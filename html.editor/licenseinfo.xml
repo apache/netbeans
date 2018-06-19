@@ -22,30 +22,26 @@
 <licenseinfo>
     <fileset>
         <file>src/org/netbeans/modules/html/editor/resources/DTDs/3_2/html32.dtd</file>
+        <file>src/org/netbeans/modules/html/editor/resources/DTDs/3_2/lat1.ent</file>
         <file>src/org/netbeans/modules/html/editor/resources/DTDs/4_0/frameset.dtd</file>
         <file>src/org/netbeans/modules/html/editor/resources/DTDs/4_0/loose.dtd</file>
         <file>src/org/netbeans/modules/html/editor/resources/DTDs/4_0/strict.dtd</file>
-        <file>src/org/netbeans/modules/html/editor/resources/DTDs/4_01/frameset.dtd</file>
-        <file>src/org/netbeans/modules/html/editor/resources/DTDs/4_01/loose.dtd</file>
-        <file>src/org/netbeans/modules/html/editor/resources/DTDs/4_01/strict.dtd</file>
-        <file>src/org/netbeans/modules/html/editor/resources/DTDs/xhtml/xhtml1-frameset.dtd</file>
-        <file>src/org/netbeans/modules/html/editor/resources/DTDs/xhtml/xhtml1-strict.dtd</file>
-        <file>src/org/netbeans/modules/html/editor/resources/DTDs/xhtml/xhtml1-transitional.dtd</file>
-        <license ref="W3C2" />
-        <comment>DTDs and XMLSchemata are used at runtime to offer code completion for HTML/XHTML files.</comment>
-    </fileset>
-    <fileset>
-        <file>src/org/netbeans/modules/html/editor/resources/DTDs/3_2/lat1.ent</file>
         <file>src/org/netbeans/modules/html/editor/resources/DTDs/4_0/HTMLlat1.ent</file>
         <file>src/org/netbeans/modules/html/editor/resources/DTDs/4_0/HTMLspecial.ent</file>
         <file>src/org/netbeans/modules/html/editor/resources/DTDs/4_0/HTMLsymbol.ent</file>
+        <file>src/org/netbeans/modules/html/editor/resources/DTDs/4_01/frameset.dtd</file>
+        <file>src/org/netbeans/modules/html/editor/resources/DTDs/4_01/loose.dtd</file>
+        <file>src/org/netbeans/modules/html/editor/resources/DTDs/4_01/strict.dtd</file>
         <file>src/org/netbeans/modules/html/editor/resources/DTDs/4_01/HTMLlat1.ent</file>
         <file>src/org/netbeans/modules/html/editor/resources/DTDs/4_01/HTMLspecial.ent</file>
         <file>src/org/netbeans/modules/html/editor/resources/DTDs/4_01/HTMLsymbol.ent</file>
+        <file>src/org/netbeans/modules/html/editor/resources/DTDs/xhtml/xhtml1-frameset.dtd</file>
+        <file>src/org/netbeans/modules/html/editor/resources/DTDs/xhtml/xhtml1-strict.dtd</file>
+        <file>src/org/netbeans/modules/html/editor/resources/DTDs/xhtml/xhtml1-transitional.dtd</file>
         <file>src/org/netbeans/modules/html/editor/resources/DTDs/xhtml/xhtml-lat1.ent</file>
         <file>src/org/netbeans/modules/html/editor/resources/DTDs/xhtml/xhtml-special.ent</file>
         <file>src/org/netbeans/modules/html/editor/resources/DTDs/xhtml/xhtml-symbol.ent</file>
-        <license ref="ISO-8879-SGML" />
+        <license ref="W3C2" />
         <comment>DTDs and XMLSchemata are used at runtime to offer code completion for HTML/XHTML files.</comment>
     </fileset>
     <fileset>

@@ -122,7 +122,7 @@ final class WrapInfo extends GapList<WrapLine> {
                 allocBounds.x += endPart.width;
             }
             // Paint wrap mark
-            if (i != lastWrapLineIndex) { // but not on last wrap line
+            if (lineContinuationTextLayout != null && i != lastWrapLineIndex) { // but not on last wrap line
                 PaintState paintState = PaintState.save(g);
                 try {
                     ViewUtils.applyForegroundColor(g, null, textComponent);

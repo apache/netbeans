@@ -552,6 +552,58 @@ public class LambdaTest {
                                       "}\n");
     }
 
+    //Todo: Verification is pending on nb-javac of JDK11
+    @Test
+    public void testImplicitVarParameterTypes1() throws Exception {
+        HintTest.create()
+                .setCaretMarker('^')
+                .input("package test;\n" +
+                       "import java.util.function.IntBinaryOperator;\n" +
+                       "public class Test {\n" +
+                       "    public void main(String list) {\n" +
+                       "        IntBinaryOperator calc3 = (int x, int y)^ ->  x + y;\n" +
+                       "    }\n" +
+                       "}\n")
+                .sourceLevel("1.11")
+                .run(Lambda.class)
+                .findWarning("4:48-4:48:verifier:ERR_addImplicitVarLambdaParameters")
+                .applyFix()
+                .assertCompilable()
+                .assertVerbatimOutput("package test;\n" +
+                                      "import java.util.function.IntBinaryOperator;\n" +
+                                      "public class Test {\n" +
+                                      "    public void main(List<String> list) {\n" +
+                                      "        IntBinaryOperator calc3 = (var x, var y) ->  x + y;\n" +
+                                      "    }\n" +
+                                      "}\n");
+    }
+
+    //Todo: Verification is pending on nb-javac of JDK11
+    @Test
+    public void testImplicitVarParameterTypes2() throws Exception {
+        HintTest.create()
+                .setCaretMarker('^')
+                .input("package test;\n" +
+                       "import java.util.function.IntBinaryOperator;\n" +
+                       "public class Test {\n" +
+                       "    public void main(String list) {\n" +
+                       "        IntBinaryOperator calc3 = (x, y)^ ->  x + y;\n" +
+                       "    }\n" +
+                       "}\n")
+                .sourceLevel("1.11")
+                .run(Lambda.class)
+                .findWarning("4:48-4:48:verifier:ERR_addImplicitVarLambdaParameters")
+                .applyFix()
+                .assertCompilable()
+                .assertVerbatimOutput("package test;\n" +
+                                      "import java.util.function.IntBinaryOperator;\n" +
+                                      "public class Test {\n" +
+                                      "    public void main(List<String> list) {\n" +
+                                      "        IntBinaryOperator calc3 = (var x, var y) ->  x + y;\n" +
+                                      "    }\n" +
+                                      "}\n");
+    }
+
     static {
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
     }

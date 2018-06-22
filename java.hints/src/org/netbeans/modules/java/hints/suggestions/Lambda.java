@@ -66,6 +66,7 @@ import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
+import javax.tools.Diagnostic;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementUtilities.ElementAcceptor;
 import org.netbeans.api.java.source.GeneratorUtilities;
@@ -91,6 +92,8 @@ import org.openide.util.NbBundle.Messages;
  */
 public class Lambda {
     
+    private static final String ERROR_CODES = "compiler.err.invalid.lambda.parameter.declaration"; // NOI18N
+
     @Hint(displayName="#DN_lambda2Class", description="#DESC_lambda2Class", category="suggestions", hintKind=Hint.Kind.ACTION,
             minSourceVersion = "8")
     @Messages({
@@ -238,6 +241,36 @@ public class Lambda {
         return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_addExplicitLambdaParameters(), new AddExplicitLambdaParameterTypes(ctx.getInfo(), ctx.getPath()).toEditorFix());
     }
     
+    @Hint(displayName = "#DN_addImplicitVarLambdaParameters", description = "#DESC_addImplicitVarLambdaParameters", category = "suggestions", hintKind = Hint.Kind.ACTION, minSourceVersion = "11")
+    @Messages({
+        "DN_addImplicitVarLambdaParameters=Convert Lambda to Use Implicit Var Parameter Types",
+        "DESC_addImplicitVarLambdaParameters=Converts lambdas to use implicit var parameter types",
+        "ERR_addImplicitVarLambdaParameters=",
+        "FIX_addImplicitVarLambdaParameters=Use var parameter types"
+    })
+    @TriggerTreeKind(Kind.LAMBDA_EXPRESSION)
+    public static ErrorDescription implicitVarParameterTypes(HintContext ctx) {
+        // hint will be enable only for JDK-11 or above.
+        if (ctx.getInfo().getSourceVersion().compareTo(SourceVersion.RELEASE_9) < 2) {
+            return null;
+        }
+        // Check invalid lambda parameter declaration
+        for (Diagnostic d : ctx.getInfo().getDiagnostics()) {
+            if (d.getCode().equals(ERROR_CODES)) {
+                return null;
+            }
+        }
+        // Check var parameter types
+        LambdaExpressionTree let = (LambdaExpressionTree) ctx.getPath().getLeaf();
+        for (VariableTree var : let.getParameters()) {
+            if (ctx.getInfo().getTreeUtilities().isVarType(TreePath.getPath(ctx.getPath(), var))) {
+                return null;
+            }
+        }
+
+        return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_addImplicitVarLambdaParameters(), new AddImplicitVarLambdaParameterTypes(ctx.getInfo(), ctx.getPath()).toEditorFix());
+    }
+
     private static ExecutableElement findAbstractMethod(CompilationInfo info, TypeMirror type) {
         if (type.getKind() != TypeKind.DECLARED) {
             return null;
@@ -628,6 +661,27 @@ public class Lambda {
                     ctx.getWorkingCopy().rewrite(var.getType(), imported);
                 }
             }
+        }
+    }
+    
+    private static final class AddImplicitVarLambdaParameterTypes extends JavaFix {
+
+        public AddImplicitVarLambdaParameterTypes(CompilationInfo info, TreePath tp) {
+            super(info, tp);
+        }
+
+        @Override
+        protected String getText() {
+            return Bundle.FIX_addImplicitVarLambdaParameters();
+        }
+
+        @Override
+        protected void performRewrite(JavaFix.TransformationContext ctx) throws Exception {
+            LambdaExpressionTree let = (LambdaExpressionTree) ctx.getPath().getLeaf();
+            TreeMaker make = ctx.getWorkingCopy().getTreeMaker();
+            let.getParameters().forEach((var) -> {
+                ctx.getWorkingCopy().rewrite(var.getType(), make.Type("var")); // NOI18N
+            });
         }
     }
 }

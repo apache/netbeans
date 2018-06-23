@@ -36,6 +36,7 @@ import org.openide.awt.StatusDisplayer;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.WindowManager;
 
@@ -67,12 +68,19 @@ public class GuiRunLevel implements RunLevel {
         Splash.getInstance().increment(10);
 
         if (CLIOptions.isGui()) {
-        //---------------------------------------------------------------------------------------------------------
-        // initialize main window AFTER the setup wizard is finished
+            //---------------------------------------------------------------------------------------------------------
+            // initialize main window AFTER the setup wizard is finished
 
-        initializeMainWindow ();
-        StartLog.logProgress ("Main window initialized"); // NOI18N
-        Splash.getInstance().increment(1);
+            initializeMainWindow ();
+            StartLog.logProgress ("Main window initialized"); // NOI18N
+            Splash.getInstance().increment(1);
+        } else {
+            RequestProcessor.getDefault().post(new Runnable() {
+                @Override
+                public void run() {
+                    maybeDie(null);
+                }
+            });
         }
 
         // -----------------------------------------------------------------------------------------------------

@@ -166,6 +166,7 @@ import org.netbeans.modules.java.source.transform.FieldGroupTree;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbCollections;
+import javax.lang.model.type.TypeKind;
 
 public class CasualDiff {
 
@@ -1443,14 +1444,21 @@ public class CasualDiff {
         int addDimensions = 0;
         if (diffContext.syntheticTrees.contains(oldT.vartype)) {
             if (!diffContext.syntheticTrees.contains(newT.vartype)) {
-                copyTo(localPointer, localPointer = oldT.pos);
+                int varOffset = skipExtraVarKeywordIfPresent(localPointer, oldT.pos);
+
+                if (varOffset == -1) {
+                    copyTo(localPointer, oldT.pos);
+                }
+                localPointer = oldT.pos;
                 printer.suppressVariableType = suppressParameterTypes;
                 int l = printer.out.length();
-                printer.print(newT.vartype);
-                printer.suppressVariableType = false;
-                if (l < printer.out.length()) {
-                    printer.print(" ");
+                if (!suppressParameterTypes) {
+                    printer.print(newT.vartype);
+                    if (l < printer.out.length()) {
+                        printer.print(" ");
+                    }
                 }
+                printer.suppressVariableType = false;
             }
         } else {
             if (suppressParameterTypes) {
@@ -1464,8 +1472,72 @@ public class CasualDiff {
                 addDimensions = dimension(newT.vartype, -1);
                 cLikeArray = vartypeBounds[1] > oldT.pos;
                 cLikeArrayChange =  cLikeArray && dimension(oldT.vartype, oldT.pos) > addDimensions;
-                copyTo(localPointer, vartypeBounds[0]);
+
+                /**
+                 * Extracting modifier from oldTree using symbol position and
+                 * modifier positions when oldT.type is error and vartype
+                 * upperbound is not proper.
+                 */
+                if (oldT.type.getKind() == TypeKind.ERROR && vartypeBounds[1] == -1) {
+
+                    // returns -1 if modifiers not present.
+                    int modsUpperBound = getCommentCorrectedEndPos(oldT.mods);
+                    if (modsUpperBound > -1) {
+                        tokenSequence.move(modsUpperBound);
+
+                        // copying modifiers from oldTree
+                        if (tokenSequence.moveNext()) {
+                            copyTo(localPointer, localPointer = modsUpperBound);
+                        }
+
+                    }
+                    int offset = localPointer;
+                    JavaTokenId tokenId = null;
+                    tokenSequence.move(localPointer);
+
+                    //adding back all whitespaces/block-comment/javadoc-comments present in OldTree before variable type token.
+                    while (tokenSequence.moveNext()) {
+                        offset = tokenSequence.offset();
+                        tokenId = tokenSequence.token().id();
+
+                        if (!((tokenId == JavaTokenId.WHITESPACE || tokenId == JavaTokenId.BLOCK_COMMENT || tokenId == JavaTokenId.JAVADOC_COMMENT) && offset < oldT.sym.pos)) {
+                            break;
+                        }
+
+                    }
+                    copyTo(localPointer, localPointer = offset);
+
+                    // Correcting lower/upper bounds for oldT.vartype tree.
+                    vartypeBounds[1] = oldT.sym.pos;
+                    vartypeBounds[0] = offset;
+
+                } else {
+                    copyTo(localPointer, vartypeBounds[0]);
+
+                }
+
                 localPointer = diffTree(oldT.vartype, newT.vartype, vartypeBounds);
+
+                /**
+                 * For erroneous variable type sometime diffTree function return
+                 * wrong position. In that scenario only old variable type will
+                 * be replaced with new variable type leaving out succeeding
+                 * comments tokens present(if any). Below code copies successive
+                 * tokens after excluding variable type token which will be the
+                 * first token.
+                 */
+                if (oldT.type.getKind() == TypeKind.ERROR && localPointer == -1) {
+                    // moving to variable type token
+                    tokenSequence.move(vartypeBounds[0]);
+                    tokenSequence.moveNext();
+
+                    //moving to first token after variable type token.
+                    if (tokenSequence.moveNext()) {
+                        // copying tokens from vartype bounds after excluding variable type token.
+                        int offset = tokenSequence.offset();
+                        copyTo(offset, localPointer = vartypeBounds[1]);
+                    }
+                }
             }
         }
         if (nameChanged(oldT.name, newT.name)) {
@@ -1820,15 +1892,21 @@ public class CasualDiff {
             return bounds[1];
         }
         PositionEstimator est = EstimatorFactory.statements(
-                oldT.getStatements(),
-                newT.getStatements(),
+                filterHidden(oldT.stats),
+                filterHidden(newT.stats),
                 diffContext
         );
-        localPointer = diffList(oldT.stats, newT.stats, localPointer, est, Measure.MEMBER, printer);
-
-        copyTo(localPointer, bounds[1]);
-
-        return bounds[1];
+        int old = printer.indent();
+        localPointer = diffInnerComments(oldT, newT, localPointer);
+        JCClassDecl oldEnclosing = printer.enclClass;
+        printer.enclClass = null;
+        localPointer = diffList(filterHidden(oldT.stats), filterHidden(newT.stats), localPointer, est, Measure.MEMBER, printer);
+        printer.enclClass = oldEnclosing;
+        if (localPointer < endPos(oldT)) {
+            copyTo(localPointer, localPointer = endPos(oldT));
+        }
+        printer.undent(old);
+        return localPointer;
     }
 
     protected int diffSynchronized(JCSynchronized oldT, JCSynchronized newT, int[] bounds) {
@@ -3684,7 +3762,8 @@ public class CasualDiff {
 
     protected int diffUnionType(JCTypeUnion oldT, JCTypeUnion newT, int[] bounds) {
         int localPointer = bounds[0];
-        return diffParameterList(oldT.alternatives, newT.alternatives, null, localPointer, Measure.MEMBER, diffContext.style.spaceAroundBinaryOps(), diffContext.style.spaceAroundBinaryOps(), false, "|");
+        int pos = diffParameterList(oldT.alternatives, newT.alternatives, null, localPointer, Measure.MEMBER, diffContext.style.spaceAroundBinaryOps(), diffContext.style.spaceAroundBinaryOps(), false, "|");
+        return Math.min(pos, bounds[1]);
     }
 
     private boolean commaNeeded(ResultItem[] arr, ResultItem item) {
@@ -3723,7 +3802,7 @@ public class CasualDiff {
                     if (!fieldGroup.isEmpty()) {
                         int oldPos = getOldPos(fieldGroup.get(0));
 
-                        if (oldPos != (-1) && oldPos != NOPOS && oldPos == getOldPos(var) && fieldGroup.get(0).getModifiers() == var.getModifiers()) {
+                        if (oldPos != (-1) && oldPos != NOPOS && oldPos == getOldPos(var) && fieldGroup.get(0).getModifiers() == var.getModifiers() && !isVarTypeVariable(var)) {
                             //seems like a field group:
                             fieldGroup.add(var);
                         } else {
@@ -4019,6 +4098,16 @@ public class CasualDiff {
             }
         }
         return localPointer;
+    }
+
+    /**
+     * Check the JCVariableDecl tree has var type
+     * @param tree instance of JCVariableDecl
+     * @return true if tree contains var type else return false
+     */
+    private static boolean isVarTypeVariable(JCVariableDecl tree){
+        if(tree == null) return false;
+        return tree.getType() instanceof JCIdent && ((JCIdent)tree.getType()).name.contentEquals("var"); // NOI18N
     }
 
     /**
@@ -6027,5 +6116,26 @@ public class CasualDiff {
         } catch (Exception ex) {}
         return sb.toString();
     }
-
+    
+    private int skipExtraVarKeywordIfPresent(int start, int end) {
+        int varoffset = -1;
+        int newStart = -1;
+        tokenSequence.move(start);
+        tokenSequence.moveNext();
+        while (tokenSequence.offset() < end) {
+            JavaTokenId token = tokenSequence.token().id();
+            if (token == JavaTokenId.VAR) {
+                varoffset = tokenSequence.offset();
+                copyTo(start, varoffset);
+            } else if (varoffset > -1) {
+                if (token != JavaTokenId.WHITESPACE) {
+                    newStart = tokenSequence.offset();
+                    copyTo(newStart, end);
+                    break;
+                }
+            }
+            tokenSequence.moveNext();
+        }
+        return varoffset;
+    }
 }

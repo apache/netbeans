@@ -166,24 +166,24 @@
                 <package>org.netbeans.modules.maven.indexer.spi.impl</package>
             </friend-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/indexer-core-6.0-SNAPSHOT-patched.jar</runtime-relative-path>
-                <binary-origin>external/indexer-core-6.0-SNAPSHOT-patched.jar</binary-origin>
+                <runtime-relative-path>ext/maven/indexer-core-6.0.0.jar</runtime-relative-path>
+                <binary-origin>external/indexer-core-6.0.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/lucene-core-5.5.3.jar</runtime-relative-path>
-                <binary-origin>external/lucene-core-5.5.3.jar</binary-origin>
+                <runtime-relative-path>ext/maven/lucene-core-5.5.5.jar</runtime-relative-path>
+                <binary-origin>external/lucene-core-5.5.5.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/lucene-highlighter-5.5.3.jar</runtime-relative-path>
-                <binary-origin>external/lucene-highlighter-5.5.3.jar</binary-origin>
+                <runtime-relative-path>ext/maven/lucene-highlighter-5.5.5.jar</runtime-relative-path>
+                <binary-origin>external/lucene-highlighter-5.5.5.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/lucene-queryparser-5.5.3.jar</runtime-relative-path>
-                <binary-origin>external/lucene-queryparser-5.5.3.jar</binary-origin>
+                <runtime-relative-path>ext/maven/lucene-queryparser-5.5.5.jar</runtime-relative-path>
+                <binary-origin>external/lucene-queryparser-5.5.5.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/lucene-analyzers-common-5.5.3.jar</runtime-relative-path>
-                <binary-origin>external/lucene-analyzers-common-5.5.3.jar</binary-origin>
+                <runtime-relative-path>ext/maven/lucene-analyzers-common-5.5.5.jar</runtime-relative-path>
+                <binary-origin>external/lucene-analyzers-common-5.5.5.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/maven/javax.annotation-api-1.2.jar</runtime-relative-path>

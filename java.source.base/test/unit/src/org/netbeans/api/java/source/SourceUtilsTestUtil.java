@@ -40,6 +40,7 @@ import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.JavaDataLoader;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.TestUtil;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer;
 import org.netbeans.modules.java.source.parsing.JavacParser;
@@ -280,9 +281,13 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
         
         public ClassPath findClassPath(FileObject file, String type) {
             try {
-            if (ClassPath.BOOT == type || JavaClassPathConstants.MODULE_BOOT_PATH.equals(type)) {
-                return ClassPathSupport.createClassPath(getBootClassPath().toArray(new URL[0]));
-            }
+                if (ClassPath.BOOT == type) {
+                   return ClassPathSupport.createClassPath(getBootClassPath().toArray(new URL[0]));
+                }
+             
+                if (JavaClassPathConstants.MODULE_BOOT_PATH == type) {
+                    return BootClassPathUtil.getModuleBootPath();
+                }
             
             if (ClassPath.SOURCE == type) {
                 return ClassPathSupport.createClassPath(new FileObject[] {

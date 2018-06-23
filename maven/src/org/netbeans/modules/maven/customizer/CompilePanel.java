@@ -92,11 +92,11 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
     private Color origComPlatformFore;
 
     /** Creates new form CompilePanel */
-    public CompilePanel(ModelHandle2 handle, Project prj) {
+    public CompilePanel(ModelHandle2 handle, Project prj, MavenProjectPropertiesUiSupport uiSupport) {
         initComponents();
         this.handle = handle;
         project = prj;
-        comJavaPlatform.setModel(new PlatformsModel());
+        comJavaPlatform.setModel(uiSupport.getPlatformComboBoxModel());
         comJavaPlatform.setRenderer(new PlatformsRenderer());
 
         origComPlatformFore = comJavaPlatform.getForeground();
@@ -248,7 +248,7 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
         };
 
         // java platform updater
-        new ComboBoxUpdater<Union2<JavaPlatform,String>>(comJavaPlatform, lblJavaPlatform) {
+        ComboBoxUpdater<Union2<JavaPlatform,String>> compleComboBoxUpdater = new ComboBoxUpdater<Union2<JavaPlatform,String>>(comJavaPlatform, lblJavaPlatform) {
             private String modifiedValue;
             private String DEFAULT_PLATFORM_VALUE = "@@DEFAU:T@@";
             private ModelOperation<POMModel> operation = new ModelOperation<POMModel>() {
@@ -330,6 +330,10 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
                 }
             }
         };
+        // the selected item is not set until the compile panel is shown
+        // so, invoke these methods for setting it
+        compleComboBoxUpdater.ancestorAdded(null);
+        compleComboBoxUpdater.ancestorRemoved(null);
     }
 
     private Pair<String,JavaPlatform> getSelPlatform () {
@@ -543,12 +547,18 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
         return null;
     }
 
-    private class PlatformsModel extends AbstractListModel implements ComboBoxModel, PropertyChangeListener {
+    static class PlatformsModel extends AbstractListModel implements ComboBoxModel, PropertyChangeListener {
+
+        private static final long serialVersionUID = 1L;
 
         private List<Union2<JavaPlatform,String>> data;
         private Union2<JavaPlatform,String> sel;
+        private final Project project;
+        private final ModelHandle2 handle;
 
-        public PlatformsModel() {
+        public PlatformsModel(Project project, ModelHandle2 handle) {
+            this.project = project;
+            this.handle = handle;
             JavaPlatformManager jpm = JavaPlatformManager.getDefault();
             getPlatforms(jpm);
             jpm.addPropertyChangeListener(WeakListeners.propertyChange(this, jpm));
@@ -616,6 +626,11 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
             data = tmp;
         }
 
+        private Pair<String, JavaPlatform> getSelPlatform() {
+            String platformId = project.getLookup().lookup(AuxiliaryProperties.class).
+                    get(Constants.HINT_JDK_PLATFORM, true);
+            return Pair.of(platformId, BootClassPathImpl.getActivePlatform(platformId));
+        }
     }
 
     private class PlatformsRenderer extends JLabel implements ListCellRenderer, UIResource {

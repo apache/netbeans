@@ -120,6 +120,22 @@ public class ConvertToVarHintTest {
                 .assertNotContainsWarnings(VAR_CONV_DESC);
 
     }
+    
+    @Test
+    public void testArrayInitializerVar() throws Exception {
+
+        HintTest.create()
+                .input("package test;\n"
+                        + "public class Test {\n"
+                        + "    void m2() {\n"
+                        + "        int[] i = {1,2,3};\n"
+                        + "    }\n"
+                        + "}\n")
+                .sourceLevel("1.10")
+                .run(ConvertToVarHint.class)
+                .assertNotContainsWarnings(VAR_CONV_DESC);
+
+    }
 
     @Test
     public void testAnonymusObjRefToVar() throws Exception {
@@ -191,17 +207,16 @@ public class ConvertToVarHintTest {
     @Test
     public void testDiamondInterfaceRefToVar() throws Exception {
         HintTest.create()
-                .setCaretMarker('^')
                 .input("package test;\n"
                         + "import java.util.HashMap;\n"
                         + "public class Test {\n"
                         + "    void m1() {\n"
-                        + "        final HashMap<String, String> map = new HashMap<>^();\n"
+                        + "        final HashMap<String, String> map = new HashMap<>();\n"
                         + "    }\n"
                         + "}")
                 .sourceLevel("1.10")
                 .run(ConvertToVarHint.class)
-                .assertNotContainsWarnings(VAR_CONV_DESC);
+                .assertContainsWarnings("4:8-4:60:"+VAR_CONV_WARNING);
     }
 
     @Test
@@ -326,33 +341,189 @@ public class ConvertToVarHintTest {
                         + "    }\n"
                         + "}");
     }
-
+    
     @Test
-    public void testMethod2AssignToVar() throws Exception {
+    public void testMethodAssignToVar2() throws Exception {
         HintTest.create()
                 .setCaretMarker('^')
                 .input("package test;\n"
-                        + "import java.util.Collections;\n"
-                        + "import java.util.List;\n"
                         + "import java.util.ArrayList;\n"
                         + "public class Test {\n"
                         + "    public static void main(String[] args) {\n"
-                        + "        List<String> list = Collections.unmodifiableList(new ArrayList<String>())^;\n"
+                        + "        Object obj = m1()^;\n"
+                        + "    }\n"
+                        + "    static Object m1()\n"
+                        + "    {\n"
+                        + "        return new ArrayList<String>();\n"
                         + "    }\n"
                         + "}")
                 .sourceLevel("1.10")
                 .run(ConvertToVarHint.class)
-                .findWarning("6:8-6:82:" + VAR_CONV_WARNING)
+                .findWarning("4:8-4:26:" + VAR_CONV_WARNING)
                 .applyFix()
                 .assertCompilable()
                 .assertVerbatimOutput("package test;\n"
-                        + "import java.util.Collections;\n"
-                        + "import java.util.List;\n"
                         + "import java.util.ArrayList;\n"
                         + "public class Test {\n"
                         + "    public static void main(String[] args) {\n"
-                        + "        var list = Collections.unmodifiableList(new ArrayList<String>());\n"
+                        + "        var obj = m1();\n"
+                        + "    }\n"
+                        + "    static Object m1()\n"
+                        + "    {\n"
+                        + "        return new ArrayList<String>();\n"
                         + "    }\n"
                         + "}");
     }
+
+    @Test
+    public void testCapturedTypeTypeParamsAssignToVar() throws Exception {
+        HintTest.create()
+                .input("package test;\n"
+                        + "public class Test {\n"
+                        + "    public void m() {\n"
+                        + "        Class<? extends String> aClass = \"x\".getClass();\n"
+                        + "    }\n"
+                        + "}")
+                .sourceLevel("1.10")
+                .run(ConvertToVarHint.class)
+                .findWarning("3:8-3:56:" + VAR_CONV_WARNING)
+                .applyFix()
+                .assertCompilable()
+                .assertVerbatimOutput("package test;\n"
+                        + "public class Test {\n"
+                        + "    public void m() {\n"
+                        + "        var aClass = \"x\".getClass();\n"
+                        + "    }\n"
+                        + "}");
+    }
+    
+    @Test
+    public void testConvertToVarForCapturedType() throws Exception {
+        HintTest.create()
+                .input("package test;\n"
+                        + "import java.util.List;\n"
+                        + "public class Test {\n"
+                        + "    void m1() {\n"
+                        + "        List<? extends String> ls = null;\n"
+                        + "        String s = ls.get(0);\n"
+                        + "    }\n"
+                        + "}")
+                .sourceLevel("1.10")
+                .run(ConvertToVarHint.class)
+                .findWarning("5:8-5:29:" + VAR_CONV_WARNING)
+                .applyFix()
+                .assertCompilable()
+                .assertVerbatimOutput("package test;\n"
+                        + "import java.util.List;\n"
+                        + "public class Test {\n"
+                        + "    void m1() {\n"
+                        + "        List<? extends String> ls = null;\n"
+                        + "        var s = ls.get(0);\n"
+                        + "    }\n"
+                        + "}");
+    } 
+    
+    @Test
+    public void testConvertToVarWithDiamondOperator1() throws Exception {
+        HintTest.create()
+                .input("package test;\n"
+                        + "import java.util.HashMap;\n"
+                        + "public class Test {\n"
+                        + "    void m1() {\n"
+                        + "        HashMap<String, String> list = new HashMap<>();\n"
+                        + "    }\n"
+                        + "}")
+                .sourceLevel("1.10")
+                .run(ConvertToVarHint.class)
+                .findWarning("4:8-4:55:" + VAR_CONV_WARNING)
+                .applyFix()
+                .assertCompilable()
+                .assertVerbatimOutput("package test;\n"
+                        + "import java.util.HashMap;\n"
+                        + "public class Test {\n"
+                        + "    void m1() {\n"
+                        + "        var list = new HashMap<String, String>();\n"
+                        + "    }\n"
+                        + "}");
+    } 
+    
+    @Test
+    public void testConvertToVarWithDiamondOperator2() throws Exception {
+        HintTest.create()
+                .input("package test;\n"
+                        + "import java.util.ArrayList;\n"
+                        + "public class Test {\n"
+                        + "    void m1() {\n"
+                        + "        ArrayList<java.util.LinkedList<?>> list = new ArrayList<>();\n"
+                        + "    }\n"
+                        + "}")
+                .sourceLevel("1.10")
+                .run(ConvertToVarHint.class)
+                .findWarning("4:8-4:68:" + VAR_CONV_WARNING)
+                .applyFix()
+                .assertCompilable()
+                .assertVerbatimOutput("package test;\n"
+                        + "import java.util.ArrayList;\n"
+                        + "public class Test {\n"
+                        + "    void m1() {\n"
+                        + "        var list = new ArrayList<java.util.LinkedList<?>>();\n"
+                        + "    }\n"
+                        + "}");
+    }
+    
+    @Test
+    public void testConvertToVarWithDiamondOperator3() throws Exception {
+        HintTest.create()
+                .input("package test;\n"
+                        + "public class Test {\n"
+                        + "    void m1() {\n"
+                        + "        java.util.HashMap<String, String> list = new java.util.HashMap<>();\n"
+                        + "    }\n"
+                        + "}")
+                .sourceLevel("1.10")
+                .run(ConvertToVarHint.class)
+                .findWarning("3:8-3:75:" + VAR_CONV_WARNING)
+                .applyFix()
+                .assertCompilable()
+                .assertVerbatimOutput("package test;\n"
+                        + "public class Test {\n"
+                        + "    void m1() {\n"
+                        + "        var list = new java.util.HashMap<String, String>();\n"
+                        + "    }\n"
+                        + "}");
+    }
+
+    @Test
+    public void testCompoundVariableDeclStatement() throws Exception {
+        HintTest.create()
+                .input("package test;\n"
+                        + "import java.util.List;\n"
+                        + "public class Test {\n"
+                        + "    void m() {\n"
+                        + "         int i =10,j=20;\n"
+                        + "    }\n"
+                        + "}")
+                .sourceLevel("1.10")
+                .run(ConvertToVarHint.class)
+                .assertNotContainsWarnings(VAR_CONV_DESC);
+
+    }
+
+    @Test
+    public void testCompoundVariableDeclStatement2() throws Exception {
+        HintTest.create()
+                .input("package test;\n"
+                        + "import java.util.List;\n"
+                        + "public class Test {\n"
+                        + "    void m() {\n"
+                        + "        final int /*comment*/l =10/*comment*/,i=20/*comment*/,j=5/*comment*/;\n"
+                        + "    }\n"
+                        + "}")
+                .sourceLevel("1.10")
+                .run(ConvertToVarHint.class)
+                .assertNotContainsWarnings(VAR_CONV_DESC);
+
+    }
+
+    
 }

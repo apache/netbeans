@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.maven.customizer;
 import javax.swing.JComponent;
-import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.api.customizer.ModelHandle2;
 import static org.netbeans.modules.maven.customizer.Bundle.*;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer;
@@ -45,9 +44,8 @@ public class CompilePanelProvider implements ProjectCustomizer.CompositeCategory
     
     @Override
     public JComponent createComponent(Category category, Lookup context) {
-        ModelHandle2 handle = context.lookup(ModelHandle2.class);
-        Project prj = context.lookup(Project.class);
-        return new CompilePanel(handle, prj);
+        MavenProjectPropertiesUiSupport uiSupport = context.lookup(MavenProjectPropertiesUiSupport.class);
+        return uiSupport.getCompilePanel();
     }
     
 }

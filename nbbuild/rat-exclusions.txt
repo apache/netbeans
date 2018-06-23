@@ -110,8 +110,6 @@ editor/demosrc/base/org/netbeans/editor/example/res/template.html_
 editor/demosrc/base/org/netbeans/editor/example/res/template.java_
 editor/demosrc/properties-addon/org/netbeans/editor/example/res/template.properties
 form/src/org/netbeans/modules/form/resources/templates/**
-hibernate/src/org/netbeans/modules/hibernate/resources/Hibernate*.xml
-hibernate/src/org/netbeans/modules/hibernate/resources/HibernateUtil.javax
 java.j2semodule/src/org/netbeans/modules/java/j2semodule/ui/resources/module-info.java.template
 java.platform.ui/src/org/netbeans/modules/java/platform/resources/templates/javaplatform.xml
 java.project.ui/src/org/netbeans/modules/java/project/ui/resources/*.template

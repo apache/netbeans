@@ -31,6 +31,7 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -39,9 +40,12 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.jar.JarInputStream;
+import java.util.jar.Manifest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
@@ -145,7 +149,7 @@ public class CreateLicenseSummary extends Task {
         
         try (PrintWriter licenseWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(license), "UTF-8"));
                 PrintWriter noticeWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(notice), "UTF-8"))) {
-            
+
             try (Reader r = new InputStreamReader(new FileInputStream(licenseStub), "UTF-8")) {
                 int read;
                 while ((read = r.read()) != (-1)) {
@@ -267,14 +271,7 @@ public class CreateLicenseSummary extends Task {
                     licenseNames.add(fs.getLicenseRef());
                 }
                 
-                String notice = fs.getNotice();
-                if (notice != null) {
-                    notice = notice.trim();
-                    if (!notices.contains(notice)) {
-                        notices.add(notice);
-                        addNotice(noticeWriter, notice);
-                    }
-                }
+                addNotice(noticeWriter, fs.getNotice(), notices);
             }
         }
         
@@ -298,12 +295,9 @@ public class CreateLicenseSummary extends Task {
             findBinaries(build, binaries2LicenseHeaders, crc2License, new HashMap<>(), "", testBinariesAreUnique, ignoredPatterns);
         if (moduleFiles != null) {
             for (Resource r : moduleFiles) {
-                try (InputStream is = r.getInputStream()) {
-                    long crc = computeCRC32(is);
-                    Map<String, String> headers = crc2License.get(crc);
-                    if (headers != null) {
-                        binaries2LicenseHeaders.put(r.getName(), headers);
-                    }
+                Entry<Map<String, String>,Long> headers = getHeaders(crc2License, () -> r.getInputStream());
+                if (headers != null) {
+                    binaries2LicenseHeaders.put(r.getName(), headers.getKey());
                 }
             }
         }
@@ -339,15 +333,7 @@ public class CreateLicenseSummary extends Task {
                 System.err.println("No license for: " + binary);
             }
             
-            String notice = headers.get("notice");
-            if (notice != null) {
-                notice = notice.trim();
-                if (!notices.contains(notice)) {
-                    notices.add(notice);
-                    addNotice(noticeWriter, notice);
-                }
-            }
-            
+            addNotice(noticeWriter, headers.get("notice"), notices);
         }
 //                String[] otherHeaders = {"Name", "Version", "Description", "Origin"};
 //                Map<Map<String,String>,Set<String>> licenseHeaders2Binaries = new LinkedHashMap<Map<String,String>,Set<String>>();
@@ -434,27 +420,67 @@ public class CreateLicenseSummary extends Task {
         return crc2LicenseHeaders;
     }
 
-    private void addNotice(PrintWriter output, String notice) throws IOException {
-        String[] lines = notice.split("\n");
-        boolean previousLineEmpty = true;
-        int n = lines.length;
-        for (int i = 0; i < n; i++) {
-            String line = lines[i];
-            line = line.trim();
-            boolean empty = line.length() == 0;
-            if (empty && previousLineEmpty) {
-                // Skip line
-            } else {
-                previousLineEmpty = empty;
-                if (!empty && i < n - 1 && line.startsWith("This product includes software") && lines[i + 1].startsWith("The Apache Software Foundation")) {
-                    i += 2;
-                    previousLineEmpty = false;
-                    // Skip
-                } else {
-                    output.println(line);
+    private String normalizeNotice(String inputNotice) {
+        if(inputNotice == null) {
+            inputNotice = "";
+        }
+        return inputNotice
+                // Remove the common part required for all ASF project, that is
+                // inserted in the header
+                .replaceAll("This product includes software.*\nThe Apache Software Foundation.*\n?", "")
+                // remove excessive whitespace (the notice entries will be separated
+                // by empty lines, while inside each block only one empty line will
+                // remain)
+                .replaceAll("\n{3,}", "\n\n")
+                // the license file is written with platform line endings, so adjust here
+                .replaceAll("\n", System.getProperty("line.separator"))
+                .trim();
+    }
+
+    private void addNotice(PrintWriter output, String notice, Set<String> alreadyWrittenNotices) throws IOException {
+        notice = normalizeNotice(notice);
+        if(notice.isEmpty() || alreadyWrittenNotices.contains(notice)) {
+            return;
+        }
+        alreadyWrittenNotices.add(notice);
+        output.println(notice);
+        output.println();
+        output.println();
+    }
+
+    private Entry<Map<String, String>, Long> getHeaders(Map<Long, Map<String, String>> crc2License,
+                                                        OpenInputStream in) throws IOException {
+        Map<String, String> headers;
+        long crc;
+
+        try (InputStream is = in.open()) {
+            crc = computeCRC32(is);
+            headers = crc2License.get(crc);
+        }
+
+        if (headers == null) {
+            try (InputStream is = in.open();
+                 JarInputStream jin = new JarInputStream(is)) {
+                Manifest man = jin.getManifest();
+                if (man != null) {
+                    String origCRC = man.getMainAttributes().getValue("NB-Original-CRC");
+                    if (origCRC != null) {
+                        try {
+                            crc = Long.parseLong(origCRC);
+                            headers = crc2License.get(crc);
+                        } catch (NumberFormatException ex) {
+                            throw new BuildException(ex);
+                        }
+                    }
                 }
             }
         }
+
+        return headers != null ? new SimpleEntry<>(headers, crc) : null;
+    }
+
+    private interface OpenInputStream {
+        public InputStream open() throws IOException;
     }
 
     private long computeCRC32(InputStream is) throws IOException {
@@ -527,30 +553,27 @@ public class CreateLicenseSummary extends Task {
             if (f.isDirectory()) {
                 findBinaries(f, binaries2LicenseHeaders, crc2LicenseHeaders, crc2Binary, prefix + n + "/", testBinariesAreUnique, ignoredPatterns);
             } else if (n.endsWith(".jar") || n.endsWith(".zip") || n.endsWith(".xml") || n.endsWith(".js") || n.endsWith(".dylib")) {
-                try (InputStream is = new FileInputStream(f)) {
-                    long crc = computeCRC32(is);
-                    Map<String, String> headers = crc2LicenseHeaders.get(crc);
-                    if (headers != null) {
-                        String path = prefix + n;
-                        binaries2LicenseHeaders.put(path, headers);
-                        String otherPath = crc2Binary.put(crc, path);
-                        if (otherPath != null) {
-                            boolean ignored = false;
-                            for (String pattern : ignoredPatterns) {
-                                String[] parts = pattern.split(" ");
-                                assert parts.length == 2 : pattern;
-                                if (SelectorUtils.matchPath(parts[0], otherPath) && SelectorUtils.matchPath(parts[1], path)) {
-                                    ignored = true;
-                                    break;
-                                }
-                                if (SelectorUtils.matchPath(parts[0], path) && SelectorUtils.matchPath(parts[1], otherPath)) {
-                                    ignored = true;
-                                    break;
-                                }
+                Entry<Map<String, String>,Long> headersAndCRC = getHeaders(crc2LicenseHeaders, () -> new FileInputStream(f));
+                if (headersAndCRC != null) {
+                    String path = prefix + n;
+                    binaries2LicenseHeaders.put(path, headersAndCRC.getKey());
+                    String otherPath = crc2Binary.put(headersAndCRC.getValue(), path);
+                    if (otherPath != null) {
+                        boolean ignored = false;
+                        for (String pattern : ignoredPatterns) {
+                            String[] parts = pattern.split(" ");
+                            assert parts.length == 2 : pattern;
+                            if (SelectorUtils.matchPath(parts[0], otherPath) && SelectorUtils.matchPath(parts[1], path)) {
+                                ignored = true;
+                                break;
                             }
-                            if (!ignored) {
-                                testBinariesAreUnique.append('\n').append(otherPath).append(" and ").append(path).append(" are identical");
+                            if (SelectorUtils.matchPath(parts[0], path) && SelectorUtils.matchPath(parts[1], otherPath)) {
+                                ignored = true;
+                                break;
                             }
+                        }
+                        if (!ignored) {
+                            testBinariesAreUnique.append('\n').append(otherPath).append(" and ").append(path).append(" are identical");
                         }
                     }
                 }

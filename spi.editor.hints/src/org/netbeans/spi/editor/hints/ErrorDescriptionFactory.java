@@ -18,7 +18,10 @@
  */
 package org.netbeans.spi.editor.hints;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.text.Document;
 import javax.swing.text.Position;
 import org.netbeans.api.annotations.common.NonNull;
@@ -242,6 +245,51 @@ public class ErrorDescriptionFactory {
         return new ErrorDescription(file, id, description, details, severity, fixes, HintsControllerImpl.linePart(file, start, end));
     }
     
+ /**Create a new {@link ErrorDescription} with the given parameters.
+     *
+     * Should be called inside document read lock to assure consistency
+     *
+     * @param id an optional ID of the {@link ErrorDescription}. Should represent a "type" of an error/warning.
+     *           It is recommended that providers prefix the ID with their unique prefix.
+     * @param severity the desired {@link Severity}
+     * @param customType
+     * @param description the text of the error/warning
+     * @param details optional "more details" describing the error/warning
+     * @param fixes a collection of {@link Fix}es that should be shown for the error/warning
+     * @param file for which the {@link ErrorDescription} should be created
+     * @param starts the array of start offsets for error/warning
+     * @param ends the array of end offsets for error/warning
+     * @return a newly created {@link ErrorDescription} based on the given parameters
+     * @since 1.42
+     */
+    public static @NonNull ErrorDescription createErrorDescription(@NullAllowed String id, @NonNull Severity severity, 
+            @NullAllowed String customType, @NonNull String description, @NullAllowed CharSequence details, @NonNull LazyFixList fixes, 
+            @NonNull FileObject file, int[] starts, int[] ends) {
+        Parameters.notNull("severity", severity);
+        Parameters.notNull("description", description);
+        Parameters.notNull("fixes", fixes);
+        Parameters.notNull("file", file);
+        Parameters.notNull("starts", starts);
+        Parameters.notNull("ends", ends);        
+        if (starts.length == 0 || starts[0] < 0) throw new IndexOutOfBoundsException("start < 0 (" + starts + " < 0)");;//NOI18N
+        if ( ends.length == 0 || ends[0] < 0) throw new IndexOutOfBoundsException("end < 0 (" + ends + " < 0)");;//NOI18N
+        if (ends.length != starts.length) throw new IndexOutOfBoundsException("starts lentgh:" + starts.length + " != " + ends.length + " ends length");//NOI18N
+        PositionBounds span = HintsControllerImpl.linePart(file, starts[0], ends[0]);
+        ArrayList<PositionBounds> spanTail = new ArrayList<>();
+        if (starts.length > 1) {
+            for (int i = 1; i < starts.length; i++) {
+                //just skip if starts greater or equals to end, no need to throw exception
+                if (starts[i] >= ends[i]) {
+                    //log and continue
+                    Logger.getLogger(ErrorDescriptionFactory.class.getName()).log(Level.INFO, "Incorrect span,  start=" + starts[i] + ", end=" + ends[i], new Exception());;//NOI18N
+                    continue;
+                }
+                spanTail.add(HintsControllerImpl.linePart(file, starts[i], ends[i]));
+            }
+        }
+        return new ErrorDescription(file, id, description, details, severity, customType, fixes, span, spanTail);
+    }    
+    
     /**Create a new {@link ErrorDescription} with the given parameters.
      *
      * @param id an optional ID of the {@link ErrorDescription}. Should represent a "type" of an error/warning.
@@ -290,6 +338,52 @@ public class ErrorDescriptionFactory {
         FileObject file = od != null ? od.getPrimaryFile() : null;
         
         return new ErrorDescription(file, id, description, details, severity, customType, new StaticFixList(fixes), HintsControllerImpl.linePart(doc, start, end));
+    }
+    
+    /**Create a new {@link ErrorDescription} with the given parameters.
+     *
+     * @param id an optional ID of the {@link ErrorDescription}. Should represent a "type" of an error/warning.
+     *           It is recommended that providers prefix the ID with their unique prefix.
+     * @param severity the desired {@link Severity}
+     * @param customType custom annotation type
+     * @param description the text of the error/warning
+     * @param details optional "more details" describing the error/warning
+     * @param fixes a collection of {@link Fix}es that should be shown for the error/warning
+     * @param doc document for which the {@link ErrorDescription} should be created
+     * @param starts the array of start offsets for error/warning
+     * @param ends the array of end offsets for error/warning
+     * @return a newly created {@link ErrorDescription} based on the given parameters
+     * @since 1.42
+     */
+    public static @NonNull ErrorDescription createErrorDescription(@NullAllowed String id, @NonNull Severity severity, 
+            @NullAllowed String customType, @NonNull String description, @NullAllowed CharSequence details,  @NonNull List<Fix> fixes, 
+            @NonNull Document doc, int[] starts, int[] ends) {
+        Parameters.notNull("severity", severity);
+        Parameters.notNull("description", description);
+        Parameters.notNull("fixes", fixes);
+        Parameters.notNull("doc", doc);
+        Parameters.notNull("starts", starts);
+        Parameters.notNull("ends", ends);                
+        DataObject od = (DataObject) doc.getProperty(Document.StreamDescriptionProperty);
+        FileObject file = od != null ? od.getPrimaryFile() : null;
+        if (starts.length == 0 || starts[0] < 0) throw new IndexOutOfBoundsException("start < 0 (" + starts + " < 0)");;//NOI18N
+        if ( ends.length == 0 || ends[0] < 0) throw new IndexOutOfBoundsException("end < 0 (" + ends + " < 0)");;//NOI18N
+        if (ends.length != starts.length) throw new IndexOutOfBoundsException("starts lentgh:" + starts.length + " != " + ends.length + " ends length");//NOI18N
+        PositionBounds span = HintsControllerImpl.linePart(file, starts[0], ends[0]);
+        ArrayList<PositionBounds> spanTail = new ArrayList<>();
+        if (starts.length > 1) {
+            for (int i = 1; i < starts.length; i++) {
+                //just skip if starts greater or equals to end
+                if (starts[i] >= ends[i]) {
+                    //log and continue
+                    Logger.getLogger(ErrorDescriptionFactory.class.getName()).log(Level.INFO, "Incorrect span,  start=" + starts[i] + ", end=" + ends[i], new Exception());;//NOI18N
+                    continue;
+                }
+                spanTail.add(HintsControllerImpl.linePart(file, starts[i], ends[i]));
+            }
+        }
+        return new ErrorDescription(file, id, description, details, severity, customType, new StaticFixList(fixes), 
+                span, spanTail);
     }
 
     /**

@@ -584,4 +584,29 @@ public class TreeUtilitiesTest extends NbTestCase {
             }
         }, true);
     }
+
+    public void testIsEndOfCompoundVariableDeclaration() throws Exception {
+        prepareTest("Test", "package test; public class Test {public Test(){int i = 10, j = 11;}}");
+        TreePath tp = info.getTreeUtilities().pathFor(47);
+        BlockTree bt = (BlockTree) tp.getLeaf();
+        assertFalse(info.getTreeUtilities().isEndOfCompoundVariableDeclaration(bt.getStatements().get(1)));
+        assertTrue(info.getTreeUtilities().isEndOfCompoundVariableDeclaration(bt.getStatements().get(2)));
+    }
+
+    public void testIsPartOfCompoundVariableDeclaration() throws Exception {
+        prepareTest("Test", "package test; public class Test {public Test(){int i = 10, j = 11; int k = 1;}}");
+
+        //int i = 10
+        VariableTree var1 = (VariableTree) info.getTreeUtilities().pathFor(55).getLeaf();
+        assertTrue(info.getTreeUtilities().isPartOfCompoundVariableDeclaration(var1));
+
+        //int j = 11
+        VariableTree var2 = (VariableTree) info.getTreeUtilities().pathFor(60).getLeaf();
+        assertTrue(info.getTreeUtilities().isPartOfCompoundVariableDeclaration(var2));
+
+        //int k = 1
+        VariableTree var3 = (VariableTree) info.getTreeUtilities().pathFor(71).getLeaf();
+        assertFalse(info.getTreeUtilities().isPartOfCompoundVariableDeclaration(var3));
+
+    }
 }

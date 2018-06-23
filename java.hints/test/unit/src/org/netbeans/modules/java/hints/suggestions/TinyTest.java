@@ -268,6 +268,76 @@ public class TinyTest extends NbTestCase {
                               "}\n");
     }
 
+    public void testSplitDeclaration4() throws Exception {
+        HintTest
+                .create()
+                .setCaretMarker('|')
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    private void test() { \n" +
+                       "        int i = 1; \n" +
+                       "        switch(i){ \n" +
+                       "            case 1: \n" +
+                       "            int k =| -1,j = 1;\n" +
+                       "            break; \n" +
+                       "        } \n" +
+                       "    }\n" +
+                       "}\n")
+                .sourceLevel("1.7")
+                .run(Tiny.class)
+                .findWarning("6:19-6:19:hint:ERR_splitDeclaration")
+                .applyFix("FIX_splitDeclaration")
+                .assertCompilable()
+                .assertOutput("package test;\n" +
+                              "public class Test {\n" +
+                              "    private void test() { \n" +
+                              "        int i = 1; \n" +
+                              "        switch(i){ \n" +
+                              "            case 1: \n" +
+                              "            int k;\n" +
+                              "            k = -1;\n" +
+                              "            int j = 1;\n" +
+                              "            break; \n" +
+                              "        } \n" +
+                              "    }\n" +
+                              "}\n");
+    }
+
+    public void testSplitDeclaration5() throws Exception {
+        HintTest
+                .create()
+                .setCaretMarker('|')
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    private void test() { \n" +
+                       "        int i = 1; \n" +
+                       "        switch(i){ \n" +
+                       "            case 1: \n" +
+                       "            final int k =| -1,j = 1;\n" +
+                       "            break; \n" +
+                       "        } \n" +
+                       "    }\n" +
+                       "}\n")
+                .sourceLevel("1.7")
+                .run(Tiny.class)
+                .findWarning("6:25-6:25:hint:ERR_splitDeclaration")
+                .applyFix("FIX_splitDeclaration")
+                .assertCompilable()
+                .assertOutput("package test;\n" +
+                              "public class Test {\n" +
+                              "    private void test() { \n" +
+                              "        int i = 1; \n" +
+                              "        switch(i){ \n" +
+                              "            case 1: \n" +
+                              "            final int k;\n" +
+                              "            k = -1;\n" +
+                              "            final int j = 1;\n" +
+                              "            break; \n" +
+                              "        } \n" +
+                              "    }\n" +
+                              "}\n");
+    }
+
     public void testSplitDeclarationForVar1() throws Exception {
         HintTest
                 .create()

@@ -29,7 +29,10 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
 import java.net.URI;
+import java.net.URL;
+import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 import javax.swing.event.ChangeListener;
 import javax.tools.JavaFileObject;
@@ -37,6 +40,7 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.preprocessorbridge.spi.JavaFileFilterImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Pair;
 import org.openide.util.Utilities;
 
 /**
@@ -151,6 +155,15 @@ public class FileObjectsTest extends NbTestCase {
         }
 
     }
+
+    public void testParsePatchModule() throws Exception {
+        Pair<String, List<URL>> patches = FileObjects.parseModulePatches(Arrays.asList("m=foo1:jar:file:bar!/:foo2").iterator());
+        Pair<String, List<URL>> expected = Pair.of("m", Arrays.asList(FileUtil.urlForArchiveOrDir(new File("foo1")),
+                                                                      new URL("jar:file:bar!/"),
+                                                                      FileUtil.urlForArchiveOrDir(new File("foo2"))));
+        assertEquals(expected, patches);
+    }
+
     private static enum Call {
         READER,
         WRITER,

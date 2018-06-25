@@ -232,17 +232,23 @@ public final class JavaCompletionTask<T> extends BaseTask {
     };
 
     private static final SourceVersion SOURCE_VERSION_RELEASE_10;
-
+    private static final SourceVersion SOURCE_VERSION_RELEASE_11;
     static {
-        SourceVersion r10;
+        SourceVersion r10, r11;
 
         try {
             r10 = SourceVersion.valueOf("RELEASE_10");
         } catch (IllegalArgumentException ex) {
             r10 = null;
         }
+        try {
+            r11 = SourceVersion.valueOf("RELEASE_11");
+        } catch (IllegalArgumentException ex) {
+            r11 = null;
+        }
 
         SOURCE_VERSION_RELEASE_10 = r10;
+        SOURCE_VERSION_RELEASE_11 = r11;
     }
 
     private final ItemFactory<T> itemFactory;
@@ -1903,6 +1909,11 @@ public final class JavaCompletionTask<T> extends BaseTask {
                         addPrimitiveTypeKeywords(env);
                         addKeyword(env, FINAL_KEYWORD, SPACE, false);
                     }
+                    //Assuming first parameter to be var type if position for the parameter type is not found.
+                    else if (!let.getParameters().isEmpty() && let.getParameters().get(0).getType() != null )
+                     {
+                        addVarTypeForLambdaParam(env);
+                    }
                     break;
             }
         }
@@ -2370,6 +2381,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             addLocalMembersAndVars(env);
             addTypes(env, EnumSet.of(CLASS, INTERFACE, ENUM, ANNOTATION_TYPE, TYPE_PARAMETER), null);
             addPrimitiveTypeKeywords(env);
+            addVarTypeForLambdaParam(env);
             addValueKeywords(env);
         } else {
             insideExpression(env, new TreePath(path, exp));
@@ -5867,5 +5879,33 @@ public final class JavaCompletionTask<T> extends BaseTask {
             }
         }
         return true;
+    }
+    
+    private void addVarTypeForLambdaParam(final Env env) throws IOException {
+        if (SOURCE_VERSION_RELEASE_11 == null || env.getController().getSourceVersion().compareTo(SOURCE_VERSION_RELEASE_11) < 0) {
+            return;
+        }
+
+        //Creating auto-complete 'var' item only for JDK-11 or above and if element is a functional interface.
+        final CompilationController controller = env.getController();
+        final Types types = controller.getTypes();
+        final Elements elements = controller.getElements();
+        Set<? extends TypeMirror> smartTypes = getSmartTypes(env);
+        if (smartTypes != null) {
+            for (TypeMirror st : smartTypes) {
+                if (st.getKind().isPrimitive()) {
+                    st = types.boxedClass((PrimitiveType) st).asType();
+                }
+                if (st.getKind() == TypeKind.DECLARED) {
+                    final DeclaredType type = (DeclaredType) st;
+                    final TypeElement element = (TypeElement) type.asElement();
+                    
+                    if (elements.isFunctionalInterface(element)) {
+                        results.add(itemFactory.createKeywordItem(VAR_KEYWORD, SPACE, anchorOffset, false));
+                        break;
+                    }
+                }
+            }
+        }
     }
 }

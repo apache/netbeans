@@ -22,7 +22,9 @@ import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.api.JavacTrees;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
 import java.util.HashMap;
@@ -73,4 +75,10 @@ public class NBJavacTrees extends JavacTrees {
     void addPathForElement(Element elem, TreePath path) {
         element2paths.put(elem, path);
     }
+
+    @Override
+    public Symbol getElement(TreePath path) {
+        return TreeInfo.symbolFor((JCTree) path.getLeaf());
+    }
+
 }

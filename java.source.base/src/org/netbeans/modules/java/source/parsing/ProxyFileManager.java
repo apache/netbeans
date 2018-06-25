@@ -636,6 +636,7 @@ public final class ProxyFileManager implements JavaFileManager {
         private final ClassPath moduleCompile;
         private final ClassPath bootCached;
         private final ClassPath compiledCached;
+        private final ClassPath src;
         private final ClassPath srcCached;
         private final ClassPath moduleSrcCached;
         private final ClassPath outputCached;
@@ -659,6 +660,7 @@ public final class ProxyFileManager implements JavaFileManager {
                 @NonNull final ClassPath moduleCompile,
                 @NonNull final ClassPath bootCached,
                 @NonNull final ClassPath compiledCached,
+                @NonNull final ClassPath src,
                 @NonNull final ClassPath srcCached,
                 @NonNull final ClassPath moduleSrcCached,
                 @NonNull final ClassPath outputCached,
@@ -670,6 +672,7 @@ public final class ProxyFileManager implements JavaFileManager {
             assert moduleCompile != null;
             assert bootCached != null;
             assert compiledCached != null;
+            assert src != null;
             assert srcCached != null;
             assert outputCached != null;
             assert aptSrcCached != null;
@@ -681,6 +684,7 @@ public final class ProxyFileManager implements JavaFileManager {
             this.moduleCompile = moduleCompile;
             this.bootCached = bootCached;
             this.compiledCached = compiledCached;
+            this.src = src;
             this.srcCached = srcCached;
             this.moduleSrcCached = moduleSrcCached;
             this.outputCached = outputCached;
@@ -746,7 +750,7 @@ public final class ProxyFileManager implements JavaFileManager {
                 if (TreeLoaderOutputFileManager.OUTPUT_ROOT.equals(hint)) {
                     createTreeLoaderFileManager();
                 }
-                if (JavacParser.OPTION_PATCH_MODULE.equals(hint)) {
+                if (JavacParser.OPTION_PATCH_MODULE.equals(hint) || (hint != null && hint.startsWith(JavacParser.NB_X_MODULE))) {
                     createPatchFileManager();
                     createModuleSrcFileManager();
                 }
@@ -995,7 +999,8 @@ public final class ProxyFileManager implements JavaFileManager {
             if (emitted[MODULE_PATCHES] == null) {
                 emitted[MODULE_PATCHES] = new PatchModuleFileManager(
                         new ModuleFileManager(cap, ClassPath.EMPTY, ROOT_TO_COLLECTION, sourceLevel, StandardLocation.MODULE_PATH, false),
-                        new ModuleSourceFileManager(ClassPath.EMPTY, ClassPath.EMPTY, ignoreExcludes)
+                        new ModuleSourceFileManager(ClassPath.EMPTY, ClassPath.EMPTY, ignoreExcludes),
+                        this.src
                 );
             }
             return emitted[MODULE_PATCHES];
@@ -1007,6 +1012,7 @@ public final class ProxyFileManager implements JavaFileManager {
                 @NonNull final ClassPath moduleCompile,
                 @NonNull final ClassPath bootCached,
                 @NonNull final ClassPath compiledCached,
+                @NonNull final ClassPath src,
                 @NonNull final ClassPath srcCached,
                 @NonNull final ClassPath moduleSrcCached,
                 @NonNull final ClassPath outputCached,
@@ -1019,6 +1025,7 @@ public final class ProxyFileManager implements JavaFileManager {
                 moduleCompile,
                 bootCached,
                 compiledCached,
+                src,
                 srcCached,
                 moduleSrcCached,
                 outputCached,

@@ -49,7 +49,6 @@ import java.nio.channels.CompletionHandler;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -61,8 +60,6 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.jar.Manifest;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -100,8 +97,6 @@ import org.openide.util.Pair;
  * @author Tomas Zezula
  */
 public class FileObjects {
-
-    private static final Logger LOG = Logger.getLogger(FileObjects.class.getName());
 
     public static final Comparator<String> SIMPLE_NAME_STRING_COMPARATOR = new Comparator<String>(){
         @Override
@@ -939,29 +934,10 @@ public class FileObjects {
             final Matcher m = MATCHER_PATCH.matcher(tail.next());
             if (m.matches() && m.groupCount() == 2) {
                 final String module = m.group(1);
-                final String locations = m.group(2);
-                List<URL> patches = new ArrayList<>();
-                int pos = 0;
-                while (pos < locations.length()) {
-                    int split;
-                    if (locations.startsWith("jar:file:", pos)) {
-                        split = locations.indexOf(File.pathSeparator, pos + "jar:file:".length());
-                    } else {
-                        split = locations.indexOf(File.pathSeparator, pos);
-                    }
-                    split = split != (-1) ? split : locations.length();
-                    String path = locations.substring(pos, split);
-                    if (path.startsWith("jar:file:")) {
-                        try {
-                            patches.add(new URL(path));
-                        } catch (MalformedURLException ex) {
-                            LOG.log(Level.FINE, null, ex);
-                        }
-                    } else {
-                        patches.add(FileUtil.urlForArchiveOrDir(FileUtil.normalizeFile(new File(path))));
-                    }
-                    pos = split + 1;
-                }
+                final List<URL> patches = Arrays.stream(m.group(2).split(File.pathSeparator))
+                        .map((p) -> FileUtil.normalizeFile(new File(p)))
+                        .map(FileUtil::urlForArchiveOrDir)
+                        .collect(Collectors.toList());
                 return Pair.of(module, patches);
             }
         }

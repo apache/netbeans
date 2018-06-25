@@ -55,15 +55,18 @@ final class PatchModuleFileManager implements JavaFileManager {
     private static final Logger LOG = Logger.getLogger(PatchModuleFileManager.class.getName());
     private final JavaFileManager binDelegate;
     private final JavaFileManager srcDelegate;
+    private final ClassPath src;
     private final Map<String,List<URL>> patches;
     private final Map<URL, String> roots;
     private Set<PatchLocation> moduleLocations;
 
     PatchModuleFileManager(
             @NonNull final JavaFileManager binDelegate,
-            @NonNull final JavaFileManager srcDelegate) {
+            @NonNull final JavaFileManager srcDelegate,
+            @NonNull ClassPath src) {
         this.binDelegate = binDelegate;
         this.srcDelegate = srcDelegate;
+        this.src = src;
         this.patches = new HashMap<>();
         this.roots = new HashMap<>();
     }
@@ -150,24 +153,30 @@ final class PatchModuleFileManager implements JavaFileManager {
         if (JavacParser.OPTION_PATCH_MODULE.equals(head)) {
             final Pair<String,List<URL>> modulePatches = FileObjects.parseModulePatches(tail);
             if (modulePatches != null) {
-                final String moduleName = modulePatches.first();
-                final List<URL> patchURLs = modulePatches.second();
-                if (patches.putIfAbsent(moduleName, patchURLs) == null) {
-                    for (URL url : patchURLs) {
-                        roots.put(url, moduleName);
-                    }
-                } else {
-                    //Don't abort compilation by Abort
-                    //Log error into javac Logger doe not help - no source to attach to.
-                    LOG.log(
-                            Level.WARNING,
-                            "Duplicate " +JavacParser.OPTION_PATCH_MODULE+ " option, ignoring: {0}",    //NOI18N
-                            modulePatches.second());
-                }
+                addModulePatches(modulePatches.first(), modulePatches.second());
                 return true;
             }
+        } else if (head.startsWith(JavacParser.NB_X_MODULE)) {
+            addModulePatches(head.substring(JavacParser.NB_X_MODULE.length()),
+                             src.entries().stream().map(e -> e.getURL()).collect(Collectors.toList()));
+            return true;
         }
         return false;
+    }
+
+    private void addModulePatches(final String moduleName, final List<URL> patchURLs) {
+        if (patches.putIfAbsent(moduleName, patchURLs) == null) {
+            for (URL url : patchURLs) {
+                roots.put(url, moduleName);
+            }
+        } else {
+            //Don't abort compilation by Abort
+            //Log error into javac Logger doe not help - no source to attach to.
+            LOG.log(
+                    Level.WARNING,
+                    "Duplicate " +JavacParser.OPTION_PATCH_MODULE+ " option, ignoring: {0}",    //NOI18N
+                    patchURLs);
+        }
     }
 
     @Override

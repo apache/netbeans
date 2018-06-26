@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="java.examples" default="netbeans" basedir=".">
+<project name="java.examples" default="build" basedir=".">
 
     <import file="../nbbuild/templates/projectized.xml"/>
 

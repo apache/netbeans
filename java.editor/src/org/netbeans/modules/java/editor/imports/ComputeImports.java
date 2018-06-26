@@ -26,6 +26,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ParameterizedTypeTree;
@@ -249,6 +250,10 @@ public final class ComputeImports {
         
         unresolvedNames.addAll(JavadocImports.computeUnresolvedImports(info));
         
+        Set<String> unresolvedNonTypes = new HashSet<String>(v.unresolvedNonTypes);
+
+        unresolvedNonTypes.addAll(forcedUnresolved);
+
         for (String unresolved : unresolvedNames) {
             if (isCancelled())
                 return;
@@ -276,24 +281,26 @@ public final class ComputeImports {
                 }
             }
             
-            Iterable<Symbols> simpleNames = cpInfo.getClassIndex().getDeclaredSymbols(unresolved, NameKind.SIMPLE_NAME,EnumSet.allOf(ClassIndex.SearchScope.class));
+            if (unresolvedNonTypes.contains(unresolved)) {
+                Iterable<Symbols> simpleNames = cpInfo.getClassIndex().getDeclaredSymbols(unresolved, NameKind.SIMPLE_NAME,EnumSet.allOf(ClassIndex.SearchScope.class));
 
-            if (simpleNames == null) {
-                //Canceled:
-                return;
-            }
-            
-            for (final Symbols p : simpleNames) {
-                if (isCancelled())
+                if (simpleNames == null) {
+                    //Canceled:
                     return;
+                }
 
-                final TypeElement te = p.getEnclosingType().resolve(allInfo);
-                final Set<String> idents = p.getSymbols();
-                if (te != null) {
-                    for (Element ne : te.getEnclosedElements()) {
-                        if (!ne.getModifiers().contains(Modifier.STATIC)) continue;
-                        if (idents.contains(getSimpleName(ne, te))) {
-                            classes.add(ne);
+                for (final Symbols p : simpleNames) {
+                    if (isCancelled())
+                        return;
+
+                    final TypeElement te = p.getEnclosingType().resolve(allInfo);
+                    final Set<String> idents = p.getSymbols();
+                    if (te != null) {
+                        for (Element ne : te.getEnclosedElements()) {
+                            if (!ne.getModifiers().contains(Modifier.STATIC)) continue;
+                            if (idents.contains(getSimpleName(ne, te))) {
+                                classes.add(ne);
+                            }
                         }
                     }
                 }
@@ -470,14 +477,17 @@ public final class ComputeImports {
     private static class TreeVisitorImpl extends CancellableTreePathScanner<Void, Map<String, Object>> {
         
         private final CompilationInfo info;
+        private boolean onlyTypes;
         private Set<String> unresolved;
+        private Set<String> unresolvedNonTypes;
         
         private List<Hint> hints;
         
         public TreeVisitorImpl(CompilationInfo info) {
             this.info = info;
-            unresolved = new HashSet<String>();
-            hints = new ArrayList<Hint>();
+            unresolved = new HashSet<>();
+            unresolvedNonTypes = new HashSet<>();
+            hints = new ArrayList<>();
         }
         
         @Override
@@ -516,7 +526,7 @@ public final class ComputeImports {
                 p.put("request", null);
             }
             
-            scan(tree.getType(), p);
+            scan(tree.getType(), p, true);
             
             Union2<String, DeclaredType> leftSide = (Union2<String, DeclaredType>) p.remove("result");
             
@@ -635,6 +645,10 @@ public final class ComputeImports {
                     if (simpleName != null) {
                         unresolved.add(simpleName);
 
+                        if (!onlyTypes) {
+                            unresolvedNonTypes.add(simpleName);
+                        }
+
                         Scope currentScope = getScope();
 
                         hints.add(new AccessibleHint(simpleName, currentScope));
@@ -659,8 +673,8 @@ public final class ComputeImports {
         public Void visitNewClass(NewClassTree node, Map<String, Object> p) {
             filterByNotAcceptedKind(node.getIdentifier(), ElementKind.ENUM);
             scan(node.getEnclosingExpression(), new HashMap<String, Object>());
-            scan(node.getIdentifier(), p);
-            scan(node.getTypeArguments(), new HashMap<String, Object>());
+            scan(node.getIdentifier(), p, true);
+            scan(node.getTypeArguments(), new HashMap<String, Object>(), true);
             scan(node.getArguments(), new HashMap<String, Object>());
             scan(node.getClassBody(), new HashMap<String, Object>());
             return null;
@@ -668,7 +682,7 @@ public final class ComputeImports {
 
         @Override
         public Void visitMethodInvocation(MethodInvocationTree node, Map<String, Object> p) {
-            scan(node.getTypeArguments(), new HashMap<String, Object>());
+            scan(node.getTypeArguments(), new HashMap<String, Object>(), true);
             scan(node.getMethodSelect(), p);
             scan(node.getArguments(), new HashMap<String, Object>());
             return null;
@@ -676,7 +690,7 @@ public final class ComputeImports {
 
         @Override
         public Void visitNewArray(NewArrayTree node, Map<String, Object> p) {
-            scan(node.getType(), p);
+            scan(node.getType(), p, true);
             scan(node.getDimensions(), new HashMap<String, Object>());
             scan(node.getInitializers(), new HashMap<String, Object>());
             return null;
@@ -697,13 +711,52 @@ public final class ComputeImports {
                     filterByAcceptedKind(intf, ElementKind.INTERFACE, ElementKind.ANNOTATION_TYPE);
                 }
             }
-            return super.visitClass(node, p);
+
+            scan(node.getModifiers(), p);
+            scan(node.getTypeParameters(), p, true);
+            scan(node.getExtendsClause(), p, true);
+            scan(node.getImplementsClause(), p, true);
+            scan(node.getMembers(), p);
+
+            return null;
         }
 
         @Override
         public Void visitAnnotation(AnnotationTree node, Map<String, Object> p) {
             filterByAcceptedKind(node.getAnnotationType(), ElementKind.ANNOTATION_TYPE);
-            return super.visitAnnotation(node, p);
+            scan(node.getAnnotationType(), p, true);
+            scan(node.getArguments(), p, false);
+            return null;
+        }
+
+        @Override
+        public Void visitMethod(MethodTree node, Map<String, Object> p) {
+            scan(node.getModifiers(), p);
+            scan(node.getTypeParameters(), p, true);
+            scan(node.getReturnType(), p, true);
+            scan(node.getReceiverParameter(), p);
+            scan(node.getParameters(), p);
+            scan(node.getThrows(), p, true);
+            scan(node.getDefaultValue(), p);
+            scan(node.getBody(), p);
+            return null;
+        }
+
+        private void scan(Iterable<? extends Tree> trees, Map<String, Object> p, boolean onlyTypes) {
+            for (Tree tree : trees) {
+                scan(tree, p, onlyTypes);
+            }
+        }
+
+        private void scan(Tree tree, Map<String, Object> p, boolean onlyTypes) {
+            boolean oldOnlyTypes = this.onlyTypes;
+
+            try {
+                this.onlyTypes = onlyTypes;
+                scan(tree, p);
+            } finally {
+                this.onlyTypes = oldOnlyTypes;
+            }
         }
         
         private Scope topLevelScope;

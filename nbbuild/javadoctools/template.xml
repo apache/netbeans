@@ -173,7 +173,7 @@ cause it to fail.
 
     <target name="javadoc-check-timestamps" depends="javadoc-init">
         <uptodate targetfile="${javadoc.out.zip}" property="javadoc.up.to.date">
-            <srcfiles dir="${javadoc.src}">
+            <srcfiles dir="${javadoc.src}" erroronmissingdir="false">
                 <or>
                     <and>
                         <selector refid="${javadoc.files}" />

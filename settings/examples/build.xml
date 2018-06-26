@@ -20,7 +20,7 @@
 
 -->
 
-<project name="settings/examples" default="netbeans" basedir=".">
+<project name="settings/examples" default="build" basedir=".">
 
     <property name="nbm_alias" value="nb_ide"/>
     <property name="homepage.base" value="netbeans.org"/>

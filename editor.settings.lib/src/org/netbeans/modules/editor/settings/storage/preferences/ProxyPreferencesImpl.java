@@ -25,6 +25,7 @@ import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EventObject;
@@ -43,7 +44,6 @@ import java.util.prefs.NodeChangeListener;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
-import javax.xml.bind.DatatypeConverter;
 import org.netbeans.modules.editor.settings.storage.api.OverridePreferences;
 import org.netbeans.modules.editor.settings.storage.spi.TypedValue;
 import org.openide.util.WeakListeners;
@@ -282,14 +282,14 @@ public final class ProxyPreferencesImpl extends Preferences implements Preferenc
 
     @Override
     public void putByteArray(String key, byte[] value) {
-        _put(key, DatatypeConverter.printBase64Binary(value), value.getClass().getName());
+        _put(key, Base64.getEncoder().encodeToString(value), value.getClass().getName());
     }
 
     @Override
     public byte[] getByteArray(String key, byte[] def) {
         String value = get(key, null);
         if (value != null) {
-            byte [] decoded = DatatypeConverter.parseBase64Binary(value);
+            byte [] decoded = Base64.getDecoder().decode(value);
             if (decoded != null) {
                 return decoded;
             }
@@ -476,7 +476,7 @@ public final class ProxyPreferencesImpl extends Preferences implements Preferenc
                             delegate.putDouble(key, Double.parseDouble(typedValue.getValue()));
 
                         } else {
-                            delegate.putByteArray(key, DatatypeConverter.parseBase64Binary(typedValue.getValue()));
+                            delegate.putByteArray(key, Base64.getDecoder().decode(typedValue.getValue()));
                         }
                     }
                 }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/debugger/jpda/resources/field.gif</file>
+        <file>src/org/netbeans/modules/debugger/jpda/resources/packageOpen.gif</file>
+        <file>src/org/netbeans/modules/debugger/jpda/resources/ExprArguments.gif</file>
+        <file>src/org/netbeans/modules/debugger/jpda/resources/drop_down_arrow2.png</file>
+        <file>src/org/netbeans/modules/debugger/jpda/resources/CallStackFrameGroup.gif</file>
+        <file>src/org/netbeans/modules/debugger/jpda/resources/classLoader.gif</file>
+        <file>src/org/netbeans/modules/debugger/jpda/resources/classLoaderOpen.gif</file>
+        <file>src/org/netbeans/modules/debugger/jpda/resources/wrong_pass.png</file>
+        <file>src/org/netbeans/modules/debugger/jpda/resources/completion_package.gif</file>
+        <file>src/org/netbeans/modules/debugger/jpda/resources/show_property_editors_16.png</file>
+        <file>src/org/netbeans/modules/debugger/jpda/resources/show_variable_values_16.png</file>
+        <file>src/org/netbeans/modules/debugger/jpda/resources/Filter.gif</file>
+        <file>src/org/netbeans/modules/debugger/jpda/resources/package.gif</file>
+        <file>src/org/netbeans/modules/debugger/jpda/resources/class.gif</file>
+        <file>src/org/netbeans/modules/debugger/jpda/resources/interface.gif</file>
+        <file>src/org/netbeans/modules/debugger/jpda/resources/formatters_options_16.png</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

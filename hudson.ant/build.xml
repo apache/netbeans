@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="hudson.ant">
+<project basedir="." default="build" name="hudson.ant">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

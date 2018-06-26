@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="jumpto">
+<project basedir="." default="build" name="jumpto">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

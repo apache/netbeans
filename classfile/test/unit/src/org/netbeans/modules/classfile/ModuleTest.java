@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.classfile;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -139,13 +140,33 @@ public class ModuleTest extends TestCase {
     }
 
     public void testOldModuleInfoCrash() throws IOException {
-        try(final InputStream in = this.getClass().getResourceAsStream("datafiles/old_version_module-info.clz")) {
+        try(final InputStream in = new ByteArrayInputStream(DATA)) {
             final ClassFile cf = new ClassFile(in);
             assertNull(cf.getModule());
             //Check other attributes are not broken
             assertEquals("module-info.java", cf.getSourceFileName());
         }
     }
+
+    private static final byte[] DATA = {
+        (byte) 0xCA, (byte) 0xFE, (byte) 0xBA, (byte) 0xBE, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x35,
+        (byte) 0x00, (byte) 0x07, (byte) 0x07, (byte) 0x00, (byte) 0x06, (byte) 0x01, (byte) 0x00, (byte) 0x0A,
+        (byte) 0x53, (byte) 0x6F, (byte) 0x75, (byte) 0x72, (byte) 0x63, (byte) 0x65, (byte) 0x46, (byte) 0x69,
+        (byte) 0x6C, (byte) 0x65, (byte) 0x01, (byte) 0x00, (byte) 0x10, (byte) 0x6D, (byte) 0x6F, (byte) 0x64,
+        (byte) 0x75, (byte) 0x6C, (byte) 0x65, (byte) 0x2D, (byte) 0x69, (byte) 0x6E, (byte) 0x66, (byte) 0x6F,
+        (byte) 0x2E, (byte) 0x6A, (byte) 0x61, (byte) 0x76, (byte) 0x61, (byte) 0x01, (byte) 0x00, (byte) 0x06,
+        (byte) 0x4D, (byte) 0x6F, (byte) 0x64, (byte) 0x75, (byte) 0x6C, (byte) 0x65, (byte) 0x01, (byte) 0x00,
+        (byte) 0x09, (byte) 0x6A, (byte) 0x61, (byte) 0x76, (byte) 0x61, (byte) 0x2E, (byte) 0x62, (byte) 0x61,
+        (byte) 0x73, (byte) 0x65, (byte) 0x01, (byte) 0x00, (byte) 0x17, (byte) 0x44, (byte) 0x65, (byte) 0x66,
+        (byte) 0x50, (byte) 0x61, (byte) 0x63, (byte) 0x6B, (byte) 0x61, (byte) 0x67, (byte) 0x65, (byte) 0x31,
+        (byte) 0x2F, (byte) 0x6D, (byte) 0x6F, (byte) 0x64, (byte) 0x75, (byte) 0x6C, (byte) 0x65, (byte) 0x2D,
+        (byte) 0x69, (byte) 0x6E, (byte) 0x66, (byte) 0x6F, (byte) 0x80, (byte) 0x00, (byte) 0x00, (byte) 0x01,
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+        (byte) 0x00, (byte) 0x02, (byte) 0x00, (byte) 0x02, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x02,
+        (byte) 0x00, (byte) 0x03, (byte) 0x00, (byte) 0x04, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x0C,
+        (byte) 0x00, (byte) 0x01, (byte) 0x00, (byte) 0x05, (byte) 0x80, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+    };
 
     private void doTest(
             final String moduleName,

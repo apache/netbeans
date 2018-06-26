@@ -22,6 +22,7 @@ package org.openide.loaders;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.EventQueue;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +30,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
@@ -51,8 +53,17 @@ public class TemplateWizardTest extends NbTestCase {
     }
     
     protected void setUp() throws Exception {
-         FileObject fo = FileUtil.getConfigRoot ();
-         FileUtil.createFolder (fo, "Templates");
+        // set up user directory
+        clearWorkDir();
+        File wd = new File(getWorkDir(), "config");
+        wd.mkdirs();
+        System.setProperty("netbeans.user", wd.toString());
+        FileObject fo = FileUtil.getConfigRoot ();
+        FileUtil.createFolder (fo, "Templates");
+    }
+    
+    protected void tearDown() {
+        System.getProperties().remove("netbeans.user");
     }
 
     /** Does getIterator honours DataObject's cookies?
@@ -197,6 +208,45 @@ public class TemplateWizardTest extends NbTestCase {
                 doNextOnIterImpl (true);
             }
         });
+    }
+    
+    /**
+     * When creating file on Config FS, the resulting object must be created
+     * on the config FS and not on the underlying OS filesystem visible through
+     * FileSystem APIs.
+     */
+    public void testWizardConfigLocation() throws Exception {
+        final TemplateWizard tw = new TemplateWizard();
+        FileObject cf = FileUtil.getConfigRoot().createFolder("target"); // NOI18N
+        DataFolder target = DataFolder.findFolder(cf);
+        tw.setTargetFolder(target);
+        
+        // folder does not have a default action -> instantiate does not open an editor
+        FileObject f = FileUtil.getConfigFile("Templates").createFolder("bubu"); // NOI18N
+        tw.setTemplate(DataObject.find(f));
+
+        tw.initialize();
+        final TemplateWizardIterImpl iter = tw.getIterImpl ();
+        iter.first();
+        // initialize the target
+        iter.nextPanel();
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                // this is what is called by UI on Finish
+                tw.updateState();
+                iter.getIterator().current().storeSettings(tw);
+            }
+        });
+        tw.setValue(TemplateWizard.FINISH_OPTION);
+        Set<DataObject> result = iter.instantiate();
+        assertNotNull(result);
+        assertFalse(result.isEmpty());
+        
+        FileObject tf = result.iterator().next().getPrimaryFile();
+        
+        // check that the object is really created on config fs
+        assertTrue(FileUtil.isParentOf(cf, tf));
     }
     
     private void doNextOnIterImpl (boolean notify) {

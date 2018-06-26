@@ -96,6 +96,9 @@
         <exclude name="**/package.html"/>
         <exclude name="package-list"/>
       </fileset>
+      <zipfileset dir="${nb_all}" includes="LICENSE" fullpath="META-INF/LICENSE"/>
+      <zipfileset dir="${nb_all}/nbbuild" includes="notice-stub.txt" fullpath="META-INF/NOTICE"/>
+      <zipfileset dir="${nb_all}" includes="DISCLAIMER" fullpath="META-INF/DISCLAIMER"/>
     </jar>
     <taskdef name="createlicensesummary" classname="org.netbeans.nbbuild.extlibs.CreateLicenseSummary" classpath="${nbantext.jar}"/>
   </target>
@@ -161,13 +164,7 @@
   <target name="init-module-list" depends="bootstrap,init-tasks,prepare-vanilla-javac">
     <!-- Define modules. -->
     <checkmoduleconfigs nbroot=".."/>
-    <resolvelist name="allmodules" list="${nb.clusters.list}"/>
-    <pathconvert property="modules.fullpath" >
-        <path>
-            <dirset dir="${nb_all}" includes="${allmodules}" />
-        </path>
-        <mapper type="identity" />
-    </pathconvert>
+    <resolvelist name="allmodules" path="modules.fullpath" dir="${nb_all}" list="${nb.clusters.list}"/>
     <sortsuitemodules unsortedmodules="${modules.fullpath}" sortedmodulesproperty="modules.sorted"/>
   </target>
 
@@ -208,6 +205,7 @@
       <subant-junit target="nbm" failonerror="${nbms.fail.on.error}" report="${nb.build.dir}/build-nbms.xml" inheritall="false">
           <buildpath path="${modules.sorted}"/>
           <property name="base.nbm.target.dir" value="${base.nbm.target.dir}"/>
+          <property name="nbm.always.create" value="true" />
       </subant-junit>
   </target>
 
@@ -1031,11 +1029,11 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
    >
     <script language="javascript">
         v = ''
-        i = new java.util.TreeMap(project.properties).entrySet().iterator()
+        i = new Packages.java.util.TreeMap(project.getProperties()).entrySet().iterator()
         while (i.hasNext()) {
             e = i.next()
-            if (e.key.startsWith('tryme.arg.')) {
-                v += ' ' + e.value
+            if (e.getKey().startsWith('tryme.arg.')) {
+                v += ' ' + e.getValue()
             }
         }
         project.setNewProperty('tryme.args', v)
@@ -1555,8 +1553,8 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
           <filterchain>
               <tokenfilter>
                   <filetokenizer />
-                  <replaceregex pattern="(\r?\n)(\r?\n)+"
-                                replace="\1\1"
+                  <replaceregex pattern="(\r?\n)(\r?\n)(\r?\n)+"
+                                replace="\1\1\1"
                                 flags="g" />
              </tokenfilter>
           </filterchain>
@@ -1596,11 +1594,11 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <include name="libs.antlr3.devel/external/binaries-list"/>
         </manifest>
     </downloadbinaries>
-    <createlicensesummary licenseStub="${nb_all}/LICENSE" 
-                          noticeStub="notice-stub.txt" 
-                          report="${nb.build.dir}/createlicensesummary.xml" 
-                          nball=".." 
-                          build="${netbeans.build.dir}" 
+    <createlicensesummary licenseStub="${nb_all}/LICENSE"
+                          noticeStub="notice-stub.txt"
+                          report="${nb.build.dir}/createlicensesummary.xml"
+                          nball=".."
+                          build="${netbeans.build.dir}"
                           license="${nb.build.dir}/LICENSE"
                           licenseTargetDir="${nb.build.dir}/licenses"
                           notice="${nb.build.dir}/NOTICE"
@@ -1891,9 +1889,10 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
       <property name="catalog.notification.url"     value=""/>
       <property name="catalog.content.description"  value=""/>
       <property name="catalog.content.description.url" value=""/>
+      <property name="catalog.license.header" value="${nb_all}/nbbuild/catalog-license-header.txt"/>
 
 <!--      <genau config="ausrc/modules.setup" nbmLocation="${nbms.location}" catalog="${catalog.file}" catalogDeploymentLocation="${catalog.base.url}"/>-->
-      <makeupdatedesc desc="${catalog.file}" distbase="${catalog.base.url}" automaticgrouping="true" uselicenseurl="${use.license.url.in.catalog}" notificationmessage="${catalog.notification.message}" notificationurl="${catalog.notification.url}" contentdescription="${catalog.content.description}" contentdescriptionurl="${catalog.content.description.url}">
+      <makeupdatedesc desc="${catalog.file}" distbase="${catalog.base.url}" automaticgrouping="true" uselicenseurl="${use.license.url.in.catalog}" notificationmessage="${catalog.notification.message}" notificationurl="${catalog.notification.url}" contentdescription="${catalog.content.description}" contentdescriptionurl="${catalog.content.description.url}" desclicense="${catalog.license.header}">
           <fileset dir="${nbms.location}">
               <include name="**/*.nbm"/>
               <include name="**/*.jar"/>
@@ -2090,15 +2089,13 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             </classpath>
         </taskdef>
         
-        <exclusionsfromlicenseinfo nball=".." licenseinfoFileset="exclusionsfromlicenseinfo" />
+        <exclusionsfromlicenseinfo nball=".." licenseinfoFileset="exclusionsfromlicenseinfo" exclusionFile="build/rat-exclusions-licenseinfo.txt"/>
         
-        <difference id="rat.files">
-            <fileset dir="${nb_all}">
-                <excludesfile name="rat-exclusions.txt" />
-            </fileset>
-            <fileset refid="exclusionsfromlicenseinfo" />
-        </difference>
-
+        <fileset dir="${nb_all}" id="rat.files">
+            <excludesfile name="rat-exclusions.txt" />
+            <excludesfile name="build/rat-exclusions-licenseinfo.txt" />
+        </fileset>
+        
         <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" reportfile="build/rat-report.txt">
             <rat:fullTextMatcher licenseFamilyCategory="AL" licenseFamilyName="Apache License 2.0 Short header">
                 Licensed to the Apache Software Foundation (ASF) under one or more contributor 

@@ -60,6 +60,9 @@ import org.openide.loaders.DataObject;
 public class ComputeImportsTest extends NbTestCase {
     
     private static final Set<String> IGNORE_CLASSES = new HashSet<String>(Arrays.asList(new String[] {
+        "com.sun.tools.javac.util.List",
+        "com.sun.tools.javac.code.Attribute.RetentionPolicy",
+        "com.sun.tools.classfile.Opcode.Set",
         "com.sun.xml.bind.v2.schemagen.xmlschema.List",
         "com.sun.xml.txw2.Document",
         "com.sun.xml.internal.txw2.Document",
@@ -210,6 +213,10 @@ public class ComputeImportsTest extends NbTestCase {
         doTest("StaticImports233117", "1.8");
     }
     
+    public void testNotImportFieldAsClass() throws Exception {
+        doTest("TestNotImportFieldAsClass");
+    }
+
     private void prepareTest(String capitalizedName, String sourceLevel) throws Exception {
         FileObject workFO = FileUtil.toFileObject(getWorkDir());
         

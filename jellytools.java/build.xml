@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="jellytools.java">
+<project basedir="." default="build" name="jellytools.java">
     <description>Builds, tests, and runs the project jellytools.java</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

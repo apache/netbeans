@@ -20,7 +20,7 @@
 
 -->
 
-<project name="updatecenters" default="netbeans" basedir=".">
+<project name="updatecenters" default="build" basedir=".">
 
   <import file="../nbbuild/templates/projectized.xml"/>
 

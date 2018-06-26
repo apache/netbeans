@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="spellchecker.kit">
+<project basedir="." default="build" name="spellchecker.kit">
     <description>Builds, tests, and runs the project org.netbeans.modules.spellchecker.kit</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

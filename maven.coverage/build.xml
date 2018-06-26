@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="maven.coverage">
+<project basedir="." default="build" name="maven.coverage">
     <description>Builds, tests, and runs the project org.netbeans.modules.maven.coverage</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

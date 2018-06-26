@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="api.progress.compat8">
+<project basedir="." default="build" name="api.progress.compat8">
     <description>Builds, tests, and runs the project api.progress.compat8</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

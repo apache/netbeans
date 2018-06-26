@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="lib.uihandler">
+<project basedir="." default="build" name="lib.uihandler">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

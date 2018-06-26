@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." name="apisupport.installer" default="netbeans">
+<project basedir="." name="apisupport.installer" default="build">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

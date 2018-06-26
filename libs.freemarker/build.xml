@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="libs.freemarker" default="netbeans" basedir=".">
+<project name="libs.freemarker" default="build" basedir=".">
   <import file="../nbbuild/templates/projectized.xml"/>
   
   <property name="freemarker.jar" location="${basedir}/external/freemarker.jar"/>

@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="editor.indent.project">
+<project basedir="." default="build" name="editor.indent.project">
     <description>Builds, tests, and runs the project org.netbeans.modules.editor.indent.project</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

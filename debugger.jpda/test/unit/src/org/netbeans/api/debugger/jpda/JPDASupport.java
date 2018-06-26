@@ -46,6 +46,8 @@ import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbModuleSuite.Configuration;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.util.Exceptions;
 
 /**
  * Contains support functionality for unit tests.
@@ -82,7 +84,25 @@ public class JPDASupport implements DebuggerManagerListener {
     
     public static Test createTestSuite(Class<? extends TestCase> clazz) {
         Configuration suiteConfiguration = NbModuleSuite.createConfiguration(clazz);
-        suiteConfiguration = suiteConfiguration.gui(false);
+        suiteConfiguration = suiteConfiguration.clusters(".*").enableModules(".*java.source.*").gui(false);
+        if (!(ClassLoader.getSystemClassLoader() instanceof URLClassLoader)) {
+            //when running on JDK 9+, to make the com.sun.jdi package dependency work, we need to make getPackage("com.sun.jdi") work
+            //for system CL's parent (which otherwise happily loads the VirtualMachineManager class,
+            //but won't return the package from getPackage due to JDK "specialty":
+            suiteConfiguration = suiteConfiguration.parentClassLoader(new ClassLoader(ClassLoader.getSystemClassLoader().getParent()) {
+                @Override
+                protected Package getPackage(String pack) {
+                    if ("com.sun.jdi".equals(pack)) {
+                        try {
+                            return loadClass("com.sun.jdi.VirtualMachineManager").getPackage();
+                        } catch (ClassNotFoundException ex) {
+                            throw new IllegalStateException(ex);
+                        }
+                    }
+                    return super.getPackage(pack);
+                }
+            });
+        }
         //suiteConfiguration = suiteConfiguration.reuseUserDir(false);
         return NbModuleSuite.create(suiteConfiguration);
     }
@@ -133,22 +153,6 @@ public class JPDASupport implements DebuggerManagerListener {
 //        pio.go ();
 //        return new JPDASupport (jpdaDebugger);
 //    }
-
-    private static void deleteUserDir() {
-        String userDir = System.getProperty("netbeans.user");
-        if (userDir != null) {
-            delete(new File(userDir));
-        }
-    }
-    
-    private static void delete(File f) {
-        if (f.isDirectory()) {
-            for (File cf : f.listFiles()) {
-                delete(cf);
-            }
-        }
-        f.delete();
-    }
 
     public static JPDASupport attach (String mainClass) throws IOException, 
     DebuggerStartException {
@@ -241,7 +245,6 @@ public class JPDASupport implements DebuggerManagerListener {
         debuggerEngine.getActionsManager ().
             doAction (ActionsManager.ACTION_KILL);
         waitState (JPDADebugger.STATE_DISCONNECTED);
-        deleteUserDir();
     }
 
     public void waitState (int state) {

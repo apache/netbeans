@@ -26,6 +26,7 @@ import java.beans.PropertyDescriptor;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
 import javax.swing.*;
 import javax.swing.event.*;
 import org.openide.WizardDescriptor;
@@ -44,6 +45,7 @@ final class TemplateWizard2 extends javax.swing.JPanel implements DocumentListen
     
     private static final String PROP_LOCATION_FOLDER = "locationFolder"; // NOI18N
     private File locationFolder;
+    private DataFolder locationDataFolder;
     private DefaultPropertyModel locationFolderModel;
 
     /** File extension of the template and of the created file -
@@ -392,7 +394,39 @@ final class TemplateWizard2 extends javax.swing.JPanel implements DocumentListen
     private javax.swing.JTextField newObjectName;
     // End of variables declaration//GEN-END:variables
 
+    private DataFolder findRelativeFolder(File fd) {
+        if (locationDataFolder == null) {
+            return null;
+        }
+        File f = FileUtil.toFile(locationDataFolder.getPrimaryFile());
+        if (f == null) {
+            return null;
+        } else if (f.equals(fd)) {
+            return locationDataFolder;
+        }
+        // attempt to locate neighbouring file on the DF's filesystem
+        FileObject folderFO = locationDataFolder.getPrimaryFile();
+        File lf = FileUtil.toFile(folderFO);
+        if (lf != null) {
+            try {
+                Path p = lf.toPath().relativize(fd.toPath());
+                FileObject newDF = folderFO.getFileObject(p.toString());
+                if (newDF != null) {
+                    return DataFolder.findFolder(newDF);
+                }
+            } catch (IllegalArgumentException ex) {
+                // cannot relativize
+            }
+        }
+        return null;
+    }
+    
     public void setLocationFolder(File fd) {
+        locationDataFolder = findRelativeFolder(fd);
+        setLocationFolder0(fd);
+    }
+    
+    private void setLocationFolder0(File fd) {
         if (locationFolder == fd)
             return ;
         if (locationFolder != null && locationFolder.equals (fd))
@@ -405,14 +439,19 @@ final class TemplateWizard2 extends javax.swing.JPanel implements DocumentListen
         firePropertyChange (PROP_LOCATION_FOLDER, oldLocation, locationFolder);
         fireStateChanged ();
     }
+    
     private void setLocationDataFolder(DataFolder fd) {
-        setLocationFolder(fd != null ? FileUtil.toFile(fd.getPrimaryFile()) : null);
+        locationDataFolder = fd;
+        setLocationFolder0(fd != null ? FileUtil.toFile(fd.getPrimaryFile()) : null);
     }
     
     public File getLocationFolder() {
         return locationFolder;
     }
     private DataFolder getLocationDataFolder() {
+        if (locationDataFolder != null) {
+            return locationDataFolder;
+        }
         if (locationFolder != null) {
             FileObject f = FileUtil.toFileObject(FileUtil.normalizeFile(locationFolder));
             if (f != null && f.isFolder()) {

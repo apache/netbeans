@@ -33,27 +33,27 @@ public class JavaCompletionTask19FeaturesTest extends CompletionTestBase {
     // Java 1.9 try-with-resources tests -------------------------------------------
     
     public void testEmptyFileBeforeTypingExistingVarResouce() throws Exception {
-        performTest("SimpleTWRStart", 948, "try (", "resourcesAndAutoCloseables.pass", "1.9");
+        performTest("SimpleTWRStart", 948, "try (", "resourcesAndAutoCloseablesFWVar.pass", "1.9");
     }
 
     public void testBeforeTypingExistingVarResouce() throws Exception {
-        performTest("SimpleTWRNoRes", 953, null, "resourcesAndAutoCloseables.pass", "1.9");
+        performTest("SimpleTWRNoRes", 953, null, "resourcesAndAutoCloseablesFWVar.pass", "1.9");
     }
 
     public void testBeforeExistingVarResouce() throws Exception {
-        performTest("SimpleTWR", 981, null, "resourcesAndAutoCloseables.pass", "1.9");
+        performTest("SimpleTWR", 981, null, "resourcesAndAutoCloseablesFWVar.pass", "1.9");
     }
 
     public void testEmptyFileTypingExistingVarResouce() throws Exception {
-        performTest("SimpleTWRStart", 948, "try (f", "finalKeyword.pass", "1.9");
+        performTest("SimpleTWRStart", 948, "try (f", "finalAndFWVar.pass", "1.9");
     }
 
     public void testTypingExistingVarResouce() throws Exception {
-        performTest("SimpleTWRNoRes", 953, "f", "finalKeyword.pass", "1.9");
+        performTest("SimpleTWRNoRes", 953, "f", "finalAndFWVar.pass", "1.9");
     }
 
     public void testOnExistingVarResouce() throws Exception {
-        performTest("SimpleTWR", 982, null, "finalKeyword.pass", "1.9");
+        performTest("SimpleTWR", 982, null, "finalAndFWVar.pass", "1.9");
     }
 
     public void testEmptyFileAfterTypingExistingVarResouce() throws Exception {
@@ -69,15 +69,15 @@ public class JavaCompletionTask19FeaturesTest extends CompletionTestBase {
     }
 
     public void testEmptyFileBeforeTypingNewVarResouce() throws Exception {
-        performTest("SimpleTWRStart", 948, "try (fw;", "resourcesAndAutoCloseables.pass", "1.9");
+        performTest("SimpleTWRStart", 948, "try (fw;", "resourcesAndAutoCloseablesFWVar.pass", "1.9");
     }
 
     public void testBeforeTypingNewVarResouce() throws Exception {
-        performTest("SimpleTWRNoRes", 953, "fw;", "resourcesAndAutoCloseables.pass", "1.9");
+        performTest("SimpleTWRNoRes", 953, "fw;", "resourcesAndAutoCloseablesFWVar.pass", "1.9");
     }
 
     public void testBeforeNewVarResouce() throws Exception {
-        performTest("SimpleTWR", 984, null, "resourcesAndAutoCloseables.pass", "1.9");
+        performTest("SimpleTWR", 984, null, "resourcesAndAutoCloseablesFWVar.pass", "1.9");
     }
 
     static {

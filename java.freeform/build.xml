@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="java.freeform">
+<project basedir="." default="build" name="java.freeform">
 
     <import file="../nbbuild/templates/projectized.xml"/>
 

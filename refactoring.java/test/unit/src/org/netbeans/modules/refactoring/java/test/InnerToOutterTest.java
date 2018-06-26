@@ -620,6 +620,43 @@ public class InnerToOutterTest extends RefactoringTestBase {
                       new File("t/B.java", "/* * Refactoring License */ package t; /** * * @author junit */ enum B { A(0); private B(int i) { System.err.println(i); } } "));
     }
 
+    // If types are omitted on lambda parameters (IMPLICIT paramKind), then the
+    // generated lambda source code should also omit parameter types.
+    public void testNETBEANS345() throws Exception {
+        writeFilesAndWaitForScan(src,
+                                 new File("t/A.java", "package t;\n" +
+                                                      "\n" +
+                                                      "import java.util.List;\n" +
+                                                      "import java.util.concurrent.RunnableFuture;\n" +
+                                                      "\n" +
+                                                      "public class A {\n" +
+                                                      "    public static class B {\n" +
+                                                      "        public B(List<? extends Runnable> runnables) {\n" +
+                                                      "            assert runnables.stream().noneMatch((r) -> r instanceof RunnableFuture);\n" +
+                                                      "        }\n" +
+                                                      "    }\n" +
+                                                      "}"));
+        performInnerToOuterTest(null);
+        verifyContent(src,
+                      new File("t/A.java", "package t;\n" +
+                                           "\n" +
+                                           "import java.util.List;\n" +
+                                           "import java.util.concurrent.RunnableFuture;\n" +
+                                           "\n" +
+                                           "public class A {\n" +
+                                           "}"),
+                      new File("t/B.java", "/* * Refactoring License */ package t;\n" +
+                                           "\n" +
+                                           "import java.util.List;\n" +
+                                           "import java.util.concurrent.RunnableFuture;\n" +
+                                           "\n" +
+                                           "/** * * @author junit */ public class B {\n" +
+                                           "    public B(List<? extends Runnable> runnables) {\n" +
+                                           "        assert runnables.stream().noneMatch((r) -> r instanceof RunnableFuture);\n" +
+                                           "    }\n" +
+                                           "} "));
+    }
+
     private void performInnerToOuterTest(String generateOuter, Problem... expectedProblems) throws Exception {
         final InnerToOuterRefactoring[] r = new InnerToOuterRefactoring[1];
 

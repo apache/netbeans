@@ -150,7 +150,8 @@ public class CustomizerProviderImpl implements CustomizerProvider2 {
                 public void run() {
                     assert EventQueue.isDispatchThread();
                     OptionListener listener = new OptionListener();
-                    Lookup context = Lookups.fixed(new Object[] { project, handle, handle2});
+                    MavenProjectPropertiesUiSupport uiSupport = new MavenProjectPropertiesUiSupport(handle2, project);
+                    Lookup context = Lookups.fixed(new Object[] { project, handle, handle2, uiSupport});
                     Dialog dialog = ProjectCustomizer.createCustomizerDialog("Projects/org-netbeans-modules-maven/Customizer", //NOI18N
                                                      context,
                                                      preselectedCategory,

@@ -66,7 +66,7 @@ public abstract class AbstractOutputHandler {
     private IndexingBridge.Lock protectedMode; // #211005
     private final Object protectedModeLock = new Object();
     private RequestProcessor.Task sleepTask;
-    private static final int SLEEP_DELAY = 5000;
+    private static final int SLEEP_DELAY = Integer.getInteger(AbstractOutputHandler.class.getName() + ".SLEEP_DELAY", 15000); // #270005
 
     protected AbstractOutputHandler(Project proj, final ProgressHandle hand, RunConfig config, OutputVisitor visitor) {
         processors = new HashMap<String, Set<OutputProcessor>>();

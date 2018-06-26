@@ -1992,7 +1992,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
                 identifierPath = getCurrentPath();
             }
             elm = evaluationContext.getTrees().getElement(identifierPath);
-            if (elm instanceof TypeElement && ((TypeElement) elm).asType() instanceof ErrorType) {
+            if (elm instanceof TypeElement && ((TypeElement) elm).asType().getKind() == TypeKind.ERROR) {
                 currentPath = null; // Elements not resolved correctly
             }
         }
@@ -4217,7 +4217,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
         if (primitiveType instanceof DoubleType) {
             typeClass = Double.class;
         }
-        if (typeClass != null) {
+        if (typeClass != null && evaluationContext != null && evaluationContext.getVMCache() != null) {
             type = evaluationContext.getVMCache().getClass(typeClass.getName());
         }
         return type;

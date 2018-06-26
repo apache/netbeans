@@ -30,7 +30,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
@@ -60,6 +62,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
+import org.netbeans.modules.java.source.base.SourceLevelUtils;
 
 /**
  *
@@ -314,6 +317,19 @@ public class JavacParserTest extends NbTestCase {
         }, true);
     }
     
+    public void testInvalidFile654() throws Exception {
+        FileObject f = createFile("test/Test.java", "package test; class Test { }");
+        JavaSource js = JavaSource.forFileObject(f);
+
+
+        js.runUserActionTask(new Task<CompilationController>() {
+            public void run(CompilationController parameter) throws Exception {
+                f.delete();
+                assertTrue(Phase.RESOLVED.compareTo(parameter.toPhase(Phase.RESOLVED)) <= 0);
+            }
+        }, true);
+    }
+
     public void testIfMissingObjectOnBootCPUseCPToGuessSourceLevel() throws Exception {
         Source ret = guessSourceLevel(false, false, false);
         assertEquals("Downgraded to 1.4", Source.JDK1_4, ret);
@@ -326,12 +342,12 @@ public class JavacParserTest extends NbTestCase {
 
     public void testIfMissingObjectOnBootCPUseCPToGuessSourceLevelWithStringBuilder() throws Exception {
         Source ret = guessSourceLevel(false, true, false);
-        assertEquals("Keeps 1.7, as Object and StringBuilder on bootCP, but no AutoCloseable", Source.JDK1_7, ret);
+        assertEquals("Keeps 1.7, as Object and StringBuilder on bootCP, but no AutoCloseable", SourceLevelUtils.JDK1_7, ret);
     }
 
     public void testIfMissingObjectOnBootCPUseCPToGuessSourceLevelWithStringBuilderAndAutoCloseable() throws Exception {
         Source ret = guessSourceLevel(false, true, true);
-        assertEquals("Kept to 1.7", Source.JDK1_7, ret);
+        assertEquals("Kept to 1.7", SourceLevelUtils.JDK1_7, ret);
     }
     
     private Source guessSourceLevel(boolean objectOnBCP, boolean sbOnCP, boolean acOnCP) throws Exception {
@@ -379,7 +395,18 @@ public class JavacParserTest extends NbTestCase {
         
         return JavacParser.validateSourceLevel("1.7", info, false);
     }
-    
+
+    public void testValidateCompilerOptions() {
+        List<String> input = Arrays.asList("--add-exports", "foo/bar=foobar",
+                                           "--add-exports=foo2/bar=foobar",
+                                           "--limit-modules", "foo",
+                                           "--add-modules", "foo",
+                                           "--add-reads", "foo=foo2");
+        assertEquals(Collections.emptyList(), JavacParser.validateCompilerOptions(input, com.sun.tools.javac.code.Source.lookup("1.8")));
+        assertEquals(input, JavacParser.validateCompilerOptions(input, com.sun.tools.javac.code.Source.lookup("9")));
+        assertEquals(input, JavacParser.validateCompilerOptions(input, com.sun.tools.javac.code.Source.lookup("10")));
+    }
+
     private FileObject createFile(String path, String content) throws Exception {
         FileObject file = FileUtil.createData(sourceRoot, path);
         TestUtilities.copyStringToFile(file, content);

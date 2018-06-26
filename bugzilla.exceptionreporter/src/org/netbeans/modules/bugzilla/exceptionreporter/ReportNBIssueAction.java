@@ -22,10 +22,13 @@ import org.openide.util.actions.SystemAction;
 import org.openide.util.HelpCtx;
 
 import java.awt.event.ActionEvent;
-import org.netbeans.modules.bugzilla.api.NBBugzillaUtils;
+import java.net.MalformedURLException;
+import java.net.URL;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
+import org.openide.awt.HtmlBrowser;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -36,6 +39,8 @@ import org.openide.util.NbBundle;
 @ActionRegistration(lazy = false, displayName = "#CTL_ReportIssueAction")
 @ActionReference(path = "Menu/Help", position = 450)
 public class ReportNBIssueAction extends SystemAction {
+
+    private static final String ISSUE_REPORTER_LINK="https://issues.apache.org/jira/projects/NETBEANS/issues";
 
     public ReportNBIssueAction() {
         setIcon(null);
@@ -54,6 +59,11 @@ public class ReportNBIssueAction extends SystemAction {
 
     @Override
     public void actionPerformed(ActionEvent ev) {
-        NBBugzillaUtils.reportAnIssue();
+        try {
+            HtmlBrowser.URLDisplayer.getDefault().showURL(new URL(ISSUE_REPORTER_LINK));
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
     }
 }

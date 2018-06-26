@@ -462,7 +462,7 @@ public class ModuleNamesTest extends NbTestCase {
             @NonNull final FileObject srcRoot,
             @NonNull final URL binRoot,
             @NullAllowed final String moduleName) throws IOException {
-        ClassIndexImpl q = ClassIndexManager.getDefault().createUsagesQuery(srcRoot.toURL(), true, ClassIndexEventsTransaction.create(true));
+        ClassIndexImpl q = ClassIndexManager.getDefault().createUsagesQuery(srcRoot.toURL(), true, ClassIndexEventsTransaction.create(true, ()->true));
         q.setState(ClassIndexImpl.State.INITIALIZED);
         JavaIndex.setAttribute(srcRoot.toURL(), JavaIndex.ATTR_MODULE_NAME, moduleName);
         ModuleNames.getInstance().reset(binRoot);

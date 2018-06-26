@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="core.nativeaccess">
+<project basedir="." default="build" name="core.nativeaccess">
     <description>Builds, tests, and runs the project org.netbeans.core.nativeaccess</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

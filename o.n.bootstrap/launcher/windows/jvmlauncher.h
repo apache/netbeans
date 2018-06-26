@@ -34,6 +34,9 @@ class JvmLauncher {
 
     static const char *JDK_KEY;
     static const char *JRE_KEY;
+    // registry key change starting with version 9 
+    static const char *JDK_POST9_KEY;
+    static const char *JRE_POST9_KEY;
     static const char *CUR_VERSION_NAME;
     static const char *JAVA_HOME_NAME;
     static const char *JAVA_BIN_DIR;

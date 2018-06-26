@@ -49,6 +49,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.netbeans.modules.java.source.base.SourceLevelUtils;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Pair;
 
@@ -82,7 +83,7 @@ public class MRJARModuleFileManagerTest extends NbTestCase {
                 CachingArchiveProvider.getDefault(),
                 bCp,
                 (u)->Collections.singleton(u),
-                Source.JDK1_9,
+                SourceLevelUtils.JDK1_9,
                 StandardLocation.MODULE_PATH,
                 false);
         JavaFileManager.Location l = StreamSupport.stream(fm.listLocationsForModules(StandardLocation.MODULE_PATH).spliterator(), true)
@@ -98,7 +99,7 @@ public class MRJARModuleFileManagerTest extends NbTestCase {
                 CachingArchiveProvider.getDefault(),
                 mvCp,
                 (u)->Collections.singleton(u),
-                Source.JDK1_9,
+                SourceLevelUtils.JDK1_9,
                 StandardLocation.MODULE_PATH,
                 false);
         l = StreamSupport.stream(fm.listLocationsForModules(StandardLocation.MODULE_PATH).spliterator(), true)
@@ -117,7 +118,7 @@ public class MRJARModuleFileManagerTest extends NbTestCase {
                 CachingArchiveProvider.getDefault(),
                 bCp,
                 (u)->Collections.singleton(u),
-                Source.JDK1_9,
+                SourceLevelUtils.JDK1_9,
                 StandardLocation.MODULE_PATH,
                 false);
         JavaFileManager.Location l = StreamSupport.stream(fm.listLocationsForModules(StandardLocation.MODULE_PATH).spliterator(), true)
@@ -133,7 +134,7 @@ public class MRJARModuleFileManagerTest extends NbTestCase {
                 CachingArchiveProvider.getDefault(),
                 mvCp,
                 (u)->Collections.singleton(u),
-                Source.JDK1_9,
+                SourceLevelUtils.JDK1_9,
                 StandardLocation.MODULE_PATH,
                 false);
         l = StreamSupport.stream(fm.listLocationsForModules(StandardLocation.MODULE_PATH).spliterator(), true)
@@ -152,7 +153,7 @@ public class MRJARModuleFileManagerTest extends NbTestCase {
                 CachingArchiveProvider.getDefault(),
                 bCp,
                 (u)->Collections.singleton(u),
-                Source.JDK1_9,
+                SourceLevelUtils.JDK1_9,
                 StandardLocation.MODULE_PATH,
                 false);
         JavaFileManager.Location l = StreamSupport.stream(fm.listLocationsForModules(StandardLocation.MODULE_PATH).spliterator(), true)
@@ -168,7 +169,7 @@ public class MRJARModuleFileManagerTest extends NbTestCase {
                 CachingArchiveProvider.getDefault(),
                 mvCp,
                 (u)->Collections.singleton(u),
-                Source.JDK1_9,
+                SourceLevelUtils.JDK1_9,
                 StandardLocation.MODULE_PATH,
                 false);
         l = StreamSupport.stream(fm.listLocationsForModules(StandardLocation.MODULE_PATH).spliterator(), true)
@@ -187,7 +188,7 @@ public class MRJARModuleFileManagerTest extends NbTestCase {
                 CachingArchiveProvider.getDefault(),
                 bCp,
                 (u)->Collections.singleton(u),
-                Source.JDK1_9,
+                SourceLevelUtils.JDK1_9,
                 StandardLocation.MODULE_PATH,
                 false);
         JavaFileManager.Location l = StreamSupport.stream(fm.listLocationsForModules(StandardLocation.MODULE_PATH).spliterator(), true)
@@ -203,7 +204,7 @@ public class MRJARModuleFileManagerTest extends NbTestCase {
                 CachingArchiveProvider.getDefault(),
                 mvCp,
                 (u)->Collections.singleton(u),
-                Source.JDK1_9,
+                SourceLevelUtils.JDK1_9,
                 StandardLocation.MODULE_PATH,
                 false);
         l = StreamSupport.stream(fm.listLocationsForModules(StandardLocation.MODULE_PATH).spliterator(), true)

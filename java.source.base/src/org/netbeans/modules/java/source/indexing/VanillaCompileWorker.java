@@ -59,8 +59,12 @@ import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Names;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -72,7 +76,9 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.JavaFileObject;
+import javax.tools.StandardLocation;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.queries.BinaryForSourceQuery;
 import org.netbeans.api.java.queries.CompilerOptionsQuery;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ElementHandle;
@@ -85,8 +91,10 @@ import org.netbeans.modules.java.source.usages.ExecutableFilesIndex;
 import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.netbeans.modules.parsing.spi.indexing.SuspendStatus;
+import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
+import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
 
 /**
@@ -350,7 +358,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 JavaIndex.LOG.log(Level.FINEST, "VanillaCompileWorker was canceled in root: " + FileUtil.getFileDisplayName(context.getRoot()), ca);  //NOI18N
             }
         } catch (Throwable t) {
-            if (t instanceof ThreadDeath) {
+             if (t instanceof ThreadDeath) {
                 throw (ThreadDeath) t;
             } else {
                 Level level = t instanceof FatalError ? Level.FINEST : Level.WARNING;
@@ -367,8 +375,79 @@ final class VanillaCompileWorker extends CompileWorker {
                     JavaIndex.LOG.log(level, message, t);  //NOI18N
                 }
             }
+             //fallback: copy output classes to caches, so that editing is not extremely slow/broken:
+            BinaryForSourceQuery.Result res2 = BinaryForSourceQuery.findBinaryRoots(context.getRootURI());
+            Set<String> filter;
+            if (!context.isAllFilesIndexing()) {
+                filter = new HashSet<>();
+                for (CompileTuple toIndex : files) {
+                    String path = toIndex.indexable.getRelativePath();
+                    filter.add(path.substring(0, path.lastIndexOf(".")));
+                }
+            } else {
+                filter = null;
+            }
+            try {
+                final Future<Void> done = FileManagerTransaction.runConcurrent(() -> {
+                    File cache = JavaIndex.getClassFolder(context.getRootURI(), false, false);
+                    for (URL u : res2.getRoots()) {
+                        FileObject binaryFO = URLMapper.findFileObject(u);
+                        if (binaryFO == null)
+                            continue;
+                        FileManagerTransaction fmtx = TransactionContext.get().get(FileManagerTransaction.class);
+                        copyRecursively(binaryFO, cache, cache, filter, fmtx);
+                    }
+                });
+                done.get();
+            } catch (IOException | InterruptedException | ExecutionException ex) {
+                Exceptions.printStackTrace(ex);
+            }
         }
-        return ParsingOutput.failure(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
+        return ParsingOutput.success(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
+    }
+
+    private static void copyRecursively(FileObject source, File targetRoot, File target, Set<String> filter, FileManagerTransaction fmtx) throws IOException {
+        if (source.isFolder()) {
+            if (target.exists() && !target.isDirectory()) {
+                throw new IOException("Cannot create folder: " + target.getAbsolutePath() + ", already exists as a file.");
+            }
+
+            FileObject[] listed = source.getChildren();
+
+            for (FileObject f : listed) {
+                String name = f.getNameExt();
+                if (name.endsWith(".class"))
+                    name = name.substring(0, name.length() - FileObjects.CLASS.length()) + FileObjects.SIG;
+                copyRecursively(f, targetRoot, new File(target, name), filter, fmtx);
+            }
+        } else {
+            if (target.isDirectory()) {
+                throw new IOException("Cannot create file: " + target.getAbsolutePath() + ", already exists as a folder.");
+            }
+
+            boolean copy;
+
+            if (filter != null) {
+                String path = FileObjects.getRelativePath(targetRoot, target);
+                int dot = path.lastIndexOf('.');
+                if (dot != (-1)) path = path.substring(0, dot);
+                int dollar = path.indexOf('$');
+                if (dollar != (-1)) path = path.substring(0, dollar);
+                copy = filter.contains(path);
+            } else {
+                copy = true;
+            }
+
+            if (copy)
+                copyFile(source, fmtx.createFileObject(StandardLocation.CLASS_OUTPUT, target, targetRoot, null, null));
+        }
+    }
+
+    private static void copyFile(FileObject updatedFile, JavaFileObject target) throws IOException {
+        try (InputStream ins = updatedFile.getInputStream();
+             OutputStream out = target.openOutputStream()) {
+            FileUtil.copy(ins, out);
+        }
     }
 
     private void dropMethodsAndErrors(com.sun.tools.javac.util.Context ctx, CompilationUnitTree cut) {

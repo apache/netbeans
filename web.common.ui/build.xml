@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="web.common.ui">
+<project basedir="." default="build" name="web.common.ui">
     <description>Builds, tests, and runs the project org.netbeans.modules.web.common.ui</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

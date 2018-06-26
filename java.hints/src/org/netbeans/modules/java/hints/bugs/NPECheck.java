@@ -209,11 +209,13 @@ public class NPECheck {
                 break;
             case POSSIBLE_NULL_REPORT:
             case POSSIBLE_NULL:
+            case INSTANCE_OF_FALSE:
                 k = "ERR_UnboxingPotentialNullValue"; // NOI18N
                 break;
             case NOT_NULL_BE_NPE:
             case NOT_NULL:
             case NOT_NULL_HYPOTHETICAL:
+            case INSTANCE_OF_TRUE:
                 return null;
             default:
                 throw new AssertionError(s.name());
@@ -238,7 +240,7 @@ public class NPECheck {
             return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), displayName);
         }
 
-        if (r == State.POSSIBLE_NULL_REPORT) {
+        if (r == State.POSSIBLE_NULL_REPORT || r == INSTANCE_OF_FALSE) {
             String displayName = NbBundle.getMessage(NPECheck.class, "ERR_PossiblyDereferencingNull");
             
             return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), displayName);
@@ -259,7 +261,7 @@ public class NPECheck {
             return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), displayName);
         }
 
-        if (r == State.POSSIBLE_NULL_REPORT) {
+        if (r == State.POSSIBLE_NULL_REPORT || r == State.INSTANCE_OF_FALSE) {
             String displayName = NbBundle.getMessage(NPECheck.class, "ERR_PossiblyDereferencingNull");
             
             return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), displayName);
@@ -278,7 +280,7 @@ public class NPECheck {
             return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), displayName);
         }
 
-        if (r == State.POSSIBLE_NULL_REPORT) {
+        if (r == State.POSSIBLE_NULL_REPORT || r == State.INSTANCE_OF_FALSE) {
             String displayName = NbBundle.getMessage(NPECheck.class, "ERR_PossiblyDereferencingNull");
             
             return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), displayName);
@@ -327,6 +329,7 @@ public class NPECheck {
                         result.add(ErrorDescriptionFactory.forTree(ctx, mit.getArguments().get(index), NbBundle.getMessage(NPECheck.class, "ERR_NULL_TO_NON_NULL_ARG")));
                         break;
                     case POSSIBLE_NULL_REPORT:
+                    case INSTANCE_OF_FALSE:
                         result.add(ErrorDescriptionFactory.forTree(ctx, mit.getArguments().get(index), NbBundle.getMessage(NPECheck.class, "ERR_POSSIBLENULL_TO_NON_NULL_ARG")));
                         break;
                 }
@@ -455,6 +458,7 @@ public class NPECheck {
                 if (expected.isNotNull()) key = "ERR_ReturningNullFromNonNull";
                 break;
             case POSSIBLE_NULL_REPORT:
+            case INSTANCE_OF_FALSE:
                 if (expected.isNotNull()) key = "ERR_ReturningPossibleNullFromNonNull";
                 break;
         }
@@ -702,6 +706,9 @@ public class NPECheck {
             mergeHypotheticalVariable2State(orig);
             
             if (e != null) {
+                if (e.getKind() == ElementKind.EXCEPTION_PARAMETER) {
+                    r = NOT_NULL;
+                }
                 variable2State.put((VariableElement) e, r);
                 TreePath pp = getCurrentPath().getParentPath();
                 if (pp != null) {
@@ -717,7 +724,7 @@ public class NPECheck {
             State expr = scan(node.getExpression(), p);
             boolean wasNPE = false;
             
-            if (expr == State.NULL || expr == State.NULL_HYPOTHETICAL || expr == State.POSSIBLE_NULL || expr == State.POSSIBLE_NULL_REPORT) {
+            if (expr == State.NULL || expr == State.NULL_HYPOTHETICAL || expr == State.POSSIBLE_NULL || expr == State.POSSIBLE_NULL_REPORT || expr == State.INSTANCE_OF_FALSE) {
                 wasNPE = true;
             }
             
@@ -886,8 +893,17 @@ public class NPECheck {
             
             Element e = info.getTrees().getElement(new TreePath(getCurrentPath(), node.getExpression()));
 
-            if (isVariableElement(e) && (variable2State.get((VariableElement) e) == null || !variable2State.get((VariableElement) e).isNotNull()) && !not) {
-                variable2State.put((VariableElement) e, State.NOT_NULL_HYPOTHETICAL);
+            if (isVariableElement(e)) {
+                boolean setState = false;
+                State currentState = variable2State.get((VariableElement) e);
+                if (currentState == null) {
+                    setState = !getStateFromAnnotations(info, e).isNotNull();
+                } else {
+                    setState = !variable2State.get((VariableElement) e).isNotNull();
+                }
+                if (setState) {
+                    variable2State.put((VariableElement) e, not ? State.INSTANCE_OF_FALSE : State.INSTANCE_OF_TRUE);
+                }
             }
             
             return null;
@@ -1479,7 +1495,7 @@ public class NPECheck {
             for (Entry<VariableElement, State> e : backup.entrySet()) {
                 State t = e.getValue();
                 
-                if (t  != null && t != State.NOT_NULL_HYPOTHETICAL && t != NULL_HYPOTHETICAL) {
+                if (t  != null && t != State.NOT_NULL_HYPOTHETICAL && t != NULL_HYPOTHETICAL && t != INSTANCE_OF_TRUE && t != INSTANCE_OF_FALSE) {
                     variable2State.put(e.getKey(), t);
                 }
             }
@@ -1495,15 +1511,6 @@ public class NPECheck {
             return NPECheck.isVariableElement(ctx, ve);
         }
         
-        private void clearHypothetical() {
-            for (Iterator<Entry<VariableElement, State>> it = variable2State.entrySet().iterator(); it.hasNext();) {
-                Entry<VariableElement, State> e = it.next();
-                
-                if (e.getValue() == State.NOT_NULL_HYPOTHETICAL || e.getValue() == State.NULL_HYPOTHETICAL) {
-                    it.remove();
-                }
-            }
-        }
     }
     
     static enum State {
@@ -1511,8 +1518,10 @@ public class NPECheck {
         NULL_HYPOTHETICAL,
         POSSIBLE_NULL,
         POSSIBLE_NULL_REPORT,
+        INSTANCE_OF_FALSE,
         NOT_NULL,
         NOT_NULL_HYPOTHETICAL,
+        INSTANCE_OF_TRUE,
         NOT_NULL_BE_NPE;
         
         public @CheckForNull State reverse() {
@@ -1521,6 +1530,8 @@ public class NPECheck {
                     return NOT_NULL;
                 case NULL_HYPOTHETICAL:
                     return NOT_NULL_HYPOTHETICAL;
+                case INSTANCE_OF_FALSE:
+                    return INSTANCE_OF_TRUE;
                 case POSSIBLE_NULL:
                 case POSSIBLE_NULL_REPORT:
                     return this;
@@ -1529,18 +1540,20 @@ public class NPECheck {
                     return NULL;
                 case NOT_NULL_HYPOTHETICAL:
                     return NULL_HYPOTHETICAL;
+                case INSTANCE_OF_TRUE:
+                    return INSTANCE_OF_FALSE;
                 default: throw new IllegalStateException();
             }
         }
         
         public boolean isNotNull() {
-            return this == NOT_NULL || this == NOT_NULL_BE_NPE || this == NOT_NULL_HYPOTHETICAL;
+            return this == NOT_NULL || this == NOT_NULL_BE_NPE || this == NOT_NULL_HYPOTHETICAL || this == INSTANCE_OF_TRUE;
         }
         
         public static State collect(State s1, State s2) {
             if (s1 == s2) return s1;
             if (s1 == NULL || s2 == NULL || s1 == NULL_HYPOTHETICAL || s2 == NULL_HYPOTHETICAL) return POSSIBLE_NULL_REPORT;
-            if (s1 == POSSIBLE_NULL_REPORT || s2 == POSSIBLE_NULL_REPORT) return POSSIBLE_NULL_REPORT;
+            if (s1 == POSSIBLE_NULL_REPORT || s2 == POSSIBLE_NULL_REPORT || s2 == INSTANCE_OF_FALSE) return POSSIBLE_NULL_REPORT;
             if (s1 != null && s2 != null && s1.isNotNull() && s2.isNotNull()) return NOT_NULL;
             
             return POSSIBLE_NULL;

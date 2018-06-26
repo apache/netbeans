@@ -727,9 +727,15 @@ public class JavacParser extends Parser {
             }
             AbstractSourceFileObject source = null;
             if (file != null) {
-                source = FileObjects.sourceFileObject(file, root);
-                if (source.getKind() != Kind.SOURCE) {
-                    source = null;
+                try {
+                    source = FileObjects.sourceFileObject(file, root, null, false);
+                    if (source.getKind() != Kind.SOURCE) {
+                        source = null;
+                    }
+                } catch (FileObjects.InvalidFileException ife) {
+                    //ignore, it will be handled again later, see #parse.
+                } catch (IOException ex) {
+                    throw new IllegalStateException(ex);
                 }
             }
             final JavacTaskImpl javacTask = createJavacTask(cpInfo,
@@ -820,7 +826,7 @@ public class JavacParser extends Parser {
         options.add("-XDsave-parameter-names");   // NOI18N, javac runs inside the IDE
         options.add("-parameters");   // NOI18N, save and read parameter names
         options.add("-XDsuppressAbortOnBadClassFile");   // NOI18N, when a class file cannot be read, produce an error type instead of failing with an exception
-        options.add("--should-stop:at=GENERATE");   // NOI18N, parsing should not stop in phase where an error is found
+        options.add("-XDshould-stop.at=GENERATE");   // NOI18N, parsing should not stop in phase where an error is found
         options.add("-g:source"); // NOI18N, Make the compiler to maintian source file info
         options.add("-g:lines"); // NOI18N, Make the compiler to maintain line table
         options.add("-g:vars");  // NOI18N, Make the compiler to maintain local variables table
@@ -865,7 +871,7 @@ public class JavacParser extends Parser {
             options.add("-proc:none"); // NOI18N, Disable annotation processors
         }
         if (compilerOptions != null) {
-            for (String compilerOption : validateCompilerOptions(compilerOptions.getArguments())) {
+            for (String compilerOption : validateCompilerOptions(compilerOptions.getArguments(), validatedSourceLevel)) {
                 options.add(compilerOption);
             }
         }
@@ -1005,7 +1011,7 @@ public class JavacParser extends Parser {
                     LOGGER.log(warnLevel,
                                "Even though the source level of {0} is set to: {1}, java.util.zip.CRC32C cannot be found on the system module path: {2}\n" +   //NOI18N
                                "Changing source level to 1.8",  //NOI18N
-                               new Object[]{srcClassPath, sourceLevel, bootClassPath}); //NOI18N
+                               new Object[]{srcClassPath, sourceLevel, moduleBoot}); //NOI18N
                     return SourceLevelUtils.JDK1_8;
                 }
                 return source;
@@ -1023,8 +1029,9 @@ public class JavacParser extends Parser {
     }
 
     @NonNull
-    public static List<? extends String> validateCompilerOptions(@NonNull final List<? extends String> options) {
+    public static List<? extends String> validateCompilerOptions(@NonNull final List<? extends String> options, @NullAllowed com.sun.tools.javac.code.Source sourceLevel) {
         final List<String> res = new ArrayList<>();
+        boolean allowModularOptions = sourceLevel == null || com.sun.tools.javac.code.Source.lookup("9").compareTo(sourceLevel) <= 0;
         boolean xmoduleSeen = false;
         for (int i = 0; i < options.size(); i++) {
             String option = options.get(i);
@@ -1041,12 +1048,13 @@ public class JavacParser extends Parser {
                 xmoduleSeen = true;
             } else if (option.equals("-parameters") || option.startsWith("-Xlint")) {     //NOI18N
                 res.add(option);
-            } else if (
+            } else if ((
                     option.startsWith("--add-modules") ||   //NOI18N
                     option.startsWith("--limit-modules") || //NOI18N
                     option.startsWith("--add-exports") ||   //NOI18N
                     option.startsWith("--add-reads")  ||
-                    option.startsWith(OPTION_PATCH_MODULE)) {
+                    option.startsWith(OPTION_PATCH_MODULE)) &&
+                    allowModularOptions) {
                 int idx = option.indexOf('=');
                 if (idx > 0) {
                    res.add(option);

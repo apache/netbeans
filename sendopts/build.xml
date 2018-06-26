@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="sendopts" default="netbeans" basedir=".">
+<project name="sendopts" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

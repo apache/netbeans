@@ -29,7 +29,7 @@ import org.openide.nodes.PropertyEditorRegistration;
  *
  * @author Jan Horvath <jhorvath@netbeans.org>
  */
-@PropertyEditorRegistration(targetType = {Integer.class, Double[].class, byte.class, char[][].class, short.class})
+@PropertyEditorRegistration(targetType = {Integer.class, Double[].class, byte.class, char[][].class, short.class, CustomData.Inner.class})
 public final class TestPropertyEditor implements PropertyEditor {
 
     @Override

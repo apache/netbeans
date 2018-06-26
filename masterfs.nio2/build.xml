@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="masterfs.nio2">
+<project basedir="." default="build" name="masterfs.nio2">
     <description>Builds, tests, and runs the project org.netbeans.modules.masterfs.nio2</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

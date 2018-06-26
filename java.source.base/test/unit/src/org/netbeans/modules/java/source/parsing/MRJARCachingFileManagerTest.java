@@ -50,6 +50,7 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Pair;
+import org.netbeans.modules.java.source.base.SourceLevelUtils;
 
 /**
  *
@@ -80,7 +81,7 @@ public class MRJARCachingFileManagerTest extends NbTestCase {
         CachingFileManager fm = new CachingFileManager(
                 CachingArchiveProvider.getDefault(),
                 bCp,
-                Source.JDK1_8,
+                SourceLevelUtils.JDK1_8,
                 false,
                 true);
         Iterable<JavaFileObject> res = fm.list(StandardLocation.CLASS_PATH, "org.me", EnumSet.of(JavaFileObject.Kind.CLASS), false);    //NOI18N
@@ -90,7 +91,7 @@ public class MRJARCachingFileManagerTest extends NbTestCase {
         fm = new CachingFileManager(
                 CachingArchiveProvider.getDefault(),
                 mvCp,
-                Source.JDK1_8,
+                SourceLevelUtils.JDK1_8,
                 false,
                 true);
         res = fm.list(StandardLocation.CLASS_PATH, "org.me", EnumSet.of(JavaFileObject.Kind.CLASS), false); //NOI18N
@@ -100,7 +101,7 @@ public class MRJARCachingFileManagerTest extends NbTestCase {
         fm = new CachingFileManager(
                 CachingArchiveProvider.getDefault(),
                 bCp,
-                Source.JDK1_9,
+                SourceLevelUtils.JDK1_9,
                 false,
                 true);
         res = fm.list(StandardLocation.CLASS_PATH, "org.me", EnumSet.of(JavaFileObject.Kind.CLASS), false);    //NOI18N
@@ -110,7 +111,7 @@ public class MRJARCachingFileManagerTest extends NbTestCase {
         fm = new CachingFileManager(
                 CachingArchiveProvider.getDefault(),
                 mvCp,
-                Source.JDK1_9,
+                SourceLevelUtils.JDK1_9,
                 false,
                 true);
         res = fm.list(StandardLocation.CLASS_PATH, "org.me", EnumSet.of(JavaFileObject.Kind.CLASS), false); //NOI18N
@@ -123,7 +124,7 @@ public class MRJARCachingFileManagerTest extends NbTestCase {
         CachingFileManager fm = new CachingFileManager(
                 CachingArchiveProvider.getDefault(),
                 bCp,
-                Source.JDK1_8,
+                SourceLevelUtils.JDK1_8,
                 false,
                 true);
         Iterable<JavaFileObject> res = fm.list(StandardLocation.CLASS_PATH, "", EnumSet.of(JavaFileObject.Kind.CLASS), true);    //NOI18N
@@ -133,7 +134,7 @@ public class MRJARCachingFileManagerTest extends NbTestCase {
         fm = new CachingFileManager(
                 CachingArchiveProvider.getDefault(),
                 mvCp,
-                Source.JDK1_8,
+                SourceLevelUtils.JDK1_8,
                 false,
                 true);
         res = fm.list(StandardLocation.CLASS_PATH, "", EnumSet.of(JavaFileObject.Kind.CLASS), true); //NOI18N
@@ -143,7 +144,7 @@ public class MRJARCachingFileManagerTest extends NbTestCase {
         fm = new CachingFileManager(
                 CachingArchiveProvider.getDefault(),
                 bCp,
-                Source.JDK1_9,
+                SourceLevelUtils.JDK1_9,
                 false,
                 true);
         res = fm.list(StandardLocation.CLASS_PATH, "", EnumSet.of(JavaFileObject.Kind.CLASS), true);    //NOI18N
@@ -153,7 +154,7 @@ public class MRJARCachingFileManagerTest extends NbTestCase {
         fm = new CachingFileManager(
                 CachingArchiveProvider.getDefault(),
                 mvCp,
-                Source.JDK1_9,
+                SourceLevelUtils.JDK1_9,
                 false,
                 true);
         res = fm.list(StandardLocation.CLASS_PATH, "", EnumSet.of(JavaFileObject.Kind.CLASS), true); //NOI18N
@@ -183,7 +184,7 @@ public class MRJARCachingFileManagerTest extends NbTestCase {
         CachingFileManager fm = new CachingFileManager(
                 CachingArchiveProvider.getDefault(),
                 bCp,
-                Source.JDK1_8,
+                SourceLevelUtils.JDK1_8,
                 false,
                 true);
         JavaFileObject res = (JavaFileObject) fm.getFileForInput(StandardLocation.CLASS_PATH, "org.me", "A.class");
@@ -193,7 +194,7 @@ public class MRJARCachingFileManagerTest extends NbTestCase {
         fm = new CachingFileManager(
                 CachingArchiveProvider.getDefault(),
                 mvCp,
-                Source.JDK1_8,
+                SourceLevelUtils.JDK1_8,
                 false,
                 true);
         res = (JavaFileObject) fm.getFileForInput(StandardLocation.CLASS_PATH, "org.me", "A.class");
@@ -203,7 +204,7 @@ public class MRJARCachingFileManagerTest extends NbTestCase {
         fm = new CachingFileManager(
                 CachingArchiveProvider.getDefault(),
                 bCp,
-                Source.JDK1_9,
+                SourceLevelUtils.JDK1_9,
                 false,
                 true);
         res = (JavaFileObject) fm.getFileForInput(StandardLocation.CLASS_PATH, "org.me", "A.class");
@@ -213,7 +214,7 @@ public class MRJARCachingFileManagerTest extends NbTestCase {
         fm = new CachingFileManager(
                 CachingArchiveProvider.getDefault(),
                 mvCp,
-                Source.JDK1_9,
+                SourceLevelUtils.JDK1_9,
                 false,
                 true);
         res = (JavaFileObject) fm.getFileForInput(StandardLocation.CLASS_PATH, "org.me", "A.class");
@@ -226,7 +227,7 @@ public class MRJARCachingFileManagerTest extends NbTestCase {
         CachingFileManager fm = new CachingFileManager(
                 CachingArchiveProvider.getDefault(),
                 bCp,
-                Source.JDK1_8,
+                SourceLevelUtils.JDK1_8,
                 false,
                 true);
         JavaFileObject res = fm.getJavaFileForInput(StandardLocation.CLASS_PATH, "org.me.A", JavaFileObject.Kind.CLASS);
@@ -236,7 +237,7 @@ public class MRJARCachingFileManagerTest extends NbTestCase {
         fm = new CachingFileManager(
                 CachingArchiveProvider.getDefault(),
                 mvCp,
-                Source.JDK1_8,
+                SourceLevelUtils.JDK1_8,
                 false,
                 true);
         res = fm.getJavaFileForInput(StandardLocation.CLASS_PATH, "org.me.A", JavaFileObject.Kind.CLASS);
@@ -246,7 +247,7 @@ public class MRJARCachingFileManagerTest extends NbTestCase {
         fm = new CachingFileManager(
                 CachingArchiveProvider.getDefault(),
                 bCp,
-                Source.JDK1_9,
+                SourceLevelUtils.JDK1_9,
                 false,
                 true);
         res = fm.getJavaFileForInput(StandardLocation.CLASS_PATH, "org.me.A", JavaFileObject.Kind.CLASS);
@@ -256,7 +257,7 @@ public class MRJARCachingFileManagerTest extends NbTestCase {
         fm = new CachingFileManager(
                 CachingArchiveProvider.getDefault(),
                 mvCp,
-                Source.JDK1_9,
+                SourceLevelUtils.JDK1_9,
                 false,
                 true);
         res = fm.getJavaFileForInput(StandardLocation.CLASS_PATH, "org.me.A", JavaFileObject.Kind.CLASS);
@@ -270,7 +271,7 @@ public class MRJARCachingFileManagerTest extends NbTestCase {
                 CachingArchiveProvider.getDefault(),
                 bCp,
                 null,
-                Source.JDK1_8,
+                SourceLevelUtils.JDK1_8,
                 false,
                 true);
         JavaFileObject res = (JavaFileObject) fm.getFileForOutput(StandardLocation.CLASS_PATH, "org.me", "A.class", null);
@@ -281,7 +282,7 @@ public class MRJARCachingFileManagerTest extends NbTestCase {
                 CachingArchiveProvider.getDefault(),
                 mvCp,
                 null,
-                Source.JDK1_8,
+                SourceLevelUtils.JDK1_8,
                 false,
                 true);
         res = (JavaFileObject) fm.getFileForOutput(StandardLocation.CLASS_PATH, "org.me", "A.class", null);
@@ -292,7 +293,7 @@ public class MRJARCachingFileManagerTest extends NbTestCase {
                 CachingArchiveProvider.getDefault(),
                 bCp,
                 null,
-                Source.JDK1_9,
+                SourceLevelUtils.JDK1_9,
                 false,
                 true);
         res = (JavaFileObject) fm.getFileForOutput(StandardLocation.CLASS_PATH, "org.me", "A.class", null);
@@ -303,7 +304,7 @@ public class MRJARCachingFileManagerTest extends NbTestCase {
                 CachingArchiveProvider.getDefault(),
                 mvCp,
                 null,
-                Source.JDK1_9,
+                SourceLevelUtils.JDK1_9,
                 false,
                 true);
         res = (JavaFileObject) fm.getFileForOutput(StandardLocation.CLASS_PATH, "org.me", "A.class", null);
@@ -326,7 +327,7 @@ public class MRJARCachingFileManagerTest extends NbTestCase {
         CachingFileManager fm = new CachingFileManager(
                 CachingArchiveProvider.getDefault(),
                 cp,
-                Source.JDK1_8,
+                SourceLevelUtils.JDK1_8,
                 false,
                 true);
         Iterable<JavaFileObject> res = fm.list(
@@ -339,7 +340,7 @@ public class MRJARCachingFileManagerTest extends NbTestCase {
         fm = new CachingFileManager(
                 CachingArchiveProvider.getDefault(),
                 cp,
-                Source.JDK1_9,
+                SourceLevelUtils.JDK1_9,
                 false,
                 true);
         res = fm.list(

@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="javafx2.samples">
+<project basedir="." default="build" name="javafx2.samples">
     <description>Builds, tests, and runs the project org.netbeans.modules.javafx2.samples</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 
@@ -76,17 +76,17 @@
             <exclude name="nbproject/private/"/>
         </zip>
         
-        <zip basedir="DisplayShelf" destfile="${examples}/DisplayShelf.zip">
+<!--        <zip basedir="DisplayShelf" destfile="${examples}/DisplayShelf.zip">
             <exclude name="build/"/>
             <exclude name="dist/"/>
             <exclude name="nbproject/private/"/>
-        </zip>
+        </zip>-->
         
-        <zip basedir="Fireworks" destfile="${examples}/Fireworks.zip">
+<!--        <zip basedir="Fireworks" destfile="${examples}/Fireworks.zip">
             <exclude name="build/"/>
             <exclude name="dist/"/>
             <exclude name="nbproject/private/"/>
-        </zip>
+        </zip>-->
 
         <zip basedir="FXML-LoginDemo" destfile="${examples}/FXML-LoginDemo.zip">
             <exclude name="build/"/>
@@ -184,11 +184,11 @@
             <exclude name="nbproject/private/"/>
         </zip>
         
-        <zip basedir="PuzzlePieces" destfile="${examples}/PuzzlePieces.zip">
+<!--        <zip basedir="PuzzlePieces" destfile="${examples}/PuzzlePieces.zip">
             <exclude name="build/"/>
             <exclude name="dist/"/>
             <exclude name="nbproject/private/"/>
-        </zip>
+        </zip>-->
         
         <zip basedir="StopWatch" destfile="${examples}/StopWatch.zip">
             <exclude name="build/"/>

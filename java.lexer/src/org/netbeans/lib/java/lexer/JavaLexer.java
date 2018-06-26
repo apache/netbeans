@@ -19,6 +19,8 @@
 
 package org.netbeans.lib.java.lexer;
 
+import java.util.EnumSet;
+import java.util.Set;
 import java.util.function.Supplier;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.lexer.PartType;
@@ -54,7 +56,7 @@ public class JavaLexer implements Lexer<JavaTokenId> {
     private final int version;
     
     private Integer state = null;
-
+    
     public JavaLexer(LexerRestartInfo<JavaTokenId> info) {
         this.input = info.input();
         this.tokenFactory = info.tokenFactory();
@@ -66,8 +68,17 @@ public class JavaLexer implements Lexer<JavaTokenId> {
             }
         }
         
-        Integer ver = (Integer)info.getAttributeValue("version"); //NOI18N
-        this.version = (ver != null) ? ver.intValue() : 9; // TODO: Java 1.8 used by default        
+        Integer ver = null;
+        Object verAttribute = info.getAttributeValue("version"); //NOI18N 
+        if (verAttribute instanceof Supplier) {
+            Object val = ((Supplier) verAttribute).get();
+            if (val instanceof String) {
+                ver = getVersionAsInt(((Supplier<String>) (verAttribute)).get());
+            }
+        } else if (verAttribute instanceof Integer) {
+            ver = (Integer) verAttribute;
+        }
+        this.version = (ver != null) ? ver.intValue() : 10; // TODO: Java 1.8 used by default        
     }
     
     public Object state() {
@@ -1023,21 +1034,59 @@ public class JavaLexer implements Lexer<JavaTokenId> {
                     return finishIdentifier(c);
 
                 case 'v':
-                    if ((c = nextChar()) == 'o') {
-                        switch (c = nextChar()) {
-                            case 'i':
-                                if ((c = nextChar()) == 'd')
-                                    return keywordOrIdentifier(JavaTokenId.VOID);
-                                break;
-                            case 'l':
-                                if ((c = nextChar()) == 'a'
-                                 && (c = nextChar()) == 't'
-                                 && (c = nextChar()) == 'i'
-                                 && (c = nextChar()) == 'l'
-                                 && (c = nextChar()) == 'e')
-                                    return keywordOrIdentifier(JavaTokenId.VOLATILE);
-                                break;
-                        }
+                    switch ((c = nextChar())) {
+                        case 'a':
+                            if ((c = nextChar()) == 'r') {
+                                c = nextChar();
+                                // Check whether the given char is non-ident and if so then return keyword
+                                if (c != EOF && !Character.isJavaIdentifierPart(c = translateSurrogates(c)) &&
+                                    version >= 10) {
+                                    // For surrogate 2 chars must be backed up
+                                    backup((c >= Character.MIN_SUPPLEMENTARY_CODE_POINT) ? 2 : 1);
+
+                                    int len = input.readLength();
+
+                                    Token next = nextToken();
+                                    boolean varKeyword = false;
+
+                                    if (AFTER_VAR_TOKENS.contains(next.id())) {
+                                        do {
+                                            next = nextToken();
+                                        } while (next != null && AFTER_VAR_TOKENS.contains(next.id()));
+
+                                        varKeyword = next != null && next.id() == JavaTokenId.IDENTIFIER;
+                                    }
+
+                                    input.backup(input.readLengthEOF()- len);
+
+                                    assert input.readLength() == len;
+
+                                    if (varKeyword) {
+                                        return token(JavaTokenId.VAR);
+                                    }
+                                } else {
+                                    // For surrogate 2 chars must be backed up
+                                    backup((c >= Character.MIN_SUPPLEMENTARY_CODE_POINT) ? 2 : 1);
+                                }
+                            }
+                            c = nextChar();
+                            break;
+                        case 'o':
+                            switch (c = nextChar()) {
+                                case 'i':
+                                    if ((c = nextChar()) == 'd')
+                                        return keywordOrIdentifier(JavaTokenId.VOID);
+                                    break;
+                                case 'l':
+                                    if ((c = nextChar()) == 'a'
+                                     && (c = nextChar()) == 't'
+                                     && (c = nextChar()) == 'i'
+                                     && (c = nextChar()) == 'l'
+                                     && (c = nextChar()) == 'e')
+                                        return keywordOrIdentifier(JavaTokenId.VOLATILE);
+                                    break;
+                            }
+                            break;
                     }
                     return finishIdentifier(c);
 
@@ -1251,7 +1300,32 @@ public class JavaLexer implements Lexer<JavaTokenId> {
                 ? tokenFactory.getFlyweightToken(id, fixedText)
                 : tokenFactory.createToken(id);
     }
-    
+
+    private static final Set<JavaTokenId> AFTER_VAR_TOKENS = EnumSet.of(
+            JavaTokenId.BLOCK_COMMENT, JavaTokenId.JAVADOC_COMMENT,
+            JavaTokenId.LINE_COMMENT, JavaTokenId.WHITESPACE
+    );
+
+    // Get version as Integer x for version String 1.x
+    private Integer getVersionAsInt(String version) {
+        Integer ver = null;
+        if (version != null) {
+            try {
+                // expect format 1.x or x
+                if (version.startsWith("1.")) { //NOI18N
+                    ver = Integer.parseInt(version.substring(2));
+                } else {
+                    ver = Integer.parseInt(version);
+                }
+            } catch (NumberFormatException e) {
+                // should not happen if version is
+                // set using SourceLevelQuery,
+                // ignore other strings
+            }
+        }
+        return ver;
+    }
+
     public void release() {
     }
 

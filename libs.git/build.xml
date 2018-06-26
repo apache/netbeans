@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="libs.git" default="netbeans" basedir=".">
+<project name="libs.git" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="xml.tax" default="netbeans" basedir=".">
+<project name="xml.tax" default="build" basedir=".">
 
     <import file="../nbbuild/templates/projectized.xml"/>
 
@@ -37,9 +37,9 @@
     </target>
 
     <target name="lib-jar" depends="lib-compile">
-        <jar jarfile="${netbeans.dest.dir}/ide/modules/ext/org-netbeans-tax.jar" index="${build.package.index}" compress="${build.package.compress}">
+        <nb-ext-jar jarfile="${netbeans.dest.dir}/ide/modules/ext/org-netbeans-tax.jar" index="${build.package.index}" compress="${build.package.compress}">
             <fileset dir="${build.dir}/libclasses"/>
-        </jar>
+        </nb-ext-jar>
     </target>
 
     <target name="compile" depends="lib-jar,projectized-common.compile"/>

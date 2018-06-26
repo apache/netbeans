@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="defaults">
+<project basedir="." default="build" name="defaults">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

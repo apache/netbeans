@@ -1,0 +1,7 @@
+Code completion result for source line:
+$clsVarC1=$clsVarC->|ccreateC();//test 2
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     cCreateA()                      [PUBLIC]   clsCVarAssignment
+METHOD     cStaticCreateA()                [STATIC]   clsCVarAssignment
+METHOD     cStaticCreateC()                [STATIC]   clsCVarAssignment
+METHOD     ccreateC()                      [PUBLIC]   clsCVarAssignment

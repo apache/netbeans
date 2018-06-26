@@ -1,0 +1,6 @@
+Code completion result for source line:
+$b->method()->|fooMethod();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     barMethod()                     [PUBLIC]   Brejla
+METHOD     fooMethod()                     [PUBLIC]   Ondrej
+METHOD     method()                        [PUBLIC]   Brejla

@@ -1,0 +1,13 @@
+Code completion result for source line:
+function paramsfnc($a,$b,|$c,$d) {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      clsA                            [PUBLIC]   paramdecltypes.php
+CLASS      ifaceA                          [PUBLIC]   paramdecltypes.php
+------------------------------------
+KEYWORD    array                                      null
+KEYWORD    bool                                       null
+KEYWORD    callable                                   null
+KEYWORD    float                                      null
+KEYWORD    int                                        null
+KEYWORD    iterable                                   null
+KEYWORD    string                                     null

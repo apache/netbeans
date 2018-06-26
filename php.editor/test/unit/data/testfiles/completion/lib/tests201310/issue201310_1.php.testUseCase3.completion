@@ -1,0 +1,9 @@
+Code completion result for source line:
+throw new |ExMyException();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    ExtraThrow                      [PUBLIC]   null
+PACKAGE    MySpaceThrow                    [PUBLIC]   null
+------------------------------------
+CONSTRUCTO Exception()                     [PUBLIC]   Exception
+CLASS      ExMyException                   [PUBLIC]   issue201310.php
+CLASS      Exception                       [PUBLIC]   issue201310.php

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2007 Sun Microsystems, Inc. All rights reserved.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Sun designates this
+particular file as subject to the "Classpath" exception as provided
+by Sun in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="urn:AddNumbers/wsdl" xmlns:ns2="urn:AddNumbers/types" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="AddNumbers" targetNamespace="urn:AddNumbers/wsdl">
+  <types>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:AddNumbers/types" xmlns:soap11-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" targetNamespace="urn:AddNumbers/types">
+      <complexType name="add">
+        <sequence>
+          <element name="x" type="int"/>
+          <element name="y" type="int"/></sequence></complexType>
+      <complexType name="addResponse">
+        <sequence>
+          <element name="result" type="int"/></sequence></complexType>
+      <complexType name="NegativeNumberException">
+        <sequence/></complexType>
+      <element name="add" type="tns:add"/>
+      <element name="addResponse" type="tns:addResponse"/>
+      <element name="NegativeNumberException" type="tns:NegativeNumberException"/></schema></types>
+  <message name="AddNumbersSEI_add">
+    <part name="parameters" element="ns2:add"/></message>
+  <message name="AddNumbersSEI_addResponse">
+    <part name="result" element="ns2:addResponse"/></message>
+  <message name="NegativeNumberException">
+    <part name="NegativeNumberException" element="ns2:NegativeNumberException"/></message>
+  <portType name="AddNumbersSEI">
+    <operation name="add">
+      <input message="tns:AddNumbersSEI_add"/>
+      <output message="tns:AddNumbersSEI_addResponse"/>
+      <fault name="NegativeNumberException" message="tns:NegativeNumberException"/></operation></portType>
+  <binding name="AddNumbersSEIBinding" type="tns:AddNumbersSEI">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+    <operation name="add">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/></input>
+      <output>
+        <soap:body use="literal"/></output>
+      <fault name="NegativeNumberException">
+        <soap:fault name="NegativeNumberException" use="literal"/></fault></operation></binding>
+  <service name="AddNumbers1">
+    <port name="AddNumbersSEIPort" binding="tns:AddNumbersSEIBinding">
+      <soap:address location="http://localhost:8080/WebApplication1/AddNumbers" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"/></port></service></definitions>

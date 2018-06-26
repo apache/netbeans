@@ -1,0 +1,19 @@
+{
+    "name": "netbeans/calculator-atoum",
+    "description": "Simple project using atoum.",
+    "authors": [
+        {
+            "name": "NetBeans",
+            "email": "tomas.mysik@oracle.com"
+        }
+    ],
+    "require": {
+
+    },
+    "require-dev": {
+        "atoum/atoum": "2.0.x"
+    },
+    "autoload": {
+        "classmap": ["src/"]
+    }
+}

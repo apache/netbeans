@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="NBProfiler">
+        <!--
+        <folder name="Categories">
+            <folder name="Persistence">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.profiler.j2ee.Bundle#NBProfiler/Categories/Persistence"/>
+                <folder name="Hibernate">
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.profiler.j2ee.Bundle#NBProfiler/Categories/Persistence/Hibernate"/>
+                    <folder name=".package">
+                        <folder name="org.hibernate.impl"/>
+                    </folder>
+                    <folder name=".type">
+                        <folder name="org.hibernate.impl.AbstractQueryImpl"/>
+                        <folder name="org.hibernate.impl.CriteriaImpl"/>
+                        <folder name="org.hibernate.impl.FetchingScrollableResultsImpl"/>
+                        <folder name="org.hibernate.impl.FilterImpl"/>
+                        <folder name="org.hibernate.impl.IteratorImpl"/>
+                        <folder name="org.hibernate.impl.QueryImpl"/>
+                        <folder name="org.hibernate.impl.SQLQueryImpl"/>
+                        <folder name="org.hibernate.impl.ScrollableResultsImpl"/>
+                        <folder name="org.hibernate.impl.SessionFactoryImpl"/>
+                        <folder name="org.hibernate.impl.SessionFactoryObjectFactory"/>
+                        <folder name="org.hibernate.impl.SessionImpl"/>
+                        <folder name="org.hibernate.impl.StatelessSessionImpl"/>
+                    </folder>
+                </folder>
+                <folder name="JDBC">
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.profiler.j2ee.Bundle#NBProfiler/Categories/Persistence/JDBC"/>
+                    <folder name="Connection">
+                        <attr name="displayName" bundlevalue="org.netbeans.modules.profiler.j2ee.Bundle#NBProfiler/Categories/Persistence/JDBC/Connection"/>
+                        <folder name=".subtypes">
+                            <folder name="java.sql.Connection"/>
+                            <folder name="javax.sql.DataSource"/>
+                            <folder name="java.sql.DriverManager">
+                                <attr name="includes" stringvalue="getConnection"/>
+                            </folder>
+                        </folder>
+                    </folder>
+                    <folder name="Statements">
+                        <attr name="displayName" bundlevalue="org.netbeans.modules.profiler.j2ee.Bundle#NBProfiler/Categories/Persistence/JDBC/Statements"/>
+                        <folder name=".subtypes">
+                            <folder name="java.sql.Statement"/>
+                        </folder>
+                    </folder>
+                </folder>
+                <folder name="JPA">
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.profiler.j2ee.Bundle#NBProfiler/Categories/Persistence/JPA"/>
+                    <folder name=".subtypes">
+                        <folder name="javax.persistence.EntityManager"/>
+                        <folder name="javax.persistence.Query"/>
+                    </folder>
+                </folder>
+            </folder>
+            <folder name="JAX-WS">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.profiler.j2ee.Bundle#NBProfiler/Categories/JAX-WS"/>
+                <folder name="Codec">
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.profiler.j2ee.Bundle#NBProfiler/Categories/JAX-WS/Codec"/>
+                    <folder name=".package">
+                        <folder name="com.sun.xml.ws.encoding"/>
+                    </folder>
+                </folder>
+                <folder name="EndpointInvocation">
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.profiler.j2ee.Bundle#NBProfiler/Categories/JAX-WS/EndpointInvocation"/>
+                    <folder name=".type">
+                        <folder name="com.sun.xml.ws.api.pipe.helper.AbstractTubeImpl">
+                            <attr name="includes" stringvalue="process"/>
+                        </folder>
+                    </folder>
+                </folder>
+                <folder name="HTTPTransport">
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.profiler.j2ee.Bundle#NBProfiler/Categories/JAX-WS/HTTPTransport"/>
+                    <folder name=".package">
+                        <folder name="com.sun.xml.ws.transport.http"/>
+                    </folder>
+                </folder>
+                <folder name="MessageProcessing">
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.profiler.j2ee.Bundle#NBProfiler/Categories/JAX-WS/MessageProcessing"/>
+                    <folder name=".package">
+                        <folder name="com.sun.xml.ws.message"/>
+                    </folder>
+                </folder>
+                <folder name="Streaming">
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.profiler.j2ee.Bundle#NBProfiler/Categories/JAX-WS/Streaming"/>
+                    <folder name=".package">
+                        <folder name="com.sun.xml.ws.streaming"/>
+                    </folder>
+                </folder>
+            </folder>
+            <folder name="WebContainer">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.profiler.j2ee.Bundle#NBProfiler/Categories/WebContainer"/>
+                <folder name="Filters">
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.profiler.j2ee.Bundle#NBProfiler/Categories/WebContainer/Filters"/>
+                    <folder name="LifeCycle">
+                        <attr name="displayName" bundlevalue="org.netbeans.modules.profiler.j2ee.Bundle#NBProfiler/Categories/WebContainer/Filters/LifeCycle"/>
+                        <folder name=".subtypes">
+                            <folder name="javax.servlet.Filter">
+                                <attr name="includes" stringvalue="init,destroy"/>
+                            </folder>
+                        </folder>
+                    </folder>
+                    <folder name=".subtypes">
+                        <folder name="javax.servlet.Filter">
+                            <attr name="excludes" stringvalue="init,destroy"/>
+                        </folder>
+                        <folder name="javax.servlet.FilterChain"/>
+                    </folder>
+                </folder>
+                <folder name="JSPs">
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.profiler.j2ee.Bundle#NBProfiler/Categories/WebContainer/JSPs"/>
+                    <folder name=".custom">
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.profiler.j2ee.JSPMarkerMethodProvider"/>
+                    </folder>
+                </folder>
+                <folder name="JSTL">
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.profiler.j2ee.Bundle#NBProfiler/Categories/WebContainer/JSTL"/>
+                    <folder name=".subtypes">
+                        <folder name="javax.servlet.jsp.tagext.BodyTagSupport"/>
+                        <folder name="javax.servlet.jsp.tagext.SimpleTagSupport"/>
+                        <folder name="javax.servlet.jsp.tagext.Tag"/>
+                        <folder name="javax.servlet.jsp.tagext.TagSupport"/>
+                    </folder>
+                </folder>
+                <folder name="Listeners">
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.profiler.j2ee.Bundle#NBProfiler/Categories/WebContainer/Listeners"/>
+                    <folder name=".subtypes">
+                        <folder name="javax.servlet.ServletContextAttributeListener"/>
+                        <folder name="javax.servlet.ServletContextListener"/>
+                        <folder name="javax.servlet.ServletRequestAttributeListener"/>
+                        <folder name="javax.servlet.ServletRequestListener"/>
+                        <folder name="javax.servlet.http.HttpSessionActivationListener"/>
+                        <folder name="javax.servlet.http.HttpSessionAttributeListener"/>
+                        <folder name="javax.servlet.http.HttpSessionListener"/>
+                    </folder>
+                </folder>
+                <folder name="Servlets">
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.profiler.j2ee.Bundle#NBProfiler/Categories/WebContainer/Servlets"/>
+                    <folder name="LifeCycle">
+                        <attr name="displayName" bundlevalue="org.netbeans.modules.profiler.j2ee.Bundle#NBProfiler/Categories/WebContainer/Servlets/LifeCycle"/>
+                        <folder name=".subtypes">
+                            <folder name="javax.servlet.Servlet">
+                                <attr name="includes" stringvalue="init,destroy"/>
+                            </folder>
+                            <folder name="javax.servlet.http.HttpServlet">
+                                <attr name="includes" stringvalue="init,destroy"/>
+                            </folder>
+                        </folder>
+                    </folder>
+                    <folder name=".subtypes">
+                        <folder name="javax.servlet.Servlet">
+                            <attr name="excludes" stringvalue="init,destroy"/>
+                        </folder>
+                        <folder name="javax.servlet.http.HttpServlet">
+                            <attr name="excludes" stringvalue="init,destroy"/>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+            <folder name="EJBContainer">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.profiler.j2ee.Bundle#NBProfiler/Categories/EJBContainer"/>
+                <folder name="Lifecycle">
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.profiler.j2ee.Bundle#NBProfiler/Categories/EJBContainer/Lifecycle"/>
+                    <folder name=".custom">
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.profiler.j2ee.marking.LifecycleEJBMarkingProvider"/>
+                    </folder>
+                </folder>
+                <folder name="Persistence">
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.profiler.j2ee.Bundle#NBProfiler/Categories/EJBContainer/Persistence"/>
+                    <folder name=".custom">
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.profiler.j2ee.marking.EJB2PersistenceMarkingProvider"/>
+                    </folder>
+                </folder>
+                
+                <folder name=".custom">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.profiler.j2ee.marking.EJBMarkingProvider"/>
+                </folder>
+            </folder>
+        </folder>
+        -->
+    </folder>
+    <folder name="Projects">
+        <folder name="org-netbeans-modules-j2ee-ejbjarproject">
+            <folder name="NBProfiler">
+                <!--
+                <folder name="Categories">
+                    <file name="Persistence.shadow">
+                        <attr name="originalFile" stringvalue="NBProfiler/Categories/Persistence"/>
+                    </file>
+                    <file name="EJBContainer.shadow">
+                        <attr name="originalFile" stringvalue="NBProfiler/Categories/EJBContainer"/>
+                    </file>
+                    <file name="JAXWS.shadow">
+                        <attr name="originalFile" stringvalue="NBProfiler/Categories/JAX-WS"/>
+                    </file>
+                </folder>
+                -->
+            </folder>
+        </folder>
+        <folder name="org-netbeans-modules-web-project">
+            <folder name="NBProfiler">
+                <!--
+                <folder name="Categories">
+                    <file name="Persistence.shadow">
+                        <attr name="originalFile" stringvalue="NBProfiler/Categories/Persistence"/>
+                    </file>
+                    <file name="WebContainer.shadow">
+                        <attr name="originalFile" stringvalue="NBProfiler/Categories/WebContainer"/>
+                    </file>
+                    <file name="JAXWS.shadow">
+                        <attr name="originalFile" stringvalue="NBProfiler/Categories/JAX-WS"/>
+                    </file>
+                </folder>
+                -->
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

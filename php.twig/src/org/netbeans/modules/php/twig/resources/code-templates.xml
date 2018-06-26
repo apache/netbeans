@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+<!DOCTYPE codetemplates PUBLIC  "-//NetBeans//DTD Editor Code Templates settings 1.0//EN"
+                                "http://www.netbeans.org/dtds/EditorCodeTemplates-1_0.dtd">
+
+<codetemplates>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.ae" abbreviation="ae" contexts="twig-code">
+        <code>
+<![CDATA[autoescape]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.eae" abbreviation="eae" contexts="twig-code">
+        <code>
+<![CDATA[endautoescape]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.bl" abbreviation="bl" contexts="twig-code">
+        <code>
+<![CDATA[block ${name}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.ebl" abbreviation="ebl" contexts="twig-code">
+        <code>
+<![CDATA[endblock]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.em" abbreviation="em" contexts="twig-code">
+        <code>
+<![CDATA[embed "${template.twig}"]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.eem" abbreviation="eem" contexts="twig-code">
+        <code>
+<![CDATA[endembed]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.ex" abbreviation="ex" contexts="twig-code">
+        <code>
+<![CDATA[extends "${template.twig}"]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.fi" abbreviation="fi" contexts="twig-code">
+        <code>
+<![CDATA[filter ${name}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.efi" abbreviation="efi" contexts="twig-code">
+        <code>
+<![CDATA[endfilter]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.fl" abbreviation="fl" contexts="twig-code">
+        <code>
+<![CDATA[flush]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.fo" abbreviation="fo" contexts="twig-code">
+        <code>
+<![CDATA[for ${item} in ${array}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.efo" abbreviation="efo" contexts="twig-code">
+        <code>
+<![CDATA[endfor]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.fr" abbreviation="fr" contexts="twig-code">
+        <code>
+<![CDATA[from]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.if" abbreviation="fif" contexts="twig-code">
+        <code>
+<![CDATA[if ${true}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.el" abbreviation="el" contexts="twig-code">
+        <code>
+<![CDATA[else]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.eli" abbreviation="eli" contexts="twig-code">
+        <code>
+<![CDATA[elseif ${true}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.eif" abbreviation="eif" contexts="twig-code">
+        <code>
+<![CDATA[endif]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.im" abbreviation="im" contexts="twig-code">
+        <code>
+<![CDATA[import '${page.html}' as ${alias}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.in" abbreviation="in" contexts="twig-code">
+        <code>
+<![CDATA[include '${page.html}']]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.ma" abbreviation="ma" contexts="twig-code">
+        <code>
+<![CDATA[macro ${name}()]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.ema" abbreviation="ema" contexts="twig-code">
+        <code>
+<![CDATA[endmacro]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.ra" abbreviation="ra" contexts="twig-code">
+        <code>
+<![CDATA[raw]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.era" abbreviation="era" contexts="twig-code">
+        <code>
+<![CDATA[endraw]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.sb" abbreviation="sb" contexts="twig-code">
+        <code>
+<![CDATA[sandbox]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.esb" abbreviation="esb" contexts="twig-code">
+        <code>
+<![CDATA[endsandbox]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.se" abbreviation="se" contexts="twig-code">
+        <code>
+<![CDATA[set ${variable}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.ese" abbreviation="ese" contexts="twig-code">
+        <code>
+<![CDATA[endset]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.sl" abbreviation="sl" contexts="twig-code">
+        <code>
+<![CDATA[spaceless]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.esl" abbreviation="esl" contexts="twig-code">
+        <code>
+<![CDATA[endspaceless]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.us" abbreviation="us" contexts="twig-code">
+        <code>
+<![CDATA[use "${page.html}"]]>
+        </code>
+    </codetemplate>
+</codetemplates>

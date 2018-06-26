@@ -1,0 +1,15 @@
+Code completion result for source line:
+[1,2]*.s|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     setMetaClass(MetaClass)                    void
+METHOD     shortValue()                    [PUBLIC]   short
+METHOD     signum(int)                     [STATIC,   int
+METHOD     sleep(long)                                void
+METHOD     sleep(long, Closure)                       void
+METHOD     split(Closure)                             Collection
+METHOD     sprintf(String, Object)                    String
+METHOD     sprintf(String, Object)                    String
+METHOD     step(Number, Number, Closure)              void
+METHOD     stringSize(int)                 [STATIC]   int
+METHOD     sum(int, int)                   [STATIC,   int

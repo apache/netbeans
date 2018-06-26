@@ -1,0 +1,10 @@
+Quirky doctype. Expected "".
+From line 5, column 4; to line 6, column 63
+(Rule Category: Doctype)
+----
+(Alt-Enter shows hints)
+End tag for "body" seen but there were unclosed elements.
+From line 16, column 3; to line 16, column 9
+(Rule Category: Tags Matching)
+----
+(Alt-Enter shows hints)

@@ -1,0 +1,7 @@
+[CODE_DELIMITER(1):-][JAVASCRIPT(34):var implicitname = "implicit name"][EOL(1):\n]
+[EOL(1):\n]
+[KEYWORD_MIXIN(5):mixin][WHITESPACE(1): ][MIXIN_NAME(13):-clever-name-][EOL(1):\n]
+[WHITESPACE(4):    ][TAG(4):ahoj][WHITESPACE(1): ][TEXT(11):how are you][EOL(1):\n]
+[WHITESPACE(4):    ][EXPRESSION_DELIMITER_OPEN(2):#{][JAVASCRIPT(12):implicitname][EXPRESSION_DELIMITER_CLOSE(1):}][EOL(1):\n]
+[WHITESPACE(4):    ][EXPRESSION_DELIMITER_OPEN(2):!{][JAVASCRIPT(12):implicitname][EXPRESSION_DELIMITER_CLOSE(1):}][EOL(1):\n]
+[WHITESPACE(4):    ]

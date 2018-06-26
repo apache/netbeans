@@ -1,0 +1,24 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='15'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='15'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='15'>
+      <BinaryNode type='ASSIGN' start='0' end='15'>
+        <isAssignment/>
+        <!-- BinaryNode lhs -->
+        <IdentNode start='0' end='1'>
+          <name>z</name>
+        </IdentNode>
+        <!-- BinaryNode rhs -->
+        <JsxElementNode name='s.a' start='4' end='15'>
+          <!-- JSX Element Attributes -->
+          <!-- JSX Element Children -->
+        </JsxElementNode>
+      </BinaryNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

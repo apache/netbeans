@@ -1,0 +1,132 @@
+<?php
+/*
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ *
+ * Copyright 2011 Oracle and/or its affiliates. All rights reserved.
+ *
+ * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+ * Other names may be trademarks of their respective owners.
+ *
+ * The contents of this file are subject to the terms of either the GNU
+ * General Public License Version 2 only ("GPL") or the Common
+ * Development and Distribution License("CDDL") (collectively, the
+ * "License"). You may not use this file except in compliance with the
+ * License. You can obtain a copy of the License at
+ * http://www.netbeans.org/cddl-gplv2.html
+ * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+ * specific language governing permissions and limitations under the
+ * License.  When distributing the software, include this License Header
+ * Notice in each file and include the License file at
+ * nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the GPL Version 2 section of the License file that
+ * accompanied this code. If applicable, add the following below the
+ * License Header, with the fields enclosed by brackets [] replaced by
+ * your own identifying information:
+ * "Portions Copyrighted [year] [name of copyright owner]"
+ *
+ * If you wish your version of this file to be governed by only the CDDL
+ * or only the GPL Version 2, indicate your decision by adding
+ * "[Contributor] elects to include this software in this distribution
+ * under the [CDDL or GPL Version 2] license." If you do not indicate a
+ * single choice of license, a recipient has the option to distribute
+ * your version of this file under either the CDDL, the GPL Version 2 or
+ * to extend the choice of license to its licensees as provided above.
+ * However, if you add GPL Version 2 code and therefore, elected the GPL
+ * Version 2 license, then the option applies only if the new code is
+ * made subject to such option by the copyright holder.
+ *
+ * Contributor(s):
+ *
+ * Portions Copyrighted 2011 Sun Microsystems, Inc.
+ */
+
+namespace TodoList;
+
+use \TodoList\Model\Todo;
+use \TodoList\Util\Utils;
+
+//~ Template for index.php
+// variables:
+//  $template - page to be displayed (included)
+//  $flashes - flash messages
+
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TODO List - sample application for NetBeans IDE</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" >
+    <meta name="description" content="TODO List - sample application for NetBeans IDE" >
+    <meta name="keywords" content="NetBeans, PHP" >
+    <meta name="author" content="NetBeans PHP team" >
+
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/redmond/jquery-ui.css" >
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" >
+    <link href="css/style.css" rel="stylesheet" type="text/css" >
+    <link href="css/layout.css" rel="stylesheet" type="text/css" >
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="js/script.js"></script>
+
+</head>
+<body id="page">
+    <div class="tail-top-right"></div>
+    <div id="main">
+        <!-- header -->
+        <div id="header">
+            <i class="material-icons logo">assignment</i>
+            <div class="title">
+                <h1>TODO List</h1>
+                <h2>NetBeans PHP Sample Application</h2>
+            </div>
+            <div class="nb">
+                <a href="https://netbeans.org/features/php/" target="_blank" title="NetBeans PHP Support"><img src="img/NB-IDE-logo.png" alt="NetBeans logo"></a>
+            </div>
+        </div>
+        <!-- content -->
+        <div id="content">
+            <div class="wrapper">
+                <div class="col-1">
+                    <div class="box">
+                        <div class="inner">
+                            <ul class="list">
+                                <li><span><a href="<?php echo Utils::createLink('home'); ?>">Home</a></span></li>
+                                <li><span><a href="<?php echo Utils::createLink('list', ['status' => Todo::STATUS_PENDING]); ?>" title="Pending TODOs"
+                                             ><?php echo Utils::iconStatus(Todo::STATUS_PENDING); ?>Pending TODOs</a></span></li>
+                                <li><span><a href="<?php echo Utils::createLink('list', ['status' => Todo::STATUS_DONE]); ?>" title="Done TODOs"
+                                             ><?php echo Utils::iconStatus(Todo::STATUS_DONE); ?>Done TODOs</a></span></li>
+                                <li><span><a href="<?php echo Utils::createLink('list', ['status' => Todo::STATUS_VOIDED]); ?>" title="Voided TODOs"
+                                             ><?php echo Utils::iconStatus(Todo::STATUS_VOIDED); ?>Voided TODOs</a></span></li>
+                                <li class="last"><span><a href="<?php echo Utils::createLink('add-edit'); ?>" title="Add TODO"
+                                             ><i class="material-icons new">insert_invitation</i>Add TODO</a></span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="indent">
+                        <?php if ($flashes): ?>
+                            <ul id="flashes">
+                            <?php foreach ($flashes as $flash): ?>
+                                <li><?php echo $flash; ?></li>
+                            <?php endforeach; ?>
+                            </ul>
+                        <?php endif; ?>
+
+                        <?php require $template; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- footer -->
+        <div id="footer">
+            <div class="indent">
+                <div class="fleft"><a href="https://blogs.oracle.com/netbeansphp/">NetBeans PHP team</a>, 2016 &copy; Copyright Oracle corp., All rights reserved</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

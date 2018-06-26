@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
+  <!ENTITY api-questions SYSTEM "../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
+]>
+
+<api-answers
+  question-version="1.9"
+  author="mgrebac@netbeans.org"
+>
+
+  &api-questions;
+
+<answer id="arch-what">The module is a JSP and servlet debugger for web applications. It allows users add breakpoints into JSPs or servlets.</answer>
+
+<answer id="dep-nb">
+<ul>
+    <li>
+        <api
+            name="OpenAPIs"
+            type="import"
+            category="stable"
+            url="http://www.netbeans.org/download/dev/javadoc/OpenAPIs/"
+        >
+        NetBeans Open APIs
+        </api>
+    </li>
+    <li>
+        <api 
+            name="web-core"
+            type="import"
+            category="friend"
+        >
+        The <code>web-core</code> module.
+        </api>
+    </li>        
+    <li>
+        <api 
+            name="debuggerjpda"
+            type="import"
+            category="stable"
+        >
+        The <code>debuggerjpda</code> module.
+        </api>
+    </li>        
+    <li>
+        <api 
+            name="javaclasspath"
+            type="import"
+            category="stable"
+        >
+        The Classpath API.
+        </api>
+    </li>        
+    <li>
+        <api 
+            name="j2eeserver"
+            type="import"
+            category="stable"
+        >
+        J2eeserver module api for ide-server communication.
+        </api>
+    </li>        
+</ul>
+</answer>
+
+<answer id="dep-non-nb">Tomcat JSP compiler.</answer>
+        
+<answer id="dep-platform">
+ Java compatible.
+</answer>
+        
+<answer id="dep-jre">
+    JRE 1.3
+</answer>
+
+<answer id="dep-jrejdk">JRE is enough.</answer>
+                
+<answer id="deploy-jar">Just module jar.</answer>
+
+<answer id="deploy-nbm">Yes.</answer>
+        
+<answer id="deploy-shared">Any described scenario works.</answer>
+        
+<answer id="deploy-packages">No.</answer>
+        
+<answer id="compat-i18n">Yes.</answer>
+
+<answer id="compat-standards">No, currently it does not implement any standard.</answer>
+
+<answer id="compat-version">No.</answer>
+
+<answer id="resources-file">Yes. It needs the File to work with insane filenames that Tomcat compiler uses.</answer>
+    
+<answer id="resources-layer">
+    It uses layer.xml file to register actions into popup menus, annotation types into editor, modules settings, and registers 
+    an implementation of an interface class declared by the <code>web-core</code> API.
+</answer>
+        
+<answer id="resources-read">No.</answer>
+       
+<answer id="resources-mask">No.</answer>
+    
+<answer id="lookup-lookup">Yes. Debugger.class, DataLoaderPool.class.</answer>
+
+<answer id="lookup-register">The module registers JspIEFactory using the layer.xml file.</answer>
+
+<answer id="lookup-remove">No.</answer>
+
+<answer id="exec-property">I would say no.</answer>
+        
+<answer id="exec-component">No.</answer>
+
+<answer id="exec-classloader">No.</answer>
+                
+<answer id="exec-reflection">No.</answer>
+        
+<answer id="exec-privateaccess">No.</answer>
+
+<answer id="format-types">It reads servlets and JSPs.</answer>
+        
+<answer id="format-dnd">None.</answer>
+        
+<answer id="format-clipboard">None.</answer>
+        
+<answer id="perf-startup">Yes. It registers Events into JPDADebugger, and creates listener on Debugger CurrentLine property changes.</answer>
+
+<answer id="perf-exit">No.</answer>
+
+<answer id="perf-scale">Size of file in editor, amount of files, amount of breakpoints in the files.</answer>
+        
+<answer id="perf-limit">No.</answer>
+    
+<answer id="perf-mem">I don't know. It holds a lineset for each document, and a table of line-mappings from jsps/servlets.</answer>
+        
+<answer id="perf-wakeup">No.</answer>
+
+<answer id="perf-progress">No.</answer>
+
+<answer id="perf-huge_dialogs">No.</answer>
+
+<answer id="perf-menus">No complicated logic.</answer>
+        
+</api-answers>

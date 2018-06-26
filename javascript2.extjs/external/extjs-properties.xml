@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 2013 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+
+Portions Copyrighted 2013 Sun Microsystems, Inc.
+-->
+
+
+<ext>
+    <object name="Ext.application">
+        <property name="name" type="String">
+            <doc>
+                The name of your application. This will also be the namespace for your views, 
+                controllers models and stores. Don't use spaces or special characters in the name.
+            </doc>
+            <template>
+                <![CDATA[
+                    '${cursor}'
+                ]]>
+            </template>
+        </property>
+        <property name="controllers" type="String[]">
+            <doc>
+                Names of controllers that the app uses.
+            </doc>
+            <template>
+                <![CDATA[
+                    ['${cursor}']
+                ]]>
+            </template>
+        </property>
+        <property name="scope" type="Object">
+            <doc>
+                The scope to execute the launch function in.
+            </doc>
+        </property>
+        <property name="enableQuickTips" type="Boolean">
+            <doc>
+                True to automatically set up Ext.tip.QuickTip support.
+            </doc>
+        </property>
+        <property name="appFolder" type="String">
+            <doc>
+                <![CDATA[ The path to the directory which contains all application's classes.
+                This path will be registered via {@link Ext.Loader#setPath} for the namespace specified
+                in the {@link #name name} config. ]]>
+            </doc>
+        </property>
+        <property name="appProperty" type="String">
+            <doc>
+                <![CDATA[
+The name of a property to be assigned to the main namespace to gain a reference to
+this application. Can be set to an empty value to prevent the reference from
+being created
+<pre>
+Ext.application({
+    name: 'MyApp',
+    appProperty: 'myProp',
+
+    launch: function() {
+        console.log(MyApp.myProp === this);
+    }
+});
+</pre>
+     ]]>
+            </doc>
+        </property>
+        <property name="namespaces" type="String[]">
+            <doc>
+                <![CDATA[
+The list of namespace prefixes used in the application to resolve dependencies
+like Views and Stores:
+
+<pre> 
+Ext.application({
+    name: 'MyApp',
+
+    namespaces: ['Common.code'],
+
+    controllers: [ 'Common.code.controller.Foo', 'Bar' ]
+});
+
+Ext.define('Common.code.controller.Foo', {
+    extend: 'Ext.app.Controller',
+
+    models: ['Foo'],    // Loads Common.code.model.Foo
+    views:  ['Bar']     // Loads Common.code.view.Bar
+});
+
+Ext.define('MyApp.controller.Bar', {
+    extend: 'Ext.app.Controller',
+
+    models: ['Foo'],    // Loads MyApp.model.Foo
+    views:  ['Bar']     // Loads MyApp.view.Bar
+});
+</pre>
+
+You don't need to include main namespace (MyApp), it will be added to the list
+automatically.
+                ]]>
+            </doc>
+        </property>
+        <property name="autoCreateViewport" type="Boolean">
+            <doc>
+                True to automatically load and instantiate AppName.view.Viewport before firing the launch function.
+            </doc>
+        </property>
+        <property name="path" type="Object">
+            <doc>
+                <![CDATA[
+                Additional load paths to add to Ext.Loader.
+                See {@link Ext.Loader#paths} config for more details.
+                ]]>
+            </doc>
+        </property>
+        <property name="launch" type="Function">
+            <doc>
+                <![CDATA[
+      Called automatically when the page has completely loaded. This is an empty function that should be
+      overridden by each application that needs to take action on page load.
+      @param {String} profile The detected application profile
+      @return {Boolean} By default, the Application will dispatch to the configured startup controller and
+      action immediately after running the launch function. Return false to prevent this behavior.
+                ]]>
+            </doc>
+            <template><![CDATA[function (profile) {
+    // This is fired as soon as the page is ready
+    ${cursor}
+}]]>
+            </template>
+        </property>
+    </object>
+    <object name="Ext.define">
+        <property name="extend">
+            <template>'${cursor}'</template>
+        </property>
+        <property name="alias">
+            <template>'${cursor}'</template>
+        </property>
+        <property name="store">
+            <template>'${cursor}'</template>
+        </property>
+    </object>
+</ext>

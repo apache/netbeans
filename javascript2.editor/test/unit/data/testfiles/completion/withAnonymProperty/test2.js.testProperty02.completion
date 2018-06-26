@@ -1,0 +1,5 @@
+Code completion result for source line:
+gg.l|anguage;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      language                        [PUBLIC]   test2.js

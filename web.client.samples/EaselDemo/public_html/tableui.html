@@ -1,0 +1,157 @@
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright (c) 2012, 2016 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.26.2/css/theme.blue.min.css'>
+        <link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.26.2/css/jquery.tablesorter.pager.min.css'>
+        <script src='//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js'></script>
+        <script src='//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'></script>
+        <script src='//ajax.cdnjs.com/ajax/libs/backbone.js/0.9.2/backbone-min.js'></script>
+        <script src='//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.26.2/js/jquery.tablesorter.min.js' type="text/javascript"></script>
+        <script src='//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.26.2/js/extras/jquery.tablesorter.pager.min.js' type="text/javascript"></script>
+        <script src='rest/RestClient.js'></script>
+    </head>
+    <body>
+        <div id='create'></div>
+
+        <table id='datatable' class='tablesorter-blue'>
+        </table>
+        <div class='pager' id='pager'>
+            <img src='//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.26.2/css/images/first.png' class='first' alt='First'/>
+            <img src='//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.26.2/css/images/prev.png' class='prev' alt='Prev'/>
+            <span class='pagedisplay'></span> <!-- this can be any element, including an input -->
+            <img src='//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.26.2/css/images/next.png' class='next' alt='Next'/>
+            <img src='//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.26.2/css/images/last.png' class='last' alt='Last'/>
+            <select class='pagesize'>
+                <option selected='selected' value='10'>10</option>
+                <option value='20'>20</option>
+                <option value='30'>30</option>
+                <option value='40'>40</option>
+            </select>
+        </div>
+        <br>
+
+        <div id='details'></div>
+
+
+        <!-- Templates -->
+        <script type='text/template' id='tpl-create'>
+            <!--
+                    Put your controls to create new entity here.
+            
+                    Class 'new' is used to listen on events in JS code.
+            -->
+            <button class='new'>Create</button>
+        </script>
+
+        <script type='text/template' id='thead'>
+        <thead><th>manufacturerId</th>
+        <th>addressline2</th>
+        <th>zip</th>
+        <th>phone</th>
+        <th>addressline1</th>
+        <th>fax</th>
+        <th>email</th>
+        <th>name</th>
+        <th>state</th>
+        <th>city</th>
+        <th>rep</th>
+    </thead>
+</script>
+<script type='text/template' id='tpl-manufacturer-list-item'>
+    <td><a href='#<%= manufacturerId %>'><%= manufacturerId %></a></td>
+    <td><%= addressline2 %></td>
+    <td><%= zip %></td>
+    <td><%= phone %></td>
+    <td><%= addressline1 %></td>
+    <td><%= fax %></td>
+    <td><%= email %></td>
+    <td><%= name %></td>
+    <td><%= state %></td>
+    <td><%= city %></td>
+    <td><%= rep %></td>
+</script>
+
+<script type='text/template' id='tpl-manufacturer-details'>
+    <div>
+        <table>
+            <tbody>
+                <tr><td>Id</td>
+                    <td>
+                        <input type='text' id='manufacturerId' name='id' value='<%= typeof(manufacturerId)!== "undefined" ? manufacturerId : "" %>'  />
+                    </td>
+                </tr>
+                <tr>
+                    <td>addressline2</td><td><input type='text' id='addressline2' name='addressline2' value='<%= addressline2 %>'/></td></tr>
+                <tr>
+                    <td>zip</td><td><input type='text' id='zip' name='zip' value='<%= zip %>'/></td></tr>
+                <tr>
+                    <td>phone</td><td><input type='text' id='phone' name='phone' value='<%= phone %>'/></td></tr>
+                <tr>
+                    <td>addressline1</td><td><input type='text' id='addressline1' name='addressline1' value='<%= addressline1 %>'/></td></tr>
+                <tr>
+                    <td>fax</td><td><input type='text' id='fax' name='fax' value='<%= fax %>'/></td></tr>
+                <tr>
+                    <td>email</td><td><input type='text' id='email' name='email' value='<%= email %>'/></td></tr>
+                <tr>
+                    <td>name</td><td><input type='text' id='name' name='name' value='<%= name %>'/></td></tr>
+                <tr>
+                    <td>state</td><td><input type='text' id='state' name='state' value='<%= state %>'/></td></tr>
+                <tr>
+                    <td>city</td><td><input type='text' id='city' name='city' value='<%= city %>'/></td></tr>
+                <tr>
+                    <td>rep</td><td><input type='text' id='rep' name='rep' value='<%= rep %>'/></td></tr>
+            </tbody>
+        </table>
+        <!--
+                Put your controls to create new entity here.
+                Classes 'save' and 'delete' are used to listen on events in JS code.
+        -->
+        <button  class='save'>Save</button>
+        <button  class='delete'>Delete</button>
+    </div>
+</script>
+
+
+</body>
+</html>

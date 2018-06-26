@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2009 Sun Microsystems, Inc. All rights reserved.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Sun designates this
+particular file as subject to the "Classpath" exception as provided
+by Sun in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!--
+*** GENERATED FROM project.xml - DO NOT EDIT  ***
+***         EDIT ../build.xml INSTEAD         ***
+
+For the purpose of easier reading the script
+is divided into following sections:
+
+  - initialization
+  - compilation
+  - dist
+  - execution
+  - debugging
+  - javadoc
+  - cleanup
+
+-->
+<project name="EnterpriseApplication1-impl" default="build" basedir=".." xmlns:ear2="http://www.netbeans.org/ns/j2ee-earproject/2">
+    <target name="default" depends="dist,javadoc" description="Build whole project."/>
+    <!-- 
+    ======================
+    INITIALIZATION SECTION 
+    ======================
+    -->
+    <target name="pre-init">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target name="init-private" depends="pre-init">
+        <property file="nbproject/private/private.properties"/>
+    </target>
+    <target name="init-userdir" depends="pre-init,init-private">
+        <property name="user.properties.file" location="${netbeans.user}/build.properties"/>
+    </target>
+    <target name="init-user" depends="pre-init,init-private,init-userdir">
+        <property file="${user.properties.file}"/>
+    </target>
+    <target name="init-project" depends="pre-init,init-private,init-userdir,init-user">
+        <property file="nbproject/project.properties"/>
+    </target>
+    <target name="do-init" depends="pre-init,init-private,init-userdir,init-user,init-project">
+        <!-- The two properties below are usually overridden -->
+        <!-- by the active platform. Just a fallback. -->
+        <property name="default.javac.source" value="1.4"/>
+        <property name="default.javac.target" value="1.4"/>
+        <condition property="no.javadoc.preview">
+            <isfalse value="${javadoc.preview}"/>
+        </condition>
+        <condition property="do.compile.jsps">
+            <istrue value="${compile.jsps}"/>
+        </condition>
+        <condition property="do.display.browser">
+            <and>
+                <istrue value="${display.browser}"/>
+                <contains string="${client.module.uri}" substring=".war"/>
+            </and>
+        </condition>
+        <available property="has.custom.manifest" file="${meta.inf}/MANIFEST.MF"/>
+    </target>
+    <target name="post-init">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target name="init-check" depends="pre-init,init-private,init-userdir,init-user,init-project,do-init">
+        <fail unless="src.dir">Must set src.dir</fail>
+        <fail unless="build.dir">Must set build.dir</fail>
+        <fail unless="build.archive.dir">Must set build.archive.dir</fail>
+        <fail unless="build.generated.dir">Must set build.generated.dir</fail>
+        <fail unless="dist.dir">Must set dist.dir</fail>
+        <fail unless="build.classes.dir">Must set build.classes.dir</fail>
+        <fail unless="dist.javadoc.dir">Must set dist.javadoc.dir</fail>
+        <fail unless="build.classes.excludes">Must set build.classes.excludes</fail>
+        <fail unless="dist.jar">Must set dist.jar</fail>
+    </target>
+    <target name="init-macrodef-javac">
+        <macrodef name="javac" uri="http://www.netbeans.org/ns/j2ee-earproject/1">
+            <attribute name="srcdir" default="${src.dir}"/>
+            <attribute name="destdir" default="${build.classes.dir}"/>
+            <attribute name="classpath" default="${javac.classpath}"/>
+            <attribute name="debug" default="${javac.debug}"/>
+            <element name="customize" optional="true"/>
+            <sequential>
+                <javac srcdir="@{srcdir}" destdir="@{destdir}" debug="@{debug}" deprecation="${javac.deprecation}" source="${javac.source}" target="${javac.target}" includeantruntime="false">
+                    <classpath>
+                        <path path="@{classpath}"/>
+                    </classpath>
+                    <customize/>
+                </javac>
+            </sequential>
+        </macrodef>
+    </target>
+    <target name="init-macrodef-nbjpda">
+        <macrodef name="nbjpdastart" uri="http://www.netbeans.org/ns/j2ee-earproject/1">
+            <attribute name="name" default="${main.class}"/>
+            <attribute name="classpath" default="${debug.classpath}"/>
+            <sequential>
+                <nbjpdastart transport="dt_socket" addressproperty="jpda.address" name="@{name}">
+                    <classpath>
+                        <path path="@{classpath}"/>
+                    </classpath>
+                </nbjpdastart>
+            </sequential>
+        </macrodef>
+        <macrodef name="nbjpdareload" uri="http://www.netbeans.org/ns/j2ee-earproject/1">
+            <attribute name="dir" default="${build.classes.dir}"/>
+            <sequential>
+                <nbjpdareload>
+                    <fileset includes="${fix.includes}*.class" dir="@{dir}"/>
+                </nbjpdareload>
+            </sequential>
+        </macrodef>
+    </target>
+    <target name="init-macrodef-debug">
+        <macrodef name="debug" uri="http://www.netbeans.org/ns/j2ee-earproject/1">
+            <attribute name="classname" default="${main.class}"/>
+            <attribute name="classpath" default="${debug.classpath}"/>
+            <attribute name="args" default="${application.args}"/>
+            <sequential>
+                <java fork="true" classname="@{classname}">
+                    <jvmarg value="-Xdebug"/>
+                    <jvmarg value="-Xnoagent"/>
+                    <jvmarg value="-Djava.compiler=none"/>
+                    <jvmarg value="-Xrunjdwp:transport=dt_socket,address=${jpda.address}"/>
+                    <classpath>
+                        <path path="@{classpath}"/>
+                    </classpath>
+                    <arg line="@{args}"/>
+                </java>
+            </sequential>
+        </macrodef>
+    </target>
+    <target name="init" depends="pre-init,init-private,init-userdir,init-user,init-project,do-init,post-init,init-check,init-macrodef-javac,init-macrodef-nbjpda,init-macrodef-debug"/>
+    <!--
+    ===================
+    COMPILATION SECTION
+    ===================
+    -->
+    <target name="deps-jar" depends="init" unless="no.deps"/>
+    <target name="deps-j2ee-archive" depends="init" unless="no.deps"/>
+    <target name="pre-pre-compile" depends="init,deps-jar,deps-j2ee-archive">
+        <mkdir dir="${build.classes.dir}"/>
+    </target>
+    <target name="pre-compile">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target name="do-compile" depends="init,deps-jar,pre-pre-compile,pre-compile">
+        <earproject:javac xmlns:earproject="http://www.netbeans.org/ns/j2ee-earproject/1"/>
+        <copy todir="${build.dir}/META-INF">
+            <fileset dir="${meta.inf}"/>
+        </copy>
+    </target>
+    <target name="post-compile">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target name="compile" depends="init,deps-jar,pre-pre-compile,pre-compile,do-compile,post-compile" description="Compile project."/>
+    <target name="pre-compile-single">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target name="do-compile-single" depends="init,deps-jar,pre-pre-compile">
+        <fail unless="javac.includes">Must select some files in the IDE or set javac.includes</fail>
+        <earproject:javac xmlns:earproject="http://www.netbeans.org/ns/j2ee-earproject/1">
+            <customize>
+                <include name="${javac.includes}"/>
+            </customize>
+        </earproject:javac>
+    </target>
+    <target name="post-compile-single">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target name="compile-single" depends="init,deps-jar,pre-pre-compile,pre-compile-single,do-compile-single,post-compile-single"/>
+    <!--
+    ====================
+    DIST BUILDING SECTION
+    ====================
+    -->
+    <target name="pre-dist">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target name="do-dist-without-manifest" depends="init,compile,pre-dist" unless="has.custom.manifest">
+        <dirname property="dist.jar.dir" file="${dist.jar}"/>
+        <mkdir dir="${dist.jar.dir}"/>
+        <jar jarfile="${dist.jar}" compress="${jar.compress}">
+            <fileset dir="${build.dir}"/>
+        </jar>
+    </target>
+    <target name="do-dist-with-manifest" depends="init,compile,pre-dist" if="has.custom.manifest">
+        <dirname property="dist.jar.dir" file="${dist.jar}"/>
+        <mkdir dir="${dist.jar.dir}"/>
+        <jar jarfile="${dist.jar}" compress="${jar.compress}" manifest="${meta.inf}/MANIFEST.MF">
+            <fileset dir="${build.dir}"/>
+        </jar>
+    </target>
+    <target name="post-dist">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target name="dist" depends="init,compile,pre-dist,do-dist-without-manifest,do-dist-with-manifest,post-dist" description="Build distribution (JAR)."/>
+    <!--
+    =================
+    EXECUTION SECTION
+    =================
+    -->
+    <target name="run" depends="run-deploy,run-display-browser,run-ac" description="Deploy to server."/>
+    <target name="run-deploy" depends="dist">
+        <nbdeploy debugmode="false" forceRedeploy="${forceRedeploy}" clientUrlPart="${client.urlPart}" clientModuleUri="${client.module.uri}"/>
+    </target>
+    <target name="verify" depends="dist">
+        <nbverify file="${dist.jar}"/>
+    </target>
+    <target name="run-display-browser" if="do.display.browser" depends="run-deploy">
+        <nbbrowse url="${client.url}"/>
+    </target>
+    <target name="run-ac" depends="init" if="app.client">
+        <antcall target="run-${app.client}"/>
+    </target>
+    <target name="-as-retrieve-option-workaround" if="j2ee.appclient.mainclass.args" unless="j2ee.clientName">
+        <property name="client.jar" value="${dist.dir}/EnterpriseApplication1Client.jar"/>
+        <copy file="${wa.copy.client.jar.from}/EnterpriseApplication1/EnterpriseApplication1Client.jar" todir="${dist.dir}"/>
+    </target>
+    <!--
+    =================
+    DEBUGGING SECTION
+    =================
+    -->
+    <target name="debug" depends="run-debug,run-display-browser" description="Deploy to server."/>
+    <target name="run-debug" description="Debug project in IDE." depends="dist" if="netbeans.home">
+        <nbdeploy debugmode="true" clientUrlPart="${client.urlPart}" clientModuleUri="${client.module.uri}"/>
+        <nbjpdaconnect name="${name}" host="${jpda.host}" address="${jpda.address}" transport="${jpda.transport}">
+            <classpath>
+                <path path="${debug.classpath}"/>
+            </classpath>
+            <sourcepath>
+                <path path="${ear.docbase.dirs}"/>
+            </sourcepath>
+        </nbjpdaconnect>
+    </target>
+    <target name="pre-debug-fix" depends="init">
+        <fail unless="fix.includes">Must set fix.includes</fail>
+        <property name="javac.includes" value="${fix.includes}.java"/>
+    </target>
+    <target name="do-debug-fix" if="netbeans.home" depends="init,pre-debug-fix,compile-single">
+        <j2seproject:nbjpdareload xmlns:j2seproject="http://www.netbeans.org/ns/j2se-project/1"/>
+    </target>
+    <target name="debug-fix" if="netbeans.home" depends="init,pre-debug-fix,do-debug-fix"/>
+    <!--
+    ===============
+    JAVADOC SECTION
+    ===============
+    -->
+    <target name="javadoc-build" depends="init">
+        <mkdir dir="${dist.javadoc.dir}"/>
+        <javadoc destdir="${dist.javadoc.dir}" source="${javac.source}" notree="${javadoc.notree}" use="${javadoc.use}" nonavbar="${javadoc.nonavbar}" noindex="${javadoc.noindex}" splitindex="${javadoc.splitindex}" author="${javadoc.author}" version="${javadoc.version}" windowtitle="${javadoc.windowtitle}" private="${javadoc.private}">
+            <classpath>
+                <path path="${javac.classpath}"/>
+            </classpath>
+            <sourcepath>
+                <pathelement location="${src.dir}"/>
+            </sourcepath>
+            <fileset dir="${src.dir}"/>
+        </javadoc>
+    </target>
+    <target name="javadoc-browse" if="netbeans.home" unless="no.javadoc.preview" depends="init,javadoc-build">
+        <nbbrowse file="${dist.javadoc.dir}/index.html"/>
+    </target>
+    <target name="javadoc" depends="init,javadoc-build,javadoc-browse" description="Build Javadoc."/>
+    <!--
+    ===============
+    CLEANUP SECTION
+    ===============
+    -->
+    <target name="deps-clean" depends="init" unless="no.deps"/>
+    <target name="do-clean" depends="init">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+        <delete dir="${build.dir}"/>
+    </target>
+    <target name="post-clean">
+        <!-- Empty placeholder for easier customization. -->
+        <!-- You can override this target in the ../build.xml file. -->
+    </target>
+    <target name="clean" depends="init,deps-clean,do-clean,post-clean" description="Clean build products."/>
+</project>

@@ -1,0 +1,2 @@
+todo.completed;
+todo === editedTodo;

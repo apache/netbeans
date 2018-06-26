@@ -1,0 +1,6 @@
+<?php
+class NullableType{
+function nullableTypes(  ?  string $string,    int $num)   :  ?   int{
+return null;
+}
+}

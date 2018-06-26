@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<?xml-stylesheet type="text/xml" href="../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="j2ee-utilities">J2EE Module and Application API</apidef>
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+    <changes>
+    
+        <change id="web-project-classpath-modifier">
+            <api name="j2ee-utilities"/>
+            <summary>Split WebProjectClassPathModifier and move shared part to j2ee.common</summary>
+            <version major="1" minor="53"/>
+            <date day="4" month="8" year="2010"/>
+            <author login="dkonecny"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Split and move existing Friend API from web project into
+                    j2ee.common so that it can be used by AppClient project
+                    as well.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.common.project" name="CompilationOnlyClassPathModifier"/>
+            <issue number="189174"/>
+        </change>
+
+        <change id="beans-xml">
+            <api name="j2ee-utilities"/>
+            <summary>Helper method DDHelper.createBeansXml was added.</summary>
+            <version major="1" minor="49"/>
+            <date day="13" month="1" year="2010"/>
+            <author login="dkonecny"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Helper method DDHelper.createBeansXml was added.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.common.dd" name="DDHelper"/>
+        </change>
+
+        <change id="migrate-code-to-java-api-common">
+            <api name="j2ee-utilities"/>
+            <summary>Migrate all Java related code to java.api.common module.</summary>
+            <version major="1" minor="36"/>
+            <date day="28" month="10" year="2008"/>
+            <author login="dkonecny"/>
+            <compatibility binary="incompatible" source="incompatible" semantic="incompatible" deletion="yes"/>
+            <description>
+                <p>
+                    Most of Java specific code was moved to java.api.common module.
+                </p>
+            </description>
+            <issue number="150357"/>
+        </change>
+
+        <change id="copylibs-library-upgrade">
+            <api name="j2ee-utilities"/>
+            <summary>Helper method makeSureProjectHasCopyLibsLibrary was added.</summary>
+            <version major="1" minor="29"/>
+            <date day="11" month="9" year="2008"/>
+            <author login="dkonecny"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Helper method makeSureProjectHasCopyLibsLibrary was added.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.common" name="SharabilityUtility"/>
+            <issue number="146736"/>
+        </change>
+        
+        <change id="revive-copylib-task">
+            <api name="j2ee-utilities"/>
+            <summary>&lt;copylibs&gt; Ant task was revived</summary>
+            <version major="1" minor="26"/>
+            <date day="27" month="6" year="2008"/>
+            <author login="dkonecny"/>
+            <compatibility binary="incompatible" source="incompatible" semantic="incompatible"/>
+            <description>
+                <p>
+                    Removal of support for generating  libs.XXX.classpath.libfile.XXX properties
+                    and keeping them up to date. It was replaced with &lt;copylibs&gt; Ant task.
+                    All friend API clients updated.
+                </p>
+            </description>
+            <issue number="134642"/>
+        </change>
+        
+        <change id="ProjectTypeRefactorings">
+            <api name="j2ee-utilities"/>
+            <summary>Refactorings of J2EE/Web code</summary>
+            <version major="1" minor="22"/>
+            <date day="18" month="2" year="2008"/>
+            <author login="dkonecny"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    Added project type implementation classes which are same in j2ee project types.
+                    See <code>org.netbeans.modules.j2ee.common.project</code> packages and
+                    subpackages.
+                </p>
+            </description>
+        </change>
+        
+        <change id="J2eeServerSharability">
+            <api name="j2ee-utilities"/>
+            <summary>Added common panels and utility class for sharability.</summary>
+            <version major="1" minor="21"/>
+            <date day="18" month="2" year="2008"/>
+            <author login="phejl"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    Added sharability support classes.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.common.sharability" name="SharabilityUtilities" link="no"/>
+            <class package="org.netbeans.modules.j2ee.common.sharability" name="PanelSharability" link="no"/>
+        </change>
+        
+        <change id="J2eeProjectsConstants">
+            <api name="j2ee-utilities"/>
+            <summary>Removed J2eeProjectsConstants class.</summary>
+            <version major="1" minor="2"/>
+            <date day="22" month="8" year="2005"/>
+            <author login="pbuzek"/>
+            <compatibility binary="incompatible" source="incompatible" semantic="incompatible" addition="no"/>
+            <description>
+                <p>
+                    The <code>J2eeProjectsConstants</code> is a duplicate of EjbProjectConstants in EjbJarAPI.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.common" name="J2eeProjectsConstants" link="no"/>
+        </change>
+
+        <change id="DDEditorNavigator">
+            <api name="j2ee-utilities"/>
+            <summary>Added support for synchronization between DD editor and EJB nodes.</summary>
+            <version major="1" minor="2"/>
+            <date day="22" month="8" year="2005"/>
+            <author login="pbuzek"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    The class serves for synchronization between EJB nodes and deployment descriptor editor.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.common" name="DDEditorNavigator"/>
+        </change>
+        
+
+        <change id="FieldAndQueryCustomizers">
+            <api name="j2ee-utilities"/>
+            <summary>Added two customizers: for .</summary>
+            <version major="1" minor="2"/>
+            <date day="22" month="8" year="2005"/>
+            <author login="pbuzek"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    Added the <code>FieldCustomizer</code> and <code>QueryCustomizer</code> classes.
+                    into newly created j2ee/ejbcore module's API.
+                </p>
+            </description>
+            <!--
+            <class package="org.netbeans.modules.j2ee.common.ui.nodes" name="FieldCustomizer"/>
+            <class package="org.netbeans.modules.j2ee.common.ui.nodes" name="QueryCustomizer"/>
+            -->
+        </change>
+        
+
+        <change id="DatasourceCombobox">
+            <api name="j2ee-utilities"/>
+            <summary>Added two customizers: for .</summary>
+            <version major="1" minor="6"/>
+            <date day="17" month="3" year="2006"/>
+            <author login="lkotouc"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    Added the <code>DatasourceUIHelper</code> class for listing and managing data sources
+                    in the combobox given by a client.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.common" name="DatasourceUIHelper"/>
+        </change>
+    </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <==============
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE j2eeserver/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the EjbJar API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the EjbJar API.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+      <hr/>
+      <standard-changelists module-code-name="org.netbeans.modules.j2ee.api.ejbmodule"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

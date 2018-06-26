@@ -1,0 +1,2 @@
+    public static function |>MARK_OCCURRENCES:parentT^estStatic<|() {
+            echo parent::|>MARK_OCCURRENCES:parentTestStatic<|() . PHP_EOL;

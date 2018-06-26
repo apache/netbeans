@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2007 Sun Microsystems, Inc. All rights reserved.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Sun designates this
+particular file as subject to the "Classpath" exception as provided
+by Sun in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+  The Original Software is NetBeans. The Initial Developer of the Original
+  Software is Sun Microsystems, Inc. Portions Copyright 1997-2007 Sun
+  Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<definitions
+ xmlns="http://schemas.xmlsoap.org/wsdl/"
+ xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+ xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+ name="NewWebServiceService" targetNamespace="http://policy/" xmlns:tns="http://policy/" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp1="http://www.w3.org/ns/ws-policy" xmlns:fi="http://java.sun.com/xml/ns/wsit/2006/09/policy/fastinfoset/service" xmlns:tcp="http://java.sun.com/xml/ns/wsit/2006/09/policy/soaptcp/service" xmlns:wsaw="http://www.w3.org/2005/08/addressing" xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy" xmlns:t="http://schemas.xmlsoap.org/ws/2005/02/trust" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:sp1="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702" xmlns:t1="http://docs.oasis-open.org/ws-sx/ws-trust/200512"
+ >
+    <message name="sample_operation"/>
+    <message name="sample_operationResponse"/>
+    <portType name="NewWebService">
+        <operation name="sample_operation">
+            <input message="tns:sample_operation"/>
+            <output message="tns:sample_operationResponse"/>
+        </operation>
+    </portType>
+    <binding name="NewWebServicePortBinding" type="tns:NewWebService">
+        <wsp1:PolicyReference URI="#NewWebServicePortBindingPolicy"/>
+        <operation name="sample_operation">
+            <input>
+                <wsp1:PolicyReference URI="#NewWebServicePortBinding_sample_operation_Input_Policy"/>
+            </input>
+            <output>
+                <wsp1:PolicyReference URI="#NewWebServicePortBinding_sample_operation_Output_Policy"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="NewWebServiceService">
+        <port name="NewWebServicePort" binding="tns:NewWebServicePortBinding"/>
+    </service>
+    <wsp1:Policy wsu:Id="NewWebServicePortBindingPolicy">
+        <wsp1:ExactlyOne>
+            <wsp1:All>
+                <wsam:Addressing wsp1:Optional="false"/>
+                <sp1:SignedEncryptedSupportingTokens>
+                    <wsp1:Policy>
+                        <sp1:SamlToken sp1:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/AlwaysToRecipient">
+                            <wsp1:Policy>
+                                <sp1:WssSamlV11Token10/>
+                            </wsp1:Policy>
+                        </sp1:SamlToken>
+                    </wsp1:Policy>
+                </sp1:SignedEncryptedSupportingTokens>
+                <sp1:SymmetricBinding>
+                    <wsp1:Policy>
+                        <sp1:ProtectionToken>
+                            <wsp1:Policy>
+                                <sp1:SecureConversationToken sp1:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/AlwaysToRecipient">
+                                    <wsp1:Policy>
+                                        <sp1:RequireDerivedKeys/>
+                                        <sp1:BootstrapPolicy>
+                                            <wsp1:Policy>
+                                                    <sp1:AsymmetricBinding>
+                                                            <wsp1:Policy>
+                                                                    <sp1:InitiatorToken>
+                                                                            <wsp1:Policy>
+                                                                                    <sp1:X509Token sp1:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/AlwaysToRecipient">
+                                                                                            <wsp1:Policy>
+                                                                                                    <sp1:WssX509V3Token10/>
+                                                                                                        <sp1:RequireIssuerSerialReference/>
+                                                                                                </wsp1:Policy>
+                                                                                        </sp1:X509Token>
+                                                                                </wsp1:Policy>
+                                                                        </sp1:InitiatorToken>
+                                                                        <sp1:RecipientToken>
+                                                                            <wsp1:Policy>
+                                                                                    <sp1:X509Token sp1:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/Never">
+                                                                                            <wsp1:Policy>
+                                                                                                    <sp1:WssX509V3Token10/>
+                                                                                                        <sp1:RequireIssuerSerialReference/>
+                                                                                                </wsp1:Policy>
+                                                                                        </sp1:X509Token>
+                                                                                </wsp1:Policy>
+                                                                        </sp1:RecipientToken>
+                                                                        <sp1:Layout>
+                                                                            <wsp1:Policy>
+                                                                                    <sp1:Strict/>
+                                                                                </wsp1:Policy>
+                                                                        </sp1:Layout>
+                                                                        <sp1:IncludeTimestamp/>
+                                                                        <sp1:OnlySignEntireHeadersAndBody/>
+                                                                        <sp1:AlgorithmSuite>
+                                                                            <wsp1:Policy>
+                                                                                    <sp1:Basic128/>
+                                                                                </wsp1:Policy>
+                                                                        </sp1:AlgorithmSuite>
+                                                                </wsp1:Policy>
+                                                        </sp1:AsymmetricBinding>
+                                                <sp1:Wss10>
+                                                    <wsp1:Policy>
+                                                            <sp1:MustSupportRefIssuerSerial/>
+                                                        </wsp1:Policy>
+                                                </sp1:Wss10>
+                                                <sp1:EncryptedParts>
+                                                    <sp1:Body/>
+                                                </sp1:EncryptedParts>
+                                                <sp1:SignedParts>
+                                                    <sp1:Body/>
+                                                    <sp1:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing"/>
+                                                    <sp1:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing"/>
+                                                    <sp1:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing"/>
+                                                    <sp1:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing"/>
+                                                    <sp1:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing"/>
+                                                    <sp1:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing"/>
+                                                    <sp1:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing"/>
+                                                    <sp1:Header Name="AckRequested" Namespace="http://docs.oasis-open.org/ws-rx/wsrmp/200702"/>
+                                                    <sp1:Header Name="SequenceAcknowledgement" Namespace="http://docs.oasis-open.org/ws-rx/wsrmp/200702"/>
+                                                    <sp1:Header Name="Sequence" Namespace="http://docs.oasis-open.org/ws-rx/wsrmp/200702"/>
+                                                    <sp1:Header Name="CreateSequence" Namespace="http://docs.oasis-open.org/ws-rx/wsrmp/200702"/>
+                                                </sp1:SignedParts>
+                                            </wsp1:Policy>
+                                        </sp1:BootstrapPolicy>
+                                    </wsp1:Policy>
+                                </sp1:SecureConversationToken>
+                            </wsp1:Policy>
+                        </sp1:ProtectionToken>
+                        <sp1:Layout>
+                            <wsp1:Policy>
+                                <sp1:Strict/>
+                            </wsp1:Policy>
+                        </sp1:Layout>
+                        <sp1:AlgorithmSuite>
+                            <wsp1:Policy>
+                                <sp1:Basic128/>
+                            </wsp1:Policy>
+                        </sp1:AlgorithmSuite>
+                        <sp1:IncludeTimestamp/>
+                        <sp1:OnlySignEntireHeadersAndBody/>
+                    </wsp1:Policy>
+                </sp1:SymmetricBinding>
+                <sp1:Wss11>
+                    <wsp1:Policy>
+                        <sp1:MustSupportRefIssuerSerial/>
+                        <sp1:MustSupportRefThumbprint/>
+                        <sp1:MustSupportRefEncryptedKey/>
+                    </wsp1:Policy>
+                </sp1:Wss11>
+                <sp1:Trust13>
+                    <wsp1:Policy>
+                        <sp1:RequireClientEntropy/>
+                        <sp1:RequireServerEntropy/>
+                        <sp1:MustSupportIssuedTokens/>
+                    </wsp1:Policy>
+                </sp1:Trust13>
+            </wsp1:All>
+        </wsp1:ExactlyOne>
+    </wsp1:Policy>
+    <wsp1:Policy wsu:Id="NewWebServicePortBinding_sample_operation_Input_Policy">
+        <wsp1:ExactlyOne>
+            <wsp1:All>
+                <sp1:EncryptedParts>
+                    <sp1:Body/>
+                </sp1:EncryptedParts>
+                <sp1:SignedParts>
+                    <sp1:Body/>
+                </sp1:SignedParts>
+            </wsp1:All>
+        </wsp1:ExactlyOne>
+    </wsp1:Policy>
+    <wsp1:Policy wsu:Id="NewWebServicePortBinding_sample_operation_Output_Policy">
+        <wsp1:ExactlyOne>
+            <wsp1:All>
+                <sp1:EncryptedParts>
+                    <sp1:Body/>
+                </sp1:EncryptedParts>
+                <sp1:SignedParts>
+                    <sp1:Body/>
+                </sp1:SignedParts>
+            </wsp1:All>
+        </wsp1:ExactlyOne>
+    </wsp1:Policy>
+</definitions>

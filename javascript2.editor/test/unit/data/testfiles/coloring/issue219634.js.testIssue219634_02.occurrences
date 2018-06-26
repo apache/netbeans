@@ -1,0 +1,2 @@
+    if (!disallowBlank(document.form1.|>MARK_OCCURRENCES:mo^n_yr<|, 'Pls. select Month /Year.'))
+    var mon_yr = getInputValue(document.form1.|>MARK_OCCURRENCES:mon_yr<|),

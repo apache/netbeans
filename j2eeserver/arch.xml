@@ -1,0 +1,1208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
+  <!ENTITY api-questions SYSTEM "../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
+]>
+
+<api-answers
+  question-version="1.29"
+  author="pavel.buzek@sun.com"
+>
+
+  &api-questions;
+
+<!--
+        <question id="arch-what" when="init" >
+            What is this project good for?
+            <hint>
+            Please provide here a few lines describing the project,
+            what problem it should solve, provide links to documentation, 
+            specifications, etc.
+            </hint>
+        </question>
+-->
+        
+<answer id="arch-what">
+<p>
+J2EE Server Module provides support for development of J2EE modules and framework for J2EE server management and for J2EE deployment in IDE.
+</p>
+</answer>
+
+<answer id="arch-overall">
+
+<p>
+    There are two separate api/spi sets in j2eeserver. The devmodules
+    api/spi is for j2ee development modules (web, j2ee app, etc). The
+    plugins api/spi is for server plugins.
+</p>
+
+<api name="J2EEServer-devmodules" type="export" category="friend" group="java">
+    The spi classes are to be subclassed by dev modules and to be provided
+    as cookies on the development nodes. The api classes are to be used to
+    add actions/properties/additional cookies to those nodes.
+</api>
+
+<api name="J2EEServerAPI" type="export" category="friend" group="java">
+  J2EE Server module serves as an integration point between two kinds of netbeans modules:
+  <ul>
+    <li><b>server plugins</b> (or simply plugins) that integrate various J2EE servers in IDE</li>
+    <li><b>devmodules</b> - netbeans modules that provide support for development
+    of J2EE modules (web module, EJB module, J2EE Application, etc.) and need to deploy 
+    and debug them on J2EE servers.</li>
+  </ul>
+</api>
+    
+<api type="export" group="layer" name="PluginRegistration" category="friend" url="@TOP@/org/netbeans/modules/j2ee/deployment/plugins/api/doc-files/plugin-layer-file.html">
+    XML layer contract for registration of server plugins and instances that implement 
+    optional capabilities of server plugins.  Plugins with
+    server-specific deployment decriptor files should declare the full
+    list in XML layer as specified in the document
+    plugin-layer-file.html from the above link. 
+</api>
+
+<p>
+J2EE Server Module enables using <a href="http://java.sun.com/j2ee/tools/deployment/index.jsp">
+J2EE Deployment API</a> (aka JSR88) for plugin integration.
+In addition to that it provides its own API for <b>incremental deployment</b>,
+JSP compilation, server life cycle management (start/stop/debugging mode).
+Incremental deployment deploys J2EE modules to server from a directory structure 
+without requiring to build a J2EE module archive. It also takes the minimal action
+to "refresh" the module on server rahter then completely undeploying and deploying
+the module (or even restarting the server).
+</p>
+<p>J2EE Server Module is integrated with Ant based project system (in the devmodules part) 
+and deployment is called via custom Ant task (works only in IDE).
+</p>
+<p>
+J2EE Server module provides basic UI for server managment and server plugins
+can provide customized UI.
+</p>
+<p>
+J2EE Server module furthermore supports devmodules by managing server libraries i.e. it provides compilation classpath and registers sources and javadocs in lookup.
+</p>
+
+</answer>
+<!--        
+        <question id="arch-usecases" when="init">
+            Describe the main <a href="http://openide.netbeans.org/tutorial/api-design.html#usecase">
+            use cases</a> of the new API. Who will use it at
+            what circumstances and what will be the typical code to write
+            to use the module.
+        </question>
+-->
+<answer id="arch-usecases">
+
+<usecase id="deployment-api-compliant-server" name="Deployment API Compliant Server Plugin">
+A server that supports Deployment API can be integrated in IDE so that J2EE 
+modules could be deployed to it from IDE. It will not support incremental
+deployment, start/stop server or JSP compilation.
+<p><i>
+In order to do this the plugin needs to add the server classes that 
+implement Deployment API to classpath and to provide a 
+<a href="@TOP@/org/netbeans/modules/j2ee/deployment/plugins/api/doc-files/plugin-layer-file.html">
+layer file</a> that will 
+register the server in IDE (specifying URL, user name and password) and 
+register a 
+<a href="http://java.sun.com/j2ee/1.4/docs/api/javax/enterprise/deploy/spi/factories/DeploymentFactory.html">
+factory class</a> from Deployment API. Beside that server plugin must also implement some other mandatory APIs.
+</i></p>
+</usecase>
+
+
+<usecase id="deployment-api-non-complient-server" name="Plugin for Server that does not support Deployment API">
+If a J2EE server does not support Deployment API still needs to be possible 
+to implement a server plugin for it. 
+<p><i>
+In this case the plugin needs to implement the Deployment API interfaces (
+<a href="http://java.sun.com/j2ee/1.4/docs/api/javax/enterprise/deploy/spi/factories/DeploymentFactory.html">
+DeploymentFactory</a>, 
+<a href="http://java.sun.com/j2ee/1.4/docs/api/javax/enterprise/deploy/spi/DeploymentManager.html">
+DeploymentManager</a>) and delegate to whetever interface the specific J2EE server provides.
+An example of this is the Tomcat5 plugin implemented in 
+<a href="http://www.netbeans.org/source/browse/tomcatint/tomcat5/">tomcatint/tomcat5</a>
+module, although it only supports deployment of web modules and it also supports
+some optional interfaces defined by J2EE Server Module in addition to the Deployment API.
+</i></p>
+</usecase>
+
+<usecase id="j2ee-platform" name="Server Plugin mandatory APIs">
+
+Each server plugin is required to provide J2EE platform which devmodules may use beside else for obtaining compilation classpath.
+
+<p><i>Plugins must implement
+<a href="@TOP@/org/netbeans/modules/j2ee/deployment/plugins/spi/J2eePlatformImpl.html">
+J2eePlatformImpl</a> interface and register it via <a href="@TOP@/org/netbeans/modules/j2ee/deployment/plugins/spi/J2eePlatformFactory.html">J2eePlatformFactory</a> whose instance must be registered in the module <a href="@TOP@/org/netbeans/modules/j2ee/deployment/plugins/api/doc-files/plugin-layer-file.html">
+layer file</a>. Devmodules then may access the <a href="@TOP@/org/netbeans/modules/j2ee/deployment/devmodules/api/J2eePlatform.html">J2eePlatform</a> interface via the <a href="@TOP@/org/netbeans/modules/j2ee/deployment/devmodules/api/Deployment.html">Deployment</a> utility class.
+</i></p>
+</usecase>
+
+<usecase id="plugin-with-optional-apis" name="Server Plugin that implements optional APIs">
+In practice plugins will likely want to provide tighter integration with IDE 
+that is specified in Deployment API.
+They can choose to provide any or all of the optional parts of plugin API:
+incremental deployment, JSP compilation, start/stop/debug server support and/or 
+customized UI for server management.
+<p><i>
+In order to do this plugin needs to implement the additional interfaces
+and register their instances in module 
+<a href="@TOP@/org/netbeans/modules/j2ee/deployment/plugins/api/doc-files/plugin-layer-file.html">
+layer file</a> and in 
+<a href="@TOP@/org/netbeans/modules/j2ee/deployment/plugins/api/doc-files/netbeans-deployment-dtd.txt">
+netbeans-deployment.xml</a>
+file (an additional config file with specified DTD).
+</i>
+</p>
+
+Registration of various optional functionality is done via 
+<a href="@TOP@/org/netbeans/modules/j2ee/deployment/plugins/spi/OptionalDeploymentManagerFactory.html">
+OptionalDeploymentManagerFactory</a>.
+
+<p>The classes and/or interfaces related to each optional functionality are:</p>
+
+<ul>
+<li><b>Server Status:</b>
+<a href="@TOP@/org/netbeans/modules/j2ee/deployment/plugins/spi/StartServer.html">StartServer</a>
+</li>
+
+<li><b>Incremental deployment:</b>
+<a href="@TOP@/org/netbeans/modules/j2ee/deployment/plugins/spi/IncrementalDeployment.html">IncrementalDeployment</a>, 
+<a href="@TOP@/org/netbeans/modules/j2ee/deployment/plugins/api/ModuleChangeDescriptor.html">ModuleChangeDescriptor</a>, 
+<a href="@TOP@/org/netbeans/modules/j2ee/deployment/plugins/api/AppChangeDescriptor.html">AppChangeDescriptor</a>, 
+<a href="@TOP@/org/netbeans/modules/j2ee/deployment/plugins/spi/TargetModuleIDResolver.html">TargetModuleIDResolver</a>, 
+<a href="@TOP@/org/netbeans/modules/j2ee/deployment/common/api/EjbChangeDescriptor.html">EjbChangeDescriptor</a>, 
+<a href="@TOP@/org/netbeans/modules/j2ee/deployment/common/api/OriginalCMPMapping.html">OriginalCMPMapping</a> 
+(note that the last two classes are also used in devmodules part of API).
+</li>
+
+<li><b>Server Registry UI:</b>
+<a href="@TOP@/org/netbeans/modules/j2ee/deployment/plugins/spi/RegistryNodeFactory.html">RegistryNodeFactory</a>
+</li>
+
+<li><b>Installation of Server Instances:</b>
+<a href="@TOP@/org/netbeans/modules/j2ee/deployment/plugins/api/InstanceProperties.html">InstanceProperties</a>
+<a href="@TOP@/org/netbeans/modules/j2ee/deployment/plugins/api/InstanceCreationException.html">InstanceCreationException</a>
+</li>
+
+<li><b>Debugging:</b>
+<a href="@TOP@/org/netbeans/modules/j2ee/deployment/plugins/api/ServerDebugInfo.html">ServerDebugInfo</a>
+<a href="@TOP@/org/netbeans/modules/j2ee/deployment/plugins/spi/OldJSPDebug.html">OldJSPDebug</a>
+</li>
+
+<li><b>JSP -&gt; Servlet mapping:</b>
+<a href="@TOP@/org/netbeans/modules/j2ee/deployment/plugins/spi/FindJSPServlet.html">FindJSPServlet</a>
+</li>
+
+<li><b>General Utilities:</b>
+<a href="@TOP@/org/netbeans/modules/j2ee/deployment/plugins/api/ServerProgress.html">ServerProgress</a>
+</li>
+</ul>
+</usecase>
+
+<usecase id="devmodule-integration" name="Devmodule integration" >
+Implemetors of J2EE module support (web module, EJB module, J2EE Application, etc.) 
+need to be able to provide UI to deploy or debug their modules on any J2EE server 
+that has a corresponding plugin and supports given type of J2EE module. 
+The deployment needs to work both for Deployment API based (full) deployment 
+and incremental deployment (this needs to be transparent for the devmodules). 
+Devmodules also need to provide UI for editing server specific configuration 
+files existing in their sources. In addition to that, J2EE Application devmodule 
+needs to communicate with devmodules representing J2EE module that constitute 
+the application.
+
+<p>
+<i>
+This is achieved by devmodules implementing the devmodules API. Typically this 
+will be done by subclassing a support class in devmodules SPI but direct 
+implementation of devmodules API should also be possible. The mechanism of
+discovery of devmodule implementation is highly dependent on how devmodules
+are represented in IDE (e.g. as projects or DataObjects) so this part of API 
+is the least stable.
+</i>
+</p>
+<p>
+The API package provides abstractions of 
+<a href="@TOP@/org/netbeans/modules/j2ee/deployment/devmodules/api/J2eeModule.html">J2eeModule</a> and a
+J2EEModuleContainer
+(a module that contains other modules, such as J2EE application).
+Two utility classes provide direct access to 
+<a href="@TOP@/org/netbeans/modules/j2ee/deployment/devmodules/api/Deployment.html">Deployment</a>
+and to a 
+<a href="@TOP@/org/netbeans/modules/j2ee/deployment/devmodules/api/JSPServletFinder.html">JSPServletFinder</a>.
+The SPI package contains utility classes for implementation of J2eeModule and J2eeModuleContainer.
+</p>
+</usecase>
+
+<usecase id="customization-of-server-registry-ui" name="Customization of Server Registry UI" >
+Some products (JSC) requested to make it possible to replace the whole server 
+registry UI.
+<p><i>Not supported in current version.</i></p>
+</usecase>
+
+<usecase id="Retrieve-data-sources" name="Retrieve data sources">
+    <p>
+        Data sources created in the module and deployed on the server are accessed using
+        <a href="@TOP@/org/netbeans/modules/j2ee/deployment/devmodules/spi/J2eeModuleProvider.html">J2eeModuleProvider</a> methods.
+        Some of the module's data source may be already also deployed on the server, in that case the client
+        is responsible for the duplicity handling.
+    </p>
+    <p>
+        Retrieval from a server is done by a server plugin. Core part of the functionality is done by 
+        <a href="@TOP@/org/netbeans/modules/j2ee/deployment/plugins/spi/DatasourceManager.html">DatasourceManager</a> implementation
+        which is exposed from a server plugin through 
+        <a href="@TOP@/org/netbeans/modules/j2ee/deployment/plugins/spi/OptionalDeploymentManagerFactory.html">OptionalDeploymentManagerFactory</a>.
+    </p>
+    <p>
+        Retrieval from a module is done with help of 
+        <a href="@TOP@/org/netbeans/modules/j2ee/deployment/devmodules/spi/J2eeModuleProvider.ConfigSupport.html">ConfigSupport</a> and 
+        ConfigurationSupport implementations.
+    </p>
+</usecase>
+
+<usecase id="Create-data-source" name="Create data source">
+    <p>
+        Data sources are created in a module if they does not exist yet on a server or in a module itself.
+        Data sources are stored in the server-specific format, only some common subset of attributes 
+        (e.g. JNDI name, username, url, ...) is provided by a creator.<br/>
+    </p>
+    <p>
+        Data source creation is done with help of 
+        <a href="@TOP@/org/netbeans/modules/j2ee/deployment/devmodules/spi/J2eeModuleProvider.ConfigSupport.html">ConfigSupport</a> and 
+        ConfigurationSupport implementations.
+        In case of conflict with existing data source, the first conflicting data source is passed to the thrown 
+        <a href="@TOP@/org/netbeans/modules/j2ee/deployment/common/api/DatasourceAlreadyExistsException.html">DatasourceAlreadyExistsException</a>.
+    </p>
+</usecase>
+
+<usecase id="Deploy-data-sources" name="Deploy data source">
+    <p>
+        Data sources stored in a module are deployed (registered) on a module's target server at the beginning
+        of a module deployment.<br/>
+    </p>
+    <p>
+        Data sources stored in a module are retrived and passed to a
+        <a href="@TOP@/org/netbeans/modules/j2ee/deployment/plugins/spi/DatasourceManager.html">DatasourceManager</a> instance
+        for deploying (registering) on the server.<br/>
+        All module data sources having a conflict with some existing server data source are passed to the thrown 
+        <a href="@TOP@/org/netbeans/modules/j2ee/deployment/common/api/DatasourceAlreadyExistsException.html">DatasourceAlreadyExistsException</a>.
+    </p>
+</usecase>
+
+</answer>
+<!--         
+        <question id="arch-time" when="init">
+            What are the time estimates of the work?
+            <hint>
+            Please express your estimates of how long the design, implementation,
+            stabilization are likely to last. How many people will be needed to
+            implement this and what is the expected milestone the work should be 
+            ready.
+            </hint>
+        </question>
+-->
+<answer id="arch-time">
+J2EEPlatform is planned to be added before promoE feature freeze. The work for promoD includes 
+support for J2EE Application (not part of 3.6), projectization of devmodules part, small fixes 
+in API and general stabilization. The work is planned to be done before promoD feature freeze.
+</answer>
+<!--    
+        <question id="arch-quality" when="init">
+            How the quality of your code will be tested and 
+            how future regressions are going to be prevented?
+            <hint>
+            What kind of testing you want to use? What/how much area of functionality
+            should be covered by the tests? 
+            </hint>
+        </question>
+-->
+<answer id="arch-quality">
+There is a test plugin and test devmodule and a set of unit tests that tests 
+the basic funtionality of server registry and deployment.
+</answer>
+<!-- 
+    </category>
+    <category id="dep" name="Project and platform dependencies">
+        <question id="dep-nb" when="init" >
+            What other NetBeans projects and modules does this one depend on?
+            <hint>
+            If you want, describe such projects as imported API using
+            the <code>&lt;api name="identification" type="import or export" category="stable" url="where is the description" /&gt;</code>
+            </hint>
+        </question>
+-->
+<answer id="dep-nb">
+<defaultanswer generate='none' />
+It uses these API's:
+<ul>
+<li>
+    <api 
+        name="OpenAPI"
+        type="import"
+        group="java" 
+        category="official"
+        url="../index.html">
+    NetBeans Open APIs
+    </api>
+Using various parts of Open API.
+</li>
+<li>
+    <api 
+        name="InputOutputAPI"
+        type="import"
+        group="java" 
+        category="official"
+        url="@org-openide-io@/index.html">
+    NetBeans Open APIs
+    </api>
+Used for displaying event log.
+</li>
+<li>
+    <api 
+        name="LoadersAPI"
+        type="import"
+        group="java" 
+        category="official"
+        url="@org-openide-loaders@/index.html">
+    NetBeans Loaders API
+    </api>
+</li>
+<li>
+    <api 
+        name="schema2beans"
+        type="import"
+        group="java" 
+        category="stable"
+    >
+    Schema2beans infrastructure
+    </api>
+Used for implementation of Deployment API, to work with DD and server specific DD. 
+Also used for NetbeansDeployment (generate S2B beans from DTD).
+</li>
+<li>
+    <api 
+        name="SettingAPI"
+        type="import"
+        group="java" 
+        category="official"
+        url="@org-netbeans-modules-settings@/index.html">
+    Setting API
+    </api>
+For for storing settings (e.g. about deployed modules) in xml.
+</li>
+<li>
+    <api 
+        name="XMLAPI"
+        type="import"
+        group="java" 
+        category="stable"
+        url="@org-netbeans-api-xml@/index.html">
+    XML API
+    </api>
+XML editing and validation of server specific deployment descriptors.
+</li>
+<li>
+    <api 
+        name="ProjectsAPI"
+        type="import"
+        group="java" 
+        category="devel"
+        url="@org-netbeans-modules-projectapi@/index.html">
+    Projects API
+    </api>
+Used for communication between j2eeserver and devmodules (devmodules are 
+expected to be implemented as projects).
+</li>
+<li>
+    <api 
+        name="JavaSupportAPIs"
+        type="import"
+        group="java" 
+        category="devel"
+        url="@org-netbeans-api-java@/index.html">
+    Java Support APIs
+    </api>
+Used for registration of server libraries' sources and javadocs.
+</li>
+<li>
+    <api 
+        name="ProjectLibrariesAPI"
+        type="import"
+        group="java" 
+        category="devel"
+        url="@org-netbeans-modules-project-libraries@/index.html">
+    Project Libraries API
+    </api>
+Used for definition of server libraries.
+</li>
+
+</ul>
+</answer>
+<!--
+        <question id="dep-non-nb" when="init" >
+            What other projects outside NetBeans does this one depend on?
+            
+            <hint>
+            Some non-NetBeans projects are packaged as NetBeans modules
+            (see <a href="http://libs.netbeans.org/">libraries</a>) and
+            it is preferred to use this approach when more modules may
+            depend on such third-party library.
+            </hint>
+        </question>
+-->
+<answer id="dep-non-nb">
+        <ul>
+            <li>
+                <api name="J2EEEditor" type="import" category="third" url="" group="java">
+                    For editing server specific deployment descriptors.
+                </api>
+            </li>
+            <li>
+                <api name="EJB" type="import" category="standard" url="http://java.sun.com/products/ejb/docs.html#specs" group="java">
+                    Enterprise JavaBeans API 2.0.
+                </api>
+            </li>
+            <li>
+                <api name="J2EEDeploymentAPI" type="import" category="standard" url="http://java.sun.com/j2ee/tools/deployment/index.jsp" group="java">
+                    J2EE Deployment API/JSR88. 
+                    Part implemented by this module and used to communicate with 
+                    server plugins and with devmodules.
+                </api>
+            </li>
+        </ul>
+</answer>
+<!-- 
+        <question id="dep-platform" when="init" >
+            On which platforms does your module run? Does it run in the same
+            way on each?
+            <hint>
+            If your module is using JNI or deals with special differences of
+            OSes like filesystems, etc. please describe here what they are.
+            </hint>
+        </question>
+-->
+<answer id="dep-platform">
+100% pure Java. It should run anywhere.
+</answer>
+<!-- 
+        <question id="dep-jre" when="final" >
+            Which version of JRE do you need (1.2, 1.3, 1.4, etc.)?
+            <hint>
+            It is expected that if your module runs on 1.x that it will run 
+            on 1.x+1 if no, state that please. Also describe here cases where
+            you run different code on different versions of JRE and why.
+            </hint>
+        </question>
+-->
+<answer id="dep-jre">
+<b>JRE 1.4</b> or <b>JRE 1.3</b> with <b>JAXP</b>
+</answer>
+<!-- 
+        <question id="dep-jrejdk" when="final" >
+            Do you require the JDK or is the JRE enough?
+        </question>
+-->
+<answer id="dep-jrejdk">
+JRE is enough.
+</answer>
+<!-- 
+    </category>
+    <category id="deploy" name="Deployment">
+        <question id="deploy-jar" when="impl" >
+            Do you deploy just module JAR file(s) or other files as well?
+            <hint>
+            If your module consists of just one module JAR file, just confirm that.
+            If it uses more than one JAR, describe where they are located, how
+            they refer to each other. 
+            If it consist of module JAR(s) and other files, please describe
+            what is their purpose, why other files are necessary. Please 
+            make sure that installation/uninstallation leaves the system 
+            in state as it was before installation.
+            </hint>
+        </question>
+-->
+<answer id="deploy-jar">
+The module deploys the following jar files into <code>modules/</code> folder: (XXX names are out of date)
+<ul>
+<li>j2eeapis.jar - a modules that represents the APIs (ejb, jsr88, jsr77, jmxri)</li>
+<li>j2eeeditor.jar - an external library with the editor for server specific configuration files</li>
+<li>ext/ejb20.jar - EJB API 2.0</li>
+<li>ext/jsr88javax.jar - J2EE Deployment API</li>
+</ul>
+</answer>
+<!-- 
+        <question id="deploy-nbm" when="impl" >
+            Can you deploy an NBM via the Update Center?
+            <hint>
+            If not why?
+            </hint>
+        </question>
+-->
+<answer id="deploy-nbm">
+Yes
+</answer>
+<!-- 
+        <question id="deploy-shared" when="final" >
+            Do you need to be installed in the shared location only, or in the user directory only,
+            or can your module be installed anywhere?
+            <hint>
+            Installation location shall not matter, if it does explain why.
+            Consider also whether <code>InstalledFileLocator</code> can help.
+            </hint>
+        </question>
+-->
+<answer id="deploy-shared">
+Anywhere.
+</answer>
+<!--
+        <question id="deploy-packages" when="init" >
+            Are packages of your module made inaccessible by not declaring them public?
+            <hint>
+            NetBeans module system allows restriction of access rights to
+            public classes of your module from other modules. This prevents
+            unwanted dependencies of others on your code and should be used
+            whenever possible (<a href="http://www.netbeans.org/download/javadoc/OpenAPIs/org/openide/doc-files/upgrade.html#3.4-public-packages">
+            public packages
+            </a>). If you do not restrict access to your classes you are
+            making it too easy for other people to misuse your implementation
+            details, that is why you should have good reason for not 
+            restricting package access.
+            </hint>
+        </question>
+-->
+<answer id="deploy-packages">
+Yes. Public packages of J2EE Server API module are specified in module manifest file :<br/><br/>
+<b>OpenIDE-Module-Public-Packages: org.netbeans.modules.j2ee.deployment.devmodules.**, org.netbeans.modules.j2ee.deployment.plugins.**</b><br/>
+</answer>
+<answer id="deploy-dependencies">
+Tomcat plugin (org.netbeans.modules.tomcat5), Web Core (org.netbeans.modules.web.core), Web Projects (org.netbeans.modules.web.project).
+</answer>
+<!-- 
+    </category>
+    <category id="compat" name="Compatibility with environment">
+        <question id="compat-i18n" when="impl" >
+            Is your module correctly internationalized?
+            <hint>
+            Correct internationalization means that it obeys instructions 
+            at <a href="http://www.netbeans.org/download/dev/javadoc/org-openide-modules/org/openide/modules/doc-files/i18n-branding.html">
+            NetBeans I18N pages</a>.
+            </hint>
+        </question>
+-->
+<answer id="compat-i18n">
+Yes.
+</answer>
+<!-- 
+        <question id="compat-standards" when="init" >
+            Does the module implement or define any standards? Is the 
+            implementation exact or does it deviate somehow?
+        </question>
+-->
+<answer id="compat-standards">
+The modules implements parts of Deployment API. 
+There are no deviations from standard, only extensions of the standard.
+</answer>
+<!-- 
+        <question id="compat-version" when="impl" >
+            Can your module coexist with earlier and future
+            versions of itself? Can you correctly read all old settings? Will future
+            versions be able to read your current settings? Can you read
+            or politely ignore settings stored by a future version?
+            
+            <hint>
+            Very helpful for reading settings is to store version number
+            there, so future versions can decide whether how to read/convert
+            the settings and older versions can ignore the new ones.
+            </hint>
+        </question>
+-->
+<answer id="compat-version">
+The only settings are the server registry content and information about deployed modules.
+The format of server registry content settings is stable and should be read by
+future versions. It is stored in textual form (.nbattrs). The information about deployed 
+modules is a transient cache that allows the IDE to remember what modules were deployed 
+to which server from the IDE.
+</answer>
+<!-- 
+    </category>
+    <category id="resources" name="Access to resources">
+        <question id="resources-file" when="final">
+            Does your module use <code>java.io.File</code> directly?       
+            <hint>
+            NetBeans provide a logical wrapper over plain files called 
+            <code>org.openide.filesystems.FileObject</code> that
+            provides uniform access to such resources and is the preferred
+            way that should be used. But of course there can be situations when
+            this is not suitable.
+            </hint>
+        </question>
+-->
+<answer id="resources-file">
+java.io.File is used in plugin API. The motivation is to make this API independent on 
+netbeans since this is an extension of the contracts defined in J2EE Deployment API.
+Filesystems are used for actual access to file contents and should also be used in plugin 
+code.
+</answer>
+<!-- 
+        <question id="resources-layer" when="final">
+            Does your module provide own layer? Does it create any files or
+            folders in it? What it is trying to communicate by that and with which 
+            components?
+            
+            <hint>
+            NetBeans allows automatic and declarative installation of resources 
+            by module layers. Module register files into appropriate places
+            and other components use that information to perform their task
+            (build menu, toolbar, window layout, list of templates, set of
+            options, etc.). 
+            </hint>
+        </question>
+-->
+<answer id="resources-layer">
+The server registry is defined in layer, it creates folder for registration of plugins 
+and server instances. Server registry instance is registered in layer file. Two handlers 
+for xml settings are registered for the settings related to deployed modules.
+</answer>
+<!-- 
+        <question id="resources-read" when="final">
+            Does your module read any resources from layers? For what purpose?
+            
+            <hint>
+            As this is some kind of intermodule dependency, it is a kind of API.
+            Please describe it and classify according to 
+            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            common stability categories</a>.
+            </hint>
+        </question>
+-->
+<answer id="resources-read">
+J2eeserver reads server registry contents from layer. This includes installed server 
+plugins as well as individual server instances (installations).
+</answer>
+<!--
+        <question id="resources-mask" when="final">
+            Does your module mask/hide/override any resources provided by other modules in
+            their layers?
+            
+            <hint>
+            If you mask a file provided by another module, you probably depend
+            on that and do not want the other module to (for example) change
+            the file's name. That module shall thus make that file available as an API
+            of some stability category.
+            </hint>
+        </question>
+    </category>
+-->
+<answer id="resources-mask">
+No.
+</answer>
+<!--
+    <category id="lookup" name="Lookup of components">
+        <question id="lookup-lookup" when="init" >
+            Does your module use <code>org.openide.util.Lookup</code>
+            to find any components to communicate with? Which ones?
+            
+            <hint>
+            Please describe the interfaces you are searching for, where 
+            are defined, whether you are searching for just one or more of them,
+            if the order is important, etc. Also classify the stability of such
+            API contract.
+            </hint>
+        </question>
+-->
+<answer id="lookup-lookup">
+Folder lookup is used to read the definition of plugin (the additional optional 
+functionality registered by the plugin).
+</answer>
+<!--
+        <question id="lookup-register" when="final" >
+            Do you register anything into lookup for other code to find?
+            <hint>
+            Do you register using layer file or using <code>META-INF/services</code>?
+            Who is supposed to find your component?
+            </hint>
+        </question>
+-->
+<answer id="lookup-register">
+Implementations of<br/>
+
+<api group="lookup"
+type="import"
+category="devel"
+name="org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation"
+url="@org-netbeans-api-java-classpath@/org/netbeans/spi/java/queries/SourceForBinaryQueryImplementation.html"
+>Information about where Java sources corresponding to binaries
+can be found.</api><br/>
+
+<api group="lookup"
+type="import"
+category="devel"
+name="org.netbeans.spi.java.queries.JavadocForBinaryQueryImplementation"
+url="@org-netbeans-api-java@/org/netbeans/spi/java/queries/JavadocForBinaryQueryImplementation.html"
+>Information about where Javadocs corresponding to binaries
+can be found.</api><br/>
+
+Both implementations are registered using <code>META-INF/services</code>.
+</answer>
+<!--
+        <question id="lookup-remove" when="final" >
+            Do you remove entries of other modules from lookup?
+            <hint>
+            Why? Of course, that is possible, but it can be dangerous. Is the module
+            your are masking resource from aware of what you are doing?
+            </hint>
+        </question>
+-->
+<answer id="lookup-remove">
+No.
+</answer>
+<!--
+    </category>
+-->
+    <!-- classification of interfaces -->
+    <!-- package names -->
+<!--
+    <category id="exec" name="Execution Environment">
+        <question id="exec-property" when="impl" >
+            Is execution of your code influenced by any environment or
+            Java system (<code>System.getProperty</code>) property?
+            
+            <hint>
+            If there is a property that can change the behavior of your 
+            code, somebody will likely use it. You should describe what it does 
+            and the <a href="http://openide.netbeans.org/tutorial/api-design.html#life">stability category</a>
+            of this API. You may use
+            <pre>
+                &lt;api type="export" group="property" name="id" category="private" url="http://..."&gt;
+                    description of the property, where it is used, what it influence, etc.
+                &lt;/api&gt;            
+            </pre>
+            </hint>
+        </question>
+-->
+<answer id="exec-property">
+No.
+</answer>
+<!--
+        <question id="exec-component" when="impl" >
+            Is execution of your code influenced by any (string) property
+            of any of your components?
+            
+            <hint>
+            Often <code>JComponent.getClientProperty</code>, <code>Action.getValue</code>
+            or <code>PropertyDescriptor.getValue</code>, etc. are used to influence
+            a behavior of some code. This of course forms an interface that should
+            be documented. Also if one depends on some interface that an object
+            implements (<code>component instanceof Runnable</code>) that forms an
+            API as well.
+            </hint>
+        </question>
+-->
+<answer id="exec-component">
+No.
+</answer>
+<!--
+        <question id="exec-classloader" when="impl" >
+            Does your code create its own class loader(s)?
+            <hint>
+            A bit unusual. Please explain why and what for.
+            </hint>
+        </question>
+-->
+<answer id="exec-classloader">
+No.
+</answer>
+<!--
+        <question id="exec-reflection" when="impl" >
+            Does your code use Java Reflection to execute other code?
+            <hint>
+            This usually indicates a missing or insufficient API in the other
+            part of the system. If the other side is not aware of your dependency
+            this contract can be easily broken.
+            </hint>
+        </question>
+-->
+<answer id="exec-reflection">
+Reflection is used in deployment configuration code.
+</answer>
+<!--
+        <question id="exec-privateaccess" when="final" >
+            Are you aware of any other parts of the system calling some of 
+            your methods by reflection?
+            <hint>
+            If so, describe the "contract" as an API. Likely private or friend one, but
+            still API and consider rewrite of it.
+            </hint>
+        </question>
+-->
+<answer id="exec-privateaccess">
+No.
+</answer>
+<!--
+        <question id="exec-process" when="impl" >
+            Do you execute an external process from your module? How do you ensure
+            that the result is the same on different platforms? Do you parse output?
+            Do you depend on result code?
+            <hint>
+            If you feed an input, parse the output please declare that as an API.
+            </hint>
+        </question>
+-->
+<answer id="exec-process">
+No.
+</answer>
+<!--
+        <question id="exec-introspection" when="impl" >
+            Does your module use any kind of runtime type information (<code>instanceof</code>,
+            work with <code>java.lang.Class</code>, etc.)?
+            <hint>
+            Check for cases when you have an object of type A and you also
+            expect it to (possibly) be of type B and do some special action. That
+            should be documented. The same applies on operations in meta-level
+            (Class.isInstance(...), Class.isAssignableFrom(...), etc.).
+            </hint>
+        </question>
+-->
+<answer id="exec-introspection">
+No.
+</answer>
+<!--
+        <question id="exec-threading" when="impl">
+            What threading models, if any, does your module adhere to?
+            <hint>
+                If your module calls foreign APIs which have a specific threading model,
+                indicate how you comply with the requirements for multithreaded access
+                (synchronization, mutexes, etc.) applicable to those APIs.
+                If your module defines any APIs, or has complex internal structures
+                that might be used from multiple threads, declare how you protect
+                data against concurrent access, race conditions, deadlocks, etc.,
+                and whether such rules are enforced by runtime warnings, errors, assertions, etc.
+                Examples: a class might be non-thread-safe (like Java Collections); might
+                be fully thread-safe (internal locking); might require access through a mutex
+                (and may or may not automatically acquire that mutex on behalf of a client method);
+                might be able to run only in the event queue; etc.
+                Also describe when any events are fired: synchronously, asynchronously, etc.
+                Ideas: <a href="http://core.netbeans.org/proposals/threading/index.html#recommendations">Threading Recommendations</a> (in progress)
+            </hint>
+        </question>
+-->
+<answer id="exec-threading">
+N/A
+</answer>
+<!--
+    </category>
+    <category id="format" name="Format of files and protocols">
+        <question id="format-types" when="impl" >
+            Which protocols and file formats (if any) does your module read or write on disk,
+            or transmit or receive over the network?
+        </question>
+-->
+<answer id="format-types">
+None.
+</answer>
+<!--
+        <question id="format-dnd" when="impl" >
+            Which protocols (if any) does your code understand during Drag &amp; Drop?
+            <hint>
+            Often Node's deal with clipboard by usage of <code>Node.drag, Node.getDropType</code>. 
+            Check your code for overriding these methods. Btw. if they are not overridden, they
+            by default delegate to <code>Node.clipboardCopy, Node.clipboardCut and Node.pasteTypes</code>.
+            </hint>
+        </question>
+-->
+<answer id="format-dnd">
+None.
+</answer>
+<!--
+        <question id="format-clipboard" when="impl" >
+            Which data flavors (if any) does your code read from or insert to
+            the clipboard (by access to clipboard on means calling methods on <code>java.awt.datatransfer.Transferable</code>?
+            
+            <hint>
+            Often Node's deal with clipboard by usage of <code>Node.clipboardCopy, Node.clipboardCut and Node.pasteTypes</code>.
+            Check your code for overriding these methods.
+            </hint>
+        </question>
+-->
+<answer id="format-clipboard">
+None.
+</answer>
+<!--
+    </category>
+    <category id="performance" name="Performance and Scalability">
+        <question id="perf-startup" when="final" >
+            Does your module run any code on startup?
+        </question>
+-->
+<answer id="perf-startup">
+No.
+</answer>
+<!--
+        <question id="perf-exit" when="final">
+            Does your module run any code on exit?
+        </question>
+-->
+<answer id="perf-exit">
+Yes. The module will stop any server instances that were started from IDE.
+</answer>
+<!--
+        <question id="perf-scale" when="init">
+            Which external criteria influence the performance of your
+            program (size of file in editor, number of files in menu, 
+            in source directory, etc.) and how well your code scales?
+            <hint>
+            Please include some estimates, there are other more detailed 
+            questions to answer in later phases of implementation. 
+            </hint>
+        </question>
+-->
+<answer id="perf-scale">
+Size of devmodules (number of files) - the code does time stamp checking for devmodule files. 
+Size of deployment descriptors and their in-memory representation. Size of platform libraries' sources and javadocs.
+</answer>
+<!--
+        <question id="perf-limit" when="init">
+            Are there any hard-coded or practical limits in the number or size of
+            elements your code can handle?
+        </question>
+-->
+<answer id="perf-limit">
+Not aware of any.
+</answer>
+        <!-- multithreading -->
+<!--
+        <question id="perf-mem" when="final" >
+            How much memory does your component consume? Estimate
+            with a relation to the number of windows, etc.
+        </question>
+-->
+<answer id="perf-mem">
+<p>
+The amount of memory consumed by server registry corresponds with the number of 
+plugins and number of registered server instances. This is a small number, typically
+2 or 3, certainly less then 10. The amount of memory consumed by server libraries depends on Java Support module implementation details.
+</p>
+<p>
+Memory consumption of configuration UI crresponds with number of open 
+configuration editors.
+</p>
+</answer>
+<!--
+        <question id="perf-wakeup" when="final">
+            Does any piece of your code wake up periodically and do something
+            even when the system is otherwise idle (no user interaction)?
+        </question>
+-->
+<answer id="perf-wakeup">
+No.
+</answer>
+<!--
+        <question id="perf-progress" when="final">
+            Does your module execute any long-running tasks?
+            
+            <hint>Long running tasks should never block 
+            AWT thread as it badly hurts the UI
+            <a href="http://performance.netbeans.org/responsiveness/issues.html">
+            responsiveness</a>.
+            Tasks like connecting over
+            network, computing huge amount of data, compilation
+            be done asynchronously (for example
+            using <code>RequestProcessor</code>), definitively it should 
+            not block AWT thread.
+            </hint>
+        </question>
+-->
+<answer id="perf-progress">
+Yes, starting /stopping server and performing deploymen is a long running task.
+It is not done in AWT thread and a progress bar is displayed.
+</answer>
+<!--
+        <question id="perf-huge_dialogs" when="final">
+            Does your module contain any dialogs or wizards with a large number of
+            GUI controls such as combo boxes, lists, trees, or text areas?
+        </question>
+-->
+<answer id="perf-huge_dialogs">
+No.
+</answer>
+<!--
+        <question id="perf-menus" when="final">
+            Does your module use dynamically updated context menus, or
+            context-sensitive actions with complicated enablement logic?
+        </question>
+-->
+<answer id="perf-menus">
+No.
+</answer>
+<!--
+        <question  id="perf-spi" when="init">
+            How the performance of the plugged in code will be enforced?
+            <hint>
+            If you allow foreign code to be plugged into your own module, how
+            do you enforce, that it will behave correctly and fast and will not
+            negatively influence the performance of your own module?
+            </hint>
+        </question>
+-->
+<answer id="perf-spi">
+There is no way to enforce performance of SPI.
+Performance of module does depend on plugin and devmodule performance.
+</answer>
+<!-- Copy this above the  tag! -->
+
+
+
+<!--
+        <question id="security-grant" when="final">
+            Does your code grant additional rights to some other code?
+            <hint>Avoid using a class loader that adds extra
+            permissions to loaded code unless really necessary.
+            Also note that your API implementation
+            can also expose unneeded permissions to enemy code by
+            calling AccessController.doPrivileged().</hint>
+        </question>
+-->
+ <answer id="security-grant">
+  <p>
+   No.
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="security-policy" when="final">
+            Does your functionality require modifications to the standard policy file?
+            <hint>Your code might pass control to third-party code not
+            coming from trusted domains. This could be code downloaded over the
+            network or code coming from libraries that are not bundled
+            with NetBeans. Which permissions need to be granted to which domains?</hint>
+        </question>
+-->
+ <answer id="security-policy">
+  <p>
+   No.
+  </p>
+ </answer>
+
+<!--
+        <question id="arch-where" when="impl">
+            Where one can find sources for your module?
+            <hint>
+                Please provide link to the Hg web client at
+                http://hg.netbeans.org/
+                or just use tag defaultanswer generate='here'
+            </hint>
+        </question>
+-->
+ <answer id="arch-where">
+  <defaultanswer generate='here' />
+ </answer>
+
+
+
+<!--
+        <question id="compat-deprecation" when="init">
+            How the introduction of your project influences functionality
+            provided by previous version of the product?
+            <hint>
+            If you are planning to deprecate/remove/change any existing APIs,
+            list them here accompanied with the reason explaining why you
+            are doing so.
+            </hint>
+        </question>
+-->
+ <answer id="compat-deprecation">
+  <p>
+   No change to existing APIs.
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="exec-ant-tasks" when="impl">
+            Do you define or register any ant tasks that other can use?
+            
+            <hint>
+            If you provide an ant task that users can use, you need to be very
+            careful about its syntax and behaviour, as it most likely forms an
+	          API for end users and as there is a lot of end users, their reaction
+            when such API gets broken can be pretty strong.
+            </hint>
+        </question>
+-->
+ <answer id="exec-ant-tasks">
+  <p>
+   Module itself does not define any. There exist ant tasks related to this
+   functionality in j2ee.ant.
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="resources-preferences" when="final">
+            Does your module uses preferences via Preferences API? Does your module use NbPreferences or
+            or regular JDK Preferences ? Does it read, write or both ? 
+            Does it share preferences with other modules ? If so, then why ?
+            <hint>
+                You may use
+                    &lt;api type="export" group="preferences"
+                    name="preference node name" category="private"&gt;
+                    description of individual keys, where it is used, what it
+                    influences, whether the module reads/write it, etc.
+                    &lt;/api&gt;
+                Due to XML ID restrictions, rather than /org/netbeans/modules/foo give the "name" as org.netbeans.modules.foo.
+                Note that if you use NbPreferences this name will then be the same as the code name base of the module.
+            </hint>
+        </question>
+-->
+ <answer id="resources-preferences">
+  <p>
+   Module use its own way to store information about registered instances.
+  </p>
+ </answer>
+
+</api-answers>

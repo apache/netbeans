@@ -1,0 +1,5 @@
+<html>
+{% *macro* %}
+text
+{% *end^macro* %}
+</html>

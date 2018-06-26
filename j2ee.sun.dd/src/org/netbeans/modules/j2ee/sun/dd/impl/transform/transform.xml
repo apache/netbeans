@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE transform>
+<!--
+    Document   : transform.xml
+    Created on : August 12, 2005, 11:52 AM
+    Author     : Nitya Doraisamy
+    Description:
+        Purpose of the document follows.
+-->
+
+<transform>
+  <xmltype>
+    <name>sunWebApp40</name>
+    <mod-element>
+      <name>sun-web-app</name>
+      <mod-attribute>
+        <name>error-url</name>
+      </mod-attribute>
+      <sub-element>
+        <name>idempotent-url-pattern</name>
+      </sub-element>
+      <sub-element>
+        <name>parameter-encoding</name>
+      </sub-element>
+    </mod-element>
+    <mod-element>
+      <name>class-loader</name>
+      <mod-attribute>
+        <name>dynamic-reload-interval</name>
+      </mod-attribute> 
+      <sub-element>
+        <name>property</name>
+      </sub-element>
+    </mod-element>  
+    <mod-element>
+      <name>cache-mapping</name>
+      <sub-element>
+        <name>dispatcher</name>
+      </sub-element>
+    </mod-element>
+    <mod-element>
+      <name>port-info</name>
+      <sub-element>
+        <name>message-security-binding</name>
+      </sub-element>
+    </mod-element>
+    <mod-element>
+    <name>webservice-endpoint</name>
+      <sub-element>
+        <name>message-security-binding</name>
+      </sub-element>
+    </mod-element>
+  </xmltype>
+  <xmltype>
+    <name>sunWebApp41</name>
+    <mod-element>
+      <name>sun-web-app</name>
+      <sub-element>
+        <name>message-destination-ref</name>
+      </sub-element>
+    </mod-element>
+    <mod-element>
+      <name>webservice-endpoint</name>
+      <sub-element>
+        <name>debugging-enabled</name>
+      </sub-element>
+      <sub-element>
+        <name>property</name>
+      </sub-element>
+    </mod-element>
+  </xmltype>
+  <xmltype>
+    <name>sunWebApp30</name>
+    <mod-element>
+      <name>sun-web-app</name>
+      <sub-element>
+        <name>context-root</name>
+      </sub-element>
+      <sub-element>
+        <name>service-ref</name>
+      </sub-element>
+      <sub-element>
+        <name>message-destination</name>
+      </sub-element>
+      <sub-element>
+        <name>webservice-description</name>
+      </sub-element>
+    </mod-element>
+    <mod-element>
+      <name>servlet</name>
+      <sub-element>
+        <name>webservice-endpoint</name>
+      </sub-element>
+    </mod-element>
+    <mod-element>
+      <name>parameter-encoding</name>
+      <sub-element>
+        <name>default-charset</name>
+      </sub-element>
+    </mod-element>
+  </xmltype>
+  <xmltype>
+    <name>sunEjb300</name>
+    <mod-element>
+      <name>enterprise-beans</name>
+      <sub-element>
+        <name>property</name>
+      </sub-element>
+     </mod-element>
+  </xmltype>
+  <xmltype>
+    <name>sunEjb211</name>
+    <mod-element>
+      <name>ejb</name>
+      <sub-element>
+        <name>message-destination-ref</name>
+      </sub-element>
+     </mod-element>
+    <mod-element>
+      <name>webservice-endpoint</name>
+      <sub-element>
+        <name>debugging-enabled</name>
+      </sub-element>
+      <sub-element>
+        <name>property</name>
+      </sub-element>
+    </mod-element>
+  </xmltype>
+  <xmltype>
+    <name>sunEjb210</name>
+    <mod-element>
+      <name>ejb</name>
+      <mod-attribute>
+        <name>availability-enabled</name>
+      </mod-attribute>
+      <sub-element>
+        <name>flush-at-end-of-method</name>
+      </sub-element>
+      <sub-element>
+        <name>checkpointed-methods</name>
+      </sub-element>
+      <sub-element>
+        <name>checkpoint-at-end-of-method</name>
+      </sub-element>
+     </mod-element>
+    <mod-element>
+      <name>cmp</name>
+      <sub-element>
+        <name>prefetch-disabled</name>
+      </sub-element>
+    </mod-element>
+    <mod-element>
+      <name>webservice-endpoint</name>
+      <sub-element>
+        <name>message-security-binding</name>
+      </sub-element>
+    </mod-element>
+    <mod-element>
+      <name>port-info</name>
+      <sub-element>
+        <name>message-security-binding</name>
+      </sub-element>
+    </mod-element>
+  </xmltype>
+  <xmltype>
+    <name>sunEjb200</name>
+    <mod-element>
+      <name>enterprise-beans</name>
+      <sub-element>
+        <name>message-destination</name>
+      </sub-element>
+      <sub-element>
+        <name>webservice-description</name>
+      </sub-element>
+    </mod-element>
+    <mod-element>
+      <name>ejb</name>
+      <sub-element>
+        <name>service-ref</name>
+      </sub-element>
+      <sub-element>
+        <name>cmt-timeout-in-seconds</name>
+      </sub-element>
+      <sub-element>
+        <name>use-thread-pool-id</name>
+      </sub-element>
+      <sub-element>
+        <name>mdb-resource-adapter</name>
+      </sub-element>
+      <sub-element>
+        <name>webservice-endpoint</name>
+      </sub-element>
+    </mod-element>
+    <mod-element>
+      <name>cmp-resource</name>
+      <sub-element>
+        <name>property</name>
+      </sub-element>
+      <sub-element>
+        <name>create-tables-at-deploy</name>
+      </sub-element>
+      <sub-element>
+        <name>drop-tables-at-undeploy</name>
+      </sub-element>
+      <sub-element>
+        <name>database-vendor-name</name>
+      </sub-element>
+      <sub-element>
+        <name>schema-generator-properties</name>
+      </sub-element>
+    </mod-element>
+    <mod-element>
+      <name>finder</name>
+      <sub-element>
+        <name>query-ordering</name>
+      </sub-element>
+    </mod-element>
+  </xmltype>
+  <xmltype>  
+  <name>sunClient41</name>
+    <mod-element>
+      <name>sun-application-client</name>
+      <sub-element>
+        <name>message-destination-ref</name>
+      </sub-element>
+      <sub-element>
+        <name>java-web-start-access</name>
+      </sub-element>
+    </mod-element>
+  </xmltype>
+  <xmltype>  
+  <name>sunClient40</name>
+    <mod-element>
+      <name>port-info</name>
+      <sub-element>
+        <name>message-security-binding</name>
+      </sub-element>
+    </mod-element>
+  </xmltype>
+  <xmltype>  
+  <name>sunClient30</name>
+    <mod-element>
+      <name>sun-application-client</name>
+      <sub-element>
+        <name>service-ref</name>
+      </sub-element>
+      <sub-element>
+        <name>message-destination</name>
+      </sub-element>
+    </mod-element>
+  </xmltype>
+</transform>

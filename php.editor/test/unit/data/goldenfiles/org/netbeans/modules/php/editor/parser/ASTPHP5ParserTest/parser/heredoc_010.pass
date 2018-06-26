@@ -1,0 +1,293 @@
+<testresult testFile='heredoc_010.php'>
+    <scanner>
+        <token id='T_INLINE_HTML' start='0' end='85'>
+            <text>--TEST--\nTorture the T_END_HEREDOC rules with variable expansions (heredoc)\n--FILE--\n</text>
+        </token>
+        <token id='T_REQUIRE_ONCE' start='92' end='104'>
+            <text>require_once</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='105' end='117'>
+            <text>&apos;nowdoc.inc&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='117' end='118'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='119' end='129'>
+            <text>$fooledYou</text>
+        </token>
+        <token id='T_EQUAL' start='130' end='131'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='132' end='134'>
+            <text>&apos;&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='134' end='135'>
+            <text>;</text>
+        </token>
+        <token id='T_PRINT' start='137' end='142'>
+            <text>print</text>
+        </token>
+        <token id='T_START_HEREDOC' start='143' end='159'>
+            <text>&lt;&lt;&lt;ENDOFHEREDOC\n</text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='159' end='160'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='160' end='170'>
+            <text>$fooledYou</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='170' end='171'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='171' end='183'>
+            <text>ENDOFHEREDOC</text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='183' end='184'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='184' end='194'>
+            <text>$fooledYou</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='194' end='195'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='195' end='208'>
+            <text>\nENDOFHEREDOC</text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='208' end='209'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='209' end='219'>
+            <text>$fooledYou</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='219' end='220'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='220' end='221'>
+            <text>\n</text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='221' end='222'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='222' end='232'>
+            <text>$fooledYou</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='232' end='233'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='233' end='258'>
+            <text>ENDOFHEREDOC\n\nENDOFHEREDO</text>
+        </token>
+        <token id='T_END_HEREDOC' start='258' end='259'>
+            <text>C</text>
+        </token>
+        <token id='T_SEMICOLON' start='259' end='260'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='262' end='264'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='265' end='266'>
+            <text>=</text>
+        </token>
+        <token id='T_START_HEREDOC' start='267' end='283'>
+            <text>&lt;&lt;&lt;ENDOFHEREDOC\n</text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='283' end='284'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='284' end='294'>
+            <text>$fooledYou</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='294' end='295'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='295' end='307'>
+            <text>ENDOFHEREDOC</text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='307' end='308'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='308' end='318'>
+            <text>$fooledYou</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='318' end='319'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='319' end='332'>
+            <text>\nENDOFHEREDOC</text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='332' end='333'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='333' end='343'>
+            <text>$fooledYou</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='343' end='344'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='344' end='345'>
+            <text>\n</text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='345' end='346'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='346' end='356'>
+            <text>$fooledYou</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='356' end='357'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='357' end='382'>
+            <text>ENDOFHEREDOC\n\nENDOFHEREDO</text>
+        </token>
+        <token id='T_END_HEREDOC' start='382' end='383'>
+            <text>C</text>
+        </token>
+        <token id='T_SEMICOLON' start='383' end='384'>
+            <text>;</text>
+        </token>
+        <token id='T_PRINT' start='386' end='391'>
+            <text>print</text>
+        </token>
+        <token id='T_QUATE' start='392' end='393'>
+            <text>"</text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='393' end='394'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='394' end='396'>
+            <text>$x</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='396' end='397'>
+            <text>}</text>
+        </token>
+        <token id='T_QUATE' start='397' end='398'>
+            <text>"</text>
+        </token>
+        <token id='T_SEMICOLON' start='398' end='399'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='401' end='404'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='T_INLINE_HTML' start='404' end='493'>
+            <text>--EXPECT--\nENDOFHEREDOC\nENDOFHEREDOC\nENDOFHEREDOC\nENDOFHEREDOC\nENDOFHEREDOC\nENDOFHEREDOC\n</text>
+        </token>
+        <token id='EOF' start='493' end='493'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='493'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <InLineHtml start='0' end='85'/>
+            <ExpressionStatement start='92' end='118'>
+                <Include start='92' end='117' type='REQUIRE_ONCE'>
+                    <Scalar start='105' end='117' type='STRING' value='&apos;nowdoc.inc&apos;'/>
+                </Include>
+            </ExpressionStatement>
+            <ExpressionStatement start='119' end='135'>
+                <Assignment start='119' end='134' operator='EQUAL'>
+                    <Variable start='119' end='129' isDollared='true'>
+                        <Identifier start='120' end='129' name='fooledYou'/>
+                    </Variable>
+                    <Scalar start='132' end='134' type='STRING' value='&apos;&apos;'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='137' end='260'>
+                <FunctionInvocation start='137' end='259'>
+                    <FucntionName start='137' end='142'>
+                        <Identifier start='137' end='142' name='print'/>
+                    </FucntionName>
+                    <Parameters>
+                        <Quote start='143' end='259' type='HEREDOC'>
+                            <Expressions>
+                                <ReflectionVariable start='159' end='171'>
+                                    <Variable start='160' end='170' isDollared='true'>
+                                        <Identifier start='161' end='170' name='fooledYou'/>
+                                    </Variable>
+                                </ReflectionVariable>
+                                <Scalar start='171' end='183' type='STRING' value='ENDOFHEREDOC'/>
+                                <ReflectionVariable start='183' end='195'>
+                                    <Variable start='184' end='194' isDollared='true'>
+                                        <Identifier start='185' end='194' name='fooledYou'/>
+                                    </Variable>
+                                </ReflectionVariable>
+                                <Scalar start='195' end='208' type='STRING' value='\nENDOFHEREDOC'/>
+                                <ReflectionVariable start='208' end='220'>
+                                    <Variable start='209' end='219' isDollared='true'>
+                                        <Identifier start='210' end='219' name='fooledYou'/>
+                                    </Variable>
+                                </ReflectionVariable>
+                                <Scalar start='220' end='221' type='STRING' value='\n'/>
+                                <ReflectionVariable start='221' end='233'>
+                                    <Variable start='222' end='232' isDollared='true'>
+                                        <Identifier start='223' end='232' name='fooledYou'/>
+                                    </Variable>
+                                </ReflectionVariable>
+                                <Scalar start='233' end='258' type='STRING' value='ENDOFHEREDOC\n\n'/>
+                            </Expressions>
+                        </Quote>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='262' end='384'>
+                <Assignment start='262' end='383' operator='EQUAL'>
+                    <Variable start='262' end='264' isDollared='true'>
+                        <Identifier start='263' end='264' name='x'/>
+                    </Variable>
+                    <Quote start='267' end='383' type='HEREDOC'>
+                        <Expressions>
+                            <ReflectionVariable start='283' end='295'>
+                                <Variable start='284' end='294' isDollared='true'>
+                                    <Identifier start='285' end='294' name='fooledYou'/>
+                                </Variable>
+                            </ReflectionVariable>
+                            <Scalar start='295' end='307' type='STRING' value='ENDOFHEREDOC'/>
+                            <ReflectionVariable start='307' end='319'>
+                                <Variable start='308' end='318' isDollared='true'>
+                                    <Identifier start='309' end='318' name='fooledYou'/>
+                                </Variable>
+                            </ReflectionVariable>
+                            <Scalar start='319' end='332' type='STRING' value='\nENDOFHEREDOC'/>
+                            <ReflectionVariable start='332' end='344'>
+                                <Variable start='333' end='343' isDollared='true'>
+                                    <Identifier start='334' end='343' name='fooledYou'/>
+                                </Variable>
+                            </ReflectionVariable>
+                            <Scalar start='344' end='345' type='STRING' value='\n'/>
+                            <ReflectionVariable start='345' end='357'>
+                                <Variable start='346' end='356' isDollared='true'>
+                                    <Identifier start='347' end='356' name='fooledYou'/>
+                                </Variable>
+                            </ReflectionVariable>
+                            <Scalar start='357' end='382' type='STRING' value='ENDOFHEREDOC\n\n'/>
+                        </Expressions>
+                    </Quote>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='386' end='399'>
+                <FunctionInvocation start='386' end='398'>
+                    <FucntionName start='386' end='391'>
+                        <Identifier start='386' end='391' name='print'/>
+                    </FucntionName>
+                    <Parameters>
+                        <Quote start='392' end='398' type='QUOTE'>
+                            <Expressions>
+                                <ReflectionVariable start='393' end='397'>
+                                    <Variable start='394' end='396' isDollared='true'>
+                                        <Identifier start='395' end='396' name='x'/>
+                                    </Variable>
+                                </ReflectionVariable>
+                            </Expressions>
+                        </Quote>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <EmptyStatement start='401' end='404'/>
+            <InLineHtml start='404' end='493'/>
+        </Statements>
+    </Program>
+</testresult>

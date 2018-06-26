@@ -1,0 +1,8 @@
+function |>METHOD:test<|(){
+
+}
+
+var |>GLOBAL:Arguments<| = {};
+
+|>GLOBAL:Arguments<|.prototype.|>FIELD:length<| = new Number();
+ 

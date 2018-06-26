@@ -1,0 +1,3 @@
+var |>MARK_OCCURRENCES:MyContext<| = {};
+|>MARK_OCCURRENCES:MyContext<|.okno = {
+with (|>MARK_OCCURRENCES:MyCont^ext<|.okno) {

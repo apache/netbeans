@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright (c) 2008, 2016 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+-->
+<project basedir="." default="netbeans" name="ide.ergonomics">
+    <description>Builds, tests, and runs the project org.netbeans.modules.ide.ergonomics</description>
+    <import file="../nbbuild/templates/projectized.xml"/>
+    <property name="anttasks.jar" value="${nbantext.jar}"/>
+
+    <target name="-release.dir" depends="-disable-kits,projectized-common.-release.dir"/>
+    <target name="jar-prep" depends="-generate-proxies,projectized-common.jar-prep"/>
+    <target name="clean" depends="-clean-release,projectized-common.clean"/>
+
+    <!--
+    -
+    - Internal implementation
+    -
+    -->
+    <target name="-compile-ant" depends="projectized-common.basic-init">
+        <mkdir dir="${src-ant.build}"/>
+        <depend srcdir="src-ant" destdir="${src-ant.build}" cache="build/depcache-ant">
+            <classpath>
+                <path path="${src-ant.cp}"/>
+            </classpath>
+        </depend>
+        <javac srcdir="src-ant" destdir="${src-ant.build}"
+            deprecation="${build.compiler.deprecation}"
+            debug="true"
+            source="1.6" target="1.6" includeantruntime="false">
+            <classpath>
+                <path path="${src-ant.cp}"/>
+            </classpath>
+            <compilerarg line="${javac.compilerargs}"/>
+        </javac>
+        <copy todir="${src-ant.build}">
+            <fileset dir="src-ant" excludes="${jar-excludes}"/>
+        </copy>
+        <taskdef name="extractlayer"
+             classname="org.netbeans.modules.ide.ergonomics.ant.ExtractLayer"
+             classpath="${src-ant.build}:${src-ant.cp}"/>
+        <taskdef name="resolvelist"
+             classname="org.netbeans.nbbuild.ResolveList"
+             classpath="${anttasks.jar}"/>
+    </target>
+
+    <target name="-init-clusters">
+        <property name="common.ergonomics" location="src-ant/org/netbeans/modules/ide/ergonomics/ant/common-ergonomics.xml"/>
+        <resolvelist
+            name="ergonomic.clusters.includes"
+            list="${nb.clusters.list}"
+        >
+            <mapper type="glob" from="*" to="*.dir"/>
+        </resolvelist>
+        <dirset 
+            id="ergonomic.clusters"
+            dir="${netbeans.dest.dir}"
+            includes="${ergonomic.clusters.includes}"
+        >
+            <exclude name="harness"/>
+            <exclude name="ide"/>
+            <exclude name="platform"/>
+            <exclude name="ergonomics"/>
+            <exclude name="extra"/>
+            <exclude name="nb"/>
+        </dirset>
+    </target>
+
+    <target name="-clean-release">
+        <property name="build.release.dir" location="build/release"/>
+        <delete dir="${build.release.dir}"/>
+    </target>
+    <target name="-init-static-analysis">
+        <property name="build.release.dir" location="build/release"/>
+        <condition property="skip.static.analysis">
+            <and>
+                <equals arg1="${static.analysis}" arg2="false"/>
+                <available file="${build.release.dir}"/>
+            </and>
+        </condition>
+    </target>
+
+    <!--
+    - multi cluster operations
+    -->
+    <target 
+        name="-disable-kits"
+        depends="-init-clusters,-init-static-analysis"
+        unless="skip.static.analysis"
+    >
+        <mkdir dir="${build.release.dir}/config/Modules"/>
+        <subant genericantfile="${common.ergonomics}" target="-disable-one-cluster">
+            <property name="xmldir" value="${build.release.dir}/config/Modules"/>
+            <property name="ergonomicsdir" location="${basedir}"/>
+            <property name="src-ant.cp" value="${src-ant.cp}"/>
+            <property name="anttasks.jar" value="${anttasks.jar}"/>
+            <dirset refid="ergonomic.clusters"/>
+        </subant>
+        <pathconvert property="extra.module.files" pathsep=",">
+            <path>
+                <fileset id="-disable-kits" dir="${build.release.dir}">
+                    <include name="**/*"/>
+                </fileset>
+            </path>
+            <chainedmapper>
+                <flattenmapper/>
+                <globmapper from="*" to="config/Modules/*"/>
+            </chainedmapper>
+        </pathconvert>
+        <copy todir="${cluster}">
+            <fileset dir="${build.release.dir}" includes="${extra.module.files}"/>
+        </copy>
+    </target>
+
+    <target 
+        name="-generate-proxies"
+        depends="-init-clusters,-init-static-analysis,-compile-ant"
+        unless="skip.static.analysis"
+    >
+        <subant genericantfile="${common.ergonomics}" target="-proxy-one-cluster">
+            <property name="ergonomicsdir" location="${basedir}"/>
+            <property name="src-ant.cp" value="${src-ant.cp}"/>
+            <property name="cluster.entries" location="${netbeans.dest.dir}"/>
+            <property name="anttasks.jar" value="${anttasks.jar}"/>
+            <dirset refid="ergonomic.clusters"/>
+        </subant>
+    </target>
+</project>

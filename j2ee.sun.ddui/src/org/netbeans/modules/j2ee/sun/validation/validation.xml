@@ -1,0 +1,766 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+<!-- This is the default validation file used by the Validation Framwork -->
+<!-- Validation Framework uses this file if one is not specified. -->
+<!-- Validation file to use can be specified using system property validation.file -->
+<!-- validation file is used to specify Constraints to be applied to various elements -->
+<validation>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/name</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/cmp-resource/jndi-name</name>
+    <check>
+      <name>Mandatory Constraint</name>
+    </check>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/cmp-resource/default-resource-principal/name</name>
+    <check>
+      <name>Mandatory Constraint</name>
+    </check>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/cmp-resource/default-resource-principal/password</name>
+    <check>
+      <name>Mandatory Constraint</name>
+    </check>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/cmp-resource/create-tables-at-deploy</name>
+    <check>
+      <name>Boolean Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/cmp-resource/drop-tables-at-undeploy</name>
+    <check>
+      <name>Boolean Constraint</name>
+    </check>   
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/cmp-resource/database-vendor-name</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>   
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/cmp-resource/property/name</name>
+    <check>
+      <name>Mandatory Constraint</name>
+    </check>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/cmp-resource/property/value</name>
+    <check>
+      <name>Mandatory Constraint</name>
+    </check>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/cmp-resource/schema-generator-properties/property/name</name>
+    <check>
+      <name>Mandatory Constraint</name>
+    </check>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/cmp-resource/schema-generator-properties/property/value</name>
+    <check>
+      <name>Mandatory Constraint</name>
+    </check>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/message-destination/message-destination-name</name>
+    <check>
+      <name>Mandatory Constraint</name>
+    </check>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/message-destination/jndi-name</name>
+    <check>
+      <name>Mandatory Constraint</name>
+    </check>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/webservice-description/webservice-description-name</name>
+    <check>
+      <name>Mandatory Constraint</name>
+    </check>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/webservice-description/wsdl-publish-location</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/pm-descriptors/pm-descriptor/pm-identifier</name>
+    <check>
+      <name>Mandatory Constraint</name>
+    </check>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/pm-descriptors/pm-descriptor/pm-version</name>
+    <check>
+      <name>Mandatory Constraint</name>
+    </check>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/pm-descriptors/pm-descriptor/pm-config</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/pm-descriptors/pm-descriptor/pm-class-generator</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/pm-descriptors/pm-descriptor/pm-mapping-factory</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <!-- Constraints for Ejbs -->
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/jndi-name</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/pass-by-reference</name>
+    <check>
+      <name>Boolean Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/ior-security-config/transport-config/integrity</name>
+    <check>
+      <name>Mandatory Constraint</name>
+    </check>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>Enumeration Constraint</name>
+      <parameters>
+        <parameter>
+            <name>enumeration-value</name>
+            <value>NONE</value>
+            <value>SUPPORTED</value>
+            <value>REQUIRED</value>
+        </parameter>
+      </parameters>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/ior-security-config/transport-config/confidentiality</name>
+    <check>
+      <name>Mandatory Constraint</name>
+    </check>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>Enumeration Constraint</name>
+      <parameters>
+        <parameter>
+            <name>enumeration-value</name>
+            <value>NONE</value>
+            <value>SUPPORTED</value>
+            <value>REQUIRED</value>
+        </parameter>
+      </parameters>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/ior-security-config/transport-config/establish-trust-in-target</name>
+    <check>
+      <name>Mandatory Constraint</name>
+    </check>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>Enumeration Constraint</name>
+      <parameters>
+        <parameter>
+            <name>enumeration-value</name>
+            <value>NONE</value>
+            <value>SUPPORTED</value>
+        </parameter>
+      </parameters>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/ior-security-config/transport-config/establish-trust-in-client</name>
+    <check>
+      <name>Mandatory Constraint</name>
+    </check>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>Enumeration Constraint</name>
+      <parameters>
+        <parameter>
+            <name>enumeration-value</name>
+            <value>NONE</value>
+            <value>SUPPORTED</value>
+            <value>REQUIRED</value>
+        </parameter>
+      </parameters>
+      </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/ior-security-config/as-context/auth-method</name>
+    <check>
+      <name>Mandatory Constraint</name>
+    </check>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>Enumeration Constraint</name>
+      <parameters>
+        <parameter>
+            <name>enumeration-value</name>
+            <value>USERNAME_PASSWORD</value>
+        </parameter>
+      </parameters>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/ior-security-config/as-context/realm</name>
+    <check>
+      <name>Mandatory Constraint</name>
+    </check>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/ior-security-config/as-context/required</name>
+    <check>
+      <name>Mandatory Constraint</name>
+    </check>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>Enumeration Constraint</name>
+      <parameters>
+        <parameter>
+            <name>enumeration-value</name>
+            <value>true</value>
+            <value>false</value>
+        </parameter>
+      </parameters>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/ior-security-config/sas-context/caller-propagation</name>
+    <check>
+      <name>Mandatory Constraint</name>
+    </check>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>Enumeration Constraint</name>
+      <parameters>
+        <parameter>
+            <name>enumeration-value</name>
+            <value>NONE</value>
+            <value>SUPPORTED</value>
+        </parameter>
+      </parameters>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/webservice-endpoint/port-component-name</name>
+    <check>
+      <name>Mandatory Constraint</name>
+    </check>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/webservice-endpoint/endpoint-address-uri</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/webservice-endpoint/login-config/auth-method</name>
+    <check>
+      <name>Enumeration Constraint</name>
+      <parameters>
+        <parameter>
+            <name>enumeration-value</name>
+            <value>USERNAME_PASSWORD</value>
+        </parameter>
+      </parameters>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/webservice-endpoint/transport-guarantee</name>
+    <check>
+      <name>Enumeration Constraint</name>
+      <parameters>
+        <parameter>
+            <name>enumeration-value</name>
+            <value>NONE</value>
+            <value>INTEGRAL</value>
+            <value>CONFIDENTIAL</value>
+        </parameter>
+      </parameters>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/bean-pool/steady-pool-size</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+    <check>
+      <name>ZeroToMaxInteger Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/bean-pool/resize-quantity</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+    <check>
+      <name>ZeroToMaxInteger Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/bean-pool/max-pool-size</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+    <check>
+      <name>ZeroToMaxInteger Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/bean-pool/pool-idle-timeout-in-seconds</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+    <check>
+      <name>ZeroToMaxInteger Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/bean-cache/max-cache-size</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+    <check>
+      <name>ZeroToMaxInteger Constraint</name>
+    </check>
+    <check>
+      <name>IntegerGreaterThan Constraint</name>
+      <parameters>
+        <parameter>
+            <name>value</name>
+            <value>1</value>
+        </parameter>
+      </parameters>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/bean-cache/resize-quantity</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+    <check>
+      <name>ZeroToMaxInteger Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/bean-cache/is-cache-overflow-allowed</name>
+    <check>
+      <name>Boolean Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/bean-cache/cache-idle-timeout-in-seconds</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+    <check>
+      <name>ZeroToMaxInteger Constraint</name>
+    </check>
+  </element>
+    <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/bean-cache/removal-timeout-in-seconds</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+    <check>
+      <name>ZeroToMaxInteger Constraint</name>
+    </check>
+    <check>
+      <name>IntegerGreaterThan Constraint</name>
+      <parameters>
+        <parameter>
+            <name>value</name>
+            <value>100</value>
+        </parameter>
+      </parameters>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/bean-cache/victim-selection-policy</name>
+    <check>
+      <name>Enumeration Constraint</name>
+      <parameters>
+        <parameter>
+            <name>enumeration-value</name>
+            <value>FIFO</value>
+            <value>LRU</value>
+            <value>NRU</value>
+        </parameter>
+      </parameters>
+    </check>
+  </element>
+  <!-- Constraints for Statefule Session Ejbs -->
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/availability-enabled</name>
+    <check>
+      <name>Boolean Constraint</name>
+    </check>
+  </element>
+  <!-- Constraints for Entity Ejbs -->
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/is-read-only-bean</name>
+    <check>
+      <name>Boolean Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/refresh-period-in-seconds</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+    <check>
+      <name>ZeroToMaxInteger Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/commit-option</name>
+    <check>
+      <name>Enumeration Constraint</name>
+      <parameters>
+        <parameter>
+            <name>enumeration-value</name>
+            <value>B</value>
+            <value>C</value>
+        </parameter>
+      </parameters>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/cmp/one-one-finders/finder/method-name</name>
+    <check>
+      <name>Mandatory Constraint</name>
+    </check>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/cmp/one-one-finders/finder/query-params</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/cmp/one-one-finders/finder/query-filter</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/cmp/one-one-finders/finder/query-variables</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/cmp/one-one-finders/finder/query-ordering</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/cmp/mapping-properties</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <!-- Constraints for MD Ejbs -->
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/jms-durable-subscription-name</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/jms-max-messages-load</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+    <check>
+      <name>ZeroToMaxInteger Constraint</name>
+    </check>
+    <check>
+      <name>IntegerGreaterThan Constraint</name>
+      <parameters>
+        <parameter>
+            <name>value</name>
+            <value>0</value>
+        </parameter>
+      </parameters>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/mdb-resource-adapter/resource-adapter-mid</name>
+    <check>
+      <name>Mandatory Constraint</name>
+    </check>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/mdb-resource-adapter/activation-config/description</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/mdb-connection-factory/jndi-name</name>
+    <check>
+      <name>Mandatory Constraint</name>
+    </check>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/mdb-connection-factory/default-resource-principal/name</name>
+    <check>
+      <name>Mandatory Constraint</name>
+    </check>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/mdb-connection-factory/default-resource-principal/password</name>
+    <check>
+      <name>Mandatory Constraint</name>
+    </check>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/flush-at-end-of-method/method/description</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/flush-at-end-of-method/method/ejb-name</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/flush-at-end-of-method/method/method-name</name>
+    <check>
+      <name>Mandatory Constraint</name>
+    </check>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/flush-at-end-of-method/method/method-intf</name>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>Enumeration Constraint</name>
+      <parameters>
+        <parameter>
+            <name>enumeration-value</name>
+            <value>Home</value>
+            <value>Remote</value>
+            <value>LocalHome</value>
+            <value>Local</value>
+        </parameter>
+      </parameters>
+    </check>
+  </element>
+  <element>
+    <name>/sun-ejb-jar/enterprise-beans/ejb/webservice-endpoint/message-security-binding/provider-id</name>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+</validation>

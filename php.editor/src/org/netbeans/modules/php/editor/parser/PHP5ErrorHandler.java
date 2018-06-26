@@ -1,0 +1,155 @@
+/*
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ *
+ * Copyright 2012 Oracle and/or its affiliates. All rights reserved.
+ *
+ * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+ * Other names may be trademarks of their respective owners.
+ *
+ * The contents of this file are subject to the terms of either the GNU
+ * General Public License Version 2 only ("GPL") or the Common
+ * Development and Distribution License("CDDL") (collectively, the
+ * "License"). You may not use this file except in compliance with the
+ * License. You can obtain a copy of the License at
+ * http://www.netbeans.org/cddl-gplv2.html
+ * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+ * specific language governing permissions and limitations under the
+ * License.  When distributing the software, include this License Header
+ * Notice in each file and include the License file at
+ * nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the GPL Version 2 section of the License file that
+ * accompanied this code. If applicable, add the following below the
+ * License Header, with the fields enclosed by brackets [] replaced by
+ * your own identifying information:
+ * "Portions Copyrighted [year] [name of copyright owner]"
+ *
+ * If you wish your version of this file to be governed by only the CDDL
+ * or only the GPL Version 2, indicate your decision by adding
+ * "[Contributor] elects to include this software in this distribution
+ * under the [CDDL or GPL Version 2] license." If you do not indicate a
+ * single choice of license, a recipient has the option to distribute
+ * your version of this file under either the CDDL, the GPL Version 2 or
+ * to extend the choice of license to its licensees as provided above.
+ * However, if you add GPL Version 2 code and therefore, elected the GPL
+ * Version 2 license, then the option applies only if the new code is
+ * made subject to such option by the copyright holder.
+ *
+ * Contributor(s):
+ *
+ * Portions Copyrighted 2012 Sun Microsystems, Inc.
+ */
+package org.netbeans.modules.php.editor.parser;
+
+import java.util.List;
+import java_cup.runtime.Symbol;
+import org.netbeans.modules.csl.api.Error;
+import org.netbeans.modules.csl.api.Severity;
+import org.netbeans.modules.php.editor.parser.astnodes.Program;
+import org.openide.util.NbBundle;
+
+/**
+ *
+ * @author Ondrej Brejla <obrejla@netbeans.org>
+ */
+public interface PHP5ErrorHandler extends ParserErrorHandler {
+
+    List<Error> displayFatalError();
+    List<Error> displaySyntaxErrors(Program program);
+    List<SyntaxError> getSyntaxErrors();
+    void disableHandling();
+
+    @org.netbeans.api.annotations.common.SuppressWarnings({"EI_EXPOSE_REP", "EI_EXPOSE_REP2"})
+    public static class SyntaxError {
+
+        @NbBundle.Messages({
+            "SE_ValidMessage=Syntax error",
+            "SE_PossibleMessage=POSSIBLE Syntax Error (check preceding valid syntax error)"
+        })
+        public static enum Type {
+            FIRST_VALID_ERROR() {
+
+                @Override
+                public String getMessageHeader() {
+                    return Bundle.SE_ValidMessage();
+                }
+
+                @Override
+                public Severity getSeverity() {
+                    return Severity.ERROR;
+                }
+
+            },
+            POSSIBLE_ERROR() {
+
+                @Override
+                public String getMessageHeader() {
+                    return Bundle.SE_PossibleMessage();
+                }
+
+                @Override
+                public Severity getSeverity() {
+                    return Severity.WARNING;
+                }
+
+            };
+
+            public abstract String getMessageHeader();
+
+            public abstract Severity getSeverity();
+        }
+
+        private final short[] expectedTokens;
+        private final Symbol currentToken;
+        private final Symbol previousToken;
+        private final Type type;
+
+        public SyntaxError(short[] expectedTokens, Symbol currentToken, Symbol previousToken, Type type) {
+            this.expectedTokens = expectedTokens;
+            this.currentToken = currentToken;
+            this.previousToken = previousToken;
+            this.type = type;
+        }
+
+        public Symbol getCurrentToken() {
+            return currentToken;
+        }
+
+        public Symbol getPreviousToken() {
+            return previousToken;
+        }
+
+        public short[] getExpectedTokens() {
+            return expectedTokens;
+        }
+
+        public String getMessageHeader() {
+            return type.getMessageHeader();
+        }
+
+        public Severity getSeverity() {
+            return type.getSeverity();
+        }
+
+        public boolean generateExtraInfo() {
+            return getSeverity().equals(Severity.ERROR);
+        }
+    }
+
+    public static class FatalError extends GSFPHPError {
+
+        @NbBundle.Messages("MSG_FatalError=Unable to parse the file")
+        FatalError(GSFPHPParser.Context context) {
+            super(Bundle.MSG_FatalError(),
+                context.getSnapshot().getSource().getFileObject(),
+                0, context.getBaseSource().length(),
+                Severity.ERROR, null);
+        }
+
+        @Override
+        public boolean isLineError() {
+            return false;
+        }
+    }
+
+}

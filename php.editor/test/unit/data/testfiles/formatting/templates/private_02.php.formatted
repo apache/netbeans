@@ -1,0 +1,15 @@
+<?php
+
+class Test {
+    private $bla = "fladsfa";
+    private 
+    public function __construct() {
+
+    }
+
+    public function method1($param) {
+
+    }
+
+}
+?>

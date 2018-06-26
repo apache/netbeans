@@ -1,0 +1,657 @@
+<?xml version="1.0"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2007 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+  <folder name="Templates">
+    <folder name="JSP_Servlet">
+        <attr name="position" intvalue="600"/>
+        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.core.Bundle"/>
+        <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/web/core/resources/WebInfo.html"/>
+      <file name="JSP.jsp" url="templates/JSP.template">
+        <attr name="position" intvalue="100"/>
+        <attr name="template" boolvalue="true"/>
+        <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+        <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/web/core/resources/JSPInfo.html"/>
+        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.core.Bundle"/>
+        <attr name="templateWizardIterator" methodvalue="org.netbeans.modules.web.wizards.PageIterator.createJspIterator"/>
+        <attr name="templateCategory" stringvalue="web-types"/>
+      </file>
+      <!--  JSP Document --> 
+      <file name="JSPX.jspx" url="templates/JSPDoc.template">
+        <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+        <attr name="position" intvalue="0"/>
+      </file>
+      <!--  JSP Segment --> 
+      <file name="JSPF.jspf" url="templates/JSPF.template">
+        <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>  
+        <attr name="position" intvalue="0"/>
+      </file>
+      <!--  XML segemnt --> 
+      <file name="JSPFX.jspf" url="templates/JSPDocX.template">
+        <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>  
+        <attr name="position" intvalue="0"/>
+      </file>
+      <!-- Tag File -->
+      <file name="TagFile.tag" url="templates/TagFile.template">
+        <attr name="position" intvalue="1100"/>
+        <attr name="template" boolvalue="true"/>
+        <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+        <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/web/core/resources/TagFile.html"/>
+        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.core.Bundle"/>
+        <attr name="templateWizardIterator" methodvalue="org.netbeans.modules.web.wizards.PageIterator.createTagIterator"/>
+        <attr name="templateCategory" stringvalue="servlet-types"/>
+      </file>
+      <!--  Tag File Document --> 
+      <file name="TagFileX.tagx" url="templates/TagFileX.template">
+        <attr name="position" intvalue="0"/>
+        <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+      </file>
+      <!--  Tag File Segments --> 
+      <file name="TagFileF.tagf" url="templates/TagFileF.template">
+        <attr name="position" intvalue="0"/>
+        <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+      </file>
+      <file name="TagFileFX.tagf" url="templates/TagFileFX.template">
+        <attr name="position" intvalue="0"/>
+        <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+      </file>
+      <!-- Servlet --> 
+      <file name="Servlet.java" url="templates/Servlet.template">
+          <attr name="position" intvalue="200"/>
+                <attr name="template" boolvalue="true"/>
+          <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+          <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/web/core/resources/Servlet.html"/>
+          <attr name="templateWizardIterator" methodvalue="org.netbeans.modules.web.wizards.ServletIterator.createServletIterator"/>
+          <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.core.Bundle"/>
+          <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.gif"/>
+          <attr name="org.netbeans.modules.web.IsServletFile" boolvalue="true"/>
+          <attr name="templateCategory" stringvalue="servlet-types"/>
+      </file>
+      <!-- use template description from HTML module -->
+      <file name="Html.html" url="nbresloc:/org/netbeans/modules/html/templates/html.html">
+         <attr name="position" intvalue="500"/>
+         <attr name="template" boolvalue="true"/>
+         <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+         <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/html/TemplateHelp.html"/>
+         <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.core.Bundle"/>
+         <attr name="templateWizardIterator" methodvalue="org.netbeans.modules.web.wizards.PageIterator.createHtmlIterator"/>
+         <attr name="templateCategory" stringvalue="web-types"/>
+      </file>
+      
+      <file name="XHtml.xhtml" url="nbresloc:/org/netbeans/modules/html/templates/xhtml.xhtml">
+         <attr name="position" intvalue="600"/>
+         <attr name="template" boolvalue="true"/>
+         <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+         <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/html/XhtmlTemplateHelp.html"/>
+         <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.core.Bundle"/>
+         <attr name="templateWizardIterator" methodvalue="org.netbeans.modules.web.wizards.PageIterator.createXHtmlIterator"/>
+         <attr name="templateCategory" stringvalue="web-types"/>
+      </file>
+      <file name="CascadeStyleSheet.css" url="nbresloc:/org/netbeans/modules/css/resources/CascadeStyleSheet.css.template">
+         <attr name="position" intvalue="650"/>
+                <attr name="template" boolvalue="true"/>
+         <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+         <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/css/resources/CSS_template.html"/>
+         <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/css/resources/style_sheet_16.png"/>
+         <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.core.Bundle"/>
+         <attr name="templateWizardIterator" methodvalue="org.netbeans.modules.web.wizards.PageIterator.createXCssIterator"/>
+         <attr name="templateCategory" stringvalue="web-types"/>
+      </file>
+
+      <!-- Servlet Listener --> 
+      <file name="ServletListener.java" url="templates/ServletListener.template">
+          <attr name="position" intvalue="400"/>
+                <attr name="template" boolvalue="true"/>
+          <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+          <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/web/core/resources/ServletListener.html"/>
+          <attr name="templateWizardIterator" newvalue="org.netbeans.modules.web.wizards.ListenerIterator"/>
+          <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.core.Bundle"/>
+          <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.gif"/>
+          <attr name="templateCategory" stringvalue="servlet-types"/>
+      </file>
+      <!-- Tag Library 2.1-->
+      <file name="TagLibrary.tld" url="templates/BlankTagLibrary.template">
+          <attr name="position" intvalue="1000"/>
+                <attr name="template" boolvalue="true"/>
+          <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/web/core/resources/TagLibrary.html"/>
+          <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.core.Bundle"/>
+          <attr name="templateWizardIterator" methodvalue="org.netbeans.modules.web.wizards.PageIterator.createTagLibraryIterator"/>
+          <attr name="templateCategory" stringvalue="servlet-types"/>
+      </file>
+      <!--  Tag Library 2.0 -->
+      <file name="TagLibrary_2_0.tld" url="templates/BlankTagLibrary_2_0.template">
+        <attr name="position" intvalue="0"/>
+      </file>
+      <!--  Tag Library 1.2 --> 
+      <file name="TagLibrary_1_2.tld" url="templates/BlankTagLibrary_1_2.template">
+        <attr name="position" intvalue="0"/>
+      </file>
+      <!-- Filters --> 
+      <file name="Filter.java" url="templates/SimpleFilter.template">
+        <attr name="position" intvalue="300"/>
+                <attr name="template" boolvalue="true"/>
+        <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+        <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/web/core/resources/SimpleFilter.html"/>
+        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.core.Bundle"/>
+          <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.gif"/>
+        <attr name="templateWizardIterator" methodvalue="org.netbeans.modules.web.wizards.ServletIterator.createFilterIterator"/>
+        <attr name="templateCategory" stringvalue="servlet-types"/>
+      </file>      
+      <file name="AdvancedFilter.java" url="templates/AdvancedFilter.template">
+        <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+        <attr name="position" intvalue="0"/>
+      </file>
+      <!-- Tag Handlers --> 
+      <file name="TagHandler.java" url="templates/SimpleTagHandler.template">
+        <attr name="position" intvalue="900"/>
+        <attr name="template" boolvalue="true"/>
+        <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+        <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/web/core/resources/TagHandler.html"/>
+        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.core.Bundle"/>
+        <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.gif"/>
+        <attr name="templateWizardIterator" newvalue="org.netbeans.modules.web.wizards.TagHandlerIterator"/>
+        <attr name="templateCategory" stringvalue="servlet-types"/>
+      </file>      
+      <file name="BodyTagHandler.java" url="templates/BodyTagHandler.template">
+        <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+        <attr name="position" intvalue="0"/>
+      </file>
+	<file name="JavaScript.js" url="nbresloc:/org/netbeans/modules/javascript2/editor/resources/jstemplate.js">
+         <attr name="position" intvalue="700"/>
+         <attr name="template" boolvalue="true"/>
+         <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+         <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javascript2/editor/resources/javascript.html"/>
+         <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.core.Bundle"/>
+         <attr name="templateWizardIterator" methodvalue="org.netbeans.modules.web.wizards.PageIterator.createJSIterator"/>
+         <attr name="templateCategory" stringvalue="web-types"/>
+      </file>
+    <!--file name="javascript.shadow">
+        <attr name="originalFile" stringvalue="Templates/Other/javascript.js"/>
+        <attr name="position" intvalue="700"/>
+        <attr name="templateCategory" stringvalue="web-types"/>
+    </file-->
+    <file name="json.shadow">
+        <attr name="originalFile" stringvalue="Templates/Other/json.json"/>
+        <attr name="position" intvalue="750"/>
+        <attr name="templateCategory" stringvalue="web-types"/>
+    </file>
+      <file name="web.xml">
+        <attr name="template" boolvalue="true"/>
+        <attr name="position" intvalue="9797"/>
+        <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/web/core/resources/webXml.html"/>
+        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.wizards.dd.Bundle"/>
+        <attr name="instantiatingIterator" newvalue="org.netbeans.modules.web.wizards.dd.WebXmlWizardIterator"/>
+        <attr name="templateCategory" stringvalue="web-types"/>
+        <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/j2ee/ddloaders/web/resources/DDDataIcon.gif"/>
+      </file>
+
+      <file name="web-fragment.xml">
+        <attr name="template" boolvalue="true"/>
+        <attr name="position" intvalue="9798"/>
+        <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/web/core/resources/webFragmentXml.html"/>
+        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.wizards.dd.Bundle"/>
+        <attr name="instantiatingIterator" newvalue="org.netbeans.modules.web.wizards.dd.WebFragmentXmlWizardIterator"/>
+        <attr name="templateCategory" stringvalue="servlet-types-j2se-only"/>
+        <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/j2ee/ddloaders/web/resources/DDDataIcon.gif"/>
+      </file>
+    </folder>
+</folder>
+
+  <folder name="Actions">
+    <folder name="Edit">
+        <file name="org-netbeans-modules-web-core-jsploader-EditServletAction.instance"/>
+    </folder>
+      <folder name="Tools">
+            <file name="org-netbeans-modules-web-core-palette-JspPaletteCustomizerAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.core.Bundle"/>
+                <attr name="delegate" newvalue="org.netbeans.modules.web.core.palette.JspPaletteCustomizerAction"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.web.core.palette.Bundle#ACT_OpenJSPCustomizer"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="true"/>
+            </file>
+        </folder>
+    </folder>
+
+<!--  <folder name="J2EE">
+    <folder name="JSPParser">
+    </folder>
+    <folder name="JSPCompilation">
+    </folder>
+    <folder name="JSPSyntaxColoring">
+        <folder name="text">
+            <folder name="x-jsp">
+                <file name="org-netbeans-modules-web-core-jsploader-JspContextInfoImpl.instance">
+                    <attr name="instanceCreate" newvalue="org.netbeans.modules.web.core.jsploader.JspContextInfoImpl"/>
+                </file>
+            </folder>
+            <folder name="x-tag">
+                <file name="org-netbeans-modules-web-core-jsploader-JspContextInfoImpl.instance">
+                    <attr name="instanceCreate" newvalue="org.netbeans.modules.web.core.jsploader.JspContextInfoImpl"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+  </folder>-->
+  
+  <folder name="Editors">
+        <folder name="text">
+            <folder name="x-jsp">
+                <file name="PaletteFactory.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.spi.palette.PaletteController"/>
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.web.core.palette.JspPaletteFactory.getPalette"/>
+                </file>
+                <folder name="Popup">
+                    <!--<file name="org-netbeans-modules-web-core-jsploader-EditServletAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/View Servlet.instance"/>
+                    </file>-->
+                    
+                    <!--<attr name="Separator5.instance/org-netbeans-modules-project-ui-RunSingle.instance" boolvalue="true"/>
+                    <attr name="org-netbeans-modules-project-ui-RunSingle.instance/org-netbeans-modules-web-core-jsploader-EditServletAction.shadow" boolvalue="true"/>
+                    <attr name="org-netbeans-modules-web-core-jsploader-EditServletAction.shadow/SeparatorJSP.instance" boolvalue="true"/>-->
+
+                    <file name="org-netbeans-modules-project-ui-RunSingle.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-RunSingle.instance"/>
+                        <attr name="position" intvalue="1250"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="x-tag">
+                <file name="PaletteFactory.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.spi.palette.PaletteController"/>
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.web.core.palette.JspPaletteFactory.getPalette"/>
+                </file>
+            </folder>
+        </folder>
+  </folder>
+    
+        
+
+    <folder name="Plugins">
+      <!-- Register XML module catalog plugin -->
+        <folder name="XML">
+            <folder name="UserCatalogs">
+                <file name="org-netbeans-modules-web-taglib-TaglibCatalog.instance">
+                    <attr name="instanceCreate" newvalue="org.netbeans.modules.web.taglib.TaglibCatalog"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.xml.catalog.spi.CatalogReader"/>
+                </file>
+            </folder>
+            <folder name="GrammarQueryManagers">
+                <!-- register semantics grammar for jsp_taglibrary2_0 due to code completion -->
+                <file name="org-netbeans-modules-web-taglib-TaglibGrammarQueryManager.instance">
+                    <attr name="position" intvalue="200"/>
+                </file>
+                </folder> <!-- GrammarQueryManagers -->
+        </folder>
+    </folder>
+
+    <folder name="Menu">
+        <folder name="Tools">
+            <folder name="PaletteManager">
+                <file name="org-netbeans-modules-html-palette-HtmlPaletteCustomizerAction.shadow_hidden"/>
+                <file name="org-netbeans-modules-web-core-palette-JspPaletteCustomizerAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Tools/org-netbeans-modules-web-core-palette-JspPaletteCustomizerAction.instance"/>
+                    <attr name="position" intvalue="200"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+    
+    <folder name="JSPPalette">
+
+        <attr name="paletteDefaultVisible" boolvalue="false"/>
+
+        <file name="HTML.shadow">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.core.palette.Bundle"/>
+            <attr name="originalFile" stringvalue="HTMLPalette/HTML"/>
+            <attr name="position" intvalue="100"/>
+        </file>
+        
+        <file name="HTML_Forms.shadow">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.core.palette.Bundle"/>
+            <attr name="originalFile" stringvalue="HTMLPalette/HTML_Forms"/>
+            <attr name="position" intvalue="200"/>
+        </file>
+
+        <folder name="JSP">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.core.palette.Bundle"/>
+            <attr name="position" intvalue="300"/>
+            <file name="UseBean.xml" url="nbresloc:/org/netbeans/modules/web/core/palette/items/resources/UseBean.xml">
+                <attr name="position" intvalue="100"/>
+            </file>
+            <file name="GetProperty.xml" url="nbresloc:/org/netbeans/modules/web/core/palette/items/resources/GetProperty.xml">
+                <attr name="position" intvalue="200"/>
+            </file>
+            <file name="SetProperty.xml" url="nbresloc:/org/netbeans/modules/web/core/palette/items/resources/SetProperty.xml">
+                <attr name="position" intvalue="300"/>
+            </file>
+            <file name="Choose.xml" url="nbresloc:/org/netbeans/modules/web/core/palette/items/resources/Choose.xml">
+                <attr name="position" intvalue="400"/>
+            </file>
+            <file name="If.xml" url="nbresloc:/org/netbeans/modules/web/core/palette/items/resources/If.xml">
+                <attr name="position" intvalue="500"/>
+            </file>
+            <file name="ForEach.xml" url="nbresloc:/org/netbeans/modules/web/core/palette/items/resources/ForEach.xml">
+                <attr name="position" intvalue="600"/>
+            </file>
+        </folder>
+
+        <folder name="Database">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.core.palette.Bundle"/>
+            <attr name="position" intvalue="500"/>
+            <file name="Query.xml" url="nbresloc:/org/netbeans/modules/web/core/palette/items/resources/Query.xml">
+                <attr name="position" intvalue="100"/>
+            </file>
+            <file name="Report.xml" url="nbresloc:/org/netbeans/modules/web/core/palette/items/resources/Report.xml">
+                <attr name="position" intvalue="200"/>
+            </file>
+            <file name="Insert.xml" url="nbresloc:/org/netbeans/modules/web/core/palette/items/resources/Insert.xml">
+                <attr name="position" intvalue="300"/>
+            </file>
+            <file name="Update.xml" url="nbresloc:/org/netbeans/modules/web/core/palette/items/resources/Update.xml">
+                <attr name="position" intvalue="400"/>
+            </file>
+            <file name="Delete.xml" url="nbresloc:/org/netbeans/modules/web/core/palette/items/resources/Delete.xml">
+                <attr name="position" intvalue="500"/>
+            </file>
+        </folder>
+    </folder>
+
+    <folder name="Loaders">
+        <folder name="text">
+            <folder name="x-tag">
+                <!-- GSF -->
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/web/core/resources/jspObject.gif"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/web/core/resources/jspObject.gif"/>
+                 <folder name="Factories">
+                     <file name="org-netbeans-modules-web-core-jsploader-JspLoader.instance">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.core.Bundle"/>
+                        <attr name="position" intvalue="3000"/>
+                    </file>
+                 </folder>
+            </folder>
+            
+            <!-- x-jsp action -->
+            <folder name="x-jsp">
+                <!-- GSF -->
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/web/core/resources/jspObject.gif"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/web/core/resources/jspObject.gif"/>
+                 <folder name="Factories">
+                     <file name="org-netbeans-modules-web-core-jsploader-JspLoader.instance">
+                         <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.core.Bundle"/>
+                         <attr name="position" intvalue="3000"/>
+                     </file>
+                 </folder>
+                
+                <folder name="Actions">
+                  <file name="CopyAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>
+                        <attr name="position" intvalue="1300"/>
+                    </file>
+                    <file name="CutAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CutAction.instance"/>
+                        <attr name="position" intvalue="1200"/>
+                    </file>
+                    <file name="DeleteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-DeleteAction.instance"/>
+                        <attr name="position" intvalue="1700"/>
+                    </file>
+                    <file name="FileSystemAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-FileSystemAction.instance"/>
+                        <attr name="position" intvalue="1000"/>
+                    </file>
+                    <file name="NewAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-NewAction.instance"/>
+                        <attr name="position" intvalue="1600"/>
+                    </file>
+                    <file name="OpenAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-OpenAction.instance"/>
+                        <attr name="position" intvalue="100"/>
+                    </file>
+                    <file name="PasteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-PasteAction.instance"/>
+                        <attr name="position" intvalue="1400"/>
+                    </file>
+                    <file name="PropertiesAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PropertiesAction.instance"/>
+                        <attr name="position" intvalue="2300"/>
+                    </file>
+                    <file name="RenameAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-RenameAction.instance"/>
+                        <attr name="position" intvalue="1800"/>
+                    </file>
+                    <file name="SaveAsTemplateAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAsTemplateAction.instance"/>
+                        <attr name="position" intvalue="2000"/>
+                    </file>
+                    <file name="ToolsAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ToolsAction.instance"/>
+                        <attr name="position" intvalue="2200"/>
+                    </file>
+                    <file name="jsp-project-separator-3.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                      <attr name="position" intvalue="900"/>
+                    </file>
+                  <file name="jsp-project-separator-4.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                      <attr name="position" intvalue="1100"/>
+                    </file>
+                  <file name="jsp-project-separator-5.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                      <attr name="position" intvalue="1500"/>
+                    </file>
+                  <file name="jsp-project-separator-6.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                      <attr name="position" intvalue="1900"/>
+                    </file>
+                  <file name="jsp-project-separator-7.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                      <attr name="position" intvalue="2100"/>
+                    </file>
+                  </folder>
+            </folder>
+            <!-- x-tld action -->
+             <folder name="x-tld">
+                 <folder name="Factories">
+                     <file name="org-netbeans-modules-web-taglib-TLDLoader.instance">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.core.Bundle"/>
+                        <attr name="position" intvalue="3100"/>
+                    </file>
+                 </folder>
+                <folder name="Actions">
+                  <file name="CopyAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>
+                        <attr name="position" intvalue="600"/>
+                    </file>
+                    <file name="CutAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CutAction.instance"/>
+                        <attr name="position" intvalue="500"/>
+                    </file>
+                    <file name="DeleteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-DeleteAction.instance"/>
+                        <attr name="position" intvalue="900"/>
+                    </file>
+                    <file name="FileSystemAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-FileSystemAction.instance"/>
+                        <attr name="position" intvalue="300"/>
+                    </file>
+                    <file name="OpenAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-OpenAction.instance"/>
+                        <attr name="position" intvalue="100"/>
+                    </file>
+                    <file name="PasteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-PasteAction.instance"/>
+                        <attr name="position" intvalue="700"/>
+                    </file>
+                    <file name="PropertiesAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PropertiesAction.instance"/>
+                        <attr name="position" intvalue="1500"/>
+                    </file>
+                    <file name="RenameAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-RenameAction.instance"/>
+                        <attr name="position" intvalue="1000"/>
+                    </file>
+                    <file name="SaveAsTemplateAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAsTemplateAction.instance"/>
+                        <attr name="position" intvalue="1200"/>
+                    </file>
+                    <file name="ToolsAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ToolsAction.instance"/>
+                        <attr name="position" intvalue="1400"/>
+                    </file>
+                    <file name="tld-separator-3.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                      <attr name="position" intvalue="200"/>
+                    </file>
+                  <file name="tld-separator-4.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                      <attr name="position" intvalue="400"/>
+                    </file>
+                  <file name="tld-separator-5.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                      <attr name="position" intvalue="800"/>
+                    </file>
+                  <file name="tld-separator-6.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                      <attr name="position" intvalue="1100"/>
+                    </file>
+                  <file name="tld-separator-7.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                      <attr name="position" intvalue="1300"/>
+                    </file>
+                  </folder>
+            </folder>
+            <!-- x-jsp-servlet action -->
+             <folder name="x-jsp-servlet">
+                <folder name="Actions">
+                  <file name="CopyAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>
+                        <attr name="position" intvalue="600"/>
+                    </file>
+                    <file name="CutAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CutAction.instance"/>
+                        <attr name="position" intvalue="500"/>
+                    </file>
+                    <file name="DeleteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-DeleteAction.instance"/>
+                        <attr name="position" intvalue="900"/>
+                    </file>
+                    <file name="FileSystemAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-FileSystemAction.instance"/>
+                        <attr name="position" intvalue="300"/>
+                    </file>
+                    <file name="OpenAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-OpenAction.instance"/>
+                        <attr name="position" intvalue="100"/>
+                    </file>
+                    <file name="PasteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-PasteAction.instance"/>
+                        <attr name="position" intvalue="700"/>
+                    </file>
+                    <file name="PropertiesAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PropertiesAction.instance"/>
+                        <attr name="position" intvalue="1500"/>
+                    </file>
+                    <file name="RenameAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-RenameAction.instance"/>
+                        <attr name="position" intvalue="1000"/>
+                    </file>
+                    <file name="SaveAsTemplateAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAsTemplateAction.instance"/>
+                        <attr name="position" intvalue="1200"/>
+                    </file>
+                    <file name="ToolsAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ToolsAction.instance"/>
+                        <attr name="position" intvalue="1400"/>
+                    </file>
+                    <file name="jspservlet-separator-3.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                      <attr name="position" intvalue="200"/>
+                    </file>
+                  <file name="jspservlet-separator-4.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                      <attr name="position" intvalue="400"/>
+                    </file>
+                  <file name="jspservlet-separator-5.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                      <attr name="position" intvalue="800"/>
+                    </file>
+                  <file name="jspservlet-separator-6.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                      <attr name="position" intvalue="1100"/>
+                    </file>
+                  <file name="jspservlet-separator-7.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                      <attr name="position" intvalue="1300"/>
+                    </file>
+                  </folder>
+            </folder>
+        </folder>
+    </folder>
+
+    <folder name="OptionsExport">
+        <folder name="Advanced">
+            <file name="JSPPalette">
+                <attr name="include" stringvalue="config/JSPPalette/.*"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.web.core.Bundle#JSPPalette.Options.Export.displayName"/>
+            </file>
+        </folder>
+    </folder>
+    
+  <folder name="org-netbeans-api-project-libraries">
+    <folder name="Libraries">
+      <file name="jsp-compiler.xml" url="jsp-compiler.xml">
+        <attr name="displayName" bundlevalue="org/netbeans/modules/web/core/Bundle#jsp-compiler"/>
+      </file>
+      <file name="jsp-compilation.xml" url="jsp-compilation.xml">
+        <attr name="displayName" bundlevalue="org/netbeans/modules/web/core/Bundle#jsp-compilation"/>
+      </file>
+      <file name="jsp-compilation-syscp.xml" url="jsp-compilation-syscp.xml">
+        <attr name="displayName" bundlevalue="org/netbeans/modules/web/core/Bundle#jsp-compilation-syscp"/>
+      </file>
+    </folder>
+  </folder>
+  
+</filesystem>

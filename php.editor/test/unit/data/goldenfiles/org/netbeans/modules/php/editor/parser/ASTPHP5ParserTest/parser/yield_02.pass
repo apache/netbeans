@@ -1,0 +1,52 @@
+<testresult testFile='yield_02.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='7' end='12'>
+            <text>$data</text>
+        </token>
+        <token id='T_EQUAL' start='13' end='14'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='15' end='16'>
+            <text>(</text>
+        </token>
+        <token id='T_YIELD' start='16' end='21'>
+            <text>yield</text>
+        </token>
+        <token id='T_VARIABLE' start='22' end='28'>
+            <text>$value</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='28' end='29'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='29' end='30'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='32' end='35'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='35' end='35'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='34'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='30'>
+                <Assignment start='7' end='29' operator='EQUAL'>
+                    <Variable start='7' end='12' isDollared='true'>
+                        <Identifier start='8' end='12' name='data'/>
+                    </Variable>
+                    <ParenthesisExpression start='15' end='29'>
+                        <YieldExpression start='16' end='28'>
+                            <Variable start='22' end='28' isDollared='true'>
+                                <Identifier start='23' end='28' name='value'/>
+                            </Variable>
+                        </YieldExpression>
+                    </ParenthesisExpression>
+                </Assignment>
+            </ExpressionStatement>
+            <EmptyStatement start='32' end='34'/>
+        </Statements>
+    </Program>
+</testresult>

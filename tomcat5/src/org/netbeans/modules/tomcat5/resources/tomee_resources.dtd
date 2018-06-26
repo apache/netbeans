@@ -1,0 +1,17 @@
+<!--
+Just artifical DTD designed to the current knowledge of tomee resources.xml.
+We didn't find a DTD or xml schema.
+-->
+
+<!ELEMENT resources (Resource*, Container*, TransactionManager*) >
+
+<!ELEMENT Resource (#PCDATA) >
+<!ATTLIST Resource id CDATA #REQUIRED>
+<!ATTLIST Resource type CDATA #REQUIRED>
+
+<!ELEMENT Container (#PCDATA) >
+<!ATTLIST Container id CDATA #REQUIRED>
+<!ATTLIST Container type CDATA #REQUIRED>
+
+<!ELEMENT TransactionManager (#PCDATA) >
+<!ATTLIST TransactionManager type CDATA #REQUIRED>

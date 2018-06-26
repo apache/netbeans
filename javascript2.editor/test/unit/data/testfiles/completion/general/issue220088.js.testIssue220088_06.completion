@@ -1,0 +1,5 @@
+Code completion result for source line:
+issue220088.m|odal.modalBody;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      modal                           [PUBLIC]   issue220088.js

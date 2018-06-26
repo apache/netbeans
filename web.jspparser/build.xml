@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<project name="web.jspparser" default="netbeans" basedir=".">
+
+    <import file="../nbbuild/templates/projectized.xml"/>
+
+    <target name="ext-compile">
+        <mkdir dir="build/extclasses"/>
+        <javac srcdir="extsrc" destdir="build/extclasses" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}" source="1.5">
+            <classpath>
+                <path path="${module.classpath}"/>
+                <path location="${cluster}/${module.jar}"/>
+                <path path="${extsrc.cp.extra}"/>
+            </classpath>
+        </javac>
+        <copy todir="build/extclasses">
+          <fileset dir="extsrc" excludes="${jar-excludes}"/>
+        </copy>
+    </target>
+
+    <target name="ext-jar" depends="ext-compile">
+        <mkdir dir="${cluster}/modules/ext"/>
+        <jar jarfile="${cluster}/modules/ext/jsp-parser-ext.jar" compress="false">
+            <fileset dir="build/extclasses"/>
+        </jar>
+    </target>
+
+    <target name="netbeans-extra" depends="release,ext-jar"/>
+
+    <target name="create-jars-from-glassfish">
+        <!-- the latest binary generated on Aug 24, 2010 is based on GlassFish 3.0.1, 
+             plus the following patch in addition (because of the following JSP engine bug: 
+             https://jsp.dev.java.net/issues/show_bug.cgi?id=15):
+             
+                Index: src/main/java/org/apache/jasper/xmlparser/ParserUtils.java
+                ===================================================================
+                - - src/main/java/org/apache/jasper/xmlparser/ParserUtils.java	(revision 1274)
+                +++ src/main/java/org/apache/jasper/xmlparser/ParserUtils.java	(working copy)
+                @@ -636,7 +636,7 @@
+
+                             }
+                         } else {
+                -            is = this.getClass().getResourceAsStream(resourceName);
+                +            is = this.getClass().getResourceAsStream(resourcePath);
+                         }
+
+                         MyLSInput ls = new MyLSInput();
+             
+        -->
+        <!-- location of glassfish instalation -->
+        
+        <property name="glassfish_location" location="/home/marfous/Programs/AppServers/glassfish-4.0-b84-custom"/>
+        <fail message="Set glassfish_location">
+            <condition>
+                <not>
+                    <available  file="${glassfish_location}" type="dir"/>
+                </not>
+            </condition>
+        </fail>
+
+        <!-- glassfish-jspparser.jar -->
+        <echo message="Creating glassfish-jspparser.jar"/>
+        <mkdir dir="glassfishjspparser"/>
+        <unzip src="${glassfish_location}/glassfish/modules/javax.servlet.jsp.jar" dest="glassfishjspparser/"/>
+        <unzip src="${glassfish_location}/glassfish/modules/javax.el.jar" dest="glassfishjspparser/"/>
+        <unzip src="${glassfish_location}/glassfish/modules/glassfish-ee-api.jar" dest="glassfishjspparser/"/>
+        <unzip src="${glassfish_location}/glassfish/modules/common-util.jar" dest="glassfishjspparser/"/>
+        <delete file="./external/glassfish-jspparser-4.0.jar" />
+        <zip  basedir="glassfishjspparser"
+        includes="org/apache/jasper/**, com/sun/el/**, com/sun/appserv/ClassLoaderUtil.class, com/sun/appserv/server/util/PreprocessorUtil.class, org/glassfish/jsp/api/**"
+            zipfile="./external/glassfish-jspparser-4.0.jar" />
+
+        <delete dir="glassfishjspparser" />
+
+        <!-- servlet3.0-jsp2.2-api.jar -->
+        <echo message="Creating servlet3.1-jsp2.3-api.jar"/>
+        <mkdir dir="servletjspapi" />
+        <unzip src="${glassfish_location}/glassfish/modules/gf-client-module.jar" dest="./servletjspapi/"/>
+        <unzip src="${glassfish_location}/glassfish/modules/javax.servlet-api.jar" dest="./servletjspapi/"/>
+        <unzip src="${glassfish_location}/glassfish/modules/javax.servlet.jsp-api.jar" dest="./servletjspapi/"/>
+        <unzip src="${glassfish_location}/glassfish/modules/javax.el-api.jar" dest="./servletjspapi/"/>
+
+        <mkdir dir="servletjspapi/resources/dtds" />
+        <copy todir="servletjspapi/resources/dtds">
+            <fileset dir="./servletjspapi/dtds">
+                <include name="web-app_2_2.dtd"/>
+                <include name="web-app_2_3.dtd"/>
+                <include name="web-jsptaglibrary_1_1.dtd"/>
+                <include name="web-jsptaglibrary_1_2.dtd"/>
+            </fileset>
+        </copy>
+
+        <mkdir dir="servletjspapi/resources/schemas" />
+        <copy todir="servletjspapi/resources/schemas">
+            <fileset dir="servletjspapi/schemas">
+                <include name="XMLSchema.dtd"/>
+                <include name="datatypes.dtd"/>
+                <include name="j2ee_1_4.xsd"/>
+                <include name="j2ee_web_services_1_1.xsd"/>
+                <include name="j2ee_web_services_client_1_1.xsd"/>
+                <include name="javaee_5.xsd"/>
+                <include name="javaee_6.xsd"/>
+                <include name="javaee_7.xsd"/>
+                <include name="javaee_web_services_1_2.xsd"/>
+                <include name="javaee_web_services_1_3.xsd"/>
+                <include name="javaee_web_services_1_4.xsd"/>
+                <include name="javaee_web_services_client_1_2.xsd"/>
+                <include name="javaee_web_services_client_1_3.xsd"/>
+                <include name="javaee_web_services_client_1_4.xsd"/>
+                <include name="jsp_2_0.xsd"/>
+                <include name="jsp_2_1.xsd"/>
+                <include name="jsp_2_2.xsd"/>
+                <include name="jsp_2_3.xsd"/>
+                <include name="web-app_2_4.xsd"/>
+                <include name="web-app_2_5.xsd"/>
+                <include name="web-app_3_0.xsd"/>
+                <include name="web-app_3_1.xsd"/>
+                <include name="web-common_3_0.xsd"/>
+                <include name="web-common_3_1.xsd"/>
+                <include name="web-facelettaglibrary_2_0.xsd"/>
+                <include name="web-facelettaglibrary_2_2.xsd"/>
+                <include name="web-fragment_3_0.xsd"/>
+                <include name="web-fragment_3_1.xsd"/>
+                <include name="web-jsptaglibrary_2_0.xsd"/>
+                <include name="web-jsptaglibrary_2_1.xsd"/>
+                <include name="web-partialresponse_2_2.xsd"/>
+                <include name="xml.xsd"/>
+                <include name="beans_1_0.xsd"/>
+                <include name="beans_1_1.xsd"/>
+            </fileset>
+        </copy>
+        <delete file="servlet3.1-jsp2.3-api.jar"/>
+        <zip basedir="servletjspapi" includes="javax/servlet/**, javax/el/**, resources/**" zipfile="../servletjspapi/external/servlet3.1-jsp2.3-api.jar" />
+        <delete dir="servletjspapi" />
+    </target>
+</project>

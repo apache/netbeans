@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright (c) 2008, 2016 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+    <folder name="Templates">
+        <folder name="SaaSServices">
+            <attr name="position" intvalue="3000"/>
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.websvc.saas.codegen.php.Bundle"/>
+
+            <!-- PHP -->
+            <file name="RestConnection.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/RestConnection.template">
+                <attr name="position" intvalue="510"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+            </file>
+            <file name="RestResponse.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/RestResponse.template">
+                <attr name="position" intvalue="520"/>
+            </file>
+            <file name="SaasService.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/SaasService.template">
+                <attr name="position" intvalue="530"/>
+            </file>
+            <file name="ApiKeyAuthenticator.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/ApiKeyAuthenticator.template">
+                <attr name="position" intvalue="540"/>
+            </file>
+            <file name="apikey.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/apikey.template">
+                <attr name="position" intvalue="550"/>
+            </file>
+            <file name="HttpBasicAuthenticator.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/HttpBasicAuthenticator.template">
+                <attr name="position" intvalue="560"/>
+            </file>
+            <file name="HttpBasicLogin.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/HttpBasicLogin.template">
+                <attr name="position" intvalue="570"/>
+            </file>
+            <file name="HttpBasicCallback.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/HttpBasicCalback.template">
+                <attr name="position" intvalue="580"/>
+            </file>
+            <file name="httpbasic.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/httpbasic.template">
+                <attr name="position" intvalue="600"/>
+            </file>
+            <file name="SessionKeyAuthenticator.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/SessionKeyAuthenticator.template">
+                <attr name="position" intvalue="610"/>
+            </file>
+            <file name="SessionKeyCallback.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/SessionKeyCallback.template">
+                <attr name="position" intvalue="620"/>
+            </file>
+            <file name="SessionKeyLogin.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/SessionKeyLogin.template">
+                <attr name="position" intvalue="630"/>
+            </file>
+            <file name="sessionkey.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/sessionkey.template">
+                <attr name="position" intvalue="640"/>
+            </file>
+            <file name="SignedUrlAuthenticator.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/SignedUrlAuthenticator.template">
+                <attr name="position" intvalue="650"/>
+            </file>
+            <file name="signedurl.php" url="/org/netbeans/modules/websvc/saas/codegen/php/resources/signedurl.template">
+                <attr name="position" intvalue="660"/>
+            </file>
+
+        </folder>
+    </folder>
+</filesystem>
+

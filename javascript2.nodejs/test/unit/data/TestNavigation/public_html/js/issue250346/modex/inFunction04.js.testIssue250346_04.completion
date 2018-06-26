@@ -1,0 +1,9 @@
+Code completion result for source line:
+modFu.|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      myOL                            [PUBLIC]   mymod.js
+METHOD     myFnc(): undefined              [PUBLIC]   mymod.js
+FIELD      myArr: Array                    [PUBLIC]   mymod.js
+FIELD      myInst: Date                    [PUBLIC]   mymod.js
+FIELD      myRes: undefined                [PUBLIC]   mymod.js

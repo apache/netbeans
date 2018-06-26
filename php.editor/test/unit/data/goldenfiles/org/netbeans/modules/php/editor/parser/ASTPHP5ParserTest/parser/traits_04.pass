@@ -1,0 +1,109 @@
+<testresult testFile='traits_04.php'>
+    <scanner>
+        <token id='T_TRAIT' start='6' end='11'>
+            <text>trait</text>
+        </token>
+        <token id='T_STRING' start='12' end='22'>
+            <text>MyTrait_04</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='23' end='24'>
+            <text>{</text>
+        </token>
+        <token id='T_USE' start='29' end='32'>
+            <text>use</text>
+        </token>
+        <token id='T_STRING' start='33' end='40'>
+            <text>MyTrait</text>
+        </token>
+        <token id='T_COMMA' start='40' end='41'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='42' end='52'>
+            <text>Mytrait_02</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='53' end='54'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='63' end='70'>
+            <text>MyTrait</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='70' end='72'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='72' end='75'>
+            <text>foo</text>
+        </token>
+        <token id='T_INSTEADOF' start='76' end='85'>
+            <text>insteadof</text>
+        </token>
+        <token id='T_STRING' start='86' end='96'>
+            <text>MyTrait_02</text>
+        </token>
+        <token id='T_SEMICOLON' start='96' end='97'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='102' end='103'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='104' end='105'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='106' end='109'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='109' end='109'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='108'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <TraitDeclaration start='6' end='105'>
+                <TraitName>
+                    <Identifier start='12' end='22' name='MyTrait_04'/>
+                </TraitName>
+                <Block start='23' end='105' isCurly='true'>
+                    <UseTraitStatement start='29' end='103'>
+                        <Parts>
+                            <UseTraitStatementPart start='33' end='40'>
+                                <Name>
+                                    <NamespaceName start='33' end='40' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='33' end='40' name='MyTrait'/>
+                                    </NamespaceName>
+                                </Name>
+                            </UseTraitStatementPart>
+                            <UseTraitStatementPart start='42' end='52'>
+                                <Name>
+                                    <NamespaceName start='42' end='52' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='42' end='52' name='Mytrait_02'/>
+                                    </NamespaceName>
+                                </Name>
+                            </UseTraitStatementPart>
+                        </Parts>
+                        <Body>
+                            <Block start='53' end='103' isCurly='true'>
+                                <TraitConflictResolutionDeclaration start='63' end='97'>
+                                    <MethodName>
+                                        <Identifier start='72' end='75' name='foo'/>
+                                    </MethodName>
+                                    <PreferredTraitName>
+                                        <NamespaceName start='63' end='70' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='63' end='70' name='MyTrait'/>
+                                        </NamespaceName>
+                                    </PreferredTraitName>
+                                    <SuppressedTraitNames>
+                                        <NamespaceName start='86' end='96' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='86' end='96' name='MyTrait_02'/>
+                                        </NamespaceName>
+                                    </SuppressedTraitNames>
+                                </TraitConflictResolutionDeclaration>
+                            </Block>
+                        </Body>
+                    </UseTraitStatement>
+                </Block>
+            </TraitDeclaration>
+            <EmptyStatement start='106' end='108'/>
+        </Statements>
+    </Program>
+</testresult>

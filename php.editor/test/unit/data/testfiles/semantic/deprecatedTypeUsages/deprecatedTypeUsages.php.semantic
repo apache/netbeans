@@ -1,0 +1,43 @@
+<?php
+namespace First;
+
+use |>DEPRECATED:Second\Delegate<|;
+use |>DEPRECATED:Second\UnusedDeprecated<|;
+use Second as S;
+
+class |>CLASS:ClassName<| implements |>DEPRECATED:S\Iface<| {
+    use |>DEPRECATED:\Second\Trt<|;
+    /**
+     * @var |>DEPRECATED:\Second\Delegate<|
+     */
+    private $|>FIELD,UNUSED:delegate<|;
+
+    /**
+     * @param |>DEPRECATED:S\Delegate<|  $param
+     */
+    function |>METHOD:info<|($param) {
+        |>DEPRECATED:Delegate<|::|>FIELD,STATIC:FOO<|;
+        |>DEPRECATED:\Second\Delegate<|::|>FIELD,STATIC:FOO<|;
+        |>DEPRECATED:S\Delegate<|::|>FIELD,STATIC:FOO<|;
+        |>DEPRECATED:Delegate<|::|>CUSTOM1,STATIC:staticFunction<|($param);
+    }
+
+}
+
+namespace Second;
+
+/** @deprecated */
+class |>CLASS,DEPRECATED:Delegate<| {
+}
+
+/** @deprecated */
+class |>CLASS,DEPRECATED:UnusedDeprecated<| {
+}
+
+/** @deprecated */
+interface |>CLASS,DEPRECATED:Iface<| {}
+
+/** @deprecated */
+trait |>CLASS,DEPRECATED:Trt<| {}
+
+?>

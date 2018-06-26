@@ -1,0 +1,1644 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<?xml-stylesheet type="text/xml" href="../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="j2eeserver">J2EE Server API</apidef>
+        <!-- org.netbeans.modules.j2ee.deployment.plugins -->
+        <apidef name="plugins">Server Integration Plugin API</apidef>
+        <!-- org.netbeans.modules.j2ee.deployment.devmodules -->
+        <apidef name="devmodules">J2EE Module Development API</apidef>
+        <!-- org.netbeans.modules.j2ee.deployment.common -->
+        <apidef name="common">J2EE Server Common API</apidef>
+        <!-- org.netbeans.modules.j2ee.deployment.profiler -->
+        <apidef name="profiler">J2EE Server Common API</apidef>
+        <!-- org.netbeans.modules.j2ee.deployment.plugins.spi.support -->
+        <apidef name="support">Server Integration Plugin SPI Support</apidef>
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+
+    <changes>
+
+        <change id="profileAndDebuggingInfo">
+    	    <api name="devmodules"/>
+            <summary>
+                Public API to ask the server about profile and debug support.
+            </summary>
+            <version major="1" minor="103"/>
+            <date day="21" month="8" year="2013"/>
+            <author login="phejl"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+               <p>
+                   Provides additional methods to query for support for debugging and profiling.
+               </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="ServerInstance"/>
+            <issue number="202587"/>
+        </change>
+        <change id="beforeDeploymentHook">
+    	    <api name="devmodules"/>
+            <summary>
+                Provide a way to execute custom code just before actual deployment.
+            </summary>
+            <version major="1" minor="102"/>
+            <date day="16" month="8" year="2013"/>
+            <author login="phejl"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+               <p>
+                   Additional Callable parameter allows execution of
+                   custom code just before the actual deployment.
+               </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="Deployment"/>
+            <issue number="234194"/>
+       </change>
+        <!-- not used for 7.3
+        <change id="deployOnSaveListeners">
+    	    <api name="devmodules"/>
+            <summary>
+                Allows listening for deploy on save operations.
+            </summary>
+            <version major="1" minor="91"/>
+            <date day="1" month="2" year="2012"/>
+            <author login="phejl"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+               <p>
+                    Client can add/remove listeners which will be notified on
+                    deploy on save event.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="J2eeModuleProvider"/>
+            <issue number="207724"/>
+       </change> -->
+       <change id="commonServerBridge">
+    	    <api name="j2eeserver"/>
+            <summary>
+                Added CommonServerBridge utility class to provide mapping of
+                instance url to common api server instance.
+            </summary>
+            <version major="1" minor="88"/>
+            <date day="13" month="1" year="2012"/>
+            <author login="phejl"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    Added CommonServerBridge utility class to provide mapping of
+                    instance url to common api server instance.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="CommonServerBridge"/>
+        </change>
+       <change id="nonPersistentServer">
+    	    <api name="j2eeserver"/>
+            <summary>
+                Adds helper method to create server instance which is not persistent.
+            </summary>
+            <version major="1" minor="83"/>
+            <date day="24" month="8" year="2011"/>
+            <author login="dkonecny"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    Adds helper method to create server instance which is not persistent.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="InstanceProperties"/>
+        </change>
+       <change id="allowInstanceSpecificModuleConfiguration">
+    	    <api name="plugins"/>
+            <summary>
+                Adds ModuleConfigurationFactory2 which can use the knowledge
+                of the server instance id to create the ModuleConfiguration.
+            </summary>
+            <version major="1" minor="74"/>
+            <date day="20" month="12" year="2010"/>
+            <author login="phejl"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    The ModuleConfiguration2 enhance the old ModuleConfiguration
+                    with new method to which the server instance id is passed
+                    in addition to J2eeModule. The creation code can be more
+                    instance specific.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.spi.config" name="ModuleConfigurationFactory2"/>
+            <issue number="193255"/>
+        </change>
+       <change id="disableDeployOnSave">
+    	    <api name="plugins"/>
+            <summary>
+                Method to disable Deploy part of Deploy on Save and performing only
+                Compile on Save.
+            </summary>
+            <version major="1" minor="73"/>
+            <date day="19" month="11" year="2010"/>
+            <author login="dkonecny"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    In order to support JRebel and similar technologies it is 
+                    desirable to be able to turn on Compile on Save but disable
+                    Deploy on Save. That is achieved by newly introduced method.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="J2eeModuleProvider"/>
+            <issue number="188361"/>
+        </change>
+       <change id="platformRoots">
+    	    <api name="plugins"/>
+            <summary>
+                Methods to obtain server, domain and middleware home.
+            </summary>
+            <version major="1" minor="72"/>
+            <date day="27" month="10" year="2010"/>
+            <author login="phejl"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                So far there was just J2eePlatform.getPlatformRoots() with unclear
+                semantics. Now there are explicit getServerHome(), getDomainHome()
+                and getMiddlewareHome() methods in the API. The corresponding SPI
+                has been added - J2eePlatformImpl2.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.spi" name="J2eePlatformImpl2"/>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="J2eePlatform"/>
+            <issue number="190387"/>
+        </change>
+
+       <change id="required-librariers">
+    	    <api name="plugins"/>
+            <summary>
+                Implement support for deployment of standalone EE modules.
+            </summary>
+            <version major="1" minor="70"/>
+            <date day="2" month="8" year="2010"/>
+            <author login="dkonecny"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                Implemented both SPI and API for communication of requires libraries
+                from EE module to deployment server.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="J2eeModuleProvider"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.spi" name="DeploymentContext"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.spi" name="DeploymentManager2"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.spi" name="IncrementalDeployment2"/>
+            <issue number="186331"/>
+        </change>
+
+        <change id="deploymentDescriptorConfiguration">
+	    <api name="j2eeserver"/>
+	    <summary>
+                Added SPI interface through which plugin may indicate it requires
+                deployment descriptor.
+	    </summary>
+	    <version major="1" minor="69"/>
+	    <date day="28" month="7" year="2010"/>
+	    <author login="phejl"/>
+	    <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+	    <description>
+                <p>
+                The SPI interface DeploymentDescriptorConfiguration may be
+                implemented by the server plugin in order to indicate the
+                server needs deployment descriptor.
+                </p>
+	    </description>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.spi.config" name="DeploymentDescriptorConfiguration"/>
+            <issue number="189012"/>
+	 </change>
+
+        <change id="serverLibraries">
+	    <summary>
+                Implemented support for handling the server libraries.
+	    </summary>
+	    <version major="1" minor="68"/>
+	    <date day="9" month="6" year="2010"/>
+	    <author login="phejl"/>
+	    <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+	    <description>
+                <p>
+                Implemented both SPI and API to provide support for server
+                libraries management.
+                </p>
+	    </description>
+            <class package="org.netbeans.modules.j2ee.deployment.common.api" name="Version"/>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="ServerInstance"/>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="J2eeModuleProvider"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="ServerLibrary"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="ServerLibraryDependency"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.spi" name="OptionalDeploymentManagerFactory"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.spi" name="ServerLibraryFactory"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.spi" name="ServerLibraryImplementation"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.spi" name="ServerLibraryManager"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.spi.config" name="ServerLibraryConfiguration"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.spi.support" name="ProxyOptionalFactory"/>
+            <issue number="182282"/>
+	 </change>
+
+        <change id="optionalFactoryProxy">
+	    <api name="support"/>
+	    <summary>
+                Added class proxying the OptionalDeploymentManagerFactory and adding
+                the optional noInitializationFinish attribute.
+	    </summary>
+	    <version major="1" minor="66"/>
+	    <date day="25" month="2" year="2010"/>
+	    <author login="phejl"/>
+	    <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+	    <description>
+                <p>
+                Added class ProxyOptionalFactory which delegates all calls
+                to configured delegate. Via noInitializationFinish it
+                is possible to supress finishInitialization() method when
+                it is not required by the plugin.
+                </p>
+                <p>
+                Designed to be used from XML Layer.
+                </p>
+	    </description>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.spi.support" name="ProxyOptionalFactory"/>
+            <issue number="180893"/>
+	 </change>
+
+        <change id="deploymentFactoryProxy">
+	    <api name="support"/>
+	    <summary>
+                Added class proxying the DeploymentFactory and adding
+                the optional urlPattern attribute.
+	    </summary>
+	    <version major="1" minor="65"/>
+	    <date day="22" month="2" year="2010"/>
+	    <author login="phejl"/>
+	    <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+	    <description>
+                <p>
+                Added class ProxyDeploymentFactory which delegates all calls
+                to configured delegate. Via urlPattern it is possible to do
+                precheck of server instance uri. The uri has to mach the pattern
+                otherwise the instance is rejected as not supported but
+                the factory.
+                </p>
+                <p>
+                Designed to be used from XML Layer.
+                </p>
+	    </description>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.spi.support" name="ProxyDeploymentFactory"/>
+            <issue number="148177"/>
+	 </change>
+
+        <change id="resourceChangeReporter">
+	    <api name="devmodules"/>
+	    <summary>
+                Added API/SPI for signalling change in resources deployed to
+                server (via DeploymentChangeDescriptor).
+	    </summary>
+	    <version major="1" minor="63"/>
+	    <date day="10" month="11" year="2009"/>
+	    <author login="phejl"/>
+	    <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+	    <description>
+                <p>
+                Added API/SPI to check for changes in resources deployed to
+                server. Such changes are flagged in DeploymentChangeDescriptor
+                and delivered to server plugin.
+                </p>
+	    </description>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="ResourceChangeReporter"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="ResourceChangeReporterFactory"/>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="ResourceChangeReporterImplementation"/>
+            <issue number="175539"/>
+	 </change>
+
+        <change id="filter">
+	    <api name="devmodules"/>
+	    <summary>
+                DeployOnSaveClassInterceptor added.
+	    </summary>
+	    <version major="1" minor="56"/>
+	    <date day="15" month="5" year="2009"/>
+	    <author login="mkleint"/>
+	    <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+	    <description>
+                <p>
+                DeployOnSaveClassInterceptor class added + gettter in J2eeModuleProvider.
+                to allow processing Artifact instances coming from java infrastructure.
+                </p>
+	    </description>
+	    <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="J2eeModuleProvider"/>
+            <issue number="165045"/>
+	 </change>
+
+        <change id="undeploy">
+	    <api name="devmodules"/>
+	    <summary>
+                Programmatic undeploy for the project.
+	    </summary>
+	    <version major="1" minor="52"/>
+	    <date day="15" month="9" year="2008"/>
+	    <author login="phejl"/>
+	    <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+	    <description>
+                <p>
+                    Provides a way to programmatic undeploy of the deployed app
+                    (project represented by J2eeModuleProvider).
+                </p>
+	    </description>
+	    <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="Deployment"/>
+            <issue number="83122"/>
+	 </change>        
+        <change id="finishServerInitialization">
+	    <api name="plugins"/>
+	    <summary>
+                Provide a way for a plugin to perform post initialization action.
+	    </summary>
+	    <version major="1" minor="51"/>
+	    <date day="31" month="7" year="2008"/>
+	    <author login="vkraemer"/>
+	    <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+	    <description>
+                <p>
+                    OptionalDeploymentManagerFactory gets a new stub, that plugin
+                    implementations would override.  The Plugin author can assume
+                    that the ServerRegistry is initialized to the point where it
+                    can support the creation on instances.
+                </p>
+	    </description>
+	    <class package="org.netbeans.modules.j2ee.deployment.plugins.spi" name="OptionalDeploymentManagerFactory"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.spi" name="ServerInitializationException"/>
+            <issue number="141427"/>
+	 </change>
+         <change id="lookupProvider">
+ 	    <api name="plugins"/>
+ 	    <summary>
+                 LookupProvider support for J2eePlatform lookup.
+ 	    </summary>
+ 	    <version major="1" minor="50"/>
+ 	    <date day="23" month="7" year="2008"/>
+ 	    <author login="phejl"/>
+ 	    <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+ 	    <description>
+                 <p>
+                     Server plugins will use this static method in J2eePlatformImpl.getLookup()
+                     method to enable registration of additional Lookup Providers in layer.xml files.
+                 </p>
+ 	    </description>
+ 	    <class package="org.netbeans.modules.j2ee.deployment.plugins.spi" name="LookupProvider"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.spi.support" name="LookupProviderSupport"/>
+            <issue number="140219"/>
+ 	</change>        
+        <change id="deployOnSaveAPI">
+	    <api name="plugins"/>
+	    <summary>
+                Provide a way for project to figure out whether deploy on save
+                is supported.
+	    </summary>
+	    <version major="1" minor="49"/>
+	    <date day="15" month="7" year="2008"/>
+	    <author login="phejl"/>
+	    <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+	    <description>
+                <p>
+                    Server instance class provides method isDeployOnSaveSupported
+                    in order to fugure out whether deploy on save is supported.
+                </p>
+	    </description>
+	    <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="ServerInstance"/>
+            <issue number="138476"/>
+	</change>
+        <change id="deployOnSaveSPI">
+	    <api name="plugins"/>
+	    <summary>
+                Support methods to allow plugin to implement deploy on save.
+	    </summary>
+	    <version major="1" minor="47"/>
+	    <date day="4" month="7" year="2008"/>
+	    <author login="phejl"/>
+	    <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+	    <description>
+                <p>
+                    SPI is enhanced by two methods isDeployOnSaveSupported and
+                    deployOnSave in order to allow plugin to provide deploy on
+                    save functionality.
+                </p>
+	    </description>
+	    <class package="org.netbeans.modules.j2ee.deployment.plugins.spi" name="IncrementalDeployment"/>
+            <issue number="138476"/>
+	</change>
+        <change id="deploymentChangeDescriptor">
+	    <api name="plugins"/>
+	    <summary>
+                Added final class describing the changes during the incremental deployment.
+	    </summary>
+	    <version major="1" minor="47"/>
+	    <date day="4" month="7" year="2008"/>
+	    <author login="phejl"/>
+	    <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+	    <description>
+                <p>
+                    Added final class describing the changes during the incremental deployment.
+                    New class DeploymentChangeDescriptor implements old interface (AppChangeDescriptor)
+                    and should be used in any new API.
+                </p>
+	    </description>
+	    <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="DeploymentChangeDescriptor"/>
+            <issue number="138476"/>
+	</change>
+        <change id="serverInstanceDescriptor">
+	    <api name="plugins"/>
+	    <summary>
+                API providing information about server host, port and flag
+                indicating local installation.
+	    </summary>
+	    <version major="1" minor="46"/>
+	    <date day="30" month="5" year="2008"/>
+	    <author login="phejl"/>
+	    <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+	    <description>
+                <p>
+                    API for querying server host, port and flag indicating
+                    local installation. This is replacement for terrible hacks
+                    querying (leaking) InstanceProperties directly.
+                </p>
+	    </description>
+	    <class package="org.netbeans.modules.j2ee.deployment.plugins.spi" name="ServerInstanceDescriptor"/>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="ServerInstance"/>
+            <issue number="133751"/>
+	</change>
+        <change id="serverInstanceAPI">
+	    <api name="plugins"/>
+	    <summary>
+                There should be server instance representation in the API.
+	    </summary>
+	    <version major="1" minor="45"/>
+	    <date day="29" month="5" year="2008"/>
+	    <author login="phejl"/>
+	    <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+	    <description>
+                <p>
+                    API server instance in the API with clear indication that
+                    instance was removed should be used in favor of Deployment
+                    facade.
+                </p>
+	    </description>
+	    <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="Deployment"/>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="InstanceRemovedException"/>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="ServerInstance"/>
+            <issue number="135324"/>
+	</change>
+        <change id="j2eePlatformLookup">
+	    <api name="plugins"/>
+	    <summary>
+                Add Lookup to J2eePlatformImpl to make it extensible.
+	    </summary>
+	    <version major="1" minor="44"/>
+	    <date day="6" month="5" year="2008"/>
+	    <author login="phejl"/>
+	    <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+	    <description>
+                <p>
+                    J2eePlatform should provide Lookup containing support for
+                    other technologies the server can provide (such as web services).
+                </p>
+	    </description>
+	    <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="J2eePlatform"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.spi" name="J2eePlatformImpl"/>
+            <issue number="133853"/>
+	</change>
+        <change id="removeDefaultServerAPI">
+            <api name="j2eeserver"/>
+            <summary>
+                Default server API residues removed.
+            </summary>
+            <version major="1" minor="42"/>
+            <date day="17" month="4" year="2008"/>
+            <author login="phejl"/>
+            <compatibility binary="incompatible" source="incompatible" semantic="incompatible"/>
+            <description>
+                <p>
+                    In the past, before the J2EE support was added to NetBeans the default server
+                    concept had been used. This concept was then abandoned since it did not work
+                    anymore. The problem could occur for example if the default server was Tomcat
+                    then the EJB project which was set to use the default server could not be
+                    deployed to it, etc.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="Deployment"/>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="InstanceListener"/>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="J2eeModuleProvider"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="InstanceProperties"/>
+            <issue number="83934"/>
+        </change>
+        <change id="removeInstance">
+	    <api name="j2eeserver"/>
+	    <summary>
+                Provides a way to remove server without need to invoke UI action.
+	    </summary>
+	    <version major="1" minor="41"/>
+	    <date day="5" month="3" year="2008"/>
+	    <author login="phejl"/>
+	    <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+	    <description>
+                <p>
+                    Method provides a way to remove server instance for plugins
+                    which don't use the j2eeserver UI.
+                </p>
+	    </description>
+	    <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="InstanceProperties"/>
+	</change>
+        <change id="createLibrary">
+	    <api name="plugins"/>
+	    <summary>
+                Method that creates the library based on content of the platform.
+	    </summary>
+	    <version major="1" minor="40"/>
+	    <date day="21" month="2" year="2008"/>
+	    <author login="phejl"/>
+	    <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+	    <description>
+                <p>
+                    Methods allows creation of the library form the platform all
+                    required files are copied to the new location. Requirement
+                    introduced by java ee sharability.
+                </p>
+	    </description>
+	    <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="J2eePlatform"/>
+	</change>
+        <change id="isCommonUIRequired">
+	    <api name="j2eeserver"/>
+	    <summary>
+                OptionalDeploymentManagerFactory declares whether j2eeserver
+                should provide common UI (like wizard for example).
+	    </summary>
+	    <version major="1" minor="38"/>
+	    <date day="1" month="2" year="2008"/>
+	    <author login="phejl"/>
+	    <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+	    <description>
+                <p>
+                    OptionalDeploymentManagerFactory declares whether j2eeserver
+                    should provide common UI (like wizard for example). This
+                    should be done with Common Server API for every new plugin.
+                    InstantiatingIterator from OptionalDeploymentManagerFactory
+                    will serve only to j2eeserver specific purposes if
+                    isCommonUIRequired will return the false (the true is the default).
+                </p>
+	    </description>
+	    <class package="org.netbeans.modules.j2ee.deployment.plugins.spi" name="OptionalDeploymentManagerFactory"/>
+	    <issue number="126010"/>
+	</change>
+        <change id="createInstancePropertiesWithoutUI">
+	    <api name="j2eeserver"/>
+	    <summary>
+                Provides a way how can plugin register instance to j2eeserver
+                without any UI.
+	    </summary>
+	    <version major="1" minor="37"/>
+	    <date day="11" month="1" year="2008"/>
+	    <author login="phejl"/>
+	    <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+	    <description>
+                <p>
+                    Provides a way how can plugin register instance to j2eeserver
+                    without any UI. SPI provided by Common Server should be used
+                    for UI integration.
+                </p>
+	    </description>
+	    <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="InstanceProperties"/>
+	    <issue number="122885"/>
+	</change>
+        <change id="fixedProfilerAPIConstants">
+	    <api name="profiler"/>
+	    <summary>
+                Fixing state constants to be real (final) constants.
+	    </summary>
+	    <version major="1" minor="36"/>
+	    <date day="11" month="12" year="2007"/>
+	    <author login="phejl"/>
+	    <compatibility binary="incompatible" source="incompatible" semantic="incompatible" addition="no"/>
+	    <description>
+                <p>
+                    State constants used in the profiler API were not constants
+                    in real - they were just public static variables. This change
+                    makes them final.
+                </p>
+	    </description>
+	    <class package="org.netbeans.modules.j2ee.deployment.profiler.api" name="ProfilerSupport"/>
+	    <issue number="122430"/>
+	</change>
+        <change id="createInstanceProperties">
+	    <api name="j2eeserver"/>
+	    <summary>
+                Adding InstanceProperties.createInstanceProperties(String, String,
+                    String, String, Map&lt;String, String&gt;) method.
+	    </summary>
+	    <version major="1" minor="35"/>
+	    <date day="27" month="11" year="2007"/>
+	    <author login="phejl"/>
+	    <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+	    <description>
+                <p>
+                    The InstanceProperties.createInstanceProperties(String, String, String, String)
+                    method does not provide any way how to pass other initial properties
+                    required by the plugin. This is usually needed and workarounded
+                    in many plugins. New method provides additional parameter containing
+                    the any plugin required properties.
+                </p>
+	    </description>
+	    <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="InstanceProperties"/>
+	    <issue number="120379"/>
+	</change>
+        <change id="findJndiNameForEjb2">
+	    <api name="j2eeserver"/>
+	    <summary>
+                Adding J2eeModuleProvider.findJndiNameForEjb method.
+	    </summary>
+	    <version major="1" minor="33"/>
+	    <date day="29" month="8" year="2007"/>
+	    <author login="sherold"/>
+	    <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+	    <description>
+                <p>
+                    The J2eeModuleProvider.bindEjbReference and J2eeModuleProvider.bindEjbReferenceForEjb methods
+                    need to pass an EJB JNDI name instead of EJB name to the plugin. The new J2eeModuleProvider.findJndiNameForEjb
+                    method will allow to obtain the EJB JNDI name.
+                </p>
+	    </description>
+	    <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="J2eeModuleProvider"/>
+	    <issue number="108198"/>
+	</change>
+	<change id="isRunning">
+	    <api name="j2eeserver"/>
+	    <summary>
+                Adding Deployment.isRunning() method.
+	    </summary>
+	    <version major="1" minor="32"/>
+	    <date day="29" month="8" year="2007"/>
+	    <author login="sherold"/>
+	    <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+	    <description>
+		<p>
+		    Adding a method which will tell whether the given server is running or not.
+		</p>
+	    </description>
+	    <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="Deployment"/>
+	    <issue number="113023"/>
+	</change>
+        <change id="findJndiNameForEjb">
+	    <api name="j2eeserver"/>
+	    <summary>
+                Adding EjbResourceConfiguration.findJndiNameForEjb method.
+	    </summary>
+	    <version major="1" minor="31"/>
+	    <date day="26" month="7" year="2007"/>
+	    <author login="sherold"/>
+	    <compatibility binary="incompatible" source="incompatible" semantic="incompatible" addition="yes"/>
+	    <description>
+                <p>
+                    The EjbResourceConfiguration.bindEjbReference and EjbResourceConfiguration.bindEjbReferenceForEjb methods
+                    need to pass an EJB JNDI name instead of EJB name to the plugin. The new EjbResourceConfiguration.findJndiNameForEjb
+                    method will allow to obtain the EJB JNDI name.
+                </p>
+	    </description>
+	    <class package="org.netbeans.modules.j2ee.deployment.plugins.spi.config" name="EjbResourceConfiguration"/>
+	    <issue number="108198"/>
+	</change>
+        <change id="setCMPResource">
+	    <api name="j2eeserver"/>
+	    <summary>
+                Replacing ensureResourceDefinedForEjb with setCMPResource.
+	    </summary>
+	    <version major="1" minor="30"/>
+	    <date day="15" month="6" year="2007"/>
+	    <author login="sherold"/>
+	    <compatibility binary="incompatible" source="incompatible" semantic="incompatible" addition="yes"/>
+	    <description>
+		<p>
+                    Removing J2eeModuleProvider.ConfigSupport.ensureResourceDefinedForEjb and
+                    EjbResourceConfiguration.ensureResourceDefined methods and replacing them
+                    with J2eeModuleProvider.ConfigSupport.setCMPResource and MappingConfiguration.setCMPResource.
+                </p>
+                <p>
+                    The main reason for this change is that the ComponentInterface parameter can
+                    no longer be used since the metadata model was introduced, other reason is that
+                    the old name was confusing.
+		</p>
+	    </description>
+	    <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="J2eeModuleProvider"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.plugins.spi.config" name="EjbResourceConfiguration"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.spi.config" name="MappingConfiguration"/>
+	    <issue number="99217"/>
+	</change>
+	<change id="MetadataModel">
+	    <api name="j2eeserver"/>
+	    <summary>
+		Renaming getDeploymentDescriptor to getMetadataModel.
+	    </summary>
+	    <version major="1" minor="29"/>
+	    <date day="12" month="6" year="2007"/>
+	    <author login="sherold"/>
+	    <compatibility binary="incompatible" source="incompatible" semantic="incompatible" addition="yes"/>
+	    <description>
+		<p>
+		    Renaming J2eeModule's and J2eeModuleImplementation's getDeploymentDescriptor method to getMetadataModel.
+		</p>
+	    </description>
+	    <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="J2eeModule"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="J2eeModuleImplementation"/>
+	    <issue number="99217"/>
+	</change>
+	<change id="AddServerWizard">
+            <api name="j2eeserver"/>
+            <summary>
+		Adds a method for displaying the Add server instance wizard.
+ 	    </summary>
+            <version major="1" minor="28"/>
+            <date day="7" month="6" year="2007"/>
+            <author login="sherold"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+		    Adds a method for displaying the Add server instance wizard.
+                </p>
+            </description>
+	    <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="ServerManager"/>
+            <issue number="105403"/>
+	</change>
+	<change id="ExposeFileDeploymentCapabilityToProjects">
+            <api name="j2eeserver"/>
+            <summary>
+                Add a method that will allow Java EE project to determine if
+                they are being targeted at a server which will support directory-
+                based deployment.
+            </summary>
+            <version major="1" minor="27"/>
+            <date day="8" month="5" year="2007"/>
+            <author login="vkraemer"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    Expose the directory deployment capabilities that a target server may
+                    have which would allow the build script for a project to be
+                    optimized to delay or eliminate unnecessary steps
+                </p>
+            </description>
+	    <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="Deployment"/>
+            <issue number="89439"/>
+        </change>
+        <change id="ResourceApiRedesignCallEjbAction">
+            <api name="j2eeserver"/>
+            <summary>
+                Adding an API for Call EJB action
+            </summary>
+            <version major="1" minor="26"/>
+            <date day="15" month="4" year="2007"/>
+            <author login="lkotouc"/>
+            <compatibility binary="incompatible" source="incompatible" semantic="incompatible" addition="yes"/>
+            <description>
+                <p>
+                    API for Call EJB action.
+            	</p>
+            </description>
+	    <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="J2eeModuleProvider"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.plugins.spi.config" name="EjbResourceConfiguration"/>
+            <issue number="89439"/>
+        </change>
+        <change id="ResourceApiRedesign">
+            <api name="j2eeserver"/>
+            <summary>
+                Adding an API for working with data sources, message-driven beans and JMS messages
+            </summary>
+            <version major="1" minor="25"/>
+            <date day="5" month="4" year="2007"/>
+            <author login="lkotouc"/>
+            <compatibility binary="incompatible" source="incompatible" semantic="incompatible" addition="yes"/>
+            <description>
+                <p>
+                    API for working with data sources, message-driven beans and JMS messages.
+            	</p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.common.api" name="MessageDestination"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="J2eeModuleProvider"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.spi" name="MessageDestinationDeployment"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.spi" name="OptionalDeploymentManagerFactory"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.plugins.spi.config" name="DatasourceConfiguration"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.plugins.spi.config" name="MessageDestinationConfiguration"/>
+            <issue number="89439"/>
+        </change>
+        <change id="jdbcDriverDeployment">
+            <api name="j2eeserver"/>
+            <summary>
+                Adding an API for JDBC driver deployment.
+            </summary>
+            <version major="1" minor="24"/>
+            <date day="28" month="3" year="2007"/>
+            <author login="sherold"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+		    API for JDBC driver deployment.
+		</p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.spi" name="JDBCDriverDeployer"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.spi" name="OptionalDeploymentManagerFactory"/>
+            <issue number="89439"/>
+        </change>
+        <change id="ddbeanRemoval">
+            <api name="j2eeserver"/>
+            <summary>
+                Removing dependency of configuration releated part of the J2EE Server API on JSR-88.
+		Splitting up the plugin API to API and SPI.
+            </summary>
+            <version major="1" minor="23"/>
+            <date day="11" month="3" year="2007"/>
+            <author login="sherold"/>
+            <compatibility binary="incompatible" source="incompatible" semantic="incompatible" addition="yes"/>
+            <description>
+                <p>
+                    The initial motivation for the J2EE Server API changes is migration to Retouche, a new
+		    NetBeans Java infrastructure. The new Java infrastructure does not supply the old deployment
+		    descriptor model with fine-grained change notification events anymore and thus a new Merged
+		    deployment descriptor model infrastructure was created instead.
+                </p>
+                <p>
+		    Since the architecture of the new Merged deployment descriptor model is essentially different
+		    from the old deployment descriptor model infrastructure, the model can no longer be wrapped in
+		    the JSR-88 DDBean wrapper, which was a basis of all the server specific deployment configuration
+		    APIs, the deployment configuration related part of the J2EE Server API had to be redesigned.
+                </p>
+                <p>
+		    Because the redesign already introduced big incompatible changes, we took advantage of it to
+		    fix couple of API issues, which required incompatible changes. First, the server plug-in part
+		    of the API was split into API and SPI. So far, there was no clear distinction between API and
+		    SPI and it was not obvious what a server plug-in writer is required to implement. Second,
+		    throws ConfigurationException clause was added to all the server-specific configuration
+		    related methods to inform the client about a problem which might have occurred when reading or
+		    writing to server-specific configuration files.
+                </p>
+                <p>
+		   For further description refer to the issue.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.common.api" name="ConfigurationException"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.common.api" name="SourceFileMap"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="J2eeApplication"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="J2eeModule"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="J2eeModuleContainer" link="no"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="J2eeApplicationImplementation"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="J2eeApplicationProvider"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="J2eeAppProvider" link="no"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="J2eeModuleFactory"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="J2eeModuleImplementation"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="J2eeModuleProvider"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="ConfigurationSupport" link="no"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="FileJ2eeModuleQuery"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.plugins.spi" name="DatasourceManager" link="no"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.plugins.spi" name="IncrementalDeployment"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.plugins.spi.config" name="ContextRootConfiguration"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.plugins.spi.config" name="DatasourceConfiguration"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.plugins.spi.config" name="DeploymentPlanConfiguration"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.plugins.spi.config" name="EjbResourceConfiguration"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.plugins.spi.config" name="MappingConfiguration"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.plugins.spi.config" name="ModuleConfigurationFactory"/>
+	    <class package="org.netbeans.modules.j2ee.deployment.plugins.spi.config" name="ModuleConfiguration"/>
+            <issue number="99217"/>
+        </change>
+        <change id="settableTimeouts">
+            <api name="plugins"/>
+            <summary>
+                New static fields on InstanceProperties
+            </summary>
+            <version major="1" minor="22"/>
+            <date day="22" month="3" year="2007"/>
+            <author login="vkraemer"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    Eliminate completely hard-code timeout for startup, shutdown
+                    and deployment operations.  Current hard-coded timeouts
+                    remain the default for plugins that do not provide
+                    per-instance settings.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="InstanceProperties"/>
+            <issue number="98089"/>
+        </change>
+        <change id="ensureResourceDefinedUpdate">
+            <api name="j2eeserver"/>
+            <summary>
+                Passing JNDI name for the resource definition callback
+            </summary>
+            <version major="1" minor="20"/>
+            <date day="11" month="8" year="2006"/>
+            <author login="lkotouc"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    Plugin needs to know JNDI name of the resource which the resource being
+                    defined is coming from.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="J2eeModuleProvider"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="ConfigurationSupport" link="no"/>
+            <issue number="82476"/>
+        </change>
+        <change id="serverIcons">
+            <api name="plugins"/>
+            <summary>
+                Added support for getting the default server icons.
+            </summary>
+            <version major="1" minor="19"/>
+            <date day="9" month="4" year="2006"/>
+            <author login="sherold"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    Added support for getting the default server icons for
+                    EAR, EJB, WAR archives and their respective containers (folders).
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="UISupport"/>
+        </change>
+        <change id="antDeployment">
+            <api name="j2eeserver"/>
+            <summary>
+                Added support for Ant (headless) deployment.
+            </summary>
+            <version major="1" minor="18"/>
+            <date day="4" month="4" year="2006"/>
+            <author login="sherold"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    Ant deployment support allows to generate Ant deployment build
+                    scripts that can be used to deploy j2ee modules to the
+                    server. The generated deployment build script can run in a headless
+                    mode - without the IDE. The IDE does not even have to be installed.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="AntDeploymentHelper"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="AntDeploymentProvider" link="no"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="OptionalDeploymentManagerFactory" link="no"/>
+        </change>
+        <change id="j2eeSpecVersionPerModule">
+            <api name="j2eeserver"/>
+            <summary>
+                Added support for getting J2EE version per module.
+            </summary>
+            <version major="1" minor="17"/>
+            <date day="4" month="4" year="2006"/>
+            <author login="pbuzek"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                Some for servers support different versions of j2ee for different modules.
+                For example JBoss 4.0.3 supports EJB 3.0 in ejb module, but only servlet api 2.4
+                in web module.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="J2eePlatform"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="J2eePlatformImpl" link="no"/>
+        </change>
+        <change id="j2eePlatformTools">
+            <api name="j2eeserver"/>
+            <summary>
+                Added support for getting the tool properties, added constants for
+                tools and tool properties.
+            </summary>
+            <version major="1" minor="16"/>
+            <date day="22" month="3" year="2006"/>
+            <author login="sherold"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    Many tools need properties like main class or JVM options,
+                    the getToolProperty method allows to get those properties
+                    now, so far these properties had to be hardcoded.
+                </p>
+                <p>
+                    The constats for the tools and the tool properties were added
+                    to avoid problems that might occur if the tool string changes.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="J2eePlatform"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="J2eePlatformImpl" link="no"/>
+        </change>
+        <change id="DatasourceManagementAPI">
+            <api name="j2eeserver"/>
+            <summary>DS management API allows clients to access and manipulate the data sources</summary>
+            <version major="1" minor="15"/>
+            <date day="17" month="3" year="2006"/>
+            <author login="lkotouc"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    DS management API allows clients to access and manipulate the data sources.
+                    Data sources are created in the module and deployed when the module deployment begins.
+                    Data sources are accessed at two places - at the modules where they are stored after creation
+                    and on the module's target server.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.common.api" name="Datasource"/>
+            <class package="org.netbeans.modules.j2ee.deployment.common.api" name="DatasourceAlreadyExistsException"/>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="J2eeModuleProvider"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="ConfigurationSupport" link="no"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="DatasourceManager" link="no"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="OptionalDeploymentManagerFactory" link="no"/>
+        </change>
+        <change id="resourceDirUpdate">
+            <api name="j2eeserver"/>
+            <summary>
+                Support for updating module enterprise resource directory added.
+            </summary>
+            <version major="1" minor="12"/>
+            <date day="10" month="10" year="2005"/>
+            <author login="sherold"/>
+            <compatibility binary="incompatible" source="incompatible" semantic="incompatible" addition="yes"/>
+            <description>
+                <p>
+                    Plugins need to be notified when the module enterprise resource
+                    directory changes.
+                </p>
+                <p>
+                    Property PROP_ENTERPRISE_RESOURCE_DIRECTORY and property change
+                    listener added to J2eeModuleProvider.
+                </p>
+                <p>
+                    Abstract method updateResourceDir(DeploymentConfiguration config, File resourceDir)
+                    added to ConfigurationSupport.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="J2eeModuleProvider"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="ConfigurationSupport" link="no" />
+        </change>
+        <change id="profilerSupport">
+            <api name="j2eeserver"/>
+            <summary>
+            Profiler support added.
+            </summary>
+            <version major="1" minor="9"/>
+            <date day="15" month="9" year="2005"/>
+            <author login="sherold"/>
+            <compatibility binary="incompatible" source="incompatible" semantic="incompatible" addition="yes"/>
+            <description>
+                <p>
+                Profiler support extension of the j2eeserver API allows Profiler to profile Web and other
+                J2EE project types in a comfortable and reliable way.
+                </p>
+                <p>
+                Profiler SPI, the Profiler is required to implement and register into the default
+                Lookup, allows to obtain information about current profiling session status, settings
+                required for starting a server in profiling mode and to stop profiled server.
+                </p>
+                <p>
+                Profiler API, which defines class encapsulating settings required for
+                starting a server in profiling mode and provides support for reading current
+                state of Profiler registered in the default Lookup.
+                </p>
+                <p>
+                Extension of StartServer that allows the j2eeserver to check whether the given
+                server supports profiling and allows to start it if it does.
+                </p>
+                <p>
+                Extension of J2eePlatform that allows the Profiler to check if the Java
+                platform specified for the server is acceptable for profiling. If not, the
+                Profiler is able to check if other platform which can be used for profiling is
+                acceptable for running the server.
+                </p>
+                <p>
+                Ant task 'nbstartprofiledserver' that may stop other server being profiled
+                and prepare the target server for profiling - this means (re)starting the
+                server using provided settings or no action if the server is already running
+                with correct configuration.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="J2eePlatform" link="no"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="J2eePlatformImpl" link="no"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="StartServer" link="no"/>
+            <class package="org.netbeans.modules.j2ee.deployment.profiler.api" name="ProfilerServerSettings" link="no"/>
+            <class package="org.netbeans.modules.j2ee.deployment.profiler.api" name="ProfilerSupport" link="no"/>
+            <class package="org.netbeans.modules.j2ee.deployment.profiler.spi" name="Profiler" link="no"/>
+            <issue number="56032"/>
+       </change>
+       <change id="serverConfigurationRedesign">
+            <api name="j2eeserver"/>
+            <summary>
+            The common server specific deployment descriptor data loader has been
+            removed from the j2eeserver. The plugins are no longer required to
+            use the DConfigBean based model.
+            </summary>
+            <version major="1" minor="8"/>
+            <date day="22" month="8" year="2005"/>
+            <author login="sherold"/>
+            <compatibility binary="incompatible" source="incompatible" semantic="incompatible" addition="yes"/>
+            <description>
+                <p>
+                The common server specific deployment descriptor data loader has
+                been removed. Each plugin should now register its own data loader,
+                if needed. The j2eeserver does no longer control saving of the
+                server specific deployment descriptors, it is plugin responsibility
+                now. With the removal of the common data loader, the plugins are
+                no longer required to use the DConfigBean based model.
+                </p>
+                <p>
+                Plugins should implement the ConfigurationSupport abstract class
+                in order to provide support for their server specific deployment
+                descriptors.
+                </p>
+                <p>
+                Removed: DConfigBeanProperties, DConfigBeanUIFactory, DeploymentPlanSplitter.
+                Modified: ConfigurationSupport interface was modified and turned into
+                an abstract class.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="DConfigBeanProperties" link="no"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="DConfigBeanUIFactory" link="no"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="DeploymentPlanSplitter" link="no"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="ConfigurationSupport" link="no"/>
+            <issue number="56032"/>
+        </change>
+        <change id="J2eeModule-UISupport">
+            <api name="j2eeserver"/>
+            <summary>ServerManager and UISupport classes added. Added method supportsStartDebugging()
+            to the StartServer class.</summary>
+            <version major="1" minor="7"/>
+            <date day="9" month="8" year="2005"/>
+            <author login="sherold"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    The <code>ServerManager</code> class allows other modules to display the Server Manager dialog.
+                    The <code>UISupport</code> class provides server plugins with an InputOutput instance with
+                    the server state management actions: start, debug, restart, stop and refresh.
+                    The <code>supportsStartDebugging()</code> method says whether the <code>startDebugging()</code>
+                    method is supported, it is analogous to the <code>supportsStartDeploymentManager()</code>
+                    and <code>startDeploymentManager()</code> methods.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="ServerManager"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="UISupport"/>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="StartServer" link="no"/>
+            <issue number="55640"/>
+        </change>
+        <change id="J2eeModule-J2EE15-constant">
+            <api name="j2eeserver"/>
+            <summary>Added setServerInstanceID method into J2eeModuleProvider.</summary>
+            <version major="1" minor="6"/>
+            <date day="18" month="4" year="2005"/>
+            <author login="pbuzek"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    Add a constant for J2EE 1.5 specification level.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="J2eeModuleProvider"/>
+        </change>
+        <change id="J2eeModuleProvider-setServerInstanceID">
+            <api name="j2eeserver"/>
+            <summary>Added setServerInstanceID method into J2eeModuleProvider.</summary>
+            <version major="1" minor="6"/>
+            <date day="14" month="3" year="2005"/>
+            <author login="sherold"/>
+            <compatibility binary="incompatible" source="incompatible" semantic="incompatible" addition="yes"/>
+            <description>
+                <p>
+                    When adding module to j2ee application the target server needs
+                    to be set to the same as for the app. To make this possible we
+                    need to add setServerInstanceID method into J2eeModuleProvider.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="J2eeModuleProvider"/>
+        </change>
+        <change id="StartServer-stopDontWait">
+            <api name="j2eeserver"/>
+            <summary>Added stopDontWait and canStopDontWait methods into StartServer.</summary>
+            <version major="1" minor="6"/>
+            <date day="10" month="3" year="2005"/>
+            <author login="pbuzek"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    These methods allow plugins to stop the server silently when the IDE is being
+                    shutdown. This addresses the problem filed as 52978 - Shutdown of appserver at
+                    IDE shutdown is unresponsive.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="StartServer" link="no" />
+        </change>
+        <change id="Deployment-addInstanceListener">
+            <api name="j2eeserver"/>
+            <summary>Added addInstanceListener and removeInstanceListener methods to Deployment class.</summary>
+            <version major="1" minor="6"/>
+            <date day="9" month="2" year="2005"/>
+            <author login="sherold"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    Added <code>addInstanceListener</code> and <code>removeInstanceListener</code> methods to the
+		    <code>Deployment</code> class. This will allow registration of <code>InstanceListener</code>s
+                    that will listen to server instances changes (addition, removal, etc.) also for modules that do
+                    not implement the <code>J2eeModuleProvider</code> which was currently the only place where
+                    <code>InstanceListener</code>s could be registered.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="Deployment"/>
+        </change>
+        <change id="InstanceListener-and-Deployment-getSrvInstIDs">
+            <api name="j2eeserver"/>
+            <summary>Added InstanceListener. Added Deployment.getServerInstancesIDs methods for getting server instances based on some requirements.</summary>
+            <version major="1" minor="6"/>
+            <date day="25" month="1" year="2005"/>
+            <author login="sherold"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    Added <code>InstanceListener</code> that will allow listening to server instance changes (addition,
+		    removal, etc.). Methods for <code>InstanceListener</code> registration were added to <code>J2eeModuleProvider</code>.
+		    To the <code>Deployment</code> class were added <code>getServerInstanceIDs</code> methods for listing
+		    registered server instances based on some requirements - supported module types, J2EE specification
+		    versions and tools.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="Deployment"/>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="InstanceListener"/>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="J2eeModuleProvider"/>
+         </change>
+        <change id="Add-StartServer-needsRestart">
+            <api name="plugins"/>
+            <summary>StartServer.needsRestart tells j2eeserver a state of the server</summary>
+            <version major="1" minor="6"/>
+            <date day="20" month="1" year="2005"/>
+            <author login="nnguyen"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    This optional method allow plugin to communicate with
+		    j2eeserver about the need to restart the server before
+		    deployment so that last changes to server configuration
+		    would take effect.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="StartServer" link="no"/>
+            <issue number="53721"/>
+        </change>
+
+        <change id="Add-ModuleChangeDescriptor-getChangedFiles">
+            <api name="plugins"/>
+            <summary>Method getChangedFiles allows plugin code to access all
+            the changes in current deployment.</summary>
+            <version major="1" minor="6"/>
+            <date day="18" month="1" year="2005"/>
+            <author login="nnguyen"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    The summary of changes provided by current
+		    ModuleChangeDescriptor is not sufficient in many cases for
+		    plugin code to ensure the incrementally deployed
+		    application available.  This new method getChangedFiles
+		    would serve as a 'catch-all' for plugin code to examine
+		    details of the changes.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="ModuleChangeDescriptor"/>
+            <issue number="53539"/>
+        </change>
+
+        <change id="StartServer-Services-for-Target">
+            <api name="plugins"/>
+            <summary>StartServer methods call to manage states for target server instances</summary>
+            <version major="1" minor="6"/>
+            <date day="10" month="1" year="2005"/>
+            <author login="nnguyen"/>
+            <compatibility binary="compatible" source="compatible" semantic="incompatible" addition="yes"/>
+            <description>
+                <p>
+                    J2eeserver should be able to start target managed server instances
+		    which are not identical with admin server instance.
+                    Methods supportsStartTarget, isRunning, startTarget, stopTarget
+                    are added as optional to StartServer abstract class plugin SPI.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="StartServer" link="no"/>
+            <issue number="53010"/>
+        </change>
+
+	<change id="J2eePlatform-Icon">
+	<api name="j2eeserver"/>
+	<summary>Added J2EE Platform icon</summary>
+	<version major="1" minor="6"/>
+	<date day="6" month="1" year="2005"/>
+	<author login="abadea"/>
+	<compatibility binary="incompatible" source="incompatible" semantic="compatible" addition="yes"/>
+	<description>
+		<p>
+        Added methods for the J2EE Platform to be able to specify an icon. The new methods are
+        <code>J2eePlatform.getIcon()</code> and <code>J2eePlatformImpl.getIcon()</code>.
+		</p>
+	</description>
+	<class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="J2eePlatform"/>
+	<class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="J2eePlatformImpl" link="no"/>
+	<issue number="52993"/>
+	</change>
+
+	<change id="J2eePlatform">
+	<api name="j2eeserver"/>
+	<summary>Added J2EE Platform</summary>
+	<version major="1" minor="5"/>
+	<date day="13" month="12" year="2004"/>
+	<author login="sherold"/>
+	<compatibility binary="compatible" source="compatible" semantic="incompatible" addition="yes"/>
+	<description>
+		<p>
+		J2EE Platform extends the current j2eeserver module of description of a target environment J2EE
+		applications are build against and subsequently deployed to.
+		</p>
+		<ul>
+		<li>platform describes the target environment</li>
+		<li>platform provides compilation classpath which projects should be build against</li>
+		<li>platform provide sources and javadocs for classpath entries</li>
+		<li>platform provide basic tool support (e.g. wscompile)</li>
+		</ul>
+		<p>
+		Constants for the J2EE specification version added to the <code>J2eeModule</code> class.<br/>
+
+		To the <code>Deployment</code> class was added method <code>getJ2eePlatform(String serverInstanceID)</code>
+		which returns <code>J2eePlatform</code> instance for the given <code>serveInstanceID</code>.<br/>
+
+		Added new classes: <code>J2eeLibraryTypeProvider</code>, <code>J2eePlatform</code>,
+		<code>J2eePlatformFactory</code>, <code>J2eePlatformImpl</code>.<br/>
+		</p>
+	</description>
+	<class package="org.netbeans.modules.j2ee.deployment.common.api" name="J2eeLibraryTypeProvider"/>
+	<class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="J2eePlatform"/>
+	<class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="Deployment"/>
+	<class package="org.netbeans.modules.j2ee.deployment.devmodules.api" name="J2eeModule"/>
+	<class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="J2eePlatformFactory" link="no" />
+	<class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="J2eePlatformImpl" link="no"/>
+	<issue number="52167"/>
+	</change>
+
+        <change id="CMP-Mapping-and-Auto-Resources.devmodules">
+            <api name="devmodules"/>
+            <summary>Added directory access methods</summary>
+            <version major="1" minor="5"/>
+            <date day="5" month="12" year="2004"/>
+            <author login="nnguyen"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added methods on <code>J2eeModuleProvider</code> for dev modules to
+                    expose some its project directory structure part to
+                    integration plugin.  The added methods are: <code>File
+                    getEnterpriseResourceDirectory()</code> and
+                    <code>FileObject[] getSourceRoots()</code>
+                </p>
+                <p>
+                    Added methods on
+                    <code>J2eeModuleProvider.ConfigSupport</code> for dev
+                    modules to push configuration data to plugin or request
+                    plugin to ensure resources are defined on creation of
+                    EJBs.  The added methods are: <code>void
+                    setCMPMappingInfo(String ejbname, OriginalCMPMapping
+                    mapping)</code> and <code>void
+                    ensureResourceDefinedForEjb(String ejbname, String
+                    ejbtype)</code>
+                </p>
+                <p>
+                    See Javadoc for details.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="J2eeModuleProvider"/>
+        </change>
+        <change id="CMP-Mapping-and-Auto-Resources.common">
+            <api name="common"/>
+            <summary>Added SourceFileMap access methods</summary>
+            <version major="1" minor="5"/>
+            <date day="5" month="12" year="2004"/>
+            <author login="nnguyen"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Expand usage of <code>SourceFileMap</code> by a set of methods
+                    to allow plugin access source, descriptor files.  Also added
+                    static lookup methods to locate the right
+                    <code>SourceFileMap</code> object.
+                </p>
+                <p>
+                    See Javadoc for details.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.common.api" name="SourceFileMap"/>
+        </change>
+        <change id="CMP-Mapping-and-Auto-Resources.plugins">
+            <api name="plugins"/>
+            <summary>Added configuration support services</summary>
+            <version major="1" minor="5"/>
+            <date day="5" month="12" year="2004"/>
+            <author login="nnguyen"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added Integration plugin SPI <code>ConfigurationSupport</code>
+                    for plugin to provide services like create CMP/CMR mapping
+                    from generic mapping info acquired by devmodule
+                    wizards. This SPI also allow development modules to notify
+                    plugin on making sure default resources might needs to be
+                    generated for new components.
+                </p>
+                <p>
+                    See Javadoc for details.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="ConfigurationSupport" link="no" />
+        </change>
+        <change id="Deprecating-DeploymentPlanSplitter.getDeploymentPlanFileNames">
+            <api name="plugins"/>
+            <summary>Deprecates DeploymentPlanSplitter.getDeploymentPlanFileNames</summary>
+            <version major="1" minor="5"/>
+            <date day="20" month="12" year="2004"/>
+            <author login="nnguyen"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    The reason for deprecating is that plugin SPI method
+		    <code>DeploymentPlanSplitter.getDeploymentPlanFileNames</code>
+                    has become exact duplicate with layer.xml entries declaration:
+                    <code>J2EE/DeploymentPlugins/plugin-name/DeploymentFileNames</code>
+                    J2EE Server Registry code has now been consolidated
+		    and is no longer depends on this method call;
+		    the require layer.xml entries are used instead.
+                </p>
+                <p>
+                    See Javadoc for details.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="DeploymentPlanSplitter" link="no"/>
+        </change>
+        <change id="Batched-CMPMappingInfo">
+            <api name="j2eeserver"/>
+            <summary>Wizard should push CMP mappings in one single call</summary>
+            <version major="1" minor="5"/>
+            <date day="23" month="12" year="2004"/>
+            <author login="nnguyen"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Related CMP Beans Wizard need to push mapping info to plugin
+		    in one single call.  This would improve performance and make it
+                    easier for plugin code to process the relationship mappings.
+                    Part of this batching change, OriginalCMPMapping now includes ejbName.
+                    J2eeModuleProvider.ConfigSupport now has new method saveConfiguration()
+                    to allow development module wizard to commit changes it caused to
+                    component deployment configuration.
+                    OriginalMappingProvider, not used in the CMP mapping push module,
+                    is removed.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.deployment.plugins.api" name="ConfigurationSupport" link="no"/>
+            <class package="org.netbeans.modules.j2ee.deployment.common.api" name="OriginalCMPMapping"/>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="J2eeModuleProvider"/>
+            <class package="org.netbeans.modules.j2ee.deployment.devmodules.spi" name="OriginalMappingProvider" link="no"/>
+         </change>
+    </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <==============
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE j2eeserver/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the J2EE Server API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the <a href="index.html">J2EE Server API</a>.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+      <hr/>
+      <standard-changelists module-code-name="org.netbeans.modules.j2eeserver/3"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

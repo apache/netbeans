@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 2009 Sun Microsystems, Inc. All rights reserved.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Sun designates this
+particular file as subject to the "Classpath" exception as provided
+by Sun in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+
+Portions Copyrighted 2009 Sun Microsystems, Inc.
+-->
+<project name="CustomerTestApp" default="default" basedir=".">
+
+    <property name="tlib.dir" location="${java.io.tmpdir}/rest-client-app-lib"/>
+    <property name="jar.tellurium" value="${tlib.dir}/tellurium-0.5.0.jar"/>
+    <property name="jar.groovyall" value="${tlib.dir}/groovy-all-1.5.6.jar"/>
+    <property name="jar.seleniumserver" value="${tlib.dir}/selenium-server.jar"/>
+    <property name="jar.seleniumdriver" value="${tlib.dir}/selenium-java-client-driver.jar"/>
+
+    <description>Builds, tests, and runs the project CustomerTestApp.</description>
+    <import file="nbproject/build-impl.xml"/>
+
+    <target name="-pre-init" depends="init-download, get-tellurium, get-groovyall, get-seleniumserver, get-seleniumdriver"/>
+
+    <target name="init-download">
+        <mkdir dir="${tlib.dir}"/>
+        <condition property="have.tellurium">
+            <available file="${jar.tellurium}"/>
+        </condition>
+        <condition property="have.groovyall">
+            <available file="${jar.groovyall}"/>
+        </condition>
+        <condition property="have.seleniumdriver">
+            <available file="${jar.seleniumdriver}"/>
+        </condition>
+        <condition property="have.seleniumserver">
+            <available file="${jar.seleniumserver}"/>
+        </condition>
+    </target>
+
+    <target name="get-tellurium" unless="have.tellurium">
+        <get src="http://aost.googlecode.com/files/tellurium-0.5.0.jar" dest="${jar.tellurium}" verbose="true"/>
+    </target>
+
+    <target name="get-groovyall" unless="have.groovyall">
+        <get src="http://repository.codehaus.org/org/codehaus/groovy/groovy-all/1.5.6/groovy-all-1.5.6.jar" dest="${jar.groovyall}" verbose="true"/>
+    </target>
+
+    <target name="get-seleniumserver" unless="have.seleniumserver">
+        <get src="http://aost.googlecode.com/svn/tags/tellurium-0.5.0/lib/selenium-server.jar" dest="${jar.seleniumserver}" verbose="true"/>
+        <!-- see http://jira.openqa.org/browse/SIDE-171 -->
+        <!-- see http://www.spacevatican.org/2008/9/27/selenium-and-firefox-3 -->
+        <mkdir dir="${java.io.tmpdir}/rest-client-test-tmp"/>
+        <patternset id="to.patch">
+            <include name="customProfileDirCUSTFFCHROME/extensions/readystate@openqa.org/install.rdf"/>
+            <include name="customProfileDirCUSTFFCHROME/extensions/{538F0036-F358-4f84-A764-89FB437166B4}/install.rdf"/>
+            <include name="customProfileDirCUSTFFCHROME/extensions/{503A0CD4-EDC8-489b-853B-19E0BAA8F0A4}/install.rdf"/>
+            <include name="customProfileDirCUSTFF/extensions/readystate@openqa.org/install.rdf"/>
+            <include name="customProfileDirCUSTFF/extensions/{538F0036-F358-4f84-A764-89FB437166B4}/install.rdf"/>
+        </patternset>
+        <unzip src="${jar.seleniumserver}" dest="${java.io.tmpdir}/rest-client-test-tmp">
+            <patternset refid="to.patch"/>
+        </unzip>
+        <replace dir="${java.io.tmpdir}/rest-client-test-tmp" token="2.0.0.*" value="3.0.*.*"/>
+        <jar destfile="${jar.seleniumserver}" duplicate="preserve" update="true" basedir="${java.io.tmpdir}/rest-client-test-tmp" includes="**/*.rdf"/>
+    </target>
+
+    <target name="get-seleniumdriver" unless="have.seleniumdriver">
+        <get src="http://aost.googlecode.com/svn/tags/tellurium-0.5.0/lib/selenium-java-client-driver.jar" dest="${jar.seleniumdriver}" verbose="true"/>
+    </target>
+
+</project>

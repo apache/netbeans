@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 2011 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+
+Portions Copyrighted 2011 Sun Microsystems, Inc.
+-->
+<html>
+<head>
+    <title>TODO List - sample application for NetBeans IDE</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >
+    <link href="web/css/layout.css" rel="stylesheet" type="text/css" >
+    <link href="web/css/style.css" rel="stylesheet" type="text/css" >
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" >
+</head>
+<body id="page">
+    <div id="main">
+        <!-- header -->
+        <div id="header">
+            <i class="material-icons logo">assignment</i>
+            <div class="title">
+                <h1>TODO List</h1>
+                <h2>NetBeans PHP Sample Application</h2>
+            </div>
+            <div class="nb">
+                <a href="https://netbeans.org/features/php/" target="_blank" title="NetBeans PHP Support"><img src="web/img/NB-IDE-logo.png" alt="NetBeans logo"></a>
+            </div>
+        </div>
+        <!-- content -->
+        <div id="content">
+            <div class="wrapper">
+                <div class="col-2">
+                    <div class="indent">
+
+                        <h3>What is TODO List?</h3>
+                        <p class="p">TODO List is a personal list of things that are to be done.
+                            This PHP application is created to highlight PHP features supported by NetBeans IDE.
+                        </p>
+                        <p class="p">
+                            <b>This sample is not intented to be used on a production server without any changes.</b>
+                        </p>
+
+                        <h3>This sample demonstrates the following features:</h3>
+                        <ul class="p">
+                            <li>OOP concepts</li>
+                            <li>preventing public access to your scripts</li>
+                            <li>configuration your application</li>
+                            <li>accessing your database data</li>
+                            <li>changing your database data (with redirect-after-post pattern)</li>
+                            <li>validating your data</li>
+                            <li>splitting scripts and templates</li>
+                            <li>handling expected and unexpected exceptions</li>
+                        </ul>
+
+                        <h3>Requirements</h3>
+                        Follow these before you run the sample:
+                        <ul class="p">
+                            <li>Install NetBeans IDE with PHP support</li>
+                            <li>Install and configure PHP Runtime (PHP 5.4 or newer)</li>
+                        </ul>
+
+                        <h3>What is included?</h3>
+                        <ul class="p">
+                            <li>NetBeans <i>PHP Application</i> Project</li>
+                            <li>Database together with SQL Script</li>
+                            <li>Additional Stylesheet, JavaScript</li>
+                        </ul>
+
+                        <h3>Before the start</h3>
+                        <ul class="p">
+                            <li>If you want to try the sample out, follow <a href="#getting_started">Getting Started</a> guidelines.</li>
+                            <li>If you want to try debugging features of the NetBeans IDE,
+                                follow the <a href="#debugging">Debugging</a> guidelines.</li>
+                        </ul>
+
+                        <h3 id="getting_started">Getting Started</h3>
+                        <ol class="p">
+                            <li>
+                                As a database, the application uses
+                                <a href="https://www.sqlite.org/" target="_blank">SQLite</a> database
+                                with some sample data (see <i>db</i> directory).
+                            </li>
+                            <li>
+                                As a server, the application uses the PHP built-in web server.
+                            </li>
+                            <li>
+                                Run the project. Right-click the project node again and select <i>Run Project</i>
+                                or use the <i>Run Project</i> icon in the main menu toolbar.
+                                The sample PHP application should open in the Web browser.
+                            </li>
+                            <li>Play further with the sample. :)</li>
+                        </ol>
+
+                        <h3 id="debugging">Debugging</h3>
+                        <p class="p">
+                            These steps should enable you the debugging option at the sample project,
+                            <a href="http://wiki.netbeans.org/HowToConfigureXDebug" target="_blank">if you already have PHP debugger
+                            installed and configured</a>.
+                        </p>
+                        <ol class="p">
+                            <li>
+                                To debug the application, right-click the project node and select
+                                <i>Debug Project</i> or use the <i>Debug Project</i> icon
+                                in the main menu toolbar.
+                            </li>
+                            <li>
+                                Put breakpoint somewhere in any PHP script and (re)load
+                                the proper URL.
+                            </li>
+                            <li>Play further with the sample. :)</li>
+                        </ol>
+
+                        <h3>Project folder's structure</h3>
+                        <ul class="p">
+                            <li><i>config</i> - Contains configuration file <i>config.ini</i> where you can edit the DB connection settings.</li>
+                            <li><i>dao</i> - Contains DAO (Data Access Object) classes.</li>
+                            <li><i>db</i> - Contains the database and SQL dump for its creating.</li>
+                            <li><i>exception</i> - Contains custom exceptions.</li>
+                            <li><i>layout</i> - Contains layout common for all web pages.</li>
+                            <li><i>mapping</i> - Contains classes used for mapping from database to model classes.</li>
+                            <li><i>model</i> - Contains model classes.</li>
+                            <li><i>page</i> - Contains pages of the TodoList application.</li>
+                            <li><i>util</i> - Contains utility classes.</li>
+                            <li><i>validation</i> - Contains validation classes.</li>
+                            <li><i>web</i> - Contains publicly accessible files (PHP scripts, CSS, JS, images).</li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- footer -->
+        <div id="footer">
+            <div class="indent">
+                <div class="fleft"><a href="https://blogs.oracle.com/netbeansphp/">NetBeans PHP team</a>, 2016 &copy; Copyright Oracle corp., All rights reserved</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

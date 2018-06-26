@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright (c) 2009, 2016 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+-->
+
+<metaDD>
+  <meta-element>
+    <dtd-name>ResourceParams</dtd-name>
+    <bean-name>ResourceParams</bean-name>
+    <meta-property>
+      <bean-name>Parameter</bean-name>
+    </meta-property>
+  </meta-element>
+  <meta-element>
+    <dtd-name>Manager</dtd-name>
+    <bean-name>Manager</bean-name>
+    <meta-property>
+      <bean-name>Store</bean-name>
+    </meta-property>
+  </meta-element>
+  <meta-element>
+    <dtd-name>Resource</dtd-name>
+    <bean-name>Resource</bean-name>
+    <wrapper-class>Boolean</wrapper-class>
+  </meta-element>
+  <meta-element>
+    <dtd-name>Connector</dtd-name>
+    <bean-name>Connector</bean-name>
+    <wrapper-class>Boolean</wrapper-class>
+  </meta-element>
+  <meta-element>
+    <dtd-name>Ejb</dtd-name>
+    <bean-name>Ejb</bean-name>
+    <wrapper-class>Boolean</wrapper-class>
+  </meta-element>
+  <meta-element>
+    <dtd-name>parameter</dtd-name>
+    <bean-name>Parameter</bean-name>
+    <meta-property>
+      <bean-name>Name</bean-name>
+    </meta-property>
+    <meta-property>
+      <bean-name>Value</bean-name>
+    </meta-property>
+  </meta-element>
+  <meta-element>
+    <dtd-name>Listener</dtd-name>
+    <bean-name>Listener</bean-name>
+    <wrapper-class>Boolean</wrapper-class>
+  </meta-element>
+  <meta-element>
+    <dtd-name>Valve</dtd-name>
+    <bean-name>Valve</bean-name>
+    <wrapper-class>Boolean</wrapper-class>
+  </meta-element>
+  <meta-element>
+    <dtd-name>DefaultContext</dtd-name>
+    <bean-name>DefaultContext</bean-name>
+    <meta-property>
+      <bean-name>Parameter</bean-name>
+    </meta-property>
+    <meta-property>
+      <bean-name>Environment</bean-name>
+    </meta-property>
+    <meta-property>
+      <bean-name>Listener</bean-name>
+    </meta-property>
+    <meta-property>
+      <bean-name>Resource</bean-name>
+    </meta-property>
+    <meta-property>
+      <bean-name>ResourceParams</bean-name>
+    </meta-property>
+  </meta-element>
+  <meta-element>
+    <dtd-name>Parameter</dtd-name>
+    <bean-name>Parameter</bean-name>
+    <wrapper-class>Boolean</wrapper-class>
+  </meta-element>
+  <meta-element>
+    <dtd-name>Loader</dtd-name>
+    <bean-name>Loader</bean-name>
+    <wrapper-class>Boolean</wrapper-class>
+  </meta-element>
+  <meta-element>
+    <dtd-name>Engine</dtd-name>
+    <bean-name>Engine</bean-name>
+    <meta-property>
+      <bean-name>Valve</bean-name>
+    </meta-property>
+    <meta-property>
+      <bean-name>Logger</bean-name>
+    </meta-property>
+    <meta-property>
+      <bean-name>Realm</bean-name>
+    </meta-property>
+    <meta-property>
+      <bean-name>Host</bean-name>
+    </meta-property>
+  </meta-element>
+  <meta-element>
+    <dtd-name>Environment</dtd-name>
+    <bean-name>Environment</bean-name>
+    <wrapper-class>Boolean</wrapper-class>
+  </meta-element>
+  <meta-element>
+    <dtd-name>Store</dtd-name>
+    <bean-name>Store</bean-name>
+    <wrapper-class>Boolean</wrapper-class>
+  </meta-element>
+  <meta-element>
+    <dtd-name>Service</dtd-name>
+    <bean-name>Service</bean-name>
+    <meta-property>
+      <bean-name>Connector</bean-name>
+    </meta-property>
+    <meta-property>
+      <bean-name>Engine</bean-name>
+    </meta-property>
+  </meta-element>
+  <meta-element>
+    <dtd-name>Server</dtd-name>
+    <bean-name>Server</bean-name>
+    <meta-property>
+      <bean-name>Service</bean-name>
+    </meta-property>
+  </meta-element>
+  <meta-element>
+    <dtd-name>value</dtd-name>
+    <bean-name>Value</bean-name>
+    <wrapper-class>String</wrapper-class>
+  </meta-element>
+  <meta-element>
+    <dtd-name>Context</dtd-name>
+    <bean-name>SContext</bean-name>
+    <meta-property>
+      <bean-name>Loader</bean-name>
+    </meta-property>
+    <meta-property>
+      <bean-name>Logger</bean-name>
+    </meta-property>
+    <meta-property>
+      <bean-name>Valve</bean-name>
+    </meta-property>
+    <meta-property>
+      <bean-name>Realm</bean-name>
+    </meta-property>
+    <meta-property>
+      <bean-name>Manager</bean-name>
+    </meta-property>
+    <meta-property>
+      <bean-name>Ejb</bean-name>
+    </meta-property>
+    <meta-property>
+      <bean-name>Parameter</bean-name>
+    </meta-property>
+    <meta-property>
+      <bean-name>Environment</bean-name>
+    </meta-property>
+    <meta-property>
+      <bean-name>Listener</bean-name>
+    </meta-property>
+    <meta-property>
+      <bean-name>Resource</bean-name>
+    </meta-property>
+    <meta-property>
+      <bean-name>ResourceParams</bean-name>
+    </meta-property>
+    <meta-property>
+      <bean-name>InstanceListener</bean-name>
+    </meta-property>    
+  </meta-element>
+  <meta-element>
+    <dtd-name>Realm</dtd-name>
+    <bean-name>Realm</bean-name>
+    <wrapper-class>Boolean</wrapper-class>
+  </meta-element>
+  <meta-element>
+    <dtd-name>Host</dtd-name>
+    <bean-name>Host</bean-name>
+    <meta-property>
+      <bean-name>Valve</bean-name>
+    </meta-property>
+    <meta-property>
+      <bean-name>Logger</bean-name>
+    </meta-property>
+    <meta-property>
+      <bean-name>Context</bean-name>
+    </meta-property>
+    <meta-property>
+      <bean-name>DefaultContext</bean-name>
+    </meta-property>
+  </meta-element>
+  <meta-element>
+    <dtd-name>Logger</dtd-name>
+    <bean-name>Logger</bean-name>
+    <wrapper-class>Boolean</wrapper-class>
+  </meta-element>
+  <meta-element>
+    <dtd-name>name</dtd-name>
+    <bean-name>Name</bean-name>
+    <wrapper-class>String</wrapper-class>
+  </meta-element>
+  <meta-element>
+    <dtd-name>InstanceListener</dtd-name>
+    <bean-name>InstanceListener</bean-name>
+    <wrapper-class>String</wrapper-class>
+  </meta-element>  
+</metaDD>
+

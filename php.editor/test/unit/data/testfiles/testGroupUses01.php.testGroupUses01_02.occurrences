@@ -1,0 +1,3 @@
+class |>MARK_OCCURRENCES:ClsA<| {
+    |>MARK_OCCURRENCES:Cl^sA<|,
+$a = new |>MARK_OCCURRENCES:ClsA<|();

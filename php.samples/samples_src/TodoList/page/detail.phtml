@@ -1,0 +1,141 @@
+<?php
+/*
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ *
+ * Copyright 2011 Oracle and/or its affiliates. All rights reserved.
+ *
+ * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+ * Other names may be trademarks of their respective owners.
+ *
+ * The contents of this file are subject to the terms of either the GNU
+ * General Public License Version 2 only ("GPL") or the Common
+ * Development and Distribution License("CDDL") (collectively, the
+ * "License"). You may not use this file except in compliance with the
+ * License. You can obtain a copy of the License at
+ * http://www.netbeans.org/cddl-gplv2.html
+ * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+ * specific language governing permissions and limitations under the
+ * License.  When distributing the software, include this License Header
+ * Notice in each file and include the License file at
+ * nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the GPL Version 2 section of the License file that
+ * accompanied this code. If applicable, add the following below the
+ * License Header, with the fields enclosed by brackets [] replaced by
+ * your own identifying information:
+ * "Portions Copyrighted [year] [name of copyright owner]"
+ *
+ * If you wish your version of this file to be governed by only the CDDL
+ * or only the GPL Version 2, indicate your decision by adding
+ * "[Contributor] elects to include this software in this distribution
+ * under the [CDDL or GPL Version 2] license." If you do not indicate a
+ * single choice of license, a recipient has the option to distribute
+ * your version of this file under either the CDDL, the GPL Version 2 or
+ * to extend the choice of license to its licensees as provided above.
+ * However, if you add GPL Version 2 code and therefore, elected the GPL
+ * Version 2 license, then the option applies only if the new code is
+ * made subject to such option by the copyright holder.
+ *
+ * Contributor(s):
+ *
+ * Portions Copyrighted 2011 Sun Microsystems, Inc.
+ */
+
+namespace TodoList;
+
+use \TodoList\Model\Todo;
+use \TodoList\Util\Utils;
+
+//~ Template for detail.php
+// variables:
+//  $todo - TODO to be displayed
+//  $tooLate - if the task should have been done already
+
+/* @var $todo Todo */
+?>
+
+<h1>
+    <?php if ($tooLate): ?>
+        <i class="material-icons error" title="Should be already done!">error</i>
+    <?php endif; ?>
+    <?php echo Utils::escape($todo->getTitle()); ?>
+</h1>
+
+<table class="detail">
+    <tr>
+        <th>Priority</th>
+        <td><?php echo Utils::iconPriority($todo->getPriority()); ?></td>
+    </tr>
+    <tr>
+        <th>Created On</th>
+        <td><?php echo Utils::escape(Utils::formatDateTime($todo->getCreatedOn())); ?></td>
+    </tr>
+    <tr>
+        <th>Due On</th>
+        <td>
+            <?php if ($tooLate): ?><span class="too-late"><?php endif; ?>
+            <?php echo Utils::escape(Utils::formatDateTime($todo->getDueOn())); ?>
+            <?php if ($tooLate): ?></span><?php endif; ?>
+        </td>
+    </tr>
+    <tr>
+        <th>Last Modified On</th>
+        <td><?php echo Utils::escape(Utils::formatDateTime($todo->getLastModifiedOn())); ?></td>
+    </tr>
+    <tr>
+        <th>Description</th>
+        <td><?php echo Utils::escape($todo->getDescription()); ?></td>
+    </tr>
+    <tr>
+        <th>Comment</th>
+        <td><?php echo Utils::escape($todo->getComment()); ?></td>
+    </tr>
+    <tr>
+        <th>Status</th>
+        <td><?php echo Utils::iconStatus($todo->getStatus()); ?></td>
+    </tr>
+    <tr>
+        <td colspan="2">&nbsp;</td>
+    </tr>
+    <tr>
+        <th></th>
+        <td>
+            <div class="statuses">
+            <?php foreach (Todo::allStatuses() as $status): ?>
+                <?php if ($status != $todo->getStatus()): ?>
+                    <a href="<?php echo Utils::createLink('change-status', ['id' => $todo->getId(), 'status' => $status]); ?>" title="Change TODO status to <?php echo Utils::capitalize($status); ?>."
+                       class="change-status-link" title="Make it <?php echo Utils::capitalize($status); ?>"
+                       ><?php echo Utils::iconStatus($status, false, false); ?></a>
+                <?php else: ?>
+                    <span title="This TODO is already <?php echo Utils::capitalize($status); ?>.">
+                        <?php echo Utils::iconStatus($status, true, false); ?>
+                    </span>
+                <?php endif; ?>
+            <?php endforeach; ?>
+            </div>
+            <div class="actions">
+                <a href="<?php echo Utils::createLink('add-edit', ['id' => $todo->getId()]); ?>" title="Edit it."><i class="material-icons multi">edit</i></a>
+                <a href="<?php echo Utils::createLink('delete', ['id' => $todo->getId()]); ?>" id="delete-link" title="Delete it."><i class="material-icons multi">delete</i></a>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<p>
+    <a href="<?php echo Utils::createLink('list', ['status' => $todo->getStatus()]); ?>" title="Back to the list."
+       ><i class="material-icons">fast_rewind</i>To the list</a>
+</p>
+
+<div id="delete-dialog" title="Delete this TODO?">
+    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This TODO will be deleted. Are you sure?</p>
+</div>
+<div id="change-status-dialog">
+    <form id="change-status-form" method="post">
+        <fieldset>
+            <div class="field">
+                <label>Comment:</label>
+                <textarea name="comment" cols="1" rows="1"></textarea>
+            </div>
+        </fieldset>
+    </form>
+</div>

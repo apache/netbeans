@@ -1,0 +1,3 @@
+Person.prototype.showLegs = function(){ formatter.println(this+" has "+this.|>MARK_OCCURRENCES:legs<|+" legs") } 
+Person.prototype.amputate = function(){ this.|>MARK_OCCURRENCES:le^gs<|-- } 
+Person.prototype.|>MARK_OCCURRENCES:legs<|=2;

@@ -1,0 +1,10 @@
+PagesManager:CONSTRUCTOR:[PRIVATE]:ESCAPED{PagesManager}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }PagesManager</font>:
+  ALREADY_REGISTERED:FIELD:[PUBLIC, STATIC]:ESCAPED{ALREADY_REGISTERED}<font color="#999999">ESCAPED{ : }Error</font>:
+  INVALID_ARGUMENT:FIELD:[PUBLIC, STATIC]:ESCAPED{INVALID_ARGUMENT}<font color="#999999">ESCAPED{ : }Error</font>:
+  NO_IMPLEMENTATION_ERROR:FIELD:[PUBLIC, STATIC]:ESCAPED{NO_IMPLEMENTATION_ERROR}<font color="#999999">ESCAPED{ : }Error</font>:
+  prototype:CLASS:[PUBLIC]:ESCAPED{prototype}:
+    _implementation:CLASS:[PUBLIC]:ESCAPED{_implementation}:
+    getIds:METHOD:[PUBLIC]:ESCAPED{getIds}ESCAPED{(}ESCAPED{callback}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    loadPage:METHOD:[PUBLIC]:ESCAPED{loadPage}ESCAPED{(}ESCAPED{id}ESCAPED{, }ESCAPED{callback}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    registerImplementation:METHOD:[PUBLIC]:ESCAPED{registerImplementation}ESCAPED{(}ESCAPED{impl}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    storePage:METHOD:[PUBLIC]:ESCAPED{storePage}ESCAPED{(}ESCAPED{page}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:

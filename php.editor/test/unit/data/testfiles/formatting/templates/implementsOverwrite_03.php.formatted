@@ -1,0 +1,30 @@
+<?php
+interface InterfaceName {
+    function getName();
+    function getAddress();
+}
+
+class Test implements InterfaceName {
+    function __construct() {
+
+    }
+
+    function method1($param) {
+
+    }
+public function getAddress()
+    {
+    
+    }
+
+public function getName()
+    {
+    
+    }
+
+}
+
+function functionName($param) {
+
+}
+?>

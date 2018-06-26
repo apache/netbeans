@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 2014 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+
+Portions Copyrighted 2014 Sun Microsystems, Inc.
+-->
+<coverage generated="1402476887434" clover="3.2.0">
+	<project timestamp="1402476887434"  name="All Files" >
+		<metrics statements="5574"  coveredstatements="1383"  conditionals="3542"  coveredconditionals="441"  methods="1182"  coveredmethods="249"  elements="10298"  coveredelements="2073"  complexity="0"  packages="4"  files="8"  classes="8"  loc="24585"  ncloc="24585" />
+		<package name="bower_components.angular-route" >
+			<metrics statements="153"  coveredstatements="19"  conditionals="113"  coveredconditionals="0"  methods="32"  coveredmethods="1" />
+			<file name="angular-route.js"  path="./app/bower_components/angular-route/angular-route.js" >
+				<metrics statements="153"  coveredstatements="19"  conditionals="113"  coveredconditionals="0"  methods="32"  coveredmethods="1" />
+				<line num="6"  count="1"  type="stmt" />
+				<line num="24"  count="1"  type="stmt" />
+				<line num="42"  count="1"  type="stmt" />
+				<line num="43"  count="1"  type="stmt" />
+				<line num="44"  count="0"  type="stmt" />
+				<line num="47"  count="0"  type="stmt" />
+				<line num="148"  count="0"  type="stmt" />
+				<line num="149"  count="0"  type="stmt" />
+				<line num="156"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="157"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="161"  count="0"  type="stmt" />
+				<line num="167"  count="0"  type="stmt" />
+				<line num="181"  count="1"  type="stmt" />
+				<line num="182"  count="0"  type="stmt" />
+				<line num="189"  count="0"  type="stmt" />
+				<line num="192"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="193"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="194"  count="0"  type="stmt" />
+				<line num="195"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="196"  count="0"  type="stmt" />
+				<line num="207"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="208"  count="0"  type="stmt" />
+				<line num="222"  count="0"  type="stmt" />
+				<line num="223"  count="0"  type="stmt" />
+				<line num="224"  count="0"  type="stmt" />
+				<line num="228"  count="0"  type="stmt" />
+				<line num="426"  count="0"  type="stmt" />
+				<line num="442"  count="0"  type="stmt" />
+				<line num="443"  count="0"  type="stmt" />
+				<line num="447"  count="0"  type="stmt" />
+				<line num="449"  count="0"  type="stmt" />
+				<line num="464"  count="1"  type="stmt" />
+				<line num="465"  count="0"  type="stmt" />
+				<line num="468"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="470"  count="0"  type="stmt" />
+				<line num="471"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="473"  count="0"  type="stmt" />
+				<line num="474"  count="0"  type="stmt" />
+				<line num="476"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="480"  count="0"  type="cond"  truecount="0"  falsecount="4" />
+				<line num="481"  count="0"  type="stmt" />
+				<line num="484"  count="0"  type="stmt" />
+				<line num="487"  count="1"  type="stmt" />
+				<line num="488"  count="0"  type="stmt" />
+				<line num="491"  count="0"  type="cond"  truecount="0"  falsecount="8" />
+				<line num="494"  count="0"  type="stmt" />
+				<line num="495"  count="0"  type="stmt" />
+				<line num="496"  count="0"  type="stmt" />
+				<line num="497"  count="0"  type="cond"  truecount="0"  falsecount="4" />
+				<line num="498"  count="0"  type="stmt" />
+				<line num="499"  count="0"  type="stmt" />
+				<line num="500"  count="0"  type="stmt" />
+				<line num="501"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="502"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="503"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="504"  count="0"  type="stmt" />
+				<line num="507"  count="0"  type="stmt" />
+				<line num="513"  count="0"  type="stmt" />
+				<line num="515"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="516"  count="0"  type="stmt" />
+				<line num="519"  count="0"  type="stmt" />
+				<line num="520"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="524"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="525"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="526"  count="0"  type="stmt" />
+				<line num="528"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="529"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="530"  count="0"  type="stmt" />
+				<line num="532"  count="0"  type="stmt" />
+				<line num="533"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="534"  count="0"  type="stmt" />
+				<line num="535"  count="0"  type="stmt" />
+				<line num="536"  count="0"  type="stmt" />
+				<line num="539"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="540"  count="0"  type="stmt" />
+				<line num="542"  count="0"  type="stmt" />
+				<line num="547"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="548"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="549"  count="0"  type="stmt" />
+				<line num="550"  count="0"  type="stmt" />
+				<line num="552"  count="0"  type="stmt" />
+				<line num="555"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="556"  count="0"  type="stmt" />
+				<line num="566"  count="1"  type="stmt" />
+				<line num="568"  count="0"  type="stmt" />
+				<line num="569"  count="0"  type="stmt" />
+				<line num="570"  count="0"  type="cond"  truecount="0"  falsecount="4" />
+				<line num="571"  count="0"  type="stmt" />
+				<line num="574"  count="0"  type="stmt" />
+				<line num="578"  count="0"  type="cond"  truecount="0"  falsecount="3" />
+				<line num="584"  count="1"  type="stmt" />
+				<line num="585"  count="0"  type="stmt" />
+				<line num="586"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="587"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="588"  count="0"  type="stmt" />
+				<line num="590"  count="0"  type="stmt" />
+				<line num="591"  count="0"  type="stmt" />
+				<line num="592"  count="0"  type="stmt" />
+				<line num="593"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="594"  count="0"  type="stmt" />
+				<line num="597"  count="0"  type="stmt" />
+				<line num="602"  count="1"  type="stmt" />
+				<line num="638"  count="1"  type="stmt" />
+				<line num="639"  count="0"  type="stmt" />
+				<line num="642"  count="1"  type="stmt" />
+				<line num="643"  count="1"  type="stmt" />
+				<line num="822"  count="1"  type="stmt" />
+				<line num="823"  count="1"  type="stmt" />
+				<line num="824"  count="0"  type="stmt" />
+				<line num="830"  count="0"  type="stmt" />
+				<line num="836"  count="0"  type="stmt" />
+				<line num="837"  count="0"  type="stmt" />
+				<line num="839"  count="1"  type="stmt" />
+				<line num="840"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="841"  count="0"  type="stmt" />
+				<line num="842"  count="0"  type="stmt" />
+				<line num="844"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="845"  count="0"  type="stmt" />
+				<line num="846"  count="0"  type="stmt" />
+				<line num="848"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="849"  count="0"  type="stmt" />
+				<line num="850"  count="0"  type="stmt" />
+				<line num="852"  count="0"  type="stmt" />
+				<line num="853"  count="0"  type="stmt" />
+				<line num="857"  count="1"  type="stmt" />
+				<line num="858"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="861"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="862"  count="0"  type="stmt" />
+				<line num="863"  count="0"  type="stmt" />
+				<line num="871"  count="0"  type="stmt" />
+				<line num="872"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="873"  count="0"  type="cond"  truecount="0"  falsecount="5" />
+				<line num="875"  count="0"  type="stmt" />
+				<line num="878"  count="0"  type="stmt" />
+				<line num="881"  count="0"  type="stmt" />
+				<line num="882"  count="0"  type="stmt" />
+				<line num="883"  count="0"  type="stmt" />
+				<line num="884"  count="0"  type="stmt" />
+				<line num="886"  count="0"  type="stmt" />
+				<line num="898"  count="1"  type="stmt" />
+				<line num="899"  count="1"  type="stmt" />
+				<line num="900"  count="0"  type="stmt" />
+				<line num="904"  count="0"  type="stmt" />
+				<line num="907"  count="0"  type="stmt" />
+				<line num="909"  count="0"  type="stmt" />
+				<line num="911"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="912"  count="0"  type="stmt" />
+				<line num="913"  count="0"  type="stmt" />
+				<line num="914"  count="0"  type="cond"  truecount="0"  falsecount="2" />
+				<line num="915"  count="0"  type="stmt" />
+				<line num="917"  count="0"  type="stmt" />
+				<line num="918"  count="0"  type="stmt" />
+				<line num="921"  count="0"  type="stmt" />
+			</file>
+		</package>
+		<package name="js" >
+			<metrics statements="12"  coveredstatements="9"  conditionals="0"  coveredconditionals="0"  methods="7"  coveredmethods="6" />
+			<file name="app.js"  path="./app/js/app.js" >
+				<metrics statements="4"  coveredstatements="1"  conditionals="0"  coveredconditionals="0"  methods="1"  coveredmethods="0" />
+				<line num="5"  count="1"  type="stmt" />
+				<line num="13"  count="0"  type="stmt" />
+				<line num="14"  count="0"  type="stmt" />
+				<line num="15"  count="0"  type="stmt" />
+			</file>
+			<file name="controllers.js"  path="./app/js/controllers.js" >
+				<metrics statements="1"  coveredstatements="1"  conditionals="0"  coveredconditionals="0"  methods="2"  coveredmethods="2" />
+				<line num="5"  count="1"  type="stmt" />
+			</file>
+			<file name="directives.js"  path="./app/js/directives.js" >
+				<metrics statements="3"  coveredstatements="3"  conditionals="0"  coveredconditionals="0"  methods="2"  coveredmethods="2" />
+				<line num="6"  count="1"  type="stmt" />
+				<line num="8"  count="1"  type="stmt" />
+				<line num="9"  count="1"  type="stmt" />
+			</file>
+			<file name="filters.js"  path="./app/js/filters.js" >
+				<metrics statements="3"  coveredstatements="3"  conditionals="0"  coveredconditionals="0"  methods="2"  coveredmethods="2" />
+				<line num="5"  count="1"  type="stmt" />
+				<line num="7"  count="1"  type="stmt" />
+				<line num="8"  count="1"  type="stmt" />
+			</file>
+			<file name="services.js"  path="./app/js/services.js" >
+				<metrics statements="1"  coveredstatements="1"  conditionals="0"  coveredconditionals="0"  methods="0"  coveredmethods="0" />
+				<line num="8"  count="1"  type="stmt" />
+			</file>
+		</package>
+	</project>
+</coverage>

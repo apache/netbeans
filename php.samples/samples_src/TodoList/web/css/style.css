@@ -1,0 +1,348 @@
+/*
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ *
+ * Copyright 2011 Oracle and/or its affiliates. All rights reserved.
+ *
+ * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+ * Other names may be trademarks of their respective owners.
+ *
+ * The contents of this file are subject to the terms of either the GNU
+ * General Public License Version 2 only ("GPL") or the Common
+ * Development and Distribution License("CDDL") (collectively, the
+ * "License"). You may not use this file except in compliance with the
+ * License. You can obtain a copy of the License at
+ * http://www.netbeans.org/cddl-gplv2.html
+ * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+ * specific language governing permissions and limitations under the
+ * License.  When distributing the software, include this License Header
+ * Notice in each file and include the License file at
+ * nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the GPL Version 2 section of the License file that
+ * accompanied this code. If applicable, add the following below the
+ * License Header, with the fields enclosed by brackets [] replaced by
+ * your own identifying information:
+ * "Portions Copyrighted [year] [name of copyright owner]"
+ *
+ * If you wish your version of this file to be governed by only the CDDL
+ * or only the GPL Version 2, indicate your decision by adding
+ * "[Contributor] elects to include this software in this distribution
+ * under the [CDDL or GPL Version 2] license." If you do not indicate a
+ * single choice of license, a recipient has the option to distribute
+ * your version of this file under either the CDDL, the GPL Version 2 or
+ * to extend the choice of license to its licensees as provided above.
+ * However, if you add GPL Version 2 code and therefore, elected the GPL
+ * Version 2 license, then the option applies only if the new code is
+ * made subject to such option by the copyright holder.
+ *
+ * Contributor(s):
+ *
+ * Portions Copyrighted 2011 Sun Microsystems, Inc.
+ */
+/** general **/
+* {
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 100%;
+    line-height: 1em;
+    color: #414141;
+}
+
+h1 {
+    margin-bottom: 30px;
+}
+h2 {
+    margin-bottom: 20px;
+}
+h3 {
+    font-size: 1.2em;
+    color: #4c7cbd;
+    margin-bottom: 12px;
+}
+h3 a {
+    color: #4c7cbd;
+    text-decoration: none;
+}
+h3 a:hover {
+    text-decoration: underline;
+}
+
+object {
+    vertical-align: top;
+}
+
+p {
+    margin: 0;
+    padding: 0;
+}
+
+img {
+    border: 0;
+    vertical-align: top;
+    text-align: left;
+}
+
+a {
+    color: #414141;
+    outline: none;
+}
+a:hover {
+    text-decoration: none;
+}
+
+/** lists **/
+ul {
+    list-style: circle;
+}
+li {
+    margin-left: 30px;
+}
+ul.list {
+    list-style: none;
+}
+.list li {
+    width: 100%;
+    overflow: hidden;
+    vertical-align: bottom;
+    padding: 3px 0 20px 0;
+    margin-left: 0;
+}
+.list li img {
+    float: left;
+    margin: -3px 15px 0 0;
+    width: 16px;
+    height: 16px;
+}
+.list p.description {
+    margin-bottom: 5px;
+}
+.list span.label {
+    font-weight: bold;
+}
+
+/** forms **/
+input, textarea, select {
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 1em;
+}
+input, select {
+    vertical-align: middle;
+    font-weight: normal;
+}
+form {
+    clear: right;
+    width: 100%;
+    overflow: hidden;
+}
+form fieldset {
+    border: none;
+    float: left;
+}
+form .field {
+    clear: both;
+}
+form label {
+    float: left;
+    width: 97px;
+    line-height: 18px;
+    padding-bottom: 8px;
+    font-weight: bold;
+    color: #4c7cbd;
+}
+input.text {
+    width: 170px;
+    padding: 1px 0 1px 3px;
+    border: 1px solid #d6d6d6;
+    color: #414141;
+    float: left;
+}
+textarea {
+    width: 340px;
+    height: 70px;
+    padding: 1px 0 1px 3px;
+    border: 1px solid #d6d6d6;
+    color: #414141;
+    margin-bottom: 15px;
+    overflow: auto;
+    float: left;
+}
+form input.submit {
+    float: right;
+    color: #4c7cbd;
+    margin-left: 5px;
+    width: 70px;
+    font-weight: bold;
+}
+.errors {
+    margin-bottom: 20px;
+}
+.errors li {
+    color: red;
+}
+.error-field {
+    background-color: pink;
+}
+
+/** boxes **/
+.box {
+    background: #fff;
+    width: 100%;
+    border: 1px solid #D6D6D6;
+}
+.box .inner {
+    padding: 30px 30px 40px 30px;
+}
+
+/** content **/
+#content {
+    padding: 20px 40px 0 40px;
+}
+#content .indent {
+    padding: 14px 0 0 9px;
+}
+#content p {
+    line-height: 1.17em;
+}
+
+/** footer **/
+#footer .indent {
+    padding: 37px 40px 20px 40px;
+}
+#footer img {
+    position: relative; top: -4px;
+}
+#footer a {
+    color: #4c7cbd;
+}
+
+/** other **/
+.fleft {
+    float: left;
+}
+.fright {
+    float: right;
+}
+.clear {
+    clear: both;
+}
+
+.alignright {
+    text-align: right;
+}
+.aligncenter {
+    text-align: center;
+}
+
+.wrapper {
+    width: 100%;
+    overflow: hidden;
+}
+.container {
+    width: 100%;
+}
+
+.statuses {
+    float: left;
+}
+.actions {
+    float: left;
+    margin-left: 20px;
+}
+
+span.too-late {
+    color: red;
+    font-weight: bold;
+}
+
+.img-box1 {
+    width: 100%;
+    overflow: hidden;
+    padding-top: 3px;
+}
+.img-box1 img {
+    float: left;
+    margin: -3px 15px 0 0;
+}
+
+.p {
+    margin-bottom: 14px;
+}
+
+table.detail {
+    margin-bottom: 20px;
+}
+table.detail th {
+    text-align: right;
+}
+table.detail td {
+    padding: 2px 14px;
+}
+
+.line-hor {
+    border-bottom: 1px solid #000;
+    margin: 20px 0;
+    overflow: hidden;
+    font-size: 0;
+    line-height: 0;
+}
+
+/** flashes **/
+ul#flashes {
+    margin: 0;
+    margin-bottom: 15px;
+    padding: 0;
+    list-style: none;
+}
+ul#flashes li {
+    margin: 0;
+    padding: 0;
+    color: green;
+    font-weight: bold;
+}
+
+/** jquery ui **/
+.ui-widget {
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 0.9em;
+}
+.ui-widget button {
+    width: 70px;
+}
+
+/** icons **/
+.material-icons {
+    color: #0E1B55;
+    font-size: 18px;
+    margin: 0 4px;
+}
+.material-icons.disabled {
+    color: darkgray;
+}
+.material-icons.error {
+    color: indianred;
+}
+.material-icons.multi {
+    margin: 0;
+}
+.material-icons.logo {
+    margin: 0;
+    font-size: 128px;
+}
+.material-icons.priority {
+    color: gold;
+}
+.material-icons.pending {
+    color: deepskyblue;
+}
+.material-icons.done {
+    color: darkseagreen;
+}
+.material-icons.voided {
+    color: coral;
+}
+.material-icons.new {
+    color: khaki;
+}

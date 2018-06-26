@@ -1,0 +1,4 @@
+Code completion result for source line:
+$this->myMixedFnc|($myArray);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     myMixedFnc($mixed)              [PRIVATE]  SmartCompletion

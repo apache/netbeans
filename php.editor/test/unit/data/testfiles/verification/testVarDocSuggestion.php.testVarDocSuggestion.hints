@@ -1,0 +1,4 @@
+$foo^Bar;
+-------
+HINT:Generate Type Comment For Variable /* @var $myvariable MyClass */
+FIX:Generate Type Comment For Variable

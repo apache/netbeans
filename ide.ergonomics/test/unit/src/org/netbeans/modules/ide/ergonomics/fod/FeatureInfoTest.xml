@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+    <folder name="Loaders">
+        <folder name="text">
+            <folder name="x-huh">
+                <folder name="Factories">
+                    <file name="Huh.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.ide.ergonomics.fod.FodDataObjectFactory.create"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="huh+xml">
+                <folder name="Factories">
+                    <file name="Huh.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.ide.ergonomics.fod.FodDataObjectFactory.create"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

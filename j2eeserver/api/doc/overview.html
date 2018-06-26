@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright (c) 2001, 2016 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+  -->
+</head>
+<body>
+J2EE Server Module provides support for development of J2EE modules and
+framework for J2EE server management and for J2EE deployment in IDE.
+
+There are two separate api/spi sets in j2eeserver. The devmodules
+api/spi is for j2ee development modules (web, j2ee app, etc). The
+plugins api/spi is for server plugins.
+<h2> devmodules
+</h2>
+The spi classes are to be subclassed by dev modules and to be provided
+as cookies on the development nodes. The api classes are to be used to
+add actions/properties/additional cookies to those nodes.
+<h2> plugins
+</h2>
+
+A jsr88 plugin needs to be wrapped in a module with an entry in the
+/J2EE/DeploymentPlugins folder in the default filesystem, so the server
+registry can pick it up. In addition to that plugin is also
+required to provide a J2EE Platform. In order to do it, plugin must implement the 
+{@link org.netbeans.modules.j2ee.deployment.plugins.spi.J2eePlatformImpl} 
+interface and register it via the
+{@link org.netbeans.modules.j2ee.deployment.plugins.spi.J2eePlatformFactory} 
+whose instance must be registered in the module 
+<a href="org/netbeans/modules/j2ee/deployment/plugins/api/doc-files/plugin-layer-file.html">layer file</a>.
+
+Plugin may also provide some additional functionality outside the
+deployment spec through use of the
+api/spi classes.&nbsp; These additional functionality neeed to be
+declared through the plugin module 
+<a href="org/netbeans/modules/j2ee/deployment/plugins/api/doc-files/plugin-layer-file.html">layer file</a>.
+<h2> test plugin
+</h2>
+The j2eeserver/test directory contains the source to a sample plugin
+containing both jsr88 classes and the wrapper to install this into the
+registry.
+<h2> user view and design
+</h2>
+<p>Documents are available <a href="http://j2eeserver.netbeans.org">online</a>.
+</p>
+
+<p>Additional Information:
+<ul>
+<li><a href="architecture-summary.html">Architecture Summary</a></li>
+<li><a href="apichanges.html">API Changes</a></li>
+</ul>
+</p>
+</body>
+</html>

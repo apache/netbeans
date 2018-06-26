@@ -1,0 +1,2 @@
+class |>MARK_OCCURRENCES:SomeClass<| {
+var_dump(new class(10) extends |>MARK_OCCURRENCES:Some^Class<| implements SomeInterface {

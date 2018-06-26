@@ -1,0 +1,142 @@
+<!--
+
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+ The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+ Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+-->
+
+<!--
+The netbeans-deployment element is the root element for the
+netbeans-specific additions to the j2ee deployment framework.
+There is one netbeans-deployment element for each vendor plugin which
+further configures that plugin to work with netbeans.
+-->
+
+<!ELEMENT netbeans-deployment (
+    icon, disconnected-string, container-limitation?,
+    config-bean*,
+    web-context-root? )>
+
+<!--
+The icon element contains a path to the icon to be used to present the server
+in the server registry.
+-->
+
+<!ELEMENT icon (#PCDATA)>
+
+<!--
+The disconnected-string element contains the String parameter to DeploymentFactory.getDisconnectedDeploymentManager()
+-->
+
+<!ELEMENT disconnected-string (#PCDATA)>
+
+<!--
+The container-limitation element modifies a plugin to say that not all j2ee deployments are valid.
+For example, a web-only server would include 
+<container-limitation> <war-deploy/> </container-limitation>
+to indicate that only war deployments are accepted.
+If a container-limitation element is not present, all j2ee deployments are assumed valid.
+If a container-limitation element is present, then only j2ee deployment types explicitly
+mentioned are allowed.  
+-->
+
+<!ELEMENT container-limitation (ear-deploy?, war-deploy?, ejbjar-deploy?)>
+
+<!--
+The ear-deploy element specifies that ear deployment is valid on this server
+-->
+
+<!ELEMENT ear-deploy EMPTY>
+
+<!--
+The war-deploy element specifies that war deployment is valid on this server
+-->
+
+<!ELEMENT war-deploy EMPTY>
+
+<!--
+The ejbjar-deploy element specifies that ejb jar deployment is valid on this server
+-->
+
+<!ELEMENT ejbjar-deploy EMPTY>
+
+<!--
+The config-bean element contains additional information about
+individual ConfigBeans and properties of ConfigBeans.
+-->
+
+<!ELEMENT config-bean (class-name, helpid, property-descrip*)>
+
+<!--
+The class-name element contains a fully qualified class name.
+-->
+
+<!ELEMENT class-name (#PCDATA)>
+
+<!--
+The helpid element contains a JavaHelp id.
+-->
+
+<!ELEMENT helpid (#PCDATA)>
+
+<!-- 
+The property-descrip element contains information about a property
+of a ConfigBean.
+-->
+
+<!ELEMENT property-descrip (property-name, helpid)>
+
+<!--
+The property-name element contains a property name.
+-->
+
+<!ELEMENT property-name (#PCDATA)>
+
+<!-- pointer to webcontext root -->
+<!ELEMENT web-context-root (xpath, prop-name) (#PCDATA)>
+
+<!-- web-context-root xpath -->
+<!ELEMENT xpath (#PCDATA)>
+
+<!-- web-context-root property name -->
+<!ELEMENT prop-name (#PCDATA)>

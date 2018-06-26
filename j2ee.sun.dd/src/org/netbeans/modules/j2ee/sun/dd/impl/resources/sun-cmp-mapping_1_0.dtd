@@ -1,0 +1,109 @@
+
+<!-- This file maps at least one set of beans to tables and columns in a 
+     specific db schema
+-->
+<!ELEMENT sun-cmp-mappings ( sun-cmp-mapping+ ) >
+
+<!-- At least one bean is mapped to database columns in the named schema -->
+<!ELEMENT sun-cmp-mapping ( schema, entity-mapping+) >
+
+<!-- A cmp bean has a name, a primary table, one or more fields, zero or 
+     more relationships, and zero or more secondary tables, plus flags for 
+     consistency checking.
+ 
+     If the consistency checking flag element is not present, then none 
+     is assumed 
+--> 
+<!ELEMENT entity-mapping (ejb-name, table-name, cmp-field-mapping+, 
+        cmr-field-mapping*, secondary-table*, consistency?)>
+
+<!-- !PW I adjusted the definition of <consistency> slightly so that 
+     schema2beans does not view the second references to check-all-at-commit
+     and lock-when-modified as distinct properties (they aren't). 
+
+     Original definition:
+          
+     ELEMENT consistency (none | check-modified-at-commit | lock-when-loaded |
+        check-all-at-commit | lock-when-modified | 
+        (lock-when-modified, check-all-at-commit) ) 
+  -->
+<!ELEMENT consistency (none | check-modified-at-commit | lock-when-loaded |
+        (lock-when-modified?, check-all-at-commit?) ) >
+
+<!ELEMENT read-only EMPTY>
+
+<!-- A cmp-field-mapping has a field, one or more columns that it maps to.  
+     The column can be from a bean's primary table or any defined secondary 
+     table.  If a field is mapped to multiple columns, the column listed first
+     is used as the SOURCE for getting the value from the database.  The 
+     columns are updated in their order.  A field may also be marked as 
+     read-only.  It may also participate in a hierarchial or independent 
+     fetch group. If the fetched-with element is not present, the field 
+     is assumed to be a member of the default hierarchial fetch group.
+-->
+<!ELEMENT cmp-field-mapping (field-name, column-name+, read-only?, 
+        fetched-with?) >
+            
+<!-- The java identifier of a field. Must match the value of the field-name 
+     sub-element of the cmp-field that is being mapped. 
+-->
+<!ELEMENT field-name (#PCDATA) >
+
+<!-- The java identifier of a field.  Must match the value of the 
+     cmr-field-name sub-element of the cmr-field tat is being mapped. 
+-->
+<!ELEMENT cmr-field-name (#PCDATA) >
+
+<!-- The ejb-name from the standard EJB-jar DTD--> 
+<!ELEMENT ejb-name (#PCDATA) >
+
+<!-- The COLUMN name of a column from the primary table, or the table 
+     qualified name (TABLE.COLUMN) of a column from a secondary or related 
+     table
+--> 
+<!ELEMENT column-name (#PCDATA) >
+
+<!-- Holds the fetch group configuration for fields and relationships -->
+<!ELEMENT fetched-with (level | named-group | none) >
+
+<!-- The name of an independent fetch group.  All the fields and relationships 
+  that are part of a named-group are fetched at the same time-->
+<!ELEMENT named-group (#PCDATA) >
+
+<!-- A hierarchial fetch group.  The value of this element must be an integer.
+     Fields and relationships that belong to a hierachial fetch group of equal
+     (or lesser) value are fetched at the same time. The value of level must
+     be greater than zero.
+-->
+<!ELEMENT level (#PCDATA) >
+
+<!-- The name of a database table -->
+<!ELEMENT table-name (#PCDATA) >
+
+<!-- a bean's secondary tables -->
+<!ELEMENT secondary-table (table-name, column-pair+) >
+
+<!-- the pair of columns -->
+<!ELEMENT column-pair (column-name, column-name) >
+
+<!-- cmr-field mapping.  A cmr field has a name and one or more column 
+     pairs that define the relationship. The relationship can also 
+     participate in a fetch group.
+     
+     If the fetched-with element is not present, the value,
+          <fetched-with><none/></fetched-with>
+     is assumed. 
+-->
+<!ELEMENT cmr-field-mapping (cmr-field-name, column-pair+, fetched-with? ) >
+
+<!-- The path name to the schema file--> 
+<!ELEMENT schema (#PCDATA) >
+
+<!-- flag elements for consistency levels -->
+
+<!-- note: none is also a sub-element of the fetched-with tag -->
+<!ELEMENT none EMPTY >
+<!ELEMENT check-modified-at-commit EMPTY >
+<!ELEMENT check-all-at-commit EMPTY>
+<!ELEMENT lock-when-modified EMPTY>
+<!ELEMENT lock-when-loaded EMPTY >

@@ -1,0 +1,294 @@
+<!--
+A Server element represents the entire Catalina servlet container. 
+Therefore, it must be the single outermost element in the conf/server.xml configuration file.
+Its attributes represent the characteristics of the servlet container as a whole.
+-->
+<!ELEMENT Server (Service+, GlobalNamingResources*) >
+<!ATTLIST Server port CDATA #IMPLIED>
+<!ATTLIST Server shutdown CDATA #IMPLIED>
+<!ATTLIST Server className CDATA #IMPLIED>
+<!ATTLIST Server debug CDATA #IMPLIED>
+
+<!--
+A Service element represents the combination of one or more Connector components
+that share a single Engine component for processing incoming requests.
+ One or more Service elements may be nested inside a Server element.
+-->
+
+<!ELEMENT Service (Connector+, Engine) >
+<!ATTLIST Service name CDATA #REQUIRED>
+<!ATTLIST Service className CDATA #IMPLIED>
+
+<!--
+The GlobalNamingResources element defines the global JNDI resources for the Server
+-->
+
+<!ELEMENT GlobalNamingResources (Resource*, ResourceParams*, Environment*) >
+
+<!--
+The HTTP/1.1 Connector element represents a Connector component that supports the HTTP/1.1 protocol.
+It enables Catalina to function as a stand-alone web server,
+in addition to its ability to execute servlets and JSP pages.
+A particular instance of this component listens for connections on a specific TCP port number on the server.
+One or more such Connectors can be configured as part of a single Service, 
+each forwarding to the associated Engine to perform request processing and create the response.
+-->
+<!ELEMENT Connector EMPTY >
+<!ATTLIST Connector className CDATA #REQUIRED>
+<!ATTLIST Connector port CDATA #REQUIRED>
+<!ATTLIST Connector minProcessors CDATA #IMPLIED>
+<!ATTLIST Connector maxProcessors CDATA #IMPLIED>
+<!ATTLIST Connector enableLookups CDATA #IMPLIED>
+<!ATTLIST Connector redirectPort CDATA #IMPLIED>
+<!ATTLIST Connector acceptCount CDATA #IMPLIED>
+<!ATTLIST Connector scheme CDATA #IMPLIED>
+<!ATTLIST Connector secure CDATA #IMPLIED>
+<!ATTLIST Connector proxyPort CDATA #IMPLIED>
+<!ATTLIST Connector proxyName CDATA #IMPLIED>
+<!ATTLIST Connector allowChunking CDATA #IMPLIED>
+<!ATTLIST Connector address CDATA #IMPLIED>
+<!ATTLIST Connector bufferSize CDATA #IMPLIED>
+<!ATTLIST Connector connectionTimeout CDATA #IMPLIED>
+<!ATTLIST Connector tcpNoDelay CDATA #IMPLIED>
+<!ATTLIST Connector algorithm CDATA #IMPLIED>
+<!ATTLIST Connector clientAuth CDATA #IMPLIED>
+<!ATTLIST Connector keystoreFile CDATA #IMPLIED>
+<!ATTLIST Connector keystorePass CDATA #IMPLIED>
+<!ATTLIST Connector keystoreType CDATA #IMPLIED>
+<!ATTLIST Connector protocol CDATA #IMPLIED>
+<!ATTLIST Connector debug CDATA #IMPLIED>
+<!ATTLIST Connector URIEncoding CDATA #IMPLIED>
+<!-- TomEE attributes -->
+<!ATTLIST Connector server CDATA #IMPLIED>
+<!ATTLIST Connector xpoweredBy CDATA #IMPLIED>
+
+<!--
+The Engine element represents the entire request processing machinery associated with a particular Catalina Service. It receives and processes all requests from one or more Connectors, and returns the completed response to the Connector for ultimate transmission back to the client.
+-->
+
+<!ELEMENT Engine (Valve*, Logger?, Realm*, Host*) >
+<!ATTLIST Engine name CDATA #REQUIRED>
+<!ATTLIST Engine defaultHost CDATA #REQUIRED>
+<!ATTLIST Engine className CDATA #IMPLIED>
+<!ATTLIST Engine debug CDATA #IMPLIED>
+
+<!--
+A Valve element represents a comonent that will be inserted into the request processing pipeline for the associated Catalina container (Engine, Host, or Context). Individual Valves have distinct processing capabilities, and are described individually below.
+-->
+
+<!ELEMENT Valve EMPTY >
+<!ATTLIST Valve className CDATA #REQUIRED>
+<!ATTLIST Valve directory CDATA #IMPLIED>
+<!ATTLIST Valve prefix CDATA #IMPLIED>
+<!ATTLIST Valve suffix CDATA #IMPLIED>
+<!ATTLIST Valve pattern CDATA #IMPLIED>
+<!ATTLIST Valve resolveHosts CDATA #IMPLIED>
+<!ATTLIST Valve allow CDATA #IMPLIED>
+<!ATTLIST Valve deny CDATA #IMPLIED>
+<!ATTLIST Valve debug CDATA #IMPLIED>
+
+<!--
+A Logger element represents a destination for logging, debugging, and error messages (including stack tracebacks) for a Catalina container (Engine, Host, or Context). In addition, Loggers associated with an Engine or a Host are automatically inherited by lower-level containers, unless explicitly overridden.
+-->
+
+<!ELEMENT Logger EMPTY >
+<!ATTLIST Logger className CDATA #REQUIRED>
+<!ATTLIST Logger verbosity CDATA #IMPLIED>
+<!ATTLIST Logger directory CDATA #IMPLIED>
+<!ATTLIST Logger prefix CDATA #IMPLIED>
+<!ATTLIST Logger suffix CDATA #IMPLIED>
+<!ATTLIST Logger timestamp CDATA #IMPLIED>
+
+<!--
+A Realm element represents a "database" of usernames, passwords, and roles (similar to Unix groups) assigned to those users. Different implementations of Realm allow Catalina to be integrated into environments where such authentication information is already being created and maintained, and then utilize that information to implement Container Managed Security as described in the Servlet Specification.
+-->
+
+<!ELEMENT Realm EMPTY >
+<!ATTLIST Realm className CDATA #REQUIRED>
+<!ATTLIST Realm pathname CDATA #IMPLIED>
+<!ATTLIST Realm connectionName CDATA #IMPLIED>
+<!ATTLIST Realm connectionPassword CDATA #IMPLIED>
+<!ATTLIST Realm connectionURL CDATA #IMPLIED>
+<!ATTLIST Realm driverName CDATA #IMPLIED>
+<!ATTLIST Realm userTable CDATA #IMPLIED>
+<!ATTLIST Realm userNameCol CDATA #IMPLIED>
+<!ATTLIST Realm userCredCol CDATA #IMPLIED>
+<!ATTLIST Realm userRoleTable CDATA #IMPLIED>
+<!ATTLIST Realm roleNameCol CDATA #IMPLIED>
+<!ATTLIST Realm digest CDATA #IMPLIED>
+<!ATTLIST Realm roleBase CDATA #IMPLIED>
+<!ATTLIST Realm roleName CDATA #IMPLIED>
+<!ATTLIST Realm roleSearch CDATA #IMPLIED>
+<!ATTLIST Realm roleSubtree CDATA #IMPLIED>
+<!ATTLIST Realm userPassword CDATA #IMPLIED>
+<!ATTLIST Realm userPattern CDATA #IMPLIED>
+<!ATTLIST Realm contextFactory CDATA #IMPLIED>
+<!ATTLIST Realm debug CDATA #IMPLIED>
+
+<!--
+The Host element represents a virtual host, which is an association of a network name for a server (such as "www.mycompany.com" with the particular server on which Catalina is running. In order to be effective, this name must be registered in the Domain Name Service (DNS) server that manages the Internet domain you belong to - contact your Network Administrator for more information.
+-->
+
+<!ELEMENT Host (Valve*, Logger?, Context*, DefaultContext?) >
+<!ATTLIST Host name CDATA #REQUIRED>
+<!ATTLIST Host appBase CDATA #REQUIRED>
+<!ATTLIST Host className CDATA #IMPLIED>
+<!ATTLIST Host unpackWARs CDATA #IMPLIED>
+<!ATTLIST Host debug CDATA #IMPLIED>
+<!ATTLIST Host autoDeploy CDATA #IMPLIED>
+
+<!--
+The DefaultContext element represents a subset of the configuration settings for a Context, and can be nested inside an Engine or Host element to represent default configuration properties for Contexts that are automatically created.
+-->
+
+<!ELEMENT DefaultContext (Parameter*, Environment*, Listener*, Resource*, ResourceParams*) >
+<!ATTLIST DefaultContext cookies CDATA #IMPLIED>
+<!ATTLIST DefaultContext crossContext CDATA #IMPLIED>
+<!ATTLIST DefaultContext reloadable CDATA #IMPLIED>
+<!ATTLIST DefaultContext useNaming CDATA #IMPLIED>
+<!ATTLIST DefaultContext wrapperClass CDATA #IMPLIED>
+
+<!--
+The DefaultContext element represents a subset of the configuration settings for a Context, and can be nested inside an Engine or Host element to represent default configuration properties for Contexts that are automatically created.
+-->
+<!ELEMENT Context (Loader?, Logger?, Valve*, Realm*, Manager?, Ejb*, Parameter*, Environment*, Listener*, InstanceListener?, Resource*, ResourceParams*) >
+<!ATTLIST Context path CDATA #REQUIRED>
+<!ATTLIST Context docBase CDATA #REQUIRED>
+<!ATTLIST Context className CDATA #IMPLIED>
+<!ATTLIST Context cookies CDATA #IMPLIED>
+<!ATTLIST Context crossContext CDATA #IMPLIED>
+<!ATTLIST Context reloadable CDATA #IMPLIED>
+<!ATTLIST Context useNaming CDATA #IMPLIED>
+<!ATTLIST Context wrapperClass CDATA #IMPLIED>
+<!ATTLIST Context override CDATA #IMPLIED>
+<!ATTLIST Context privileged CDATA #IMPLIED>
+<!ATTLIST Context workDir CDATA #IMPLIED>
+<!ATTLIST Context debug CDATA #IMPLIED>
+<!--
+The Loader element represents the web application class loader that will be used to load Java classes and resources for your web application. Such a class loader must follow the requirements of the Servlet Specification, and load classes from the following locations:
+-->
+
+<!ELEMENT Loader EMPTY >
+<!ATTLIST Loader className CDATA #IMPLIED>
+<!ATTLIST Loader delegate CDATA #IMPLIED>
+<!ATTLIST Loader reloadable CDATA #IMPLIED>
+<!ATTLIST Loader checkInterval CDATA #IMPLIED>
+<!ATTLIST Logger loaderClass CDATA #IMPLIED>
+<!ATTLIST Logger workDir CDATA #IMPLIED>
+<!ATTLIST Logger debug CDATA #IMPLIED>
+
+<!--
+The Manager element represents the session manager that will be used to create and maintain HTTP sessions as requested by the associated web application.
+-->
+
+<!ELEMENT Manager (Store*) >
+<!ATTLIST Manager className CDATA #IMPLIED>
+<!ATTLIST Manager distributable CDATA #IMPLIED>
+<!ATTLIST Manager maxInactiveInterval CDATA #IMPLIED>
+<!ATTLIST Manager maxActiveSessions CDATA #IMPLIED>
+<!ATTLIST Manager algorithm CDATA #IMPLIED>
+<!ATTLIST Manager checkInterval CDATA #IMPLIED>
+<!ATTLIST Manager entropy CDATA #IMPLIED>
+<!ATTLIST Manager pathname CDATA #IMPLIED>
+<!ATTLIST Manager randomClass CDATA #IMPLIED>
+<!ATTLIST Manager maxIdleBackup CDATA #IMPLIED>
+<!ATTLIST Manager minIdleSwap CDATA #IMPLIED>
+<!ATTLIST Manager maxIdleSwap CDATA #IMPLIED>
+<!ATTLIST Manager saveOnRestart CDATA #IMPLIED>
+<!ATTLIST Manager debug CDATA #IMPLIED>
+
+<!--
+If you are using the Persistent Manager Implementation as described above, you MUST nest a <Store> element inside, which defines the characteristics of the persistent data storage. 
+-->
+
+<!ELEMENT Store EMPTY >
+<!ATTLIST Store className CDATA #REQUIRED>
+<!ATTLIST Store checkInterval CDATA #IMPLIED>
+<!ATTLIST Store directory CDATA #IMPLIED>
+<!ATTLIST Store checkInterval CDATA #IMPLIED>
+<!ATTLIST Store connectionURL CDATA #IMPLIED>
+<!ATTLIST Store driverName CDATA #IMPLIED>
+<!ATTLIST Store sessionDataCol CDATA #IMPLIED>
+<!ATTLIST Store sessionIdCol CDATA #IMPLIED>
+<!ATTLIST Store sessionLastAccessedCol CDATA #IMPLIED>
+<!ATTLIST Store sessionMaxInactiveCol CDATA #IMPLIED>
+<!ATTLIST Store sessionTable CDATA #IMPLIED>
+<!ATTLIST Store sessionValidCol CDATA #IMPLIED>
+<!ATTLIST Store debug CDATA #IMPLIED>
+
+<!--
+This element is used to configure the resource manager (or object factory) used to return objects when the web application performs a JNDI lookup operation on the corresponding resource name. You MUST define resource parameters for every resource name that is specified by a <Resource> element inside a <Context> or <DefaultContext> element in $CATALINA_HOME/conf/server.xml, and/or for every name declared in a <resource-ref> or <resource-env-ref> element in the web application deployment descriptor, before that resource can be successfully accessed.
+-->
+
+<!ELEMENT ResourceParams (parameter*) >
+<!ATTLIST ResourceParams name CDATA #REQUIRED>
+
+<!--
+Resource parameters are defined by name, and the precise set of parameter names supported depend on the resource manager (or object factory) you are using - they must match the names of settable JavaBeans properties on the corresponding factory class. The JNDI implementation will configure an instance of the specified factory class specified by calling all the corresponding JavaBeans property setters, and then making the factory instance available via the JNDI lookup() call.
+-->
+
+<!ELEMENT parameter (name, value) >
+<!ELEMENT name (#PCDATA) >
+<!ELEMENT value (#PCDATA) >
+
+<!--
+You can configure named values that will be made visible to web applications as servlet context initialization parameters by nesting <Parameter> elements inside this element.
+-->
+
+<!ELEMENT Parameter EMPTY >
+<!ATTLIST Parameter name CDATA #REQUIRED>
+<!ATTLIST Parameter value CDATA #REQUIRED>
+<!ATTLIST Parameter description CDATA #IMPLIED>
+<!ATTLIST Parameter override CDATA #IMPLIED>
+
+<!--
+You can configure named values that will be made visible to web applications as environment entry resources, by nesting <Environment> entries inside this element. 
+-->
+
+<!ELEMENT Environment EMPTY >
+<!ATTLIST Environment name CDATA #REQUIRED>
+<!ATTLIST Environment type CDATA #REQUIRED>
+<!ATTLIST Environment value CDATA #REQUIRED>
+<!ATTLIST Environment description CDATA #IMPLIED>
+<!ATTLIST Environment override CDATA #IMPLIED>
+
+<!--
+If you have implemented a Java object that needs to know when this Context is started or stopped, you can declare it by nesting a Listener element inside this element. The class name you specify must implement the org.apache.catalina.LifecycleListener interface, and it will be notified about the occurrence of the coresponding lifecycle events. 
+-->
+
+<!ELEMENT Listener EMPTY >
+<!ATTLIST Listener className CDATA #REQUIRED>
+
+<!--
+Necessary for org.netbeans.modules.web.monitor.catalina.DispatchListener definition
+-->
+<!ELEMENT InstanceListener (#PCDATA) >
+
+<!--
+You can declare the characteristics of the resource to be returned for JNDI lookups of <resource-ref> and <resource-env-ref> elements in the web application deployment descriptor. You MUST also define Resource Parameters for the same resource name, to configure the object factory to be used (if not known to Tomcat already), and the properties used to configure that object factory.
+-->
+
+<!ELEMENT Resource EMPTY >
+<!ATTLIST Resource name CDATA #REQUIRED>
+<!ATTLIST Resource type CDATA #REQUIRED>
+<!ATTLIST Resource auth CDATA #REQUIRED>
+<!ATTLIST Resource driverClassName CDATA #IMPLIED>
+<!ATTLIST Resource url CDATA #IMPLIED>
+<!ATTLIST Resource username CDATA #IMPLIED>
+<!ATTLIST Resource password CDATA #IMPLIED>
+<!ATTLIST Resource maxActive CDATA #IMPLIED>
+<!ATTLIST Resource maxIdle CDATA #IMPLIED>
+<!ATTLIST Resource maxWait CDATA #IMPLIED>
+<!ATTLIST Resource description CDATA #IMPLIED>
+<!ATTLIST Resource scope CDATA #IMPLIED>
+
+<!--
+Ejb element.
+-->
+
+<!ELEMENT Ejb EMPTY >
+<!ATTLIST Ejb name CDATA #REQUIRED>
+<!ATTLIST Ejb type CDATA #REQUIRED>
+<!ATTLIST Ejb home CDATA #REQUIRED>
+<!ATTLIST Ejb remote CDATA #REQUIRED>
+<!ATTLIST Ejb description CDATA #IMPLIED>

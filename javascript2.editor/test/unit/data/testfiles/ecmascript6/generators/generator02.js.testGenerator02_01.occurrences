@@ -1,0 +1,4 @@
+var |>MARK_OCCURRENCES:Utils<| = {
+console.log(|>MARK_OCCURRENCES:Utils<|.values().next().done);
+console.log(|>MARK_OCCURRENCES:Ut^ils<|.values().next().value);
+console.log(|>MARK_OCCURRENCES:Utils<|.values().next().value);

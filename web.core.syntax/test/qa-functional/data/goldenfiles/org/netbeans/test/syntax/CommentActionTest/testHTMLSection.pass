@@ -1,0 +1,234 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<!--    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>-->
+    <body>
+        <div class="f-page-cell bg-sky" >
+            <h2>Upload of NetBeans Analytics Logs Complete</h2>
+
+            <p>
+                Thank you very much for sending data on your UI gestures to our server. This
+                data forms an important contribution that helps us in our ongoing efforts to
+                improve the NetBeans IDE and platform.
+            </p>
+
+            <p>
+                Please see the graph section on the right to view various comparisons
+                between tasks that you performed and those that were done by other users.
+            </p>
+            <ui:useStatistic name="ProjectTypes"/>
+            <p>
+                From an analysis of your previous log file, we are happy to offer you the
+                following tip of the day:
+            </p>
+
+            <!--
+                To change this template, choose Tools | Templates
+                and open the template in the editor.
+                -->
+            <div class="b-bottom-dashed b-top f-page-cell">
+                <img alt="" src="http://www.netbeans.org/images/v5/wp.png" class="float-left" style="margin-right:10px;"/>
+                <h1 class="font-light normal">Tip of the Day</h1>
+
+                <table>
+                    <thead>
+                        <th align="left">${tip.title}</th>
+                    </thead>
+                    <tr>
+                        <td>
+                            ${tip.description}
+                        </td>
+                    </tr>
+                    <tr align="left">
+                        <td>
+                        </td>
+                    </tr>
+                    <!--
+                    To change this template, choose Tools | Templates
+                    and open the template in the editor.
+                    -->
+                </table>
+            </div>
+
+            <div class="b-bottom-dashed b-top f-page-cell">
+                <img alt="Thank you" src="http://www.netbeans.org/images/v5/kpackage.png" class="float-left" style="margin-right:10px;"/>
+                <h1 class="font-light normal">Thank You!</h1>
+                <p>
+                    Once again thank you for helping us with this application. We hope that
+                    the process of providing UI gesture data was at least slightly interesting.
+                    Please do not hesitate to submit data on additional sessions! We are
+                    continuously working on ways to improve statistics.
+                </p>
+            </div>
+            <div class="f-page-cell bg-sky" >
+                <h2>Upload of NetBeans Error Report Complete</h2>
+                <table border="0" cellpadding="2">
+                    <tbody>
+                        <tr>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                If you were interested in you previous reports see
+                                <a href ="list.do?order=duplicates&username=${username}">this</a>
+                                page.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!--
+                To change this template, choose Tools | Templates
+                and open the template in the editor.
+                -->
+            <p>
+                Thanks again for your help.
+                <br><br>
+                The <a href="http://www.netbeans.org">NetBeans</a> development team!
+            </p>
+<table width="100%" border="0" cellpadding="5">
+  <tr>
+    <td height="0"><font color="#000099"><b>standard taglib &#149; implementation
+      of the JSP Standard Tag Library &#149; </b></font><font color="#003399"><a href="mailto:taglibs-user@jakarta.apache.org"><b>support</b></a>
+      &nbsp;&nbsp;<b><a href="mailto:taglibs-dev@jakarta.apache.org">development</a>&nbsp;&nbsp;
+      <a href="mailto:jsr-52-comments@jcp.org">comments to JSR-52</a></b></font></td>
+  </tr>
+  <tr>
+    <td bgcolor="#CCCCFF"><font size="-1">Examples &nbsp;&nbsp;&nbsp;&nbsp;<a href="index.html">Introduction</a>
+      &#149; <a href="elsupport/index.html">General Purpose</a>
+      &#149; <a href="conditionals/index.html">Conditionals</a>
+      &#149; <a href="iterators/index.html">Iterators</a> &#149;
+      <a href="import/index.jsp">Import</a> &#149; <a href="format/index.html">I18N
+      & Formatting</a> &#149; <a href="xml/index.html">XML</a>
+      &#149; <a href="sql/index.jsp">SQL</a> &#149; <a href="functions/index.html">Functions</a>
+      &#149; <a href="tlv/index.html">TLV</a> &#149; <a href="functions/index.html"></a><a href="misc/index.html">Misc.</a></font></td>
+  </tr>
+</table>
+<!-- #BeginEditable "body" -->
+<h2>Welcome to the standard-examples web application!</h2>
+<p>This web application includes a variety of sample JSP pages that showcase the
+  JSTL tags specified within the <a href="http://www.jcp.org/jsr/detail/52.jsp">JSR-052
+  Expert Group</a>.
+<h3>Documentation</h3>
+<p>The <a
+href="http://www.jcp.org/aboutJava/communityprocess/final/jsr052/index2.html">JSTL
+  1.1 Specification</a> developed by the JSR052 expert group under the <a href="http://www.jcp.org">Java
+  Community Process</a> is a complete JSTL 1.1 reference.</p>
+<p>Documentation on the JSTL tags is available at <a href="http://jakarta.apache.org/taglibs/doc/standard-doc">http://jakarta.apache.org/taglibs/doc/standard-doc</a>.
+  It is also available as the standard-doc web application of the standard taglib
+  release.
+<h3>Mailing Lists</h3>
+<p>There are three ways to obtain information from or send your comments:
+<ol>
+  <li><b>Support</b>: For support/usage questions, please use the <a href="mailto:taglibs-user@jakarta.apache.org">user
+    mailing list</a> of jakarta-taglibs. </li>
+  <li><b>Development</b>: For bugs, development related questions, please use
+    the <a href="mailto:taglibs-dev@jakarta.apache.org">developer mailing list</a>
+    of jakarta-taglibs</li>
+  <li><b>Comments to the JSR052 EG</b>: To provide the Expert Group with feedback
+    on JSTL, use either the <a href="mailto:taglibs-dev@jakarta.apache.org">developers
+    mailing list</a> at Jakarta, or you may contact the expert group privately
+    at <a href="mailto:jsr-52-comments@jcp.org">jsr-52-comments@jcp.org</a>. All
+    comments will be read, but we cannot guarantee a personal reply to all messages
+    received.</li>
+</ol>
+<h3>Examples</h3>
+<p>The JSTL examples have been divided in the following categories:</p>
+<ul>
+  <li><a href="elsupport/index.html">General Purpose Tags</a></li>
+  <li><a href="conditionals/index.html">Conditional Tags</a></li>
+  <li><a href="iterators/index.html">Iterator Tags</a></li>
+  <li><a href="import/index.jsp">Import Tags</a> </li>
+  <li><a href="format/index.html">I18N &amp; Formatting Tags</a></li>
+  <li><a href="xml/index.html">XML Tags</a></li>
+  <li><a href="sql/index.jsp">SQL Tags</a></li>
+  <li><a href="functions/index.html">Functions</a></li>
+  <li><a href="tlv/index.html">Tag Library Validators</a></li>
+  <li><a href="misc/index.html">Miscellaneous</a></li>
+</ul>
+<p>The navigation bar at the top of each index page provides quick navigation
+  to each set of example pages.</p>
+<p>When navigating the examples, the following icons will allow you to look at
+  the source code as well as execute the example JSP page.</p>
+<table border="1" align="center" cellpadding="10">
+  <tr>
+    <td width="30"><img src="images/code.gif"></td>
+    <td>Look at the source code of the example JSP page</td>
+  </tr>
+  <tr>
+    <td width="30"><img src="images/execute.gif"></td>
+    <td>Execute the example JSP page</td>
+  </tr>
+</table>
+<h3>Infrastructure</h3>
+<p>The source code for the JSTL examples includes class <code>startup.Init</code>
+  to initilialize the objects used in the examples. This allows us to mimic the
+  environment that would normally be used within an MVC architecture: the Controller
+  invokes the business logic, saves the objects required by the web application
+  into JSP scoped attributes (usually request), and then invokes the proper JSP
+  page. For the sake of this &quot;examples&quot; webapp, all objects are saved
+  in the application scope.</p>
+<p>The application attributes are:</p>
+<ul>
+  <li><code>customers</code><br>
+    A collection of Customer objects</li>
+  <li><code>intArray</code><br>
+    An array of int's</li>
+  <li><code>stringArray</code><br>
+    An array of Strings</li>
+  <li><code>numberMap</code><br>
+    A Map instance associating Integer objects with their Spanish names</li>
+  <li><code>enumeration</code><br>
+    An enumeration on numberMap from above.<br>
+  </li>
+</ul>
+<p>The classes of interest that hold the information manipulated by the JSP pages
+  are:</p>
+<ul>
+  <li>Customer
+    <ul>
+      <li>int key</li>
+      <li>String lastName</li>
+      <li>String firstName</li>
+      <li>Date birthDate</li>
+      <li>Address address<br>
+        <br>
+      </li>
+    </ul>
+  </li>
+  <li>Address
+    <ul>
+      <li>String line1</li>
+      <li>String line2</li>
+      <li>String city</li>
+      <li>String state</li>
+      <li>String country</li>
+    </ul>
+  </li>
+</ul>
+<!-- #EndEditable -->
+<hr noshade color="#000099">
+<table width="100%" border="0" cellpadding="5">
+  <tr>
+    <td height="24"><font color="#000099"><b>standard taglib &#149; implementation
+      of the JSP Standard Tag Library &#149; </b></font><font color="#003399"><a href="mailto:taglibs-user@jakarta.apache.org"><b>support</b></a>
+      &nbsp;&nbsp;<b><a href="mailto:taglibs-dev@jakarta.apache.org">development</a>&nbsp;&nbsp;
+      <a href="mailto:jsr-52-comments@jcp.org">comments to JSR-52</a></b></font></td>
+  </tr>
+</table>
+
+
+        </div>
+    </body>
+</html>
+

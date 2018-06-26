@@ -1,0 +1,115 @@
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 2012 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+
+Portions Copyrighted 2012 Sun Microsystems, Inc.
+-->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>_pluginName</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="../css/options.css">
+        <script type="text/javascript" src="../i18n/i18n.js"></script>
+        <script type="text/javascript" src="../i18n/options.js"></script>
+        <script type="text/javascript" src="../js/options.js"></script>
+    </head>
+    <body>
+        <div id="main">
+
+            <div id="presetCustomizer" class="panel">
+                <div class="title i18n">_CustomizeWindowSettings</div>
+                <div id="perex" class="perex">
+                    <span class="i18n">_ConfigureSizesInfo</span> <a href="#" id="moreHelpButton" class="i18n">_More_hellip</a>
+                    <div id="help">
+                        <ul>
+                            <li class="i18n">_Help_Step1</li>
+                            <li class="i18n">_Help_Step2</li>
+                            <li class="i18n">_Help_Step3</li>
+                            <li class="i18n">_Help_Step4</li>
+                        </ul>
+                        <p class="i18n">_Help_FinalStep</p>
+                    </div>
+                </div>
+                <div id="sizes" class="i18n">_DisplaySizes</div>
+                <div id="presetCustomizerTableWrapper">
+                    <div id="presetCustomizerTableColumn">
+                        <table id="presetCustomizerTable">
+                            <thead>
+                                <tr>
+                                    <th>_Type</th>
+                                    <th>_Name</th>
+                                    <th class="number">_Width</th>
+                                    <th class="number">_Height</th>
+                                    <th id="toolbarHeader" class="toolbar">_Toolbar</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="presetButtonsColumn">
+                    <div id="presetButtons">
+                        <button id="addPreset" title="_AddSize">_New</button>
+                        <button id="removePreset" disabled="disabled" title="_RemoveSize">_Remove</button>
+                        <button id="moveUpPreset" disabled="disabled" title="_MoveSizeUp">_MoveUp</button>
+                        <button id="moveDownPreset" disabled="disabled" title="_MoveSizeDown">_MoveDown</button>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div class="mainButtons">
+                    <button id="presetCustomizerOk" title="_SaveAndClose">_OK</button>
+                    <button id="presetCustomizerCancel" title="_CloseWithoutSaving">_Cancel</button>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <div id="resetWarningsPanel" class="panel">
+                <div class="title i18n">_Warnings</div>
+                <div class="perex i18n">_ResetAllWarningDialogs</div>
+                <div class="mainButtons">
+                    <button id="resetWarnings" title="_ResetAllWarningDialogs">_Reset</button>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+        </div>
+
+    </body>
+</html>

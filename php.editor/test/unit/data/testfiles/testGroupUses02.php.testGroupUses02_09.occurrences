@@ -1,0 +1,2 @@
+    function test AS |>MARK_OCCURRENCES:mytest<|
+|>MARK_OCCURRENCES:my^test<|(); // test

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2013 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<xs:schema
+  xmlns='http://www.netbeans.org/ns/jax-ws/1'
+  xmlns:xs='http://www.w3.org/2001/XMLSchema'
+  targetNamespace='http://www.netbeans.org/ns/jax-ws/1'
+  xmlns:t='http://www.netbeans.org/ns/jax-ws/1' elementFormDefault='qualified'>
+
+ <xs:element name='jax-ws'>
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element ref='t:services'/>
+    <xs:element ref='t:clients'/>
+    <xs:element name='jsr109' type='xs:string' minOccurs='0' maxOccurs='1'/>
+   </xs:sequence>
+  </xs:complexType>
+ </xs:element>
+
+ <xs:element name='services'>
+  <xs:complexType>
+   <xs:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xs:element ref='t:service'/>
+   </xs:sequence>
+  </xs:complexType>
+ </xs:element>
+
+ <xs:element name='service'>
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element name='implementation-class' type='xs:string'/>
+    <xs:element name='wsdl-url' type='xs:string' minOccurs='0' maxOccurs='1'/>
+    <xs:element name='local-wsdl-file' type='xs:string' minOccurs='0' maxOccurs='1'/>
+    <xs:element name='service-name' type='xs:string' minOccurs='0' maxOccurs='1'/>
+    <xs:element name='port-name' type='xs:string' minOccurs='0' maxOccurs='1'/>
+    <xs:element ref='t:package-name' minOccurs='0' maxOccurs='1'/>
+    <xs:element name='catalog-file' type='xs:string' minOccurs='0' maxOccurs='1'/>
+    <xs:sequence minOccurs='0' maxOccurs='unbounded'>
+     <xs:element ref='t:binding'/>
+    </xs:sequence>
+    <xs:element name='handler-binding-file' type='xs:string' minOccurs='0' maxOccurs='1'/>
+    <xs:element name='use-provider' type='xs:string' minOccurs='0' maxOccurs='1'/>
+    <xs:element ref='t:wsimport-options' minOccurs='0' maxOccurs='1'/>
+    <xs:element name='jvmarg' type='xs:string' minOccurs='0' maxOccurs='unbounded'/>
+   </xs:sequence>
+   <xs:attribute name='name' type='xs:string' use='required'/>
+  </xs:complexType>
+ </xs:element>
+
+ <xs:element name='package-name'>
+  <xs:complexType mixed='true'>
+   <xs:attribute name='forceReplace' use='optional'>
+    <xs:simpleType>
+     <xs:restriction base='xs:string'/>
+    </xs:simpleType>
+   </xs:attribute>
+  </xs:complexType>
+ </xs:element>
+
+ <xs:element name='binding'>
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element name='file-name' type='xs:string'/>
+    <xs:element name='original-file-url' type='xs:string'/>
+   </xs:sequence>
+  </xs:complexType>
+ </xs:element>
+
+ <xs:element name='wsimport-options'>
+  <xs:complexType>
+   <xs:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xs:element ref='t:wsimport-option'/>
+   </xs:sequence>
+  </xs:complexType>
+ </xs:element>
+
+ <xs:element name='wsimport-option'>
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element name='wsimport-option-name' type='xs:string'/>
+    <xs:element name='wsimport-option-value' type='xs:string'/>
+    <xs:element name='jaxboption' type='xs:string' minOccurs='0' maxOccurs='1'/>
+   </xs:sequence>
+  </xs:complexType>
+ </xs:element>
+
+ <xs:element name='clients'>
+  <xs:complexType>
+   <xs:sequence minOccurs='0' maxOccurs='unbounded'>
+    <xs:element ref='t:client'/>
+   </xs:sequence>
+  </xs:complexType>
+ </xs:element>
+
+ <xs:element name='client'>
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element name='wsdl-url' type='xs:string'/>
+    <xs:element name='local-wsdl-file' type='xs:string'/>
+    <xs:element ref='t:package-name' minOccurs='0' maxOccurs='1'/>
+    <xs:element name='catalog-file' type='xs:string' minOccurs='0' maxOccurs='1'/>
+    <xs:sequence minOccurs='0' maxOccurs='unbounded'>
+     <xs:element ref='t:binding'/>
+    </xs:sequence>
+    <xs:element name='handler-binding-file' type='xs:string' minOccurs='0' maxOccurs='1'/>
+    <xs:element name='use-dispatch' type='xs:string' minOccurs='0' maxOccurs='1'/>
+    <xs:element ref='t:wsimport-options' minOccurs='0' maxOccurs='1'/>
+    <xs:element name='jvmarg' type='xs:string' minOccurs='0' maxOccurs='unbounded'/>
+   </xs:sequence>
+   <xs:attribute name='name' type='xs:string' use='required'/>
+  </xs:complexType>
+ </xs:element>
+</xs:schema>

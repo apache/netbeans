@@ -1,0 +1,107 @@
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 2012 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+
+Portions Copyrighted 2012 Sun Microsystems, Inc.
+-->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="../css/popup.css">
+        <script type="text/javascript" src="../i18n/i18n.js"></script>
+        <script type="text/javascript" src="../i18n/popup.js"></script>
+        <script type="text/javascript" src="../js/popup.js"></script>
+    </head>
+    <body>
+        <div id="presetMenu">
+            <a href="#" id="debugInNetBeansMenu" title="_DebugInNetBeans" tabindex="-1">
+                <div class="form-item">
+                    <input type="checkbox" class="hidden" tabindex="-1">
+                </div>
+                <div class="icon">
+                    <img src="../img/netbeans16.png" id="debugInNetBeansIcon" alt="_DebugInNetBeans" title="_DebugInNetBeans">
+                </div>
+                <div class="label">
+                    <div id="debugInNetBeans" class="main i18n">_DebugInNetBeans</div>
+                </div>
+            </a>
+            <hr id="debugInNetBeansSeparator">
+            <a href="#" id="selectionModeMenu" title="_SwitchSelectionMode" tabindex="-1">
+                <div class="form-item">
+                    <input type="checkbox" id="selectionModeCheckBox" tabindex="1">
+                </div>
+                <div class="icon">
+                    <img src="../img/presets/selectionMode.png" id="selectModeIcon" alt="_SelectMode" title="_SelectMode">
+                </div>
+                <div  class="label">
+                    <div id="selectMode" class="main i18n">_SelectMode</div>
+                </div>
+            </a>
+            <hr id="selectionModeSeparator">
+            <div id="menuPresets" class="clear"></div>
+            <a href="#" id="autoPresetMenu" title="_ActualWindowSize" tabindex="-1">
+                <div class="form-item">
+                    <input type="radio" id="autoPresetRadio" tabindex="-1">
+                </div>
+                <div class="icon">
+                    <img src="../img/presets/sizeToFit.png" id="sizeToFitIcon" alt="_SizeToFit" title="_SizeToFit">
+                </div>
+                <div  class="label">
+                    <div id="sizeToFit" class="main i18n">_SizeToFit</div>
+                </div>
+            </a>
+            <hr>
+            <a href="#" id="customizePresetsMenu" title="_CustomizeWindowSettings_hellip" tabindex="-1">
+                <div class="form-item">
+                    <input type="checkbox" class="hidden" tabindex="-1">
+                </div>
+                <div class="icon">
+                    <img src="../img/presets/customize.png" id="customizeIcon" alt="_Customize_hellip" title="_Customize_hellip">
+                </div>
+                <div  class="label">
+                    <div id="customize" class="main i18n">_Customize_hellip</div>
+                </div>
+            </a>
+            <div class="clear"></div>
+        </div>
+
+    </body>
+</html>

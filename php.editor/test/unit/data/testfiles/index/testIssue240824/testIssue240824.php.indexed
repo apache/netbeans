@@ -1,0 +1,28 @@
+
+
+Document 0
+Searchable Keys:
+
+Not Searchable Keys:
+
+
+Document 1
+Searchable Keys:
+  clz : myconfig;MyConfig;13;;;;1;;0;<TESTURL>/testIssue240824.php;
+  method : functionname;functionName;109;$param::0::1:0:0;;1;0;<TESTURL>/testIssue240824.php;
+  top : myconfig
+
+Not Searchable Keys:
+
+
+Document 2
+Searchable Keys:
+  identifier_used :                 my string **NB_SEMI****NB_SEMI** with semicolon
+;
+  identifier_used : functionname;
+  identifier_used : myconfig;
+  identifier_used : param;
+  identifier_used : param;
+  identifier_used : ty**NB_SEMI**p**NB_SEMI**e;
+
+Not Searchable Keys:

@@ -1,0 +1,10 @@
+[[60,70]-Syntax error
+ unexpected:	variable '$canNotBe1'
+ after:	final
+ expected:	function, static, private, protected, public] 60-70:Syntax error
+ unexpected:	variable '$canNotBe1'
+ after:	final
+ expected:	function, static, private, protected, public
+[[73,74]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}] 73-74:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}

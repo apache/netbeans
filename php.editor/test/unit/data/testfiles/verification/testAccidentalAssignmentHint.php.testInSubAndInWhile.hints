@@ -1,0 +1,28 @@
+while ($row = mysql_fetch_array($result)) {
+       ---------------------------------
+HINT:Accidental assignment in a condition $row = mysql_fetch_array($result)
+FIX:Change assignment to comparison: $row === mysql_fetch_array($result)
+FIX:Change assignment to comparison: $row == mysql_fetch_array($result)
+} while ($foo = $bar);
+         -----------
+HINT:Accidental assignment in a condition $foo = $bar
+FIX:Change assignment to comparison: $foo === $bar
+FIX:Change assignment to comparison: $foo == $bar
+if ($baz = ($bat = 56)) {
+            ----------
+HINT:Accidental assignment in a condition $bat = 56
+FIX:Change assignment to comparison: $bat === 56
+FIX:Change assignment to comparison: $bat == 56
+HINT:Accidental assignment in a condition $baz = ($bat = 56)
+FIX:Change assignment to comparison: $baz === ($bat = 56)
+FIX:Change assignment to comparison: $baz == ($bat = 56)
+for ($i = 0; $i = 56; $i++) {
+             -------
+HINT:Accidental assignment in a condition $i = 56
+FIX:Change assignment to comparison: $i === 56
+FIX:Change assignment to comparison: $i == 56
+while ($sub == ($accident = $assignment)) {
+                -----------------------
+HINT:Accidental assignment in a condition $accident = $assignment
+FIX:Change assignment to comparison: $accident === $assignment
+FIX:Change assignment to comparison: $accident == $assignment

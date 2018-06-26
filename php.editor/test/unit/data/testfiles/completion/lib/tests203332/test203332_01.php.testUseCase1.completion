@@ -1,0 +1,5 @@
+Code completion result for source line:
+$q->open()->|open();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     close()                         [PUBLIC]   Book_Abstract
+METHOD     open()                          [PUBLIC]   Book_Abstract

@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2012 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!--
+    Generated file; DO NOT EDIT.
+-->
+<project name="__PROJECT_NAME__" basedir="..">
+    <property file="nbproject/configs/${config}.properties" />
+
+    <scriptdef name="checkVersion" language="javascript">
+        <attribute name="first" />
+        <attribute name="property" />
+     <![CDATA[
+       var first = attributes.get("first");
+       if (first >= "3.0.0") {
+         project.setProperty(attributes.get("property"), true);
+       }
+     ]]>
+    </scriptdef>
+    
+    <scriptdef name="forDevice" language="javascript">
+     <![CDATA[
+       var dev = project.getProperty("device");
+       if (dev == "device") {
+         project.setProperty("build.for.device", true);
+       }
+     ]]>
+    </scriptdef>
+
+    <target name="check-cordova-project">
+        <condition property="cordova.project">
+            <or>
+                <available file=".cordova"/>
+                <available file="hooks"/>
+            </or>
+        </condition>
+    </target>
+    
+    <target name="upgrade-to-cordova-project" depends="check-cordova-project,check-cordova-version" unless="cordova.project">
+        <echo level="info" message="${cordova.command} -d create ${java.io.tmpdir}/nb_temp_project com.coolappz.${project.name} ${project.name}" />
+        <delete dir="${java.io.tmpdir}/nb_temp_project"/>
+        <exec executable="${cordova.command}" resolveexecutable="true" searchpath="true" failonerror="true" >
+            <env key="${cordova.path.key}" path="${cordova.path.value}:${android.sdk.home}/tools:${android.sdk.home}/platform-tools:${jdk.home}/bin:${ant.home}/bin:${jdk.home}/bin"/>
+            <env key="JAVA_HOME" path="${jdk.home}"/>
+            <arg value="-d"/>
+            <arg value="create"/>   
+            <arg value="${java.io.tmpdir}/nb_temp_project"/>   
+            <arg value="com.coolappz.${project.name}"/>
+            <arg value="${project.name}" />
+        </exec>
+        <copy todir="." overwrite="true" failonerror="false">
+            <fileset dir="${java.io.tmpdir}/nb_temp_project"/>
+        </copy>
+        <delete dir="${java.io.tmpdir}/nb_temp_project"/>
+        <delete dir="www"/>
+        <copy todir="www" failonerror="false" quiet="true" >
+            <fileset dir="${site.root}"/>
+        </copy>
+    </target>
+
+    <target name="create-hello-world" depends="check-cordova-version">
+        <echo level="info" message="${cordova.command} -d create www_nb_temp com.coolappz.${project.name} ${project.name}" />
+        <exec executable="${cordova.command}" resolveexecutable="true" searchpath="true" failonerror="true">
+            <env key="${cordova.path.key}" path="${cordova.path.value}:${android.sdk.home}/tools:${android.sdk.home}/platform-tools:${jdk.home}/bin:${ant.home}/bin:${jdk.home}/bin"/>
+            <env key="JAVA_HOME" path="${jdk.home}"/>
+            <arg value="-d"/>
+            <arg value="create"/>   
+            <arg value="www_nb_temp"/>   
+            <arg value="com.coolappz.${project.name}"/>
+            <arg value="${project.name}" />
+        </exec>
+        <delete dir="www"/>
+        <mkdir dir="www"/>
+        <move file="www_nb_temp/www" tofile="www"/>
+        <delete dir="www_nb_temp"/>
+        <delete file="www/config.xml"/>
+    </target>
+    
+    <taskdef 
+        classname="org.netbeans.modules.cordova.updatetask.ReadConfigTask" 
+        classpath="${update.task.jar}"
+        name="readconfig"/>
+
+    <taskdef 
+        classname="org.netbeans.modules.cordova.updatetask.PluginTask" 
+        classpath="${update.task.jar}"
+        name="plugintask"/>
+    
+        
+    <target name="check-cordova-version">
+        <property environment="env"/>        
+        <checkVersion first="${cordova.version}" property="cordova.ver.3"/>
+        <fail message="Cordova version 3 or greater required." unless="cordova.ver.3"/>
+        <readconfig/>
+        <forDevice/>
+    </target>
+    
+    <target name="check-android-template">
+        <available file="platforms/android" property="android.generated.exists"/>
+    </target>
+
+    <target name="check-ios-template">
+        <available file="platforms/ios" property="ios.generated.exists"/>
+    </target>
+    
+    <target name="create-android" depends="check-android-template,check-cordova-version,upgrade-to-cordova-project" unless="android.generated.exists">
+        <echo level="info" message="${cordova.command} -d platform add android"/>
+        <exec executable="${cordova.command}" resolveexecutable="true" searchpath="true" failonerror="true">
+            <env key="${cordova.path.key}" path="${cordova.path.value}:${android.sdk.home}/tools:${android.sdk.home}/platform-tools:${jdk.home}/bin:${ant.home}/bin:${jdk.home}/bin"/>
+            <env key="JAVA_HOME" path="${jdk.home}"/>
+            <arg value="-d"/>
+            <arg value="platform"/>   
+            <arg value="add"/>   
+            <arg value="android"/>
+        </exec>
+    </target>
+    
+    <target name="create-ios" depends="check-ios-template,check-cordova-version,upgrade-to-cordova-project" unless="ios.generated.exists">
+        <echo level="info" message="${cordova.command} -d platform add ios"/>
+        <exec executable="${cordova.command}" resolveexecutable="true" searchpath="true" dir="." failonerror="true">
+            <env key="${cordova.path.key}" path="${cordova.path.value}:${android.sdk.home}/tools:${android.sdk.home}/platform-tools:${jdk.home}/bin:${ant.home}/bin:${jdk.home}/bin"/>
+            <env key="JAVA_HOME" path="${jdk.home}"/>
+            <arg value="-d"/>
+            <arg value="platform"/>   
+            <arg value="add"/>   
+            <arg value="ios"/>
+        </exec>
+    </target>
+
+    <target name="rebuild-ios" depends="clean-ios,build-ios"/>
+
+    <target name="build-ios" depends="create-ios,update-plugins,update-ios,build-ios-xcodebuild,build-ios-ipa"/>
+
+    <target name="build-ios-xcodebuild">
+        <property name="path" location="platforms/ios/build"/>
+        <exec executable="xcodebuild" dir="platforms/ios" failonerror="true">
+            <arg value="-project"/>
+            <arg value="${project.name}.xcodeproj"/>
+            <arg value="ARCHS=${ios.build.arch}"/>   
+            <arg value="-target"/>
+            <arg value="${project.name}"/>
+            <arg value="-configuration"/> 
+            <arg value="Release"/>
+            <arg value="-sdk"/>   
+            <arg value="${ios.build.sdk}" />
+            <arg value="build"/>
+            <arg value="CONFIGURATION_BUILD_DIR=${path}"/>
+        </exec>
+    </target>
+    
+    <target name="build-ios-ipa" if="build.for.device">
+        <exec executable="xcrun" dir="platforms/ios/build" failonerror="true">
+            <env key="CODESIGN_ALLOCATE" value="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/codesign_allocate" />
+            <arg value="-sdk"/>
+            <arg value="${ios.build.sdk}" />            
+            <arg value="PackageApplication"/>
+            <arg value="-v"/>
+            <arg value="${project.name}.app"/>
+            <arg value="-o"/>
+            <arg value="${basedir}/platforms/ios/build/${project.name}.ipa"/>
+            <arg value="--sign"/>
+            <arg value="${ios.certificate.name}"/>
+            <arg value="--embed"/>
+            <arg value="${ios.provisioning.profile}"/>
+        </exec>
+        <available file="${basedir}/platforms/ios/build/${project.name}.ipa" property="ipa.found"/>
+        <fail unless="ipa.found" message="PackageApplication failed."/>
+    </target>
+         
+
+    <target name="sim-ios" depends="build-ios,ios-run-device,ios-run-simulator">
+    </target>
+    
+    <target name="ios-run-device" if="build.for.device">
+        <echo>
+            Install "${basedir}/platforms/ios/build/${project.name}.ipa" through iTunes and run it. 
+        </echo> 
+        <exec executable="open" failonerror="true">
+            <arg value="${basedir}/platforms/ios/build/${project.name}.ipa"/>
+        </exec>
+    </target>
+
+    <target name="ios-run-simulator" unless="build.for.device">
+        <exec executable="killall" dir="platforms/ios/build">
+            <arg value="launchd_sim"/>
+        </exec>
+        <exec executable="${ios.sim.exec}" dir="platforms/ios/build">
+            <arg line="launch ${project.name}.app ${ios.device.args} --exit"/>
+        </exec> 
+    </target>
+    
+    <target name="update-plugins">
+        <plugintask/>
+    </target>    
+    
+    <target name="update-android">
+        <echo level="info" message="${cordova.command} prepare android"/>
+
+        <exec executable="${cordova.command}" resolveexecutable="true" searchpath="true" failonerror="true">
+            <env key="${cordova.path.key}" path="${cordova.path.value}:${android.sdk.home}/tools:${android.sdk.home}/platform-tools:${jdk.home}/bin:${ant.home}/bin:${jdk.home}/bin"/>
+            <env key="JAVA_HOME" path="${jdk.home}"/>
+            <arg value="prepare"/>
+            <arg value="android"/>
+        </exec>
+    </target>    
+        
+                           
+    <target name="update-ios">
+        <echo level="info" message="${cordova.command} prepare ios"/>
+        <exec executable="${cordova.command}" resolveexecutable="true" searchpath="true" failonerror="true">
+            <env key="${cordova.path.key}" path="${cordova.path.value}:${android.sdk.home}/tools:${android.sdk.home}/platform-tools:${jdk.home}/bin:${ant.home}/bin:${jdk.home}/bin"/>
+            <env key="JAVA_HOME" path="${jdk.home}"/>
+            <arg value="prepare"/>
+            <arg value="ios"/>
+        </exec>
+    </target>    
+    
+    <target name="rebuild-android" depends="clean-android,build-android"/>      
+    
+    <target name="build-android" depends="create-android,update-plugins">
+        <echo level="info" message="${cordova.command} -d build android"/>
+        <exec executable="${cordova.command}" resolveexecutable="true" searchpath="true" failonerror="true">
+            <env key="${cordova.path.key}" path="${cordova.path.value}:${android.sdk.home}/tools:${android.sdk.home}/platform-tools:${jdk.home}/bin:${ant.home}/bin:${jdk.home}/bin"/>
+            <env key="JAVA_HOME" path="${jdk.home}"/>
+            <arg value="-d"/>   
+            <arg value="build"/>   
+            <arg value="android"/>   
+        </exec>
+    </target>    
+    
+    <target name="sim-android" depends="create-android,update-plugins">
+        <echo level="info" message="${cordova.command} -d ${android.target.device.arg} android"/>
+        <exec executable="${cordova.command}" resolveexecutable="true" searchpath="true" failonerror="true">
+            <env key="${cordova.path.key}" path="${cordova.path.value}:${android.sdk.home}/tools:${android.sdk.home}/platform-tools:${jdk.home}/bin:${ant.home}/bin:${jdk.home}/bin"/>
+            <env key="JAVA_HOME" path="${jdk.home}"/>
+            <arg value="-d"/>
+            <arg value="${android.target.device.arg}"/>
+            <arg value="android"/>   
+        </exec>
+    </target>
+    
+    <target name="clean-android" depends="check-android-template" if="android.generated.exists">
+        <exec executable="./gradlew" dir="platforms/android">
+            <arg value="clean" />
+        </exec>
+    </target>
+    
+    <target name="clean-ios" depends="check-ios-template" if="ios.generated.exists">
+        <exec executable="platforms/ios/cordova/clean" />
+    </target>
+</project>

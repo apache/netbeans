@@ -1,0 +1,291 @@
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 2011 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+
+Portions Copyrighted 2011 Sun Microsystems, Inc.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculator (PHPUnit) - sample application for NetBeans IDE</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style type="text/css">
+        /** general **/
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Tahoma, Geneva, sans-serif;
+            font-size: 100%;
+            line-height: 1em;
+            color: #414141;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        h3 {
+            font-size: 1em;
+            color: #4c7cbd;
+            margin-bottom: 12px;
+        }
+        h3 a {
+            color: #4c7cbd;
+            text-decoration: none;
+        }
+        h3 a:hover {
+            text-decoration: underline;
+        }
+
+        p {
+            margin: 0;
+            padding: 0;
+        }
+        .p {
+            margin-bottom: 14px;
+        }
+
+        a {
+            color: #414141;
+            outline: none;
+        }
+        a:hover {
+            text-decoration: none;
+        }
+
+        /** lists **/
+        ul {
+            list-style: circle;
+        }
+        li {
+            margin-left: 30px;
+        }
+        ul.list {
+            list-style: none;
+        }
+        .list li {
+            width: 100%;
+            overflow: hidden;
+            vertical-align: bottom;
+            padding: 3px 0 20px 0;
+            margin-left: 0;
+        }
+        .list li img {
+            float: left;
+            margin: -3px 15px 0 0;
+            width: 16px;
+            height: 16px;
+        }
+        .list p.description {
+            margin-bottom: 5px;
+        }
+        .list span.label {
+            font-weight: bold;
+        }
+
+
+        /** other **/
+        .fleft {
+            float: left;
+        }
+        .fright {
+            float: right;
+        }
+        .clear {
+            clear: both;
+        }
+
+        .wrapper {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        #main {
+            width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        #content, #footer {
+            font-size: 0.75em;
+        }
+
+        .col-1, .col-2, .col-3 {
+            float: left;
+        }
+
+        #page #content .col-1 {
+            width: 250px;
+            margin-right: 20px;
+        }
+        #page #content .col-2 {
+            width: 650px;
+            min-height: 500px;
+        }
+
+        #footer {
+            height: 89px;
+        }
+
+        /** content **/
+        #content {
+            padding: 20px 40px 0 40px;
+        }
+        #content .indent {
+            padding: 14px 0 0 9px;
+        }
+        #content p {
+            line-height: 1.17em;
+        }
+
+        /** footer **/
+        #footer .indent {
+            padding: 37px 40px 20px 40px;
+        }
+        #footer img {
+            position: relative; top: -4px;
+        }
+        #footer a {
+            color: #4c7cbd;
+        }
+
+    </style>
+</head>
+<body id="page">
+    <div id="main">
+        <!-- content -->
+        <div id="content">
+            <div class="wrapper">
+                <div class="col-2">
+                    <div class="indent">
+
+                        <h1>Calculator (PHPUnit)</h1>
+                        <h2>NetBeans PHP Sample Application</h2>
+
+                        <h3>What is Calculator?</h3>
+                        <p class="p">Calculator is a simple calculator that supports basic arithmetical operations.
+                            This PHP application is created to highlight PHP features supported by NetBeans IDE.
+                        </p>
+                        <p class="p">
+                            <b>This sample is not intented to be used in a production environment without any changes.</b>
+                        </p>
+
+                        <h3>This sample demonstrates the following features:</h3>
+                        <ul class="p">
+                            <li>unit testing using PHPUnit</li>
+                            <li>creating unit tests using PHPUnit Skeleton Generator</li>
+                            <li>code coverage of project files</li>
+                        </ul>
+
+                        <h3>Requirements</h3>
+                        Follow these before you run the sample:
+                        <ul class="p">
+                            <li>Install NetBeans IDE with PHP support</li>
+                            <li>Install and configure PHP Runtime</li>
+                            <li>Install all dependencies using <a href="https://getcomposer.org/">Composer</a>
+                                (click on project and invoke <i>Composer</i> &gt; <i>Install (dev)</i>)<br>
+                                <i>Note:</i> PHPUnit can also be installed <a href="https://github.com/sebastianbergmann/phpunit/#installation" target="_blank">globally as PHAR file</a></li>
+                            <li>Install and configure <a href="https://github.com/sebastianbergmann/phpunit-skeleton-generator" target="_blank">PHPUnit Skeleton Generator</a></li>
+                            <li>For debugging and code coverage, <a href="http://www.xdebug.org/">Xdebug</a> PHP extension is required</li>
+
+                        </ul>
+
+                        <h3>What is included?</h3>
+                        <ul class="p">
+                            <li>NetBeans <i>PHP Application</i> Project</li>
+                        </ul>
+
+                        <h3>Before the start</h3>
+                        <ul class="p">
+                            <li>If you want to try the sample out, follow <a href="#getting_started">Getting Started</a> guidelines.</li>
+                            <li>In case if you want to try debugging features of the NetBeans IDE,
+                                follow the <a href="#debugging">Debugging</a> guidelines.</li>
+                        </ul>
+
+                        <h3 id="getting_started">Getting Started</h3>
+                        <ol class="p">
+                            <li>
+                                For the very first run, PHPUnit must be installed via Composer
+                                and PHPUnit Skeleton Generator globally (see Requirements).
+                            </li>
+                            <li>
+                                Now, create a unit test for Calculator class - open it in the editor
+                                and select <i>Tools &gt; Create Tests</i>.
+                            </li>
+                            <li>
+                                Simply test the project. Right-click the project node and select <i>Test</i>.
+                                IDE will inform you about the test results (window with test results can be opened manually).
+                            </li>
+                            <li>
+                                For code coverage, open its report (right-click the project node and select <i>Code Coverage &gt; Show Report...</i>)
+                                and <i>Run All Tests</i> if there are no data available yet. Open <i>Calculator.php</i> file from the list of the files
+                                to see which lines are and which lines are not tested.
+                            </li>
+                            <li>Play futher with the sample :)</li>
+                        </ol>
+
+                        <h3 id="debugging">Debugging</h3>
+                        <p class="p">
+                            These steps should enable you the debugging option at the sample project,
+                            <a href="http://wiki.netbeans.org/HowToConfigureXDebug" target="_blank">if you already have PHP debugger (Xdebug)
+                            installed and configured</a>.<br>
+                            For demonstrating the PHP debugger in NetBeans, try the following:
+                        </p>
+                        <ol class="p">
+                            <li>Open source class <i>Calculator.php</i> or generated <i>CalculatorTest.php</i> in the editor.</li>
+                            <li>Put breakpoint on some line with PHP code.</li>
+                            <li>To debug, right-click <i>CalculatorTest.php</i> and select <i>Debug</i>.</li>
+                        </ol>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- footer -->
+        <div id="footer">
+            <div class="indent">
+                <div class="fleft"><a href="https://blogs.oracle.com/netbeansphp/">NetBeans PHP team</a>, 2013 &copy; Copyright Oracle corp., All rights reserved</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

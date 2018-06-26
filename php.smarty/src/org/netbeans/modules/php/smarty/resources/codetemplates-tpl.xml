@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 2012 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+
+Portions Copyrighted 2012 Sun Microsystems, Inc.
+-->
+
+<!DOCTYPE codetemplates PUBLIC  "-//NetBeans//DTD Editor Code Templates settings 1.0//EN"
+                                "http://www.netbeans.org/dtds/EditorCodeTemplates-1_0.dtd">
+
+<codetemplates>
+
+    <!-- Variable Modifiers -->
+    <codetemplate abbreviation="ca"><code><![CDATA[${no-indent}capitalize]]></code></codetemplate>
+    <codetemplate abbreviation="ct"><code><![CDATA[${no-indent}cat]]></code></codetemplate>
+    <codetemplate abbreviation="cc"><code><![CDATA[${no-indent}count_characters]]></code></codetemplate>
+    <codetemplate abbreviation="cp"><code><![CDATA[${no-indent}count_paragraphs]]></code></codetemplate>
+    <codetemplate abbreviation="cs"><code><![CDATA[${no-indent}count_sentences]]></code></codetemplate>
+    <codetemplate abbreviation="cw"><code><![CDATA[${no-indent}count_words]]></code></codetemplate>
+    <codetemplate abbreviation="da"><code><![CDATA[${no-indent}date_format]]></code></codetemplate>
+    <codetemplate abbreviation="de"><code><![CDATA[${no-indent}default]]></code></codetemplate>
+    <codetemplate abbreviation="es"><code><![CDATA[${no-indent}escape]]></code></codetemplate>
+    <codetemplate abbreviation="fr"><code><![CDATA[${no-indent}from_charset]]></code></codetemplate>
+    <codetemplate abbreviation="in"><code><![CDATA[${no-indent}indent]]></code></codetemplate>
+    <codetemplate abbreviation="lo"><code><![CDATA[${no-indent}lower]]></code></codetemplate>
+    <codetemplate abbreviation="nl"><code><![CDATA[${no-indent}nl2br]]></code></codetemplate>
+    <codetemplate abbreviation="re"><code><![CDATA[${no-indent}replace:'${toBeReplaced}':'${replaceWith}']]></code></codetemplate>
+    <codetemplate abbreviation="rr"><code><![CDATA[${no-indent}regex_replace:"/${toBeReplaced}/":${replaceWith}]]></code></codetemplate>
+    <codetemplate abbreviation="sp"><code><![CDATA[${no-indent}spacify]]></code></codetemplate>
+    <codetemplate abbreviation="sf"><code><![CDATA[${no-indent}string_format:"${format}"]]></code></codetemplate>
+    <codetemplate abbreviation="st"><code><![CDATA[${no-indent}strip]]></code></codetemplate>
+    <codetemplate abbreviation="stt"><code><![CDATA[${no-indent}strip_tags]]></code></codetemplate>
+    <codetemplate abbreviation="to"><code><![CDATA[${no-indent}to_charset]]></code></codetemplate>
+    <codetemplate abbreviation="tr"><code><![CDATA[${no-indent}truncate]]></code></codetemplate>
+    <codetemplate abbreviation="un"><code><![CDATA[${no-indent}unescape]]></code></codetemplate>
+    <codetemplate abbreviation="up"><code><![CDATA[${no-indent}upper]]></code></codetemplate>
+    <codetemplate abbreviation="wo"><code><![CDATA[${no-indent}wordwrap]]></code></codetemplate>
+
+</codetemplates>

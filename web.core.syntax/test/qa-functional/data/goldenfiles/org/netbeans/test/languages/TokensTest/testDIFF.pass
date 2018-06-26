@@ -1,0 +1,164 @@
+PLAIN:? web/external/jsf-1.1
+
+INDEX:Index: j2ee/clientproject/src/org/netbeans/modules/j2ee/clientproject/api/AppClientProjectGenerator.java
+
+HEADER:===================================================================
+
+HEADER:RCS file: /cvs/j2ee/clientproject/src/org/netbeans/modules/j2ee/clientproject/api/AppClientProjectGenerator.java,v
+
+HEADER:retrieving revision 1.10
+
+HEADER:diff -w -u -r1.10 AppClientProjectGenerator.java
+
+HEADER:--- j2ee/clientproject/src/org/netbeans/modules/j2ee/clientproject/api/AppClientProjectGenerator.java	30 May 2007 08:30:28 -0000	1.10
+
+HEADER:+++ j2ee/clientproject/src/org/netbeans/modules/j2ee/clientproject/api/AppClientProjectGenerator.java	1 Jun 2007 15:00:25 -0000
+
+HEADER:@@ -338,7 +338,7 @@
+
+PLAIN:         //XXX the name of the dist.ear.jar file should be different, but now it cannot be since the name is used as a key in module provider mapping
+
+PLAIN:         ep.setProperty(AppClientProjectProperties.DIST_EAR_JAR, "${"+AppClientProjectProperties.DIST_DIR+"}/" + "${" + AppClientProjectProperties.JAR_NAME + "}"); // NOI18N
+
+PLAIN:         ep.setProperty(AppClientProjectProperties.JAR_NAME, PropertyUtils.getUsablePropertyName(name) + ".jar"); // NOI18N
+
+REMOVED:-        ep.setProperty(AppClientProjectProperties.BUILD_EAR_CLASSES_DIR, "${"+AppClientProjectProperties.BUILD_DIR+"}/ear-module"); // NOI18N
+
+ADDED:+        ep.setProperty(AppClientProjectProperties.BUILD_EAR_CLASSES_DIR, "${"+AppClientProjectProperties.BUILD_DIR+"}/jar"); // NOI18N
+
+PLAIN:         
+
+PLAIN:         ep.setProperty("dist.dir", "dist"); // NOI18N
+
+PLAIN:         ep.setComment("dist.dir", new String[] {"# " + NbBundle.getMessage(AppClientProjectGenerator.class, "COMMENT_dist.dir")}, false); // NOI18N
+
+INDEX:Index: j2ee/ejbjarproject/src/org/netbeans/modules/j2ee/ejbjarproject/api/EjbJarProjectGenerator.java
+
+HEADER:===================================================================
+
+HEADER:RCS file: /cvs/j2ee/ejbjarproject/src/org/netbeans/modules/j2ee/ejbjarproject/api/EjbJarProjectGenerator.java,v
+
+HEADER:retrieving revision 1.10
+
+HEADER:diff -w -u -r1.10 EjbJarProjectGenerator.java
+
+HEADER:--- j2ee/ejbjarproject/src/org/netbeans/modules/j2ee/ejbjarproject/api/EjbJarProjectGenerator.java	31 May 2007 12:48:26 -0000	1.10
+
+HEADER:+++ j2ee/ejbjarproject/src/org/netbeans/modules/j2ee/ejbjarproject/api/EjbJarProjectGenerator.java	1 Jun 2007 15:00:25 -0000
+
+HEADER:@@ -349,7 +349,7 @@
+
+PLAIN:         ep.setProperty(EjbJarProjectProperties.BUILD_TEST_RESULTS_DIR, "${build.dir}/test/results"); // NOI18N
+
+PLAIN:         ep.setProperty(EjbJarProjectProperties.BUILD_GENERATED_DIR, "${"+EjbJarProjectProperties.BUILD_DIR+"}/generated");
+
+PLAIN:         ep.setProperty(EjbJarProjectProperties.BUILD_CLASSES_DIR, "${"+EjbJarProjectProperties.BUILD_DIR+"}/jar");
+
+REMOVED:-        ep.setProperty(EjbJarProjectProperties.BUILD_EAR_CLASSES_DIR, "${"+EjbJarProjectProperties.BUILD_DIR+"}/ear-module");
+
+ADDED:+        ep.setProperty(EjbJarProjectProperties.BUILD_EAR_CLASSES_DIR, "${"+EjbJarProjectProperties.BUILD_DIR+"}/jar");
+
+PLAIN:         ep.setProperty(EjbJarProjectProperties.BUILD_CLASSES_EXCLUDES, "**/*.java,**/*.form,**/.nbattrs");
+
+PLAIN:         ep.setProperty(EjbJarProjectProperties.DIST_JAVADOC_DIR, "${"+EjbJarProjectProperties.DIST_DIR+"}/javadoc");
+
+PLAIN:         ep.setProperty(EjbJarProjectProperties.JAVA_PLATFORM, "default_platform");
+
+INDEX:Index: j2eeserver/src/org/netbeans/modules/j2ee/deployment/config/ConfigSupportImpl.java
+
+HEADER:===================================================================
+
+HEADER:RCS file: /cvs/j2eeserver/src/org/netbeans/modules/j2ee/deployment/config/ConfigSupportImpl.java,v
+
+HEADER:retrieving revision 1.50
+
+HEADER:diff -w -u -r1.50 ConfigSupportImpl.java
+
+HEADER:--- j2eeserver/src/org/netbeans/modules/j2ee/deployment/config/ConfigSupportImpl.java	15 Apr 2007 15:58:30 -0000	1.50
+
+HEADER:+++ j2eeserver/src/org/netbeans/modules/j2ee/deployment/config/ConfigSupportImpl.java	1 Jun 2007 15:00:27 -0000
+
+HEADER:@@ -729,7 +729,7 @@
+
+PLAIN:                 }
+
+PLAIN:             }
+
+PLAIN:             // TODO child module was not found
+
+REMOVED:-            return null;
+
+ADDED:+            return moduleUri == null ? j2eeModule : null;
+
+PLAIN:         }
+
+PLAIN:         return j2eeModule;
+
+PLAIN:     }
+
+INDEX:Index: j2eeserver/src/org/netbeans/modules/j2ee/deployment/impl/Bundle.properties
+
+HEADER:===================================================================
+
+HEADER:RCS file: /cvs/j2eeserver/src/org/netbeans/modules/j2ee/deployment/impl/Bundle.properties,v
+
+HEADER:retrieving revision 1.37
+
+HEADER:diff -w -u -r1.37 Bundle.properties
+
+HEADER:--- j2eeserver/src/org/netbeans/modules/j2ee/deployment/impl/Bundle.properties	18 Apr 2007 11:27:20 -0000	1.37
+
+HEADER:+++ j2eeserver/src/org/netbeans/modules/j2ee/deployment/impl/Bundle.properties	1 Jun 2007 15:00:27 -0000
+
+HEADER:@@ -170,3 +170,5 @@
+
+PLAIN: MSG_ServerStartupCancelled=Starting of server {0} has been cancelled.
+
+PLAIN: MSG_ServerSuspended=Cannot perform required operation, since the server is currently \
+
+PLAIN: in suspended state and thus cannot handle any requests.
+
+PLAIN:\ No newline at end of file
+
+ADDED:+
++MSG_NoContents=No content for {0}
+
+PLAIN:\ No newline at end of file
+
+INDEX:Index: j2eeserver/src/org/netbeans/modules/j2ee/deployment/impl/InitialServerFileDistributor.java
+
+HEADER:===================================================================
+
+HEADER:RCS file: /cvs/j2eeserver/src/org/netbeans/modules/j2ee/deployment/impl/InitialServerFileDistributor.java,v
+
+HEADER:retrieving revision 1.19
+
+HEADER:diff -w -u -r1.19 InitialServerFileDistributor.java
+
+HEADER:--- j2eeserver/src/org/netbeans/modules/j2ee/deployment/impl/InitialServerFileDistributor.java	29 Mar 2007 23:04:55 -0000	1.19
+
+HEADER:+++ j2eeserver/src/org/netbeans/modules/j2ee/deployment/impl/InitialServerFileDistributor.java	1 Jun 2007 15:00:27 -0000
+
+HEADER:@@ -148,8 +148,7 @@
+
+PLAIN:             if (! dir.exists())
+
+PLAIN:                 dir.mkdirs();
+
+PLAIN:             
+
+REMOVED:-            File parent = dir.getParentFile();
+
+REMOVED:-            FileObject destRoot = FileUtil.toFileObject(parent);
+
+ADDED:+            FileObject destRoot = FileUtil.toFileObject(dir);
+
+PLAIN:             
+
+PLAIN:             FileObject[] garbages = destRoot.getChildren();
+
+PLAIN:             for (int i=0; i<garbages.length; i++) {
+
+
+
+

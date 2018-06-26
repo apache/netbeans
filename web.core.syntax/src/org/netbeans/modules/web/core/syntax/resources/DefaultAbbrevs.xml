@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE codetemplates PUBLIC  "-//NetBeans//DTD Editor Code Templates settings 1.0//EN"
+                                "http://www.netbeans.org/dtds/EditorCodeTemplates-1_0.dtd">
+<codetemplates>
+    <codetemplate abbreviation="ag">
+        <code><![CDATA[application.getAttribute("${cursor}")]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="ap">
+        <code><![CDATA[application.setAttribute("${cursor}", )]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="ar">
+        <code><![CDATA[application.removeAttribute("${cursor}")]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="cfgi">
+        <code><![CDATA[config.getInitParameter("${cursor}")]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="jspf">
+        <code><![CDATA[<jsp:forward page="${cursor}"/>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="jspg">
+        <code><![CDATA[<jsp:getProperty name="${cursor}" property=""/>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="jspi">
+        <code><![CDATA[<jsp:include page="${cursor}"/>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="jspp">
+        <code>
+<![CDATA[<jsp:plugin type="${cursor}" code="" codebase="">
+</jsp:plugin>]]>
+        </code>
+    </codetemplate>
+    <codetemplate abbreviation="jsps">
+        <code><![CDATA[<jsp:setProperty name="${cursor}" property=""/>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="jspu">
+        <code><![CDATA[<jsp:useBean id="${cursor}" type=""/>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="oup">
+        <code><![CDATA[out.print("${cursor}")]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="oupl">
+        <code><![CDATA[out.println("${cursor}")]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="pcg">
+        <code><![CDATA[pageContext.getAttribute("${cursor}")]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="pcgn">
+        <code><![CDATA[pageContext.getAttributeNamesInScope(${cursor})]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="pcgs">
+        <code><![CDATA[pageContext.getAttributesScope("${cursor}")]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="pcr">
+        <code><![CDATA[pageContext.removeAttribute("${cursor}")]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="pcs">
+        <code><![CDATA[pageContext.setAttribute("${cursor}", )]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="pg">
+        <code><![CDATA[<%@page ${cursor}%>]]></code>
+    </codetemplate>
+        
+    <!-- default is true so false is only meaningful value -->
+    <codetemplate abbreviation="pga">
+        <code><![CDATA[<%@page autoFlush="false"%>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="pgb">
+        <code><![CDATA[<%@page buffer="${cursor}kb"%>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="pgc">
+        <code><![CDATA[<%@page contentType="${cursor}"%>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="pgerr">
+        <code><![CDATA[<%@page errorPage="${cursor}"%>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="pgex">
+        <code><![CDATA[<%@page extends="${cursor}"%>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="pgie">
+        <code><![CDATA[<%@page isErrorPage="true"%>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="pgim">
+        <code><![CDATA[<%@page import="${cursor}"%>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="pgin">
+        <code><![CDATA[<%@page info="${cursor}"%>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="pgit">
+        <code><![CDATA[<%@page isThreadSafe="false"%>]]></code>
+    </codetemplate>
+    
+    <!-- only defined and required value this attribute is 'java' -->
+    <codetemplate abbreviation="pgl">
+        <code><![CDATA[<%@page language="java"%>]]></code>
+    </codetemplate>
+        
+    <!-- default is true so false is only meaningful value -->
+    <codetemplate abbreviation="pgs">
+        <code><![CDATA[<%@page session="false"%>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="rg">
+        <code><![CDATA[request.getParameter("${cursor}")]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="sg">
+        <code><![CDATA[session.getAttribute("${cursor}")]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="sp">
+        <code><![CDATA[session.setAttribute("${cursor}", )]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="sr">
+        <code><![CDATA[session.removeAttribute("${cursor}")]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="tglb">
+        <code><![CDATA[<%@taglib uri="${cursor}"%>]]></code>
+    </codetemplate>
+</codetemplates>
+

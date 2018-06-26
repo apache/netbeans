@@ -1,0 +1,27 @@
+var |>GLOBAL:prom<| = "Simple text";
+
+var |>GLOBAL:Address2<| = {
+    |>FIELD:street<|: 'K lesiku',
+    |>FIELD:city<| : 'Prague',
+    |>FIELD:zip<| : '16000',
+    |>METHOD:toString<| : function () {
+        var |>LOCAL_VARIABLE_DECLARATION,UNUSED:text<| = this.|>FIELD:street<| + ", " + this.|>FIELD:city<| + " " + this.toString();
+    }
+}
+
+var |>GLOBAL:test<| = |>GLOBAL:prom<|;
+|>GLOBAL:formatter<|.println(|>GLOBAL:test<|.length);
+
+|>GLOBAL:test<| = |>GLOBAL:Address2<|;
+|>GLOBAL:formatter<|.println(|>GLOBAL:test<|.|>FIELD:street<|);
+
+var |>GLOBAL:test2<| = 10;  
+|>GLOBAL:formatter<|.println(|>GLOBAL:test2<|.street);
+
+function |>METHOD:change<|() {
+    |>GLOBAL:test2<| = |>GLOBAL:prom<|;
+    return |>GLOBAL:test2<|;
+}       
+|>GLOBAL:formatter<|.println(|>GLOBAL:test2<|.length);
+
+

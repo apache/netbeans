@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+  The Original Software is NetBeans. The Initial Developer of the Original
+  Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+  Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<project basedir="." default="netbeans" name="websvc.wsitconf">
+    <import file="../nbbuild/templates/projectized.xml"/>
+    
+ <property name="resources.dir" value="./src/org/netbeans/modules/websvc/wsitconf/resources/"/>
+
+    <target name="build61modules">
+
+        <delete dir="61src" failonerror="false"/>
+        <delete file="nb61src.zip" failonerror="false"/>
+
+        <condition property="61srcdownloaded">
+          <available file="nb61src.zip"/>
+        </condition>
+        <antcall target="download61src"/>
+
+        <condition property="61srcexpanded">
+          <available file="61src"/>
+        </condition>
+        <antcall target="expand61src"/>
+
+        <delete dir="61src/websvc.wsitmodelext"/>
+        <delete dir="61src/websvc.wsitconf"/>
+
+        <mkdir dir="61src/websvc.wsitmodelext"/>   
+        <copy todir="61src/websvc.wsitmodelext">
+            <fileset dir="../websvc.wsitmodelext"/>
+        </copy> 
+        <mkdir dir="61src/websvc.wsitconf"/>
+        <copy todir="61src/websvc.wsitconf">
+            <fileset dir="../websvc.wsitconf">
+                <include name="nbproject**/*"/>
+                <include name="src**/*"/>
+                <include name="test**/*"/>
+                <include name="build.xml"/>
+                <include name="manifest.mf"/>
+            </fileset>
+        </copy>
+
+        <delete dir="61src/websvc.wsitconf/nbproject/project.xml"/>
+
+        <copy file="61src/websvc.wsitconf/nbproject/project61.xml" tofile="61src/websvc.wsitconf/nbproject/project.xml"/>
+        
+    </target>
+
+    <target name="download61src" unless="61srcdownloaded">
+        <get src="http://smetiste.czech.sun.com/builds/netbeans/6.1/fixes/2008-06-09_03-01-28/zip/netbeans-6.1_fixes-200806090101-src.zip" dest="nb61src.zip"/>
+    </target>
+
+    <target name="expand61src" unless="61srcexpanded">
+        <unzip src="nb61src.zip" dest="61src"/>
+    </target>
+
+    <target name="build-init" depends="projectized.build-init">
+        <unzip src="external/websvc.wsitconf-external-resources.zip" dest="${resources.dir}"/>
+    </target>
+</project>

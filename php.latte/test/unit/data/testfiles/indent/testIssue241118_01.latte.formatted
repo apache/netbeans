@@ -1,0 +1,37 @@
+<script type="text/javascript" n:syntax="double">
+    $(document).ready(function () {
+        $("a[rel^='prettyPhoto']").prettyPhoto({
+            social_tools: false
+        });
+
+        $('#file_upload').uploadify({
+            swf: '/admin-files/js/uploadify.swf',
+            uploader: {{link uploadPhotos $place->place_id}},
+            auto: true,
+            buttonText: 'Vybrat soubory',
+            height: 25,
+            fileTypeDesc: 'Obrázky',
+            fileTypeExts: '*.gif; *.jpg; *.png',
+            fileSizeLimit: '8MB',
+            onUploadSuccess: function (file, data, response) {
+                if (!$('#nahrane-soubory').is(':visible')) {
+                    $('#nahrane-soubory').css('display', 'block');
+                }
+                $('#nahrane-soubory').append(file.name + '<br>');
+            },
+            onQueueComplete: function () {
+                alert('Všechny soubory byly nahrány. Pokud je chcete zobrazit, aktualizujte prosím stránku.');
+            }
+        });
+    });
+
+    function editReview(item) {
+
+    }
+
+    function deleteReview(reviewId) {
+        if (confirm('Opravdu chcete smazat tento příspěvek?')) {
+            location.href ={{link deleteReviews!}} + "&reviewId=" + reviewId;
+        }
+    }
+</script>

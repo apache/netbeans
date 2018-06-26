@@ -1,0 +1,13 @@
+[[157,163]-Syntax error
+ unexpected:	variable '$index'
+ after:	::
+ expected:	identifier, namespace, \, define] 157-163:Syntax error
+ unexpected:	variable '$index'
+ after:	::
+ expected:	identifier, namespace, \, define
+[[163,164]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	]] 163-164:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	]
+[[167,168]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}] 167-168:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}

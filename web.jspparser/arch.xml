@@ -1,0 +1,728 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
+  <!ENTITY api-questions SYSTEM "../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
+]>
+
+<api-answers
+  question-version="1.9"
+  author="pjiricka@netbeans.org"
+>
+
+  &api-questions;
+
+
+<!-- Question: arch-what
+
+     <question id="arch-what">
+            What is this project good for?
+            <hint>
+            Please provide here few lines describing the the project,
+            what problem it should solve, provide links to documentation, 
+            specifications, etc.
+            </hint>
+        </question>
+-->
+<answer id="arch-what">
+The module is for parsing JSP pages. The information produced by the parser is then
+used in other parts of the product.
+</answer>
+
+
+<!-- Question: compat-i18n
+
+     <question id="compat-i18n">
+            Is your module correctly internationalized?
+            <hint>
+            Correct internationalization means that it obeys instuctions 
+            at <a href="http://www.netbeans.org/devhome/docs/i18n/index.html">
+            NetBeans I18N pages</a>.
+            </hint>
+        </question>
+-->
+<answer id="compat-i18n">
+Yes.
+</answer>
+
+
+
+<!-- Question: compat-standards
+
+     <question id="compat-standards">
+            Does the module implements or defines any standards? Is the 
+            implementation exact or it deviates somehow?
+        </question>
+-->
+<answer id="compat-standards">
+The parser reads JSP pages which follow the JSP 1.2 standard (including pages 
+written to older versions of the JSP specification). Itself, it does not implement 
+or define a standard.
+</answer>
+
+
+
+<!-- Question: compat-version
+
+     <question id="compat-version">
+            Does your module properly coexists with earlier and future
+            versions? Can you correctly read settings? Will future
+            versions be able to read settings?
+            
+            <hint>
+            Very helpful for reading settings is to store version number
+            there, so future versions can decide whether how to read/convert
+            the settings and older versions can ignore the new ones.
+            </hint>
+        </question>
+-->
+<answer id="compat-version">
+The module does not define any persistent information, so it does not need to 
+read old or future settings.
+</answer>
+
+
+
+<!-- Question: dep-jre
+
+     <question id="dep-jre">
+            Which version of JRE you need (1.2, 1.3, 1.4, etc.)?
+            <hint>
+            It is expected that if your module runs on 1.x that it will run 
+            on 1.x+1 if no, state that please. Also describe here cases where
+            you run different code on different versions of JRE and why.
+            </hint>
+        </question>
+-->
+<answer id="dep-jre">
+It uses JRE 1.3.
+</answer>
+
+
+
+<!-- Question: dep-jrejdk
+
+     <question id="dep-jrejdk">
+            Do you require JDK or is JRE enough?
+        </question>
+-->
+<answer id="dep-jrejdk">
+The module requires the JDK. The reason is the fact that the Tomcat server, 
+whose component is used as a third party library, needs the JDK.
+</answer>
+
+
+
+<!-- Question: dep-nb
+
+     <question id="dep-nb">
+            What other NetBeans projects this one depends on?
+            <hint>
+            If you want, describe such projects as imported API using
+            the <code>&lt;api name="identification" type="import or export" category="stable" url="where is the description" /&gt;</code>
+            </hint>
+        </question>
+-->
+<answer id="dep-nb">
+It uses various kinds of API's:
+<ul>
+<li>
+    <api 
+        name="OpenAPIs"
+        type="import"
+        category="stable"
+        group="java"         
+        url="http://www.netbeans.org/download/dev/javadoc/OpenAPIs/"
+    />
+    NetBeans OpenAPIs
+</li>
+<li>
+    <api 
+        name="web-core"
+        type="import"
+        category="friend"
+        group="java"         
+        url=""
+    />
+    The <code>web-core</code> module. Notably, the <code>JSPParserAPI</code> class defined 
+    in the <code>web-core</code> friend API is implemented by this module.
+</li>
+<li>
+    <api 
+        name="servletjspapi"
+        type="import"
+        category="standard"
+        group="java"         
+        url="http://java.sun.com/products/servlets/"
+    />
+    The Servlet 2.5/JSP 2.1 APIs, packaged as a NetBeans module.
+</li>
+</ul>
+</answer>
+
+
+
+<!-- Question: dep-non-nb
+
+     <question id="dep-non-nb">
+            What other non-NetBeans projects this one depends on?
+            
+            <hint>
+            Some non-NetBeans projects are packaged as NetBeans modules
+            (see <a href="http://libs.netbeans.org">libraries</a>) and
+            it is prefered to use this approach when more modules may
+            depend on such third-party library.
+            </hint>
+        </question>
+-->
+<answer id="dep-non-nb">
+<ul>
+<li>
+    <api 
+        name="Tomcat4.0-Jasper"
+        type="import"
+        category="private"
+        group="java"         
+        url="http://jakarta.apache.org/tomcat/"
+    />
+    Tomcat JSP compiler library is used as an implementation of the parser.
+</li>
+</ul>
+
+I am not sure whether the ServletAPIs should be listed here or in the NetBeans projects.
+</answer>
+
+
+
+<!-- Question: dep-platform
+
+     <question id="dep-platform">
+            On which platforms your module run? Any? Does it run in the same
+            way?
+            <hint>
+            If your module is using JNI or deals with special differences of
+            OSes like filesystems, etc. please describe here what they are.
+            </hint>
+        </question>
+-->
+<answer id="dep-platform">
+100% pure Java. It should run anywhere.
+</answer>
+
+
+
+<!-- Question: deploy-jar
+
+     <question id="deploy-jar">
+            Do you deploy just module JAR file(s) or some other files?
+            <hint>
+            If your module consist just from one module JAR file, just confirm that.
+            If it uses more than one JAR, describe where there are located, how
+            they refer to each other. 
+            If it consist of module JAR(s) and other files, please describe
+            what is their purpose, why other files are necessary. Please 
+            make sure that installation/deinstallation leaves the system 
+            in state as it was before installation.
+            </hint>
+        </question>
+-->
+<answer id="deploy-jar">
+There is the module jar: <code>jsp-parser.jar</code>, and the tomcat libraries:
+<code>jasper-compiler-4.0.4.jar</code> and <code>jasper-runtime-4.0.4.jar</code>.
+Additionally, some libraries are needed by the Tomcat JSP compiler, e.g. 
+an XML parser and the Servlet APIs.
+</answer>
+
+
+
+<!-- Question: deploy-nbm
+
+     <question id="deploy-nbm">
+            Can you deploy NBM via AutoUpdate center?
+            <hint>
+            If not why?
+            </hint>
+        </question>
+-->
+<answer id="deploy-nbm">
+Yes.
+</answer>
+
+
+
+<!-- Question: deploy-packages
+
+     <question id="deploy-packages">
+            Are packages of your module made inaccessible by not declaring them
+            public?
+            
+            <hint>
+            NetBeans module system allows restriction of access rights to
+            public classes of your module from other modules. This prevents
+            unwanted dependencies of others on your code and should be used
+            whenever possible (<a href="http://www.netbeans.org/download/apis/org/openide/doc-files/upgrade.html#3.4-public-packages">
+            public packages
+            </a>). 
+            </hint>
+        </question>
+-->
+<answer id="deploy-packages">
+No.
+</answer>
+
+
+
+<!-- Question: deploy-shared
+
+     <question id="deploy-shared">
+            Do you need to be installed in shared location or only in user directory?
+            <hint>
+            Installation location shall not matter, if it does explain why.
+            </hint>
+        </question>
+-->
+<answer id="deploy-shared">
+Either way is possible.
+</answer>
+
+
+
+<!-- Question: exec-classloader
+
+     <question id="exec-classloader">
+            Does your code uses own classloader?
+            <hint>
+            A bit unusual. Please explain why and what for.
+            </hint>
+        </question>
+-->
+<answer id="exec-classloader">
+Yes. It uses a classloader class imported from the <code>web-core</code> friend API. This classloader
+is used by the Tomcat JSP compiler/parser libraries (it is passed as a parameter). The reason is that
+the JSP compiler needs to load user classes present in the Web Application the user is developing, so the 
+custom classloader simulates what the app will look like at runtime.
+</answer>
+
+
+
+<!-- Question: exec-component
+
+     <question id="exec-component">
+            Is execution of your code influenced by (string) property
+            of any of your components?
+            
+            <hint>
+            Often <code>JComponent.getClientProperty</code>, <code>Action.getValue</code>
+            or <code>PropertyDescriptor.getValue</code>, etc. are used to influence
+            a behaviour of some code. This of course forms an interface that should
+            be documented. Also if one depends on some interface that an object
+            implements (<code>component instanceof Runnable</code>) that forms an
+            API as well.
+            </hint>
+        </question>
+-->
+<answer id="exec-component">
+No.
+</answer>
+
+
+
+<!-- Question: exec-privateaccess
+
+     <question id="exec-privateaccess">
+            Are you aware of any other part of the system calling some of 
+            your methods by reflection?
+            <hint>
+            If so, describe the "contract" as an API. Likely private or friend one, but
+            still API and consider rewrite of it.
+            </hint>
+        </question>
+-->
+<answer id="exec-privateaccess">
+No.
+</answer>
+
+
+
+<!-- Question: exec-property
+
+     <question id="exec-property">
+            Is execution of your code influenced by any environment of
+            system (<code>System.getProperty</code>) property?
+            
+            <hint>
+            If there is a property that can change the behaviour of your 
+            code, somebody will likely use it. You should describe what it does 
+            and the stability category of this API. You may use
+            <PRE>
+                &lt;property name="id" category="private" &gt;
+                    description of the property, where it is used, what it influence, etc.
+                &lt;/property&gt;            
+            </PRE>
+            </hint>
+        </question>
+-->
+<answer id="exec-property">
+I think not.
+</answer>
+
+
+
+<!-- Question: exec-reflection
+
+     <question id="exec-reflection">
+            Does your code uses java.lang.reflect to execute some other code?
+            <hint>
+            This usually indicates a missing or unsufficient API in the other
+            part of the system. If the other side is not aware of your dependency
+            this contract can be easily broken.
+            </hint>
+        </question>
+-->
+<answer id="exec-reflection">
+Yes. It uses reflection to access private fields and methods in the Tomcat JSP compiler/parser library.
+</answer>
+
+
+
+<!-- Question: format-clipboard
+
+     <question id="format-clipboard">
+            Which protocols your code reads/inserts when communicating with
+            clipboard?
+        </question>
+-->
+<answer id="format-clipboard">
+None.
+</answer>
+
+
+
+<!-- Question: format-dnd
+
+     <question id="format-dnd">
+            Which protocols your code understands during drag-n-drop?
+        </question>
+-->
+<answer id="format-dnd">
+Drag and drop is not applicable to this module (it is non-gui).
+</answer>
+
+
+
+<!-- Question: format-types
+
+     <question id="format-types">
+            Which file formats your code reads or writes on disk?
+        </question>
+-->
+<answer id="format-types">
+It reads files which make up the user's web application, e.g. JSPs, tag libraries, 
+the deployment descriptor etc. These are described by the JSP and Servlet specifications.
+</answer>
+
+
+
+<!-- Question: lookup-lookup
+
+     <question id="lookup-lookup">
+            Does your module uses <code>org.openide.util.Lookup</code>
+            to find any components to communicate to? Which ones?
+            
+            <hint>
+            Please describe the interfaces you are searching for, where 
+            are defined, whether you are searching for just one or more of them,
+            if the order is important, etc. Also clasify the stability of such
+            API contract.
+            </hint>
+        </question>
+-->
+<answer id="lookup-lookup">
+No.
+</answer>
+
+
+
+<!-- Question: lookup-register
+
+     <question id="lookup-register">
+            Do you register anything into the lookup for other to find? 
+            <hint>
+            Do you register using layer file or using <code>META-INF/services</code>?
+            Who is supposed to find your component?
+            </hint>
+        </question>
+-->
+<answer id="lookup-register">
+The module registers the implementation of the <code>JSPParserAPI</code> class defined by the 
+<code>web-core</code> friend API, through an XML layer file.
+</answer>
+
+
+
+<!-- Question: lookup-remove
+
+     <question id="lookup-remove">
+            Do you remove entries of other modules from lookup?
+            <hint>
+            Why? Of course, that is possible, but it can be dangerous. Is the module
+            your are masking resource from aware of what you are doing?
+            </hint>
+        </question>
+-->
+<answer id="lookup-remove">
+No.
+</answer>
+
+
+
+<!-- Question: perf-exit
+
+     <question id="perf-exit">
+            Does your module executes anything on exit?
+        </question>
+-->
+<answer id="perf-exit">
+No.
+</answer>
+
+
+
+<!-- Question: perf-huge_dialogs
+
+     <question id="perf-huge_dialogs">
+            Does your module contain any dialogs or wizards with huge
+            amount of GUI controls like combo boxes, lists, trees, text
+            areas?
+        </question>
+-->
+<answer id="perf-huge_dialogs">
+No.
+</answer>
+
+
+
+<!-- Question: perf-limit
+
+     <question id="perf-limit">
+            Are there any limits in number/size of elements your code
+            can handle?
+        </question>
+-->
+<answer id="perf-limit">
+The horse power of the machine is a limiting factor, as parsing JSP pages 
+can be demanding resource-wise.
+</answer>
+
+
+
+<!-- Question: perf-mem
+
+     <question id="perf-mem">
+            What is the amount of memory your component occupies? Estimate
+            with a relaction to the number of windows, etc.
+        </question>
+-->
+<answer id="perf-mem">
+Relatively to the number of windows, it's pretty high (as there are no windows) :-)
+It occupies a reasonable amount of memory necessary to do the parsing job.
+It also keeps a cache of parsed tag libraries constructed from the user application.
+</answer>
+
+
+
+<!-- Question: perf-menus
+
+     <question id="perf-menus">
+            Does your module use dynamically changing context menus or
+            context sensitive actions with complicated logic for enable/disable?
+        </question>
+-->
+<answer id="perf-menus">
+No.
+</answer>
+
+
+
+<!-- Question: perf-progress
+
+     <question id="perf-progress">
+            Does your module executes some long running task?
+            <hint>Typically they are tasks like connecting over
+            network, computing huge amount of data, compilation.
+            Such communication should be done asynchronously (for example
+            using <code>RequestProcessor</code>), definitively it should 
+            not block AWT thread.
+            </hint>
+        </question>
+-->
+<answer id="perf-progress">
+Yes. I guess parsing can be considered long.
+</answer>
+
+
+
+<!-- Question: perf-scale
+
+     <question id="perf-scale">
+            Which external criteria influence the performance of your
+            program (size of file in editor, number of files in menu, 
+            in source directory, etc.) and how well your code scales?
+            Please include some estimates.
+        </question>
+-->
+<answer id="perf-scale">
+Size of file in editor, number of components (e.g. tag libraries) in the web module, 
+the length of the deployment descriptor.
+Performance improvements are possible.
+</answer>
+
+
+
+<!-- Question: perf-startup
+
+     <question id="perf-startup">
+            Does your module executes anything on startup?
+        </question>
+-->
+<answer id="perf-startup">
+No.
+</answer>
+
+
+
+<!-- Question: perf-wakeup
+
+     <question id="perf-wakeup">
+            Is any piece of your code waking up periodically?
+        </question>
+-->
+<answer id="perf-wakeup">
+No.
+</answer>
+
+
+
+<!-- Question: resources-file
+
+     <question id="resources-file">
+            Does your module use <code>java.io.File</code> directly?
+            
+            <hint>
+            NetBeans provide a logical wrapper over plain files called 
+            <code>org.openide.filesystems.FileObject</code> that
+            provides uniform access to such resources and is the prefered
+            way that should be used. But of course there can be situations when
+            this is not suitable.
+            </hint>
+        </question>
+-->
+<answer id="resources-file">
+Yes. The Tomcat JSP Compiler library expects <code>java.io.File</code> to be passed to it.
+</answer>
+
+
+
+<!-- Question: resources-layer
+
+     <question id="resources-layer">
+            Does your module provide own layer? Does it create some files or
+            folders on it? What it is trying to communicate by that and with which 
+            component?
+            
+            <hint>
+            NetBeans allows automatic and declarative installation of resources 
+            by module layers. Module register files into appropriate places
+            and other components use that information to perform their task
+            (build menu, toolbar, window layout, list of templates, set of
+            options, etc.). 
+            </hint>
+        </question>
+-->
+<answer id="resources-layer">
+Yes. It registers an implementation of an interface class declared by the <code>web-core</code> API 
+with the <code>web-core</code> module.
+</answer>
+
+
+
+<!-- Question: resources-mask
+
+     <question id="resources-mask">
+            Does your module mask/hide/override any resource provided by another one in
+            module layer? 
+            
+            <hint>
+            If you mask a file provided by another module, you probably depend
+            on that and do not want the other module to (for example) change
+            the file's name. That module shall thus make that file available as an API
+            of some stability category.
+            </hint>
+        </question>
+-->
+<answer id="resources-mask">
+No.
+</answer>
+
+
+
+<!-- Question: resources-read
+
+     <question id="resources-read">
+            Does your module read any resources from layers? For what purpose?
+            
+            <hint>
+            As this is some kind of intermodule dependency, it is a kind of API.
+            Please describe it and clasify according to 
+            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            common stability categories</a>.
+            </hint>
+        </question>
+-->
+<answer id="resources-read">
+Nope.
+</answer>
+
+</api-answers>

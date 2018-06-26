@@ -1,0 +1,439 @@
+/*
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ *
+ * Copyright 2010 Oracle and/or its affiliates. All rights reserved.
+ *
+ * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+ * Other names may be trademarks of their respective owners.
+ *
+ * The contents of this file are subject to the terms of either the GNU
+ * General Public License Version 2 only ("GPL") or the Common
+ * Development and Distribution License("CDDL") (collectively, the
+ * "License"). You may not use this file except in compliance with the
+ * License. You can obtain a copy of the License at
+ * http://www.netbeans.org/cddl-gplv2.html
+ * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+ * specific language governing permissions and limitations under the
+ * License.  When distributing the software, include this License Header
+ * Notice in each file and include the License file at
+ * nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the GPL Version 2 section of the License file that
+ * accompanied this code. If applicable, add the following below the
+ * License Header, with the fields enclosed by brackets [] replaced by
+ * your own identifying information:
+ * "Portions Copyrighted [year] [name of copyright owner]"
+ *
+ * If you wish your version of this file to be governed by only the CDDL
+ * or only the GPL Version 2, indicate your decision by adding
+ * "[Contributor] elects to include this software in this distribution
+ * under the [CDDL or GPL Version 2] license." If you do not indicate a
+ * single choice of license, a recipient has the option to distribute
+ * your version of this file under either the CDDL, the GPL Version 2 or
+ * to extend the choice of license to its licensees as provided above.
+ * However, if you add GPL Version 2 code and therefore, elected the GPL
+ * Version 2 license, then the option applies only if the new code is
+ * made subject to such option by the copyright holder.
+ *
+ * Contributor(s):
+ *
+ * Portions Copyrighted 2010 Sun Microsystems, Inc.
+ */
+
+/*
+ * RESTResourcesPanel.java
+ *
+ * Created on 02-Feb-2010, 10:21:21
+ */
+
+package org.netbeans.modules.websvc.rest.client;
+
+import java.io.IOException;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.xml.bind.JAXBException;
+import org.netbeans.modules.websvc.rest.model.api.RestServiceDescription;
+import org.netbeans.modules.websvc.saas.model.WadlSaas;
+import org.netbeans.modules.websvc.saas.model.WadlSaasResource;
+import org.netbeans.modules.websvc.saas.model.jaxb.SaasMetadata.Authentication;
+import org.openide.DialogDescriptor;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
+import org.openide.WizardDescriptor;
+import org.openide.nodes.Node;
+import org.openide.util.NbBundle;
+
+/**
+ *
+ * @author mkuchtiak
+ */
+public class RESTResourcesPanel extends javax.swing.JPanel {
+
+    private Object[] cbDefault = new Object[] {Security.Authentication.NONE, Security.Authentication.BASIC};
+    boolean securityDefault=true;
+    private Node resourceNode;
+    private DialogDescriptor descriptor;
+    private boolean nameChangedByUser = false;
+    private JerseyClientWizardPanel wizardPanel;
+
+    /** Creates new form RESTResourcesPanel */
+    public RESTResourcesPanel(JerseyClientWizardPanel wizardPanel) {
+        init();
+        this.wizardPanel = wizardPanel;
+        jLabel2.setVisible(false);
+        jTextField2.setVisible(false);
+    }
+    
+    public RESTResourcesPanel() {
+        init();
+        jTextField2.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                nameChanged();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                nameChanged();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                nameChanged();
+            }
+        });
+    }
+
+    private void init() {
+        initComponents();
+        jTextField1.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                resourceChanged();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                resourceChanged();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                resourceChanged();
+            }
+        });
+
+        jComboBox1.setModel(new DefaultComboBoxModel(cbDefault));
+    }
+
+
+    /** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        jLabel1 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jTextField2 = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox();
+        jCheckBox1 = new javax.swing.JCheckBox();
+        jPanel1 = new javax.swing.JPanel();
+        jRadioButton1 = new javax.swing.JRadioButton();
+        jRadioButton2 = new javax.swing.JRadioButton();
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(RESTResourcesPanel.class, "RESTResourcesPanel.jLabel1.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(RESTResourcesPanel.class, "RESTResourcesPanel.jButton1.text")); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setLabelFor(jTextField2);
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(RESTResourcesPanel.class, "RESTResourcesPanel.jLabel2.text")); // NOI18N
+
+        jLabel3.setLabelFor(jTextField1);
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(RESTResourcesPanel.class, "RESTResourcesPanel.jLabel3.text")); // NOI18N
+
+        jTextField1.setEditable(false);
+
+        jLabel4.setLabelFor(jComboBox1);
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(RESTResourcesPanel.class, "RESTResourcesPanel.jLabel4.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox1, org.openide.util.NbBundle.getMessage(RESTResourcesPanel.class, "RESTResourcesPanel.jCheckBox1.text")); // NOI18N
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        buttonGroup1.add(jRadioButton1);
+        jRadioButton1.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(jRadioButton1, org.openide.util.NbBundle.getMessage(RESTResourcesPanel.class, "RESTResourcesPanel.jRadioButton1.text")); // NOI18N
+        jRadioButton1.setToolTipText(org.openide.util.NbBundle.getMessage(RESTResourcesPanel.class, "RESTResourcesPanel.jRadioButton1_hint")); // NOI18N
+        jPanel1.add(jRadioButton1);
+
+        buttonGroup1.add(jRadioButton2);
+        org.openide.awt.Mnemonics.setLocalizedText(jRadioButton2, org.openide.util.NbBundle.getMessage(RESTResourcesPanel.class, "RESTResourcesPanel.jRadioButton2.text")); // NOI18N
+        jRadioButton2.setToolTipText(org.openide.util.NbBundle.getMessage(RESTResourcesPanel.class, "RESTResourcesPanel.jRadioButton2_hint")); // NOI18N
+        jPanel1.add(jRadioButton2);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1))
+                    .addComponent(jLabel3)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBox1, 0, 198, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jCheckBox1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(28, 28, 28)
+                        .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE))
+                    .addComponent(jLabel1))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(4, 4, 4)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jCheckBox1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+    }// </editor-fold>//GEN-END:initComponents
+
+    void setDescriptor(DialogDescriptor descriptor) {
+        this.descriptor = descriptor;
+        descriptor.setValid(false);
+    }
+
+    private void resourceChanged() {
+        WadlSaasResource saasResource = resourceNode.getLookup().lookup(WadlSaasResource.class);
+        if (saasResource != null) {
+            boolean isOauth = false;
+            try {
+                if (saasResource.getSaas().getOauthMetadata() != null) {
+                    jComboBox1.setModel(new DefaultComboBoxModel(new Object[] {Security.Authentication.OAUTH}));
+                    securityDefault = false;
+                    isOauth = true;
+                }
+            } catch (IOException ex) {
+
+            } catch (JAXBException ex) {
+
+            }
+            if (!isOauth) {
+                Authentication auth = saasResource.getSaas().getSaasMetadata().getAuthentication();
+                if (auth != null) {
+                    if (auth.getSessionKey().size() > 0) {
+                        jComboBox1.setModel(new DefaultComboBoxModel(new Object[] {Security.Authentication.SESSION_KEY}));
+                        securityDefault = false;
+                    } else if (auth.getHttpBasic() != null) {
+                        jComboBox1.setModel(new DefaultComboBoxModel(new Object[] {Security.Authentication.BASIC}));
+                        securityDefault = false;
+                    } else {
+                        if (!securityDefault) {
+                            jComboBox1.setModel(new DefaultComboBoxModel(cbDefault));
+                            securityDefault = true;
+                        }
+                    }
+                } else {
+                    if (!securityDefault) {
+                        jComboBox1.setModel(new DefaultComboBoxModel(cbDefault));
+                        securityDefault = true;
+                    }
+                }
+            }
+        } else {
+            if (!securityDefault) {
+                jComboBox1.setModel(new DefaultComboBoxModel(cbDefault));
+                securityDefault = true;
+            }
+        }
+        jComboBox1.setEnabled(securityDefault);
+        
+        if (wizardPanel == null) {
+            if (!nameChangedByUser
+                    || jTextField2.getText().trim().length() == 0)
+            {
+                if (saasResource != null) {
+                    jTextField2.setText(Wadl2JavaHelper
+                            .getClientClassName(saasResource));
+                }
+                else {
+                    RestServiceDescription restServiceDesc = resourceNode
+                            .getLookup().lookup(RestServiceDescription.class);
+                    if (restServiceDesc != null) {
+                        jTextField2.setText(restServiceDesc.getName()
+                                + "_JerseyClient"); // NOI18N
+                    }
+                }
+            }
+        } else {
+            wizardPanel.fireChangeEvent();
+        }
+
+    }
+    private void nameChanged() {
+        if (wizardPanel == null) {
+            if (jTextField2.getText().trim().length() == 0) {
+                descriptor.setValid(false);
+            } else if (resourceNode == null) {
+                descriptor.setValid(false);
+            } else {
+                descriptor.setValid(true);
+            }
+            nameChangedByUser = true;
+        }
+    }
+
+    boolean isValid(WizardDescriptor wiz) {
+        if (wizardPanel != null && wiz != null) {
+            if (resourceNode != null) {
+                return true;
+            } else {
+                wiz.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, NbBundle.getMessage(RESTResourcesPanel.class, "LBL_SelectRestResource")); //NOI18N
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if (jRadioButton1.isSelected()) {
+            RESTExplorerPanel explorerPanel = new RESTExplorerPanel();
+            DialogDescriptor desc = new DialogDescriptor(explorerPanel,
+                    NbBundle.getMessage(RESTResourcesPanel.class,"TTL_RESTResources")); //NOI18N
+            explorerPanel.setDescriptor(desc);
+            if (DialogDisplayer.getDefault().notify(desc).equals(NotifyDescriptor.OK_OPTION)) {
+                resourceNode = explorerPanel.getSelectedService();
+                boolean isChangedByUser = nameChangedByUser;
+                jTextField1.setText(resourceNode.getDisplayName());
+                if (!isChangedByUser) {
+                    nameChangedByUser = false;
+                }
+            }
+        } else {
+            SaasExplorerPanel explorerPanel = new SaasExplorerPanel();
+            DialogDescriptor desc = new DialogDescriptor(explorerPanel,
+                    NbBundle.getMessage(RESTResourcesPanel.class,"TTL_RESTResources")); //NOI18N
+            explorerPanel.setDescriptor(desc);
+            if (DialogDisplayer.getDefault().notify(desc).equals(NotifyDescriptor.OK_OPTION)) {
+                resourceNode = explorerPanel.getSelectedService();
+                boolean isChangedByUser = nameChangedByUser;
+                jTextField1.setText(getSaasResourceName(resourceNode));
+                if (!isChangedByUser) {
+                    nameChangedByUser = false;
+                }
+            }
+        }
+            if (resourceNode != null && wizardPanel == null) {
+                descriptor.setValid(true);
+            }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    public static String getSaasResourceName(Node node) {
+        WadlSaasResource saasResource = node.getLookup().lookup(WadlSaasResource.class);
+
+        String resourceName = saasResource.getResource().getPath();
+        if (resourceName.startsWith("/")) { //NOI18N
+            resourceName = resourceName.substring(1);
+        }
+
+        Node saasNode = node.getParentNode();
+        while (saasNode != null && saasNode.getLookup().lookup(WadlSaas.class) == null) {
+            saasResource = saasNode.getLookup().lookup(WadlSaasResource.class);
+            if (saasResource != null) {
+                String path = saasResource.getResource().getPath();
+                if (path.startsWith("/")) {
+                    path = path.substring(1);
+                }
+                if (path.endsWith("/")) {
+                    path = path.substring(0, path.length()-1);
+                }
+                if (path.length() > 0) {
+                    resourceName = path+"/"+resourceName;
+                }
+            } else {
+                resourceName = saasNode.getDisplayName()+"/"+resourceName;
+            }
+            saasNode = saasNode.getParentNode();
+        }
+        if (saasNode != null) {
+            resourceName = saasNode.getDisplayName()+" ["+resourceName+"]"; //NOI18N
+        }
+        return resourceName;
+    }
+
+    public Node getResourceNode() {
+        return resourceNode;
+    }
+    
+    public String getResourceName() {
+        return jTextField1.getText().trim();
+    }
+
+    public String getClassName() {
+        return jTextField2.getText().trim();
+    }
+    
+    public Security getSecurity () {
+        return new Security(jCheckBox1.isSelected(), (Security.Authentication)jComboBox1.getSelectedItem());
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JRadioButton jRadioButton2;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
+    // End of variables declaration//GEN-END:variables
+
+}

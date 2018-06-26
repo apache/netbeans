@@ -7,3 +7,5 @@ var man1 = {
 
 var address = man1.addr;
 address.doorNo = "11";
+a.b = a.b;
+

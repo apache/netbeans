@@ -1219,7 +1219,7 @@ public class ModelUtils {
             if (type.isResolved()) {
                 String newObjectName = type.getType();
                 JsObject object = ModelUtils.searchJsObjectByName(parent, newObjectName);
-                if (object != null) {
+                if ((object != null) && (object != parent)) {
                     String partfqn = props.toString();
                     if (!partfqn.trim().equals("")) {
                         String[] tokens = partfqn.split("\\.");

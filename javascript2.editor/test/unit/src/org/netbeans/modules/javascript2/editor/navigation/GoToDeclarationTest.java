@@ -72,6 +72,10 @@ public class GoToDeclarationTest extends JsTestBase {
     public void testIssue233298_3() throws Exception {
         checkDeclaration("testfiles/coloring/issue233298_2.js", "add.zi^p", "^zip: \"15000\"");        
     }
+
+    public void testIssue233298_4() throws Exception { 
+        checkDeclaration("testfiles/coloring/issue233298.js", "a.b^", "a.^b");
+    }
     
     public void testBasicNavigation_01() throws Exception {
         checkDeclaration("testfiles/model/variables01.js", "var address = new A^ddress(\"Prague\", \"Czech Republic\", 15000)", "function ^Address (town, state, number) {");

@@ -1111,8 +1111,36 @@ TARGETS AVAILABLE FOR OVERRIDING IN YOUR build.xml
 --------------------------------------------------
 
 Obscure or mostly internal targets are skipped here, but again examine the
-actual harness script if in doubt. If you want to keep the original
-implementation and just add a before hook, try e.g.
+actual harness script if in doubt.
+
+Since Apache NetBeans 11 some of the default targets make the use of Ant "Extension-Points"
+to add "before" and "after" hooks. See Ant manual for more about "Extension-Points"
+https://ant.apache.org/manual/targets.html#extension-points
+
+    <target name="yourStuffName" extensionOf="-pre-jar">
+        <!-- your stuff here -->
+    </target>
+
+compile - compile Java sources for the module.
+
+jar - build the module JAR.
+
+nbm - build the NBM. You might override this to give a complex (multipart)
+license text. Copy basic impl from common.xml and edit.
+
+release - copies contents of ${release.dir} to ${cluster}.
+
+The Call-Graph of these targets is
+
+  "OTHERTARGETS" -> "-pre-TARGET" -> "YOUR-preEXTENSIONS" -> "-do-TARGET"
+  -> "-post-TARGET" -> "YOUR-postEXTENSIONS" -> "TARGET"
+
+The "TARGET" itself does nothing. If your existing build.xml has some customization
+discussed later you may want to update your targets to match the new call-graph.
+You are encurraged to use the extension mechanism.
+
+If you want to keep the original implementation of the other and just add a before hook,
+try e.g.
 
     <target name="-pre-javahelp">
         <!-- your stuff here -->
@@ -1135,8 +1163,6 @@ clean - remove all build products: the "build" directory under your project
 directory, and any files left in the build cluster (including
 ${extra.module.files}).
 
-compile - compile Java sources for the module.
-
 compile-single - compile selected Java sources (F9).
 
 compile-test-single - compile selected unit test classes (F9).
@@ -1157,8 +1183,6 @@ rather than overriding this.
 
 init - all normal initialization.
 
-jar - build the module JAR.
-
 jar-prep - prepare to build the module JAR; define ${buildnumber}.
 
 javadoc - build module Javadoc.
@@ -1172,9 +1196,6 @@ as Build -> Generate Javadoc.
 
 javahelp - build JavaHelp.
 
-nbm - build the NBM. You might override this to give a complex (multipart)
-license text. Copy basic impl from common.xml and edit.
-
 netbeans - build everything needed for the NBM. Do not override; use
 netbeans-extra instead.
 
@@ -1187,8 +1208,6 @@ profile the entire application.
 
 profile-test-single-nb - run one unit test under the profiler. Available from the
 IDE's menus if the NetBeans profiler is installed.
-
-release - copies contents of ${release.dir} to ${cluster}.
 
 reload - reloads the module in the target IDE/app to try out changes interactively.
 

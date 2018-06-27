@@ -1592,8 +1592,11 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             includes="${allmodules},${harness-modules},nbbuild${build.source.config.add.ide},nbi,libs.antlr3.devel,libs.junit4"
             excludes="nbi/engine/lib,nbi/infra/build/jvm,nbi/infra/sandbox,nbi/infra/server,nbi/infra/utils"
     />
-    <pathconvert property="source.dirs" pathsep="," refid="source.dirset">
-      <regexpmapper from="${nb_all}/(.*)$" to="\1/**/*" handledirsep="yes"/>
+    <pathconvert property="nb_all_slash" dirsep="/">
+      <path location="${nb_all}"/>
+    </pathconvert>
+    <pathconvert property="source.dirs" dirsep="/" pathsep="," refid="source.dirset">
+      <regexpmapper from="${nb_all_slash}/(.*)$" to="\1/**/*" handledirsep="yes"/>
     </pathconvert>
     <downloadbinaries cache="${binaries.cache}" server="${binaries.server}"> <!--XXX-->
         <manifest dir="${nb_all}">

@@ -72,6 +72,15 @@ public class PhpTypedBreakInterceptorTest extends PhpTypinghooksTestBase {
         super.insertBreak(wrapAsPhp(original), wrapAsPhp(expected));
     }
 
+    private void insertBreakMultiLineComment(String original, String expected, boolean insertAsterisk) throws Exception {
+        PhpTypedBreakInterceptor.setInsertAsteriskToPHPComment(insertAsterisk);
+        try {
+            insertBreak(original, expected);
+        } finally {
+            PhpTypedBreakInterceptor.setInsertAsteriskToPHPComment(null);
+        }
+    }
+
     public void testInsertBreakAfterClass2() throws Exception {
         insertBreak("class Foo {^\n    \n}", "class Foo {\n    ^\n    \n}");
     }
@@ -815,5 +824,304 @@ public class PhpTypedBreakInterceptorTest extends PhpTypinghooksTestBase {
         );
     }
 
+    // #230814
+    public void testDoNotInsertCommentAsterisk_01() throws Exception {
+        insertBreakMultiLineComment(
+                "/*^",
+                "/*\n"
+                + "^\n"
+                + "*/",
+                false
+        );
+    }
+
+    public void testDoNotInsertCommentAsterisk_02() throws Exception {
+        insertBreakMultiLineComment(
+                "/*\n"
+                + "^\n"
+                + "*/",
+                "/*\n"
+                + "\n"
+                + "^\n"
+                + "*/",
+                false
+        );
+    }
+
+    public void testDoNotInsertCommentAsterisk_03() throws Exception {
+        insertBreakMultiLineComment(
+                "/*\n"
+                + " * ^\n"
+                + "*/",
+                "/*\n"
+                + " * \n"
+                + "^\n"
+                + "*/",
+                false
+        );
+    }
+
+    public void testDoNotInsertCommentAsterisk_04() throws Exception {
+        insertBreakMultiLineComment(
+                "/*\n"
+                + "something^\n"
+                + "*/",
+                "/*\n"
+                + "something\n"
+                + "^\n"
+                + "*/",
+                false
+        );
+    }
+
+    public void testDoNotInsertCommentAsterisk_05() throws Exception {
+        insertBreakMultiLineComment(
+                "class MyClass {\n"
+                + "\n"
+                + "    /*^\n"
+                + "    public function test() {\n"
+                + "        \n"
+                + "    }\n"
+                + "}\n",
+                "class MyClass {\n"
+                + "\n"
+                + "    /*\n"
+                + "    ^\n"
+                + "    */\n"
+                + "    public function test() {\n"
+                + "        \n"
+                + "    }\n"
+                + "}\n",
+                false
+        );
+    }
+
+    public void testDoNotInsertCommentAsterisk_06() throws Exception {
+        insertBreakMultiLineComment(
+                "class MyClass {\n"
+                + "\n"
+                + "    /*^\n"
+                + "    */\n"
+                + "    public function test() {\n"
+                + "        \n"
+                + "    }\n"
+                + "}\n",
+                "class MyClass {\n"
+                + "\n"
+                + "    /*\n"
+                + "    ^\n"
+                + "    */\n"
+                + "    public function test() {\n"
+                + "        \n"
+                + "    }\n"
+                + "}\n",
+                false
+        );
+    }
+
+    public void testDoNotInsertCommentAsterisk_07() throws Exception {
+        insertBreakMultiLineComment(
+                "class MyClass {\n"
+                + "\n"
+                + "    /*\n"
+                + "    ^\n"
+                + "    */\n"
+                + "    public function test() {\n"
+                + "        \n"
+                + "    }\n"
+                + "}\n",
+                "class MyClass {\n"
+                + "\n"
+                + "    /*\n"
+                + "    \n"
+                + "    ^\n"
+                + "    */\n"
+                + "    public function test() {\n"
+                + "        \n"
+                + "    }\n"
+                + "}\n",
+                false
+        );
+    }
+
+    public void testDoNotInsertCommentAsterisk_08() throws Exception {
+        insertBreakMultiLineComment(
+                "class MyClass {\n"
+                + "\n"
+                + "    /*\n"
+                + "    something^\n"
+                + "    */\n"
+                + "    public function test() {\n"
+                + "        \n"
+                + "    }\n"
+                + "}\n",
+                "class MyClass {\n"
+                + "\n"
+                + "    /*\n"
+                + "    something\n"
+                + "    ^\n"
+                + "    */\n"
+                + "    public function test() {\n"
+                + "        \n"
+                + "    }\n"
+                + "}\n",
+                false
+        );
+    }
+
+    public void testDoNotInsertCommentAsterisk_09() throws Exception {
+        // PHPDoc
+        insertBreakMultiLineComment(
+                "class MyClass {\n"
+                + "\n"
+                + "    /**^\n"
+                + "     */\n"
+                + "    public function test() {\n"
+                + "        \n"
+                + "    }\n"
+                + "}\n",
+                "class MyClass {\n"
+                + "\n"
+                + "    /**\n"
+                + "     * ^\n"
+                + "     */\n"
+                + "    public function test() {\n"
+                + "        \n"
+                + "    }\n"
+                + "}\n",
+                false
+        );
+    }
+
+    public void testInsertCommentAsterisk_01() throws Exception {
+        insertBreakMultiLineComment(
+                "/*^",
+                "/*\n"
+                + " * ^\n"
+                + " */",
+                true
+        );
+    }
+
+    public void testInsertCommentAsterisk_02() throws Exception {
+        insertBreakMultiLineComment(
+                "/*\n"
+                + " * ^\n"
+                + " */",
+                "/*\n"
+                + " * \n"
+                + " * ^\n"
+                + " */",
+                true
+        );
+    }
+
+    public void testInsertCommentAsterisk_03() throws Exception {
+        insertBreakMultiLineComment(
+                "/*\n"
+                + " * something^\n"
+                + " */",
+                "/*\n"
+                + " * something\n"
+                + " * ^\n"
+                + " */",
+                true
+        );
+    }
+
+    public void testInsertCommentAsterisk_04() throws Exception {
+        insertBreakMultiLineComment(
+                "class MyClass {\n"
+                + "\n"
+                + "    /*^\n"
+                + "    public function test() {\n"
+                + "        \n"
+                + "    }\n"
+                + "}\n",
+                "class MyClass {\n"
+                + "\n"
+                + "    /*\n"
+                + "     * ^\n"
+                + "     */\n"
+                + "    public function test() {\n"
+                + "        \n"
+                + "    }\n"
+                + "}\n",
+                true
+        );
+    }
+
+    public void testInsertCommentAsterisk_05() throws Exception {
+        insertBreakMultiLineComment(
+                "class MyClass {\n"
+                + "\n"
+                + "    /*^\n"
+                + "     */\n"
+                + "    public function test() {\n"
+                + "        \n"
+                + "    }\n"
+                + "}\n",
+                "class MyClass {\n"
+                + "\n"
+                + "    /*\n"
+                + "     * ^\n"
+                + "     */\n"
+                + "    public function test() {\n"
+                + "        \n"
+                + "    }\n"
+                + "}\n",
+                true
+        );
+    }
+
+    public void testInsertCommentAsterisk_06() throws Exception {
+        insertBreakMultiLineComment(
+                "class MyClass {\n"
+                + "\n"
+                + "    /*\n"
+                + "     * ^\n"
+                + "     */\n"
+                + "    public function test() {\n"
+                + "        \n"
+                + "    }\n"
+                + "}\n",
+                "class MyClass {\n"
+                + "\n"
+                + "    /*\n"
+                + "     * \n"
+                + "     * ^\n"
+                + "     */\n"
+                + "    public function test() {\n"
+                + "        \n"
+                + "    }\n"
+                + "}\n",
+                true
+        );
+    }
+
+    public void testInsertCommentAsterisk_07() throws Exception {
+        insertBreakMultiLineComment(
+                "class MyClass {\n"
+                + "\n"
+                + "    /*\n"
+                + "     * something^\n"
+                + "     */\n"
+                + "    public function test() {\n"
+                + "        \n"
+                + "    }\n"
+                + "}\n",
+                "class MyClass {\n"
+                + "\n"
+                + "    /*\n"
+                + "     * something\n"
+                + "     * ^\n"
+                + "     */\n"
+                + "    public function test() {\n"
+                + "        \n"
+                + "    }\n"
+                + "}\n",
+                true
+        );
+    }
 
 }

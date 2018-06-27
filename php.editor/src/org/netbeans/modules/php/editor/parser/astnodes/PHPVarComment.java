@@ -46,6 +46,12 @@ package org.netbeans.modules.php.editor.parser.astnodes;
  * Represents a single line comment, where user is able to assigna a type to variable
  * <pre> @var $variable type </pre> . It has to be single line comment. Also it can
  * contains mixed type. e.g. <pre> @var $variable type1|type2 </pre>
+ *
+ * <b>NOTE:</b> There is an order difference.
+ * <pre>
+ * &#47;*  @var $variableName TypeName *&#47;
+ * &#47;** @var TypeName $variableName Description *&#47;
+ * </pre>
  * @author Petr Pisl
  */
 public class PHPVarComment extends Comment {

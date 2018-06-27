@@ -59,6 +59,7 @@ public class PHPDocTag extends ASTNode {
         PARAM("param"), //NOI18N
         RETURN("return"), //NOI18N
         VAR("var"), //NOI18N
+        MIXIN("mixin"), // NOI18N
         DEPRECATED("deprecated"); //NOI18N
 
         private final String name;

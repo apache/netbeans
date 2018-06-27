@@ -242,6 +242,8 @@ public interface ElementQuery {
 
         Set<TypeMemberElement> getAccessibleTypeMembers(TypeElement typeElement, TypeElement calledFromEnclosingType);
 
+        Set<TypeMemberElement> getAccessibleMixinTypeMembers(TypeElement typeElement, TypeElement calledFromEnclosingType);
+
         /**
          * @param typeElement
          * @param insideEnclosingType false means that private, protected elements are filtered. True

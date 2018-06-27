@@ -239,7 +239,7 @@ public final class PHPIndexer extends EmbeddingIndexer {
     public static final class Factory extends EmbeddingIndexerFactory {
 
         public static final String NAME = "php"; // NOI18N
-        public static final int VERSION = 27;
+        public static final int VERSION = 28;
 
         @Override
         public EmbeddingIndexer createIndexer(final Indexable indexable, final Snapshot snapshot) {

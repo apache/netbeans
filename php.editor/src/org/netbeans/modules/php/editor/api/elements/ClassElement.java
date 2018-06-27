@@ -56,6 +56,7 @@ public interface ClassElement extends TraitedElement {
     @CheckForNull
     QualifiedName getSuperClassName();
     Collection<QualifiedName> getPossibleFQSuperClassNames();
+    Collection<QualifiedName> getFQMixinClassNames();
     boolean isFinal();
     boolean isAbstract();
     boolean isAnonymous();

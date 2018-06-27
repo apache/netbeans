@@ -51,16 +51,23 @@ import java.util.Set;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.fold.FoldTemplate;
 import org.netbeans.api.editor.fold.FoldType;
+import org.netbeans.api.lexer.Token;
+import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.parsing.api.Source;
+import org.netbeans.modules.php.editor.lexer.LexUtilities;
+import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.netbeans.modules.php.editor.model.FileScope;
 import org.netbeans.modules.php.editor.model.FunctionScope;
+import org.netbeans.modules.php.editor.model.GroupUseScope;
 import org.netbeans.modules.php.editor.model.MethodScope;
 import org.netbeans.modules.php.editor.model.Model;
 import org.netbeans.modules.php.editor.model.ModelElement;
 import org.netbeans.modules.php.editor.model.Scope;
 import org.netbeans.modules.php.editor.model.TypeScope;
+import org.netbeans.modules.php.editor.model.UseScope;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.api.Utils;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTError;
@@ -126,6 +133,25 @@ public final class FoldingScanner {
             "array",
             Bundle.FT_Arrays(), new FoldTemplate(0, 0, "[...]")); // NOI18N
 
+    @NbBundle.Messages("FT_Use=Use statements")
+    public static final FoldType TYPE_USE = FoldType.IMPORT.derive(
+            "use", // NOI18N
+            Bundle.FT_Use(),
+            new FoldTemplate(0, 0, "...") // NOI18N
+    );
+
+    /**
+     * PHP tags (&lt;?php...?&gt; blocks).
+     *
+     * <b>NOTE:</b> &lt;?=...?&gt; blocks are not folded.
+     */
+    @NbBundle.Messages("FT_PHPTag=<?php ?> blocks")
+    public static final FoldType TYPE_PHPTAG = FoldType.CODE_BLOCK.derive(
+            "phptag", // NOI18N
+            Bundle.FT_PHPTag(),
+            new FoldTemplate(0, 0, "...") // NOI18N
+    );
+
     private static final String LAST_CORRECT_FOLDING_PROPERTY = "LAST_CORRECT_FOLDING_PROPERY"; //NOI18N
 
     public static FoldingScanner create() {
@@ -166,6 +192,7 @@ public final class FoldingScanner {
             Source source = phpParseResult.getSnapshot().getSource();
             assert source != null : "source was null";
             Document doc = source.getDocument(false);
+            processPHPTags(folds, doc);
             setFoldingProperty(doc, folds);
             return folds;
         }
@@ -210,7 +237,56 @@ public final class FoldingScanner {
         }
     }
 
+    private void processPHPTags(Map<String, List<OffsetRange>> folds, Document document) {
+        if (document instanceof BaseDocument) {
+            BaseDocument doc = (BaseDocument) document;
+            doc.readLock();
+            try {
+                TokenSequence<PHPTokenId> ts = LexUtilities.getPHPTokenSequence(doc, 0);
+                if (ts == null) {
+                    return;
+                }
+                ts.move(0);
+                int startOffset = -1;
+                int endOffset = -1;
+                int shortTagBalance = 0; // for <?= ... ?>
+                while (ts.moveNext()) {
+                    Token<PHPTokenId> token = ts.token();
+                    if (token != null) {
+                        PHPTokenId id = token.id();
+                        switch (id) {
+                            case PHP_OPENTAG:
+                                startOffset = ts.offset() + token.length();
+                                break;
+                            case PHP_CLOSETAG:
+                                if (shortTagBalance == 0) {
+                                    assert startOffset != -1;
+                                    endOffset = ts.offset();
+                                    getRanges(folds, TYPE_PHPTAG).add(new OffsetRange(startOffset, endOffset));
+                                } else {
+                                    shortTagBalance--;
+                                }
+                                break;
+                            case T_OPEN_TAG_WITH_ECHO:
+                                shortTagBalance++;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+            } finally {
+                doc.readUnlock();
+            }
+        }
+    }
+
     private void processScopes(Map<String, List<OffsetRange>> folds, List<Scope> scopes) {
+        processUseScopes(folds, scopes);
+        processTypeAndFunctionScopes(folds, scopes);
+    }
+
+    private void processTypeAndFunctionScopes(Map<String, List<OffsetRange>> folds, List<Scope> scopes) {
         for (Scope scope : scopes) {
             OffsetRange offsetRange = scope.getBlockRange();
             if (offsetRange == null || offsetRange.getLength() <= 1) {
@@ -223,6 +299,40 @@ public final class FoldingScanner {
                     getRanges(folds, TYPE_FUNCTION).add(offsetRange);
                 }
             }
+        }
+    }
+
+    private void processUseScopes(Map<String, List<OffsetRange>> folds, List<Scope> scopes) {
+        List<Scope> allScopes = new ArrayList<>(scopes);
+        allScopes.sort((o1, o2) -> Integer.compare(o1.getOffset(), o2.getOffset()));
+        int startOffset = -1;
+        OffsetRange lastOffsetRange = OffsetRange.NONE;
+        for (Scope scope : allScopes) {
+            boolean isPartOfGroupUse = false;
+            if (scope instanceof UseScope) {
+                UseScope useScope = (UseScope) scope;
+                isPartOfGroupUse = useScope.isPartOfGroupUse();
+            }
+            if (scope instanceof UseScope || scope instanceof GroupUseScope) {
+                if (!isPartOfGroupUse) {
+                    lastOffsetRange = scope.getNameRange();
+                    if (startOffset == -1) {
+                        startOffset = lastOffsetRange.getStart();
+                    }
+                }
+            } else {
+                // +1 : ";"
+                // XXX ";" may not be the next char
+                addUseScope(startOffset, lastOffsetRange.getEnd() + 1, folds);
+                startOffset = -1;
+            }
+        }
+        addUseScope(startOffset, lastOffsetRange.getEnd() + 1, folds);
+    }
+
+    private void addUseScope(int startOffset, int endOffset, Map<String, List<OffsetRange>> folds) {
+        if (startOffset != -1) {
+            getRanges(folds, TYPE_USE).add(new OffsetRange(startOffset, endOffset));
         }
     }
 

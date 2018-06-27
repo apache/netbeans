@@ -877,6 +877,23 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/issue271109");
     }
 
+    // PHP 7.2
+    public void testGroupUseTrailingCommas_01() throws Exception {
+        performTest("parser/groupUseTrailingCommas_01");
+    }
+
+    public void testGroupUseTrailingCommas_02() throws Exception {
+        performTest("parser/groupUseTrailingCommas_02");
+    }
+
+    public void testGroupUseTrailingCommas_03() throws Exception {
+        performTest("parser/groupUseTrailingCommas_03");
+    }
+
+    public void testGroupUseTrailingCommas_04() throws Exception {
+        performTest("parser/groupUseTrailingCommas_04");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

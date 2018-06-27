@@ -577,11 +577,7 @@ public class TokenFormatter {
                                             countSpaces = indent;
                                         }
                                         if (templateEdit) {
-                                            // #262205 don't add spaces if existing spaces have new lines
-                                            if (oldText == null) {
-                                                newLines = 0;
-                                                countSpaces = 0;
-                                            } else {
+                                            if (oldText != null) {
                                                 ws = countExistingWS(oldText);
                                                 newLines = ws.lines;
                                                 countSpaces = ws.spaces;

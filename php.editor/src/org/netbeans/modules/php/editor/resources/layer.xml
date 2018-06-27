@@ -435,6 +435,7 @@ Contributor(s):
                     <file name="org-netbeans-modules-php-editor-verification-PHP56UnhandledError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-PHP70UnhandledError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-PHP71UnhandledError.instance"/>
+                    <file name="org-netbeans-modules-php-editor-verification-PHP72UnhandledError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-ReturnTypeHintError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-TypeRedeclarationHintError.instance"/>
                 </folder>

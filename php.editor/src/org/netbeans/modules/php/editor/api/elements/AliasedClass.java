@@ -86,6 +86,11 @@ public final class AliasedClass extends AliasedType implements ClassElement {
     }
 
     @Override
+    public Collection<QualifiedName> getFQMixinClassNames() {
+        return getClassElement().getFQMixinClassNames();
+    }
+
+    @Override
     public Collection<QualifiedName> getUsedTraits() {
         return getClassElement().getUsedTraits();
     }

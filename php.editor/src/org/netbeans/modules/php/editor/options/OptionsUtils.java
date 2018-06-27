@@ -99,6 +99,12 @@ public final class OptionsUtils {
                         CodeCompletionPanel.PHP_AUTO_COMPLETION_USE_LOWERCASE_TRUE_FALSE_NULL_DEFAULT);
             }
 
+            if (settingName == null || CodeCompletionPanel.PHP_AUTO_COMPLETION_COMMENT_ASTERISK.equals(settingName)) {
+                autoCompletionCommentAsterisk = preferences.getBoolean(
+                        CodeCompletionPanel.PHP_AUTO_COMPLETION_COMMENT_ASTERISK,
+                        CodeCompletionPanel.PHP_AUTO_COMPLETION_COMMENT_ASTERISK_DEFAULT);
+            }
+
             if (settingName == null || CodeCompletionPanel.PHP_CODE_COMPLETION_STATIC_METHODS.equals(settingName)) {
                 codeCompletionStaticMethods = preferences.getBoolean(
                         CodeCompletionPanel.PHP_CODE_COMPLETION_STATIC_METHODS,
@@ -134,6 +140,7 @@ public final class OptionsUtils {
     private static Boolean autoCompletionSmartQuotes = null;
     private static Boolean autoStringConcatination = null;
     private static Boolean autoCompletionUseLowercaseTrueFalseNull = null;
+    private static Boolean autoCompletionCommentAsterisk = null;
 
     private static Boolean codeCompletionStaticMethods = null;
     private static Boolean codeCompletionNonStaticMethods = null;
@@ -242,6 +249,17 @@ public final class OptionsUtils {
         lazyInit();
         assert autoCompletionUseLowercaseTrueFalseNull != null;
         return autoCompletionUseLowercaseTrueFalseNull;
+    }
+
+    /**
+     * Multi line comment only.
+     *
+     * @return {@code true} if " * " is inserted, otherwise {@code false}
+     */
+    public static boolean autoCompletionCommentAsterisk() {
+        lazyInit();
+        assert autoCompletionCommentAsterisk != null;
+        return autoCompletionCommentAsterisk;
     }
 
     /**

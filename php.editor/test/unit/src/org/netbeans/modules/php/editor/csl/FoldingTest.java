@@ -106,4 +106,14 @@ public class FoldingTest extends PHPTestBase {
         checkFolds("testfiles/parser/foldingArrays.php");
     }
 
+    // #254432
+    public void testUses() throws Exception {
+        checkFolds("testfiles/parser/foldingUses.php");
+    }
+
+    // #232600
+    public void testPHPTags() throws Exception {
+        checkFolds("testfiles/parser/foldingPHPTags.php");
+    }
+
 }

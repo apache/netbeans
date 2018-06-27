@@ -300,4 +300,17 @@ Contributor(s): Sebastian Hörl
             </file>
         </folder>
     </folder>
+    <folder name="Palettes">
+        <folder name="Twig">
+            <attr name="paletteDefaultVisible" boolvalue="false"/>
+            <file name="HTML.shadow">
+                <attr name="originalFile" stringvalue="HTMLPalette/HTML"/>
+                <attr name="position" intvalue="100"/>
+            </file>
+            <file name="HTML_Forms.shadow">
+                <attr name="originalFile" stringvalue="HTMLPalette/HTML_Forms"/>
+                <attr name="position" intvalue="200"/>
+            </file>
+        </folder>
+    </folder>
 </filesystem>

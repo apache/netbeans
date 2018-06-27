@@ -125,6 +125,7 @@ import org.netbeans.modules.php.editor.model.VariableScope;
 import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.model.impl.VariousUtils;
 import org.netbeans.modules.php.editor.NavUtils;
+import org.netbeans.modules.php.editor.api.elements.TypeMemberElement;
 import org.netbeans.modules.php.editor.options.CodeCompletionPanel.VariablesScope;
 import org.netbeans.modules.php.editor.options.OptionsUtils;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
@@ -1183,7 +1184,17 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                             ElementFilter.forKind(PhpElementKind.TYPE_CONSTANT),
                             ElementFilter.forName(NameKind.caseInsensitivePrefix(request.prefix)),
                             ElementFilter.forInstanceOf(TypeConstantElement.class));
-                    for (final PhpElement phpElement : request.index.getAccessibleTypeMembers(typeScope, enclosingType)) {
+                    HashSet<TypeMemberElement> accessibleTypeMembers = new HashSet<>();
+                    accessibleTypeMembers.addAll(request.index.getAccessibleTypeMembers(typeScope, enclosingType));
+                    // for @mixin tag #241740
+                    if (typeScope instanceof ClassElement) {
+                        ClassElement classElement = (ClassElement) typeScope;
+                        if (!classElement.getFQMixinClassNames().isEmpty()) {
+                            // XXX currently, only when mixins are used directly in the class. should support all cases?
+                            accessibleTypeMembers.addAll(request.index.getAccessibleMixinTypeMembers(typeScope, enclosingType));
+                        }
+                    }
+                    for (final PhpElement phpElement : accessibleTypeMembers) {
                         if (CancelSupport.getDefault().isCancelled()) {
                             return;
                         }

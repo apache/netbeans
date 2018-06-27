@@ -1,5 +1,5 @@
-  <?php
-  
++ <?php
+| 
 + try {
 |     echo "";
 + } catch (Exception $ex) {
@@ -7,5 +7,5 @@
 + } finally {
 |     echo "";
 - }
-  
-  ?>
+| 
+- ?>

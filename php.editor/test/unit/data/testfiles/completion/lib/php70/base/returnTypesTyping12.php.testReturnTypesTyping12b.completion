@@ -53,5 +53,6 @@ KEYWORD    callable                                   null
 KEYWORD    float                                      null
 KEYWORD    int                                        null
 KEYWORD    iterable                                   null
+KEYWORD    object                                     null
 KEYWORD    string                                     null
 KEYWORD    void                                       null

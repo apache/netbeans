@@ -158,7 +158,7 @@ public class BrkpntSetCommand extends DbgpCommand {
     }
 
     public void setExpression(String expression) {
-        myException = expression;
+        myExpression = expression;
     }
 
     public void setTemporary(boolean isTemp) {

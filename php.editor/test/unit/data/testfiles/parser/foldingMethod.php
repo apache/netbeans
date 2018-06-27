@@ -19,5 +19,3 @@ trait TraitName {
     }
     
 }
-
-?>

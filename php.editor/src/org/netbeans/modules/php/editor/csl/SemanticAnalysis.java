@@ -691,6 +691,20 @@ public class SemanticAnalysis extends SemanticAnalyzer {
                 if (item != null) {
                     addColoringForNode(item.identifier, item.coloring);
                 }
+            } else if (fnName.getName() instanceof Variable) {
+                // e.g. $test->instance::$staticField();
+                // $test->instance::$staticField[0]();
+                Variable variable = (Variable) fnName.getName();
+                Expression expr = variable;
+                if (variable instanceof ArrayAccess) {
+                    ArrayAccess arrayAccess = (ArrayAccess) variable;
+                    expr = arrayAccess.getName();
+                }
+                if (variable.isDollared() || variable instanceof ArrayAccess) {
+                    new FieldAccessVisitor(ColoringAttributes.STATIC_FIELD_SET).scan(expr);
+                    super.visit(node);
+                    return;
+                }
             }
             addColoringForNode(fnName, STATIC_METHOD_INVOCATION_SET);
             super.visit(node);

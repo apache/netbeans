@@ -29,11 +29,11 @@
             <ExpressionStatement start='7' end='17'>
                 <FunctionInvocation start='7' end='16'>
                     <FucntionName start='7' end='14'>
-                        <ParenthesisExpression start='7' end='14'>
+                        <DereferencableVariable start='7' end='14'>
                             <Variable start='8' end='13' isDollared='true'>
                                 <Identifier start='9' end='13' name='func'/>
                             </Variable>
-                        </ParenthesisExpression>
+                        </DereferencableVariable>
                     </FucntionName>
                     <Parameters>
                     </Parameters>

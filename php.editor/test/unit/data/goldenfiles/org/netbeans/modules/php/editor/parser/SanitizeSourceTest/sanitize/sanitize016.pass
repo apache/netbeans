@@ -1,6 +1,6 @@
 <Program start='0' end='256'>
     <Comments>
-        Comment start='170' end='180' commentType='multiLine'/>
+        <Comment start='170' end='180' commentType='multiLine'/>
     </Comments>
     <Statements>
         <ClassDeclaration start='7' end='65' modifier='NONE'>

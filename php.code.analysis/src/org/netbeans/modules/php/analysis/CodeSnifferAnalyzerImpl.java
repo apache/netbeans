@@ -88,6 +88,11 @@ public class CodeSnifferAnalyzerImpl implements Analyzer {
     })
     @Override
     public Iterable<? extends ErrorDescription> analyze() {
+        Preferences settings = context.getSettings();
+        if (settings != null && !settings.getBoolean(CodeSnifferCustomizerPanel.ENABLED, false)) {
+            return Collections.emptyList();
+        }
+
         CodeSniffer codeSniffer = getValidCodeSniffer();
         if (codeSniffer == null) {
             context.reportAnalysisProblem(Bundle.CodeSnifferAnalyzerImpl_codeSniffer_error(), Bundle.CodeSnifferAnalyzerImpl_codeSniffer_error_description());

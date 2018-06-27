@@ -381,6 +381,19 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/classConstant.php");
     }
 
+    public void testClassConstantWithWhitespace() throws Exception {
+        checkErrors("testfiles/parser/classConstantWithWhitespace.php");
+    }
+
+    public void testConstDefine_01() throws Exception {
+        // const DEFINE = ""; is not a syntax error
+        checkErrors("testfiles/parser/constDefine_01.php");
+    }
+
+    public void testConstDefine_02() throws Exception {
+        checkErrors("testfiles/parser/constDefine_02.php");
+    }
+
     // #250579
     public void testConstantArrayAccess_01() throws Exception {
         checkErrors("testfiles/parser/constantArrayAccess_01.php");
@@ -584,15 +597,15 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/uniformVariableSyntax_20.php");
     }
 
-    // XXX
-//    public void testUniformVariableSyntax_21() throws Exception {
-//        checkErrors("testfiles/parser/uniformVariableSyntax_21.php");
-//    }
+    // #262141
+    public void testUniformVariableSyntax_21() throws Exception {
+        checkErrors("testfiles/parser/uniformVariableSyntax_21.php");
+    }
 
-    // XXX
-//    public void testUniformVariableSyntax_22() throws Exception {
-//        checkErrors("testfiles/parser/uniformVariableSyntax_22.php");
-//    }
+    // #262141
+    public void testUniformVariableSyntax_22() throws Exception {
+        checkErrors("testfiles/parser/uniformVariableSyntax_22.php");
+    }
 
     public void testUniformVariableSyntax_23() throws Exception {
         checkErrors("testfiles/parser/uniformVariableSyntax_23.php");
@@ -636,6 +649,31 @@ public class PhpParserErrorTest extends PHPTestBase {
 
     public void testUniformVariableSyntax_33() throws Exception {
         checkErrors("testfiles/parser/uniformVariableSyntax_33.php");
+    }
+
+    // #262141
+    public void testUniformVariableSyntax_34() throws Exception {
+        // ... -> ... (->|::)
+        checkErrors("testfiles/parser/uniformVariableSyntax_34.php");
+    }
+
+    public void testUniformVariableSyntax_35() throws Exception {
+        // ... :: ... (->|::)
+        checkErrors("testfiles/parser/uniformVariableSyntax_35.php");
+    }
+
+    public void testUniformVariableSyntax_36() throws Exception {
+        // dereferencable
+        checkErrors("testfiles/parser/uniformVariableSyntax_36.php");
+    }
+
+    public void testUniformVariableSyntax_37() throws Exception {
+        // [$object1, $object2][0]->property;
+        checkErrors("testfiles/parser/uniformVariableSyntax_37.php");
+    }
+
+    public void testCloneExpression_01() throws Exception {
+        checkErrors("testfiles/parser/cloneExpression_01.php");
     }
 
     public void testGroupUse_01() throws Exception {
@@ -716,6 +754,36 @@ public class PhpParserErrorTest extends PHPTestBase {
 
     public void testSymmetricArrayDestructuring_01() throws Exception {
         checkErrors("testfiles/parser/symmetricArrayDestructuring_01.php");
+    }
+
+    // #262141 PHP7.0
+    public void testContextSensitiveLexer_01() throws Exception {
+        checkErrors("testfiles/parser/contextSensitiveLexer_01.php");
+    }
+
+    public void testContextSensitiveLexer_02() throws Exception {
+        checkErrors("testfiles/parser/contextSensitiveLexer_02.php");
+    }
+
+    public void testContextSensitiveLexer_03() throws Exception {
+        checkErrors("testfiles/parser/contextSensitiveLexer_03.php");
+    }
+
+    public void testContextSensitiveLexer_04() throws Exception {
+        checkErrors("testfiles/parser/contextSensitiveLexer_04.php");
+    }
+
+    public void testContextSensitiveLexer_05() throws Exception {
+        checkErrors("testfiles/parser/contextSensitiveLexer_05.php");
+    }
+
+    public void testContextSensitiveLexerWithConstVisibility_01() throws Exception {
+        checkErrors("testfiles/parser/contextSensitiveLexerWithConstVisibility_01.php");
+    }
+
+    public void testIssue271109() throws Exception {
+        // PHP7
+        checkErrors("testfiles/parser/issue271109.php");
     }
 
 }

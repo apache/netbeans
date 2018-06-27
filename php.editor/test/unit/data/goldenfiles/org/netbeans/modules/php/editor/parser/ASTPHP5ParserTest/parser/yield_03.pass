@@ -87,8 +87,8 @@
     </scanner>
     <Program start='0' end='131'>
         <Comments>
-            Comment start='74' end='90' commentType='singleLine'/>
-            Comment start='74' end='90' commentType='singleLine'/>
+            <Comment start='74' end='90' commentType='singleLine'/>
+            <Comment start='74' end='90' commentType='singleLine'/>
         </Comments>
         <Statements>
             <FunctionDeclaration start='7' end='127' isReference='false'>

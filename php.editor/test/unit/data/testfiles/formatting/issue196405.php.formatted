@@ -15,5 +15,7 @@ class foo {
 
 }
 
-$y = foo(1, "some text", "another text"
+$y = foo(1,
+        "some text",
+        "another text"
 );

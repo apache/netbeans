@@ -1,8 +1,8 @@
 <Program start='0' end='236'>
     <Comments>
-        Comment start='163' end='172' commentType='singleLine'/>
-        Comment start='191' end='197' commentType='singleLine'/>
-        Comment start='215' end='234' commentType='singleLine'/>
+        <Comment start='163' end='172' commentType='singleLine'/>
+        <Comment start='191' end='197' commentType='singleLine'/>
+        <Comment start='215' end='234' commentType='singleLine'/>
     </Comments>
     <Statements>
         <ClassDeclaration start='7' end='54' modifier='NONE'>

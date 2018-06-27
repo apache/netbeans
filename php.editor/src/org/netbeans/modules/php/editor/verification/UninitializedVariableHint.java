@@ -476,6 +476,8 @@ public class UninitializedVariableHint extends HintRule implements CustomisableR
                 initializeReference((Reference) expression);
             } else if (expression instanceof Variadic) {
                 initializeVariadic((Variadic) expression);
+            } else if (expression instanceof  ListVariable) { // #249508
+                initializeListVariable((ListVariable) expression);
             }
         }
 

@@ -61,7 +61,7 @@ import org.netbeans.modules.web.common.api.ByteStack;
 %state ST_PHP_DOUBLE_QUOTES
 %state ST_PHP_BACKQUOTE
 %state ST_PHP_QUOTES_AFTER_VARIABLE
-%state ST_PHP_LOOKING_FOR_CLASS_CONST
+%state ST_PHP_LOOKING_FOR_STATIC_PROPERTY
 %state ST_PHP_HEREDOC
 %state ST_PHP_START_HEREDOC
 %state ST_PHP_END_HEREDOC
@@ -69,6 +69,8 @@ import org.netbeans.modules.web.common.api.ByteStack;
 %state ST_PHP_START_NOWDOC
 %state ST_PHP_END_NOWDOC
 %state ST_PHP_LOOKING_FOR_PROPERTY
+%state ST_PHP_LOOKING_FOR_FUNCTION_NAME
+%state ST_PHP_LOOKING_FOR_CONSTANT_NAME
 %state ST_PHP_VAR_OFFSET
 %state ST_PHP_COMMENT
 %state ST_PHP_DOC_COMMENT
@@ -92,8 +94,11 @@ import org.netbeans.modules.web.common.api.ByteStack;
     private final ByteStack stack = new ByteStack();
     private String heredoc = null;
     private int hereocLength = 0;
+    private int parenBalanceInConst = 0; // for context sensitive lexer
+    private int bracketBalanceInConst = 0; // for context sensitive lexer
     private boolean aspTagsAllowed;
     private boolean shortTagsAllowed;
+    private boolean isInConst;
     private LexerInput input;
 
     public PHP5ColoringLexer(LexerRestartInfo info, boolean shortTagsAllowed, boolean aspTagsAllowed, boolean inPHP) {
@@ -345,11 +350,69 @@ PHP_ITERABLE=[i][t][e][r][a][b][l][e]
 }
 
 <ST_PHP_IN_SCRIPTING>"function" {
+    pushState(ST_PHP_LOOKING_FOR_FUNCTION_NAME);
     return PHPTokenId.PHP_FUNCTION;
 }
 
+<ST_PHP_LOOKING_FOR_FUNCTION_NAME>{WHITESPACE}+ {
+    return PHPTokenId.WHITESPACE;
+}
+
+<ST_PHP_LOOKING_FOR_FUNCTION_NAME>"(" {
+    popState();
+    return PHPTokenId.PHP_TOKEN;
+}
+
+<ST_PHP_LOOKING_FOR_FUNCTION_NAME>{LABEL} {
+    popState();
+    return PHPTokenId.PHP_STRING;
+}
+
+<ST_PHP_LOOKING_FOR_FUNCTION_NAME>{ANY_CHAR} {
+    yypushback(1);
+    popState();
+}
+
 <ST_PHP_IN_SCRIPTING>"const" {
+    isInConst = true;
+    parenBalanceInConst = 0;
+    bracketBalanceInConst = 0;
+    pushState(ST_PHP_LOOKING_FOR_CONSTANT_NAME);
     return PHPTokenId.PHP_CONST;
+}
+
+<ST_PHP_LOOKING_FOR_CONSTANT_NAME>{WHITESPACE}+ {
+    return PHPTokenId.WHITESPACE;
+}
+
+<ST_PHP_LOOKING_FOR_CONSTANT_NAME>{LABEL}{WHITESPACE}*"=" {
+    // const keyword is also used within group uses. so check "=", otherwise it matches the following:
+    // use A\{const CONSTANTA, function myFunction,...}
+    popState();
+    String match = yytext();
+    String[] segments = match.split("[ \n\r\t]+");
+    int back = 1;
+    if(segments.length > 1) {
+        int wsLength = yylength() - 1 - segments[0].length(); // - "=" - {LABEL}
+        back +=  wsLength;
+    }
+    yypushback(back);
+    return PHPTokenId.PHP_STRING;
+}
+
+<ST_PHP_LOOKING_FOR_CONSTANT_NAME>{ANY_CHAR} {
+    if(parenBalanceInConst == 0 && bracketBalanceInConst == 0) {
+        isInConst = false;
+    }
+    yypushback(1);
+    popState();
+}
+
+<ST_PHP_IN_SCRIPTING>"," {
+    if (isInConst) {
+        pushState(ST_PHP_LOOKING_FOR_CONSTANT_NAME);
+    }
+    return PHPTokenId.PHP_TOKEN;
 }
 
 <ST_PHP_IN_SCRIPTING>"return" {
@@ -560,17 +623,25 @@ PHP_ITERABLE=[i][t][e][r][a][b][l][e]
 }
 
 <ST_PHP_IN_SCRIPTING>"::" {
-    pushState(ST_PHP_LOOKING_FOR_CLASS_CONST);
+    pushState(ST_PHP_LOOKING_FOR_STATIC_PROPERTY);
     return PHPTokenId.PHP_PAAMAYIM_NEKUDOTAYIM;
 }
 
-<ST_PHP_LOOKING_FOR_CLASS_CONST> {
-    "class" {
+<ST_PHP_LOOKING_FOR_STATIC_PROPERTY>{WHITESPACE}+ {
+    return PHPTokenId.WHITESPACE;
+}
+
+<ST_PHP_LOOKING_FOR_STATIC_PROPERTY>"::" {
+    return PHPTokenId.PHP_PAAMAYIM_NEKUDOTAYIM;
+}
+
+<ST_PHP_LOOKING_FOR_STATIC_PROPERTY> {
+    {LABEL} {
         popState();
         return PHPTokenId.PHP_STRING;
     }
-    {ANY_CHAR} | "class"{LABEL} {
-        yypushback(yylength());
+    {ANY_CHAR} {
+        yypushback(1);
         popState();
     }
 }
@@ -745,10 +816,36 @@ PHP_ITERABLE=[i][t][e][r][a][b][l][e]
 }
 
 <ST_PHP_IN_SCRIPTING>{TOKENS} {
+    if(isInConst) {
+        // for checking arrays
+        // e.g. const CONST = [1, 2], const GOTO = 1;
+        String text = yytext();
+        switch (text) {
+            case "[":
+                bracketBalanceInConst++;
+                break;
+            case "]":
+                bracketBalanceInConst--;
+                break;
+            case "(":
+                parenBalanceInConst++;
+                break;
+            case ")":
+                parenBalanceInConst--;
+                break;
+            default:
+                break;
+        }
+    }
     return PHPTokenId.PHP_TOKEN;
 }
 
 <ST_PHP_IN_SCRIPTING>{CLOSE_EXPRESSION} {
+    if(isInConst) {
+        isInConst = false;
+        parenBalanceInConst = 0;
+        bracketBalanceInConst = 0;
+    }
     return PHPTokenId.PHP_SEMICOLON;
 }
 

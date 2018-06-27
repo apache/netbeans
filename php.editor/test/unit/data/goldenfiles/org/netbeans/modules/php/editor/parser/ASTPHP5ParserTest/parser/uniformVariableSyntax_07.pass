@@ -121,9 +121,7 @@
                         <Member>
                             <FunctionInvocation start='35' end='47'>
                                 <FucntionName start='35' end='45'>
-                                    <Variable start='35' end='45' isDollared='false'>
-                                        <Identifier start='35' end='45' name='staticTest'/>
-                                    </Variable>
+                                    <Identifier start='35' end='45' name='staticTest'/>
                                 </FucntionName>
                                 <Parameters>
                                 </Parameters>
@@ -131,9 +129,7 @@
                         </Member>
                         <FunctionInvocation start='35' end='47'>
                             <FucntionName start='35' end='45'>
-                                <Variable start='35' end='45' isDollared='false'>
-                                    <Identifier start='35' end='45' name='staticTest'/>
-                                </Variable>
+                                <Identifier start='35' end='45' name='staticTest'/>
                             </FucntionName>
                             <Parameters>
                             </Parameters>

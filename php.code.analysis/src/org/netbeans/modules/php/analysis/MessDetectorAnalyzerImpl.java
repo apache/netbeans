@@ -48,6 +48,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.fileinfo.NonRecursiveFolder;
@@ -87,6 +88,11 @@ public class MessDetectorAnalyzerImpl implements Analyzer {
     })
     @Override
     public Iterable<? extends ErrorDescription> analyze() {
+        Preferences settings = context.getSettings();
+        if (settings != null && !settings.getBoolean(MessDetectorCustomizerPanel.ENABLED, false)) {
+            return Collections.emptyList();
+        }
+
         MessDetector messDetector = getValidMessDetector();
         if (messDetector == null) {
             context.reportAnalysisProblem(Bundle.MessDetectorAnalyzerImpl_messDetector_error(), Bundle.MessDetectorAnalyzerImpl_messDetector_error_description());

@@ -1392,4 +1392,29 @@ public class PHPFormatterSpacesTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/spaces/spaceAroundDeclareEqual04b.php", options);
     }
 
+    public void testIssue268541_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/spaces/issue268541_01.php", options);
+    }
+
+    public void testIssue268541_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/spaces/issue268541_02.php", options);
+    }
+
+    public void testIssue268541_03() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/spaces/issue268541_03.php", options);
+    }
+
+    public void testIssue268541_04() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/spaces/issue268541_04.php", options);
+    }
+
+    public void testIssue268541_05() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/spaces/issue268541_05.php", options);
+    }
+
 }

@@ -79,6 +79,10 @@ public class TplParser extends Parser {
         result = new TplParserResult(snapshot);
 
         TokenHierarchy<?> tokenHierarchy = snapshot.getTokenHierarchy();
+        // #269903
+        if (tokenHierarchy == null) {
+            return;
+        }
         LanguagePath tplMimePath = null;
         for (LanguagePath path : tokenHierarchy.languagePaths()) {
             if (path.mimePath().endsWith("x-tpl-inner")) { //NOI18N

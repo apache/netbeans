@@ -1,0 +1,101 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n
+token #2 PHP_NAMESPACE namespace
+token #3 WHITESPACE  
+token #4 PHP_STRING A
+token #5 PHP_SEMICOLON ;
+token #6 WHITESPACE \n\n
+token #7 PHP_CONST const
+token #8 WHITESPACE  
+token #9 PHP_STRING CONSTANTA
+token #10 WHITESPACE  
+token #11 PHP_OPERATOR =
+token #12 WHITESPACE  
+token #13 PHP_CONSTANT_ENCAPSED_STRING "CONSTANTA"
+token #14 PHP_SEMICOLON ;
+token #15 WHITESPACE \n
+token #16 PHP_CONST const
+token #17 WHITESPACE  
+token #18 PHP_STRING CONSTANTB
+token #19 WHITESPACE  
+token #20 PHP_OPERATOR =
+token #21 WHITESPACE  
+token #22 PHP_CONSTANT_ENCAPSED_STRING "CONSTANTB"
+token #23 PHP_SEMICOLON ;
+token #24 WHITESPACE \n
+token #25 PHP_FUNCTION function
+token #26 WHITESPACE  
+token #27 PHP_STRING testA
+token #28 PHP_TOKEN (
+token #29 PHP_TOKEN )
+token #30 WHITESPACE  
+token #31 PHP_CURLY_OPEN {
+token #32 WHITESPACE \n    
+token #33 PHP_ECHO echo
+token #34 WHITESPACE  
+token #35 PHP_CONSTANT_ENCAPSED_STRING "testA"
+token #36 WHITESPACE  
+token #37 PHP_TOKEN .
+token #38 WHITESPACE  
+token #39 PHP_STRING PHP_EOL
+token #40 PHP_SEMICOLON ;
+token #41 WHITESPACE \n
+token #42 PHP_CURLY_CLOSE }
+token #43 WHITESPACE \n\n
+token #44 PHP_CLASS class
+token #45 WHITESPACE  
+token #46 PHP_STRING MyA
+token #47 WHITESPACE  
+token #48 PHP_CURLY_OPEN {
+token #49 PHP_CURLY_CLOSE }
+token #50 WHITESPACE \n
+token #51 PHP_CLASS class
+token #52 WHITESPACE  
+token #53 PHP_STRING MyAA
+token #54 WHITESPACE  
+token #55 PHP_CURLY_OPEN {
+token #56 PHP_CURLY_CLOSE }
+token #57 WHITESPACE \n\n
+token #58 PHP_NAMESPACE namespace
+token #59 WHITESPACE  
+token #60 PHP_STRING B
+token #61 PHP_SEMICOLON ;
+token #62 WHITESPACE \n\n
+token #63 PHP_USE use
+token #64 WHITESPACE  
+token #65 PHP_STRING A
+token #66 PHP_NS_SEPARATOR \
+token #67 PHP_CURLY_OPEN {
+token #68 WHITESPACE \n    
+token #69 PHP_STRING MyA
+token #70 PHP_TOKEN ,
+token #71 WHITESPACE \n    
+token #72 PHP_CONST const
+token #73 WHITESPACE  
+token #74 PHP_STRING CONSTANTA
+token #75 PHP_TOKEN ,
+token #76 WHITESPACE \n    
+token #77 PHP_CONST const
+token #78 WHITESPACE  
+token #79 PHP_STRING CONSTANTB
+token #80 PHP_TOKEN ,
+token #81 WHITESPACE \n    
+token #82 PHP_FUNCTION function
+token #83 WHITESPACE  
+token #84 PHP_STRING testA
+token #85 PHP_TOKEN ,
+token #86 WHITESPACE \n    
+token #87 PHP_FUNCTION function
+token #88 WHITESPACE   
+token #89 PHP_STRING testA
+token #90 WHITESPACE  
+token #91 PHP_AS AS
+token #92 WHITESPACE  
+token #93 PHP_STRING mytestA
+token #94 PHP_TOKEN ,
+token #95 WHITESPACE \n    
+token #96 PHP_STRING MyAA
+token #97 WHITESPACE \n
+token #98 PHP_CURLY_CLOSE }
+token #99 PHP_SEMICOLON ;
+token #100 WHITESPACE \n

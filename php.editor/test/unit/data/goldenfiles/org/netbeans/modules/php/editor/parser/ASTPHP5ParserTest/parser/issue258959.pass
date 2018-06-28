@@ -1245,10 +1245,10 @@
     </scanner>
     <Program start='0' end='1373'>
         <Comments>
-            Comment start='571' end='595' commentType='singleLine'/>
-            Comment start='833' end='860' commentType='singleLine'/>
-            Comment start='571' end='595' commentType='singleLine'/>
-            Comment start='833' end='860' commentType='singleLine'/>
+            <Comment start='571' end='595' commentType='singleLine'/>
+            <Comment start='833' end='860' commentType='singleLine'/>
+            <Comment start='571' end='595' commentType='singleLine'/>
+            <Comment start='833' end='860' commentType='singleLine'/>
         </Comments>
         <Statements>
             <GlobalConstantDeclaration start='7' end='26'>

@@ -204,4 +204,12 @@ public class SemanticAnalyzerTest extends SemanticAnalysisTestBase {
     public void testIssue258676() throws Exception {
         checkSemantic("testfiles/semantic/issue258676.php");
     }
+
+    public void testUniformVariableSyntax_01() throws Exception {
+        checkSemantic("testfiles/semantic/uniformVariableSyntax/uniformVariableSyntax_01.php");
+    }
+
+    public void testUniformVariableSyntax_02() throws Exception {
+        checkSemantic("testfiles/semantic/uniformVariableSyntax/uniformVariableSyntax_02.php");
+    }
 }

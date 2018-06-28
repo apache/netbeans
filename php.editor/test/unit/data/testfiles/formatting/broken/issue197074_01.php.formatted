@@ -11,7 +11,8 @@ class Model_Zendcalendar extends Zend_Db_Table {
             ->where('cat = ?', 1)
             ->where('YEAR(start_date) = ?', $year)
             ->order('start_date')
-            ->joinLeft(array('f' => 'zend_calendar_files'), 'c.id = f.id', array('info', 'results', 'games'))
+            ->joinLeft(array('f' => 'zend_calendar_files'), 'c.id = f.id',
+                array('info', 'results', 'games'))
             ->setIntegrityCheck(false);
         return $this->fetchAll($select);
     }

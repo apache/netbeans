@@ -150,8 +150,8 @@
     </scanner>
     <Program start='0' end='161'>
         <Comments>
-            Comment start='55' end='114' commentType='singleLine'/>
-            Comment start='55' end='114' commentType='singleLine'/>
+            <Comment start='55' end='114' commentType='singleLine'/>
+            <Comment start='55' end='114' commentType='singleLine'/>
         </Comments>
         <Statements>
             <FunctionDeclaration start='6' end='115' isReference='false'>

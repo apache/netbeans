@@ -797,4 +797,10 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         options.put(FmtOptions.METHOD_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
         reformatFileContents("testfiles/formatting/issue270385_04.php", options);
     }
+
+    public void testIssue271062() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/issue271062.php", options);
+    }
+
 }

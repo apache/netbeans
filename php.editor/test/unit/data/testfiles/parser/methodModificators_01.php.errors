@@ -8,9 +8,6 @@
 [[74,77]-POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	identifier 'fnc'] 74-77:POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	identifier 'fnc'
-[[80,81]-POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	{] 80-81:POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	{
 [[90,91]-POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	}] 90-91:POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	}

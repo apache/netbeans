@@ -1,7 +1,7 @@
 [[13,21]-Syntax error
  unexpected:	callable
  after:	const
- expected:	identifier] 13-21:Syntax error
+ expected:	identifier, define] 13-21:Syntax error
  unexpected:	callable
  after:	const
- expected:	identifier
+ expected:	identifier, define

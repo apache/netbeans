@@ -41,19 +41,19 @@
             <ExpressionStatement start='7' end='21'>
                 <FunctionInvocation start='7' end='20'>
                     <FucntionName start='7' end='18'>
-                        <ParenthesisExpression start='7' end='18'>
+                        <DereferencableVariable start='7' end='18'>
                             <FunctionInvocation start='8' end='17'>
                                 <FucntionName start='8' end='15'>
-                                    <ParenthesisExpression start='8' end='15'>
+                                    <DereferencableVariable start='8' end='15'>
                                         <Variable start='9' end='14' isDollared='true'>
                                             <Identifier start='10' end='14' name='func'/>
                                         </Variable>
-                                    </ParenthesisExpression>
+                                    </DereferencableVariable>
                                 </FucntionName>
                                 <Parameters>
                                 </Parameters>
                             </FunctionInvocation>
-                        </ParenthesisExpression>
+                        </DereferencableVariable>
                     </FucntionName>
                     <Parameters>
                     </Parameters>

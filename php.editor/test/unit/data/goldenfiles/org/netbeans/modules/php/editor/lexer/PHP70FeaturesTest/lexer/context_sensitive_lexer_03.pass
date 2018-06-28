@@ -1,0 +1,658 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n\n
+token #2 PHP_INTERFACE interface
+token #3 WHITESPACE  
+token #4 PHP_STRING InterfaceExample
+token #5 WHITESPACE  
+token #6 PHP_CURLY_OPEN {
+token #7 WHITESPACE \n\n    
+token #8 PHP_PUBLIC public
+token #9 WHITESPACE  
+token #10 PHP_FUNCTION function
+token #11 WHITESPACE  
+token #12 PHP_STRING define
+token #13 PHP_TOKEN (
+token #14 PHP_TOKEN )
+token #15 PHP_SEMICOLON ;
+token #16 WHITESPACE \n    
+token #17 PHP_PUBLIC public
+token #18 WHITESPACE  
+token #19 PHP_FUNCTION function
+token #20 WHITESPACE  
+token #21 PHP_STRING callable
+token #22 PHP_TOKEN (
+token #23 PHP_TOKEN )
+token #24 PHP_SEMICOLON ;
+token #25 WHITESPACE \n    
+token #26 PHP_PUBLIC public
+token #27 WHITESPACE  
+token #28 PHP_FUNCTION function
+token #29 WHITESPACE  
+token #30 PHP_STRING trait
+token #31 PHP_TOKEN (
+token #32 PHP_TOKEN )
+token #33 PHP_SEMICOLON ;
+token #34 WHITESPACE \n    
+token #35 PHP_PUBLIC public
+token #36 WHITESPACE  
+token #37 PHP_FUNCTION function
+token #38 WHITESPACE  
+token #39 PHP_STRING extends
+token #40 PHP_TOKEN (
+token #41 PHP_TOKEN )
+token #42 PHP_SEMICOLON ;
+token #43 WHITESPACE \n    
+token #44 PHP_PUBLIC public
+token #45 WHITESPACE  
+token #46 PHP_FUNCTION function
+token #47 WHITESPACE  
+token #48 PHP_STRING implements
+token #49 PHP_TOKEN (
+token #50 PHP_TOKEN )
+token #51 PHP_SEMICOLON ;
+token #52 WHITESPACE \n    
+token #53 PHP_PUBLIC public
+token #54 WHITESPACE  
+token #55 PHP_FUNCTION function
+token #56 WHITESPACE  
+token #57 PHP_STRING static
+token #58 PHP_TOKEN (
+token #59 PHP_TOKEN )
+token #60 PHP_SEMICOLON ;
+token #61 WHITESPACE \n    
+token #62 PHP_PUBLIC public
+token #63 WHITESPACE  
+token #64 PHP_FUNCTION function
+token #65 WHITESPACE  
+token #66 PHP_STRING abstract
+token #67 PHP_TOKEN (
+token #68 PHP_TOKEN )
+token #69 PHP_SEMICOLON ;
+token #70 WHITESPACE \n    
+token #71 PHP_PUBLIC public
+token #72 WHITESPACE  
+token #73 PHP_FUNCTION function
+token #74 WHITESPACE  
+token #75 PHP_STRING final
+token #76 PHP_TOKEN (
+token #77 PHP_TOKEN )
+token #78 PHP_SEMICOLON ;
+token #79 WHITESPACE \n    
+token #80 PHP_PUBLIC public
+token #81 WHITESPACE  
+token #82 PHP_FUNCTION function
+token #83 WHITESPACE  
+token #84 PHP_STRING public
+token #85 PHP_TOKEN (
+token #86 PHP_TOKEN )
+token #87 PHP_SEMICOLON ;
+token #88 WHITESPACE \n    
+token #89 PHP_PUBLIC public
+token #90 WHITESPACE  
+token #91 PHP_FUNCTION function
+token #92 WHITESPACE  
+token #93 PHP_STRING protected
+token #94 PHP_TOKEN (
+token #95 PHP_TOKEN )
+token #96 PHP_SEMICOLON ;
+token #97 WHITESPACE \n    
+token #98 PHP_PUBLIC public
+token #99 WHITESPACE  
+token #100 PHP_FUNCTION function
+token #101 WHITESPACE  
+token #102 PHP_STRING private
+token #103 PHP_TOKEN (
+token #104 PHP_TOKEN )
+token #105 PHP_SEMICOLON ;
+token #106 WHITESPACE \n    
+token #107 PHP_PUBLIC public
+token #108 WHITESPACE  
+token #109 PHP_FUNCTION function
+token #110 WHITESPACE  
+token #111 PHP_STRING const
+token #112 PHP_TOKEN (
+token #113 PHP_TOKEN )
+token #114 PHP_SEMICOLON ;
+token #115 WHITESPACE \n    
+token #116 PHP_PUBLIC public
+token #117 WHITESPACE  
+token #118 PHP_FUNCTION function
+token #119 WHITESPACE  
+token #120 PHP_STRING enddeclare
+token #121 PHP_TOKEN (
+token #122 PHP_TOKEN )
+token #123 PHP_SEMICOLON ;
+token #124 WHITESPACE \n    
+token #125 PHP_PUBLIC public
+token #126 WHITESPACE  
+token #127 PHP_FUNCTION function
+token #128 WHITESPACE  
+token #129 PHP_STRING endfor
+token #130 PHP_TOKEN (
+token #131 PHP_TOKEN )
+token #132 PHP_SEMICOLON ;
+token #133 WHITESPACE \n    
+token #134 PHP_PUBLIC public
+token #135 WHITESPACE  
+token #136 PHP_FUNCTION function
+token #137 WHITESPACE  
+token #138 PHP_STRING endforeach
+token #139 PHP_TOKEN (
+token #140 PHP_TOKEN )
+token #141 PHP_SEMICOLON ;
+token #142 WHITESPACE \n    
+token #143 PHP_PUBLIC public
+token #144 WHITESPACE  
+token #145 PHP_FUNCTION function
+token #146 WHITESPACE  
+token #147 PHP_STRING endif
+token #148 PHP_TOKEN (
+token #149 PHP_TOKEN )
+token #150 PHP_SEMICOLON ;
+token #151 WHITESPACE \n    
+token #152 PHP_PUBLIC public
+token #153 WHITESPACE  
+token #154 PHP_FUNCTION function
+token #155 WHITESPACE  
+token #156 PHP_STRING endwhile
+token #157 PHP_TOKEN (
+token #158 PHP_TOKEN )
+token #159 PHP_SEMICOLON ;
+token #160 WHITESPACE \n    
+token #161 PHP_PUBLIC public
+token #162 WHITESPACE  
+token #163 PHP_FUNCTION function
+token #164 WHITESPACE  
+token #165 PHP_STRING and
+token #166 PHP_TOKEN (
+token #167 PHP_TOKEN )
+token #168 PHP_SEMICOLON ;
+token #169 WHITESPACE \n    
+token #170 PHP_PUBLIC public
+token #171 WHITESPACE  
+token #172 PHP_FUNCTION function
+token #173 WHITESPACE  
+token #174 PHP_STRING global
+token #175 PHP_TOKEN (
+token #176 PHP_TOKEN )
+token #177 PHP_SEMICOLON ;
+token #178 WHITESPACE \n    
+token #179 PHP_PUBLIC public
+token #180 WHITESPACE  
+token #181 PHP_FUNCTION function
+token #182 WHITESPACE  
+token #183 PHP_STRING goto
+token #184 PHP_TOKEN (
+token #185 PHP_TOKEN )
+token #186 PHP_SEMICOLON ;
+token #187 WHITESPACE \n    
+token #188 PHP_PUBLIC public
+token #189 WHITESPACE  
+token #190 PHP_FUNCTION function
+token #191 WHITESPACE  
+token #192 PHP_STRING instanceof
+token #193 PHP_TOKEN (
+token #194 PHP_TOKEN )
+token #195 PHP_SEMICOLON ;
+token #196 WHITESPACE \n    
+token #197 PHP_PUBLIC public
+token #198 WHITESPACE  
+token #199 PHP_FUNCTION function
+token #200 WHITESPACE  
+token #201 PHP_STRING insteadof
+token #202 PHP_TOKEN (
+token #203 PHP_TOKEN )
+token #204 PHP_SEMICOLON ;
+token #205 WHITESPACE \n    
+token #206 PHP_PUBLIC public
+token #207 WHITESPACE  
+token #208 PHP_FUNCTION function
+token #209 WHITESPACE  
+token #210 PHP_STRING interface
+token #211 PHP_TOKEN (
+token #212 PHP_TOKEN )
+token #213 PHP_SEMICOLON ;
+token #214 WHITESPACE \n    
+token #215 PHP_PUBLIC public
+token #216 WHITESPACE  
+token #217 PHP_FUNCTION function
+token #218 WHITESPACE  
+token #219 PHP_STRING namespace
+token #220 PHP_TOKEN (
+token #221 PHP_TOKEN )
+token #222 PHP_SEMICOLON ;
+token #223 WHITESPACE \n    
+token #224 PHP_PUBLIC public
+token #225 WHITESPACE  
+token #226 PHP_FUNCTION function
+token #227 WHITESPACE  
+token #228 PHP_STRING new
+token #229 PHP_TOKEN (
+token #230 PHP_TOKEN )
+token #231 PHP_SEMICOLON ;
+token #232 WHITESPACE \n    
+token #233 PHP_PUBLIC public
+token #234 WHITESPACE  
+token #235 PHP_FUNCTION function
+token #236 WHITESPACE  
+token #237 PHP_STRING or
+token #238 PHP_TOKEN (
+token #239 PHP_TOKEN )
+token #240 PHP_SEMICOLON ;
+token #241 WHITESPACE \n    
+token #242 PHP_PUBLIC public
+token #243 WHITESPACE  
+token #244 PHP_FUNCTION function
+token #245 WHITESPACE  
+token #246 PHP_STRING xor
+token #247 PHP_TOKEN (
+token #248 PHP_TOKEN )
+token #249 PHP_SEMICOLON ;
+token #250 WHITESPACE \n    
+token #251 PHP_PUBLIC public
+token #252 WHITESPACE  
+token #253 PHP_FUNCTION function
+token #254 WHITESPACE  
+token #255 PHP_STRING try
+token #256 PHP_TOKEN (
+token #257 PHP_TOKEN )
+token #258 PHP_SEMICOLON ;
+token #259 WHITESPACE \n    
+token #260 PHP_PUBLIC public
+token #261 WHITESPACE  
+token #262 PHP_FUNCTION function
+token #263 WHITESPACE  
+token #264 PHP_STRING use
+token #265 PHP_TOKEN (
+token #266 PHP_TOKEN )
+token #267 PHP_SEMICOLON ;
+token #268 WHITESPACE \n    
+token #269 PHP_PUBLIC public
+token #270 WHITESPACE  
+token #271 PHP_FUNCTION function
+token #272 WHITESPACE  
+token #273 PHP_STRING var
+token #274 PHP_TOKEN (
+token #275 PHP_TOKEN )
+token #276 PHP_SEMICOLON ;
+token #277 WHITESPACE \n    
+token #278 PHP_PUBLIC public
+token #279 WHITESPACE  
+token #280 PHP_FUNCTION function
+token #281 WHITESPACE  
+token #282 PHP_STRING exit
+token #283 PHP_TOKEN (
+token #284 PHP_TOKEN )
+token #285 PHP_SEMICOLON ;
+token #286 WHITESPACE \n    
+token #287 PHP_PUBLIC public
+token #288 WHITESPACE  
+token #289 PHP_FUNCTION function
+token #290 WHITESPACE  
+token #291 PHP_STRING list
+token #292 PHP_TOKEN (
+token #293 PHP_TOKEN )
+token #294 PHP_SEMICOLON ;
+token #295 WHITESPACE \n    
+token #296 PHP_PUBLIC public
+token #297 WHITESPACE  
+token #298 PHP_FUNCTION function
+token #299 WHITESPACE  
+token #300 PHP_STRING clone
+token #301 PHP_TOKEN (
+token #302 PHP_TOKEN )
+token #303 PHP_SEMICOLON ;
+token #304 WHITESPACE \n    
+token #305 PHP_PUBLIC public
+token #306 WHITESPACE  
+token #307 PHP_FUNCTION function
+token #308 WHITESPACE  
+token #309 PHP_STRING include
+token #310 PHP_TOKEN (
+token #311 PHP_TOKEN )
+token #312 PHP_SEMICOLON ;
+token #313 WHITESPACE \n    
+token #314 PHP_PUBLIC public
+token #315 WHITESPACE  
+token #316 PHP_FUNCTION function
+token #317 WHITESPACE  
+token #318 PHP_STRING include_once
+token #319 PHP_TOKEN (
+token #320 PHP_TOKEN )
+token #321 PHP_SEMICOLON ;
+token #322 WHITESPACE \n    
+token #323 PHP_PUBLIC public
+token #324 WHITESPACE  
+token #325 PHP_FUNCTION function
+token #326 WHITESPACE  
+token #327 PHP_STRING throw
+token #328 PHP_TOKEN (
+token #329 PHP_TOKEN )
+token #330 PHP_SEMICOLON ;
+token #331 WHITESPACE \n    
+token #332 PHP_PUBLIC public
+token #333 WHITESPACE  
+token #334 PHP_FUNCTION function
+token #335 WHITESPACE  
+token #336 PHP_STRING array
+token #337 PHP_TOKEN (
+token #338 PHP_TOKEN )
+token #339 PHP_SEMICOLON ;
+token #340 WHITESPACE \n    
+token #341 PHP_PUBLIC public
+token #342 WHITESPACE  
+token #343 PHP_FUNCTION function
+token #344 WHITESPACE  
+token #345 PHP_STRING print
+token #346 PHP_TOKEN (
+token #347 PHP_TOKEN )
+token #348 PHP_SEMICOLON ;
+token #349 WHITESPACE \n    
+token #350 PHP_PUBLIC public
+token #351 WHITESPACE  
+token #352 PHP_FUNCTION function
+token #353 WHITESPACE  
+token #354 PHP_STRING echo
+token #355 PHP_TOKEN (
+token #356 PHP_TOKEN )
+token #357 PHP_SEMICOLON ;
+token #358 WHITESPACE \n    
+token #359 PHP_PUBLIC public
+token #360 WHITESPACE  
+token #361 PHP_FUNCTION function
+token #362 WHITESPACE  
+token #363 PHP_STRING require
+token #364 PHP_TOKEN (
+token #365 PHP_TOKEN )
+token #366 PHP_SEMICOLON ;
+token #367 WHITESPACE \n    
+token #368 PHP_PUBLIC public
+token #369 WHITESPACE  
+token #370 PHP_FUNCTION function
+token #371 WHITESPACE  
+token #372 PHP_STRING require_once
+token #373 PHP_TOKEN (
+token #374 PHP_TOKEN )
+token #375 PHP_SEMICOLON ;
+token #376 WHITESPACE \n    
+token #377 PHP_PUBLIC public
+token #378 WHITESPACE  
+token #379 PHP_FUNCTION function
+token #380 WHITESPACE  
+token #381 PHP_STRING return
+token #382 PHP_TOKEN (
+token #383 PHP_TOKEN )
+token #384 PHP_SEMICOLON ;
+token #385 WHITESPACE \n    
+token #386 PHP_PUBLIC public
+token #387 WHITESPACE  
+token #388 PHP_FUNCTION function
+token #389 WHITESPACE  
+token #390 PHP_STRING else
+token #391 PHP_TOKEN (
+token #392 PHP_TOKEN )
+token #393 PHP_SEMICOLON ;
+token #394 WHITESPACE \n    
+token #395 PHP_PUBLIC public
+token #396 WHITESPACE  
+token #397 PHP_FUNCTION function
+token #398 WHITESPACE  
+token #399 PHP_STRING elseif
+token #400 PHP_TOKEN (
+token #401 PHP_TOKEN )
+token #402 PHP_SEMICOLON ;
+token #403 WHITESPACE \n    
+token #404 PHP_PUBLIC public
+token #405 WHITESPACE  
+token #406 PHP_FUNCTION function
+token #407 WHITESPACE  
+token #408 PHP_STRING default
+token #409 PHP_TOKEN (
+token #410 PHP_TOKEN )
+token #411 PHP_SEMICOLON ;
+token #412 WHITESPACE \n    
+token #413 PHP_PUBLIC public
+token #414 WHITESPACE  
+token #415 PHP_FUNCTION function
+token #416 WHITESPACE  
+token #417 PHP_STRING break
+token #418 PHP_TOKEN (
+token #419 PHP_TOKEN )
+token #420 PHP_SEMICOLON ;
+token #421 WHITESPACE \n    
+token #422 PHP_PUBLIC public
+token #423 WHITESPACE  
+token #424 PHP_FUNCTION function
+token #425 WHITESPACE  
+token #426 PHP_STRING continue
+token #427 PHP_TOKEN (
+token #428 PHP_TOKEN )
+token #429 PHP_SEMICOLON ;
+token #430 WHITESPACE \n    
+token #431 PHP_PUBLIC public
+token #432 WHITESPACE  
+token #433 PHP_FUNCTION function
+token #434 WHITESPACE  
+token #435 PHP_STRING switch
+token #436 PHP_TOKEN (
+token #437 PHP_TOKEN )
+token #438 PHP_SEMICOLON ;
+token #439 WHITESPACE \n    
+token #440 PHP_PUBLIC public
+token #441 WHITESPACE  
+token #442 PHP_FUNCTION function
+token #443 WHITESPACE  
+token #444 PHP_STRING yield
+token #445 PHP_TOKEN (
+token #446 PHP_TOKEN )
+token #447 PHP_SEMICOLON ;
+token #448 WHITESPACE \n    
+token #449 PHP_PUBLIC public
+token #450 WHITESPACE  
+token #451 PHP_FUNCTION function
+token #452 WHITESPACE  
+token #453 PHP_STRING function
+token #454 PHP_TOKEN (
+token #455 PHP_TOKEN )
+token #456 PHP_SEMICOLON ;
+token #457 WHITESPACE \n    
+token #458 PHP_PUBLIC public
+token #459 WHITESPACE  
+token #460 PHP_FUNCTION function
+token #461 WHITESPACE  
+token #462 PHP_STRING if
+token #463 PHP_TOKEN (
+token #464 PHP_TOKEN )
+token #465 PHP_SEMICOLON ;
+token #466 WHITESPACE \n    
+token #467 PHP_PUBLIC public
+token #468 WHITESPACE  
+token #469 PHP_FUNCTION function
+token #470 WHITESPACE  
+token #471 PHP_STRING endswitch
+token #472 PHP_TOKEN (
+token #473 PHP_TOKEN )
+token #474 PHP_SEMICOLON ;
+token #475 WHITESPACE \n    
+token #476 PHP_PUBLIC public
+token #477 WHITESPACE  
+token #478 PHP_FUNCTION function
+token #479 WHITESPACE  
+token #480 PHP_STRING finally
+token #481 PHP_TOKEN (
+token #482 PHP_TOKEN )
+token #483 PHP_SEMICOLON ;
+token #484 WHITESPACE \n    
+token #485 PHP_PUBLIC public
+token #486 WHITESPACE  
+token #487 PHP_FUNCTION function
+token #488 WHITESPACE  
+token #489 PHP_STRING for
+token #490 PHP_TOKEN (
+token #491 PHP_TOKEN )
+token #492 PHP_SEMICOLON ;
+token #493 WHITESPACE \n    
+token #494 PHP_PUBLIC public
+token #495 WHITESPACE  
+token #496 PHP_FUNCTION function
+token #497 WHITESPACE  
+token #498 PHP_STRING foreach
+token #499 PHP_TOKEN (
+token #500 PHP_TOKEN )
+token #501 PHP_SEMICOLON ;
+token #502 WHITESPACE \n    
+token #503 PHP_PUBLIC public
+token #504 WHITESPACE  
+token #505 PHP_FUNCTION function
+token #506 WHITESPACE  
+token #507 PHP_STRING declare
+token #508 PHP_TOKEN (
+token #509 PHP_TOKEN )
+token #510 PHP_SEMICOLON ;
+token #511 WHITESPACE \n    
+token #512 PHP_PUBLIC public
+token #513 WHITESPACE  
+token #514 PHP_FUNCTION function
+token #515 WHITESPACE  
+token #516 PHP_STRING case
+token #517 PHP_TOKEN (
+token #518 PHP_TOKEN )
+token #519 PHP_SEMICOLON ;
+token #520 WHITESPACE \n    
+token #521 PHP_PUBLIC public
+token #522 WHITESPACE  
+token #523 PHP_FUNCTION function
+token #524 WHITESPACE  
+token #525 PHP_STRING do
+token #526 PHP_TOKEN (
+token #527 PHP_TOKEN )
+token #528 PHP_SEMICOLON ;
+token #529 WHITESPACE \n    
+token #530 PHP_PUBLIC public
+token #531 WHITESPACE  
+token #532 PHP_FUNCTION function
+token #533 WHITESPACE  
+token #534 PHP_STRING while
+token #535 PHP_TOKEN (
+token #536 PHP_TOKEN )
+token #537 PHP_SEMICOLON ;
+token #538 WHITESPACE \n    
+token #539 PHP_PUBLIC public
+token #540 WHITESPACE  
+token #541 PHP_FUNCTION function
+token #542 WHITESPACE  
+token #543 PHP_STRING as
+token #544 PHP_TOKEN (
+token #545 PHP_TOKEN )
+token #546 PHP_SEMICOLON ;
+token #547 WHITESPACE \n    
+token #548 PHP_PUBLIC public
+token #549 WHITESPACE  
+token #550 PHP_FUNCTION function
+token #551 WHITESPACE  
+token #552 PHP_STRING catch
+token #553 PHP_TOKEN (
+token #554 PHP_TOKEN )
+token #555 PHP_SEMICOLON ;
+token #556 WHITESPACE \n    
+token #557 PHP_PUBLIC public
+token #558 WHITESPACE  
+token #559 PHP_FUNCTION function
+token #560 WHITESPACE  
+token #561 PHP_STRING die
+token #562 PHP_TOKEN (
+token #563 PHP_TOKEN )
+token #564 PHP_SEMICOLON ;
+token #565 WHITESPACE \n    
+token #566 PHP_PUBLIC public
+token #567 WHITESPACE  
+token #568 PHP_FUNCTION function
+token #569 WHITESPACE  
+token #570 PHP_STRING self
+token #571 PHP_TOKEN (
+token #572 PHP_TOKEN )
+token #573 PHP_SEMICOLON ;
+token #574 WHITESPACE \n    
+token #575 PHP_PUBLIC public
+token #576 WHITESPACE  
+token #577 PHP_FUNCTION function
+token #578 WHITESPACE  
+token #579 PHP_STRING parent
+token #580 PHP_TOKEN (
+token #581 PHP_TOKEN )
+token #582 PHP_SEMICOLON ;
+token #583 WHITESPACE \n    
+token #584 PHP_PUBLIC public
+token #585 WHITESPACE  
+token #586 PHP_FUNCTION function
+token #587 WHITESPACE  
+token #588 PHP_STRING __CLASS__
+token #589 PHP_TOKEN (
+token #590 PHP_TOKEN )
+token #591 PHP_SEMICOLON ;
+token #592 WHITESPACE \n    
+token #593 PHP_PUBLIC public
+token #594 WHITESPACE  
+token #595 PHP_FUNCTION function
+token #596 WHITESPACE  
+token #597 PHP_STRING __TRAIT__
+token #598 PHP_TOKEN (
+token #599 PHP_TOKEN )
+token #600 PHP_SEMICOLON ;
+token #601 WHITESPACE \n    
+token #602 PHP_PUBLIC public
+token #603 WHITESPACE  
+token #604 PHP_FUNCTION function
+token #605 WHITESPACE  
+token #606 PHP_STRING __FUNCTION__
+token #607 PHP_TOKEN (
+token #608 PHP_TOKEN )
+token #609 PHP_SEMICOLON ;
+token #610 WHITESPACE \n    
+token #611 PHP_PUBLIC public
+token #612 WHITESPACE  
+token #613 PHP_FUNCTION function
+token #614 WHITESPACE  
+token #615 PHP_STRING __METHOD__
+token #616 PHP_TOKEN (
+token #617 PHP_TOKEN )
+token #618 PHP_SEMICOLON ;
+token #619 WHITESPACE \n    
+token #620 PHP_PUBLIC public
+token #621 WHITESPACE  
+token #622 PHP_FUNCTION function
+token #623 WHITESPACE  
+token #624 PHP_STRING __LINE__
+token #625 PHP_TOKEN (
+token #626 PHP_TOKEN )
+token #627 PHP_SEMICOLON ;
+token #628 WHITESPACE \n    
+token #629 PHP_PUBLIC public
+token #630 WHITESPACE  
+token #631 PHP_FUNCTION function
+token #632 WHITESPACE  
+token #633 PHP_STRING __FILE__
+token #634 PHP_TOKEN (
+token #635 PHP_TOKEN )
+token #636 PHP_SEMICOLON ;
+token #637 WHITESPACE \n    
+token #638 PHP_PUBLIC public
+token #639 WHITESPACE  
+token #640 PHP_FUNCTION function
+token #641 WHITESPACE  
+token #642 PHP_STRING __DIR__
+token #643 PHP_TOKEN (
+token #644 PHP_TOKEN )
+token #645 PHP_SEMICOLON ;
+token #646 WHITESPACE \n    
+token #647 PHP_PUBLIC public
+token #648 WHITESPACE  
+token #649 PHP_FUNCTION function
+token #650 WHITESPACE  
+token #651 PHP_STRING __NAMESPACE__
+token #652 PHP_TOKEN (
+token #653 PHP_TOKEN )
+token #654 PHP_SEMICOLON ;
+token #655 WHITESPACE \n
+token #656 PHP_CURLY_CLOSE }
+token #657 WHITESPACE \n

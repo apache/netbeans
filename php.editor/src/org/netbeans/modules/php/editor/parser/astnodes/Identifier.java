@@ -44,21 +44,37 @@ package org.netbeans.modules.php.editor.parser.astnodes;
 /**
  * Holds an identifier.<br>
  * uses for variable name, function name and class name.
- * <pre>e.g.<pre>  $variableName - variableName is the identifier,
+ *
+ * <pre>e.g.  $variableName - variableName is the identifier,
  * foo() - foo is the identifier,
  * $myClass->fun() - myClass and fun are identifiers
+ * class MyClass {
+ *     const CONST = "const"; // CONST is the identifier (PHP7.0)
+ *     public function new(){} // new is the identifier(PHP7.0)
+ * }
+ * </pre>
  */
 public class Identifier extends Expression {
 
-    private String name;
+    private final String name;
+    private final boolean isKeyword; // for PHP7.0 Context Sensitive Lexer
 
     public Identifier(int start, int end, String value) {
+        this(start, end, value, false);
+    }
+
+    public Identifier(int start, int end, String value, boolean isKeyword) {
         super(start, end);
         this.name = value;
+        this.isKeyword = isKeyword;
     }
 
     public String getName() {
         return name;
+    }
+
+    public boolean isKeyword() {
+        return isKeyword;
     }
 
     @Override

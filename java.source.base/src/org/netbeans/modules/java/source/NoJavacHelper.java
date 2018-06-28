@@ -21,10 +21,10 @@ package org.netbeans.modules.java.source;
 import java.lang.reflect.Field;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jdk.internal.misc.Unsafe;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.openide.modules.OnStart;
-import sun.misc.Unsafe;
 
 /**
  *

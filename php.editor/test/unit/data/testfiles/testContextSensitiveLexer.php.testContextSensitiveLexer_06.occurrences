@@ -1,2 +1,0 @@
-    public function |>MARK_OCCURRENCES:implements<|() {
-        $this->|>MARK_OCCURRENCES:implemen^ts<|();

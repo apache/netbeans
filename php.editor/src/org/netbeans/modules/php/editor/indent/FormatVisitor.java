@@ -292,7 +292,7 @@ public class FormatVisitor extends DefaultVisitor {
                 delta = options.indentArrayItems;
             }
             delta = modifyDeltaForEnclosingFunctionInvocations(delta);
-            if (path.get(1) instanceof FunctionInvocation) {
+            if (path.get(1) instanceof FunctionInvocation && ((FunctionInvocation) path.get(1)).getParameters().size() == 1) {
                 int hindex = formatTokens.size() - 1;
                 while (hindex > 0 && formatTokens.get(hindex).getId() != FormatToken.Kind.TEXT
                         && formatTokens.get(hindex).getId() != FormatToken.Kind.WHITESPACE_INDENT
@@ -687,10 +687,6 @@ public class FormatVisitor extends DefaultVisitor {
                 switch (ts.token().id()) {
                     case PHP_CLASS:
                         addFormatToken(formatTokens);
-                        List<Expression> ctorParams = node.ctorParams();
-                        if (!ctorParams.isEmpty()) {
-                            processArguments(ctorParams);
-                        }
                         break;
                     case PHP_IMPLEMENTS:
                         if (node.getInterfaces().size() > 0) {
@@ -702,7 +698,6 @@ public class FormatVisitor extends DefaultVisitor {
                     case PHP_EXTENDS:
                         formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_EXTENDS_IMPLEMENTS, ts.offset()));
                         addFormatToken(formatTokens);
-                        scan(node.getSuperClass());
                         break;
                     default:
                         addFormatToken(formatTokens);
@@ -710,13 +705,10 @@ public class FormatVisitor extends DefaultVisitor {
             }
 
             ts.movePrevious();
-            scan(node.getBody());
+            super.visit(node);
         } else {
             if (node.ctorParams() != null && node.ctorParams().size() > 0) {
-                boolean addIndentation = !(path.get(1) instanceof ReturnStatement
-                        || path.get(1) instanceof Assignment
-                        || path.get(1) instanceof ExpressionStatement)
-                        || (path.size() > 2 && (path.get(1) instanceof ArrayElement) && (path.get(2) instanceof ArrayCreation));
+                boolean addIndentation = (path.size() > 2 && (path.get(1) instanceof ArrayElement) && (path.get(2) instanceof ArrayCreation));
                 if (addIndentation) {
                     formatTokens.add(new FormatToken.IndentToken(node.getClassName().getEndOffset(), options.continualIndentSize));
                 }
@@ -1141,10 +1133,6 @@ public class FormatVisitor extends DefaultVisitor {
             ts.movePrevious();
         }
         scan(node.getFunctionName());
-
-        // #270903 add indent
-        formatTokens.add(new FormatToken.IndentToken(node.getFunctionName().getEndOffset(), options.continualIndentSize));
-
         List<FormalParameter> parameters = node.getFormalParameters();
         if (parameters != null && parameters.size() > 0) {
             while (ts.moveNext() && ts.offset() < parameters.get(0).getStartOffset()
@@ -1154,20 +1142,6 @@ public class FormatVisitor extends DefaultVisitor {
             ts.movePrevious();
             addListOfNodes(parameters, FormatToken.Kind.WHITESPACE_IN_PARAMETER_LIST);
         }
-
-        // #270903 add indent
-        int indentEndOffset;
-        Expression returnType = node.getReturnType();
-        Block body = node.getBody();
-        if (returnType != null) {
-            indentEndOffset = returnType.getStartOffset();
-        } else if (body != null){
-            indentEndOffset = body.getStartOffset();
-        } else {
-            indentEndOffset = node.getEndOffset();
-        }
-        formatTokens.add(new FormatToken.IndentToken(indentEndOffset, -1 * options.continualIndentSize));
-
         addReturnType(node.getReturnType());
         scan(node.getBody());
     }
@@ -1241,15 +1215,20 @@ public class FormatVisitor extends DefaultVisitor {
             boolean addIndentation = !(path.get(1) instanceof ReturnStatement
                     || path.get(1) instanceof Assignment
                     || (path.size() > 2 && path.get(1) instanceof MethodInvocation && path.get(2) instanceof Assignment));
-            FormatToken.IndentToken indentToken = new FormatToken.IndentToken(node.getFunctionName().getEndOffset(), options.continualIndentSize);
+            // anonymous classes
+            if (options.wrapMethodCallArgs != CodeStyle.WrapStyle.WRAP_ALWAYS) {
+                for (Expression parameter : parameters) {
+                    if (isAnonymousClass(parameter)) {
+                        addIndentation = false;
+                        break;
+                    }
+                }
+            }
+
             if (addIndentation) {
-                formatTokens.add(indentToken);
+                formatTokens.add(new FormatToken.IndentToken(node.getFunctionName().getEndOffset(), options.continualIndentSize));
             }
             processArguments(parameters);
-
-            // remove an indent token when the last param is an anonymous class
-            addIndentation = removeIndentTokenForAnonymousClass(parameters, indentToken, addIndentation);
-
             if (addIndentation) {
                 List<FormatToken> removed = new ArrayList<>();
                 FormatToken ftoken = formatTokens.get(formatTokens.size() - 1);
@@ -1259,7 +1238,7 @@ public class FormatVisitor extends DefaultVisitor {
                         || ftoken.getId() == FormatToken.Kind.COMMENT_START
                         || ftoken.getId() == FormatToken.Kind.COMMENT_END
                         || ftoken.getId() == FormatToken.Kind.INDENT
-                        || (ftoken.getId() == FormatToken.Kind.TEXT && (")".equals(ftoken.getOldText()) || "]".equals(ftoken.getOldText())))) { // NOI18N
+                        || (ftoken.getId() == FormatToken.Kind.TEXT && (")".equals(ftoken.getOldText().toString()) || "]".equals(ftoken.getOldText().toString())))) {
                     formatTokens.remove(formatTokens.size() - 1);
                     removed.add(ftoken);
                     ftoken = formatTokens.get(formatTokens.size() - 1);
@@ -1280,42 +1259,6 @@ public class FormatVisitor extends DefaultVisitor {
             }
         }
         addAllUntilOffset(node.getEndOffset());
-    }
-
-    private boolean removeIndentTokenForAnonymousClass(List<Expression> parameters, FormatToken.IndentToken indentToken, boolean addIndentation) {
-        boolean addIndent = addIndentation;
-        if (options.wrapMethodCallArgs == CodeStyle.WrapStyle.WRAP_ALWAYS
-                || parameters.isEmpty()) {
-            return addIndent;
-        }
-        Expression firstParameter = parameters.get(0);
-        if (!isAnonymousClass(parameters.get(parameters.size() - 1))) {
-            return addIndent;
-        }
-
-        for (Expression parameter : parameters) {
-            if (isAnonymousClass(parameter)) {
-                int index = formatTokens.size() - 1;
-                FormatToken lastFormatToken = formatTokens.get(index);
-                while (lastFormatToken.getOffset() >= firstParameter.getStartOffset()) {
-                    index--;
-                    lastFormatToken = formatTokens.get(index);
-                    if (parameter.getStartOffset() == lastFormatToken.getOffset()) {
-                        if (index - 1 >= 0
-                                && formatTokens.get(index - 1).getId() == FormatToken.Kind.WHITESPACE_INDENT) {
-                            lastFormatToken = formatTokens.get(index - 1);
-                            break;
-                        }
-                    }
-                }
-                if (lastFormatToken.getId() != FormatToken.Kind.WHITESPACE_INDENT) {
-                    formatTokens.remove(indentToken);
-                    addIndent = false;
-                }
-                break;
-            }
-        }
-        return addIndent;
     }
 
     @Override
@@ -1352,8 +1295,6 @@ public class FormatVisitor extends DefaultVisitor {
         scan(node.getCondition());
         Statement trueStatement = node.getTrueStatement();
         formatTokens.add(new FormatToken.IndentToken(ts.offset(), -1 * options.continualIndentSize));
-        // #268541
-        boolean isTrueStatementCurly = false;
         if (trueStatement != null && trueStatement instanceof Block && !((Block) trueStatement).isCurly()) {
             isCurly = false;
             addAllUntilOffset(trueStatement.getStartOffset());
@@ -1368,7 +1309,6 @@ public class FormatVisitor extends DefaultVisitor {
             isCurly = false;
             addNoCurlyBody(trueStatement, FormatToken.Kind.WHITESPACE_BEFORE_IF_ELSE_STATEMENT);
         } else {
-            isTrueStatementCurly = true;
             scan(trueStatement);
         }
         Statement falseStatement = node.getFalseStatement();
@@ -1405,7 +1345,6 @@ public class FormatVisitor extends DefaultVisitor {
             addEndOfUnbreakableSequence(falseStatement.getEndOffset());
             formatTokens.add(new FormatToken.IndentToken(falseStatement.getEndOffset(), -1 * options.indentSize));
         } else {
-            isCurly = isTrueStatementCurly;
             scan(falseStatement);
         }
 

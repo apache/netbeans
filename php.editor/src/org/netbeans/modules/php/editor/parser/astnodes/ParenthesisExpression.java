@@ -43,11 +43,8 @@ package org.netbeans.modules.php.editor.parser.astnodes;
 
 /**
  * Represents a parenthesis expression
- * <pre>e.g. ( $a == 2 );
- * $data = (yield $value);
- * $data = (yield $key => $value);
- * echo ((string) $variable);
- * </pre>
+ * <pre>e.g.<pre> ( $a == 2 );
+ * echo ($a);
  */
 public class ParenthesisExpression extends Expression {
 

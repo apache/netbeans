@@ -95,7 +95,7 @@ public class AnalysisOptionsPanel extends JPanel {
         assert EventQueue.isDispatchThread();
         String name = panel.getCategoryName();
         assert !categoryPanels.containsKey(name) : name + " already found in " + categoryPanels;
-        ((DefaultListModel<String>) categoriesList.getModel()).addElement(name);
+        ((DefaultListModel) categoriesList.getModel()).addElement(name);
         categoryPanels.put(name, panel);
     }
 
@@ -132,7 +132,7 @@ public class AnalysisOptionsPanel extends JPanel {
     @CheckForNull
     public AnalysisCategoryPanel getSelectedPanel() {
         assert EventQueue.isDispatchThread();
-        String categoryName = categoriesList.getSelectedValue();
+        String categoryName = (String) categoriesList.getSelectedValue();
         return categoryPanels.get(categoryName);
     }
 
@@ -147,12 +147,12 @@ public class AnalysisOptionsPanel extends JPanel {
 
         errorLabel = new JLabel();
         categoriesScrollPane = new JScrollPane();
-        categoriesList = new JList<>();
+        categoriesList = new JList<String>();
         categoryPanel = new JPanel();
 
         Mnemonics.setLocalizedText(errorLabel, "ERROR"); // NOI18N
 
-        categoriesList.setModel(new DefaultListModel<String>());
+        categoriesList.setModel(new DefaultListModel());
         categoriesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         categoriesList.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent evt) {
@@ -165,7 +165,8 @@ public class AnalysisOptionsPanel extends JPanel {
 
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addComponent(categoriesScrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -177,7 +178,8 @@ public class AnalysisOptionsPanel extends JPanel {
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(0, 0, 0))
         );
-        layout.setVerticalGroup(layout.createParallelGroup(Alignment.LEADING)
+        layout.setVerticalGroup(
+            layout.createParallelGroup(Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(Alignment.TRAILING)

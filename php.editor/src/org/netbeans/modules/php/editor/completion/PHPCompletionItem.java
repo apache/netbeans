@@ -1336,9 +1336,11 @@ public abstract class PHPCompletionItem implements CompletionProposal {
 
         @Override
         public String getLhsHtml(HtmlFormatter formatter) {
-            formatter.name(getKind(), true); // <b> is added, so don't call formatter.emphasis(true)
+            formatter.name(getKind(), true);
+            formatter.emphasis(true);
             formatter.appendText(getName());
-            formatter.name(getKind(), false); // </b> is added
+            formatter.emphasis(false);
+            formatter.name(getKind(), false);
 
             return formatter.getText();
         }

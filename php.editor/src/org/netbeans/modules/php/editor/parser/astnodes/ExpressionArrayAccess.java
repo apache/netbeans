@@ -42,16 +42,15 @@
 package org.netbeans.modules.php.editor.parser.astnodes;
 
 /**
- * <pre>e.g.
+ * <pre>e.g.<pre>
  * [1, 2, 3][0];
  * "String"[1];
  * CONSTANT[1][2]; MyClass::CONSTANT[1];
  * \Foo\CONSTANT[0]; namespace\CONSTANT[0];
- * </pre>
  *
  * @author Ondrej Brejla <obrejla@netbeans.org>
  */
-public class ExpressionArrayAccess extends VariableBase {
+public class ExpressionArrayAccess extends Expression {
     private final Expression expression;
     private final ArrayDimension dimension;
 

@@ -76,6 +76,7 @@ import org.netbeans.modules.web.common.api.ByteStack;
 
 
 %state ST_IN_SCRIPTING
+%state ST_LOOKING_FOR_CLASS_CONST
 %state ST_DOUBLE_QUOTES
 %state ST_BACKQUOTE
 %state ST_HEREDOC
@@ -327,15 +328,15 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
 }
 
 <ST_IN_SCRIPTING>"function" {
-	return createFullSymbol(ASTPHP5Symbols.T_FUNCTION);
+	return createSymbol(ASTPHP5Symbols.T_FUNCTION);
 }
 
 <ST_IN_SCRIPTING>"const" {
-	return createFullSymbol(ASTPHP5Symbols.T_CONST);
+	return createSymbol(ASTPHP5Symbols.T_CONST);
 }
 
 <ST_IN_SCRIPTING>"return" {
-	return createFullSymbol(ASTPHP5Symbols.T_RETURN);
+	return createSymbol(ASTPHP5Symbols.T_RETURN);
 }
 
 <ST_IN_SCRIPTING>"yield"{WHITESPACE}+"from" {
@@ -343,143 +344,143 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
 }
 
 <ST_IN_SCRIPTING>"yield" {
-	return createFullSymbol(ASTPHP5Symbols.T_YIELD);
+	return createSymbol(ASTPHP5Symbols.T_YIELD);
 }
 
 <ST_IN_SCRIPTING>"try" {
-	return createFullSymbol(ASTPHP5Symbols.T_TRY);
+	return createSymbol(ASTPHP5Symbols.T_TRY);
 }
 
 <ST_IN_SCRIPTING>"catch" {
-	return createFullSymbol(ASTPHP5Symbols.T_CATCH);
+	return createSymbol(ASTPHP5Symbols.T_CATCH);
 }
 
 <ST_IN_SCRIPTING>"throw" {
-	return createFullSymbol(ASTPHP5Symbols.T_THROW);
+	return createSymbol(ASTPHP5Symbols.T_THROW);
 }
 
 <ST_IN_SCRIPTING>"finally" {
-	return createFullSymbol(ASTPHP5Symbols.T_FINALLY);
+	return createSymbol(ASTPHP5Symbols.T_FINALLY);
 }
 
 <ST_IN_SCRIPTING>"if" {
-	return createFullSymbol(ASTPHP5Symbols.T_IF);
+	return createSymbol(ASTPHP5Symbols.T_IF);
 }
 
 <ST_IN_SCRIPTING>"elseif" {
-	return createFullSymbol(ASTPHP5Symbols.T_ELSEIF);
+	return createSymbol(ASTPHP5Symbols.T_ELSEIF);
 }
 
 <ST_IN_SCRIPTING>"endif" {
-	return createFullSymbol(ASTPHP5Symbols.T_ENDIF);
+	return createSymbol(ASTPHP5Symbols.T_ENDIF);
 }
 
 <ST_IN_SCRIPTING>"else" {
-	return createFullSymbol(ASTPHP5Symbols.T_ELSE);
+	return createSymbol(ASTPHP5Symbols.T_ELSE);
 }
 
 <ST_IN_SCRIPTING>"while" {
-	return createFullSymbol(ASTPHP5Symbols.T_WHILE);
+	return createSymbol(ASTPHP5Symbols.T_WHILE);
 }
 
 <ST_IN_SCRIPTING>"endwhile" {
-	return createFullSymbol(ASTPHP5Symbols.T_ENDWHILE);
+	return createSymbol(ASTPHP5Symbols.T_ENDWHILE);
 }
 
 <ST_IN_SCRIPTING>"do" {
-	return createFullSymbol(ASTPHP5Symbols.T_DO);
+	return createSymbol(ASTPHP5Symbols.T_DO);
 }
 
 <ST_IN_SCRIPTING>"for" {
-	return createFullSymbol(ASTPHP5Symbols.T_FOR);
+	return createSymbol(ASTPHP5Symbols.T_FOR);
 }
 
 <ST_IN_SCRIPTING>"endfor" {
-	return createFullSymbol(ASTPHP5Symbols.T_ENDFOR);
+	return createSymbol(ASTPHP5Symbols.T_ENDFOR);
 }
 
 <ST_IN_SCRIPTING>"foreach" {
-	return createFullSymbol(ASTPHP5Symbols.T_FOREACH);
+	return createSymbol(ASTPHP5Symbols.T_FOREACH);
 }
 
 <ST_IN_SCRIPTING>"endforeach" {
-	return createFullSymbol(ASTPHP5Symbols.T_ENDFOREACH);
+	return createSymbol(ASTPHP5Symbols.T_ENDFOREACH);
 }
 
 <ST_IN_SCRIPTING>"declare" {
-	return createFullSymbol(ASTPHP5Symbols.T_DECLARE);
+	return createSymbol(ASTPHP5Symbols.T_DECLARE);
 }
 
 <ST_IN_SCRIPTING>"enddeclare" {
-	return createFullSymbol(ASTPHP5Symbols.T_ENDDECLARE);
+	return createSymbol(ASTPHP5Symbols.T_ENDDECLARE);
 }
 
 <ST_IN_SCRIPTING>"instanceof" {
-	return createFullSymbol(ASTPHP5Symbols.T_INSTANCEOF);
+	return createSymbol(ASTPHP5Symbols.T_INSTANCEOF);
 }
 
 <ST_IN_SCRIPTING>"insteadof" {
-	return createFullSymbol(ASTPHP5Symbols.T_INSTEADOF);
+	return createSymbol(ASTPHP5Symbols.T_INSTEADOF);
 }
 
 <ST_IN_SCRIPTING>"as" {
-	return createFullSymbol(ASTPHP5Symbols.T_AS);
+	return createSymbol(ASTPHP5Symbols.T_AS);
 }
 
 <ST_IN_SCRIPTING>"switch" {
-	return createFullSymbol(ASTPHP5Symbols.T_SWITCH);
+	return createSymbol(ASTPHP5Symbols.T_SWITCH);
 }
 
 <ST_IN_SCRIPTING>"endswitch" {
-	return createFullSymbol(ASTPHP5Symbols.T_ENDSWITCH);
+	return createSymbol(ASTPHP5Symbols.T_ENDSWITCH);
 }
 
 <ST_IN_SCRIPTING>"case" {
-	return createFullSymbol(ASTPHP5Symbols.T_CASE);
+	return createSymbol(ASTPHP5Symbols.T_CASE);
 }
 
 <ST_IN_SCRIPTING>"default" {
-	return createFullSymbol(ASTPHP5Symbols.T_DEFAULT);
+	return createSymbol(ASTPHP5Symbols.T_DEFAULT);
 }
 
 <ST_IN_SCRIPTING>"break" {
-	return createFullSymbol(ASTPHP5Symbols.T_BREAK);
+	return createSymbol(ASTPHP5Symbols.T_BREAK);
 }
 
 <ST_IN_SCRIPTING>"continue" {
-	return createFullSymbol(ASTPHP5Symbols.T_CONTINUE);
+	return createSymbol(ASTPHP5Symbols.T_CONTINUE);
 }
 
 <ST_IN_SCRIPTING>"goto" {
- 	return createFullSymbol(ASTPHP5Symbols.T_GOTO);
+ 	return createSymbol(ASTPHP5Symbols.T_GOTO);
 }
 
 <ST_IN_SCRIPTING>"echo" {
-	return createFullSymbol(ASTPHP5Symbols.T_ECHO);
+	return createSymbol(ASTPHP5Symbols.T_ECHO);
 }
 
 <ST_IN_SCRIPTING>"print" {
-	return createFullSymbol(ASTPHP5Symbols.T_PRINT);
+	return createSymbol(ASTPHP5Symbols.T_PRINT);
 }
 
 <ST_IN_SCRIPTING>"class" {
-	return createFullSymbol(ASTPHP5Symbols.T_CLASS);
+	return createSymbol(ASTPHP5Symbols.T_CLASS);
 }
 
 <ST_IN_SCRIPTING>"trait" {
-	return createFullSymbol(ASTPHP5Symbols.T_TRAIT);
+	return createSymbol(ASTPHP5Symbols.T_TRAIT);
 }
 
 <ST_IN_SCRIPTING>"interface" {
-	return createFullSymbol(ASTPHP5Symbols.T_INTERFACE);
+	return createSymbol(ASTPHP5Symbols.T_INTERFACE);
 }
 
 <ST_IN_SCRIPTING>"extends" {
-	return createFullSymbol(ASTPHP5Symbols.T_EXTENDS);
+	return createSymbol(ASTPHP5Symbols.T_EXTENDS);
 }
 
 <ST_IN_SCRIPTING>"implements" {
-	return createFullSymbol(ASTPHP5Symbols.T_IMPLEMENTS);
+	return createSymbol(ASTPHP5Symbols.T_IMPLEMENTS);
 }
 
 <ST_IN_SCRIPTING>"->" {
@@ -506,7 +507,19 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
 }
 
 <ST_IN_SCRIPTING>"::" {
+    pushState(ST_LOOKING_FOR_CLASS_CONST);
 	return createSymbol(ASTPHP5Symbols.T_PAAMAYIM_NEKUDOTAYIM);
+}
+
+<ST_LOOKING_FOR_CLASS_CONST> {
+    "class" {
+        popState();
+        return createFullSymbol(ASTPHP5Symbols.T_STRING);
+    }
+    {ANY_CHAR} | "class"{LABEL} {
+        yypushback(yylength());
+        popState();
+    }
 }
 
 <ST_IN_SCRIPTING>"\\" {
@@ -514,15 +527,15 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
 }
 
 <ST_IN_SCRIPTING>"new" {
-	return createFullSymbol(ASTPHP5Symbols.T_NEW);
+	return createSymbol(ASTPHP5Symbols.T_NEW);
 }
 
 <ST_IN_SCRIPTING>"clone" {
-	return createFullSymbol(ASTPHP5Symbols.T_CLONE);
+	return createSymbol(ASTPHP5Symbols.T_CLONE);
 }
 
 <ST_IN_SCRIPTING>"var" {
-	return createFullSymbol(ASTPHP5Symbols.T_VAR);
+	return createSymbol(ASTPHP5Symbols.T_VAR);
 }
 
 <ST_IN_SCRIPTING>"("{TABS_AND_SPACES}("int"|"integer"){TABS_AND_SPACES}")" {
@@ -558,43 +571,43 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
 }
 
 <ST_IN_SCRIPTING>"eval" {
-	return createFullSymbol(ASTPHP5Symbols.T_EVAL);
+	return createSymbol(ASTPHP5Symbols.T_EVAL);
 }
 
 <ST_IN_SCRIPTING>"include" {
-	return createFullSymbol(ASTPHP5Symbols.T_INCLUDE);
+	return createSymbol(ASTPHP5Symbols.T_INCLUDE);
 }
 
 <ST_IN_SCRIPTING>"include_once" {
-	return createFullSymbol(ASTPHP5Symbols.T_INCLUDE_ONCE);
+	return createSymbol(ASTPHP5Symbols.T_INCLUDE_ONCE);
 }
 
 <ST_IN_SCRIPTING>"require" {
-	return createFullSymbol(ASTPHP5Symbols.T_REQUIRE);
+	return createSymbol(ASTPHP5Symbols.T_REQUIRE);
 }
 
 <ST_IN_SCRIPTING>"require_once" {
-	return createFullSymbol(ASTPHP5Symbols.T_REQUIRE_ONCE);
+	return createSymbol(ASTPHP5Symbols.T_REQUIRE_ONCE);
 }
 
 <ST_IN_SCRIPTING>"namespace" {
- 	return createFullSymbol(ASTPHP5Symbols.T_NAMESPACE);
+ 	return createSymbol(ASTPHP5Symbols.T_NAMESPACE);
 }
 
 <ST_IN_SCRIPTING>"use" {
-	return createFullSymbol(ASTPHP5Symbols.T_USE);
+	return createSymbol(ASTPHP5Symbols.T_USE);
 }
 
 <ST_IN_SCRIPTING>"global" {
-	return createFullSymbol(ASTPHP5Symbols.T_GLOBAL);
+	return createSymbol(ASTPHP5Symbols.T_GLOBAL);
 }
 
 <ST_IN_SCRIPTING>"isset" {
-	return createFullSymbol(ASTPHP5Symbols.T_ISSET);
+	return createSymbol(ASTPHP5Symbols.T_ISSET);
 }
 
 <ST_IN_SCRIPTING>"empty" {
-	return createFullSymbol(ASTPHP5Symbols.T_EMPTY);
+	return createSymbol(ASTPHP5Symbols.T_EMPTY);
 }
 
 <ST_IN_SCRIPTING>"__halt_compiler();" {
@@ -607,31 +620,31 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
 }
 
 <ST_IN_SCRIPTING>"static" {
-	return createFullSymbol(ASTPHP5Symbols.T_STATIC);
+	return createSymbol(ASTPHP5Symbols.T_STATIC);
 }
 
 <ST_IN_SCRIPTING>"abstract" {
-	return createFullSymbol(ASTPHP5Symbols.T_ABSTRACT);
+	return createSymbol(ASTPHP5Symbols.T_ABSTRACT);
 }
 
 <ST_IN_SCRIPTING>"final" {
-	return createFullSymbol(ASTPHP5Symbols.T_FINAL);
+	return createSymbol(ASTPHP5Symbols.T_FINAL);
 }
 
 <ST_IN_SCRIPTING>"private" {
-	return createFullSymbol(ASTPHP5Symbols.T_PRIVATE);
+	return createSymbol(ASTPHP5Symbols.T_PRIVATE);
 }
 
 <ST_IN_SCRIPTING>"protected" {
-	return createFullSymbol(ASTPHP5Symbols.T_PROTECTED);
+	return createSymbol(ASTPHP5Symbols.T_PROTECTED);
 }
 
 <ST_IN_SCRIPTING>"public" {
-	return createFullSymbol(ASTPHP5Symbols.T_PUBLIC);
+	return createSymbol(ASTPHP5Symbols.T_PUBLIC);
 }
 
 <ST_IN_SCRIPTING>"unset" {
-	return createFullSymbol(ASTPHP5Symbols.T_UNSET);
+	return createSymbol(ASTPHP5Symbols.T_UNSET);
 }
 
 <ST_IN_SCRIPTING>"=>" {
@@ -639,15 +652,15 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
 }
 
 <ST_IN_SCRIPTING>"list" {
-	return createFullSymbol(ASTPHP5Symbols.T_LIST);
+	return createSymbol(ASTPHP5Symbols.T_LIST);
 }
 
 <ST_IN_SCRIPTING>"array" {
-	return createFullSymbol(ASTPHP5Symbols.T_ARRAY);
+	return createSymbol(ASTPHP5Symbols.T_ARRAY);
 }
 
 <ST_IN_SCRIPTING>"callable" {
-	return createFullSymbol(ASTPHP5Symbols.T_CALLABLE);
+	return createSymbol(ASTPHP5Symbols.T_CALLABLE);
 }
 
 <ST_IN_SCRIPTING>"++" {
@@ -739,15 +752,15 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
 }
 
 <ST_IN_SCRIPTING>"OR" {
-	return createFullSymbol(ASTPHP5Symbols.T_LOGICAL_OR);
+	return createSymbol(ASTPHP5Symbols.T_LOGICAL_OR);
 }
 
 <ST_IN_SCRIPTING>"AND" {
-	return createFullSymbol(ASTPHP5Symbols.T_LOGICAL_AND);
+	return createSymbol(ASTPHP5Symbols.T_LOGICAL_AND);
 }
 
 <ST_IN_SCRIPTING>"XOR" {
-	return createFullSymbol(ASTPHP5Symbols.T_LOGICAL_XOR);
+	return createSymbol(ASTPHP5Symbols.T_LOGICAL_XOR);
 }
 
 <ST_IN_SCRIPTING>"<<" {
@@ -860,7 +873,7 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
 }
 
 <ST_IN_SCRIPTING>"__CLASS__" {
-    return createFullSymbol(ASTPHP5Symbols.T_CLASS_C);
+    return createSymbol(ASTPHP5Symbols.T_CLASS_C);
 }
 
 <ST_IN_SCRIPTING>"__TRAIT__" {
@@ -868,27 +881,27 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
 }
 
 <ST_IN_SCRIPTING>"__FUNCTION__" {
-    return createFullSymbol(ASTPHP5Symbols.T_FUNC_C);
+    return createSymbol(ASTPHP5Symbols.T_FUNC_C);
 }
 
 <ST_IN_SCRIPTING>"__METHOD__" {
-    return createFullSymbol(ASTPHP5Symbols.T_METHOD_C);
+    return createSymbol(ASTPHP5Symbols.T_METHOD_C);
 }
 
 <ST_IN_SCRIPTING>"__LINE__" {
-    return createFullSymbol(ASTPHP5Symbols.T_LINE);
+    return createSymbol(ASTPHP5Symbols.T_LINE);
 }
 
 <ST_IN_SCRIPTING>"__FILE__" {
-    return createFullSymbol(ASTPHP5Symbols.T_FILE);
+    return createSymbol(ASTPHP5Symbols.T_FILE);
 }
 
 <ST_IN_SCRIPTING>"__DIR__" {
- 	return createFullSymbol(ASTPHP5Symbols.T_DIR);
+ 	return createSymbol(ASTPHP5Symbols.T_DIR);
 }
 
 <ST_IN_SCRIPTING>"__NAMESPACE__" {
-	return createFullSymbol(ASTPHP5Symbols.T_NS_C);
+	return createSymbol(ASTPHP5Symbols.T_NS_C);
 }
 
 <YYINITIAL>(([^<]|"<"[^?%s<])+)|"<s"|"<" {

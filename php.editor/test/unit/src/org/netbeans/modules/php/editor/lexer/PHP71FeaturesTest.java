@@ -61,9 +61,4 @@ public class PHP71FeaturesTest extends PHPLexerTestBase {
         performTest("lexer/iterable_01");
     }
 
-    // #262141
-    public void testContextSensitiveLexerWithConstVisibility01() throws Exception {
-        performTest("lexer/context_sensitive_lexer_with_const_visibility_01");
-    }
-
 }

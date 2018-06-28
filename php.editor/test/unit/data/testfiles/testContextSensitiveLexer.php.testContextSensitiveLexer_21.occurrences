@@ -1,2 +1,0 @@
-    const ECHO = "ECHO", |>MARK_OCCURRENCES:FOR<| = 1;
-ChildClass::|>MARK_OCCURRENCES:F^OR<|;

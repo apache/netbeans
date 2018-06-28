@@ -1,2 +1,0 @@
-    public static function ^|>MARK_OCCURRENCES:new<|($new) {
-ChildClass::|>MARK_OCCURRENCES:new<|("test");

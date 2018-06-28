@@ -1,2 +1,0 @@
-    const GOTO = [1, 2], |>MARK_OCCURRENCES:I^F<| = 2;
-        ChildClass::|>MARK_OCCURRENCES:IF<|;

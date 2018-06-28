@@ -59,7 +59,9 @@
                     <Member>
                         <FunctionInvocation start='20' end='25'>
                             <FucntionName start='20' end='23'>
-                                <Identifier start='20' end='23' name='baz'/>
+                                <Variable start='20' end='23' isDollared='false'>
+                                    <Identifier start='20' end='23' name='baz'/>
+                                </Variable>
                             </FucntionName>
                             <Parameters>
                             </Parameters>
@@ -67,7 +69,9 @@
                     </Member>
                     <FunctionInvocation start='20' end='25'>
                         <FucntionName start='20' end='23'>
-                            <Identifier start='20' end='23' name='baz'/>
+                            <Variable start='20' end='23' isDollared='false'>
+                                <Identifier start='20' end='23' name='baz'/>
+                            </Variable>
                         </FucntionName>
                         <Parameters>
                         </Parameters>

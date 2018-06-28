@@ -4,3 +4,4 @@ UVS3::myStatic3()::myStatic2()::|myStatic1()::MAX;
 METHOD     myStatic1()                     [STATIC]   UVS1
 VARIABLE   UVS1 $INSTANCE                  [STATIC]   UVS1
 CONSTANT   MAX 99                          [PUBLIC]   UVS1
+CONSTANT   class \UVS1                     [PUBLIC]   Magic Constant

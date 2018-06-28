@@ -1,6 +1,3 @@
-[[132,140]-POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	function] 132-140:POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	function
 [[187,188]-POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	}] 187-188:POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	}
@@ -11,3 +8,6 @@
  unexpected:	identifier 'xmlParser'
  after:	{
  expected:	function, const, use, var, }, VAR_COMMENT, static, abstract, final, private, protected, public
+[[83,84]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	{] 83-84:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	{

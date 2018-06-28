@@ -499,16 +499,9 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             case INHERITANCE:
                 autoCompleteKeywords(completionResult, request, INHERITANCE_KEYWORDS);
                 break;
-            case THROW_NEW:
+            case THROW:
                 autoCompleteNamespaces(completionResult, request);
                 autoCompleteExceptions(completionResult, request, true);
-                break;
-            case THROW:
-                autoCompleteKeywords(completionResult, request, Collections.singletonList("new")); // NOI18N
-                autoCompleteNamespaces(completionResult, request);
-                // XXX allow all class names for static factory methods? e.g. ExceptionFactory::create("Something");
-                // currently, restrict to classes extending the Exception class
-                autoCompleteExceptions(completionResult, request, false);
                 break;
             case CATCH:
                 autoCompleteNamespaces(completionResult, request);
@@ -714,7 +707,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                     if (isExceptionClass(inheritedClass)) {
                         completionResult.add(new PHPCompletionItem.ClassItem(classElement, request, false, null));
                         if (withConstructors) {
-                            constructorClassNames.add(classElement.getFullyQualifiedName());
+                            constructorClassNames.add(inheritedClass.getFullyQualifiedName());
                         }
                         break;
                     }
@@ -1209,16 +1202,15 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                         }
                     }
                     if (staticContext) {
-                        boolean isDynamicAccess = isDynamicAccess(varName);
+                        boolean isVariableAccess = isVariableAccess(varName);
                         Set<TypeConstantElement> magicConstants = constantsFilter.filter(request.index.getAccessibleMagicConstants(typeScope));
                         for (TypeConstantElement magicConstant : magicConstants) {
                             if (CancelSupport.getDefault().isCancelled()) {
                                 return;
                             }
                             if (magicConstant != null) {
-                                // dynamic class names are not allowed in complie-time
-                                // e.g. $instance::class, create()::class
-                                if ("class".equals(magicConstant.getName()) && isDynamicAccess) { // NOI18N
+                                // $instance::class is invalid
+                                if ("class".equals(magicConstant.getName()) && isVariableAccess) { // NOI18N
                                     continue;
                                 }
                                 completionResult.add(PHPCompletionItem.TypeConstantItem.getItem(magicConstant, request));
@@ -1230,14 +1222,10 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         }
     }
 
-    private static boolean isDynamicAccess(CharSequence varName) {
-        if (varName != null) {
-            return varName.charAt(0) == '$'
-                    || varName.charAt(0) == ']' // array
-                    || varName.charAt(0) == '}'
-                    || varName.charAt(0) == ')';
-        }
-        return false;
+    private static boolean isVariableAccess(CharSequence varName) {
+        // "]" : array
+        return varName != null
+                && (varName.charAt(0) == '$' || varName.charAt(0) == ']'); // NOI18N
     }
 
     private void autoCompleteClassFields(final PHPCompletionResult completionResult, final PHPCompletionItem.CompletionRequest request) {

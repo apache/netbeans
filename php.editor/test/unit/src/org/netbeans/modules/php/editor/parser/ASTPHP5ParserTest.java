@@ -694,15 +694,15 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/uniformVariableSyntax_20");
     }
 
-    // #262141
-    public void testUniformVariableSyntax_21() throws Exception {
-        performTest("parser/uniformVariableSyntax_21");
-    }
+    // XXX
+//    public void testUniformVariableSyntax_21() throws Exception {
+//        performTest("parser/uniformVariableSyntax_21");
+//    }
 
-    // #262141
-    public void testUniformVariableSyntax_22() throws Exception {
-        performTest("parser/uniformVariableSyntax_22");
-    }
+    // XXX
+//    public void testUniformVariableSyntax_22() throws Exception {
+//        performTest("parser/uniformVariableSyntax_22");
+//    }
 
     public void testUniformVariableSyntax_23() throws Exception {
         performTest("parser/uniformVariableSyntax_23");
@@ -746,31 +746,6 @@ public class ASTPHP5ParserTest extends ParserTestBase {
 
     public void testUniformVariableSyntax_33() throws Exception {
         performTest("parser/uniformVariableSyntax_33");
-    }
-
-    // #262141
-    public void testUniformVariableSyntax_34() throws Exception {
-        // ... -> ... (->|::)
-        performTest("parser/uniformVariableSyntax_34");
-    }
-
-    public void testUniformVariableSyntax_35() throws Exception {
-        // ... :: ... (->|::)
-        performTest("parser/uniformVariableSyntax_35");
-    }
-
-    public void testUniformVariableSyntax_36() throws Exception {
-        // dereferencable
-        performTest("parser/uniformVariableSyntax_36");
-    }
-
-    public void testUniformVariableSyntax_37() throws Exception {
-        // [$object1, $object2][0]->property;
-        performTest("parser/uniformVariableSyntax_37");
-    }
-
-    public void testCloneExpression_01() throws Exception {
-        performTest("parser/cloneExpression_01");
     }
 
     public void testGroupUse_01() throws Exception {
@@ -847,39 +822,8 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/issue269707");
     }
 
-    // #262141 PHP7.0
-    public void testContextSensitiveLexer_01() throws Exception {
-        performTest("parser/contextSensitiveLexer_01");
-    }
-
-    public void testContextSensitiveLexer_02() throws Exception {
-        performTest("parser/contextSensitiveLexer_02");
-    }
-
-    public void testContextSensitiveLexer_03() throws Exception {
-        performTest("parser/contextSensitiveLexer_03");
-    }
-
-    public void testContextSensitiveLexer_04() throws Exception {
-        performTest("parser/contextSensitiveLexer_04");
-    }
-
-    public void testContextSensitiveLexer_05() throws Exception {
-        performTest("parser/contextSensitiveLexer_05");
-    }
-
-    public void testContextSensitiveLexerWithConstVisibility_01() throws Exception {
-        performTest("parser/contextSensitiveLexerWithConstVisibility_01");
-    }
-
-    public void testIssue271109() throws Exception {
-        // PHP7
-        performTest("parser/issue271109");
-    }
-
     @Override
     protected String getTestResult(String filename) throws Exception {
-        // the same <Comment /> is shown twice becase the scanner is used twice
         File testFile = new File(getDataDir(), "testfiles/" + filename + ".php");
         StringBuilder result = new StringBuilder();
         String content = PHPLexerUtils.getFileContent(testFile);

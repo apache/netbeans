@@ -1,2 +1,0 @@
-    public function |>MARK_OCCURRENCES:trait<|($a) {
-$child->|>MARK_OCCURRENCES:trai^t<|("trait");

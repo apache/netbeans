@@ -1,7 +1,6 @@
 Code completion result for source line:
 throw new |ExMyException();
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
-CONSTRUCTO ExMyException()                 [PUBLIC]   ExMyException
 CONSTRUCTO Exception()                     [PUBLIC]   Exception
 PACKAGE    ExtraThrow                      [PUBLIC]   null
 PACKAGE    MySpaceThrow                    [PUBLIC]   null

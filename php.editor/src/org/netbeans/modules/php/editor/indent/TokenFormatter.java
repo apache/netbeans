@@ -216,8 +216,6 @@ public class TokenFormatter {
         public boolean groupMulitilineAssignment;
         public boolean groupMulitilineArrayInit;
 
-        boolean wrapNeverKeepLines = Boolean.getBoolean("nb.php.editor.formatting.never.keep.lines"); // NOI18N
-
         public DocumentOptions(BaseDocument doc) {
             CodeStyle codeStyle = CodeStyle.get(doc);
             continualIndentSize = codeStyle.getContinuationIndentSize();
@@ -891,15 +889,12 @@ public class TokenFormatter {
                                         switch (docOptions.wrapMethodParams) {
                                             case WRAP_ALWAYS:
                                                 newLines = 1;
-                                                countSpaces = docOptions.alignMultilineMethodParams ? lastAnchor.getAnchorColumn() : indent;
+                                                countSpaces = docOptions.alignMultilineMethodParams ? lastAnchor.getAnchorColumn() : indent + docOptions.continualIndentSize;
                                                 break;
                                             case WRAP_NEVER:
-                                                // for keeping the same line
-                                                int countOfNewLines = countOfNewLines(oldText);
-                                                if (isAfterLineComment(formatTokens, index)
-                                                        || (!docOptions.wrapNeverKeepLines && countOfNewLines > 0)) {
+                                                if (isAfterLineComment(formatTokens, index)) {
                                                     newLines = 1;
-                                                    countSpaces = docOptions.alignMultilineMethodParams ? lastAnchor.getAnchorColumn() : indent;
+                                                    countSpaces = docOptions.alignMultilineMethodParams ? lastAnchor.getAnchorColumn() : indent + docOptions.continualIndentSize;
                                                 } else {
                                                     newLines = 0;
                                                     countSpaces = docOptions.spaceAfterComma ? 1 : 0;
@@ -908,7 +903,7 @@ public class TokenFormatter {
                                             case WRAP_IF_LONG:
                                                 if (column + 1 + countLengthOfNextSequence(formatTokens, index + 1) > docOptions.margin) {
                                                     newLines = 1;
-                                                    countSpaces = docOptions.alignMultilineMethodParams ? lastAnchor.getAnchorColumn() : indent;
+                                                    countSpaces = docOptions.alignMultilineMethodParams ? lastAnchor.getAnchorColumn() : indent + docOptions.continualIndentSize;
                                                 } else {
                                                     newLines = 0;
                                                     countSpaces = 1;
@@ -926,10 +921,7 @@ public class TokenFormatter {
                                                 countSpaces = docOptions.alignMultilineCallArgs ? lastAnchor.getAnchorColumn() : indent;
                                                 break;
                                             case WRAP_NEVER:
-                                                // for keeping the same line
-                                                int countOfNewLines = countOfNewLines(oldText);
-                                                if (isAfterLineComment(formatTokens, index)
-                                                        || (!docOptions.wrapNeverKeepLines && countOfNewLines > 0)) {
+                                                if (isAfterLineComment(formatTokens, index)) {
                                                     newLines = 1;
                                                     countSpaces = docOptions.alignMultilineCallArgs ? lastAnchor.getAnchorColumn() : indent;
                                                 } else {

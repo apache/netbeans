@@ -2,7 +2,6 @@ Code completion result for source line:
 throw new Nette\Application\|ForbiddenRequestException();
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-CONSTRUCTO BadRequestException()           [PUBLIC]   Nette\Application
-CONSTRUCTO ForbiddenRequestException()     [PUBLIC]   Nette\Application
+CONSTRUCTO Exception()                     [PUBLIC]   Exception
 CLASS      BadRequestException             [PUBLIC]   Nette\Application
 CLASS      ForbiddenRequestException       [PUBLIC]   Nette\Application

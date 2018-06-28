@@ -66,7 +66,6 @@ public final class AnalysisOptions {
     private static final String MESS_DETECTOR_PATH = "messDetector.path"; // NOI18N
     private static final String MESS_DETECTOR_RULE_SETS = "messDetector.ruleSets"; // NOI18N
     // coding standards fixer
-    private static final String CODING_STANDARDS_FIXER_VERSION = "codingStandardsFixer.version"; // NOI18N
     private static final String CODING_STANDARDS_FIXER_PATH = "codingStandardsFixer.path"; // NOI18N
     private static final String CODING_STANDARDS_FIXER_LEVEL = "codingStandardsFixer.level"; // NOI18N
     private static final String CODING_STANDARDS_FIXER_CONFIG = "codingStandardsFixer.config"; // NOI18N
@@ -76,9 +75,6 @@ public final class AnalysisOptions {
     private volatile boolean messDetectorSearched = false;
     private volatile boolean codingStandardsFixerSearched = false;
 
-
-    private AnalysisOptions() {
-    }
 
     public static AnalysisOptions getInstance() {
         return INSTANCE;
@@ -143,15 +139,6 @@ public final class AnalysisOptions {
 
     public void setMessDetectorRuleSets(List<String> ruleSets) {
         getPreferences().put(MESS_DETECTOR_RULE_SETS, AnalysisUtils.serialize(ruleSets));
-    }
-
-    @CheckForNull
-    public String getCodingStandardsFixerVersion() {
-        return getPreferences().get(CODING_STANDARDS_FIXER_VERSION, CodingStandardsFixer.VERSIONS.get(CodingStandardsFixer.VERSIONS.size() - 1));
-    }
-
-    public void setCodingStandardsFixerVersion(String version) {
-        getPreferences().put(CODING_STANDARDS_FIXER_VERSION, version);
     }
 
     @CheckForNull

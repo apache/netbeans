@@ -52,6 +52,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.lexer.Token;
@@ -256,8 +257,11 @@ public class DeclarationFinderImpl implements DeclarationFinder {
     private static class ReferenceSpanFinder {
 
         private static final int RECURSION_LIMIT = 100;
-        private int recursionCounter = 0;
+        // e.g.  @var VarType $variable 
+        private static final Pattern INLINE_PHP_VAR_COMMENT_PATTERN = Pattern.compile("^[ \t]*@var[ \t]+.+[ \t]+\\$.+$"); // NOI18N
         private static final Logger LOGGER = Logger.getLogger(DeclarationFinderImpl.class.getName());
+
+        private int recursionCounter = 0;
         private final Model model;
 
         public ReferenceSpanFinder(final Model model) {
@@ -294,6 +298,13 @@ public class DeclarationFinderImpl implements DeclarationFinder {
                         }
                     }
                 } else if (id.equals(PHPTokenId.PHPDOC_COMMENT)) {
+                    String tokenText = token.text().toString();
+                    if (INLINE_PHP_VAR_COMMENT_PATTERN.matcher(tokenText).matches()) {
+                        OffsetRange offsetRange = getVarCommentOffsetRange(ts, tokenText, caretOffset);
+                        if (offsetRange != null) {
+                            return offsetRange;
+                        }
+                    }
                     PHPDocCommentParser docParser = new PHPDocCommentParser();
                     PHPDocBlock docBlock = docParser.parse(ts.offset() - 3, ts.offset() + token.length(), token.text().toString());
                     ASTNode[] hierarchy = Utils.getNodeHierarchyAtOffset(docBlock, caretOffset);
@@ -349,30 +360,10 @@ public class DeclarationFinderImpl implements DeclarationFinder {
                         }
                     }
                 } else if (id.equals(PHPTokenId.PHP_COMMENT) && token.text() != null) {
-                    String text = token.text().toString();
-                    final String dollaredVar = "@var";
-                    if (text.contains(dollaredVar)) {
-                        String[] segments = text.split("\\s");
-                        for (int i = 0; i < segments.length; i++) {
-                            String seg = segments[i];
-                            if (seg.equals(dollaredVar) && segments.length > i + 2) {
-                                for (int j = 1; j <= 2; j++) {
-                                    seg = segments[i + j];
-                                    if (seg != null && seg.trim().length() > 0) {
-                                        int indexOf = text.indexOf(seg);
-                                        assert indexOf != -1;
-                                        indexOf += ts.offset();
-                                        OffsetRange range = new OffsetRange(indexOf, indexOf + seg.length());
-                                        if (range.containsInclusive(caretOffset)) {
-                                            return range;
-                                        }
-                                    }
-                                }
-                                return OffsetRange.NONE;
-                            }
-                        }
+                    OffsetRange offsetRange = getVarCommentOffsetRange(ts, token.text().toString(), caretOffset);
+                    if (offsetRange != null) {
+                        return offsetRange;
                     }
-
                 }
             }
             if (caretOffset == startTSOffset) {
@@ -386,6 +377,33 @@ public class DeclarationFinderImpl implements DeclarationFinder {
                 }
             }
             return OffsetRange.NONE;
+        }
+
+        @CheckForNull
+        private OffsetRange getVarCommentOffsetRange(TokenSequence<PHPTokenId> ts, String text, int caretOffset) {
+            final String dollaredVar = "@var"; // NOI18N
+            if (text.contains(dollaredVar)) {
+                String[] segments = text.split("[ \t]+"); // NOI18N
+                for (int i = 0; i < segments.length; i++) {
+                    String seg = segments[i];
+                    if (seg.equals(dollaredVar) && segments.length > i + 2) {
+                        for (int j = 1; j <= 2; j++) {
+                            seg = segments[i + j];
+                            if (seg != null && seg.trim().length() > 0) {
+                                int indexOf = text.indexOf(seg);
+                                assert indexOf != -1;
+                                indexOf += ts.offset();
+                                OffsetRange range = new OffsetRange(indexOf, indexOf + seg.length());
+                                if (range.containsInclusive(caretOffset)) {
+                                    return range;
+                                }
+                            }
+                        }
+                        return OffsetRange.NONE;
+                    }
+                }
+            }
+            return null;
         }
 
         private void logRecursion(TokenSequence<PHPTokenId> ts) {

@@ -114,6 +114,7 @@ public class CodeCompletionPanel extends JPanel {
     static final String PHP_AUTO_COMPLETION_SMART_QUOTES = "phpCodeCompletionSmartQuotes"; //NOI18N
     static final String PHP_AUTO_STRING_CONCATINATION = "phpCodeCompletionStringAutoConcatination"; //NOI18N
     static final String PHP_AUTO_COMPLETION_USE_LOWERCASE_TRUE_FALSE_NULL = "phpAutoCompletionUseLowercaseTrueFalseNull"; //NOI18N
+    static final String PHP_AUTO_COMPLETION_COMMENT_ASTERISK = "phpAutoCompletionCommentAsterisk"; // NOI18N
 
     // default values
     static final boolean PHP_AUTO_COMPLETION_FULL_DEFAULT = true;
@@ -126,6 +127,7 @@ public class CodeCompletionPanel extends JPanel {
     static final boolean PHP_AUTO_COMPLETION_SMART_QUOTES_DEFAULT = true;
     static final boolean PHP_AUTO_STRING_CONCATINATION_DEFAULT = true;
     static final boolean PHP_AUTO_COMPLETION_USE_LOWERCASE_TRUE_FALSE_NULL_DEFAULT = true;
+    static final boolean PHP_AUTO_COMPLETION_COMMENT_ASTERISK_DEFAULT = true;
 
     private final Preferences preferences;
     private final ItemListener defaultCheckBoxListener = new DefaultCheckBoxListener();
@@ -156,6 +158,7 @@ public class CodeCompletionPanel extends JPanel {
         id2Saved.put(PHP_AUTO_COMPLETION_SMART_QUOTES, autoCompletionSmartQuotesCheckBox.isSelected());
         id2Saved.put(PHP_AUTO_STRING_CONCATINATION, autoStringConcatenationCheckBox.isSelected());
         id2Saved.put(PHP_AUTO_COMPLETION_USE_LOWERCASE_TRUE_FALSE_NULL, trueFalseNullCheckBox.isSelected());
+        id2Saved.put(PHP_AUTO_COMPLETION_COMMENT_ASTERISK, autoCompletionCommentAsteriskCheckBox.isSelected());
     }
 
     public static PreferencesCustomizer.Factory getCustomizerFactory() {
@@ -233,6 +236,12 @@ public class CodeCompletionPanel extends JPanel {
                 PHP_AUTO_COMPLETION_USE_LOWERCASE_TRUE_FALSE_NULL_DEFAULT);
         trueFalseNullCheckBox.setSelected(codeCompletionUseLowercaseTrueFalseNull);
         trueFalseNullCheckBox.addItemListener(defaultCheckBoxListener);
+
+        boolean codeCompletionCommentAsterisk = preferences.getBoolean(
+                PHP_AUTO_COMPLETION_COMMENT_ASTERISK,
+                PHP_AUTO_COMPLETION_COMMENT_ASTERISK_DEFAULT);
+        autoCompletionCommentAsteriskCheckBox.setSelected(codeCompletionCommentAsterisk);
+        autoCompletionCommentAsteriskCheckBox.addItemListener(defaultCheckBoxListener);
     }
 
     private void initCodeCompletionForMethods() {
@@ -303,6 +312,7 @@ public class CodeCompletionPanel extends JPanel {
         preferences.putBoolean(PHP_AUTO_COMPLETION_SMART_QUOTES, autoCompletionSmartQuotesCheckBox.isSelected());
         preferences.putBoolean(PHP_AUTO_STRING_CONCATINATION, autoStringConcatenationCheckBox.isSelected());
         preferences.putBoolean(PHP_AUTO_COMPLETION_USE_LOWERCASE_TRUE_FALSE_NULL, trueFalseNullCheckBox.isSelected());
+        preferences.putBoolean(PHP_AUTO_COMPLETION_COMMENT_ASTERISK, autoCompletionCommentAsteriskCheckBox.isSelected());
 
         VariablesScope variablesScope = null;
         if (allVariablesRadioButton.isSelected()) {
@@ -368,6 +378,8 @@ public class CodeCompletionPanel extends JPanel {
         autoStringConcatenationCheckBox = new JCheckBox();
         useLowercaseLabel = new JLabel();
         trueFalseNullCheckBox = new JCheckBox();
+        autoCompletionCommentAsteriskLabel = new JLabel();
+        autoCompletionCommentAsteriskCheckBox = new JCheckBox();
 
         enableAutocompletionLabel.setLabelFor(autoCompletionFullRadioButton);
         Mnemonics.setLocalizedText(enableAutocompletionLabel, NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.enableAutocompletionLabel.text")); // NOI18N
@@ -437,6 +449,10 @@ public class CodeCompletionPanel extends JPanel {
 
         Mnemonics.setLocalizedText(trueFalseNullCheckBox, NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.trueFalseNullCheckBox.text")); // NOI18N
 
+        Mnemonics.setLocalizedText(autoCompletionCommentAsteriskLabel, NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.autoCompletionCommentAsteriskLabel.text")); // NOI18N
+
+        Mnemonics.setLocalizedText(autoCompletionCommentAsteriskCheckBox, NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.autoCompletionCommentAsteriskCheckBox.text")); // NOI18N
+
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
@@ -482,7 +498,13 @@ public class CodeCompletionPanel extends JPanel {
                         .addComponent(useLowercaseLabel))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(trueFalseNullCheckBox)))
+                        .addComponent(trueFalseNullCheckBox))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(autoCompletionCommentAsteriskLabel))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(autoCompletionCommentAsteriskCheckBox)))
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(layout.createParallelGroup(Alignment.LEADING)
@@ -537,6 +559,10 @@ public class CodeCompletionPanel extends JPanel {
                 .addComponent(useLowercaseLabel)
                 .addPreferredGap(ComponentPlacement.RELATED)
                 .addComponent(trueFalseNullCheckBox)
+                .addPreferredGap(ComponentPlacement.UNRELATED)
+                .addComponent(autoCompletionCommentAsteriskLabel)
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addComponent(autoCompletionCommentAsteriskCheckBox)
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -583,6 +609,8 @@ public class CodeCompletionPanel extends JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JRadioButton allVariablesRadioButton;
     private ButtonGroup autoCompletionButtonGroup;
+    private JCheckBox autoCompletionCommentAsteriskCheckBox;
+    private JLabel autoCompletionCommentAsteriskLabel;
     private JRadioButton autoCompletionCustomizeRadioButton;
     private JRadioButton autoCompletionFullRadioButton;
     private JCheckBox autoCompletionNamespacesCheckBox;

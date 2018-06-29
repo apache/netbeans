@@ -255,7 +255,7 @@ public class PHPDocCommentParser {
                     }
                 }
                 return null;
-            } else if (type.equals(PHPDocTag.Type.RETURN) || type.equals(PHPDocTag.Type.VAR)) {
+            } else if (type.equals(PHPDocTag.Type.RETURN) || type.equals(PHPDocTag.Type.VAR) || type.equals(PHPDocTag.Type.MIXIN)) {
                 return new PHPDocTypeTag(start, end, type, description, docTypes);
             }
             return new PHPDocTag(start, end, type, description);

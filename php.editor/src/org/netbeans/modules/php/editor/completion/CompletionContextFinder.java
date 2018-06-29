@@ -990,7 +990,8 @@ final class CompletionContextFinder {
                 || id.equals(PHPTokenId.PHP_TYPE_FLOAT)
                 || id.equals(PHPTokenId.PHP_TYPE_INT)
                 || id.equals(PHPTokenId.PHP_TYPE_STRING)
-                || id.equals(PHPTokenId.PHP_TYPE_VOID);
+                || id.equals(PHPTokenId.PHP_TYPE_VOID)
+                || id.equals(PHPTokenId.PHP_TYPE_OBJECT);
     }
 
     private static boolean isComma(Token<PHPTokenId> token) {

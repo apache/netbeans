@@ -1196,7 +1196,7 @@ namespace_name:list
 
 // used only in group uses
 group_namespace_parts ::=
-non_empty_group_namespace_parts:list
+non_empty_group_namespace_parts:list possible_comma
 {:
 	RESULT = list;
 :}

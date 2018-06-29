@@ -51,6 +51,7 @@ import org.netbeans.api.annotations.common.NonNull;
  * <pre>
  * some\namespace\{ClassA, sub\ClassB, ClassC as C};
  * some\namespace\{ClassA, function sub\myfnc, const MY_CONST as C};
+ * some\namespace\{ClassA,}; // PHP7.2
  * </pre>
  */
 public class GroupUseStatementPart extends UseStatementPart {

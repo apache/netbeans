@@ -1039,41 +1039,15 @@ public final class IndexQueryImpl implements ElementQuery.Index {
             EnumSet<PhpElementKind> typeKinds, EnumSet<PhpElementKind> memberKinds) {
         final Set<TypeMemberElement> directTypes = new LinkedHashSet<>();
         if (typeKinds.contains(PhpElementKind.CLASS) && (typeElement instanceof ClassElement)) {
-            final Set<TypeMemberElement> classTypes = new LinkedHashSet<>();
+            ClassElement classElement = (ClassElement) typeElement;
             QualifiedName superClassName;
-            Collection<QualifiedName> possibleFQSuperClassNames = ((ClassElement) typeElement).getPossibleFQSuperClassNames();
+            Collection<QualifiedName> possibleFQSuperClassNames = classElement.getPossibleFQSuperClassNames();
             if (possibleFQSuperClassNames.size() == 1) {
                 superClassName = possibleFQSuperClassNames.iterator().next();
             } else {
-                superClassName = ((ClassElement) typeElement).getSuperClassName();
+                superClassName = classElement.getSuperClassName();
             }
-            if (superClassName != null) {
-                classTypes.addAll(extendedQuery.getFields(NameKind.exact(superClassName), NameKind.empty()));
-                classTypes.addAll(extendedQuery.getMethods(NameKind.exact(superClassName), NameKind.empty()));
-                classTypes.addAll(extendedQuery.getTypeConstants(NameKind.exact(superClassName), NameKind.empty()));
-                if (memberKinds.size() != 1) {
-                    classTypes.addAll(ElementFilter.forFiles(typeElement.getFileObject()).prefer(getTypeMembers(NameKind.exact(superClassName), NameKind.empty())));
-                } else {
-                    switch(memberKinds.iterator().next()) {
-                        case METHOD:
-                            classTypes.addAll(ElementFilter.forFiles(typeElement.getFileObject()).prefer(
-                                    getMethodsImpl(NameKind.exact(superClassName), NameKind.empty(), EnumSet.of(PhpElementKind.CLASS))));
-                            break;
-                        case FIELD:
-                            classTypes.addAll(ElementFilter.forFiles(typeElement.getFileObject()).prefer(getFields(NameKind.exact(superClassName), NameKind.empty())));
-                            break;
-                        case TYPE_CONSTANT:
-                            classTypes.addAll(ElementFilter.forFiles(typeElement.getFileObject()).prefer(
-                                    getTypeConstantsImpl(NameKind.exact(superClassName), NameKind.empty(), EnumSet.of(PhpElementKind.CLASS))));
-                            break;
-                        default:
-                            //no-op
-                    }
-                }
-                if (classTypes.isEmpty()) {
-                    insertEmptyElement(classTypes, getClasses(NameKind.exact(superClassName)));
-                }
-            }
+            Set<TypeMemberElement> classTypes = getDirectInheritedClassTypes(superClassName, memberKinds, typeElement);
             directTypes.addAll(classTypes);
         }
         if (typeKinds.contains(PhpElementKind.IFACE)) {
@@ -1138,6 +1112,51 @@ public final class IndexQueryImpl implements ElementQuery.Index {
             }
         }
         return directTypes;
+    }
+
+    private Set<TypeMemberElement> getDirectMixinTypeMembers(final TypeElement typeElement,
+            EnumSet<PhpElementKind> typeKinds, EnumSet<PhpElementKind> memberKinds) {
+        final Set<TypeMemberElement> directTypes = new LinkedHashSet<>();
+        if (typeKinds.contains(PhpElementKind.CLASS) && (typeElement instanceof ClassElement)) {
+            ClassElement classElement = (ClassElement) typeElement;
+            Collection<QualifiedName> mixinNames = classElement.getFQMixinClassNames();
+            mixinNames.stream()
+                    .map(mixinName -> getDirectInheritedClassTypes(mixinName, memberKinds, typeElement))
+                    .forEach(classTypes -> directTypes.addAll(classTypes));
+        }
+        return directTypes;
+    }
+
+    private Set<TypeMemberElement> getDirectInheritedClassTypes(QualifiedName superClassName, EnumSet<PhpElementKind> memberKinds, final TypeElement typeElement) {
+        final Set<TypeMemberElement> classTypes = new LinkedHashSet<>();
+        if (superClassName != null) {
+            classTypes.addAll(extendedQuery.getFields(NameKind.exact(superClassName), NameKind.empty()));
+            classTypes.addAll(extendedQuery.getMethods(NameKind.exact(superClassName), NameKind.empty()));
+            classTypes.addAll(extendedQuery.getTypeConstants(NameKind.exact(superClassName), NameKind.empty()));
+            if (memberKinds.size() != 1) {
+                classTypes.addAll(ElementFilter.forFiles(typeElement.getFileObject()).prefer(getTypeMembers(NameKind.exact(superClassName), NameKind.empty())));
+            } else {
+                switch (memberKinds.iterator().next()) {
+                    case METHOD:
+                        classTypes.addAll(ElementFilter.forFiles(typeElement.getFileObject()).prefer(
+                                getMethodsImpl(NameKind.exact(superClassName), NameKind.empty(), EnumSet.of(PhpElementKind.CLASS))));
+                        break;
+                    case FIELD:
+                        classTypes.addAll(ElementFilter.forFiles(typeElement.getFileObject()).prefer(getFields(NameKind.exact(superClassName), NameKind.empty())));
+                        break;
+                    case TYPE_CONSTANT:
+                        classTypes.addAll(ElementFilter.forFiles(typeElement.getFileObject()).prefer(
+                                getTypeConstantsImpl(NameKind.exact(superClassName), NameKind.empty(), EnumSet.of(PhpElementKind.CLASS))));
+                        break;
+                    default:
+                    //no-op
+                }
+            }
+            if (classTypes.isEmpty()) {
+                insertEmptyElement(classTypes, getClasses(NameKind.exact(superClassName)));
+            }
+        }
+        return classTypes;
     }
 
     private void insertEmptyElement(final Set<TypeMemberElement> where, final Set<? extends TypeElement> exactTypeName) {
@@ -1243,6 +1262,17 @@ public final class IndexQueryImpl implements ElementQuery.Index {
                 new LinkedHashSet<>(getDeclaredTypeMembers(typeElement)), typeKinds, memberKinds);
     }
 
+    private Set<TypeMemberElement> getAllMixinTypeMembers(TypeElement typeElement) {
+        final EnumSet<PhpElementKind> typeKinds = EnumSet.of(PhpElementKind.CLASS);
+        final EnumSet<PhpElementKind> memberKinds = EnumSet.of(
+                PhpElementKind.METHOD,
+                PhpElementKind.FIELD,
+                PhpElementKind.TYPE_CONSTANT
+        );
+        return getMixinTypeMembers(typeElement, new LinkedHashSet<>(),
+                new LinkedHashSet<>(getDeclaredTypeMembers(typeElement)), typeKinds, memberKinds);
+    }
+
     @Override
     public Set<TypeMemberElement> getInheritedTypeMembers(final TypeElement typeElement) {
         final EnumSet<PhpElementKind> typeKinds = EnumSet.of(
@@ -1263,6 +1293,14 @@ public final class IndexQueryImpl implements ElementQuery.Index {
     public Set<TypeMemberElement> getAccessibleTypeMembers(TypeElement typeElement, TypeElement calledFromEnclosingType) {
         final long start = (LOG.isLoggable(Level.FINE)) ? System.currentTimeMillis() : 0;
         final Set<TypeMemberElement> allTypeMembers = getAllTypeMembers(typeElement);
+        Set<TypeMemberElement> retval = getAccessibleTypeMembers(typeElement, calledFromEnclosingType, allTypeMembers);
+        if (LOG.isLoggable(Level.FINE)) {
+            logQueryTime("Set<TypeMemberElement> getAccessibleTypeMembers", NameKind.exact(typeElement.getFullyQualifiedName()), start); //NOI18N
+        }
+        return Collections.unmodifiableSet(retval);
+    }
+
+    private Set<TypeMemberElement> getAccessibleTypeMembers(TypeElement typeElement, TypeElement calledFromEnclosingType, final Set<TypeMemberElement> allTypeMembers) {
         Collection<TypeElement> subTypes = Collections.emptySet();
         if (calledFromEnclosingType != null) {
             if (typeElement instanceof TraitElement
@@ -1275,8 +1313,16 @@ public final class IndexQueryImpl implements ElementQuery.Index {
         retval.addAll(filterForAccessible.filter(allTypeMembers));
         ElementFilter allOf = ElementFilter.allOf(ElementFilter.forVirtualExtensions(), ElementFilter.forMembersOfTypeName(typeElement));
         retval.addAll(allOf.filter(allTypeMembers));
+        return retval;
+    }
+
+    @Override
+    public Set<TypeMemberElement> getAccessibleMixinTypeMembers(TypeElement typeElement, TypeElement calledFromEnclosingType) {
+        final long start = (LOG.isLoggable(Level.FINE)) ? System.currentTimeMillis() : 0;
+        final Set<TypeMemberElement> allTypeMembers = getAllMixinTypeMembers(typeElement);
+        Set<TypeMemberElement> retval = getAccessibleTypeMembers(typeElement, calledFromEnclosingType, allTypeMembers);
         if (LOG.isLoggable(Level.FINE)) {
-            logQueryTime("Set<PhpElement> getAccessibleTypeMembers", NameKind.exact(typeElement.getFullyQualifiedName()), start); //NOI18N
+            logQueryTime("Set<TypeMemberElement> getAccessibleMixinTypeMembers", NameKind.exact(typeElement.getFullyQualifiedName()), start); // NOI18N
         }
         return Collections.unmodifiableSet(retval);
     }
@@ -1289,6 +1335,18 @@ public final class IndexQueryImpl implements ElementQuery.Index {
             for (final TypeElement tp : typeMembers.isEmpty() ? getDirectInheritedTypes(typeElement) : toTypes(typeMembers)) {
                 retval.addAll(getInheritedTypeMembers(tp, recursionPrevention, retval, typeKinds, memberKinds));
             }
+        }
+        return forPrefereMethodImplementation(retval).filter(retval);
+    }
+
+    private Set<TypeMemberElement> getMixinTypeMembers(final TypeElement typeElement, final Set<TypeElement> recursionPrevention,
+            Set<TypeMemberElement> retval, EnumSet<PhpElementKind> typeKinds, EnumSet<PhpElementKind> memberKinds) {
+        if (recursionPrevention.add(typeElement)) {
+            final Set<TypeMemberElement> typeMembers = getDirectMixinTypeMembers(typeElement, typeKinds, memberKinds);
+            retval.addAll(forEmptyElements().filter(forComparingNonAbstractNameKinds(retval).reverseFilter(typeMembers)));
+            Set<TypeElement> types = toTypes(typeMembers);
+            types.addAll(getDirectInheritedTypes(typeElement));
+            types.forEach(type -> retval.addAll(getMixinTypeMembers(type, recursionPrevention, retval, typeKinds, memberKinds)));
         }
         return forPrefereMethodImplementation(retval).filter(retval);
     }

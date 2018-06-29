@@ -46,6 +46,7 @@ package org.netbeans.modules.php.dbgp.breakpoints;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.options.OptionsDisplayer;
@@ -80,6 +81,12 @@ public final class Utils {
         Utils.lineFactory = lineFactory;
     }
 
+    /**
+     * Get the current line.
+     *
+     * @return the current line if the file is php, otherwise {@code null}.
+     */
+    @CheckForNull
     public static Line getCurrentLine() {
         FileObject fileObject = EditorContextDispatcher.getDefault().getCurrentFile();
 
@@ -88,6 +95,44 @@ public final class Utils {
         }
 
         return EditorContextDispatcher.getDefault().getCurrentLine();
+    }
+
+    /**
+     * Get the Line from FileObject.
+     *
+     * @param file the FileObject
+     * @param lineNumber the line number
+     * @return the line if it is found with the file and the line number,
+     * otherwise {@code null}
+     */
+    @CheckForNull
+    public static Line getLine(FileObject file, int lineNumber) {
+        if (file == null || lineNumber < 0) {
+            return null;
+        }
+
+        DataObject dataObject;
+        try {
+            dataObject = DataObject.find(file);
+        } catch (DataObjectNotFoundException ex) {
+            return null;
+        }
+        if (dataObject == null) {
+            return null;
+        }
+        LineCookie lineCookie = dataObject.getLookup().lookup(LineCookie.class);
+        if (lineCookie == null) {
+            return null;
+        }
+        Line.Set ls = lineCookie.getLineSet();
+        if (ls == null) {
+            return null;
+        }
+        try {
+            return ls.getCurrent(lineNumber);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
     }
 
     public static BrkpntSetCommand getCommand(DebugSession session, SessionId id, AbstractBreakpoint breakpoint) {

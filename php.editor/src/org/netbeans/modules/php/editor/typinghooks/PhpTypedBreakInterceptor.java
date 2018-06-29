@@ -76,8 +76,14 @@ public class PhpTypedBreakInterceptor implements TypedBreakInterceptor {
      * does not also have code on the same line).
      */
     static final boolean CONTINUE_COMMENTS = Boolean.getBoolean("php.cont.comment"); // NOI18N
+    // for unit tests
+    private static Boolean INSERT_ASTERISK_TO_PHP_COMMENT = null;
 
     private PhpDocBodyGenerator phpDocBodyGenerator = PhpDocBodyGenerator.NONE;
+
+    static void setInsertAsteriskToPHPComment(Boolean insert) {
+        PhpTypedBreakInterceptor.INSERT_ASTERISK_TO_PHP_COMMENT = insert;
+    }
 
     @Override
     public void insert(MutableContext context) throws BadLocationException {
@@ -621,6 +627,7 @@ public class PhpTypedBreakInterceptor implements TypedBreakInterceptor {
             PHPTokenId commentEnd,
             MutableContext context) throws BadLocationException {
         PHPTokenId id = ts.token().id();
+        boolean insertAsterisk = insertAsterisk(commentStart);
         if (id == commentBody || id == commentStart) {
             int insertOffset;
             if (id == commentStart) {
@@ -642,14 +649,18 @@ public class PhpTypedBreakInterceptor implements TypedBreakInterceptor {
             StringBuilder sb = new StringBuilder("\n");
             if (offset > afterLastNonWhite) {
                 sb.append(org.netbeans.modules.editor.indent.api.IndentUtils.createIndentString(doc, indent));
-                sb.append(" * "); // NOI18N
+                if (insertAsterisk) {
+                    sb.append(" * "); // NOI18N
+                }
                 newCaretOffset = sb.length();
             } else {
                 // I'm inserting a newline in the middle of a sentence, such as the scenario in #118656
                 // I should insert the end AFTER the text on the line
                 String restOfLine = doc.getText(insertOffset, LineDocumentUtils.getLineEnd(doc, afterLastNonWhite) - insertOffset);
                 sb.append(org.netbeans.modules.editor.indent.api.IndentUtils.createIndentString(doc, indent));
-                sb.append(" * "); // NOI18N
+                if (insertAsterisk) {
+                    sb.append(" * "); // NOI18N
+                }
                 newCaretOffset = sb.length();
                 sb.append(restOfLine);
                 doc.remove(insertOffset, restOfLine.length());
@@ -658,7 +669,11 @@ public class PhpTypedBreakInterceptor implements TypedBreakInterceptor {
                 // add the closing tag
                 sb.append("\n");
                 sb.append(org.netbeans.modules.editor.indent.api.IndentUtils.createIndentString(doc, indent));
-                sb.append(" */"); // NOI18N
+                if (insertAsterisk) {
+                    sb.append(" */"); // NOI18N
+                } else {
+                    sb.append("*/"); // NOI18N
+                }
             }
             context.setText(sb.toString(), 0, newCaretOffset);
             return new Object[]{insertOffset + newCaretOffset, addClosingTag};
@@ -681,7 +696,9 @@ public class PhpTypedBreakInterceptor implements TypedBreakInterceptor {
             if (beforeFirstNonWhite >= insertOffset) {
                 // only whitespace in front of */
                 sb.append(org.netbeans.modules.editor.indent.api.IndentUtils.createIndentString(doc, indent));
-                sb.append(" * ");
+                if (insertAsterisk) {
+                    sb.append(" * "); // NOI18N
+                }
                 newCaretOffset = sb.length();
                 newCaretOffset2 = rowStart + newCaretOffset;
                 sb.append(org.netbeans.modules.editor.indent.api.IndentUtils.createIndentString(doc, indent));
@@ -695,6 +712,18 @@ public class PhpTypedBreakInterceptor implements TypedBreakInterceptor {
             return new Object[]{newCaretOffset2, false};
         }
         return new Object[]{-1, false};
+    }
+
+    private static boolean insertAsterisk(PHPTokenId commentStart) {
+        return commentStart == PHPTokenId.PHPDOC_COMMENT_START
+                || (commentStart == PHPTokenId.PHP_COMMENT_START && insertAsteriskToPHPComment());
+    }
+
+    private static boolean insertAsteriskToPHPComment() {
+        if (INSERT_ASTERISK_TO_PHP_COMMENT != null) {
+            return INSERT_ASTERISK_TO_PHP_COMMENT;
+        }
+        return OptionsUtils.autoCompletionCommentAsterisk();
     }
 
     // XXX: stolen from JavaKit.JavaInsertBreakAction, we should extend it to support heredoc

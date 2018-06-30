@@ -1205,7 +1205,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         if (annTypeElement != null && annTypeElement.getKind() == ANNOTATION_TYPE) {
             HashSet<String> names = new HashSet<>();
             for (ExpressionTree arg : ann.getArguments()) {
-                if (arg.getKind() == Tree.Kind.ASSIGNMENT && sourcePositions.getEndPosition(root, arg) < offset) {
+                if (arg.getKind() == Tree.Kind.ASSIGNMENT && sourcePositions.getEndPosition(root, ((AssignmentTree) arg).getExpression()) < offset) {
                     ExpressionTree var = ((AssignmentTree) arg).getVariable();
                     if (var.getKind() == Tree.Kind.IDENTIFIER) {
                         names.add(((IdentifierTree) var).getName().toString());

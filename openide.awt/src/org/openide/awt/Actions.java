@@ -74,6 +74,13 @@ import org.openide.util.actions.SystemAction;
 */
 public class Actions {
     /**
+     * Action may {@link Action#putValue} this value to indicate that, if not enabled,
+     * it should not be visible at all. Presenters may honour the request by removing
+     * action's presenter from the UI.
+     */
+    public static final String ACTION_VALUE_VISIBLE = "openide.awt.actionVisible"; // NOI18N
+    
+    /**
      * @deprecated should not be used
      */
     @Deprecated
@@ -1127,7 +1134,7 @@ public class Actions {
                     );
                 }
             }
-
+            
             if (
                 button instanceof javax.accessibility.Accessible &&
                     ((changedProperty == null) || changedProperty.equals(Action.NAME))

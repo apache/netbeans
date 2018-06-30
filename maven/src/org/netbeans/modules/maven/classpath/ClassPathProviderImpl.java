@@ -423,7 +423,7 @@ public final class ClassPathProviderImpl implements ClassPathProvider, ActiveJ2S
     }
     
     private ClassPath getModuleBootPath() {
-        return computeIfAbsent(MODULE_BOOT_PATH, () -> createModuleInfoSelector(() -> createPlatformModulesPath(), () -> ClassPath.EMPTY, "ModuleBootPath")); // XXX empty? // NOI18N                
+        return computeIfAbsent(MODULE_BOOT_PATH, () -> createModuleInfoSelector(() -> createPlatformModulesPath(), () -> createPlatformModulesPath(), "ModuleBootPath")); // NOI18N
     }
 
     private ClassPath getModuleCompilePath(int type) {

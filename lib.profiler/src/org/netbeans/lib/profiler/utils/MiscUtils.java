@@ -296,6 +296,13 @@ public class MiscUtils implements CommonConstants {
 
             return JDK_19_STRING;
         } else {
+            try {
+                if (Integer.parseInt(outString.replaceAll("[.\\-+].*", "")) >= 10) {
+                    return JDK_110_BEYOND_STRING;
+                }
+            } catch (NumberFormatException ex) {
+                //ignore
+            }
             throw new IOException(VM_INCOMPATIBLE_MSG + printOutString);
         }
     }
@@ -638,6 +645,14 @@ public class MiscUtils implements CommonConstants {
             }
         } else if (jdkVersionString.equals("CVM")) {    // NOI18N
             return true;
+        } else {
+            try {
+                if (Integer.parseInt(jdkVersionString.replaceAll("[.\\-+].*", "")) >= 10) {
+                    return true;
+                }
+            } catch (NumberFormatException ex) {
+                //ignore
+            }
         }
         return false;
     }

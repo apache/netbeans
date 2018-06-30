@@ -24,9 +24,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
-import javax.swing.DefaultComboBoxModel;
+import javax.swing.AbstractListModel;
+import javax.swing.ComboBoxModel;
 import javax.swing.JPanel;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
+import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.api.Constants;
@@ -45,7 +52,9 @@ import org.netbeans.modules.maven.options.MavenVersionSettings;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.modules.SpecificationVersion;
 import org.openide.util.HelpCtx;
+import org.openide.util.Union2;
 
 /**
  * Customizer panel for setting source level and encoding.
@@ -161,7 +170,7 @@ public class SourcesPanel extends JPanel implements HelpCtx.Provider {
         }
     };
 
-    public SourcesPanel( ModelHandle2 handle, NbMavenProjectImpl project ) {
+    public SourcesPanel( ModelHandle2 handle, NbMavenProjectImpl project, MavenProjectPropertiesUiSupport uiSupport) {
         initComponents();
         this.handle = handle;
         FileObject projectFolder = project.getProjectDirectory();
@@ -171,9 +180,7 @@ public class SourcesPanel extends JPanel implements HelpCtx.Provider {
         // XXX use ComboBoxUpdater to boldface the label when not an inherited default
         comSourceLevel.setEditable(false);
         sourceLevel = SourceLevelQuery.getSourceLevel(project.getProjectDirectory());
-        comSourceLevel.setModel(new DefaultComboBoxModel(new String[] {
-            "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "9" //NOI18N
-        }));
+        comSourceLevel.setModel(uiSupport.getSourceLevelComboBoxModel());
         
         comSourceLevel.setSelectedItem(sourceLevel);
         String enc = project.getOriginalMavenProject().getProperties().getProperty(Constants.ENCODING_PROP);
@@ -403,5 +410,116 @@ public class SourcesPanel extends JPanel implements HelpCtx.Provider {
     private javax.swing.JTextField txtSrc;
     private javax.swing.JTextField txtTestSrc;
     // End of variables declaration//GEN-END:variables
-    
+
+    static final class SourceLevelComboBoxModel extends AbstractListModel<String> implements ComboBoxModel<String>, ListDataListener {
+
+        private final ComboBoxModel platformComboBoxModel;
+        private String selectedSourceLevel;
+        private String[] sourceLevelCache;
+
+        private static final SpecificationVersion MINIMAL_SOURCE_LEVEL = new SpecificationVersion("1.3"); // NOI18N
+        private static final long serialVersionUID = 1L;
+
+        public SourceLevelComboBoxModel(ComboBoxModel platformComboBoxModel, String selectedSourceLevel) {
+            this.platformComboBoxModel = platformComboBoxModel;
+            this.platformComboBoxModel.addListDataListener(this);
+            this.selectedSourceLevel = selectedSourceLevel;
+        }
+
+        @Override
+        public int getSize() {
+            String[] sourceLevels = getSourceLevels();
+            return sourceLevels.length;
+        }
+
+        @Override
+        public String getElementAt(int index) {
+            String[] sourceLevels = getSourceLevels();
+            assert index >= 0 && index < sourceLevels.length;
+            return sourceLevels[index];
+        }
+
+        @Override
+        public void setSelectedItem(Object obj) {
+            selectedSourceLevel = (obj == null ? null : (String) obj);
+            fireContentsChanged(this, 0, getSize());
+        }
+
+        @Override
+        public Object getSelectedItem() {
+            return selectedSourceLevel;
+        }
+
+        @Override
+        public void intervalAdded(ListDataEvent e) {
+        }
+
+        @Override
+        public void intervalRemoved(ListDataEvent e) {
+        }
+
+        @Override
+        public void contentsChanged(ListDataEvent e) {
+            resetCache();
+        }
+
+        private void resetCache() {
+            synchronized (this) {
+                sourceLevelCache = null;
+            }
+            fireContentsChanged(this, 0, getSize());
+        }
+
+        private synchronized String[] getSourceLevels() {
+            if (sourceLevelCache == null) {
+                Union2<JavaPlatform, String> union = (Union2<JavaPlatform, String>) platformComboBoxModel.getSelectedItem();
+                JavaPlatform platform = union.first();
+                List<String> sourceLevels = new ArrayList<>();
+                if (platform != null) {
+                    SpecificationVersion version = platform.getSpecification().getVersion();
+                    SpecificationVersion current = MINIMAL_SOURCE_LEVEL;
+                    while (current.compareTo(version) <= 0) {
+                        sourceLevels.add(current.toString());
+                        current = incJavaSpecVersion(current);
+                    }
+                }
+                sourceLevelCache = sourceLevels.toArray(new String[sourceLevels.size()]);
+            }
+            return sourceLevelCache;
+        }
+
+    }
+
+    private static SpecificationVersion incJavaSpecVersion(@NonNull final SpecificationVersion version) {
+        int major = major(version);
+        int minor = minor(version);
+        if (major == 1) {
+            if (minor == 8) {
+                major = minor + 1;
+                minor = -1;
+            } else {
+                minor += 1;
+            }
+        } else {
+            major += 1;
+        }
+        return minor == -1
+                ? new SpecificationVersion(Integer.toString(major))
+                : new SpecificationVersion(String.format(
+                        "%d.%d", //NOI18N
+                        major,
+                        minor));
+    }
+
+    private static int minor(@NonNull final SpecificationVersion specVer) {
+        final String s = specVer.toString();
+        final int split = s.indexOf('.');
+        return split < 0 ? -1 : Integer.parseInt(s.substring(split + 1));
+    }
+
+    private static int major(@NonNull final SpecificationVersion specVer) {
+        final String s = specVer.toString();
+        final int split = s.indexOf('.');
+        return Integer.parseInt(split < 0 ? s : s.substring(0, split));
+    }
 }

@@ -168,6 +168,34 @@ is the proper place.
              </description>
              <issue number="254375"/>
         </change>
+        
+        <change id="multiple-annotation-type">
+             <api name="EditorHintsSPI"/>
+             <summary>Support multiple ranges for ErrorDescriptor</summary>
+             <version major="1" minor="42" subsubminor="0"/>
+             <date day="17" month="7" year="2017"/>
+             <author login="mromashova"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added support for multiple ranges for error/warning. New field added to ErrorDescription  as well as corresponding getter method and new constructor 
+                 in order to be able to provide multiple ranges support for highlight  particular hint. Added new factory method to
+                 ErrorDescriptionFactory which uses new ErrorDescription constructor.
+             </description>
+             <issue number="271070"/>
+        </change>   
+        
+        <change id="fixable-annotation-default-action">
+             <api name="EditorHintsSPI"/>
+             <summary>Provide a way to have fixable annotation with default action</summary>
+             <version major="1" minor="43" subsubminor="0"/>
+             <date day="24" month="7" year="2017"/>
+             <author login="mromashova"/>
+             <compatibility addition="no" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 For custom type of annotations will dynamically register this annotation type as fixable, so Fix action (click on the icon) will work for it
+             </description>
+             <issue number="271069"/>
+        </change>                    
 
     </changes>
 

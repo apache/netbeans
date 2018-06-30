@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.function.Supplier;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.TypeElement;
 import org.netbeans.api.annotations.common.NonNull;
@@ -43,6 +44,7 @@ import org.openide.util.Parameters;
 public final class ClassIndexEventsTransaction extends TransactionContext.Service {
 
     private final boolean source;
+    private final Supplier<Boolean> isAllFilesIndexing;
     private Set<URL> removedRoots;
     private ElementHandle<ModuleElement> addedModule;
     private ElementHandle<ModuleElement> removedModule;
@@ -56,8 +58,9 @@ public final class ClassIndexEventsTransaction extends TransactionContext.Servic
     private URL changesInRoot;
     private boolean closed;
 
-    private ClassIndexEventsTransaction(final boolean src) {
+    private ClassIndexEventsTransaction(final boolean src, final Supplier<Boolean> allFilesIndexing) {
         source = src;
+        isAllFilesIndexing = allFilesIndexing;
         removedRoots = new HashSet<>();
         addedTypes = new HashSet<>();
         removedTypes = new HashSet<>();
@@ -212,7 +215,8 @@ public final class ClassIndexEventsTransaction extends TransactionContext.Servic
                         JavaIndex.getClassFolder(changesInRoot),
                         Collections.unmodifiableCollection(removedFiles),
                         Collections.unmodifiableCollection(addedFiles),
-                        false);
+                        false,
+                        isAllFilesIndexing.get());
                 }
             } finally {
                 final ClassIndexManager ciManager = ClassIndexManager.getDefault();
@@ -278,11 +282,12 @@ public final class ClassIndexEventsTransaction extends TransactionContext.Servic
     /**
      * Creates a new instance of {@link ClassIndexEventsTransaction} service.
      * @param source the source flag, true for source roots, false for binary roots.
+     * @param isAllFilesIndexing  true for all files indexing
      * @return the {@link ClassIndexEventsTransaction}.
      */
     @NonNull
-    public static ClassIndexEventsTransaction create(final boolean source) {
-        return new ClassIndexEventsTransaction(source);
+    public static ClassIndexEventsTransaction create(final boolean source, final Supplier<Boolean> isAllFilesIndexing) {
+        return new ClassIndexEventsTransaction(source, isAllFilesIndexing);
     }
 
 }

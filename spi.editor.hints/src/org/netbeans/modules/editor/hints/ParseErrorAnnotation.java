@@ -103,6 +103,10 @@ public class ParseErrorAnnotation extends Annotation implements PropertyChangeLi
                     throw new IllegalArgumentException(String.valueOf(severity));
             }
         } else {
+            if (hasFixes) {
+                //dynamically register this annotation type as fixable, so Fix action (click on the icon) will work for it
+                FixAction.addFixableAnnotationType(customType);
+            }
             return customType;
         }
     }

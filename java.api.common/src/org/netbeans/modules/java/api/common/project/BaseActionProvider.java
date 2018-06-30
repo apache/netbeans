@@ -47,6 +47,7 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.project.runner.JavaRunner;
+import org.netbeans.api.java.source.BuildArtifactMapper;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.java.api.common.SourceRoots;
@@ -521,6 +522,8 @@ public abstract class BaseActionProvider implements ActionProvider {
 
     @NonNull
     private Set<? extends JavaActionProvider.CompileOnSaveOperation> getCompileOnSaveOperations() {
+        if (!BuildArtifactMapper.isCompileOnSaveSupported())
+            return Collections.emptySet();
         final Set<JavaActionProvider.CompileOnSaveOperation> ops = EnumSet.noneOf(JavaActionProvider.CompileOnSaveOperation.class);
         if (isCompileOnSaveEnabled()) {
             ops.add(JavaActionProvider.CompileOnSaveOperation.EXECUTE);

@@ -37,12 +37,42 @@
         <file>src/org/netbeans/modules/web/browser/ui/resources/browser_safari_24x.png</file>
         <license ref="CDDL-1.0" />
         <comment>
-Files were taken from oracle netbeans repository and were distributed 
-in the netbeans binary distribution under the combined GPLv2 + CDDL
-license.
+            Files were taken from oracle netbeans repository and were distributed 
+            in the netbeans binary distribution under the combined GPLv2 + CDDL
+            license.
 
-The files are used in the GUI to represent the browsers and so need
-to be close to the original artwork of their icons.
+            The files are used in the GUI to represent the browsers and so need
+            to be close to the original artwork of their icons.
         </comment>
+    </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/tabletLandscape.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/menu.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/netbook_dark.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/widescreen.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/desktop.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/sizeToFit_dark.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/tabletPortrait.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/tabletPortrait_dark.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/selectionMode.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/tabletLandscape_dark.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/widescreen_dark.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/nb-badge.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/customize.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/handheldPortrait_dark.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/handheldPortrait.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/selectionMode_dark.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/netbook.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/menu_dark.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/sizeToFit.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/desktop_dark.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/handheldLandscape.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/handheldLandscape_dark.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/browser_disabled_16x.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/browser_disabled_24x.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/browser_generic_16x.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/browser_generic_24x.png</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
     </fileset>
 </licenseinfo>

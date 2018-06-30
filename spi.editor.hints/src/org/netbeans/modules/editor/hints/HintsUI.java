@@ -26,7 +26,6 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
@@ -48,11 +47,9 @@ import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -130,20 +127,11 @@ public final class HintsUI implements MouseListener, MouseMotionListener, KeyLis
     //-J-Dorg.netbeans.modules.editor.hints.HintsUI.always.show.error=true
     private static final boolean ALWAYS_SHOW_ERROR_MESSAGE = Boolean.getBoolean(HintsUI.class.getName() + ".always.show.error");
     private static HintsUI INSTANCE;
-    private static final Set<String> fixableAnnotations;
     private static final String POPUP_NAME = "hintsPopup"; // NOI18N
     private static final String SUB_POPUP_NAME = "subHintsPopup"; // NOI18N
     private static final int POPUP_VERTICAL_OFFSET = 5;
     private static final RequestProcessor WORKER = new RequestProcessor(HintsUI.class.getName(), 1, false, false);
 
-    static {
-        fixableAnnotations = new HashSet<String>(3);
-
-        fixableAnnotations.add("org-netbeans-spi-editor-hints-parser_annotation_err_fixable"); // NOI18N
-        fixableAnnotations.add("org-netbeans-spi-editor-hints-parser_annotation_hint_fixable"); // NOI18N
-        fixableAnnotations.add("org-netbeans-spi-editor-hints-parser_annotation_verifier_fixable"); // NOI18N
-        fixableAnnotations.add("org-netbeans-spi-editor-hints-parser_annotation_warn_fixable"); // NOI18N
-    }
 
     public static synchronized HintsUI getDefault() {
         if (INSTANCE == null)
@@ -656,7 +644,7 @@ public final class HintsUI implements MouseListener, MouseMotionListener, KeyLis
                         return false;
                     }
                     String type = activeAnnotation.getAnnotationType();
-                    if (!fixableAnnotations.contains(type) && onlyActive) {
+                    if (!FixAction.getFixableAnnotationTypes().contains(type) && onlyActive) {
                         return false;
                     }
                     if (onlyActive) {

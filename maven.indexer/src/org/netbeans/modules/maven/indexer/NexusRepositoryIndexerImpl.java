@@ -41,7 +41,6 @@ import java.util.zip.ZipError;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.maven.index.expr.SearchTyped;
 import org.codehaus.plexus.PlexusConstants;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.FSDirectory;
@@ -252,10 +251,10 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                 desc.addRequirement(req);
                 embedder.addComponentDescriptor(desc);
                 indexer = embedder.lookup(Indexer.class);
-                scanner = embedder.lookup(org.apache.maven.index.Scanner.class);
                 searcher = embedder.lookup(SearchEngine.class);
                 remoteIndexUpdater = embedder.lookup(IndexUpdater.class);
                 contextProducer = embedder.lookup(ArtifactContextProducer.class);
+                scanner = new FastScanner(contextProducer);
                 inited = true;
             } catch (Exception x) {
                 Exceptions.printStackTrace(x);

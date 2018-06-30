@@ -104,7 +104,7 @@ public class JavaWhereUsedQueryPlugin extends JavaRefactoringPlugin implements F
 
     @Override
     protected Problem preCheck(CompilationController javac) throws IOException {
-        javac.toPhase(JavaSource.Phase.PARSED);
+        javac.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
         TreePathHandle handle = refactoring.getRefactoringSource().lookup(TreePathHandle.class);
         if (handle.resolveElement(javac) == null) {
             return new Problem(true, NbBundle.getMessage(FindVisitor.class, "DSC_ElNotAvail")); // NOI18N

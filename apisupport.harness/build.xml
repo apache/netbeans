@@ -24,14 +24,14 @@
     <import file="../nbbuild/templates/projectized.xml"/>
 
     <target name="nbantext" depends="build-init">
-        <jar jarfile="${cluster}/tasks.jar" compress="${build.package.compress}" index="${build.package.index}">
+        <nb-ext-jar jarfile="${cluster}/tasks.jar" compress="${build.package.compress}" index="${build.package.index}">
             <manifest>
                 <attribute name="NetBeans-Own-Library" value="true"/>
             </manifest>
             <!-- XXX would be more maintainable to use depfind.sf.net / genjar.sf.net / sadun-util.sf.net/pack.html -->
             <zipfileset src="${nbantext.jar}" includes="${bundled.tasks}"/>
             <zipfileset file="taskdefs.properties" fullpath="org/netbeans/nbbuild/taskdefs.properties"/>
-        </jar>
+        </nb-ext-jar>
     </target>
 
     <target name="compile-jnlp-launcher" depends="init,compile">
@@ -49,9 +49,9 @@
    
     <target name="jar-jnlp-launcher" depends="compile-jnlp-launcher">
         <mkdir dir="${cluster}/jnlp/"/>
-        <jar jarfile="${cluster}/jnlp/jnlp-launcher.jar" compress="false" manifest="jnlp-manifest.mf" >
+        <nb-ext-jar jarfile="${cluster}/jnlp/jnlp-launcher.jar" compress="false" manifest="jnlp-manifest.mf" >
             <fileset dir="${build.dir}/jnlp-launcher-classes"/>
-        </jar>
+        </nb-ext-jar>
     </target>
 
     <target name="netbeans-extra" depends="nbantext,jar-jnlp-launcher"/>

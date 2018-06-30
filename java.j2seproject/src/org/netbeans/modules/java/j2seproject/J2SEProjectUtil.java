@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.source.BuildArtifactMapper;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.api.common.SourceRoots;
 import org.netbeans.modules.java.api.common.project.ProjectProperties;
@@ -136,7 +137,7 @@ public class J2SEProjectUtil {
                 }
             }                    
         }
-        return true;
+        return BuildArtifactMapper.isCompileOnSaveSupported();
     }
 
     public static boolean isCompileOnSaveEnabled(final J2SEProject project) {

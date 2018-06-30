@@ -19,6 +19,9 @@
 package org.netbeans.modules.editor.hints;
 
 import java.awt.event.ActionEvent;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.text.JTextComponent;
@@ -34,16 +37,34 @@ import org.openide.windows.TopComponent;
  */
 public class FixAction extends AbstractAction {
     
+    private static final Set<String> fixableAnnotations = new HashSet<>();
+    static {
+        fixableAnnotations.add("org-netbeans-spi-editor-hints-parser_annotation_err_fixable"); // NOI18N
+        fixableAnnotations.add("org-netbeans-spi-editor-hints-parser_annotation_hint_fixable"); // NOI18N
+        fixableAnnotations.add("org-netbeans-spi-editor-hints-parser_annotation_verifier_fixable"); // NOI18N
+        fixableAnnotations.add("org-netbeans-spi-editor-hints-parser_annotation_warn_fixable"); // NOI18N
+    }
+
     public FixAction() {
         putValue(NAME, NbBundle.getMessage(FixAction.class, "NM_FixAction"));
-        putValue("supported-annotation-types", new String[] {
-            "org-netbeans-spi-editor-hints-parser_annotation_err_fixable",
-            "org-netbeans-spi-editor-hints-parser_annotation_warn_fixable",
-            "org-netbeans-spi-editor-hints-parser_annotation_verifier_fixable",
-            "org-netbeans-spi-editor-hints-parser_annotation_hint_fixable"
-        });
     }
-    
+
+    /*package*/ static void addFixableAnnotationType(String fixableAnnotation) {
+        fixableAnnotations.add(fixableAnnotation);
+    }
+
+    /*package*/ static  Set<String> getFixableAnnotationTypes() {
+        return Collections.unmodifiableSet(fixableAnnotations);
+    }
+
+    @Override
+    public Object getValue(String key) {
+        if ("supported-annotation-types".equals(key)) {//NOI18N
+            return fixableAnnotations.toArray(new String[0]);
+        }
+        return super.getValue(key);
+    }
+
     public void actionPerformed(ActionEvent e) {
         if (!HintsUI.getDefault().invokeDefaultAction(true)) {
             Object source = e.getSource();

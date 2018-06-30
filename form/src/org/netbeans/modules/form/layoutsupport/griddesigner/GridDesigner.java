@@ -264,7 +264,8 @@ public class GridDesigner extends JPanel {
         KeyStroke ks = null;
         FileObject undoRedoFO = FileUtil.getConfigFile(undo ? "Menu/Edit/org-openide-actions-UndoAction.shadow" : "Menu/Edit/org-openide-actions-RedoAction.shadow"); // NOI18N
         if (undoRedoFO != null) {
-            ContextAwareAction undoRedoAction = SystemAction.get(undo ? org.openide.actions.UndoAction.class : org.openide.actions.RedoAction.class);
+            Class<? extends SystemAction> undoClass = undo ? org.openide.actions.UndoAction.class : org.openide.actions.RedoAction.class;
+            ContextAwareAction undoRedoAction = (ContextAwareAction)SystemAction.get(undoClass);
             Action a = undoRedoAction.createContextAwareInstance(Lookup.EMPTY);
             AcceleratorBinding.setAccelerator(a, undoRedoFO);
             Object ksObj = a.getValue(Action.ACCELERATOR_KEY);

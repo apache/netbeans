@@ -38,17 +38,39 @@
 
     <target name="jar-updater" depends="init,compile-updater">
         <mkdir dir="${cluster}/modules/ext" />
-        <jar jarfile="${cluster}/modules/ext/updater.jar"
+        <nb-ext-jar jarfile="${cluster}/modules/ext/updater.jar"
              compress="${build.package.compress}">
             <manifest>
                 <attribute name="NetBeans-Own-Library" value="true"/>
             </manifest>
             <fileset dir="${build.dir}/updaterclasses"/>
-        </jar>
+        </nb-ext-jar>
     </target>
 
     <target name="compile" depends="jar-updater,projectized-common.compile"/>
 
     <target name="netbeans-extra" depends="jar-updater"/>
+
+    <target name="do-unit-test-build" depends="projectized.do-unit-test-build">
+        <touch file="${build.dir}/Dummy.class" />
+        <jar destfile="${build.test.unit.classes.dir}/org/netbeans/api/autoupdate/data/dummy-signed.jar">
+            <zipfileset prefix="dummy/" file="${build.dir}/Dummy.class"/>
+        </jar>
+        <signjar jar="${build.test.unit.classes.dir}/org/netbeans/api/autoupdate/data/dummy-signed.jar"
+                 keystore="${test.unit.src.dir}/org/netbeans/api/autoupdate/data/test-keystore.jks"
+                 storepass="password"
+                 alias="test-one" />
+        <jar destfile="${build.test.unit.classes.dir}/org/netbeans/api/autoupdate/data/dummy-signed-twice.jar">
+            <zipfileset prefix="dummy/" file="${build.dir}/Dummy.class"/>
+        </jar>
+        <signjar jar="${build.test.unit.classes.dir}/org/netbeans/api/autoupdate/data/dummy-signed-twice.jar"
+                 keystore="${test.unit.src.dir}/org/netbeans/api/autoupdate/data/test-keystore.jks"
+                 storepass="password"
+                 alias="test-one" />
+        <signjar jar="${build.test.unit.classes.dir}/org/netbeans/api/autoupdate/data/dummy-signed-twice.jar"
+                 keystore="${test.unit.src.dir}/org/netbeans/api/autoupdate/data/test-keystore.jks"
+                 storepass="password"
+                 alias="test-two" />
+    </target>
 
 </project>

@@ -22,22 +22,16 @@
 <project name="extbrowser" default="build" basedir=".">
 
     <import file="../nbbuild/templates/projectized.xml"/>
-    
-    <property name="resourcesdir" value="./release/modules/lib/"/>
-    <target name="-release.dir" depends="projectized-common.-release.dir">
-        <mkdir dir="${resourcesdir}"/>
-        <unzip src="external/extbrowser-dlls-18.03.15.zip" dest="${resourcesdir}"/>
-    </target>
 
     <target name="jnlp" depends="netbeans,-jnlp-init">
         <property name="dir" location="${jnlp.dest.dir}/${code.name.base.dashes}"/>
         <mkdir dir="${dir}"/>
         <copy file="${cluster}/${module.jar}" todir="${dir}"/>
-        <jar jarfile="${dir}/windows.jar">
+        <nb-ext-jar jarfile="${dir}/windows.jar">
             <fileset dir="${cluster}/modules/lib">
                 <include name="extbrowser*.dll"/>
             </fileset>
-        </jar>
+        </nb-ext-jar>
         <!-- XXX ought to only do this in case jnlp.sign.jars=true -->
         <signjar alias="${jnlp.signjar.alias}" storepass="${jnlp.signjar.password}" keystore="${jnlp.signjar.keystore}">
             <fileset dir="${dir}">

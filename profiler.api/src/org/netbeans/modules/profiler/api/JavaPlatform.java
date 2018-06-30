@@ -151,6 +151,13 @@ public final class JavaPlatform {
         } else if (ver.startsWith("9")) {
             return CommonConstants.JDK_19_STRING; // NOI18N
         } else {
+            try {
+                if (Integer.parseInt(ver.replaceAll("[.\\-+].*", "")) >= 10) {
+                    return CommonConstants.JDK_110_BEYOND_STRING;
+                }
+            } catch (NumberFormatException ex) {
+                //ignore
+            }
             return null;
         }
     }

@@ -91,6 +91,18 @@ is the proper place.
 
   <changes>
   
+    <change id="netbeans_diff_default_compact">
+        <api name="diff"/>
+        <summary>Show compact diff with netbeans.diff.default.compact system property</summary>
+        <version major="1" minor="52"/>
+        <date day="2" month="5" year="2018"/>
+        <author login="emi"/>
+        <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+        <description>
+            Added the system property netbeans.diff.default.compact which instructs the default DiffControllerProvider to
+            show only the graphical diff (instead of the tabbed pane with the graphical and textual diffs).
+        </description>
+    </change>
     <change id="diff-api">
       <api name="diff"/>
       <summary>The Diff APIs created</summary>

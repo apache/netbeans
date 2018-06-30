@@ -266,7 +266,7 @@ public class CompletionTestBase extends NbTestCase {
         
         File goldenFile = null;
         String version = System.getProperty("java.specification.version");
-        for (String variant : VERSION_VARIANTS.get(version)) {
+        for (String variant : computeVersionVariantsFor(version)) {
             goldenFile = new File(getDataDir(), "/goldenfiles/org/netbeans/modules/java/completion/JavaCompletionTaskTest/" + variant + "/" + goldenFileName);
             if (goldenFile.exists())
                 break;
@@ -278,16 +278,17 @@ public class CompletionTestBase extends NbTestCase {
         LifecycleManager.getDefault().saveAll();
     }
 
-    private static final Map<String, List<String>> VERSION_VARIANTS = new HashMap<>();
-
-    static {
-        VERSION_VARIANTS.put("1.8", Arrays.asList("1.8"));
-        VERSION_VARIANTS.put("9", Arrays.asList("9", "1.8"));
-        VERSION_VARIANTS.put("1.9", Arrays.asList("9", "1.8"));
-        VERSION_VARIANTS.put("10", Arrays.asList("10", "9", "1.8"));
-        VERSION_VARIANTS.put("1.10", Arrays.asList("10", "9", "1.8"));
-        VERSION_VARIANTS.put("11", Arrays.asList("11", "10", "9", "1.8"));
-        VERSION_VARIANTS.put("1.11", Arrays.asList("11", "10", "9", "1.8"));
+    private List<String> computeVersionVariantsFor(String version) {
+        int dot = version.indexOf('.');
+        version = version.substring(dot + 1);
+        int versionNum = Integer.parseInt(version);
+        List<String> versions = new ArrayList<>();
+        
+        for (int v = versionNum; v >= 8; v--) {
+            versions.add(v != 8 ? "" + v : "1." + v);
+        }
+        
+        return versions;
     }
 
     private void copyToWorkDir(File resource, File toFile) throws IOException {

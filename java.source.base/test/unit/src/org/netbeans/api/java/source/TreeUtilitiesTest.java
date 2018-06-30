@@ -25,6 +25,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Scope;
+import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
@@ -41,6 +42,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
+import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.Comment.Style;
@@ -583,6 +585,38 @@ public class TreeUtilitiesTest extends NbTestCase {
                 parameter.getTreeUtilities().attributeTree(et, disableScope);
             }
         }, true);
+    }
+
+    public void testAttributingVar() throws Exception {
+        ClassPath boot = ClassPathSupport.createClassPath(SourceUtilsTestUtil.getBootClassPath().toArray(new URL[0]));
+        FileObject testFile = FileUtil.createData(FileUtil.createMemoryFileSystem().getRoot(), "Test.java");
+        try (Writer w = new OutputStreamWriter(testFile.getOutputStream())) {
+            w.append("public class Test { private static int I; }");
+        }
+        JavaSource js = JavaSource.create(ClasspathInfo.create(boot, ClassPath.EMPTY, ClassPath.EMPTY), testFile);
+        js.runUserActionTask(new Task<CompilationController>() {
+            @Override
+            public void run(CompilationController parameter) throws Exception {
+                parameter.toPhase(Phase.RESOLVED);
+                TreePath clazzPath = new TreePath(new TreePath(new TreePath(parameter.getCompilationUnit()),
+                                                  parameter.getCompilationUnit().getTypeDecls().get(0)),
+                        ((ClassTree) parameter.getCompilationUnit().getTypeDecls().get(0)).getMembers().get(1));
+                Scope scope = parameter.getTrees().getScope(clazzPath);
+                StatementTree st = parameter.getTreeUtilities().parseStatement("{ String s; }", new SourcePositions[1]);
+                assertEquals(Kind.BLOCK, st.getKind());
+                StatementTree var = st.getKind() == Kind.BLOCK ? ((BlockTree) st).getStatements().get(0) : st;
+                parameter.getTreeUtilities().attributeTree(st, scope);
+                checkType(parameter, clazzPath, var);
+            }
+        }, true);
+    }
+
+    private void checkType(CompilationInfo info, TreePath base, StatementTree st) {
+        TreePath tp = new TreePath(base, st);
+        Element el = info.getTrees().getElement(tp);
+
+        assertNotNull(el);
+        assertEquals("s", el.toString());
     }
 
     public void testIsEndOfCompoundVariableDeclaration() throws Exception {

@@ -872,6 +872,9 @@ public final class TreeUtilities {
             Env<AttrContext> env = getEnv(scope);
             if (tree instanceof JCExpression)
                 return attr.attribExpr((JCTree) tree,env, Type.noType);
+            if (env.tree != null && env.tree.getKind() == Kind.VARIABLE) {
+                env = env.next;
+            }
             return attr.attribStat((JCTree) tree,env);
         } finally {
 //            cacheContext.leave();

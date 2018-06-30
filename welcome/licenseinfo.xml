@@ -22,14 +22,10 @@
 <licenseinfo>
     <fileset>
         <file>src/org/netbeans/modules/welcome/resources/xhtml1-transitional.dtd</file>
-        <license ref="W3C2" />
-        <comment>DTDs and XMLSchemata are used at runtime to enable html entity resolution in RSS feeds.</comment>
-    </fileset>
-    <fileset>
         <file>src/org/netbeans/modules/welcome/resources/xhtml-lat1.ent</file>
         <file>src/org/netbeans/modules/welcome/resources/xhtml-special.ent</file>
         <file>src/org/netbeans/modules/welcome/resources/xhtml-symbol.ent</file>
-        <license ref="ISO-8879-SGML" />
+        <license ref="W3C2" />
         <comment>DTDs and XMLSchemata are used at runtime to enable html entity resolution in RSS feeds.</comment>
     </fileset>
     <fileset>

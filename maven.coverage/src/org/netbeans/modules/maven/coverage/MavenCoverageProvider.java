@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.maven.coverage;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -199,17 +200,16 @@ public final class MavenCoverageProvider implements CoverageProvider {
             return null;
         }
         try {
-            org.w3c.dom.Document report = XMLUtil.parse(new InputSource(r.toURI().toString()), true, false, XMLUtil.defaultErrorHandler(), new EntityResolver() {
-                                     public @Override InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-                                         if (systemId.equals("http://cobertura.sourceforge.net/xml/coverage-04.dtd")) {
-                                             return new InputSource(MavenCoverageProvider.class.getResourceAsStream("coverage-04.dtd")); // NOI18N
-                                         } else if (publicId.equals("-//JACOCO//DTD Report 1.0//EN")) {
-                                             return new InputSource(MavenCoverageProvider.class.getResourceAsStream("jacoco-1.0.dtd"));
-                                         } else {
-                                             return null;
-                                         }
-                                     }
-                                 });
+            // Entity resolver is overriden to prevent retrieval of the cobertura
+            // DTDs. The license situation around the DTDs is unclear and as the
+            // DTDs don't contain entity definitions, they are not strictly
+            // necessary to parse the XML files
+            org.w3c.dom.Document report = XMLUtil.parse(new InputSource(r.toURI().toString()), false, false, XMLUtil.defaultErrorHandler(), new EntityResolver() {
+                @Override
+                public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+                    return new InputSource(new ByteArrayInputStream(new byte[0]));
+                }
+            });
             LOG.log(Level.FINE, "parsed {0}", r);
             return Pair.of(r, report);
         } catch (/*IO,SAX*/Exception x) {

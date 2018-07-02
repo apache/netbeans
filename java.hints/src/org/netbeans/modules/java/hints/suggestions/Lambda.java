@@ -96,7 +96,7 @@ import org.openide.util.NbBundle.Messages;
 public class Lambda {
     
     private static final Set<String> ERROR_CODES = new HashSet<String>(Arrays.asList(
-            "compiler.err.prob.found.req")); // NOI18N
+            "compiler.err.invalid.lambda.parameter.declaration")); // NOI18N
 
     @Hint(displayName="#DN_lambda2Class", description="#DESC_lambda2Class", category="suggestions", hintKind=Hint.Kind.ACTION,
             minSourceVersion = "8")

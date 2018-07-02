@@ -42,9 +42,12 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.util.SharedNameTable;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -92,7 +95,8 @@ import org.openide.util.NbBundle.Messages;
  */
 public class Lambda {
     
-    private static final String ERROR_CODES = "compiler.err.invalid.lambda.parameter.declaration"; // NOI18N
+    private static final Set<String> ERROR_CODES = new HashSet<String>(Arrays.asList(
+            "compiler.err.prob.found.req")); // NOI18N
 
     @Hint(displayName="#DN_lambda2Class", description="#DESC_lambda2Class", category="suggestions", hintKind=Hint.Kind.ACTION,
             minSourceVersion = "8")
@@ -241,12 +245,12 @@ public class Lambda {
         return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_addExplicitLambdaParameters(), new AddExplicitLambdaParameterTypes(ctx.getInfo(), ctx.getPath()).toEditorFix());
     }
     
-    @Hint(displayName = "#DN_addImplicitVarLambdaParameters", description = "#DESC_addImplicitVarLambdaParameters", category = "suggestions", hintKind = Hint.Kind.ACTION, minSourceVersion = "11")
+    @Hint(displayName = "#DN_addVarLambdaParameters", description = "#DESC_addVarLambdaParameters", category = "suggestions", hintKind = Hint.Kind.ACTION, minSourceVersion = "11")
     @Messages({
-        "DN_addImplicitVarLambdaParameters=Convert Lambda to Use Implicit Var Parameter Types",
-        "DESC_addImplicitVarLambdaParameters=Converts lambdas to use implicit var parameter types",
-        "ERR_addImplicitVarLambdaParameters=",
-        "FIX_addImplicitVarLambdaParameters=Use var parameter types"
+        "DN_addVarLambdaParameters=Convert Lambda to Use Var Parameter Types",
+        "DESC_addVarLambdaParameters=Converts lambdas to use var parameter types",
+        "ERR_addtVarLambdaParameters=",
+        "FIX_addVarLambdaParameters=Use var parameter types"
     })
     @TriggerTreeKind(Kind.LAMBDA_EXPRESSION)
     public static ErrorDescription implicitVarParameterTypes(HintContext ctx) {
@@ -256,7 +260,7 @@ public class Lambda {
         }
         // Check invalid lambda parameter declaration
         for (Diagnostic d : ctx.getInfo().getDiagnostics()) {
-            if (d.getCode().equals(ERROR_CODES)) {
+            if (ERROR_CODES.contains(d.getCode())) {
                 return null;
             }
         }

@@ -29,7 +29,7 @@ import org.netbeans.modules.java.hints.test.api.HintTest;
 public class ConvertToVarHintTest {
 
     private static final String VAR_CONV_DESC = "Explict type can be replaced with 'var'"; //NOI18N
-    private static final String VAR_CONV_WARNING = "verifier:" + VAR_CONV_DESC; //NOI18N
+    private static final String VAR_CONV_WARNING = "hint:" + VAR_CONV_DESC; //NOI18N
 
     @Test
     public void testIntLiteralRefToVar() throws Exception {

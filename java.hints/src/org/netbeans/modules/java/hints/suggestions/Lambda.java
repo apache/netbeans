@@ -43,6 +43,7 @@ import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -68,6 +69,8 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
 import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.api.java.source.ElementUtilities.ElementAcceptor;
+import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.TreeUtilities;
@@ -242,9 +245,9 @@ public class Lambda {
     
     @Hint(displayName = "#DN_addVarLambdaParameters", description = "#DESC_addVarLambdaParameters", category = "suggestions", hintKind = Hint.Kind.ACTION, minSourceVersion = "11")
     @Messages({
-        "DN_addVarLambdaParameters=Convert Lambda to Use Var Parameter Types",
-        "DESC_addVarLambdaParameters=Converts lambdas to use var parameter types",
-        "ERR_addtVarLambdaParameters=",
+        "DN_addVarLambdaParameters=Convert Lambda to Var Parameter Types",
+        "DESC_addVarLambdaParameters=Converts lambdas to var parameter types",
+        "ERR_addVarLambdaParameters=",
         "FIX_addVarLambdaParameters=Use var parameter types"
     })
     @TriggerTreeKind(Kind.LAMBDA_EXPRESSION)
@@ -267,7 +270,7 @@ public class Lambda {
             }
         }
 
-        return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_addImplicitVarLambdaParameters(), new AddImplicitVarLambdaParameterTypes(ctx.getInfo(), ctx.getPath()).toEditorFix());
+        return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_addVarLambdaParameters(), new AddVarLambdaParameterTypes(ctx.getInfo(), ctx.getPath()).toEditorFix());
     }
 
     private static ExecutableElement findAbstractMethod(CompilationInfo info, TypeMirror type) {
@@ -663,15 +666,15 @@ public class Lambda {
         }
     }
     
-    private static final class AddImplicitVarLambdaParameterTypes extends JavaFix {
+    private static final class AddVarLambdaParameterTypes extends JavaFix {
 
-        public AddImplicitVarLambdaParameterTypes(CompilationInfo info, TreePath tp) {
+        public AddVarLambdaParameterTypes(CompilationInfo info, TreePath tp) {
             super(info, tp);
         }
 
         @Override
         protected String getText() {
-            return Bundle.FIX_addImplicitVarLambdaParameters();
+            return Bundle.FIX_addVarLambdaParameters();
         }
 
         @Override

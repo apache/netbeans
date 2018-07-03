@@ -34,6 +34,7 @@ import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.java.hints.errors.Utilities;
 import org.netbeans.spi.editor.hints.ErrorDescription;
+import org.netbeans.spi.editor.hints.Severity;
 import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
 import org.netbeans.spi.java.hints.Hint;
 import org.netbeans.spi.java.hints.HintContext;
@@ -48,7 +49,7 @@ import org.openide.util.NbBundle.Messages;
  *
  * @author rtaneja
  */
-@Hint(displayName = "#DN_ConvertVarToExplicitType", description = "#DESC_ConvertVarToExplicitType", category = "rules15", minSourceVersion = "10")
+@Hint(displayName = "#DN_ConvertVarToExplicitType", description = "#DESC_ConvertVarToExplicitType", category = "rules15", severity = Severity.HINT, minSourceVersion = "10")
 @Messages("MSG_ConvertibleToExplicitType=Convert var to explicit type")
 public class ConvertVarToExplicitType {
 

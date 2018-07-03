@@ -27,6 +27,9 @@ public class Test {
 
     private void test(Foo f) {
     }
-
+    
+    private void test2(String str, int num, Foo f) {
+    }
+    
     public static void main(String[] args) {
 	Test t = new Test();

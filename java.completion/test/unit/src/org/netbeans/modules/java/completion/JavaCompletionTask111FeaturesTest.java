@@ -47,27 +47,35 @@ public class JavaCompletionTask111FeaturesTest extends CompletionTestBase {
 
     // JDK-1.11 lambda expressions var param type support tests ---------------------------------------
     public void testEmptyFileAfterTypingLambdaParam() throws Exception {
-        performTest("SimpleLambdaExpression2Start", 1010, "t.test((s ", "empty.pass", "1.11");
+        performTest("SimpleLambdaExpression2Start", 1060, "t.test((s ", "empty.pass", "1.11");
     }
 
     public void testEmptyFileAfterTypingTypeOfLambdaParam() throws Exception {
-        performTest("SimpleLambdaExpression2Start", 1010, "t.test((String ", "stringVarName.pass", "1.11");
+        performTest("SimpleLambdaExpression2Start", 1060, "t.test((String ", "stringVarName.pass", "1.11");
     }
 
     public void testFirstLambdaParam() throws Exception {
-        performTest("SimpleLambdaExpression2Start", 1008, "t.test((", "lambdaParameterTypesIncludingVar.pass", "1.11");
+        performTest("SimpleLambdaExpression2Start", 1066, "t.test((", "lambdaParameterTypesIncludingVar.pass", "1.11");
     }
 
     public void testSecondLambdaParam1() throws Exception {
-        performTest("SimpleLambdaExpression2Start", 1010, "t.test((s,", "empty.pass", "1.11");
+        performTest("SimpleLambdaExpression2Start", 1060, "t.test((s,", "empty.pass", "1.11");
     }
 
     public void testSecondLambdaParam2() throws Exception {
-        performTest("SimpleLambdaExpression2Start", 1010, "t.test((String s,", "lambdaParameterTypesExcludingVar.pass", "1.11");
+        performTest("SimpleLambdaExpression2Start", 1060, "t.test((String s,", "lambdaParameterTypesExcludingVar.pass", "1.11");
     }
 
     public void testSecondLambdaParam3() throws Exception {
-        performTest("SimpleLambdaExpression2Start", 1010, "t.test((var s,", "var.pass", "1.11");
+        performTest("SimpleLambdaExpression2Start", 1060, "t.test((var s,", "var.pass", "1.11");
+    }
+
+    public void testSecondLambdaParam4() throws Exception {
+        performTest("SimpleLambdaExpression2Start", 1068, "t.test2( \"hello\",2,( var s,", "var.pass", "1.11");
+    }
+
+    public void testSecondLambdaParam5() throws Exception {
+        performTest("SimpleLambdaExpression2Start", 1068, "t.test2( \"hello\",2,( String s,", "lambdaParameterTypesExcludingVar.pass", "1.11");
     }
 
     public void noop() {

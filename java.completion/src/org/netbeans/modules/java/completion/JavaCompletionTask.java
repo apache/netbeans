@@ -1910,8 +1910,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                         addKeyword(env, FINAL_KEYWORD, SPACE, false);
                     }
                     //Assuming first parameter to be var type if position for the parameter type is not found.
-                    else if (!let.getParameters().isEmpty() && let.getParameters().get(0).getType() != null )
-                     {
+                    else if (!let.getParameters().isEmpty()) {
                         addVarTypeForLambdaParam(env);
                     }
                     break;
@@ -5893,13 +5892,10 @@ public final class JavaCompletionTask<T> extends BaseTask {
         Set<? extends TypeMirror> smartTypes = getSmartTypes(env);
         if (smartTypes != null) {
             for (TypeMirror st : smartTypes) {
-                if (st.getKind().isPrimitive()) {
-                    st = types.boxedClass((PrimitiveType) st).asType();
-                }
                 if (st.getKind() == TypeKind.DECLARED) {
                     final DeclaredType type = (DeclaredType) st;
                     final TypeElement element = (TypeElement) type.asElement();
-                    
+
                     if (elements.isFunctionalInterface(element)) {
                         results.add(itemFactory.createKeywordItem(VAR_KEYWORD, SPACE, anchorOffset, false));
                         break;

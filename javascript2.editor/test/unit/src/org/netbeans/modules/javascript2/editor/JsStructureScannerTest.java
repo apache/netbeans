@@ -76,6 +76,10 @@ public class JsStructureScannerTest extends JsTestBase {
         checkFolds("testfiles/structure/issue228186.js");
     }
 
+    public void testIssue240529() throws Exception {
+        checkFolds("testfiles/structure/issue240529.js");
+    }
+
     public void testSimpleMethodChain() throws Exception {
         checkStructure("testfiles/completion/simpleMethodChain/methodChainSimple.js");
     }

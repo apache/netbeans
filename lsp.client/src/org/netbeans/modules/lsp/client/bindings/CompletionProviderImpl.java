@@ -31,13 +31,17 @@ import javax.swing.ImageIcon;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
+import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionItemKind;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
+import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import org.netbeans.editor.BaseDocument;
+import org.netbeans.editor.Utilities;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.lsp.client.ProjectLSPBindings;
 import org.netbeans.spi.editor.completion.CompletionProvider;
@@ -47,6 +51,7 @@ import org.netbeans.spi.editor.completion.support.AsyncCompletionQuery;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
 import org.netbeans.spi.editor.completion.support.CompletionUtilities;
 import org.openide.filesystems.FileObject;
+import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 
@@ -96,7 +101,32 @@ public class CompletionProviderImpl implements CompletionProvider {
                         resultSet.addItem(new org.netbeans.spi.editor.completion.CompletionItem() {
                             @Override
                             public void defaultAction(JTextComponent jtc) {
-                                throw new UnsupportedOperationException("TODO.");
+                                Document doc = jtc.getDocument();
+                                TextEdit te = i.getTextEdit();
+                                if (te != null) {
+                                    int start = Utils.getOffset(doc, te.getRange().getStart());
+                                    int end = Utils.getOffset(doc, te.getRange().getEnd());
+                                    NbDocument.runAtomic((StyledDocument) doc, () -> {
+                                        try {
+                                            doc.remove(start, end - start);
+                                            doc.insertString(start, te.getNewText(), null);
+                                        } catch (BadLocationException ex) {
+                                            Exceptions.printStackTrace(ex);
+                                        }
+                                    });
+                                } else {
+                                    String toAdd = i.getInsertText();
+                                    if (toAdd == null) {
+                                        toAdd = i.getLabel();
+                                    }
+                                    try {
+                                        int offset = jtc.getCaretPosition();
+                                        String ident = Utilities.getIdentifier((BaseDocument) doc, offset);
+                                        doc.insertString(offset, toAdd.substring(ident != null ? ident.length() : 0), null);
+                                    } catch (BadLocationException ex) {
+                                        Exceptions.printStackTrace(ex);
+                                    }
+                                }
                             }
 
                             @Override

@@ -34,6 +34,7 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.spi.editor.hints.ErrorDescription;
+import org.netbeans.spi.editor.hints.Severity;
 import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
 import org.netbeans.spi.java.hints.Hint;
 import org.netbeans.spi.java.hints.HintContext;
@@ -54,7 +55,7 @@ import org.netbeans.modules.java.hints.errors.Utilities;
  *
  * @author arusinha
  */
-@Hint(displayName = "#DN_CanUseVarForExplicitType", description = "#DESC_CanUseVarForExplicitType", category = "rules15", minSourceVersion = "10") //NOI18N
+@Hint(displayName = "#DN_CanUseVarForExplicitType", description = "#DESC_CanUseVarForExplicitType", category = "rules15", severity = Severity.HINT, minSourceVersion = "10") //NOI18N
 @Messages("MSG_ConvertibleToVarType=Explict type can be replaced with 'var'")  //NOI18N  
 public class ConvertToVarHint {
 

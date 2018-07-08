@@ -20,18 +20,10 @@
 package org.netbeans.modules.java.completion;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Writer;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.prefs.Preferences;
 
 import javax.lang.model.element.*;
 import javax.lang.model.type.ArrayType;
@@ -40,183 +32,28 @@ import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
-import javax.swing.JEditorPane;
 import javax.swing.text.Document;
 
-import junit.framework.Assert;
-
-import org.netbeans.api.editor.mimelookup.MimeLookup;
-import org.netbeans.api.java.classpath.ClassPath;
-import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.*;
 import org.netbeans.api.java.source.support.ReferencesCount;
 import org.netbeans.api.lexer.Language;
-import org.netbeans.core.startup.Main;
-import org.netbeans.junit.NbTestCase;
-import org.netbeans.modules.java.JavaDataLoader;
-import org.netbeans.modules.java.source.BootClassPathUtil;
-import org.netbeans.modules.java.source.TestUtil;
-import org.netbeans.modules.java.source.indexing.TransactionContext;
-import org.netbeans.modules.java.source.usages.BinaryAnalyser;
-import org.netbeans.modules.java.source.usages.ClassIndexImpl;
-import org.netbeans.modules.java.source.usages.ClassIndexManager;
-import org.netbeans.modules.java.source.usages.IndexUtil;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.Source;
-import org.netbeans.spi.java.classpath.ClassPathProvider;
-import org.netbeans.spi.java.classpath.support.ClassPathSupport;
-import org.netbeans.spi.java.queries.SourceLevelQueryImplementation;
 import org.openide.LifecycleManager;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
-import org.openide.util.Lookup;
-import org.openide.util.SharedClassObject;
-import org.openide.util.lookup.Lookups;
-import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
  * @author Dusan Balek, Jan Lahoda
  */
-public class CompletionTestBase extends NbTestCase {
-    
-    static {
-        JavaCompletionTaskBasicTest.class.getClassLoader().setDefaultAssertionStatus(true);
-        SourceUtilsTestUtil2.disableArtificalParameterNames();
-    }
-
-    static final int FINISH_OUTTIME = 5 * 60 * 1000;
-    
-    public static class Lkp extends ProxyLookup {
-        
-        private static Lkp DEFAULT;
-        
-        public Lkp() {
-            Assert.assertNull(DEFAULT);
-            DEFAULT = this;
-        }
-        
-        public static void initLookups(Object[] objs) throws Exception {
-            ClassLoader l = Lkp.class.getClassLoader();
-            DEFAULT.setLookups(new Lookup [] {
-                Lookups.fixed(objs),
-                Lookups.metaInfServices(l),
-                Lookups.singleton(l)
-            });
-        }
-    }
+public class CompletionTestBase extends CompletionTestBaseBase {
     
     public CompletionTestBase(String testName) {
-        super(testName);
-    }
-    
-    private final AtomicReference<String> sourceLevel = new AtomicReference<>();
-    
-    @Override
-    protected void setUp() throws Exception {
-        ClassPathProvider cpp = new ClassPathProvider() {
-            volatile ClassPath bootCache;
-            volatile ClassPath moduleBootCache;
-            @Override
-            public ClassPath findClassPath(FileObject file, String type) {
-                try {
-                    if (type.equals(ClassPath.SOURCE)) {
-                        return ClassPathSupport.createClassPath(new FileObject[]{FileUtil.toFileObject(getWorkDir())});
-                    }
-                    if (type.equals(ClassPath.COMPILE)) {
-                        return ClassPathSupport.createClassPath(new FileObject[0]);
-                    }
-                    if (type.equals(ClassPath.BOOT)) {
-                        ClassPath cp = bootCache;
-                        if (cp == null) {
-                            bootCache = cp = BootClassPathUtil.getBootClassPath();
-                        }
-                        return cp;
-                    }
-                    if (type.equals(JavaClassPathConstants.MODULE_BOOT_PATH)) {
-                        ClassPath cp = moduleBootCache;
-                        if (cp == null) {
-                            moduleBootCache = cp = BootClassPathUtil.getModuleBootPath();
-                        }
-                        return cp;
-                    }
-                } catch (IOException ex) {}
-                return null;
-            }
-        };
-        SharedClassObject loader = JavaDataLoader.findObject(JavaDataLoader.class, true);
-        SourceLevelQueryImplementation slq = new SourceLevelQueryImplementation() {
-            @Override public String getSourceLevel(FileObject javaFile) {
-                return sourceLevel.get();
-            }
-        };
-        SourceUtilsTestUtil.prepareTest(new String[] {
-            "META-INF/generated-layer.xml",
-            "org/netbeans/modules/java/editor/resources/layer.xml",
-            "org/netbeans/modules/defaults/mf-layer.xml"
-        }, new Object[] {loader, cpp, slq});
-        File cacheFolder = new File(getWorkDir(), "var/cache/index");
-        cacheFolder.mkdirs();
-        IndexUtil.setCacheFolder(cacheFolder);
-        JEditorPane.registerEditorKitForContentType("text/x-java", "org.netbeans.modules.editor.java.JavaKit");
-        final ClassPath sourcePath = ClassPathSupport.createClassPath(new FileObject[] {FileUtil.toFileObject(getDataDir())});
-        final ClassIndexManager mgr  = ClassIndexManager.getDefault();
-        for (ClassPath.Entry entry : sourcePath.entries()) {
-            TransactionContext tx = TransactionContext.beginStandardTransaction(entry.getURL(), true, ()->true, false);
-            try {
-                mgr.createUsagesQuery(entry.getURL(), true);
-            } finally {
-                tx.commit();
-            }
-        }
-        final ClassPath bootPath = cpp.findClassPath(FileUtil.toFileObject(getWorkDir()), ClassPath.BOOT);
-        final ClasspathInfo cpInfo = ClasspathInfo.create(bootPath, ClassPathSupport.createClassPath(new URL[0]), sourcePath);
-        assertNotNull(cpInfo);
-        final JavaSource js = JavaSource.create(cpInfo);
-        assertNotNull(js);
-        js.runUserActionTask(new Task<CompilationController>() {
-            @Override
-            public void run(CompilationController parameter) throws Exception {
-                for (ClassPath.Entry entry : bootPath.entries()) {
-                    final URL url = entry.getURL();
-                    TransactionContext.beginStandardTransaction(entry.getURL(), false, ()->true, false);
-                    try {
-                        final ClassIndexImpl cii = mgr.createUsagesQuery(url, false);
-                        BinaryAnalyser ba = cii.getBinaryAnalyser();
-                        ba.analyse(url);
-                    } finally {
-                        TransactionContext.get().commit();
-                    }
-                }
-            }
-        }, true);
-        Main.initializeURLFactory();
-        Preferences preferences = MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class);
-        preferences.putBoolean("completion-case-sensitive", true);
-    }
-    
-    private URL[] prepareLayers(String... paths) throws IOException {
-        List<URL> layers = new LinkedList<>();
-        
-        for (int cntr = 0; cntr < paths.length; cntr++) {
-            boolean found = false;
-
-            for (Enumeration<URL> en = Thread.currentThread().getContextClassLoader().getResources(paths[cntr]); en.hasMoreElements(); ) {
-                found = true;
-                layers.add(en.nextElement());
-            }
-
-            Assert.assertTrue(paths[cntr], found);
-        }
-        
-        return layers.toArray(new URL[0]);
-    }
-    
-    @Override
-    protected void tearDown() throws Exception {
+        super(testName, "org/netbeans/modules/java/completion/JavaCompletionTaskTest");
     }
     
     protected void performTest(String source, int caretPos, String textToInsert, String goldenFileName) throws Exception {
@@ -253,7 +90,9 @@ public class CompletionTestBase extends NbTestCase {
             for (Object item : items) {
                 String itemString = item.toString();
                 if (!(org.openide.util.Utilities.isMac() && itemString.equals("apple") //ignoring 'apple' package
-                        || itemString.equals("jdk"))) { //ignoring 'jdk' package introduced by jdk1.7.0_40
+                        || itemString.equals("jdk")        //ignoring 'jdk' package introduced by jdk1.7.0_40
+                        || itemString.equals("netscape")   //ignoring 'netscape' package present in some JDK builds
+                        || itemString.equals("oracle"))) { //ignoring 'oracle' package present in some JDK builds
                     out.write(itemString);
                     out.write("\n");
                 }
@@ -261,82 +100,13 @@ public class CompletionTestBase extends NbTestCase {
         }
         
         
-        File goldenFile = null;
-        String version = System.getProperty("java.specification.version");
-        for (String variant : VERSION_VARIANTS.get(version)) {
-            goldenFile = new File(getDataDir(), "/goldenfiles/org/netbeans/modules/java/completion/JavaCompletionTaskTest/" + variant + "/" + goldenFileName);
-            if (goldenFile.exists())
-                break;
-        }
-        assertNotNull(goldenFile);
+        File goldenFile = getGoldenFile(goldenFileName);
         File diffFile = new File(getWorkDir(), getName() + ".diff");        
         assertFile(output, goldenFile, diffFile);
         
         LifecycleManager.getDefault().saveAll();
     }
 
-    private static final Map<String, List<String>> VERSION_VARIANTS = new HashMap<>();
-
-    static {
-        VERSION_VARIANTS.put("1.8", Arrays.asList("1.8"));
-        VERSION_VARIANTS.put("9", Arrays.asList("9", "1.8"));
-        VERSION_VARIANTS.put("1.9", Arrays.asList("9", "1.8"));
-        VERSION_VARIANTS.put("10", Arrays.asList("10", "9", "1.8"));
-        VERSION_VARIANTS.put("1.10", Arrays.asList("10", "9", "1.8"));
-        VERSION_VARIANTS.put("11", Arrays.asList("11", "10", "9", "1.8"));
-        VERSION_VARIANTS.put("1.11", Arrays.asList("11", "10", "9", "1.8"));
-    }
-
-    private void copyToWorkDir(File resource, File toFile) throws IOException {
-        InputStream is = new FileInputStream(resource);
-        OutputStream outs = new FileOutputStream(toFile);
-        int read;
-        while ((read = is.read()) != (-1)) {
-            outs.write(read);
-        }
-        outs.close();
-        is.close();
-    }
-    
-    private static ClassPath createClassPath(String classpath) {
-        StringTokenizer tokenizer = new StringTokenizer(classpath, File.pathSeparator);
-        List list = new ArrayList();
-        while (tokenizer.hasMoreTokens()) {
-            String item = tokenizer.nextToken();
-            File f = FileUtil.normalizeFile(new File(item));
-            URL url = getRootURL(f);
-            if (url!=null) {
-                list.add(ClassPathSupport.createResource(url));
-            }
-        }
-        return ClassPathSupport.createClassPath(list);
-    }
-    
-    // XXX this method could probably be removed... use standard FileUtil stuff
-    private static URL getRootURL  (File f) {
-        URL url = null;
-        try {
-            if (isArchiveFile(f)) {
-                url = FileUtil.getArchiveRoot(f.toURI().toURL());
-            } else {
-                url = f.toURI().toURL();
-                String surl = url.toExternalForm();
-                if (!surl.endsWith("/")) {
-                    url = new URL(surl+"/");
-                }
-            }
-        } catch (MalformedURLException e) {
-            throw new AssertionError(e);
-        }
-        return url;
-    }
-    
-    private static boolean isArchiveFile(File f) {
-        // the f might not exist and so you cannot use e.g. f.isFile() here
-        String fileName = f.getName().toLowerCase();
-        return fileName.endsWith(".jar") || fileName.endsWith(".zip");    //NOI18N
-    }
-    
     private static class CIFactory implements JavaCompletionTask.ModuleItemFactory<CI> {
 
         private static final int SMART_TYPE = 1000;

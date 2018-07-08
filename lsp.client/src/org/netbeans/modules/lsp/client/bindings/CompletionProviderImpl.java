@@ -43,7 +43,7 @@ import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.editor.NbEditorUtilities;
-import org.netbeans.modules.lsp.client.ProjectLSPBindings;
+import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.spi.editor.completion.CompletionProvider;
 import org.netbeans.spi.editor.completion.CompletionResultSet;
 import org.netbeans.spi.editor.completion.CompletionTask;
@@ -73,7 +73,7 @@ public class CompletionProviderImpl implements CompletionProvider {
                         //TODO: beep
                         return ;
                     }
-                    ProjectLSPBindings server = ProjectLSPBindings.getBindings(file);
+                    LSPBindings server = LSPBindings.getBindings(file);
                     if (server == null) {
                         return ;
                     }

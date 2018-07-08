@@ -37,7 +37,7 @@ import org.netbeans.editor.Utilities;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderExt;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
 import org.netbeans.modules.editor.NbEditorUtilities;
-import org.netbeans.modules.lsp.client.ProjectLSPBindings;
+import org.netbeans.modules.lsp.client.LSPBindings;
 import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
@@ -80,7 +80,7 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
             //TODO: beep
             return ;
         }
-        ProjectLSPBindings server = ProjectLSPBindings.getBindings(file);
+        LSPBindings server = LSPBindings.getBindings(file);
         if (server == null) {
             return ;
         }

@@ -38,7 +38,7 @@ import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.netbeans.api.editor.EditorRegistry;
 import org.netbeans.editor.BaseDocumentEvent;
 import org.netbeans.modules.editor.*;
-import org.netbeans.modules.lsp.client.ProjectLSPBindings;
+import org.netbeans.modules.lsp.client.LSPBindings;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.OnStart;
@@ -72,7 +72,7 @@ public class TextDocumentSyncServerCapabilityHandler {
             if (file == null)
                 continue; //ignore
 
-            ProjectLSPBindings server = ProjectLSPBindings.getBindings(file);
+            LSPBindings server = LSPBindings.getBindings(file);
 
             if (server == null)
                 continue; //ignore

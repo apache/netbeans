@@ -161,18 +161,20 @@ public class RemoteProvider {
 
         @Override
         public void stateChanged(ChangeEvent evt) {
-            synchronized (platform2Remote) {
-                platform2Remote.remove(platform);
+            try {
+                stop();
+            } catch (InterruptedException ex) {
+                //ignored
             }
         }
 
         private void stop() throws InterruptedException {
             synchronized (platform2Remote) {
+                platform2Remote.remove(platform);
                 process.destroy();
                 process.waitFor(2, TimeUnit.SECONDS);
                 process.destroyForcibly();
                 process.waitFor();
-                platform2Remote.remove(platform);
             }
         }
     }

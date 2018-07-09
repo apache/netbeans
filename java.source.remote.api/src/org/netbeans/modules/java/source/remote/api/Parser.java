@@ -23,7 +23,9 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Map;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import javax.swing.text.StyledDocument;
 import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
@@ -32,6 +34,7 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.modules.java.source.remoteapi.SourceLevelQueryImpl;
+import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
@@ -104,7 +107,22 @@ public class Parser {
         public static Config create(FileObject file) {
             //caching...
             try {
-                return new Config(nextId++, file.getNameExt(), file.asText(), ClasspathInfo.create(file), SourceLevelQuery.getSourceLevel(file));
+                EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+                StyledDocument doc = ec.getDocument();
+                String[] text = new String[1];
+                
+                if (doc != null) {
+                    doc.render(() -> {
+                        try {
+                            text[0] = doc.getText(0, doc.getLength());
+                        } catch (BadLocationException ex) {
+                            throw new IllegalStateException(ex);
+                        }
+                    });
+                } else {
+                    text[0] = file.asText();
+                }
+                return new Config(nextId++, file.getNameExt(), text[0], ClasspathInfo.create(file), SourceLevelQuery.getSourceLevel(file));
             } catch (IOException ex) {
                 throw new IllegalStateException(ex); //XXX: error handling
             }

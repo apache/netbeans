@@ -273,6 +273,23 @@ public class NPECheckTest extends NbTestCase {
                             "0:62-0:65:verifier:ERR_POSSIBLENULL_TO_NON_NULL_ARG");
     }
     
+    public void testParameter4() throws Exception {
+        HintTest.create()
+                .sourceLevel("8")
+                .input("test/Test.java", 
+                       "package test; \n" +
+                       "import java.util.function.Function; \n" +
+                       "class Test { \n" +
+                       "       private void func(@NotNull Function<Object, Object> func){} \n" +
+                       "       @CheckForNull private Object foo(){ return null;} \n" +
+                       "       private void bar(){func((item)->foo());} \n" +
+                       "       private @CheckForNull String t() { return null;}} \n" +
+                       "       @interface NotNull {} \n" +
+                       "       @interface CheckForNull {}")
+                .run(NPECheck.class)
+                .assertNotContainsWarnings("ERR_POSSIBLENULL_TO_NON_NULL_ARG");        
+    }
+    
     public void testNoMultipleReports1() throws Exception {
         performAnalysisTest("test/Test.java",
                             "package test;\n" +

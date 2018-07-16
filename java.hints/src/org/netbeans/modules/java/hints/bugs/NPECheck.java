@@ -625,7 +625,7 @@ public class NPECheck {
             
             TypeMirror currentType = tree != null ? info.getTrees().getTypeMirror(new TreePath(getCurrentPath(), tree)) : null;
             
-            if ((tree != null && tree.getKind().equals(Kind.LAMBDA_EXPRESSION)) || (currentType != null && currentType.getKind().isPrimitive())) {
+            if ((tree != null && tree.getKind() == Kind.LAMBDA_EXPRESSION) || (currentType != null && currentType.getKind().isPrimitive())) {
                 r = State.NOT_NULL;
             }
             

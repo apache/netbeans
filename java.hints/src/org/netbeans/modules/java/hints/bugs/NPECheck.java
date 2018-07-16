@@ -22,7 +22,6 @@ package org.netbeans.modules.java.hints.bugs;
 import com.sun.source.tree.*;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
-import com.sun.tools.javac.tree.JCTree;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -626,7 +625,7 @@ public class NPECheck {
             
             TypeMirror currentType = tree != null ? info.getTrees().getTypeMirror(new TreePath(getCurrentPath(), tree)) : null;
             
-            if ((tree != null && tree instanceof JCTree.JCLambda) || (currentType != null && currentType.getKind().isPrimitive())) {
+            if ((tree != null && tree.getKind().equals(Kind.LAMBDA_EXPRESSION)) || (currentType != null && currentType.getKind().isPrimitive())) {
                 r = State.NOT_NULL;
             }
             

@@ -257,11 +257,9 @@ public class Lambda {
             return null;
         }
         // Check invalid lambda parameter declaration
-        for (Diagnostic d : ctx.getInfo().getDiagnostics()) {
-            if (ERROR_CODES.contains(d.getCode())) {
-                return null;
-            }
-        }
+        if(isDiagnosticCodeTobeSkipped(ctx.getInfo(), ctx.getPath().getLeaf()))
+            return null;
+
         // Check var parameter types
         LambdaExpressionTree let = (LambdaExpressionTree) ctx.getPath().getLeaf();
         for (VariableTree var : let.getParameters()) {
@@ -685,5 +683,19 @@ public class Lambda {
                 ctx.getWorkingCopy().rewrite(var.getType(), make.Type("var")); // NOI18N
             });
         }
+    }
+
+    /**
+     *
+     * @param info : compilationInfo
+     * @return true if Diagnostic Code is present in SKIPPED_ERROR_CODES
+     */
+    private static boolean isDiagnosticCodeTobeSkipped(CompilationInfo info, Tree tree) {
+        long startPos = info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
+        long endPos = info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree);
+
+        List<Diagnostic> diagnosticsList = info.getDiagnostics();
+        return diagnosticsList.stream().anyMatch((d)
+                -> ((d.getKind() == Diagnostic.Kind.ERROR) && ((d.getStartPosition() >= startPos) && (d.getEndPosition() <= endPos)) && (ERROR_CODES.contains(d.getCode()))));
     }
 }

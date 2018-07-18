@@ -257,12 +257,13 @@ public class Lambda {
             return null;
         }
         // Check invalid lambda parameter declaration
-        if(isDiagnosticCodeTobeSkipped(ctx.getInfo(), ctx.getPath().getLeaf()))
+        if (ctx.getInfo().getTreeUtilities().isTreeHasError(ctx.getPath().getLeaf(), ERROR_CODES)) {
             return null;
-
+        }
         // Check var parameter types
         LambdaExpressionTree let = (LambdaExpressionTree) ctx.getPath().getLeaf();
-        for (VariableTree var : let.getParameters()) {
+        if (let.getParameters() != null && let.getParameters().size() > 0) {
+            VariableTree var = let.getParameters().get(0);
             if (ctx.getInfo().getTreeUtilities().isVarType(TreePath.getPath(ctx.getPath(), var))) {
                 return null;
             }
@@ -677,25 +678,13 @@ public class Lambda {
 
         @Override
         protected void performRewrite(JavaFix.TransformationContext ctx) throws Exception {
-            LambdaExpressionTree let = (LambdaExpressionTree) ctx.getPath().getLeaf();
-            TreeMaker make = ctx.getWorkingCopy().getTreeMaker();
-            let.getParameters().forEach((var) -> {
-                ctx.getWorkingCopy().rewrite(var.getType(), make.Type("var")); // NOI18N
-            });
+            if (ctx.getPath().getLeaf().getKind() == Kind.LAMBDA_EXPRESSION) {
+                LambdaExpressionTree let = (LambdaExpressionTree) ctx.getPath().getLeaf();
+                TreeMaker make = ctx.getWorkingCopy().getTreeMaker();
+                let.getParameters().forEach((var) -> {
+                    ctx.getWorkingCopy().rewrite(var.getType(), make.Type("var")); // NOI18N
+                });
+            }
         }
-    }
-
-    /**
-     *
-     * @param info : compilationInfo
-     * @return true if Diagnostic Code is present in SKIPPED_ERROR_CODES
-     */
-    private static boolean isDiagnosticCodeTobeSkipped(CompilationInfo info, Tree tree) {
-        long startPos = info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
-        long endPos = info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree);
-
-        List<Diagnostic> diagnosticsList = info.getDiagnostics();
-        return diagnosticsList.stream().anyMatch((d)
-                -> ((d.getKind() == Diagnostic.Kind.ERROR) && ((d.getStartPosition() >= startPos) && (d.getEndPosition() <= endPos)) && (ERROR_CODES.contains(d.getCode()))));
     }
 }

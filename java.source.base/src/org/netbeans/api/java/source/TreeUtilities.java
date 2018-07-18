@@ -1927,6 +1927,23 @@ public final class TreeUtilities {
         return false;
     }
 
+    /**
+     * Check the tree has compile error in given collection of errors.
+     *
+     * @param tree : compilation tree
+     * @param errors : Collection of error code
+     * @return true if tree has compile error present in collection of errors.
+     * @since 2.37.0
+     */
+    public boolean isTreeHasError(Tree tree, Collection<String> errors) {
+        long startPos = info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
+        long endPos = info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree);
+
+        List<Diagnostic> diagnosticsList = info.getDiagnostics();
+        return diagnosticsList.stream().anyMatch((d)
+                -> ((d.getKind() == Diagnostic.Kind.ERROR) && ((d.getStartPosition() >= startPos) && (d.getEndPosition() <= endPos)) && (errors.contains(d.getCode()))));
+    }
+
     private static final class NBScope implements Scope {
 
         private final JavacScope delegate;

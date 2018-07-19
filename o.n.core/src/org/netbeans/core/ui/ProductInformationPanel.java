@@ -110,6 +110,7 @@ public class ProductInformationPanel extends JPanel implements HyperlinkListener
                         description.setText(LBL_description(getProductVersionValue(), getJavaValue(), getVMValue(), getOperatingSystemValue(), getEncodingValue(), getSystemLocaleValue(), getUserDirValue(), Places.getCacheDirectory().getAbsolutePath(), updates, FONT_SIZE, getJavaRuntime()));
                         description.setCursor(null);
                         description.revalidate();
+                        description.setCaretPosition(0);
                     }
                 });
             }

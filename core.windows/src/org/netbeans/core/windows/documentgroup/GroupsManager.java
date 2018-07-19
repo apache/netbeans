@@ -348,7 +348,13 @@ public class GroupsManager {
             String id = wmi.findTopComponentID(tc);
             if( tc.equals(welcomeTc) && !welcomeWasOpened )
                 continue;
+            if (tc.getPersistenceType() == TopComponent.PERSISTENCE_NEVER) {
+                continue;
+            }
             FileObject tcFO = FileUtil.toFileObject(new File(componentRoot, id + "." + SETTINGS)); //NOI18N //NOI18N
+            if (tcFO == null) {
+                continue;
+            }
             try {
                 tcFO.copy(groupFO, id, SETTINGS);
             } catch( IOException ex ) {

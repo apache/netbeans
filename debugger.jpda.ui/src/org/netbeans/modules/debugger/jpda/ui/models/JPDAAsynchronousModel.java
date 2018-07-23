@@ -53,8 +53,8 @@ public class JPDAAsynchronousModel implements AsynchronousModelFilter {
         switch (asynchCall) {
             case VALUE:
             case CHILDREN:
-                return rp;
             case SHORT_DESCRIPTION:
+                return rp;
             case DISPLAY_NAME:
                 return CURRENT_THREAD;
         }

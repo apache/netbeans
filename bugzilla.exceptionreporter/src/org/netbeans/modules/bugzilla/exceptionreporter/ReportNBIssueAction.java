@@ -40,7 +40,7 @@ import org.openide.util.NbBundle;
 @ActionReference(path = "Menu/Help", position = 450)
 public class ReportNBIssueAction extends SystemAction {
 
-    private static final String ISSUE_REPORTER_LINK="https://issues.apache.org/jira/projects/NETBEANS/issues";
+    private static final String ISSUE_REPORTER_LINK="https://netbeans.apache.org/nb/report-issue";
 
     public ReportNBIssueAction() {
         setIcon(null);

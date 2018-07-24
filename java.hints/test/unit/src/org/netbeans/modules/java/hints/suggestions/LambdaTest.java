@@ -566,7 +566,7 @@ public class LambdaTest {
                        "}\n")
                 .sourceLevel("1.11")
                 .run(Lambda.class)
-                .findWarning("4:48-4:48:verifier:ERR_addImplicitVarLambdaParameters")
+                .findWarning("4:48-4:48:verifier:ERR_ConvertVarLambdaParameters")
                 .applyFix()
                 .assertCompilable()
                 .assertVerbatimOutput("package test;\n" +
@@ -592,7 +592,7 @@ public class LambdaTest {
                        "}\n")
                 .sourceLevel("1.11")
                 .run(Lambda.class)
-                .findWarning("4:48-4:48:verifier:ERR_addImplicitVarLambdaParameters")
+                .findWarning("4:48-4:48:verifier:ERR_ConvertVarLambdaParameters")
                 .applyFix()
                 .assertCompilable()
                 .assertVerbatimOutput("package test;\n" +

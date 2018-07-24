@@ -1928,20 +1928,32 @@ public final class TreeUtilities {
     }
 
     /**
-     * Check the tree has compile error in given collection of errors.
+     * Check the tree has compile error in given errors.
      *
      * @param tree : compilation tree
-     * @param errors : Collection of error code
-     * @return true if tree has compile error present in collection of errors.
+     * @param errors : Array of error code
+     * @return true if tree has compile error present in list of errors.
      * @since 2.37.0
      */
-    public boolean isTreeHasError(Tree tree, Collection<String> errors) {
+    public boolean hasError(@NonNull Tree tree, String... errors) {
         long startPos = info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
         long endPos = info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree);
 
         List<Diagnostic> diagnosticsList = info.getDiagnostics();
-        return diagnosticsList.stream().anyMatch((d)
-                -> ((d.getKind() == Diagnostic.Kind.ERROR) && ((d.getStartPosition() >= startPos) && (d.getEndPosition() <= endPos)) && (errors.contains(d.getCode()))));
+        for (Diagnostic d : diagnosticsList) {
+            if ((d.getKind() == Diagnostic.Kind.ERROR) && ((d.getStartPosition() >= startPos) && (d.getEndPosition() <= endPos))) {
+                if (errors == null || errors.length == 0) {
+                    return true;
+                } else {
+                    for (String error : errors) {
+                        if (error.equals(d.getCode())) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     private static final class NBScope implements Scope {

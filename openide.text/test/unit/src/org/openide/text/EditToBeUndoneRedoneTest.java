@@ -114,6 +114,49 @@ implements CloneableEditorSupport.Env {
         assertNotNull("Expected valid myEdit", myEdit);
     }
     
+    // testcase for bug: NETBEANS-691
+    public void testUndoRedoUndoEdits() throws Exception {
+
+        final StyledDocument d = support.openDocument();
+
+        UndoRedo.Manager ur = support.getUndoRedo();
+        UndoRedoManager urMgr = null;
+
+        if (ur instanceof UndoRedoManager) {
+            urMgr = (UndoRedoManager) ur;
+        }
+
+        d.insertString(d.getLength(), "a", null);
+        final CompoundEdit bigEdit = new CompoundEdit();
+        d.insertString(d.getLength(), "b", null);
+        bigEdit.end();
+        support.saveDocument();
+
+        // setting the property to populate urMgr.onSaveTasksEdit field
+        d.putProperty("beforeSaveRunnable", new Runnable() {
+
+            public void run() {
+                Runnable beforeSaveStart = (Runnable) d.getProperty("beforeSaveStart");
+                if (beforeSaveStart != null) {
+                    beforeSaveStart.run();
+                    support.getUndoRedo().undoableEditHappened(new UndoableEditEvent(d, bigEdit));
+                }
+            }
+        });
+
+        urMgr.undo();
+        support.saveDocument();
+        d.putProperty("beforeSaveRunnable", null);
+        assertEquals("after undo data", "a", d.getText(0, d.getLength()));
+
+        urMgr.redo();
+        support.saveDocument();
+        assertEquals("after redo data", "ab", d.getText(0, d.getLength()));
+
+        urMgr.undo();
+        assertEquals("after redo data", "a", d.getText(0, d.getLength()));
+    }
+
     //
     // Implementation of the CloneableEditorSupport.Env
     //

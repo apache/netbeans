@@ -41,10 +41,14 @@ public final class Icons {
     }
     
     public static Icon getCompletionIcon(CompletionItemKind completionKind) {
-        Image img = ImageUtilities.loadImage(ICON_BASE + completionKind.name().toLowerCase(Locale.US) + PNG_EXTENSION);
+        Image img = null;
 
-        if (img == null) {
-            img = ImageUtilities.loadImage(ICON_BASE + completionKind.name().toLowerCase(Locale.US) + GIF_EXTENSION);
+        if (completionKind != null) {
+            img = ImageUtilities.loadImage(ICON_BASE + completionKind.name().toLowerCase(Locale.US) + PNG_EXTENSION);
+
+            if (img == null) {
+                img = ImageUtilities.loadImage(ICON_BASE + completionKind.name().toLowerCase(Locale.US) + GIF_EXTENSION);
+            }
         }
         
         if (img == null) {

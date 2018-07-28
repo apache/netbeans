@@ -38,6 +38,7 @@ import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageServer;
 import org.eclipse.lsp4j.services.TextDocumentService;
+import org.eclipse.lsp4j.services.WorkspaceService;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.progress.*;
 import org.netbeans.api.project.FileOwnerQuery;
@@ -85,9 +86,11 @@ public class LSPBindings {
                                                LanguageServer server = provider.startServer(prj, lci);
 
                                                if (server != null) {
+                                                   lci.setServer(server);
                                                    try {
                                                        InitializeParams initParams = new InitializeParams();
                                                        initParams.setRootUri(prj.getProjectDirectory().toURI().toString()); //XXX: what if a different root is expected????
+                                                       initParams.setRootPath(FileUtil.toFile(prj.getProjectDirectory()).getAbsolutePath()); //some servers still expect root path
                                                        initParams.setProcessId(0);
                                                        InitializeResult result = server.initialize(initParams).get();
                                                        return new LSPBindings(server, result);
@@ -122,6 +125,8 @@ public class LSPBindings {
                 launcher.startListening();
                 LanguageServer server = launcher.getRemoteProxy();
 
+                lc.setServer(server);
+
                 InitializeParams initParams = new InitializeParams();
                 initParams.setRootUri(root.toURI().toString());
                 initParams.setProcessId(0);
@@ -145,6 +150,10 @@ public class LSPBindings {
 
     public TextDocumentService getTextDocumentService() {
         return server.getTextDocumentService();
+    }
+
+    public WorkspaceService getWorkspaceService() {
+        return server.getWorkspaceService();
     }
 
     public InitializeResult getInitResult() {

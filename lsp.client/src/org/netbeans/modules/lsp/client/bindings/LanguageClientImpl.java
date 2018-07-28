@@ -18,32 +18,55 @@
  */
 package org.netbeans.modules.lsp.client.bindings;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import javax.swing.text.StyledDocument;
+import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
+import org.eclipse.lsp4j.ApplyWorkspaceEditResponse;
+import org.eclipse.lsp4j.CodeActionContext;
+import org.eclipse.lsp4j.CodeActionParams;
+import org.eclipse.lsp4j.Command;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DiagnosticSeverity;
+import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
+import org.eclipse.lsp4j.TextDocumentIdentifier;
+import org.eclipse.lsp4j.TextEdit;
+import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.services.LanguageClient;
+import org.eclipse.lsp4j.services.LanguageServer;
+import org.netbeans.spi.editor.hints.ChangeInfo;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.ErrorDescriptionFactory;
+import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.editor.hints.HintsController;
+import org.netbeans.spi.editor.hints.LazyFixList;
 import org.netbeans.spi.editor.hints.Severity;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
+import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
+import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -52,6 +75,13 @@ import org.openide.util.Exceptions;
 public class LanguageClientImpl implements LanguageClient {
 
     private static final Logger LOG = Logger.getLogger(LanguageClientImpl.class.getName());
+    private static final RequestProcessor WORKER = new RequestProcessor(LanguageClientImpl.class.getName(), 1, false, false);
+
+    private LanguageServer server;
+
+    public void setServer(LanguageServer server) {
+        this.server = server;
+    }
 
     @Override
     public void telemetryEvent(Object arg0) {
@@ -59,22 +89,20 @@ public class LanguageClientImpl implements LanguageClient {
     }
 
     @Override
-    public void publishDiagnostics(PublishDiagnosticsParams arg0) {
+    public void publishDiagnostics(PublishDiagnosticsParams pdp) {
         try {
-            FileObject file = URLMapper.findFileObject(new URI(arg0.getUri()).toURL());
+            FileObject file = URLMapper.findFileObject(new URI(pdp.getUri()).toURL());
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec != null ? ec.getDocument() : null;
             if (doc == null)
                 return ; //ignore...
-            List<ErrorDescription> diags = arg0.getDiagnostics().stream().map(d -> 
-                    ErrorDescriptionFactory.createErrorDescription(severityMap.get(d.getSeverity()), d.getMessage(), file, Utils.getOffset(doc, d.getRange().getStart()), Utils.getOffset(doc, d.getRange().getEnd()))
+            List<ErrorDescription> diags = pdp.getDiagnostics().stream().map(d -> 
+                    ErrorDescriptionFactory.createErrorDescription(severityMap.get(d.getSeverity()), d.getMessage(), new DiagnosticFixList(pdp.getUri(), d), file, Utils.getOffset(doc, d.getRange().getStart()), Utils.getOffset(doc, d.getRange().getEnd()))
             ).collect(Collectors.toList());
             HintsController.setErrors(doc, LanguageClientImpl.class.getName(), diags);
         } catch (URISyntaxException | MalformedURLException ex) {
             LOG.log(Level.FINE, null, ex);
         }
-        System.err.println("arg0: " + arg0.getDiagnostics().size());
-        System.err.println("publishDiagnostics: " + arg0);
     }
 
     private static final Map<DiagnosticSeverity, Severity> severityMap = new EnumMap<>(DiagnosticSeverity.class);
@@ -84,6 +112,39 @@ public class LanguageClientImpl implements LanguageClient {
         severityMap.put(DiagnosticSeverity.Hint, Severity.HINT);
         severityMap.put(DiagnosticSeverity.Information, Severity.HINT);
         severityMap.put(DiagnosticSeverity.Warning, Severity.HINT);
+    }
+
+    @Override
+    public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
+        WorkspaceEdit edit = params.getEdit();
+        for (Entry<String, List<TextEdit>> e : edit.getChanges().entrySet()) {
+            try {
+                FileObject file = URLMapper.findFileObject(new URI(e.getKey()).toURL());
+                EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+                Document doc = ec != null ? ec.openDocument() : null;
+                if (doc == null) {
+                    continue;
+                }
+                NbDocument.runAtomic((StyledDocument) doc, () -> {
+                    e.getValue()
+                     .stream()
+                     .sorted((te1, te2) -> te1.getRange().getEnd().getLine() == te2.getRange().getEnd().getLine() ? te1.getRange().getEnd().getCharacter() - te2.getRange().getEnd().getCharacter() : te1.getRange().getEnd().getLine() - te2.getRange().getEnd().getLine())
+                     .forEach(te -> {
+                        try {
+                            int start = Utils.getOffset(doc, te.getRange().getStart());
+                            int end = Utils.getOffset(doc, te.getRange().getEnd());
+                            doc.remove(start, end - start);
+                            doc.insertString(start, te.getNewText(), null);
+                        } catch (BadLocationException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
+                     });
+                });
+            } catch (URISyntaxException | IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+        return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(true));
     }
 
     @Override
@@ -102,4 +163,92 @@ public class LanguageClientImpl implements LanguageClient {
         System.err.println("logMessage: " + arg0);
     }
 
+    private final class DiagnosticFixList implements LazyFixList {
+
+        private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+        private final String fileUri;
+        private final Diagnostic diagnostic;
+        private List<Fix> fixes;
+        private boolean computing;
+        private boolean computed;
+
+        public DiagnosticFixList(String fileUri, Diagnostic diagnostic) {
+            this.fileUri = fileUri;
+            this.diagnostic = diagnostic;
+        }
+
+        @Override
+        public void addPropertyChangeListener(PropertyChangeListener l) {
+            pcs.addPropertyChangeListener(l);
+        }
+
+        @Override
+        public void removePropertyChangeListener(PropertyChangeListener l) {
+            pcs.removePropertyChangeListener(l);
+        }
+
+        @Override
+        public boolean probablyContainsFixes() {
+            return true;
+        }
+
+        @Override
+        public synchronized List<Fix> getFixes() {
+            if (!computing && !computed) {
+                computing = true;
+                WORKER.post(() -> {
+                    try {
+                        List<? extends Command> commands =
+                                server.getTextDocumentService().codeAction(new CodeActionParams(new TextDocumentIdentifier(fileUri),
+                                        diagnostic.getRange(),
+                                        new CodeActionContext(Collections.singletonList(diagnostic)))).get();
+                        List<Fix> fixes = commands.stream()
+                                                  .map(cmd -> new CommandBasedFix(cmd))
+                                                  .collect(Collectors.toList());
+                        synchronized (this) {
+                            this.fixes = Collections.unmodifiableList(fixes);
+                            this.computed = true;
+                            this.computing = false;
+                        }
+                        pcs.firePropertyChange(PROP_COMPUTED, null, null);
+                        pcs.firePropertyChange(PROP_FIXES, null, null);
+                    } catch (InterruptedException | ExecutionException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                });
+            }
+            return fixes;
+        }
+
+        @Override
+        public synchronized boolean isComputed() {
+            return computed;
+        }
+
+        private class CommandBasedFix implements Fix {
+
+            private final Command cmd;
+
+            public CommandBasedFix(Command cmd) {
+                this.cmd = cmd;
+            }
+
+            @Override
+            public String getText() {
+                return cmd.getTitle();
+            }
+
+            @Override
+            public ChangeInfo implement() throws Exception {
+                try {
+                    server.getWorkspaceService().executeCommand(new ExecuteCommandParams(cmd.getCommand(), cmd.getArguments())).get();
+                } catch (InterruptedException | ExecutionException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+                
+                return null;
+            }
+        }
+        
+    }
 }

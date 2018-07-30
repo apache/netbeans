@@ -23,8 +23,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.WeakHashMap;
@@ -49,6 +51,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -56,8 +59,11 @@ import org.openide.util.NbBundle.Messages;
  */
 public class LSPBindings {
 
+    private static final RequestProcessor WORKER = new RequestProcessor(LanguageClientImpl.class.getName(), 1, false, false);
+
     private static final Map<Project, Map<String, LSPBindings>> project2MimeType2Server = new WeakHashMap<>();
-    private static final Map<FileObject, Map<String, LSPBindings>> workspace2Extension2Server = new WeakHashMap<>();
+    private static final Map<FileObject, Map<String, LSPBindings>> workspace2Extension2Server = new HashMap<>();
+    private final Map<FileObject, List<BackgroundTask>> backgroundTasks = new WeakHashMap<>();
 
     public static LSPBindings getBindings(FileObject file) {
         for (Entry<FileObject, Map<String, LSPBindings>> e : workspace2Extension2Server.entrySet()) {
@@ -86,14 +92,15 @@ public class LSPBindings {
                                                LanguageServer server = provider.startServer(prj, lci);
 
                                                if (server != null) {
-                                                   lci.setServer(server);
                                                    try {
                                                        InitializeParams initParams = new InitializeParams();
                                                        initParams.setRootUri(prj.getProjectDirectory().toURI().toString()); //XXX: what if a different root is expected????
                                                        initParams.setRootPath(FileUtil.toFile(prj.getProjectDirectory()).getAbsolutePath()); //some servers still expect root path
                                                        initParams.setProcessId(0);
                                                        InitializeResult result = server.initialize(initParams).get();
-                                                       return new LSPBindings(server, result);
+                                                       LSPBindings b = new LSPBindings(server, result);
+                                                       lci.setBindings(b);
+                                                       return b;
                                                    } catch (InterruptedException | ExecutionException ex) {
                                                        LOG.log(Level.FINE, null, ex);
                                                    }
@@ -125,13 +132,13 @@ public class LSPBindings {
                 launcher.startListening();
                 LanguageServer server = launcher.getRemoteProxy();
 
-                lc.setServer(server);
-
                 InitializeParams initParams = new InitializeParams();
                 initParams.setRootUri(root.toURI().toString());
                 initParams.setProcessId(0);
                 InitializeResult result = server.initialize(initParams).get();
                 LSPBindings bindings = new LSPBindings(server, result);
+
+                lc.setBindings(bindings);
 
                 workspace2Extension2Server.put(root, Arrays.stream(extensions).collect(Collectors.toMap(k -> k, v -> bindings)));
             } catch (InterruptedException | ExecutionException | IOException ex) {
@@ -161,4 +168,34 @@ public class LSPBindings {
         return initResult;
     }
 
+    public static void addBackgroundTask(FileObject file, BackgroundTask task) {
+        LSPBindings bindings = getBindings(file);
+
+        if (bindings == null)
+            return ;
+
+        bindings.backgroundTasks.computeIfAbsent(file, f -> new ArrayList<>()).add(task);
+        bindings.runOnBackground(() -> task.run(bindings, file));
+    }
+
+    public static void removeBackgroundTask(FileObject file, BackgroundTask task) {
+        LSPBindings bindings = getBindings(file);
+
+        if (bindings == null)
+            return ;
+
+        bindings.backgroundTasks.computeIfAbsent(file, f -> new ArrayList<>()).remove(task);
+    }
+
+    public void runOnBackground(Runnable r) {
+        WORKER.post(r);
+    }
+
+    public void runBackgroundTasks(FileObject file) {
+        backgroundTasks.computeIfAbsent(file, f -> new ArrayList<>()).stream().forEach(bt -> runOnBackground(() -> bt.run(this, file)));
+    }
+
+    public interface BackgroundTask {
+        public void run(LSPBindings bindings, FileObject file);
+    }
 }

@@ -46,13 +46,13 @@ public class ProviderRegistryTest extends NbTestCase {
         ProviderRegistry providerReg = ProviderRegistry.getInstance();
         
         System.out.println("Asking for non-existent type...");
-        assertEquals(0, providerReg.getProviders("image/non_existent_type").size());
+        assertEquals(0, providerReg.getProviders("image/non_existent_type", null).size());
         
         System.out.println("Asking for non-existent class...");
-        assertEquals(0, providerReg.getProviders("text/plain").size());
+        assertEquals(0, providerReg.getProviders("text/plain", null).size());
         
         System.out.println("Asking for valid type and provider...");
-        Collection<? extends NavigatorPanel> result = providerReg.getProviders(MARVELOUS_DATA_TYPE);
+        Collection<? extends NavigatorPanel> result = providerReg.getProviders(MARVELOUS_DATA_TYPE, null);
         assertEquals(1, result.size());
         NavigatorPanel np = result.iterator().next();
         assertTrue(np instanceof MarvelousDataTypeProvider);

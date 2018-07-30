@@ -53,7 +53,7 @@ import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.services.LanguageClient;
-import org.eclipse.lsp4j.services.LanguageServer;
+import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.spi.editor.hints.ChangeInfo;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.ErrorDescriptionFactory;
@@ -66,7 +66,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
-import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -75,12 +74,11 @@ import org.openide.util.RequestProcessor;
 public class LanguageClientImpl implements LanguageClient {
 
     private static final Logger LOG = Logger.getLogger(LanguageClientImpl.class.getName());
-    private static final RequestProcessor WORKER = new RequestProcessor(LanguageClientImpl.class.getName(), 1, false, false);
 
-    private LanguageServer server;
+    private LSPBindings bindings;
 
-    public void setServer(LanguageServer server) {
-        this.server = server;
+    public void setBindings(LSPBindings bindings) {
+        this.bindings = bindings;
     }
 
     @Override
@@ -100,6 +98,7 @@ public class LanguageClientImpl implements LanguageClient {
                     ErrorDescriptionFactory.createErrorDescription(severityMap.get(d.getSeverity()), d.getMessage(), new DiagnosticFixList(pdp.getUri(), d), file, Utils.getOffset(doc, d.getRange().getStart()), Utils.getOffset(doc, d.getRange().getEnd()))
             ).collect(Collectors.toList());
             HintsController.setErrors(doc, LanguageClientImpl.class.getName(), diags);
+            bindings.runBackgroundTasks(file);
         } catch (URISyntaxException | MalformedURLException ex) {
             LOG.log(Level.FINE, null, ex);
         }
@@ -196,10 +195,10 @@ public class LanguageClientImpl implements LanguageClient {
         public synchronized List<Fix> getFixes() {
             if (!computing && !computed) {
                 computing = true;
-                WORKER.post(() -> {
+                bindings.runOnBackground(() -> {
                     try {
                         List<? extends Command> commands =
-                                server.getTextDocumentService().codeAction(new CodeActionParams(new TextDocumentIdentifier(fileUri),
+                                bindings.getTextDocumentService().codeAction(new CodeActionParams(new TextDocumentIdentifier(fileUri),
                                         diagnostic.getRange(),
                                         new CodeActionContext(Collections.singletonList(diagnostic)))).get();
                         List<Fix> fixes = commands.stream()
@@ -241,7 +240,7 @@ public class LanguageClientImpl implements LanguageClient {
             @Override
             public ChangeInfo implement() throws Exception {
                 try {
-                    server.getWorkspaceService().executeCommand(new ExecuteCommandParams(cmd.getCommand(), cmd.getArguments())).get();
+                    bindings.getWorkspaceService().executeCommand(new ExecuteCommandParams(cmd.getCommand(), cmd.getArguments())).get();
                 } catch (InterruptedException | ExecutionException ex) {
                     Exceptions.printStackTrace(ex);
                 }

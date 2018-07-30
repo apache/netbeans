@@ -24,6 +24,7 @@ import java.util.Locale;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import org.eclipse.lsp4j.CompletionItemKind;
+import org.eclipse.lsp4j.SymbolKind;
 import org.openide.util.ImageUtilities;
 
 /**
@@ -59,4 +60,15 @@ public final class Icons {
         
     }
     
+    public static String getSymbolIconBase(SymbolKind symbolKind) {
+        for (String variant : new String[] {
+            ICON_BASE + symbolKind.name().toLowerCase(Locale.US) + PNG_EXTENSION,
+            ICON_BASE + symbolKind.name().toLowerCase(Locale.US) + GIF_EXTENSION,
+            ICON_BASE + "variable" + GIF_EXTENSION
+        }) {
+            if (ImageUtilities.loadImage(variant) != null)
+                return variant;
+        }
+        return null;
+    }
 }

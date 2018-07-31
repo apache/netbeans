@@ -38,6 +38,18 @@
         </description>
         <class name="TreeUtilities" package="org.netbeans.api.java.source"/>
     </change>
+    <change id="TreeUtilities.isTreeHasError">
+        <api name="javasource_base"/>
+        <summary>Check the tree has compile error in given collection of errors.</summary>
+        <version major="1" minor="2.37"/>
+        <date day="18" month="7" year="2018"/>
+        <author login="vikasprabhakar"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"/>
+        <description>
+            Check the tree has compile error in given collection of errors.
+        </description>
+        <class name="TreeUtilities" package="org.netbeans.api.java.source"/>
+    </change>
     <change id="TreeUtilities.isVarType">
         <api name="javasource_base"/>
         <summary>Check the var type variable in given tree path.</summary>

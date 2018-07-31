@@ -1958,6 +1958,35 @@ public final class TreeUtilities {
         return false;
     }
 
+    /**
+     * Check the tree has compile error in given errors.
+     *
+     * @param tree compilation tree
+     * @param errors Array of error code
+     * @return true if tree has compile error present in list of errors.
+     * @since 2.37
+     */
+    public boolean hasError(@NonNull Tree tree, String... errors) {
+        long startPos = info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
+        long endPos = info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree);
+
+        List<Diagnostic> diagnosticsList = info.getDiagnostics();
+        for (Diagnostic d : diagnosticsList) {
+            if ((d.getKind() == Diagnostic.Kind.ERROR) && ((d.getStartPosition() >= startPos) && (d.getEndPosition() <= endPos))) {
+                if (errors == null || errors.length == 0) {
+                    return true;
+                } else {
+                    for (String error : errors) {
+                        if (error.equals(d.getCode())) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     private static final class NBScope implements Scope {
 
         private final JavacScope delegate;

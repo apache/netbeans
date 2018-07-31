@@ -1930,10 +1930,10 @@ public final class TreeUtilities {
     /**
      * Check the tree has compile error in given errors.
      *
-     * @param tree : compilation tree
-     * @param errors : Array of error code
+     * @param tree compilation tree
+     * @param errors Array of error code
      * @return true if tree has compile error present in list of errors.
-     * @since 2.37.0
+     * @since 2.37
      */
     public boolean hasError(@NonNull Tree tree, String... errors) {
         long startPos = info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);

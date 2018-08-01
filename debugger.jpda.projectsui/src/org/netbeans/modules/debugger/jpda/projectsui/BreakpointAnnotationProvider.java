@@ -412,10 +412,6 @@ public class BreakpointAnnotationProvider implements AnnotationProvider {
         }
         List<DebuggerBreakpointAnnotation> annotations = new ArrayList<DebuggerBreakpointAnnotation>();
         for (int l : lines) {
-            if (l < 1){
-                //avoid IndexOutOfBoundsException
-                continue;
-            }
             try {
                 Line line = lc.getLineSet().getCurrent(l - 1);
                 DebuggerBreakpointAnnotation annotation = new DebuggerBreakpointAnnotation (annotationType, line, b);

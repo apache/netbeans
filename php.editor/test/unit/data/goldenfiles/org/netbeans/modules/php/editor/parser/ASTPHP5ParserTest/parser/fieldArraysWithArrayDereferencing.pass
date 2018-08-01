@@ -1,0 +1,78 @@
+<testresult testFile='fieldArraysWithArrayDereferencing.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='7' end='14'>
+            <text>$object</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='14' end='16'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='16' end='38'>
+            <text>thisIsCommonFieldArray</text>
+        </token>
+        <token id='T_OPEN_RECT' start='38' end='39'>
+            <text>[</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='39' end='40'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_RECT' start='40' end='41'>
+            <text>[</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='41' end='42'>
+            <text>]</text>
+        </token>
+        <token id='T_EQUAL' start='43' end='44'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='45' end='47'>
+            <text>""</text>
+        </token>
+        <token id='T_SEMICOLON' start='47' end='48'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='50' end='53'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='53' end='53'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='52'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='48'>
+                <Assignment start='7' end='47' operator='EQUAL'>
+                    <FieldAccess start='7' end='42'>
+                        <Variable start='7' end='14' isDollared='true'>
+                            <Identifier start='8' end='14' name='object'/>
+                        </Variable>
+                        <Field>
+                            <ArrayAccess start='16' end='42' type='VARIABLE_ARRAY' isDollared='false'>
+                                <ArrayDimension start='40' end='42'>
+                                    <Index>
+                                    </Index>
+                                </ArrayDimension>
+                                <Name>
+                                    <ArrayAccess start='16' end='40' type='VARIABLE_ARRAY' isDollared='false'>
+                                        <ArrayDimension start='38' end='40'>
+                                            <Index>
+                                            </Index>
+                                        </ArrayDimension>
+                                        <Name>
+                                            <Variable start='16' end='38' isDollared='false'>
+                                                <Identifier start='16' end='38' name='thisIsCommonFieldArray'/>
+                                            </Variable>
+                                        </Name>
+                                    </ArrayAccess>
+                                </Name>
+                            </ArrayAccess>
+                        </Field>
+                    </FieldAccess>
+                    <Scalar start='45' end='47' type='STRING' value='""'/>
+                </Assignment>
+            </ExpressionStatement>
+            <EmptyStatement start='50' end='52'/>
+        </Statements>
+    </Program>
+</testresult>

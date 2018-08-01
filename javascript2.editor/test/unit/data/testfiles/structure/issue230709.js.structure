@@ -1,0 +1,5 @@
+Manager:CLASS:[PUBLIC]:ESCAPED{Manager}:
+  method1:METHOD:[PUBLIC]:ESCAPED{method1}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  method2:METHOD:[PUBLIC]:ESCAPED{method2}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+MyApp:CLASS:[PUBLIC]:ESCAPED{MyApp}:
+  manager:CLASS:[PUBLIC]:ESCAPED{manager}:

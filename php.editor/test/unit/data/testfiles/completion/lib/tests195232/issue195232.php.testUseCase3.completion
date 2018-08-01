@@ -1,0 +1,4 @@
+Code completion result for source line:
+/*3*/$a->b->|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     testB()                         [PUBLIC]   B

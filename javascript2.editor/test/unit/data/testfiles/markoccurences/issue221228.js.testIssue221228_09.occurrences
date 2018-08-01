@@ -1,0 +1,3 @@
+a221228.|>MARK_OCCURRENCES:msg<| = "Hi public";        // creates new property of object a/
+formatter.println(a221228.|>MARK_OCCURRENCES:ms^g<|);
+formatter.println(a221228.|>MARK_OCCURRENCES:msg<|);

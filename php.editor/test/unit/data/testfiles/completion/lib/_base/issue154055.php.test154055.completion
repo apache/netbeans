@@ -1,0 +1,5 @@
+Code completion result for source line:
+$book->|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   ? author                        [PUBLIC]   Test154055
+VARIABLE   ? title                         [PUBLIC]   Test154055

@@ -1,0 +1,6 @@
+Code completion result for source line:
+#{V|}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      VerifyError                                java.lang.VerifyError
+CLASS      Void                                       java.lang.Void

@@ -1,0 +1,6 @@
+Code completion result for source line:
+$this->| //cc
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     getBar()                        [PUBLIC]   FooTrt
+METHOD     setBar($bar)                    [PUBLIC]   FooTrt
+VARIABLE   ? bar                           [PROTECTE  FooTrt

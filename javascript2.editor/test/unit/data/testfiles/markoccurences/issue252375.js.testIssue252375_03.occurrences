@@ -1,0 +1,2 @@
+    |>MARK_OCCURRENCES:fn^1<|: function (data) {
+MyOb.|>MARK_OCCURRENCES:fn1<|("sranda");

@@ -1,0 +1,22 @@
+Code completion result for source line:
+new File(new Date().get|)
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     getAt(String)                              Object
+METHOD     getAt(int)                                 int
+METHOD     getClass()                      [PUBLIC]   Class<?>
+METHOD     getDate()                       [PUBLIC]   int
+METHOD     getDateString()                            String
+METHOD     getDateTimeString()                        String
+METHOD     getDay()                        [PUBLIC]   int
+METHOD     getHours()                      [PUBLIC]   int
+METHOD     getMetaClass()                             MetaClass
+METHOD     getMetaPropertyValues()                    List
+METHOD     getMinutes()                    [PUBLIC]   int
+METHOD     getMonth()                      [PUBLIC]   int
+METHOD     getProperties()                            Map
+METHOD     getSeconds()                    [PUBLIC]   int
+METHOD     getTime()                       [PUBLIC]   long
+METHOD     getTimeString()                            String
+METHOD     getTimezoneOffset()             [PUBLIC]   int
+METHOD     getYear()                       [PUBLIC]   int

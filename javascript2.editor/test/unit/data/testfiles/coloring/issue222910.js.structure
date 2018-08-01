@@ -1,0 +1,4 @@
+gk:CLASS:[PUBLIC]:ESCAPED{gk}:
+  beCool:METHOD:[PUBLIC]:ESCAPED{beCool}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+Person:CONSTRUCTOR:[PUBLIC]:ESCAPED{Person}ESCAPED{(}ESCAPED{n}ESCAPED{, }ESCAPED{race}ESCAPED{)}<font color="#999999">ESCAPED{ : }Person</font>:
+  clothing:FIELD:[PUBLIC]:ESCAPED{clothing}<font color="#999999">ESCAPED{ : }String</font>:

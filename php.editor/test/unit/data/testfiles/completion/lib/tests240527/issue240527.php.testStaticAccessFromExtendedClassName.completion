@@ -1,0 +1,13 @@
+Code completion result for source line:
+ExClass::|publicStaticExMethod(); // test
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     newInstance()                   [STATIC]   ExClass
+METHOD     publicStaticBaseTraitMethod()   [STATIC]   BaseTrait
+METHOD     publicStaticExMethod()          [STATIC]   ExClass
+METHOD     publicStaticSAMethod()          [STATIC]   StaticAccessTest
+VARIABLE   ? $publicStaticBaseTraitField   [STATIC]   BaseTrait
+VARIABLE   ? $publicStaticExField          [STATIC]   ExClass
+VARIABLE   ? $publicStaticSAField          [STATIC]   StaticAccessTest
+CONSTANT   CONSTANT_EX 'CONSTANT_EX'       [PUBLIC]   ExClass
+CONSTANT   CONSTANT_SA 'CONSTANT_SA'       [PUBLIC]   StaticAccessTest
+CONSTANT   class \ExClass                  [PUBLIC]   Magic Constant

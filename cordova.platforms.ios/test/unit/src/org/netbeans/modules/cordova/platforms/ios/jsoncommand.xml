@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>__selector</key>
+	<string>_rpc_applicationSentData:</string>
+	<key>__argument</key>
+	<dict>
+		<key>WIRApplicationIdentifierKey</key>
+		<string>com.apple.mobilesafari</string>
+		<key>WIRMessageDataKey</key>
+		<data>
+			eyJlcnJvciI6eyJjb2RlIjotMzI2MDEsIm1lc3NhZ2UiOiInQ1NTLmZvcmNlUHNldWRvU3RhdGUnIHdhc24ndCBmb3VuZCJ9LCJpZCI6NzUwfQ==
+		</data>
+		<key>WIRDestinationKey</key>
+		<string>50ECDF4F-EC2D-4CF8-9A43-0252F7CB2973</string>
+	</dict>
+</dict>
+</plist>

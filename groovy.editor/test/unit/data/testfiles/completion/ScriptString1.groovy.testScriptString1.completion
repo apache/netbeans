@@ -1,0 +1,13 @@
+Code completion result for source line:
+s.val|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     valueOf(Object)                 [STATIC,   String
+METHOD     valueOf(boolean)                [STATIC,   String
+METHOD     valueOf(char)                   [STATIC,   String
+METHOD     valueOf(char[])                 [STATIC,   String
+METHOD     valueOf(char[], int, int)       [STATIC,   String
+METHOD     valueOf(double)                 [STATIC,   String
+METHOD     valueOf(float)                  [STATIC,   String
+METHOD     valueOf(int)                    [STATIC,   String
+METHOD     valueOf(long)                   [STATIC,   String

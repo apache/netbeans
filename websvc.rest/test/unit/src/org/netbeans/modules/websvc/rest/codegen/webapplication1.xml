@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application>
+    <resources base="http://localhost:8080/WebApplication1/resources/">
+        <resource path="/manufacturers/">
+            <method name="GET">
+                <request>
+                    <param default="0" type="xs:int" style="query" name="start"/>
+                    <param default="10" type="xs:int" style="query" name="max"/>
+                </request>
+                <response>
+                    <representation mediaType="application/xml"/>
+                    <representation mediaType="application/json"/>
+                </response>
+            </method>
+            <method name="POST">
+                <request>
+                    <representation mediaType="application/xml"/>
+                    <representation mediaType="application/json"/>
+                </request>
+                <response>
+                    <representation mediaType="*/*"/>
+                </response>
+            </method>
+        </resource>
+        <resource path="/customers/">
+            <method name="GET">
+                <request>
+                    <param default="0" type="xs:int" style="query" name="start"/>
+                    <param default="10" type="xs:int" style="query" name="max"/>
+                </request>
+                <response>
+                    <representation mediaType="application/xml"/>
+                    <representation mediaType="application/json"/>
+                </response>
+            </method>
+            <method name="POST">
+                <request>
+                    <representation mediaType="application/xml"/>
+                    <representation mediaType="application/json"/>
+                </request>
+                <response>
+                    <representation mediaType="*/*"/>
+                </response>
+            </method>
+        </resource>
+        <resource path="/products/">
+            <method name="GET">
+                <request>
+                    <param default="0" type="xs:int" style="query" name="start"/>
+                    <param default="10" type="xs:int" style="query" name="max"/>
+                </request>
+                <response>
+                    <representation mediaType="application/xml"/>
+                    <representation mediaType="application/json"/>
+                </response>
+            </method>
+            <method name="POST">
+                <request>
+                    <representation mediaType="application/xml"/>
+                    <representation mediaType="application/json"/>
+                </request>
+                <response>
+                    <representation mediaType="*/*"/>
+                </response>
+            </method>
+        </resource>
+        <resource path="/discountCodes/">
+            <method name="GET">
+                <request>
+                    <param default="0" type="xs:int" style="query" name="start"/>
+                    <param default="10" type="xs:int" style="query" name="max"/>
+                </request>
+                <response>
+                    <representation mediaType="application/xml"/>
+                    <representation mediaType="application/json"/>
+                </response>
+            </method>
+            <method name="POST">
+                <request>
+                    <representation mediaType="application/xml"/>
+                    <representation mediaType="application/json"/>
+                </request>
+                <response>
+                    <representation mediaType="*/*"/>
+                </response>
+            </method>
+        </resource>
+        <resource path="/productCodes/">
+            <method name="GET">
+                <request>
+                    <param default="0" type="xs:int" style="query" name="start"/>
+                    <param default="10" type="xs:int" style="query" name="max"/>
+                </request>
+                <response>
+                    <representation mediaType="application/xml"/>
+                    <representation mediaType="application/json"/>
+                </response>
+            </method>
+            <method name="POST">
+                <request>
+                    <representation mediaType="application/xml"/>
+                    <representation mediaType="application/json"/>
+                </request>
+                <response>
+                    <representation mediaType="*/*"/>
+                </response>
+            </method>
+        </resource>
+        <resource path="/purchaseOrders/">
+            <method name="GET">
+                <request>
+                    <param default="0" type="xs:int" style="query" name="start"/>
+                    <param default="10" type="xs:int" style="query" name="max"/>
+                </request>
+                <response>
+                    <representation mediaType="application/xml"/>
+                    <representation mediaType="application/json"/>
+                </response>
+            </method>
+            <method name="POST">
+                <request>
+                    <representation mediaType="application/xml"/>
+                    <representation mediaType="application/json"/>
+                </request>
+                <response>
+                    <representation mediaType="*/*"/>
+                </response>
+            </method>
+        </resource>
+    </resources>
+</application>

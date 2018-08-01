@@ -1,0 +1,80 @@
+Code completion result for source line:
+fs.|; // cc here
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CONSTRUCTO ReadStream                      [PUBLIC]   fs.js
+CONSTRUCTO SyncWriteStream                 [PUBLIC]   fs.js
+CONSTRUCTO WriteStream                     [PUBLIC]   fs.js
+CONSTRUCTO read                            [PUBLIC]   fs.js
+CLASS      Stats                           [PUBLIC]   fs.js
+METHOD     _toUnixTimestamp(time): Number  [PUBLIC]   fs.js
+METHOD     appendFile(path, data, options  [PUBLIC]   fs.js
+METHOD     appendFileSync(path, data, opt  [PUBLIC]   fs.js
+METHOD     chmod(path, mode, callback): u  [PUBLIC]   fs.js
+METHOD     chmodSync(path, mode)           [PUBLIC]   fs.js
+METHOD     chown(path, uid, gid, callback  [PUBLIC]   fs.js
+METHOD     chownSync(path, uid, gid)       [PUBLIC]   fs.js
+METHOD     close(fd, callback): undefined  [PUBLIC]   fs.js
+METHOD     closeSync(fd)                   [PUBLIC]   fs.js
+METHOD     createReadStream(path, options  [PUBLIC]   fs.js
+METHOD     createWriteStream(path, option  [PUBLIC]   fs.js
+METHOD     exists(path, callback): undefi  [PUBLIC]   fs.js
+METHOD     existsSync(path): Boolean       [PUBLIC]   fs.js
+METHOD     fchmod(fd, mode, callback): un  [PUBLIC]   fs.js
+METHOD     fchmodSync(fd, mode)            [PUBLIC]   fs.js
+METHOD     fchown(fd, uid, gid, callback)  [PUBLIC]   fs.js
+METHOD     fchownSync(fd, uid, gid)        [PUBLIC]   fs.js
+METHOD     fdatasync(fd, callback): undef  [PUBLIC]   fs.js
+METHOD     fdatasyncSync(fd)               [PUBLIC]   fs.js
+METHOD     fstat(fd, callback): undefined  [PUBLIC]   fs.js
+METHOD     fstatSync(fd)                   [PUBLIC]   fs.js
+METHOD     fsync(fd, callback): undefined  [PUBLIC]   fs.js
+METHOD     fsyncSync(fd)                   [PUBLIC]   fs.js
+METHOD     ftruncate(fd, len, callback):   [PUBLIC]   fs.js
+METHOD     ftruncateSync(fd, len)          [PUBLIC]   fs.js
+METHOD     futimes(fd, atime, mtime, call  [PUBLIC]   fs.js
+METHOD     futimesSync(fd, atime, mtime):  [PUBLIC]   fs.js
+METHOD     lchmod(path, mode, callback):   [PUBLIC]   fs.js
+METHOD     lchmodSync(path, mode)          [PUBLIC]   fs.js
+METHOD     lchown(path, uid, gid, callbac  [PUBLIC]   fs.js
+METHOD     lchownSync(path, uid, gid)      [PUBLIC]   fs.js
+METHOD     link(srcpath, dstpath, callbac  [PUBLIC]   fs.js
+METHOD     linkSync(srcpath, dstpath)      [PUBLIC]   fs.js
+METHOD     lstat(path, callback): undefin  [PUBLIC]   fs.js
+METHOD     lstatSync(path)                 [PUBLIC]   fs.js
+METHOD     mkdir(path, mode, callback): u  [PUBLIC]   fs.js
+METHOD     mkdirSync(path, mode)           [PUBLIC]   fs.js
+METHOD     open(path, flags, mode, callba  [PUBLIC]   fs.js
+METHOD     openSync(path, flags, mode)     [PUBLIC]   fs.js
+METHOD     readFile(path, options, callba  [PUBLIC]   fs.js
+METHOD     readFileSync(path, options)     [PUBLIC]   fs.js
+METHOD     readSync(fd, buffer, offset, l  [PUBLIC]   fs.js
+METHOD     readdir(path, callback): undef  [PUBLIC]   fs.js
+METHOD     readdirSync(path)               [PUBLIC]   fs.js
+METHOD     readlink(path, callback): unde  [PUBLIC]   fs.js
+METHOD     readlinkSync(path)              [PUBLIC]   fs.js
+METHOD     realpath(p, cache, cb)          [PUBLIC]   fs.js
+METHOD     realpathSync(p, cache)          [PUBLIC]   fs.js
+METHOD     rename(oldPath, newPath, callb  [PUBLIC]   fs.js
+METHOD     renameSync(oldPath, newPath)    [PUBLIC]   fs.js
+METHOD     rmdir(path, callback): undefin  [PUBLIC]   fs.js
+METHOD     rmdirSync(path)                 [PUBLIC]   fs.js
+METHOD     stat(path, callback): undefine  [PUBLIC]   fs.js
+METHOD     statSync(path)                  [PUBLIC]   fs.js
+METHOD     symlink(destination, path, typ  [PUBLIC]   fs.js
+METHOD     symlinkSync(destination, path,  [PUBLIC]   fs.js
+METHOD     truncate(path, len, callback)   [PUBLIC]   fs.js
+METHOD     truncateSync(path, len)         [PUBLIC]   fs.js
+METHOD     unlink(path, callback): undefi  [PUBLIC]   fs.js
+METHOD     unlinkSync(path)                [PUBLIC]   fs.js
+METHOD     unwatchFile(filename, listener  [PUBLIC]   fs.js
+METHOD     utimes(path, atime, mtime, cal  [PUBLIC]   fs.js
+METHOD     utimesSync(path, atime, mtime)  [PUBLIC]   fs.js
+METHOD     watch(filename)                 [PUBLIC]   fs.js
+METHOD     watchFile(filename)             [PUBLIC]   fs.js
+METHOD     write(fd, buffer, offset, leng  [PUBLIC]   fs.js
+METHOD     writeFile(path, data, options,  [PUBLIC]   fs.js
+METHOD     writeFileSync(path, data, opti  [PUBLIC]   fs.js
+METHOD     writeSync(fd, buffer, offset,   [PUBLIC]   fs.js
+FIELD      FileReadStream                  [PUBLIC]   fs.js
+FIELD      FileWriteStream                 [PUBLIC]   fs.js

@@ -1,0 +1,8 @@
+function |>METHOD:name<|() {
+    try {
+        
+    } catch (err) {
+        |>GLOBAL:console<|.log(err.stack);
+    }
+    
+}

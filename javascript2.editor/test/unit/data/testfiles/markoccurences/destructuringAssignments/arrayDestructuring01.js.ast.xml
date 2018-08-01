@@ -1,0 +1,124 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='156'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='156'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='a' start='4' end='5'>
+    </VarNode>
+    <VarNode name='b' start='7' end='8'>
+    </VarNode>
+    <VarNode name='c' start='10' end='11'>
+    </VarNode>
+    <VarNode name='d' start='17' end='22'>
+      <hasInit/>
+      <isAssignment/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='17' end='18'>
+        <name>d</name>
+        <isDeclaredHere/>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <NumberLiteralNode value='4' start='21' end='22'/>
+    </VarNode>
+    <ExpressionStatement start='24' end='60'>
+      <BinaryNode type='ASSIGN' start='24' end='59'>
+        <isAssignment/>
+        <!-- BinaryNode lhs -->
+        <ArrayLiteralNode start='24' end='35'>
+          <IdentNode start='25' end='26'>
+            <name>a</name>
+          </IdentNode>
+          <IdentNode start='27' end='28'>
+            <name>b</name>
+          </IdentNode>
+          <IdentNode start='30' end='31'>
+            <name>c</name>
+          </IdentNode>
+          <IdentNode start='33' end='34'>
+            <name>d</name>
+          </IdentNode>
+        </ArrayLiteralNode>
+        <!-- BinaryNode rhs -->
+        <ArrayLiteralNode start='38' end='59'>
+          <NumberLiteralNode value='1' start='39' end='40'/>
+          <NumberLiteralNode value='2' start='42' end='43'/>
+          <StringLiteralNode value='testik' start='46' end='52'/>
+          <BinaryNode type='ADD' start='55' end='58'>
+            <!-- BinaryNode lhs -->
+            <IdentNode start='55' end='56'>
+              <name>d</name>
+            </IdentNode>
+            <!-- BinaryNode rhs -->
+            <IdentNode start='57' end='58'>
+              <name>d</name>
+            </IdentNode>
+          </BinaryNode>
+        </ArrayLiteralNode>
+      </BinaryNode>
+    </ExpressionStatement>
+    <ExpressionStatement start='66' end='86'>
+      <CallNode start='66' end='80'>
+        <!-- CallNode Arguments -->
+        <IdentNode start='78' end='79'>
+          <name>a</name>
+        </IdentNode>
+        <!-- CallNode Function -->
+        <AccessNode property='log' start='66' end='77'>
+          <!-- AccessNode Base -->
+          <IdentNode start='66' end='73'>
+            <name>console</name>
+          </IdentNode>
+        </AccessNode>
+      </CallNode>
+    </ExpressionStatement>
+    <ExpressionStatement start='87' end='107'>
+      <CallNode start='87' end='101'>
+        <!-- CallNode Arguments -->
+        <IdentNode start='99' end='100'>
+          <name>b</name>
+        </IdentNode>
+        <!-- CallNode Function -->
+        <AccessNode property='log' start='87' end='98'>
+          <!-- AccessNode Base -->
+          <IdentNode start='87' end='94'>
+            <name>console</name>
+          </IdentNode>
+        </AccessNode>
+      </CallNode>
+    </ExpressionStatement>
+    <ExpressionStatement start='108' end='135'>
+      <CallNode start='108' end='122'>
+        <!-- CallNode Arguments -->
+        <IdentNode start='120' end='121'>
+          <name>c</name>
+        </IdentNode>
+        <!-- CallNode Function -->
+        <AccessNode property='log' start='108' end='119'>
+          <!-- AccessNode Base -->
+          <IdentNode start='108' end='115'>
+            <name>console</name>
+          </IdentNode>
+        </AccessNode>
+      </CallNode>
+    </ExpressionStatement>
+    <ExpressionStatement start='136' end='156'>
+      <CallNode start='136' end='150'>
+        <!-- CallNode Arguments -->
+        <IdentNode start='148' end='149'>
+          <name>d</name>
+        </IdentNode>
+        <!-- CallNode Function -->
+        <AccessNode property='log' start='136' end='147'>
+          <!-- AccessNode Base -->
+          <IdentNode start='136' end='143'>
+            <name>console</name>
+          </IdentNode>
+        </AccessNode>
+      </CallNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

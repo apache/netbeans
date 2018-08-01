@@ -1,0 +1,5 @@
+Code completion result for source line:
+var a = $|.parent();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+PARAMETER  $p3Cell                         [PUBLIC]   issue228986.js

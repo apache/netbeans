@@ -1,0 +1,160 @@
+<testresult testFile='nowdoc_014.php'>
+    <scanner>
+        <token id='T_INLINE_HTML' start='0' end='218'>
+            <text>--TEST--\nHighliting empty nowdoc\n--INI--\nhighlight.string  = #DD0000\nhighlight.comment = #FF8000\nhighlight.keyword = #007700\nhighlight.bg      = #FFFFFF\nhighlight.default = #0000BB\nhighlight.html    = #000000\n--FILE--\n</text>
+        </token>
+        <token id='T_VARIABLE' start='224' end='229'>
+            <text>$code</text>
+        </token>
+        <token id='T_EQUAL' start='230' end='231'>
+            <text>=</text>
+        </token>
+        <token id='T_START_NOWDOC' start='232' end='241'>
+            <text>&lt;&lt;&lt;&apos;EOF&apos;\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='266' end='282'>
+            <text>\n  $y = 2;\n?&gt;\nEO</text>
+        </token>
+        <token id='T_END_NOWDOC' start='282' end='283'>
+            <text>F</text>
+        </token>
+        <token id='T_SEMICOLON' start='283' end='284'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='285' end='301'>
+            <text>highlight_string</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='301' end='302'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='302' end='307'>
+            <text>$code</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='307' end='308'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='308' end='309'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='310' end='313'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='T_INLINE_HTML' start='313' end='330'>
+            <text>--EXPECT--\n&lt;code&gt;</text>
+        </token>
+        <token id='T_INLINE_HTML' start='330' end='332'>
+            <text>&lt;s</text>
+        </token>
+        <token id='T_INLINE_HTML' start='332' end='360'>
+            <text>pan style="color: #000000"&gt;\n</text>
+        </token>
+        <token id='T_INLINE_HTML' start='360' end='362'>
+            <text>&lt;s</text>
+        </token>
+        <token id='T_INLINE_HTML' start='362' end='430'>
+            <text>pan style="color: #0000BB"&gt;&amp;lt;?php&lt;br /&gt;&amp;nbsp;&amp;nbsp;$x&amp;nbsp;&lt;/span&gt;</text>
+        </token>
+        <token id='T_INLINE_HTML' start='430' end='432'>
+            <text>&lt;s</text>
+        </token>
+        <token id='T_INLINE_HTML' start='432' end='496'>
+            <text>pan style="color: #007700"&gt;=&amp;nbsp;&amp;lt;&amp;lt;&amp;lt;&apos;EOT&apos;&lt;br /&gt;&lt;/span&gt;</text>
+        </token>
+        <token id='T_INLINE_HTML' start='496' end='498'>
+            <text>&lt;s</text>
+        </token>
+        <token id='T_INLINE_HTML' start='498' end='532'>
+            <text>pan style="color: #0000BB"&gt;&lt;/span&gt;</text>
+        </token>
+        <token id='T_INLINE_HTML' start='532' end='534'>
+            <text>&lt;s</text>
+        </token>
+        <token id='T_INLINE_HTML' start='534' end='589'>
+            <text>pan style="color: #007700"&gt;EOT&lt;br /&gt;&amp;nbsp;&amp;nbsp;&lt;/span&gt;</text>
+        </token>
+        <token id='T_INLINE_HTML' start='589' end='591'>
+            <text>&lt;s</text>
+        </token>
+        <token id='T_INLINE_HTML' start='591' end='633'>
+            <text>pan style="color: #0000BB"&gt;$y&amp;nbsp;&lt;/span&gt;</text>
+        </token>
+        <token id='T_INLINE_HTML' start='633' end='635'>
+            <text>&lt;s</text>
+        </token>
+        <token id='T_INLINE_HTML' start='635' end='676'>
+            <text>pan style="color: #007700"&gt;=&amp;nbsp;&lt;/span&gt;</text>
+        </token>
+        <token id='T_INLINE_HTML' start='676' end='678'>
+            <text>&lt;s</text>
+        </token>
+        <token id='T_INLINE_HTML' start='678' end='713'>
+            <text>pan style="color: #0000BB"&gt;2&lt;/span&gt;</text>
+        </token>
+        <token id='T_INLINE_HTML' start='713' end='715'>
+            <text>&lt;s</text>
+        </token>
+        <token id='T_INLINE_HTML' start='715' end='756'>
+            <text>pan style="color: #007700"&gt;;&lt;br /&gt;&lt;/span&gt;</text>
+        </token>
+        <token id='T_INLINE_HTML' start='756' end='758'>
+            <text>&lt;s</text>
+        </token>
+        <token id='T_INLINE_HTML' start='758' end='814'>
+            <text>pan style="color: #0000BB"&gt;?&amp;gt;&lt;/span&gt;\n&lt;/span&gt;\n&lt;/code&gt;\n</text>
+        </token>
+        <token id='EOF' start='814' end='814'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='814'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <InLineHtml start='0' end='218'/>
+            <ExpressionStatement start='224' end='284'>
+                <Assignment start='224' end='283' operator='EQUAL'>
+                    <Variable start='224' end='229' isDollared='true'>
+                        <Identifier start='225' end='229' name='code'/>
+                    </Variable>
+                    <Scalar start='232' end='283' type='STRING' value='\n  $y = 2;\n?&gt;\n'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='285' end='309'>
+                <FunctionInvocation start='285' end='308'>
+                    <FucntionName start='285' end='301'>
+                        <NamespaceName start='285' end='301' isCurrent='false' isGlobal='false'>
+                            <Identifier start='285' end='301' name='highlight_string'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Variable start='302' end='307' isDollared='true'>
+                            <Identifier start='303' end='307' name='code'/>
+                        </Variable>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <EmptyStatement start='310' end='313'/>
+            <InLineHtml start='313' end='330'/>
+            <InLineHtml start='330' end='332'/>
+            <InLineHtml start='332' end='360'/>
+            <InLineHtml start='360' end='362'/>
+            <InLineHtml start='362' end='430'/>
+            <InLineHtml start='430' end='432'/>
+            <InLineHtml start='432' end='496'/>
+            <InLineHtml start='496' end='498'/>
+            <InLineHtml start='498' end='532'/>
+            <InLineHtml start='532' end='534'/>
+            <InLineHtml start='534' end='589'/>
+            <InLineHtml start='589' end='591'/>
+            <InLineHtml start='591' end='633'/>
+            <InLineHtml start='633' end='635'/>
+            <InLineHtml start='635' end='676'/>
+            <InLineHtml start='676' end='678'/>
+            <InLineHtml start='678' end='713'/>
+            <InLineHtml start='713' end='715'/>
+            <InLineHtml start='715' end='756'/>
+            <InLineHtml start='756' end='758'/>
+            <InLineHtml start='758' end='814'/>
+        </Statements>
+    </Program>
+</testresult>

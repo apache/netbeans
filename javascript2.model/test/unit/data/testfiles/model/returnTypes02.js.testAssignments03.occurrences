@@ -1,0 +1,5 @@
+            |>MARK_OCCURRENCES:zip<| = zipp;
+            formatter.println("Zip: " + |>MARK_OCCURRENCES:zip<|);
+            var tmp = createAddress(street, town, |>MARK_OCCURRENCES:zip<|+1);
+            if (|>MARK_OCCURRENCES:zip<| < 15000) {
+                |>MARK_OCCURRENCES:zi^p<| = 15000;

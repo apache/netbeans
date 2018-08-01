@@ -1,0 +1,25 @@
+$foo->bar($_COOKIE);
+          --------
+HINT:Do not Access Superglobal $_COOKIE Array Directly.
+
+Use some filtering functions instead (e.g. filter_input(), conditions with is_*() functions, etc.).
+echo $_COOKIE["foo"];
+     --------
+HINT:Do not Access Superglobal $_COOKIE Array Directly.
+
+Use some filtering functions instead (e.g. filter_input(), conditions with is_*() functions, etc.).
+    echo $_COOKIE["foo"];
+         --------
+HINT:Do not Access Superglobal $_COOKIE Array Directly.
+
+Use some filtering functions instead (e.g. filter_input(), conditions with is_*() functions, etc.).
+    ? $_COOKIE[""]
+      --------
+HINT:Do not Access Superglobal $_COOKIE Array Directly.
+
+Use some filtering functions instead (e.g. filter_input(), conditions with is_*() functions, etc.).
+    : $_COOKIE[""];
+      --------
+HINT:Do not Access Superglobal $_COOKIE Array Directly.
+
+Use some filtering functions instead (e.g. filter_input(), conditions with is_*() functions, etc.).

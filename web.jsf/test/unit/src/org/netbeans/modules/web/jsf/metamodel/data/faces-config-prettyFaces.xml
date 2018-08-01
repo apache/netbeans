@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- =========== FULL CONFIGURATION FILE ================================== -->
+<pretty-config xmlns="http://ocpsoft.com/prettyfaces/3.3.0"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://ocpsoft.com/prettyfaces/3.3.0
+                                   		http://ocpsoft.com/xml/ns/prettyfaces/ocpsoft-pretty-faces-3.3.0.xsd">
+
+    <rewrite match="^/old-url/(\w+)/$" substitute="/new_url/$1/" redirect="301" />
+
+    <url-mapping id="home">
+        <pattern value="/" />
+        <view-id value="/faces/index.jsf" />
+    </url-mapping>
+
+    <url-mapping id="store">
+        <pattern value="/store/" />
+        <view-id value="/faces/shop/store.jsf" />
+    </url-mapping>
+
+    <url-mapping id="viewCategory">
+        <pattern value="/store/#{ cat : bean.category }/" />
+        <view-id value="/faces/shop/store.jsf" />
+    </url-mapping>
+
+    <url-mapping id="viewItem">
+        <pattern value="/store/#{ cat : bean.category }/#{ iid : bean.itemId }/" />
+        <view-id value="/faces/shop/item.jsf" />
+        <action>#{bean.loadItem}</action>
+    </url-mapping>
+
+</pretty-config>

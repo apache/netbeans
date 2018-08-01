@@ -1,0 +1,25 @@
+<?php
+
+class |>CLASS:Cls<| {
+
+    /** @deprecated */
+    public $|>DEPRECATED,FIELD:deprPublic<|;
+
+    /** @deprecated */
+    protected $|>DEPRECATED,FIELD:deprProtected<|;
+
+    /** @deprecated */
+    private $|>DEPRECATED,FIELD,UNUSED:deprUnusedPrivate<|;
+
+    /** @deprecated */
+    public static $|>DEPRECATED,FIELD,STATIC:deprStaticPublic<|;
+
+    /** @deprecated */
+    protected static $|>DEPRECATED,FIELD,STATIC:deprStaticProtected<|;
+
+    /** @deprecated */
+    private static $|>DEPRECATED,FIELD,STATIC,UNUSED:deprStaticUnusedPrivate<|;
+
+}
+
+?>

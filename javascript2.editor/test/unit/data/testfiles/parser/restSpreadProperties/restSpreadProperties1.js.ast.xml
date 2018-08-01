@@ -1,0 +1,88 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='80'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='80'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='x' start='4' end='7'>
+      <isBlockScoped/>
+      <isLet/>
+      <isDestructuring/>
+    </VarNode>
+    <VarNode name='y' start='4' end='13'>
+      <isBlockScoped/>
+      <isLet/>
+      <isDestructuring/>
+    </VarNode>
+    <ExpressionStatement start='22' end='50'>
+      <ErrorNode start='22' end='50'>
+      </ErrorNode>
+    </ExpressionStatement>
+    <EmptyNode start='50' end='51'>
+    </EmptyNode>
+    <VarNode name='n' start='58' end='79'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isLet/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='58' end='59'>
+        <name>n</name>
+        <isDeclaredHere/>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <ObjectNode start='62' end='79'>
+        <!-- ObjectNode Elements -->
+        <PropertyNode start='64' end='68'>
+          <!-- PropertyNode Key -->
+          <UnaryNode type='SPREAD_OBJECT' start='64' end='68'>
+            <!-- UnaryNode Expression -->
+            <IdentNode start='67' end='68'>
+              <name>x</name>
+            </IdentNode>
+          </UnaryNode>
+          <!-- PropertyNode Value -->
+          <UnaryNode type='SPREAD_OBJECT' start='64' end='68'>
+            <!-- UnaryNode Expression -->
+            <IdentNode start='67' end='68'>
+              <name>x</name>
+            </IdentNode>
+          </UnaryNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <PropertyNode name='y' start='70' end='71'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='70' end='71'>
+            <name>y</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <IdentNode start='70' end='71'>
+            <name>y</name>
+          </IdentNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <PropertyNode start='73' end='77'>
+          <!-- PropertyNode Key -->
+          <UnaryNode type='SPREAD_OBJECT' start='73' end='77'>
+            <!-- UnaryNode Expression -->
+            <IdentNode start='76' end='77'>
+              <name>z</name>
+            </IdentNode>
+          </UnaryNode>
+          <!-- PropertyNode Value -->
+          <UnaryNode type='SPREAD_OBJECT' start='73' end='77'>
+            <!-- UnaryNode Expression -->
+            <IdentNode start='76' end='77'>
+              <name>z</name>
+            </IdentNode>
+          </UnaryNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+      </ObjectNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

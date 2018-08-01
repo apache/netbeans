@@ -1,0 +1,41 @@
+<testresult testFile='useSimple.php'>
+    <scanner>
+        <token id='T_USE' start='6' end='9'>
+            <text>use</text>
+        </token>
+        <token id='T_STRING' start='10' end='11'>
+            <text>A</text>
+        </token>
+        <token id='T_SEMICOLON' start='11' end='12'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='13' end='15'>
+            <text>?&gt;</text>
+        </token>
+        <token id='T_INLINE_HTML' start='15' end='17'>
+            <text> \n</text>
+        </token>
+        <token id='EOF' start='17' end='17'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='16'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <UseStatement start='6' end='12' type='TYPE'>
+                <SingleUseStatementPart start='10' end='11'>
+                    <Name>
+                        <NamespaceName start='10' end='11' isCurrent='false' isGlobal='false'>
+                            <Identifier start='10' end='11' name='A'/>
+                        </NamespaceName>
+                    </Name>
+                    <Alias>
+                    </Alias>
+                </SingleUseStatementPart>
+            </UseStatement>
+            <EmptyStatement start='13' end='15'/>
+            <InLineHtml start='15' end='16'/>
+        </Statements>
+    </Program>
+</testresult>

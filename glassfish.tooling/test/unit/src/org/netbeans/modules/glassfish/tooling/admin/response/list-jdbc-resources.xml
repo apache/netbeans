@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<map>
+  <entry key="extraProperties">
+    <map>
+      <entry key="methods">
+        <list>
+          <map>
+            <entry key="name" value="GET"/>
+          </map>
+          <map>
+            <entry key="messageParameters">
+              <map>
+                <entry key="targetName">
+                  <map>
+                    <entry key="acceptableValues" value=""/>
+                    <entry key="optional" value="true"/>
+                    <entry key="defaultValue" value="server"/>
+                    <entry key="type" value="string"/>
+                  </map>
+                </entry>
+              </map>
+            </entry>
+          </map>
+        </list>
+      </entry>
+    </map>
+  </entry>
+  <entry key="message" value=""/>
+  <entry key="exit_code" value="SUCCESS"/>
+  <entry key="command" value="list-jdbc-resources AdminCommand"/>
+  <entry key="children">
+    <list>
+      <map>
+        <entry key="message" value="jdbc/sample"/>
+        <entry key="properties">
+          <map/>
+        </entry>
+      </map>
+      <map>
+        <entry key="message" value="jdbc/__TimerPool"/>
+        <entry key="properties">
+          <map/>
+        </entry>
+      </map>
+      <map>
+        <entry key="message" value="jdbc/__default"/>
+        <entry key="properties">
+          <map/>
+        </entry>
+      </map>
+    </list>
+  </entry>
+</map>

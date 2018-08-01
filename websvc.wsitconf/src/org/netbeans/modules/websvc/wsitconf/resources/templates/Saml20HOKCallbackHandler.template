@@ -1,0 +1,224 @@
+<#-- FreeMarker template (see http://freemarker.org/) -->
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+<#if package?? && package != "">
+package ${package};
+</#if>
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.security.cert.Certificate;
+import java.security.KeyStore;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.GregorianCalendar;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.UnsupportedCallbackException;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import com.sun.org.apache.xml.internal.security.keys.KeyInfo;
+import com.sun.xml.wss.impl.callback.SAMLCallback;
+import com.sun.xml.wss.impl.callback.SignatureKeyCallback;
+import com.sun.xml.wss.saml.Assertion;
+import com.sun.xml.wss.saml.Conditions;
+import com.sun.xml.wss.saml.NameID;
+import com.sun.xml.wss.saml.SAMLAssertionFactory;
+import com.sun.xml.wss.saml.SubjectConfirmation;
+import com.sun.xml.wss.saml.SubjectConfirmationData;
+import com.sun.xml.wss.saml.Subject;
+
+/** 
+ *
+ * @author  ${user}
+ * @version
+ * 
+ * SAML 2.0 Holder Of Key Callback Handler
+ */
+public class Saml20HOKCallbackHandler implements CallbackHandler {
+    
+    private String keyStoreURL;
+    private String keyStorePassword;
+    private String keyStoreType;
+    
+    private KeyStore keyStore;
+    
+    private static final String fileSeparator = System.getProperty("file.separator");
+    
+    private  UnsupportedCallbackException unsupported =
+            new UnsupportedCallbackException(null,
+            "Unsupported Callback Type Encountered");
+    
+    private  static Element hokAssertion20 = null;
+    
+    public static final String holderOfKeyConfirmation_saml20 =
+            "urn:oasis:names:tc:SAML:2.0:cm:holder-of-key";
+    
+    String glassfish_home = System.getProperty("com.sun.aas.installRoot");
+    String client_priv_key_alias="xws-security-client";
+    
+    public Saml20HOKCallbackHandler() {
+        try {            
+            this.keyStoreURL = glassfish_home + fileSeparator + "domains" + fileSeparator + "domain1" +
+                    fileSeparator + "config" + fileSeparator + "keystore.jks";
+            this.keyStoreType = "JKS";
+            this.keyStorePassword = "changeit";
+            
+            initKeyStore();
+        }catch(Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+    
+    public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
+        for (int i=0; i < callbacks.length; i++) {
+            if (callbacks[i] instanceof SAMLCallback) {
+                try{
+                    SAMLCallback samlCallback = (SAMLCallback)callbacks[i];
+                    samlCallback.setConfirmationMethod(samlCallback.HOK_ASSERTION_TYPE);
+                    if (samlCallback.getConfirmationMethod().equals(samlCallback.HOK_ASSERTION_TYPE)){
+                        samlCallback.setAssertionElement(createHOKSAMLAssertion20());
+                        hokAssertion20=samlCallback.getAssertionElement();
+                    }else{
+                        throw new Exception("SAML Assertion Type is not matched.");
+                    }
+                }catch(Exception ex){
+                    ex.printStackTrace();
+                }
+            } else {
+                throw unsupported;
+            }
+        }
+    }
+    
+    private  Element createHOKSAMLAssertion20() {
+        
+        Assertion assertion = null;
+        try {            
+            SAMLAssertionFactory factory = SAMLAssertionFactory.newInstance(SAMLAssertionFactory.SAML2_0);            
+            // create the assertion id
+            String assertionID = String.valueOf(System.currentTimeMillis());            
+            
+            GregorianCalendar c = new GregorianCalendar();
+            long beforeTime = c.getTimeInMillis();
+            // roll the time by one hour
+            long offsetHours = 60*60*1000;
+            
+            c.setTimeInMillis(beforeTime - offsetHours);
+            GregorianCalendar before= (GregorianCalendar)c.clone();
+            
+            c = new GregorianCalendar();
+            long afterTime = c.getTimeInMillis();
+            c.setTimeInMillis(afterTime + offsetHours);
+            GregorianCalendar after = (GregorianCalendar)c.clone();
+            
+            GregorianCalendar issueInstant = new GregorianCalendar();
+            // statements
+            List statements = new LinkedList();
+            NameID nmId = factory.createNameID("CN=SAML User,OU=SU,O=SAML User,L=Los Angeles,ST=CA,C=US",
+                    null, "urn:oasis:names:tc:SAML:2.0:nameid-format:X509SubjectName");
+            
+            //default priv key cert req
+            SignatureKeyCallback.DefaultPrivKeyCertRequest request =
+                    new SignatureKeyCallback.DefaultPrivKeyCertRequest();
+            
+            getDefaultPrivKeyCert(request);
+            
+            if ( request.getX509Certificate() == null ) {
+                throw new RuntimeException("Not able to resolve the Default Certificate");
+            }
+            PublicKey pubKey = request.getX509Certificate().getPublicKey();
+            PrivateKey privKey = request.getPrivateKey();
+            
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            Document doc = docFactory.newDocumentBuilder().newDocument();
+            
+            KeyInfo keyInfo = new KeyInfo(doc);
+            keyInfo.addKeyValue(pubKey);
+            
+            List subConfirmation = new ArrayList();
+            subConfirmation.add(holderOfKeyConfirmation_saml20);
+            SubjectConfirmationData scd = factory.createSubjectConfirmationData(null, null, null, null, null, keyInfo.getElement());
+            
+            SubjectConfirmation scf = factory.createSubjectConfirmation(nmId, scd, holderOfKeyConfirmation_saml20);
+                        
+            Subject subj = factory.createSubject(nmId, scf);
+            
+            List attributes = new LinkedList();
+            List attributeValues = new LinkedList();
+            attributeValues.add("ATTRIBUTE1");
+            attributes.add( factory.createAttribute(
+                    "attribute1",
+                    attributeValues));
+            
+            statements.add(factory.createAttributeStatement(attributes));
+            
+            Conditions conditions = factory.createConditions(before, after, null, null, null);
+            
+            assertion = factory.createAssertion(assertionID, nmId, issueInstant,
+                    conditions, null, subj, statements);
+            assertion.setVersion("2.0");
+            
+            return assertion.sign(pubKey, privKey);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }        
+    }
+    
+    private void initKeyStore() throws IOException {
+        try {
+            keyStore = KeyStore.getInstance(keyStoreType);
+            keyStore.load(new FileInputStream(keyStoreURL), keyStorePassword.toCharArray());
+        } catch (Exception e) {
+            throw new IOException(e.getMessage());
+        }
+    }
+    
+    private void getDefaultPrivKeyCert(
+            SignatureKeyCallback.DefaultPrivKeyCertRequest request)
+            throws IOException {
+        
+        String uniqueAlias = null;
+        try {
+            Enumeration aliases = keyStore.aliases();
+            while (aliases.hasMoreElements()) {
+                String currentAlias = (String) aliases.nextElement();
+                if (currentAlias.equals(client_priv_key_alias)){
+                    if (keyStore.isKeyEntry(currentAlias)) {
+                        Certificate thisCertificate = keyStore.getCertificate(currentAlias);
+                        if (thisCertificate != null) {
+                            if (thisCertificate instanceof X509Certificate) {
+                                if (uniqueAlias == null) {
+                                    uniqueAlias = currentAlias;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (uniqueAlias != null) {
+                request.setX509Certificate(
+                        (X509Certificate) keyStore.getCertificate(uniqueAlias));
+                request.setPrivateKey(
+                        (PrivateKey) keyStore.getKey(uniqueAlias, keyStorePassword.toCharArray()));
+            }
+        } catch (Exception e) {
+            throw new IOException(e.getMessage());
+        }
+    }
+}

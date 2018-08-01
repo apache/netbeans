@@ -1,0 +1,10 @@
+    |>MARK_OCCURRENCES:c<| = {
+var o = {a, b, |>MARK_OCCURRENCES:c<|};
+console.log(o.|>MARK_OCCURRENCES:c<|);           // { first: '1th', second: '2th' }
+console.log(o.|>MARK_OCCURRENCES:c<|.first);     // 1th
+console.log(o.|>MARK_OCCURRENCES:c<|.second);    // 2th
+o.|>MARK_OCCURRENCES:c<|.third = "3th";
+console.log(o.|>MARK_OCCURRENCES:c<|.third);     // 3th
+console.log(|>MARK_OCCURRENCES:c<|.third);       // 3th 
+o.|>MARK_OCCURRENCES:c<|.sayHello = function () {
+console.log(|>MARK_OCCURRENCES:c^<|.sayHello());  // Hello

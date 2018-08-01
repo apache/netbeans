@@ -1,0 +1,3 @@
+jQuery(function(|>MARK_OCCURRENCES:$^<|){
+    |>MARK_OCCURRENCES:$<|.timepicker.regional["cs"] = {
+    |>MARK_OCCURRENCES:$<|.timepicker.setDefaults(|>MARK_OCCURRENCES:$<|.timepicker.regional['cs']);

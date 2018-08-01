@@ -1,0 +1,129 @@
+<testresult testFile='heredoc_008.php'>
+    <scanner>
+        <token id='T_INLINE_HTML' start='0' end='43'>
+            <text>--TEST--\nempty doc test (heredoc)\n--FILE--\n</text>
+        </token>
+        <token id='T_REQUIRE_ONCE' start='50' end='62'>
+            <text>require_once</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='63' end='75'>
+            <text>&apos;nowdoc.inc&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='75' end='76'>
+            <text>;</text>
+        </token>
+        <token id='T_PRINT' start='78' end='83'>
+            <text>print</text>
+        </token>
+        <token id='T_START_HEREDOC' start='84' end='100'>
+            <text>&lt;&lt;&lt;ENDOFHEREDOC\n</text>
+        </token>
+        <token id='T_END_HEREDOC' start='100' end='112'>
+            <text>ENDOFHEREDOC</text>
+        </token>
+        <token id='T_SEMICOLON' start='112' end='113'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='115' end='117'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='118' end='119'>
+            <text>=</text>
+        </token>
+        <token id='T_START_HEREDOC' start='120' end='136'>
+            <text>&lt;&lt;&lt;ENDOFHEREDOC\n</text>
+        </token>
+        <token id='T_END_HEREDOC' start='136' end='148'>
+            <text>ENDOFHEREDOC</text>
+        </token>
+        <token id='T_SEMICOLON' start='148' end='149'>
+            <text>;</text>
+        </token>
+        <token id='T_PRINT' start='151' end='156'>
+            <text>print</text>
+        </token>
+        <token id='T_QUATE' start='157' end='158'>
+            <text>"</text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='158' end='159'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='159' end='161'>
+            <text>$x</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='161' end='162'>
+            <text>}</text>
+        </token>
+        <token id='T_QUATE' start='162' end='163'>
+            <text>"</text>
+        </token>
+        <token id='T_SEMICOLON' start='163' end='164'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='166' end='169'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='T_INLINE_HTML' start='169' end='180'>
+            <text>--EXPECT--\n</text>
+        </token>
+        <token id='EOF' start='180' end='180'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='180'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <InLineHtml start='0' end='43'/>
+            <ExpressionStatement start='50' end='76'>
+                <Include start='50' end='75' type='REQUIRE_ONCE'>
+                    <Scalar start='63' end='75' type='STRING' value='&apos;nowdoc.inc&apos;'/>
+                </Include>
+            </ExpressionStatement>
+            <ExpressionStatement start='78' end='113'>
+                <FunctionInvocation start='78' end='112'>
+                    <FucntionName start='78' end='83'>
+                        <Identifier start='78' end='83' name='print'/>
+                    </FucntionName>
+                    <Parameters>
+                        <Quote start='84' end='112' type='HEREDOC'>
+                            <Expressions>
+                            </Expressions>
+                        </Quote>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='115' end='149'>
+                <Assignment start='115' end='148' operator='EQUAL'>
+                    <Variable start='115' end='117' isDollared='true'>
+                        <Identifier start='116' end='117' name='x'/>
+                    </Variable>
+                    <Quote start='120' end='148' type='HEREDOC'>
+                        <Expressions>
+                        </Expressions>
+                    </Quote>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='151' end='164'>
+                <FunctionInvocation start='151' end='163'>
+                    <FucntionName start='151' end='156'>
+                        <Identifier start='151' end='156' name='print'/>
+                    </FucntionName>
+                    <Parameters>
+                        <Quote start='157' end='163' type='QUOTE'>
+                            <Expressions>
+                                <ReflectionVariable start='158' end='162'>
+                                    <Variable start='159' end='161' isDollared='true'>
+                                        <Identifier start='160' end='161' name='x'/>
+                                    </Variable>
+                                </ReflectionVariable>
+                            </Expressions>
+                        </Quote>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <EmptyStatement start='166' end='169'/>
+            <InLineHtml start='169' end='180'/>
+        </Statements>
+    </Program>
+</testresult>

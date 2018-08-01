@@ -1,0 +1,51 @@
+<?php
+abstract class AbstractClass {
+    abstract public function abstractFoo();
+}
+
+abstract class AbstractClass2 {
+    abstract public function abstractFoo();
+    abstract public function abstractBar();
+}
+
+class ExtendingClass1 extends AbstractClass {
+
+}
+
+class ExtendingClass2 extends AbstractClass {
+}
+
+class ExtendingClass3 extends AbstractClass
+{
+}
+
+class ExtendingClass4 extends AbstractClass {
+
+    private $foo = array(
+        "foo1",
+        "foo2",
+        "foo3"
+    );
+}
+
+class ExtendingClass5 extends AbstractClass2 {
+
+    public function abstractFoo() {
+    }
+
+    public function abstractFoo2() {
+    }
+
+    public function abstractBar() {
+        
+    }
+
+}
+
+interface InterfaceName {
+    public function abstractBar();
+}
+
+class ImplementingClass implements InterfaceName {
+
+}

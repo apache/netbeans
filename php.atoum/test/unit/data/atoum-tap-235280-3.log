@@ -1,0 +1,4 @@
+1..1
+not ok 1 - tests\units\netbeans\sample\Calculator::testAdd()
+# E_USER_ERROR : Tested class 'netbeans\sample\Calculator' does not exist for test class 'tests\units\netbeans\sample\Calculator'
+# /home/gapon/NetBeansProjects/atoum-issue/tests/units/netbeans/sample/Calculator.php

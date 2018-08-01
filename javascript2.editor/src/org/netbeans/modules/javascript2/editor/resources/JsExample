@@ -1,0 +1,18 @@
+/*
+ * Comment example.
+ */
+var globalVar = {
+    id: 10,
+    name: "Test",
+    getDescription: function () {
+        return this.id + " " + this.name;
+    }
+};
+
+ClassName.prototype.test = function (parameter) {
+    var number = 123 + parameter;
+    var str = "String";
+    var regExp = /.HTML/;
+    return this.name + '_' + str; // line comment
+}
+

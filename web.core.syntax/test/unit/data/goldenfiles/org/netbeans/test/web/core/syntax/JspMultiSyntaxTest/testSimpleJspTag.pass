@@ -1,0 +1,10 @@
+'token image' [offset, length]; tokenID name; tokenID id; token category name; <list of token context names>
+--------------------
+
+'</' [0, 2]; symbol; 4; -; JspTagTokenContext, JspMultiTokenContext
+'jsp:useBean' [2, 11]; tag-directive; 3; -; JspTagTokenContext, JspMultiTokenContext
+' ' [13, 1]; whitespace; 11; -; JspTagTokenContext, JspMultiTokenContext
+'id' [14, 2]; attribute-name; 7; -; JspTagTokenContext, JspMultiTokenContext
+'=' [16, 1]; symbol; 4; -; JspTagTokenContext, JspMultiTokenContext
+'"sss"' [17, 5]; attribute-value; 8; -; JspTagTokenContext, JspMultiTokenContext
+'>' [22, 1]; symbol; 4; -; JspTagTokenContext, JspMultiTokenContext

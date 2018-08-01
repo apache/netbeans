@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.php.phpdoc.documentation
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/php/phpdoc/documentation/Bundle.properties
+OpenIDE-Module-Specification-Version: 0.22
+AutoUpdate-Show-In-Client: false

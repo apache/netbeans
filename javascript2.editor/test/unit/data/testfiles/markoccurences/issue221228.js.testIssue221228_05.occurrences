@@ -1,0 +1,3 @@
+Greetings.prototype.|>MARK_OCCURRENCES:say^Ahoj<| = function () {
+a221228.|>MARK_OCCURRENCES:sayAhoj<|();
+b221228.|>MARK_OCCURRENCES:sayAhoj<|();

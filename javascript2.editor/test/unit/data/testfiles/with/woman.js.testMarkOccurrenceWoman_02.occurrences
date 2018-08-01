@@ -1,0 +1,4 @@
+    this.|>MARK_OCCURRENCES:address<| = {
+    |>MARK_OCCURRENCES:address<|.city = "Pribram";
+    with (|>MARK_OCCURRENCES:address<|) {
+console.log(martin.|>MARK_OCCURRENCES:addre^ss<|.city);

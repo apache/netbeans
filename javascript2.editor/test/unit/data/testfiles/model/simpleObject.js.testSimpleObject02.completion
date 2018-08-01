@@ -1,0 +1,5 @@
+Code completion result for source line:
+this.called = this.cal|led + 1;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      called: Number                  [PUBLIC]   simpleObject.js

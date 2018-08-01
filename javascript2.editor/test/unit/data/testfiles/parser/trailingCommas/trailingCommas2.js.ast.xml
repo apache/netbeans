@@ -1,0 +1,58 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='78'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='78'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='mapped' start='4' end='77'>
+      <hasInit/>
+      <isAssignment/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='4' end='10'>
+        <name>mapped</name>
+        <isDeclaredHere/>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <CallNode start='13' end='77'>
+        <!-- CallNode Arguments -->
+        <AccessNode property='children' start='29' end='52'>
+          <!-- AccessNode Base -->
+          <AccessNode property='props' start='29' end='43'>
+            <!-- AccessNode Base -->
+            <IdentNode start='29' end='37'>
+              <name>instance</name>
+            </IdentNode>
+          </AccessNode>
+        </AccessNode>
+        <FunctionNode name='=>:3' kind='ARROW' start='56' end='74'>
+          <isAnonymous/>
+          <!-- FunctionNode Parameters -->
+          <IdentNode start='56' end='63'>
+            <name>element</name>
+          </IdentNode>
+          <!-- FunctionNode Body -->
+          <Block start='67' end='74'>
+            <isFunctionBody/>
+            <isTerminal/>
+            <!-- Block Statements -->
+            <ReturnNode start='67' end='74'>
+              <IdentNode start='67' end='74'>
+                <name>element</name>
+              </IdentNode>
+            </ReturnNode>
+          </Block>
+        </FunctionNode>
+        <!-- CallNode Function -->
+        <AccessNode property='map' start='13' end='25'>
+          <!-- AccessNode Base -->
+          <IdentNode start='13' end='21'>
+            <name>Children</name>
+          </IdentNode>
+        </AccessNode>
+      </CallNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

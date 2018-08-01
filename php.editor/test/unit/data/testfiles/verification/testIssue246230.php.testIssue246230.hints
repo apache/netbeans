@@ -1,0 +1,3 @@
+} catch ( Exception $ex ) {
+                     --
+HINT:Variable $ex seems to be unused in its scope

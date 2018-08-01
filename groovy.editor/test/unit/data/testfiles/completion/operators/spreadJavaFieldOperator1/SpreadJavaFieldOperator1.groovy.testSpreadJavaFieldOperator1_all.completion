@@ -1,0 +1,8 @@
+Code completion result for source line:
+['abc', 'def']*.@|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      CASE_INSENSITIVE_ORDER          [STATIC,   Comparator<String>
+FIELD      bytes                           [PUBLIC]   byte[]
+FIELD      class                           [PUBLIC]   Class
+FIELD      empty                           [PUBLIC]   boolean

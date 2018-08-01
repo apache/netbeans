@@ -1,0 +1,21 @@
+var |>GLOBAL:Core<| = |>GLOBAL:Core<| || {};
+
+|>GLOBAL:Core<|.needModules(function() {
+    "use strict";
+
+    var |>LOCAL_VARIABLE_DECLARATION:REGEXP<| = /[+]?\d{1,20}$/; // REGEXP marked as unused
+
+    |>GLOBAL:Core<|.|>CLASS:Test<| = {
+        |>METHOD:test<|: function(value) {
+            var |>LOCAL_VARIABLE_DECLARATION:fieldType<|; // fieldType marked as unused
+
+            alert(|>LOCAL_VARIABLE:REGEXP<|.test(value));
+
+            switch (|>LOCAL_VARIABLE:fieldType<|) {
+                case "test":
+                    alert(|>LOCAL_VARIABLE:REGEXP<|.test(value));
+                    break;
+            }
+        }
+    };   
+});

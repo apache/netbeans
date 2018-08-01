@@ -1,0 +1,19 @@
+var |>GLOBAL:property<| = 10;
+var |>GLOBAL:o<| = {
+    |>METHOD:method<|() {
+        return "method"
+    },
+    |>METHOD:get<| |>FIELD:property<|() { 
+        return |>GLOBAL:property<|; // global property
+    },
+    |>METHOD:set<| |>FIELD:property<|(value) {
+        |>GLOBAL:property<| = value;  // global property
+    },
+    * |>METHOD:generator<|() {}
+};   
+
+|>GLOBAL:console<|.log(|>GLOBAL:o<|.|>FIELD:property<|);
+|>GLOBAL:o<|.|>FIELD:property<| = 20;
+|>GLOBAL:console<|.log(|>GLOBAL:o<|.|>FIELD:property<|);
+|>GLOBAL:console<|.log(|>GLOBAL:property<|);
+|>GLOBAL:console<|.log(|>GLOBAL:o<|.method());

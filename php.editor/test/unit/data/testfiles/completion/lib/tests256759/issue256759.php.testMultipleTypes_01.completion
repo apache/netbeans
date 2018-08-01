@@ -1,0 +1,6 @@
+Code completion result for source line:
+$test->multi->|t1;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   ? t1                            [PUBLIC]   T1
+VARIABLE   ? t2                            [PUBLIC]   T2
+VARIABLE   ? t3                            [PUBLIC]   T3

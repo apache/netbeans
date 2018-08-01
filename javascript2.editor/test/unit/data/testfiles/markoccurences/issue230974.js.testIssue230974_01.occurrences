@@ -1,0 +1,2 @@
+WidgetManager.prototype.nextP2 = data[0].|>MARK_OCCURRENCES:p2^limit<|; // place cursor inside p2limit
+    var n = old + "<br/><b>\u2264 " + data[0].|>MARK_OCCURRENCES:p2limit<| + "</b> - Quality Criteria for " + data[1] + " (in " + data[2] + " days)";

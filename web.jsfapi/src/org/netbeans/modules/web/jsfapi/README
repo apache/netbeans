@@ -1,0 +1,9 @@
+The weird module's code name base org.netbeans.modules.jsfapi needs to be used
+since the natural org.netbeans.modules.jsf is already taken by the legacy
+"JSF Support" module.
+
+This module is going to be a shared place for common JSF stuff from both JSF Common
+and JSF Editor modules. Currently there are some dependencies problems between
+these two which requires another common module. This however still needs to be done!
+Right now the module contains only small portion of the classes which needs to
+be shared.

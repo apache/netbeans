@@ -1,0 +1,94 @@
+[<% org.test.|, TestBean, <% org.test.TestBean, 431]
+Card
+TestBean
+End cursor position = 452
+[<% t|, TestBean testBean, <% testBean, 578]
+TestBean testBean
+String toString ()
+this
+throw
+try
+Thread
+ThreadDeath
+ThreadGroup
+ThreadLocal <T>
+Throwable
+TypeNotPresentException
+End cursor position = 590
+[<% testBean.|, Integer getId (), <% testBean.getId(), 724]
+boolean equals (Object obj )
+Class  getClass ()
+Integer getId ()
+String getName ()
+int hashCode ()
+void notify ()
+void notifyAll ()
+void setId (Integer id )
+void setName (String name )
+String toString ()
+void wait ()
+void wait (long timeout )
+void wait (long timeout , int 
+End cursor position = 744
+[<% "Hello World !".| %>, int hashCode (), <% "Hello World !".hashCode() %>, 867]
+char charAt (int index )
+IntStream chars ()
+int codePointAt (int index )
+int codePointBefore (int index
+int codePointCount (int beginI
+IntStream codePoints ()
+int compareTo (String anotherS
+int compareToIgnoreCase (Strin
+String concat (String str )
+boolean contains (CharSequence
+boolean contentEquals (CharSeq
+boolean contentEquals (StringB
+boolean endsWith (String suffi
+boolean equals (Object anObjec
+boolean equalsIgnoreCase (Stri
+byte[] getBytes ()
+byte[] getBytes (Charset chars
+byte[] getBytes (String charse
+void getBytes (int srcBegin , 
+void getChars (int srcBegin , 
+Class  getClass ()
+int hashCode ()
+int indexOf (String str )
+int indexOf (int ch )
+int indexOf (String str , int 
+int indexOf (int ch , int from
+String intern ()
+boolean isEmpty ()
+int lastIndexOf (String str )
+int lastIndexOf (int ch )
+int lastIndexOf (String str , 
+int lastIndexOf (int ch , int 
+int length ()
+boolean matches (String regex 
+void notify ()
+void notifyAll ()
+int offsetByCodePoints (int in
+boolean regionMatches (int tof
+boolean regionMatches (boolean
+String replace (CharSequence t
+String replace (char oldChar ,
+String replaceAll (String rege
+String replaceFirst (String re
+String[] split (String regex )
+String[] split (String regex ,
+boolean startsWith (String pre
+boolean startsWith (String pre
+CharSequence subSequence (int 
+String substring (int beginInd
+String substring (int beginInd
+char[] toCharArray ()
+String toLowerCase ()
+String toLowerCase (Locale loc
+String toString ()
+String toUpperCase ()
+String toUpperCase (Locale loc
+String trim ()
+void wait ()
+void wait (long timeout )
+void wait (long timeout , int 
+End cursor position = 897

@@ -1,0 +1,7 @@
+Code completion result for source line:
+h|istory;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     hasOwnProperty(prop: String):   [PUBLIC]   JS Platform
+METHOD     helpId(): Number                [PUBLIC]   issue226521.js
+FIELD      history: History                [PUBLIC]   JS Platform

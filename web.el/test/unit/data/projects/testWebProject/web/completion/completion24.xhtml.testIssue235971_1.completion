@@ -1,0 +1,5 @@
+Code completion result for source line:
+#{bean.myString.toS|tring()}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     toString()                      [PUBLIC]   String

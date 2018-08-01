@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN" "http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd">
+
+<fontscolors>
+    <fontcolor name="keyword" default="keyword">
+        <font style="bold" />
+    </fontcolor>
+    <fontcolor name="sgml-declaration" foreColor="628FB5" default="default"/>
+    <fontcolor name="html-tag"  default="markup-element"/>
+    <fontcolor name="html-attribute" default="markup-attribute"/>
+    <fontcolor name="text"  default="default"/>
+    <fontcolor name="separator"  default="default"/>
+    <fontcolor name="javascript-embedded" bgColor="FFE3F2E1" default="default"/>
+    <fontcolor name="css-embedded" bgColor="FFE3F2E1" default="default"/>
+    <fontcolor name="comment"  default="comment"/>
+    <fontcolor name="unbuffered-comment"  default="comment"/>
+    <fontcolor name="code-delimiter"  default="default"/>
+    <fontcolor name="plain-text-delimiter"  default="default"/>
+    <fontcolor name="plain-text"  bgColor="E3F2ff" default="default"/>
+    <fontcolor name="expression-delimiter" default="default">
+        <font style="bold" />
+    </fontcolor>
+    <fontcolor name="css-id"  foreColor="007c00"/>
+    <fontcolor name="css-class"  foreColor="006b00"/>
+    <fontcolor name="file-path"  foreColor="6b6b00"/>
+    <fontcolor name="filter"  foreColor="006b6b"/>
+    <fontcolor name="filter-text"  default="default"/>
+    <fontcolor name="block-name"  foreColor="999922"/>
+    <fontcolor name="mixin-name"  foreColor="999922"/>
+</fontscolors>

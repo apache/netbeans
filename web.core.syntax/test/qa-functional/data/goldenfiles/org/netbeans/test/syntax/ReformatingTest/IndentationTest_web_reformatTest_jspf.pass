@@ -1,0 +1,29 @@
+<%-- any content can be specified here e.g.: --%>
+<p>
+<h2>Hello World!</h2>
+
+<% if (Boolean.parseBoolean("true")) {
+%>
+<table style="font-size: 12pt; 
+       font-weight: bold;
+       border: 1pt;" 
+       title="TITULEK"
+       rules="groups">
+    <tr>
+        <td>
+            TEXT
+        </td>
+        <td>TEXT</td>
+    </tr>
+</table>
+<%} else {
+%>
+<ul style="list-style-type: disc;">
+    <li>            1
+    <li>            2
+    <li>            3
+    <li>            4
+</ul>
+<%}%>
+
+

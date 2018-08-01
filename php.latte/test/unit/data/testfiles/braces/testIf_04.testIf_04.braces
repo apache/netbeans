@@ -1,0 +1,9 @@
+<html>
+{*if* true }
+text
+{*elseif* true}
+text
+{*else*}
+text
+{*/i^f*}
+</html>

@@ -1,0 +1,6 @@
+host=localhost
+adminUser=admin
+adminPassword=admin123
+domainName=test
+glassFishArgs=-domain test
+javaArgs=-XX:MaxPermSize=192m -XX:PermSize=64m -client

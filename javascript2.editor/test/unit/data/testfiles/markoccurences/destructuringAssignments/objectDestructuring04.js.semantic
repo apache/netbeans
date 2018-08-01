@@ -1,0 +1,6 @@
+// the w property is not colored, because  it doesn't correspond with the right properties
+var {|>FIELD:p<|: |>GLOBAL:foo<|, |>FIELD:q<|: |>GLOBAL:bar<|, w: |>GLOBAL:abc<|} = {|>FIELD:p<|: 5, |>FIELD:q<|:7};     
+          
+|>GLOBAL:console<|.log(|>GLOBAL:foo<|); // 5   
+|>GLOBAL:console<|.log(|>GLOBAL:bar<|); // 7  
+|>GLOBAL:console<|.log(|>GLOBAL:abc<|); // undefined

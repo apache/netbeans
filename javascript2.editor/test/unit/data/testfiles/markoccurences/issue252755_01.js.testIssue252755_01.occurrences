@@ -1,0 +1,2 @@
+        var |>MARK_OCCURRENCES:bu^f<| = this.buf,
+            ch = (pos < |>MARK_OCCURRENCES:buf<|.length ? |>MARK_OCCURRENCES:buf<|[pos] : '\0'); // problem with first 'buf'

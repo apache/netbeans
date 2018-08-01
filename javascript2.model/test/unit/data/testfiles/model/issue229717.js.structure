@@ -1,0 +1,8 @@
+test:VARIABLE:[PUBLIC]:ESCAPED{test}<font color="#999999">ESCAPED{ : }ExpensesModel</font>:
+ExpensesModel:CONSTRUCTOR:[PUBLIC]:ESCAPED{ExpensesModel}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }ExpensesModel</font>:
+  addType:METHOD:[PUBLIC]:ESCAPED{addType}ESCAPED{(}ESCAPED{type}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  privateFun:METHOD:[PRIVATE]:ESCAPED{privateFun}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  prototype:CLASS:[PUBLIC]:ESCAPED{prototype}:
+    publicFnc:METHOD:[PUBLIC]:ESCAPED{publicFnc}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  self:VARIABLE:[PRIVATE]:ESCAPED{self}<font color="#999999">ESCAPED{ : }ExpensesModel</font>:
+  types:FIELD:[PUBLIC]:ESCAPED{types}<font color="#999999">ESCAPED{ : }Array</font>:

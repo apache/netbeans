@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : deployment-plan.dtd
+    Created on : April 7, 2003, 2:33 PM
+    Author     : vkraemer
+    Description:
+        Purpose of the document follows.
+-->
+
+<!ELEMENT deployment-plan (file-entry*) >
+
+<!ELEMENT file-entry (name, content, uri?) >
+
+<!ELEMENT name (#PCDATA) >
+<!ELEMENT content (#PCDATA) >
+<!ELEMENT uri (#PCDATA) >

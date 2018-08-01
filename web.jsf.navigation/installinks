@@ -1,0 +1,6 @@
+#!/bin/sh
+cd ../nbbuild
+cd rave/modules
+rm -f navigation.jar
+ln -s ../../../navigation/netbeans/modules/navigation.jar
+

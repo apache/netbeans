@@ -1,0 +1,5 @@
+<html>
+{% *i^f* true %}
+text
+{% *endif* %}
+</html>

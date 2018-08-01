@@ -1,0 +1,9 @@
+Display text: public function TestFunc($<b>fred</b>) {
+File name: index.php
+Name: $fred
+Position: BEGIN: 252 END: 256
+
+Display text: echo $<b>fred</b>->hello;
+File name: index.php
+Name: $fred
+Position: BEGIN: 274 END: 278

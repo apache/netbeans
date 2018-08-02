@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="__FILE_ENCODING__"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+    <head>
+        <title>${rest_client_stubs} - ${test_page}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=${encoding}" />
+        <link rel="stylesheet" href="./css/clientstubs.css" type="text/css"/>
+        <link rel="stylesheet" href="./css/css_master-all.css" type="text/css"/>
+        <!-- JS_DECLARE_START - DO NOT REMOVE-->
+        <script type="text/javascript" src="./Support.js"></script>
+        ${js_scripts_declaration}
+        <!-- JS_DECLARE_END - DO NOT REMOVE-->
+	<!--<script type="text/javascript">
+            //rest debug, uncomment to enable debugging
+            var rjsConfig = {
+                isDebug: true
+            };
+	</script>-->
+    </head>
+    <body>
+        <div class="outerBorder">
+            <div class="header">
+                <div id="subheader" class="subheader"></div> <!-- sub-header -->
+                <div class="banner"><img src="./css/images/pname-clientstubs.png"/></div>
+            </div> <!-- header -->
+            <div id="main" class="main">
+              <h2>${rest_client_stubs} - ${test_page}</h2>
+              <div id="containerContent"> </div>
+              <!-- JS_USAGE_START - DO NOT REMOVE-->
+              ${js_usage}
+              <!-- JS_USAGE_END - DO NOT REMOVE--> 
+            </div> <!-- main -->
+        </div> <!-- outerborder -->
+    </body>
+</html>

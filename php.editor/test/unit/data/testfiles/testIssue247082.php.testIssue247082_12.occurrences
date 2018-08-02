@@ -1,0 +1,2 @@
+    public static $|>MARK_OCCURRENCES:myFieldStatic<| = 'myFieldStatic';
+            echo self::$|>MARK_OCCURRENCES:myFiel^dStatic<| . PHP_EOL;

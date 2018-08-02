@@ -1,0 +1,6 @@
+Code completion result for source line:
+$var2->|foo();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     foo()                           [PUBLIC]   \Data\User
+VARIABLE   ? bar                           [PUBLIC]   \Data\User

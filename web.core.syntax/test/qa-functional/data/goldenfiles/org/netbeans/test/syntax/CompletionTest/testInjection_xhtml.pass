@@ -1,0 +1,108 @@
+[${|}, NamedWithName beruska, ${beruska}, 376]
+NamedWithName beruska
+ConversationImpl javax.enterpr
+Model model
+MyManagedBean myManagedBean
+NamedBean namedBean
+ManagedBeanWithName slunicko
+application
+applicationScope[]
+cc
+component
+cookie[]
+facesContext
+flash
+headerValues[]
+header[]
+initParam[]
+pageScope[]
+paramValues[]
+param[]
+requestScope[]
+resource
+session
+sessionScope[]
+view
+viewScope[]
+End cursor position = 386
+[${|}, MyManagedBean myManagedBean, ${myManagedBean}, 439]
+NamedWithName beruska
+ConversationImpl javax.enterpr
+Model model
+MyManagedBean myManagedBean
+NamedBean namedBean
+ManagedBeanWithName slunicko
+application
+applicationScope[]
+cc
+component
+cookie[]
+facesContext
+flash
+headerValues[]
+header[]
+initParam[]
+pageScope[]
+paramValues[]
+param[]
+requestScope[]
+resource
+session
+sessionScope[]
+view
+viewScope[]
+End cursor position = 455
+[${|}, NamedBean namedBean, ${namedBean}, 489]
+NamedWithName beruska
+ConversationImpl javax.enterpr
+Model model
+MyManagedBean myManagedBean
+NamedBean namedBean
+ManagedBeanWithName slunicko
+application
+applicationScope[]
+cc
+component
+cookie[]
+facesContext
+flash
+headerValues[]
+header[]
+initParam[]
+pageScope[]
+paramValues[]
+param[]
+requestScope[]
+resource
+session
+sessionScope[]
+view
+viewScope[]
+End cursor position = 501
+[${|}, ManagedBeanWithName slunicko, ${slunicko}, 547]
+NamedWithName beruska
+ConversationImpl javax.enterpr
+Model model
+MyManagedBean myManagedBean
+NamedBean namedBean
+ManagedBeanWithName slunicko
+application
+applicationScope[]
+cc
+component
+cookie[]
+facesContext
+flash
+headerValues[]
+header[]
+initParam[]
+pageScope[]
+paramValues[]
+param[]
+requestScope[]
+resource
+session
+sessionScope[]
+view
+viewScope[]
+End cursor position = 558

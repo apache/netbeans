@@ -1,0 +1,33 @@
+Code completion result for source line:
+$anon = new class($|int, foo()) {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   int $int                        [PUBLIC]   anonymousClass02.php
+VARIABLE   {} $anon                        [PUBLIC]   anonymousClass02.php
+------------------------------------
+VARIABLE   $GLOBALS                                   PHP Platform
+VARIABLE   $HTTP_RAW_POST_DATA                        PHP Platform
+VARIABLE   $_COOKIE                                   PHP Platform
+VARIABLE   $_ENV                                      PHP Platform
+VARIABLE   $_FILES                                    PHP Platform
+VARIABLE   $_GET                                      PHP Platform
+VARIABLE   $_POST                                     PHP Platform
+VARIABLE   $_REQUEST                                  PHP Platform
+VARIABLE   $_SERVER                                   PHP Platform
+VARIABLE   $_SESSION                                  PHP Platform
+VARIABLE   $argc                                      PHP Platform
+VARIABLE   $argv                                      PHP Platform
+VARIABLE   $http_response_header                      PHP Platform
+VARIABLE   $php_errormsg                              PHP Platform
+VARIABLE   ? $a01                          [PUBLIC]   groupUse01.php
+VARIABLE   ? $a02                          [PUBLIC]   groupUse02.php
+VARIABLE   ? $a03                          [PUBLIC]   groupUse03.php
+VARIABLE   ? $a04                          [PUBLIC]   groupUse04.php
+VARIABLE   ? $ab01                         [PUBLIC]   groupUse01.php
+VARIABLE   ? $ab02                         [PUBLIC]   groupUse02.php
+VARIABLE   ? $ab03                         [PUBLIC]   groupUse03.php
+VARIABLE   ? $ab04                         [PUBLIC]   groupUse04.php
+VARIABLE   ? $abc01                        [PUBLIC]   groupUse01.php
+VARIABLE   ? $abc02                        [PUBLIC]   groupUse02.php
+VARIABLE   ? $abc03                        [PUBLIC]   groupUse03.php
+VARIABLE   ? $abc04                        [PUBLIC]   groupUse04.php
+VARIABLE   ? $mycls04                      [PUBLIC]   groupUse04.php

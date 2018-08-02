@@ -1,0 +1,7 @@
+config:CLASS:[PUBLIC]:ESCAPED{config}:
+  defaults:CLASS:[PUBLIC]:ESCAPED{defaults}:
+    level:FIELD:[PUBLIC]:ESCAPED{level}<font color="#999999">ESCAPED{ : }String</font>:
+    players:FIELD:[PUBLIC]:ESCAPED{players}<font color="#999999">ESCAPED{ : }Number</font>:
+    treasure:CLASS:[PUBLIC]:ESCAPED{treasure}:
+      gold:FIELD:[PUBLIC]:ESCAPED{gold}<font color="#999999">ESCAPED{ : }Number</font>:
+  proeprty1:FIELD:[PUBLIC]:ESCAPED{proeprty1}<font color="#999999">ESCAPED{ : }Number</font>:

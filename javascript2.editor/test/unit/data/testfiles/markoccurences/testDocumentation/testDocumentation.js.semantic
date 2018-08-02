@@ -1,0 +1,62 @@
+
+var |>GLOBAL:Context<| = {};
+
+|>GLOBAL:Context<|.|>FIELD:id<| = 22;
+|>GLOBAL:Context<|.|>FIELD:user<| = "tomas";
+
+/**
+ * @param {Color} color car color
+ * @param {String} maker car maker
+ * @type Car
+ */
+function |>METHOD:Car<| (color, maker) {
+    this.|>FIELD:color<| = color;
+    this.|>FIELD:maker<| = maker;
+
+    this.|>METHOD:getColor<| = function () {
+        return this.|>FIELD:color<|;
+    }
+    this.|>METHOD:getMaker<| = function () {
+        return this.|>FIELD:maker<|;
+    }
+}
+
+/**
+ * @param {String} street
+ * @param {String} town
+ * @param {String} country
+ * @return {Address} address
+ */
+function |>METHOD:Address<| (street, town, country) {
+    this.|>FIELD:street<| = street;
+    this.|>FIELD:town<| = town;
+    this.|>FIELD:country<| = country;
+}
+
+/**
+ * @param {String} street my street
+ * @param {String} town my town
+ * @param {String} country my country
+ * @return {Address} address
+ */
+function |>METHOD:Address2<| (street, town, country) {
+    this.|>FIELD:street<| = street; //another line
+    this.|>FIELD:town<| = town; //another line
+    this.|>FIELD:country<| = country; //another line
+}
+
+var |>GLOBAL:mujString<| = new String("mujString");
+
+var |>GLOBAL:object<| = new Car("red", "Skoda");
+|>GLOBAL:formatter<|.println("Car:");
+|>GLOBAL:formatter<|.addIndent(4);
+|>GLOBAL:formatter<|.println("color: " + |>GLOBAL:object<|.getColor());
+|>GLOBAL:formatter<|.println("maker: " + |>GLOBAL:object<|.|>FIELD:maker<|);
+|>GLOBAL:formatter<|.removeIndent(4);
+
+|>GLOBAL:object<| = new Address("V Parku", "Prague", "Czech Republic");
+|>GLOBAL:formatter<|.println("Address:");
+|>GLOBAL:formatter<|.addIndent(4);
+|>GLOBAL:formatter<|.println("street: " + |>GLOBAL:object<|.|>FIELD:street<|);
+|>GLOBAL:formatter<|.println("town: " + |>GLOBAL:object<|.|>FIELD:town<|);
+|>GLOBAL:formatter<|.removeIndent(4);

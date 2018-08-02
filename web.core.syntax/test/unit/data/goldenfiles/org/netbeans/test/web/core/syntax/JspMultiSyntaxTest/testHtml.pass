@@ -1,0 +1,26 @@
+'token image' [offset, length]; tokenID name; tokenID id; token category name; <list of token context names>
+--------------------
+
+'<' [0, 1]; tag-open-symbol; 14; tag; HtmlTokenContext, JspMultiTokenContext
+'html' [1, 4]; open-tag; 4; tag; HtmlTokenContext, JspMultiTokenContext
+'>' [5, 1]; tag-close-symbol; 15; tag; HtmlTokenContext, JspMultiTokenContext
+'<NL>' [6, 1]; text; 1; -; HtmlTokenContext, JspMultiTokenContext
+'<' [7, 1]; tag-open-symbol; 14; tag; HtmlTokenContext, JspMultiTokenContext
+'body' [8, 4]; open-tag; 4; tag; HtmlTokenContext, JspMultiTokenContext
+'>' [12, 1]; tag-close-symbol; 15; tag; HtmlTokenContext, JspMultiTokenContext
+'<NL>' [13, 1]; text; 1; -; HtmlTokenContext, JspMultiTokenContext
+'<' [14, 1]; tag-open-symbol; 14; tag; HtmlTokenContext, JspMultiTokenContext
+'h1' [15, 2]; open-tag; 4; tag; HtmlTokenContext, JspMultiTokenContext
+'>' [17, 1]; tag-close-symbol; 15; tag; HtmlTokenContext, JspMultiTokenContext
+'hello' [18, 5]; text; 1; -; HtmlTokenContext, JspMultiTokenContext
+'</' [23, 2]; tag-open-symbol; 14; tag; HtmlTokenContext, JspMultiTokenContext
+'h1' [25, 2]; close-tag; 5; tag; HtmlTokenContext, JspMultiTokenContext
+'>' [27, 1]; tag-close-symbol; 15; tag; HtmlTokenContext, JspMultiTokenContext
+'<NL>' [28, 1]; text; 1; -; HtmlTokenContext, JspMultiTokenContext
+'</' [29, 2]; tag-open-symbol; 14; tag; HtmlTokenContext, JspMultiTokenContext
+'body' [31, 4]; close-tag; 5; tag; HtmlTokenContext, JspMultiTokenContext
+'>' [35, 1]; tag-close-symbol; 15; tag; HtmlTokenContext, JspMultiTokenContext
+'<NL>' [36, 1]; text; 1; -; HtmlTokenContext, JspMultiTokenContext
+'</' [37, 2]; tag-open-symbol; 14; tag; HtmlTokenContext, JspMultiTokenContext
+'html' [39, 4]; close-tag; 5; tag; HtmlTokenContext, JspMultiTokenContext
+'>' [43, 1]; tag-close-symbol; 15; tag; HtmlTokenContext, JspMultiTokenContext

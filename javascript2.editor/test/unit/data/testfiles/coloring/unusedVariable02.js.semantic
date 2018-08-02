@@ -1,0 +1,5 @@
+|>GLOBAL:MySpace<|.|>METHOD:extractTimeFromDateObject<| = function(dateObject)
+{
+    var |>LOCAL_VARIABLE_DECLARATION:time<| = 10 + dateObject.getMinutes() + ":" + dateObject.getSeconds();
+    return |>LOCAL_VARIABLE:time<|;
+ };

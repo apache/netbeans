@@ -1,0 +1,63 @@
+[docu|, Window document, document, 40]
+AbstractView document : Docume
+Document documentElement : Ele
+Document documentURI : String
+Document documentURIObject
+Window document
+End cursor position = 49
+[ab|, Math abs ( x ) : Number, abs(x), 86]
+HTMLTableCellElement abbr : St
+Math abs ( x ) : Number
+XMLHttpRequest abort () : void
+abstract
+End cursor position = 92
+[has|, Node hasChildNodes () : void, hasChildNodes(), 147]
+DOMImplementation hasFeature (
+Element hasAttribute ( attName
+Element hasAttributeNS ( names
+Element hasAttributes () : voi
+Element hasChildNodes () : voi
+Node hasAttributes () : void
+Node hasChildNodes () : void
+Object hasOwnProperty ( prop )
+End cursor position = 163
+[Math.|, Math sqrt ( x ) : Number, Math.sqrt(x), 203]
+Math E : Number
+Math LN10 : Number
+Math LN2 : Number
+Math LOG10E : Number
+Math LOG2E : Number
+Math PI : Number
+Math SQRT1_2 : Number
+Math SQRT2 : Number
+Math abs ( x ) : Number
+Math acos ( x ) : Number
+Math asin ( x ) : Number
+Math atan ( x ) : Number
+Math atan2 ( y , x ) : Number
+Math ceil ( x ) : Number
+Math cos ( x ) : Number
+Math exp ( x ) : Number
+Math floor ( x ) : Number
+Math log ( x ) : Number
+Math max ( value1 , value2 ) :
+Math min ( value1 , value2 ) :
+Math pow ( base , exponent ) :
+Math random () : Number
+Math round ( x ) : Number
+Math sin ( x ) : Number
+Math sqrt ( x ) : Number
+Math tan ( x ) : Number
+Object constructor
+Object eval ( string ) : void
+Object hasOwnProperty ( prop )
+Object isPrototypeOf ( object 
+Object propertyIsEnumerable ( 
+Object prototype
+Object toLocaleString () : Str
+Object toSource () : void
+Object toString () : String
+Object unwatch ( prop ) : void
+Object valueOf () : void
+Object watch ( prop , handler 
+End cursor position = 215

@@ -1,0 +1,2 @@
+    public function |>MARK_OCCURRENCES:do^Something<|()
+        $this->|>MARK_OCCURRENCES:doSomething<|();

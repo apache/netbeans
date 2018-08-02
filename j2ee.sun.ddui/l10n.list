@@ -1,0 +1,4 @@
+# serverplugins/sun/sunddui
+read global
+${l10n-module}/src/org/netbeans/modules/j2ee/sun/share/NewBundle.properties
+${l10n-module}/src/org/netbeans/modules/j2ee/sun/share/configbean/templates/*.html 

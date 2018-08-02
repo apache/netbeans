@@ -1,0 +1,4 @@
+Code completion result for source line:
+class Lorry extends \test\ns\cls\ctx\Ca|r implements /**/cls\ctx\Vehicle {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Car                             [PUBLIC]   test\ns\cls\ctx

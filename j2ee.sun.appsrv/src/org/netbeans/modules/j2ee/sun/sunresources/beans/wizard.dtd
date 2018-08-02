@@ -1,0 +1,15 @@
+<!ELEMENT wizard (name, field-group+)>
+<!ELEMENT field-group (name, field+)>
+<!ELEMENT field (name, field-value, tag?)>
+<!ATTLIST field  field-type                 CDATA     "string"
+                 required                   CDATA     "true">
+<!ELEMENT field-value (default-field-value, option-value-pair*)>
+<!ELEMENT option-value-pair (option-name, conditional-value)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT default-field-value (#PCDATA)>
+<!ELEMENT option-name (#PCDATA)>
+<!ELEMENT conditional-value (#PCDATA)>
+<!ELEMENT tag (tag-item*)>
+<!ELEMENT tag-item (#PCDATA)>
+
+

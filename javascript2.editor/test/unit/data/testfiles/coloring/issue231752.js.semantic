@@ -1,0 +1,9 @@
+function |>METHOD:Test<|() {
+    this.|>FIELD:listeners<| = [];
+    var |>LOCAL_VARIABLE_DECLARATION:subs<| = this.|>FIELD:listeners<|[|>GLOBAL:event<|] || [];
+    for (var |>LOCAL_VARIABLE_DECLARATION:i<| = 0, |>LOCAL_VARIABLE_DECLARATION:max<| = |>LOCAL_VARIABLE:subs<|.length; |>LOCAL_VARIABLE:i<| < |>LOCAL_VARIABLE:max<|; |>LOCAL_VARIABLE:i<| += 1) {
+        if (|>LOCAL_VARIABLE:subs<|[|>LOCAL_VARIABLE:i<|] === |>GLOBAL:fn<|) {
+            |>LOCAL_VARIABLE:subs<|.splice(|>LOCAL_VARIABLE:i<|, 1);
+        }
+    }
+}  

@@ -1,0 +1,37 @@
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+<#if package?? && package != "">
+package ${package};
+</#if>
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.actions.MappingDispatchAction;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionForward;
+
+/**
+ *
+ * @author ${user}
+ */
+public class ${name} extends MappingDispatchAction {
+    
+    /* forward name="success" path="" */
+    private final static String SUCCESS = "success";
+    
+    /**
+     * This is the Struts Action method specified in struts-config file using the parameter attribute
+     * ( <action parameter="customMethod" .../> )
+     */
+    public ActionForward customMethod(ActionMapping mapping, ActionForm  form,
+            HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        
+        return mapping.findForward(SUCCESS);
+    }
+}

@@ -1,0 +1,73 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n\n
+token #2 PHP_FUNCTION function
+token #3 WHITESPACE  
+token #4 PHP_STRING parameterType
+token #5 PHP_TOKEN (
+token #6 PHP_TYPE_OBJECT object
+token #7 WHITESPACE  
+token #8 PHP_VARIABLE $object1
+token #9 PHP_TOKEN ,
+token #10 WHITESPACE  
+token #11 PHP_TYPE_OBJECT object
+token #12 WHITESPACE  
+token #13 PHP_VARIABLE $object2
+token #14 PHP_TOKEN )
+token #15 WHITESPACE  
+token #16 PHP_CURLY_OPEN {
+token #17 WHITESPACE \n    
+token #18 PHP_ECHO echo
+token #19 WHITESPACE  
+token #20 PHP_STRING get_class
+token #21 PHP_TOKEN (
+token #22 PHP_VARIABLE $object1
+token #23 PHP_TOKEN )
+token #24 WHITESPACE  
+token #25 PHP_TOKEN .
+token #26 WHITESPACE  
+token #27 PHP_STRING PHP_EOL
+token #28 PHP_SEMICOLON ;
+token #29 WHITESPACE \n    
+token #30 PHP_ECHO echo
+token #31 WHITESPACE  
+token #32 PHP_STRING get_class
+token #33 PHP_TOKEN (
+token #34 PHP_VARIABLE $object2
+token #35 PHP_TOKEN )
+token #36 WHITESPACE  
+token #37 PHP_TOKEN .
+token #38 WHITESPACE  
+token #39 PHP_STRING PHP_EOL
+token #40 PHP_SEMICOLON ;
+token #41 WHITESPACE \n
+token #42 PHP_CURLY_CLOSE }
+token #43 WHITESPACE \n\n
+token #44 PHP_FUNCTION function
+token #45 WHITESPACE  
+token #46 PHP_STRING returnType
+token #47 PHP_TOKEN (
+token #48 PHP_TOKEN )
+token #49 PHP_TOKEN :
+token #50 WHITESPACE  
+token #51 PHP_TYPE_OBJECT object
+token #52 WHITESPACE  
+token #53 PHP_CURLY_OPEN {
+token #54 WHITESPACE \n    
+token #55 PHP_VARIABLE $stdClass
+token #56 WHITESPACE  
+token #57 PHP_OPERATOR =
+token #58 WHITESPACE  
+token #59 PHP_NEW new
+token #60 WHITESPACE  
+token #61 PHP_STRING stdClass
+token #62 PHP_TOKEN (
+token #63 PHP_TOKEN )
+token #64 PHP_SEMICOLON ;
+token #65 WHITESPACE \n    
+token #66 PHP_RETURN return
+token #67 WHITESPACE  
+token #68 PHP_VARIABLE $stdClass
+token #69 PHP_SEMICOLON ;
+token #70 WHITESPACE \n
+token #71 PHP_CURLY_CLOSE }
+token #72 WHITESPACE \n

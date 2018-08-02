@@ -1,0 +1,3 @@
+    } catch (Exception $^|>MARK_OCCURRENCES:e<|) {
+                || !($|>MARK_OCCURRENCES:e<| instanceof $mExpectedException)
+        || !($|>MARK_OCCURRENCES:e<| instanceof Exception);

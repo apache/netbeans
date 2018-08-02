@@ -1,0 +1,3 @@
+        this.|>MARK_OCCURRENCES:call^ed<| = this.|>MARK_OCCURRENCES:called<| + 1;
+        var text = "color is " + this.color + ". This function was called: " + this.|>MARK_OCCURRENCES:called<|;
+    |>MARK_OCCURRENCES:called<|: 0

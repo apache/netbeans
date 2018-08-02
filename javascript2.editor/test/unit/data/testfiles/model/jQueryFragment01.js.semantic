@@ -1,0 +1,41 @@
+var |>GLOBAL:globalProperty<| = "Some global property";
+(function() {
+    
+var |>LOCAL_VARIABLE_DECLARATION:functionVar<| = "155";
+var |>CLASS:jQuery<| = {};
+jQuery.|>CLASS:event<| = {
+    |>FIELD:name<|: "testovaci object",
+    |>CLASS:customEvent<|: {
+        "|>FIELD:getData<|": true,
+        "|>FIELD:setData<|": true,
+        "|>FIELD:changeData<|": true,
+        "|>CLASS:class<|" : {
+            |>FIELD:name<| : "fdsadfdsa"
+        },
+        |>CLASS:martin<|: {
+            |>FIELD:address<|: "martinova adresa"
+        },
+        |>FIELD:petr<|: 10,
+        |>METHOD:test<| : function () {
+            |>GLOBAL:formatter<|.println("");
+            |>GLOBAL:formatter<|.println("What is vissible inside function jQuery.event.customEvent.test()");
+            |>GLOBAL:formatter<|.addIndent(4);
+            |>GLOBAL:formatter<|.println("this.martin.address: " + this.martin.|>FIELD:address<|);
+            |>GLOBAL:formatter<|.println("this.petr: " + this.|>FIELD:petr<|);
+            |>GLOBAL:formatter<|.println("this.name: " + this.name);
+            |>GLOBAL:formatter<|.println("jQuery.event.name: " + jQuery.event.|>FIELD:name<|);
+            |>GLOBAL:formatter<|.println("globalPropery: " + |>GLOBAL:globalProperty<|);
+            |>GLOBAL:formatter<|.println("functionVar: " + |>LOCAL_VARIABLE:functionVar<|);
+            |>GLOBAL:formatter<|.removeIndent(4);
+            
+        }
+    }
+}
+
+|>GLOBAL:formatter<|.println(jQuery.event.|>FIELD:name<|); 
+jQuery.event.customEvent.test();
+
+}());
+
+|>GLOBAL:jQuery<|.ajaxStart().addClass();
+

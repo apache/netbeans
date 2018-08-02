@@ -1,0 +1,3 @@
+class |>MARK_OCCURRENCES:Str^ing<| {
+use Abc\|>MARK_OCCURRENCES:String<|;
+$s = new |>MARK_OCCURRENCES:String<|();

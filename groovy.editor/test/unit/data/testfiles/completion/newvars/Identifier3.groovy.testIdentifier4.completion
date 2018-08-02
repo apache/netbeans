@@ -1,0 +1,8 @@
+Code completion result for source line:
+StringBuffer |
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+VARIABLE   s                                          null
+VARIABLE   sb                                         null
+VARIABLE   stringBuffer                               null
+VARIABLE   stringbuffer                               null

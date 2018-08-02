@@ -1,0 +1,5 @@
+Code completion result for source line:
+$(this.m|odal.modalHeader).text(header); // cc here
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      modal                           [PUBLIC]   issue220088.js

@@ -1,0 +1,5 @@
+Code completion result for source line:
+$ahoj = $this->|newerFunction();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     functionName($param)            [PUBLIC]   NewClass
+METHOD     newerFunction()                 [PUBLIC]   NewClass

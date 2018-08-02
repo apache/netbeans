@@ -1,0 +1,25 @@
+$foo->bar($_POST);
+          ------
+HINT:Do not Access Superglobal $_POST Array Directly.
+
+Use some filtering functions instead (e.g. filter_input(), conditions with is_*() functions, etc.).
+echo $_POST["foo"];
+     ------
+HINT:Do not Access Superglobal $_POST Array Directly.
+
+Use some filtering functions instead (e.g. filter_input(), conditions with is_*() functions, etc.).
+    echo $_POST["foo"];
+         ------
+HINT:Do not Access Superglobal $_POST Array Directly.
+
+Use some filtering functions instead (e.g. filter_input(), conditions with is_*() functions, etc.).
+    ? $_POST[""]
+      ------
+HINT:Do not Access Superglobal $_POST Array Directly.
+
+Use some filtering functions instead (e.g. filter_input(), conditions with is_*() functions, etc.).
+    : $_POST[""];
+      ------
+HINT:Do not Access Superglobal $_POST Array Directly.
+
+Use some filtering functions instead (e.g. filter_input(), conditions with is_*() functions, etc.).

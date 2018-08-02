@@ -1,0 +1,38 @@
+FUNCTION namespaces01 [ANONYMOUS: false, DECLARED: true - namespaces01, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+MyContext     : OBJECT MyContext [ANONYMOUS: false, DECLARED: true - MyContext, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+              # PROPERTIES
+              User : OBJECT User [ANONYMOUS: false, DECLARED: true - User, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+                   # PROPERTIES
+                   Address   : OBJECT Address [ANONYMOUS: false, DECLARED: true - Address, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+                             # PROPERTIES
+                             street : OBJECT street [ANONYMOUS: false, DECLARED: true - street, MODIFIERS: PUBLIC, PROPERTY]
+                             town   : OBJECT town [ANONYMOUS: false, DECLARED: true - town, MODIFIERS: PUBLIC, PROPERTY]
+                   firstName : OBJECT firstName [ANONYMOUS: false, DECLARED: true - firstName, MODIFIERS: PUBLIC, PROPERTY]
+                   lastName  : OBJECT lastName [ANONYMOUS: false, DECLARED: true - lastName, MODIFIERS: PUBLIC, PROPERTY]
+                   session   : OBJECT session [ANONYMOUS: false, DECLARED: true - session, MODIFIERS: PUBLIC, PROPERTY]
+              id   : OBJECT id [ANONYMOUS: false, DECLARED: true - id, MODIFIERS: PUBLIC, PROPERTY]
+              test : OBJECT test [ANONYMOUS: false, DECLARED: true - test, MODIFIERS: PUBLIC, PROPERTY]
+Ns1           : OBJECT Ns1 [ANONYMOUS: false, DECLARED: false - Ns1, MODIFIERS: PUBLIC, OBJECT]
+              # PROPERTIES
+              Ns2 : OBJECT Ns2 [ANONYMOUS: false, DECLARED: false - Ns2, MODIFIERS: PUBLIC, OBJECT]
+                  # PROPERTIES
+                  Ns3 : OBJECT Ns3 [ANONYMOUS: false, DECLARED: false - Ns3, MODIFIERS: PUBLIC, OBJECT]
+                      # PROPERTIES
+                      fix : OBJECT fix [ANONYMOUS: false, DECLARED: true - fix, MODIFIERS: PUBLIC, PROPERTY]
+addProperties : FUNCTION addProperties [ANONYMOUS: false, DECLARED: true - addProperties, MODIFIERS: PUBLIC, FUNCTION]
+              # RETURN TYPES
+              undefined, RESOLVED: true
+              # PARAMETERS
+              OBJECT arg [ANONYMOUS: false, DECLARED: true - arg, MODIFIERS: PUBLIC, PARAMETER]
+              # PROPERTIES
+              arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+formatter     : OBJECT formatter [ANONYMOUS: false, DECLARED: false - formatter, MODIFIERS: PUBLIC, OBJECT]
+              # PROPERTIES
+              println : FUNCTION println [ANONYMOUS: false, DECLARED: false - println, MODIFIERS: PUBLIC, METHOD]
+                      # PARAMETERS
+                      OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                      # PROPERTIES
+                      arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

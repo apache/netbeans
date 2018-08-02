@@ -1,0 +1,63 @@
+<testresult testFile='nowdoc01.php'>
+    <scanner>
+        <token id='T_INLINE_HTML' start='0' end='213'>
+            <text>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"&gt;\n&lt;html&gt;\n    &lt;head&gt;\n        &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8"&gt;\n        &lt;title&gt;&lt;/title&gt;\n    &lt;/head&gt;\n    &lt;body&gt;\n        </text>
+        </token>
+        <token id='T_ECHO' start='231' end='235'>
+            <text>echo</text>
+        </token>
+        <token id='T_START_NOWDOC' start='236' end='249'>
+            <text>&lt;&lt;&lt; &apos;NOWDOC&apos;\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='249' end='272'>
+            <text>nowdoc text $text\nNOWDO</text>
+        </token>
+        <token id='T_END_NOWDOC' start='272' end='273'>
+            <text>C</text>
+        </token>
+        <token id='T_SEMICOLON' start='273' end='274'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='300' end='302'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='303' end='304'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='305' end='311'>
+            <text>"ahoj"</text>
+        </token>
+        <token id='T_SEMICOLON' start='311' end='312'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='321' end='324'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='T_INLINE_HTML' start='324' end='344'>
+            <text>    &lt;/body&gt;\n&lt;/html&gt;\n</text>
+        </token>
+        <token id='EOF' start='344' end='344'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='343'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <InLineHtml start='0' end='213'/>
+            <EchoStatement start='231' end='274'>
+                <Scalar start='236' end='273' type='STRING' value='nowdoc text $text\n'/>
+            </EchoStatement>
+            <ExpressionStatement start='300' end='312'>
+                <Assignment start='300' end='311' operator='EQUAL'>
+                    <Variable start='300' end='302' isDollared='true'>
+                        <Identifier start='301' end='302' name='x'/>
+                    </Variable>
+                    <Scalar start='305' end='311' type='STRING' value='"ahoj"'/>
+                </Assignment>
+            </ExpressionStatement>
+            <EmptyStatement start='321' end='324'/>
+            <InLineHtml start='324' end='343'/>
+        </Statements>
+    </Program>
+</testresult>

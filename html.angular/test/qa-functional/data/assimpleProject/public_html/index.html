@@ -1,0 +1,41 @@
+<!doctype html>
+<html ng-app>
+    <head>
+        <script src="http://code.angularjs.org/1.0.6/angular.min.js"></script>
+        <script src="script.js"></script>
+    </head>
+    <body>
+        <div ng-controller="SettingsController as ctrl">
+            <h1>{{ctrl.name}}</h1>{{ctrl.lastName}}
+            Name: <input type="text" ng-model="ctrl.name"/>
+            [ <a href="" ng-click="ctrl.greet()">greet</a> ]<br/>
+               <!--cc;13;{{ctrl.}};2;lastName,name,cssColor,contacts,greet,addContact,own,removeContact,clearContact,foo;addContact;.addC|ontact;Date,decodeURI-->
+               <!--cc;13;{{ctrl.}};2;lastName,name,own;lastName;{{las|tName}};Date,decodeURI-->
+            
+            <ul>
+                <li ng-repeat="contact in ctrl.contacts">
+                    <!--cc;13;{{ctrl.}};2;lastName,name,cssColor,contacts,greet,addContact,own,removeContact,clearContact,foo;cssColor;ctrl.cssC|olor;Date,alert,contact-->
+                    <select ng-model="contact.type" class="{{ctrl.cssColor}}">
+                        <option>phone</option>
+                        <option>email</option>
+                    </select>
+                    <input type="text" ng-model="contact.value"/>
+                    [ <a href="" ng-click="ctrl.clearContact(contact)">clear</a>
+                    | <a href="" ng-click="ctrl.removeContact(contact)">X</a> ]
+                </li>
+                <li>[ <a href="" ng-dblclick="" ng-click="ctrl.addContact()">add</a> ]</li>
+            </ul>
+            <div ng-controller="ACtrl as ctr">
+                {{ctrl.foo}}
+                <div ng-click="ctr.print()" ng-model=""></div><!--cc;55;ctr.;0;page,printAttempt,print;printAttempt;model="pri|ntAttempt";Math,alert,addContact,removeContact,clearContact-->
+            
+                <span ng-bind="ctr.printAttempt"></span><!--cc;48;.;0;total,number;total;pri|ntAttempt.to|tal;-->
+                <span ng-bind="ctr.day"></span><!--cc;39;.;0;getDate,UTC;getDate;da|y.getDate(|);-->
+            
+            </div>
+                <!--cc;13;{{}};2;ctrl,decodeURI;ctrl;{{ct|rl}};lastName,addContact,own-->
+               
+                <div ng-click="ctr.print()" ng-model=""></div><!--cc;55;;0;ctrl,alert;ctrl;model=\"ct|rl\";page,printAttempt,own,removeContact,clearContact-->
+        </div>
+    </body>
+</html>

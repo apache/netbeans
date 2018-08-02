@@ -1,0 +1,5 @@
+Code completion result for source line:
+$a[0]->|field;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     method()                        [PUBLIC]   ArraysCc
+VARIABLE   ArraysCc[][int][string] field   [PUBLIC]   ArraysCc

@@ -1,0 +1,4 @@
+<?php
+   public class cls {
+   }
+?>

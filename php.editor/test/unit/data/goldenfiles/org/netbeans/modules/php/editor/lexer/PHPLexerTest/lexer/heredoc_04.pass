@@ -1,0 +1,11 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n\n
+token #2 PHP_VARIABLE $foo
+token #3 WHITESPACE  
+token #4 PHP_OPERATOR =
+token #5 WHITESPACE  
+token #6 PHP_HEREDOC_TAG_START <<<OMG\n
+token #7 PHP_HEREDOC_TAG_END OMG
+token #8 PHP_SEMICOLON ;
+token #9 WHITESPACE \n\n
+token #10 PHP_CLOSETAG ?>\n

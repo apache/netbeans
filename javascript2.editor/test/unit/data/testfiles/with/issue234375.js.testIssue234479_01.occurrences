@@ -1,0 +1,5 @@
+        console.|>MARK_OCCURRENCES:lo^g<|(getDate());
+    console.|>MARK_OCCURRENCES:log<|(this.den.getDate());
+        console.|>MARK_OCCURRENCES:log<|(run());
+    window.console.|>MARK_OCCURRENCES:log<|(arr);
+    this.run = function (){console.|>MARK_OCCURRENCES:log<|("vrr");};

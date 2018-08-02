@@ -1,0 +1,14 @@
+doctype html
+html
+  head
+    title Hello, #{first} #{last}!
+    link(rel="stylesheet", href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css")
+  body
+    div.container
+      h1 Hey there, #{first}!
+      p.
+        According to my data, your name is #{first} #{last}.
+          You're #{age || "unknown"} years old, and I predict you're fond of the
+        colour #{colour}... Correct? At the moment you appear to
+        be #{mood}.
+        p That's all I know...

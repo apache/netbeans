@@ -1,0 +1,8 @@
+    class |>MARK_OCCURRENCES:AliasedClassName<| {
+    use \Foo\Bar\|>MARK_OCCURRENCES:AliasedClassName<| as Cls;
+            (new Omg\|>MARK_OCCURRENCES:AliasedClassName<|())->bar();
+            new Omg\|>MARK_OCCURRENCES:Aliased^ClassName<|();
+            Omg\|>MARK_OCCURRENCES:AliasedClassName<|::foo();
+            Omg\|>MARK_OCCURRENCES:AliasedClassName<|::FOO;
+            Omg\|>MARK_OCCURRENCES:AliasedClassName<|::$foo;
+            if ($x instanceof Omg\|>MARK_OCCURRENCES:AliasedClassName<|) {}

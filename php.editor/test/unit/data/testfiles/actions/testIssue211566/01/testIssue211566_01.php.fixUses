@@ -1,0 +1,24 @@
+<?php
+
+namespace Foo\Bar;
+
+class Baz {
+
+    function __construct() {
+
+    }
+
+}
+
+namespace Omg;
+
+use Foo\Bar\Baz;
+
+class ClassName {
+
+    function __construct() {
+        new Baz(); //HERE
+    }
+
+}
+?>

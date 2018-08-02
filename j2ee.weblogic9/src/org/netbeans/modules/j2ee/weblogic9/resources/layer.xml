@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<filesystem>
+    <folder name="J2EE">
+        <folder name="DeploymentPlugins">
+            <folder name="WebLogic9">
+                <!--
+                    The additional deployment information supplied to NetBeans,
+                    Currently we define only two things: the web module's
+                    context root xpath and the URL for the disconnected
+                    deployment manager
+                -->
+                <file name="Descriptor" url="nbdep.xml"/>
+
+                <!--
+                    An instance of the class implementing the DeploymentFactory
+                    interface, it will be used as the main entry point for the
+                    plugin
+                -->
+                <file name="Factory.instance">
+                    <attr name="urlPattern" stringvalue="^deployer:WebLogic:http://.*$"/>
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.support.ProxyDeploymentFactory.create"/>
+                    <attr name="delegate" methodvalue="org.netbeans.modules.j2ee.weblogic9.WLDeploymentFactory.getInstance"/>
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.support.ProxyDeploymentFactory"/>
+                    <attr name="instanceOf" stringvalue="javax.enterprise.deploy.spi.factories.DeploymentFactory"/>
+                </file>
+
+                <!--
+                    An instance of the factory for creating the nodes that will
+                    appear in the Server Registry, namely the Manager (Instance)
+                    node and the Target node
+                -->
+                <file name="RegistryNodeFactory.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.j2ee.weblogic9.ui.nodes.WLRegistryNodeFactory"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.RegistryNodeFactory"/>
+                </file>
+                
+                <!--
+                <file name="ConfigurationSupport.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.j2ee.genericserver.GSConfigurationSupport"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.j2ee.deployment.plugins.api.ConfigurationSupport"/>
+                </file>
+                -->
+                
+                <!--
+                    An instance of the class implementing the 
+                    J2eeDeploymentFactory interface, it will be used to create 
+                    objects that describe the environment that exists on a 
+                    particular instance of the server
+                -->
+                <file name="J2eePlatformFactory.instance">
+                    <attr name="instanceCreate" newvalue="org.netbeans.modules.j2ee.weblogic9.j2ee.WLJ2eePlatformFactory"/>
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.j2ee.weblogic9.j2ee.WLJ2eePlatformFactory"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.J2eePlatformFactory"/>
+                </file>
+                
+                <!--
+                    A factory that creates objects that provide optional 
+                    functionality for the plugin, i.e. starting/stopping the
+                    server, getting a custom wizard for instance registration, 
+                    etc.
+                -->
+                <file name="OptionalFactory.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.support.ProxyOptionalFactory.create"/>
+                    <attr name="delegate" newvalue="org.netbeans.modules.j2ee.weblogic9.optional.WLOptionalDeploymentManagerFactory"/>
+                    <attr name="noInitializationFinish" boolvalue="true"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.OptionalDeploymentManagerFactory"/>
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.j2ee.weblogic9.Bundle#TXT_displayName"/>
+                </file>
+                <file name="WLModuleConfigurationFactory.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.j2ee.weblogic9.config.WLModuleConfigurationFactory"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.config.ModuleConfigurationFactory"/>
+                </file>
+                
+                <!--
+                    Server-specific deployment configuration files' names, 
+                    grouped by module type
+                -->
+                <folder name="DeploymentFileNames">
+                    <folder name="EAR">
+                        <file name="META-INF\weblogic-application.xml"/>
+                    </folder>
+                    <folder name="WAR">
+                        <file name="WEB-INF\weblogic.xml"/>
+                        <!-- 210324 -->
+                        <file name="WEB-INF\weblogic-ejb-jar.xml"/>
+                    </folder>
+                    <folder name="EJB">
+                        <file name="META-INF\weblogic-ejb-jar.xml"/>
+                    </folder>
+                </folder>
+                
+                <file name="WhitelistVerifier.instance">
+                    <attr name="instanceCreate" newvalue="org.netbeans.modules.j2ee.weblogic9.deploy.WebLogicVerifier"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.VerifierSupport"/>
+                </file>
+                
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

@@ -1,0 +1,2 @@
+|>MARK_OCCURRENCES:age<| = 10;
+    this.age = |>MARK_OCCURRENCES:ag^e<|;

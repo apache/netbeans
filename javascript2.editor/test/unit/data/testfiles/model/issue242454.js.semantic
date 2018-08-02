@@ -1,0 +1,16 @@
+var |>GLOBAL:myLib<| = new function |>METHOD,UNUSED:MyLib<|() {
+   
+    
+    /**
+     * ShareableFunc
+     * @param {string} arg description
+     */
+    function |>METHOD:PublicAndPrivateUsageFunc<|(|>UNUSED:arg<|) {}
+    
+    this.|>METHOD:publicInnerFunc<| = PublicAndPrivateUsageFunc;
+    
+   
+};
+
+|>GLOBAL:myLib<|.
+        

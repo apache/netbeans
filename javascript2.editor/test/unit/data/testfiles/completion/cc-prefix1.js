@@ -1,0 +1,2 @@
+foo = true
+if !fo

@@ -1,0 +1,3 @@
+SeLiteMisc.isInstance= function isPrdca( |>MARK_OCCURRENCES:ob^ject<|, classes, className, message ) {
+    var arr= [|>MARK_OCCURRENCES:object<|, classes, message, className ];
+        if( |>MARK_OCCURRENCES:object<| ) {

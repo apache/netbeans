@@ -1,0 +1,8 @@
+var |>GLOBAL:namespace<| = {
+    /**
+     * @param {Object} z Some whatever obj
+     */
+    |>METHOD:m<|: function (z) {
+        return |>GLOBAL:Object<|.keys( z )
+    }
+}

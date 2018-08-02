@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<faces-config version="2.2"
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_2.xsd">
+
+    <application>
+        <resource-library-contracts>
+            <contract-mapping>
+                <url-pattern>/user/*</url-pattern>
+                <contracts>user</contracts>
+            </contract-mapping>
+            <contract-mapping>
+                <url-pattern>*</url-pattern>
+                <contracts>default</contracts>
+            </contract-mapping>
+        </resource-library-contracts>
+    </application>
+</faces-config>

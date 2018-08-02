@@ -1,0 +1,3 @@
+        |>MARK_OCCURRENCES:street<|: "Ulice",
+console.log(store.address.|>MARK_OCCURRENCES:street<|);
+console.log(window.store.address.|>MARK_OCCURRENCES:stree^t<|);

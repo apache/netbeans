@@ -1,0 +1,69 @@
+<FunctionNode name='importFindDeclaration01.js' kind='MODULE' start='0' end='142'>
+  <isProgram/>
+  <ImportNode start='0' end='26'>
+    <ImportClauseNode start='7' end='11'>
+      <IdentNode start='7' end='11'>
+        <name>text</name>
+      </IdentNode>
+    </ImportClauseNode>
+    <FromNode start='12' end='26'>
+      <StringLiteralNode value='export01' start='18' end='16'/>
+    </FromNode>
+  </ImportNode>
+  <ImportNode start='29' end='74'>
+    <ImportClauseNode start='36' end='53'>
+      <NamedImportsNode start='36' end='53'>
+        <ImportSpecifierNode start='38' end='51'>
+          <IdentNode start='38' end='42'>
+            <name>text</name>
+          </IdentNode>
+          <IdentNode start='46' end='51'>
+            <name>text2</name>
+          </IdentNode>
+        </ImportSpecifierNode>
+      </NamedImportsNode>
+    </ImportClauseNode>
+    <FromNode start='54' end='74'>
+      <StringLiteralNode value='./lib/export02' start='60' end='58'/>
+    </FromNode>
+  </ImportNode>
+  <ImportNode start='77' end='120'>
+    <ImportClauseNode start='84' end='101'>
+      <NamedImportsNode start='84' end='101'>
+        <ImportSpecifierNode start='86' end='99'>
+          <IdentNode start='86' end='90'>
+            <name>text</name>
+          </IdentNode>
+          <IdentNode start='94' end='99'>
+            <name>text3</name>
+          </IdentNode>
+        </ImportSpecifierNode>
+      </NamedImportsNode>
+    </ImportClauseNode>
+    <FromNode start='102' end='120'>
+      <StringLiteralNode value='lib/export02' start='108' end='106'/>
+    </FromNode>
+  </ImportNode>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='142'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='124' end='142'>
+      <CallNode start='124' end='141'>
+        <!-- CallNode Arguments -->
+        <IdentNode start='136' end='140'>
+          <name>text</name>
+        </IdentNode>
+        <!-- CallNode Function -->
+        <AccessNode property='log' start='124' end='135'>
+          <!-- AccessNode Base -->
+          <IdentNode start='124' end='131'>
+            <name>console</name>
+          </IdentNode>
+        </AccessNode>
+      </CallNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

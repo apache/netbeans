@@ -1,0 +1,101 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='149'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='149'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='foo' start='4' end='33'>
+      <hasInit/>
+      <isAssignment/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='4' end='7'>
+        <name>foo</name>
+        <isDeclaredHere/>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <ArrayLiteralNode start='10' end='33'>
+        <StringLiteralNode value='one' start='12' end='15'/>
+        <StringLiteralNode value='two' start='19' end='22'/>
+        <StringLiteralNode value='three' start='26' end='31'/>
+      </ArrayLiteralNode>
+    </VarNode>
+    <VarNode name='one' start='40' end='44'>
+      <isDestructuring/>
+    </VarNode>
+    <VarNode name='two' start='40' end='49'>
+      <isDestructuring/>
+    </VarNode>
+    <VarNode name='three' start='40' end='56'>
+      <isDestructuring/>
+    </VarNode>
+    <ExpressionStatement start='40' end='63'>
+      <BinaryNode type='ASSIGN' start='40' end='63'>
+        <isAssignment/>
+        <!-- BinaryNode lhs -->
+        <ArrayLiteralNode start='40' end='57'>
+          <IdentNode start='41' end='44'>
+            <name>one</name>
+          </IdentNode>
+          <IdentNode start='46' end='49'>
+            <name>two</name>
+          </IdentNode>
+          <IdentNode start='51' end='56'>
+            <name>three</name>
+          </IdentNode>
+        </ArrayLiteralNode>
+        <!-- BinaryNode rhs -->
+        <IdentNode start='60' end='63'>
+          <name>foo</name>
+        </IdentNode>
+      </BinaryNode>
+    </ExpressionStatement>
+    <ExpressionStatement start='65' end='91'>
+      <CallNode start='65' end='81'>
+        <!-- CallNode Arguments -->
+        <IdentNode start='77' end='80'>
+          <name>one</name>
+        </IdentNode>
+        <!-- CallNode Function -->
+        <AccessNode property='log' start='65' end='76'>
+          <!-- AccessNode Base -->
+          <IdentNode start='65' end='72'>
+            <name>console</name>
+          </IdentNode>
+        </AccessNode>
+      </CallNode>
+    </ExpressionStatement>
+    <ExpressionStatement start='92' end='118'>
+      <CallNode start='92' end='108'>
+        <!-- CallNode Arguments -->
+        <IdentNode start='104' end='107'>
+          <name>two</name>
+        </IdentNode>
+        <!-- CallNode Function -->
+        <AccessNode property='log' start='92' end='103'>
+          <!-- AccessNode Base -->
+          <IdentNode start='92' end='99'>
+            <name>console</name>
+          </IdentNode>
+        </AccessNode>
+      </CallNode>
+    </ExpressionStatement>
+    <ExpressionStatement start='119' end='149'>
+      <CallNode start='119' end='137'>
+        <!-- CallNode Arguments -->
+        <IdentNode start='131' end='136'>
+          <name>three</name>
+        </IdentNode>
+        <!-- CallNode Function -->
+        <AccessNode property='log' start='119' end='130'>
+          <!-- AccessNode Base -->
+          <IdentNode start='119' end='126'>
+            <name>console</name>
+          </IdentNode>
+        </AccessNode>
+      </CallNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

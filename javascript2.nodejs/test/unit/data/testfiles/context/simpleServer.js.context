@@ -1,0 +1,6 @@
+[GLOBAL]var http[UNKNOWN] =[AFTER_ASSIGNMENT] require[UNKNOWN]('[MODULE_PATH]http'[UNKNOWN]);[GLOBAL]
+v[UNKNOWN]ar server =[AFTER_ASSIGNMENT] http[UNKNOWN].createServer([GLOBAL]f[UNKNOWN]unction (req, res) {[GLOBAL]
+    res[UNKNOWN].writeHead(200);[GLOBAL]
+    res[UNKNOWN].end('Hello Http');[GLOBAL] 
+}[UNKNOWN]);[GLOBAL]
+server[UNKNOWN].listen(8080);[GLOBAL]

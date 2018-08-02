@@ -1,0 +1,24 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n\n
+token #2 PHP_FUNCTION function
+token #3 WHITESPACE  
+token #4 PHP_STRING count_to_two
+token #5 PHP_TOKEN (
+token #6 PHP_TOKEN )
+token #7 WHITESPACE  
+token #8 PHP_CURLY_OPEN {
+token #9 WHITESPACE \n    
+token #10 PHP_RETURN return
+token #11 WHITESPACE  
+token #12 PHP_YIELD_FROM yield from
+token #13 WHITESPACE  
+token #14 PHP_TOKEN [
+token #15 PHP_NUMBER 1
+token #16 PHP_TOKEN ,
+token #17 WHITESPACE  
+token #18 PHP_NUMBER 2
+token #19 PHP_TOKEN ]
+token #20 PHP_SEMICOLON ;
+token #21 WHITESPACE \n
+token #22 PHP_CURLY_CLOSE }
+token #23 WHITESPACE \n

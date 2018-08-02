@@ -1,0 +1,262 @@
+<testresult testFile='listInForeach_02.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='6' end='12'>
+            <text>$array</text>
+        </token>
+        <token id='T_EQUAL' start='13' end='14'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='15' end='16'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='21' end='27'>
+            <text>"key1"</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='28' end='30'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_OPEN_RECT' start='31' end='32'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='32' end='33'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='33' end='34'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='35' end='36'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='36' end='37'>
+            <text>]</text>
+        </token>
+        <token id='T_COMMA' start='37' end='38'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='43' end='49'>
+            <text>"key2"</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='50' end='52'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_OPEN_RECT' start='53' end='54'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='54' end='55'>
+            <text>3</text>
+        </token>
+        <token id='T_COMMA' start='55' end='56'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='57' end='58'>
+            <text>4</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='58' end='59'>
+            <text>]</text>
+        </token>
+        <token id='T_COMMA' start='59' end='60'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='61' end='62'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='62' end='63'>
+            <text>;</text>
+        </token>
+        <token id='T_FOREACH' start='65' end='72'>
+            <text>foreach</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='73' end='74'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='74' end='80'>
+            <text>$array</text>
+        </token>
+        <token id='T_AS' start='81' end='83'>
+            <text>as</text>
+        </token>
+        <token id='T_VARIABLE' start='84' end='88'>
+            <text>$key</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='89' end='91'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_LIST' start='92' end='96'>
+            <text>list</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='96' end='97'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='97' end='100'>
+            <text>$v1</text>
+        </token>
+        <token id='T_COMMA' start='100' end='101'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='102' end='105'>
+            <text>$v2</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='105' end='106'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='106' end='107'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='108' end='109'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='114' end='118'>
+            <text>echo</text>
+        </token>
+        <token id='T_QUATE' start='119' end='120'>
+            <text>"</text>
+        </token>
+        <token id='T_VARIABLE' start='120' end='124'>
+            <text>$key</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='124' end='131'>
+            <text> =&gt; A: </text>
+        </token>
+        <token id='T_VARIABLE' start='131' end='134'>
+            <text>$v1</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='134' end='139'>
+            <text>, B: </text>
+        </token>
+        <token id='T_VARIABLE' start='139' end='142'>
+            <text>$v2</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='142' end='144'>
+            <text>\n</text>
+        </token>
+        <token id='T_QUATE' start='144' end='145'>
+            <text>"</text>
+        </token>
+        <token id='T_SEMICOLON' start='145' end='146'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='147' end='148'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='149' end='149'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='149'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='6' end='63'>
+                <Assignment start='6' end='62' operator='EQUAL'>
+                    <Variable start='6' end='12' isDollared='true'>
+                        <Identifier start='7' end='12' name='array'/>
+                    </Variable>
+                    <ArrayCreation start='15' end='62' type='NEW'>
+                        <ArrayElement start='21' end='37'>
+                            <Key>
+                                <Scalar start='21' end='27' type='STRING' value='"key1"'/>
+                            </Key>
+                            <Value>
+                                <ArrayCreation start='31' end='37' type='NEW'>
+                                    <ArrayElement start='32' end='33'>
+                                        <Key>
+                                        </Key>
+                                        <Value>
+                                            <Scalar start='32' end='33' type='INT' value='1'/>
+                                        </Value>
+                                    </ArrayElement>
+                                    <ArrayElement start='35' end='36'>
+                                        <Key>
+                                        </Key>
+                                        <Value>
+                                            <Scalar start='35' end='36' type='INT' value='2'/>
+                                        </Value>
+                                    </ArrayElement>
+                                </ArrayCreation>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='43' end='59'>
+                            <Key>
+                                <Scalar start='43' end='49' type='STRING' value='"key2"'/>
+                            </Key>
+                            <Value>
+                                <ArrayCreation start='53' end='59' type='NEW'>
+                                    <ArrayElement start='54' end='55'>
+                                        <Key>
+                                        </Key>
+                                        <Value>
+                                            <Scalar start='54' end='55' type='INT' value='3'/>
+                                        </Value>
+                                    </ArrayElement>
+                                    <ArrayElement start='57' end='58'>
+                                        <Key>
+                                        </Key>
+                                        <Value>
+                                            <Scalar start='57' end='58' type='INT' value='4'/>
+                                        </Value>
+                                    </ArrayElement>
+                                </ArrayCreation>
+                            </Value>
+                        </ArrayElement>
+                    </ArrayCreation>
+                </Assignment>
+            </ExpressionStatement>
+            <ForEachStatement start='65' end='148'>
+                <Key>
+                    <Variable start='84' end='88' isDollared='true'>
+                        <Identifier start='85' end='88' name='key'/>
+                    </Variable>
+                </Key>
+                <Expression>
+                    <Variable start='74' end='80' isDollared='true'>
+                        <Identifier start='75' end='80' name='array'/>
+                    </Variable>
+                </Expression>
+                <Statement>
+                    <Block start='108' end='148' isCurly='true'>
+                        <EchoStatement start='114' end='146'>
+                            <Quote start='119' end='145' type='QUOTE'>
+                                <Expressions>
+                                    <Variable start='120' end='124' isDollared='true'>
+                                        <Identifier start='121' end='124' name='key'/>
+                                    </Variable>
+                                    <Scalar start='124' end='131' type='STRING' value=' =&gt; A: '/>
+                                    <Variable start='131' end='134' isDollared='true'>
+                                        <Identifier start='132' end='134' name='v1'/>
+                                    </Variable>
+                                    <Scalar start='134' end='139' type='STRING' value=', B: '/>
+                                    <Variable start='139' end='142' isDollared='true'>
+                                        <Identifier start='140' end='142' name='v2'/>
+                                    </Variable>
+                                    <Scalar start='142' end='144' type='STRING' value='\n'/>
+                                </Expressions>
+                            </Quote>
+                        </EchoStatement>
+                    </Block>
+                </Statement>
+                <Value>
+                    <ListVariable start='92' end='106' type='OLD'>
+                        <ArrayElement start='97' end='100'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Variable start='97' end='100' isDollared='true'>
+                                    <Identifier start='98' end='100' name='v1'/>
+                                </Variable>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='102' end='105'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Variable start='102' end='105' isDollared='true'>
+                                    <Identifier start='103' end='105' name='v2'/>
+                                </Variable>
+                            </Value>
+                        </ArrayElement>
+                    </ListVariable>
+                </Value>
+            </ForEachStatement>
+        </Statements>
+    </Program>
+</testresult>

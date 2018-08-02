@@ -27,10 +27,13 @@ package org.openide.util.actions;
 * This action is not the most effective way to implement checkbox in
 * a menu. Consider using more modern alternative:
 * <a href="@org-openide-awt@/org/openide/awt/Actions.html#checkbox(java.lang.String,%20java.lang.String,%20java.lang.String,%20java.lang.String,%20boolean)">
-* Actions.checkbox</a>.
+* Actions.checkbox</a>, or declarative <a href="@org-openide-awt@/org/openide/awt/ActionState.html">ActionState annotation</a>.
 *
 * @author   Ian Formanek, Petr Hamernik
+* @deprecated Use new support for stateful actions in <a href="@org-openide-awt@/org/openide/awt/Actions.html">Actions</a> or <a href="@org-openide-awt@/org/openide/awt/ActionState.html">ActionState annotation</a>
+*
 */
+@Deprecated
 public abstract class BooleanStateAction extends SystemAction implements Presenter.Menu, Presenter.Popup,
     Presenter.Toolbar {
     /** serialVersionUID */

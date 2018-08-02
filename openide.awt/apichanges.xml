@@ -26,6 +26,21 @@
 <apidef name="awt">AWT API</apidef>
 </apidefs>
 <changes>
+    <change id="ToggleActions">
+        <api name="awt"/>
+        <summary>Allow for context-dependent boolean-state actions</summary>
+        <version major="7" minor="71"/>
+        <date day="30" month="8" year="2018"/>
+        <author login="sdedic"/>
+        <compatibility addition="yes" binary="compatible" semantic="compatible" deprecation="yes" deletion="no" modification="no"/>
+        <description>
+            Context Actions which provide <code>Action.SELECTED_KEY</code> value will be presented as checkbox (menu) or toggle button (toolbar) and
+            will reflect the state of an underlying model bean property, updating on model changes. Eliminates the need for eager toggle-style actions.
+        </description>
+        <class package="org.openide.awt" name="Actions"/>
+        <class package="org.openide.awt" name="ActionState"/>
+        <class package="org.openide.awt" name="ActionReference"/>
+    </change>
     <change id="NotificationCategory">
         <api name="awt"/>
         <summary>Add notification category to the NotificationDisplayer API</summary>

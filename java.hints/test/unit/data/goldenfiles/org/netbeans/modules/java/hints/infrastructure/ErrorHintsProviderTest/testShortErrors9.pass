@@ -1,0 +1,2 @@
+9:35-9:36:error:variable y might not have been initialized
+10:35-10:36:error:variable t might not have been initialized

@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Memory Snapshot</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="MemorySnapshot.HelpCtx" name="MemorySnapshot.HelpCtx"></a></p>
+<div id="NBCSH3374"><!-- infolevel="all" infotype="General" --><a id="sthref423" name="sthref423"></a>
+<h1>Memory Snapshot</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to capture data on live objects, object allocation and liveness. The data captured in the snapshot depends upon the options that were selected for the profiling session. You can take a memory snapshot when you are analyzing memory usage. The snapshot is displayed in the main editor window. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG728">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<table summary="Descriptions of Memory Snapshot window tabs." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="34%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t26">Element</th>
+<th align="left" valign="bottom" id="r1c2-t26">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t26" headers="r1c1-t26">
+<p>Memory Results</p>
+</td>
+<td align="left" headers="r2c1-t26 r1c2-t26">Displays a list of classes (including array classes), with the total size and number of instances allocated at the time you took the snapshot.
+<p>If Record Stack Trace for Allocations was selected as a profiling option, you can display the stack traces for a specific class by right-clicking the name of the class and selecting <b>Show Allocation Stack Traces</b>. The stack traces are displayed in the <b>Allocation Stack Traces</b> tab.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t26" headers="r1c1-t26">
+<p>Info</p>
+</td>
+<td align="left" headers="r3c1-t26 r1c2-t26">Displays data on when the snapshot was taken, where it is saved, and the configuration of the profiling session.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t26" headers="r1c1-t26">
+<p>Allocation Stack Traces</p>
+</td>
+<td align="left" headers="r4c1-t26 r1c2-t26">Displays a reverse call graph with all call paths leading to object allocations for the given class.
+<p>This tab is only available if <b>Record Stack Trace for Allocations</b> was selected as a profiling option.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>Right-click any class in the Memory Results tab or the Allocation Stack Traces tab and select Go To Source to load the source <code dir="ltr">.java</code> file of a class.</p>
+<a id="NBCSH3378" name="NBCSH3378"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG727">
+<param name="text" value="<html><u>&quot;Taking a Snapshot&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG765">
+<param name="text" value="<html><u>&quot;Analyzing Memory Usage&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

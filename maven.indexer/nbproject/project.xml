@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.apisupport.project</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
+            <code-name-base>org.netbeans.modules.maven.indexer</code-name-base>
+            <module-dependencies>
+                <dependency>
+                    <code-name-base>org.netbeans.api.annotations.common</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.7</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.api.progress</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.40</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.classfile</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.46</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.maven.embedder</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>2.54</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.project.spi.intern</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.filesystems</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>9.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.modules</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>7.25</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.util</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>9.3</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.util.lookup</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>8.0</specification-version>
+                    </run-dependency>
+                </dependency>
+            </module-dependencies>
+            <test-dependencies>
+                <test-type>
+                    <name>unit</name>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.libs.junit4</code-name-base>
+                        <compile-dependency/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.nbjunit</code-name-base>
+                        <recursive/>
+                        <compile-dependency/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.projectapi.nb</code-name-base>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.openide.modules</code-name-base>
+                        <compile-dependency/>
+                        <test/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.openide.util.ui</code-name-base>
+                        <compile-dependency/>
+                        <test/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.openide.util.lookup</code-name-base>
+                        <test/>
+                    </test-dependency>
+                </test-type>
+            </test-dependencies>
+            <friend-packages>
+                <friend>org.netbeans.modules.maven</friend>
+                <friend>org.netbeans.modules.maven.apisupport</friend>
+                <friend>org.netbeans.modules.maven.grammar</friend>
+                <friend>org.netbeans.modules.maven.graph</friend>
+                <friend>org.netbeans.modules.maven.hints</friend>
+                <friend>org.netbeans.modules.maven.indexer.ui</friend>
+                <friend>org.netbeans.modules.maven.j2ee</friend>
+                <friend>org.netbeans.modules.maven.refactoring</friend>
+                <friend>org.netbeans.modules.maven.repository</friend>
+                <friend>org.netbeans.modules.maven.search</friend>
+                <friend>ro.emilianbold.modules.maven.search.remote</friend>
+                <package>org.apache.lucene</package>
+                <package>org.apache.lucene.analysis</package>
+                <package>org.apache.lucene.analysis.standard</package>
+                <package>org.apache.lucene.analysis.tokenattributes</package>
+                <package>org.apache.lucene.document</package>
+                <package>org.apache.lucene.index</package>
+                <package>org.apache.lucene.messages</package>
+                <package>org.apache.lucene.queryParser</package>
+                <package>org.apache.lucene.search</package>
+                <package>org.apache.lucene.search.highlight</package>
+                <package>org.apache.lucene.search.function</package>
+                <package>org.apache.lucene.search.payloads</package>
+                <package>org.apache.lucene.search.spans</package>
+                <package>org.apache.lucene.store</package>
+                <package>org.apache.lucene.util</package>
+                <package>org.apache.lucene.util.cache</package>
+                <package>org.netbeans.modules.maven.indexer.api</package>
+                <package>org.netbeans.modules.maven.indexer.spi</package>
+                <package>org.netbeans.modules.maven.indexer.spi.impl</package>
+            </friend-packages>
+            <class-path-extension>
+                <runtime-relative-path>ext/maven/indexer-core-6.0.0.jar</runtime-relative-path>
+                <binary-origin>external/indexer-core-6.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/maven/lucene-core-5.5.5.jar</runtime-relative-path>
+                <binary-origin>external/lucene-core-5.5.5.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/maven/lucene-highlighter-5.5.5.jar</runtime-relative-path>
+                <binary-origin>external/lucene-highlighter-5.5.5.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/maven/lucene-queryparser-5.5.5.jar</runtime-relative-path>
+                <binary-origin>external/lucene-queryparser-5.5.5.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/maven/lucene-analyzers-common-5.5.5.jar</runtime-relative-path>
+                <binary-origin>external/lucene-analyzers-common-5.5.5.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/maven/javax.annotation-api-1.2.jar</runtime-relative-path>
+                <binary-origin>external/javax.annotation-api-1.2.jar</binary-origin>
+            </class-path-extension>
+        </data>
+    </configuration>
+</project>

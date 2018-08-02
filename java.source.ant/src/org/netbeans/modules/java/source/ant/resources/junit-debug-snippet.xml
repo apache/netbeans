@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project name="{0} (debug-test)" default="debug-test" basedir=".">
+    <target name="-init">
+        <condition property="testng.available" value="true" else="false">
+            <available classname="org.testng.annotations.Test" classpath="${classpath}"/>
+        </condition>
+        <condition property="has.modules" value="true" else="false">
+            <and>
+                <istrue value="${modules.supported.internal}"/>
+                <isset property="modulepath"/>
+                <length string="${modulepath}" when="greater" length="0"/>
+            </and>
+        </condition>
+        <condition property="testng.available+has.modules" value="true" else="false">
+            <or>
+                <istrue value="${testng.available}"/>
+                <istrue value="${has.modules}"/>
+            </or>
+        </condition>
+        <condition property="testng.mode" value="-mixed" else="">
+            <and>
+                <istrue value="${testng.available}"/>
+                <available classname="org.junit.Test" classpath="${classpath}"/>
+            </and>
+        </condition>
+    </target>
+    <target name="-check-run-test-single-method-supported" if="methodname">
+        <condition property="run.test.single.method.supported">
+            <or>
+                <available resource="org/apache/tools/ant/taskdefs/optional/junit/JUnit4TestMethodAdapter.class"/>
+                <istrue value="${testng.available}"/>
+            </or>
+        </condition>
+        <fail unless="run.test.single.method.supported">Execution of a single test method is not supported by this version of Ant.</fail>
+    </target>
+     <target name="-init-debug-args">
+        <condition property="debug-transport-by-os" value="dt_shmem" else="dt_socket">
+            <os family="windows"/>
+        </condition>
+        <condition property="debug-transport" value="${debug.transport}" else="${debug-transport-by-os}">
+            <isset property="debug.transport"/>
+        </condition>
+    </target>
+    <target name="-prepare-junit-execution-with-module" depends="-init-debug-args" unless="${testng.available}" if="${has.modules}">
+        <property name="test.result.dir" location="${java.io.tmpdir}"/>
+        <property name="test.result.file"
+                  location="${test.result.dir}/TEST-${classname}.xml"/>
+        <property  name="tmp.dir" value="${basedir}"/>
+        <macrodef name="junit-debug-template">
+            <element name="test-spec" implicit="yes"/>
+            <sequential>
+                <translate-classpath classpath="${classpath}" targetProperty="classpath-translated" />
+                <translate-classpath classpath="${modulepath}" targetProperty="modulepath-translated" moduleOriented="true" />
+                <translate-classpath classpath="${module.root}" targetProperty="module.root-translated"/>
+                <nbjpdastart addressproperty="jpda.address" name="${classname}" stopclassname="" transport="${debug-transport}" listeningcp="${classpath},${modulepath},${module.root}">
+                    <modulepath>
+                        <path path="${modulepath-translated}"/>
+                    </modulepath>
+                    <classpath>
+                        <path path="${classpath-translated}"/>
+                    </classpath>
+                    <bootclasspath>
+                        <path path="${platform.bootcp}"/>
+                    </bootclasspath>
+                </nbjpdastart>
+                <property name="run.jvmargs" value="" />
+                <property name="work.dir" value="${basedir}"/>
+                <condition property="run.test.addexport.source.module.internal" value="${module.name}" else="${related.module.name}">
+                    <and>
+                        <isset property="module.name"/>
+                        <length length="0" string="${module.name}" when="greater"/>
+                    </and>
+                </condition>
+                <fileset dir="${module.root}" id="run.test.packages.internal" includes="**/*.class"/>
+                <property name="module.root.abs.internal" location="${module.root}"/>
+                <pathconvert pathsep=" " property="run.test.addexports.internal" refid="run.test.packages.internal">
+                    <chainedmapper>
+                        <regexpmapper from="^(.*)\Q${file.separator}\E.*\.class$$" to="\1"/>
+                        <filtermapper>
+                            <uniqfilter/>
+                            <replacestring from="${module.root.abs.internal}" to=""/>
+                        </filtermapper>
+                        <cutdirsmapper dirs="1"/>
+                        <packagemapper from="*" to="--add-exports ${run.test.addexport.source.module.internal}/*=ALL-UNNAMED"/>
+                    </chainedmapper>
+                </pathconvert>
+                <condition property="run.test.jvmargs"
+                        value="--add-modules ${module.name} --add-reads ${module.name}=ALL-UNNAMED ${run.test.addexports.internal}"
+                        else="--patch-module ${related.module.name}=${module.root} --add-modules ${related.module.name} --add-reads ${related.module.name}=ALL-UNNAMED ${run.test.addexports.internal}">
+                    <and>
+                        <isset property="module.name"/>
+                        <length length="0" string="${module.name}" when="greater"/>
+                    </and>
+                </condition>
+                <junit showoutput="true" fork="true" dir="${work.dir}" jvm="${platform.java}" tempdir="${tmp.dir}">
+                    <test-spec/>
+                    <classpath path="${classpath-translated}" />
+                    <jvmarg value="-agentlib:jdwp=transport=${debug-transport},address=${jpda.address}"/>
+                    <jvmarg value="-ea"/>
+                    <jvmarg line="${run.jvmargs}"/>
+                    <formatter type="brief" usefile="false"/>
+                    <formatter type="xml" />
+                    <syspropertyset>
+                        <propertyref prefix="test-sys-prop."/>
+                        <mapper from="test-sys-prop.*" to="*" type="glob"/>
+                    </syspropertyset>
+                    <modulepath path="${modulepath-translated}"/>
+                    <jvmarg line="${run.test.jvmargs}"/>
+                </junit>
+            </sequential>
+        </macrodef>
+        <macrodef name="testng-debug-template">
+            <attribute name="test"/>
+            <attribute name="method" default=""/>
+            <sequential/>
+        </macrodef>
+    </target>
+    <target name="-prepare-junit-execution-without-module" depends="-init-debug-args" unless="${testng.available+has.modules}">
+        <property name="test.result.dir" location="${java.io.tmpdir}"/>
+        <property name="test.result.file"
+                  location="${test.result.dir}/TEST-${classname}.xml"/>
+        <property  name="tmp.dir" value="${basedir}"/>
+        <macrodef name="junit-debug-template">
+            <element name="test-spec" implicit="yes"/>
+            <sequential>
+                <translate-classpath classpath="${classpath}" targetProperty="classpath-translated" />
+                <nbjpdastart addressproperty="jpda.address" name="${classname}" stopclassname="" transport="${debug-transport}" listeningcp="${classpath}">
+                    <classpath>
+                        <path path="${classpath-translated}"/>
+                    </classpath>
+                    <bootclasspath>
+                        <path path="${platform.bootcp}"/>
+                    </bootclasspath>
+                </nbjpdastart>
+                <property name="run.jvmargs" value="" />
+                <property name="work.dir" value="${basedir}"/>
+                <junit showoutput="true" fork="true" dir="${work.dir}" jvm="${platform.java}" tempdir="${tmp.dir}">
+                    <test-spec/>
+                    <classpath path="${classpath-translated}" />
+                    <jvmarg value="-agentlib:jdwp=transport=${debug-transport},address=${jpda.address}"/>
+                    <jvmarg value="-ea"/>
+                    <jvmarg line="${run.jvmargs}"/>
+                    <formatter type="brief" usefile="false"/>
+                    <formatter type="xml" />
+                    <syspropertyset>
+                        <propertyref prefix="test-sys-prop."/>
+                        <mapper from="test-sys-prop.*" to="*" type="glob"/>
+                    </syspropertyset>
+                </junit>
+            </sequential>
+        </macrodef>
+        <macrodef name="testng-debug-template">
+            <attribute name="test"/>
+            <attribute name="method" default=""/>
+            <sequential/>
+        </macrodef>
+    </target>
+    <target name="-prepare-testng-execution" depends="-init-debug-args" if="${testng.available}">
+        <macrodef name="junit-debug-template">
+            <element name="test-spec" implicit="yes"/>
+            <sequential/>
+        </macrodef>
+        <macrodef name="testng-debug-template">
+            <attribute name="test"/>
+            <attribute name="method" default=""/>
+            <sequential>
+                <property name="test.results.dir" location="${java.io.tmpdir}/${classname}"/>
+                <property  name="tmp.dir" value="${basedir}"/>
+                <translate-classpath classpath="${classpath}" targetProperty="classpath-translated" />
+                <nbjpdastart addressproperty="jpda.address" name="${classname}" stopclassname="" transport="${debug-transport}" listeningcp="${classpath}">
+                    <classpath>
+                        <path path="${classpath-translated}"/>
+                    </classpath>
+                    <bootclasspath>
+                        <path path="${platform.bootcp}"/>
+                    </bootclasspath>
+                </nbjpdastart>
+                <condition else="-testclass @{test}" property="testng.cmd.args" value="-methods @{test}.@{method}">
+                    <length string="@{method}" when="gt" length="0" trim="true"/>
+                </condition>
+                <property name="work.dir" value="${basedir}"/>
+                <property name="java.failonerror" value="true"/>
+                <java classname="org.testng.TestNG" dir="${work.dir}" jvm="${platform.java}" fork="true" failonerror="${java.failonerror}">
+                    <jvmarg value="-Xrunjdwp:transport=${debug-transport},address=${jpda.address}"/>
+                    <jvmarg line="${run.jvmargs}"/>
+                    <classpath path="${classpath-translated}" />
+                    <syspropertyset>
+                        <propertyref prefix="run-sys-prop."/>
+                        <mapper from="run-sys-prop.*" to="*" type="glob"/>
+                    </syspropertyset>
+                    <arg line="${testng.mode}"/>
+                    <arg line="-d ${test.results.dir}"/>
+                    <arg line="-listener org.testng.reporters.VerboseReporter"/>
+                    <arg line="${testng.cmd.args}"/>
+                </java>
+                <delete dir="${test.results.dir}" quiet="true"/>
+            </sequential>
+        </macrodef>
+    </target>
+    <target name="-prepare-execution" depends="-init-debug-args,-prepare-junit-execution-with-module,-prepare-junit-execution-without-module,-prepare-testng-execution"/>
+    <target name="-debug-test-class" depends="-prepare-execution" unless="methodname">
+        <junit-debug-template>
+            <test name="${classname}" todir="${test.result.dir}"/>
+        </junit-debug-template>
+        <testng-debug-template test="${classname}" />
+    </target>
+    <target name="-debug-test-method" depends="-check-run-test-single-method-supported,-prepare-execution" if="methodname">
+        <junit-debug-template>
+            <test name="${classname}" methods="${methodname}"
+                  todir="${test.result.dir}"/>
+        </junit-debug-template>
+        <testng-debug-template test="${classname}" method="${methodname}" />
+    </target>
+    <target name="debug-test" depends="-init,-debug-test-class,-debug-test-method">
+        <!-- This target is intended to be used in conjunction with the
+        org.apache.tools.ant.module.spi.AntLogger. Note, the next task
+        deletes just created test report. -->
+        <delete file="${test.result.file}" deleteonexit="true" />
+    </target>
+</project>

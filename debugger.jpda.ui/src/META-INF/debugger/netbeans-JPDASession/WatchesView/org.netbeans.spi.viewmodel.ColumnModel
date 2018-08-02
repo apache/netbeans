@@ -1,0 +1,2 @@
+org.netbeans.modules.debugger.ui.models.ColumnModels.createDefaultWatchesColumn()-hidden
+org.netbeans.modules.debugger.jpda.ui.models.WatchesColumnModels.createDefaultWatchesColumn()

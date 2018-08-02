@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.editor.document
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/editor/document/Bundle.properties
+OpenIDE-Module-Implementation-Version: 3

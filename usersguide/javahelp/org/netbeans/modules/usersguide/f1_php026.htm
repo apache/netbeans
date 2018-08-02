@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Options Window: PHP: Debugging</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.php.project.ui.options.PhpDebuggerPanelController" name="org.netbeans.modules.php.project.ui.options.PhpDebuggerPanelController"></a></p>
+<div id="NBCSH3661"><!-- infolevel="all" infotype="General" --><a id="sthref492" name="sthref492"></a>
+<h1>Options Window: PHP: Debugging</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>In this tab you can set the following options.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t28">Element</th>
+<th align="left" valign="bottom" id="r1c2-t28">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t28" headers="r1c1-t28">
+<p>Debugger port</p>
+</td>
+<td align="left" headers="r2c1-t28 r1c2-t28">This is the port that XDebug uses, as set in php.ini. By default it is port 9000. The port number in this dialog must be the same as the debugger port you set in php.ini. You cannot affect the port that XDebug uses in this dialog. You only inform NetBeans IDE of the port that XDebug uses.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t28" headers="r1c1-t28">
+<p>Session ID</p>
+</td>
+<td align="left" headers="r3c1-t28 r1c2-t28">Arbitrary name of the debugging session. By default it is <code dir="ltr">netbeans-xdebug</code>. This value is important to note in cases where you have to set the xdebug.idekey property in <code dir="ltr">php.ini</code>, such as some remote debugging scenarios.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t28" headers="r1c1-t28">
+<p>Stop at First Line</p>
+</td>
+<td align="left" headers="r4c1-t28 r1c2-t28">Tick this option for the debugger session to stop at the first line of code instead of at the first breakpoint. This keeps your screen focused in the IDE instead of switching to a browser window when you launch a debugging session.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t28" headers="r1c1-t28">
+<p>Watches and Balloon Evaluation</p>
+</td>
+<td align="left" headers="r5c1-t28 r1c2-t28">Due to a number of bugs, watches and balloon evaluation is disabled by default.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t28" headers="r1c1-t28">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Maximum Depth of Structures</p>
+</td>
+<td align="left" headers="r6c1-t28 r1c2-t28">Sets the visibility of nested structures (such as nested arrays, objects in objects, etc.)</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t28" headers="r1c1-t28">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Maximum Number of Children</p>
+</td>
+<td align="left" headers="r7c1-t28 r1c2-t28">Sets the visibility of array items during Watch evaluation. (If you set Maximum Number of Children to 1 you will see only the first item of an array even if the array has more then one item.)</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t28" headers="r1c1-t28">
+<p>Show Requested URLs</p>
+</td>
+<td align="left" headers="r8c1-t28 r1c2-t28">Opens new Output window during debugging. This Output window is named PHP Requested Urls and it shows currently processed URLs. The URLs are clickable. Click on a URL in the Output window to open the URL in a browser window.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t28" headers="r1c1-t28">
+<p>Show Debugger Console</p>
+</td>
+<td align="left" headers="r9c1-t28 r1c2-t28">Opens new Output window that shows the output of debugged scripts.
+<p>Set <code dir="ltr">output_buffering = Off</code> in your <code dir="ltr">php.ini</code> file. Otherwise there will be a delay in seeing script output in the Output window.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH3670" name="NBCSH3670"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2001">
+<param name="text" value="<html><u>&quot;Debugging PHP Applications&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

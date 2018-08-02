@@ -1,0 +1,6 @@
+[global]
+http-proxy-host = my.proxy
+http-proxy-port = 8080
+
+http-timeout = 60
+neon-debug-mask = 130

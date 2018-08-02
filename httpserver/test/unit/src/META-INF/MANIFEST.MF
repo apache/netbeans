@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.servlettest/1
+OpenIDE-Module-Module-Dependencies: org.netbeans.modules.servletapi/1
+OpenIDE-Module-Requires: org.openide.util.HttpServer$Impl
+

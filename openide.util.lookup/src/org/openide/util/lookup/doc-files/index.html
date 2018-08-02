@@ -1,0 +1,188 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<HTML>
+<HEAD>
+<TITLE>Lookup Library</TITLE>
+<link rel="Stylesheet" href="@TOP@/prose.css" type="text/css" title="NetBeans Open APIs Style">
+</HEAD>
+<BODY>
+
+<P>
+
+This is the home page of the <em>lookup library</em> implementation, which
+is intended to solve a general problem that every <cite>component-based system</CITE>
+has had to face: how different components <b>register</b> to the system
+and how other parts of the system can <b>look</b> them <b>up</B>.
+<P>
+There already are libraries trying to solve this problem, usually by querying for
+an interface and finding its appropriate implementaion. The most famous is
+<A href="http://www.jini.org/">Jini</A>, the platform for development of
+distributed network services. Our library does something similar, but tries
+to stay small and easy
+to use. The NetBeans <em>Lookup
+Library</EM>'s main focus is a modular application consisting of independent modules
+that want to communicate with each other. It does not try to solve networking or
+legacy application integration. It is simple but powerful.
+
+<H2>Why would you want to use it?</H2>
+
+A well-written modular program separates <em>development</EM>
+and <em>deployment</EM>.
+There are many situations where a component needs some functionality but
+does not actually care about the implementation. It is up to the <em>system
+adminstrator</em> that deploys (installs) the application to decide which 
+implementation to use.
+<P>
+The most simple and most often used method for allowing other implementations
+to be plugged in is the <em>system property</em> pattern:
+
+<pre>
+    <font class="keyword">public</font> <font class="type">Toolkit</font> <font class="function-name">getDefaultToolkit</font> () {
+        java.awt.<font class="type">Toolkit</font> <font class="variable-name">t</font> = <font class="constant">null</font>;
+        <font class="type">String</font> <font class="variable-name">classname</font> = System.getProperty (<font class="string">"java.awt.Toolkit"</font>);
+        <font class="keyword">if</font> (classname != <font class="constant">null</font>) {
+            <font class="keyword">try</font> {
+                <font class="type">Class</font> <font class="variable-name">c</font> = Class.forName (classname);
+                t = (java.awt.<font class="type">Toolkit</font>)c.newInstance ();
+            } <font class="keyword">catch</font> (<font class="type">Exception</font> <font class="variable-name">ex</font>) {
+                System.out.println (<font class="string">"Cannot initialize toolkit: "</font> + classname);
+                ex.printStackTrace ();
+            }
+        }
+        <font class="comment">// fallback </font>
+        <font class="keyword">if</font> (t == <font class="constant">null</font>) {
+            t = <font class="keyword">new</font> <font class="type">GenericAWTToolkit</font> ();
+        }
+    }
+</pre>
+
+    
+The idea is simple. The <em>deployer</em> can start the Java VM with the flag
+<code>-Djava.awt.Toolkit=org.myorg.MyToolkit</code> where the <code>MyToolkit</code>
+is his class with default constructor and the code in the <code>getDefaultToolkit</CODE>
+method will instantiate the class and use it.
+<P>
+In principle this is general enough of a solution and works well, except that writing the 
+code above is error prone and it also requires passing the arguments to the virtual machine. 
+It would be much nicer if the registation could be done just by putting a JAR file with the <code>MyToolkit</code> class
+into the application classpath.
+<P>
+Actually this has been realized also by the JDK development team and addressed in
+JDK 1.3 as part of the <a href="http://java.sun.com/j2se/1.3/docs/guide/jar/jar.html#Provider%20Configuration%20File">provider extension mechanism</A>. 
+The <code>MyToolkit</code> could be registered by adding a file 
+<code>/META-INF/services/java.awt.Toolkit</code> with one line
+<code>org.myorg.MyToolkit</code> into the JAR file that contains the
+<code>MyToolkit</CODE> implementation. The code in <code>getDefaultToolkit</CODE>
+will scan all JAR files in classpath and search for that file,
+create an instance of <code>MyToolkit</code> and use it. 
+The deployer can influence which toolkit will be created by 
+adding the right JAR files into the classpath.
+<P>
+Of course the code to access the <code>META-INF/services/</code> files is even
+more error prone than the <em>property pattern</EM>.  And this is exactly the
+place where the <em>lookup library</em> can help. It provides an implementation of
+the search algorithm with an easy interface. Just write:
+<pre>
+    <font class="keyword">import</font> <font class="type">java.awt.Toolkit</font>;
+    <font class="keyword">import</font> <font class="type">org.openide.util.Lookup;</font>;
+    <font class="type">Toolkit</font> <font class="variable-name">t</font> = (<font class="type">Toolkit</font>)Lookup.getDefault().<a href="@TOP@org/openide/util/Lookup.html#lookup-java.lang.Class-">lookup</a>(Toolkit.<font class="keyword">class</font>);
+</PRE>
+and if the JAR with <code>MyToolkit</CODE> is in the class path, the simple call 
+above will do the rest.
+<P>
+So whenever one writes an application divided into several independent modules (jar files)
+that are being developed and deployed independently, there is a need for registering
+and discovering components. First of all, a set of interfaces can be defined to enable 
+inter-module communication (like the abstract class <code>java.awt.Toolkit</CODE>).
+After that a set of modules providing implementation can written (<code>MyToolkit</code> and other concurent implementations)
+and after that, whenever a module trying to utilitize the functionality wants to access
+the <code>Toolkit</code> via lookup, the real implementation is returned.
+<P>
+It is the responsibility of lookup to find a suitable implementation of the
+requested service and return an object implementing the service. This is the
+the basic functionality and while the library provides you with a little bit
+more, even this simple usage might be extremaly useful: the client code knows
+nothing about the implementation and the implementation can be switched in
+deployment time by simply replacing one implementation jar with other. There
+is no code change required.
+
+<H2> Local lookup usage </H2>
+The example in previous paragraph demostrated the usage of lookup as a global
+registry (by using the <CODE>Lookup.getDefault()</CODE> call). One can also
+consider another scenario where the lookup can help.
+<P>
+Let's switch hats to be an API designer for a while. The goal is to introduce a
+new object into the system. But you either are not sure yet what all the roles
+of the new object will be or you (more importantly) want to be able to add (or
+change) roles of the object dynamically. So why not to introduce following
+method to the object's interface:
+<pre>
+<font class="keyword">public class </FONT> <font class="type">MorphingObject</FONT> {
+    <font class="keyword">public</FONT> <font class="type"><a href="@TOP@org/openide/util/Lookup.html">Lookup</A></FONT> getLookup() {
+        <font class="keyword">return</FONT> <font class="variable-name">myLookup;</FONT>
+    }
+    ...
+}
+</pre>
+By exposing the method getLookup you can attach different functionality to the
+MorphingObject at runtime and whoever gets a reference to your object can ask it
+whether the object supports a given interface like this:
+<pre>
+<font class="type">MorphingObject</FONT> <font class="variable-name">morph</FONT> = ...
+<font class="type">AnInterface</font> <font class="variable-name">impl</font> = (<font
+class="type">AnInterface</font>)morph.getLookup().<a
+href="@TOP@org/openide/util/Lookup.html#lookup-java.lang.Class-">lookup</a>(AnInterface.<font class="keyword">class</font>);
+<font class="keyword">if</font> (impl == <font class="constant">null</font>) {
+    <font class="keyword">return;</font><font class="comment">/* AnInterface not supported now! */</font>
+}
+impl.useIt();
+</PRE>
+
+<H2>Additional functionality</H2>
+The NetBeans lookup library also provides:
+<UL>
+<LI>Support for dynamically changing the lookup content.</LI>
+<LI>The ability to return multiple results.</LI>
+<LI>Notification of changes. After retrieving the result, the client can attach a
+listener and be notified when the result of the lookup is changed.</LI>
+<LI>Lazy initialization of the implementation. The implementation objects are
+initialized only after someone asks for them. Even the implementation classes
+are not loaded if they are not going to be used! </LI>
+</UL>
+
+<H2>Further information</H2>
+<UL>
+  <LI><A HREF="lookup-api.html">Lookup Library APIs</A> for those writing the client code.
+Specifying the query, getting the result and listenning on changes.</LI>
+  <LI><A HREF="lookup-spi.html">Lookup Library SPIs</A> for those writing the
+implementaion code and registering it with lookup. Includes also writing own
+lookup implementation.</LI>
+  <LI>Download <A HREF="http://www.netbeans.org/">NetBeans platform</A> which
+contains <code>org-openide-util.jar</code></LI>
+    <A HREF="http://hg.netbeans.org/main-golden/file/tip/openide.util/src/org/openide/util/lookup/">
+    implementation package (org.openide.util.lookup) </A>
+    + classes Lookup, LookupEvent, LookupListener in
+    <A href="http://hg.netbeans.org/main-golden/file/tip/openide.util/src/org/openide/util/">util package</A></LI>
+  <li><a href="http://www.martinfowler.com/articles/injection.html">Inversion of Control Containers and the Dependency Injection pattern</a> (Martin Fowler)</li>
+</UL>
+</BODY>
+</HTML>

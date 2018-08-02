@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="dir1/importing2" default="main" basedir=".">
+    <import file="imported.xml"/>
+    <import file="../imported2.xml"/>
+    <import file="../nonexistent.xml" optional="true"/>
+    <target name="main"/>
+</project>

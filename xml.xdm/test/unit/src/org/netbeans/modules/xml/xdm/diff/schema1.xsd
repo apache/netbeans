@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Document   : schema1.xsd
+    Created on : January 25, 2006, 3:10 PM
+    Author     : Owner
+    Description:
+        Purpose of XML Schema document follows.
+-->
+<schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+     targetNamespace="http://www.example.com/test"
+     xmlns="http://www.w3.org/2001/XMLSchema">
+    <include schemaLocation="somefile.xsd"/>
+    <element name="name" type="string"/>
+</schema>

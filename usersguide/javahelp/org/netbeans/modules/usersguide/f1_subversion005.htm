@@ -1,0 +1,258 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Subversion: Diff Viewer</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.subversion.ui.diff.DiffTopComponent" name="org.netbeans.modules.subversion.ui.diff.DiffTopComponent"></a></p>
+<div id="NBCSH1439"><!-- infolevel="all" infotype="General" --><a id="sthref166" name="sthref166"></a>
+<h1>Subversion: Diff Viewer</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>The IDE's graphical Diff Viewer enables you to compare revisions of a file side by side using color coding to emphasize the differences between the files being compared. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG292">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>The icons in the Diff Viewer toolbar enable you to perform the following:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t8">Function</th>
+<th align="left" valign="bottom" id="r1c2-t8">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t8" headers="r1c1-t8">
+<p>Change viewing criteria</p>
+</td>
+<td align="left" headers="r2c1-t8 r1c2-t8">You can choose whether to view files containing changes from the local working copy, the repository, as well as both simultaneously.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t8" headers="r1c1-t8">
+<p>Local</p>
+</td>
+<td align="left" headers="r3c1-t8 r1c2-t8">Displays locally modified files only.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t8" headers="r1c1-t8">
+<p>Remote</p>
+</td>
+<td align="left" headers="r4c1-t8 r1c2-t8">Displays remotely modified files only.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t8" headers="r1c1-t8">
+<p>Local and Remote</p>
+</td>
+<td align="left" headers="r5c1-t8 r1c2-t8">Displays both locally and remotely modified files.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t8" headers="r1c1-t8">
+<p>Navigate among differences found in the compared files</p>
+</td>
+<td align="left" headers="r6c1-t8 r1c2-t8">You can view differences as they appear from top to bottom.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t8" headers="r1c1-t8">
+<p>Previous</p>
+</td>
+<td align="left" headers="r7c1-t8 r1c2-t8">Goes to previous difference displayed in the diff.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t8" headers="r1c1-t8">
+<p>Next</p>
+</td>
+<td align="left" headers="r8c1-t8 r1c2-t8">Goes to next difference displayed in the diff.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t8" headers="r1c1-t8">
+<p>Perform refresh/update on the diff</p>
+</td>
+<td align="left" headers="r9c1-t8 r1c2-t8">You can refresh the status of the diff in the event that changes to your local working directory have been made externally. You can also update the status of repository versions of files shown in the diff.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t8" headers="r1c1-t8">
+<p>Refresh</p>
+</td>
+<td align="left" headers="r10c1-t8 r1c2-t8">Refreshes the diff in the event that you have made changes to your local working directory externally.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r11c1-t8" headers="r1c1-t8">
+<p>Update</p>
+</td>
+<td align="left" headers="r11c1-t8 r1c2-t8">Updates the repository version of the file displayed in the diff.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r12c1-t8" headers="r1c1-t8">
+<p>Commit changes</p>
+</td>
+<td align="left" headers="r12c1-t8 r1c2-t8">You can commit changes in your local version to the repository.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r13c1-t8" headers="r1c1-t8">
+<p>Commit</p>
+</td>
+<td align="left" headers="r13c1-t8 r1c2-t8">Commits any changes you have made in the local version to the repository.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>When you choose to open the Diff Viewer on a selected item, all files contained in the item display in the table located above the graphical viewer (In the event that you select a single file, only that file is displayed). The table lists all modified files and organizes information based on the following column headings:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t9">Element</th>
+<th align="left" valign="bottom" id="r1c2-t9">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t9" headers="r1c1-t9">
+<p>File</p>
+</td>
+<td align="left" headers="r2c1-t9 r1c2-t9">The name of the file.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t9" headers="r1c1-t9">
+<p>Status</p>
+</td>
+<td align="left" headers="r3c1-t9 r1c2-t9">The status of the file (i.e. modified locally or remotely).</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t9" headers="r1c1-t9">
+<p>Location</p>
+</td>
+<td align="left" headers="r4c1-t9 r1c2-t9">The relative path of the file found in the repository.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>The Diff Viewer highlights changes in the files using the following color encoding.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t10">Element</th>
+<th align="left" valign="bottom" id="r1c2-t10">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t10" headers="r1c1-t10">
+<p>Blue</p>
+</td>
+<td align="left" headers="r2c1-t10 r1c2-t10">Indicates lines that have been changed since the earlier revision</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t10" headers="r1c1-t10">
+<p>Green</p>
+</td>
+<td align="left" headers="r3c1-t10 r1c2-t10">Indicates lines that have been added since the earlier revision</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t10" headers="r1c1-t10">
+<p>Red</p>
+</td>
+<td align="left" headers="r4c1-t10 r1c2-t10">Indicates lines that have been removed since the earlier revision</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>Your local copy appears in the right pane of the Diff Viewer. You can also make changes to your local copy by typing directly into it in the Diff Viewer.</p>
+<p>Any changes made in the Diff Viewer are automatically saved as they occur.</p>
+<p>The following icons enable you to make changes directly within the Diff Viewer:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t11">Element</th>
+<th align="left" valign="bottom" id="r1c2-t11">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t11" headers="r1c1-t11">
+<p>Replace</p>
+</td>
+<td align="left" headers="r2c1-t11 r1c2-t11">Inserts the highlighted text from the previous revision into the current revision</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t11" headers="r1c1-t11">
+<p>Move All</p>
+</td>
+<td align="left" headers="r3c1-t11 r1c2-t11">Reverts the file's current version to the state of the selected previous version.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t11" headers="r1c1-t11">
+<p>Remove</p>
+</td>
+<td align="left" headers="r4c1-t11 r1c2-t11">Removes the highlighted text from the current version so that it mirrors the previous version.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH1461" name="NBCSH1461"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG274">
+<param name="text" value="<html><u>&quot;Versioning Applications with Subversion&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

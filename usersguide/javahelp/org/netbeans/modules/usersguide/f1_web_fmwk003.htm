@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Add Managed Bean Dialog Box</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.web.jsf.dialogs.AddManagedBeanDialog" name="org.netbeans.modules.web.jsf.dialogs.AddManagedBeanDialog"></a></p>
+<div id="NBCSH4142"><!-- infolevel="all" infotype="General" --><a id="sthref551" name="sthref551"></a>
+<h1>Add Managed Bean Dialog Box</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to register an existing JSF managed bean with the application by adding an entry to the Faces configuration file. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1151">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>A JSF managed bean, or "backing bean" is a Java class that adheres to JavaBean conventions, and is associated with UI components used in a page. A managed bean defines UI component properties, each of which is bound to either a component's value or a component instance. A managed bean can also define methods that perform functions associated with a component, including validation, event handling, and navigation processing. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1142">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>JSF 2.0 applications do not require the <code dir="ltr">faces-config.xml</code> file. You can equally declare a managed bean using the <code dir="ltr">@ManagedBean</code> annotation directly within the managed bean class. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1157">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t3">Element</th>
+<th align="left" valign="bottom" id="r1c2-t3">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t3" headers="r1c1-t3">
+<p>Bean Name</p>
+</td>
+<td align="left" headers="r2c1-t3 r1c2-t3">Specifies the name which the managed bean can be invoked by.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t3" headers="r1c1-t3">
+<p>Bean Class</p>
+</td>
+<td align="left" headers="r3c1-t3 r1c2-t3">Specifies the fully qualified class name of the Java class that will be used to instantiate a new instance, if creation of the specified managed bean is requested. The specified class must conform to standard JavaBean conventions. In particular, it must have a public, no-argument constructor, and properties must be accessible using <i>get</i> and <i>set</i>, following standard naming conventions.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t3" headers="r1c1-t3">
+<p>Scope</p>
+</td>
+<td align="left" headers="r4c1-t3 r1c2-t3">Specifies the scope into which a newly created instance of the specified managed bean will be stored (default is <code dir="ltr">request</code>; choose <code dir="ltr">none</code> if you want to refrain from placing bean instances in any scope).</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t3" headers="r1c1-t3">
+<p>Bean Description</p>
+</td>
+<td align="left" headers="r5c1-t3 r1c2-t3">An optional textual description of the element, which can be flagged with a language code using the <code dir="ltr">xml:lang</code> attribute.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH4147" name="NBCSH4147"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1141">
+<param name="text" value="<html><u>&quot;Working with the JavaServer Faces Framework&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

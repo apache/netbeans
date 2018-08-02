@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!--
+    An example how to use this DTD from your XML document:
+
+    <?xml version="1.0"?>
+
+    <!DOCTYPE html SYSTEM "xhtml.dtd">
+
+    <html>
+    ...
+    </html>
+-->
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT td (#PCDATA)>
+<!ATTLIST td
+    colspan CDATA #IMPLIED
+    rowspan CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT tr (td)*>
+<!ATTLIST tr
+    align CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT tbody EMPTY>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT tfoot EMPTY>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT thead EMPTY>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT table (tr|tbody|tfoot|thead)*>
+<!ATTLIST table
+    bgcolor CDATA #IMPLIED
+    border CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT h1 (#PCDATA)>
+<!ATTLIST h1
+    title CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT h3 (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT tb (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT body (table|h1|h3|tb)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT title (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT head (title)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT html (body|head)*>
+<!ATTLIST html
+    xmlns CDATA #IMPLIED
+  >

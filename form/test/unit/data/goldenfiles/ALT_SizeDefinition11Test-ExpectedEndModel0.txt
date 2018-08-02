@@ -1,0 +1,42 @@
+<LayoutModel>
+  <Root id="Form">
+    <DimensionLayout dim="horizontal">
+      <Group type="parallel" groupAlignment="leading" attributes="2048">
+          <Group type="sequential" alignment="leading" attributes="0">
+              <EmptySpace max="$pref" attributes="0"/>
+              <Component id="panel" max="Short.MAX_VALUE" attributes="0"/>
+              <EmptySpace max="$pref" attributes="4"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="vertical">
+      <Group type="parallel" groupAlignment="leading" attributes="2048">
+          <Group type="sequential" alignment="leading" attributes="0">
+              <EmptySpace max="$pref" attributes="0"/>
+              <Component id="panel" max="Short.MAX_VALUE" attributes="0"/>
+              <EmptySpace max="$pref" attributes="4"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Root>
+  <Root id="panel">
+    <DimensionLayout dim="horizontal">
+      <Group type="parallel" groupAlignment="leading" attributes="2048">
+          <Group type="sequential" alignment="leading" attributes="0">
+              <EmptySpace max="$pref" attributes="0"/>
+              <Component id="scrollPane" max="Short.MAX_VALUE" attributes="0"/>
+              <EmptySpace max="$pref" attributes="4"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="vertical">
+      <Group type="parallel" groupAlignment="leading" attributes="2048">
+          <Group type="sequential" alignment="leading" attributes="0">
+              <EmptySpace max="$pref" attributes="0"/>
+              <Component id="scrollPane" max="Short.MAX_VALUE" attributes="0"/>
+              <EmptySpace max="$pref" attributes="4"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Root>
+</LayoutModel>

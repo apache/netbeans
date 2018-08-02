@@ -1,0 +1,7 @@
+[groups]
+group1 = *.collab.net
+peterp = peterp.*
+
+[peterp]
+http-timeout = 60
+neon-debug-mask = 130

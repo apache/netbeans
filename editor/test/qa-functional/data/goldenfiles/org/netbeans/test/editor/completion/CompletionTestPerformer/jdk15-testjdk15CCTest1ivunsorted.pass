@@ -1,0 +1,2 @@
+public abstract String get(int index)
+public final native Class<Object> getClass()

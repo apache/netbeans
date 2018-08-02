@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<palette_item version="1.0">
+  <component classname="javax.swing.Box$Filler" type="visual" initializer-id="Box.Filler.HorizontalStrut" />
+  <icon16 urlvalue="nbres:/org/netbeans/modules/form/resources/palette/horizontalStrut.png" />
+  <icon32 urlvalue="nbres:/org/netbeans/modules/form/resources/palette/horizontalStrut32.png" />
+  <description localizing-bundle="org.netbeans.modules.form.resources.Bundle"
+               display-name-key="NAME_BoxFillerHorizontalStrut"
+               tooltip-key="HINT_BoxFillerHorizontalStrut" />
+</palette_item>

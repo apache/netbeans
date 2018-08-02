@@ -1,0 +1,3 @@
+5:29-5:42:error:cannot find symbol
+  symbol:variable FORMAT_STRING
+  location:class TestShortErrors10

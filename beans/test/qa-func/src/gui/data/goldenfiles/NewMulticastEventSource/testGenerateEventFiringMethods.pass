@@ -1,0 +1,50 @@
+public class TestFile {
+    
+    /**
+     * Utility field holding list of ActionListeners.
+     */
+    private transient java.util.ArrayList actionListenerList;
+    
+    /** Creates a new instance of TestFile */
+    public TestFile() {
+    }
+    
+    /**
+     * Registers ActionListener to receive events.
+     * @param listener The listener to register.
+     */
+    public synchronized void addActionListener(java.awt.event.ActionListener listener) {
+        if (actionListenerList == null ) {
+            actionListenerList = new java.util.ArrayList();
+        }
+        actionListenerList.add(listener);
+    }
+    
+    /**
+     * Removes ActionListener from the list of listeners.
+     * @param listener The listener to remove.
+     */
+    public synchronized void removeActionListener(java.awt.event.ActionListener listener) {
+        if (actionListenerList != null ) {
+            actionListenerList.remove(listener);
+        }
+    }
+    
+    /**
+     * Notifies all registered listeners about the event.
+     *
+     * @param event The event to be fired
+     */
+    private void fireActionListenerActionPerformed(java.awt.event.ActionEvent event) {
+        java.util.ArrayList list;
+        synchronized (this) {
+            if (actionListenerList == null) return;
+            list = (java.util.ArrayList)actionListenerList.clone();
+        }
+        for (int i = 0; i < list.size(); i++) {
+            ((java.awt.event.ActionListener)list.get(i)).actionPerformed(event);
+        }
+    }
+    
+}
+

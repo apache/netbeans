@@ -1,0 +1,4 @@
+'token image' [offset, length]; tokenID name; tokenID id; token category name; <list of token context names>
+--------------------
+
+'this is just a text' [0, 19]; text; 1; -; HTMLTokenContext

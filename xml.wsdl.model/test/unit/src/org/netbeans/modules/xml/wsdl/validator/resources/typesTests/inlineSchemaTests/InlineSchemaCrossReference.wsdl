@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://standoniperez:7070/axis/services/Suma" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://standoniperez:7070/axis/services/Suma" xmlns:intf="http://standoniperez:7070/axis/services/Suma" xmlns:tns1="http://erp.wsutils.batz.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:plnk="http://schemas.xmlsoap.org/ws/2004/03/partner-link/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+<!--WSDL created by Apache Axis version: 1.4
+Built on Apr 22, 2006 (06:55:48 PDT)-->
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="http://standoniperez:7070/axis/services/Suma" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://erp.wsutils.batz.com"/>
+   <element name="sumador">
+    <complexType>
+     <sequence>
+      <element name="i" type="xsd:int"/>
+      <element name="j" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="sumadorResponse">
+    <complexType>
+     <sequence>
+      <element name="sumadorReturn" type="tns1:OperacionSuma"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="sumador2">
+    <complexType>
+     <sequence>
+      <element name="i" type="xsd:int"/>
+      <element name="j" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="sumador2Response">
+    <complexType>
+     <sequence>
+      <element name="sumador2Return" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+  </schema>
+  <schema elementFormDefault="qualified" targetNamespace="http://erp.wsutils.batz.com" xmlns="http://www.w3.org/2001/XMLSchema">
+   <complexType name="OperacionSuma">
+    <sequence>
+     <element name="numPri" type="xsd:int"/>
+     <element name="numSec" type="xsd:int"/>
+     <element name="result" type="xsd:int"/>
+     <element name="suma" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </schema>
+ </wsdl:types>
+ 
+   <wsdl:message name="sumador2Request">
+ 
+      <wsdl:part element="impl:sumador2" name="parameters"/>
+ 
+   </wsdl:message>
+ 
+   <wsdl:message name="sumadorResponse">
+ 
+      <wsdl:part element="impl:sumadorResponse" name="parameters"/>
+ 
+   </wsdl:message>
+ 
+   <wsdl:message name="sumadorRequest">
+ 
+      <wsdl:part element="impl:sumador" name="parameters"/>
+ 
+   </wsdl:message>
+ 
+   <wsdl:message name="sumador2Response">
+ 
+      <wsdl:part element="impl:sumador2Response" name="parameters"/>
+ 
+   </wsdl:message>
+ 
+   <wsdl:portType name="Suma">
+ 
+      <wsdl:operation name="sumador">
+ 
+         <wsdl:input message="impl:sumadorRequest" name="sumadorRequest"/>
+ 
+         <wsdl:output message="impl:sumadorResponse" name="sumadorResponse"/>
+ 
+      </wsdl:operation>
+ 
+      <wsdl:operation name="sumador2">
+ 
+         <wsdl:input message="impl:sumador2Request" name="sumador2Request"/>
+ 
+         <wsdl:output message="impl:sumador2Response" name="sumador2Response"/>
+ 
+      </wsdl:operation>
+ 
+   </wsdl:portType>
+ 
+   <wsdl:binding name="SumaSoapBinding" type="impl:Suma">
+ 
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+ 
+      <wsdl:operation name="sumador">
+ 
+         <wsdlsoap:operation soapAction=""/>
+ 
+         <wsdl:input name="sumadorRequest">
+ 
+            <wsdlsoap:body use="literal"/>
+ 
+         </wsdl:input>
+ 
+         <wsdl:output name="sumadorResponse">
+ 
+            <wsdlsoap:body use="literal"/>
+ 
+         </wsdl:output>
+ 
+      </wsdl:operation>
+ 
+      <wsdl:operation name="sumador2">
+ 
+         <wsdlsoap:operation soapAction=""/>
+ 
+         <wsdl:input name="sumador2Request">
+ 
+            <wsdlsoap:body use="literal"/>
+ 
+         </wsdl:input>
+ 
+         <wsdl:output name="sumador2Response">
+ 
+            <wsdlsoap:body use="literal"/>
+ 
+         </wsdl:output>
+ 
+      </wsdl:operation>
+ 
+   </wsdl:binding>
+ 
+   <wsdl:service name="SumaService">
+ 
+      <wsdl:port binding="impl:SumaSoapBinding" name="Suma">
+ 
+         <wsdlsoap:address location="http://standoniperez:7070/axis/services/Suma"/>
+ 
+      </wsdl:port>
+ 
+   </wsdl:service>
+    <plnk:partnerLinkType name="SumaLinkType">
+        <plnk:role name="SumaRole" portType="impl:Suma"/>
+    </plnk:partnerLinkType>
+</wsdl:definitions>

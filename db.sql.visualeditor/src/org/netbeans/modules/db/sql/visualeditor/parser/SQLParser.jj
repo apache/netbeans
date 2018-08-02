@@ -1,0 +1,722 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+// Build and test outside Rave with:
+//     % java -classpath .../db/visualsqleditor/external/javacc.jar org.javacc.parser.Main -OUTPUT_DIRECTORY:. [-debug_parser] SQLParser.jj
+//     % javac -classpath .:.../nbbuild/netbeans/ide/modules/org-netbeans-modules-db-sql-visualeditor.jar SQLParser.java
+//     % java -classpath .:/Users/jdavidso/rave/cvs/dev/nbbuild/netbeans/ide/modules/org-netbeans-modules-db-sql-visualeditor.jar SQLParser < test
+
+options {
+    // DEBUG_PARSER = true;
+    IGNORE_CASE=true;
+    STATIC=false;
+    JAVA_UNICODE_ESCAPE=true;
+}
+
+PARSER_BEGIN(SQLParser)
+
+package org.netbeans.modules.db.sql.visualeditor.parser;
+
+import java.util.ArrayList;
+
+import org.netbeans.modules.db.sql.visualeditor.querymodel.*;
+
+public class SQLParser {
+
+  public static void main(String args[]) throws ParseException {
+      SQLParser parser = new SQLParser(System.in);
+      QueryNode query = parser.SQLQuery();
+//      System.out.println("Query generated from model: ");
+//      System.out.println(query.genText());
+  }
+
+}
+
+PARSER_END(SQLParser)
+
+
+SKIP :
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+}
+
+
+TOKEN : /* Reserved Words */
+{
+     < AS:      "AS" >
+|    < ALL:     "ALL" >
+|    < AND:     "AND" >
+|    < ASC:     "ASC" >
+|    < AVG:     "AVG" >
+|    < BY:      "BY" >
+|    < COUNT:   "COUNT" >
+|    < CROSS:   "CROSS" >
+|    < DESC:    "DESC" >
+|    < DISTINCT: "DISTINCT" >
+|    < FROM:    "FROM" >
+|    < FULL:    "FULL" >
+|    < GROUP:   "GROUP" >
+|    < HAVING:  "HAVING" >
+|    < INNER:   "INNER" >
+|    < LEFT:    "LEFT" >
+|    < JOIN:    "JOIN" >
+|    < MAX:     "MAX" >
+|    < MIN:     "MIN" >
+|    < NATURAL: "NATURAL" >
+|    < NOT:     "NOT" >
+|    < ON:      "ON" >
+|    < OR:      "OR" >
+|    < ORDER:   "ORDER" >
+|    < OUTER:   "OUTER" >
+|    < RIGHT:   "RIGHT" >
+|    < SELECT:  "SELECT" >
+|    < SUM:     "SUM" >
+|    < WHERE:   "WHERE" >
+}
+
+
+TOKEN : /* Operators */
+{
+    < RELOP: "=" | "!=" | "<" | "<=" | ">" | ">=" | "<>" | " LIKE " | " IN " >
+}
+
+
+TOKEN : /* Identifier */
+{
+//    < ORDINARY_ID: ["a"-"z","A"-"Z","_"] ( ["a"-"z","A"-"Z","_","0"-"9"] )* >
+    < ORDINARY_ID: <LETTER> (<LETTER>|<DIGIT>)* >
+|
+    < DELIMITED_ID: "\"" (~["\n","\r","\""])* "\"" >
+|
+    < MYSQL_DELIMITED_ID: "`" (~["\n","\r","\"", "`"])* "`" >
+|
+    < #LETTER:
+      [
+       "\u0024",
+       "\u0041"-"\u005a",
+       "\u005f",
+       "\u0061"-"\u007a",
+       "\u00c0"-"\u00d6",
+       "\u00d8"-"\u00f6",
+       "\u00f8"-"\u00ff",
+       "\u0100"-"\u1fff",
+       "\u3040"-"\u318f",
+       "\u3300"-"\u337f",
+       "\u3400"-"\u3d2d",
+       "\u4e00"-"\u9fff",
+       "\uf900"-"\ufaff"
+      ]
+  >
+|
+  < #DIGIT:
+      [
+       "\u0030"-"\u0039",
+       "\u0660"-"\u0669",
+       "\u06f0"-"\u06f9",
+       "\u0966"-"\u096f",
+       "\u09e6"-"\u09ef",
+       "\u0a66"-"\u0a6f",
+       "\u0ae6"-"\u0aef",
+       "\u0b66"-"\u0b6f",
+       "\u0be7"-"\u0bef",
+       "\u0c66"-"\u0c6f",
+       "\u0ce6"-"\u0cef",
+       "\u0d66"-"\u0d6f",
+       "\u0e50"-"\u0e59",
+       "\u0ed0"-"\u0ed9",
+       "\u1040"-"\u1049"
+      ]
+  >
+      
+}
+
+
+TOKEN : /* Literals */
+{
+    < STRING_LITERAL: "'" ("''" | ~["'", "\t", "\n", "\r"])* "'">
+  | < INTEGER_LITERAL:  ([ "0"-"9" ])+ >
+}
+
+
+// select-clause from-clause where-clause groupby-clause having-clause orderby-clause
+
+QueryNode SQLQuery() :
+{
+//    System.out.println("parse query");
+    SelectNode s=null;
+    FromNode f=null;
+    WhereNode w = null;
+    OrderByNode o=null;
+    GroupByNode g=null;
+    HavingNode h=null;
+}
+{
+    // Select List
+    s=SQLSelect()
+
+    // Table Expression
+    // Each clause takes table from previous clause, produces table for next clause
+    f=SQLFrom()
+    [ w = SQLWhere() ]
+    [ g = SQLGroupBy() ]
+    [ h = SQLHaving() ]
+
+    // Order by 
+    [ o = SQLOrderBy() ]
+
+    <EOF>
+
+    {
+        return new QueryNode(s, f, w, g, h, o);
+    }
+}
+
+// SELECT [ quantifier ] column (, column)*
+
+SelectNode SQLSelect() :
+{
+    ArrayList selctItemList=new ArrayList();
+    String q="ALL";
+    ColumnItem item = null;
+}
+{
+    <SELECT>
+
+    // Quantifier
+    [ <ALL>         { q="ALL"; }
+    | <DISTINCT>    { q="DISTINCT"; } ]
+
+    item=SQLColumnItem()
+        { selctItemList.add(item); }
+
+    ( ","
+      item=SQLColumnItem()
+        { selctItemList.add(item); }  )*
+
+    {
+        return new SelectNode(selctItemList, q);
+    }
+}
+
+
+ColumnItem SQLColumnItem() :
+{
+    ColumnItem item = null;
+}
+{
+    (<AVG> { item = SQLSetFunction(SetFunction.AVG); } 
+     | <COUNT> { item = SQLSetFunction(SetFunction.COUNT); } 
+     | <MAX> { item = SQLSetFunction(SetFunction.MAX); } 
+     | <MIN> { item = SQLSetFunction(SetFunction.MIN); } 
+     | <SUM> { item = SQLSetFunction(SetFunction.SUM); } 
+     | item = SQLColumn()
+    )
+    {
+        return item;
+    }
+}
+
+// * | [ tablename . ] columnname
+// ToDo: Add semantic processing for elided tablenames
+
+ColumnNode SQLColumn() :
+{
+    Identifier tableName=null, columnName=null, schemaName=null, derivedColName=null;
+}
+{
+    ("*" { columnName = new Identifier("*", false); }
+     | LOOKAHEAD(4)
+        schemaName=identifier()
+        "."
+        tableName=identifier()
+        "."   
+        columnName=identifier()
+     
+     | LOOKAHEAD(2)
+        tableName=identifier()
+        "."   
+        columnName=identifier()
+
+     |  columnName=identifier()
+    )
+
+    [ [ <AS> ]
+      derivedColName = identifier() ]
+
+    {
+        return ColumnNode.make(tableName, columnName, schemaName, derivedColName);
+    }
+}
+
+
+SetFunction SQLSetFunction(int type) :
+{
+    ColumnNode c = null;
+    Identifier alias = null;
+}
+{
+    "(" 
+    c = SQLColumn()
+    ")"
+    [ [ <AS> ]
+      alias = identifier() ]
+    {
+        return new SetFunction(type, c, alias);
+    }
+}
+
+
+// FROM table-reference [, table-reference]
+
+FromNode SQLFrom() :
+{
+    ArrayList tableList = new ArrayList();
+    JoinTableNode jt=null;
+}
+{
+    // For now just accept table names, no joins or correlation variables
+    <FROM>
+    jt = SQLFirstJoinTable()
+    { tableList.add(jt);  }
+
+    ( jt = SQLJoinTable()
+    { tableList.add(jt); } )*
+
+    { return new FromNode(tableList); }
+}
+        
+
+// GROUP by grouping-column [, grouping-column ]
+
+GroupByNode SQLGroupBy() :
+{
+    ArrayList columnList=new ArrayList();
+    ColumnItem col;
+}
+{
+    <GROUP> <BY>
+    col = SQLColumnItem()   
+    { columnList.add(col); }
+
+    ( ","
+      col=SQLColumnItem()
+      { columnList.add(col); }  )*
+
+    {
+        return new GroupByNode(columnList);
+    }
+}
+
+
+// HAVING search-condition
+
+HavingNode SQLHaving() :
+{
+    Expression cond;
+}
+{
+    <HAVING>
+    cond=SQLOrExpr()
+    {
+        return new HavingNode(cond);
+    }
+}
+
+
+JoinTableNode SQLFirstJoinTable() :
+{
+    TableNode tbl;
+}
+{
+    tbl = SQLTable()
+
+    { return new JoinTableNode(tbl); }
+}
+
+
+JoinTableNode SQLJoinTable() :
+{
+    String joinType=null;
+    Expression cond=null;
+    TableNode tbl;
+}
+{
+    joinType = SQLJoinType()
+
+    tbl = SQLTable()
+
+    [ <ON>
+      cond=SQLOrExpr()
+    ]
+
+    {
+        return new JoinTableNode(tbl, joinType, cond);
+    }
+}
+
+
+// tableName [ [ AS ] corrName ]
+
+TableNode SQLTable() :
+{
+    Identifier tableName=null, corrName=null, schemaName=null;
+}
+{
+    (
+        LOOKAHEAD(2)
+        schemaName=identifier()
+        "."
+        tableName = identifier() 
+    |
+        tableName = identifier()
+    )
+
+        [ [ <AS> ]
+          corrName = identifier() ]
+        {
+            return TableNode.make(tableName, corrName, schemaName);
+        }
+            
+}
+
+
+
+String SQLJoinType() :
+{
+    String type=null;
+}
+{
+    (   "," { type = "CROSS"; }
+        | [ <CROSS> { type = "CROSS"; }
+          | <INNER> { type = "INNER"; }
+          | <NATURAL> { type = "NATURAL"; }
+          | [ <LEFT> { type = "LEFT OUTER"; }
+            | <RIGHT> { type = "RIGHT OUTER"; }
+            | <FULL> { type = "FULL OUTER"; }
+            ]
+            <OUTER> { type = "LEFT OUTER"; }
+          ]
+          <JOIN> { if (type==null) type="INNER"; }
+        )
+    { return type; }
+}
+
+
+// WHERE <Expression>
+
+WhereNode SQLWhere() :
+{
+    Expression o;
+}
+{
+    <WHERE>
+
+    o=SQLOrExpr()
+    {
+        return new WhereNode(o);
+    }
+}
+
+
+// An arbitrary search-condition, in a WHERE or ON clause
+// We assume, without loss of generality, that the search-condition
+// is in Disjunctive Normal Form (DNF)
+// If join is true, we are in a join clause, and only allow columns as primitive
+
+// [(] <AndExpr> [ OR <AndExpr>] [)]
+
+
+Expression SQLOrExpr() :
+{
+//    System.out.println("SQLOrExpr");
+    Expression c=null;
+}
+{
+    (
+        LOOKAHEAD(SQLOr())
+        c=SQLOr()
+    |
+        "("
+        c=SQLOrExpr()
+        ")"
+    )
+    {
+        return c;
+    }
+}
+
+Expression SQLOr() :
+{
+//    System.out.println("SQLOr");
+    Expression a;
+    ArrayList forms = new ArrayList();
+}
+{
+    a=SQLAndExpr()
+        { forms.add(a); }
+
+    ( LOOKAHEAD(2)
+      <OR>
+      a=SQLOrExpr()
+        { forms.add(a); } ) *
+
+    {
+        if (forms.size()==1)
+            return a;
+        else 
+            return new OrNode(forms);
+    }
+}
+
+
+// [(] <NotExpr> [ AND <NotExpr>] [)]
+
+Expression SQLAndExpr() :
+{
+//    System.out.println("SQLAndExpr");
+    Expression c=null;
+}
+{
+    (
+        LOOKAHEAD(SQLAnd())
+        c=SQLAnd()
+    |
+        "("
+        c=SQLOrExpr()
+        ")"
+    )
+    {
+        return c;
+    }
+}
+
+
+Expression SQLAnd() :
+{
+//    System.out.println("SQLAnd");
+    Expression c;
+    ArrayList forms = new ArrayList();
+}
+{
+    c=SQLNot()
+    { forms.add(c); }
+
+    ( LOOKAHEAD(2)
+      <AND>
+      c=SQLAndExpr()
+    { forms.add(c); } )*
+
+    {
+        if (forms.size()==1)
+            return c;
+        else
+            return new AndNode(forms);
+    }
+}
+
+
+// [ NOT ] <Predicate>
+
+Expression SQLNot() :
+{
+//    System.out.println("SQLNot");
+    Expression p;
+    boolean foundNot=false;
+}
+{
+    (
+        LOOKAHEAD(2)
+        [ <NOT>
+          { foundNot = true; }
+        ]
+        "("
+        p=SQLOrExpr()
+        ")"
+    |
+        [ <NOT>
+          { foundNot = true; }
+        ]
+        p=SQLPredicate()
+    )
+
+    { if (!foundNot)
+          return p;
+      else 
+          return new NotNode(p);
+    }
+}
+
+
+// For the moment, we assume that the expression has the form
+// Column = Column
+Predicate SQLPredicate() :
+{
+//    System.out.println("SQLPredicate");
+    Value val1, val2;
+    String op;
+}
+{
+    val1=SQLValue()
+    op=relop()
+    (
+        "("
+            val2=SQLCommaSeparatedStrings()
+        ")" 
+        
+    |
+            val2=SQLValue()
+    )
+    {
+        return new Predicate(val1, val2, op);
+    }
+}
+
+Value SQLCommaSeparatedStrings() :
+{
+    String lit;
+    StringBuffer litBuffer = new StringBuffer();
+}
+{
+    lit = literal()
+    { litBuffer.append ( lit ); }
+    ( ","
+        lit=literal()
+        { 
+        litBuffer.append(","); 
+        litBuffer.append(lit); 
+        }  )*
+    {
+        return new Literal ( " ( " + litBuffer.toString() + " ) " );
+    }
+}
+
+Value SQLValue() :
+{
+    ColumnItem col;
+    String lit;
+}
+{
+    /* "?"                 { return new Literal("?"); }
+    | */
+    col=SQLColumnItem()   { return col; }
+    | lit=literal()     { return new Literal(lit); }
+}
+
+
+// ORDER by sort-specification [, sort-specification]
+
+OrderByNode SQLOrderBy() :
+{
+    ArrayList sortSpecificationList=new ArrayList();
+    SortSpecification ss=null;
+}
+{
+    <ORDER> <BY>
+    ss=SQLSortSpecification()
+    { sortSpecificationList.add(ss); }
+
+    ( ","
+      ss=SQLSortSpecification()
+      { sortSpecificationList.add(ss); } )*
+
+    {
+        return new OrderByNode(sortSpecificationList);
+    }
+}
+
+
+// column [ ASC | DESC ]
+
+SortSpecification SQLSortSpecification() :
+{
+    ColumnItem col=null;
+    String dir="ASC";
+}
+{
+    col=SQLColumnItem()
+    
+    [   <ASC>  { dir="ASC"; }
+      | <DESC> { dir="DESC"; } ]
+
+    {
+        return new SortSpecification(col, dir);
+    }
+}
+
+
+Identifier identifier() :
+{
+    Token t;
+}
+{
+      t = <ORDINARY_ID>         // Not delimited
+      { return new Identifier(t.image,false); }
+
+      // For delimited identifiers, strip surrounding quotes before returning.
+      // When we generate text output we will use the appropriate quote form.
+      
+    | t = <DELIMITED_ID>  
+      { return new Identifier(t.image.substring(1,t.image.length()-1),true); }
+
+    | t = <MYSQL_DELIMITED_ID>  
+      { return new Identifier(t.image.substring(1,t.image.length()-1),true); }
+
+
+//      { return new Identifier(t.image,true); }
+}
+
+
+String relop() :
+{
+    Token t;
+}
+{
+    t=<RELOP>
+    {
+        return t.image;
+    }
+}
+
+
+String literal() :
+{
+    Token t;}
+{
+    ( t = <STRING_LITERAL>
+    | t = <INTEGER_LITERAL>
+    | t = "?"
+    )
+    {
+        return t.image;
+    }
+}
+
+
+// String direction() :
+// {
+//     Token t;
+// }
+// {
+//     t=<DIRECTION>
+//     {
+//      return t.image;
+//     }
+// }

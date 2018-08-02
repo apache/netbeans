@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>New Web Service Client Wizard: WSDL and Client Location</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.websvc.core.client.wizard.WebServiceClientWizardDescriptor" name="org.netbeans.modules.websvc.core.client.wizard.WebServiceClientWizardDescriptor"></a></p>
+<div id="NBCSH4924"><!-- infolevel="all" infotype="General" --><a id="sthref717" name="sthref717"></a>
+<h1>New Web Service Client Wizard: WSDL and Client Location</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>The New Web Service Client wizard creates a new Web Service Client.</p>
+<p>Use this page to specify the details of the local or remote domain by selecting one of the following options.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t87">Element</th>
+<th align="left" valign="bottom" id="r1c2-t87">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t87" headers="r1c1-t87">
+<p>Specify WSDL file of the Web Service</p>
+</td>
+<td align="left" headers="r2c1-t87 r1c2-t87">Specify one of the following</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t87" headers="r1c1-t87">&nbsp;&nbsp;&nbsp;&nbsp;Project</td>
+<td align="left" headers="r3c1-t87 r1c2-t87">Select this option to specify an open project where the web service is defined. Click Browse to locate it in the IDE.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t87" headers="r1c1-t87">&nbsp;&nbsp;&nbsp;&nbsp;Local File</td>
+<td align="left" headers="r4c1-t87 r1c2-t87">Select this option to specify a WSDL file in your local filesystem. Click Browse to locate it in your filesystem.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t87" headers="r1c1-t87">
+<p>WSDL URL</p>
+</td>
+<td align="left" headers="r5c1-t87 r1c2-t87">Select this option to specify the URL to a running web service's WSDL file. If you use a proxy server, you must click Proxy Settings and set the proxy host and port number, otherwise the IDE will not be able to download the WSDL file.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t87" headers="r1c1-t87">
+<p>IDE Registered</p>
+</td>
+<td align="left" headers="r6c1-t87 r1c2-t87">Select this option to select a web service that is registered with the IDE. Click Browse to select from a list of registered services.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t87" headers="r1c1-t87">Package</td>
+<td align="left" headers="r7c1-t87 r1c2-t87">(Optional) Specify the package where the client files will be generated. The generated client files can be found in the Projects window, in the Generated Sources node of the client project, or in the Files window, within the <code dir="ltr">build</code> folder.
+<p>If you do not specify a package name, the IDE generates the client files in the default package, which is based on the namespace in the WSDL. You can change this package name later in the WSDL Customization editor.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t87" headers="r1c1-t87">
+<p>Generate Dispatch Code</p>
+</td>
+<td align="left" headers="r8c1-t87 r1c2-t87">If you want to use raw XML messages when invoking the web service, select Generate Dispatch Code. The client code is generated using the <code dir="ltr">java.xml.ws</code>.Dispatch interface instead of the usual service endpoint interface. This is an advanced feature and disabled by default.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH4929" name="NBCSH4929"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1681">
+<param name="text" value="<html><u>&quot;Working with Glassfish Application Servers&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

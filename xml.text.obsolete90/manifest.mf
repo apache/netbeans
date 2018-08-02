@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.modules.xml.text.obsolete90
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/xml/text/obsolete90/Bundle.properties
+OpenIDE-Module-Implementation-Version: 1
+OpenIDE-Module-Layer: org/netbeans/modules/xml/text/obsolete90/resources/mf-layer.xml

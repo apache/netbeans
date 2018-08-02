@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Subversion: Commit Dialog Box</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.subversion.ui.commit.CommitAction" name="org.netbeans.modules.subversion.ui.commit.CommitAction"></a></p>
+<div id="NBCSH1419"><!-- infolevel="all" infotype="General" --><a id="sthref164" name="sthref164"></a>
+<h1>Subversion: Commit Dialog Box</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>The Subversion Commit dialog box enables you to commit local changes in version-controlled files to the repository. If you have an issue tracker set up with your repository, the commit dialog box lets you associate your commit action with an existing issue. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG296">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t5">Element</th>
+<th align="left" valign="bottom" id="r1c2-t5">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t5" headers="r1c1-t5">
+<p>Commit Message</p>
+</td>
+<td align="left" headers="r2c1-t5 r1c2-t5">Type in a message describing your commit action.
+<ul>
+<li>When entering a commit message, you can view previous messages by clicking the Recent Messages button located in the upper right corner of the dialog. A dialog displays, listing recent commit messages.</li>
+<li>If you know you will be repeatedly making commits for the same purpose, you can set text to be included as a template for commit messages. Click the Load Template icon in the upper right corner of the dialog to load text from Template file directly into the Commit Message text area.</li>
+</ul>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t5" headers="r1c1-t5">
+<p>Files to Commit</p>
+</td>
+<td align="left" headers="r3c1-t5 r1c2-t5">View files that will be included in the commit action.
+<p>When you click on a field in the Commit Action column, you can specify additional actions by choosing from the drop-down list:</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t5" headers="r1c1-t5">
+<p>Exclude from Commit</p>
+</td>
+<td align="left" headers="r4c1-t5 r1c2-t5">Exclude the selected file from the commit action.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t5" headers="r1c1-t5">
+<p>Add as Text</p>
+</td>
+<td align="left" headers="r5c1-t5 r1c2-t5">Set the MIME type for the file as textual data. (For new files only. New files are displayed in green text.)</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t5" headers="r1c1-t5">
+<p>Add as Binary</p>
+</td>
+<td align="left" headers="r6c1-t5 r1c2-t5">Set the MIME type for the file as binary data. (For new files only. New files are displayed in green text.)</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t5" headers="r1c1-t5">
+<p>Update Task</p>
+</td>
+<td align="left" headers="r7c1-t5 r1c2-t5">Update a task by associating your commit action with an existing task in your task repository.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t5" headers="r1c1-t5">
+<p>Task Repository</p>
+</td>
+<td align="left" headers="r8c1-t5 r1c2-t5">Specify the task repository that your repository uses, by selecting an task repository from the drop-down list. The drop-down provides you with a list of all task repositories registered with the IDE. If your task repository is not registered, click the New button to register it.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t5" headers="r1c1-t5">
+<p>Task</p>
+</td>
+<td align="left" headers="r9c1-t5 r1c2-t5">Specify the task ID. You can do this by typing in the ID, or part of the description.
+<p>You can also specify the following options:</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t5" headers="r1c1-t5">
+<p>Resolve as FIXED</p>
+</td>
+<td align="left" headers="r10c1-t5 r1c2-t5">When selected, the status of the issue is marked as Resolved.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r11c1-t5" headers="r1c1-t5">
+<p>Add details to commit message and issue</p>
+</td>
+<td align="left" headers="r11c1-t5 r1c2-t5">When selected, the modify link in parentheses is enabled. Modify the format of the information that is added to commit messages and tasks in the Modify templates dialog box that is displayed, by clicking the <code dir="ltr">modify</code> link.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH1430" name="NBCSH1430"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG274">
+<param name="text" value="<html><u>&quot;Versioning Applications with Subversion&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

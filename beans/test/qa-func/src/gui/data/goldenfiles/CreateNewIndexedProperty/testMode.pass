@@ -1,0 +1,40 @@
+public class TestFile {
+    
+    /** Creates a new instance of TestFile */
+    public TestFile() {
+    }
+    
+    /**
+     * Indexed getter for property first.
+     * @param index Index of the property.
+     * @return Value of the property at <CODE>index</CODE>.
+     */
+    public int getFirst(int index) {
+    }
+    
+    /**
+     * Indexed setter for property second.
+     * @param index Index of the property.
+     * @param second New value of the property at <CODE>index</CODE>.
+     */
+    public void setSecond(int index, double second) {
+    }
+    
+    /**
+     * Indexed getter for property third.
+     * @param index Index of the property.
+     * @return Value of the property at <CODE>index</CODE>.
+     */
+    public long getThird(int index) {
+    }
+    
+    /**
+     * Indexed setter for property third.
+     * @param index Index of the property.
+     * @param third New value of the property at <CODE>index</CODE>.
+     */
+    public void setThird(int index, long third) {
+    }
+    
+}
+

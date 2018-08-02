@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- ex1.xml                                                      -->
+<!-- This is a simple XML source file.  Object class metamethod   -->
+<!-- m3 includes 8-bit ASCII text, with a tilde-n and accent-e    -->
+<!-- characters embedded, to test the UTF8->native codeset        -->
+<!-- conversion feature of the SAX expat driver.  As long as this -->
+<!-- test is run under ISO-8859-1 localization, test output should-->
+<!-- be identical to test input, with one odd byte representing   -->
+<!-- each of these 8-bit characters.                              -->
+<!--                                                              -->
+<!-- The vi editor on Sun Solaris displays the two odd characters -->
+<!-- as \161 and \151.                                            -->
+<!--                                                              -->
+
+<!-- <!DOCTYPE FORTEDDL SYSTEM "TestEncoding.dtd" []> -->
+<FORTEDDL>
+	<PHASE OBJECTTYPE="MetaPlan.MetaClass" OBJECTNAME="c1" NUMBER="1">
+		<ATTRIBUTE NAME="Name">c1</ATTRIBUTE>
+		<ATTRIBUTE NAME="MethodArray">
+			<ARRAY>
+				<MYOBJECT CLASS="MetaMethod">
+					<ATTRIBUTE NAME="Name">m1</ATTRIBUTE>
+					<ATTRIBUTE NAME="Text">
+	task.lgr.putline('this is m1');
+	return;
+					</ATTRIBUTE>
+				</MYOBJECT>
+				<MYOBJECT CLASS="MetaMethod">
+					<ATTRIBUTE NAME="Name">m2</ATTRIBUTE>
+					<ATTRIBUTE NAME="Text">
+	                <?FORTE ThisIsAProcessingInstruction ?>
+	task.lgr.putline('this is m2');
+	return;
+					</ATTRIBUTE>
+				</MYOBJECT>
+				<MYOBJECT CLASS="MetaMethod">
+					<ATTRIBUTE NAME="Name">m3</ATTRIBUTE>
+					<ATTRIBUTE NAME="8-bit ASCII text">
+	task.lgr.putline('Yo amo habañero chilés');
+	return;
+					</ATTRIBUTE>
+				</MYOBJECT>
+			</ARRAY>
+		</ATTRIBUTE>
+		<ANNOTATION OBJECTTYPE="CrossRefInfo" NAME="cr1">
+			<ATTRIBUTE NAME="InfoArray">
+				<ARRAY>
+					<MYOBJECT CLASS="infoItem">
+						<ATTRIBUTE NAME="Reference">putline</ATTRIBUTE>
+						<ATTRIBUTE NAME="Class">c1</ATTRIBUTE>
+						<ATTRIBUTE NAME="Method">m1</ATTRIBUTE>
+					</MYOBJECT>
+				</ARRAY>
+			</ATTRIBUTE>
+		</ANNOTATION>
+	</PHASE>
+</FORTEDDL>

@@ -1,0 +1,16 @@
+Index: src/org/netbeans/modules/languages/Language.java
+===================================================================
+retrieving revision 1.19
+--- src/org/netbeans/modules/languages/Language.java	12 May 2006 06:22:07 -0000	1.19
++++ src/org/netbeans/modules/languages/Language.java	12 May 2006 09:09:24 -0000
+@@ -70,24 +70,43 @@
+         return (AttributeSet) colorings.get (token);
+     }
+-    public String getFold (String nt) {
+-        return (String) folds.get (nt);
++    public String getFold (String mimeType, String id) {
++        if (m == null) return null;
+@@ -176,21 +195,47 @@
+     
+     private Map folds = new HashMap ();
+         // import grammar rues

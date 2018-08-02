@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN" "http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd">
+
+<fontscolors>
+    <fontcolor name="test-bgColor" bgColor="AA0000" />
+    <fontcolor name="test-foreColor" foreColor="00BB00" />
+    <fontcolor name="test-underline" underline="0000CC"/>
+    <fontcolor name="test-strikeThrough" strikeThrough="DD0000" />
+    <fontcolor name="test-waveUnderlined" waveUnderlined="00EE00" />
+    <fontcolor name="test-all" bgColor="0A0B0C" foreColor="0D0E0F" underline="010203" strikeThrough="040506" waveUnderlined="070809" />
+
+    <fontcolor name="test-set-all" bgColor="0A0B0C" foreColor="0D0E0F" underline="010203" strikeThrough="040506" waveUnderlined="070809" />
+    <fontcolor name="test-events" bgColor="0A0B0C" foreColor="0D0E0F" underline="010203" strikeThrough="040506" waveUnderlined="070809" />
+    <fontcolor name="test-immutable" bgColor="0A0B0C" foreColor="0D0E0F" underline="010203" strikeThrough="040506" waveUnderlined="070809" />
+    
+    <fontcolor name="test-font-cute-A">
+        <font name="Test Font Cute A" size="17" style="bold" />
+    </fontcolor>
+    <fontcolor name="test-font-cute-B">
+        <font name="Test Font Cute B" size="13" style="italic" />
+    </fontcolor>
+
+    <fontcolor name="test-inheritance-typeA-specific" bgColor="AA0000" />
+    <fontcolor name="test-inheritance-typeA-typeB" bgColor="AAAA00" />
+</fontscolors>

@@ -1,0 +1,58 @@
+<record>
+  <date>2013-01-24T00:36:33</date>
+  <millis>1358962593337</millis>
+  <sequence>57</sequence>
+  <level>FINEST</level>
+  <thread>13</thread>
+  <message>CPU INFO</message>
+  <param>2</param>
+</record>
+<record>
+  <date>2013-03-13T20:13:18</date>
+  <millis>1363205598725</millis>
+  <sequence>965</sequence>
+  <logger>org.netbeans.ui.SystemActionBridge</logger>
+  <level>FINER</level>
+  <thread>20</thread>
+  <message>UI_ACTION_BUTTON_PRESS</message>
+  <key>UI_ACTION_BUTTON_PRESS</key>
+  <catalog>org.openide.awt.Bundle</catalog>
+  <param></param>
+  <param></param>
+  <param>org.netbeans.modules.git.ui.fetch.FetchAction[&amp;Fetch...]</param>
+  <param>org.netbeans.modules.git.ui.fetch.FetchAction</param>
+  <param>&amp;Fetch...</param>
+</record>
+<record>
+  <date>2013-03-13T20:14:17</date>
+  <millis>1363205657615</millis>
+  <sequence>967</sequence>
+  <logger>org.netbeans.modules.git.ui.repository.remote.SelectUriStep</logger>
+  <level>INFO</level>
+  <thread>116</thread>
+  <message>Cannot connect to ves-ebi-0c:/es/ebinocle.git</message>
+  <exception>
+    <message>org.netbeans.libs.git.GitException$AuthorizationException: ves-ebi-0c:/es/ebinocle.git: java.net.UnknownHostException: ves-ebi-0c</message>
+    <frame>
+      <class>org.netbeans.libs.git.jgit.commands.TransportCommand</class>
+      <method>handleException</method>
+      <line>198</line>
+      <file>${netBeansDir}modules/org-netbeans-libs-git.jar</file>
+    </frame>
+    <frame>
+      <class>org.netbeans.libs.git.jgit.commands.ListRemoteObjectsCommand</class>
+      <method>runTransportCommand</method>
+      <line>87</line>
+      <file>${netBeansDir}modules/org-netbeans-libs-git.jar</file>
+    </frame>
+    <frame>
+      <class>org.netbeans.libs.git.jgit.commands.TransportCommand</class>
+      <method>run</method>
+      <line>137</line>
+      <file>${netBeansDir}modules/org-netbeans-libs-git.jar</file>
+    </frame>
+    <frame>
+      <class>org.netbeans.libs.git.jgit.commands.GitCommand</class>
+      <method>execute</method>
+      <line>73</line>
+      <file>${netBeansDir}modules/org-netbeans-libs-git.jar</file>

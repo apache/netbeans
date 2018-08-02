@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+<body>
+
+Various Ant tasks used during the NetBeans build process.
+
+<p>Of especial interest to module developers are:</p>
+
+<dl>
+
+<dt><a href="MakeNBM.html"><code>&lt;makenbm&gt;</code></a></dt>
+<dt><a href="MakeListOfNBM.html"><code>&lt;genlist&gt;</code></a></dt>
+<dd>Create NBM files for Auto Update, and create update tracking files to list
+the files contained in an NBM.</dd>
+
+<dt><a href="JHIndexer.html"><code>&lt;jhindexer&gt;</code></a></dt>
+<dt><a href="CheckLinks.html"><code>&lt;checklinks&gt;</code></a></dt>
+<dt><a href="CheckHelpSets.html"><code>&lt;checkhelpsets&gt;</code></a></dt>
+<dd>Create search databases for JavaHelp help sets. Check those help sets, or
+any other sets of HTML files, for broken links.</dd>
+
+<dt><a href="Arch.html"><code>&lt;arch&gt;</code></a></dt>
+<dd>Create a high-level architectural summary of your module and how it
+interacts with the complete application, based on a premade XML-based
+questionnaire.</dd>
+
+</dl>
+
+<p>Of especial interest to those creating a complete NetBeans distribution:</p>
+
+<dl>
+
+<dt><a href="CreateModuleXML.html"><code>&lt;createmodulexml&gt;</code></a></dt>
+<dd>Pregenerate the files <samp>system/Modules/*.xml</samp> in a NetBeans
+distribution, so that they are not created in the user directory when NetBeans
+is first started.</dd>
+
+<dt><a href="MakeUpdateDesc.html"><code>&lt;makeupdatedesc&gt;</code></a></dt>
+<dd>Create an XML file which can be put on a webserver that Auto Update can
+connect to in order to get a list of NBMs that it can install - create your own
+update center.</dd>
+
+</dl>
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+<record>
+  <date>2007-05-07T17:51:02</date>
+  <millis>1178553062843</millis>
+  <sequence>1368</sequence>
+  <level>FINER</level>
+  <thread>11</thread>
+  <message>Invoking St&amp;op implemented as org.openide.util.actions.NodeAction$DelegateAction thru org.openide.awt.Actions$MenuItem</message>
+  <key>UI_ACTION_BUTTON_PRESS</key>
+  <catalog>org.openide.awt.Bundle</catalog>
+  <param>org.openide.awt.Actions$MenuItem[Stop]</param>
+  <param>org.openide.awt.Actions$MenuItem</param>
+  <param>org.openide.util.actions.NodeAction$DelegateAction,St&amp;op[delegate=org.netbeans.modules.j2ee.deployment.impl.ui.actions.StopAction,St&amp;op]</param>
+  <param>org.openide.util.actions.NodeAction$DelegateAction</param>
+  <param>St&amp;op</param>
+</record>
+<record>
+  <date>2007-05-07T18:09:33</date>
+  <millis>1178554173671</millis>
+  <sequence>1658</sequence>
+  <level>FINER</level>
+  <thread>11</thread>
+  <message>UI_ACTION_KEY_PRESS</message>
+  <param>ctrl pressed S</param>
+  <param>ctrl pressed S</param>
+  <param>org.openide.util.actions.CookieAction$CookieDelegateAction[&amp;Save]</param>
+  <param>org.openide.util.actions.CookieAction$CookieDelegateAction</param>
+  <param>&amp;Save</param>
+</record>
+<record>
+  <date>2007-05-09T23:33:15</date>
+  <millis>1178721195343</millis>
+  <sequence>2847</sequence>
+  <level>FINER</level>
+  <thread>11</thread>
+  <message>UI_ACTION_KEY_PRESS</message>
+  <param>shift alt pressed LEFT</param>
+  <param>shift alt pressed LEFT</param>
+  <param>org.openide.util.actions.CallbackSystemAction$DelegateAction,Previous Inner View[delegate=org.netbeans.core.actions.PreviousViewCallbackAction,Previous Inner View]</param>
+  <param>org.openide.util.actions.CallbackSystemAction$DelegateAction</param>
+  <param>Previous Inner View</param>
+</record>
+<record>
+  <date>2007-05-07T17:45:21</date>
+  <millis>1178552721593</millis>
+  <sequence>1317</sequence>
+  <level>FINER</level>
+  <thread>11</thread>
+  <message>Invoking &amp;Build Main Project implemented as org.netbeans.modules.project.ui.actions.MainProjectAction thru javax.swing.JButton</message>
+  <key>UI_ACTION_BUTTON_PRESS</key>
+  <catalog>org.openide.awt.Bundle</catalog>
+  <param>javax.swing.JButton[]</param>
+  <param>javax.swing.JButton</param>
+  <param>org.netbeans.modules.project.ui.actions.MainProjectAction[&amp;Build Main Project]</param>
+  <param>org.netbeans.modules.project.ui.actions.MainProjectAction</param>
+  <param>&amp;Build Main Project</param>
+</record>
+<record>
+  <date>2007-05-07T07:12:41</date>
+  <millis>1178489561984</millis>
+  <sequence>242</sequence>
+  <level>FINE</level>
+  <thread>11</thread>
+  <message>UI_ACTION_BUTTON_PRESS</message>
+  <param>org.openide.awt.Toolbar$DefaultIconButton[]</param>
+  <param>org.openide.awt.Toolbar$DefaultIconButton</param>
+  <param>org.netbeans.modules.project.ui.actions.ProjectAction[Test Project]</param>
+  <param>org.netbeans.modules.project.ui.actions.ProjectAction</param>
+  <param>Test Project</param>
+</record>
+
+
+

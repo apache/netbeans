@@ -1,0 +1,4 @@
+HTML5
+HTML5 Application
+HTML5 Application with Existing Sources
+Cordova Application

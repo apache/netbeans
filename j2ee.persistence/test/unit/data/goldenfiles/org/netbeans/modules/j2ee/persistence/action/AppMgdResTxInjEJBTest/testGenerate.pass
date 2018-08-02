@@ -1,0 +1,35 @@
+package org.netbeans.test;
+
+import java.util.*;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
+
+public class Test {
+    @PersistenceUnit(name = "MyPersistenceUnit")
+    private EntityManagerFactory emf;
+    private EntityManager em;
+
+    @PostConstruct
+    public void init() {
+        em = emf.createEntityManager();
+    }
+
+    @PreDestroy
+    public void destroy() {
+        em.close();
+    }
+
+    public void create(Object object) {
+        em.getTransaction().begin();
+        try {
+            em.persist(object);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            em.getTransaction().rollback();
+        }
+    }
+}

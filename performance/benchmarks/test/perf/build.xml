@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<project basedir="." default="test" name="JDK platform benchmarks">
+
+    <!-- Properties -->
+    <property name="perf.home" value="../../../performance"/>
+
+    <!-- ClassPath for platform performance tests compilation -->
+    <path id="performance.pt.cpath">
+	<pathelement location="../../../xtest/lib/junit.jar"/>
+	<pathelement location="${perf.home}/lib/performance.jar"/>
+    </path>
+
+    <!-- ClassPath for platform performance tests running -->
+    <path id="performance.pt.rpath">
+	<pathelement location="../../../xtest/lib/junit.jar"/>
+	<pathelement location="${perf.home}/lib/performance.jar"/>
+	<pathelement location="lib/tests.jar"/>
+	<pathelement location="lib"/>
+    </path>
+
+    <!-- test compilation & packaging -->
+    <target name="compile">
+        <javac destdir="src" srcdir="src">
+            <classpath refid="performance.pt.cpath"/>
+        </javac>
+    </target>
+
+    <target name="suite_assembler" depends="compile">
+	<java   fork="yes"
+	        classname="org.netbeans.performance.SuiteAssembler">
+	    <arg value="${basedir}/src"/>
+	    <classpath refid="performance.pt.cpath"/>
+	</java>
+    </target>
+								
+
+    <target depends="compile,suite_assembler" name="jars">
+        <mkdir dir="lib"/>
+        <jar basedir="src"
+		compress="false"
+		excludes="**/*.jar"
+		jarfile="lib/tests.jar"/>
+    </target>
+
+    <target name="clean">
+	<delete>
+	    <fileset dir="src">
+		<include name="**/*.class"/>
+	    </fileset>
+	</delete>
+	<delete dir="lib"/>
+    </target>
+    
+    <target depends="jars,prop_runner_init,prop_test_init,prop_output_init" name="init">
+	<mkdir dir="report"/>
+    </target>
+		    
+    <target name="prop_runner_init" unless="${runnerclass}">
+	<property name="runnerclass" value="junit.textui.TestRunner"/>
+    </target>
+				    
+    <target name="prop_test_init" unless="${tests.specs}">
+        <property name="tests.specs" value=""/>
+    </target>
+
+    <target name="prop_output_init" unless="${tests.output}">
+        <property name="tests.output" value="report/all.xml"/>
+    </target>
+
+    <target name="test" depends="init">
+	<java	fork="yes"
+		classname="${runnerclass}">
+	    <classpath refid="performance.pt.rpath"/>
+	    <arg value="libgen.GenSuite"/>
+	    <jvmarg value="-Dtests.specs=${tests.specs}"/>
+	    <jvmarg value="-Dtests.output=${tests.output}"/>
+	</java>
+    </target>
+    
+    <target name="test-lists">
+        <property name="tests.specs" value="org.netbeans.performance.collections.ListTestArrayList;org.netbeans.performance.collections.ListTestArrayListForN;org.netbeans.performance.collections.ListTestVector;org.netbeans.performance.collections.ListTestVectorForN;org.netbeans.performance.collections.ListTestLinkedList"/>
+        <property name="tests.output" value="report/lists.xml"/>
+	<antcall target="test"/>
+    </target>
+
+    <target name="test-swing">
+        <property name="tests.specs" value="javax.swing.ListCellTest"/>
+        <property name="tests.output" value="report/swing.xml"/>
+	<antcall target="test"/>
+    </target>
+
+    <target name="test-exceptions">
+        <property name="tests.specs" value="org.netbeans.performance.platform.ExceptionConstruct"/>
+        <property name="tests.output" value="report/exceptions.xml"/>
+	<antcall target="test"/>
+    </target>
+
+    <target name="test-newinner">
+        <property name="tests.specs" value="org.netbeans.performance.platform.InnerClassConstruct"/>
+        <property name="tests.output" value="report/newinner.xml"/>
+	<antcall target="test"/>
+    </target>
+
+    <target depends="jars" name="test-runnablemethod">
+        <property name="tests.specs" value="org.netbeans.performance.platform.RunnableMethod"/>
+        <property name="tests.output" value="report/runnablemethod.xml"/>
+	<antcall target="test"/>
+    </target>
+
+
+</project>

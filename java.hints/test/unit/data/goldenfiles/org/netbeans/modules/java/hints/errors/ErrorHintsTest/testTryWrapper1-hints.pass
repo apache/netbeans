@@ -1,0 +1,2 @@
+Add throws clause for java.io.FileNotFoundException
+Surround with try-catch

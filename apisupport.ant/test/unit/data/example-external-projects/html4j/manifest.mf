@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.test.html4j
+OpenIDE-Module-Localizing-Bundle: org/netbeans/test/html4j/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.1
+

@@ -1,0 +1,12 @@
+diff -u file1 file2
+--- file1 2009-07-07 16:48:22.000000000 +0200
++++ file1 2009-07-07 16:49:01.000000000 +0200
+@@ -1,7 +1,7 @@
+ one
+ two
+ three
+-for
++four
+ five
+ six
+ seven

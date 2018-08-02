@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="goodNOperation" targetNamespace="http://j2ee.netbeans.org/wsdl/goodNOperation"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://j2ee.netbeans.org/wsdl/goodNOperation" xmlns:plink="http://schemas.xmlsoap.org/ws/2004/03/partner-link/">
+    <types/>
+    <message name="goodNOperationOperationReply">
+        <part name="part1" type="xsd:string"/>
+    </message>
+    <portType name="goodNOperationPortType">
+        <operation name="goodNOperationOperation">
+            <output name="output1" message="tns:goodNOperationOperationReply"/>
+        </operation>
+    </portType>
+    <binding name="goodNOperationBinding" type="tns:goodNOperationPortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="goodNOperationOperation">
+            <soap:operation/>
+            <output name="output1">
+                <soap:body use="literal" namespace="http://j2ee.netbeans.org/wsdl/goodNOperation"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="goodNOperationService">
+        <port name="goodNOperationPort" binding="tns:goodNOperationBinding">
+            <soap:address location="http://localhost:18181/goodNOperationService/goodNOperationPort"/>
+        </port>
+    </service>
+    <plink:partnerLinkType name="goodNOperationPartner">
+        <!-- partnerLinkType are automatically generated when a new portType is added. partnerLinkType are used by BPEL processes. 
+In a BPEL process, a partner link represents the interaction between the BPEL process and a partner service. Each partner link is associated with a partner link type.
+A partner link type characterizes the conversational relationship between two services. The partner link type can have one or two roles.-->
+        <plink:role name="goodNOperationPortTypeRole" portType="tns:goodNOperationPortType"/>
+    </plink:partnerLinkType>
+</definitions>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+    <folder name="foo">
+        <file name="bar.txt">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="sfs_attr_test.Bundle"/>
+            <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/sfs_attr_test/main.gif"/>
+        </file>
+        <file name="baz.txt">
+            <attr name="SystemFileSystem.icon" methodvalue="sfs_attr_test.Util.mergeIcons"/>
+            <attr name="iconCount" intvalue="2"/>
+            <attr name="icon1" urlvalue="nbresloc:/sfs_attr_test/main.gif"/>
+            <attr name="icon2" urlvalue="nbresloc:/sfs_attr_test/badge.gif"/>
+            <attr name="iconx2" intvalue="8"/>
+            <attr name="icony2" intvalue="8"/>
+        </file>
+    </folder>
+</filesystem>

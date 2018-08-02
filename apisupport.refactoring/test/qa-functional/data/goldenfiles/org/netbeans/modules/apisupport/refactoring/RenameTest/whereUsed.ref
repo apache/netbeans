@@ -1,0 +1,29 @@
+testrename.MyDataLoader
+Found 3 occurance(s).
+
+Section Loader: <b>testRename/WhereUsedDataLoader.class</b>
+
+testRename/WhereUsedDataLoader.java
+      return NbBundle.getMessage(<b>WhereUsedDataLoader</b>.class, "LBL_WhereUsed_loader_name");
+
+testRename/WhereUsedDataObject.java
+      public WhereUsedDataObject(FileObject pf, <b>WhereUsedDataLoader</b> loader) throws DataObjectExistsException, IOException
+
+
+testrename.WhereUsedAction
+Found 7 occurance(s).
+
+Path: <b>Actions/Build/testRename-WhereUsedAction.instance</b>
+
+Path: Actions/Build/testRename-WhereUsedAction.instance Attribute: instanceClass Value: <b>testRename.WhereUsedAction</b>
+
+Path: Editors/application/xml-dtd/Popup/testRename-WhereUsedAction.shadow Attribute: originalFile Value: <b>Actions/Build/testRename-WhereUsedAction.instance</b>
+
+Path: Loaders/application/pdf/Actions/testRename-WhereUsedAction.shadow Attribute: originalFile Value: <b>Actions/Build/testRename-WhereUsedAction.instance</b>
+
+Path: Menu/File/testRename-WhereUsedAction.shadow Attribute: originalFile Value: <b>Actions/Build/testRename-WhereUsedAction.instance</b>
+
+testRename/WhereUsedAction.java
+      return NbBundle.getMessage(<b>WhereUsedAction</b>.class, "CTL_WhereUsedAction");
+
+

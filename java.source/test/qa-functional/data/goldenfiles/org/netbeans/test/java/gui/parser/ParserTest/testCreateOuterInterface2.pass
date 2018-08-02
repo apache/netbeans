@@ -1,0 +1,11 @@
+Type Element: testCreateOuterInterface 2332 2491
+public class testCreateOuterInterface {
+    
+    /** Creates a new instance of testCreateOuterInterface */
+    public testCreateOuterInterface() {
+    }
+    
+}
+Executable Element: <init> 2443 2484
+public testCreateOuterInterface() {
+    }

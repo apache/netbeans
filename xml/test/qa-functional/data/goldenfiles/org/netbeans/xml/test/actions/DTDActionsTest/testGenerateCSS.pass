@@ -1,0 +1,8 @@
+/* Cascade style sheet based on testDTD.dtd DTD */
+CATALOG { display: block }
+PRODUCT { display: block }
+SPECIFICATIONS { display: block }
+OPTIONS { display: block }
+PRICE { display: block }
+NOTES { display: block }
+

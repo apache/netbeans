@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+ <!-- Comment -->
+  <!ATTLIST Toolbar
+    name CDATA #REQUIRED
+    background CDATA "&white;"
+    visible (true | false) #IMPLIED
+  >
+  %includeOther;
+  <!ATTLIST Item 
+    name CDATA #FIXED "unnamed&amp;unknown"
+  >
+  <!ATTLIST OherItem
+    %sharedAttributes;
+  >
+error

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<#--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+
+<project name="Custom junit test" default="test-custom" basedir=".">
+    <target name="-check-run-test-single-method-supported" if="methodname">
+        <available property="run.test.single.method.supported"
+                   resource="org/apache/tools/ant/taskdefs/optional/junit/JUnit4TestMethodAdapter.class"/>
+        <fail unless="run.test.single.method.supported">Execution of a single test method is not supported by this version of Ant.</fail>
+    </target>
+<#noparse>
+    <target name="-prepare-execution">
+        <property name="test.result.dir" location="${basedir}"/>
+        <property  name="tmp.dir" value="${basedir}"/>
+        <macrodef name="junit-template">
+            <element name="test-spec" implicit="yes"/>
+            <sequential>
+                <property name="run.jvmargs" value="" />
+                <property name="work.dir" value="${basedir}"/>
+                <junit showoutput="true" fork="true" dir="${work.dir}" jvm="${platform.java}" tempdir="${tmp.dir}">
+                    <test-spec/>
+                    <classpath path="${classpath}" />
+                    <jvmarg value="-ea"/>
+                    <jvmarg line="${run.jvmargs}"/>
+                    <formatter type="brief" usefile="false"/>
+                    <formatter type="xml" />
+                    <syspropertyset>
+                        <propertyref prefix="test-sys-prop."/>
+                        <mapper from="test-sys-prop.*" to="*" type="glob"/>
+                    </syspropertyset>
+                </junit>
+            </sequential>
+        </macrodef>
+    </target>
+    <target name="test-custom" depends="-check-run-test-single-method-supported,-prepare-execution">
+        <tstamp>
+            <format property="run.id" pattern="hhmmssSSS"/>
+        </tstamp>
+        <property name="test.result.dir.custom" value="${test.result.dir}/run-${run.id}"/>
+        <mkdir dir="${test.result.dir.custom}"/>
+</#noparse>
+        <junit-template>
+            ${tests}
+        </junit-template>
+<#noparse>
+        <delete dir="${test.result.dir.custom}" deleteonexit="true"/>
+</#noparse>
+    </target>
+</project>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project basedir=".." name="NetBeans_Build_System">
+    <property file="nbproject/nbjdk.properties"/>
+    <property location="${netbeans.user}/build.properties" name="user.properties.file"/>
+    <property file="${user.properties.file}"/>
+    <import file="jdk.xml"/>
+    <target depends="-jdk-init" name="bootstrap">
+        <ant inheritall="false" target="bootstrap"/>
+    </target>
+    <target depends="-jdk-init" name="localclean">
+        <ant inheritall="false" target="localclean"/>
+    </target>
+    <target depends="-jdk-init" name="localtest">
+        <ant inheritall="false" target="localtest"/>
+    </target>
+    <target depends="-jdk-init" name="localtest-single">
+        <ant inheritall="false" target="localtest-single"/>
+    </target>
+    <target depends="-jdk-init,-jdk-presetdef-nbjpdastart" name="localtest-single-nb-debug">
+        <ant inheritall="false" target="localtest-single-nb-debug"/>
+    </target>
+    <target depends="-jdk-init" name="tryme">
+        <ant inheritall="false" target="tryme"/>
+    </target>
+    <target depends="-jdk-init,-jdk-presetdef-nbjpdastart" name="tryme-debug">
+        <ant inheritall="false" target="tryme-debug"/>
+    </target>
+</project>

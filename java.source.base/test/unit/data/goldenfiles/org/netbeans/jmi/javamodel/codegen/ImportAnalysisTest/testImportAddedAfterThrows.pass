@@ -1,0 +1,12 @@
+package org.netbeans.test.codegen;
+
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.text.BadLocationException;
+
+public abstract class ImportsTest7 {
+    
+    public ImportsTest7() throws BadLocationException {
+    }
+    
+}

@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.editor.lib2/1
+OpenIDE-Module-Implementation-Version: 55
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/editor/lib2/Bundle.properties
+OpenIDE-Module-Layer: org/netbeans/modules/editor/lib2/resources/layer.xml
+OpenIDE-Module-Needs: org.netbeans.modules.editor.actions

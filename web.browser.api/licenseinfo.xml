@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/browser_chrome_16x.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/browser_chrome_24x.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/browser_chromium_16x.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/browser_chromium_24x.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/browser_edge_16x.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/browser_edge_24x.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/browser_firefox_16x.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/browser_firefox_24x.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/browser_ie_16x.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/browser_ie_24x.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/browser_opera_16x.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/browser_opera_24x.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/browser_safari_16x.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/browser_safari_24x.png</file>
+        <license ref="CDDL-1.0" />
+        <comment>
+            Files were taken from oracle netbeans repository and were distributed 
+            in the netbeans binary distribution under the combined GPLv2 + CDDL
+            license.
+
+            The files are used in the GUI to represent the browsers and so need
+            to be close to the original artwork of their icons.
+        </comment>
+    </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/tabletLandscape.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/menu.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/netbook_dark.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/widescreen.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/desktop.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/sizeToFit_dark.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/tabletPortrait.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/tabletPortrait_dark.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/selectionMode.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/tabletLandscape_dark.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/widescreen_dark.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/nb-badge.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/customize.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/handheldPortrait_dark.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/handheldPortrait.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/selectionMode_dark.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/netbook.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/menu_dark.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/sizeToFit.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/desktop_dark.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/handheldLandscape.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/handheldLandscape_dark.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/browser_disabled_16x.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/browser_disabled_24x.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/browser_generic_16x.png</file>
+        <file>src/org/netbeans/modules/web/browser/ui/resources/browser_generic_24x.png</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

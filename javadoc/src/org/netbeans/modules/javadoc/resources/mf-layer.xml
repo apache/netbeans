@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.0//EN" "http://www.netbeans.org/dtds/filesystem-1_0.dtd">
+<filesystem>
+
+  <!-- Contribute actions to main menu -->
+  <folder name="Menu">
+	<folder name="Help">
+            
+            <file name="org-netbeans-modules-javadoc-search-SearchDocAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Tools/org-netbeans-modules-javadoc-search-SearchDocAction.instance"/>
+                <attr name="position" intvalue="1050"/>
+            </file>
+            
+            <file name="org-netbeans-modules-javadoc-search-IndexOverviewAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Tools/org-netbeans-modules-javadoc-search-IndexOverviewAction.instance"/>
+                <attr name="position" intvalue="1100"/>
+            </file>
+            
+            <file name="SeparatorAfterJavadoc.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="1150"/>
+            </file>
+        </folder>
+  </folder>  <!-- Main menu -->
+
+  <!-- Register actions in actions pool -->
+  <folder name="Actions">
+    <folder name="Tools">
+      <file name="org-netbeans-modules-javadoc-search-SearchDocAction.instance">
+        <attr name="instanceClass" stringvalue="org.netbeans.modules.javadoc.search.SearchDocAction"/>
+      </file>
+      
+      <file name="org-netbeans-modules-javadoc-search-IndexOverviewAction.instance">
+        <attr name="instanceClass" stringvalue="org.netbeans.modules.javadoc.search.IndexOverviewAction"/>
+      </file>
+      
+    </folder>
+  </folder> <!-- Action pool -->
+
+
+  <folder name="Shortcuts">
+      <file name="S-F1.shadow">
+            <attr name="originalFile" stringvalue="Actions/Tools/org-netbeans-modules-javadoc-search-SearchDocAction.instance"/>
+        </file>
+    </folder> 
+  
+<!--    <folder name="org-netbeans-modules-java-hints">
+        <folder name="rules">
+            <folder name="hints">
+                <folder name="javadoc">
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javadoc.hints.Bundle"/>
+                    <file name="CreateJavadoc.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.javadoc.hints.JavadocHintProvider.createCreateJavadoc"/>
+                    </file>
+                    <file name="ErrorInJavadoc.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.javadoc.hints.JavadocHintProvider.createErrorInJavadoc"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+    </folder>-->
+
+    <folder name="Editors">
+        <folder name="text">
+            <folder name="x-javadoc">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javadoc.resources.Bundle"/>
+                <folder name="BracesMatchers">
+                    <file name="org-netbeans-modules-javadoc-JavadocBracesMatcher.instance">
+                        <attr name="position" intvalue="0"/>
+                    </file>
+                </folder>
+                <file name="org-netbeans-modules-javadoc-Formatter.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.javadoc.hints.GenerateJavadocAction.create"/>
+                </file>
+            </folder>
+            <folder name="x-java">
+                <file name="org-netbeans-modules-javadoc-highlighting-Factory.instance" >
+                    <attr name="instanceOf" stringvalue="org.netbeans.spi.editor.highlighting.HighlightsLayerFactory"/>
+                    <attr name="instanceCreate" newvalue="org.netbeans.modules.javadoc.highlighting.Factory"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

@@ -1,0 +1,169 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+    <head>
+        <title>JavaFX WebView Application</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body{
+                font-family: Dialog;
+                font-size: 13px;
+                width: 90%;
+                background-color: #eeeeee;
+            }
+
+            #locations{
+                display: table;
+            }
+
+            .form-field{
+                display: table-row;
+            }
+
+            .form-field > label, .form-field > input, .form-field > button{
+                display: table-cell;
+            }
+
+            .error{
+                color: red;
+                position: absolute;
+                bottom: 10px;
+            }
+
+            label.checkbox-label input[type=checkbox]{
+                position: relative;
+                vertical-align: middle;
+                bottom: 2px;
+            }
+
+            label.checkbox-label input[type=radio]{
+                position: relative;
+                vertical-align: middle;
+                bottom: 2px;
+            }
+        </style>
+    </head>
+    <body id="body">
+        <div>
+            <section data-bind="step: 'targetChooser:archetype'">
+                <!-- where to generate the project -->
+            </section>
+            <section data-bind="step: { 'id' : 'platforms', text : 'Choose Platforms'}" >
+                <strong>Choose the Platforms where you want to deploy your application:</strong>
+                <br><br><br>
+                <div >
+                    <label class="checkbox-label">
+                        <input id="android" type="checkbox" data-bind="checked: android" />
+                        <label for="android" >Run on Android devices</label>
+                </div>
+                <div data-bind="if: errorCode()===7">
+                    <label for="androidSdkPath">Running on Android devices requires an Android SDK. Please specify the path to the directory containing the platform-tools folder:</label>
+                    <input type="text" class="form-field" id="androidSdkPath" data-bind="textInput: androidSdkPath"/>
+                    <button data-bind="click: chooseAndroidSDK">Browse...</button>
+                </div>
+                <div >
+                    <label class="checkbox-label" for="ios">
+                    <input id="ios" type="checkbox" data-bind="checked: ios"/>
+                    Run on iOS devices (Requires a Mac)</label>
+                    <div data-bind="visible: ios" style="position: relative; left: 3em">
+                        <div>
+                            <label class="checkbox-label" for="moe">
+                            <input id="moe" type="checkbox" data-bind="checked: iosMoe"/>
+                            Use Intel's Multi OS Engine</label>
+                        </div>
+                        <div>
+                            <label class="checkbox-label" for="robovm">
+                            <input id="robovm" type="checkbox" data-bind="checked: iosRoboVM"/>
+                            Use Mobidevelop RoboVM</label>
+                        </div>
+                        <select data-bind='options: availableSimulators, optionsText: "name", value: selectedSimulator, optionsCaption: "Choose a device..."'>
+                        </select>
+                    </div>
+                </div>
+                <div >
+                    <label class="checkbox-label">
+                        <input id="web" type="checkbox" data-bind="checked: web"/>
+                        <label for="web">Run in a Browser</label>
+                </div>
+                <div >
+                    <label class="checkbox-label">
+                        <input id="netbeans" type="checkbox" data-bind="checked: netbeans"/>
+                        <label for="netbeans">Run as a NetBeans Plugin</label>
+                </div>
+                <div data-bind="if: errorCode()===8">
+                    <label for="defineNbInstallation">Please select your NetBeans Installation Directory: </label>
+                    <input type="text" class="form-field" id="defineNbInstallation" data-bind="textInput: nbhome"/>
+                    <button data-bind="click: defineNbInstallation">Browse...</button>
+                </div>
+            </section>
+
+            <section data-bind="step: { 'id' : 'template', text : 'Select a template'}" >
+                <strong>Select a template to start with:</strong>
+                <br><br><br>
+                <div data-bind="foreach: archetypes">
+                    <label class="checkbox-label">
+                        <input type="radio" name="archetype" data-bind="attr: {id: artifactId}, value: $data, checked: $root.archetype" />
+                        <label data-bind="attr: {for: artifactId}, text: name"></label>
+                        <br>
+                        </div>
+                        <div data-bind="with: archetype">
+                            <h4>Description:</h4>
+                            <span data-bind="text: description"></span>
+                            <div data-bind="if: example">
+                                <label class="checkbox-label">
+                                    <input id="sample" type="checkbox" data-bind="checked: $root.installExample"/>
+                                    <label for="sample">Install sample code</label>
+                            </div>
+                        </div>
+                        <br><br>
+            </section>
+
+
+            <section data-bind="step: { 'id' : 'summary', text : 'What will be created?' }" >
+                            <p>
+                                Let's generate a project from following archetype:
+                            </p>
+                            <ul data-bind="with: archetype">
+                                <li><b>artifactId</b>: <span data-bind="text: artifactId"></span></li>
+                                <li><b>groupId</b>: <span data-bind="text: groupId"></span></li>
+                                <li><b>version</b>: <span data-bind="text: version"></span></li>
+                            </ul>
+            </section>
+
+
+        </div>
+
+
+        <!-- display the error message -->
+        <div data-bind="visible: errorCode() === 3" class="error">
+            Choose at least one: <b>MOE</b> or <b>RoboVM</b>!
+        </div>
+        <div data-bind="visible: errorCode() === 4" class="error">
+            Choose a device to define <b>moe.launcher.simulators</b> property in
+            <code>.m2/settings.xml</code> file.
+        </div>
+        <div data-bind="visible: errorCode() === 6" class="error">
+            <span data-bind="text: warning"></span>
+            <a href="#" data-bind="click: cleanWarning">Dismiss</a>
+        </div>
+    </body>
+</html>

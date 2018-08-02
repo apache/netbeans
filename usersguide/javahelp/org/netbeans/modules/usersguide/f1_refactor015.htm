@@ -1,0 +1,252 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Move Members Dialog Box</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.refactoring.java.ui.MoveMembersUI" name="org.netbeans.modules.refactoring.java.ui.MoveMembersUI"></a></p>
+<div id="NBCSH2979"><!-- infolevel="all" infotype="General" --><a id="sthref384" name="sthref384"></a>
+<h1>Move Members Dialog Box</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to specify the target where selected methods and fields of the source are to be moved. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG567">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<table summary="Descriptions of Move Members dialog box options." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="37%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t18">Element</th>
+<th align="left" valign="bottom" id="r1c2-t18">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t18" headers="r1c1-t18">
+<p>Move members from.</p>
+</td>
+<td align="left" headers="r2c1-t18 r1c2-t18">Displays the name of the source class containing members to be moved. The value is already filled in and is read-only</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t18" headers="r1c1-t18">
+<p>Target</p>
+</td>
+<td align="left" headers="r3c1-t18 r1c2-t18">Displays fields for specifying a fully qualified name of the target class.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t18" headers="r1c1-t18">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Project</p>
+</td>
+<td align="left" headers="r4c1-t18 r1c2-t18">Specifies the name of the project to which you are moving the members.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t18" headers="r1c1-t18">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Location</p>
+</td>
+<td align="left" headers="r5c1-t18 r1c2-t18">Specifies the part of the project to which you are moving the members. The appropriate value here is generally Source Packages, but it is also possible to have other source roots represented in this field.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t18" headers="r1c1-t18">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Package</p>
+</td>
+<td align="left" headers="r6c1-t18 r1c2-t18">Specifies the package of the project to which you are moving the members.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t18" headers="r1c1-t18">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;To Class</p>
+</td>
+<td align="left" headers="r7c1-t18 r1c2-t18">Specifies the class to which you are moving the members.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t18" headers="r1c1-t18">
+<p>Members to be moved.</p>
+</td>
+<td align="left" headers="r8c1-t18 r1c2-t18">Lists all members detected in the source class.
+<p>Select checkboxes next to the members you want to move. You can move more than one member at a time.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t18" headers="r1c1-t18">
+<p>Visibility</p>
+</td>
+<td align="left" headers="r9c1-t18 r1c2-t18">Specifies visibility level using six options available: <b>Escalate</b>, <b>As is</b>, <b>Private</b>, <i>default</i>, <b>Protected</b>, and <b>Public</b>.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t18" headers="r1c1-t18">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Escalate</p>
+</td>
+<td align="left" headers="r10c1-t18 r1c2-t18">Automatically raises the visibility to a necessary level based on usages.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r11c1-t18" headers="r1c1-t18">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;As is</p>
+</td>
+<td align="left" headers="r11c1-t18 r1c2-t18">Keeps the current visibility level of the member.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r12c1-t18" headers="r1c1-t18">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Private</p>
+</td>
+<td align="left" headers="r12c1-t18 r1c2-t18">Changes to or keeps the visibility private.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r13c1-t18" headers="r1c1-t18">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;default</p>
+</td>
+<td align="left" headers="r13c1-t18 r1c2-t18">Changes to or keeps the visibility the default level.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r14c1-t18" headers="r1c1-t18">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Protected</p>
+</td>
+<td align="left" headers="r14c1-t18 r1c2-t18">Changes to or keeps the visibility protected.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r15c1-t18" headers="r1c1-t18">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Public</p>
+</td>
+<td align="left" headers="r15c1-t18 r1c2-t18">Changes to or keeps the visibility public.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r16c1-t18" headers="r1c1-t18">
+<p>Javadoc</p>
+</td>
+<td align="left" headers="r16c1-t18 r1c2-t18">Specifies whether the Javadoc documentation is to be kept as is or updated during the refactoring using the two options available (<code dir="ltr">As is</code>, <code dir="ltr">Update</code>).</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r17c1-t18" headers="r1c1-t18">
+<p>Keep original method(s) and delegate to the moved method</p>
+</td>
+<td align="left" headers="r17c1-t18 r1c2-t18">Keeps original methods signatures in the source class and lets them call the newly created method in the target class.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r18c1-t18" headers="r1c1-t18">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Deprecate the old method(s)</p>
+</td>
+<td align="left" headers="r18c1-t18 r1c2-t18">Deprecates the old methods in the source class after refactoring.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>The IDE displays an error message when target class is identical to source class or when target class belongs to the same target package.</p>
+<p>The following table lists buttons that are available in the toolbar at the bottom of the Members list. Hold the cursor over a button to display a description of the command:</p>
+
+<table summary="Descriptions of toolbar icons below Members list." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t19">Element</th>
+<th align="left" valign="bottom" id="r1c2-t19">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t19" headers="r1c1-t19">
+<p>Show fields</p>
+<p><img width="16" height="16" src="img/filterhidefields.png" alt="Show Fields icon" title="Show Fields icon" /></p>
+</td>
+<td align="left" headers="r2c1-t19 r1c2-t19">Displays fields in the list.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t19" headers="r1c1-t19">
+<p>Show static members</p>
+<p><img width="16" height="16" src="img/filterhidestatic.png" alt="Show static members icon." title="Show static members icon." /></p>
+</td>
+<td align="left" headers="r3c1-t19 r1c2-t19">Displays static members in the list.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t19" headers="r1c1-t19">
+<p>Show non-public members</p>
+<p><img width="16" height="16" src="img/filterhidenonpublic.png" alt="Show non-public members icon." title="Show non-public members icon." /></p>
+</td>
+<td align="left" headers="r4c1-t19 r1c2-t19">Displays non-public members in the list.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t19" headers="r1c1-t19">
+<p>Sort by name</p>
+<p><img width="16" height="16" src="img/sortalpha.png" alt="Sort by name icon." title="Sort by name icon." /></p>
+</td>
+<td align="left" headers="r5c1-t19 r1c2-t19">Displays members sorted by names.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t19" headers="r1c1-t19">
+<p>Sort by source</p>
+<p><img width="16" height="16" src="img/sortposition.png" alt="Sort by source icon." title="Sort by source icon." /></p>
+</td>
+<td align="left" headers="r6c1-t19 r1c2-t19">Displays members sorted by their positions in the source code.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t19" headers="r1c1-t19">
+<p>Select all</p>
+<p><img width="12" height="12" src="img/selected.png" alt="Select all icon." title="Select all icon." /></p>
+</td>
+<td align="left" headers="r7c1-t19 r1c2-t19">Selects all members in the list.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t19" headers="r1c1-t19">
+<p>Deselect all</p>
+<p><img width="12" height="12" src="img/deselected.png" alt="Deselect all icon." title="Deselect all icon." /></p>
+</td>
+<td align="left" headers="r8c1-t19 r1c2-t19">Deselects all members in the list.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>Click the black arrow in the center of the divider to toggle the display of the toolbar.</p>
+<a id="NBCSH3011" name="NBCSH3011"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG547">
+<param name="text" value="<html><u>&quot;Refactoring Java Projects&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

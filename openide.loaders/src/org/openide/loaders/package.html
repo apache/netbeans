@@ -1,0 +1,65 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+<body>
+
+<a href="http://top/org/openide/loaders/doc-files/api.html"><em>Datasystems</em></a>
+
+are the logical layer between a filesystem and higher-level file-oriented operations.
+
+<p>The
+
+<a href="doc-files/api.html"><b>Datasystems API</b></a>
+
+provides a higher-level view of files in terms of useful data - data
+which has specific types, actions that can be performed on these
+types, and relationships to other files. For example, NetBeans might
+find these files in a newly-opened directory:
+
+<ul>
+<li> <code>myform.form</code>
+<li> <code>myform.java</code>
+<li> <code>myform.class</code>
+<li> <code>myform$1.class</code>
+<li> <code>myform$2.class</code>
+</ul>
+
+Logically, all of these files are interlinked, and it is the job of a
+
+<a href="DataLoader.html"><em>data loader</em></a>
+
+to associate them. In this case, a loader installed by the Form Editor
+into the system's
+
+<a href="DataLoaderPool.html"><em>loader pool</em></a>
+
+would recognize the common basename of the files, and produce a
+special
+
+<a href="DataObject.html"><em>data object</em></a>
+
+which encapsulates that there is a Java source with an accompanying
+form and compiled class files. This data object would then provide
+operations appropriate to a form on disk, and assist in creating an
+Explorer node subtree for it.
+
+</body>
+</html>

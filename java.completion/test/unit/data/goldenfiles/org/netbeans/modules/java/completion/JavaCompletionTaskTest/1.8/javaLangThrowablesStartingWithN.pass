@@ -1,0 +1,8 @@
+NegativeArraySizeException
+NoClassDefFoundError
+NoSuchFieldError
+NoSuchFieldException
+NoSuchMethodError
+NoSuchMethodException
+NullPointerException
+NumberFormatException

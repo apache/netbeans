@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Debugging: Loaded Classes Window</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="NetbeansDebuggerInstancesNode" name="NetbeansDebuggerInstancesNode"></a></p>
+<div id="NBCSH2639"><!-- infolevel="all" infotype="General" --><a id="sthref346" name="sthref346"></a>
+<h1>Debugging: Loaded Classes Window</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to view the classes loaded on the heap and the percentage and number of object instances. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG885">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>You can sort the classes by class name or the number or percentage of instances. You can also use the filter box at the bottom of the window to filter the list by class name. Right-click a class name to view additional details about the class.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="36%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t12">Element</th>
+<th align="left" valign="bottom" id="r1c2-t12">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t12" headers="r1c1-t12">
+<p>Show in Instances View (requires JDK 1.6)</p>
+</td>
+<td align="left" headers="r2c1-t12 r1c2-t12">Opens the Instances window displaying the object instances allocated by the constructor of the selected class.
+<p>The Instances window enables you to browse the instances of each class, the fields of each instance and the references to each instance.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t12" headers="r1c1-t12">
+<p>Show Only Subclasses</p>
+</td>
+<td align="left" headers="r3c1-t12 r1c2-t12">Enables you to limit the classes displayed to the subclasses of the selected class.
+<p>This functions by using the selected class as the filter criteria. To restore the full list of classes, click <b>Clear Filter</b> to the right of the filter class box</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t12" headers="r1c1-t12">
+<p>Go to Source</p>
+</td>
+<td align="left" headers="r4c1-t12 r1c2-t12">Opens the Java source file in the Source Editor.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>The following table describes the icons used in the Loaded Classes window.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t13">Element</th>
+<th align="left" valign="bottom" id="r1c2-t13">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t13" headers="r1c1-t13">
+<p><img width="16" height="16" src="img/class_loader.gif" alt="Class loader icon." title="Class loader icon." /></p></td>
+<td align="left" headers="r2c1-t13 r1c2-t13">Class Loader</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t13" headers="r1c1-t13">
+<p><img width="16" height="16" src="img/classes.gif" alt="Class icon." title="Class icon." /></p></td>
+<td align="left" headers="r3c1-t13 r1c2-t13">Class</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t13" headers="r1c1-t13">
+<p><img width="16" height="16" src="img/interface.gif" alt="Interface icon." title="Interface icon." /></p></td>
+<td align="left" headers="r4c1-t13 r1c2-t13">Interface</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>You can expand the class loader node to view the class. You can use the context menu in the Loaded Classes window to access the display commands.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t14">Element</th>
+<th align="left" valign="bottom" id="r1c2-t14">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t14" headers="r1c1-t14">
+<p>List Options</p>
+</td>
+<td align="left" headers="r2c1-t14 r1c2-t14">Enables you to customize the Loaded Classes window by choosing how classes are sorted in the display. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2393">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t14" headers="r1c1-t14">
+<p>View Packages As</p>
+</td>
+<td align="left" headers="r3c1-t14 r1c2-t14">Enables you to customize how packages are displayed in the window. You can choose to display packages in List or Tree view.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2648" name="NBCSH2648"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG825">
+<param name="text" value="<html><u>&quot;Debugger Windows and Context&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG822">
+<param name="text" value="<html><u>&quot;Using the Debugger Windows&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

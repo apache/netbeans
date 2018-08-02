@@ -1,0 +1,4 @@
+print('<?xml version="1.0"?>');
+print('<root>');
+print('    Žluťoučký kůň skákal přes čtvero mezí.');
+print('</root>');

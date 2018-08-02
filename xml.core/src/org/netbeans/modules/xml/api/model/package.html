@@ -1,0 +1,131 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<HTML>
+  <HEAD>
+    <TITLE>XML Code Completion</TITLE>
+  </HEAD>
+  <BODY>
+
+<h2>XML Model SPIs</h2>
+
+The SPI defines an interface of <code>GrammarQuery</code> provider.
+Once registered (the registration methods depends on particular
+client) it can reply to queries that can be resolved with a
+grammar knowledge. It reuses DOM interfaces for context definition
+however their semantics can be slightly changed. Most notably the DOM
+is read-only and may throw <code>DOMException.UNSUPPORTED_OPERATION</code> from
+more methods than defined by DOM IDLs.
+
+<h3>How to Register a Provider</h3>
+
+Default <code>GrammarQuery</code> registration mechanism uses
+Lookup. Modules providing an implementation can register
+{@link org.netbeans.modules.xml.api.model.GrammarQueryManager} at default filesystem. Such
+registration can be than located by clients using
+{@link org.netbeans.modules.xml.api.model.GrammarQueryManager#getDefault} which returns
+an implementation proxing to registered ones.
+
+<hr>
+
+<h2>XML Code Completion ("XCC") SPI Requirements</h2>
+
+<h3>XML Phenomens to be Completed</h3>
+
+<ul>
+<li>pairing end tag  (must be solved by a client)
+<li>element name and content
+<li>attribute name and value (enumerated, ...)
+<li>namespace prefix (namespaces declared)
+<li>general reference name
+<li>parameter reference name
+<li>prolog content (must be solved by a client)
+</ul>
+
+<h3>XCC Context</h3>
+
+All bellow can be described by read-only DOM Node context.
+
+<ul>
+<li>Current namespace (possibly derived from parents)
+<li>Parents
+<li>Siblings
+<li>Attributes (what about default ones)
+</ul>
+
+Document content that is not described by DOM Node that must be extra handled
+by a client:
+
+<dl>
+<dt>Entity Prolog <dd>extra handling is easy no grammar required
+<dt>DTD Stuff <dd>what about it? exclude this support in GrammarQuery
+</dl>
+Document DTD if any (note it is a responsibility of a binder)
+
+<h3>XCC Interface</h3>
+
+XCC behaviour should be pluggable, XML module should provide
+a default implementation for:
+
+<dl>
+<dt>well formed document <dd>document history based completion (at least pairing tags)
+<dt>DTD grammar based completion <dd>content is forced by a DTD grammar
+<dt>Schema grammar based completion <dd>must be namespace aware
+</dl>
+
+Particular XCC plugins can add some well-known global attributes at element content or
+can provide information that is not provided by grammar (Ant task names and content)
+or can handle new type of grammar.
+
+
+<h3>Integration with Text Editor</h3>
+
+Text editor must provide its context as virtual read-only Node representing
+just edited phenomenon (therefore itself invalid).
+
+<h4>Narrowing Context</h4>
+Node context can be narrowed by knowledge of characters precending caret.
+<dl>
+<dt>whitespace in content<dd>complete element name, the first option is pairing end tag
+<dt>&lt;ns:prefix <dd>complete element name starting with the prefix defined in given ns (detect that document use : for ordinary naming)
+<dt>&lt;/prefix <dd>complete pairing end tag starting with prefix
+<dt>&lt;prefix <dd>complete element name or namespace starting with the prefix
+<dt>[prefix after] whitespace in element start tag markup <dd>complete namespace prefix of attribute name (global) 
+<dt>&amp;prefix <dd>list all declared general entities starting with prefix
+<dt>pseudo attribute name in prolog <dd>complete one of: version, standalone, encoding
+<dt>pseudo attribute value in prolog <dd>complete from list of known values (encodings)
+</dl>
+
+
+<h2>Integration with Tree Editor</h2>
+
+<h3>Narrowing Context</h3>
+
+All particular text field values may be used as prefix, but in this mode
+all other values can be hidden.
+
+
+
+http://xml.netbeans.org/issues/show_bug.cgi?id=14296
+
+  </BODY>
+</HTML>

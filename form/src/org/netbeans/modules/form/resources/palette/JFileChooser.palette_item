@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<palette_item version="1.0">
+  <component classname="javax.swing.JFileChooser" type="visual" />
+  <icon16 urlvalue="nbres:/org/netbeans/modules/form/resources/palette/file_chooser_16.png" />
+  <icon32 urlvalue="nbres:/org/netbeans/modules/form/resources/palette/file_chooser_32.png" />
+  <description localizing-bundle="org.netbeans.modules.form.resources.Bundle"
+               display-name-key="NAME_javax-swing-JFileChooser"
+               tooltip-key="HINT_javax-swing-JFileChooser" />
+</palette_item>

@@ -1,0 +1,70 @@
+<#--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+package ${PACKAGE_NAME};
+
+import org.netbeans.api.templates.TemplateRegistration;
+import org.openide.util.NbBundle.Messages;
+<#if HTML4J>
+import net.java.html.json.Model;
+import net.java.html.json.Property;
+import net.java.html.json.ComputedProperty;
+@Model(className="${WIZARD_PREFIX}Cntrl", properties = {
+  @Property(name = "current", type = String.class),
+  @Property(name = "ok", type = boolean.class),
+  @Property(name = "msg", type = String.class),
+})
+</#if>
+public class ${WIZARD_PREFIX} {
+// TODO define position attribute
+@TemplateRegistration(
+  page="${TR_page}",
+  scriptEngine = "freemarker",
+  content="${TR_content}",
+  folder="${TR_folder}",
+  displayName="#${WIZARD_PREFIX}_displayName",
+  <#if TR_iconBase??>iconBase="${TR_iconBase}", </#if>
+  description="${TR_description}"
+)
+@Messages("${WIZARD_PREFIX}_displayName=${TR_displayName}")
+<#if HTML4J>
+  public static ${WIZARD_PREFIX}Cntrl javaWizard() {
+    return new ${WIZARD_PREFIX}Cntrl();
+  }
+
+  @ComputedProperty static int errorCode(String current, boolean ok, String msg) {
+    if ("info".equals(current)) {
+      if (!ok) return 1;
+      if (msg == null || msg.isEmpty()) return 2;
+    }
+    return 0;
+  }
+<#else>
+    public static String jsWizard() {
+        return "init();";
+    }
+</#if>
+}
+

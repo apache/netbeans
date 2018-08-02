@@ -1,0 +1,23 @@
+public Component add(Component arg0) - override
+public void add(PopupMenu arg0) - override
+public void add(Component arg0, Object arg1) - override
+public Component add(Component arg0, int arg1) - override
+public Component add(String arg0, Component arg1) - override
+public void add(Component arg0, Object arg1, int arg2) - override
+public synchronized void addComponentListener(ComponentListener arg0) - override
+public synchronized void addContainerListener(ContainerListener arg0) - override
+public synchronized void addFocusListener(FocusListener arg0) - override
+public void addHierarchyBoundsListener(HierarchyBoundsListener arg0) - override
+public void addHierarchyListener(HierarchyListener arg0) - override
+protected void addImpl(Component arg0, Object arg1, int arg2) - override
+public synchronized void addInputMethodListener(InputMethodListener arg0) - override
+public synchronized void addKeyListener(KeyListener arg0) - override
+public synchronized void addMouseListener(MouseListener arg0) - override
+public synchronized void addMouseMotionListener(MouseMotionListener arg0) - override
+public synchronized void addMouseWheelListener(MouseWheelListener arg0) - override
+public void addNotify() - override
+public void addPropertyChangeListener(PropertyChangeListener arg0) - override
+public void addPropertyChangeListener(String arg0, PropertyChangeListener arg1) - override
+public synchronized void addWindowFocusListener(WindowFocusListener arg0) - override
+public synchronized void addWindowListener(WindowListener arg0) - override
+public synchronized void addWindowStateListener(WindowStateListener arg0) - override

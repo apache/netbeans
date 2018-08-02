@@ -1,0 +1,463 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+    <body>
+        <span style="float:right">Tor Norbye &lt;tor.norbye@sun.com&gt;</span>
+
+        <h2><a href="apichanges.html">API changes</a></h2>
+
+        <h1>GSF</h1>
+        <p>
+            GSF is a language infrastructure for NetBeans.
+            The purpose of GSF is to help create first-class editing support
+            for a group languages (like Ruby, Groovy, JavaScript, Python, Scala,
+            PHP, etc). By "first-class" editing support I mean all the features
+            that we currently have for Java in NetBeans. Deep editing support
+            including intelligent code completion, quick fixes and hints,
+            and so on.
+        </p>
+        <p>
+            The abbreviation
+            "GSF" is an historical artifact and a new name should probably be
+            assigned.
+        </p>
+        <h2>Philosophy</h2>
+        <p>
+            The GSF API is intended for "language plugins". These are modules
+            which add support for new languages (such as Ruby, JavaScript,
+            HTML, CSS and so on) to NetBeans. 
+            
+            The <b>key philosophy</b> behind GSF is:
+            <blockquote style="background-color: #ffddff; color: black; padding: 20px; border: solid 1px black">
+                The language plugin deals <b>only</b> with language specific details.
+            </blockquote>
+        </p>
+        <p>
+            The implication of this is that nearly all UI, and all "infrastructure"
+            code like listening on editor changes, scheduling parsing, implementing editor
+            actions etc. are handled by the GSF infrastructure. A language plugin should
+            just focus on specific features as they pertain to this language.
+        </p>
+        <p>
+            If you are trying to get started writing a new language using GSF,
+            see the <a href="getting-started.html">Getting Started</a> document,
+            which will try to order the tasks involved and point to the relevant
+            sections.
+        </p>
+        <h3>Example: Instant Rename</h3>
+        <p>
+            For an example of this, take a look at the following diagram. This shows
+            how "Instant Rename" works in GSF. The Instant Rename action itself
+            (editor action implementation, keybinding registration, etc.) is provided
+            by GSF.   The language plugin implements two services:
+            <ul>
+                <li> A parser - which produces a parse tree. This is used for most
+                features in GSF.
+                <li> An "InstantRenamer" - a simple interface where the language plugin
+                is handed one of its own parse trees, and it needs to answer two
+                questions:
+                <ol>
+                    <li>Is the given caret offset renameable? (And if not, provide
+                        some error message to explain why, or an indication that refactoring
+                    needs to be involved.</li>)
+                    <li>Produce a set of offset ranges (begin to end) for all the 
+                        instances of this symbol that should be renamed together.
+                    </li>
+                </ol>
+            </ul>
+            Here's the flow - the left side is what happens on the GSF side, and
+            the right side is what happens in the language plugin:
+            <br/>
+            <img src="instant-rename.png" />
+            <br/>
+            <br/>
+            One important thing to notice here is that on the GSF side, there
+            is <b>NO</b> interpretation of the parser result in any way. GSF asks
+            you to parse your code, and hands the parser result back to you
+            as part of the implementation of many features.
+        </p>
+        <p>
+            As you can see, GSF provides implementations for a lot of the UI
+            and interactions that you need for deep editing support for your language.
+            You implement your lexer, parser, and feature implementations like
+            code completion, go to declaration, quickfixes etc. based on analyzing
+            your own parse trees.  You talk through feature specific APIs to GSF,
+            and GSF does the rest.
+        </p>
+        <h2>Architecture</h2>
+        <p>
+            Here's a rough architecture diagram for GSF:
+            <br/>
+            <img src="gsf-architecture.png" />
+            <br/>
+            <br/>
+            As you can see, language plugins talk mostly through the GSF APIs
+            to implement their features. GSF is in turn implemented in many cases
+            on top of existing NetBeans APIs. In some cases, the abstraction on
+            top of existing APIs (such as the Hyperlink API) is very thin. In other
+            cases, such as for quickfixes, mark occurrences or semantic highlighting,
+            GSF provides a lot of UI implementation under the hood on top of the
+            existing APIs.  You might wonder why GSF should bother with features
+            such as code completion and hyperlinking when the existing APIs are
+            pretty complete. There are several reasons for this:
+            <ul>
+                <li>Simpler to learn from one place. The goal for GSF is to bring
+                    language support of many languages in NetBeans up to the same depth
+                    of support as we have for Java.  (See 
+                    <a href="http://wiki.netbeans.org/EditorFeaturesChecklist">http://wiki.netbeans.org/EditorFeaturesChecklist</a>
+                    for a document which tries to list all these features.)
+                    If you have to go and hunt for various different NetBeans APIs 
+                    (navigation, hyperlinking, highlighting, etc.) it's a lot harder 
+                    to make sure you cover everything, and you in some cases have
+                    to learn new concepts.
+                </li>
+                <li>
+                    GSF can take advantage of synergy. For example, GSF knows how
+                    to (a) parse your code, and (b) index your code, so it can hand
+                    you an up to date parse tree when it's asking you to for example
+                    compute the declaration location for an editor click. That makes
+                    your job easier. As another example, because GSF implements both
+                    your Hyperlink provider (Go To Declaration), and your code completion
+                    documentation provider, it can register a tooltip which shows the
+                    documentation for the symbol under the caret when you are
+                    ctrl-hovering over that symbol. And so on.
+                </li>
+                <li>
+                    GSF makes unit testing easier. This is another aspect of the synergy
+                    point I brought up above. When you for example add a new 
+                    "semantic highlighting" implementation, writing a unit test for it
+                    is as simple as writing a simple function call - pass in a source
+                    file, and a caret location. The GSF unit testing infrastructure
+                    will do the rest: It will parse your file, pass it to your semantic
+                    highlighting feature implementation, produce a nice "golden file"
+                    pretty print of your highlighting (see the unit testing section
+                    of this document for details), and diff that result with the recorded
+                    golden file (or create it if it doesn't exist). Thus, to unit test,
+                    just create new testcases in the form of a source file, run the test
+                    once to create a golden file, look at the golden file to make sure
+                    it looks correct, and from now on you have a regression test which
+                    makes sure that your semantic highlighter always produces the same
+                    highlights for this source file.
+                </li>
+                <li>
+                    GSF supports embedding. Thus, if you for example implement a GSF
+                    hints provider for your language, when your language is embedded in
+                    some other files, your quickfixes continue to work; they get run,
+                    the error offsets from your AST get translated back to embedding
+                    appropriate offsets, etc.
+                </li>
+            </ul>
+            The bigger point though is that for nearly all editing actions, there is
+            shared UI that should not be duplicated across modules. Things like
+            color and font definitions for syntax highlighting, error messages,
+            action names, keybindings, icons etc. should all be defined in one place
+            such that periodic maintenance keeps everything in sync, and such that
+            for example editor themes work across all intentional and unintentional 
+            file types.
+        </p>
+        <p>
+            Furthermore, for many actions, there is a LOT of code behind the scenes
+            that is not language specific.  Take mark occurrences for example.
+            The only language specific thing there is determining, for a given offset,
+            what the other corresponding occurrences are in terms of editor offsets.
+            Everything else: ensuring that the parse information is up to date,
+            listening on caret changes, painting highlights for the occurrences,
+            defining and implementing "goto previous occurrence" and "goto next occurrence",
+            and so on, should all be implemented in just one shared place.
+        </p>
+        <p>
+            One thing which is not obvious from the diagram above is that clients
+            are free to use NetBeans APIs directly. For example, in NetBeans 6.1,
+            the HTML module uses GSF for parsing, navigator, embedding etc. - but
+            it registers its own CompletionProvider using the NetBeans APIs
+            instead of GSF's code completion handler interface. It is possible
+            to combine GSF with for example Schliemann or a custom written
+            editor kit or custom written data loaders. More details about this
+            are found in the <a href="registration.html#UseCustomEditorKit">custom editor kit</a> section.
+        </p>
+        
+        <h2>Lack of Extensibility</h2>
+        <p>
+            One of the key principles of GSF is to keep all UI in GSF. In the old days,
+            each language support would define all its own logical editor types, color 
+            definitions, and so on. That made it really tricky to provide editor themes,
+            as well as keep things consistent. A literal string may have one color in one
+            file type, and another color in another filetype.
+        </p>
+        <p>
+            This has some implications for GSF:
+            
+            <ul>
+                <li>
+                    In the Java module, one of the key APIs you get is the ability
+                    to schedule a user task: run the parse tree on a Java file,
+                    and then run a task over the parse tree. (This is
+                    <code>JavaSource.runUserActionTask()</code>).
+                    This lets modules create arbitrary features for Java - and this
+                    is how the various Java modules (navigation, hints, etc)
+                    operate.
+                    <br/><br/>
+                    GSF does not push this approach (it's actually there, through
+                    the <code>SourceModel</code> class, but you're discouraged
+                    from using it).
+                    <br/><br/>
+                    This facility is typically used to implement specific features.
+                    And the GSF Way is to implement the feature INSIDE GSF, and expose
+                    a lean feature API to other language clients. If it's a feature
+                    needed for language A, chances are it's needed for language B
+                    as well, and putting user <b>feature</b> code in language plugins
+                    is the opposite approach of what GSF is trying to do.
+                    <br/><br/>
+                </li>
+                <li>
+                    GSF tries to make it really easy to describe UI. It provides this
+                    through the 
+                    <a href="org/netbeans/modules/gsf/api/ElementKind.html">ElementKind</a>
+                    enumeration class. When creating code completion items, or navigation
+                    items, just reference one of the constants there, such as
+                    ElementKind.METHOD, to create an item which will look like a method,
+                    consistent across languages. This will provide an icon, a color,
+                    a code completion sorting priority etc. None of these are language
+                    specific, which is why GSF wants to provide the definitions, and
+                    language clients just reference them through the enumeration name.
+                    <br/><br/>
+                    This of course may seem like a straightjacket - the types of code
+                    elements that GSF can address are hardcoded!!
+                    <br/><br/>
+                    Once again, the philosophy here is that GSF is trying to address
+                    a wide swath of languages, but perhaps not every single one. 
+                    Rather than saying that say a Prolog language has a particular
+                    code element that isn't provided by GSF today so Prolog should have
+                    the option of adding it, I'd like to add new types to the ElementKind
+                    enum. They can be added in every release without any backwards
+                    compatibility problems. Chances are, if something is available in
+                    one language, it's going to be needed by some other language as well.
+                    Second, there's a pretty simple workaround - pick something SIMILAR.
+                    In Ruby for example, I could have used the FIELD kind if there
+                    wasn't an ATTRIBUTE kind.
+                    <br/><br/>
+                    Finally, there are backdoors. For example, the CompletionProposal
+                    interface (implemented by code completion items) actually has
+                    a <code>getIcon()</code> method, where you normally return null,
+                    but you can override the icon there. This is how I return a 
+                    Ruby specific icon for Ruby keywords in code completion (and
+                    ditto for JavaScript). But overriding UI is the exception, not
+                    the norm.
+                    <br/><br/>
+                </li>
+                <li>
+                    GSF lets client format the data shown in code completion items; 
+                    there's the left hand side, the right hand side, as well as
+                    different colors and attributes for parameter types, return types,
+                    overridden methods, deprecated methods, etc.  Rather than
+                    letting clients format HTML directly (which would for example
+                    cause color definitions to get hardcoded into the clients),
+                    GSF provides an HTML formatter to clients, and when they need
+                    to produce HTML, they use logical formatter methods to emit
+                    HTML. The actual color definitions etc. are therefore provided
+                    by GSF and clients are a bit more high level.
+                    <br/><br/>
+                </li>
+            </ul>
+        </p>
+        
+        
+        <h2>Service Implementations</h2>
+        <p>
+            A language plugin basically registers a bunch of callbacks. These are invoked
+            at appropriate times by the infrastructure.  There are two types of callbacks:
+            <ol>
+                <li>Service Implementations, such as lexing and parsing</li>
+                <li>Feature Implementations, such as code completion and quickfixes</li>
+            </ol>
+            Service Implementations basically implement basic services that are used
+            to drive other features. There service implementations are:
+            <ul>
+                <li>Lexing: Tokenize a document into syntactic elements</li>
+                <li>Parsing: Parse a document into semantic structure</li>
+                <li>Indexing: Given a parse result, store some information in a persistent
+                (and quickly searchable) index</li>
+            </ul>
+            The infrastructure will call your services at the right times. For example,
+            the lexer is asked to lex your document when it is opened in the editor.
+            It is also asked to update the token hierarchy immediately as the document
+            is edited. Similarly, the parser is called in a background thread shortly
+            after the document has been edited, or immediately when the result is needed
+            right away such as during code completion. And finally, the indexer is called
+            when you leave a file (to keep the index up to date), or at startup for
+            files that are new or have been updated outside the IDE.
+        </p>
+        
+        <h3>Lexing</h3>
+        <p>
+            GSF uses the Lexer API in NetBeans directly. All GSF languages must provide
+            a Lexer language. It must also be registered in the Editors mime folder.
+            See the <a href="registration.html">Registration</a> section for more details.
+        </p>
+        
+        <h3>Parsing</h3>
+        <p>
+            GSF provides a <a href="org/netbeans/modules/gsf/api/Parser.html">parser</a> interface.
+            You can register a parser, and GSF will call your parser when needed.  
+        </p>
+        <blockquote style="background-color: #ffdddd; color: black; padding: 20px; border: solid 1px black">
+            NOTE: There is a new Parsing API underway. This will be something
+            equivalent to the Lexer API, but applied to parsing. The plan is for GSF
+            to remove its own Parser registration and interfaces and replace it with
+            the standard Parser API. This will allow embedding and coordination
+            not just among GSF-based languages, but for all languages that implement
+            the parsing API (such as Java, and C/C++, which are not GSF based).
+        </blockquote>
+        <p>
+            The Parser API basically just asks you to parse a given CharSequence,
+            and return the result as your own subclass of the
+            <a href="org/netbeans/modules/gsf/api/ParserResult.html">ParserResult</a> interface.
+            It is in your own parser result that you store your own AST reference.
+            You will probably need it to implement most of the features.
+            There is a separate document describing the <a href="parsing.html">parsing aspects</a>
+            of GSF. (Eventually you'll also want to implement
+            <a href="incremental-parsing.html">incremental parsing</a>.)
+        </p>
+        <h3>Indexing</h3>
+        <p>
+            Indexing lets you register a service which will extract information from your
+            parse results, and store them in an index which can be queried quickly later.
+            Your indexer will be called "at the right times" by the infrastructure:
+            <ol>
+                <li>At startup for all source files that are new or have changed since the 
+                    last IDE session
+                </li>
+                <li>After a file has been edited, and closed/left</li>
+                <li>Immediately if a file has been edited and somebody is trying to query the index
+            </ol>
+            
+            This topic is described in a lot more detail in the separate 
+            <a href="indexer.html">Indexing and Querying</a> document.
+        </p>
+        <h2>Feature Implementations</h2>
+        
+        The service implementations above aren't really useful in their own right,
+        but they allow a number of features to be implemented. When implementing
+        additional feature interfaces, you get handed your token hierarchy from
+        your lexer, your parse tree and a handle to search the index populated
+        by your indexer, which you can use to respond to the feature requests.
+        
+        <h3>Semantic Highlighting</h3>
+        <p>
+            
+        </p>
+        <p>
+            To implement semantic highlighting, you need to 
+            <a href="registration.html">register</a> an implementation of the
+            <a href="org/netbeans/modules/gsf/api/SemanticAnalyzer.html">SemanticAnalyzer</a> interface.
+            You will be given your own <code>ParserResult</code> object, and
+            you need to return a <code>Map&lt;OffsetRange, Set&lt;ColoringAttributes&gt;&gt;</code>.
+            So, you'll iterate your own AST, look for things to highlight, such as
+            method definitions, parameters and unused variables, and for each node,
+            look up its source offsets (start, end integer offsets in the document),
+            and then place them in the document:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    // Aha, this is an unused variable reference!
+    int nodeStart = node.getStartOffset();
+    int nodeEnd = node.getEndOffset();
+    result.put(new OffsetRange(nodeStart, nodeEnd), ColoringAttribute.UNUSED_SET);
+            </pre>
+            Mark Occurrences is very similar to this. You implement the 
+            <a href="org/netbeans/modules/gsf/api/OccurrencesFinder.html">OccurrencesFinder</a> interface,
+            where you return a Set&lt;OffsetRange&gt; for the symbols that should be
+            highlighted as other occurrences of the symbol at the given offset.
+        </p>
+        
+        <h3>Other Features</h3>
+        <p>
+            TODO: I plan to write some documents explaining how to do keystroke handling,
+            formatting, declaration finding, code completion, etc.
+        </p>
+        
+        <a name="registration"/>
+        <h2>Registration</h2>
+        <p>
+            GSF services, such as the lexer, parser, and feature implementations,
+            must all be registered with the GSF infrastructure. For details on
+            how to do this, see the <a href="registration.html">Registration document</a>.
+        </p>
+        
+        <h2>Embedding</h2>
+        <p>
+            GSF supports language embedding - supporting nested languages, like 
+            JavaScript and CSS support inside HTML files, Ruby support (and JavaScript
+            and CSS support) inside ERb/RHTML files, and so on.
+            The mechanism of how this works is described fully in the
+            <a href="embedding.html">embedding document</a>.
+        </p>
+        
+        <h2>GSF Diagnostic Tools</h2>
+        <p>
+            There is a separate module in the contrib repository, <code>gsf.tools</code>,
+            which provides a number of tools in the <b>Tools | GSF Development</b> menu.
+            Details are described in the <a href="gsf-tools.html">GSF Development Tools</a> document.
+        </p>
+        
+        <a name="Classpath"/>
+        <h2>Classpath</h2>
+        GSF needs to integrated with the project system, in order to index source files at startup,
+        in order to support project-wide operations like Open Type, and so on. Details about
+        the project and classpath integration are discussed in more detail in the
+        <a href="classpath.html">Classpath document</a>.
+        
+        <h2>Unit Testing</h2>
+        <p>
+            GSF makes it really easy to unit test your feature implementations.
+            Details on how to do this is described in the <a href="unit-testing.html">unit 
+            testing document</a>.
+        </p>
+        
+        
+        <h2>Implementation Issues/Limitations</h2>
+        <p>
+            I will describe the various GSF limitations here. For now, they are
+            listed (in very brief form) in the following Wiki page:<br/>
+            <a href="http://wiki.netbeans.org/GsfIssues">http://wiki.netbeans.org/GsfIssues</a>
+            <br/>
+        </p>
+        
+        <h2>TODO</h2>
+        <p>
+            <ul>
+                <li>
+                    Describe the philosophy of the builtin ElementKind UI, icons, fonts etc. and
+                    the general philosophy of pushing features INTO gsf rather than supporting
+                    generic user task execution.
+                </li>
+                <li>
+                    Describe the modules, imported and exported APIs, etc.
+                </li>
+                <li>
+                    Document the GSF limitations
+                </li>
+                <li>Write documents for specific features, like code completion and keystroke handling</li>
+            </ul>
+        </p>
+        
+        <br/>
+        <span style="color: #cccccc">Tor Norbye &lt;tor@netbeans.org&gt;</span>
+    </body>
+</html>

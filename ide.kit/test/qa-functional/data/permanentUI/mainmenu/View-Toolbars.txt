@@ -1,0 +1,12 @@
+    Toolbars                 > [x] File                   F
+                               [ ] Clipboard              p
+                               [x] Undo/Redo              U
+                               [ ] Remote                 O
+                               [x] Run                    R
+                               [ ] Debug                  D
+                               [x] Performance            P
+                               ========================
+                               [ ] Small Toolbar Icons    S
+                               ========================
+                                   Reset Toolbars         T
+                                   Customize              C

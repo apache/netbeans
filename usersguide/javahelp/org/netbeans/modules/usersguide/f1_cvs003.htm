@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>CVS Import Wizard: CVS Root</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.versioning.system.cvss.ui.wizards.RepositoryStep.import" name="org.netbeans.modules.versioning.system.cvss.ui.wizards.RepositoryStep.import"></a></p>
+<div id="NBCSH1629"><!-- infolevel="all" infotype="General" --><a id="sthref202" name="sthref202"></a>
+<h1>CVS Import Wizard: CVS Root</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>The CVS Root panel of the CVS Import wizard enables you to specify the CVS root path to the repository which you want to have files imported into. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2330">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>When importing files into a repository, you need to specify the location of the repository as defined by the CVS root. The following fields enable you to do so.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t6">Element</th>
+<th align="left" valign="bottom" id="r1c2-t6">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t6" headers="r1c1-t6">
+<p>CVS root</p>
+</td>
+<td align="left" headers="r2c1-t6 r1c2-t6">Select a CVS root type and location from the drop-down list. The drop-down list contains a list of previous CVS root locations used in the IDE. If no CVS root locations are provided from the drop-down list, you need to supply the CVS root type. You can enter the information directly into the text field, or click the Edit button to open the Edit CVS Root dialog box.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t6" headers="r1c1-t6">
+<p>Password</p>
+</td>
+<td align="left" headers="r3c1-t6 r1c2-t6">Enter the password for the user to access the repository.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t6" headers="r1c1-t6">
+<p>Proxy configuration</p>
+</td>
+<td align="left" headers="r4c1-t6 r1c2-t6">Click the Proxy configuration button to specify details of your proxy configuration to connect to the CVS repository.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>The IDE supports the following CVS root types:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t7">Element</th>
+<th align="left" valign="bottom" id="r1c2-t7">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t7" headers="r1c1-t7">
+<p>pserver</p>
+</td>
+<td align="left" headers="r2c1-t7 r1c2-t7">For connecting to pserver repositories.
+<p><code dir="ltr">:pserver:username@hostname:/repository_path</code></p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t7" headers="r1c1-t7">
+<p>ext</p>
+</td>
+<td align="left" headers="r3c1-t7 r1c2-t7">For connecting to CVS repositories using SSH, etc.
+<p><code dir="ltr">:ext:username@hostname:/repository_path</code></p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>The following root types require an external CVS executable:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t8">Element</th>
+<th align="left" valign="bottom" id="r1c2-t8">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t8" headers="r1c1-t8">
+<p>fork</p>
+</td>
+<td align="left" headers="r2c1-t8 r1c2-t8">For protocol access to local CVS repository
+<p><code dir="ltr">:fork:/repository_path</code></p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t8" headers="r1c1-t8">
+<p>local</p>
+</td>
+<td align="left" headers="r3c1-t8 r1c2-t8">For direct access to local CVS repository
+<p><code dir="ltr">:local:/repository_path</code></p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH1637" name="NBCSH1637"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG236">
+<param name="text" value="<html><u>&quot;Versioning Applications with CVS&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

@@ -1,0 +1,46 @@
+<LayoutModel>
+  <Root id="Form">
+    <DimensionLayout dim="horizontal">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <Group type="sequential" attributes="0">
+              <Group type="parallel" groupAlignment="leading" attributes="0">
+                  <Group type="sequential" alignment="leading" attributes="0">
+                      <EmptySpace min="$pref" pref="27" max="$pref" attributes="0"/>
+                      <Component id="jLabel1" min="$pref" max="$pref" attributes="0"/>
+                      <EmptySpace min="$pref" pref="30" max="$pref" attributes="0"/>
+                      <Component id="jToggleButton2" min="$pref" pref="145" max="$pref" attributes="0"/>
+                      <EmptySpace min="$pref" pref="19" max="$pref" attributes="0"/>
+                      <Component id="jComboBox1" min="$pref" max="$pref" attributes="0"/>
+                  </Group>
+                  <Group type="sequential" alignment="leading" attributes="0">
+                      <EmptySpace min="$pref" pref="47" max="$pref" attributes="0"/>
+                      <Component id="jCheckBox1" min="$pref" max="$pref" attributes="0"/>
+                      <EmptySpace min="$pref" pref="56" max="$pref" attributes="0"/>
+                      <Component id="jCheckBox2" min="$pref" max="$pref" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace pref="59" max="Short.MAX_VALUE" attributes="4"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="vertical">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <Group type="sequential" alignment="leading" attributes="0">
+              <EmptySpace min="$pref" pref="27" max="$pref" attributes="0"/>
+              <Group type="parallel" groupAlignment="baseline" attributes="0">
+                  <Component id="jLabel1" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+                  <Component id="jComboBox1" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="$pref" attributes="0"/>
+              <Component id="jToggleButton2" min="$pref" max="$pref" attributes="0"/>
+              <EmptySpace type="separate" max="$pref" attributes="0"/>
+              <Group type="parallel" groupAlignment="baseline" attributes="0">
+                  <Component id="jCheckBox1" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+                  <Component id="jCheckBox2" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+              </Group>
+              <EmptySpace pref="178" max="Short.MAX_VALUE" attributes="4"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Root>
+</LayoutModel>

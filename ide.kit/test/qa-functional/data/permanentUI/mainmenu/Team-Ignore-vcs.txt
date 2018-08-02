@@ -1,0 +1,2 @@
+Ignore      >   Ignore           I
+                Exclude From Commit     C

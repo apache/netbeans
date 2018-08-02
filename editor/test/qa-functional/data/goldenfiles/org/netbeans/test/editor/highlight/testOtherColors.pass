@@ -1,0 +1,366 @@
+0 2
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+3 62
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+63 65
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+66 139
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+140 142
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+143 220
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+221 281
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+282 284
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+285 356
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+357 419
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+420 486
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+487 557
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+558 609
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+610 652
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+653 714
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+715 783
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+784 856
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+857 911
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+912 970
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+971 1041
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+1042 1108
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+1109 1177
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+1178 1248
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+1249 1285
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+1286 1344
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+1345 1347
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+1348 1366
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+1367 1369
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+1370 1445
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+1446 1516
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+1517 1559
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+1560 1562
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+1563 1635
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+1636 1698
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+1699 1769
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+1770 1841
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+1842 1911
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+1912 1984
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+1985 2055
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+2056 2128
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+2129 2198
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+2199 2254
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+2255 2258
+    default comment
+    display name Comment
+    foreground java.awt.Color[r=150,g=150,b=150]
+    name comment
+2259 2264
+    background java.awt.Color[r=255,g=255,b=255]
+    default keyword
+    display name Keyword
+    foreground java.awt.Color[r=255,g=0,b=255]
+    name keyword
+2264 2265
+    default whitespace
+    display name Whitespace
+    foreground java.awt.Color[r=0,g=0,b=0]
+    name whitespace
+2265 2280
+    background java.awt.Color[r=255,g=255,b=255]
+    default identifier
+    display name Identifier
+    foreground java.awt.Color[r=255,g=255,b=0]
+    name identifier
+2280 2281
+    default whitespace
+    display name Whitespace
+    foreground java.awt.Color[r=0,g=0,b=0]
+    name whitespace
+2281 2282
+    background java.awt.Color[r=255,g=255,b=255]
+    default separator
+    display name Separator
+    foreground java.awt.Color[r=128,g=128,b=128]
+    name separator
+2283 2287
+    default whitespace
+    display name Whitespace
+    foreground java.awt.Color[r=0,g=0,b=0]
+    name whitespace
+2287 2293
+    background java.awt.Color[r=255,g=255,b=255]
+    default identifier
+    display name Identifier
+    foreground java.awt.Color[r=255,g=255,b=0]
+    name identifier
+2293 2294
+    default whitespace
+    display name Whitespace
+    foreground java.awt.Color[r=0,g=0,b=0]
+    name whitespace
+2294 2299
+    background java.awt.Color[r=255,g=255,b=255]
+    default identifier
+    display name Identifier
+    foreground java.awt.Color[r=255,g=255,b=0]
+    name identifier
+2299 2300
+    default whitespace
+    display name Whitespace
+    foreground java.awt.Color[r=0,g=0,b=0]
+    name whitespace
+2300 2301
+    default operator
+    display name Operator
+    name operator
+2301 2302
+    default whitespace
+    display name Whitespace
+    foreground java.awt.Color[r=0,g=0,b=0]
+    name whitespace
+2302 2303
+    background java.awt.Color[r=255,g=255,b=255]
+    default string
+    display name String
+    foreground java.awt.Color[r=255,g=0,b=0]
+    name string
+2303 2307
+    background java.awt.Color[r=255,g=255,b=255]
+    default string
+    display name String
+    foreground java.awt.Color[r=255,g=0,b=0]
+    name string
+2307 2308
+    background java.awt.Color[r=255,g=255,b=255]
+    default string
+    display name String
+    foreground java.awt.Color[r=255,g=0,b=0]
+    name string
+2308 2309
+    background java.awt.Color[r=255,g=255,b=255]
+    default separator
+    display name Separator
+    foreground java.awt.Color[r=128,g=128,b=128]
+    name separator
+2310 2314
+    default whitespace
+    display name Whitespace
+    foreground java.awt.Color[r=0,g=0,b=0]
+    name whitespace
+2314 2318
+    background java.awt.Color[r=255,g=255,b=255]
+    default keyword
+    display name Keyword
+    foreground java.awt.Color[r=255,g=0,b=255]
+    name keyword
+2318 2319
+    default whitespace
+    display name Whitespace
+    foreground java.awt.Color[r=0,g=0,b=0]
+    name whitespace
+2319 2320
+    background java.awt.Color[r=255,g=255,b=255]
+    default identifier
+    display name Identifier
+    foreground java.awt.Color[r=255,g=255,b=0]
+    name identifier
+2320 2321
+    default whitespace
+    display name Whitespace
+    foreground java.awt.Color[r=0,g=0,b=0]
+    name whitespace
+2321 2322
+    default operator
+    display name Operator
+    name operator
+2322 2323
+    default whitespace
+    display name Whitespace
+    foreground java.awt.Color[r=0,g=0,b=0]
+    name whitespace
+2323 2324
+    default char
+    display name Character
+    foreground java.awt.Color[r=128,g=128,b=128]
+    name character
+2324 2325
+    default char
+    display name Character
+    foreground java.awt.Color[r=128,g=128,b=128]
+    name character
+2325 2326
+    default char
+    display name Character
+    foreground java.awt.Color[r=128,g=128,b=128]
+    name character
+2326 2327
+    background java.awt.Color[r=255,g=255,b=255]
+    default separator
+    display name Separator
+    foreground java.awt.Color[r=128,g=128,b=128]
+    name separator
+2329 2330
+    background java.awt.Color[r=255,g=255,b=255]
+    default separator
+    display name Separator
+    foreground java.awt.Color[r=128,g=128,b=128]
+    name separator

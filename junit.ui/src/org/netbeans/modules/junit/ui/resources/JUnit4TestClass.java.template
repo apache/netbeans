@@ -1,0 +1,67 @@
+<#-- FreeMarker template (see http://freemarker.org/) -->
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+<#if package?? && package != "">
+package ${package};
+
+</#if>
+<#if methodTearDown!false>
+import org.junit.After;
+</#if>
+<#if classTearDown!false>
+import org.junit.AfterClass;
+</#if>
+<#if methodSetUp!false>
+import org.junit.Before;
+</#if>
+<#if classSetUp!false>
+import org.junit.BeforeClass;
+</#if>
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+/**
+ *
+ * @author ${user}
+ */
+public class ${name} {
+
+    public ${name}() {
+    }
+
+<#if classSetUp!false>
+    @BeforeClass
+    public static void setUpClass() {
+    }
+
+</#if>
+<#if classTearDown!false>
+    @AfterClass
+    public static void tearDownClass() {
+    }
+
+</#if>
+<#if methodSetUp!false>
+    @Before
+    public void setUp() {
+    }
+
+</#if>
+<#if methodTearDown!false>
+    @After
+    public void tearDown() {
+    }
+
+</#if>
+<#if testMethodsPlaceholder!false>
+    // TODO add test methods here.
+    // The methods must be annotated with annotation @Test. For example:
+    //
+    // @Test
+    // public void hello() {}
+
+</#if>
+}

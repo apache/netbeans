@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- This is the doctype declaration for this XML document -->
+
+<!DOCTYPE chapter
+  PUBLIC "-//OASIS//DTD DocBook XML//EN" "../dtds/docbookx.dtd">
+
+<chapter><title>Chapter 1</title>
+  <para>More unexpert, I boast not: them let those</para>
+  <para>Contrive who need, or when they need, not now.</para>
+  <para>For while they sit contriving, shall the rest,</para>
+  <para>Millions that stand in Arms, and longing wait</para>
+</chapter>

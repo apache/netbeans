@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : newSchema.xsd
+    Created on : January 25, 2006, 5:43 PM
+    Author     : Owner
+    Description:
+        Purpose of XML Schema document follows.
+-->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://xml.netbeans.org/examples/targetNS"
+            xmlns:tns="http://xml.netbeans.org/examples/targetNS"
+            xmlns="http://xml.netbeans.org/examples/targetNS"
+            elementFormDefault="qualified">
+
+
+</xsd:schema>

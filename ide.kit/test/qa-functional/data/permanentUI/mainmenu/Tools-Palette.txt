@@ -1,0 +1,4 @@
+Palette     > Swing/AWT Components              S
+              HTML/JSP Code Clips               H
+              Code Clips                        C
+              SVG Shapes                        G

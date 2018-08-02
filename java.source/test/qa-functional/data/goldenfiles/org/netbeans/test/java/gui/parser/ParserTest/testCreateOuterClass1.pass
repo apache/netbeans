@@ -1,0 +1,14 @@
+Type Element: testCreateOuterClass 2332 2479
+public class testCreateOuterClass {
+    
+    /** Creates a new instance of testCreateOuterClass */
+    public testCreateOuterClass() {
+    }
+    
+}
+Executable Element: <init> 2435 2472
+public testCreateOuterClass() {
+    }
+Type Element: Outer 2480 2495
+class Outer { }
+Executable Element: <init> 2480 -1

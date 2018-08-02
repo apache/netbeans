@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+     targetNamespace="http://www.example.com/testInclude"
+    xmlns="http://www.w3.org/2001/XMLSchema">
+    <include schemaLocation="testInclude.xsd"/>
+</schema>

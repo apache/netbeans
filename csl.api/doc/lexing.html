@@ -1,0 +1,205 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+    <body>
+        <h2>GSF Lexing</h2>
+        <p>
+            GSF requires you to provide a lexer for your language. The lexer should
+            implement the NetBeans Lexer API.
+            In addition, you have to register the lexer, as well as
+            color definitions. (I'd like to remove the need for this part
+            by having GSF do it for you). See the
+            <a href="#registration">registration section</a> for details on this.
+        </p>
+        <p>
+            Writing a lexer using the NetBeans lexing API is pretty easy.
+            There is already quite a bit of documentation for the lexer itself,
+            so I won't repeat any of that here.  However, GSF is often used to wrap
+            languages with existing lexers and parsers which I'll get into next.
+        </p>
+        <h2>Wrapping Existing Lexers</h2>
+        <p>
+            If you are trying to add language support for a popular language,
+            changes are you already have a lexer for it - and you don't want to
+            write one from scratch. After all, if you're trying to support
+            say Groovy, why duplicate the Groovy compiler's lexer and risk
+            making mistakes such that your IDE support doesn't 100% correctly
+            handle exactly the same keywords, commenting rules etc. as the 
+            language?  For the Ruby support in NetBeans, I'm using the JRuby
+            lexer. It turns out lexing Ruby is pretty tricky - you should take 
+            a look at their lexer!
+        </p>
+        <p>
+            If you are wrapping an existing lexer there are two things you
+            need to worry about. One of them is easy, the other one probably hard:
+            <ol>
+                <li>
+                    Most lexers written for these languages (Ruby, JavaScript,
+                    Groovy, PHP, Scala, Python, etc.) were intended for use
+                    by a parser. If you're trying to reuse a parser's lexer,
+                    you'll run into a problem. Parsers don't care about 
+                    whitespace and comments! Typically, they'll just throw
+                    them away and only tokenize the rest of the buffer
+                    that is relevant for the parser.  That won't do for your
+                    IDE lexer! It must return a TokenId for ALL characters
+                    in the buffer, and in particular, whitespace and comments
+                    too!  Thus, you have to modify your lexer to not throw
+                    these things away, but return proper tokens for them
+                    instead. I modified both Rhino (for JavaScript) and JRuby
+                    (for JRuby) to do this. In both cases it involved changing
+                    a "continue" in a for loop (where they had just eaten
+                    whitespace) to a "return whitespace/comment token") and
+                    a little bit of futzing to make sure the parser would
+                    correctly handle coming back from this state.
+                </li>
+                <li>
+                    The lexer must be incremental!! This means that your lexer
+                    wrapper needs to be able to restart your wrapped lexer
+                    at any position in the buffer (well, at any token boundary
+                    to be more exact) and continue lexing from there. This
+                    is used heavily in the IDE; if you're editing a 4,000 line
+                    JavaScript file, we don't start lexing from the top
+                    for every character you're typing! The editor is pretty smart
+                    and as soon as your token stream matches the old token
+                    stream it will stop lexing again, which means that it ends
+                    up doing very little work for normal typing, and if you
+                    say type <code>/*</code> to start a comment, it will 
+                    immediately relex the rest of the screen to reflect that
+                    it's all a big comment now.
+                </li>
+            </ol>
+            Modifying your lexer to return whitespace and token types should
+            be pretty trivial. Adding incremental support might not be so
+            easy. For JRuby, this involved figuring out all the state that
+            is needed by the lexer, and extracting this into a separate
+            state object, as space and performance efficiently as possible,
+            and then stashing away one of these for each token generated.
+            (The IDE makes this part easy).
+            There is also really good unit testing support for the Lexer API,
+            which lets you both easily do token dumps, as well as incremental
+            lexing tests, where it performs random edits of your documents,
+            and compares the incrementally lexed token hierarchy for each step
+            with a token hierarchy obtained by lexing your entire file from
+            the top and diffs the two.
+        </p>
+        <p>
+            If you want code inspiration, the RubyLexer in the 
+            <code>ruby</code> module and the
+            JsLexer in the <code>javascript.editing</code> module have examples
+            of this was done for Ruby and JavaScript.
+        </p>
+        
+        <a name="registration"/>
+        <h3>Lexer Registration and Colors</h3>
+        <p>
+            In addition to providing your Lexer language from your language configuration
+            object (as described in the <a href="registration.html">registration document</a>),
+            you should probably also register the lexer language with NetBeans. This will allow
+            language embedding to work more naturally because NetBeans (not just GSF) can
+            locate the lexer language for a given mime type, which is used in langauge embedding
+            scenarios.  <b>Yes, there is a redundancy here</b> that both GSF and the editor
+            need you to register the Lexer language. Either GSF should read the information directly
+            from the editor's location, or GSF should automatically register the lexer language
+            on your behalf in the editor's location. I'll look into fixing this. But for now,
+            add the following registration in the Editors/mimetype folder:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    &lt;folder name="Editors"&gt;
+        &lt;folder name="text"&gt;
+            &lt;folder name="x-ruby"&gt;
+                ...
+                <b>&lt;file name="language.instance"&gt;
+                    &lt;attr name="instanceCreate" methodvalue="org.netbeans.modules.ruby.lexer.RubyTokenId.language"/&gt;
+                    &lt;attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/&gt;
+                &lt;/file&gt;</b>
+        &lt;/folder&gt;
+    &lt;/folder&gt;
+            </pre>
+            So note that <code>language.instance</code> here is under the <code>Editors</code> folder,
+            and refers to a Lexer Language,
+            whereas the language configuration object, also in <code>language.instance</code> file,
+            is under the <code>GsfPlugins</code> folder, and refers to a GsfLanguage object.
+        </p>
+        <p>
+            You can also register color definitions (as well as color registrations) for arbitrary
+            <code>TokenIds</code> that your lexer is creating. Usually you'll probably want to
+            just inherit as many colors from the defaults as possible, to leave color and font
+            management up to the defaults supplied by the various themes.
+            To register colors for the default theme, use a registration like this:
+            
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    &lt;folder name="Editors"&gt;
+        &lt;folder name="text"&gt;
+            &lt;folder name="x-ruby"&gt;
+                ...
+                <b>&lt;folder name="FontsColors"&gt;
+                    &lt;folder name="NetBeans"&gt;
+                        &lt;folder name="Defaults"&gt;
+                            &lt;file name="coloring.xml" url="fontsColors.xml"&gt;
+                                &lt;attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.ruby.Bundle"/&gt;
+                            &lt;/file&gt;
+                        &lt;/folder&gt;
+                    &lt;/folder&gt;</b>
+                &lt;/folder&gt;
+            &lt;/folder&gt;
+        &lt;/folder&gt;
+    &lt;/folder&gt;
+            </pre>
+            Here, we are referencing two other files. First, a <code>fontsColors.xml</code> file, which supplies
+            a set of color definitions for our token types:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    &lt;fontcolor name="STRING_LITERAL" default="string"/&gt;
+    &lt;fontcolor name="DOUBLE_LITERAL" default="number"/&gt;
+    &lt;fontcolor name="BLOCK_COMMENT" default="comment"/&gt;
+    &lt;fontcolor name="DOCUMENTATION" default="comment"/&gt;
+    &lt;fontcolor name="LONG_LITERAL" default="number"/&gt;
+    &lt;fontcolor name="REGEXP_LITERAL" foreColor="9933CC"/&gt;
+    &lt;fontcolor name="ERROR" default="error"/&gt;
+    ...
+            </pre>
+            Here, <code>STRING_LITERAL</code> is the enum-name of the <code>TokenId</code> corresponding
+            to a String literal, and so on. As you can see, in most cases we are just referring
+            to logical styles like <code>string</code>, <code>number</code>, and so on. In the
+            case of regular expressions, there isn't a builtin type for that, so we specify
+            a custom color. The editor plans to provide a larger set of builtin definitions
+            such that you shouldn't have to do this.
+        </p>
+        <p>
+            Second, the color registration mentioned a particular <code>Bundle.properties</code> file,
+            where the color definitions can be named. This is used for the Fonts &amp; Colors options
+            dialog, where users get to click on the logical names of style definitions and 
+            customize them. In your <code>Bundle.properties</code> file, you need something
+            like this:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+STRING_LITERAL=String
+DOUBLE_LITERAL=Double
+BLOCK_COMMENT=Block Comment
+STRING_TEXT=String
+QUOTED_STRING_LITERAL=Quoted String
+LONG_LITERAL=Long
+STRING_ESCAPE=String Escape
+DOCUMENTATION=Documentation
+...            
+            </pre>
+        </p>
+        <br/>
+        <span style="color: #cccccc">Tor Norbye &lt;tor@netbeans.org&gt;</span>
+    </body>
+</html>

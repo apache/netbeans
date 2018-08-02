@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<book good="no">
+	<!-- BLUE -->
+	<summary length="123" lang="us" size="12">
+	This book is about the life of a book spent between books who dreamed
+	to meet a fairy who could transform it into an XML book and travel
+	in an electronic boundary-less world.
+	</summary>
+	<author>
+	John Smith
+	</author>
+	<author>
+	Donald Duck
+	</author>
+	<author>
+	Mikey Mouse
+	</author>
+	<chapter title="First">
+		<paragraph>
+			And the book lived a never ending happy life, read, copied
+			and enjoyed by so many readers.
+		</paragraph>	
+	</chapter>
+	<chapter title="Second">
+		<comment>
+		First chapter.
+		</comment>
+		<paragraph>
+			Once upon a time...
+		</paragraph>
+		<paragraph>
+			And this is how the book met the fairy, and how all this
+			story began.
+		</paragraph>
+	</chapter>
+	<chapter>	
+		<comment>
+		Empty chapter
+		</comment>
+	</chapter>
+	<index cross-ref="no" color="blue">
+		<word>
+			Good book
+		</word>
+    	<!-- MAUVE -->
+	    <!-- CYAN -->
+		<ref>
+		<page>
+			22
+		</page>	
+		<line>
+			12
+		</line>
+		</ref>
+	</index>
+	<index>
+	<!--RED-->
+		<word>
+			E-Tool
+		</word>
+		<ref>
+		<page>
+			5
+		</page>	
+		<line>
+			15
+		</line>
+		</ref>
+		<ref>
+		<page>
+			29
+		</page>	
+		<line>
+			31
+		</line>
+		</ref>
+	</index>
+	<good/>
+  <!-- GREEN -->
+</book>

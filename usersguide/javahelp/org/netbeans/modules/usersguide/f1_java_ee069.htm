@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>New JDBC Connection Pool: Add Connection Pool Properties</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="AS_Wiz_ConnPool_props" name="AS_Wiz_ConnPool_props"></a></p>
+<div id="NBCSH4808"><!-- infolevel="all" infotype="General" --><a id="sthref698" name="sthref698"></a>
+<h1>New JDBC Connection Pool: Add Connection Pool Properties</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>You see this page of the New File wizard when you are defining a connection pool and you have already named the connection pool and selected the database connection.</p>
+<p>On this (and the Connection Pool Optional Settings page) you specify the properties of the connection pool. After entering the property values, you can do one of the following:</p>
+<ul>
+<li>Click <b>Next</b> if you want to further customize the optional pool properties such as pool size and connection validation.</li>
+<li>Click <b>Finish</b> to create the connection pool, leaving the optional settings at their default values.</li>
+</ul>
+<p>The connection pool properties are added to glassfish-resources.xml. If you want to modify connection pool properties you can open glassfish-resources.xml in the Source Editor by locating the file in your project in the Projects window and double-clicking the file.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="19%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t68">Element</th>
+<th align="left" valign="bottom" id="r1c2-t68">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t68" headers="r1c1-t68">
+<p>Datasource classname</p>
+</td>
+<td align="left" headers="r2c1-t68 r1c2-t68">The datasource class name is the JDBC driver that implements the APIs for the datasource. This name is provided according to the database connection selected in the previous screen. If you selected Other as the connection in the previous screen, you may need to add the datasource classname manually.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t68" headers="r1c1-t68">
+<p>Resource type</p>
+</td>
+<td align="left" headers="r3c1-t68 r1c2-t68">The resource type reflects whether the connection pool enables XA global transactions or is restricted to local transactions. Return to the previous screen to change the resource type.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t68" headers="r1c1-t68">
+<p>Description</p>
+</td>
+<td align="left" headers="r4c1-t68 r1c2-t68">You can enter a description of this connection pool.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t68" headers="r1c1-t68">
+<p>Properties</p>
+</td>
+<td align="left" headers="r5c1-t68 r1c2-t68">Connection pool properties may vary according to the database vendor. Common properties include the datasource URL, user name, and password, but other properties may be suggested or required depending on the database connection. If you selected an existing source in the previous screen, some of the property values may already be provided.
+<p>Properties may be changed or removed and additional properties may be added, but each property in the Properties area must have a value entered before you can proceed to the next screen or finish the connection pool configuration.</p>
+<ul>
+<li>To change a property, click a box in the Properties Name column, select a new property from the dropdown list and add a value for that property.</li>
+<li>To add a new property, click the Add button. A new row appears in the properties box. In the new row, click the box in the Properties Name column and select a property from the dropdown list, and add a value for that property.</li>
+<li>To remove a property click the row containing the propertyanc click the Remove button.</li>
+</ul>
+<p><b>Note</b>: To complete the wizard you might need to supply the password for your database if the property field is empty. Use the character sequence open-parenthesis close-parenthesis, "()", to denote an empty string or blank password.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH4813" name="NBCSH4813"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1651">
+<param name="text" value="<html><u>&quot;About Working with Web Application Servers&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1681">
+<param name="text" value="<html><u>&quot;Working with Glassfish Application Servers&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

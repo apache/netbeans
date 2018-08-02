@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Attach Debugger Dialog Box</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="debug.jpda.attach" name="debug.jpda.attach"></a></p>
+<div id="NBCSH2784"><!-- infolevel="all" infotype="General" --><a id="sthref360" name="sthref360"></a>
+<h1>Attach Debugger Dialog Box</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>The Attach Debugger dialog box enables you to specify how the Java debugger attaches or listens to the target VM. You can choose if you want the debugger to attach or listen to the target VM. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG871">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>In this dialog you need to specify the following properties:</p>
+
+<table summary="Descriptions of stack alert box commands." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="38%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t36">Element</th>
+<th align="left" valign="bottom" id="r1c2-t36">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t36" headers="r1c1-t36">
+<p>Debugger</p>
+</td>
+<td align="left" headers="r2c1-t36 r1c2-t36">Select the debugger.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t36" headers="r1c1-t36">
+<p>Connector</p>
+</td>
+<td align="left" headers="r3c1-t36 r1c2-t36">Select a connector from the dropdown list based upon how you want to establish a connection to the target VM.
+<p>The connector that you select determines the properties that you will need to specify in this dialog box.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t36" headers="r1c1-t36">
+<p>Transport</p>
+</td>
+<td align="left" headers="r4c1-t36 r1c2-t36">(Read-only) This field displays the method of communication between the debugger and the target VM. This field is populated automatically based upon the connector that you select in the Connector dropdown list.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t36" headers="r1c1-t36">
+<p>Host</p>
+</td>
+<td align="left" headers="r5c1-t36 r1c2-t36">(Optional) Specify the name of the machine that hosts the target VM. You can set this property when you select SocketAttach in the Connector dropdown list.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t36" headers="r1c1-t36">
+<p>Name</p>
+</td>
+<td align="left" headers="r6c1-t36 r1c2-t36">Name of the shared memory region of the target VM. You must supply the region name when you attach to the target VM via shared memory.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t36" headers="r1c1-t36">
+<p>Local Address</p>
+</td>
+<td align="left" headers="r7c1-t36 r1c2-t36">(Optional) Address that the listener binds to. You can set this property when you select SocketListen in the Connector dropdown list.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t36" headers="r1c1-t36">
+<p>Port</p>
+</td>
+<td align="left" headers="r8c1-t36 r1c2-t36">Specify the port that is used to connect to the remote instance. You must specify a port when you attach via socket.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t36" headers="r1c1-t36">
+<p>Process ID</p>
+</td>
+<td align="left" headers="r9c1-t36 r1c2-t36">Specify the process ID (pid) that is used to connect to the VM. You must specify a process ID to attach to the target VM via ProcessAttach.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t36" headers="r1c1-t36">
+<p>Timeout [ms]</p>
+</td>
+<td align="left" headers="r10c1-t36 r1c2-t36">(Optional) Specify the length of time to use when attaching to the target VM or while waiting for the target VM to connect.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2794" name="NBCSH2794"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG863">
+<param name="text" value="<html><u>&quot;Managing Debugging Sessions&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

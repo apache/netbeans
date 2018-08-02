@@ -1,0 +1,400 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+    <body>
+        <h2>GSF Indexing and Querying</h2>
+        <p>
+            If you register an indexer with GSF, it will be called at the right times
+            to extract relevant information from a ParseResult, and store it somewhere
+            in persistent store. You can later quickly search this index. This lets
+            you for example implement cross-file behavior such that a user can
+            search the whole project for functions or classes (via the Open Type
+            dialog in NetBeans), or cross-file go to declaration, code completion
+            referencing symbols in other files, etc. And this can be achieved without
+            having to go and parse other files on the fly when you're trying to
+            collect project information. The index is always kept in sync by GSF.
+            At startup, GSF looks at all the files in your project (as determined by
+            the relevant source directories, see the section on <a href="#Classpath">Classpath</a>)
+            and checks whether the timestamp is more recent than the previous timestamp
+            that is recorded in the index. Files that have changed (or have never been
+            indexed) will be indexed, in a background thread, at startup. Similarly,
+            as soon as a file deleted, or edited and then closed, the index will be
+            updated. GSF also tracks whether a file has been edited, such that if you
+            attempt to access its index when the index is considered dirty, the indexer
+            will be immediately called such that all clients of the index can assume
+            the index is always up to date.
+        </p>
+        <p>
+            Indexing is simple. It basically lets you, for any particular source file,
+            store a series of "Documents", where each document contains a multimap.
+            Each multimap consists of keys, and one or more values each key.
+            Furthermore, keys can be designated as "searchable" or not.
+            This just controls whether you can search the index by the given key. (Keys that
+            are searchable require a bit more maintenance on the GSF side, which is
+            why you avoid it for keys you never plan on searching by).
+        </p>
+        <p>
+            It is up to <b>you</b> to decide what information to store in the index,
+            how to divide it into documents, how to "encode" it into Strings (all
+            [key,value] pairs are of type [String,String], and so on.
+            Typically, you will make this decision based on how you can later retrieve
+            the information. So, you need to think up front about what you will need,
+            and organize the information based on that. 
+            When you search, you can search for a given key. This will return
+            you a set of all the <b>documents</b> where the search occurs. This lets
+            you find other values associated with the [key,value] pair in the
+            same document.
+        </p>
+        <h3>Example: Ruby</h3>
+        <p>
+            Here's how the information is currently stored for Ruby.
+            In Ruby, a file can contain many classes. I decided to put each
+            class in its own search document. This means that if I for example
+            search for methods that start with "foo", I can look in the same
+            document for the "class" attribute and I will have information
+            about the class containing the method. Here's an example of
+            a Ruby file and the search documents created by the Ruby language
+            plugin's indexer:
+            <br/>
+            <img src="indexing.png"/>
+            <br/>
+            <br/>
+            As you can see, we get two documents, one for each class in the file. 
+            In the second class, we have two methods. Each method
+            is recorded with a "method" key. Later, if I call
+            <code>searchDoc.getValue("method")</code> I will get out two strings, 
+            <code>{"mymethod","myother"}</code>.  If I now want to know what
+            class these methods are coming from, I can call
+            <code>searchDoc.getValue("class")</code> - or to get the fully qualified
+            name (fqn), <code>searchDoc.getValue("fqn")</code>. I can also look
+            up attributes for this class with <code>searchDoc.getValue("attrs")</code>
+            which for example lets me see if this is a class or a module. I store
+            a number of attributes - whether a class is documented, or if it 
+            is explicitly to be ignored, and so on. These are used by the code
+            completion and go to declaration feature implementations to for example
+            pick the best candidate among multiple possibilities.
+            There's a more complete list of the data stored in the Ruby index
+            later in this document.
+        </p>
+        <h3>Indexing</h3>
+        <p>
+            To index your code, implement the 
+            <a href="org/netbeans/modules/gsf/api/Parser.html">Indexer</a> interface.
+            First, you must implement the <code>isIndexable</code> method:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    boolean <b>isIndexable</b>(@NonNull ParserFile file);
+            </pre>
+            This should just be a quick check to see if the given file should
+            be indexed by this indexer. Typically, you'll just look at the file
+            name and make a decision.
+            <div style="float:right; width: 300px; background: #ccffcc; color: black; border: solid 1px black; padding: 10px">
+                Indexers shouldn't have to know about potential languages they are embedded in.
+                GSF has this information already, via the embedding provider registrations.
+                This should be used somehow such that indexers don't have to know everything.
+            </div>
+            For JavaScript for example, we care about
+            <code>.js</code> files, as well as <code>.html</code>, <code>.jsp</code> 
+            and <code>.erb</code>, since these embedded file types can contain
+            JavaScript functions we want in the index. 
+            In some cases however, the logic can be slightly more complicated.
+            In the case of JavaScript again, it's pretty common to have "minimized"
+            versions of a file, where symbols have been replaced with single letter
+            names, whitespace removed etc. to make the code as small and fast as
+            possible. We typically don't want to index these versions, so the
+            JavaScript indexer checks the file name and looks for name pattern
+            overlaps. If it for example finds <code>foo-debug.js</code>, <code>foo-min.js</code>
+            and <code>foo.js</code>, it will return <code>false</code> from <code>isIndexable()</code>
+            for both <code>foo-debug.js</code> and <code>foo-min.js</code>, and <code>true</code>
+            only for <code>foo.js</code>.
+            
+        </p>
+        <p>
+            <b>IMPORTANT</b>: You may be tempted to base your decision on the mimetype of
+            a file, but be careful calling <code>file.getFileObject().getMimeType()</code>.
+            First, <code>file.getFileObject()</code> can be a performance issue.
+            During startup, your indexer will be asked by the system for all the
+            source files in the project if they are indexable. Each <code>getFileObject</code>
+            can end up doing a lot of work.<br/><br/>
+            A bigger problem is that when source files are deleted, the index needs to
+            be cleaned up. The IDE will ask all the indexers if they care about this file,
+            and if they do, the index entries will be cleared for this file.
+            (TODO: Perhaps I should just unconditionally try to delete the file in all
+            indices?)
+            In any case, when a file is deleted, its <code>FileObject</code> no longer
+            exists, and calling <code>file.getFileObject()</code> will return null.
+            You can end up getting an NPE in these cases if you're not careful.
+        </p>
+        <p>
+            The second method you have to implement in your indexer is
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    List&lt;IndexDocument&gt; <b>index</b>(ParserResult result, IndexDocumentFactory factory)
+            </pre>
+            
+            Here, all you have to do is look up your own AST from your <code>ParserResult</code>.
+            Then, look through your AST, pick out the information you want to store, and store
+            it in the index. You do that by creating one or more documents (by calling
+            the <code>IndexDocumentFactory</code> which is passed to you above.
+            The <code>IndexDocumentFactory</code> lets you create an <code>IndexDocument</code>.
+            And each <code>IndexDocument</code> object has a single method:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    void <b>addPair</b>(String key, String value, boolean searchable);
+            </pre>
+            So, all you have to do here is call <code>addPair</code> repeatedly, with key,value pairs.
+            You also get to decide if your key is searchable. You <b>must</b> be consistent
+            in how you call this method with respect to the <code>searchable</code> parameter
+            for a given key in a given document.
+        </p>
+        
+        <h3>Searching</h3>
+        <p>
+            You can search your index. For the various feature implementations (code completion,
+            go to declaration, and so on), you are passed a
+            <a href="org/netbeans/modules/gsf/api/CompilationInfo.html">CompilationInfo</a> instance.
+            The <code>CompilationInfo</code> holds a lot of vital state: your parser result,
+            the file object and document corresponding to the current file, and so on.
+            It also gives you access to the 
+            <a href="org/netbeans/modules/gsf/api/Index.html">Index</a> object.
+            The <code>Index</code> class has one method:
+            <div style="float:right; width: 300px; background: #ccffcc; color: black; border: solid 1px black; padding: 10px">
+                I plan to add a simple <code>SearchContext</code> class which holds some of the
+                search parameters, and the search method will change into a simple
+                <code>search(SearchContext)</code> method. I also plan to remove the result list
+                input parameter and just return it (created by the index) instead.
+            </div>
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    public abstract void <b>search</b>(
+            @NonNull final String <b>key</b>, 
+            @NonNull final String <b>value</b>, 
+            @NonNull final NameKind kind, 
+            @NonNull final Set&lt;SearchScope&gt; scope, 
+            @NonNull Set&lt;SearchResult&gt; <b>result</b>, 
+            @NonNull final Set&lt;String&gt; includeKeys);
+            </pre>
+            The way this works is that you create your own empty set of SearchResults,
+            and then you call the search method on the index with a key, a value (which
+            for example can be a prefix), and so on. This will fill your SearchResult
+            set with matches.
+        </p>
+        <p>
+            You can now iterate over the matching SearchResults (which will correspond to
+            <code>IndexDocument</code>s your indexer have created earlier), and for each,
+            call one of the getValue methods:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    @NonNull String <b>getValue</b>(@NonNull String <b>key</b>);
+    @NonNull String[] <b>getValues</b>(@NonNull String <b>key</b>);
+            </pre>            
+            If you know that you're storing just one value for a given in the index
+            (such as the <code>class</code> or <code>fqn</code> keys in the Ruby index),
+            you can call the <code>getValue</code> method to get it directly. If you're
+            storing many values (such as the <code>method</code> key in the Ruby index),
+            call <code>getValues</code> to get an array of all the results.
+        </p>
+        <h3>Classpath: Searching What?</h3>
+        <p>
+            In the search section above I glossed over some of the other parameters
+            in the <code>search</code> method. In particular, the <code>scope</code>
+            parameter, which lets you control whether to search just the current
+            project, or just the libraries, or both. But how does GSF know what source
+            files are relevant in the project? And what about the libraries?
+        </p>
+        <p>
+            This is controlled by a different API in GSF, which you use to integrate
+            into different project types and tell GSF which directories are relevant
+            for this project, as well as register libraries. This is described in
+            more detail in the <a href="classpath.html">Classpath</a> document.
+        </p>
+        
+        <h3>Index Abstraction</h3>
+        <p>
+            I recommend that you build an abstraction on top of the index. Your various
+            feature implementations shouldn't go into the index and look for specific keys
+            and so forth. That will make changing the index (which I will discuss in the
+            next section) very difficult.  Instead, you should create a class which
+            wraps the index with logical methods. For example, in Ruby, I have a RubyIndex
+            class which has dedicated methods like
+            <ul>
+                <li><code>getClasses()</code></li>
+                <li><code>getMethods()</code></li>
+                <li><code>getSubclassesOf()</code></li>
+                <li><code>getRequires()</code></li>
+                <li><code>getTransitiveRequires()</code></li>
+                <li><code>getSuperClass()</code></li>
+                <li><code>getOverridingMethod()</code></li>
+                <li><code>getInheritedMethods()</code></li>
+            </ul>
+            and so on. This places all the logic of your index schema in two classes -
+            your index abstraction and your indexer, and you can more easily change it
+            later. 
+        </p>
+        <h3>Making Changes</h3>
+        <p>
+            During development, including after your first release, you'll probably find
+            that you want to make changes to the index, either because of performance
+            reasons, or because you want to store more information to support new features.
+            However, if you just make the change in your indexer and index query code,
+            you might have a really hard time dealing with the fact that your users
+            can have existing indices out there with the old data format.
+        </p>
+        <p>
+            Dealing with this is easy. The <code>Indexer</code> class has these two
+            methods:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    @NonNull String <b>getIndexerName</b>();
+    @NonNull String <b>getIndexVersion</b>();
+            </pre>
+            Any time you make an incompatible change to the way you are storing data
+            in the index, just change the value of your <code>getIndexVersion()</code>
+            method. This will force reindexing of all the code whenever your users
+            run with your new version of the indexer.
+        </p>
+        <p>
+            The way this works on the implementation side is that each index database
+            is isolated, and in particular, they are stored in the user directory,
+            under <code>var/cache/gsf-index/<i>your-index-name</i>/<i>your-index-version</i></code>. 
+            For example, the Ruby indexer names its indexer "ruby", and the JavaScript
+            indexer names its indexer "javascript". This ensures that these two systems
+            don't interfere which each others databases. The index version is just a string,
+            and you can put anything you want here (as long as it's a string that is
+            filesystem safe, meaning it can be written on all file systems where NetBeans
+            runs). A good convention is to just use a number - e.g. "42" or "6.5.2", etc.
+        </p>
+        <h3>Unit Testing</h3>
+        <p>
+            Unit testing your indexer is trivial. Create a unit test class for your
+            indexer, and make sure it extends <code>GsfTestBase</code>. Then, just
+            create new tests with the following single line call:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    public class RubyIndexerTest extends RubyTestBase {
+        public void testIndexData() throws Exception {
+            checkIndexer("testfiles/date.rb");
+        }
+
+        public void testRails1() throws Exception {
+            checkIndexer("testfiles/action_controller.rb");
+        }
+        ...etc
+    }                
+            </pre>            
+            All you have to do is put the test files you want into <code>test/unit/data</code>,
+            refer to them from the <code>checkIndexer</code> call, and the GSF test infrastructure
+            will do the rest: it will load the file, parse it using your parser,
+            call your indexer, pretty print it, see if a golden file (named the same as
+            the input file name, plus the extra extension <code>.indexed</code>) exists,
+            and if not create it, or otherwise diff the computed results with the golden
+            file. The test fails if the diffs aren't identical.
+        </p>
+        <p>
+            See the <a href="unit-testing.html">Unit Testing</a> document for more information.
+        </p>
+        
+        <h3>Debugging Query Problems</h3>
+        <p>
+            Sometimes a feature fails -- for example, code completion doesn't return the
+            results you expect. One way to debug this is to use the GSF diagnostics tools.
+            The Lucene Index Browser is described in the
+            <a href="gsf-tools.html#index-browser">GSF Diagnostics Tools</a> document.
+        </p>
+        <h3>Ruby Indexed Data</h3>
+        <p>
+            The following table shows the data currently stored in the Ruby index, which
+            will hopefully give some ideas for how a complete indexer/query system
+            can work:
+            <table border="1" style="background: #ffffcc; border-collapse: collapse; border:solid 1px black">
+                <tr>
+                    <th>Key</th><th>Value</th>
+                </tr>
+                <tr>
+                    <td>fqn</td>
+                    <td>Fully qualified name of a class or module, such as "Test::Unit" for the Unit class.</td>
+                </tr>
+                <tr>
+                    <td>class</td>
+                    <td>The "basename" of a class or module, such as "Unit" for the Test::Unit class.</td>
+                </tr>
+                <tr>
+                    <td>class-ig</td>
+                    <td>A lowercased version of the class name. Used for case insensitive queries. (This shouldn't be necessary).</td>
+                </tr>
+                <tr>
+                    <td>extends</td>
+                    <td>The fully qualified name of a superclass, if any. Used to compute inherited methods by iterating through class documents.</td>
+                </tr>
+                <tr>
+                    <td>in</td>
+                    <td>The name of the module this class is contained in.</td>
+                </tr>
+                <tr>
+                    <td>require</td>
+                    <td>The string required to include this class from other files, e.g. <code>io/nonblock</code> for the nonblock.rb file. Used for require-completion.</td>
+                </tr>
+                <tr>
+                    <td>requires</td>
+                    <td>A list of all the files <i>this</i> file requires. Used to compute file inclusion transitively.</td>
+                </tr>
+                <tr>
+                    <td>includes</td>
+                    <td>A list of modules included (not the same as requires) by this class or module.</td>
+                </tr>
+                <tr>
+                    <td>extendWith</td>
+                    <td>Used to simulate the way classes can dynamically be extended with a given module in Ruby.</td>
+                </tr>
+                <tr>
+                    <td>method</td>
+                    <td>A method in the class. This isn't just a method name; it's a pretty complicated encoding
+                        of the method name, its parameter list, its (optional) return type, its (optional) parameter
+                        hints or types, as well as a set of attributes for the method (is documented, is ignored,
+                    etc.)</td>
+                </tr>
+                <tr>
+                    <td>field</td>
+                    <td>A field in the class</td>
+                </tr>
+                <tr>
+                    <td>attribute</td>
+                    <td>An attribute in the class.</td>
+                </tr>
+                <tr>
+                    <td>constant</td>
+                    <td>A constant in the class</td>
+                </tr>
+                <tr>
+                    <td>attrs</td>
+                    <td>A set of attributes for the class, written as a hex value string</td>
+                </tr>
+                <tr>
+                    <td>dbtable</td>
+                    <td>For active record database table completion, the table name this migration refers to</td>
+                </tr>
+                <tr>
+                    <td>dbversion</td>
+                    <td>The version number of this migration (used to apply the migrations in the correct order)</td>
+                </tr>
+                <tr>
+                    <td>dbcolumn</td>
+                    <td>A column name to be added, removed or renamed (indicated with + or - after the name)</td>
+                </tr>
+            </table>
+        </p>
+        <br/>
+        <span style="color: #cccccc">Tor Norbye &lt;tor@netbeans.org&gt;</span>
+    </body>
+</html>

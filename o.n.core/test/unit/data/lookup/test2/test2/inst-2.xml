@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE settings PUBLIC
+          "-//NetBeans//DTD Session settings 1.0//EN"
+          "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+    <module name="test2"/>
+    <instanceof class="javax.swing.Action"/>
+    <instanceof class="test2.SomeAction"/>
+    <instance class="test2.SomeAction"/>
+</settings>

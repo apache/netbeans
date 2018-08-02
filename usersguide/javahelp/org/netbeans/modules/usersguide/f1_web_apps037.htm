@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>New Web Application Wizard: Server and Settings</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.javaee.project.api.ant.ui.wizard.ProjectServerWizardPanel_WAR" name="org.netbeans.modules.javaee.project.api.ant.ui.wizard.ProjectServerWizardPanel_WAR"></a></p>
+<div id="NBCSH4068"><!-- infolevel="all" infotype="General" --><a id="sthref539" name="sthref539"></a>
+<h1>New Web Application Wizard: Server and Settings</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to specify the web application server and other settings for a new standard project containing an empty web application. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1039">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>In the Server and Settings page, you have to set the following properties:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t45">Element</th>
+<th align="left" valign="bottom" id="r1c2-t45">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t45" headers="r1c1-t45">
+<p>Add to Enterprise Application</p>
+</td>
+<td align="left" headers="r2c1-t45 r1c2-t45">Lets you add the web project to any open enterprise application project. If you do not add it here, you can do so later by expanding the enterprise application project node and right-clicking the Java EE Modules node.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t45" headers="r1c1-t45">
+<p>Server</p>
+</td>
+<td align="left" headers="r3c1-t45 r1c2-t45">Specifies the web application's server. Only servers that are registered with the IDE are available to be selected here.
+<p><b>Note:</b> The default installation of the IDE's Java bundle includes the Glassfish application server, and the Tomcat web server. Servers included in the installation are automatically registered in the IDE.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t45" headers="r1c1-t45">
+<p>Copy Server JAR Files to Libraries Folder</p>
+</td>
+<td align="left" headers="r4c1-t45 r1c2-t45">If you are using a dedicated folder for storing libraries, you can select this option to copy the server JAR files required for compilation into the dedicated libraries folder. If not selected, other users will need local copies of the server JAR files to build the project.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t45" headers="r1c1-t45">
+<p>Java EE Version</p>
+</td>
+<td align="left" headers="r5c1-t45 r1c2-t45">Specifies the Java EE level against which your web application will run. Note that Java EE 7 applications require a certified Java EE 7 server, such as GlassFish Server 4. The TomEE server is a certified Java EE 6 server.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t45" headers="r1c1-t45">
+<p>Enable Contexts and Dependency Injection</p>
+</td>
+<td align="left" headers="r6c1-t45 r1c2-t45">Contexts and Dependency Injection (CDI) is specified by JSR-299. When selected, this option generates a <code dir="ltr">beans.xml</code> file in the project's <code dir="ltr">WEB-INF</code> folder when the project template is created. The <code dir="ltr">beans.xml</code> file is used by CDI to instruct the Java EE-compliant server that the project is a module containing CDI beans.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t45" headers="r1c1-t45">
+<p>Context Path</p>
+</td>
+<td align="left" headers="r7c1-t45 r1c2-t45">Specifies a way to distinguish resources in one web application from resources in others that are deployed on the same server instance. The context of an application determines the URL namespace of the contents of the web application. When a web application's context property value is set, you access the web application at <code dir="ltr">http://hostname:port/context/some_file.some_extension</code>. For example, with the property value set to <code dir="ltr">/HelloWeb</code>, you could access the application's entry point <code dir="ltr">index.jsp</code> file at: <code dir="ltr">http://hostname:port/HelloWeb/index.jsp</code>.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>If you click <b>Next</b>, you can let the IDE provide your application with the libraries needed to work with various frameworks, including JavaServer Faces, Struts, Spring, and Hibernate. If you click <b>Finish</b>, the project is created on your computer and opened in the IDE. You can view its logical structure in the Projects window and its file structure in the Files window.</p>
+<a id="NBCSH4075" name="NBCSH4075"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG370">
+<param name="text" value="<html><u>&quot;Using Java Project Templates&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG455">
+<param name="text" value="<html><u>&quot;Sharing a Library with Other Users&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns:y="http://new.webservice.namespace" 
+    xmlns:po="http://www.example.com/PO1"
+    xmlns:b="myNamespace" targetNamespace="http://new.webservice.namespace" >
+    <types >
+        <xs:schema targetNamespace="myNamespace">
+            <xs:import schemaLocation="PurchaseOrder.xsd" namespace="http://www.example.com/PO1"/>
+            <xs:element name="a" type="b:someType"/>
+            <xs:element name="myPO" type="po:PurchaseOrderType"/>
+            <xs:simpleType name="someType">
+                <xs:restriction base="xs:string"/>
+            </xs:simpleType>
+        </xs:schema>
+    </types>
+    <message name="messageName"/>
+    <portType name="typeName"/>
+    <binding name="bindingName" type="y:typeName"/>
+    <service name="serviceName"/>
+</definitions>

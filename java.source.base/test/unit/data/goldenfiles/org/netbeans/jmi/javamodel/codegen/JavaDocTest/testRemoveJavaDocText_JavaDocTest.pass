@@ -1,0 +1,68 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.netbeans.test.codegen;
+
+import java.io.IOException;
+
+public class JavaDocTestClass {
+
+    /**
+     * JavaDoc for the firstMethod.
+     */
+    public void firstMethod() {
+    }
+
+    /**
+     * Javadoc to be changed.
+     * Two line comment.
+     */
+    public int secondMethod() {
+        return 0;
+    }
+
+    /**
+     * JavaDoc in method.
+     *
+     * @param  a  integral value
+     * @param  c  sequence of chars
+     *
+     * @return value of something
+     */
+    public long thirdMethod(int a, String c) {
+        int e = a++;
+        String d = c;
+        
+        return e - d.length();
+    }
+    
+    protected static void fourthMethod(int x) throws IOException {
+        // nothing to do.
+        return;
+    }
+    
+    private void fifthMethod(String d) throws IOException, IllegalAccessError, IllegalArgumentException {
+        // three exceptions thrown
+    }
+    
+    protected Object sixthMethod() {
+        return "";
+    }
+    
+    public abstract void seventhMethod();
+}

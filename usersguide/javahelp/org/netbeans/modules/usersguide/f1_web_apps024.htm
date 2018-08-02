@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Standard Web Project Properties Dialog Box: Compiling</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.web.project.ui.customizer.CustomizerCompile" name="org.netbeans.modules.web.project.ui.customizer.CustomizerCompile"></a></p>
+<div id="NBCSH3952"><!-- infolevel="all" infotype="General" --><a id="sthref531" name="sthref531"></a>
+<h1>Standard Web Project Properties Dialog Box: Compiling</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to set compiling options. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2819">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>In the Compiling page, you can set the following properties:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t32">Element</th>
+<th align="left" valign="bottom" id="r1c2-t32">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t32" headers="r1c1-t32">
+<p>Copy Static Resources on Save</p>
+</td>
+<td align="left" headers="r2c1-t32 r1c2-t32">This option enables you to choose how the IDE handles non-Java files when the files are modified and saved. When selected, the files are automatically copied to the build directory of the project when the files are saved. When not selected the non-Java files are not copied when you save the files. You can invoke the Build command to copy the files to the build directory. This option is automatically enabled when you enable Deploy on Save.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t32" headers="r1c1-t32">
+<p>Compile on Save</p>
+</td>
+<td align="left" headers="r3c1-t32 r1c2-t32">This option enables you to choose how the IDE handles Java files when the files are modified and saved. When selected, Java files are compiled when you save them and generated class files are stored in the build directory of the project. This option can save you time when you run or debug your application in the IDE. When not selected the Java files are not compiled when you save the files. You can invoke the Build command to compile the files. This option is automatically enabled when you enable Deploy on Save. Deploy on Save is automatically disabled when you disable this option.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t32" headers="r1c1-t32">
+<p>Generate Debugging Info</p>
+</td>
+<td align="left" headers="r4c1-t32 r1c2-t32">If selected, the compiled classes will include information necessary for stopping at breakpoints and stepping through the application with the debugger.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t32" headers="r1c1-t32">
+<p>Report Uses of Deprecated APIs</p>
+</td>
+<td align="left" headers="r5c1-t32 r1c2-t32">If selected, you are notified in the compilation output of any deprecated APIs that the code uses.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t32" headers="r1c1-t32">
+<p>Enable Annotation Processing</p>
+</td>
+<td align="left" headers="r6c1-t32 r1c2-t32">Select this check box to enable annotation processing during building the project. When deselected, compilation proceeds without annotation processing. Any annotation processors on the classpath are ignored. This check box corresponds to the <code dir="ltr">-proc:none</code> option of the compiler. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG384">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t32" headers="r1c1-t32">
+<p>Enable Annotation Processing in Editor</p>
+</td>
+<td align="left" headers="r7c1-t32 r1c2-t32">When selected, you can enable annotation processing in the IDE Editor. This means that any additional artifacts that are generated by processors (classes, methods, fields, etc.) will be visible through the IDE features, such as code completion, Navigator, GoTo Type and Find usages. Also, the Editor will display any diagnostic messages produced by annotation processors. In addition, completion suggestions for annotation attribute values produced by annotation processors will become available in Java code completion.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t32" headers="r1c1-t32">
+<p>Annotation Processors</p>
+</td>
+<td align="left" headers="r8c1-t32 r1c2-t32">Click Add to explicitly specify an annotation processor for your project. In the Add Annotation Processor dialog box, enter a fully qualified name of the annotation processor. This setting corresponds to the <code dir="ltr">&ndash;processor</code> option of the compiler. Note that to use the annotation processor, you should also add it to the classpath or the processor path of your project in the Libraries category.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t32" headers="r1c1-t32">
+<p>Additional Compiler Options.</p>
+</td>
+<td align="left" headers="r9c1-t32 r1c2-t32">Enter any additional compiler options in a space-separated list. For example, if you type -help -version, the Output window displays the Java compiler's synopsis of standard options together with the Java compiler's version information.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t32" headers="r1c1-t32">Test compile all JSP files during build</td>
+<td align="left" headers="r10c1-t32 r1c2-t32">Specifies that the project's JSP files are to be compiled when you build the project. By default, the IDE does not compile JSP files while building a project. This is because JSP compilation can take a long time because JSP files have to be translated to servlets before they can be compiled. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1056">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p><b>Notes:</b></p>
+<ul>
+<li>Do not use compiler options like <code dir="ltr">-bootclasspath</code> to cross-compile between Java platforms. Instead, register the target Java platform by clicking Manage Platforms in the Libraries page and set the target JDK for the project.</li>
+<li>You can manage the project's classpath in the Libraries page. You can set up file filters for WAR file creation in the Packaging page.</li>
+</ul>
+<a id="NBCSH3961" name="NBCSH3961"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1111">
+<param name="text" value="<html><u>&quot;Configuring a Web Application&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

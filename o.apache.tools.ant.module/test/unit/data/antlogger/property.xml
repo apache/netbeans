@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="property" default="run" basedir=".">
+    <target name="run">
+        <property name="propname" value="propval"/>
+        <echo leVel="info">meaningless</echo>
+    </target>
+    <target name="run2">
+        <echo>about to use antcall</echo>
+        <antcall target="run"/>
+    </target>
+</project>

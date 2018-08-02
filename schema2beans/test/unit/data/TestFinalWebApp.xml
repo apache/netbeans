@@ -1,0 +1,46 @@
+<?xml version='1.0'?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<web-app xmlns:testNS='http://testNS' xmlns:sl='http://www.w3.org/2001/XMLSchema-instance' sl:schemaLocation='foo' qname-test-attrib='testNS:at'>
+  <description>This is my Web App</description>
+  <display-name>MyWebApp</display-name>
+  <filter>
+	<filter-name>Bob</filter-name>
+  </filter>
+  <service-ref>
+	<description>First ref</description>
+	<service-qname>noNS</service-qname>
+  </service-ref>
+  <service-ref xmlns:foo='http://blue'>
+	<description>Second ref</description>
+	<service-qname >foo:someNS</service-qname>
+  </service-ref>
+  <service-ref xmlns:otherNS='http://green'>
+	<description>Third ref</description>
+	<service-qname>otherNS:outerNS</service-qname>
+	<handler xmlns:bar="http://bar.com">
+	  <handler-name>P</handler-name>
+	  <soap-header>a</soap-header>
+	  <soap-header>bar:b</soap-header>
+	  <soap-header>otherNS:c</soap-header>
+	</handler>
+  </service-ref>
+</web-app>

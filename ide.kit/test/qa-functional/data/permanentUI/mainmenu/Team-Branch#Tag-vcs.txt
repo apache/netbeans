@@ -1,0 +1,9 @@
+Branch/Tag  >   Create Branch...    B
+                Switch To Branch...    S
+                Set Tracked Branch...    C
+                =================
+                Create Tag...       T
+                Manage Tags...      G
+                =================
+                Merge Revision...    M
+                Rebase...           R

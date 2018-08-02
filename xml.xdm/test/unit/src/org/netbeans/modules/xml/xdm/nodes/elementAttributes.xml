@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<test xmlns="http://org.company/schemas/test.xsd"
+	  xmlns:someNs="http://org.company/schemas/test1.xsd" 
+	  xmlns:otherNs="http://org.company/schemas/test2.xsd">
+	<e someNs:myAttribute="7" myAttribute="8" otherNs:myAttribute="9"/>
+</test>

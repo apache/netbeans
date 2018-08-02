@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.diff/1
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/diff/Bundle.properties
+OpenIDE-Module-Implementation-Version: 42
+OpenIDE-Module-Layer: org/netbeans/modules/diff/mf-layer.xml
+AutoUpdate-Show-In-Client: false

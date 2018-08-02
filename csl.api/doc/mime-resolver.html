@@ -1,0 +1,209 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+    <body>
+        <h2>Mime Resolver</h2>
+        <p>
+            GSF is based on mimetypes. Each GSF language plugin is associated
+            with a particular "mime type". For example, Ruby files have the
+            mime type <code>text/x-ruby</code>, JavaScript files have the mime
+            type <code>text/javascript</code>, and so on.
+        </p>
+        <p>
+            In order for GSF to add its editing services to particular files,
+            you have to teach the IDE how to recognize the mime type for your
+            files. You do that using the "mime resolver" support in NetBeans.
+            This is not particular to GSF, but it's a prerequisite.
+        </p>
+        <p>
+            Basically, all you have to do is write a simple XML file which
+            tells NetBeans for example that files with the extension <code>.foo</code>
+            have the mimetype <code>text/foo</code>. Once you've done that,
+            you can go to the <a href="registration.html">registration</a>
+            section and register editing services for the <code>text/foo</code>
+            mime type. GSF will provide DataLoaders, DataObjects etc. for
+            files of the mimetypes as soon as you do that.
+        </p>
+        <h3>Registering a Mime Resolver</h3>
+        <p>
+            When you create a new NetBeans plugin, it will typically create
+            an empty layer.xml file for you. This is an XML file where you
+            can register implementations of various IDE services.
+            In particular, to register a mime resolver, you'll need to
+            add something like this:
+            
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+&lt;filesystem&gt;
+
+<b>      &lt;folder name="Services"&gt;
+        &lt;folder name="MIMEResolver"&gt;
+            &lt;file name="javascript.xml" url="jsresolver.xml"&gt;
+                &lt;attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javascript.editing.Bundle"/&gt;
+                &lt;attr name="position" intvalue="190"/&gt;
+            &lt;/file&gt;
+        &lt;/folder&gt;
+    &lt;/folder&gt;</b>
+           
+&lt;filesystem&gt;
+            </pre>
+            Here, the file name <code>javascript.xml</code> should be something unique that no other
+            mime resolver might have picked. The <code>url</code> attribute points to a filename
+            in the same directory as the layer.xml file. I'll cover that file next.
+            Finally, the attributes let you create a properly localized user visible description 
+            of files of this file type. 
+        </p>
+        <h3>Describing File Types</h3>
+        <p>
+            For the example above, you would create a <code>Bundle.properties</code> file in the same
+            package as the layer file (again, when you create a plugin you usually get one of these
+            created for you already), and it should contain something like this:
+            <pre>
+Services/MIMEResolver/javascript.xml=JavaScript Files
+            </pre>
+        </p>
+        <h3>Writing a Mime Resolver</h3>
+        <p>
+            Finally, you need to go and write the actual mime resolver file, <code>jsresolver.xml</code>
+            (we could have named it anything, including <code>javascript.xml</code>).
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    
+&lt;!DOCTYPE MIME-resolver PUBLIC "-//NetBeans//DTD MIME Resolver 1.0//EN" "http://www.netbeans.org/dtds/mime-resolver-1_0.dtd"&gt;
+&lt;MIME-resolver&gt;
+    &lt;file&gt;
+        &lt;ext name="json"/&gt;
+        &lt;ext name="js"/&gt;
+        &lt;resolver mime="text/javascript"/&gt;
+    &lt;/file&gt;
+&lt;/MIME-resolver&gt;
+            </pre>            
+            Here we're saying that files of extensions <code>json</code> and <code>js</code> should
+            be treated as JavaScript files. The DTD for mime resolvers allow more complex
+            analysis, such as analyzing file headers and such. Take a look
+            at the <a href="http://www.netbeans.org/dtds/mime-resolver-1_0.dtd">DTD</a> for
+            the full details.  You can also write a custom class to do mime resolvers
+            if you have really specific needs. Avoid doing that if you can, since with a custom
+            mime resolver the IDE can't figure out what you're doing and do special optimizations.
+            There is an example of how to do this in the ruby editing module - look for <code>RubyMimeResolver</code> - but
+            again try to avoid this if you don't strictly have to do it.
+        </p>
+        <p>
+            Finally, note that there is a position attribute on the registration of the
+            mime resolver above. The position attributes are used to order the mime resolvers.
+            In case there are overlaps in registrations, order matters. For that reason,
+            pick some number. NetBeans integration unit tests will check all the layers and make
+            sure there aren't inconsistencies into folder orderings and will generate unit test
+            failures if there are.
+        </p>
+        <h3>Icons and Actions</h3>
+        <p>
+            Once you register your mime type with GSF (described in the
+            <a href="registration.html">registration document</a>, files shown in the
+            Files and Projects views will be handled by GSF.
+            You can also assign a custom icon to file as well as context menu actions.
+            To do this, you need a few more registration steps. Add something like the
+            following to your layer:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    &lt;folder name="Loaders"&gt;
+        &lt;folder name="text"&gt;
+            &lt;folder name="javascript"&gt;
+                <b>&lt;attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/javascript/editing/javascript.png"/&gt;
+                &lt;attr name="iconBase" stringvalue="org/netbeans/modules/javascript/editing/javascript.png"/&gt;</b>
+                &lt;folder name="Actions"&gt;
+                    &lt;file name="OpenAction.instance"&gt;
+                        &lt;attr name="instanceClass" stringvalue="org.openide.actions.OpenAction"/&gt;
+                        &lt;attr name="position" intvalue="100"/&gt;
+                    &lt;/file&gt;
+                    &lt;file name="Separator1.instance"&gt;
+                        &lt;attr name="instanceClass" stringvalue="javax.swing.JSeparator"/&gt;
+                        &lt;attr name="position" intvalue="200"/&gt;
+                    &lt;/file&gt;
+                    &lt;file name="CutAction.instance"&gt;
+                        &lt;attr name="instanceClass" stringvalue="org.openide.actions.CutAction"/&gt;
+                        &lt;attr name="position" intvalue="300"/&gt;
+                    &lt;/file&gt;     
+                    &lt;file name="CopyAction.instance"&gt;
+                        &lt;attr name="instanceClass" stringvalue="org.openide.actions.CopyAction"/&gt;
+                        &lt;attr name="position" intvalue="400"/&gt;
+                    &lt;/file&gt;
+                    &lt;file name="PasteAction.instance"&gt;
+                        &lt;attr name="instanceClass" stringvalue="org.openide.actions.PasteAction"/&gt;
+                        &lt;attr name="position" intvalue="500"/&gt;
+                    &lt;/file&gt;
+                    &lt;file name="Separator2.instance"&gt;
+                        &lt;attr name="instanceClass" stringvalue="javax.swing.JSeparator"/&gt;
+                        &lt;attr name="position" intvalue="600"/&gt;
+                    &lt;/file&gt;
+                    &lt;file name="NewAction.instance"&gt;
+                        &lt;attr name="instanceClass" stringvalue="org.openide.actions.NewAction"/&gt;
+                        &lt;attr name="position" intvalue="700"/&gt;
+                    &lt;/file&gt;
+                    &lt;file name="DeleteAction.instance"&gt;
+                        &lt;attr name="instanceClass" stringvalue="org.openide.actions.DeleteAction"/&gt;
+                        &lt;attr name="position" intvalue="800"/&gt;
+                    &lt;/file&gt;
+                    &lt;file name="RenameAction.instance"&gt;
+                        &lt;attr name="instanceClass" stringvalue="org.openide.actions.RenameAction"/&gt;
+                        &lt;attr name="position" intvalue="900"/&gt;
+                    &lt;/file&gt;
+                    &lt;file name="Separator3.instance"&gt;
+                        &lt;attr name="instanceClass" stringvalue="javax.swing.JSeparator"/&gt;
+                        &lt;attr name="position" intvalue="1000"/&gt;
+                    &lt;/file&gt;
+                    &lt;file name="SaveAsTemplateAction.instance"&gt;
+                        &lt;attr name="instanceClass" stringvalue="org.openide.actions.SaveAsTemplateAction"/&gt;
+                        &lt;attr name="position" intvalue="1100"/&gt;
+                    &lt;/file&gt;
+                    &lt;file name="Separator4.instance"&gt;
+                        &lt;attr name="instanceClass" stringvalue="javax.swing.JSeparator"/&gt;
+                        &lt;attr name="position" intvalue="1200"/&gt;
+                    &lt;/file&gt;
+                    &lt;file name="FileSystemAction.instance"&gt;
+                        &lt;attr name="instanceClass" stringvalue="org.openide.actions.FileSystemAction"/&gt;
+                        &lt;attr name="position" intvalue="1300"/&gt;
+                    &lt;/file&gt;
+                    &lt;file name="Separator5.instance"&gt;
+                        &lt;attr name="instanceClass" stringvalue="javax.swing.JSeparator"/&gt;
+                        &lt;attr name="position" intvalue="1400"/&gt;
+                    &lt;/file&gt; 
+                    &lt;file name="ToolsAction.instance"&gt;
+                        &lt;attr name="instanceClass" stringvalue="org.openide.actions.ToolsAction"/&gt;
+                        &lt;attr name="position" intvalue="1500"/&gt;
+                    &lt;/file&gt; 
+                    &lt;file name="PropertiesAction.instance"&gt;
+                        &lt;attr name="instanceClass" stringvalue="org.openide.actions.PropertiesAction"/&gt;
+                        &lt;attr name="position" intvalue="1600"/&gt;
+                    &lt;/file&gt; 
+                &lt;/folder&gt;            
+            &lt;/folder&gt;
+        &lt;/folder&gt;
+    &lt;/folder&gt;
+            </pre>
+            Here, the highlighted section shows how an icon is assigned to this type.
+            You need to place an icon in the directory shown in the attribute. The rest
+            of this section registers various common actions you might want on your
+            files. These are all standard actions defined by NetBeans so you don't
+            have to write these on your own.
+            
+        </p>
+        <br/>
+        <span style="color: #cccccc">Tor Norbye &lt;tor@netbeans.org&gt;</span>
+    </body>
+</html>

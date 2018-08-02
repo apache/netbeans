@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!--
+    Document   : actiondefs.xml
+    Created on : January 25, 2004, 4:19 PM
+    Author     : Tim Boudreau
+    Description:
+        Define actions for the actions framework prototype.
+-->
+
+<actionset>
+    <!-- Container definitions.  Containers can be menus or toolbars.
+      They contain items, which are names of actions defined later in
+      the file -->
+
+    <container type="menu" name="file">
+        <item name="new"/>
+        <item name="open"/>
+        <item name="save"/>
+        <item name="saveas"/>
+        <item name="saveall"/>
+        <item name="close"/>
+        <item name="revert"/>
+        <item name="exit"/>
+    </container>
+
+    <container type="menu" name="edit">
+        <item name="undo"/>
+        <item name="redo"/>
+        <item name="cut"/>
+        <item name="copy"/>
+        <item name="paste"/>
+    </container>
+
+    <container type="toolbar" name="fileToolbar">
+        <item name="new"/>
+        <item name="open"/>
+        <item name="save"/>
+        <item name="close"/>
+    </container>
+    
+    <container type="toolbar" name="editToolbar">
+        <item name="undo"/>
+        <item name="redo"/>
+        <item name="cut"/>
+        <item name="copy"/>
+        <item name="paste"/>
+    </container>
+    
+    <container type="contextmenu" name="contextMenu">
+        <item name="open"/>
+        <item name="delete"/>
+        <item name="cut"/>
+        <item name="copy"/>
+        <item name="paste"/>
+    </container>
+    
+    <!--Keystroke definitions.  These will be used to create the
+     InputMap and ActionMap returned by the Engine.  The application
+     should apply these to its root pane.  We could define per-component
+     maps, if necessary; better is probably to just allow constraints
+     which check the active component type.
+     
+     Keystrokes are defined using the same syntax as defined in
+     the javadoc for KeyStroke.getKeyStroke(String), except that
+     the modifiers are in separate attributes from the key.  To
+     register against a KeyTyped keystroke, don't include any modifiers
+     and use the attribute typedkey instead of key (defining both is
+     meaningless).
+     
+     Also, since not all platforms use the same accelerator keystroke,
+     the special modifier value defaultAccelerator can be specified
+     to map the action to the default accelerator for the current
+     platform.
+     
+     TODO:  Move inside an inputmap tag and support per-platform
+     definitions.
+     -->
+    
+    <keystroke action="save" modifiers="defaultAccelerator" key="S"/>
+    <keystroke action="open" modifiers="defaultAccelerator" key="O"/>
+    <keystroke action="cut" modifiers="defaultAccelerator" key="X"/>
+    <keystroke action="copy" modifiers="defaultAccelerator" key="C"/>
+    <keystroke action="paste" modifiers="defaultAccelerator" key="V"/>
+    <keystroke action="new" modifiers="defaultAccelerator" key="N"/>
+        
+    <!--Action definitions.  Actions are simply strings.  They may
+      specify constraints (defined below) that affect their enablement
+      or visibility.  Each action maps to an invoker (also defined below).
+     -->
+    
+    <action name="new" invoker="new" icon="icons/new.gif"/>
+    <action name="open" constraints="canopen" invoker="open" icon="icons/open.gif"/>
+    <action name="save" constraints="ismodified" invoker="save" icon="icons/save.gif"/>
+    <action name="close" constraints="canclose,canclose2" invoker="close"/>
+    <action name="undo" constraints="canundo" invoker="undo" icon="icons/undo.gif"/>
+    <action name="redo" constraints="canredo" invoker="redo" icon="icons/redo.gif"/>
+    <action name="exit" invoker="exit"/>
+    <action name="revert" constraints="ismodified" invoker="revert"/>
+    <action name="saveall" constraints="cansaveall" invoker="saveall" icon="icons/saveall.gif"/>
+    <action name="cut" constraints="selection" invoker="cut" icon="icons/cut.gif"/>
+    <action name="copy" constraints="selection" invoker="copy" icon="icons/copy.gif"/>
+    <action name="paste" constraints="clipboard" invoker="paste" icon="icons/paste.gif"/>
+    <action name="saveas" constraints="hasdoc" invoker="saveas"/>
+    <action name="delete" constraints="candelete" invoker="delete" icon="icons/delete.gif"/>
+
+    <!--Constraint definitions.  A constraint determines whether an
+     action's presenter is visible.  The ContextProvider (implemented by the application)
+     which is provided to the engine provides a map that defines the
+     current application context.  A constraint owns a set of keys.
+     Each key must match some contents of the map.  In the simplest form,
+     <key value="blah"/>, the test is simply if the map contains any
+     value when get is called with the key's value.  A slightly more
+     complex kind matches one string with another (e.g. activeComponent=editor).
+     Further complexity is possible, but should be as limited as possible.
+     -->
+        
+    <!--  Example:
+    <constraint name="selection" type="enabled">
+        <key value="selection" mode="mustcontain"/>
+        <key value="activeComponent" match="editor"/>
+        <key method="someMethodThatReturnsBooleanAndMaybeTakesAMap" class="com.foo.Foo"/>
+    </constraint>
+    -->     
+     
+    <constraint name="clipboard" type="enabled">
+        <key value="clipboardcontents"/>
+        <key value="activecomponent" match="editor"/>
+    </constraint>
+    
+    <constraint name="canopen" type="enabled">
+        <key value="fileSelected" mode="mustcontain"/>
+        <key value="closedFileSelected"/>
+        <key value="dirSelected" mode="mustnotcontain"/>
+    </constraint>
+    
+    <constraint name="candelete" type="visible">
+        <key value="activecomponent" match="filetree"/>
+        <key value="fileSelected"/>
+    </constraint>
+
+    <constraint name="selection" type="enabled">
+        <key value="selection"/>
+    </constraint>
+
+    <constraint name="canundo" type="enabled">
+        <key value="undo"/>
+    </constraint>
+    
+    <constraint name="canredo" type="enabled">
+        <key value="redo"/>
+    </constraint>
+    
+    <constraint name="hasdoc" type="visible">
+        <key value="doc"/>
+    </constraint>
+    
+    <constraint name="ismodified" type="enabled">
+        <key value="modified"/>
+    </constraint>
+    
+    <constraint name="cansaveall" type="enabled">
+        <key value="anymodified"/>
+    </constraint>
+    
+    <constraint name="canclose" type="enabled">
+        <key value="close"/>
+    </constraint>
+    
+    <constraint name="canclose2" type="visible">
+        <key value="close"/>
+    </constraint>
+
+    <!--Invoker definitions.  Here is where all these strings get turned
+      into code that is run against something.  An invoker contains a 
+      pointer to a class and a method.  These will be looked up by
+      reflection.  Then, following the cookie pattern, an object of
+      that class is looked up in the app context map provided by the
+      ContextProvider.  If non-null, the method is invoked on that
+      object.  More complexities are of course possible here, but we
+      should avoid them if we can. 
+      
+      One of the nice (or not nice, depending on how much of an OOP 
+      freak you are) things about this is that you don't need a 
+      1:1 mapping of classes to actions.  So this can save a chunk
+      of memory, but provide all the flexibility you could want.
+    -->    
+
+    <invoker name="new" type="context" class="org.netbeans.actions.examples.MiniEdit"
+        method="newFile"/>
+
+    <invoker name="open" type="context" class="org.netbeans.actions.examples.MiniEdit"
+        method="open"/>
+
+    <invoker name="saveall" type="context" class="org.netbeans.actions.examples.MiniEdit"
+        method="saveAll"/>
+        
+    <invoker name="close" type="context" class="org.netbeans.actions.examples.MiniEdit"
+        method="close"/>
+        
+    <invoker name="exit" type="context" class="org.netbeans.actions.examples.MiniEdit"
+        method="exit"/>
+        
+    <invoker name="cut" type="context" class="org.netbeans.actions.examples.MiniEdit"
+        method="cut"/>
+        
+    <invoker name="copy" type="context" class="org.netbeans.actions.examples.MiniEdit"
+        method="copy"/>
+
+    <invoker name="paste" type="context" class="org.netbeans.actions.examples.MiniEdit"
+        method="paste"/>
+        
+    <invoker name="revert" type="context" class="org.netbeans.actions.examples.MiniEdit$Doc"
+        method="revert"/>
+        
+    <invoker name="undo" type="context" class="org.netbeans.actions.examples.MiniEdit$Doc"
+        method="undo"/>
+
+    <invoker name="redo" type="context" class="org.netbeans.actions.examples.MiniEdit$Doc"
+        method="redo"/>
+        
+    <invoker name="save" type="context" class="org.netbeans.actions.examples.MiniEdit$Doc"
+        method="save"/>
+        
+    <invoker name="saveas" type="context" class="org.netbeans.actions.examples.MiniEdit$Doc"
+        method="saveAs"/>
+        
+    <invoker name="delete" type="context" class="org.netbeans.actions.examples.MiniEdit"
+        method="delete"/>
+        
+        
+</actionset>

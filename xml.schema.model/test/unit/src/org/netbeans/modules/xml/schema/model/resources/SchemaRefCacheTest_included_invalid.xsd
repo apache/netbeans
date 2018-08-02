@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="windows-1252"?>
+
+<xsd:schema___ xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://xml.netbeans.org/schema/refCacheTest"
+            elementFormDefault="qualified">
+    <xsd:complexType name="includedType">
+        <xsd:sequence>
+            <xsd:element name="includedElement" type="xsd:string"></xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="includedAttr" type="xsd:string"/>
+    </xsd:complexType>
+</xsd:schema>

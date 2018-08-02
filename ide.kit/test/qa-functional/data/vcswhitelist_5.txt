@@ -1,0 +1,4 @@
+#serves for VCSClassloadingTest.testTraverseHGMenu
+#include vcswhitelist_4.txt
+
+# Hg offenders - remove after fix

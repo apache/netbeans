@@ -1,0 +1,95 @@
+JFrame:ATTRIBUTE:[]:JFrame:
+  content:ATTRIBUTE:[]:content:
+    list item:ATTRIBUTE:[]:list item:
+      JPanel:ATTRIBUTE:[]:JPanel:
+        content:ATTRIBUTE:[]:content:
+          list item:ATTRIBUTE:[]:list item:
+            JBSeparator:ATTRIBUTE:[]:JBSeparator:
+              name:ATTRIBUTE:[]:name:
+              text:ATTRIBUTE:[]:text:
+          list item:ATTRIBUTE:[]:list item:
+            JLabel:ATTRIBUTE:[]:JLabel:
+              name:ATTRIBUTE:[]:name:
+              text:ATTRIBUTE:[]:text:
+          list item:ATTRIBUTE:[]:list item:
+            JTextField:ATTRIBUTE:[]:JTextField:
+              name:ATTRIBUTE:[]:name:
+              onFocus:ATTRIBUTE:[]:onFocus:
+              onFocusLost:ATTRIBUTE:[]:onFocusLost:
+          list item:ATTRIBUTE:[]:list item:
+            JLabel:ATTRIBUTE:[]:JLabel:
+              name:ATTRIBUTE:[]:name:
+              text:ATTRIBUTE:[]:text:
+          list item:ATTRIBUTE:[]:list item:
+            JTextField:ATTRIBUTE:[]:JTextField:
+              name:ATTRIBUTE:[]:name:
+              onKeyPressed:ATTRIBUTE:[]:onKeyPressed:
+              onKeyReleased:ATTRIBUTE:[]:onKeyReleased:
+          list item:ATTRIBUTE:[]:list item:
+            JLabel:ATTRIBUTE:[]:JLabel:
+              name:ATTRIBUTE:[]:name:
+              text:ATTRIBUTE:[]:text:
+          list item:ATTRIBUTE:[]:list item:
+            JTextField:ATTRIBUTE:[]:JTextField:
+              name:ATTRIBUTE:[]:name:
+              onKeyTyped:ATTRIBUTE:[]:onKeyTyped:
+          list item:ATTRIBUTE:[]:list item:
+            JLabel:ATTRIBUTE:[]:JLabel:
+              name:ATTRIBUTE:[]:name:
+              text:ATTRIBUTE:[]:text:
+          list item:ATTRIBUTE:[]:list item:
+            JComboBox:ATTRIBUTE:[]:JComboBox:
+              name:ATTRIBUTE:[]:name:
+          list item:ATTRIBUTE:[]:list item:
+            JLabel:ATTRIBUTE:[]:JLabel:
+              name:ATTRIBUTE:[]:name:
+              text:ATTRIBUTE:[]:text:
+          list item:ATTRIBUTE:[]:list item:
+            JTextField:ATTRIBUTE:[]:JTextField:
+              name:ATTRIBUTE:[]:name:
+          list item:ATTRIBUTE:[]:list item:
+            JBSeparator:ATTRIBUTE:[]:JBSeparator:
+              name:ATTRIBUTE:[]:name:
+              text:ATTRIBUTE:[]:text:
+          list item:ATTRIBUTE:[]:list item:
+            JLabel:ATTRIBUTE:[]:JLabel:
+              name:ATTRIBUTE:[]:name:
+              text:ATTRIBUTE:[]:text:
+          list item:ATTRIBUTE:[]:list item:
+            JTextField:ATTRIBUTE:[]:JTextField:
+              name:ATTRIBUTE:[]:name:
+          list item:ATTRIBUTE:[]:list item:
+            JList:ATTRIBUTE:[]:JList:
+              name:ATTRIBUTE:[]:name:
+          list item:ATTRIBUTE:[]:list item:
+            JButton:ATTRIBUTE:[]:JButton:
+              actionCommand:ATTRIBUTE:[]:actionCommand:
+              name:ATTRIBUTE:[]:name:
+              text:ATTRIBUTE:[]:text:
+          list item:ATTRIBUTE:[]:list item:
+            JButton:ATTRIBUTE:[]:JButton:
+              actionCommand:ATTRIBUTE:[]:actionCommand:
+              name:ATTRIBUTE:[]:name:
+              text:ATTRIBUTE:[]:text:
+          list item:ATTRIBUTE:[]:list item:
+            JButton:ATTRIBUTE:[]:JButton:
+              name:ATTRIBUTE:[]:name:
+              onAction:ATTRIBUTE:[]:onAction:
+              text:ATTRIBUTE:[]:text:
+          list item:ATTRIBUTE:[]:list item:
+            JButton:ATTRIBUTE:[]:JButton:
+              actionCommand:ATTRIBUTE:[]:actionCommand:
+              name:ATTRIBUTE:[]:name:
+              text:ATTRIBUTE:[]:text:
+          list item:ATTRIBUTE:[]:list item:
+            JButton:ATTRIBUTE:[]:JButton:
+              name:ATTRIBUTE:[]:name:
+              onAction:ATTRIBUTE:[]:onAction:
+              text:ATTRIBUTE:[]:text:
+          list item:ATTRIBUTE:[]:list item:
+            JButton:ATTRIBUTE:[]:JButton:
+              name:ATTRIBUTE:[]:name:
+              onAction:ATTRIBUTE:[]:onAction:
+              text:ATTRIBUTE:[]:text:
+        layout:ATTRIBUTE:[]:layout:
+  title:ATTRIBUTE:[]:title:

@@ -1,0 +1,403 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>NetBeans JavaHelp Integration API</title>
+<link rel="stylesheet" href="../../../../../prose.css" type="text/css">
+</head>
+
+<body>
+<p class="overviewlink"><a href="../package-summary.html">Overview</a></p>
+
+<h1>NetBeans JavaHelp Integration API</h1>
+
+<p>It is possible to add JavaHelp and context help capabilities to modules.
+This API module makes that possible. It also includes the JavaHelp standard
+extension library itself.</p>
+
+<h2><a name="helpctx-layer">JavaHelp installation</a></h2>
+
+<h3>Helpset registration</h3>
+
+<p>You can add JavaHelp via your XML layer. First you
+need to add the helpset to the IDE. This has several effects: it ensures that
+context help can use your helpset; it enabled help links to use help IDs
+defined in this helpset; and assuming the helpset is marked to be merged into
+the master helpset, this means that the menu item <b>Help&nbsp;| Contents</b>
+will show any navigators you define in your helpset, merged into others.
+
+<p>To add a helpset, you must register an object implementing <code>javax.swing.HelpSet</code>
+into the IDE's lookup system. The normal way to do this is to use <code>@HelpSetRegistration</code>.
+
+<p>By default such a helpset will be merged into the IDE's master help
+navigators. You may opt out of this by specifying
+<samp>merge="false"</samp>. If
+providing a custom help set instance via lookup, in order to turn off
+merging you should set the "key data" on the helpset with the context
+<code>OpenIDE</code> and key <code>mergeIntoMaster</code> to
+<code>Boolean.FALSE</code>.
+
+<p>Using <code>nbresloc</code> implies that the
+helpset can be found in the module's classloader, for example in its
+main JAR or in an extension ZIP or JAR referenced via the
+<code>Class-Path</code> manifest attribute. There is a URL protocol
+<code>nbdocs</code> which is similar to <code>nbresloc</code> and will load anything it can.
+It also will try to load localized resources using
+<a href="@org-openide-modules@/org/openide/modules/InstalledFileLocator.html"><code>InstalledFileLocator</code></a>
+with a prefix of <samp>docs/</samp>.
+<span class="nonnormative">Given the current implementation of the
+NetBeans installation structure, this will permit the help set and
+associated files to reside in a package hierarchy underneath the
+<samp>docs/</samp> folder (of the IDE installation or user directory),
+if not in the module classloader.</span></p>
+
+<h3>Shortcut registration</h3>
+
+<p>To add a shortcut to a specific help ID in your help set, there is an
+XML DTD you can use.
+The shortcut XML specifies the help ID to display (which must be present in some
+registered help set of course), for example:
+
+<pre>
+&lt;?<span class="keyword">xml</span>?&gt;
+&lt;!<span class="keyword">DOCTYPE</span> <span class="type">helpctx</span> <span class="keyword">PUBLIC</span>
+          <span class="string">"-//NetBeans//DTD Help Context 1.0//EN"</span>
+          <span class="string">"http://www.netbeans.org/dtds/helpcontext-1_0.dtd"</span>&gt;
+&lt;<span class="function-name">helpctx</span> <span class="variable-name">id</span>=<span class="string">"org.netbeans.modules.foo.some-topic"</span>/&gt;
+</pre>
+
+<p>By default such a link will display a help window containing
+navigators only for the help set from which it was taken. If you
+prefer to display navigators for all merged help sets, specify
+<samp>showmaster="true"</samp> on the <samp>&lt;helpctx/&gt;</samp>.
+
+<p>This XML file's only use is that it has a menu/toolbar presenter
+which opens the specified help page. (You can customize its display
+name and icon using the normal means available to templates etc.)
+You could provide an alternate means of displaying help shortcuts,
+however the functionality of showing the master navigators is only
+accessible via the presenters of this kind of XML file.
+
+<p class="nonnormative">Note that usage of help shortcuts is no longer recommended by NetBeans style
+guidelines.</p>
+
+<h2><a name="helpctx-context-help">Context Help</a></h2>
+
+<p>When the help set is specified in the module, this permits the
+IDE to associate context help with various features associated with
+the module (or, technically, other modules - if you know their help
+IDs and they do not themselves bind them). There are several ways
+to associate help IDs with module features so that they may be used
+by the IDE, mostly revolving around the API class
+
+<a href="@org-openide-util-ui@/org/openide/util/HelpCtx.html"><code>HelpCtx</code></a>.
+
+<p>This class has should be constructed with a help ID,
+which should be a string constant uniquely identifying the feature, and
+associated with an HTML page using the map file.</p>
+
+<div class="nonnormative">
+
+<p>For example, an action might include a method
+implementation such as:
+
+<pre>
+<span class="keyword">public</span> <span class="type">HelpCtx</span> <span class="function-name">getHelpCtx</span>() {
+    <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">HelpCtx</span>("my.action");
+}
+</pre>
+
+Now the map file should include a line such as:
+
+<pre>
+&lt;<span class="function-name">mapID</span> <span class="variable-name">target</span>=<span class="string">"my.action"</span> <span class="variable-name">url</span>=<span class="string">"this-action.html"</span>/&gt;
+</pre>
+
+</div>
+
+<p>There are a number of different points in the APIs where you may
+specify a <code>HelpCtx</code> in this fashion:
+
+<ul>
+
+<li> <a href="@org-openide-nodes@/org/openide/nodes/Node.html#getHelpCtx--"><code>Node.getHelpCtx()</code></a>
+
+<li> <a href="@org-openide-loaders@/org/openide/loaders/DataObject.html#getHelpCtx--"><code>DataObject.getHelpCtx()</code></a>
+
+<li> <a href="@org-openide-windows@/org/openide/windows/TopComponent.html#getHelpCtx--"><code>TopComponent.getHelpCtx()</code></a>
+
+<li> <a href="@org-openide-util-ui@/org/openide/util/actions/SystemAction.html#getHelpCtx--"><code>SystemAction.getHelpCtx()</code></a>
+
+<li> <a href="@org-openide-util-ui@/org/openide/util/datatransfer/NewType.html#getHelpCtx--"><code>NewType.getHelpCtx()</code></a>
+
+<li> <a href="@org-openide-util-ui@/org/openide/util/datatransfer/PasteType.html#getHelpCtx--"><code>PasteType.getHelpCtx()</code></a>
+
+<li> <a href="@org-openide-dialogs@/org/openide/DialogDescriptor.html#getHelpCtx--"><code>DialogDescriptor.getHelpCtx()</code></a>
+
+<li> <a href="@org-openide-dialogs@/org/openide/WizardDescriptor.Panel.html#getHelp--"><code>WizardDescriptor.Panel.getHelpCtx()</code></a>
+
+<li> <a href="@org-openide-options@/org/openide/options/SystemOption.html#getHelpCtx--"><code>SystemOption.getHelpCtx()</code></a>
+
+<li> <a href="@org-openide-util-ui@/org/openide/ServiceType.html#getHelpCtx--"><code>ServiceType.getHelpCtx()</code></a>
+
+(applies equally to executors and compiler types)
+
+</ul>
+
+<p>There are some other points where you may specify a help ID directly:</p>
+
+<ul>
+
+<li> On any (Swing lightweight) component you use in a GUI, by
+means of
+
+<a href="@org-openide-util-ui@/org/openide/util/HelpCtx.html#setHelpIDString-javax.swing.JComponent-java.lang.String-"><code>HelpCtx.setHelpIDString(...)</code></a>.
+
+This is especially useful for custom property editor components.
+
+<li> On any JavaBean, by adding the help ID as a (string) value to
+the (<code>FeatureDescriptor</code>) attribute named
+<code>helpID</code> in a <code>BeanDescriptor</code>, as described
+by the JavaHelp specification in regards to beans. This will be
+interpreted by any bean container (e.g.
+
+<a href="@org-openide-loaders@/org/openide/loaders/InstanceDataObject.html"><code>InstanceDataObject</code></a>
+
+or
+
+<a href="@org-openide-nodes@/org/openide/nodes/BeanNode.html"><code>BeanNode</code></a>
+
+or <code>*.ser</code> files)
+
+that uses
+
+<a href="@org-openide-loaders@/org/openide/loaders/InstanceSupport.html#findHelp-org.openide.cookies.InstanceCookie-"><code>InstanceSupport.findHelp(...)</code></a>.
+
+<p>This technique may also be used to add context help support to
+the editor kits used in the
+
+<a href="@org-openide-text@/overview-summary.html">Editor API</a>;
+
+create the bean info for the subclass of
+
+<a href="@JDK@/javax/swing/text/EditorKit.html"><code>EditorKit</code></a>,
+
+and this help will be used for the editor pane.
+
+<p>As of NetBeans 3.4, you may also use the attributes
+<code>propertiesHelpID</code> and <code>expertHelpID</code>
+on the <code>BeanDescriptor</code> in order to specifically supply
+help for regular (resp. expert) property sets only. To provide
+a specific help for just one property, use <code>helpID</code> on
+the <code>PropertyDescriptor</code>.
+
+<li> As the <code>helpID</code>
+
+<a href="@JDK@/java/beans/FeatureDescriptor.html#getValue-java.lang.String-">value</a>
+
+of a
+
+<a href="@org-openide-nodes@/org/openide/nodes/Node.PropertySet.html"><code>Node.PropertySet</code></a>
+
+or
+
+<a href="@org-openide-nodes@/org/openide/nodes/Node.PropertySet.html"><code>Node.Property</code></a>.
+
+<li> For services on the system filesystem (typically installed via layer) and the folders
+they are in (typically beneath <samp>Services/</samp>), you may 
+use the file attribute <code>helpID</code>
+to specify the help ID right in the layer. See the
+<a href="@org-openide-util-ui@/org/openide/util/doc-files/api.html#service-lookup">Services API</a> for details.
+
+<li> In the <code>&lt;homeID&gt;</code> tag of a help set file; in
+this case, the specified help ID is understood as applying
+generally to the module. Typically it should be some sort of index
+page.
+
+<li> In various navigational views used by JavaHelp, such as the table
+of contents or the index.
+
+</ul>
+
+<p>The proper help page for the selected component, if there is
+one, is displayed by the IDE by default using <code>F1</code>.
+This applies to various visual components (when they have focus),
+the current <code>TopComponent</code>, and nodes (or the objects
+they represent) when the node is selected in an Explorer window (or
+custom windows using 
+<a href="@org-openide-explorer@/org/openide/explorer/ExplorerUtils.html"><code>ExplorerUtils</code></a>).
+
+Programmatically, you may also display help by using
+the
+
+<a href="../Help.html">JavaHelp module API</a>:</p>
+
+<pre>
+<span class="type">String</span> <span class="variable-name">id</span> = ...;
+<span class="type">Help</span> <span class="variable-name">help</span> = Lookup.getDefault().lookup(Help.<span class="keyword">class</span>);
+<span class="keyword">if</span> (help != <span class="constant">null</span> &amp;&amp; help.isValidID(id, <span class="constant">true</span>)) {
+    help.showHelp(<span class="keyword">new</span> <span class="type">HelpCtx</span>(id));
+} <span class="keyword">else</span> {
+    Toolkit.getDefaultToolkit().beep();
+}
+</pre>
+
+<p>However for most purposes you can use the simpler
+<a href="@org-openide-util-ui@/org/openide/util/HelpCtx.html#display--"><code>HelpCtx.display</code></a>
+method and avoid a direct dependency on this API entirely:</p>
+
+<pre>
+<span class="type">String</span> <span class="variable-name">id</span> = ...;
+<span class="keyword">if</span> (id != <span class="constant">null</span> &amp;&amp; !<span class="keyword">new</span> <span class="type">HelpCtx</span>(id).display()) {
+    Toolkit.getDefaultToolkit().beep();
+}
+</pre>
+
+<p class="nonnormative">If you are having trouble figuring out why you
+are not seeing the help you expect, try running the IDE with the
+command-line option <samp>-J-Dorg.netbeans.modules.javahelp=0</samp>
+and look in your log file for details.
+<samp>-J-Dorg.openide.util.HelpCtx=0</samp> may also be used to get
+further information on association between help IDs and GUI
+components, and so on.</p>
+
+<h2><a name="external-links">External links in JavaHelp</a></h2>
+<div class="nonnormative">
+Most of external links are not displayed correctly in internal java help viewer.
+This lightweight component was added to invoke default IDE HTML browser
+(it should be external browser). This component can be included in HTML content
+within JHContentViewer. Component is displayed as a mouse enabled Label.
+Only text is supported.
+<p>
+To use this class within HTML content use the &lt;object&gt; tag. Below is an
+example usage:
+<p><pre>
+&lt;object CLASSID="java:org.netbeans.module.javahelp.BrowserDisplayer"&gt;
+    &lt;param name="content" value="http://www.netbeans.org"&gt;
+    &lt;param name="text" value="Click here"&gt;
+    &lt;param name="textFontFamily" value="SansSerif"&gt;
+    &lt;param name="textFontSize" value="x-large"&gt;
+    &lt;param name="textFontWeight" value="plain"&gt;
+    &lt;param name="textFontStyle" value="italic"&gt;
+    &lt;param name="textColor" value="red"&gt;
+&lt;/object&gt;
+</pre><p>
+or to get hyperlink style use:
+<p><pre>
+&lt;object CLASSID="java:org.netbeans.modules.javahelp.BrowserDisplayer"&gt;
+    &lt;param name="content" value="http://java.sun.com/downloads/ea/index.html"&gt;
+    &lt;param name="text" value="&lt;html&gt;&lt;u&gt;Early Access&lt;/u&gt;&lt;/html&gt;"&gt;
+    &lt;param name="textFontSize" value="medium"&gt;
+    &lt;param name="textColor" value="blue"&gt;
+&lt;/object&gt;
+</pre><p>
+HTML is used to get underlined text and value of text parameter must be properly escaped.
+<br><br>
+Valid parameters are:
+<ul>
+<li>content - a valid external url like http://java.sun.com
+<li>text - the text of the activator.
+<li>textFontFamily - the font family of the activator text.
+<li>textFontSize - the size of the activator text font. Size is specified
+in a css termonolgy. Acceptable values are as follows:
+      <ul>
+      <li>xx-small
+      <li>x-small
+      <li>small
+      <li>medium
+      <li>large
+      <li>x-large
+      <li>xx-large
+      <li>bigger - increase the current base font size by 1
+      <li>smaller - decrease the current base font size by 1
+      <li>xxpt - set the font size to a specific pt value of "xx"
+      <li>+x - increase the current base font size by a value of "x"
+      <li>-x - decrease the current base font size by a value of "x"
+      <li>x - set the font size to the point size associated with the index "x"
+      </ul>
+<li>textFontWeight - the activator text font weight. Valid weights are
+      <ul>
+      <li>plain
+      <li>bold
+      </ul>
+<li>textFontStyle - the activator text font style. Valid font styles are
+      <ul>
+      <li>plain
+      <li>italic
+      </ul>
+<li>textColor - the activator text color. The following is a list of supported Color names
+      <ul>
+      <li>black
+      <li>blue
+      <li>cyan
+      <li>darkGray
+      <li>gray
+      <li>green
+      <li>lightGray
+      <li>magenta
+      <li>orange
+      <li>pink
+      <li>red
+      <li>white
+      <li>yellow
+      </ul>
+</ul>
+
+</div>
+
+<h2><a name="extension">Extension of nbdocs protocol</a></h2>
+<div class="nonnormative">
+As documentation is modular ie. it is defined across modules it is possible to define
+link in documentation from one module to another module. When referred module is not
+present or is not enabled such link becomes invalid. We extended nbdocs protocol to handle
+such case by frendlier way. Now it is possible to place at URL host name position base name
+of referred module. Instead of
+<pre>
+nbdocs:/org/nb/mod/foo/docs/somepage.html
+</pre>
+it is possible (and in fact recommended) to use:
+<pre>
+nbdocs://org.nb.mod.bar/org/nb/mod/foo/docs/somepage.html
+</pre>
+where <code>org.nb.mod.bar</code> is module base name. Referred module is checked if it is present
+and enabled in IDE. If yes link is handled as usual. If not informational page is created and displayed.
+Page template is located at <code>core/javahelp/src/org/netbeans/modules/javahelp/resources</code> as 
+<code>notEnabledModule.html</code>
+and <code>notInstalledModule.html</code> so they can be localized.<br><br>
+
+Example: In Users Guide module there is link to HTTP Monitor module:
+<pre>
+&lt;a href="nbdocs:/org/netbeans/modules/web/monitor/docs/monitor/ctx_monitorintro.html"&gt;
+Monitoring Data Flow on the Web Server&lt;/a&gt;
+</pre>
+After adding module base name it will be:
+<pre>
+&lt;a href="nbdocs://org.netbeans.modules.web.monitor/org/netbeans/modules/web/monitor/docs/monitor/ctx_monitorintro.html"&gt;
+Monitoring Data Flow on the Web Server&lt;/a&gt;
+</pre>
+
+</div>
+
+<hr>
+<p>@FOOTER@</p>
+</body>
+</html>

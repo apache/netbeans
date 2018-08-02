@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+OpenIDE-Module: testRename
+OpenIDE-Module-Layer: testRename/layer.xml
+OpenIDE-Module-Localizing-Bundle: testRename/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.1
+
+Name: testRename/MyDataLoader.class
+OpenIDE-Module-Class: Loader
+
+Name: testRename/WhereUsedDataLoader.class
+OpenIDE-Module-Class: Loader
+

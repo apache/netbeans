@@ -1,0 +1,7 @@
+public static final Class class
+public static final CCTest9a A
+public static final CCTest9a B
+public static final CCTest9a C
+public static Object valueOf(Class<Object> enumType, String name)
+public static CCTest9a valueOf(String name)
+public static CCTest9a[] values()

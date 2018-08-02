@@ -1,0 +1,5 @@
+root:ROOT(0-40)
+   <p>(4-7/27)[RO];S:root
+      <a>(15-18/23)[RR]missing_required_end_tag ;S:root,p
+   </p>(23-27)[RO];S:root,p,a
+   </a>(35-39)[RR]unmatched_tag ;S:root

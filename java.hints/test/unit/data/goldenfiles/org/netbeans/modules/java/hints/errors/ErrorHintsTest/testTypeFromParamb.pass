@@ -1,0 +1,22 @@
+package org.netbeans.test.java.hints;
+
+import java.awt.Rectangle;
+import javax.swing.SwingUtilities;
+
+/**
+ * @author leon chiver
+ */
+public class TypeFromParamb {
+
+    private Rectangle f;
+    
+    /** Creates a new instance of TypeFromParama */
+    public TypeFromParamb() {
+        doStuff(1, SwingUtilities.calculateInnerArea(null, f), 2);
+    }
+    
+    public void doStuff(int i1, Object o, int i2) {
+        
+    }
+    
+}

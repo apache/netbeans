@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="subdir/importing2" basedir="..">
+    <property name="x" value="1"/>
+    <property file="${basedir}${file.separator}p${x}.properties"/>
+    <macrodef name="metaprop">
+        <attribute name="name"/>
+        <attribute name="value"/>
+        <sequential>
+            <property name="@{name}" value="${@{value}}"/>
+        </sequential>
+    </macrodef>
+    <property name="prop2" value="3"/>
+    <metaprop name="z" value="prop${y}"/>
+    <import file="imported${z}.xml"/>
+    <target name="master"/>
+</project>

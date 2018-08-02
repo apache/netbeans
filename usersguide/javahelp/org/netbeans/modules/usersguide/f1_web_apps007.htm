@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>web.xml Visual Editor: Error Pages</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="dd_multiview_pages_errorPagesNode" name="dd_multiview_pages_errorPagesNode"></a></p>
+<div id="NBCSH3819"><!-- infolevel="all" infotype="General" --><a id="sthref517" name="sthref517"></a>
+<h1>web.xml Visual Editor: Error Pages</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use the Error Pages section to add, remove, and view the deployment information of your web application's error pages. An error page is a web component that handles errors. In the Visual Editor, click <b>Pages</b> at the top of the editor to open the Pages view. Click the Error Pages header to open the Error Pages section. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1114">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>Web components such as servlets and JSP pages may throw exceptions to indicate error conditions. Usually, a web component catches and handles its own exceptions, as well as exceptions from the other components it uses. When a web component receives or generates an exception that it does not catch, the exception is passed to the web container (part of the J2EE server). If another web component is defined as an error page for that exception, the request is directed to the error page's URL.</p>
+<p>To define the web component that handles an error, you can register it in the <code dir="ltr">web.xml</code> file. For example, you can register a JSP file or a Java class as an error page in the <code dir="ltr">web.xml</code> file. When you do this, you must provide information needed by the server for handling an exception. For example, you specify the error code or the exception type that must occur for the error page to be called.</p>
+<p>Before you can register an error page in the <code dir="ltr">web.xml</code> file, you must create it or import it from your existing sources. For example, you can use the New File wizard to create a JSP file.</p>
+<p>Click <b>Add</b> to define the error page element with the following properties:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t13">Element</th>
+<th align="left" valign="bottom" id="r1c2-t13">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t13" headers="r1c1-t13">
+<p>Error Page Location</p>
+</td>
+<td align="left" headers="r2c1-t13 r1c2-t13">Specifies the location of the error page.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t13" headers="r1c1-t13">
+<p>Error Code</p>
+</td>
+<td align="left" headers="r3c1-t13 r1c2-t13">Specifies the HTTP error code that invokes the error page, such as <code dir="ltr">404</code>. See the link below for a complete list of HTTP error codes and their descriptions.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t13" headers="r1c1-t13">
+<p>Exception Type</p>
+</td>
+<td align="left" headers="r4c1-t13 r1c2-t13">Specifies the Java exception type that invokes the error page, such as <code dir="ltr">java.lang.NullPointerException</code>.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH3823" name="NBCSH3823"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2812">
+<param name="text" value="<html><u>&quot;About Deployment Descriptors&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1111">
+<param name="text" value="<html><u>&quot;Configuring a Web Application&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

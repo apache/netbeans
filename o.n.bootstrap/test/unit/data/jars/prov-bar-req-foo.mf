@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: prov_bar_req_foo
+OpenIDE-Module-Name: Provides bar, requires foo
+OpenIDE-Module-Provides: bar
+OpenIDE-Module-Requires: foo

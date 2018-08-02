@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:ns="http://xml.netbeans.org/examples/targetNS"
+            targetNamespace="http://xml.netbeans.org/examples/testLength"
+            xmlns="http://xml.netbeans.org/examples/targetNS"
+            elementFormDefault="qualified">
+
+    <simpleType name='productCode'>
+       <restriction base='string'>
+         <length value='8' fixed='true'/>
+       </restriction>
+    </simpleType>
+</xsd:schema>

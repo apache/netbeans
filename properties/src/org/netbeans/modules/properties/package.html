@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+  <!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+</head>
+<body>
+
+Contains the basic functionality of the <em>Properties</em> module.
+
+<h2>Properties Module Architecture (l10n)</h2>
+
+
+<h3>String Handling</h3>
+<p>String use escaping schema while writing them down to
+file. It should the only place tackling with escaping.
+All other string should Java strings.</p>
+
+
+<h3>Editors Relations</h3>
+<p>The content is stored in modifiable external file.
+It can be edited in text editor, in visulal editor
+or directly via an API.</p>
+
+<p>These representations need to be reasonable synchronized.</p>
+
+Text =&gt; Struct
+
+<pre>autoParse():113, org.netbeans.modules.properties.StructHandler
+notifyModified():232, org.netbeans.modules.properties.PropertiesEditorSupport
+insertUpdate():1554, org.openide.text.CloneableEditorSupport$Listener
+fireInsertUpdate():184, javax.swing.text.AbstractDocument
+fireInsertUpdate():1020, org.netbeans.editor.BaseDocument
+insertString():583, org.netbeans.editor.BaseDocument</pre>
+
+<h4>TableView =&gt; struct =&gt; text =&gt; struct</h4>
+
+<p>
+It does not recognize that struct modification caused
+the text change and needlessly handles that text change
+</p>
+
+<pre>autoParse():113, org.netbeans.modules.properties.StructHandler
+notifyModified():232, org.netbeans.modules.properties.PropertiesEditorSupport
+insertUpdate():1554, org.openide.text.CloneableEditorSupport$Listener
+fireInsertUpdate():184, javax.swing.text.AbstractDocument
+fireInsertUpdate():1020, org.netbeans.editor.BaseDocument
+insertString():583, org.netbeans.editor.BaseDocument
+run():84, org.openide.text.PositionBounds$1
+runAtomicAsUser():906, org.netbeans.editor.BaseDocument
+runAtomic():217, org.netbeans.editor.GuardedDocument
+runAtomic():329, org.openide.text.NbDocument
+setText():108, org.openide.text.PositionBounds
+print():98, org.netbeans.modules.properties.Element
+setValue():156, org.netbeans.modules.properties.Element$Basic
+setKey():370, org.netbeans.modules.properties.Element$ItemElem
+renameItem():164, org.netbeans.modules.properties.PropertiesStructure
+setValueAt():174, org.netbeans.modules.properties.PropertiesTableModel</pre>
+
+<p>autoparse() does not recognize that struct was not created and always
+recreates it&nbsp;-
+FIXED <a href="http://www.netbeans.org/issues/show_bug.cgi?id=31593">#31593</a>.</p>
+
+<h3>Class Diagrams</h3>
+
+<ul>
+    <li><a href="doc-files/DO_and_nodes.png"><code>DataLoader</code>s, <code>DataObject</code>s and nodes</a></li>
+    <li><a href="doc-files/DO_structure.png">structure of <code>PropertiesDataObject</code> and its entries</a></li>
+</ul>
+
+<h3>Issues</h3>
+<p>PropertiesTableModel.StringPair</p>
+
+<p>Layered TableModels, single properties file TableModel,
+GroupingTableModel and SortingTableModel. Still need to
+maintain table cell -&gt; document position mapping e.g.
+by a wrapper values.</p>
+
+</body>
+</html>

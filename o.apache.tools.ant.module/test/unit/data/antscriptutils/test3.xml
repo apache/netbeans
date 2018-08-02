@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Imports test4.xml. -->
+<project name="test3">
+    <import file="test4.xml"/>
+    <target name="main"/>
+    <target name="imported2"/>
+</project>

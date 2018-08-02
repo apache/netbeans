@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+     <!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+  <title></title>
+</head>
+  <body bgcolor="white">
+ Provides a set of classes for setting properties.
+<p>  In the IDE properties settings happens through so called property sheets.
+ Property sheet ({@link org.netbeans.jellytools.properties.PropertySheetOperator})
+can be docked to any other window. Property sheet consists
+of JTable with properties and optional description area. The table has two
+columns showing property name and property value. Properties are grouped to
+logical categories which can be collapsed or expanded when properties are
+sorted by category. It is also possible to sort properties alphabetically (Sort
+by Name).
+Property value can be changed by inline editors (text field for string values,
+check box for boolean values - {@link
+org.netbeans.jellytools.properties.Property#setValue(String)} and combo box for list values
+- {@link
+org.netbeans.jellytools.properties.Property#setValue(int)}) or by custom editors
+where they are available ({@link
+org.netbeans.jellytools.properties.Property#openEditor}).
+<P> 
+ You can extend {@link org.netbeans.jellytools.properties.Property Property}, if 
+you want to create your specific property. Some common properties are already 
+created in this package (ColorProperty, PointProperty, ...).
+</P>
+ Properties can be used the following way:<br>
+ 
+<pre>
+        PropertySheetOperator pso = new PropertySheetOperator("Properties of MyClass");
+        Property p = new Property(pso, "Name");
+        System.out.println("\nProperty name="+p.getName());
+        System.out.println("\nProperty value="+p.getValue());
+        p.setValue("ANewValue");
+        // set a new value by index where it is applicable
+        //p.setValue(2);
+        // open custom editor where it is applicable
+        //p.openEditor();
+</pre>
+
+ Common custom editors are grouped in package {@link org.netbeans.jellytools.properties.editors 
+editors}.<br>
+ <br>
+</body>
+</html>

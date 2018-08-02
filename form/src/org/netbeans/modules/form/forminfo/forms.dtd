@@ -1,0 +1,116 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+<!-- top-level element identifying this xml as form, -->
+<!-- providing version of form file and type of form -->
+<!-- -->
+
+<!ELEMENT Form (Layout?, SubComponents?, Properties?, Events?)>
+<!ATTLIST Form
+                 version    CDATA  #REQUIRED
+                 type       CDATA  #REQUIRED >
+
+<!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+<!-- Non-visual components list -->
+<!-- -->
+
+<!ELEMENT NonVisualComponents (Component*, Container*, MenuItem*, Menu*)>
+
+<!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+<!-- SubComponents list for a single container -->
+<!-- -->
+
+<!ELEMENT SubComponents (Component*)>
+
+<!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+<!-- Various component types -->
+<!-- -->
+
+<!ELEMENT Container (Layout?, SubComponents?, Properties?, Constraints?, Events?)>
+<!ATTLIST Container
+                 class      CDATA  #REQUIRED
+                 name       CDATA  #REQUIRED >
+
+<!ELEMENT Component (Properties?, Constraints?, Events?)>
+<!ATTLIST Component
+                 class      CDATA  #REQUIRED
+                 name       CDATA  #REQUIRED >
+
+<!ELEMENT MenuItem (Properties?, Events?)>
+<!ATTLIST MenuItem
+                 class      CDATA  #REQUIRED
+                 name       CDATA  #REQUIRED >
+
+<!ELEMENT Menu (SubComponents?, Properties?, Events?)>
+<!ATTLIST Menu
+                 class      CDATA  #REQUIRED
+                 name       CDATA  #REQUIRED >
+
+<!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+<!-- Events list for a single component or the form itself -->   
+<!-- -->
+
+<!ELEMENT Events (EventHandler*)>
+<!ELEMENT EventHandler EMPTY>
+<!ATTLIST EventHandler
+                 event      CDATA  #REQUIRED
+                 handler    CDATA  #REQUIRED >
+
+<!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+<!-- Layout Manager for a single container -->   
+<!-- -->
+
+<!ELEMENT Layout ANY>
+<!ATTLIST Layout
+                 class      CDATA  #REQUIRED >
+
+
+<!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+<!-- Properties list for a single component -->   
+<!-- -->
+
+<!ELEMENT Properties (Property*)>
+<!ELEMENT Property ANY>
+<!ATTLIST Property
+                 name       CDATA  #REQUIRED
+                 type       CDATA  #REQUIRED
+                 editor     CDATA  #IMPLIED
+                 value      CDATA  #IMPLIED >
+
+<!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+<!-- Aux Values list for a single component -->   
+<!-- -->
+
+<!ELEMENT AuxValues (AuxValue*)>
+<!ELEMENT AuxValue EMPTY>
+<!ATTLIST AuxValue
+                 name       CDATA  #REQUIRED
+                 value      CDATA  #REQUIRED >
+
+<!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+<!-- Constraints list for a single visual component -->   
+<!-- -->
+
+<!ELEMENT Constraints (Constraint*)>
+<!ELEMENT Constraint ANY>
+<!ATTLIST Constraint
+                 layoutClass  CDATA  #REQUIRED
+                 value        CDATA  #REQUIRED >

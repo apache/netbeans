@@ -1,0 +1,13 @@
+Calling GenBeans.doIt
+Bean Tree:
+exceps <EXCEPS> : Exceps
+	blue <BLUE> : String[0,1]
+	green <GREEN> : boolean[0,1]
+		EMPTY : String
+
+Compiling
+Finished compiling: 0
+out: TestExceptions - creating the bean graph
+out: TestExceptions - Hit Exception: class org.netbeans.modules.schema2beans.Schema2BeansException
+out: TestExceptions - Doc root 'EXCEPS' not found in the DOM graph! Found 'foo' instead.
+Finished running TestExceptions: 0

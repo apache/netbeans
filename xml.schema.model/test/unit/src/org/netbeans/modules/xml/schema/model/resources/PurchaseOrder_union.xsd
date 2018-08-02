@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:po="http://www.example.com/PO1"
+        targetNamespace="http://www.example.com/PO1"
+        elementFormDefault="unqualified"
+        attributeFormDefault="unqualified">
+
+  <element name="purchaseOrder" type="po:PurchaseOrderType"/>
+  <element name="comment"       type="string"/>
+
+  <complexType name="PurchaseOrderType">
+    <sequence>
+      <element name="shipTo"    type="po:USAddress"/>
+      <element name="billTo"    type="po:USAddress"/>
+      <element ref="po:comment" minOccurs="0"/>
+      <!-- etc. -->
+    </sequence>
+    <!-- etc. -->
+  </complexType>
+
+  <complexType name="USAddress">
+    <sequence>
+      <element name="name"   type="string"/>
+      <element name="street" type="string"/>
+      <!-- etc. -->
+    </sequence>
+  </complexType>
+  
+  <simpleType name="allNNI">
+  <annotation>
+    <documentation>for maxOccurs</documentation>
+  </annotation>
+  <union memberTypes="nonNegativeInteger nonPositiveInteger">
+   <simpleType>
+    <restriction base="NMTOKEN">
+     <enumeration value="unbounded"/>
+    </restriction>
+   </simpleType>
+  </union>
+ </simpleType>
+
+    <xs:simpleType name="Money">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Used for amounts, max 3 decimals</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:decimal">
+            <xs:fractionDigits value="3"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Percentage">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Used for percentage values</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:decimal">
+            <xs:minInclusive value="0.01"/>
+            <xs:maxInclusive value="100.00"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="MoneyOrPercentageType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">A union of money and percentage so that the appropriate data can be sent in a single field.</xs:documentation>
+        </xs:annotation>
+        <xs:union memberTypes="po:Money po:Percentage"/>
+    </xs:simpleType>
+
+
+  <!-- etc. -->
+
+</schema>

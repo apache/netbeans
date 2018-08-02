@@ -1,0 +1,8 @@
+.t.e.s.t. imports
+@import url("anoher.css") screen, print;
+@import "file://../third.css";
+@import "nonexisting.css";
+@import "http://fukala.net/resources/style.css";
+@import url(http://fukala.net/resources/style2.css);
+.e.o.f.
+

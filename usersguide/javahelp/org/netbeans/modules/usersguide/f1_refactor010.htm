@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Introduce Local Extension Dialog Box</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.refactoring.java.ui.IntroduceLocalExtensionUI" name="org.netbeans.modules.refactoring.java.ui.IntroduceLocalExtensionUI"></a></p>
+<div id="NBCSH2942"><!-- infolevel="all" infotype="General" --><a id="sthref379" name="sthref379"></a>
+<h1>Introduce Local Extension Dialog Box</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to add logic when you cannot modify the original source code. Select a class method in the Source Editor and choose <b>Refactor</b> &gt; <b>Introduce Local Extension</b> to open the Introduce Local Extension dialog box. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG592">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<table summary="Descriptions of Introduce Local Extension command options." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="35%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t13">Element</th>
+<th align="left" valign="bottom" id="r1c2-t13">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t13" headers="r1c1-t13">
+<p>Introduce Local Extension for</p>
+</td>
+<td align="left" headers="r2c1-t13 r1c2-t13">(read-only) Displays the name of the source class that needs an additional method but cannot be modified.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t13" headers="r1c1-t13">
+<p>New Name</p>
+</td>
+<td align="left" headers="r3c1-t13 r1c2-t13">Specifies the name of an extension class being created.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t13" headers="r1c1-t13">
+<p>Project</p>
+</td>
+<td align="left" headers="r4c1-t13 r1c2-t13">Specifies the project in which the extension class is created.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t13" headers="r1c1-t13">
+<p>Location</p>
+</td>
+<td align="left" headers="r5c1-t13 r1c2-t13">Specifies the folder where you want to store the created extension class.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t13" headers="r1c1-t13">
+<p>To Package</p>
+</td>
+<td align="left" headers="r6c1-t13 r1c2-t13">Specifies the name of the package where the generated extension class is housed.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t13" headers="r1c1-t13">
+<p>Type</p>
+</td>
+<td align="left" headers="r7c1-t13 r1c2-t13">Provides the following extension class options to use:</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t13" headers="r1c1-t13">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Wrapper</p>
+</td>
+<td align="left" headers="r8c1-t13 r1c2-t13">Makes the extension class a wrapper of the original class, which keeps the original instance in one of its private fields.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t13" headers="r1c1-t13">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Subtype</p>
+</td>
+<td align="left" headers="r9c1-t13 r1c2-t13">Makes the extension class a subclass of the original class, which uses the extension keyword.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t13" headers="r1c1-t13">
+<p>Equality</p>
+</td>
+<td align="left" headers="r10c1-t13 r1c2-t13">Provides the following options to set how the equals and <code dir="ltr">hashCode</code> methods are handled:</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r11c1-t13" headers="r1c1-t13">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Delegate</p>
+</td>
+<td align="left" headers="r11c1-t13 r1c2-t13">Delegates to the <code dir="ltr">equals</code> and <code dir="ltr">hashCode</code> methods of the original class.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r12c1-t13" headers="r1c1-t13">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Generate</p>
+</td>
+<td align="left" headers="r12c1-t13 r1c2-t13">Generates new <code dir="ltr">equals</code> and <code dir="ltr">hashCode</code> methods using the IDE code generator.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r13c1-t13" headers="r1c1-t13">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Separate</p>
+</td>
+<td align="left" headers="r13c1-t13 r1c2-t13">Separates the <code dir="ltr">equals</code> method into two. A new method is added to check if the original class equals the extension class.
+<p>The Equality field is disabled when Subtype is chosen in the Type field.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r14c1-t13" headers="r1c1-t13">
+<p>Replace original usages with the extension</p>
+</td>
+<td align="left" headers="r14c1-t13 r1c2-t13">Replaces all usages of the original class with the new local extension class.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2956" name="NBCSH2956"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG547">
+<param name="text" value="<html><u>&quot;Refactoring Java Projects&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

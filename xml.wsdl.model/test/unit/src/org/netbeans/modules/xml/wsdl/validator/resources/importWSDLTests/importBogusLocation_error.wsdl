@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="goodWSDLImportedWSDL" targetNamespace="http://j2ee.netbeans.org/wsdl/goodWSDLImportedWSDL"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://j2ee.netbeans.org/wsdl/goodWSDLImportedWSDL" xmlns:plink="http://schemas.xmlsoap.org/ws/2004/03/partner-link/" xmlns:ns="http://j2ee.netbeans.org/wsdl/goodBasicWSDL">
+    <import location="bogus/bogus.wsdl" namespace="http://j2ee.netbeans.org/wsdl/goodBasicWSDL"/>
+    <types/>
+    <message name="goodWSDLImportedWSDLOperationRequest">
+        <part name="part1" type="xsd:string"/>
+    </message>
+    <message name="goodWSDLImportedWSDLOperationReply">
+        <part name="part1" type="xsd:string"/>
+    </message>
+    <portType name="goodWSDLImportedWSDLPortType">
+        <operation name="goodWSDLImportedWSDLOperation">
+            <input name="input1" message="tns:goodWSDLImportedWSDLOperationRequest"/>
+            <output name="output1" message="tns:goodWSDLImportedWSDLOperationReply"/>
+        </operation>
+    </portType>
+    <binding name="goodWSDLImportedWSDLBinding" type="tns:goodWSDLImportedWSDLPortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="goodWSDLImportedWSDLOperation">
+            <soap:operation/>
+            <input name="input1">
+                <soap:body use="literal" namespace="http://j2ee.netbeans.org/wsdl/goodWSDLImportedWSDL"/>
+            </input>
+            <output name="output1">
+                <soap:body use="literal" namespace="http://j2ee.netbeans.org/wsdl/goodWSDLImportedWSDL"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="goodWSDLImportedWSDLService">
+        <port name="goodWSDLImportedWSDLPort" binding="tns:goodWSDLImportedWSDLBinding">
+            <soap:address location="http://localhost:18181/goodWSDLImportedWSDLService/goodWSDLImportedWSDLPort"/>
+        </port>
+    </service>
+    <plink:partnerLinkType name="goodWSDLImportedWSDLPartner">
+        <!-- partnerLinkType are automatically generated when a new portType is added. partnerLinkType are used by BPEL processes. 
+In a BPEL process, a partner link represents the interaction between the BPEL process and a partner service. Each partner link is associated with a partner link type.
+A partner link type characterizes the conversational relationship between two services. The partner link type can have one or two roles.-->
+        <plink:role name="goodWSDLImportedWSDLPortTypeRole" portType="tns:goodWSDLImportedWSDLPortType"/>
+    </plink:partnerLinkType>
+</definitions>

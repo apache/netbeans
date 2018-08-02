@@ -1,0 +1,18 @@
+.t.e.s.t. simple source code
+IDENT           "h1"
+WS              " "
+LBRACE          "{"
+NL              "\n"
+WS              "    "
+IDENT           "color"
+COLON           ":"
+WS              " "
+IDENT           "red"
+SEMI            ";"
+NL              "\n"
+RBRACE          "}"
+----- EOF -----
+
+<Unnamed test>
+----- EOF -----
+

@@ -1,0 +1,55 @@
+/*
+ * ImplementAbstractMethod1.java
+ *
+ * Created on March 12, 2005, 7:22 PM
+ */
+
+package org.netbeans.test.java.hints;
+
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import javax.swing.text.BadLocationException;
+
+/**
+ *
+ * @author lahvac
+ */
+public class ImplementAbstractMethods1 extends AbstractClass implements PropertyChangeListener, MouseListener {
+    
+    /** Creates a new instance of ImplementAbstractMethod1 */
+    public ImplementAbstractMethods1() {
+    }
+
+    @Override
+    public void test(int x, String y, String... args) throws IOException, BadLocationException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void propertyChange(PropertyChangeEvent pce) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void mouseClicked(MouseEvent me) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void mousePressed(MouseEvent me) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void mouseReleased(MouseEvent me) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void mouseEntered(MouseEvent me) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void mouseExited(MouseEvent me) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+}

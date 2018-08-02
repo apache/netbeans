@@ -1,0 +1,338 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+    <body>
+        <h2>Unit Testing</h2>
+        <p>
+            GSF makes unit testing your specific features easy.
+            By extending the <code>GsfTestBase</code> unit test class
+            (which in turn extends <code>NbTestCase</code> which in turn
+            extends JUnit's <code>TestCase</code>), you inherit a number
+            of additional unit testing methods.
+        </p>
+        <p>
+            Unfortunately, you have to write a few configuration steps
+            for your language, once - this is described at the end of
+            this document in the <a href="#configuration">Configuration</a> section.
+        </p>
+        <h3>Unit Test Workflow</h3>
+        <p>
+            All GSF unit tests are based on "golden files".
+            <ul>
+                <li>You have a source file in your language.</li>
+                <li>The source file is parsed and then your language feature
+                is run on the given parse result</li>
+                <li> The result from your feature is pretty printed</li>
+                <li> The pretty-printed output is compared to a previously
+                    saved golden file result. If there is a difference, the test fails.
+                </li>
+                <li>Crucially, the FIRST time you run the test, there is no golden file,
+                    so one is created instead!  This makes it trivial to create new
+                    tests. Just add more test files, manually check that your feature
+                    is producing the correct result for these test files, and then
+                    run them as unit tests. You now have golden files which ensure
+                    that for these testcases you get the same feature output every time.
+                </li>
+            </ul>
+        </p>
+        <h3>Example: Semantic Highlighting</h3>
+        <p>
+            To illustrate how this works, I'll use an example. To create 
+            a semantic highlighting unit test, create a new test method like this
+            in your SemanticHighlighterTest:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    public void testSemantic1() throws Exception {
+        checkSemantic("testfiles/test1.js");
+    }
+            </pre>
+            Here, the <code>checkSemantic</code> method is inherited for you from
+            <code>GsfTestBase</code>, and handles testing semantic highlighting code
+            by parsing your testfile (which is specified by a path relative to your
+            <code>test/unit/data/</code> directory in your plugin), then hands it
+            to your semantic highlighter, and then prints and diffs the output. 
+            The <code>checkSemantic</code> method will pretty print your source
+            file by inserting markers for the logical attributes you've added superimposed
+            on top of the code.
+            For example, here is <code>test1.js</code>, a simple JavaScript file:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    Draggable.prototype = {
+      scroll: function() {
+        var wind, window2, y = 1, win3 = 50;
+        var windo
+        if(this.scroll == window) {
+        }
+      }
+    }
+            </pre>
+            When I run the above test the first time, it fails, along with this error 
+            message: "<code>Please re-run the test</code>".
+            If you now run the test again, it will pass, and will continue to pass
+            until you the output of your semantic highlighter changes for this input.
+            If we look in the unit test directory, there is a new file right next
+            to the testfile with the extra extension <code>.semantic</code>: 
+            <code>test1.js.semantic</code>.
+            Here's how that file looks:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    |&gt;CLASS:Draggable&lt;|.prototype = {
+      |&gt;METHOD:scroll&lt;|: function() {
+        var |&gt;UNUSED:wind&lt;|, |&gt;UNUSED:window2&lt;|, |&gt;UNUSED:y&lt;| = 1, |&gt;UNUSED:win3&lt;| = 50;
+        var |&gt;UNUSED:windo&lt;|
+        if(this.scroll == |&gt;GLOBAL:window&lt;|) {
+        }
+      }
+    }
+            </pre>
+            
+            Notice how this is identical to the input file, but with |&gt;MARKERS:&lt;| inserted around
+            sections of code that indicate what kind of highlighting attribute is associated with
+            that span.  It should be trivial to look at this golden file and convince yourself
+            that the semantic highlighting worked correctly here.
+        </p>
+        <p>
+            Repeat this process for all the different scenarios you want to test your semantic
+            highlighter for.
+        </p>
+        <p>
+            Occasionally, you get a unit test failure. Perhaps you've accidentally
+            broken your code - or perhaps you've actually fixed a bug, which changes the
+            output of your semantic highlighter in some way, so your golden file diff
+            fails and the test files. There is a textual diff printed to the output when
+            you run the test in the IDE, but personally I find it hard to read.
+            Your tests, and your golden files, should all be checked in with your code,
+            and therefore version controlled. So what I do in this scenario is just
+            remove all the golden files (<code>rm *.semantic</code> for example),
+            and run the tests again. I then use the builtin IDE diff tool to diff
+            all the golden files and see what the changes are. Sometimes, the changes
+            are an improvement, and I want the goldenfile updated (which it now has been!)
+            to reflect the new behavior. And in some cases, the change is a bad one,
+            and I have a regression on my hands, so I revert the file change,
+            and start debugging to track down the problem.
+            Here's an example of diffing golden files, where in this case there is
+            definitely a problem - the highlighter is no longer identifying regular
+            expressions in JavaScript (which has to be done at the parse level rather
+            than at the lexical level in JavaScript):
+            <br/>
+            <img src="test-diff.png" />
+            <br/>
+            <br/>
+        </p>
+        <h3>Caret-based Tests</h3>
+        <p>
+            Many GSF features are associated with a caret position. For example,
+            code completion applies at a particular offset, and ditto for
+            mark occurrences.
+        </p>
+        <p>
+            The convention in GSF is to tell unit tests about a caret position
+            by passing in a substring of the testfile, with an extra <code>^</code>
+            (arrow up) indicating the caret position. For example, in the
+            above semantic highlighting code fragment, if I wanted to identify
+            a caret position between the "f" and the "u" of the function keyword
+            on the second line, I could pass in this string:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    "scroll: f<b>^</b>unction"
+            </pre>
+            Note that this isn't a complete line of the source - it can be just a
+            portion of a line. The key part is that it tells GSF where the caret
+            offset should be in the file, without having to tell it something
+            awkward like an integer offset. Unit tests will assert if you're
+            passing in a caret offset and it cannot find the corresponding position
+            in the source file.
+        </p>
+        <p>
+            Here's an example of a unit test which uses this:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    checkOccurrences("testfiles/semantic4.js", "function myfunc(param1, pa^ram2) {", true);
+            </pre>            
+            This is the test for the Mark Occurrences feature. We're telling it
+            which source file we want to test, <b>and</b> where the caret is. <b>Your</b>
+            occurrences marker will be asked to compute the occurrences corresponding
+            to the given offset. If we run this test, it will compute all the occurrences
+            and pretty print them by listing ONLY the lines in the file that contain
+            an occurrence, and showing that occurrence in context (e.g. the source
+            code with the region containing the marker). Here's the occurrences output
+            for another test file:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    Spry.Effect.Registry.prototype.getRegisteredEffect = function(|&gt;MARK_OCCURRENCES:elem^ent&lt;|, effect)
+            var eleIdx = this.getIndexOfElement(|&gt;MARK_OCCURRENCES:element&lt;|);
+                    var addedElement = new Spry.Effect.AnimatedElement(|&gt;MARK_OCCURRENCES:element&lt;|);
+            </pre>            
+            
+        </p>
+        <h3>Code Completion Tests</h3>
+        <p>
+            Here's an example of a code completion test. Again, we point to some test
+            file, as well as a caret position - in this case, it's at the beginning
+            of the symbol "escape", so there's no prefix:
+            
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    public void testExpression1() throws Exception {
+        checkCompletion("testfiles/completion/lib/expressions.js", "^escape", false);
+    }
+            </pre>            
+            This will generate (and then diff as usual) the following code completion output:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+Results for escape with queryType=COMPLETION and nameKind=PREFIX
+METHOD     exec(str) : void                           RegExp
+METHOD     test(str) : Boolean                        RegExp
+METHOD     toSource() : void                          RegExp
+METHOD     toString() : String                        RegExp
+METHOD     watch(prop, handler) : void                RegExp
+PROPERTY   constructor                                RegExp
+PROPERTY   global : Boolean                           RegExp
+PROPERTY   ignoreCase : Boolean                       RegExp
+PROPERTY   lastIndex : Number                         RegExp
+PROPERTY   multiline                                  RegExp
+PROPERTY   prototype                                  RegExp
+PROPERTY   source : String                            RegExp
+------------------------------------                  
+METHOD     eval(string) : void                        Object
+METHOD     hasOwnProperty(prop) : Boolean             Object
+METHOD     isPrototypeOf(object) : Boolea             Object
+METHOD     propertyIsEnumerable(prop) : B             Object
+METHOD     toLocaleString() : String                  Object
+            </pre>
+            The divider line here is showing the difference between the smart
+            items and the non-smart items (just like the dividing line you see
+            in the IDE).
+        </p>
+        <p>
+            As you can see, writing code completion tests is pretty trivial. 
+        </p>
+        <h3>Other Features</h3>
+        <p>
+            There are many other feature tests like this, and all are very
+            similar to the above: a single line call with test data which
+            gets pretty printed and diffed.  For example,
+            the <b>insertChar</b> test (and removeChar and insertBreak etc) let
+            you test what happens when you type keys in the editor. You provide
+            the document contents and caret position before, the character to be
+            typed, and the contents and caret position after the insert, like this:
+            <pre>
+    insertChar("x = ^", '\'', "x = '^'");                
+            </pre>
+            This test ensures that bracket matching works correctly for the apostrophy
+            for example. You should obviously write lots of other tests for this to
+            make sure that bracket matching doesn't happen inside strings and
+            comments, when there is already a bracket there, etc:
+            <pre>
+    insertChar("x = '^'", '\'', "x = ''^");
+    insertChar("// Hello^", '\'', "// Hello'^");
+    <i>etc.</i>
+            </pre>
+            There are unit tests for all kinds of features. Formatting. Keystroke
+            handling. Quickfixes. Instant Rename. Indexing. Code Folding. Navigation.
+        </p>
+        <h3>AST Offset Tests</h3>
+        <p>
+            Unlike the feature tests, the AST offset test support involves a bit
+            more work. That's because GSF does not have any clue about
+            <b>your</b> AST. GSF doesn't even know about it; you typically stash
+            it in your own subclass of the <code>ParserResult</code> class.
+            However, GSF makes it easier to make sure that your AST offsets
+            are correct, which is typically vital for correct IDE operation.
+            To test your own ASTs, you need to override a couple of protected
+            methods in the GsfTestBase:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    protected String <b>describeNode</b>(CompilationInfo info, Object node, boolean includePath);
+    protected void <b>initializeNodes</b>(CompilationInfo info, List validNodes,
+            Map&lt;Object,OffsetRange&gt; positions, List invalidNodes);
+            </pre>
+        </p>
+        <p>
+            The first method just lets you create a description of the node
+            (which will show up in the AST golden file). Typically there will be some
+            AST specific way to identify node types - for example, STRING, EXPRESSION,
+            FUNCTION, etc.
+        </p>
+        <p>
+             In the second method, you need to go and pull ALL nodes out of the
+             AST for your parser result, and put all of them into a map, where
+             each node maps to a given OffsetRange (the start/end offsets) of your
+             nodes that you are trying to test. You can ignore the other offsets
+             for now. Once you do that, you can write tests like this:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    public void testOffsets1() throws Exception {
+        checkOffsets("testfiles/test1.js");
+    }
+            </pre>
+            This is the <code>test1.js</code> file we saw for semantic highlighting above.
+            Here the golden file will be named <code>test1.js.offsets</code> (as opposed
+            to the <code>.semantic</code> golden file we get from the semantic test).
+            The golden file will use XML-like syntax to show the node descriptions around
+            the begin/end offsets for your nested AST hierarchy that corresponds to
+            your source:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+&lt;SCRIPT&gt;&lt;EXPR_RESULT&gt;&lt;SETPROP&gt;&lt;NAME&gt;<b>Draggable</b>&lt;/NAME&gt;<b>.</b>&lt;STRING&gt;<b>prototype</b>&lt;/STRING&gt;<b> = </b>&lt;OBJECTLIT&gt;<b>{</b>
+  &lt;OBJLITNAME&gt;<b>scroll</b>&lt;/OBJLITNAME&gt;<b>: </b>&lt;FUNCTION&gt;<b>function() </b>&lt;BLOCK&gt;<b>{</b> 
+    &lt;VAR&gt;var &lt;NAME&gt;wind&lt;/NAME&gt;, &lt;NAME&gt;window2&lt;/NAME&gt;, &lt;NAME&gt;y = &lt;NUMBER&gt;1&lt;/NUMBER&gt;&lt;/NAME&gt;, &lt;NAME&gt;win3 = &lt;NUMBER&gt;50&lt;/NUMBER&gt;&lt;/NAME&gt;&lt;/VAR&gt;;
+    &lt;VAR&gt;var &lt;NAME&gt;windo&lt;/NAME&gt;&lt;/VAR&gt;
+    &lt;BLOCK&gt;if(&lt;IFNE&gt;&lt;EQ&gt;&lt;GETPROP&gt;&lt;THIS&gt;this&lt;/THIS&gt;.&lt;STRING&gt;scroll&lt;/STRING&gt;&lt;/GETPROP&gt; == &lt;NAME&gt;window&lt;/NAME&gt;&lt;/EQ&gt;&lt;/IFNE&gt;) &lt;BLOCK&gt;{
+    }&lt;TARGET&gt;&lt;/TARGET&gt;&lt;/BLOCK&gt;&lt;/BLOCK&gt;  &lt;RETURN&gt;&lt;/RETURN&gt;&lt;/BLOCK&gt;}&lt;/FUNCTION&gt;
+}&lt;/OBJECTLIT&gt;&lt;/SETPROP&gt;&lt;/EXPR_RESULT&gt;&lt;/SCRIPT&gt;   
+            </pre>
+            I've bolded the beginning of the embedded code here so you can see the code 
+            through the AST node markup.
+        </p>
+        <p>
+            I have made a lot of diffs to the Rhino parser for the JavaScript support to add in
+            AST offset support (Rhino doesn't record source offsets, we've added that for NetBeans).
+            Having tests like these makes it a lot easier to feel confident when I make any changes to the
+            parser. As shown earlier, if there are diffs, I delete the offset files, run the tests, and
+            then diff the golden files through the IDE.
+        </p>
+        
+        <a name="Configuration"/>
+        <h3>Configuration</h3>
+        <p>
+            Typically, you'll want to create your own <code>TestBase</code> class,
+            which extends <code>GsfTestBase</code>, and then make all your unit tests
+            extend your own <code>TestBase</code>.  In your superclass, you need to
+            do a few configuration steps.
+        </p>
+        
+        <p>
+            <blockquote style="background-color: #ffdddd; color: black; padding: 20px; border: solid 1px black">
+                <b>These steps should not be necessary</b>. Unfortunately, I haven't
+                been able to get the GSF services working without them.
+                What I'm observing is that from a unit test, services that are
+                registered via the layer file systems don't work. I've been playing
+                around with module dependencies, Mock services etc. but I haven't
+                gotten it to work. So, for example, for some reason from a unit test,
+                the GSF Data Loader isn't used, and attempting to open documents give
+                me simple PlainDocuments instead of BaseDocuments. 
+                I would <b>really</b> appreciate some help from people who know more
+                about unit testing and netbeans service loading to help me track
+                this down so that these manual steps aren't necessary.
+            </blockquote>
+        </p>
+        <p>
+            Here's the code you have to add to your own test class such that all
+            your unit tests inherit it.
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+            TODO - document this. For now, anyone curious, go look at
+            <code>javascript.editing/test/unit/src/org/netbeans/modules/javascript/editing/JsTestBase.java</code>
+            </pre>
+        </p>
+        <br/>
+        <span style="color: #cccccc">Tor Norbye &lt;tor@netbeans.org&gt;</span>
+    </body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+</head>
+<body>
+MultiView SPI provides infrastructure for creating components that dock
+multiple views into one consistent component. Developers define what
+shall be included into the component and are given opportunity to
+influence the overall behaviour of the component.<br>
+This SPI handles the lifecycle of a multiview component.<p>
+<h3>Creation</h3>
+New instance of MultiView TopComponent can be created by calling
+<a href="@TOP@/org/netbeans/core/spi/multiview/MultiViewFactory.html#createMultiView-org.netbeans.core.spi.multiview.MultiViewDescription:A-org.netbeans.core.spi.multiview.MultiViewDescription-">
+    MultiViewFactory.createMultiView
+</a>
+<!--{@link org.netbeans.core.spi.multiview.MultiViewFactory#createMultiView}.-->
+The resulting TopComponent can be docked in arbitrary mode at your
+convenience. The factory method requires an array of 
+{@link org.netbeans.core.spi.multiview.MultiViewDescription}s that
+describe the content of the view.<br>
+Each description in the View shall have a unique <a
+ href="@TOP@/org/netbeans/core/spi/multiview/MultiViewDescription.html#getDisplayName--">display name</a>
+and <a href="@TOP@/org/netbeans/core/spi/multiview/MultiViewDescription.html#preferredID--">preferredId</a>.
+All the descriptions shall be lightweight classes, which create the
+actual visual components on demand in 
+{@link org.netbeans.core.spi.multiview.MultiViewDescription#createElement}<br>
+The multiview component is cloneable by default. If any of your
+embedded elements cannot be cloned, or you don't intend to allow the
+users to clone the component, please use the appropriate factory method
+to create a non-cloneable instance.
+<h3>Lifecycle</h3>
+Once the multiview component is opened, the element for the default
+MultiViewDescription is created. Creation of other Elements is delayed
+to the moment these are required.<br>
+All created Elements get notified of changes in the lifecycle of the
+multiview component and their own. The notification callback method
+have the same name and similar semantics as the TopComponent ones.<br>
+<ul>
+  <li>When the element is shown for the first time, componentOpened()
+is called.</li>
+  <li>Everytime the element is selected in the component,
+componentShowing() is called on the new selection and componentHidden()
+on the one deselected.</li>
+  <li>When focusing the whole component, the currently selected element
+receives componentActivated(). When switching elements, the element
+loosing focus gets called componentDeactivated(), the one gaining focus
+is called componentActivated()</li>
+  <li>Whenever the multiview component gets notified of it's state
+changes (showing/hidden/activate/deactivated) by the window system,
+these are propagated to the currently selected element only.<br>
+  </li>
+  <li>For all elements that were created during the lifecycle of the
+component, componentClosed() is called when the component is about to
+be closed. Closing the component is special because the elements can be
+in non-deterministic state and a dataloss&nbsp; situation is possible.
+Each created MultiViewElement is queried for it's state, the
+environment calls 
+{@link org.netbeans.core.spi.multiview.MultiViewElement#canCloseElement}.
+The owner of the multiview component resolves the problems (silently or
+by asking the user) in 
+{@link org.netbeans.core.spi.multiview.CloseOperationHandler#resolveCloseOperation}
+  </li>
+</ul>
+<br>
+<h3>Persistence</h3>
+TopComponents decide about persistence based on the <a
+ href="@org-openide-windows@/org/openide/windows/TopComponent.html">TopComponent.getPersistenceType()</a>&nbsp;
+return values. Possible values are:
+<br>
+<ul>
+  <li>TopComponent.PERSISTENCE_ALWAYS, </li>
+  <li>TopComponent.PERSISTENCE_NEVER, </li>
+  <li>TopComponent.PERSISTENCE_ONLY_OPENED.</li>
+</ul>
+The multiview component decides what it's return value is based on the
+values returned by <a
+ href="@TOP@/org/netbeans/core/spi/multiview/MultiViewDescription.html">MultiViewDescription.getPersistenceType()</a>
+of all&nbsp; embedded MultiViewDescriptions.&nbsp; <br>
+<ul>
+  <li>When at least one of
+them returns PERSISTENCE_ALWAYS, it is returned by
+the TopComponent as well. </li>
+  <li>If at least one requires
+PERSISTENCE_ONLY_OPENED and none needs PERSISTENCE_ALWAYS, the
+TopComponent's state will be stored only when it's opened on IDE exit.</li>
+  <li>The multiview topcomponent is not persisted if all descriptions
+return PERSISTENCE_NEVER, or any of the descriptions are not
+serializable.<br>
+  </li>
+</ul>
+In other words, ALWAYS has higher priority than ONLY_OPENED and NEVER
+has the lowest priority of all.<br>
+<br>
+When the multiview's TopComponent gets persisted, all of it's 
+{@link org.netbeans.core.spi.multiview.MultiViewDescription} instances
+get serialized. Thus they need to implement Serializable.&nbsp; Then
+for all MultiViewDescriptions that were opened (created their 
+{@link org.netbeans.core.spi.multiview.MultiViewElement} instances) and don't
+declare PERSISTENCE_NEVER in their getPersistenceType() method, the
+MultiViewElement instance gets persisted as well. <br>
+Note: If any of the MultiViewDescription instances is not Serializable,
+the TopComponent will not get persisted. Please note that even if your
+MultiViewDescription returns PERSISTENCE_NEVER, it should be possible
+to serialize the Description instance. After restoration the
+deserialized instance will create a fresh MultiViewElement instance.<br>
+<br>
+If you define your own {@link org.netbeans.core.spi.multiview.CloseOperationHandler} implementation for the multiview component, then you also ought to define it
+Serializable.
+<br>
+When restoring the multiview TopComponent, all the
+MultiViewDescriptions are deserialized, also all the stored
+MultiViewElements are deserialized.&nbsp; These are kept and the
+createElement() method is not called on the matching
+MultiViewDescription.<br>
+<br>
+<h3>Manipulating the multiview</h3>
+MultiViewElements get a chance to manipulate the enclosed topcomponent.
+Each of them is passed an instance of 
+{@link org.netbeans.core.spi.multiview.MultiViewElementCallback} on
+creation or deserialization. (Please don't serialize with your
+element's data, for performance reasons) It can be used during
+lifecycle of the element. <br>
+<ul>
+  <li>To request activation.</li>
+  <li>To request visibility.</li>
+  <li>To get the default topcomponent actions (shall be used to
+contruct the Element's getActions() array).</li>
+  <li>To change the title for the topcomponent.</li>
+</ul>
+<span style="font-weight: bold;"><br>
+</span>
+If your MultiViewElement is a TopComponent or provides a TopComponent
+in getVisualRepresentation(), you can manipulate
+the activatedNodes of the whole multiview component by setting the
+appropriate nodes on your own TopComponent.
+when elements are switched, the activated nodes get updated as well
+according to the shown element.
+<br>
+<h3><span style="font-weight: bold;"></span>Embedding editors</h3>
+A typical MultiViewElement for embedding editor extends 
+<a href="@org-openide-text@/org/openide/text/CloneableEditor.html">CloneableEditor</a>
+and delegates some of the functionality to the multiview component. <br>
+The multiview component implements <a href="@org-openide-text@/org/openide/text/CloneableEditorSupport.Pane.html">CloneableEditorSupport.Pane</a> and the
+<a href="@org-openide-text@/org/openide/text/CloneableEditorSupport.html">CloneableEditorSupport</a> instance's createPane() method
+shall return the overall multiview component, rather than the
+MultiViewElement's component. In such case the opening the component
+shall be always done using the openCloneableTopComponent() call which
+will register the MultiView component as
+a holder of the editor pane for that CloneableEditorSupport instance.
+The multiview component will always
+delegate to the currently selected element when communication with the
+editor support classes. Keep that in mind when trying to manipulate
+the editor pane. Always switch to the editor's element first.<br>
+<br>
+Please note: The multiview component is just a placeholder for the
+enclosed components. Any data related synchronizations are to be
+performed in the client code. This is especially important when
+multiple elements work over the same data/files.<br>
+<br>
+At
+least the requestActive() and requestVisible() methods shall be
+overriden to delegate to the MultiViewElementCallback. Sample code:<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; public void requestActive() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if
+(multiViewCallback != null) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+multiViewCallback.requestActive();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+else {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+super.requestActive();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</code><br>
+Since TopComponent's lifecycle callback methods (componentOpened(),
+componentShowing() etc) are defined with protected scope, you will have
+to redefine the to be public to be in synch with the MultiViewElement
+interface signature. If the lifecycle within the multiview component
+differs from the default behaviour, additional handling goes here as
+well.<br>
+<br>
+To create the editor's toolbar, the one provided by the
+NbDocument.CustomToobar is the obvious choice.<br>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; public JComponent
+getToolbarRepresentation() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if
+(toolbar == null) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+JEditorPane pane = getEditorPane();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+if (pane != null) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Document doc = pane.getDocument();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+if (doc instanceof NbDocument.CustomToolbar) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+toolbar = ((NbDocument.CustomToolbar)doc).createToolbar(pane);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+if (toolbar == null) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+//attempt to create own toolbar?<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+toolbar = new JPanel();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+return toolbar;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+</code><br>
+The owner/creator of the multiview component is responsible to handle
+proper closing of the editor via the 
+{@link org.netbeans.core.spi.multiview.CloseOperationHandler#resolveCloseOperation}
+method implementation.<br>
+<br>
+</body>
+</html>

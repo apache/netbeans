@@ -1,0 +1,58 @@
+Calling GenBeans.doIt
+Bean Tree:
+book <book> : Book
+	[attr: good ENUM ( yes no ) yes]
+	index <index> : Index[1,n]
+		[attr: color CDATA #IMPLIED ]
+		[attr: cross-ref ENUM ( yes no ) no]
+		[attr: glossary CDATA #FIXED nope]
+		word <word> : String
+			[attr: freq CDATA #IMPLIED ]
+		ref <ref> : Ref[1,n]
+			page <page> : String
+			line <line> : String
+	chapter <chapter> : Chapter[1,n]
+		[attr: title CDATA #IMPLIED ]
+		comment <comment> : String[0,1]
+		paragraph <paragraph> : String[0,n]
+	summary <summary> : String[0,1]
+		[attr: length CDATA #REQUIRED ]
+		[attr: lang CDATA #IMPLIED ]
+		[attr: size CDATA #FIXED 12]
+	available <available> : boolean
+		EMPTY : String
+
+Compiling
+Finished compiling: 0
+out: TestFind - creating the DOM document
+out: TestFind - creating the bean graph
+out: TestFind - bean graph created
+out: TestFind Test findProperty - found element -> OK
+out: TestFind - /Book/Index.b/Word
+out: TestFind Test findProperty - found elements -> OK
+out: TestFind - /Book/Index.b/Ref.d/Line
+out: TestFind - /Book/Index.10/Ref.15/Line
+out: TestFind Test findProperty - not found element -> OK
+out: TestFind Test findValue - found elements -> OK
+out: TestFind - /Book/Index.b/Ref.d/Line
+out: TestFind - /Book/Index.10/Ref.15/Page
+out: TestFind - /Book/Index.10/Ref.15/Line
+out: TestFind Test findValue - found element -> OK
+out: TestFind - /Book/Index.10/Word
+out: TestFind Test findValue - not found element -> OK
+out: TestFind Test findValue - found elements -> OK
+out: TestFind - /Book/Index.b:CrossRef
+out: TestFind - /Book/Chapter.6/Comment
+out: TestFind Test findValue - found element -> OK
+out: TestFind - /Book:Good
+out: TestFind Test findAttributeValue - found element -> OK
+out: TestFind - /Book/Index.b:Color
+out: TestFind Test findAttributeValue - found element -> OK
+out: TestFind - /Book/Index.10:Color
+out: TestFind Test findAttributeValue - not found element -> OK
+out: TestFind Test findAttributeValue - found elements -> OK
+out: TestFind - /Book/Index.b/Word:Freq
+out: TestFind - /Book/Index.10/Word:Freq
+out: TestFind Test findAttributeValue - found element -> OK
+out: TestFind - /Book:Good
+Finished running TestFind: 0

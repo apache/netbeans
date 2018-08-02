@@ -1,0 +1,2 @@
+Subversion     >  Checkout...                         k
+                  Import into Repository...           m

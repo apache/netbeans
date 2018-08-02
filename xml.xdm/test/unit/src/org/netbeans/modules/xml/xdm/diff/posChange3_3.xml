@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test><e name='a' id="a"/>
+    <e name='d'/>
+    <e2 name='e'/><e name='b'/>
+    <e name='c' id="c"/>
+
+</test>

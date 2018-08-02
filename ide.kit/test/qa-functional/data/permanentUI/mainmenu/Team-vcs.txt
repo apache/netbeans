@@ -1,0 +1,30 @@
+| Team |                M
+=========
+Show Changes            W
+Diff            >       D
+Add                     A
+Commit...               M
+Checkout >              K
+Revert Modifications... R
+Show Annotations        N
+Show History            H
+Resolve Conflicts       F
+===================
+Ignore          >       I
+Patches         >       P
+===================
+Branch/Tag      >       B
+Remote          >       E
+Revert/Recover  >       V
+===================
+Repository Browser      Y
+===================
+Shelve Changes  >       S
+Disconnect...           O
+===================
+Other VCS       >       V
+===================
+History         >       T
+Find Tasks...           F
+Report Task...          K
+Create Build Job...     J

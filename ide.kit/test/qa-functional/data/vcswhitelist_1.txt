@@ -1,0 +1,39 @@
+#serves for VCSClassloadingTest.testOpenIDE
+#include biglist.txt
+
+#Versioning classes that should be loaded on startup:
+org.netbeans.lib.cvsclient.admin.AdminHandler
+org.netbeans.lib.cvsclient.admin.StandardAdminHandler
+org.netbeans.lib.cvsclient.command.GlobalOptions
+org.netbeans.lib.cvsclient.file.DefaultFileHandler
+org.netbeans.lib.cvsclient.file.DefaultTransmitTextFilePreprocessor
+org.netbeans.lib.cvsclient.file.DefaultWriteTextFilePreprocessor
+org.netbeans.lib.cvsclient.file.FileHandler
+org.netbeans.lib.cvsclient.file.FileReadOnlyHandler
+org.netbeans.lib.cvsclient.file.FileUtils
+org.netbeans.lib.cvsclient.file.OutputStreamProvider
+org.netbeans.lib.cvsclient.file.TransmitTextFilePreprocessor
+org.netbeans.lib.cvsclient.file.WriteRcsDiffFilePreprocessor
+org.netbeans.lib.cvsclient.file.WriteTextFilePreprocessor
+org.netbeans.modules.git.ModuleLifecycleManager
+org.netbeans.modules.subversion.ModuleLifecycleManager
+org.netbeans.modules.subversion.SvnMetadataFolderLoader
+org.netbeans.modules.versioning.system.cvss.Annotator
+org.netbeans.modules.versioning.system.cvss.CVS
+org.netbeans.modules.versioning.system.cvss.CvsLiteAdminHandler
+org.netbeans.modules.versioning.system.cvss.CvsLiteFileHandler
+org.netbeans.modules.versioning.system.cvss.CvsLiteFileHandler$LockedOutputStream
+org.netbeans.modules.versioning.system.cvss.CvsLiteGzippedFileHandler
+org.netbeans.modules.versioning.system.cvss.CvsModuleConfig
+org.netbeans.modules.versioning.system.cvss.CvsVersioningSystem
+org.netbeans.modules.versioning.system.cvss.CvsVisibilityQuery
+org.netbeans.modules.versioning.system.cvss.DiskMapTurboProvider
+org.netbeans.modules.versioning.system.cvss.FileInformation
+org.netbeans.modules.versioning.system.cvss.FileStatusCache
+org.netbeans.modules.versioning.system.cvss.FileStatusCache$NotManagedMap
+org.netbeans.modules.versioning.system.cvss.FileStatusCache$RefreshRequestRunnable
+org.netbeans.modules.versioning.system.cvss.FileStatusProvider
+org.netbeans.modules.versioning.system.cvss.FilesystemHandler
+org.netbeans.modules.versioning.system.cvss.ModuleLifecycleManager
+org.netbeans.modules.versioning.system.cvss.NotVersionedException
+org.netbeans.modules.versioning.system.cvss.util.Utils

@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Options Window: Java: Java Debugger</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="JavaDebuggerOptions" name="JavaDebuggerOptions"></a></p>
+<div id="NBCSH2649"><!-- infolevel="all" infotype="General" --><a id="sthref347" name="sthref347"></a>
+<h1>Options Window: Java: Java Debugger</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to customize options for the Java debugger. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG801">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<a id="NBCSH2650" name="NBCSH2650"></a>
+<p><b>General</b></p>
+<p>This category enables you to set custom breakpoint and Debugger Console operations.</p>
+
+<table summary="Descriptions of custom breakpoint and debugging commands." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="39%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t15">Element</th>
+<th align="left" valign="bottom" id="r1c2-t15">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t15" headers="r1c1-t15">
+<p>Stop on uncaught exceptions</p>
+</td>
+<td align="left" headers="r2c1-t15 r1c2-t15">Determines whether execution of the application should suspend when an uncaught exception is thrown.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t15" headers="r1c1-t15">
+<p>Apply code changes after save (in "Compile on Save" mode only)</p>
+</td>
+<td align="left" headers="r3c1-t15 r1c2-t15">Applies code changes you make during a debugging section to the code. This option works only when the Compile on Save mode is enabled in the project properties.
+<p>To check whether the Compile on Save mode is enabled, right-click the project, choose <b>Properties</b>, and select the Compiling category.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t15" headers="r1c1-t15">
+<p>New breakpoints suspend</p>
+</td>
+<td align="left" headers="r4c1-t15 r1c2-t15">Suspends the selected threads when a new breakpoint is reached.
+<p>You can choose to suspend all threads in a multi-threaded application, only the current thread, or do not suspend any thread, just write the output to the log.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t15" headers="r1c1-t15">
+<p>Steps resume</p>
+</td>
+<td align="left" headers="r5c1-t15 r1c2-t15">Determines whether only the current thread or all threads are resumed when stepping during a debugging session.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t15" headers="r1c1-t15">
+<p>Open Debugger Console for debugging sessions</p>
+</td>
+<td align="left" headers="r6c1-t15 r1c2-t15">Opens the Debugger Console automatically when a debugging sessions starts.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t15" headers="r1c1-t15">
+<p>Reuse Editor when displaying source code</p>
+</td>
+<td align="left" headers="r7c1-t15 r1c2-t15">Displays the source file containing the called method in an existing editor window instead of opening a new editor window.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2657" name="NBCSH2657"></a>
+<p><b>Step Filters</b></p>
+<p>This category enables you to use step filters to specify the language constructs that are filtered while stepping. You can enable step filters for synthetic methods, static initializers, constructors, and specify patterns for Java classes.</p>
+
+<table summary="Descripton of customized step filter command." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="39%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t16">Element</th>
+<th align="left" valign="bottom" id="r1c2-t16">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t16" headers="r1c1-t16">
+<p>Step through the filters to reach unfiltered code</p>
+</td>
+<td align="left" headers="r2c1-t16 r1c2-t16">Steps through a filtered location to the next unfiltered code.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2659" name="NBCSH2659"></a>
+<p><b>Variable Formatters</b></p>
+<p>This category enables you to create and edit variable formatters, which are used to display variables, for example, in the Variables view.</p>
+<p>There are several formatters that are provided by default. To add a formatter, use the <b>Add</b> button on the right side of the pane.</p>
+<a id="NBCSH2660" name="NBCSH2660"></a>
+<p><b>Visual Debugger</b></p>
+<p>This category enables you to modify the options for using the visual debugger when debugging GUI applications.</p>
+
+<table summary="Descriptions of customiztion commands for the visual debugger." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="39%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t17">Element</th>
+<th align="left" valign="bottom" id="r1c2-t17">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t17" headers="r1c1-t17">
+<p>Upload Visual Debugging agent to target application</p>
+</td>
+<td align="left" headers="r2c1-t17 r1c2-t17">Enables you to use the Visual Debugger and take GUI snapshots.
+<p>This option is enabled by default.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t17" headers="r1c1-t17">Track locations of component hierarchy changes</td>
+<td align="left" headers="r3c1-t17 r1c2-t17">Enables the Go to Hierarchy Addition task in the context menu in a GUI snapshot.
+<p>This option is disabled by default because it can increase the debugging overhead.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2662" name="NBCSH2662"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG822">
+<param name="text" value="<html><u>&quot;Using the Debugger Windows&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

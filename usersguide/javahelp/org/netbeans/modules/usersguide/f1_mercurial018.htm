@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Mercurial: Select Changesets to Rebase Dialog Box</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.mercurial.ui.rebase.RebasePanel" name="org.netbeans.modules.mercurial.ui.rebase.RebasePanel"></a></p>
+<div id="NBCSH1297"><!-- infolevel="all" infotype="General" --><a id="sthref148" name="sthref148"></a>
+<h1>Mercurial: Select Changesets to Rebase Dialog Box</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use the Select Changesets to Rebase dialog to append the private changes on top of any destination commit. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG330">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>You access this dialog box by selecting a versioned project, file or folder and either:</p>
+<ul>
+<li>choosing <b>Team &gt; Branch/Tag &gt; Rebase</b> from the main menu</li>
+<li>right-clicking the selected item and choose <b>Mercurial &gt; Branch/Tag &gt; Rebase</b> from the context menu</li>
+</ul>
+<p>In the Select Changesets to Rebase dialog box, you have to set the following properties:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t24">Element</th>
+<th align="left" valign="bottom" id="r1c2-t24">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t24" headers="r1c1-t24">
+<p>Rebase</p>
+</td>
+<td align="left" headers="r2c1-t24 r1c2-t24">Choose a rebasing mode.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t24" headers="r1c1-t24">
+<p>Current Revision to Tipmost Head</p>
+</td>
+<td align="left" headers="r3c1-t24 r1c2-t24">Select to move a Working Directory parent commit and its ancestors to the most recent commit in the current branch. It is the suggested option when you want to move your local commits on top of just pulled remote commits.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t24" headers="r1c1-t24">
+<p>Current Revision to Any Destination</p>
+</td>
+<td align="left" headers="r4c1-t24 r1c2-t24">Select to move Working Directory parent and its ancestors to an arbitrary destination changeset.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t24" headers="r1c1-t24">
+<p>Revision to Any Destination</p>
+</td>
+<td align="left" headers="r5c1-t24 r1c2-t24">Select to move any changeset, its ancestors, and all its descendants to an arbitrary destination changeset.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t24" headers="r1c1-t24">
+<p>Tree to Any Destination</p>
+</td>
+<td align="left" headers="r6c1-t24 r1c2-t24">Select to move any changeset and all its descendants to an arbitrary destination changeset.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t24" headers="r1c1-t24">
+<p>Rebased Branch</p>
+</td>
+<td align="left" headers="r7c1-t24 r1c2-t24">Specify the branch to rebase.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t24" headers="r1c1-t24">
+<p>Destination Revision</p>
+</td>
+<td align="left" headers="r8c1-t24 r1c2-t24">Specify the new base for the selected branch.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t24" headers="r1c1-t24">
+<p>Preview</p>
+</td>
+<td align="left" headers="r9c1-t24 r1c2-t24">Displays a sample result of the completed rebase operation.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t24" headers="r1c1-t24">
+<p>B (Base revision)</p>
+</td>
+<td align="left" headers="r10c1-t24 r1c2-t24">A commit to rebase along with all its descendants and ancestors.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r11c1-t24" headers="r1c1-t24">
+<p>W (Working Directory Parent)</p>
+</td>
+<td align="left" headers="r11c1-t24 r1c2-t24">A Working Directory parent.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r12c1-t24" headers="r1c1-t24">
+<p>T (Current Branch's Tipmost Head)</p>
+</td>
+<td align="left" headers="r12c1-t24 r1c2-t24">The tipmost head of the current branch.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r13c1-t24" headers="r1c1-t24">
+<p>S (Source Revision)</p>
+</td>
+<td align="left" headers="r13c1-t24 r1c2-t24">A changeset to be moved along with all its descendants.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r14c1-t24" headers="r1c1-t24">
+<p>D (Destination Revision)</p>
+</td>
+<td align="left" headers="r14c1-t24 r1c2-t24">A changeset to which the rebased changesets are moved.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>Click Rebase to complete rebasing according to the defined settings.</p>
+<a id="NBCSH1311" name="NBCSH1311"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG318">
+<param name="text" value="<html><u>&quot;Versioning Applications with Mercurial&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

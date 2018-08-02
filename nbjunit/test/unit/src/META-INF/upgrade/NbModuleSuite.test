@@ -1,0 +1,38 @@
+%%TestCase suite
+package test;
+public class SomeTest extends org.netbeans.junit.NbTestCase {
+    public static junit.framework.Test suite() {
+        return org.netbeans.junit.NbModuleSuite.create(org.netbeans.junit.NbModuleSuite.createConfiguration(SomeTest.class).gui(false));
+    }
+}
+%%=>
+package test;
+public class SomeTest extends org.netbeans.junit.NbTestCase {
+    public static junit.framework.Test suite() {
+        return org.netbeans.junit.NbModuleSuite.createConfiguration(SomeTest.class).gui(false).suite();
+    }
+}
+
+%%TestCase createConfiguration
+package test;
+public class SomeTest extends org.netbeans.junit.NbTestCase {
+    public static junit.framework.Test suite() {
+        return org.netbeans.junit.NbModuleSuite.emptyConfiguration().addTest(SomeTest.class).gui(false).suite();
+    }
+}
+%%=>
+package test;
+import org.netbeans.junit.NbModuleSuite;
+public class SomeTest extends org.netbeans.junit.NbTestCase {
+    public static junit.framework.Test suite() {
+        return NbModuleSuite.createConfiguration(SomeTest.class).gui(false).suite();
+    }
+}
+
+%%TestCase createConfigurationNotTestCase
+package test;
+public class SomeTest extends junit.framework.TestSuite {
+    public static junit.framework.Test suite() {
+        return org.netbeans.junit.NbModuleSuite.emptyConfiguration().addTest(SomeTest.class).gui(false).suite();
+    }
+}

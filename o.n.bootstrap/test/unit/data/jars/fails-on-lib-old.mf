@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.dol
+OpenIDE-Module-Name: Fails on old library
+OpenIDE-Module-Package-Dependencies: pkg.subpkg[Something] > 2.4
+Class-Path: library-vers.jar
+

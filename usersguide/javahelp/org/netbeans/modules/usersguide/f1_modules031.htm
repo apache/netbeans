@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Wizard Wizard: Wizard Type</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.apisupport.project.ui.wizard.wizard.WizardTypePanel" name="org.netbeans.modules.apisupport.project.ui.wizard.wizard.WizardTypePanel"></a></p>
+<div id="NBCSH1932"><!-- infolevel="all" infotype="General" --><a id="sthref255" name="sthref255"></a>
+<h1>Wizard Wizard: Wizard Type</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>The New Wizard wizard creates a new Wizard. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG3121">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>You open the New Wizard wizard by right-clicking a module project, choosing New &gt; Other and selecting Wizard from the Module Development category. dah</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t31">Element</th>
+<th align="left" valign="bottom" id="r1c2-t31">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t31" headers="r1c1-t31">
+<p>Registration Type</p>
+</td>
+<td align="left" headers="r2c1-t31 r1c2-t31">Specifies where the user will be able to find the wizard in the IDE. See About Wizards for details.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t31" headers="r1c1-t31">
+<p>Wizard Step Sequence</p>
+</td>
+<td align="left" headers="r3c1-t31 r1c2-t31">Specifies whether the Wizard wizard will create an implementation of this NetBeans API class.
+<p>If you choose Static, an implementation of this NetBeans API class will not be created. The default progression from panel to panel will then be supported by your wizard, sequential progression without divergences or reversals.</p>
+<p>If you choose Dynamic, the Wizard wizard will create an implementation of the WizardDescriptor.Iterator class. This class guides progress from one panel to the next. The developer has a lot more freedom in coding the wizard, but has a more complex task since there are many more possibilities to consider. When you choose "Static", you can also extend the wizard to provide support for panel skipping and reversals, but the "Dynamic" type was made for this purpose. For example, the Add Server Instance wizard offers different panels depending on the type of server that the user wants to register.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t31" headers="r1c1-t31">
+<p>Number of Wizard Panels</p>
+</td>
+<td align="left" headers="r4c1-t31 r1c2-t31">For each panel, the IDE creates two files&mdash;a visual panel (called <code dir="ltr">xxxVisualPanel.java</code>) and a wizard panel (called <code dir="ltr">xxxWizardPanel</code>) for retrieving the current values from the visual panel. Only if you enter an integer greater than 0, will you be able to progress to the next panel in the Wizard wizard.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH1936" name="NBCSH1936"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG3071">
+<param name="text" value="<html><u>&quot;About the NetBeans Platform and Module Development&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG3059">
+<param name="text" value="<html><u>&quot;About the NetBeans Platform&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

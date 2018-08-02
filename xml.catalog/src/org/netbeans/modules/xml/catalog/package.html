@@ -1,0 +1,192 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+</head>
+<body>
+
+<H1>Catalogs Package</H1>
+
+<p><b>Maintainer</b>: Petr Kuzel
+<p><b>Updated on</b>: 6th feb 2001
+
+<H2>Introduction</H2>
+
+<h3>What is catalog?</h3>
+<p>In order to use a variety of XML tools in a variety of
+computer environments, the problem of addressing resources
+that are inaccessible using their explicit system
+identifiers must be solved.</p>
+
+<p>The short term solution to this problem is to define an
+entity catalog that handles the simple cases of mapping an
+external entity's public identifier and/or system
+identifier to an alternate URI. This solution allows for a
+probably system-dependent but application-independent
+catalog. Though it does not handle all issues that a
+combination of a complete entity manager and storage
+manager addresses, it simplifies both the use of multiple
+products in a great majority of cases and the task of
+processing documents on different systems.</p>
+
+<h3>What is Entity Resolution?</h3>
+
+<p>Entity resolution is the process that an XML processor goes through
+when it has been requested to find another
+file<sup>[<a href="#fnote1">1</a>]</sup> in the course of
+processing the file it's working on. The XML processor knows labelling
+information about the file such as its system identifier and possibly
+a name, public identifier, and so forth. These identifiers can be used
+to determine the actual location of the desired external file.  This
+determination process (which "maps" the known labelling information
+into an actual location) is called an entity resolution, and the file
+that contains the specific mapping information is called the entity
+resolution catalog.</p>
+
+<blockquote>
+<p><a name="fnote1"></a><font size="-1">[1] <em>file</em>
+is used here for simplicity, but could be any other resource
+consisting of such things as declarations, a parsed entity, an
+unparsed entity, etc.</font></p>
+</blockquote>
+
+<hr>
+
+<a name='req'><h3>Requirements</h3></a>
+<li>Catalog can define public ID to system ID mappings.
+<li>Catalog must allow to mount user's catalogs
+<li>Mounted catalog's should be persistent
+<li>Catalog must provide mappings to OpenIDE APIs
+<li>Visualize build-in catalog
+<li>Define catalog SPI
+
+<h4>Dependencies</h4>
+OpenIDE should allow to add custom <tt>EntityResolvers</tt>.
+
+<hr>
+
+<a name='dev-view'><h2>Developer's View</h2></a>
+
+<h3>OpenIDE Support</h3>
+
+XMLDataObject allows registering custom catalogs by two methods.
+
+<h4>XMLDataObject API</h4>
+
+<b>@deprecated</b><p>
+
+I call it <b>Entity Resolving API</b>. It consists of <tt>registerCatalogEntry()</tt> methods.
+
+<p>Two new methods have been introduced into it to support users catalogs:
+<li><tt>addEntityResolver(EntityResolver resolver)</tt>
+<li><tt>removeEntityResolver(EntityResolver resolver)</tt>
+
+<p>The mapping registered by <tt>registerCatalogEntry()</tt> must stay of 
+<li>the highest priority
+<li>transient among IDE restarts 
+<li>must use latter registered mapping prevails previous mapping strategy.
+
+<h4>Declarative way</h4>
+XMLDataObject recognize well known folder named XML/catalog containing
+<tt>EntityResolver</tt>'s implemetations registrations.
+<p>The Catalog package put there its implementation of <tt>EntityResolver</tt>.
+
+<H3>User's Persistent Catalogs</H3>
+A user can have its own catalog on some place following some DTD or
+other format (SOCAT). This feature supports integration of such catalogs
+into IDE mappings. Every catalog must provide
+a <tt>CatalogReader</tt> interface implementation.
+See <a href="spi/package.html">SPI interface</a> for details.
+
+<p>The catalog implementation provides a <tt>EntityResolver</tt> implementation
+based upon mounted catalogs. The resolver is registered into the IDE resolver chain.
+See <a href="CatalogEntityResolver.html">JavaDoc</a>.
+
+
+<hr>
+
+
+<a name='user-view'><h2>User's View</h2></>
+A user will browse and manage catalog using a node structure.
+
+<pre>
+ + XML Catalog Browser ~-------------------------{root}
+   + System Catalog [ro] ~--------------------{catalog}
+   | + -//Netbeans Toolbars DTD//EN ~---{catalog entry}
+   | + -//Other system DTD//EN
+   | + -//X Catalog//EN
+   + My SOCAT [ro]
+   + My XCatalog [rw]
+     + +//WML 1.1//EN
+</pre>
+
+<h4>Catalog Root</h4>
+Root of all catalogs used in system. It always contains a system catalog as a child.
+
+<p>Actions:
+<ul>
+<p><b>New</b> -> some catalog provider: creates a new catalog provider bean
+<!--<p><b>Resolve</b>: takes public and system ID and translates it into a new pair-->
+</ul>
+
+
+<h4>Catalog</h4>
+A catalog must be mounted by New action at Catalog Root. One mounted then all
+actions in XML module use mappings defined by the catalog. Depending on catalog
+type the mounting is persistent in per project basis.
+
+<!--
+There is one special catalog called <b>system catalog</b>. It contains entries
+vital for proper IDE functionality. These can not be modified not changed
+and these are transient.
+<p>If a catalog miss its provider or source then an icon indicates it.
+-->
+
+<p>Actions: 
+<ul>
+<p><b>Delete</b>: remove it if user confirms
+<!--
+<p><b>New Entry</b>: allows to register a new entry on read/write catalogs
+<p><b>Paste</b>: paste copied entry in this catalog (what about coping it to local file) (at writeable catalogs)
+<p><b>Resolve</b>: takes public and system id and translates it into a new pair
+-->
+<p><b>Refresh</b>: refreshes a catalog content
+</ul>
+
+
+<h4>Catalog Entry</h4>
+It may be read-only depending on catalog provider type.
+
+<p>Actions:
+<ul>
+<p><b>View</b>: try to open the entity in read-only editor
+</ul>
+
+<p>Properties:
+<ul> 
+<p><b>Public ID</b>: a mapping key
+<p><b>System ID</b>: a mapped value
+</ul>
+
+</body>
+</HTML>

@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "HTTP://www.w3.org/TR/html4/loose.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+<head>
+  <title>Libraries API</title>
+  <meta name="GENERATOR" content="Quanta Plus">
+  <style TYPE="text/css">
+<!--
+.STR {color: #99006b}
+.NUM {color: #780000}
+.ID {color: #000099; font-family: Monospaced; font-weight: bold}
+.COMMENT {color: #808080; font-family: Monospaced; font-style: italic}
+-->
+</style>
+</head>
+<body>
+<p>Representation of a library, and the ability to find the installed libraries.</p>
+<h1>
+Contents
+</h1>
+<ul>
+<li><a href="#overview">Overview</a>
+<li><a href="#manager">How to obtain a list of installed libraries</a>
+<li><a href="#customizer">Managing libraries</a>
+<li><a href="#dtd">Library definition format</a>
+</ul>
+
+<h1>Libraries API</h1>
+<h2><a name="overview">Overview</a></h2>
+<p>The libraries API provides a client API of the Libraries framework. The <strong>Library</strong> itself is a typed set of
+volumes. The <a name="volumeType"><strong>volume</strong></a> is a ordered list of <strong>resources</strong>. The type of library implies the volumes contained
+in it. For example the Java SE library contains three volumes (sources, classpath and javadoc). The resource is a
+valid URL of the physical resource.
+</p>
+<h2><a name="manager">How to obtain a list of installed libraries or given library</a></h2>
+<p>
+To obtain a list of installed libraries you want to call
+{@link org.netbeans.api.project.libraries.LibraryManager#getLibraries}
+as in the following example for listing the names of installed libraries.
+<pre>
+Library[] libraries = LibraryManager.getDefault().getLibraries ();
+<span CLASS="ID">for</span> (<span CLASS="ID">int</span> i = <span CLASS="NUM">0</span>; i&lt; libraries.length; i++) {
+    System.out.println(libraries[i].getName()+<span CLASS="STR">" : "</span>+libraries[i].getType());
+}
+</pre>
+To obtain a library with a given name you want to call
+{@link org.netbeans.api.project.libraries.LibraryManager#getLibrary} method as in the following example.
+<pre>
+Library library = LibraryManager.getDefault().getLibrary (<span CLASS="STR">"Ant"</span>);
+<span CLASS="ID">if</span> (library != <span CLASS="ID">null</span>) {
+    System.out.println(library.getName()+<span CLASS="STR">" : "</span>+libraries[i].getType());
+}
+</pre>
+<h2><a name="customizer">Managing libraries</a></h2>
+<p>
+Libraries module provides graphical manager of libraries. The manager allows you to create a new library
+of a given type, to delete existing library or to change content of volumes. It is not possible to create
+or delete a volume in the library since the volumes are implied by the library type.</p>
+<p>
+To open the graphical libraries manager you need to call
+{@link org.netbeans.api.project.libraries.LibrariesCustomizer#showCustomizer} method.
+</p>
+<h2><a name="dtd">Library definition format</a></h2>
+<p>
+A module is able to register the predefined library. For example the junit module installs
+the junit library. The library definition is placed in the <strong>org-netbeans-api-project-libraries/Libraries</strong> folder
+on the system filesystem.</p>
+<p>
+The library format is given by the following DTD.
+<pre>
+&lt;?<span CLASS="ID">xml</span> <span CLASS="ID">version</span>="1.0" <span CLASS="ID">encoding</span>="UTF-8"?&gt;
+
+<span CLASS="COMMENT">&lt;!--</span>
+<span CLASS="COMMENT">  Root element of library definition descriptor.</span>
+<span CLASS="COMMENT">--&gt;</span>
+&lt;!<span CLASS="ID">ELEMENT</span> library (name, type, description?, localizing-bundle?, volume*) &gt;
+
+<span CLASS="COMMENT">&lt;!--</span><span CLASS="COMMENT"> The version attribute specifies the version of the library </span><span CLASS="COMMENT">--&gt;</span>
+
+&lt;!<span CLASS="ID">ATTLIST</span> library version <span CLASS="ID">CDATA</span> <span CLASS="ID">#FIXED</span> <span CLASS="STR">"</span><span CLASS="STR">1.0</span><span CLASS="STR">"</span> &gt;
+
+<span CLASS="COMMENT">&lt;!--</span><span CLASS="COMMENT">- Library unique identifier - a string.</span>
+
+<span CLASS="COMMENT"> In the case when the localizing-bundle element presents the name value is used </span>
+<span CLASS="COMMENT"> as a key into bundle to locate the display name. Otherwise the name value is </span>
+<span CLASS="COMMENT"> used as a display name</span><span CLASS="COMMENT">--&gt;</span>
+&lt;!<span CLASS="ID">ELEMENT</span> name (<span CLASS="ID">#PCDATA</span>) &gt;
+
+<span CLASS="COMMENT">&lt;!--</span><span CLASS="COMMENT">Short description of given library - a string.</span>
+<span CLASS="COMMENT"> In the case when the localizing-bundle element presents the description value</span>
+<span CLASS="COMMENT"> is used as a key into bundle to locate the localized description. Otherwise</span>
+<span CLASS="COMMENT"> the description value is used.</span><span CLASS="COMMENT">--&gt;</span>
+&lt;!<span CLASS="ID">ELEMENT</span> description (<span CLASS="ID">#PCDATA</span>) &gt;
+
+<span CLASS="COMMENT">&lt;!--</span><span CLASS="COMMENT"> The resource name of base bundle without an extension - a string.</span>
+<span CLASS="COMMENT"> The bundle used to lookup the localized strings.</span>
+<span CLASS="COMMENT"> The bundle is looked up by NbBundle.getBundle (String) method.</span>
+<span CLASS="COMMENT"> Example of localizing bundle: org.netbeans.modules.junit.resources.Bundle </span><span CLASS="COMMENT">--&gt;</span>
+&lt;!<span CLASS="ID">ELEMENT</span> localizing-bundle (<span CLASS="ID">#PCDATA</span>)&gt;
+
+<span CLASS="COMMENT">&lt;!--</span><span CLASS="COMMENT">- Volume is typed list of resources </span><span CLASS="COMMENT">--&gt;</span>
+&lt;!<span CLASS="ID">ELEMENT</span> volume (type, resource*) &gt;
+
+<span CLASS="COMMENT">&lt;!--</span><span CLASS="COMMENT">- Volume type of a library volume - a string </span>
+<span CLASS="COMMENT"> For example the Java SE library supports the following types of volume:</span>
+
+<span CLASS="COMMENT"> classpath, javadoc and src </span><span CLASS="COMMENT">--&gt;</span>
+&lt;!<span CLASS="ID">ELEMENT</span> type (<span CLASS="ID">#PCDATA</span>) &gt;
+
+<span CLASS="COMMENT">&lt;!--</span><span CLASS="COMMENT">- Volume resource coded as an URL</span>
+<span CLASS="COMMENT"> In the case of URL with nbinst protocol the URL is resolved from the NetBeans installation</span>
+<span CLASS="COMMENT"> directory.</span>
+<span CLASS="COMMENT"> If the URL points to a ZIP/JAR archive, the URL must have the jar protocol.</span>
+<span CLASS="COMMENT"> Example:</span>
+<span CLASS="COMMENT"> jar:file:///usr/lib/java/xerces.jar!/ is resolved to /usr/lib/java/xerces.jar/</span>
+<span CLASS="COMMENT"> jar:nbinst://org.netbeans.modules.junit/modules/ext/junit.jar!/ is resolved to ${netbeans</span><span CLASS="COMMENT">.home</span><span CLASS="COMMENT">}</span><span CLASS="COMMENT">/modules/ext/junit.jar</span>
+
+ <span CLASS="COMMENT">--&gt;</span>
+&lt;!<span CLASS="ID">ELEMENT</span> resource (<span CLASS="ID">#PCDATA</span>) &gt;
+</pre>
+</body>
+</html>

@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<filesystem>
+
+    <folder name="Loaders">
+        <folder name="text">
+            <folder name="x-javahints">
+                <folder name="Actions">
+                    <file name="org-openide-actions-CopyAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>
+                        <attr name="position" intvalue="400"/>
+                    </file>
+                    <file name="org-openide-actions-CutAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CutAction.instance"/>
+                        <attr name="position" intvalue="300"/>
+                    </file>
+                    <file name="org-openide-actions-DeleteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-DeleteAction.instance"/>
+                        <attr name="position" intvalue="600"/>
+                    </file>
+                    <file name="org-openide-actions-FileSystemAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-FileSystemAction.instance"/>
+                        <attr name="position" intvalue="1100"/>
+                    </file>
+                    <file name="org-openide-actions-OpenAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-OpenAction.instance"/>
+                        <attr name="position" intvalue="100"/>
+                    </file>
+                    <file name="org-openide-actions-PropertiesAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PropertiesAction.instance"/>
+                        <attr name="position" intvalue="1400"/>
+                    </file>
+                    <file name="org-openide-actions-RenameAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-RenameAction.instance"/>
+                        <attr name="position" intvalue="700"/>
+                    </file>
+                    <file name="org-openide-actions-SaveAsTemplateAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAsTemplateAction.instance"/>
+                        <attr name="position" intvalue="900"/>
+                    </file>
+                    <file name="org-openide-actions-ToolsAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ToolsAction.instance"/>
+                        <attr name="position" intvalue="1300"/>
+                    </file>
+                    <file name="sep-1.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="200"/>
+                    </file>
+                    <file name="sep-2.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="500"/>
+                    </file>
+                    <file name="sep-3.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="800"/>
+                    </file>
+                    <file name="sep-4.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1000"/>
+                    </file>
+                    <file name="sep-5.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1200"/>
+                    </file>
+                </folder>
+                <folder name="Factories">
+                    <file name="HintDataLoader.instance">
+                        <attr name="dataObjectClass" stringvalue="org.netbeans.modules.java.hints.declarative.HintDataObject"/>
+                        <attr name="instanceCreate" methodvalue="org.openide.loaders.DataLoaderPool.factory"/>
+                        <attr name="mimeType" stringvalue="text/x-javahints"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="x-javahintstest">
+                <folder name="Actions">
+                    <file name="org-openide-actions-CopyAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>
+                        <attr name="position" intvalue="400"/>
+                    </file>
+                    <file name="org-openide-actions-CutAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CutAction.instance"/>
+                        <attr name="position" intvalue="300"/>
+                    </file>
+                    <file name="org-openide-actions-DeleteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-DeleteAction.instance"/>
+                        <attr name="position" intvalue="600"/>
+                    </file>
+                    <file name="org-openide-actions-FileSystemAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-FileSystemAction.instance"/>
+                        <attr name="position" intvalue="1100"/>
+                    </file>
+                    <file name="org-openide-actions-OpenAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-OpenAction.instance"/>
+                        <attr name="position" intvalue="100"/>
+                    </file>
+                    <file name="org-openide-actions-PropertiesAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PropertiesAction.instance"/>
+                        <attr name="position" intvalue="1400"/>
+                    </file>
+                    <file name="org-openide-actions-RenameAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-RenameAction.instance"/>
+                        <attr name="position" intvalue="700"/>
+                    </file>
+                    <file name="org-openide-actions-SaveAsTemplateAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAsTemplateAction.instance"/>
+                        <attr name="position" intvalue="900"/>
+                    </file>
+                    <file name="org-openide-actions-ToolsAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ToolsAction.instance"/>
+                        <attr name="position" intvalue="1300"/>
+                    </file>
+                    <file name="sep-1.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="200"/>
+                    </file>
+                    <file name="sep-2.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="500"/>
+                    </file>
+                    <file name="sep-3.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="800"/>
+                    </file>
+                    <file name="sep-4.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1000"/>
+                    </file>
+                    <file name="sep-5.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1200"/>
+                    </file>
+                </folder>
+                <folder name="Factories">
+                    <file name="DeclarativeHintsTestDataLoader.instance">
+                        <attr name="dataObjectClass" stringvalue="org.netbeans.modules.java.hints.declarative.test.DeclarativeHintsTestDataObject"/>
+                        <attr name="instanceCreate" methodvalue="org.openide.loaders.DataLoaderPool.factory"/>
+                        <attr name="mimeType" stringvalue="text/x-javahintstest"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+    
+<!--    <folder name="Templates">
+        <folder name="Other">
+            <file name="DeclarativeHintsTestTemplate.test" url="DeclarativeHintsTestTemplate.test">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.java.hints.declarative.resources.Bundle"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+            <file name="HintTemplate.hint" url="HintTemplate.hint">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.java.hints.declarative.resources.Bundle"/>
+                <attr name="template" boolvalue="true"/>
+                </file>
+            <file name="HintSample.hint" url="HintSample.hint">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.java.hints.declarative.resources.Bundle"/>
+                <attr name="template" boolvalue="true"/>
+                </file>
+                
+        </folder>
+    </folder>-->
+    <folder name="org-netbeans-modules-java-hints">
+        <folder name="templates">
+            <file name="Inspection.hint" url="HintSample.hint">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.java.hints.declarative.resources.Bundle"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+        </folder>
+        <folder name="rules">
+            <folder name="hints">
+                <folder name="classpathbased">
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.java.hints.declarative.resources.Bundle"/>
+                </folder>
+            </folder>
+         </folder>
+    </folder>
+    
+
+    <folder name="Editors">
+        <folder name="text">
+            <folder name="x-javahints">
+                <file name="language.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.java.hints.declarative.DeclarativeHintTokenId.language"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
+                </file>
+                <folder name="FontsColors">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-java-hints-declarative-token-colorings.xml" url="fontsColors.xml">
+<!--                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.java.editor.resources.Bundle"/>-->
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+                <file name="org-netbeans-modules-java-editor-semantic-HighlightsLayerFactoryImpl.instance"/>
+                <folder name="CompletionProviders">
+                    <file name="org-netbeans-modules-editor-java-JavaCompletionProvider.instance"/>
+                </folder>
+                <folder name="HyperlinkProviders">
+                    <file name="JavaHyperlinkProvider.instance">
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.java.editor.hyperlink.JavaHyperlinkProvider"/>
+                        <attr name="instanceOf" stringvalue="org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderExt"/>
+                        <attr name="position" intvalue="1000"/>
+                    </file>
+                </folder>
+                <folder name="Actions">
+                    <file name="toggle-debugging-action.instance">
+                        <attr name="instanceCreate" newvalue="org.netbeans.modules.java.hints.declarative.debugging.ToggleDebuggingAction"/>
+                    </file>
+                </folder>
+                <folder name="Toolbars">
+                    <folder name="Default">
+                        <file name="Separator-before-toggle-debugging.instance">
+                            <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                            <attr name="position" intvalue="25000"/>
+                        </file>
+                         <file name="toggle-debugging-action">
+                            <attr name="position" intvalue="26000"/>
+                         </file>
+                    </folder>
+                </folder>
+            </folder>
+
+            <folder name="x-javahintstest">
+                <file name="language.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.java.hints.declarative.test.TestTokenId.language"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+    
+</filesystem>

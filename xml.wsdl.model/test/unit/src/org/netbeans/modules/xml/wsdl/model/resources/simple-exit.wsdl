@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:slnk="http://schemas.xmlsoap.org/ws/2002/07/service-link/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="urn:exit-simple" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="OutOnlyService" targetNamespace="urn:exit-simple">
+    <types>
+        <xsd:schema xmlns:ns1="urn:exit-simple" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:exit-simple">
+            <xsd:element name="helloObj" type="tns:helloObjType"/>
+            <xsd:complexType name="helloObjType">
+                <xsd:sequence>
+                    <xsd:element name="string" type="xsd:string"/>
+                    <xsd:element name="nonNegativeInteger" type="xsd:nonNegativeInteger"/>
+                    <xsd:element name="byte" type="xsd:byte"/>
+                    <xsd:element name="short" type="xsd:short"/>
+                    <xsd:element name="int" type="xsd:int"/>
+                    <xsd:element name="long" type="xsd:long"/>
+                    <xsd:element name="negativeInteger" type="xsd:negativeInteger"/>
+                    <xsd:element name="dateTime" type="xsd:dateTime"/>
+                    <xsd:element name="nonPositiveInteger" type="xsd:nonPositiveInteger"/>
+                    <xsd:element name="duration" type="xsd:duration"/>
+                    <xsd:element name="ENTITIES" type="xsd:ENTITIES"/>
+                    <xsd:element name="double" type="xsd:double"/>
+                    <xsd:element name="ENTITY" type="xsd:ENTITY"/>
+                    <xsd:element name="float" type="xsd:float"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </types>
+    <message name="HelloIF_sayHello">
+        <part element="tns:helloObj" name="body"/>
+    </message>
+    <message name="HelloIF_sayHelloResponse">
+        <part element="tns:helloObj" name="result"/>
+    </message>
+    <portType name="HelloIF">
+        <operation name="sayHello">
+            <input message="tns:HelloIF_sayHello"/>
+            <output message="tns:HelloIF_sayHelloResponse"/>
+        </operation>
+    </portType>
+    <portType name="exit-simpleIF">
+        <operation name="sayHello">
+            <input message="tns:HelloIF_sayHello"/>
+        </operation>
+    </portType>
+    <binding name="HelloDocElem2DocElemIFBinding" type="tns:HelloIF">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="sayHello">
+            <soap:operation soapAction="sayHello"/>
+            <input>
+                <soap:body parts="body" use="literal"/>
+            </input>
+            <output>
+                <soap:body parts="result" use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <binding name="exit-simpleIFBinding" type="tns:exit-simpleIF">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="sayHello">
+            <soap:operation soapAction="sayHello"/>
+            <input>
+                <soap:body parts="body" use="literal"/>
+            </input>
+        </operation>
+    </binding>
+    <service name="exit-simpleBindingService">
+        <port binding="tns:HelloDocElem2DocElemIFBinding" name="HelloDocElem2DocElemIFPort">
+            <soap:address location="http://localhost:12100/service/exit-simpleTrigger"/>
+        </port>
+        <port binding="tns:exit-simpleIFBinding" name="exit-simpleIFPort">
+            <soap:address location="http://localhost:12100/service/exit-simple"/>
+        </port>
+    </service>
+    <plnk:partnerLinkType xmlns:plnk="http://schemas.xmlsoap.org/ws/2004/03/partner-link/" name="HelloIFServiceLink">
+        <plnk:role name="HelloIFRole" portType="HelloIF"/>
+        <plnk:role name="exit-simpleIFRole" portType="exit-simpleIF"/>
+    </plnk:partnerLinkType>
+</definitions>

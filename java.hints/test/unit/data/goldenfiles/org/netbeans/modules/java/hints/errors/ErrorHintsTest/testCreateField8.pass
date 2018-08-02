@@ -1,0 +1,11 @@
+package org.netbeans.test.java.hints;
+
+import org.netbeans.test.java.hints.CreateField8.T;
+
+public class CreateField8<T> {
+    
+    public void test(T data) {
+        this.data = data;
+    }
+private T data;
+}

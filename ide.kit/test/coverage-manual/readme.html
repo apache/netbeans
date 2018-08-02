@@ -1,0 +1,98 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+    <head>
+        <title>EMMA Instrumentation for Manual Testing</title>
+        <style type="text/css">
+            body {
+                background-color: #ffffff;
+                font-size: 12px;
+                font-family: Verdana, "Verdana CE",  Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+                color: #000000;
+            }
+        </style>
+    </head>
+    <body>
+        <h2>How to instrument IDE for manual testing</h2>
+        Ant and JDK must be installed on your system before you can run coverage tests.
+        <p>
+        Before starting be sure you have xtest module checked out and folder
+        xtest/external contains emma.jar and emma_ant.jar, those files can be downloaded
+        from <a href="http://emma.sourceforge.net/downloads.html">EMMA download site</a>
+        (last 2.0.x version of EMMA).
+        Or you can use script that downloads emma libraries for you, in that case you
+        need to provide proxy settings on command line when executing Ant script:<br/>
+        <code>-Dproxy.host=[proxy_host] -Dproxy.port=[proxy_port]</code>
+        </p>
+        
+        <h4>User defined properties</h4>
+        There are couple of properties that are needed to be correctly set in 
+        build.xml file before you can instrument IDE. Those properties are:
+        <dl>
+            <dt><code><b>jdkhome</b></code> 
+                <dd>Location of JDK that will be used to run instrumented IDE
+            <dt><code><b>netbeans.dir</b></code>
+                <dd>NetBeans installation dir, IDE on this location will be copied 
+                over and instrumented (default value: nbbuild/netbeans)
+            <dt><code><b>included.packages</b></code>
+                <dd>List of packages that will be instrumented
+                (default value: org.netbeans.*, org.openide.*, org.openidex.*, 
+                javax.jmi.*, org.apache.tools.ant.module.*)
+            <dt><code><b>coverage.runtime.file</b></code>
+                <dd>Name of the file for writing EMMA runtime coverage data for given session 
+                (default value: coverage.ec)
+        </dl>
+        
+        <h3>Important notes</h3>
+        When performing tests on instrumented IDE:
+        <ul>
+            <li><b>Do not run more instances</b> of NetBeans with the same .ec file (file will be corrupted)
+            <li>When doing extensive long tests make sure you log <b>each session into separate .ec file</b>
+        </ul>
+        Use following system property to extend available memory for Ant process 
+        <code><b>ANT_OPTS=Xmx512m</b></code> when generating report, 
+        otherwise OutOfMemoryError will be thrown.
+        
+        <h3>Targets</h3>
+        List of main Ant targets:
+        <dl>
+            <dt><code><b>instrument-ide</b></code>
+                <dd>Executes all necessary subtargets and creates instrumented IDE
+            <dt><code><b>run-ide</b></code>
+                <dd>Runs instrumented IDE
+            <dt><code><b>clean-ide</b></code>
+                <dd>Deletes instrumented IDE, with userdir
+            <dt><code><b>clean-emma</b></code>
+                <dd>Deletes EMMA data files
+            <dt><code><b>clean-report</b></code>
+                <dd>Deletes EMMA report
+            <dt><code><b>clean-userdir</b></code>
+                <dd>Deletes IDE uderdir
+            <dt><code><b>real-clean</b></code>
+                <dd>Runs all clean targets above
+            <dt><code><b>emma-report</b></code>
+                <dd>Creates report from all available EMMA data files
+        </ul>
+        
+  </body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+  <head>
+    <title>org.netbeans.spi.editor.caret</title>
+  </head>
+  <body>
+
+  <p>
+  The Editor Caret SPI contains interface(s) to be implemented by clients
+  in order to manipulate the editor carets.
+  </p>
+  
+  <h3>Key parts of the SPI</h3>
+  
+  <p>
+  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/caret/CaretMoveHandler.html">CaretMoveHandler</a></code>
+  allows to implement a transaction that will move individual carets or change their selections.
+  <br>
+  The following code shows how all carets are moved to the
+  end of the word they are currently on.  
+  </p>
+  <pre>
+  <code>
+    editorCaret.moveCarets((CaretMoveContext context) -> {
+        for (CaretInfo ci : context.getOriginalCarets()) {
+            Position pos = target.getDocument().createPosition(Utilities.getWordEnd(target, ci.getDot()));
+            context.setDot(ci, pos);
+        }
+    });
+  </code>
+  </pre>
+  
+  <h3><a name="navigation-filters">Navigation Filters</a></h3>
+  <p>
+  A boilerplate <a href="CascadingNavigationFilter.html">CascadingNavigationFilter</a> is provided to 
+  make implementation of <a href="@JDK@/javax/swing/text/NavigationFilter.html">NavigationFilters</a> easier. The boilerplate
+  remembers the preceding filter and will delegate to it. If you create a subclass, you may call <code>super</code> methods 
+  <code>moveDot</code> and <code>setDot</code> to delegate to that previous filter and ultimately perform the action. Calling
+  methods of <a href="@JDK@/javax/swing/text/NavigationFilter.FilterBypass.html">FilterBypass</a> will perform the caret action
+  directly.
+  </p>
+  <p>
+  The filter can find out the <a href="../../../api/editor/caret/package-summary.html#movement-origins">origin of the movement</a> or
+  the <a href="../../../api/editor/caret/CaretInfo.html"><code>CaretInfo</code> for actual caret</a> being moved. The 
+  <a href="@JDK@/javax/swing/text/NavigationFilter.FilterBypass.html">FilterBypass</a> implementation passed to 
+  <a href="@JDK@/javax/swing/text/NavigationFilter.html">NavigationFilter</a> can be downcasted to <a href="NavigationFilterBypass.html">NavigationFilterBypass</a>,
+  which provides this extended information.
+  </p>
+  <h3><a name="compatibilty">Backwards compatibility</a></h3>
+  
+  <h3><a name="usecases">Use cases</a></h3>
+  <p>
+  Use cases are shown in javadoc documentation of particular methods.
+  </p>
+  
+  </body>
+</html>

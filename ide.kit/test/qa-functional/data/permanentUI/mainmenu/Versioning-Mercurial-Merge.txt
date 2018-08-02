@@ -1,0 +1,2 @@
+                  Merge              > Merge Changes        M
+                                       Resolve Conflicts    R

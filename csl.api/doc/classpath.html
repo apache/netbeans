@@ -1,0 +1,96 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+    <body>
+        <h3>GSF Classpath</h3>
+        <p>
+            <blockquote style="background-color: #ffdddd; color: black; padding: 20px; border: solid 1px black">
+                WARNING: GSF has its own Classpath copy of the Java one, slightly renamed
+                and in a different package. However, in NetBeans 6.5, the Java Classpath
+                module has been moved from the java cluster into the IDE cluster and should
+                be generic. I plan to retrofit GSF to use the standard Classpath package
+                as soon as possible.
+            </blockquote>
+            <blockquote style="background-color: #ffdddd; color: black; padding: 20px; border: solid 1px black">
+                NOTE 2: The class path and project integration aspects of GSF are really half baked
+                at this point. It works, but it's not pretty, and this is an area that I <b>know</b>
+                will need to change and I plan to do something about it.
+            </blockquote>
+        </p>
+        <p>
+            The GSF classpath API sits in its own module and its own package: <code>gsfpath.api</code>.
+            It's a pretty small API. All it boils down to this this:  For each project type
+            (Ruby Project, Web Project for JavaScript, Groovy project for Groovy, etc.) you have
+            to tell GSF where your sources are. The way you do this is to register a
+            "project open hook", a callback provided by the project system which will call custom
+            code after the project is opened.  In the project open hook, you register a series
+            of directories with GSF. That's really the gist of it.
+        </p>
+        <p>
+            Unfortunately, it's not the 3 lines it sounds like. What you actually have to register
+            are "Classpath" objects, one for each source root, and one for each library.
+            A classpath has both a directory/url, as well as a "type", such as "SOURCE" or "BOOT".
+            A "SOURCE" classpath is exactly what you expect - it's a root directory for sources
+            in your project. "BOOT" on the other hand designates a library. As explained in the
+            <a href="indexer.html">indexing</a> document, these can be treated differently by
+            the code. Some features may only want to search local project sources, and so on.
+        </p>
+        <p>
+            What you end up doing is something like the following (I will use the Rails project
+            as an example):
+            <ol>
+                <li>Implement an implementation of a ClasspathProvider 
+                    (org.netbeans.modules.gsfpath.spi.classpath.ClassPathProvider).
+                    In the Rails case, this is the ClassPathProviderImpl class in ruby.railsproject.
+                    I will describe this class in more detail below.
+                </li>
+                <li> Register the ClassPathProviderImpl in your project's lookup.
+                <li> In your project's <code>open</code> hook, register your class path
+                    with the global path registry, like this:
+                    <pre>
+    ClassPathProviderImpl cpProvider = getLookup().lookup(ClassPathProviderImpl.class);
+    GlobalPathRegistry.getDefault().register(ClassPath.BOOT, cpProvider.getProjectClassPaths(ClassPath.BOOT));
+    GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, cpProvider.getProjectClassPaths(ClassPath.SOURCE));
+                    </pre>             
+                </li>
+                <li>
+                    Similarly. in your project's <code>close</code> hook, unregister the paths:
+                    <pre>
+    ClassPathProviderImpl cpProvider = getLookup().lookup(ClassPathProviderImpl.class);
+    GlobalPathRegistry.getDefault().unregister(ClassPath.BOOT, cpProvider.getProjectClassPaths(ClassPath.BOOT));
+    GlobalPathRegistry.getDefault().unregister(ClassPath.SOURCE, cpProvider.getProjectClassPaths(ClassPath.SOURCE));
+                    </pre>
+                </li>
+            </ol>
+            
+            That's basically it. So the only trick here is implementing the <code>ClasspathProvider</code>.
+            Take a look at the one in the Rails project, or the Web project (<code>web.project</code>), etc.
+            It's not rocket science. You just have to do whatever it takes for the specific project type
+            to look up the source roots, decide whether all of these are relevant for your file type
+            (for example, in Web projects, I only register the web folder for JavaScript, not the src folder
+            which just contains Java code) and then produce classpath implementation objects for these.
+            There are utility methods to help.
+        </p>
+        <p>
+            As I warned in the red box above, this will probably change soon.
+        </p>
+    </body>
+</html>

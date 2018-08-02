@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>New Entity Classes from Database Wizard: Mapping Options</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.j2ee.persistence.wizard.fromdb.MappingOptionsPanel" name="org.netbeans.modules.j2ee.persistence.wizard.fromdb.MappingOptionsPanel"></a></p>
+<div id="NBCSH5050"><!-- infolevel="all" infotype="General" --><a id="sthref749" name="sthref749"></a>
+<h1>New Entity Classes from Database Wizard: Mapping Options</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>In this page of the wizard you can set options for configuring generated annotation elements. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2778">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t4">Element</th>
+<th align="left" valign="bottom" id="r1c2-t4">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t4" headers="r1c1-t4">
+<p>Association Fetch</p>
+</td>
+<td align="left" headers="r2c1-t4 r1c2-t4">Select the fetch element to add to the relationship annotations. You can select <b>default</b>, <b>eager</b> or <b>lazy</b>. When <b>default</b> is selected (<b>default</b> is selected by default), no fetch element is added to the relationship annotations.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t4" headers="r1c1-t4">
+<p>Collection Type</p>
+</td>
+<td align="left" headers="r3c1-t4 r1c2-t4">Select the collection type for OneToMany and ManyToMany CMR fields.
+<p>You can select <code dir="ltr">java.util.Collection</code>, <code dir="ltr">java.util.List</code> or <code dir="ltr">java.util.Set</code>. <code dir="ltr">java.util.Collection</code> is selected by default.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t4" headers="r1c1-t4">
+<p>Fully Qualified Database Table Names</p>
+</td>
+<td align="left" headers="r4c1-t4 r1c2-t4">When selected, catalog and schema elements are added to the <code dir="ltr">@Table</code> annotation. This option is deselected by default.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t4" headers="r1c1-t4">
+<p>Attributes for Regenerating Database Tables</p>
+</td>
+<td align="left" headers="r5c1-t4 r1c2-t4">When selected, <code dir="ltr">nullable</code> (when it is false), <code dir="ltr">length</code> (for String type), <code dir="ltr">precision</code> and <code dir="ltr">scale</code> (for decimal type) are added to the <code dir="ltr">@Column</code> annotation.
+<p>Unique constraints are also added to the <code dir="ltr">@Table</code> annotation when selected. This option is deselected by default..</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t4" headers="r1c1-t4">
+<p>Use Column Names in Relationships</p>
+</td>
+<td align="left" headers="r6c1-t4 r1c2-t4">When selected, when a table references a foreign key, the field name is generated according to the name of the column in the table. For example, if the table <code dir="ltr">customer</code> has a column named <code dir="ltr">zip</code> that is mapped to a column named <code dir="ltr">zip_code</code> in table <code dir="ltr">micromarket</code>, the generated field name will be <code dir="ltr">zip</code>. This option is selected by default.
+<p>When this option is deselected, the field name is generated according to the name of the table that contains the foreign key. In the example above, the generated field name will be <code dir="ltr">microMarket</code>.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t4" headers="r1c1-t4">
+<p>Use Defaults if Possible</p>
+</td>
+<td align="left" headers="r7c1-t4 r1c2-t4">When selected, only annotations that modify the default behavior or attributes will be generated.
+<p>Selecting this option can reduce the number of unnecessary annotations that are generated. This option is deselected by default.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t4" headers="r1c1-t4">
+<p>Generate Fields for Unresolved Relationships</p>
+</td>
+<td align="left" headers="r8c1-t4 r1c2-t4">When selected, basic generic fields are generated for the fields in a relationship that reference fields or entities that are missing or cannot be resolved. The basic fields that are generated might not accurately represent the columns in the tables because of the missing data.
+<p>When deselected, fields in a relationship are not generated if any of the fields or entities in the relationship are missing. This option is deselected by default.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH5058" name="NBCSH5058"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2773">
+<param name="text" value="<html><u>&quot;Creating an Entity Class&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

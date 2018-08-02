@@ -1,0 +1,62 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+<body>
+<h2>I18N Wizards</h2>
+
+This package contains two wizards: Internationalization
+wizard ("IW") and Test Internationalization wizard ("TIW").
+Implementation is based on regular expressions ("RE") matching.
+
+<p>
+IW gathers from a user a set of files to internationalize
+and then identifies using RE hardcoded strings and prepares
+in-memory map of <code>HardCodedString</code>s to <code>I18nString</code>s.
+User can customize it (remove a mapping or customize default
+<code>I18nString</code>).
+
+<p>
+TIW gathers from a user a set of files that are RE scanned for
+internationalized strings. It extracts internationalizizes string keys
+and their bundles (actually user must identify bundles, i.e. one
+file cannot use more bundles) and then it scans bundles for the
+keys. Any missing keys are reported.
+
+<h3>Code Paths</h3>
+IW <code>I18nWizardAction</code> creates <code>I18nWizardDesctiptor</code>
+populated by <code>SourceWizardPanel</code>, <code>ResourceWizardPanel</code>,
+<code>AdditionalWizardPanel</code> and <code>HardStringWizardPanel</code> then
+shows it.
+<p>
+TIW <code>I18nTestWizardAction</code> creates <code>I18nWizardDesctiptor</code>
+populated by <code>SourceWizardPanel.Panel(true)</code>, 
+<code>ResourceWizardPanel.Panel(true)</code>
+and <code>TestStringWizardPanel</code> then shows it.
+<p>
+Some panels are self swapping to <code>ProgressWizardPanel</code> see 
+<code>doLongTimeChanges()</code> methods.
+
+<h3>Data Flow</h3>
+All wizard gathered data are passed using a map class created by
+<code>Util</code>. Map content is transferred using wizard settings.
+
+</body>
+</html>

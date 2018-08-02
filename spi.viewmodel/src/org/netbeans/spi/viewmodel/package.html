@@ -1,0 +1,107 @@
+<!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+  <meta name="GENERATOR"
+ content="Mozilla/4.76 [en] (Windows NT 5.0; U) [Netscape]">
+  <title>View Model API</title>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+  <meta content="Jan Jancura" name="author">
+</head>
+<body style="color: rgb(0, 0, 0);" link="#0000ee" alink="#0000ee"
+ vlink="#551a8b">
+Defines API for sharing of Tree Table View. This API has been designed
+for sharing Debugger Views (like Callstack View) among different
+modules. But it does not depends on debugger itself. <br>
+<h2>Main features:</h2>
+<ul>
+  <li>One TreeView, or TreeTableView can be shared among different
+modules. Different modules can add different types of nodes to one view.</li>
+  <li>Hierarchy produced by one module can be changed by another one.<br>
+  </li>
+  <li>Allows to split UI and implementation to different modules.</li>
+  <li>Performance and memory consumption of this model should be much
+better than Node based models.</li>
+  <li>You do not need one instance of some class (Node) per one node
+visible in view. And you do not need one class per one node type.<br>
+  </li>
+</ul>
+<h2>How to use View Model API<br>
+</h2>
+Following example shows how to use viewmodel API to create simple files
+view.<br>
+<h3>Step 1.</h3>
+In the first step we should create plain tree model (TreeModel).<br>
+<pre style="background-color: rgb(255, 255, 102);">public class TreeModelImpl implements TreeModel {<br><img
+ src="doc-files/TreeModelExample1.JPG" title=""
+ alt="Tree Model Example 1" style="width: 401px; height: 355px;"
+ align="right"><br>    public Object getRoot () {<br>        return ROOT;<br>    }<br>    <br>    public Object[] getChildren (Object parent, int from, int to) {<br>        if (parent == ROOT)<br>            return File.listRoots ();<br>        return ((File) parent).listFiles ();<br>    }<br>    <br>    public boolean isLeaf (Object node) {<br>        if (node == ROOT)<br>            return false;<br>        return ((File) node).isFile ();<br>    }<br>}<br></pre>
+And create a TreeView for this model:
+<pre style="background-color: rgb(255, 255, 102);">    JComponent treeView = Models.createView (<br>        Models.createCompoundModel (<br>	    Arrays.asList (new Model[] {<br>                new TreeModelImpl (),      // TreeModel<br>                new ArrayList ()           // list of ColumnModel s<br>            })<br>        )<br>    );</pre>
+<h3>Step 2.</h3>
+NodeModel implementation can define name, icon and tooltip for tree
+nodes produced by TreeModel.<br>
+<pre style="background-color: rgb(255, 255, 102);">public class NodeModelImpl implements NodeModel {<img
+ src="doc-files/TreeModelExample2.JPG" title=""
+ alt="Tree Model Example 2" style="width: 355px; height: 329px;"
+ align="right"><br><br>    public String getDisplayName (Object node) {<br>        if (node == ROOT) return "Name";<br>        String name = ((File) node).getName ();<br>        if (name.length () &lt; 1) return ((File) node).getAbsolutePath ();<br>        return name;<br>    }<br>    <br>    public String getIconBase (Object node) {<br>        if (node == ROOT) return "folder";<br>        if (((File) node).isDirectory ()) return "folder";<br>        return "file";<br>    }<br>    <br>    public String getShortDescription (Object node) {<br>        if (node == ROOT) return "Name";<br>        return ((File) node).getAbsolutePath ();<br>    }<br>}</pre>
+<h3>Step 3.</h3>
+NodeActionsProvider defines set of Actions for each node, and default
+action..<br>
+<pre style="background-color: rgb(255, 255, 102);">public class NodeActionsProviderImpl implements NodeActionsProvider {<br><br>    public Action[] getActions (final Object node) {<br>        return new Action [] {<br>            new AbstractAction ("Open") {<br>                public void actionPerformed (ActionEvent e) {<br>                    performDefaultAction (node);<br>                }<br>            },<br>            new AbstractAction ("Delete") {<br>                public void actionPerformed (ActionEvent e) {<br>                    ((File) node).delete ();<br>                }<br>            }<br>        };<br>    }<br>    <br>    public void performDefaultAction (Object node) {<br>        try {<br>            JFrame f = new JFrame ("View");<br>            f.getContentPane ().add (new JEditorPane (((File) node).toURL ()));<br>            f.pack ();<br>            f.show ();<br>        } catch (Exception e) {<br>            e.printStackTrace();<br>        }<br>    }<br>}</pre>
+<br>
+<div style="text-align: center;"><img
+ src="doc-files/TreeModelExample3.JPG" title=""
+ alt="Tree Model Example 3" style="width: 642px; height: 438px;"><br>
+</div>
+<h3>Step 4.</h3>
+TableModel and ColumnModel adds support for additional columns to tree
+view.<br>
+<pre style="background-color: rgb(255, 255, 102);">public class TableModelImpl implements TableModel {<br><br>    <br>    public Object getValueAt (Object node, String columnID) {<br>        try {<br>            if (node == ROOT) return null;<br>            if (columnID.equals ("sizeID")) {<br>                if (((File) node).isDirectory ()) return "&lt;dir&gt;";<br>                return "" + new FileInputStream ((File) node).getChannel ().size ();<br>            }<br>        } catch (Exception e) {<br>            e.printStackTrace ();<br>        }<br>        return "";<br>    }<br>    <br>    public boolean isReadOnly (Object node, String columnID) {<br>        return true;<br>    }<br>    <br>    public void setValueAt (Object node, String columnID, Object value) {<br>    }<br>}</pre>
+And initialization of columns looks like:<br>
+<pre style="background-color: rgb(255, 255, 102);">    ArrayList columns = new ArrayList ();<img
+ src="doc-files/TreeModelExample4.JPG" title=""
+ alt="Tree Model Example 4" style="width: 384px; height: 278px;"
+ align="right"><br>    columns.add (new ColumnModel () {<br>        public String getID () { return "sizeID"; }<br>        public String getDisplayName () { return "size"; }<br>        public Class getType () { return String.class; }<br>    });<br>    JComponent treeTableView = Models.createView (<br>        Models.createCompoundModel (<br>            Arrays.asList (new Model[] {<br>                new TreeModelImpl (),           // TreeModel<br>                new NodeModelImpl (),           // NodeModel<br>                new TableModelImpl (),          // TableModel<br>                new NodeActionsProviderImpl (), // NodeActionsProvider<br>                columns                         // list of ColumnModel s<br>            })<br>        )<br>    );<br><br></pre>
+<br>
+<br>
+<br>
+<h3>How to use Filters</h3>
+We can use filters to modify content of tree table view created in our
+example.<br>
+<ul>
+  <li><span style="font-weight: bold;">TreeModelFilter:</span> this
+filter can be used to hide fome files, to add some virtual filesystems,
+to add content of zip files to original tree, and so on.</li>
+  <li><span style="font-weight: bold;">NodeModelFilter</span>: can be
+used to change names, icons or tooltips for existing files.</li>
+  <li><span style="font-weight: bold;">TableModelFilter</span>: can be
+used to modify content of columns.</li>
+  <li><span style="font-weight: bold;">NodeActionsProviderFilter</span>:
+can be used to add a new actions to pup-up menus, of to redefine
+default action.</li>
+</ul>
+All these actions can be done in some external module.<br>
+<br>
+</body>
+</html>

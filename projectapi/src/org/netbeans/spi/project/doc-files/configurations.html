@@ -1,0 +1,350 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><!-- -*- xhtml -*- -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Project Configurations</title>
+<link rel="stylesheet" type="text/css" href="../../../../../prose.css"/>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+<meta name="topic" content="projects"/>
+<meta name="type" content="proposal"/>
+<meta name="audience" content="nbdeveloper"/>
+<meta name="description" content="Description of (currently proposed) system of project configurations."/>
+<meta name="author" content="jglick@netbeans.org"/>
+<meta name="indexed" content="y"/>
+</head>
+<body>
+
+<h1>Project Configurations</h1>
+<dl>
+ <dt><em>Version:</em></dt>
+ <dd><!-- hhmts start -->May  4, 2007<!-- hhmts end --></dd>
+ <dt><em>Author:</em></dt>
+ <dd>Jesse Glick</dd>
+ <dt><em>Abstract:</em></dt>
+ <dd>
+  <p>
+   NetBeans 4.0 introduced a project system that initially defined only project-wide build and run actions;
+   per-file build and run actions were added during the 4.0 development cycle. Project build and run options,
+   however, remained project-wide in the common project types such as <code>j2seproject</code> and thus were not
+   meaningful for per-file actions. Many users objected particularly to the inability to separately configure
+   command-line application arguments for classes with main methods inside a project.
+  </p>
+  <p>
+   The project system did not <em>prevent</em> project types from adding such facilities, and in fact the
+   NetBeans Mobility Pack’s Java ME project type soon provided a rich project configuration system used to
+   control a variety of build and run characteristics (such as the device emulator to use). The newer CND
+   (C/C++/native) project type also uses configurations.
+  </p>
+  <p>
+   This proposal tries to address these limitations (probably for NetBeans 6.0). An SPI with matching GUI is
+   introduced to permit a shared UI gesture for changing a project’s configuration. Additionally, the Java SE
+   project type (<code>j2seproject</code>) is modified to include run configurations.
+  </p>
+ </dd>
+</dl>
+
+<h1>Motivation</h1>
+<p>
+ Basic goals include:
+</p>
+<ol>
+ <li>
+  <p>
+   Some kind of configurations for <code>j2seproject</code>s, tracked in
+   <a href="https://netbeans.org/issues/show_bug.cgi?id=49636">issue #49636</a> with many votes.
+   See also the <a href="http://wiki.netbeans.org/RunConfigurations49636">wiki page</a>.
+  </p>
+  <p>
+   The most frequently requested ability, considered to be a functional regression in NB 4.0 from 3.x, is
+   <dfn>per-class application args</dfn> (passed as a <code>String[]</code> to a <code>main</code> method). This
+   is adopted as a primary goal for this proposal.
+  </p>
+  <p>
+   Some people have requested the ability to customize other run parameters on a per-class basis, e.g. JVM
+   startup parameters. This is considered a secondary goal, but the proposed implementation does address it.
+  </p>
+  <p>
+   Others have requested build configurations, e.g. debug vs. release builds. This is also considered a
+   secondary goal, since the Java language permits little variation in build semantics anyway, and most
+   interesting production release targets (e.g. creating a Pack200 JAR) can process binaries built for
+   development purposes. The proposed implementation permits build configurations at the Ant level but provides
+   no GUI support for them.
+  </p>
+ </li>
+ <li>
+  <p>
+   A common SPI for selecting configurations across project types, tracked in
+   <a href="https://netbeans.org/issues/show_bug.cgi?id=49652">issue #49652</a>. The proposed
+   implementation addresses this, including a common GUI for switching configuration that can work with
+   different project types.
+  </p>
+  <p>
+   It is not a goal for the common GUI to work with the old APIs in Java ME and CND projects, but these should
+   be easily migrated to the new SPI.
+  </p>
+ </li>
+</ol>
+
+<h1>API Change Overview</h1>
+<p>
+ Several API changes are proposed.
+</p>
+
+<h2>Project Configuration SPI</h2>
+<p>
+ An SPI for defining configurations available in a project is needed. This SPI is adopted from an SPI already
+ used in the Java ME project type (and copied to the CND project type), with only minor changes.
+</p>
+<pre>
+package org.netbeans.spi.project;
+public interface ProjectConfigurationProvider {
+    String PROP_CONFIGURATION_ACTIVE;
+    String PROP_CONFIGURATIONS;
+    Collection&lt;? extends ProjectConfiguration&gt; getConfigurations();
+    ProjectConfiguration getActiveConfiguration();
+    void setActiveConfiguration(ProjectConfiguration) throws IllegalArgumentException, IOException;
+    boolean configurationsAffectAction(String command);
+    boolean hasCustomizer();
+    void customize();
+    void addPropertyChangeListener(PropertyChangeListener);
+    void removePropertyChangeListener(PropertyChangeListener);
+}
+public interface ProjectConfiguration {
+    String getDisplayName();
+}
+package org.netbeans.spi.project.ui.support;
+public class CommonProjectActions {
+    // ...
+    public static Action setProjectConfigurationAction();
+}
+</pre>
+<p>
+ Some notes:
+</p>
+<ol>
+ <li>
+  <p>
+   The <code>hasCustomizer</code> and <code>customize</code> methods were added from the original SPI.
+  </p>
+ </li>
+ <li>
+  <p>
+   <code>setActiveConfiguration</code> can throw meaningful exceptions, unlike in the original SPI.
+  </p>
+ </li>
+ <li>
+  <p>
+   <code>getConfigurations</code> is generified, unlike in the original SPI.
+  </p>
+ </li>
+ <li>
+  <p>
+   The use of interfaces rather than abstract classes is not expected to pose a threat to the evolution of this
+   SPI. Replacement interfaces can be freely introduced since the SPI is permitted to be called only from fixed
+   GUI infrastructure.
+  </p>
+ </li>
+</ol>
+
+<h2>Ant Project SPI Enhancements</h2>
+<p>
+ Two API additions in the Ant Project SPI are desirable to permit <code>j2seproject</code>’s
+ <code>PropertyEvaluator</code> to reflect the active configuration accurately, without duplicating a great deal
+ of subtle code already written and tested in support of
+ <code>AntProjectHelper.getStandardPropertyEvaluator()</code>:
+</p>
+<pre>
+package org.netbeans.spi.project.support.ant;
+public class PropertyUtils {
+    // ...
+    public static PropertyProvider userPropertiesProvider(PropertyEvaluator, String, File);
+    public static abstract class DelegatingPropertyProvider implements PropertyProvider {
+        protected DelegatingPropertyProvider(PropertyProvider);
+        protected final void setDelegate(PropertyProvider);
+        public final Map getProperties();
+        public final void addChangeListener(ChangeListener);
+        public final void removeChangeListener(ChangeListener);
+    }
+}
+</pre>
+
+<h2>Java SE Project Metadata</h2>
+<p>
+ A metadata format change is needed in <code>j2seproject</code> to load configurations.
+</p>
+<ol>
+ <li>
+  <code>nbproject/private/config.properties</code> stores the currently active configuration in a property
+  <code>config</code>. If <code>${config}</code> is undefined, the active configuration is considered to be a
+  <dfn>default</dfn> configuration.
+ </li>
+ <li>
+  <code>nbproject/configs/<i>CONFIGNAME</i>.properties</code> signals that a configuration with the code name
+  <i>CONFIGNAME</i> exists. It may optionally define a property named <code>$label</code> giving a
+  human-readable display name for the configuration. Any other properties defined in the configuration are
+  applied to the project when that configuration is active and override defaults in
+  <code>nbproject/project.properties</code>.
+ </li>
+ <li>
+  <code>nbproject/private/configs/<i>CONFIGNAME</i>.properties</code> is optional and can contain per-user
+  settings for the indicated configuration. Any such properties override defaults in
+  <code>nbproject/private/private.properties</code>.
+ </li>
+</ol>
+<p>
+ There is no support for <dfn>orthogonal</dfn> configurations, for example a build configuration and a run
+ configuration active simultaneously, though a configuration could hold either build-oriented or run-oriented
+ properties or both. Neither Java ME nor CND projects ever apparently needed orthogonal configurations, so this
+ was not considered a goal.
+</p>
+<p>
+ There is no support for one configuration <dfn>inheriting</dfn> default settings from another, except in that
+ all named configurations inherit defaults from project-wide settings. (The default configuration behaves like
+ an empty configuration.)
+</p>
+
+<h1>UI Overview</h1>
+<p>
+ The proposed changes affect both the global and <code>j2seproject</code> GUIs.
+</p>
+
+<h2>Global UI Changes</h2>
+<p>
+ These UI elements are borrowed from the Java ME and CND project types with only minor modifications.
+</p>
+<p>
+ A combo box for switching the active configuration is added to the <b>Build</b> toolbar. It is enabled iff a
+ main project is set which defines a <code>ProjectConfigurationProvider</code> and lists the available
+ configurations in alphabetical order. If <code>hasCustomizer()</code>, a final entry <b>Customize…</b> is added
+ which if selected just invokes <code>customize()</code>.
+</p>
+<p>
+ Main-project-specific toolbar buttons are given an extra combo-box-like dropdown menu when a main project is
+ set, it has a <code>ProjectConfigurationProvider</code> with multiple configurations available,
+ and <code>configurationsAffectAction</code> returns
+ true for that command. The menu items correspond to available configurations; when selected, an item runs the
+ project action once with that configuration in effect without changing the active configuration. Java SE
+ projects enable this mode for the <b>Run Main Project</b> and <b>Debug Main Project</b> buttons.
+</p>
+<p>
+ A menu item <b>Set Main Project Configuration</b> is also added to the <b>Build</b> menu with similar
+ semantics.
+</p>
+
+<h2>Java SE Project UI Changes</h2>
+<p>
+ A menu item <b>Set Configuration</b> is added to the context menu of <code>j2seproject</code>s to permit the
+ active configuration to be changed even if the project is not the main project. It is otherwise similar to the
+ main menu item.
+</p>
+<p>
+ The <code>j2seproject</code> always defines a <b>&lt;default&gt;</b> configuration representing project-wide
+ settings, and additionally defines one configuration per entry in <code>nbproject/configs/*.properties</code>.
+ (A project initially has no configurations.) The <b>Customize…</b> entry simply displays the <b>Run</b> panel
+ of the project <b>Properties</b> dialog.
+</p>
+<p>
+ This panel is modified to include a <b>Configuration</b> combo box listing available configurations (selection
+ tracks the active configuration for the project). The other text fields in the panel apply to the selected
+ configuration. A <b>New…</b> button prompts for a name for a new profile and adds it to the list (also
+ selecting it). A <b>Delete</b> button removes the selected profile (disabled when <b>&lt;default&gt;</b> is
+ selected). Properties set in the default configuration are also displayed in other configurations unless
+ overridden; properties are stored in other configurations only if they <em>differ</em> from the value in the
+ default configuration, in which case their corresponding labels are also displayed in boldface.
+</p>
+
+<h1>Other Possibilities</h1>
+<p>
+ Possible enhancements, plausible but unlikely enhancements, and open questions.
+</p>
+
+<ol>
+ <li>
+  <p>
+   Java EE project types are likely to want to define configurations, perhaps for selecting application servers
+   or web browsers to test against. Since these changes would not be needed until NB 6.0, they could be deferred
+   until after 5.5 work is complete, so long as nothing in the current proposal seems incompatible with the
+   expected changes.
+  </p>
+ </li>
+ <li>
+  <p>
+   There are no plans to use configurations in NetBeans module and suite project types.
+  </p>
+ </li>
+ <li>
+  <p>
+   Adding GUI support for making some or all of the remaining <code>j2seproject</code> properties
+   configuration-specific would probably not be difficult if it is found to be desirable. An add-on module could
+   also provide a GUI to mark certain properties as configuration-specific, though it could not integrate well
+   with the existing <b>Properties</b> dialog.
+  </p>
+ </li>
+ <li>
+  <p>
+   <code>j2seproject</code> could directly permit associating arguments with classes run using <b>Run File</b>.
+   A third-party module exists which does just this. While simple and perhaps enough for many people, the UI is
+   different from that of the “main” class in the project; other parameters (such as JVM arguments) would need
+   to be handled separately; there would be no evolution path to add build or other kinds of configurations; and
+   the disparity with the UI of Java ME and CND projects would remain.
+  </p>
+ </li>
+ <li>
+  <p>
+   Java ME projects use a somewhat different storage format for configurations. They keep all the data in
+   <code>project.properties</code> and <code>private.properties</code>, but prefix configuration-specific
+   property names with the prefix <code>configs.<i>CONFIGNAME</i>.</code> and use Ant filter chains to strip off
+   the prefix when loading. This style also works well and avoids the need for extra properties files, although
+   it is a bit trickier in <code>build-impl.xml</code> and makes it less obvious which configurations exist in a
+   given project. (Configurations are listed in <code>project.xml</code> for <code>j2meproject</code>s.) Would
+   an inconsistency in storage format between <code>j2seproject</code> and <code>j2meproject</code> be a
+   potential problem? Would the other style be preferable for <code>j2seproject</code> for independent reasons?
+  </p>
+ </li>
+ <li>
+  <p>
+   Is a public support SPI needed for configuration storage in Ant-based projects?
+   <code>J2SEConfigurationProvider</code> is mostly generic, referring to <code>j2seproject</code>-specific code
+   only in <code>customize()</code>, so this could easily be made into a support SPI if desired. Of course this
+   question is dependent on the previous question about what storage format for configurations should be
+   recommended.
+  </p>
+ </li>
+ <li>
+  <p>
+   Loading and storing configuration-specific settings for the <b>Properties</b> dialog is a bit complex, and
+   not supported by the current <code>StoreGroup</code> SPI (cf. <code>J2SEProjectProperties</code>). Displaying
+   a configuration chooser in the <b>Properties</b> dialog and marking particular properties as belonging to the
+   currently selected configuration is also not trivial (cf. <code>CustomizerRun</code>). Assuming there were a
+   conventional storage format for configurations, it would be nice to also have an extension to
+   <code>StoreGroup</code> to mark certain properties as (potentially) configuration-specific, and perhaps even
+   to adjust a GUI display to make the elements switch themselves according to active configuration. However it
+   is not clear whether a configuration-sensitive storage SPI would be generally usable, as details of storage
+   for nontrivial properties like classpaths might still require project-type-specific logic; and a
+   configuration-sensitive GUI SPI could be even more difficult, especially without a standardized data binding
+   framework. So these enhancements are probably best left for a future release.
+  </p>
+ </li>
+</ol>
+
+</body>
+</html>

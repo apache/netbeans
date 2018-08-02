@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="typesMultSchemas" targetNamespace="http://j2ee.netbeans.org/wsdl/typesMultSchemas"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+    xmlns:tns="http://j2ee.netbeans.org/wsdl/typesMultSchemas" 
+    xmlns:plink="http://schemas.xmlsoap.org/ws/2004/03/partner-link/" 
+    xmlns:ns1="http://xml.netbeans.org/schema/newXMLSchema">
+    <documentation/>
+    <types>
+        <documentation/>
+        <xsd:schema targetNamespace="http://j2ee.netbeans.org/wsdl/typesMultSchemas" 
+            xmlns:tns="http://j2ee.netbeans.org/wsdl/typesMultSchemas" 
+            xmlns:sync="http://xml.netbeans.org/schema/SynchronousSample">
+           <xsd:import schemaLocation="../schemas/SynchronousSample.xsd" namespace="http://xml.netbeans.org/schema/SynchronousSample"/>
+        </xsd:schema>
+       <xsd:schema targetNamespace="http://j2ee.netbeans.org/wsdl/typesMultSchemas" 
+            xmlns:ns1="http://xml.netbeans.org/schema/newXMLSchema" 
+            xmlns:tns="http://j2ee.netbeans.org/wsdl/typesMultSchemas">
+          <xsd:import schemaLocation="../schemas/LoanRequestor.xsd" namespace="http://xml.netbeans.org/schema/newXMLSchema"/>
+       </xsd:schema>
+     </types>
+    <message name="goodWSDLImportedSchemaOperationRequest">
+        <part name="part1" type="xsd:string"/>
+    </message>
+    <message name="goodWSDLImportedSchemaOperationReply">
+        <part name="part1" type="xsd:string"/>
+    </message>
+    <portType name="goodWSDLImportedSchemaPortType">
+        <operation name="goodWSDLImportedSchemaOperation">
+            <input name="input1" message="tns:goodWSDLImportedSchemaOperationRequest"/>
+            <output name="output1" message="tns:goodWSDLImportedSchemaOperationReply"/>
+        </operation>
+    </portType>
+    <binding name="goodWSDLImportedSchemaBinding" type="tns:goodWSDLImportedSchemaPortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="goodWSDLImportedSchemaOperation">
+            <soap:operation/>
+            <input name="input1">
+                <soap:body use="literal" namespace="http://j2ee.netbeans.org/wsdl/goodWSDLImportedSchema"/>
+            </input>
+            <output name="output1">
+                <soap:body use="literal" namespace="http://j2ee.netbeans.org/wsdl/goodWSDLImportedSchema"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="goodWSDLImportedSchemaService">
+        <port name="goodWSDLImportedSchemaPort" binding="tns:goodWSDLImportedSchemaBinding">
+            <soap:address location="http://localhost:18181/goodWSDLImportedSchemaService/goodWSDLImportedSchemaPort"/>
+        </port>
+    </service>
+    <plink:partnerLinkType name="goodWSDLImportedSchemaPartner">
+        <!-- partnerLinkType are automatically generated when a new portType is added. partnerLinkType are used by BPEL processes. 
+In a BPEL process, a partner link represents the interaction between the BPEL process and a partner service. Each partner link is associated with a partner link type.
+A partner link type characterizes the conversational relationship between two services. The partner link type can have one or two roles.-->
+        <plink:role name="goodWSDLImportedSchemaPortTypeRole" portType="tns:goodWSDLImportedSchemaPortType"/>
+    </plink:partnerLinkType>
+</definitions>

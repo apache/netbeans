@@ -1,0 +1,7 @@
+OpenIDE-Module: org.netbeans.examples.debugger.delegating/1
+OpenIDE-Module-Localizing-Bundle: org/netbeans/examples/debugger/delegating/Bundle.properties
+OpenIDE-Module-Module-Dependencies: org.netbeans.api.debugger/1,
+  org.netbeans.api.debugger.jpda/1
+OpenIDE-Module-Specification-Version: 1.00
+OpenIDE-Module-Implementation-Version: @BUILD_NUMBER_SUBST@
+OpenIDE-Module-Public-Packages: -

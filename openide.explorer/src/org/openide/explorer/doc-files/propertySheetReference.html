@@ -1,0 +1,130 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+  <head>
+    <title>Property Sheet Reference</title>
+    <link rel="Stylesheet" href="../../../../prose.css" type="text/css" title="NetBeans Open APIs Style">
+  </head>
+  <body>
+<h1>Property Sheet Reference</h1>
+
+This document details a few ways in which the Property Sheet can be customized
+or affected by system properties, UI manager keys, non-normative hints from
+Nodes and such.
+
+<h2><a name="jvmflags">System properties that affect the behavior of the Property Sheet</a></h2>
+<p>Note that generally these flags may or may not be supported in
+future versions.  The following flags may be passed to the JVM
+in the form <code>runide -J-Dsome.property=true</code> which
+affect the user interface of the Property Sheet.  Generally they
+represent either cases where different applications have different
+requirements, or where there is some contention about which style
+is the most effective.
+<UL>
+<LI><b>netbeans.ps.noCustomButtons</b> - Do not display custom editor buttons
+    for properties unless the user has clicked the property to put it into
+    edit mode.  This mimics the behavior of the original Property Sheet, and
+    looks somewhat cleaner, but has the side effect that properties are not
+    automatically updated by clicking on a checkbox, and combo box
+    editors do not automatically open on the first click.</LI>
+<LI><b>netbeans.ps.forceRadioBoolean</b> - always use a radio button editor for
+    boolean/Boolean properties, instead of a checkbox</LI>
+<LI><b>netbeans.ps.noCheckboxCaption</b> - do not display a caption on checkbox 
+    boolean editors displayed in the Property Sheet</LI>
+<LI><b>netbeans.ps.hideSingleExpansion</b> - In sort-by-category mode, hide the
+    category expander for nodes that posess only one set of properties</LI>
+<LI><b>netbeans.ps.neverMargin</b> - Suppress the left margin of the property
+    sheet - less aesthetically pleasing, but useful on small displays</LI>
+<LI><b>netbeans.reusable.strictthreads</b> - diagnostic flag to force an
+    exception to be thrown if code attempts to force the Property Sheet to
+    paint from some thread other than the AWT event thread</LI>
+<LI><b>netbeans.ps.forcetabs</b> - debugging flag which forces the property
+    sheet to use tabs instead of expandable sets for all property sets</LI>
+</UL>
+</div>
+
+<h2><a name="uimanager">UIManager settings that affect Property Sheet display characteristics</a></h2>
+<div class="nonnormative">
+<p>The Property Sheet will look for a number of custom values in UIManager,
+which may be supplied to affect its appearance, either by a themes.xml file
+in the user directory, or by a custom look and feel.  It is not required that
+UIManager return non-null for any of these values - they are optional for
+enhancing the presentation of the Property Sheet:
+</p>
+<UL>
+<LI><b>Tree.altbackground</b> - an alternate Color to use for every other
+    line in the Property Sheet</LI>
+<LI><b>PropSheet.setBackground</b> - Background color for expandable sets.  If
+    not set, a color is derived from the default table background color.</LI>
+<LI><b>PropSheet.setBackground</b> - Background color for expandable sets when selected.  If
+    not set, a color is derived from the default table selection background color.</LI>
+<LI><b>netbeans.ps.rowheight</b> - An Integer specifying a fixed height for rows
+    in the Property Sheet, regardless of font size.  If not set, the height is
+    derived from the font size.</LI>
+<LI><b>netbeans.ps.iconmargin</b> - Integer pixel count to add to the left column 
+    margin in the Property Sheet</LI>
+<li><code>netbeans.ps.combohack</code>-Forces the combo box editor to use a 
+    heavyweight popup window, used to solve a problem with some window managers.</li>
+<li><code>netbeans.ps.forcetabs</code>-Force each property set to be displayed
+    in a separate tab (normally this is done only by providing a hint from
+    a PropertySet via getValue(&quot;tabName&quot;).</li>
+<li><code>netbeans.ps.nevertabs</code>-Disable use of tabs in the Property Sheet
+    even if the property set provides a tab name via the above mentioned hint</li>
+</UL>
+</div>
+
+<h2><a name="customps">Customization of PropertyPanel</a></h2>
+<div class="nonnormative">
+<P>The PropertyPanel component is a generic component which will display a 
+property editor for a single property - rather like a single cell of the 
+Property Sheet.  There are a few non-normative client properties which may
+be set on it to change its behavior, via <code>putClientProperty()</code>.</P>
+
+<ul>
+<li><code>radioButtonThreshold</code>-Integer - display a set of labelled
+    radio buttons instead of a combo box if the property editor returns less
+    than the specified number of tags from <code>PropertyEditor.getTags()</code></li>
+<li><code>suppressCustomEditor</code>-Do not display a custom editor button
+    even if the property's associated property editor supports one</li>
+<li><code>useLabels</code>-Use the property's display name as the label portion
+    of a checkbox boolean editor, if the property is boolean, so that there
+    is some indication of keyboard focus.  If radioButtonThreshold is in use
+    and a property panel will display radio buttons, this will also affect
+    whether a TitledBorder is used for the group of radio buttons.</li>
+</ul>
+</div>  
+
+<h2><a name="tabs">Using Tabs in a Property Sheet in a stand-alone application</a></h2>
+The Property Sheet can display different property sets in different tabs -
+all sets that return the same value from <code>PropertySet.getValue("tabName")</code>
+will be aggregated together on the same tab.
+<p>
+  
+To use this functionality in a
+standalone application, an implementation of <code>
+org.netbeans.modules.openide.explorer.TabbedContainerBridge</code> must
+be available via <code>Lookup.getDefault()</code>.  For an example, see
+<code>org.netbeans.core.windows.view.ui.tabcontrol.TabbedContainerBridgeImpl</code>.
+A non-functional implementation is provided if none is present via lookup,
+to enable unit testing.
+
+  </body>
+</html>

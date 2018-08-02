@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.0//EN" "http://www.netbeans.org/dtds/filesystem-1_0.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="System">
+            <file name="org-netbeans-modules-db-sql-editor-ui-actions-RunSQLAction.instance">
+                <!-- #128873 - to show icon in toolbar (keep in sync with RunSQLAction.ICON_PATH) -->
+                <attr name="iconBase" stringvalue="org/netbeans/modules/db/sql/editor/resources/runsql.png"/>
+            </file>
+            <file name="org-netbeans-modules-db-sql-editor-ui-actions-RunSQLSelectionAction.instance">
+                <attr name="iconBase" stringvalue="org/netbeans/modules/db/sql/editor/resources/runsql-partial.png"/>
+            </file>
+            <file name="org-netbeans-modules-db-sql-editor-ui-actions-SQLHistoryAction.instance">
+                <!-- #128873 - to show icon in toolbar (keep in sync with SQLHistoryAction.ICON_PATH) -->
+                <attr name="iconBase" stringvalue="org/netbeans/modules/db/sql/editor/resources/sql_history_16.png"/>
+            </file>
+            <file name="org-netbeans-modules-db-sql-editor-ui-actions-ToggleKeepOldResultTabsAction.instance"/>
+        </folder>
+    </folder>
+
+    <folder name="Shortcuts">
+        <file name="DS-E.shadow">
+            <attr name="originalFile" stringvalue="Actions/System/org-netbeans-modules-db-sql-editor-ui-actions-RunSQLAction.instance"/>
+        </file>
+        <file name="DAS-H.shadow">
+            <attr name="originalFile" stringvalue="Actions/System/org-netbeans-modules-db-sql-editor-ui-actions-SQLHistoryAction.instance"/>
+        </file>
+    </folder>
+
+    <folder name="Editors">
+        <folder name="text">
+            <folder name="x-sql">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.db.sql.editor.resources.Bundle"/>
+
+                <folder name="CompletionProviders">
+                    <file name="org-netbeans-modules-db-sql-editor-completion-SQLCompletionProvider.instance"/>
+                </folder>
+
+                <folder name="FoldManager">
+                    <file name="CustomFoldManager.instance">
+                	<attr name="position" intvalue="1200"/>
+                        <attr name="instanceOf" stringvalue="org.netbeans.spi.editor.fold.FoldManagerFactory"/>
+                        <attr name="instanceCreate" methodvalue="org.netbeans.api.editor.fold.FoldingSupport.userFoldManagerFactory"/>
+                        <attr name="tokenId" stringvalue="sql-line-comment"/>
+                    </file>
+                </folder>
+
+                <folder name="FontsColors">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-db-sql-editor-token-colorings.xml" url="NetBeans-SQL-fontsColors.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.db.sql.editor.resources.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                    <folder name="CityLights">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-db-sql-editor-token-colorings.xml" url="CityLights-SQL-fontsColors.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.db.sql.editor.resources.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+
+                <folder name="Toolbars">
+                    <folder name="Default">
+                        <file name="org-netbeans-modules-db-sql-editor-ui-actions-ConnectionAction.instance">
+                            <attr name="position" intvalue="600"/>
+                        </file>
+                        <file name="org-netbeans-modules-db-sql-editor-ui-actions-SQLHistoryAction.shadow">
+                            <attr name="originalFile" stringvalue="Actions/System/org-netbeans-modules-db-sql-editor-ui-actions-SQLHistoryAction.instance"/>
+                            <attr name="position" intvalue="920"/>
+                        </file>
+                        <file name="org-netbeans-modules-db-sql-editor-ui-actions-ToggleKeepOldResultTabsAction.shadow">
+                            <attr name="originalFile" stringvalue="Actions/System/org-netbeans-modules-db-sql-editor-ui-actions-ToggleKeepOldResultTabsAction.instance"/>
+                            <attr name="position" intvalue="940"/>
+                        </file>
+                        <file name="sql-separator-2.instance">
+                            <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                            <attr name="position" intvalue="700"/>
+                        </file>
+                        <file name="org-netbeans-modules-db-sql-editor-ui-actions-RunSQLAction.shadow">
+                            <attr name="originalFile" stringvalue="Actions/System/org-netbeans-modules-db-sql-editor-ui-actions-RunSQLAction.instance"/>
+                            <attr name="position" intvalue="800"/>
+                        </file>
+                        <file name="org-netbeans-modules-db-sql-editor-ui-actions-RunSQLSelectionAction.shadow">
+                            <attr name="originalFile" stringvalue="Actions/System/org-netbeans-modules-db-sql-editor-ui-actions-RunSQLSelectionAction.instance"/>
+                            <attr name="position" intvalue="850"/>
+                        </file>
+                        <file name="org-netbeans-modules-db-sql-editor-ui-actions-SelectInExplorerAction.instance">
+                            <attr name="position" intvalue="900"/>
+                        </file>
+                        </folder>
+                </folder>
+
+                <folder name="Popup">
+                    <file name="org-netbeans-modules-db-sql-editor-ui-actions-RunSQLSelectionAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-netbeans-modules-db-sql-editor-ui-actions-RunSQLSelectionAction.instance"/>
+                        <attr name="position" intvalue="800"/>
+                    </file>
+                    <file name="org-netbeans-modules-db-sql-editor-ui-actions-SQLHistoryAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-netbeans-modules-db-sql-editor-ui-actions-SQLHistoryAction.instance"/>
+                        <attr name="position" intvalue="802"/>
+                    </file>
+                    <file name="sql-separator-1.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="900"/>
+                    </file>
+                    <file name="org-netbeans-modules-project-ui-RunSingle.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-RunSingle.instance"/>
+                        <attr name="position" intvalue="902"/>
+                    </file>
+                    <file name="sql-separator-2.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="904"/>
+                    </file>
+                    <!-- Seperator before 'Select in projects' -->
+                    <file name="sql-separator-3.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="8900"/>
+                    </file>
+                    <!-- Seperator before 'Select connection in services' -->
+                    <file name="sql-separator-4.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="9100"/>
+                    </file>
+                    <file name="org-netbeans-modules-db-sql-editor-ui-actions-SelectInExplorerAction.instance">
+                        <attr name="position" intvalue="9200"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+
+    <folder name="OptionsDialog">
+        <folder name="PreviewExamples">
+            <folder name="text">
+                <file name="x-sql" url="SQLExample"/>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

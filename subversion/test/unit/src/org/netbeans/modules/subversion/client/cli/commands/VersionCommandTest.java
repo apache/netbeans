@@ -16,17 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package rg.netbeans.modules.subversion.client.cli.commands;
+
+package org.netbeans.modules.subversion.client.cli.commands;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.netbeans.modules.subversion.client.cli.commands.VersionCommand;
 import org.netbeans.modules.subversion.client.cli.commands.VersionCommand.Version;
 
-/**
- *
- * @author lauri
- */
 public class VersionCommandTest {
 
     @Test
@@ -54,7 +50,36 @@ public class VersionCommandTest {
     @Test
     public void testRemainder() {
         assertEquals("(r1827917)", Version.parse("1.10.0 (r1827917)").remainder);
-        assertEquals("r1827917", Version.parse("1.10.0-r1827917", "-").remainder);
+        assertEquals("SNAPSHOT", Version.parse("1.1.1-SNAPSHOT", "-").remainder);
+    }
+
+    @Test
+    public void testArguments() {
+        try {
+            Version.parse(null);
+            fail("Null argument should not be accepted");
+        } catch (IllegalArgumentException ex) {
+        }
+        try {
+            Version.parse(null, null);
+            fail("Null argument should not be accepted");
+        } catch (IllegalArgumentException ex) {
+        }
+        try {
+            Version.parse("1.1.1", null);
+            fail("Null argument should not be accepted");
+        } catch (IllegalArgumentException ex) {
+        }
+        try {
+            Version.parse("a.b.c");
+            fail("Number parsing exception is expected");
+        } catch (NumberFormatException ex) {
+        }
+        try {
+            Version.parse("not a version");
+            fail("Number parsing exception is expected");
+        } catch (NumberFormatException ex) {
+        }
     }
 
     @Test
@@ -70,5 +95,4 @@ public class VersionCommandTest {
         assertFalse(VersionCommand.VERSION_15.sameMinor(v110));
         assertFalse(VersionCommand.VERSION_16.sameMinor(v110));
     }
-
 }

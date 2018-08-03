@@ -59,10 +59,9 @@ import org.netbeans.modules.java.hints.errors.Utilities;
 public class ConvertToVarHint {
 
     // hint will be disabled for error codes present in SKIPPED_ERROR_CODES.
-    private final static Set<String> SKIPPED_ERROR_CODES = Collections.unmodifiableSet(
-            new HashSet<>(Arrays.asList(
-                    "compiler.err.generic.array.creation" //NOI18N
-            )));
+    private final static String[] SKIPPED_ERROR_CODES = {
+        "compiler.err.generic.array.creation" //NOI18N
+    };
 
     @TriggerPattern("$mods$ $type $var = $init") //NOI18N
 
@@ -153,7 +152,7 @@ public class ConvertToVarHint {
             return false;
         }
 
-        if (ctx.getInfo().getTreeUtilities().hasError(treePath.getLeaf())) {
+        if (ctx.getInfo().getTreeUtilities().hasError(treePath.getLeaf(), SKIPPED_ERROR_CODES)) {
             return false;
         }
 

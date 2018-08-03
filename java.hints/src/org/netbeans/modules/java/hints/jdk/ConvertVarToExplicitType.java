@@ -59,7 +59,7 @@ public class ConvertVarToExplicitType {
             return null;
         }
         TreePath treePath = ctx.getPath();
-        if (hasDiagnosticErrors(ctx.getInfo(), treePath.getLeaf())) {
+        if (ctx.getInfo().getTreeUtilities().hasError(treePath.getLeaf())) {
             return null;
         }
 
@@ -132,20 +132,6 @@ public class ConvertVarToExplicitType {
 
         // variable declaration of type 'var'
         return info.getTreeUtilities().isVarType(treePath);
-    }
-
-    private static boolean hasDiagnosticErrors(CompilationInfo info, Tree tree) {
-        long startPos = info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
-        long endPos = info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree);
-
-        for (Diagnostic<?> d : info.getDiagnostics()) {
-            if (d.getKind() == Kind.ERROR) {
-                if ((d.getPosition() >= startPos) && (d.getPosition() <= endPos)) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     //filter anonymous class and intersection types

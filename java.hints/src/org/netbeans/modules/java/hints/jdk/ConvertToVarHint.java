@@ -153,7 +153,7 @@ public class ConvertToVarHint {
             return false;
         }
 
-        if (isDiagnosticCodeTobeSkipped(ctx.getInfo(), treePath.getLeaf())) {
+        if (ctx.getInfo().getTreeUtilities().hasError(treePath.getLeaf())) {
             return false;
         }
 
@@ -163,23 +163,6 @@ public class ConvertToVarHint {
 
         //  hint is not applicable for  variable declaration where type is already 'var'
         return !info.getTreeUtilities().isVarType(treePath);
-    }
-
-    /**
-     *
-     * @param info : compilationInfo
-     * @return true if Diagnostic Code is present in SKIPPED_ERROR_CODES
-     */
-    private static boolean isDiagnosticCodeTobeSkipped(CompilationInfo info, Tree tree) {
-        long startPos = info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
-        long endPos = info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree);
-
-        List<Diagnostic> diagnosticsList = info.getDiagnostics();
-        if (diagnosticsList.stream().anyMatch((d)
-                -> ((d.getKind() == Kind.ERROR) && ((d.getStartPosition() >= startPos) && (d.getEndPosition() <= endPos)) && (SKIPPED_ERROR_CODES.contains(d.getCode()))))) {
-            return true;
-        }
-        return false;
     }
     
     private static boolean isValidVarType(HintContext ctx) {

@@ -1,0 +1,5 @@
+<html>
+{*capture*}
+text
+{*/^capture*}
+</html>

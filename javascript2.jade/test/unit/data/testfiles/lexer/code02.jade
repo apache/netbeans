@@ -1,0 +1,10 @@
+- var name = "john"
+p
+  = 'This code is <escaped>!'
+
+p= 'This code is ' + name + ' <escaped>!'
+
+p
+  != 'This code is <strong>not</strong> escaped!'
+
+p!= 'This code is <strong>not</strong> esescaped!'

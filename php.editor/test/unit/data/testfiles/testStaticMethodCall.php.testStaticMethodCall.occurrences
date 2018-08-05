@@ -1,0 +1,2 @@
+    static function |>MARK_OCCURRENCES:staticFunctionName<|($param) {
+Presenter::|>MARK_OCCURRENCES:staticFun^ctionName<|($param);

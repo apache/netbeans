@@ -1,0 +1,12 @@
+factory(    function () {
+    var |>CLASS:LoginService<| = {};
+
+        |>GLOBAL:AuthHttp<|.getSession().then(function (|>UNUSED:data<|) {
+            LoginService.|>FIELD:authProvider<| = "google";
+            LoginService.|>FIELD:test<| = "google";
+        });
+
+        return LoginService;
+
+    });
+      

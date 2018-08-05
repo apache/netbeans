@@ -1,0 +1,5 @@
+	this.|>MARK_OCCURRENCES:clothing<|="nothing/naked";
+Person.prototype.beCool = function(){ this.|>MARK_OCCURRENCES:clothing<|="khakis and black shirt" } 
+	gk.|>MARK_OCCURRENCES:clot^hing<|="Pimp Outfit";                    //clothing is a public variable that can be updated to any funky value 
+		this.|>MARK_OCCURRENCES:clothing<|="tinfoil";
+		+gk.|>MARK_OCCURRENCES:clothing<|+" with dirt factor " 

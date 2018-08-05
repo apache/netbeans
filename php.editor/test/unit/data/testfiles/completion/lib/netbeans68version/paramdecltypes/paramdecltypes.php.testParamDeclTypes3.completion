@@ -1,0 +1,3 @@
+Code completion result for source line:
+function paramsfnc($a,$b,$c,$d|) {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)

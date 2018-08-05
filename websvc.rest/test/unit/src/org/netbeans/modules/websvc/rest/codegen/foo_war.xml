@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<application xmlns="http://research.sun.com/wadl/2006/10">
+    <resources base="http://localhost:8080/foo-war/resources/">
+        <resource path="generic">
+            <method name="GET" id="getXml">
+                <response>
+                    <representation mediaType="application/xml"/>
+                </response>
+            </method>
+            <method name="PUT" id="putXml">
+                <request>
+                    <representation mediaType="application/xml"/>
+                </request>
+            </method>
+        </resource>
+    </resources>
+</application>

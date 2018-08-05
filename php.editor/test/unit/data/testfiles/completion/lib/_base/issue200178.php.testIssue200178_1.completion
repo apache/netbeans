@@ -1,0 +1,9 @@
+Code completion result for source line:
+/**/bar|();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     bar($x = -5)                    [PUBLIC]   issue200178.php
+METHOD     bar($x = -5, $y = 3)            [PUBLIC]   issue200178.php
+METHOD     bar()                           [PUBLIC]   issue200178.php
+------------------------------------
+METHOD     bar()                           [PUBLIC]   issue141999.php
+METHOD     bar(Test &$t)                   [PUBLIC]   issue142024.php

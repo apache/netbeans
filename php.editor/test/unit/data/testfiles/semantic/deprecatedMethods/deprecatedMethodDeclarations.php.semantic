@@ -1,0 +1,19 @@
+<?php
+
+class |>CLASS:Cls<| {
+
+    /** @deprecated */
+    public function |>DEPRECATED,METHOD:deprecatedFunction<|($param) {}
+
+    /** @deprecated */
+    public static function |>DEPRECATED,METHOD,STATIC:deprecatedStaticFunction<|($param) {}
+
+    /** @deprecated */
+    private function |>DEPRECATED,METHOD,UNUSED:deprecatedUnusedFunction<|($param) {}
+
+    /** @deprecated */
+    private static function |>DEPRECATED,METHOD,STATIC,UNUSED:deprecatedUnusedStaticFunction<|($param) {}
+
+}
+
+?>

@@ -1,0 +1,8 @@
+Code completion result for source line:
+TraitedTrait::|$publicStaticTraitedTraitField;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticBaseTrait1Method()  [STATIC]   BaseTrait1
+METHOD     publicStaticTraitedTraitMethod  [STATIC]   TraitedTrait
+VARIABLE   ? $publicStaticBaseTrait1Field  [STATIC]   BaseTrait1
+VARIABLE   ? $publicStaticTraitedTraitFie  [STATIC]   TraitedTrait
+CONSTANT   class \TraitedTrait             [PUBLIC]   Magic Constant

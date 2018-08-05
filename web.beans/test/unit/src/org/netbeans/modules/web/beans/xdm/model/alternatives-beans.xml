@@ -1,0 +1,11 @@
+<?xml  version='1.0' encoding='UTF-8'?>
+
+<beans xmlns="http://java.sun.com/xml/ns/javaee">
+	<alternatives>
+		<class>Class1</class>
+		<stereotype>Stereotype1</stereotype>
+		<class>Class2</class>
+		<class>Class3</class>
+		<stereotype>Stereotype2</stereotype>
+	</alternatives>
+</beans>

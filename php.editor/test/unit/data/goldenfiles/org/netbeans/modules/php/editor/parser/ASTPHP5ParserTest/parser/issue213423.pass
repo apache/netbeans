@@ -1,0 +1,135 @@
+<testresult testFile='issue213423.php'>
+    <scanner>
+        <token id='T_CLASS' start='6' end='11'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='12' end='15'>
+            <text>Foo</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='16' end='17'>
+            <text>{</text>
+        </token>
+        <token id='T_USE' start='22' end='25'>
+            <text>use</text>
+        </token>
+        <token id='T_STRING' start='26' end='27'>
+            <text>A</text>
+        </token>
+        <token id='T_COMMA' start='27' end='28'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='29' end='30'>
+            <text>B</text>
+        </token>
+        <token id='T_COMMA' start='30' end='31'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='32' end='33'>
+            <text>C</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='34' end='35'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='44' end='45'>
+            <text>C</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='45' end='47'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='47' end='50'>
+            <text>bar</text>
+        </token>
+        <token id='T_INSTEADOF' start='51' end='60'>
+            <text>insteadof</text>
+        </token>
+        <token id='T_STRING' start='61' end='62'>
+            <text>A</text>
+        </token>
+        <token id='T_COMMA' start='62' end='63'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='64' end='65'>
+            <text>B</text>
+        </token>
+        <token id='T_SEMICOLON' start='65' end='66'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='71' end='72'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='74' end='75'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='76' end='79'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='79' end='79'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='78'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='6' end='75' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='12' end='15' name='Foo'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='16' end='75' isCurly='true'>
+                    <UseTraitStatement start='22' end='72'>
+                        <Parts>
+                            <UseTraitStatementPart start='26' end='27'>
+                                <Name>
+                                    <NamespaceName start='26' end='27' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='26' end='27' name='A'/>
+                                    </NamespaceName>
+                                </Name>
+                            </UseTraitStatementPart>
+                            <UseTraitStatementPart start='29' end='30'>
+                                <Name>
+                                    <NamespaceName start='29' end='30' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='29' end='30' name='B'/>
+                                    </NamespaceName>
+                                </Name>
+                            </UseTraitStatementPart>
+                            <UseTraitStatementPart start='32' end='33'>
+                                <Name>
+                                    <NamespaceName start='32' end='33' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='32' end='33' name='C'/>
+                                    </NamespaceName>
+                                </Name>
+                            </UseTraitStatementPart>
+                        </Parts>
+                        <Body>
+                            <Block start='34' end='72' isCurly='true'>
+                                <TraitConflictResolutionDeclaration start='44' end='66'>
+                                    <MethodName>
+                                        <Identifier start='47' end='50' name='bar'/>
+                                    </MethodName>
+                                    <PreferredTraitName>
+                                        <NamespaceName start='44' end='45' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='44' end='45' name='C'/>
+                                        </NamespaceName>
+                                    </PreferredTraitName>
+                                    <SuppressedTraitNames>
+                                        <NamespaceName start='61' end='62' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='61' end='62' name='A'/>
+                                        </NamespaceName>
+                                        <NamespaceName start='64' end='65' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='64' end='65' name='B'/>
+                                        </NamespaceName>
+                                    </SuppressedTraitNames>
+                                </TraitConflictResolutionDeclaration>
+                            </Block>
+                        </Body>
+                    </UseTraitStatement>
+                </Block>
+            </ClassDeclaration>
+            <EmptyStatement start='76' end='78'/>
+        </Statements>
+    </Program>
+</testresult>

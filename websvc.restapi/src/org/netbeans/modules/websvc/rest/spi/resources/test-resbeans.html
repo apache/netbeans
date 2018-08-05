@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>TTL_TEST_RESBEANS</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link rel="stylesheet" href="test-resbeans.css" type="text/css"/>
+        <link rel="stylesheet" href="css_master-all.css" type="text/css"/>
+        <script type="text/javascript">
+            //___ BASE_URL ___ will get replaced by the base url of application
+            //whose resource beans needs to be tested For eg:- http://localhost:8080/SimpleServlet/
+            var baseURL = "___BASE_URL___";
+        </script>
+        <script type="text/javascript" src="test-resbeans.js"></script>
+    </head>
+    <body>
+        <div class="outerBorder">
+            <div class="header">
+                <div id="subheader" class="subheader"></div> <!-- sub-header -->
+                <div class="banner"><img src="./images/pname.png" alt="Test RESTful Web Services banner"/></div>
+            </div> <!-- header -->
+            <div id="main" class="main hide">
+                <table style="width:100%;">
+                    <tr>
+                        <td id="leftSidebar" style="vertical-align:top;"></td>
+                        <td class="seperator" style="vertical-align:top;"></td>
+                        <td id="content" class="content" style="vertical-align:top;">
+                            <div id="navigation" class="details"></div><hr/>
+                            <div id="request">MSG_TEST_RESBEANS_INFO</div><hr/>
+                            <div id="testaction" class="ConMgn_sun4"></div>
+                            <div id="testinput" class="ConMgn_sun4"></div>
+                            <hr/>
+                            <div id="req_headers" class="ConMgn_sun4">
+                                <input id = "headers_btn" class="Btn1_sun4 Btn1Hov_sun4" type="button" name="" value="&uarr; Custom HTTP Headers" 
+                                       onclick="toggleHeadersBlock('headers_block', 'headers_btn', 'Custom Request Headers');"/>
+                                <div id = "headers_block" style="padding-top: 5px;">
+                                    <table id="headers_tbl" cellspacing="0" border="1">
+                                      <thead>
+                                        <tr>
+                                          <th style="font-size:10px;text-align: left; background-color: #E5E9ED;">&nbsp;Header Name</th>
+                                          <th style="font-size:10px; text-align: left; background-color: #E5E9ED;">&nbsp;Header Value</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr>
+                                            <td><input style="font-size:10px;" id="req_hdr_1" type="text" size="20"></input></td>
+                                            <td><input style="font-size:10px;" id="req_hdr_val_1" type="text" size="50"></input></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input style="font-size:10px;" id="req_hdr_2" type="text" size="20" value=""></input></td>
+                                            <td><input style="font-size:10px;" id="req_hdr_val_2" type="text" size="50" value=""></input></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input style="font-size:10px;" id="req_hdr_3" type="text" size="20" value=""></input></td>
+                                            <td><input style="font-size:10px;" id="req_hdr_val_3" type="text" size="50" value=""></input></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input style="font-size:10px;" id="req_hdr_4" type="text" size="20" value=""></input></td>
+                                            <td><input style="font-size:10px;" id="req_hdr_val_4" type="text" size="50" value=""></input></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input style="font-size:10px;" id="req_hdr_5" type="text" size="20" value=""></input></td>
+                                            <td><input style="font-size:10px;" id="req_hdr_val_5" type="text" size="50" value=""></input></td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="ConMgn_sun4">
+                                <table class="details">
+                                    <tr><td><div id="result"></div></td></tr><tr><td style="height:10px;">&nbsp;</td></tr>
+                                    <tr><td><div id="resultheaders" class="ml20"></div></td></tr><tr><td style="height:10px;">&nbsp;</td></tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div> <!-- main -->
+        </div> <!-- outerborder -->
+	<!--<script type="text/javascript">
+            var rjsConfig = {
+                    isDebug: true
+            };
+	</script>-->
+        <script type="text/javascript">
+            var ts = new TestSupport();
+            ts.init();
+            
+            // global request headers section toggle function (hiding and opening headers table)
+            function toggleHeadersBlock(id, buttonId, buttonText) {
+              var o = toggleHeadersBlock.cache;
+              var obj = document.getElementById(id);
+              var tbdy = obj.getElementsByTagName('table')[0];
+              if (obj) {
+                if (!o) {
+                  o = toggleHeadersBlock.cache = {
+                    tbdy: tbdy
+                  };
+                }
+                if (tbdy) {
+                  ts.storeRequestHeaders();
+                  obj.removeChild(o.tbdy);
+                  document.getElementById(buttonId).value = '\u2193 '+buttonText;
+                } else {
+                  obj.appendChild(o.tbdy);
+                  document.getElementById(buttonId).value = '\u2191 '+buttonText;
+                }
+              }
+            }
+            
+            ts.restoreRequestHeaders();
+            toggleHeadersBlock('headers_block', 'headers_btn', 'Custom Request Headers');
+            document.getElementById("req_headers").style.visibility="hidden";
+            
+        </script>
+    </body>
+</html>

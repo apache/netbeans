@@ -1,0 +1,28 @@
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+<#if package?? && package != "">
+package ${package};
+</#if>
+
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+
+/**
+ *
+ * @author ${user}
+ */
+public class ${name} implements ConstraintValidator<${constraint}, ${validatorType}> {
+
+    @Override
+    public void initialize(${constraint} constraintAnnotation) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean isValid(${validatorType} value, ConstraintValidatorContext context) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+}

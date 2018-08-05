@@ -1,0 +1,18 @@
+Code completion result for source line:
+requirejs(['|']);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+OTHER      text!                                      
+FILE       api                                        
+FILE       config                                     
+FILE       fileCC                                     
+FILE       folder1                                    
+FILE       folder2                                    
+FILE       issue251646                                
+FILE       js                                         
+FILE       lib/api                                    
+FILE       lib2                                       
+FILE       main.js                                    
+FILE       main3.js                                   
+FILE       main3.js.testIssue247729_01.ex             
+FILE       utils                                      

@@ -1,0 +1,5 @@
+Code completion result for source line:
+test(My|Object());
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     MyObject(): undefined           [PRIVATE]  constructors.js

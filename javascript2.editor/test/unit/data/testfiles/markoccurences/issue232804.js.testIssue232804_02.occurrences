@@ -1,0 +1,3 @@
+        |>MARK_OCCURRENCES:description<|: "some description",
+    app.|>MARK_OCCURRENCES:description<| = "new description";
+    console.log(app.|>MARK_OCCURRENCES:desc^ription<|);

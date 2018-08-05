@@ -1,0 +1,4 @@
+        public static $|>MARK_OCCURRENCES:staticField<| = 2;
+            parent::$|>MARK_OCCURRENCES:static^Field<|;
+            self::$|>MARK_OCCURRENCES:staticField<|;
+            static::$|>MARK_OCCURRENCES:staticField<|;

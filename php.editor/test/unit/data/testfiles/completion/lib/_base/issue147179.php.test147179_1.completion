@@ -1,0 +1,5 @@
+Code completion result for source line:
+<?php Test147179::|foo(); ?>
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     foo()                           [STATIC]   Test147179
+CONSTANT   class \Test147179               [PUBLIC]   Magic Constant

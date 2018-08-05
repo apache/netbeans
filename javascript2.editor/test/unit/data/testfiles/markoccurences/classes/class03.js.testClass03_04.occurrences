@@ -1,0 +1,2 @@
+    this.|>MARK_OCCURRENCES:height<| = height;
+console.log(p.|>MARK_OCCURRENCES:hei^ght<|);

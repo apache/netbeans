@@ -1,0 +1,7 @@
+Detected parser errors in the file:
+Unclosed "while" tag : offset <121:126>
+Unclosed "if" tag : offset <56:58>
+Unclosed "if" tag : offset <70:74>
+Unclosed "if" tag : offset <86:92>
+Unclosed "section" tag : offset <1:8>
+Unclosed "section" tag : offset <20:31>

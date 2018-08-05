@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.5" maxVersion="1.8" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <NonVisualComponents>
+    <Component class="javax.swing.JCheckBox" name="phoneGapCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/cordova/project/Bundle.properties" key="CordovaPanel.phoneGapCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="phoneGapCheckBoxStateChanged"/>
+      </Events>
+    </Component>
+    <Container class="javax.swing.JTabbedPane" name="platformsPane">
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
+      <SubComponents>
+        <Container class="javax.swing.JPanel" name="androidPanel">
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+              <JTabbedPaneConstraints tabName="Android">
+                <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/cordova/project/Bundle.properties" key="CordovaPanel.androidPanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </JTabbedPaneConstraints>
+            </Constraint>
+          </Constraints>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="androidTarget" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="androidTargetCombo" pref="312" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="labXhdpiSplashLandscape" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labXhdpiSplashPortrait" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labHdpiSplashPortrait" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labHdpiSplashLandscape" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labMdpiSplashPortrait" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labMdpiSplashLandscape" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labLdpiSplashPortrait" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labLdpiSplashLandscape" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labXhdpiIcon" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="tfXhdpiIcon" max="32767" attributes="0"/>
+                                  <Component id="tfLdpiSplashLandscape" max="32767" attributes="0"/>
+                                  <Component id="tfLdpiSplashPortrait" max="32767" attributes="0"/>
+                                  <Component id="tfMdpiSplashLandscape" max="32767" attributes="0"/>
+                                  <Component id="tfMdpiSplashPortrait" max="32767" attributes="0"/>
+                                  <Component id="tfHdpiSplashLandscape" max="32767" attributes="0"/>
+                                  <Component id="tfHdpiSplashPortrait" max="32767" attributes="0"/>
+                                  <Component id="tfXHdpiSplashPortrait" max="32767" attributes="0"/>
+                                  <Component id="tfXhdpiSplashLandscape" alignment="0" max="32767" attributes="0"/>
+                              </Group>
+                          </Group>
+                      </Group>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="androidTarget" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="androidTargetCombo" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="labXhdpiIcon" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tfXhdpiIcon" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="labLdpiSplashLandscape" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tfLdpiSplashLandscape" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="labLdpiSplashPortrait" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tfLdpiSplashPortrait" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="labMdpiSplashLandscape" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tfMdpiSplashLandscape" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="labMdpiSplashPortrait" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tfMdpiSplashPortrait" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="labHdpiSplashLandscape" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tfHdpiSplashLandscape" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="labHdpiSplashPortrait" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tfHdpiSplashPortrait" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="labXhdpiSplashLandscape" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tfXhdpiSplashLandscape" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="labXhdpiSplashPortrait" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tfXHdpiSplashPortrait" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+          <SubComponents>
+            <Component class="javax.swing.JLabel" name="androidTarget">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/cordova/project/Bundle.properties" key="CordovaPanel.androidTarget.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="androidTargetCombo">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="2">
+                    <StringItem index="0" value="API Level 14 (Android 4.0+)"/>
+                    <StringItem index="1" value="API Level 8 (Android 2.2+)"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="labXhdpiIcon">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/cordova/project/Bundle.properties" key="CordovaPanel.labXhdpiIcon.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="labLdpiSplashLandscape">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/cordova/project/Bundle.properties" key="CordovaPanel.labLdpiSplashLandscape.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="labLdpiSplashPortrait">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/cordova/project/Bundle.properties" key="CordovaPanel.labLdpiSplashPortrait.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="labMdpiSplashLandscape">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/cordova/project/Bundle.properties" key="CordovaPanel.labMdpiSplashLandscape.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="labMdpiSplashPortrait">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/cordova/project/Bundle.properties" key="CordovaPanel.labMdpiSplashPortrait.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="labHdpiSplashLandscape">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/cordova/project/Bundle.properties" key="CordovaPanel.labHdpiSplashLandscape.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="labHdpiSplashPortrait">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/cordova/project/Bundle.properties" key="CordovaPanel.labHdpiSplashPortrait.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="labXhdpiSplashLandscape">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/cordova/project/Bundle.properties" key="CordovaPanel.labXhdpiSplashLandscape.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="labXhdpiSplashPortrait">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/cordova/project/Bundle.properties" key="CordovaPanel.labXhdpiSplashPortrait.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="tfXhdpiIcon">
+            </Component>
+            <Component class="javax.swing.JTextField" name="tfLdpiSplashLandscape">
+            </Component>
+            <Component class="javax.swing.JTextField" name="tfLdpiSplashPortrait">
+            </Component>
+            <Component class="javax.swing.JTextField" name="tfMdpiSplashLandscape">
+            </Component>
+            <Component class="javax.swing.JTextField" name="tfMdpiSplashPortrait">
+            </Component>
+            <Component class="javax.swing.JTextField" name="tfHdpiSplashLandscape">
+            </Component>
+            <Component class="javax.swing.JTextField" name="tfHdpiSplashPortrait">
+            </Component>
+            <Component class="javax.swing.JTextField" name="tfXhdpiSplashLandscape">
+            </Component>
+            <Component class="javax.swing.JTextField" name="tfXHdpiSplashPortrait">
+            </Component>
+          </SubComponents>
+        </Container>
+        <Container class="javax.swing.JPanel" name="iOSPanel">
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+              <JTabbedPaneConstraints tabName="iOS">
+                <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/cordova/project/Bundle.properties" key="CordovaPanel.iOSPanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </JTabbedPaneConstraints>
+            </Constraint>
+          </Constraints>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="iosTarget" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="iosTargetCombo" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="labiPadSplashRetLandscape" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labiPadSplashRetPortrait" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labiPadSplashPortrait" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labiPadSplashLandscape" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labPhoneSplashRetPortrait" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labiPhoneSplashRetLandscape" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labiPhoneSplashPortrait" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labiPhoneSplashLandscape" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labRetinaIcon" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="tfRetinaIcon" alignment="0" pref="190" max="32767" attributes="0"/>
+                                  <Component id="tfiPhoneSplashLandscape" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="tfiPhoneSplashPortrait" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="tfiPhoneSplashRetLandscape" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="tfiPhoneSplashRetPortrait" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="tfiPadSplashLandscape" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="tfiPadSplashPortrait" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="tfiPadSplashRetPortrait" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="tfiPadSplashRetLandscape" alignment="0" max="32767" attributes="0"/>
+                              </Group>
+                          </Group>
+                      </Group>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="iosTarget" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="iosTargetCombo" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="labRetinaIcon" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tfRetinaIcon" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="labiPhoneSplashLandscape" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tfiPhoneSplashLandscape" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="labiPhoneSplashPortrait" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tfiPhoneSplashPortrait" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="labiPhoneSplashRetLandscape" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tfiPhoneSplashRetLandscape" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="labPhoneSplashRetPortrait" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tfiPhoneSplashRetPortrait" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="labiPadSplashLandscape" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tfiPadSplashLandscape" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="labiPadSplashPortrait" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tfiPadSplashPortrait" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="labiPadSplashRetLandscape" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tfiPadSplashRetLandscape" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="labiPadSplashRetPortrait" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tfiPadSplashRetPortrait" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+          <SubComponents>
+            <Component class="javax.swing.JLabel" name="iosTarget">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/cordova/project/Bundle.properties" key="CordovaPanel.iosTarget.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="iosTargetCombo">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="2">
+                    <StringItem index="0" value="iOS 5.1"/>
+                    <StringItem index="1" value="iOS 5.0"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="labRetinaIcon">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/cordova/project/Bundle.properties" key="CordovaPanel.labRetinaIcon.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="labiPhoneSplashLandscape">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/cordova/project/Bundle.properties" key="CordovaPanel.labiPhoneSplashLandscape.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="labiPhoneSplashPortrait">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/cordova/project/Bundle.properties" key="CordovaPanel.labiPhoneSplashPortrait.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="labiPhoneSplashRetLandscape">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/cordova/project/Bundle.properties" key="CordovaPanel.labiPhoneSplashRetLandscape.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="labPhoneSplashRetPortrait">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/cordova/project/Bundle.properties" key="CordovaPanel.labPhoneSplashRetPortrait.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="labiPadSplashLandscape">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/cordova/project/Bundle.properties" key="CordovaPanel.labiPadSplashLandscape.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="labiPadSplashPortrait">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/cordova/project/Bundle.properties" key="CordovaPanel.labiPadSplashPortrait.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="labiPadSplashRetLandscape">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/cordova/project/Bundle.properties" key="CordovaPanel.labiPadSplashRetLandscape.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="labiPadSplashRetPortrait">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/cordova/project/Bundle.properties" key="CordovaPanel.labiPadSplashRetPortrait.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="tfRetinaIcon">
+            </Component>
+            <Component class="javax.swing.JTextField" name="tfiPhoneSplashLandscape">
+            </Component>
+            <Component class="javax.swing.JTextField" name="tfiPhoneSplashPortrait">
+            </Component>
+            <Component class="javax.swing.JTextField" name="tfiPhoneSplashRetLandscape">
+            </Component>
+            <Component class="javax.swing.JTextField" name="tfiPhoneSplashRetPortrait">
+            </Component>
+            <Component class="javax.swing.JTextField" name="tfiPadSplashLandscape">
+            </Component>
+            <Component class="javax.swing.JTextField" name="tfiPadSplashPortrait">
+            </Component>
+            <Component class="javax.swing.JTextField" name="tfiPadSplashRetLandscape">
+            </Component>
+            <Component class="javax.swing.JTextField" name="tfiPadSplashRetPortrait">
+            </Component>
+          </SubComponents>
+        </Container>
+      </SubComponents>
+    </Container>
+  </NonVisualComponents>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="packageLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="nameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="versionLabel" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="packageTextField" pref="309" max="32767" attributes="0"/>
+                  <Component id="nameTextField" max="32767" attributes="0"/>
+                  <Component id="versionTextField" alignment="0" max="32767" attributes="0"/>
+              </Group>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="packageLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="packageTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="nameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="nameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="versionTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="versionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JTextField" name="packageTextField">
+    </Component>
+    <Component class="javax.swing.JLabel" name="packageLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/cordova/project/Bundle.properties" key="CordovaPanel.packageLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="nameLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/cordova/project/Bundle.properties" key="CordovaPanel.nameLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="nameTextField">
+    </Component>
+    <Component class="javax.swing.JTextField" name="versionTextField">
+    </Component>
+    <Component class="javax.swing.JLabel" name="versionLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/cordova/project/Bundle.properties" key="CordovaPanel.versionLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+  </SubComponents>
+</Form>

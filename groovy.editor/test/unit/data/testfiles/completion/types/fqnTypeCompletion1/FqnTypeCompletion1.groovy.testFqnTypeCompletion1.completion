@@ -1,0 +1,21 @@
+Code completion result for source line:
+groovy.xml.|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+PACKAGE    dom                                        null
+PACKAGE    streamingmarkupsupport                     null
+CLASS      DOMBuilder                                 null
+CLASS      Entity                                     null
+CLASS      FactorySupport                             null
+CLASS      MarkupBuilder                              null
+CLASS      MarkupBuilderHelper                        null
+CLASS      Namespace                                  null
+CLASS      NamespaceBuilder                           null
+CLASS      NamespaceBuilderSupport                    null
+CLASS      QName                                      null
+CLASS      SAXBuilder                                 null
+CLASS      StaxBuilder                                null
+CLASS      StreamingDOMBuilder                        null
+CLASS      StreamingMarkupBuilder                     null
+CLASS      StreamingSAXBuilder                        null
+CLASS      XmlUtil                                    null

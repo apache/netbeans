@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ejb-jar version="2.1" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd">
+    <description>test New description</description>
+    <display-name>testDisplayName</display-name>
+    <icon>
+        <small-icon>/tmp/test/small</small-icon>
+        <large-icon>/tmp/test/large</large-icon>
+        </icon>
+    <enterprise-beans>
+    <entity>
+            <description>jdbc:mysql://localhost:3306/users [blaha on Default schema]</description>
+            <display-name>CustomerEB</display-name>
+            <ejb-name>CustomerBean</ejb-name>
+      <local-home>cmp.CustomerLocalHome</local-home>
+      <local>cmp.CustomerLocal</local>
+      <ejb-class>cmp.CustomerBean</ejb-class>
+      <persistence-type>Container</persistence-type>
+      <prim-key-class>cmp.CompoundClassTest</prim-key-class>
+      <reentrant>true</reentrant>
+      <abstract-schema-name>Customer</abstract-schema-name>
+      <cmp-field>
+        <field-name>id</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>lastName</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>firstName</field-name>
+      </cmp-field>
+      <query>
+        <description>auto generated method</description>
+        <query-method>
+          <method-name>findById</method-name>
+          <method-params>
+            <method-param>java.lang.Long</method-param>
+          </method-params>
+        </query-method>
+        <ejb-ql>SELECT OBJECT(c) FROM Customer AS c WHERE c.id = ?1</ejb-ql>
+      </query>
+      <query>
+        <description>auto generated method</description>
+        <query-method>
+          <method-name>findByLastName</method-name>
+          <method-params>
+            <method-param>java.lang.String</method-param>
+          </method-params>
+        </query-method>
+        <ejb-ql>SELECT OBJECT(c) FROM Customer AS c WHERE c.lastName = ?1</ejb-ql>
+      </query>
+      <query>
+        <description>auto generated method</description>
+        <query-method>
+          <method-name>findByFirstName</method-name>
+          <method-params>
+            <method-param>java.lang.String</method-param>
+          </method-params>
+        </query-method>
+        <ejb-ql>SELECT OBJECT(c) FROM Customer AS c WHERE c.firstName = ?1</ejb-ql>
+      </query>
+    </entity>
+  </enterprise-beans>
+  <assembly-descriptor>
+    <container-transaction>
+      <method>
+        <ejb-name>CustomerBean</ejb-name>
+        <method-name>*</method-name>
+      </method>
+      <trans-attribute>Required</trans-attribute>
+    </container-transaction>
+  </assembly-descriptor>
+</ejb-jar>

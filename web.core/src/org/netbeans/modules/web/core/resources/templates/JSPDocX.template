@@ -1,0 +1,5 @@
+<!-- any content can be specified here e.g.: -->
+<jsp:directive.page pageEncoding="${encoding}"/>
+<jsp:element name="title">
+    <jsp:body>Hello World!</jsp:body>
+</jsp:element>

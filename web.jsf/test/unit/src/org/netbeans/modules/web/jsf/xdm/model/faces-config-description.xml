@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+
+<!DOCTYPE faces-config PUBLIC
+  "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.1//EN"
+  "http://java.sun.com/dtd/web-facesconfig_1_1.dtd">
+
+<!-- =========== FULL CONFIGURATION FILE ================================== -->
+
+<faces-config>
+    <navigation-rule>
+        <description xml:lang="cz">
+            Czech description
+        </description>
+        <description xml:lang="en">
+            English Description
+        </description>
+        <display-name>afdf</display-name>
+        <icon xml:lang="cz">
+            <small-icon>cz/small/icon</small-icon>
+            <large-icon>cz/large/icon</large-icon>
+        </icon>
+        <icon xml:lang="en">
+            <small-icon>en/small/icon</small-icon>
+            <large-icon>en/large/icon</large-icon>
+        </icon>
+        <from-view-id>faf</from-view-id>
+    </navigation-rule>
+</faces-config>

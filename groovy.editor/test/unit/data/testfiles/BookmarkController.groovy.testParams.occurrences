@@ -1,0 +1,2 @@
+    private printParams(|>MARK_OCCURRENCES:params<|, unusedParam) {
+        |>MARK_OCCURRENCES:par^ams<|.each {

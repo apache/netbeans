@@ -1,0 +1,2 @@
+|>MARK_OCCURRENCES:console<|.log();  
+   |>MARK_OCCURRENCES:conso^le<|.log(getFirstName()); 

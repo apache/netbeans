@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+*** GENERATED FROM project.xml - DO NOT EDIT  ***
+***         EDIT ../build.xml INSTEAD         ***
+
+        
+        -->
+<project xmlns:j2seproject3="http://www.netbeans.org/ns/j2se-project/3" xmlns:j2seproject1="http://www.netbeans.org/ns/j2se-project/1" xmlns:jaxrpc="http://www.netbeans.org/ns/j2se-project/jax-rpc">
+    <target name="-groovy-init-macrodef-javac">
+        <macrodef name="javac" uri="http://www.netbeans.org/ns/j2se-project/3">
+            <attribute name="srcdir" default="${src.dir}"/>
+            <attribute name="destdir" default="${build.classes.dir}"/>
+            <attribute name="classpath" default="${javac.classpath}"/>
+            <attribute name="includes" default="${includes}"/>
+            <attribute name="excludes" default="${excludes}"/>
+            <attribute name="debug" default="${javac.debug}"/>
+            <attribute name="sourcepath" default="${empty.dir}"/>
+            <attribute name="gensrcdir" default="${empty.dir}"/>
+            <attribute name="processorpath" default="${javac.processorpath}"/>
+            <attribute name="apgeneratedsrcdir" default="${build.generated.sources.dir}/ap-source-output"/>
+            <element name="customize" optional="true"/>
+            <sequential>
+                <taskdef name="groovyc" classpath="${javac.classpath}" classname="org.codehaus.groovy.ant.Groovyc"/>
+                <property name="empty.dir" location="${build.dir}/empty"/>
+                <mkdir dir="${empty.dir}"/>
+                <groovyc srcdir="@{srcdir}" sourcepath="@{sourcepath}" destdir="@{destdir}" encoding="${source.encoding}" excludes="@{excludes}" includeAntRuntime="false" fork="true">
+                    <src>
+                        <dirset dir="@{gensrcdir}" erroronmissingdir="false">
+                            <include name="*"/>
+                        </dirset>
+                    </src>
+                    <classpath>
+                        <path path="@{classpath}"/>
+                    </classpath>
+                    <javac debug="@{debug}" deprecation="${javac.deprecation}" encoding="${source.encoding}" source="${javac.source}" target="${javac.target}">
+                        <compilerarg line="${javac.compilerargs} ${javac.compilerargs.jaxws}"/>
+                        <customize/>
+                    </javac>
+                </groovyc>
+            </sequential>
+        </macrodef>
+        <macrodef name="depend" uri="http://www.netbeans.org/ns/j2se-project/3">
+            <attribute name="srcdir" default="${src.dir}"/>
+            <attribute name="destdir" default="${build.classes.dir}"/>
+            <attribute name="classpath" default="${javac.classpath}"/>
+            <sequential>
+                <depend srcdir="@{srcdir}" destdir="@{destdir}" cache="${build.dir}/depcache" includes="${includes}" excludes="${excludes}">
+                    <classpath>
+                        <path path="@{classpath}"/>
+                    </classpath>
+                </depend>
+            </sequential>
+        </macrodef>
+        <macrodef name="force-recompile" uri="http://www.netbeans.org/ns/j2se-project/3">
+            <attribute name="destdir" default="${build.classes.dir}"/>
+            <sequential>
+                <fail unless="javac.includes">Must set javac.includes</fail>
+                <pathconvert property="javac.includes.binary" pathsep=",">
+                    <path>
+                        <filelist dir="@{destdir}" files="${javac.includes}"/>
+                    </path>
+                    <globmapper from="*.java" to="*.class"/>
+                </pathconvert>
+                <delete>
+                    <files includes="${javac.includes.binary}"/>
+                </delete>
+            </sequential>
+        </macrodef>
+    </target>
+    <target depends="init,compile-test,-pre-test-run" if="have.tests" name="-do-test-run-with-groovy">
+        <j2seproject3:test testincludes=""/>
+    </target>
+    <target depends="init,compile-test,-pre-test-run,-do-test-run-with-groovy" if="have.tests" name="-post-test-run-with-groovy">
+        <fail if="tests.failed" unless="ignore.failing.tests">Some tests failed; see details above.</fail>
+    </target>
+    <target depends="init,compile-test,-pre-test-run,-do-test-run-with-groovy,test-report,-post-test-run-with-groovy,-test-browse" description="Run unit tests." name="test-with-groovy"/>
+    <target depends="init,compile-test-single,-pre-test-run-single" if="have.tests" name="-do-test-run-single-groovy">
+        <fail unless="test.binarytestincludes">Must select some files in the IDE or set test.includes</fail>
+        <j2seproject3:test testincludes=""/>
+    </target>
+    <target depends="init,compile-test-single,-pre-test-run-single,-do-test-run-single-groovy" if="have.tests" name="-post-test-run-single-groovy">
+        <fail if="tests.failed" unless="ignore.failing.tests">Some tests failed; see details above.</fail>
+    </target>
+    <target depends="init,compile-test-single,-pre-test-run-single,-do-test-run-single-groovy,-post-test-run-single-groovy" description="Run single unit test." name="test-single-groovy"/>
+    <target depends="init,compile-test-single,-pre-test-run-single,-debug-start-debugger-test" name="-do-test-debug-single-groovy">
+        <fail unless="test.binarytestincludes">Must select some files in the IDE or set test.binarytestincludes</fail>
+        <j2seproject3:test-debug testincludes=""/>
+    </target>
+    <target depends="init,compile-test-single,-pre-test-run-single,-do-test-debug-single-groovy" if="have.tests" name="-post-test-debug-single-groovy">
+        <fail if="tests.failed" unless="ignore.failing.tests">Some tests failed; see details above.</fail>
+    </target>
+    <target depends="init,compile-test-single,-pre-test-run-single,-debug-start-debugger-test,-do-test-debug-single-groovy,-post-test-debug-single-groovy" name="debug-test-with-groovy"/>
+</project>

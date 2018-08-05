@@ -1,0 +1,63 @@
+<testresult testFile='heredoc01.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='3' end='8'>
+            <text>$name</text>
+        </token>
+        <token id='T_EQUAL' start='8' end='9'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='9' end='15'>
+            <text>"Petr"</text>
+        </token>
+        <token id='T_SEMICOLON' start='15' end='16'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='17' end='21'>
+            <text>$age</text>
+        </token>
+        <token id='T_EQUAL' start='21' end='22'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='22' end='24'>
+            <text>10</text>
+        </token>
+        <token id='T_SEMICOLON' start='24' end='25'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='26' end='30'>
+            <text>echo</text>
+        </token>
+        <token id='T_START_HEREDOC' start='31' end='42'>
+            <text>&lt;&lt;&lt;HEREDOC\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='42' end='49'>
+            <text>Name: \n</text>
+        </token>
+        <token id='EOF' start='49' end='49'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='48'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='3' end='16'>
+                <Assignment start='3' end='15' operator='EQUAL'>
+                    <Variable start='3' end='8' isDollared='true'>
+                        <Identifier start='4' end='8' name='name'/>
+                    </Variable>
+                    <Scalar start='9' end='15' type='STRING' value='"Petr"'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='17' end='25'>
+                <Assignment start='17' end='24' operator='EQUAL'>
+                    <Variable start='17' end='21' isDollared='true'>
+                        <Identifier start='18' end='21' name='age'/>
+                    </Variable>
+                    <Scalar start='22' end='24' type='INT' value='10'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ASTError start='26' end='48'/>
+        </Statements>
+    </Program>
+</testresult>

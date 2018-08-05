@@ -1,0 +1,96 @@
+<testresult testFile='groupUse_01.php'>
+    <scanner>
+        <token id='T_USE' start='7' end='10'>
+            <text>use</text>
+        </token>
+        <token id='T_STRING' start='11' end='15'>
+            <text>some</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='15' end='16'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='16' end='18'>
+            <text>ns</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='18' end='19'>
+            <text>\</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='19' end='20'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='20' end='26'>
+            <text>ClassA</text>
+        </token>
+        <token id='T_COMMA' start='26' end='27'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='28' end='34'>
+            <text>ClassB</text>
+        </token>
+        <token id='T_COMMA' start='34' end='35'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='36' end='42'>
+            <text>ClassC</text>
+        </token>
+        <token id='T_AS' start='43' end='45'>
+            <text>as</text>
+        </token>
+        <token id='T_STRING' start='46' end='47'>
+            <text>C</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='47' end='48'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='48' end='49'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='50' end='50'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='50'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <UseStatement start='7' end='49' type='TYPE'>
+                <GroupUseStatementPart start='11' end='48'>
+                    <BaseNameSpace>
+                        <NamespaceName start='11' end='18' isCurrent='false' isGlobal='false'>
+                            <Identifier start='11' end='15' name='some'/>
+                            <Identifier start='16' end='18' name='ns'/>
+                        </NamespaceName>
+                    </BaseNameSpace>
+                    <SingleUseStatementPart start='20' end='26'>
+                        <Name>
+                            <NamespaceName start='20' end='26' isCurrent='false' isGlobal='false'>
+                                <Identifier start='20' end='26' name='ClassA'/>
+                            </NamespaceName>
+                        </Name>
+                        <Alias>
+                        </Alias>
+                    </SingleUseStatementPart>
+                    <SingleUseStatementPart start='28' end='34'>
+                        <Name>
+                            <NamespaceName start='28' end='34' isCurrent='false' isGlobal='false'>
+                                <Identifier start='28' end='34' name='ClassB'/>
+                            </NamespaceName>
+                        </Name>
+                        <Alias>
+                        </Alias>
+                    </SingleUseStatementPart>
+                    <SingleUseStatementPart start='36' end='47'>
+                        <Name>
+                            <NamespaceName start='36' end='42' isCurrent='false' isGlobal='false'>
+                                <Identifier start='36' end='42' name='ClassC'/>
+                            </NamespaceName>
+                        </Name>
+                        <Alias>
+                            <Identifier start='46' end='47' name='C'/>
+                        </Alias>
+                    </SingleUseStatementPart>
+                </GroupUseStatementPart>
+            </UseStatement>
+        </Statements>
+    </Program>
+</testresult>

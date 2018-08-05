@@ -1,0 +1,1 @@
+function drawES6Chart({size = 'big', cords = { x: 0, y: 0 , |>MARK_OCCURRENCES:z^<|: 0}, radius = 25} = {}) {

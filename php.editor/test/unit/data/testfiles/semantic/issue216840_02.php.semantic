@@ -1,0 +1,26 @@
+<?php
+
+class |>CLASS:test<| {
+
+    private $|>FIELD,UNUSED:age<|;
+
+    public function |>METHOD:getName<|() {
+        return $this->|>FIELD:name<|;
+    }
+
+    public static  function |>METHOD,STATIC:getCount<|() {
+        return self::|>CUSTOM1,STATIC:getHelpCount<|();
+    }
+
+    private static function |>METHOD,STATIC:getHelpCount<|() {
+        return test::$|>FIELD,STATIC:count<|;
+    }
+
+    static private $|>FIELD,STATIC:count<| = 5;
+    private $|>FIELD:name<| = "petr";
+}
+
+echo "Number: ".test::|>CUSTOM1,STATIC:getCount<|()."\n";
+$myvar = new test("Pepa");
+echo "Name: ".$myvar->|>CUSTOM1:getName<|()."\n";
+?>

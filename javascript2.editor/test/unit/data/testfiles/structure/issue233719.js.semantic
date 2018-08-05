@@ -1,0 +1,16 @@
+
+(function() {
+    |>GLOBAL:window<|.|>GLOBAL:prom01<| = "nazdar";
+    |>GLOBAL:console<|.log(|>GLOBAL:prom01<|);
+    |>GLOBAL:window<|['|>GLOBAL:prom02<|'] = "cau";
+    |>GLOBAL:window<|['|>FIELD:prom03<|'] = 111;
+    |>GLOBAL:console<|.log(|>GLOBAL:prom02<|);
+    
+    
+    var |>CLASS:man<| = {};
+    man.|>FIELD:prop1<| = 10;
+    man['|>FIELD:prop2<|'] = 20;
+    man['|>FIELD:prop3<|'] = "ajo";
+    |>GLOBAL:console<|.log(man.|>FIELD:prop1<|);
+    |>GLOBAL:console<|.log(man.|>FIELD:prop2<|);
+}());

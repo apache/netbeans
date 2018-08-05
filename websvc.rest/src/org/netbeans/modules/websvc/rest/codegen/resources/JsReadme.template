@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="__FILE_ENCODING__"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+    <head>
+        <title>${rest_client_stubs} - ${msg_readme}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=${encoding}" />
+        <link rel="stylesheet" href="./css/clientstubs.css" type="text/css"/>
+        <link rel="stylesheet" href="./css/css_master-all.css" type="text/css"/>
+    </head>
+    <body>
+        <div class="outerBorder">
+            <div class="header">
+                <div id="subheader" class="subheader"></div> <!-- sub-header -->
+                <div class="banner"><img src="./css/images/pname-clientstubs.png"/></div>
+            </div> <!-- header -->
+            <div id="main" class="main">
+                <table width="100%">
+                    <tr>
+                        <td id="content" class="content" valign="top" colspan="12">
+                            ${readme_content}
+                        </td>
+                    </tr>
+                </table>
+            </div> <!-- main -->
+        </div> <!-- outerborder -->
+    </body>
+</html>

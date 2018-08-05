@@ -1,0 +1,10 @@
+function |>METHOD:a<|() {
+    var |>LOCAL_VARIABLE_DECLARATION:a<|, |>LOCAL_VARIABLE_DECLARATION:b<|, |>LOCAL_VARIABLE_DECLARATION:c<|;
+    return [|>LOCAL_VARIABLE:a<|, |>LOCAL_VARIABLE:b<|, |>LOCAL_VARIABLE:c<|];     
+}
+   
+function |>METHOD:b<|() {
+    return [function() {
+        var |>LOCAL_VARIABLE_DECLARATION,UNUSED:something<|;
+    }];
+}

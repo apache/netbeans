@@ -1,0 +1,42 @@
+<div ng-click=""><!--cc;16;ct1.;0;test,hello,ironman,dog;hello;hel|lo();test2,hello2,dog3,test3;-->
+    <!--cc;3;{{ct1.}};2;test,hello,ironman,dog;test;test|}};test2,hello2,dog3,test3;-->
+    
+    
+    
+    <div ng-model=""></div><!--cc;20;ct1.ironman.;0;iteration,date,exec,config;date;.da|te;test2,hello2,dog3,ironman3;-->
+    <div ng-model=""></div><!--cc;20;ct1.ironman.;0;iteration,date,exec,config;config;.co|nfig;test2,hello2,dog3,ironman3;-->
+    <div ng-model=""></div><!--cc;20;ct1.ironman.date.;0;getDate,getDay;getDate;getD|ate();test2,hello2,dog3,ironman3;-->
+    <div ng-model=""></div><!--cc;20;ct1.ironman.config.;0;url,http;http;.ht|tp;test2,hello2,dog3,ironman3;-->
+    <div ng-bind=""></div>
+    
+    <!--cc;3;{{ct1.ironman.}};2;iteration,date,config,exec;config;.conf|ig;test2,hello,test,test3;-->
+
+    <!--cc;3;{{ct1.ironman.config.}};2;http,url;url;.ur|l;test2,hello,test,test3;-->
+    
+    <!--cc;3;{{ct1.ironman.date.}};2;getDate,getDay;getDate;get|Date();test2,hello,test,test3;-->
+    
+    <!--cc;3;{{ct1.dog.}};2;name;name;na|me}};test2,hello,test,test3;-->
+    
+    <div ng-bind=""></div><!--cc;19;ct1.dog.;0;name;name;na|me";test2,hello,test,test3;-->
+
+    
+    <div ng-model=""><!--cc;20;ct1.;0;test,hello,ironman,dog;hello;hel|lo();test2,hello2,dog3,test3;-->
+    <div ng-bind=""><!--cc;19;ct1.;0;test,hello,ironman,dog;hello;hel|lo();test2,hello2,dog3,test3;-->
+    
+     <!--cc;3;<div ng-controller="></div>;8;MyCtrl1,MyCtrl2,MyCtrl3;MyCtrl1;"M|yCtrl1;test2,hello2,ironman3,test3;-->   
+     
+     <!--gt;3;<div ng-click="ct1.hello()"></div>;11;controllers.js;8;22;-->   
+     <!--gt;3;<div ng-model="ct1.test"></div>;9;controllers.js;7;22;-->   
+     <!--gt;3;<div ng-bind="ct1.dog"></div>;9;controllers.js;11;22;-->   
+     <!--gt;3;<div ng-bind="ct1.ironman.date"></div>;9;controllers.js;32;10;-->   
+     <!--gt;3;<div ng-bind="ct1.ironman.config.url"></div>;9;controllers.js;36;9;-->   
+     <!--gt;3;{{ct1.test}};4;controllers.js;7;22;-->   
+     <!--gt;3;{{ct1.ironman.config.url}};4;controllers.js;36;9;-->   
+     <!--gt;3;{{ct1.ironman.date}};4;controllers.js;32;10;-->   
+     <!--gt;3;{{ct1.dog.name}};4;controllers.js;11;29;-->   
+     <!--gt;3;<div ng-controller="MyCtrl1 as ct1"></div>;17;controllers.js;6;21;-->   
+     
+     <!--cc;3;{{}};2;ct1;ct1;ct1|}};ct2,test,hello,ironman,ct3,dog,test2,hello2,dog3,test3;-->
+     
+     <div ng-click=""><!--cc;21;;0;ct1;ct1;ct|1";ct2,ct3,test,hello,ironman,dog,test2,hello2,dog3,test3;-->
+</div>

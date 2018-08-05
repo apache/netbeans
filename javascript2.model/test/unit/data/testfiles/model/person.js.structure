@@ -1,0 +1,25 @@
+Person:CONSTRUCTOR:[PUBLIC]:ESCAPED{Person}ESCAPED{(}ESCAPED{n}ESCAPED{, }ESCAPED{race}ESCAPED{)}<font color="#999999">ESCAPED{ : }Person</font>:
+  age:VARIABLE:[PRIVATE]:ESCAPED{age}<font color="#999999">ESCAPED{ : }Number</font>:
+  alive:VARIABLE:[PRIVATE]:ESCAPED{alive}<font color="#999999">ESCAPED{ : }Boolean</font>:
+  clothing:FIELD:[PUBLIC]:ESCAPED{clothing}<font color="#999999">ESCAPED{ : }String</font>:
+  dirtFactor:FIELD:[PUBLIC]:ESCAPED{dirtFactor}<font color="#999999">ESCAPED{ : }Number</font>:
+  eat:METHOD:[PROTECTED]:ESCAPED{eat}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Number</font>:
+  exercise:METHOD:[PROTECTED]:ESCAPED{exercise}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Number</font>:
+  getAge:METHOD:[PROTECTED]:ESCAPED{getAge}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Number</font>:
+  getName:METHOD:[PROTECTED]:ESCAPED{getName}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }String</font>:
+  getRace:METHOD:[PROTECTED]:ESCAPED{getRace}ESCAPED{(}ESCAPED{)}:
+  makeOlder:METHOD:[PRIVATE]:ESCAPED{makeOlder}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Boolean</font>:
+  maxAge:VARIABLE:[PRIVATE]:ESCAPED{maxAge}<font color="#999999">ESCAPED{ : }Number</font>:
+  muchTimePasses:METHOD:[PROTECTED]:ESCAPED{muchTimePasses}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  myName:VARIABLE:[PRIVATE]:ESCAPED{myName}<font color="#999999">ESCAPED{ : }String</font>:
+  population:FIELD:[PUBLIC, STATIC]:ESCAPED{population}<font color="#999999">ESCAPED{ : }Number</font>:
+  prototype:CLASS:[PUBLIC]:ESCAPED{prototype}:
+    amputate:METHOD:[PUBLIC]:ESCAPED{amputate}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    beCool:METHOD:[PUBLIC]:ESCAPED{beCool}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    legs:FIELD:[PUBLIC]:ESCAPED{legs}<font color="#999999">ESCAPED{ : }Number</font>:
+    showLegs:METHOD:[PUBLIC]:ESCAPED{showLegs}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    shower:METHOD:[PUBLIC]:ESCAPED{shower}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  toString:METHOD:[PROTECTED]:ESCAPED{toString}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }String</font>:
+  weigh:METHOD:[PROTECTED]:ESCAPED{weigh}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Number</font>:
+  weight:VARIABLE:[PRIVATE]:ESCAPED{weight}<font color="#999999">ESCAPED{ : }Number</font>:
+RunGavinsLife:METHOD:[PUBLIC]:ESCAPED{RunGavinsLife}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:

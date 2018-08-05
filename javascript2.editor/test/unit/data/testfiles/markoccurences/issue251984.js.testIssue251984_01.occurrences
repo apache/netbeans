@@ -1,0 +1,3 @@
+var |>MARK_OCCURRENCES:myL^ib<| = new function MyLib() {
+|>MARK_OCCURRENCES:myLib<|.f1();
+|>MARK_OCCURRENCES:myLib<|.f2();    

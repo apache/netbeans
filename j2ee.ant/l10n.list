@@ -1,0 +1,3 @@
+# j2ee/samples
+read global
+${l10n-module}/antsrc/**/Bundle*.properties

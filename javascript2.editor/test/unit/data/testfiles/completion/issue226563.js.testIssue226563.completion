@@ -1,0 +1,9 @@
+Code completion result for source line:
+this.|pppp();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     baf(): undefined                [PROTECTE  issue226563.js
+METHOD     fail(): undefined               [PROTECTE  issue226563.js
+METHOD     ok(): undefined                 [PROTECTE  issue226563.js
+METHOD     pppp()                          [PUBLIC]   issue226563.js
+FIELD      run: Number                     [PUBLIC]   issue226563.js

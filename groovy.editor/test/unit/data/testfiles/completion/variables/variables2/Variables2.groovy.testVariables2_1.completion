@@ -1,0 +1,9 @@
+Code completion result for source line:
+it|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      Iterable                                   null
+CLASS      Iterator                                   null
+METHOD     iterator()                                 Iterator
+VARIABLE   item                                       Object
+VARIABLE   item2                                      Object

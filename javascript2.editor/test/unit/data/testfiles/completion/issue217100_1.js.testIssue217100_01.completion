@@ -1,0 +1,8 @@
+Code completion result for source line:
+v|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     valueOf(): Object               [PUBLIC]   JS Platform
+METHOD     values(obj: Object): Array      [PUBLIC,   JS Platform
+KEYWORD    var                                        null
+KEYWORD    void                                       null

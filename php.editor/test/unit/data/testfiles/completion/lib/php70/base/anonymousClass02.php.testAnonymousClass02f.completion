@@ -1,0 +1,5 @@
+Code completion result for source line:
+$this->pr|op1 = $number;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   ? prop1                         [PRIVATE]  {}
+VARIABLE   ? prop2                         [PRIVATE]  {}

@@ -1,0 +1,17 @@
+<?xml  version='1.0' encoding='UTF-8'?>
+
+<beans xmlns="http://java.sun.com/xml/ns/javaee">
+	<interceptors/>
+	<interceptors>
+		<class>Class1</class>
+	</interceptors>
+	<decorators>
+		<class>Class2</class>
+	</decorators>
+	<alternatives/>
+	<decorators/>
+	<alternatives>
+		<class>Class3</class>
+		<stereotype>Stereotype1</stereotype>
+	</alternatives>
+</beans>

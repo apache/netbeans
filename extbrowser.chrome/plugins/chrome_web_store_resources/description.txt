@@ -1,0 +1,11 @@
+*** The NetBeans Connector is a Beta Release ***
+
+With the release of NetBeans 7.3 Beta comes a new feature for editing and interacting with HTML5, JavaScript, and CSS3 based applications.  This connector allows for tight integration with Google Chrome. 
+
+With this integration, comes the ability to:
+* Refresh on Save
+* Live DOM navigation from within the IDE itself
+* Bi-directional element inspection. Click in the browser, see it in the IDE, and vice-versa
+* JavaScript debugging of the application using Remote WebKit APIs 
+* Visual CSS Style editing of all page elements, including JavaScript generated elements
+* Screen resizing to veiw your application at various pre-defined sizes (Smartphone, Tablet, etc.), or sizes that you can define yourself

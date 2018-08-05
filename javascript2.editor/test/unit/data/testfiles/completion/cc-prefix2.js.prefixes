@@ -1,0 +1,64 @@
+z = []
+^"",z
+z = []
+ ^z,z
+z = []
+  ^"",""
+z = []
+   ^"",""
+z = []
+    ^"",""
+z = []
+     ^"",""
+z = []
+      ^"",""
+y = ''
+^"",""
+y = ''
+ ^y,y
+y = ''
+  ^"",""
+y = ''
+   ^"",""
+y = ''
+    ^"",""
+y = ''
+     ^"",""
+y = ''
+      ^"",""
+z = ""
+^"",""
+z = ""
+ ^z,z
+z = ""
+  ^"",""
+z = ""
+   ^"",""
+z = ""
+    ^"",""
+z = ""
+     ^"",""
+z = ""
+      ^"",""
+FooBar.Baz
+^"",""
+FooBar.Baz
+ ^F,FooBar
+FooBar.Baz
+  ^Fo,FooBar
+FooBar.Baz
+   ^Foo,FooBar
+FooBar.Baz
+    ^FooB,FooBar
+FooBar.Baz
+     ^FooBa,FooBar
+FooBar.Baz
+      ^FooBar,FooBar
+FooBar.Baz
+       ^"",""
+FooBar.Baz
+        ^B,Baz
+FooBar.Baz
+         ^Ba,Baz
+FooBar.Baz
+          ^Baz,Baz

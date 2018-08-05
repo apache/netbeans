@@ -1,0 +1,10 @@
+class |>MARK_OCCURRENCES:UVS3<| {
+|>MARK_OCCURRENCES:UVS3<|::myStatic3()::myStatic2();
+|>MARK_OCCURRENCES:UV^S3<|::myStatic3()::myStatic2()::myStatic1()::MAX;
+|>MARK_OCCURRENCES:UVS3<|::myStatic3()::myStatic2()::myStatic1()::AVG;
+|>MARK_OCCURRENCES:UVS3<|::myStatic3()::myStatic2()::myStatic1()::$MIN;
+|>MARK_OCCURRENCES:UVS3<|::myStatic3()::myStatic2()::myStatic1()::$TOTAL;
+|>MARK_OCCURRENCES:UVS3<|::myStatic3()::myStatic2()::myStatic1()::$INSTANCE::myStatic1();
+|>MARK_OCCURRENCES:UVS3<|::myStatic3()::myStatic2()::myStatic1()::myStatic2();
+|>MARK_OCCURRENCES:UVS3<|::myStatic3()->myStatic2()::myStatic1()->myStatic2();
+|>MARK_OCCURRENCES:UVS3<|::myStatic3()->myStatic2()::myStatic1()->test;

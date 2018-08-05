@@ -1,0 +1,5 @@
+Code completion result for source line:
+public sta|tic function anotherStatic();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    static                                     null

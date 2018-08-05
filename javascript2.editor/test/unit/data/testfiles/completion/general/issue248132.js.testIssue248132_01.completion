@@ -1,0 +1,5 @@
+Code completion result for source line:
+var issue248132 = Date.U|TC();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     UTC(year: Number, month: Numbe  [PUBLIC,   JS Platform

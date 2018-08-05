@@ -1,0 +1,40 @@
+Code completion result for source line:
+TestDomain.find|By
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     find()                                     Object
+METHOD     find(Closure)                              Object
+METHOD     find(Object)                    [PROTECTE  Object
+METHOD     find(String)                    [PROTECTE  Object
+METHOD     find(String, Collection)        [PROTECTE  Object
+METHOD     find(String, Map)               [PROTECTE  Object
+METHOD     findAll()                       [PROTECTE  List
+METHOD     findAll(Closure)                           Collection
+METHOD     findAll(Object)                 [PROTECTE  List
+METHOD     findAll(String)                 [PROTECTE  List
+METHOD     findAll(String, Collection)     [PROTECTE  List
+METHOD     findAll(String, Collection, Ma  [PROTECTE  List
+METHOD     findAll(String, Map)            [PROTECTE  List
+METHOD     findAll(String, Map, Map)       [PROTECTE  List
+METHOD     findAllByAge(Object)            [PROTECTE  List
+METHOD     findAllByAge(Object, Map)       [PROTECTE  List
+METHOD     findAllByAge...                 [PROTECTE  List
+METHOD     findAllByName(Object)           [PROTECTE  List
+METHOD     findAllByName(Object, Map)      [PROTECTE  List
+METHOD     findAllByName...                [PROTECTE  List
+METHOD     findAllWhere(Map)               [PROTECTE  List
+METHOD     findByAge(Object)               [PROTECTE  Object
+METHOD     findByAge(Object, Map)          [PROTECTE  Object
+METHOD     findByAge...                    [PROTECTE  Object
+METHOD     findByName(Object)              [PROTECTE  Object
+METHOD     findByName(Object, Map)         [PROTECTE  Object
+METHOD     findByName...                   [PROTECTE  Object
+METHOD     findIndexOf(Closure)                       int
+METHOD     findIndexOf(int, Closure)                  int
+METHOD     findIndexValues(Closure)                   List
+METHOD     findIndexValues(Number, Closur             List
+METHOD     findLastIndexOf(Closure)                   int
+METHOD     findLastIndexOf(int, Closure)              int
+METHOD     findResult(Closure)                        Object
+METHOD     findResult(Object, Closure)                Object
+METHOD     findWhere(Map)                  [PROTECTE  Object

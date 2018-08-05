@@ -1,0 +1,5 @@
+foo:METHOD:[PUBLIC]:ESCAPED{foo}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  bar:CLASS:[PRIVATE]:ESCAPED{bar}:
+    func1:METHOD:[PUBLIC]:ESCAPED{func1}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    func2:METHOD:[PUBLIC]:ESCAPED{func2}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  that:VARIABLE:[PRIVATE]:ESCAPED{that}<font color="#999999">ESCAPED{ : }foo</font>:

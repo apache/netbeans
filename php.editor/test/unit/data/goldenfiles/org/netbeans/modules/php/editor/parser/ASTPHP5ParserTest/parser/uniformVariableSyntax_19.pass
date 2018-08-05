@@ -1,0 +1,75 @@
+<testresult testFile='uniformVariableSyntax_19.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='7' end='11'>
+            <text>$foo</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='11' end='13'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='13' end='14'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='14' end='18'>
+            <text>$bar</text>
+        </token>
+        <token id='T_OPEN_RECT' start='18' end='19'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='19' end='24'>
+            <text>&apos;baz&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='24' end='25'>
+            <text>]</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='25' end='26'>
+            <text>}</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='26' end='27'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='27' end='28'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='28' end='29'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='30' end='30'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='30'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='29'>
+                <MethodInvocation start='7' end='28'>
+                    <Variable start='7' end='11' isDollared='true'>
+                        <Identifier start='8' end='11' name='foo'/>
+                    </Variable>
+                    <Method>
+                        <FunctionInvocation start='13' end='28'>
+                            <FucntionName start='13' end='26'>
+                                <ReflectionVariable start='13' end='26'>
+                                    <ArrayAccess start='14' end='25' type='VARIABLE_ARRAY' isDollared='false'>
+                                        <ArrayDimension start='18' end='25'>
+                                            <Index>
+                                                <Scalar start='19' end='24' type='STRING' value='&apos;baz&apos;'/>
+                                            </Index>
+                                        </ArrayDimension>
+                                        <Name>
+                                            <Variable start='14' end='18' isDollared='true'>
+                                                <Identifier start='15' end='18' name='bar'/>
+                                            </Variable>
+                                        </Name>
+                                    </ArrayAccess>
+                                </ReflectionVariable>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Method>
+                </MethodInvocation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

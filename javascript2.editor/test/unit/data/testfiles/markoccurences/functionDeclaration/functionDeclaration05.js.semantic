@@ -1,0 +1,15 @@
+function |>METHOD:f1<|(cont) {
+    var |>METHOD:f1<| = function |>METHOD,UNUSED:f2<|(cont) {
+        if (cont) { 
+            f1(false);
+        }
+        |>GLOBAL:console<|.log("running f1 inner");
+    } 
+    if (cont) {
+        f1(true); // inner f1 is called
+    } 
+     
+    |>GLOBAL:console<|.log("running f1 outer");
+}
+     
+f1(true);

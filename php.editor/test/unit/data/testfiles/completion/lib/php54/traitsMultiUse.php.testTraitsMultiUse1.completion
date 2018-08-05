@@ -1,0 +1,16 @@
+Code completion result for source line:
+$this->|publicFirstField;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     functionName()                  [PUBLIC]   WithMultiUses
+METHOD     privateFirstMethod()            [PRIVATE]  FirstTrait
+METHOD     privateSecondMethod()           [PRIVATE]  SecondTrait
+METHOD     protecedFirstMethod()           [PROTECTE  FirstTrait
+METHOD     protecedSecondMethod()          [PROTECTE  SecondTrait
+METHOD     publicFirstMethod()             [PUBLIC]   FirstTrait
+METHOD     publicSecondMethod()            [PUBLIC]   SecondTrait
+VARIABLE   ? privateFirstField             [PRIVATE]  FirstTrait
+VARIABLE   ? privateSecondField            [PRIVATE]  SecondTrait
+VARIABLE   ? protectedFirstField           [PROTECTE  FirstTrait
+VARIABLE   ? protectedSecondField          [PROTECTE  SecondTrait
+VARIABLE   ? publicFirstField              [PUBLIC]   FirstTrait
+VARIABLE   ? publicSecondField             [PUBLIC]   SecondTrait

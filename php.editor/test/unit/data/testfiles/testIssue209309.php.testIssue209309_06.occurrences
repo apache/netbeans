@@ -1,0 +1,3 @@
+    class |>MARK_OCCURRENCES:AliasedClassName<| {}
+    use \Foo\Bar\|>MARK_OCCURRENCES:AliasedClassName<| as Cls;
+        function bar(Omg\|>MARK_OCCURRENCES:Aliased^ClassName<| $p, Cls $a) {}

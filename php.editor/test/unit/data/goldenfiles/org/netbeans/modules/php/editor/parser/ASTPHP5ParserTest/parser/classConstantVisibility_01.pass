@@ -1,0 +1,272 @@
+<testresult testFile='classConstantVisibility_01.php'>
+    <scanner>
+        <token id='T_CLASS' start='7' end='12'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='13' end='36'>
+            <text>ClassConstantVisibility</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='37' end='38'>
+            <text>{</text>
+        </token>
+        <token id='T_CONST' start='44' end='49'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='50' end='71'>
+            <text>IMPLICIT_PUBLIC_CONST</text>
+        </token>
+        <token id='T_EQUAL' start='72' end='73'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='74' end='75'>
+            <text>0</text>
+        </token>
+        <token id='T_SEMICOLON' start='75' end='76'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='81' end='87'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='88' end='93'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='94' end='106'>
+            <text>PUBLIC_CONST</text>
+        </token>
+        <token id='T_EQUAL' start='107' end='108'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='109' end='110'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='110' end='111'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='116' end='123'>
+            <text>private</text>
+        </token>
+        <token id='T_CONST' start='124' end='129'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='130' end='143'>
+            <text>PRIVATE_CONST</text>
+        </token>
+        <token id='T_EQUAL' start='144' end='145'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='146' end='147'>
+            <text>2</text>
+        </token>
+        <token id='T_SEMICOLON' start='147' end='148'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED' start='153' end='162'>
+            <text>protected</text>
+        </token>
+        <token id='T_CONST' start='163' end='168'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='169' end='184'>
+            <text>PROTECTED_CONST</text>
+        </token>
+        <token id='T_EQUAL' start='185' end='186'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='187' end='188'>
+            <text>3</text>
+        </token>
+        <token id='T_SEMICOLON' start='188' end='189'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='194' end='201'>
+            <text>private</text>
+        </token>
+        <token id='T_CONST' start='202' end='207'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='208' end='211'>
+            <text>FOO</text>
+        </token>
+        <token id='T_EQUAL' start='212' end='213'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='214' end='215'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='215' end='216'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='217' end='220'>
+            <text>BAR</text>
+        </token>
+        <token id='T_EQUAL' start='221' end='222'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='223' end='224'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='224' end='225'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='225' end='226'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='227' end='228'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='228' end='229'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='229' end='230'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='232' end='233'>
+            <text>}</text>
+        </token>
+        <token id='T_INTERFACE' start='235' end='244'>
+            <text>interface</text>
+        </token>
+        <token id='T_STRING' start='245' end='272'>
+            <text>InterfaceConstantVisibility</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='273' end='274'>
+            <text>{</text>
+        </token>
+        <token id='T_CONST' start='280' end='285'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='286' end='307'>
+            <text>IMPLICIT_PUBLIC_CONST</text>
+        </token>
+        <token id='T_EQUAL' start='308' end='309'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='310' end='311'>
+            <text>0</text>
+        </token>
+        <token id='T_SEMICOLON' start='311' end='312'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='317' end='323'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='324' end='329'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='330' end='342'>
+            <text>PUBLIC_CONST</text>
+        </token>
+        <token id='T_EQUAL' start='343' end='344'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='345' end='346'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='346' end='347'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='349' end='350'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='351' end='351'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='351'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='7' end='233' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='13' end='36' name='ClassConstantVisibility'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='37' end='233' isCurly='true'>
+                    <ClassConstantDeclaration start='44' end='76' modifier='public'>
+                        <Names>
+                            <Identifier start='50' end='71' name='IMPLICIT_PUBLIC_CONST'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='74' end='75' type='INT' value='0'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='81' end='111' modifier='public'>
+                        <Names>
+                            <Identifier start='94' end='106' name='PUBLIC_CONST'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='109' end='110' type='INT' value='1'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='116' end='148' modifier='private'>
+                        <Names>
+                            <Identifier start='130' end='143' name='PRIVATE_CONST'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='146' end='147' type='INT' value='2'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='153' end='189' modifier='protected'>
+                        <Names>
+                            <Identifier start='169' end='184' name='PROTECTED_CONST'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='187' end='188' type='INT' value='3'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='194' end='230' modifier='private'>
+                        <Names>
+                            <Identifier start='208' end='211' name='FOO'/>
+                            <Identifier start='217' end='220' name='BAR'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='214' end='215' type='INT' value='1'/>
+                            <ArrayCreation start='223' end='229' type='NEW'>
+                                <ArrayElement start='224' end='225'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='224' end='225' type='INT' value='1'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='227' end='228'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='227' end='228' type='INT' value='2'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <InterfaceDeclaration start='235' end='350'>
+                <Name>
+                    <Identifier start='245' end='272' name='InterfaceConstantVisibility'/>
+                </Name>
+                <Block start='273' end='350' isCurly='true'>
+                    <ClassConstantDeclaration start='280' end='312' modifier='public'>
+                        <Names>
+                            <Identifier start='286' end='307' name='IMPLICIT_PUBLIC_CONST'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='310' end='311' type='INT' value='0'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='317' end='347' modifier='public'>
+                        <Names>
+                            <Identifier start='330' end='342' name='PUBLIC_CONST'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='345' end='346' type='INT' value='1'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                </Block>
+            </InterfaceDeclaration>
+        </Statements>
+    </Program>
+</testresult>

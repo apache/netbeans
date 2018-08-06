@@ -621,8 +621,6 @@ public class Reformatter implements ReformatTask {
                     continue;
                 if (TreeUtilities.CLASS_TREE_KINDS.contains(typeDecl.getKind())) {
                     blankLines(cs.getBlankLinesBeforeClass());
-                } else {
-                    blankLines(typeDecl.getKind() == Tree.Kind.MODULE ? 0 : 1);
                 }
                 scan(typeDecl, p);
                 int index = tokens.index();

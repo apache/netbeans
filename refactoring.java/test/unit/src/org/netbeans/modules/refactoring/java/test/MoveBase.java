@@ -49,7 +49,11 @@ public class MoveBase extends RefactoringTestBase {
     public MoveBase(String name) {
         super(name);
     }
-    
+
+    public MoveBase(String name, String sourceLevel) {
+        super(name, sourceLevel);
+    }
+
     void performMove(FileObject source, final int position, final URL target, Problem... expectedProblems) throws IOException, IllegalArgumentException, InterruptedException {
         final MoveRefactoring[] r = new MoveRefactoring[1];
         JavaSource.forFileObject(source).runUserActionTask(new Task<CompilationController>() {

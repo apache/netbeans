@@ -25,11 +25,6 @@ import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
@@ -45,8 +40,6 @@ import org.openide.util.NbBundle.Messages;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeMirror;
-import javax.tools.Diagnostic;
-import javax.tools.Diagnostic.Kind;
 import org.netbeans.modules.java.hints.errors.Utilities;
 
 /**
@@ -60,10 +53,9 @@ import org.netbeans.modules.java.hints.errors.Utilities;
 public class ConvertToVarHint {
 
     // hint will be disabled for error codes present in SKIPPED_ERROR_CODES.
-    private final static Set<String> SKIPPED_ERROR_CODES = Collections.unmodifiableSet(
-            new HashSet<>(Arrays.asList(
-                    "compiler.err.generic.array.creation" //NOI18N
-            )));
+    private final static String[] SKIPPED_ERROR_CODES = {
+        "compiler.err.generic.array.creation" //NOI18N
+    };
 
     @TriggerPattern("$mods$ $type $var = $init") //NOI18N
 
@@ -154,7 +146,7 @@ public class ConvertToVarHint {
             return false;
         }
 
-        if (isDiagnosticCodeTobeSkipped(ctx.getInfo(), treePath.getLeaf())) {
+        if (ctx.getInfo().getTreeUtilities().hasError(treePath.getLeaf(), SKIPPED_ERROR_CODES)) {
             return false;
         }
 
@@ -164,23 +156,6 @@ public class ConvertToVarHint {
 
         //  hint is not applicable for  variable declaration where type is already 'var'
         return !info.getTreeUtilities().isVarType(treePath);
-    }
-
-    /**
-     *
-     * @param info : compilationInfo
-     * @return true if Diagnostic Code is present in SKIPPED_ERROR_CODES
-     */
-    private static boolean isDiagnosticCodeTobeSkipped(CompilationInfo info, Tree tree) {
-        long startPos = info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
-        long endPos = info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree);
-
-        List<Diagnostic> diagnosticsList = info.getDiagnostics();
-        if (diagnosticsList.stream().anyMatch((d)
-                -> ((d.getKind() == Kind.ERROR) && ((d.getStartPosition() >= startPos) && (d.getEndPosition() <= endPos)) && (SKIPPED_ERROR_CODES.contains(d.getCode()))))) {
-            return true;
-        }
-        return false;
     }
     
     private static boolean isValidVarType(HintContext ctx) {

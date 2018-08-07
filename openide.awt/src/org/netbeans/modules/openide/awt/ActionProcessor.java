@@ -88,7 +88,7 @@ public final class ActionProcessor extends LayerGeneratingProcessor {
         hash.add(ActionID.class.getCanonicalName());
         hash.add(ActionReference.class.getCanonicalName());
         hash.add(ActionReferences.class.getCanonicalName());
-        hash.add(ActionState.class.getCanonicalName());
+//        hash.add(ActionState.class.getCanonicalName());
         return hash;
     }
     
@@ -299,13 +299,8 @@ public final class ActionProcessor extends LayerGeneratingProcessor {
                 if (ar.surviveFocusChange()) {
                     f.boolvalue("surviveFocusChange", true); 
                 }
-                ActionState as = ar.enabledOn();
-                processActionState(e, as, f, selectType, true, at, ot, lt, vt);
-
-                as = e.getAnnotation(ActionState.class);
-                if (as != null) {
-                    processActionState(e, as, f, selectType, false, at, ot, lt, vt);
-                }
+                processActionState(e, ar.enabledOn(), f, selectType, true, at, ot, lt, vt);
+                processActionState(e, ar.checkedOn(), f, selectType, false, at, ot, lt, vt);
             }
             f.write();
             
@@ -559,7 +554,7 @@ public final class ActionProcessor extends LayerGeneratingProcessor {
                 case ActionState.NULL_VALUE:
                     f.boolvalue(enable ? "enableOnNull" : "checkedOnNull", true);
                     break;
-                case ActionState.ANY_VALUE:
+                case ActionState.NON_NULL_VALUE:
                     f.boolvalue(enable ? "enableOnNull" : "checkedOnNull", false);
                     break;
                 default:

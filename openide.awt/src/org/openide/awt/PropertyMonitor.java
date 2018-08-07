@@ -163,7 +163,7 @@ class PropertyMonitor<T> implements ContextAction.StatefulMonitor<T>, PropertyCh
         if (cv == null) {
             Object b= data.get(keyPrefix + KEY_NULL);
             if (b instanceof Boolean) {
-                cv = ((Boolean)b).booleanValue() ? ActionState.NULL_VALUE : ActionState.ANY_VALUE;
+                cv = ((Boolean)b).booleanValue() ? ActionState.NULL_VALUE : ActionState.NON_NULL_VALUE;
             }
         }
         checkedValue = cv;
@@ -416,7 +416,7 @@ class PropertyMonitor<T> implements ContextAction.StatefulMonitor<T>, PropertyCh
                 }
                 Class c = getter.getReturnType();
                 if (!(c != Boolean.TYPE || c != Boolean.class || c != String.class || !c.isEnum()) && 
-                    !(checkedValue == ActionState.NULL_VALUE || checkedValue == ActionState.ANY_VALUE)) {
+                    !(checkedValue == ActionState.NULL_VALUE || checkedValue == ActionState.NON_NULL_VALUE)) {
                     getter = null;
                 }
                 valType = c;
@@ -522,7 +522,7 @@ class PropertyMonitor<T> implements ContextAction.StatefulMonitor<T>, PropertyCh
         if (checkedValue == null) {
             return false;
         }
-        if (checkedValue == ActionState.ANY_VALUE) {
+        if (checkedValue == ActionState.NON_NULL_VALUE) {
             return true;
         }
         if (!(checkedValue instanceof String)) {

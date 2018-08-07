@@ -141,4 +141,13 @@ public @interface ActionRegistration {
      * @since 7.71
      */
     ActionState enabledOn() default @ActionState(type=Void.class);
+    
+    /**
+     * Controls action's enable state. If unspecified, the action will not represent the state value,
+     * and will be presented as normal item or button. If specified, the action will be presented as
+     * checkbox or toggle button. * Similar to {@link #enableOn}, type and its property can be used to determine whether the
+     * action is checked or unchecked. See {@link ActionState} for more details.
+     * @return specification of the checked state.
+     */
+    ActionState checkedOn() default @ActionState(type=Void.class);
 }

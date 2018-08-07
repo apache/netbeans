@@ -207,7 +207,7 @@ public class Actions {
     * @param item menu item
     * @param action action
     * @param popup create popup or menu item
-    * @deprecated Please use {@link #connect(javax.swing.JCheckBoxMenuItem, org.openide.util.actions.Presenter.BooleanState, boolean)}. 
+    * @deprecated Please use {@link #connect(javax.swing.JCheckBoxMenuItem, javax.swing.Action, boolean)}. 
     * Have your action to implement properly {@link Action#getValue} for {@link Action#SELECTED_KEY}
     */
     @Deprecated
@@ -674,6 +674,37 @@ public class Actions {
      *    }
      *  }
      * </pre>
+     * <p/>
+     * Further attributes are defined to control action's enabled and checked state. 
+     * Attributes which control enable state are prefixed by "{@code enableOn}". Attributes
+     * controlling checked state have prefix "{@code checkedOn}":
+     * <code><pre>
+     * &lt;file name="action-pkg-ClassName.instance"&gt;
+     *   &lt;!-- Enable on certain type in Lookup --&gt;
+     *   &lt;attr name="enableOnType" stringvalue="qualified.type.name"/&gt;
+     * 
+     *   &lt;!-- Monitor specific property in that type --&gt;
+     *   &lt;attr name="enableOnProperty" stringvalue="propertyName"/&gt;
+     * 
+     *   &lt;!-- The property value, which corresponds to enabled action.
+     *           Values "#null" and "#non-null" are treated specially.
+     *   --&gt;
+     *   &lt;attr name="enableOnValue" stringvalue="propertyName"/&gt;
+     * 
+     *   &lt;!-- Name of custom listener interface --&gt;
+     *   &lt;attr name="enableOnChangeListener" stringvalue="qualifier.listener.interface"/&gt;
+     * 
+     *   &lt;!-- Name of listener method that triggers state re-evaluation  --&gt;
+     *   &lt;attr name="enableOnMethod" stringvalue="methodName"/&gt;
+     * 
+     *   &lt;!-- Delegate to the action instance for final decision --&gt;
+     *   &lt;attr name="enableOnActionProperty" stringvalue="actionPropertyName"/&gt;
+     * 
+     *   &lt;!-- ... --&gt;
+     * 
+     * &lt;/file&gt;
+     * 
+     * </pre></code>
      *
      * @param type the object to seek for in the active context
      * @param single shall there be just one or multiple instances of the object
@@ -700,13 +731,12 @@ public class Actions {
         map.put("key", key); // NOI18N
         map.put("surviveFocusChange", surviveFocusChange); // NOI18N
         map.put("delegate", delegate); // NOI18N
-        map.put("_delegateReady", true); // NOI18N
         map.put("type", type); // NOI18N
         map.put("selectionType", single ? ContextSelection.EXACTLY_ONE : ContextSelection.ANY);
         map.put("displayName", displayName); // NOI18N
         map.put("iconBase", iconBase); // NOI18N
         map.put("noIconInMenu", noIconInMenu); // NOI18N
-        return GeneralAction.context(map);
+        return GeneralAction.context(map, true);
     }
     static Action context(Map fo) {
         Object context = fo.get("context");

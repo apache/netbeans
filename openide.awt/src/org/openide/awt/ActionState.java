@@ -31,12 +31,12 @@ import org.openide.util.actions.Presenter;
 
 /**
  * Specifies that the action behaviour is conditional and how the action should obtain the
- * state for its display. The annotation must be present on the same element as
- * {@link ActionRegistration} to specify that action is on/off state. The annotation
+ * state for its presentation. The annotation is used as value for {@link ActionRegistration#enabledOn}
+ * and {@link ActionRegistration#checkedOn} to control action's enabled or checked state. The annotation
  * can be only applied on <b>context actions</b>, which have a single parameter constructor,
  * which accept the model object - see {@link Actions#context(java.lang.Class, boolean, boolean, org.openide.util.ContextAwareAction, java.lang.String, java.lang.String, java.lang.String, boolean)}.
  * <p/>
- * The annotation can be used either as <b>top-level</b>, and will change the action
+ * When used as {@link ActionRegistration#checkedOn} value, the annotated action will change
  * to <b>toggle on/off action</b>, represented by a checkbox (menu) or a toggle button (toolbar).
  * The action state will track the model property specified by this
  * annotation. Toggle actions become <b>enabled</b> when the model object is
@@ -56,7 +56,7 @@ import org.openide.util.actions.Presenter;
  * if present.
  * <li>if {@link #checkValue} is {@link #NULL_VALUE}, the action is checked if and only if
  * the value is {@code null}. 
- * <li>if {@link #checkValue} is {@link #ANY_VALUE}, the action is checked if and only if
+ * <li>if {@link #checkValue} is {@link #NON_NULL_VALUE}, the action is checked if and only if
  * the value is not {@code null}. 
  * <li>if the value type is an enum, its {@link Enum#name} is compared to {@link #checkValue}
  * <li>the state will be {@code false} (unchecked) otherwise.
@@ -81,7 +81,7 @@ import org.openide.util.actions.Presenter;
  * same way as for "checked" state. See the above text.
  * <p/>
  * If a completely custom behaviour is desired, the system can finally delegate {@link Action#isEnabled} and
- * {@link Action#getValue({@link Action#SELECTED_KEY}) to the action implementation itself: use {@link #useActionInstance()}
+ * {@link Action#getValue getValue}({@link Action#SELECTED_KEY}) to the action implementation itself: use {@link #useActionInstance()}
  * value.
  * <p/>
  * Here are several examples of {@code @ActionState} usage:
@@ -117,8 +117,9 @@ import org.openide.util.actions.Presenter;
  *     normal
  * }
  * &#64;ActionID(category = "Example", id = "example.RectSelection")
- * &#64;ActionRegistration(displayName = "Toggle rectangular selection")
- * &#64;ActionState(property = "selectionMode", checkedValue = "Rectangular", listenOn = EditorStateListener.class)
+ * &#64;ActionRegistration(displayName = "Toggle rectangular selection", checkedOn = &#64;ActionState(
+ *     property = "selectionMode", checkedValue = "Rectangular", listenOn = EditorStateListener.class)
+ * )
  * public class RectangularSelectionAction implements ActionListener {
  *     public RectangularSelectionAction(EditorInterface editor) {
  *         // ...
@@ -138,8 +139,9 @@ import org.openide.util.actions.Presenter;
  * that UI will not be strongly referenced from the model for proper garbage collection:
  * <code><pre>
  * &#64;ActionID(category = "Example", id = "example.SelectPrevious")
- * &#64;ActionRegistration(displayName = "Selects previous item")
- * &#64;ActionState(listenOn = ListSelectionListener.class, useActionInstance = true)
+ * &#64;ActionRegistration(displayName = "Selects previous item", checkedOn = &#64;ActionState(
+ *     listenOn = ListSelectionListener.class, useActionInstance = true)
+ * )
  * public class SelectPreviousAction extends AbstractAction {
  *     private final ListSelectionModel model;
  *     
@@ -162,7 +164,7 @@ import org.openide.util.actions.Presenter;
  * @since 7.71
  */
 @Retention(RetentionPolicy.SOURCE)
-@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD})
+@Target({ElementType.FIELD})
 public @interface ActionState {
 
     /**
@@ -176,7 +178,7 @@ public @interface ActionState {
      * as obtained by {@link Action#getValue}.
      * </ul>
      * If {@code @ActionState} is used in {@link ActionRegistration#enabledOn()}, the
-     * {@code type} can be left blank, defaulting to the context type for the action.
+ * {@code type} can be left unspecified, defaulting to the context type for the action.
      *
      * @return type to work with.
      */
@@ -185,9 +187,9 @@ public @interface ActionState {
     /**
      * Property name whose value represents the state. The property must be a
      * property on the {@link #type()} class; read-only properties are
-     * supported. If the target class as supports attaching
+     * supported. If the target class supports attaching
      * {@link PropertyChangeListener} or {@link ChangeListener}, the action will
-     * attach a listener (PropertyChangeListener takes precedence) and will fire
+     * attach a listener ({@link PropertyChangeListener} takes precedence) and will fire
      * appropriate state events when the property property changes.
      * <p/>
      * In the case that checked state is delegated to {@link Action}, the property
@@ -211,7 +213,7 @@ public @interface ActionState {
      * <li><code>"true"</code>, <code>"false"</code> to represent boolean or Boolean values
      * <li>String representation of an enum value, as obtained by {@link Enum#name()}
      * <li><code>{@link #NULL_VALUE}</code> to indicate <code>null</code> value
-     * <li><code>{@link #ANY_VALUE}</code> to indicate any non-null value
+     * <li><code>{@link #NON_NULL_VALUE}</code> to indicate any non-null value
      * <li>String representation of the value object, as obtained by {@link Object#toString}
      * <li>
      * </ul>
@@ -251,7 +253,7 @@ public @interface ActionState {
      * becomes available and the guard {@link #property()} has the {@link #checkedValue() appropriate value}.
      * <p/>
      * After that, the system will delegate to {@link Action#isEnabled()} for enablement, or
-     * to {@link Action#getValue()}({@link Action#SELECTED_KEY} for on/off state of the action.
+     * to {@link Action#getValue getValue}({@link Action#SELECTED_KEY}) for on/off state of the action.
      * <p/>
      * The annotated element <b>must</b> implement {@link Action} interface in order to use
      * this value.
@@ -267,5 +269,5 @@ public @interface ActionState {
     /**
      * An explicit {@code null} value for {@link #checkedValue}, represents {@code non-null} 
      */
-    public static final String ANY_VALUE = "#non-null";
+    public static final String NON_NULL_VALUE = "#non-null";
 }

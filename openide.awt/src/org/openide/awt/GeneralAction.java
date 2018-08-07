@@ -84,8 +84,12 @@ final class GeneralAction {
     }
     
     public static ContextAwareAction context(Map map) {
+        return context(map, false);
+    }
+    
+    static ContextAwareAction context(Map map, boolean instanceReady) {
         Class<?> dataType = readClass(map.get("type")); // NOI18N
-        ContextAwareAction ca = _context(map, dataType, Utilities.actionsGlobalContext());
+        ContextAwareAction ca = _context(map, dataType, Utilities.actionsGlobalContext(), instanceReady);
         // autodetect on/off actions
         if (ca.getValue(Action.SELECTED_KEY) != null) {
             return new StateDelegateAction(map, ca);
@@ -96,10 +100,10 @@ final class GeneralAction {
     
     public static Action bindContext(Map map, Lookup context) {
         Class<?> dataType = readClass(map.get("type")); // NOI18N
-        return new BaseDelAction(map, _context(map, dataType, context));
+        return new BaseDelAction(map, _context(map, dataType, context, false));
     }
     
-    private static <T> ContextAwareAction _context(Map map, Class<T> dataType, Lookup context) {
+    private static <T> ContextAwareAction _context(Map map, Class<T> dataType, Lookup context, boolean instanceReady) {
         ContextSelection sel = readSelection(map.get("selectionType")); // NOI18N
         Performer<T> perf = new Performer<T>(map);
         boolean survive = Boolean.TRUE.equals(map.get("surviveFocusChange")); // NOI18N
@@ -123,7 +127,7 @@ final class GeneralAction {
             }
         }
         // special case to hook on existing action instances
-        if (map.containsKey("_delegateReady")) { // NOI18N
+        if (instanceReady) { // NOI18N
             enableMonitor = new PropertyMonitor(Action.class, "enabled"); // NOI18N
             Object ao = map.get("delegate");
             if (ao instanceof Action) {
@@ -131,11 +135,6 @@ final class GeneralAction {
                     checkMonitor = new PropertyMonitor(Action.class, Action.SELECTED_KEY);
                 }
             }
-        }
-        
-        if (enableMonitor == null && map.containsKey("enableDelegate")) { // NOI18N
-            // force enablement through the action instance
-            enableMonitor = new PropertyMonitor(Action.class, "enabled"); // NOI18N
         }
         
         ContextAction a;

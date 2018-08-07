@@ -282,9 +282,9 @@ public class StatefulActionProcessorTest extends NbTestCase implements ContextGl
                     
             "public class A {\n" +
             "    @ActionID(category=\"Tools\",id=\"test.action\")" +
-            "    @ActionRegistration(displayName=\"AAA\", key=\"K\") " +
+            "    @ActionRegistration(displayName=\"AAA\", key=\"K\", checkedOn = @ActionState()) " +
             "    @ActionReference(path=\"manka\", position=11)" +
-            "    @ActionState()" +
+            "    " +
             "    public static class B implements ActionListener {\n" +
             "       public B(ActionModel mdl) {} \n" +
             "      public void actionPerformed(ActionEvent e) {}\n" +
@@ -317,9 +317,9 @@ public class StatefulActionProcessorTest extends NbTestCase implements ContextGl
                     
             "public class A {\n" +
             "    @ActionID(category=\"Tools\",id=\"test.action\")" +
-            "    @ActionRegistration(displayName=\"AAA\", key=\"K\") " +
+            "    @ActionRegistration(displayName=\"AAA\", key=\"K\", checkedOn = @ActionState(type = ActionModel2.class, property=\"rumcajs\")) " +
             "    @ActionReference(path=\"manka\", position=11)" +
-            "    @ActionState(type = ActionModel2.class, property=\"rumcajs\")" +
+            "    " +
             "    public static class B implements ActionListener {\n" +
             "       public B(ActionModel mdl) {} \n" +
             "      public void actionPerformed(ActionEvent e) {}\n" +
@@ -352,9 +352,9 @@ public class StatefulActionProcessorTest extends NbTestCase implements ContextGl
                     
             "public class A {\n" +
             "    @ActionID(category=\"Tools\",id=\"test.action\")" +
-            "    @ActionRegistration(displayName=\"AAA\", key=\"K\") " +
+            "    @ActionRegistration(displayName=\"AAA\", key=\"K\", checkedOn = @ActionState(type = ActionModel2.class, property=\"intProp\")) " +
             "    @ActionReference(path=\"manka\", position=11)" +
-            "    @ActionState(type = ActionModel2.class, property=\"intProp\")" +
+            "    " +
             "    public static class B implements ActionListener {\n" +
             "       public B(ActionModel mdl) {} \n" +
             "      public void actionPerformed(ActionEvent e) {}\n" +
@@ -387,9 +387,9 @@ public class StatefulActionProcessorTest extends NbTestCase implements ContextGl
                     
             "public class A {\n" +
             "    @ActionID(category=\"Tools\",id=\"test.action\")" +
-            "    @ActionRegistration(displayName=\"AAA\", key=\"K\") " +
+            "    @ActionRegistration(displayName=\"AAA\", key=\"K\", checkedOn = @ActionState(type = ActionModel2.class, property=\"boolProp\")) " +
             "    @ActionReference(path=\"manka\", position=11)" +
-            "    @ActionState(type = ActionModel2.class, property=\"boolProp\")" +
+            "    " +
             "    public static class B implements ActionListener {\n" +
             "       public B(ActionModel mdl) {} \n" +
             "      public void actionPerformed(ActionEvent e) {}\n" +
@@ -419,9 +419,9 @@ public class StatefulActionProcessorTest extends NbTestCase implements ContextGl
                     
             "public class A {\n" +
             "    @ActionID(category=\"Tools\",id=\"test.action\")" +
-            "    @ActionRegistration(displayName=\"AAA\", key=\"K\") " +
+            "    @ActionRegistration(displayName=\"AAA\", key=\"K\", checkedOn = @ActionState(type = ActionModel2.class, property=\"bool2Prop\")) " +
             "    @ActionReference(path=\"manka\", position=11)" +
-            "    @ActionState(type = ActionModel2.class, property=\"bool2Prop\")" +
+            "    " +
             "    public static class B implements ActionListener {\n" +
             "       public B(ActionModel mdl) {} \n" +
             "      public void actionPerformed(ActionEvent e) {}\n" +
@@ -452,9 +452,9 @@ public class StatefulActionProcessorTest extends NbTestCase implements ContextGl
                     
             "public class A {\n" +
             "    @ActionID(category=\"Tools\",id=\"test.action\")" +
-            "    @ActionRegistration(displayName=\"AAA\", key=\"K\") " +
+            "    @ActionRegistration(displayName=\"AAA\", key=\"K\", checkedOn = @ActionState(type = ActionModel2.class, property=\"prop\", listenOn=ClassListener.class)) " +
             "    @ActionReference(path=\"manka\", position=11)" +
-            "    @ActionState(type = ActionModel2.class, property=\"prop\", listenOn=ClassListener.class)" +
+            "    " +
             "    public static class B implements ActionListener {\n" +
             "       public B(ActionModel mdl) {} \n" +
             "      public void actionPerformed(ActionEvent e) {}\n" +
@@ -487,9 +487,9 @@ public class StatefulActionProcessorTest extends NbTestCase implements ContextGl
                     
             "public class A {\n" +
             "    @ActionID(category=\"Tools\",id=\"test.action\")" +
-            "    @ActionRegistration(displayName=\"AAA\", key=\"K\") " +
+            "    @ActionRegistration(displayName=\"AAA\", key=\"K\", checkedOn = @ActionState(type = ActionModel2.class, property=\"prop\", listenOn=NonpublicListener.class)) " +
             "    @ActionReference(path=\"manka\", position=11)" +
-            "    @ActionState(type = ActionModel2.class, property=\"prop\", listenOn=NonpublicListener.class)" +
+            "    " +
             "    public static class B implements ActionListener {\n" +
             "       public B(ActionModel mdl) {} \n" +
             "      public void actionPerformed(ActionEvent e) {}\n" +
@@ -522,9 +522,9 @@ public class StatefulActionProcessorTest extends NbTestCase implements ContextGl
                     
             "public class A {\n" +
             "    @ActionID(category=\"Tools\",id=\"test.action\")" +
-            "    @ActionRegistration(displayName=\"AAA\", key=\"K\") " +
+            "    @ActionRegistration(displayName=\"AAA\", key=\"K\", checkedOn = @ActionState(type = ActionModel2.class, property=\"prop\", listenOn=ChangeListener.class)) " +
             "    @ActionReference(path=\"manka\", position=11)" +
-            "    @ActionState(type = ActionModel2.class, property=\"prop\", listenOn=ChangeListener.class)" +
+            "    " +
             "    public static class B implements ActionListener {\n" +
             "       public B(ActionModel mdl) {} \n" +
             "      public void actionPerformed(ActionEvent e) {}\n" +
@@ -557,10 +557,10 @@ public class StatefulActionProcessorTest extends NbTestCase implements ContextGl
                     
             "public class A {\n" +
             "    @ActionID(category=\"Tools\",id=\"test.action\")" +
-            "    @ActionRegistration(displayName=\"AAA\", key=\"K\") " +
+            "    @ActionRegistration(displayName=\"AAA\", key=\"K\", checkedOn = "
+                    + "@ActionState(type = ActionModel5.class, property=\"prop\", listenOn=CustomListener.class, listenOnMethod=\"bubu\")) " +
             "    @ActionReference(path=\"manka\", position=11)" +
-            "    @ActionState(type = ActionModel5.class, property=\"prop\", "
-                    + "listenOn=CustomListener.class, listenOnMethod=\"bubu\")" +
+            "    " +
             "    public static class B implements ActionListener {\n" +
             "       public B(ActionModel mdl) {} \n" +
             "      public void actionPerformed(ActionEvent e) {}\n" +
@@ -625,7 +625,7 @@ public class StatefulActionProcessorTest extends NbTestCase implements ContextGl
     
     @ActionID(id = "test.NonNull", category="Foo")
     @ActionRegistration(displayName = "TestAction", 
-            enabledOn = @ActionState(property = "prop1", checkedValue = ActionState.ANY_VALUE)
+            enabledOn = @ActionState(property = "prop1", checkedValue = ActionState.NON_NULL_VALUE)
     )
     public static class NonNullAction implements ActionListener {
 
@@ -892,8 +892,7 @@ public class StatefulActionProcessorTest extends NbTestCase implements ContextGl
     }
     
     @ActionID(id = "test.ToggleAction", category="Foo")
-    @ActionRegistration(displayName = "TestAction")
-    @ActionState(property = "boolProp")
+    @ActionRegistration(displayName = "TestAction", checkedOn = @ActionState(property = "boolProp"))
     public static class ToggleAction implements ActionListener {
         
         public ToggleAction(ActionModel3 model) {
@@ -970,8 +969,7 @@ public class StatefulActionProcessorTest extends NbTestCase implements ContextGl
     
 
     @ActionID(id = "test.ToggleAction3", category="Foo")
-    @ActionRegistration(displayName = "TestAction")
-    @ActionState(property = "boolProp")
+    @ActionRegistration(displayName = "TestAction", checkedOn = @ActionState(property = "boolProp"))
     public static class ToggleAction3 implements ActionListener {
         public ToggleAction3(ActionModel4 model) {
             instance2 = this;
@@ -1012,8 +1010,7 @@ public class StatefulActionProcessorTest extends NbTestCase implements ContextGl
     }
 
     @ActionID(id = "test.ToggleCustomCallback", category="Foo")
-    @ActionRegistration(displayName = "TestAction")
-    @ActionState(property = "boolProp", listenOn = CustomListener.class)
+    @ActionRegistration(displayName = "TestAction", checkedOn = @ActionState(property = "boolProp", listenOn = CustomListener.class))
     public static class ToggleCustomCallback implements ActionListener {
         public ToggleCustomCallback(ActionModel5 model) {
             instance2 = this;
@@ -1055,8 +1052,7 @@ public class StatefulActionProcessorTest extends NbTestCase implements ContextGl
 
 
     @ActionID(id = "test.ToggleAction2", category="Foo")
-    @ActionRegistration(displayName = "TestAction")
-    @ActionState(property = "boolProp")
+    @ActionRegistration(displayName = "TestAction", checkedOn = @ActionState(property = "boolProp"))
     public static class ToggleAction2 implements ActionListener {
         
         public ToggleAction2(ActionModel2 model) {
@@ -1124,8 +1120,7 @@ public class StatefulActionProcessorTest extends NbTestCase implements ContextGl
     }
     
     @ActionID(id = "test.CustomToggleAction", category="Foo")
-    @ActionRegistration(displayName = "TestAction")
-    @ActionState(property = "boolProp", useActionInstance = true)
+    @ActionRegistration(displayName = "TestAction", checkedOn = @ActionState(property = "boolProp", useActionInstance = true))
     public static class CustomToggleAction extends AbstractAction {
         ActionModel3 aModel;
         
@@ -1369,8 +1364,9 @@ public class StatefulActionProcessorTest extends NbTestCase implements ContextGl
     }
     
     @ActionID(id = "test.ListAction", category="Foo")
-    @ActionRegistration(displayName = "TestAction")
-    @ActionState(property = "minSelectionIndex", listenOn = ListSelectionListener.class, listenOnMethod="valueChanged")
+    @ActionRegistration(displayName = "TestAction", checkedOn = @ActionState(
+            property = "minSelectionIndex", listenOn = ListSelectionListener.class, listenOnMethod="valueChanged"
+    ))
     public static class ListAction implements ActionListener {
         public ListAction(ListSelectionModel model) {
             instance2 = this;
@@ -1381,6 +1377,4 @@ public class StatefulActionProcessorTest extends NbTestCase implements ContextGl
             received = e;
         }
     }
-    
-    
 }

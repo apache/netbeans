@@ -28,14 +28,21 @@
 <changes>
     <change id="ToggleActions">
         <api name="awt"/>
-        <summary>Allow for context-dependent boolean-state actions</summary>
+        <summary>Support model-based enabled and check state of actions</summary>
         <version major="7" minor="71"/>
         <date day="30" month="8" year="2018"/>
         <author login="sdedic"/>
         <compatibility addition="yes" binary="compatible" semantic="compatible" deprecation="yes" deletion="no" modification="no"/>
         <description>
-            Context Actions which provide <code>Action.SELECTED_KEY</code> value will be presented as checkbox (menu) or toggle button (toolbar) and
-            will reflect the state of an underlying model bean property, updating on model changes. Eliminates the need for eager toggle-style actions.
+            <p>
+                Context Actions which provide <code>Action.SELECTED_KEY</code> value will be presented as checkbox (menu) or toggle button (toolbar) and
+                will reflect the state of an underlying model bean property, tracking models in Lookup and updating to model changes. Similar support
+                was added for <code>enabled</code> Action property.
+            </p>
+            <p>
+                All that was required to be implemented by individual Actions in their <a href="@org-openide-util-ui@/org/openide/util/ContextAwareAction.html">ContextAwareAction</a>
+                implementations, this allows to use just annotation for the same behaviour in most cases.
+            </p>
         </description>
         <class package="org.openide.awt" name="Actions"/>
         <class package="org.openide.awt" name="ActionState"/>

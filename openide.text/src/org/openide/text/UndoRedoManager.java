@@ -251,7 +251,7 @@ final class UndoRedoManager extends UndoRedo.Manager {
     }
         
     private void undoSaveActions() {
-        if (onSaveTasksEdit != null) {
+        if (onSaveTasksEdit != null && onSaveTasksEdit.canUndo()){
             checkLogOp("    saveActionsEdit.undo()", onSaveTasksEdit); // NOI18N
             onSaveTasksEdit.undo();
         }
@@ -263,7 +263,7 @@ final class UndoRedoManager extends UndoRedo.Manager {
     }
         
     private void redoSaveActions() {   
-        if (onSaveTasksEdit != null) {
+        if (onSaveTasksEdit != null && onSaveTasksEdit.canRedo()) {
             checkLogOp("    saveActionsEdit.redo()", onSaveTasksEdit); // NOI18N
             onSaveTasksEdit.redo();
         }

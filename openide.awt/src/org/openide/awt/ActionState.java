@@ -46,7 +46,7 @@ import org.openide.util.actions.Presenter;
  * The {@link #type} specifies type which is searched for in the {@link Lookup} and
  * if an instance is found, it is used as the model object. If the {@link #type} is not set, 
  * the <b>the type inferred from Action's
- * constructor</b> (see {@link ActionRegistration}) will be used to find th model.
+ * constructor</b> (see {@link ActionRegistration}) will be used to find the model.
  * <p/>
  * The {@link #property} specifies bean property whose value should be used to
  * determine checked state. The obtained value is compared using {@link #checkedValue}

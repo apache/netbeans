@@ -148,6 +148,7 @@ public @interface ActionRegistration {
      * checkbox or toggle button. * Similar to {@link #enableOn}, type and its property can be used to determine whether the
      * action is checked or unchecked. See {@link ActionState} for more details.
      * @return specification of the checked state.
+     * @since 7.71
      */
     ActionState checkedOn() default @ActionState(type=Void.class);
 }

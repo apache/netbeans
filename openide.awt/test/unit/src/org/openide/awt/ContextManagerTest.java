@@ -141,7 +141,7 @@ public class ContextManagerTest extends NbTestCase {
         assertGC("Action should be GCed", clone);
 
         assertGC("Fallback action should be GCed", fallbackActionRef);
-            assertGC("Action LSet Should be GCed", lsetRef);
+        assertGC("Action LSet Should be GCed", lsetRef);
         lookupResult.allInstances();
     }
     

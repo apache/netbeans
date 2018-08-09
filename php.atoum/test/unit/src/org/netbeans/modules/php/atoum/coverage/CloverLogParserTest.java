@@ -55,7 +55,7 @@ public class CloverLogParserTest extends NbTestCase {
         assertEquals(new File(getDataDir(), "testdata/Calculator.php").getAbsolutePath(), file.getPath());
         FileMetrics metrics = file.getMetrics();
         assertNotNull(metrics);
-        assertEquals(68, metrics.getLineCount());
+        assertEquals(45, metrics.getLineCount());
         assertEquals(6, metrics.getStatements());
         assertEquals(6, metrics.getCoveredStatements());
         assertNotNull(file.getLines());
@@ -74,7 +74,7 @@ public class CloverLogParserTest extends NbTestCase {
         assertEquals(new File(getDataDir(), "testdata/Calculator2.php").getAbsolutePath(), file.getPath());
         metrics = file.getMetrics();
         assertNotNull(metrics);
-        assertEquals(65, metrics.getLineCount());
+        assertEquals(42, metrics.getLineCount());
         assertEquals(6, metrics.getStatements());
         assertEquals(4, metrics.getCoveredStatements());
         assertNotNull(file.getLines());

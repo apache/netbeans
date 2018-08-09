@@ -36,6 +36,7 @@ import org.openide.util.actions.BooleanStateAction;
 import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.util.actions.ActionPresenterProvider;
+import org.openide.util.actions.Presenter;
 
 /** Default implementation of presenters for various action types.
  */
@@ -45,6 +46,9 @@ public final class DefaultAWTBridge extends ActionPresenterProvider {
         if (action instanceof BooleanStateAction) {
             BooleanStateAction b = (BooleanStateAction)action;
             return new Actions.CheckboxMenuItem (b, true);
+        }
+        if (action.getValue(Actions.ACTION_VALUE_TOGGLE) != null) {
+            return new Actions.CheckboxMenuItem(action, true);
         }
         if (action instanceof SystemAction) {
             SystemAction s = (SystemAction)action;
@@ -68,11 +72,12 @@ public final class DefaultAWTBridge extends ActionPresenterProvider {
         return item;
     }
     
+    @Override
     public Component createToolbarPresenter(Action action) {
         AbstractButton btn;
-        if (action instanceof BooleanStateAction) {
+        if ((action instanceof BooleanStateAction) || (action.getValue(Actions.ACTION_VALUE_TOGGLE) != null)) {
             btn = new JToggleButton();
-            Actions.connect(btn, (BooleanStateAction) action);
+            Actions.connect(btn, action);
         } else {
             btn = new JButton();
             Actions.connect(btn, action);

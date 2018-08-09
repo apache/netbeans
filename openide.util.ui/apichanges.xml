@@ -27,6 +27,22 @@
     <apidef name="actions">Actions API</apidef>
 </apidefs>
 <changes>
+    <change id="DeprecateBooleanStateAction">
+        <api name="util"/>
+        <summary><code>BooleanStateAction</code> deprecated in favour of <code>Actions</code> API and <code>@ActionState</code> annotation.</summary>
+        <version major="9" minor="11"/>
+        <date day="1" month="8" year="2018"/>
+        <author login="sdedic"/>
+        <compatibility deprecation="yes"/>
+        <description>
+            <p>
+                The <a href="@TOP@/org/openide/util/actions/BooleanStateAction.html">BooleanStateAction</a> base class was deprecated, as
+                there's a programatic API in <a href="@org-openide-awt@/org/openide/awt/Actions.html">Actions</a>
+                and a declarative <a href="@org-openide-awt@/org/openide/awt/ActionState.html">@ActionState</a> annotation which fully supersede the deprecated class.
+            </p>
+        </description>
+        <class package="org.openide.util.actions" name="BooleanStateAction"/>
+    </change>
     <change id="GetAuthenticationPassword">
         <api name="util"/>
         <summary>API <code>NetworkSettings.getAuthenticationPassword</code> added</summary>

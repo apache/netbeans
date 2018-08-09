@@ -65,6 +65,7 @@ import org.openide.util.LookupListener;
 import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
 import org.openide.util.actions.BooleanStateAction;
+import org.openide.util.actions.Presenter;
 import org.openide.util.actions.SystemAction;
 
 
@@ -79,6 +80,15 @@ public class Actions {
      * action's presenter from the UI.
      */
     public static final String ACTION_VALUE_VISIBLE = "openide.awt.actionVisible"; // NOI18N
+    
+    /**
+     * Key for {@link Action#getValue} to indicate that the action should be presented
+     * as toggle, if possible. Presenters may create checkbox item, toggle button etc.
+     * This is to avoid accessing the {@link Action#SELECTED_KEY} actual value during
+     * presenter construction, as evaluation may be expensive.
+     * @since 7.71
+     */
+    public static final String ACTION_VALUE_TOGGLE = "openide.awt.actionToggle"; // NOI18N
     
     /**
      * @deprecated should not be used
@@ -179,7 +189,12 @@ public class Actions {
                 return;
             }
         }
-        Bridge b = new MenuBridge(item, action, popup);
+        Bridge b;
+        if ((item instanceof JCheckBoxMenuItem) && (action.getValue(Actions.ACTION_VALUE_TOGGLE) != null)) {
+            b = new CheckMenuBridge((JCheckBoxMenuItem)item, action, popup);
+        } else {
+            b = new MenuBridge(item, action, popup);
+        }
         b.prepare();
 
         if (item instanceof Actions.MenuItem) {
@@ -192,8 +207,24 @@ public class Actions {
     * @param item menu item
     * @param action action
     * @param popup create popup or menu item
+    * @deprecated Please use {@link #connect(javax.swing.JCheckBoxMenuItem, javax.swing.Action, boolean)}. 
+    * Have your action to implement properly {@link Action#getValue} for {@link Action#SELECTED_KEY}
     */
+    @Deprecated
     public static void connect(JCheckBoxMenuItem item, BooleanStateAction action, boolean popup) {
+        Bridge b = new CheckMenuBridge(item, action, popup);
+        b.prepare();
+    }
+
+    /** Attaches checkbox menu item to boolean state action. The presenter connects to the
+     * {@link Action#SELECTED_KEY} action value
+     * 
+    * @param item menu item
+    * @param action action
+    * @param popup create popup or menu item
+    * @since 7.71
+    */
+    public static void connect(JCheckBoxMenuItem item, Action action, boolean popup) {
         Bridge b = new CheckMenuBridge(item, action, popup);
         b.prepare();
     }
@@ -240,8 +271,17 @@ public class Actions {
                 return;
             }
         }
-        Bridge b = new ButtonBridge(button, action);
+        Bridge b;
+        if (action instanceof BooleanStateAction) {
+            b = new BooleanButtonBridge(button, (BooleanStateAction)action);
+        }
+        if (action.getValue(Actions.ACTION_VALUE_TOGGLE) != null) {
+            b = new BooleanButtonBridge(button, action);
+        } else {
+            b = new ButtonBridge(button, action);
+        }
         b.prepare();
+        button.putClientProperty(DynamicMenuContent.HIDE_WHEN_DISABLED, action.getValue(DynamicMenuContent.HIDE_WHEN_DISABLED));
     }
 
     /** Connects buttons to action.
@@ -634,6 +674,37 @@ public class Actions {
      *    }
      *  }
      * </pre>
+     * <p/>
+     * Further attributes are defined to control action's enabled and checked state. 
+     * Attributes which control enable state are prefixed by "{@code enableOn}". Attributes
+     * controlling checked state have prefix "{@code checkedOn}":
+     * <code><pre>
+     * &lt;file name="action-pkg-ClassName.instance"&gt;
+     *   &lt;!-- Enable on certain type in Lookup --&gt;
+     *   &lt;attr name="enableOnType" stringvalue="qualified.type.name"/&gt;
+     * 
+     *   &lt;!-- Monitor specific property in that type --&gt;
+     *   &lt;attr name="enableOnProperty" stringvalue="propertyName"/&gt;
+     * 
+     *   &lt;!-- The property value, which corresponds to enabled action.
+     *           Values "#null" and "#non-null" are treated specially.
+     *   --&gt;
+     *   &lt;attr name="enableOnValue" stringvalue="propertyName"/&gt;
+     * 
+     *   &lt;!-- Name of custom listener interface --&gt;
+     *   &lt;attr name="enableOnChangeListener" stringvalue="qualifier.listener.interface"/&gt;
+     * 
+     *   &lt;!-- Name of listener method that triggers state re-evaluation  --&gt;
+     *   &lt;attr name="enableOnMethod" stringvalue="methodName"/&gt;
+     * 
+     *   &lt;!-- Delegate to the action instance for final decision --&gt;
+     *   &lt;attr name="enableOnActionProperty" stringvalue="actionPropertyName"/&gt;
+     * 
+     *   &lt;!-- ... --&gt;
+     * 
+     * &lt;/file&gt;
+     * 
+     * </pre></code>
      *
      * @param type the object to seek for in the active context
      * @param single shall there be just one or multiple instances of the object
@@ -665,7 +736,7 @@ public class Actions {
         map.put("displayName", displayName); // NOI18N
         map.put("iconBase", iconBase); // NOI18N
         map.put("noIconInMenu", noIconInMenu); // NOI18N
-        return GeneralAction.context(map);
+        return GeneralAction.context(map, true);
     }
     static Action context(Map fo) {
         Object context = fo.get("context");
@@ -1155,8 +1226,24 @@ public class Actions {
     /** Bridge for button and boolean action.
     */
     private static class BooleanButtonBridge extends ButtonBridge {
-        public BooleanButtonBridge(AbstractButton button, BooleanStateAction action) {
+        private final BooleanStateAction stateAction;
+        private final PropertyChangeListener bsaL;
+        
+        public BooleanButtonBridge(AbstractButton button, BooleanStateAction bsa) {
+            super(button, bsa);
+            this.stateAction = bsa;
+            if (bsa != null && bsa != action) {
+                bsaL = WeakListeners.propertyChange(this, BooleanStateAction.PROP_BOOLEAN_STATE, bsa);
+                bsa.addPropertyChangeListener(bsaL);
+            } else {
+                bsaL = null;
+            }
+        }
+
+        public BooleanButtonBridge(AbstractButton button, Action action) {
             super(button, action);
+            this.stateAction = null;
+            this.bsaL = null;
         }
 
         /** @param changedProperty the name of property that has changed
@@ -1166,9 +1253,19 @@ public class Actions {
         public void updateState(String changedProperty) {
             super.updateState(changedProperty);
 
-            if ((changedProperty == null) || changedProperty.equals(BooleanStateAction.PROP_BOOLEAN_STATE)) {
-                button.setSelected(((BooleanStateAction) action).getBooleanState());
+            if ((changedProperty == null) || 
+                    changedProperty.equals(BooleanStateAction.PROP_BOOLEAN_STATE) ||
+                    (bsaL == null && changedProperty.equals(Action.SELECTED_KEY))) {
+                button.setSelected(getBooleanState());
             }
+        }
+        
+        protected boolean getBooleanState() {
+            if (action instanceof AlwaysEnabledAction.CheckBox) {
+                return ((AlwaysEnabledAction.CheckBox)action).isPreferencesSelected();
+            }
+            return stateAction != null ? stateAction.getBooleanState() :
+                    Boolean.TRUE.equals(action.getValue(Action.SELECTED_KEY));
         }
     }
 
@@ -1329,8 +1426,17 @@ public class Actions {
         private boolean hasOwnIcon = false;
 
         /** Popup menu */
-        public CheckMenuBridge(JCheckBoxMenuItem item, BooleanStateAction action, boolean popup) {
+        public CheckMenuBridge(JCheckBoxMenuItem item, BooleanStateAction bsa, boolean popup) {
+            super(item, bsa);
+            init(item, popup);
+        }
+        
+        public CheckMenuBridge(JCheckBoxMenuItem item, Action action, boolean popup) {
             super(item, action);
+            init(item, popup);
+        }
+        
+        private void init(JCheckBoxMenuItem item, boolean popup) {
             this.popup = popup;
 
             if (popup) {
@@ -1585,8 +1691,23 @@ public class Actions {
         *  and connects it to the given BooleanStateAction.
         * @param aAction the action to which this menu item should be connected
         * @param useMnemonic if true, the menu try to find mnemonic in action label
+        * @deprecated use {@link #CheckboxMenuItem(javax.swing.Action, boolean)}. 
+        * Have your action to implement properly {@link Action#getValue} for {@link Action#SELECTED_KEY}
         */
         public CheckboxMenuItem(BooleanStateAction aAction, boolean useMnemonic) {
+            Actions.connect(this, aAction, !useMnemonic);
+        }
+        
+        
+        /** Constructs a new ActCheckboxMenuItem with the specified label
+        *  and connects it to the given Action and its {@link Action#SELECTED_KEY}
+        * value.
+        * 
+        * @param aAction the action to which this menu item should be connected
+        * @param useMnemonic if true, the menu try to find mnemonic in action label
+        * @since 7.71
+        */
+        public CheckboxMenuItem(Action aAction, boolean useMnemonic) {
             Actions.connect(this, aAction, !useMnemonic);
         }
     }

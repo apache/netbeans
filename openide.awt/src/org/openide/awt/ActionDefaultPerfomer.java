@@ -21,6 +21,8 @@ package org.openide.awt;
 import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import static javax.swing.Action.ACTION_COMMAND_KEY;
 import org.netbeans.api.actions.Closable;
 import org.netbeans.api.actions.Editable;
 import org.netbeans.api.actions.Openable;
@@ -60,5 +62,20 @@ final class ActionDefaultPerfomer extends ContextAction.Performer<Object> {
                     assert false : "Wrong type: " + type;
             }
         }
+    }
+
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        Object o = delegate.get("key"); // NOI18N
+        if (o == null) {
+            o = delegate.get(ACTION_COMMAND_KEY);
+        }
+        Object d= instDelegate == null ? null : instDelegate.get();
+        sb.append("PerformerDefault{id = ").append(Objects.toString(o))
+                .append(", type = ").append(type)
+                .append("}");
+        return sb.toString();
     }
 }

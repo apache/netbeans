@@ -32,8 +32,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.BiFunction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Action;
 import org.openide.util.Lookup;
 import org.openide.util.Lookup.Item;
 import org.openide.util.Lookup.Provider;
@@ -137,13 +139,32 @@ class ContextManager extends Object {
         Lookup.Result<T> result = findResult(type);
         
         boolean e = isEnabledOnData(result, type, selectMode);
-        if (e && enabler != null) {
-            e = enabler.enabled(listFromResult(result));
+        if (enabler != null) {
+            if (e) {
+                List<? extends T> all = listFromResult(result);
+                e = enabler.enabled(all, new LkpAE(all, type));
+            } else if (enabler != null) {
+                enabler.detach();
+            }
         }
         
         return e;
     }
     
+    /** Checks whether a type is enabled.
+     */
+    public <T> boolean runEnabled(Class<T> type, ContextSelection selectMode,  BiFunction<List<? extends T>, Lookup.Provider, Boolean> callback) {
+        Lookup.Result<T> result = findResult(type);
+        
+        boolean e = isEnabledOnData(result, type, selectMode);
+        if (e) {
+            List<? extends T> all = listFromResult(result);
+            e = callback.apply(all, new LkpAE(all, type));
+        }
+        
+        return e;
+    }
+
     private <T> boolean isEnabledOnData(Lookup.Result<T> result, Class<T> type, ContextSelection selectMode) {
         boolean res = isEnabledOnDataImpl(result, type, selectMode);
         LOG.log(Level.FINE, "isEnabledOnData(result, {0}, {1}) = {2}", new Object[]{type, selectMode, res});
@@ -215,24 +236,31 @@ class ContextManager extends Object {
         return res;
     }
     
+    private final class LkpAE<T> implements Lookup.Provider {
+        final List<? extends T> all;
+        final Class<T> type;
+        public LkpAE(List<? extends T> all, Class<T> type) {
+            this.all = all;
+            this.type = type;
+        }
+        
+        private Lookup lookup;
+        public Lookup getLookup() {
+            if (lookup == null) {
+                lookup = new ProxyLookup(
+                    Lookups.fixed(all.toArray()),
+                    Lookups.exclude(ContextManager.this.lookup, type)
+                );
+            }
+            return lookup;
+        }
+    }
+    
     public <T> void actionPerformed(final ActionEvent e, ContextAction.Performer<? super T> perf, final Class<T> type, ContextSelection selectMode) {
         Lookup.Result<T> result = findResult(type);
         final List<? extends T> all = listFromResult(result);
 
-        class LkpAE implements Lookup.Provider {
-            private Lookup lookup;
-            public Lookup getLookup() {
-                if (lookup == null) {
-                    lookup = new ProxyLookup(
-                        Lookups.fixed(all.toArray()),
-                        Lookups.exclude(ContextManager.this.lookup, type)
-                    );
-                }
-                return lookup;
-            }
-        }
-
-        perf.actionPerformed(e, Collections.unmodifiableList(all), new LkpAE());
+        perf.actionPerformed(e, Collections.unmodifiableList(all), new LkpAE(all, type));
     }
 
     private <T> List<? extends T> listFromResult(Lookup.Result<T> result) {

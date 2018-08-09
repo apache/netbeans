@@ -19,11 +19,12 @@
 
 package org.openide.awt;
 
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import static javax.swing.Action.ACTION_COMMAND_KEY;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.Lookup.Provider;
@@ -34,9 +35,9 @@ final class InjectorExactlyOne extends ContextAction.Performer<Object> {
     }
 
     @Override
-    public void actionPerformed(ActionEvent ev, List<? extends Object> data, Provider everything) {
+    protected Object createDelegate(Provider everything, List<?> data) {
         if (data.size() != 1) {
-            return;
+            return null;
         }
         String clazz = (String) delegate.get("injectable"); // NOI18N
         String type = (String) delegate.get("type"); // NOI18N
@@ -52,9 +53,26 @@ final class InjectorExactlyOne extends ContextAction.Performer<Object> {
             Class<?> clazzC = Class.forName(clazz, true, l);
             Constructor c = clazzC.getConstructor(typeC);
             ActionListener action = (ActionListener) c.newInstance(data.get(0));
-            action.actionPerformed(ev);
+            return action;
         } catch (Exception ex) {
-                Exceptions.printStackTrace(ex);
+            Exceptions.printStackTrace(ex);
+            return null;
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        Object o = delegate.get("key"); // NOI18N
+        if (o == null) {
+            o = delegate.get(ACTION_COMMAND_KEY);
+        }
+        Object d= instDelegate == null ? null : instDelegate.get();
+        sb.append("PerformerONE{id = ").append(Objects.toString(o))
+                .append(", del = ").append(Objects.toString(d))
+                .append(", injectable = ").append(delegate.get("injectable"))
+                .append(", type = ").append(delegate.get("type"))
+                .append("}");
+        return sb.toString();
     }
 }

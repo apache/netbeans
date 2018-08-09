@@ -48,7 +48,6 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.ContextAwareAction;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -917,5 +916,5 @@ public class ActionProcessorTest extends NbTestCase {
             fail("B has to be static:\n" + os);
         }
     }
-    
+
 }

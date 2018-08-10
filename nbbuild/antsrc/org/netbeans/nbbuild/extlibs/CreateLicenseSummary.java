@@ -369,51 +369,49 @@ public class CreateLicenseSummary extends Task {
 
     private Map<Long, Map<String, String>> findCrc2LicenseHeaderMapping() throws IOException {
         Map<Long, Map<String, String>> crc2LicenseHeaders = new HashMap<>();
-        for (String cluster : getProject().getProperty("nb.clusters.list").split("[, ]+")) {
-            for (String module : getProject().getProperty(cluster).split("[, ]+")) {
-                File d = new File(new File(nball, module), "external");
-                Set<String> hgFiles = VerifyLibsAndLicenses.findHgControlledFiles(d);
-                Map<String, Map<String, String>> binary2License = findBinary2LicenseHeaderMapping(hgFiles, d);
-                for (String n : hgFiles) {
-                    if (!n.endsWith(".jar") && !n.endsWith(".zip") && !n.endsWith(".xml")
-                            && !n.endsWith(".js") && !n.endsWith(".dylib")) {
-                        continue;
-                    }
-                    Map<String, String> headers = binary2License.get(n);
-                    if (headers == null) {
-                        continue;
-                    }
-                    File f = new File(d, n);
-                    InputStream is = new FileInputStream(f);
-                    try {
-                        crc2LicenseHeaders.put(computeCRC32(is), headers);
-                    } finally {
-                        is.close();
-                    }
-                    if (!n.endsWith(".jar") && !n.endsWith(".zip")) {
-                        continue;
-                    }
-                    ZipFile zf = new ZipFile(f);
-                    try {
-                        Enumeration<? extends ZipEntry> entries = zf.entries();
-                        while (entries.hasMoreElements()) {
-                            ZipEntry entry = entries.nextElement();
-                            String innerName = entry.getName();
-                            if (!innerName.endsWith(".jar") && !innerName.endsWith(".zip")) {
-                                continue;
-                            }
-                            Map<String, String> nestedHeaders = binary2License.get(n + "!/" + innerName);
-                            if (nestedHeaders == null) nestedHeaders = headers;
-                            is = zf.getInputStream(entry);
-                            try {
-                                crc2LicenseHeaders.put(computeCRC32(is), nestedHeaders);
-                            } finally {
-                                is.close();
-                            }
+        for (String module : modules) {
+            File d = new File(new File(nball, module), "external");
+            Set<String> hgFiles = VerifyLibsAndLicenses.findHgControlledFiles(d);
+            Map<String, Map<String, String>> binary2License = findBinary2LicenseHeaderMapping(hgFiles, d);
+            for (String n : hgFiles) {
+                if (!n.endsWith(".jar") && !n.endsWith(".zip") && !n.endsWith(".xml")
+                        && !n.endsWith(".js") && !n.endsWith(".dylib")) {
+                    continue;
+                }
+                Map<String, String> headers = binary2License.get(n);
+                if (headers == null) {
+                    continue;
+                }
+                File f = new File(d, n);
+                InputStream is = new FileInputStream(f);
+                try {
+                    crc2LicenseHeaders.put(computeCRC32(is), headers);
+                } finally {
+                    is.close();
+                }
+                if (!n.endsWith(".jar") && !n.endsWith(".zip")) {
+                    continue;
+                }
+                ZipFile zf = new ZipFile(f);
+                try {
+                    Enumeration<? extends ZipEntry> entries = zf.entries();
+                    while (entries.hasMoreElements()) {
+                        ZipEntry entry = entries.nextElement();
+                        String innerName = entry.getName();
+                        if (!innerName.endsWith(".jar") && !innerName.endsWith(".zip")) {
+                            continue;
                         }
-                    } finally {
-                        zf.close();
+                        Map<String, String> nestedHeaders = binary2License.get(n + "!/" + innerName);
+                        if (nestedHeaders == null) nestedHeaders = headers;
+                        is = zf.getInputStream(entry);
+                        try {
+                            crc2LicenseHeaders.put(computeCRC32(is), nestedHeaders);
+                        } finally {
+                            is.close();
+                        }
                     }
+                } finally {
+                    zf.close();
                 }
             }
         }

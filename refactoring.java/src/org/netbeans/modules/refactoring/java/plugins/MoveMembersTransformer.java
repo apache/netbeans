@@ -25,7 +25,7 @@ import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.source.util.Trees;
-import com.sun.tools.javac.tree.JCTree.JCMemberReference;
+
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -139,7 +139,7 @@ public class MoveMembersTransformer extends RefactoringVisitor {
             } else if (node instanceof MemberSelectTree) {
                 changeMemberSelect(el, (MemberSelectTree) node, currentPath, target);
             } else if (node.getKind() == Tree.Kind.MEMBER_REFERENCE) {
-                changeMemberRefer(el, (JCMemberReference) node, currentPath, target);
+                changeMemberRefer(el, (MemberReferenceTree) node, currentPath, target);
 
             }
             return true;
@@ -172,9 +172,9 @@ public class MoveMembersTransformer extends RefactoringVisitor {
         }
     }
 
-    private void changeMemberRefer(Element el, final JCMemberReference node, TreePath currentPath, final Element target) {
+    private void changeMemberRefer(Element el, final MemberReferenceTree node, TreePath currentPath, final Element target) {
         if (el.getModifiers().contains(Modifier.STATIC)) {
-            Tree oldT = node.expr;
+            Tree oldT = node.getQualifierExpression();
             Tree newT = make.QualIdent(make.setLabel(make.QualIdent(target), target.getSimpleName()).toString());
             rewrite(oldT, newT);
         } else {

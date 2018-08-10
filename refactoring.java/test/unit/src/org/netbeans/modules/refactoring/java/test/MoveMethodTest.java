@@ -28,8 +28,10 @@ import org.netbeans.modules.refactoring.java.api.JavaMoveMembersProperties.Visib
  */
 public class MoveMethodTest extends MoveBase {
 
+    private static String SOURCE_LEVEL = "1.8"; //NOI18N
+
     public MoveMethodTest(String name) {
-        super(name,"1.8");
+        super(name, SOURCE_LEVEL);
     }
     
     static {

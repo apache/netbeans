@@ -24,20 +24,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
-import java.util.StringJoiner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JEditorPane;
 import javax.swing.SwingUtilities;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONAware;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.netbeans.modules.mercurial.FileInformation;
 import org.netbeans.modules.mercurial.FileStatus;
 import org.netbeans.modules.mercurial.FileStatusCache;
@@ -56,7 +49,6 @@ import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.nodes.Node;
 import org.openide.text.NbDocument;
-import org.openide.util.Exceptions;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
@@ -216,15 +208,7 @@ public class AnnotateAction extends ContextAction {
             ab.setAnnotationMessage(NbBundle.getMessage(AnnotateAction.class, "CTL_AnnotationFailed")); // NOI18N;
             return;
         }
-        AnnotateLine [] lines;
-        try{
-            lines = toAnnotateLines(list);
-        }
-        catch (ParseException e){
-            Mercurial.LOG.log(Level.SEVERE, "Invalid Json", e);
-            ab.setAnnotationMessage(NbBundle.getMessage(AnnotateAction.class, "CTL_AnnotationFailed")); // NOI18N;
-            return;
-        }
+        AnnotateLine [] lines = toAnnotateLines(list);
         List<String> revisions = getRevisionNumbers(lines);
         HgLogMessage initialRevision = null;
         HgLogMessage [] logs = new HgLogMessage[0];
@@ -298,85 +282,19 @@ public class AnnotateAction extends ContextAction {
         }
     }
 
-    private static AnnotateLine [] toAnnotateLines(List<String> annotations) throws ParseException
+    private static AnnotateLine [] toAnnotateLines(List<String> annotations)
     {
-        //TODO: use JSON instead of plain text. Something strange happens with
-        //the diffing engine if we use json.
-//        if(false){
-//            final Pattern isNumsOnly = Pattern.compile("^\\d+$");
-//            boolean assertionsEnabled = false;
-//            assert assertionsEnabled = true;
-//            StringJoiner join = new StringJoiner("\n");
-//            annotations.forEach(join::add);
-//            String json = join.toString();
-//
-//            JSONParser parser = new JSONParser();
-//            JSONAware jsonRoot = (JSONAware)parser.parse(json);
-//
-//            JSONObject root;
-//            if (jsonRoot instanceof JSONObject){
-//                //not expecting this, but it could theretically happen.
-//                root = (JSONObject) jsonRoot;
-//            }
-//            else{
-//                //this is the most likely result.
-//                root = (JSONObject)((JSONArray)jsonRoot).get(0);
-//            }
-//            JSONArray jsonLines = (JSONArray)root.get("lines");
-//            List<AnnotateLine> lines = new ArrayList<>(jsonLines.size());
-//            int i = 0;
-//            for (Object jsonItem : jsonLines) {
-//                i++;
-//                AnnotateLine anLine = null;
-//                boolean invalid = false;
-//                ValidScope:
-//                {
-//                    if (!(jsonItem instanceof JSONObject)){
-//                        invalid = true;
-//                        break ValidScope;
-//                    }
-//                    JSONObject jLine = (JSONObject)jsonItem;
-//                    anLine = new AnnotateLine();
-//                    anLine.setAuthor(Objects.toString(jLine.get("user")));
-//                    anLine.setRevision(Objects.toString(jLine.get("rev")));
-//                    anLine.setFileName(Objects.toString(jLine.get("file")));
-//                    String lineNumRaw = Objects.toString(jLine.get("line_number"),
-//                            "");
-//                    //just in case....
-//                    lineNumRaw = lineNumRaw.trim();
-//                    int prevLineNum;
-//                    if (lineNumRaw.isEmpty() || !isNumsOnly.matcher(lineNumRaw).find()){
-//                        prevLineNum = -1;
-//                    }
-//                    else {
-//                        try{
-//                            prevLineNum = Integer.parseInt(lineNumRaw);
-//                        }
-//                        catch (NumberFormatException e){
-//                            //String of numbers was not a number!?!?!?!
-//                            throw new AssertionError(lineNumRaw, e);
-//                        }
-//                    }
-//                    anLine.setPrevLineNum(prevLineNum);
-//                    anLine.setContent(Objects.toString(jLine.get("line")));
-//                }
-//                if (invalid){
-//                    anLine = new FakeAnnotationLine();
-//                }
-//                assert anLine != null;//shouldn't happen
-//                anLine.setLineNum(i);
-//                lines.add(anLine);
-//            }
-//            return lines.toArray(new AnnotateLine[lines.size()]);
-//        }
         final int GROUP_AUTHOR = 1;
         final int GROUP_REVISION = 2;
         final int GROUP_FILENAME = 3;
         final int GROUP_LINE_NUMBER = 4;
         final int GROUP_CONTENT = 5;
-
+        
         List<AnnotateLine> lines = new ArrayList<AnnotateLine>();
         int i = 0;
+        //using "(\S.*?)" instead of "(\b\S*)" since files can contain spaces
+        //and start with dots. "\S" will match the first character and
+        //will lazily match the rest of the file.
         Pattern p = Pattern.compile("^\\s*(\\S+\\b)\\s+(\\d+)\\s+(\\S.*?):\\s*(\\d+):\\s(.*)$"); //NOI18N
         for (String line : annotations) {
             i++;
@@ -398,7 +316,7 @@ public class AnnotateAction extends ContextAction {
                 anLine.setContent(m.group(GROUP_CONTENT));
             }
             anLine.setLineNum(i);
-
+            
             lines.add(anLine);
         }
         return lines.toArray(new AnnotateLine[lines.size()]);

@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified">
+    
+    <xsd:simpleType name="anyType" id="anyType"/>
+    
+    <xsd:simpleType name="anyURI" id="anyURI">
+        <xsd:restriction base="xsd:anySimpleType">
+            <xsd:whiteSpace value="collapse" fixed="true"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="base64Binary" id="base64Binary">
+        <xsd:restriction base="xsd:anySimpleType">
+            <xsd:whiteSpace value="collapse" fixed="true"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="boolean" id="boolean">
+        <xsd:restriction base="xsd:anySimpleType">
+            <xsd:whiteSpace value="collapse" fixed="true"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="byte" id="byte">
+        <xsd:restriction base="xsd:short">
+            <xsd:minInclusive value="-128"/>
+            <xsd:maxInclusive value="127"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="date" id="date">
+        <xsd:restriction base="xsd:anySimpleType">
+            <xsd:whiteSpace value="collapse" fixed="true"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="dateTime" id="dateTime">
+        <xsd:restriction base="xsd:anySimpleType">
+            <xsd:whiteSpace value="collapse" fixed="true"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="decimal" id="decimal">
+        <xsd:restriction base="xsd:anySimpleType">
+            <xsd:whiteSpace value="collapse" fixed="true"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="double" id="double">
+        <xsd:restriction base="xsd:anySimpleType">
+            <xsd:whiteSpace value="collapse" fixed="true"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="duration" id="duration">
+        <xsd:restriction base="xsd:anySimpleType">
+            <xsd:whiteSpace value="collapse" fixed="true"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="ENTITIES" id="ENTITIES">
+        <xsd:restriction>
+        <xsd:simpleType>
+        <xsd:list>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:ENTITY"/>
+            </xsd:simpleType>
+        </xsd:list>
+            </xsd:simpleType>
+            <xsd:minLength value="1"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="ENTITY" id="ENTITY">
+        <xsd:restriction base="xsd:NCName"/>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="float" id="float">
+        <xsd:restriction base="xsd:anySimpleType">
+            <xsd:whiteSpace value="collapse" fixed="true"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="gDay" id="gDay">
+        <xsd:restriction base="xsd:anySimpleType">
+            <xsd:whiteSpace value="collapse" fixed="true"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="gMonth" id="gMonth">
+        <xsd:restriction base="xsd:anySimpleType">
+            <xsd:whiteSpace value="collapse" fixed="true"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="gMonthDay" id="gMonthDay">
+        <xsd:restriction base="xsd:anySimpleType">
+            <xsd:whiteSpace value="collapse" fixed="true"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="gYear" id="gYear">
+        <xsd:restriction base="xsd:anySimpleType">
+            <xsd:whiteSpace value="collapse" fixed="true"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="gYearMonth" id="gYearMonth">
+        <xsd:restriction base="xsd:anySimpleType">
+            <xsd:whiteSpace value="collapse" fixed="true"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="hexBinary" id="hexBinary">
+        <xsd:restriction base="xsd:anySimpleType">
+            <xsd:whiteSpace value="collapse" fixed="true"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="ID" id="ID">
+        <xsd:restriction base="xsd:NCName"/>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="IDREF" id="IDREF">
+        <xsd:restriction base="xsd:NCName"/>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="IDREFS" id="IDREFS">
+        <xsd:restriction>
+        <xsd:simpleType>
+        <xsd:list>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:IDREF"/>
+            </xsd:simpleType>
+        </xsd:list>
+            </xsd:simpleType>
+            <xsd:minLength value="1"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="int" id="int">
+        <xsd:restriction base="xsd:long">
+            <xsd:minInclusive value="-2147483648"/>
+            <xsd:maxInclusive value="2147483647"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="integer" id="integer">
+        <xsd:restriction base="xsd:decimal">
+            <xsd:fractionDigits value="0" fixed="true"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="language" id="language">
+        <xsd:restriction base="xsd:token">
+            <xsd:pattern
+            value="([a-zA-Z]{2}|[iI]-[a-zA-Z]+|[xX]-[a-zA-Z]{1,8})(-[a-zA-Z]{1,8})*"
+            />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="long" id="long">
+        <xsd:restriction base="xsd:integer">
+            <xsd:minInclusive value="-9223372036854775808"/>
+            <xsd:maxInclusive value="9223372036854775807"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="Name" id="Name">
+        <xsd:restriction base="xsd:token">
+            <xsd:pattern value="\i\c*"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="NCName" id="NCName">
+        <xsd:restriction base="xsd:Name">
+            <xsd:pattern value="[\i-[:]][\c-[:]]*"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="negativeInteger" id="negativeInteger">
+        <xsd:restriction base="xsd:nonPositiveInteger">
+            <xsd:maxInclusive value="-1"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="NMTOKEN" id="NMTOKEN">
+        <xsd:restriction base="xsd:token">
+            <xsd:pattern value="\c+"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="NMTOKENS" id="NMTOKENS">
+        <xsd:restriction>
+        <xsd:simpleType>
+        <xsd:list>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN"/>
+            </xsd:simpleType>
+        </xsd:list>
+            </xsd:simpleType>
+            <xsd:minLength value="1"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="nonNegativeInteger" id="nonNegativeInteger">
+        <xsd:restriction base="xsd:integer">
+            <xsd:minInclusive value="0"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="nonPositiveInteger" id="nonPositiveInteger">
+        <xsd:restriction base="xsd:integer">
+            <xsd:maxInclusive value="0"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="normalizedString" id="normalizedString">
+        <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="replace"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="NOTATION" id="NOTATION">
+        <xsd:restriction base="xsd:anySimpleType">
+            <xsd:whiteSpace value="collapse" fixed="true"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="positiveInteger" id="positiveInteger">
+        <xsd:restriction base="xsd:nonNegativeInteger">
+            <xsd:minInclusive value="1"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="QName" id="QName">
+        <xsd:restriction base="xsd:anySimpleType">
+            <xsd:whiteSpace value="collapse" fixed="true"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="short" id="short">
+        <xsd:restriction base="xsd:int">
+            <xsd:minInclusive value="-32768"/>
+            <xsd:maxInclusive value="32767"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="string" id="string">
+        <xsd:restriction base="xsd:anySimpleType">
+            <xsd:whiteSpace value="preserve"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="time" id="time">
+        <xsd:restriction base="xsd:anySimpleType">
+            <xsd:whiteSpace value="collapse" fixed="true"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="token" id="token">
+        <xsd:restriction base="xsd:normalizedString">
+            <xsd:whiteSpace value="collapse"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="unsignedByte" id="unsignedBtype">
+        <xsd:restriction base="xsd:unsignedShort">
+            <xsd:maxInclusive value="255"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="unsignedInt" id="unsignedInt">
+        <xsd:restriction base="xsd:unsignedLong">
+            <xsd:maxInclusive value="4294967295"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="unsignedLong" id="unsignedLong">
+        <xsd:restriction base="xsd:nonNegativeInteger">
+            <xsd:maxInclusive value="18446744073709551615"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="unsignedShort" id="unsignedShort">
+        <xsd:restriction base="xsd:unsignedInt">
+            <xsd:maxInclusive value="65535"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+</xsd:schema>

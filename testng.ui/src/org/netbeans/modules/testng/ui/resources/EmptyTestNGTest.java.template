@@ -1,0 +1,30 @@
+<#-- FreeMarker template (see http://freemarker.org/) -->
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+<#if package?? && package != "">
+package ${package};
+
+</#if>
+import static org.testng.Assert.*;
+
+/**
+ *
+ * @author ${user}
+ */
+public class ${name} {
+
+    public ${name}() {
+    }
+
+<#if testMethodsPlaceholder!false>
+    // TODO add test methods here.
+    // The methods must be annotated with annotation @Test. For example:
+    //
+    // @Test
+    // public void hello() {}
+
+</#if>
+}

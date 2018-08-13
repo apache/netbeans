@@ -1,0 +1,14 @@
+Usages and Overriding Methods of Iface.method [8 occurrences]
+    RefactoringTest
+        SubClass.java
+            48: public void method() {
+        SuperClass.java
+            46: public void method() {
+        Test.java
+            47: public void method() {
+        User.java
+            47: * user of method
+            52: t.method();
+            53: new Test().method();
+            54: ((Test)new Object()).method();
+            56: i.method();

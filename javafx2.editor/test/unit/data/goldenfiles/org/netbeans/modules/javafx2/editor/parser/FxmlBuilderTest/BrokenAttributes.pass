@@ -1,0 +1,88 @@
+[40 - 60]         import: name=java.lang, wildcard=true
+[63 - 94]         import: name=javafx.scene.control, wildcard=true
+[97 - 127]        import: name=javafx.scene.effect, wildcard=true
+[130 - 160]       import: name=javafx.scene.layout, wildcard=true
+[164 - 1812]      instance: id=null, className=AnchorPane
+[246 - 263]         setter: name=prefWidth, content=400.0
+[193 - 209]         setter: name=minHeight, content=90.0
+[178 - 192]         setter: name=d, content=SimpleForm
+[210 - 226]         setter: name=minWidth, content=220.0
+[227 - 245]         setter: name=prefHeight, content=300.0
+[301 - 1798]        setter: name=children, content=null
+[316 - 414]           instance: id=null, className=CheckBox
+[326 - -1]              setter: name=id, content=null
+[330 - 353]             setter: name=text, content=Keep Me Informed
+[354 - 383]             attached: name=bottomAnchor, source=AnchorPane, content=8.0
+[384 - 411]             attached: name=leftAnchor, source=AnchorPane, content=5.0
+[419 - 518]           instance: id=null, className=Button
+[427 - 449]             setter: name=id, content=SubmitButto text=
+[449 - -1]              setter: name=Submit, content=null
+[487 - 515]             attached: name=rightAnchor, source=AnchorPane, content=5.0
+[457 - 486]             attached: name=bottomAnchor, source=AnchorPane, content=5.0
+[523 - 1314]          instance: id=null, className=AnchorPane
+[604 - 621]             setter: name=prefWidth, content=330.0
+[550 - 567]             setter: name=minHeight, content=127.0
+[539 - -1]              setter: name=ValuePane, content=null
+[535 - -1]              setter: name=idx, content=null
+[568 - 584]             setter: name=minWidth, content=330.0
+[585 - 603]             setter: name=prefHeight, content=127.0
+[715 - 1296]            setter: name=children, content=null
+[734 - 848]               instance: id=null, className=TextField
+[745 - -1]                  setter: name=id, content=null
+[749 - -1]                  setter: name=ameTextField, content=null
+[790 - 818]                 attached: name=rightAnchor, source=AnchorPane, content=0.0
+[819 - 845]                 attached: name=topAnchor, source=AnchorPane, content=0.0
+[762 - 789]                 attached: name=leftAnchor, source=AnchorPane, content=0.0
+[857 - 1151]              instance: id=newTextField, className=TextField
+[868 - 885]                 setter: name=id, content=newTextField
+[1019 - 1030]               setter: name=text, content=Ahoj
+[1001 - 1018]               setter: name=promptText, content=asdf
+[983 - 1000]                setter: name=prefWidth, content=321.0
+[915 - 939]                 setter: name=minHeight, content=21.310546875
+[1063 - 1130]               setter: name=effect, content=null
+[1084 - 1110]                 instance: id=null, className=MotionBlur
+[1096 - 1108]                   setter: name=radius, content=5.0
+[886 - 899]                 setter: name=layoutX, content=1.0
+[940 - 956]                 setter: name=minWidth, content=321.0
+[900 - 914]                 setter: name=layoutY, content=72.0
+[957 - 982]                 setter: name=prefHeight, content=21.310546875
+[1160 - 1278]             instance: id=null, className=TextField
+[1171 - 1190]               setter: name=id, content=EmailTextField
+[1219 - 1247]               attached: name=rightAnchor, source=AnchorPane, content=0.0
+[1248 - 1275]               attached: name=topAnchor, source=AnchorPane, content=33.0
+[1191 - 1218]               attached: name=leftAnchor, source=AnchorPane, content=0.0
+[651 - 680]             attached: name=rightAnchor, source=AnchorPane, content=-2.0
+[681 - 707]             attached: name=topAnchor, source=AnchorPane, content=5.0
+[622 - 650]             attached: name=leftAnchor, source=AnchorPane, content=72.0
+[1319 - 1717]         instance: id=null, className=AnchorPane
+[1331 - 1345]           setter: name=id, content=LabelPane
+[1408 - 1699]           setter: name=children, content=null
+[1427 - 1548]             instance: id=null, className=Label
+[1434 - 1448]               setter: name=id, content=NameLabel
+[1449 - 1461]               setter: name=text, content=Name:
+[1490 - 1518]               attached: name=rightAnchor, source=AnchorPane, content=0.0
+[1519 - 1545]               attached: name=topAnchor, source=AnchorPane, content=0.0
+[1462 - 1489]               attached: name=leftAnchor, source=AnchorPane, content=0.0
+[1557 - 1681]             instance: id=null, className=Label
+[1564 - 1579]               setter: name=id, content=EmailLabel
+[1580 - 1593]               setter: name=text, content=Email:
+[1622 - 1650]               attached: name=rightAnchor, source=AnchorPane, content=0.0
+[1651 - 1678]               attached: name=topAnchor, source=AnchorPane, content=34.0
+[1594 - 1621]               attached: name=leftAnchor, source=AnchorPane, content=0.0
+[1374 - 1400]           attached: name=topAnchor, source=AnchorPane, content=8.0
+[1346 - 1373]           attached: name=leftAnchor, source=AnchorPane, content=5.0
+[1722 - 1784]         instance: id=null, className=Label
+[1729 - 1739]           setter: name=id, content=Label
+[1769 - 1781]           setter: name=text, content=Label
+[1740 - 1753]           setter: name=layoutX, content=5.0
+[1754 - 1768]           setter: name=layoutY, content=77.0
+[176 - -1]          setter: name=i, content=null
+
+
+Error{type: unexpected-token, pos: 177, len: 1, message: Unexpected token: " ", []}
+Error{type: unexpected-token, pos: 329, len: 1, message: Unexpected token: " ", []}
+Error{type: unexpected-token, pos: 455, len: 1, message: Unexpected token: """, []}
+Error{type: unexpected-token, pos: 538, len: 1, message: Unexpected token: """, []}
+Error{type: unexpected-token, pos: 548, len: 1, message: Unexpected token: """, []}
+Error{type: unexpected-token, pos: 747, len: 2, message: Unexpected token: "=N", []}
+Error{type: unexpected-token, pos: 761, len: 1, message: Unexpected token: " ", []}

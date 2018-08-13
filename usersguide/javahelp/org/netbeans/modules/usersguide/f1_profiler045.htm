@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Heap Walker Dialog</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="HeapWalker.HelpCtx" name="HeapWalker.HelpCtx"></a></p>
+<!-- infolevel="all" infotype="General" --><a id="sthref457" name="sthref457"></a>
+<h1>Heap Walker Dialog</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to view an analysis of a heap dump. The dialog displays detailed information about the heap when the heap dump was saved. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG789">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>The dialog contains the following tabs for browsing information contained in the heap dump. Each tab contains additional buttons located on the right side of the dialog. These buttons enable you to modify information in the dialog.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t45">Tab</th>
+<th align="left" valign="bottom" id="r1c2-t45">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t45" headers="r1c1-t45">Summary</td>
+<td align="left" headers="r2c1-t45 r1c2-t45">Displays general information about the heap dump such as total numbers of classes and instances. The tab also provides information about the environment and system properties of the machine where the heap dump was taken.
+<p>Click the Inspect button to find objects by the retained size. You can click on an object returned by the query to view details about it in the Classes or Instances tab.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t45" headers="r1c1-t45">
+<p>Classes</p>
+</td>
+<td align="left" headers="r3c1-t45 r1c2-t45">Displays a list of classes with information about the number of instances of the class and the total size of the instances. You can click a class to view details in the Instances tab.
+<p>Click the Static Fields button to view the static fields of the selected class. Click Compare with another heap dump to select and then view the differences between two heap dumps.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t45" headers="r1c1-t45">Instances</td>
+<td align="left" headers="r4c1-t45 r1c2-t45">Displays instances for a class you select in the Classes tab. For each instance, you can select an instance to browse:
+<ul>
+<li>the fields of the instance in the Fields browser.</li>
+<li>references to the instance in the Reference browser.</li>
+</ul>
+<p>You can hide or reveal individual panes by clicking the Instances, Fields and References buttons.</p>
+<p>You can right-click individual items in each of the panes to open a popup menu with additional commands.</p>
+<p>For objects that have a graphical representation such as UI elements, Heap Walker displays an image of the selected instance in addition to the textual values.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t45" headers="r1c1-t45">OQL Console</td>
+<td align="left" headers="r5c1-t45 r1c2-t45">Displays the OQL editor, saved queries, and a window that displays the query results.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="sthref458" name="sthref458"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG659">
+<param name="text" value="<html><u>&quot;Testing and Profiling Java Application Projects&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

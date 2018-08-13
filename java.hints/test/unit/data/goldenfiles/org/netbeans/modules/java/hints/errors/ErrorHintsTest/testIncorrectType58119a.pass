@@ -1,0 +1,17 @@
+package org.netbeans.test.java.hints;
+
+import java.awt.Rectangle;
+import javax.swing.SwingUtilities;
+
+/**
+ * @author leon chiver
+ */
+public class IncorrectType58119a {
+
+    private Rectangle c;
+    
+    public void doStuff1() {
+        c = SwingUtilities.calculateInnerArea(null, null);
+    }
+    
+}

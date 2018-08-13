@@ -1,0 +1,32 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# List of patterns (one pair per line) to skip over in VerifyLibsAndLicenses.testBinaryUniqueness.
+# Both sides of the pair must match for the pair to be skipped.
+# Uses standard Ant pattern syntax, in ${nb_all} among modules included in cluster config.
+# (For ZIP entries, just list the containing ZIP, not the entry path.)
+
+# These are used quite independently (sharing in platform makes little sense).
+# apisupport does not even technically use it - it is only part of a sample app.
+apisupport.feedreader/external/jdom-1.0.jar mobility.deployment.webdav/external/jdom-1.0.jar
+
+# db.sql.visualeditor/external/javacc-3.2.jar is used at compile-time only
+db.sql.visualeditor/external/javacc-3.2.jar performance/external/javacc-3.2.jar
+
+# It happens that maven 3.3.9 uses commons-lang-2.6.jar, same as o.apache.commons.lang
+# These are used independently, different functional goals
+maven.embedder/external/apache-maven-3.3.9-bin.zip o.apache.commons.lang/external/commons-lang-2.6.jar
+

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+    <folder name="foo">
+        <file name="file3.txt">customized contents</file>
+        <file name="file4.txt_hidden"/>
+        <file name="file5.txt">
+            <attr name="myattr" stringvalue="someotherval"/>
+        </file>
+    </folder>
+</filesystem>

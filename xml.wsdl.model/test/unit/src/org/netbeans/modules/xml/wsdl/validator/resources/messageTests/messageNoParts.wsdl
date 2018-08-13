@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="goodBasicWSDL" 
+    targetNamespace="http://j2ee.netbeans.org/wsdl/messageNoParts"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+    xmlns:plink="http://schemas.xmlsoap.org/ws/2004/03/partner-link/">
+    <types/>
+    <message name="goodBasicWSDLOperationRequest">
+    </message>
+</definitions>

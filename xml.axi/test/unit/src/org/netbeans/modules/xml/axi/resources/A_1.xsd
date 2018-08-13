@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="windows-1252"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://xml.netbeans.org/schema/A"
+            xmlns:tns="http://xml.netbeans.org/schema/A"
+            elementFormDefault="qualified">
+    <xsd:include schemaLocation="B_1.xsd"/>
+    <xsd:element name="A" type="tns:C1"></xsd:element>
+</xsd:schema>

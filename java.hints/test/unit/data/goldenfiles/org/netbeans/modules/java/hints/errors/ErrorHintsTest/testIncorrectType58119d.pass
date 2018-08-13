@@ -1,0 +1,22 @@
+package org.netbeans.test.java.hints;
+
+import javax.swing.JButton;
+
+/**
+ * @author leon chiver
+ */
+public class IncorrectType58119d {
+    
+    /** Creates a new instance of IncorrectType58119d */
+    public IncorrectType58119d() {
+    }
+    
+    public void doStuff() {
+        javax.swing.JButton btn = IncorrectType58119d.doStuff(3, 4);
+    }
+
+    private static JButton doStuff(int i, int i0) {
+        return null;
+    }
+    
+}

@@ -1,0 +1,59 @@
+<!-- The following DTD is a simple view of a book:
+book
+     index
+        +
+          word
+               #PCDATA
+          page
+               #PCDATA
+     chapter+
+          comment?
+               #PCDATA
+          paragraph*
+               #PCDATA
+     summary?
+          #PCDATA
+
+     good
+	EMPTY
+-->
+
+<!ELEMENT summary (#PCDATA)>
+
+<!ELEMENT book (index+, chapter+, summary?, good, available, extra)>
+
+<!ELEMENT good EMPTY>
+
+<!ELEMENT available EMPTY>
+
+<!ELEMENT index (word, ref+)>
+
+<!ELEMENT ref (page, line)>
+
+<!ELEMENT word (#PCDATA)>
+
+<!ELEMENT line (#PCDATA)>
+
+<!ELEMENT page (#PCDATA)>
+
+<!ELEMENT chapter (comment?, paragraph*, comment?)>
+<!ATTLIST chapter length CDATA #IMPLIED >
+
+<!ELEMENT paragraph (#PCDATA)>
+
+<!ELEMENT comment (#PCDATA)>
+
+<!ELEMENT extra ((size-cm | size-inches | size), color?, (weight-lb | weight-kg))>
+
+<!ELEMENT size-cm (#PCDATA)>
+
+<!ELEMENT size-inches (#PCDATA)>
+
+<!ELEMENT size (#PCDATA)>
+
+<!ELEMENT color (#PCDATA)>
+
+<!ELEMENT weight-lb (#PCDATA)>
+
+<!ELEMENT weight-kg (#PCDATA)>
+

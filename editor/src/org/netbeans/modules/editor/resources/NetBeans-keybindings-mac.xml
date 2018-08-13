@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE bindings PUBLIC "-//NetBeans//DTD Editor KeyBindings settings 1.1//EN" "http://www.netbeans.org/dtds/EditorKeyBindings-1_1.dtd">
+
+<!--
+    IMPORTANT:  This file modifies keybindings from NetBeans-keybindings.xml to make them work on Mac OS.
+-->
+
+<bindings>
+    <!-- Things we add that replace standard keybindings -->
+    
+    <bind key="F3" remove="true"/>
+    <bind key="M-G" actionName="find-next"/> 
+    
+    <bind key="S-F3" remove="true"/>
+    <bind key="MS-G" actionName="find-previous"/> 
+
+    <bind key="D-F3" remove="true"/>
+    <bind key="CA-G" actionName="find-selection"/> 
+    
+    <bind key="D-HOME" remove="true"/>
+    <bind actionName="caret-begin" key="M-UP"/>
+
+    <bind key="D-END" remove="true"/>
+    <bind actionName="caret-end" key="M-DOWN"/>
+
+    <bind key="D-LEFT" remove="true"/>
+    <bind key="A-LEFT" actionName="caret-previous-word"/> 
+    
+    <bind key="D-RIGHT" remove="true"/>
+    <bind key="A-RIGHT" actionName="caret-next-word"/> 
+
+    <bind key="D-DELETE" remove="true"/>
+    <bind actionName="remove-word-next" key="A-DELETE"/>
+
+    <bind key="D-BACK_SPACE" remove="true"/>
+    <bind actionName="remove-word-previous" key="A-BACK_SPACE"/>
+
+    <bind key="DS-LEFT" remove="true"/>
+    <bind key="AS-LEFT" actionName="selection-previous-word"/>
+
+    <bind key="DS-RIGHT" remove="true"/>
+    <bind key="AS-RIGHT" actionName="selection-next-word"/>
+    
+    <bind key="D-M" remove="true"/>
+    <bind key="C-M" actionName="select-next-parameter"/>
+    
+    <bind key="D-R" remove="true"/>
+    <bind key="C-R" actionName="in-place-refactoring"/>
+
+    <bind key="C-H" remove="true"/>
+    <bind key="M-R" actionName="replace"/>
+
+    <bind key="D-UP" remove="true"/>
+    <bind actionName="scroll-down" key="C-UP"/>
+    <bind key="D-DOWN" remove="true"/>
+    <bind actionName="scroll-up" key="C-DOWN"/>
+
+    <bind key="O-I" actionName="generate-code"/>
+    
+    <!-- Move 'copy lines' shortcuts, mac defines selection to begin/end of doc for them -->
+        
+    <bind actionName="copy-selection-else-line-up" key="AS-UP"/>
+    <bind actionName="copy-selection-else-line-up" key="AS-KP_UP"/>
+    <bind actionName="copy-selection-else-line-down" key="AS-DOWN"/>
+    <bind actionName="copy-selection-else-line-down" key="AS-KP_DOWN"/>
+    <bind actionName="selection-begin" key="DS-UP"/>
+    <bind actionName="selection-begin" key="DS-KP_UP"/>
+    <bind actionName="selection-end" key="DS-DOWN"/>
+    <bind actionName="selection-end" key="DS-KP_DOWN"/>
+
+    <!-- Things we add only on the mac -->
+    
+    <bind actionName="selection-begin-line" key="MS-LEFT"/>
+    <bind actionName="selection-end-line" key="MS-RIGHT"/>
+    <bind actionName="caret-end-line" key="M-RIGHT"/>
+    <bind actionName="caret-begin-line" key="M-LEFT"/>
+    
+    <bind actionName="page-down" key="A-PAGE_DOWN"/>
+    <bind actionName="page-up" key="A-PAGE_UP"/>
+
+    <!-- Things we remove on Mac -->
+    
+    <bind key="D-Y" remove="true"/>
+    <!-- remove Ctrl-INSERT on Mac (no INSERT on Mac keyboard)-->
+    <bind key="O-INSERT" remove="true"/>
+    
+    <!-- conflict with system zoom shortcut (Alt-mousewheel), see issue #212484, comment #12 -->
+    <bind actionName="zoom-text-in" key="A-MOUSE_WHEEL_UP"/>
+    <bind actionName="zoom-text-out" key="A-MOUSE_WHEEL_DOWN"/>
+
+    <bind actionName="next-marked-occurrence" key="A-DOWN"/>
+    <bind actionName="prev-marked-occurrence" key="A-UP"/>
+
+    <!-- Multi-caret: extra shortcuts for adding carets in up/down direction -->    
+    <bind actionName="add-caret-up" key="AD-UP"/>
+    <bind actionName="add-caret-up" key="AD-KP_UP"/>
+    <bind actionName="add-caret-down" key="AD-DOWN"/>
+    <bind actionName="add-caret-down" key="AD-KP_DOWN"/>
+    <!-- Multi-caret: extra shortcut for Paste by lines -->    
+    <bind actionName="clipboard-lines" key="AD-V"/>
+
+</bindings>

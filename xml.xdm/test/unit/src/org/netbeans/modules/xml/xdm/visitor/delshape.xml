@@ -1,0 +1,18 @@
+<?xml version='1.0'?>
+
+<shape-document
+xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.example.org diagram.xsd">
+
+    <container name="container1">
+        <square id="1" x="30" y="50"/>
+        
+        <circle id="3" x="30" y="150"/>
+        <circle id="4" x="130" y="150"/>
+        <triangle id="5" x="30" y="250"/>
+        <triangle id="5" x="130" y="250"/>
+        <line src_id="1" dest_id="2"/>
+    </container>
+    
+</shape-document>

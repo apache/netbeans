@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE adresses SYSTEM "dtd/adress.dtd">
+
+<adresses>
+    <addres>
+        <first-name>Joe</first-name>
+        <last-name>Brown</last-name>
+        <email2>jb@planet.com</email2>
+        <country>Fairyland</country>
+    </addres>
+</adresses>
+

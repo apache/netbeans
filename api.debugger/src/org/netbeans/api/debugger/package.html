@@ -1,0 +1,239 @@
+<!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+  <meta name="GENERATOR"
+ content="Mozilla/4.76 [en] (Windows NT 5.0; U) [Netscape]">
+  <title>package</title>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+</head>
+<body style="color: rgb(0, 0, 0);" link="#0000ee" alink="#0000ee"
+ vlink="#551a8b">
+The NetBeans Debugger Core API definition. Debugger Core API interfaces
+allows to install differrent debugger inlementations to one IDE, and
+share some UI components among them.<br>
+<br>
+<h2><a name="Basic_debugger_model"></a>Basic debugger model<br>
+</h2>
+Debugger Core API represents debugger as some tree structure. {@link
+org.netbeans.api.debugger.DebuggerManager} represents root of this
+tree. It manages list of {@link org.netbeans.api.debugger.Breakpoint}s,
+{@link org.netbeans.api.debugger.Watch}es and running {@link
+org.netbeans.api.debugger.Session}s. All watches and breakpoints
+registerred here are shared for all running sessions.<br>
+<br>
+{@link
+org.netbeans.api.debugger.Session} represents one process or
+application running in debug mode. Each Session manages list of
+supported programming languages. Support for each programming language
+is represented by some instance of {@link
+org.netbeans.api.debugger.DebuggerEngine}. DebuggerEngine is a main
+intergation point for all Debugger Plug-ins. Most of Service Providers
+(like {@link
+org.netbeans.spi.debugger.ActionsProvider} or different Models) should
+be registered for
+some concrete type of DebuggerEngine.<br>
+<br>
+<pre style="background-color: rgb(255, 255, 153);">{@link org.netbeans.api.debugger.DebuggerManager}<br>  |<br>  |- {@link org.netbeans.api.debugger.Breakpoint}(s)<br>  |<br>  |- {@link org.netbeans.api.debugger.Watch}(es)<br>  |<br>  |- {@link org.netbeans.api.debugger.Session}(s)   &lt;programming language 1 -&gt; {@link org.netbeans.api.debugger.DebuggerEngine} 1&gt;<br>                  &lt;programming language 2 -&gt; {@link org.netbeans.api.debugger.DebuggerEngine} 2&gt;<br>                   ...<br><br></pre>
+<br>
+One DebuggerEngine can manage more than one language. And it can be
+used for more than one Session. In extreme example, there may be one
+DebuggerManager only for several different sessions and for many
+different languages.<br>
+<br>
+The only way how to add some language, session or engine to this tree
+is method {@link
+org.netbeans.api.debugger.DebuggerManager#startDebugging(DebuggerInfo)}.
+The only method how to remove something is {@link
+org.netbeans.api.debugger.DebuggerEngine.Destructor}.<br>
+<br>
+<h2><a name="lookups"></a>Exension of basic model - lookups,
+Meta-inf/debugger<br>
+</h2>
+Basic debugger model is very simple, and it should be extended by some
+additional services (see <a
+ href="../../spi/debugger/package-summary.html">Debugger
+SPI </a>documentation for default set of additional services). As the
+Debugger API interfaces should be (and are) final, we use lookup
+pattern for this purpose. <br>
+<br>
+List of 'extensible' interfaces:<br>
+<ul>
+  <li>{@link org.netbeans.api.debugger.DebuggerManager}: methods {@link
+org.netbeans.api.debugger.DebuggerManager#lookup(String,Class)}
+and {@link
+org.netbeans.api.debugger.DebuggerManager#lookupFirst(String,Class)}</li>
+  <li>{@link org.netbeans.api.debugger.DebuggerInfo}: methods {@link
+org.netbeans.api.debugger.DebuggerInfo#lookup(String,Class)} and {@link
+org.netbeans.api.debugger.DebuggerInfo#lookupFirst(String,Class)}</li>
+  <li>{@link org.netbeans.api.debugger.Session}: methods {@link
+org.netbeans.api.debugger.Session#lookup(String,Class)} and {@link
+org.netbeans.api.debugger.Session#lookupFirst(String,Class)}</li>
+  <li>{@link org.netbeans.api.debugger.DebuggerEngine}: methods {@link
+org.netbeans.api.debugger.DebuggerEngine#lookup(String,Class)}, {@link
+org.netbeans.api.debugger.DebuggerEngine#lookupFirst(String,Class)}, {@link
+org.netbeans.api.debugger.DebuggerManager#lookup(String,Class)}
+and {@link
+org.netbeans.api.debugger.DebuggerManager#lookupFirst(String,Class)}</li>
+</ul>
+There are two ways how to registrer services. The first possibility is
+to put 'live' instance of some service to the interface when a new
+instance is created. This solution is supported by methods: {@link
+org.netbeans.api.debugger.DebuggerInfo#create(String,Object[])}, {@link
+org.netbeans.spi.debugger.SessionProvider#getServices()} and {@link
+org.netbeans.spi.debugger.DebuggerEngineProvider#getServices()}. Second
+possibility (and preferred one) is to register service to
+Meta-inf/debugger folder. The way how to do it is described in <a
+ href="../../spi/debugger/package-summary.html">Debugger
+SPI </a>documentation.<br>
+<br>
+<h2><a name="Debugger_Start_Process"></a>Debugger Start Process</h2>
+The process which implements starting of debugger in Debugger Core
+module is very simple. There is one instance of {@link
+org.netbeans.api.debugger.DebuggerInfo} and {@link
+org.netbeans.api.debugger.DebuggerManager#startDebugging(DebuggerInfo)}
+method on the
+begining of this process. DebuggerInfo determines a set of debugger
+Sessions to be started:<br>
+<br>
+<pre style="background-color: rgb(255, 255, 153);">List sessionProviders = debuggerInfo.lookup (null, SessionsProvider.class);<br></pre>
+<br>
+A new instance of {@link
+org.netbeans.api.debugger.Session} is created for every {@link
+org.netbeans.spi.debugger.SessionProvider} after that. A set of
+DebuggerEngines is created for each Session in the second step:<br>
+<br>
+<pre style="background-color: rgb(255, 255, 153);">List engineProviders = session.lookup (null, DebuggerEngineProvider.class);<br></pre>
+<br>
+Each {@link
+org.netbeans.spi.debugger.DebuggerEngineProvider} drives creation of
+one new instance of
+{@link
+org.netbeans.api.debugger.DebuggerEngine}. So, the debugger start
+process creates a tree of
+new Sessions and new DebuggerEngines and registers them to the
+DebuggerManager.
+Thats all.<br>
+<br>
+<h2><a name="Debugger_Start_Process_-_advanced"></a>Debugger Start
+Process - advanced version</h2>
+Debugger API supports two enhancements to the standard debugger start
+process:<br>
+<ol>
+  <li>Start new DebuggerEngine for already existing Session</li>
+  <li>Create a new Session for already existing DebuggerEngine.</li>
+</ol>
+{@link
+org.netbeans.spi.debugger.DelegatingSessionProvider} interface is
+designed to support first usecase. You should implement and register
+this interface in Meta-inf/debugger, to delegate on some existing
+Session. <br>
+Second usecase is supported by interface {@link
+org.netbeans.spi.debugger.DelegatingDebuggerEngineProvider}.<br>
+<br>
+<h2><a name="Debugger_Actions"></a>Debugger Actions - how does it work</h2>
+debuggercore-ui module installs some basic set of standard debugger
+actions to NetBeans toolbar and menu. Debugger actions
+(javax.swing.Action) are private. Each action is represented by some
+constant in {@link
+org.netbeans.api.debugger.ActionsManager} (like {@link
+org.netbeans.api.debugger.ActionsManager#ACTION_STEP_INTO}). <br>
+ActionsManager manages list of registered {@link
+org.netbeans.spi.debugger.ActionProvider}s. It contains mapping between
+action constant and ActionProvider registerred for this constant. For
+example:<br>
+<br>
+<div style="margin-left: 40px;"><span style="font-style: italic;">instance
+of DebuggerEngine which represents JPDA debugger contains mapping:</span><br
+ style="font-style: italic;">
+<span style="font-style: italic;">ActionsManager.ACTION_STEP_INTO
+--&gt; JPDAStepIntoActionProvider</span><br>
+</div>
+<br>
+How to implement and register some debugger action:<br>
+<pre style="background-color: rgb(255, 255, 153);">public class JPDAStepIntoAction extends ActionsProviderSupport {<br><br>&nbsp;&nbsp;&nbsp; JPDAStepIntoAction () {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; jpdaDebugger.add...Listener (<br>            new Listener () {<br>                public ...event () {<br>                    // set state of action here<br>                    setEnabled ( state );<br>                }<br>            }<br>        );<br>&nbsp;&nbsp;&nbsp; }<br>    public boolean doAction (Object action) {<br>        // put implementation of action here<br>        return true; // action successful<br>    }<br>}<br></pre>
+And JPDAStepIntoAction should be registerred in file:<br>
+<span style="font-style: italic;">META-INF/debugger/{DebuggerEngineTypeID}/org.netbeans.spi.debugger.ActionsProvider</span><br>
+<br>
+Following two diagrams will show how the action system works:<br>
+<br>
+<span style="text-decoration: underline;">Diagram 1</span> - what
+happens when user press Step Into Action:<br>
+<ol>
+  <li>StepIntoAction calls {@link
+org.netbeans.api.debugger.ActionsManager#doAction(Object)} for {@link
+org.netbeans.api.debugger.ActionsManager#ACTION_STEP_INTO}, when its
+invoked by the user.</li>
+  <li>{@link org.netbeans.api.debugger.ActionsManager} finds proper
+{@link org.netbeans.spi.debugger.ActionsProvider} registered for given
+action. Than it calls {@link
+org.netbeans.spi.debugger.ActionsProvider#doAction(Object)}.</li>
+  <li>{@link org.netbeans.api.debugger.ActionsManager} notifies all
+{@link org.netbeans.api.debugger.ActionsManagerListener}s about it, when the
+action is done.<br>
+  </li>
+</ol>
+<pre style="background-color: rgb(255, 255, 153);"> <span
+ style="font-weight: bold;">user</span>           <span
+ style="font-weight: bold;"> StepIntoAction                                 DebuggerEngine                       </span><span
+ style="font-weight: bold;">StepInto</span><span
+ style="font-weight: bold;">ActionProvider                   DebuggerEngineListener<br></span>              (javax.swing.Action)                                    |                                 (ActionsProvider)                                |<span
+ style="font-weight: bold;"><br></span>                       |                                              |                                         |                                        | <br>  o  press  -&gt;  <span
+ style="font-weight: bold;">actionPerformed </span>(...)                                 |                                         |                                        |<br> _|_ action          calls                                            |                                         |                                        |<br>  |  button     currentDebuggerEngine.         <span
+ style="font-weight: bold;">--&gt;</span>       <span
+ style="font-weight: bold;">doAction (ACTION_STEP_INTO)</span>                            |                                        |<br> / \                doAction                                          |                                         |                                        |<br>                (ACTION_STEP_INTO)                           finds ActionsProviders                             |                                        |<br>                       |                                   registerred for given action        --&gt;   <span
+ style="font-weight: bold;">doAction (ACTION_STEP_INTO)</span>                         |<br>                       |                                    and calls doAction on them                  implementation of                                |<br>                       |                                              |                               Step Into Action is here                           |<br>                       |                                              |                        &lt;--              |                                        |<br>                       |                                  fires PROP_ACTION_PERFORMED                           |                                        |<br>                       |                                              |                        <span
+ style="font-weight: bold;">--&gt;</span>             -|-&gt;                              <span
+ style="font-weight: bold;">actionPerformed</span> (..)<br>                       |                                              |                                         |                                  listener impl.<br>                       | &lt;--                                        &lt;-|-                                      &lt;-|-                                    &lt;--|<br>                       |                                              |                                         |                                        |<br></pre>
+<br>
+<span style="text-decoration: underline;">Diagram 2</span> - what
+happens when the state of Step Into Action is changed:<br>
+<ol>
+  <li>Debugger implementation should recognize that the state of Step
+Into action should be changed, and it should notify
+StepIntoActionProvider about it.</li>
+  <li>StepIntoActionProvider should fire {@link
+org.netbeans.spi.debugger.ActionsProviderListener#actionStateChange(Object,boolean)}
+for {@link org.netbeans.api.debugger.ActionsManager#ACTION_STEP_INTO}.</li>
+  <li>{@link org.netbeans.api.debugger.DebuggerEngine} is listenning on
+all installed {@link org.netbeans.spi.debugger.ActionsProvider}s and
+fires all action state changes using {@link
+org.netbeans.api.debugger.DebuggerEngineListener#actionStateChanged(Object,boolean)}.</li>
+  <li>StepIntoAction listens on {@link
+org.netbeans.api.debugger.DebuggerEngine}, and it updates its state
+when some actionStateChanged is fired.<br>
+  </li>
+</ol>
+<pre style="background-color: rgb(255, 255, 153);"> <span
+ style="font-weight: bold;">     debugger</span>  <span
+ style="font-weight: bold;">  StepInto</span><span
+ style="font-weight: bold;">ActionProvider</span><span
+ style="font-weight: bold;">          DebuggerEngine.ActionsProviderListener                </span><span
+ style="font-weight: bold;">StepIntoAction.DebuggerEngineListener</span><span
+ style="font-weight: bold;"></span><br>                     (ActionsProvider)                            |                                           (javax.swing.Action)                 <span
+ style="font-weight: bold;"><br></span>                            |                                     |                                                    |<br>   _  state of   -&gt;  fire action state                            |                                                    |<br>  |?|  action            change           --&gt;   <b>actionStateChange</b> (ACTION_STEP_INTO, enabled)                          |<br>   &macr;  should be             |                                     |                                                    |<br>      changed               |                         fire DebuggerEngineListener                                      |<br>                            |                            actionStateChanged                   --&gt;             <span
+ style="font-weight: bold;">actionStateChanged</span><br>                            |                                     |                                             updates a state<br>                            |                                     |                                                of action<br>                            |&lt;--                                &lt;-|-                          <span
+ style="font-weight: bold;">&lt;--</span>                      |<br></pre>
+<br>
+</body>
+</html>

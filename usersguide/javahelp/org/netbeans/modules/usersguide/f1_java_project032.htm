@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Options Window: Java: Ant</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="netbeans.optionsDialog.advanced.ant" name="netbeans.optionsDialog.advanced.ant"></a></p>
+<div id="NBCSH2219"><!-- infolevel="all" infotype="General" --><a id="sthref302" name="sthref302"></a>
+<h1>Options Window: Java: Ant</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to configure Ant settings that effect the behavior of Ant in the IDE. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG516">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<table summary="Descriptions of New Libraries wizards actions." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="38%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t28">Element</th>
+<th align="left" valign="bottom" id="r1c2-t28">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t28" headers="r1c1-t28">
+<p>Ant Home</p>
+</td>
+<td align="left" headers="r2c1-t28 r1c2-t28">Specifies the installation directory of the Ant executable used by the IDE.
+<p>You can change Ant versions by typing the full path to a new Ant installation directory in this property or clicking Change to browse to the location. You can only switch between versions 1.5.3 and higher of Ant. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2125">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>The Ant installation directory must contain a <code dir="ltr">lib/</code> subdirectory which contains the <code dir="ltr">ant.jar</code> binary. For example, for the standard Ant 1.5.4 release, the Ant installation directory is <code dir="ltr">ant/lib/apache-ant-1.5.4</code>. If you enter a directory that does not match this structure, the IDE gives you an error.</p>
+<p>You can also specify the following options:</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t28" headers="r1c1-t28">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Save All Modified Files</p>
+</td>
+<td align="left" headers="r3c1-t28 r1c2-t28">If selected, saves all unsaved files in the IDE before running Ant.
+<p>It is recommended to leave this property selected because modifications to files in the IDE are not recognized by Ant unless they are first saved to disk.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t28" headers="r1c1-t28">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Reuse Output Tabs</p>
+</td>
+<td align="left" headers="r4c1-t28 r1c2-t28">If selected, writes Ant output to a single Output window tab, deleting the output from the previous process.
+<p>If not selected, opens a new tab for each Ant process.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t28" headers="r1c1-t28">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Always Show Output</p>
+</td>
+<td align="left" headers="r5c1-t28 r1c2-t28">If selected, the IDE always fronts the Output window for all Ant processes.
+<p>If not selected, the IDE fronts the Output window tab only when the Ant output requires user input or contains a hyperlink. Output that contains hyperlinks usually denotes an error or warning. This option is deselected by default.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t28" headers="r1c1-t28">
+<p>Verbosity Level</p>
+</td>
+<td align="left" headers="r6c1-t28 r1c2-t28">Sets the amount of compilation output.
+<p>You can set the verbosity lower to suppress informational messages or higher to get more detailed information.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t28" headers="r1c1-t28">
+<p>Classpath</p>
+</td>
+<td align="left" headers="r7c1-t28 r1c2-t28">Contains binaries and libraries that are added to Ant's classpath.
+<p>Click <b>Manage Classpath</b> to open the Classpath Editor.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t28" headers="r1c1-t28">
+<p>Properties</p>
+</td>
+<td align="left" headers="r8c1-t28 r1c2-t28">Configures custom properties to pass to an Ant script each time you call Ant.
+<p>Click <b>Manage Properties</b> to edit the properties in the property editor. This property is similar to the Ant command-line option, <code dir="ltr">-Dkey=value</code>. The following default properties are available:</p>
+<p><code dir="ltr">${build.compiler.emacs}</code>. If you are compiling using Jikes (build.compiler=jikes), setting this property to true enables Emacs-compatible error messages. It is recommended that you leave this property set to true even if you are not using Jikes, since the IDE prefers Emacs-compatible error messages.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2227" name="NBCSH2227"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG515">
+<param name="text" value="<html><u>&quot;Building a Java Project&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

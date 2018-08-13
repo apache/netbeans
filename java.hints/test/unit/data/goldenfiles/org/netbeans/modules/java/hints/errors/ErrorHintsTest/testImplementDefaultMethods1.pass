@@ -1,0 +1,19 @@
+package org.netbeans.test.java.hints;
+
+/**
+ *
+ * @author sdedic
+ */
+public class ImplementDefaultMethods1 implements java.util.Iterator<String> {
+
+    @Override
+    public boolean hasNext() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public String next() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+}

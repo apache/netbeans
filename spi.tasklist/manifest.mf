@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.spi.tasklist/1
+OpenIDE-Module-Implementation-Version: 1
+OpenIDE-Module-Layer: org/netbeans/spi/tasklist/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/spi/tasklist/Bundle.properties
+

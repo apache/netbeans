@@ -1,0 +1,5 @@
+Internationalization       > Internationalize...                   r
+                             Insert Internationalized String...    S
+                             ===================================
+                             Internationalization Wizard           I
+                             Internationalization Test Wizard      T

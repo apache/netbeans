@@ -1,0 +1,303 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Deployment Descriptor Visual Editor: Web Services</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.j2ee.sun.ddloaders.multiview.webservice.WebServiceNode,org.netbeans.modules.j2ee.sun.ddloaders.multiview.webservice.WebServiceView" name="org.netbeans.modules.j2ee.sun.ddloaders.multiview.webservice.WebServiceNode,org.netbeans.modules.j2ee.sun.ddloaders.multiview.webservice.WebServiceView"></a></p>
+<div id="NBCSH4740"><!-- infolevel="all" infotype="General" --><a id="sthref692" name="sthref692"></a>
+<h1>Deployment Descriptor Visual Editor: Web Services</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to edit the platform-specific deployment descriptors for web services in the project if you are deploying to the GlassFish server. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2677">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>Depending on your application, the Web Services tab may have the following sections: Web Services, Web Service Clients, and Web Service Endpoints.</p>
+<p><b>Web Services</b></p>
+
+<table summary="Descriptions of name and location properties of new Java Project existing sources wizard." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="36%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t53">Element</th>
+<th align="left" valign="bottom" id="r1c2-t53">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t53" headers="r1c1-t53">
+<p>Add Web Service</p>
+</td>
+<td align="left" headers="r2c1-t53 r1c2-t53">Adds descriptor properties for a web service.
+<p>Each web service has the following properties: Web Service Description Name and WSDL Publish Location.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t53" headers="r1c1-t53">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Web Service Description Name</p>
+</td>
+<td align="left" headers="r3c1-t53 r1c2-t53">Specifies the web service description name as read from the corresponding entry for this service in your <code dir="ltr">webservices.xml</code> file.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t53" headers="r1c1-t53">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;WSDL Publish Location</p>
+</td>
+<td align="left" headers="r4c1-t53 r1c2-t53">(Optional) Specifies a URL of a directory to which this web service's WSDL and any dependent files are published during deployment.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p><b>Note:</b> The Web Services node is visible when a <code dir="ltr">webservices.xml</code> also exists in the project. In other words, this node only appears for web and enterprise bean projects that implement web services.</p>
+<p><b>Web Service Clients</b></p>
+
+<table summary="Descriptions of name and location properties of new Java Project existing sources wizard." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="36%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t54">Element</th>
+<th align="left" valign="bottom" id="r1c2-t54">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t54" headers="r1c1-t54">
+<p>Add Web Service Reference</p>
+</td>
+<td align="left" headers="r2c1-t54 r1c2-t54">Adds descriptor properties for a web service client.
+<p>Each web service client has the following properties: Service Reference Name, WSDL override, Port Information, and Selected Port Information.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t54" headers="r1c1-t54">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Service Reference Name</p>
+</td>
+<td align="left" headers="r3c1-t54 r1c2-t54">Specifies the web service description name as read from the corresponding entry for this service in your <code dir="ltr">webservices.xml</code> file.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t54" headers="r1c1-t54">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;WSDL override</p>
+</td>
+<td align="left" headers="r4c1-t54 r1c2-t54">Specifies the URL to a WSDL document.
+<p>This URL overrides the WSDL document reference in the <code dir="ltr">web-app.xm</code>l file.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t54" headers="r1c1-t54">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Port Information</p>
+</td>
+<td align="left" headers="r5c1-t54 r1c2-t54">Defines and configures the port information and properties of a Service reference.
+<p>Add a new port for a Service reference by clicking <b>Add Port Information</b>, or expand an existing port node to edit the properties of that port or to remove it.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t54" headers="r1c1-t54">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Selected Port Information</p>
+</td>
+<td align="left" headers="r6c1-t54 r1c2-t54">Adds or modifies the following properties for the web service client port:
+<ul>
+<li>Service Endpoint Interface</li>
+<li>WSDL Port Namespace URI</li>
+<li>WSDL Port Localpart - Specifies the local portion of the WSDL namespace.</li>
+<li>Message Security - Enables you to edit the message security binding settings when selected.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p><b>Web Service Endpoints</b></p>
+<p>The Web Service Endpoints section enables you to edit the properties of any endpoints exposed by a web service in the application. An endpoint identifies the final destination of a service or a message. In the web service context, an endpoint is the URL at which the service can be reached. The properties should automatically be prepopulated with entries corresponding to the ports defined for this service in <code dir="ltr">webservices.xml</code>.</p>
+
+<table summary="Descriptions of name and location properties of new Java Project existing sources wizard." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="36%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t55">Element</th>
+<th align="left" valign="bottom" id="r1c2-t55">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t55" headers="r1c1-t55">
+<p>Add Endpoint</p>
+</td>
+<td align="left" headers="r2c1-t55 r1c2-t55">Adds descriptor properties for a web service endpoint.
+<p>Each web service client has the following properties: Port Component Name, Endpoint Address URI, Transport Guarantee, Debugging Enabled, Message Security, and Security Settings.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t55" headers="r1c1-t55">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Port Component Name</p>
+</td>
+<td align="left" headers="r3c1-t55 r1c2-t55">Specifies the port component name for this endpoint.
+<p>Matches the corresponding port component name in <code dir="ltr">webservices.xml.</code> You generally should not need to edit this field if the endpoint is already specified in <code dir="ltr">webservices.xml</code> file.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t55" headers="r1c1-t55">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Endpoint Address URI</p>
+</td>
+<td align="left" headers="r4c1-t55 r1c2-t55">Specifies the automatically generated endpoint address.
+<p>The Endpoint Address must be a fixed pattern. No * wildcards are allowed. The default value is the web service name for servlet-based endpoints or <code dir="ltr">webservice/</code><code dir="ltr">ejb-name</code> for an EJB-based endpoint.</p>
+<p>The Endpoint Address is combined with the web server root to form the fully-qualified endpoint address URI for a web service endpoint during deployment time.</p>
+<p>The fully-qualified endpoint address URI is the URI at which the web service can be reached. The Endpoint Address is required for servlet endpoints if the servlet implements more than one endpoint and for all EJB endpoints.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t55" headers="r1c1-t55">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Transport Guarantee</p>
+</td>
+<td align="left" headers="r5c1-t55 r1c2-t55">Specifies the mode of communication between client and server.
+<p>The following options are available: NONE, INTEGRAL, AND CONFIDENTIAL</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t55" headers="r1c1-t55">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NONE</p>
+</td>
+<td align="left" headers="r6c1-t55 r1c2-t55">Specifies that the application does not require any transport guarantees.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t55" headers="r1c1-t55">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;INTEGRAL</p>
+</td>
+<td align="left" headers="r7c1-t55 r1c2-t55">Specify that the application requires that the data sent between the client and server be sent in such a way that it cannot be changed in transit.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t55" headers="r1c1-t55">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CONFIDENTIAL</p>
+</td>
+<td align="left" headers="r8c1-t55 r1c2-t55">Specifies that the application requires that the data be transmitted in a fashion that prevents other entities from observing the contents of the transmission.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t55" headers="r1c1-t55">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Debugging Enabled</p>
+</td>
+<td align="left" headers="r9c1-t55 r1c2-t55">Enables debugging.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t55" headers="r1c1-t55">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Message Security</p>
+</td>
+<td align="left" headers="r10c1-t55 r1c2-t55">If deselected, the application does not require authentication.
+<p>If selected, the application requires that the data be transmitted in a fashion that prevents other entities from observing the contents of the transmission.</p>
+<p>If you select this option, you must click <b>Edit Bindings</b> to set the message-security-binding properties.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r11c1-t55" headers="r1c1-t55">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Security Settings</p>
+</td>
+<td align="left" headers="r11c1-t55 r1c2-t55">Specifies the following authentication options if you are configuring an EJB web service endpoint: No Security, Message Security, and Login Configuration Realm.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r12c1-t55" headers="r1c1-t55">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No Security</p>
+</td>
+<td align="left" headers="r12c1-t55 r1c2-t55">If selected, the application does not require any authentication.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r13c1-t55" headers="r1c1-t55">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Message Security</p>
+</td>
+<td align="left" headers="r13c1-t55 r1c2-t55">If deselected, the application does not require authentication.
+<p>If selected, the application requires that the data be transmitted in a fashion that prevents other entities from observing the contents of the transmission.</p>
+<p>If you select this option, you must click <b>Edit Bindings</b> to set the message-security-binding properties.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r14c1-t55" headers="r1c1-t55">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Login Configuration Realm</p>
+</td>
+<td align="left" headers="r14c1-t55 r1c2-t55">If selected, you must specify a realm that exists on the GlassFish application server and specify one of the following authentication options: Basic or Client Certification.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r15c1-t55" headers="r1c1-t55">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Basic</p>
+</td>
+<td align="left" headers="r15c1-t55 r1c2-t55">The application uses basic authentication, that is, a user ID and password.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r16c1-t55" headers="r1c1-t55">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Client Certification</p>
+</td>
+<td align="left" headers="r16c1-t55 r1c2-t55">The application authenticates with a client certificate.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p><b>Note:</b> For servlet endpoints, authentication is either configured in <code dir="ltr">web.xml</code>.</p>
+<a id="NBCSH4764" name="NBCSH4764"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2805">
+<param name="text" value="<html><u>&quot;Configuring Web Services&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1111">
+<param name="text" value="<html><u>&quot;Configuring a Web Application&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2719">
+<param name="text" value="<html><u>&quot;Building and Deploying an EJB Module&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

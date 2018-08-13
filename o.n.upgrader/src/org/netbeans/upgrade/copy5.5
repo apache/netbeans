@@ -1,0 +1,81 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+# start the line either with # to begin a comment
+# or include to describe a file(s) to be included during copy
+# or exclude to describe a file(s) to be excluded
+# use of regular expressions allowed in file names
+#
+# the list is iterated from first to last and the last match
+# decides the result
+
+include CreatorDesignerPalette/.*
+include CreatorDesignerPalette5/.*
+include Databases/.*
+include Editors/.*
+exclude Editors/.*/macros.xml
+exclude Editors/.*/Popup.*
+exclude Editors/.*/.*\.instance
+exclude Editors/.*/Settings\.settings
+include Editors/AnnotationTypes/org-netbeans-modules-java-.*\.xml
+include Editors/AnnotationTypes/TaskAnnotation.*\.xml
+include Favorites/.*
+include FormDesignerPalette/.*
+include HTMLPalette/.*
+include HTTPMonitor/.*
+include J2EE/.*
+include JSPPalette/.*
+include Keymaps/.*
+exclude MVD/.*
+include org-netbeans-api-project-libraries/Libraries/.*\.xml
+include Services/Browsers/.*
+include Services/Collaboration/.*
+include Services/DiffProviders/.*
+include Services/Diffs/.*
+include Services/DiffVisualizers/.*
+include Services/formsettings\.settings
+include Services/Hidden/org-netbeans-modules-diff-DiffSettings\.settings
+include Services/Hidden/org-netbeans-modules-subversion-settings-.*
+include Services/Hidden/org-netbeans-modules-tasklist-suggestions-settings-ManagerSettings\.instance
+include Services/Hidden/org-netbeans-modules-vcscore-settings-GeneralVcsSettings\.settings
+include Services/Hidden/org-netbeans-modules-versioning-system-cvss-settings.*
+include Services/Hidden/VersionControl/org-netbeans-modules-vcscore-grouping-VcsGroupSettings\.settings
+exclude Services/IndentEngine/.*
+include Services/MergeVisualizers/.*
+include Services/org-apache-tools-ant-module-AntSettings\.settings
+include Services/org-netbeans-core-IDESettings\.settings
+include Services/org-netbeans-modules-db-explorer-DatabaseOption\.settings
+include Services/org-netbeans-modules-debugger-Settings\.properties
+include Services/org-netbeans-modules-derby-DerbyOptions\.settings
+include Services/org-netbeans-modules-httpserver-HttpServerSettings\.settings
+include Services/org-netbeans-modules-java-settings-JavaSettings\.settings
+include Services/org-netbeans-modules-javadoc-settings-DocumentationSettings\.settings
+include Services/org-netbeans-modules-profiler-ProfilerIDESettings\.settings
+include Services/org-netbeans-modules-project-ui-OpenProjectList\.settings
+include Services/org-netbeans-modules-tasklist-docscan-Settings\.settings
+include Services/Platforms/org-netbeans-api-java-Platform/.*\.xml
+include Shortcuts/.*
+include TaskList/.*
+include Templates/Classes/.*
+include Templates/J2MEProjectConfigurations/.*\.cfg
+include Toolbars/.*
+exclude Toolbars/Progress/.*
+include vcs/.*
+include VCSMount/.*
+exclude Windows2Local/Components/DesignInspector.settings
+exclude Windows2Local/Groups/mvd/DesignInspector.wstcgrp
+exclude Windows2Local/Modes/navigator/DesignInspector.wstcref

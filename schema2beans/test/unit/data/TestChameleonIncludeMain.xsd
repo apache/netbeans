@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://test.org/test" xmlns:test="http://test.org/test"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="qualified" 
+  attributeFormDefault="unqualified">
+	
+  <include schemaLocation="TestChameleonIncludeDependency.xsd"/>
+
+  <element name="basket" type="test:basketType"/>
+  
+  <complexType name="basketType">
+    <sequence>
+      <element ref="test:item" maxOccurs="unbounded"/>
+    </sequence>
+  </complexType>
+</schema>

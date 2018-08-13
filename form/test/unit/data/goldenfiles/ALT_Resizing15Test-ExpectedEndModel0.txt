@@ -1,0 +1,69 @@
+<LayoutModel>
+  <Root id="Form">
+    <DimensionLayout dim="horizontal">
+      <Group type="parallel" groupAlignment="leading" attributes="2048">
+          <Group type="sequential" alignment="leading" attributes="0">
+              <EmptySpace max="$pref" attributes="0"/>
+              <Group type="parallel" groupAlignment="trailing" attributes="0">
+                  <Component id="jLabel4" alignment="trailing" min="$pref" max="$pref" attributes="0"/>
+                  <Component id="jLabel3" alignment="trailing" min="$pref" max="$pref" attributes="0"/>
+                  <Component id="jLabel1" alignment="trailing" min="$pref" max="$pref" attributes="0"/>
+              </Group>
+              <EmptySpace max="$pref" attributes="0"/>
+              <Group type="parallel" groupAlignment="leading" attributes="0">
+                  <Group type="sequential" attributes="0">
+                      <Group type="parallel" groupAlignment="trailing" max="$pref" attributes="0">
+                          <Group type="sequential" attributes="1">
+                              <Component id="jTextField4" min="$pref" max="$pref" attributes="0"/>
+                              <EmptySpace max="Short.MAX_VALUE" attributes="512"/>
+                              <Component id="jLabel5" min="$pref" max="$pref" attributes="0"/>
+                          </Group>
+                          <Group type="sequential" alignment="leading" attributes="0">
+                              <Component id="jTextField1" min="$pref" max="$pref" attributes="0"/>
+                              <EmptySpace max="$pref" attributes="0"/>
+                              <Component id="jLabel2" min="$pref" max="$pref" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace max="$pref" attributes="0"/>
+                      <Group type="parallel" groupAlignment="leading" attributes="0">
+                          <Component id="jTextField5" pref="200" max="Short.MAX_VALUE" attributes="0"/>
+                          <Component id="jTextField2" alignment="leading" min="$pref" max="$pref" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="sequential" attributes="0">
+                      <Component id="jTextField3" min="$pref" pref="181" max="$pref" attributes="1024"/>
+                      <EmptySpace min="0" pref="0" max="Short.MAX_VALUE" attributes="1536"/>
+                  </Group>
+              </Group>
+              <EmptySpace max="$pref" attributes="4"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="vertical">
+      <Group type="parallel" groupAlignment="leading" attributes="2048">
+          <Group type="sequential" alignment="leading" attributes="0">
+              <EmptySpace max="$pref" attributes="0"/>
+              <Group type="parallel" groupAlignment="baseline" attributes="0">
+                  <Component id="jLabel1" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+                  <Component id="jTextField1" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+                  <Component id="jLabel2" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+                  <Component id="jTextField2" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+              </Group>
+              <EmptySpace max="$pref" attributes="0"/>
+              <Group type="parallel" groupAlignment="baseline" attributes="0">
+                  <Component id="jLabel3" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+                  <Component id="jTextField3" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+              </Group>
+              <EmptySpace max="$pref" attributes="0"/>
+              <Group type="parallel" groupAlignment="baseline" attributes="0">
+                  <Component id="jLabel4" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+                  <Component id="jTextField4" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+                  <Component id="jLabel5" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+                  <Component id="jTextField5" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+              </Group>
+              <EmptySpace pref="217" max="Short.MAX_VALUE" attributes="4"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Root>
+</LayoutModel>

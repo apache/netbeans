@@ -1,0 +1,572 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<html>
+<head>
+<title>Actions API</title>
+<link rel="stylesheet" href="../../../../prose.css" type="text/css">
+</head>
+<body>
+
+<p class="overviewlink"><a href="../../../../overview-summary.html">Overview</a></p>
+
+<h1>Javadoc</h1>
+For installation of global, always-enabled actions, you do not need to use any special interfaces -
+just create a <code>javax.swing.Action</code> and <a href="#adv-install">register</a> it.
+
+Common, global actions such as Cut or Copy are to be found in the
+<a href="../package-summary.html"><code>org.openide.actions</code></a>
+package. The base classes used to create new actions reside in
+<a href="@org-openide-util-ui@/org/openide/util/actions/package-summary.html"><code>org.openide.util.actions</code></a>
+(you need these only if you want to affect a global action's behavior or
+provide a context-sensitive action which is disabled or enabled depending on
+what is selected).
+
+<h1>Contents</h1>
+
+<ul>
+
+<li><a href="#standard">Using Standard Swing Actions</a>
+<li><a href="#intro">Introduction to NetBeans' Actions</a>
+<ul>
+<li><a href="#intro-callback">Callback Actions</a>
+<li><a href="#intro-sense">Context-sensitive Actions</a>
+<li><a href="#intro-present">Presenters</a>
+</ul>
+
+<li><a href="#use-std">Using Standard Actions Found in NetBeans APIs</a>
+<ul>
+<li><a href="#attach">Attaching to an Existing Object</a>
+</ul>
+
+<li><a href="#adv-install">Installation and Maintenance</a>
+<ul>
+<li><a href="#install-menu">Menu Installation</a>
+<li><a href="#install-toolbar">Toolbar Installation</a>
+<li><a href="#install-pool">The Global Actions Pool</a>
+<li><a href="#keymap">Installing Keyboard Shortcuts</a>
+</ul>
+
+</ul>
+
+
+
+<h1>Actions API</h1>
+
+The Actions API allows users to interact with module code, by invoking
+actions via menus, toolbars or keyboard shortcuts.
+
+<h2><a name="standard">Using Standard Swing Actions</a></h2>
+For uncomplicated cases (such as adding an always-enabled action to the main
+menu or the context menu of a <code>Node</code>), it is not necessary to use
+any of the Actions API classes at all - just register an instance of the action class into
+the appropriate folder of the System Filesystem and it will appear.  Similarly,
+any Swing action can be returned from <code>Node.getActions()</code>; it is
+not necessary to subclass one of NetBeans' action classes unless there is 
+specific functionality that only it can provide.
+<p>
+Actions are typically either presented in popup menus, or otherwise
+<a href="#attach">attached</a> to a component such as a window, node,
+data object, or filesystem, or installed globally in the main menu or
+toolbars.
+<p>
+
+<h2><a name="intro">Introduction to NetBeans' Action classes</a></h2>
+For historical reasons, the action subclasses available in NetBeans' APIs 
+are subclasses of
+<a href="@org-openide-util-ui@/org/openide/util/actions/SystemAction.html"><code>SystemAction</code></a>.
+It is no longer required that you use <code>SystemAction</code> - for most purposes, 
+generic Swing <code>Action</code> subclasses will work just fine.  For example, one benefit of 
+using <code>SystemAction</code> is automatic handling of mnemonics - just 
+place an <code>&amp;</code> character before the letter that should be the mnemonic, in 
+the display name - for example, the defined display name for the Copy 
+action is <code>&amp;Copy</code> - that is why <code>C</code>
+is the mnemonic for it.
+However you can get the same effect with any action using <code>Mnemonics.setLocalizedText</code>.
+<p>
+If you do use NetBeans' <code>SystemAction</code> or its subclasses, one 
+important thing to note is that <code>SystemAction</code> objects should be
+<em>singletons</em>, meaning that any instance of the class is
+interchangeable, and all useful state should be static. For this
+reason, actions are commonly specified by class name only.
+<p>
+<blockquote><strong>Important:
+For historical reasons, by default, all <code>SystemAction</code> classes run
+their <code>actionPerformed</code> method <i>off</i> the AWT event dispatch thread.  For 
+backward compatibility this remains the default.  Unless you <i>really</i> want
+your action run in a background thread, you should override the method 
+<code>SystemAction.asynchronous()</code> to return false.  Failing to do so
+can cause your action to appear to run slower than it really does,
+not to mention introducing nondeterminacy.
+Watch your console (or <code>var/log/messages.log</code> file) - if you forget to
+override this method on some action, you will be warned when it is run.
+</strong></blockquote>
+
+<h3><a name="intro-callback">Callback Actions</a></h3>
+
+Some global actions should perform a different function depending on which
+component has focus.  For example, Ctrl-F runs a generic &quot;Find&quot; action.
+In the editor, this searches text, but in the Explorer it searches files, and so on.
+<p>
+To make this possible, <code>FindAction</code> is a public API; modules providing implementations
+affect its behavior by setting its <i>action delegate</i> into <a
+href="@JDK@/javax/swing/ActionMap.html"><code>ActionMap</code></a>.
+<p>
+The typical usage pattern for these is along the lines of:
+<pre>
+ActionMap actionMap = topComponent.getActionMap();
+CallbackSystemAction a = SystemAction.get(SomeAction.class);
+actionMap.put(<a href="@org-openide-util-ui@/org/openide/util/actions/CallbackSystemAction.html#getActionMapKey--">a.getActionMapKey()</a>, new MyAction());
+</pre>
+or directly
+<pre>
+actionMap.put("the-key", new MyAction());
+</pre>
+if the key has been made publicly known and the action is not accessible.
+
+<h3><a name="intro-sense">Context-sensitive actions</a></h3>
+
+Often you will want to have actions be enabled or disabled based on what
+is selected.  Historically this was based on the activated <code>Node</code>;  in more
+recent versions of NetBeans, this is abstracted into an instance of 
+<a href="@org-openide-util-lookup@/org/openide/util/Lookup.html"><code>Lookup</code></a> (which may be the result of
+the selected <code>Node</code>'s <code>getLookup()</code> method, or a merge of several
+selected <code>Node</code>s' <code>Lookup</code>s).  This <code>Lookup</code> instance is found via
+<a href="@org-openide-util-ui@/org/openide/util/Utilities.html#actionsGlobalContext--"><code>Utilities.actionsGlobalContext</code></a>.
+So typically, an action will be enabled or disabled depending on the presence
+or absence of a given object in the global action context - which is typically
+the <code>Lookup</code> of the <i>selected <code>Node</code>(s)</i> for whichever <i><code>TopComponent</code></i> has
+focus.
+<p>
+
+<a href="@org-openide-nodes@/org/openide/util/actions/CookieAction.html"><code>CookieAction</code></a>
+is a base class for context-sensitive actions in NetBeans.  Its name comes
+from the historic <code>Node.Cookie</code> interface, which in earlier versions
+of NetBeans was a marker interface for objects returned by <code>Node.getCookie()</code>.
+A <code>CookieAction</code> may be sensitive to any object that implements <code>Node.Cookie</code>.
+If you want an action sensitive to some other kind of interface in node lookup,
+you <em>cannot use it</em>.
+<p>
+Typical usage is to subclass <code>CookieAction</code>, providing an array of
+one or more classes to be returned from <code>getCookieClasses()</code>.  If the
+global action context (typically the <code>Lookup</code> of the selected <code>Node</code>s
+in whichever component has focus) returns non-null for all of the classes 
+returned by <code>getCookieClasses()</code>, that
+action should be enabled.  Override the <code>mode()</code> method to determine
+the algorithm used for enablement - if all selected <code>Node</code>s must contain the
+requested classes in their <code>Lookup</code> or if the presence of the classes
+on any of the selected <code>Node</code>s is enough, or if the action should
+be disabled if more than one <code>Node</code> is selected.
+
+<h3><a name="intro-present">Presenters</a></h3>
+Sometimes an action needs to provide a custom component to be used in menus
+or toolbars.  For example, the memory meter (enabled in development builds
+of NetBeans) provides a custom component that shows the amount of memory
+NetBeans is using, which, when clicked, calls <code>System.gc()</code>.
+<p>
+<a href="@org-openide-util-ui@/org/openide/util/actions/Presenter.html"><code>Presenter</code></a> is an
+empty interface which contains sub-interfaces <code>Presenter.Menu</code>,
+<code>Presenter.Toolbar</code> and <code>Presenter.Popup</code>.  Any 
+action can implement one or more of these interfaces to
+provide a custom component which will be used in toolbars, popup menus or the
+main menu.
+<p>
+The most typical use of the <code>Presenter</code>s is to return a <code>JMenu</code> instead
+of a <code>JMenuItem</code>, to create a submenu.
+<blockquote>
+<strong>Important: Using ad-hoc Swing components in menus
+is not recommended, as this interacts badly with the screen menu bar on the
+Apple Macintosh, which expects all menu contents to be <code>JMenuItem</code>
+or <code>JMenu</code> instances.</strong>
+</blockquote>
+
+<h2><a name="using-callback">Using <code>CallbackSystemAction</code></a></h2>
+<a href="@org-openide-util-ui@/org/openide/util/actions/CallbackSystemAction.html">
+<code>CallbackSystemAction</code></a> makes it possible for a single action to have
+multiple implementations, depending on what is selected.  A <code>CallbackSystemAction</code>
+has an <code>ActionPerformer</code> that actually does the work when the user
+invokes the action.  The <code>ActionPerformer</code> can be set programmatically,
+for example, when a component receives focus.
+<p>
+<code>CallbackSystemAction</code>
+may be subclassed. First decide what, if any, state the action
+needs; if it does need some, this should be stored in the class
+itself, rather than in the instance, as it should be a
+singleton. Conventionally,
+<a href="@org-openide-util-ui@/org/openide/util/actions/SystemAction.html#getValue-java.lang.String-"><code>SystemAction.getValue(...)</code></a>
+and
+<a
+href="@org-openide-util-ui@/org/openide/util/actions/SystemAction.html#putValue-java.lang.String-java.lang.Object-"><code>SystemAction.putValue(...)</code></a>
+are used for storage.
+
+<p><a href="@org-openide-util-ui@/org/openide/util/actions/SystemAction.html#getName--"><code>SystemAction.getName()</code></a>,
+<a href="@org-openide-util-ui@/org/openide/util/actions/SystemAction.html#getHelpCtx--"><code>SystemAction.getHelpCtx()</code></a>,
+and
+<a href="@org-openide-util-ui@/org/openide/util/actions/SystemAction.html#iconResource--"><code>SystemAction.iconResource()</code></a>
+should all be overridden to provide basic information about how to
+display the action in its presenters.
+
+<p>Note that you may include an ampersand in the name before a letter
+to indicate a desired mnemonic position. E.g.
+<samp>My&nbsp;Act&amp;ion</samp> should use the <samp>i</samp> as a
+mnemonic. The default menu and popup presenters honor these mnemonics.
+
+<p><a href="@org-openide-util-ui@/org/openide/util/actions/CallbackSystemAction.html#setSurviveFocusChange-boolean-"><code>CallbackSystemAction.setSurviveFocusChange(...)</code></a>
+might be called in the <code>initialize</code> method if it needs to
+be changed.
+
+<p>That's it for creating the action class itself. Now another
+implementation class should provide the performers for it, e.g.:
+
+<pre>
+<span class="comment">// Get the action:
+</span><span class="type">MyCallbackAction</span> <span class="variable-name">action</span> = (<span class="type">MyCallbackAction</span>) SystemAction.get(MyCallbackAction.<span class="keyword">class</span>);
+<span class="comment">// Some subsystem, changes in which should affect the action:
+</span><span class="type">FooSystem</span> <span class="variable-name">fooSys</span>;
+<span class="comment">// Attach a listener for the action's benefit:
+</span>fooSys.addWidgetListener(<span class="keyword">new</span> <span class="type">WidgetListener</span>() {
+    <span class="keyword">public</span> <span class="type">void</span> <span class="function-name">widgetAdded</span>(<span class="keyword">final</span> <span class="type">WidgetEvent</span> <span class="variable-name">ev</span>) {
+        <span class="comment">// Enable it, and tell it what to act on.
+</span>        action.setActionPerformer(<span class="keyword">new</span> <span class="type">ActionPerformer</span>() {
+            <span class="keyword">public</span> <span class="type">void</span> <span class="function-name">performAction</span>(<span class="type">SystemAction</span> <span class="variable-name">ignore</span>) {
+                ev.getWidget().doMyActionStuff();
+            }
+        });
+    }
+    <span class="keyword">public</span> <span class="type">void</span> <span class="function-name">widgetRemoved</span>(<span class="type">WidgetEvent</span> <span class="variable-name">ev</span>) {
+        <span class="comment">// Now disable it.
+</span>        action.setActionPerformer(<span class="constant">null</span>);
+    }
+});
+</pre>
+
+<p>A newer style, used for actions such as Next Error and Previous Error, is not to use
+<code>CallbackSystemAction</code> at all; instead, a <code>TopComponent</code> need only register an action
+implementation in its <code>ActionMap</code> with a specified key, such as <code>jumpPrev</code> or
+<code>jumpNext</code>. When a component with such a binding has focus (or was recently focussed), the global
+command will use that component's implementation of the action.
+
+<h2>Using <code>CookieAction</code></h2>
+
+Using
+<a href="@org-openide-nodes@/org/openide/util/actions/CookieAction.html"><code>CookieAction</code></a>
+is fairly easy, as it assumes that the objects providing the cookies
+have already done most of the hard work in providing cookie supports
+and determining which objects should contain the cookies. Basic
+implementation of the action is similar to that for
+<code>CallbackSystemAction</code>, but now a few more methods should
+be implemented, for example:
+
+<pre>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="type">MyScanAction</span> <span class="keyword">extends</span> <span class="type">CookieAction</span> {
+    <span class="comment">// help context, display name, icon...
+</span>    <span class="keyword">public</span> <span class="type">String</span> <span class="function-name">getName</span>() {
+        <span class="keyword">return</span> <span class="string">"Scan Things"</span>;
+    }
+    <span class="keyword">public</span> <span class="type">HelpCtx</span> <span class="function-name">getHelpCtx</span>() {
+        <span class="comment">// Update with real help when ready:
+</span>        <span class="keyword">return</span> HelpCtx.DEFAULT_HELP;
+    }
+    <span class="keyword">public</span> <span class="type">Class</span>[] <span class="function-name">cookieClasses</span>() {
+        <span class="comment">// Which cookies is this action sensitive to?
+</span>        <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">Class</span>[] {MyScanCookie.<span class="keyword">class</span>};
+    }
+    <span class="keyword">public</span> <span class="type">int</span> <span class="function-name">mode</span>() {
+        <span class="comment">// At least some of the selected nodes must have this cookie.
+</span>        <span class="keyword">return</span> MODE_ANY;
+    }
+    <span class="keyword">public</span> <span class="type">void</span> <span class="function-name">performAction</span>(<span class="type">Node</span>[] <span class="variable-name">selectedNodes</span>) {
+        <span class="type">MyScanContext</span> <span class="variable-name">ctxt</span> = <span class="keyword">new</span> <span class="type">MyScanContext</span>();
+        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable-name">i</span> = 0; i &lt; selectedNodes.length; i++) {
+            <span class="type">MyScanCookie</span> <span class="variable-name">cookie</span> = (<span class="type">MyScanCookie</span>) selectedNodes[i].getCookie(MyScanCookie.<span class="keyword">class</span>);
+            <span class="keyword">if</span> (cookie != <span class="constant">null</span>)
+                ctxt.addScannable(cookie);
+        }
+        ctxt.scanAway();
+    }
+}
+</pre>
+
+<p>Now this action may be installed into a toolbar, for example, and
+it will be enabled automatically whenever the node selection includes
+at least one "scannable" object.</p>
+
+<h3><a name="install">Installation</a></h3>
+
+Global installation of an action may be accomplished by
+adding it to the <code>Actions</code> folder of the system filesystem,
+and optionally creating links in the <code>Toolbars</code> or <code>Menu</code>
+folders.
+<p>
+Actions only present in the popup menu of specific Nodes need no installation.
+See <a href="#attach">below</a>.
+
+<p class="nonnormative">Though not part of the Open APIs, it bears
+mentioning here that the NetBeans <code>editor</code> module also has
+its own action creation and installation system. These actions are
+<em>not</em> based on <code>SystemAction</code>; there are based
+directly on the Swing <code>Action</code> class, and are written and
+registered quite differently, more along the lines of the named
+actions used in editor kits in the Swing Text API. Using XML layers,
+modules which use the <code>editor</code>-specific APIs may install
+them into appropriate editor kits (content types). Actions may be
+bound to keyboard shortcuts active only in the editor window; added to
+the editor toolbar; or added to the editor's context menu. </p>
+
+<h2><a name="use-std">Using Standard Actions Found in NetBeans' APIs</a></h2>
+
+Many of the commonly-used actions available in NetBeans are located in
+the
+
+<a href="../package-summary.html"><code>org.openide.actions</code></a>
+
+package.  Typically you don't subclass one of these actions - you simply
+find the default instance (via <code>SystemAction.findAction()</code>and use it.
+
+<h3><a name="attach">Attaching to an Existing Object</a></h3>
+An action that does not have global scope and sensitivity should
+usually be explicitly attached to components that can use it. For
+example,
+
+<a href="@org-openide-loaders@/org/openide/loaders/DataLoader.html#actionsContext--"><code>DataLoader.actionsContext()</code></a>
+
+may be used to provide context-menu actions appropriate to all <code>DataObject</code>s
+created by that loader, e.g.:
+
+<pre>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="type">MyDataLoader</span> <span class="keyword">extends</span> <span class="type">DataLoader</span> {
+    <span class="keyword">public</span> <span class="type">MyDataLoader</span>() {
+        <span class="keyword">super</span>(<span class="string">"com.me.MyDataObject"</span>);
+    }
+    <span class="keyword">protected</span> <span class="type">void</span> <span class="function-name">actionsContext</span>() {
+        <span class="keyword">return</span> <span class="string">"Loaders/text/x-my-file-type/Actions"</span>;
+    }
+}
+</pre>
+
+<pre>
+&lt;?<span class="keyword">xml</span> <span class="variable-name">version</span>=<span class="string">"1.0"</span> <span class="variable-name">encoding</span>=<span class="string">"UTF-8"</span>?&gt;
+&lt;!<span class="keyword">DOCTYPE</span> <span class="type">filesystem</span> <span class="keyword">PUBLIC</span> <span class="string">"-//NetBeans//DTD Filesystem 1.1//EN"</span> <span class="string">"http://www.netbeans.org/dtds/filesystem-1_1.dtd"</span>&gt;
+&lt;<span class="function-name">filesystem</span>&gt;
+    &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Loaders"</span>&gt;
+        &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"text"</span>&gt;
+            &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"x-my-file-type"</span>&gt;
+                &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Actions"</span>&gt;
+                    &lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="string">"org-openide-actions-OpenAction.instance"</span>&gt;
+                        &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"position"</span> <span class="variable-name">intvalue</span>=<span class="string">"100"</span>/&gt;
+                    &lt;/<span class="function-name">file</span>&gt;
+                    <span class="comment">&lt;!-- etc. --&gt;</span>
+                &lt;/<span class="function-name">folder</span>&gt;
+            &lt;/<span class="function-name">folder</span>&gt;
+        &lt;/<span class="function-name">folder</span>&gt;
+    &lt;/<span class="function-name">folder</span>&gt;
+&lt;/<span class="function-name">filesystem</span>&gt;
+</pre>
+
+This set of actions will then provide the context menu for the 
+<code>DataObject</code>s belonging to this loader. It is the responsibility of the
+loader author in this case to make sure that all of the provided
+actions make sense for the object, and will run the correct code - for
+example, providing <code>OpenAction</code> means that the object will have to
+provide a usable
+
+<a href="@org-openide-nodes@/org/openide/cookies/OpenCookie.html"><code>OpenCookie</code></a>.
+
+<p>Some other ways that actions may be attached:
+
+<ol>
+
+<li><p>Nodes may attach actions by overriding
+
+<a href="@org-openide-nodes@/org/openide/nodes/Node.html#getActions-boolean-"><code>Node.getActions(...)</code></a>
+or
+<a href="@org-openide-nodes@/org/openide/nodes/Node.html#getPreferredAction--"><code>Node.getPreferredAction()</code></a>.
+
+<li><p><code>TopComponent</code>s (dockable, window-like tabs) may attach actions
+by overriding
+<a href="@org-openide-windows@/org/openide/windows/TopComponent.html#getActions--"><code>TopComponent.getActions()</code></a>.
+For example, Editor windows provide a few right-click actions in the
+Editor tab, such as Save and Close.
+
+</ol>
+
+<h2><a name="adv-install">Installation and Maintenance</a></h2>
+Except for programmatic uses (overriding <code>Node.getActions()</code> and the
+like), actions are installed via module XML layer files - by placing a JavaBean
+&quot;instance&quot; of a given action class into a folder in the system 
+filesystem which represents a menu or a toolbar.
+For details see <a href="@org-openide-util@/org/openide/util/doc-files/api.html#instances">Working with Instances</a>.
+
+<h3><a name="install-menu">Menu installation</a></h3>
+The main menu in NetBeans is constructed from a set of folders in the 
+system filesystem.  There is a folder called <samp>Menu</samp>.  Each
+child folder of it is one menu;  child folders may contain additional child
+folders to represent submenus.
+<p>
+Typical installation of an action into a menu looks like this:
+<pre>
+&lt;<span class="function-name">filesystem</span>&gt;
+    &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Menu"</span>&gt;
+        &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Build"</span>&gt;
+            &lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="string">"com-me-MyAction.instance"</span>&gt;
+                &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"position"</span> <span class="variable-name">intvalue</span>=<span class="string">"100"</span>/&gt;
+            &lt;/<span class="function-name">file</span>&gt;
+        &lt;/<span class="function-name">folder</span>&gt;
+    &lt;/<span class="function-name">folder</span>&gt;
+&lt;/<span class="function-name">filesystem</span>&gt;
+</pre>
+
+You could also, if you wished, provide an object whose
+instance was of type
+<a href="@JDK@/javax/swing/JMenu.html"><code>JMenu</code></a>,
+as an item in the top-level <code>Menu</code> folder if you had very
+special requirements that demanded complete control over the menu at all
+times.
+
+<p>Within a subfolder representing a menu, there are four kinds of
+instances which you may provide to create items in the menu:
+
+<ol>
+<li>An implementation of <code>javax.swing.Action</code> - by far the 
+simplest technique, and often all that is needed - provide a file that
+names the action class required, i.e. <code>com-foo-mymodule-MyAction.instance</code>.</li>
+
+<li>An actual
+
+<a href="@JDK@/javax/swing/JMenuItem.html"><code>JMenuItem</code></a>,
+
+which will be inserted as-is; you are responsible for its
+appearance and behavior.  This uses the same syntax as above, the only difference
+being that it constructs a JMenu, not an Action.
+
+<li>An action which implements
+
+<a href="@org-openide-util-ui@/org/openide/util/actions/Presenter.Menu.html"><code>Presenter.Menu</code></a>
+
+In this case, the
+returned <code>JMenuItem</code> will be used in the menu.
+Also note that bookmarks (<samp>*.url</samp> files) as created by the User Utilities
+module provide a cookie implementing this interface and so are useful things
+to place in menus.</li>
+
+<li>An instance of
+<a href="@JDK@/javax/swing/JSeparator.html"><code>JSeparator</code></a>, 
+to separate items in the menu.</li>
+
+</ol>
+
+<p>Please see the class Javadoc for 
+
+<a href="@org-openide-loaders@/org/openide/awt/MenuBar.html"><code>MenuBar</code></a>
+
+for a precise list of what kinds of instances are permitted and how
+they will be treated.</p>
+
+<h3><a name="install-toolbar">Toolbar installation</a></h3>
+
+Installing items into toolbars can be done in a similar fashion to
+that available for menu installation, but with more options for
+customized behavior.
+
+<p>The normal way to customize the Main Window's toolbars is to add
+an item or two to one of the existing toolbars in the Main
+Window. To do that, simply add your action to the appropriate
+subfolder of the <samp>Toolbars</samp> folder in the System Filesystem.
+Remember to specify an icon for the action.  There are options to
+entirely replace a toolbar with your choice of components;  read 
+about advanced Toolbar configuration <a href="toolbarsAdvanced.html">here</a>.
+
+
+<h3><a name="install-pool">The Global Actions Pool</a></h3>
+
+The <samp>Actions/</samp> folder in the system filesystem
+contains a list of standard actions, as instances in the same style
+as is used for menus and toolbars.
+<span class="nonnormative">
+This is what is shown when a user
+browses <b>Tools | Options | Advanced Options | IDE Configuration | Look and Feel | Actions</b>.
+</span>
+Any global
+action you install should be installed into this folder, regardless of
+whether it is used in a menu or toolbar.
+<p>
+This folder makes up the <i>global actions pool</i>.  NetBeans' UI allows
+users to customize menus and toolbars - meaning that a user can delete your
+action, effectively making it inaccessible.  The actions pool provides a way
+to restore an action that has been deleted, so any global action should be
+found here as well as in whatever toolbar or menu it is displayed in.
+<p>
+
+<h3><a name="keymap">Installing Keyboard Shortcuts</a></h3>
+
+<p>The way to install keyboard shortcuts is to make an instance of
+the action in question, and place it in the <samp>Shortcuts/</samp>
+folder. The file name will give the keyboard sequence, named
+according to the method
+
+<a href="@org-openide-util-ui@/org/openide/util/Utilities.html#keyToString-javax.swing.KeyStroke-"><code>Utilities.keyToString(KeyStroke)</code></a>.
+
+Such instances will be used to create the
+global keymap used as a fallback for all components.
+(Per-component keymaps can override these bindings.)
+<p>
+Typically, you create an instance of an <code>Action</code> in 
+the Actions Pool, by defining
+it in one or another subfolder of <samp>Actions</samp> in your module's layer.
+Then you link to it using <samp>.shadow</samp> files from the various other
+places it may be used (shadow files are similar to Unix symlinks - see 
+<samp>DataShadow</samp> for more details).
+<p>
+A typical action installation looks like this:
+<pre>
+&lt;?<span class="keyword">xml</span> <span class="variable-name">version</span>=<span class="string">"1.0"</span> <span class="variable-name">encoding</span>=<span class="string">"UTF-8"</span>?&gt;
+&lt;!<span class="keyword">DOCTYPE</span> <span class="type">filesystem</span> <span class="keyword">PUBLIC</span> <span class="string">"-//NetBeans//DTD Filesystem 1.1//EN"</span> <span class="string">"http://www.netbeans.org/dtds/filesystem-1_1.dtd"</span>&gt;
+&lt;<span class="function-name">filesystem</span>&gt;
+    &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Actions"</span> &gt;
+        &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Edit"</span>&gt;
+            &lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="string">"com-mymodule-MyEditAction.instance"</span>/&gt;
+        &lt;/<span class="function-name">folder</span>&gt;
+    &lt;/<span class="function-name">folder</span>&gt;
+    &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Menu"</span>&gt;
+        &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Edit"</span>&gt;
+            &lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="string">"com-mymodule-MyEditAction.shadow"</span>&gt;
+                &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"originalFile"</span> <span class="variable-name">stringvalue</span>=<span class="string">"Actions/Edit/com-mymodule-MyEditAction.instance"</span>/&gt;
+            &lt;/<span class="function-name">file</span>&gt;
+        &lt;/<span class="function-name">folder</span>&gt;
+    &lt;/<span class="function-name">folder</span>&gt;
+    &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Toolbars"</span>&gt;
+        &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Edit"</span>&gt;
+            &lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="string">"com-mymodule-MyEditAction.shadow"</span>&gt;
+                &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"originalFile"</span> <span class="variable-name">stringvalue</span>=<span class="string">"Actions/Edit/com-mymodule-MyEditAction.instance"</span>/&gt;
+            &lt;/<span class="function-name">file</span>&gt;
+        &lt;/<span class="function-name">folder</span>&gt;
+    &lt;/<span class="function-name">folder</span>&gt;
+    &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Shortcuts"</span>&gt;
+        &lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="string">"S-A-Left.shadow"</span>&gt;
+            &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"originalFile"</span> <span class="variable-name">stringvalue</span>=<span class="string">"Actions/Edit/com-mymodule-MyEditAction.instance"</span>/&gt;
+        &lt;/<span class="function-name">file</span>&gt;
+    &lt;/<span class="function-name">folder</span>&gt;
+&lt;/<span class="function-name">filesystem</span>&gt;
+</pre>
+
+<hr>@FOOTER@
+</body>
+</html>

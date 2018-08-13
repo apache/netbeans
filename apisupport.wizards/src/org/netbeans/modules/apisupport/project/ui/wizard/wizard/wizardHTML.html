@@ -1,0 +1,100 @@
+<#--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<#assign licenseFirst = "<!--">
+<#assign licensePrefix = "">
+<#assign licenseLast = "-->">
+<#include "${project.licensePath}">
+<html>
+    <head>
+        <title>${TR_displayName}</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div>
+            <section data-bind="step: { 'id' : 'init', text : 'Initial Page'}" >
+                <p>
+                Write your UI in portable HTML and display it in NetBeans
+                or on web! Read more at <a href="http://wiki.netbeans.org/HtmlUIForTemplates">our wiki</a>...
+                </p>
+            </section>
+
+            <section data-bind="step: 'info'" >
+                <p>
+                    Use <a href="http://knockoutjs.com">knockout.js</a> bindings
+                    to isolate your view model from the actual look of your HTML
+                    page. Bind your view to model written in Java or JavaScript.
+                </p>
+                <h3>Is everything OK?</h3>
+                <input type="checkbox" data-bind="checked: ok"/>
+                <h3>How do you feel?</h3>
+                <input type='text' data-bind="textInput: msg"/>
+            </section>
+
+            <section data-bind="step: 'targetChooser'">
+                <!-- placeholder section for providing default location chooser 
+                  you can also use "step: 'targetChooser:java'" to request
+                  chooser showing list of packages 
+                -->
+            </section>
+            
+            <section data-bind="step: { 'id' : 'summary' }" >
+                <p>
+                You are feeling <span data-bind="text: msg"></span>!
+                Let's proceed to create a file which will express your 
+                feeling by using <a href="http://freemarker.org/">Freemarker</a>
+                templating engine and values filled in this wizard.
+                </p>
+            </section>
+        </div>
+<#if HTML4J>
+<#else>
+        <script>
+            function init() { 
+                var msg = ko.observable();
+                var current = ko.observable();
+                var ok = ko.observable();
+                return {
+                    'current' : current,
+                    'errorCode': ko.computed(function() {
+                        if (current() === 'info') {
+                            // checking the input fields
+                            if (!ok()) return 1;
+                            if (!msg()) return 2;
+                        }
+                        // no errors
+                        return 0;
+                    }),
+                    'ok' : ok,
+                    'msg' : msg
+                }; 
+            }
+        </script>
+</#if>
+        <!-- display the error message -->
+        <div data-bind="visible: errorCode() === 1" style="color: red">
+            Please, check the OK checkbox!
+        </div>
+        <div data-bind="visible: errorCode() === 2" style="color: red">
+            Please, fill in the input field!
+        </div>
+    </body>
+</html>

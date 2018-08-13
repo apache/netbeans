@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Git: Versioning View</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.git.ui.status.GitVersioningTopComponent" name="org.netbeans.modules.git.ui.status.GitVersioningTopComponent"></a></p>
+<div id="NBCSH1103"><!-- infolevel="all" infotype="General" --><a id="sthref113" name="sthref113"></a>
+<h1>Git: Versioning View</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>The Git Versioning view provides you with a real-time list of all of the changes made to files within a selected folder of your local working tree. It opens by default in the bottom panel of the IDE, listing added, deleted or modified files. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG255">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>By default, the Versioning view displays a list of all modified files within the selected package or folder in your Working Tree.</p>
+<p>The following table lists the Git commands available in the toolbar of the Versioning view:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t31">Name</th>
+<th align="left" valign="bottom" id="r1c2-t31">Function</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t31" headers="r1c1-t31">
+<p><img width="16" height="16" src="img/head_vs_working.png" alt="Head vs Working icon" title="Head vs Working icon" /> Changes between HEAD and Working Tree</p>
+</td>
+<td align="left" headers="r2c1-t31 r1c2-t31">Displays a list of files that are either already staged or only modified/created and not staged yet.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t31" headers="r1c1-t31">
+<p><img width="16" height="16" src="img/head_vs_index.png" alt="Head vs Index icon" title="Head vs Index icon" /> Changes between HEAD and Index</p>
+</td>
+<td align="left" headers="r3c1-t31 r1c2-t31">Displays a list of files that are staged.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t31" headers="r1c1-t31">
+<p><img width="16" height="16" src="img/index_vs_working.png" alt="Index vs Working icon" title="Index vs Working icon" /> Changes between Index and Working Tree</p>
+</td>
+<td align="left" headers="r4c1-t31 r1c2-t31">Displays files that have differences between their staged and working tree states.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t31" headers="r1c1-t31">
+<p><img width="16" height="16" src="img/refresh.png" alt="Refresh Status icon" title="Refresh Status icon" /> Refresh Statuses</p>
+</td>
+<td align="left" headers="r5c1-t31 r1c2-t31">Refreshes the status of the selected files and folders. Files displayed in the Versioning window can be refreshed to reflect any changes that may have been made externally.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t31" headers="r1c1-t31">
+<p><img width="19" height="20" src="img/open-diff.png" alt="Open Diff icon" title="Open Diff icon" /> Open Diff</p>
+</td>
+<td align="left" headers="r6c1-t31 r1c2-t31">Opens the Diff Viewer providing you with a side-by-side comparison of your local copies and the versions maintained in the repository.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t31" headers="r1c1-t31">
+<p><img width="16" height="16" src="img/get_clean.png" alt="Revert Modifications icon" title="Revert Modifications icon" /> Revert Modifications</p>
+</td>
+<td align="left" headers="r7c1-t31 r1c2-t31">Displays the Revert Modifications dialog box.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t31" headers="r1c1-t31">
+<p><img width="16" height="16" src="img/commit.png" alt="Commit Changes icon" title="Commit Changes icon" /> Commit Changes</p>
+</td>
+<td align="left" headers="r8c1-t31 r1c2-t31">Displays the Commit dialog box.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p><b>Note:</b> You can access other Git commands in the Versioning view by selecting a table row that corresponds to a modified file, and choosing a command from the right-click menu.</p>
+<p>You can click the column headings above the listed files to sort the files by name, status or location.</p>
+<a id="NBCSH1111" name="NBCSH1111"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE,</i> 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG237">
+<param name="text" value="<html><u>&quot;Versioning Applications with Git&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

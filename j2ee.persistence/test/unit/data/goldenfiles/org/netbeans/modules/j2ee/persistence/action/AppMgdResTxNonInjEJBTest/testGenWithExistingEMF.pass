@@ -1,0 +1,24 @@
+package org.netbeans.test;
+
+import java.util.*;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+
+public class Test {
+
+    private static EntityManagerFactory myEmf;
+
+    public void create(Object object) {
+        EntityManager em = myEmf.createEntityManager();
+        em.getTransaction().begin();
+        try {
+            em.persist(object);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            em.getTransaction().rollback();
+        } finally {
+            em.close();
+        }
+    }
+}

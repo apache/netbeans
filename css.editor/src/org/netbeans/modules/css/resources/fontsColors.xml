@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN" "http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd">
+
+<fontscolors>
+    
+     <!-- Defined categories:
+     * =======================
+     * default
+     * brace
+     * separator
+     * hash
+     * operator
+     * string
+     * url
+     * comment
+     * keyword
+     * number
+     * identifier
+     * function
+     * unknown
+     * whitespace
+     * comment
+     -->
+    
+    <fontcolor name="others" default="default"/>
+    <fontcolor name="braces" default="separator"/>
+    <fontcolor name="separators" default="separator"/>
+    <fontcolor name="hashes" default="number"/>
+    <fontcolor name="operators" default="operator"/>
+    <fontcolor name="strings" default="string"/>
+    <fontcolor name="uris" default="string"/>
+    <fontcolor name="numbers" default="number"/>
+    <fontcolor name="identifiers" default="identifier"/>
+    <fontcolor  name="whitespaces" default="default"/>
+    <fontcolor  name="comments" default="comment"/>
+
+    <fontcolor name="at_rule_symbol" foreColor="black">
+        <font style="bold" />
+    </fontcolor>
+    
+    <!--"semantic" highlighting:-->
+    
+    <!-- css property name -->
+    <fontcolor name="mod-custom1" foreColor="blue"/> 
+    
+    <!-- vendor specific property name -->
+    <fontcolor name="mod-custom2" foreColor="blue"> 
+        <font style="italic" />
+    </fontcolor>
+    
+    <!-- media queries: media type (screen, printer, ...) -->
+    <fontcolor name="mod-custom3" foreColor="black">
+        <font style="italic" />
+    </fontcolor>
+    
+    <!-- element, class, id selectors -->
+    <fontcolor name="mod-method" foreColor="007c00" >
+        <!--<font style="bold" />-->
+    </fontcolor>
+    
+    <!-- namespace prefix -->
+    <fontcolor name="mod-constructor">
+        <font style="bold" />
+    </fontcolor>
+
+    <!-- pseudo class -->
+    <fontcolor name="mod-class" >
+        <font style="italic" />
+    </fontcolor>
+    
+    <!-- less/sass variable -->
+    <fontcolor name="mod-local-variable" foreColor="006666" >
+        <!--<font style="bold" />-->
+    </fontcolor>
+    
+    <!-- less/sass keywords -->
+    <fontcolor name="mod-private" foreColor="006666"> <!-- 00007C -->
+        <font style="bold" />
+    </fontcolor>
+    
+    
+<!--    
+    <fontcolor name="mod-interface" />
+    <fontcolor name="mod-annotation-type" />
+    <fontcolor name="mod-enum" />
+    <fontcolor name="mod-deprecated" strikeThrough="404040" />
+    <fontcolor name="mod-static" >
+        <font style="italic" />
+    </fontcolor>
+    <fontcolor name="mod-private" />
+    <fontcolor name="mod-package-private" />
+    <fontcolor name="mod-protected" />
+    <fontcolor name="mod-public" />    
+    <fontcolor name="mod-type-parameter-declaration" bgColor="lightGray"/>
+    <fontcolor name="mod-type-parameter-use" bgColor="green"/>
+    <fontcolor name="mod-undefined" foreColor="red"/>
+    -->
+
+    <!-- eof GSF colors -->
+    
+    
+    
+</fontscolors>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<application  xmlns='http://geronimo.apache.org/xml/ns/j2ee/application-2.0'
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xsi:schemaLocation='http://geronimo.apache.org/xml/ns/j2ee/application-2.0
+    http://geronimo.apache.org/xml/ns/j2ee/application-2.0'>
+    <
+    <dep:environment xmlns:dep='http://geronimo.apache.org/xml/ns/deployment-1.2'
+        xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+        xsi:schemaLocation='http://geronimo.apache.org/xml/ns/deployment-1.2
+        http://geronimo.apache.org/xml/ns/deployment-1.2'>
+            <
+    </dep:environment>    
+    <
+</application>

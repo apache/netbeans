@@ -1,0 +1,4 @@
+modules/org-netbeans-swing-tabcontrol.jar
+modules/org-openide-io.jar
+modules/org-netbeans-modules-settings.jar
+

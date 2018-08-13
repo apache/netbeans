@@ -1,0 +1,13 @@
+Maven
+    Java Application
+    JavaFX Application
+    Web Application
+    EJB Module
+    Enterprise Application
+    Enterprise Application Client
+    OSGi Bundle
+    NetBeans Module
+    NetBeans Application
+    POM Project
+    Project from Archetype
+    Project with Existing POM

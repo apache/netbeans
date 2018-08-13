@@ -1,0 +1,3 @@
+5:8-5:15:error:cannot find symbol
+  symbol:variable Toolkit
+  location:class TestShortErrors3

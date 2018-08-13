@@ -1,0 +1,26 @@
+Licensed to the Apache Software Foundation (ASF) under one or more contributor
+license agreements; and to You under the Apache License, Version 2.0.
+
+The "xml-resolver-1.2-netbeans.patch" was created in 2017 for the donation of NetBeans to the Apache Foundation.
+
+The patch is licensed under the Apache 2.0 License. See [1] for license information.
+
+The patch is to be applied to the Apache XML Commons Resolver version 1.2 sources as downloaded from Maven Central [2]
+
+The patch contains the modifications detailed in "readme.txt", i.e.:
+  - The method "getPublicIDs()" in org/apache/xml/resolver/Catalog.java
+  - The special "if" clause in org/apache/xml/resolver/CatalogManager.java#readProperties()
+  - The org/apache/xml/resolver/NbCatalogManager.java new class.
+  - The org/apache/xml/resolver/tools/NbCatalogResolver.java new class.
+
+Note that for historic reasons the sources from Maven Central contain
+MS-DOS/Windows line endings, so the patch also uses these line endings, that
+must be preserved.
+
+
+
+[1] http://mail-archives.apache.org/mod_mbox/incubator-netbeans-dev/201710.mbox/browser
+[2] http://repo1.maven.org/maven2/xml-resolver/xml-resolver/1.2/xml-resolver-1.2-sources.jar
+[3] https://netbeans.org/bugzilla/show_bug.cgi?id=128678#c17
+
+

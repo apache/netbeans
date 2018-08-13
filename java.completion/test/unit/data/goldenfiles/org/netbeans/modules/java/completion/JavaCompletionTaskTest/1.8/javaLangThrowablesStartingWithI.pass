@@ -1,0 +1,12 @@
+IllegalAccessError
+IllegalAccessException
+IllegalArgumentException
+IllegalMonitorStateException
+IllegalStateException
+IllegalThreadStateException
+IncompatibleClassChangeError
+IndexOutOfBoundsException
+InstantiationError
+InstantiationException
+InternalError
+InterruptedException

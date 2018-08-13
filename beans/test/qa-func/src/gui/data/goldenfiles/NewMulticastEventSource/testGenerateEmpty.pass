@@ -1,0 +1,22 @@
+public class TestFile {
+    
+    /** Creates a new instance of TestFile */
+    public TestFile() {
+    }
+    
+    /**
+     * Registers ActionListener to receive events.
+     * @param listener The listener to register.
+     */
+    public synchronized void addActionListener(java.awt.event.ActionListener listener) {
+    }
+    
+    /**
+     * Removes ActionListener from the list of listeners.
+     * @param listener The listener to remove.
+     */
+    public synchronized void removeActionListener(java.awt.event.ActionListener listener) {
+    }
+    
+}
+

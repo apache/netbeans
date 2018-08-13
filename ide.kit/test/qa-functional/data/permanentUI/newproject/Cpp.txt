@@ -1,0 +1,9 @@
+C/C++
+    C/C++ Project with Existing Sources
+    C/C++ Project from Binary File
+    C/C++ Application
+    C/C++ Dynamic Library
+    C/C++ Static Library
+    C/C++ Qt Application
+    C/C++ Qt Dynamic Library
+    C/C++ Qt Static Library

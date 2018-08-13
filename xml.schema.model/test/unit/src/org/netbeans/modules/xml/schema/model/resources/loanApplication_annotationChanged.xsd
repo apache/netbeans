@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 3 U (http://www.xmlspy.com) by Sun Microsystems (Sun Microsystems) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns:fn="http://www.example.com/funtion"
+    elementFormDefault="qualified" 
+    xmlns="http://www.example.com/loanApplication"
+    targetNamespace="http://www.example.com/loanApplication"
+    attributeFormDefault="unqualified">
+	<xs:element name="auto-loan-application">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">A CHANGED loan application</xs:documentation>
+                        <xs:documentation>
+                            <html>
+                                <a>Testing CHANGED documenation elemnent</a>
+                            </html>
+                        </xs:documentation>
+                        <xs:appinfo source="http://www.aloan.com/loanApp">
+                            <fn:specialHandling>checkForPrimesCHANGED</fn:specialHandling>
+                            <fn:specialHandling>checkForPrimesADDED</fn:specialHandling>
+                        </xs:appinfo>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="loan-type" type="LoanType"/>
+				<xs:element name="term" type="xs:integer"/>
+				<xs:element name="amount">
+					<xs:simpleType>
+						<xs:restriction base="xs:decimal">
+							<xs:minInclusive value="5000.00"/>
+							<xs:maxInclusive value="10000.00"/>
+							<xs:fractionDigits value="2"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="application-type">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="individual"/>
+							<xs:enumeration value="joint"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="state" type="State"/>
+				<xs:element name="applicant" type="Applicant" maxOccurs="2"/>
+				<xs:element name="trade-in" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="vehicle" type="Car"/>
+							<xs:element name="monthly-payment">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:fractionDigits value="2"/>
+										<xs:minInclusive value="0.00"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="LoanType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="new"/>
+			<xs:enumeration value="used_dealer"/>
+			<xs:enumeration value="used_private"/>
+			<xs:enumeration value="refinance"/>
+			<xs:enumeration value="lease_buyout"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="State">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="AZ"/>
+			<xs:enumeration value="CA"/>
+			<xs:enumeration value="NY"/>
+			<xs:enumeration value="TX"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Applicant">
+		<xs:sequence>
+			<xs:element name="name">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="first" type="xs:string"/>
+						<xs:element name="middle" type="xs:string"/>
+						<xs:element name="last" type="xs:string"/>
+						<xs:element name="suffix">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="Jr"/>
+									<xs:enumeration value="Sr"/>
+									<xs:enumeration value="II"/>
+									<xs:enumeration value="III"/>
+									<xs:enumeration value="IV"/>
+									<xs:enumeration value="V"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ssid">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="\d{3}-\d{2}-\d{4}"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="birthdate" type="xs:date"/>
+			<xs:element name="home-phone" type="PhoneNumber"/>
+			<xs:element name="cell-phone" type="PhoneNumber"/>
+			<xs:element name="email-address">
+				<xs:simpleType>
+					<xs:restriction base="xs:string"/>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="residence" type="Residence" maxOccurs="unbounded"/>
+			<xs:element name="employment">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="status">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="unemployed"/>
+									<xs:enumeration value="employed"/>
+									<xs:enumeration value="self_employed"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="detail" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="occupation" type="xs:string"/>
+									<xs:element name="employer">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="name"/>
+												<xs:element name="address" type="Address"/>
+												<xs:element name="length-of-employment" type="Duration"/>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="work-phone" type="PhoneNumber"/>
+									<xs:element name="gross-monthly-income">
+										<xs:simpleType>
+											<xs:restriction base="xs:decimal">
+												<xs:minInclusive value="0.00"/>
+												<xs:fractionDigits value="2"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="supplemental-income">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="source">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="alimony"/>
+									<xs:enumeration value="child_support"/>
+									<xs:enumeration value="investments"/>
+									<xs:enumeration value="part_time_job"/>
+									<xs:enumeration value="rental_property"/>
+									<xs:enumeration value="retirement_income"/>
+									<xs:enumeration value="social_security"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="gross-monthly-income">
+							<xs:simpleType>
+								<xs:restriction base="xs:decimal">
+									<xs:minInclusive value="0.00"/>
+									<xs:fractionDigits value="2"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Address">
+		<xs:sequence>
+			<xs:element name="address1"/>
+			<xs:element name="address2"/>
+			<xs:element name="city"/>
+			<xs:element name="state" type="State"/>
+			<xs:element name="zip">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="5"/>
+						<xs:maxLength value="5"/>
+						<xs:pattern value="\d{5}"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PhoneNumber">
+		<xs:sequence>
+			<xs:element name="area-code"/>
+			<xs:element name="exchange"/>
+			<xs:element name="number"/>
+			<xs:element name="extension" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Occupancy">
+		<xs:sequence>
+			<xs:element name="type">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="rent"/>
+						<xs:enumeration value="own"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="moved-in" type="xs:date"/>
+			<xs:element name="length-of-occupancy" type="Duration"/>
+			<xs:element name="payment">
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:fractionDigits value="2"/>
+						<xs:minInclusive value="0.00"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Residence">
+		<xs:sequence>
+			<xs:element name="address" type="Address"/>
+			<xs:element name="occupancy" type="Occupancy"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Car">
+		<xs:sequence>
+			<xs:element name="year" type="xs:gYear"/>
+			<xs:element name="make" type="xs:string"/>
+			<xs:element name="model" type="xs:string"/>
+			<xs:element name="vin" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Duration">
+		<xs:sequence>
+			<xs:element name="years" type="xs:positiveInteger"/>
+			<xs:element name="months">
+				<xs:simpleType>
+					<xs:restriction base="xs:positiveInteger">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="12"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

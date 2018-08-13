@@ -1,0 +1,22 @@
+package org.netbeans.test.java.editor.actions.JavaEditActionsTest;
+
+public class testEditActions {
+
+    /** test  mode */
+    public void testEditActions() {
+    }
+    
+    public String getString(){
+        return "Str insdxrtStringg";
+    }
+    
+    /**INSDXRTSTRING
+     * 1
+     * 2
+     * 4
+     * 5
+     */
+    public static void ahoj(){
+        st 
+    }
+}

@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Manage Remote Connections Window</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.php.project.connections.ui.RemoteConnectionsPanel" name="org.netbeans.modules.php.project.connections.ui.RemoteConnectionsPanel"></a></p>
+<div id="NBCSH3514"><!-- infolevel="all" infotype="General" --><a id="sthref473" name="sthref473"></a>
+<h1>Manage Remote Connections Window</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>In this panel you create a new FTP or SFTP connection or reconfigure an existing remote connection.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t9">Element</th>
+<th align="left" valign="bottom" id="r1c2-t9">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t9" headers="r1c1-t9">
+<p>Name</p>
+</td>
+<td align="left" headers="r2c1-t9 r1c2-t9">The arbitrary name of the connection. Set the name in the Create New Connection panel.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t9" headers="r1c1-t9">
+<p>Host name</p>
+</td>
+<td align="left" headers="r3c1-t9 r1c2-t9">The root name of your FTP or SFTP host, such as <code dir="ltr">http://x10hosting.com</code>.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t9" headers="r1c1-t9">
+<p>Port</p>
+</td>
+<td align="left" headers="r4c1-t9 r1c2-t9">Port number of your FTP or SFTP connection.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t9" headers="r1c1-t9">
+<p>Encryption</p>
+</td>
+<td align="left" headers="r5c1-t9 r1c2-t9">(FTP only) Select whether to encrypt your FTP communication over TLS. You can select Pure FTP (no encryption), Explicit FTP (explicit method to invoke client security) or Implicit FTP (implicit method to invoke client security.)</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t9" headers="r1c1-t9">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Encrypt Only Authentication Process</p>
+</td>
+<td align="left" headers="r6c1-t9 r1c2-t9">If you choose to encrypt FTP communication, select this to encrypt only the login process.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t9" headers="r1c1-t9">
+<p>User Name</p>
+</td>
+<td align="left" headers="r7c1-t9 r1c2-t9">Your user name on the FTP or SFTP host.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t9" headers="r1c1-t9">
+<p>Password</p>
+</td>
+<td align="left" headers="r8c1-t9 r1c2-t9">Your password on the FTP or SFTP host. Leave this field blank and the IDE will prompt you for your password.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t9" headers="r1c1-t9">
+<p>Private Key file</p>
+</td>
+<td align="left" headers="r9c1-t9 r1c2-t9">(SFTP only) The file with the private key for your SFTP client. You do not need to use public/private key for SFTP--you can use username/password--but it is better practice to use key pair authentication.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t9" headers="r1c1-t9">Known Hosts file</td>
+<td align="left" headers="r10c1-t9 r1c2-t9">(SFTP only) File that stores host names and public keys. If you do not have a known_hosts file, the public key must be resent every time a connection is re-established.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r11c1-t9" headers="r1c1-t9">Initial directory</td>
+<td align="left" headers="r11c1-t9 r1c2-t9">The root directory on your host for all of your projects. By default it is only a slash, meaning that your host name + user name is your root directory.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r12c1-t9" headers="r1c1-t9">Timeout(s)</td>
+<td align="left" headers="r12c1-t9 r1c2-t9">Time in which the client waits for a server response before timing out the connection. Timeout is in seconds.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r13c1-t9" headers="r1c1-t9">Keep-alive interval(s)</td>
+<td align="left" headers="r13c1-t9 r1c2-t9">Sets the connection keep-alive interval. Helps when upload-on-save is selected.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r14c1-t9" headers="r1c1-t9">Passive mode</td>
+<td align="left" headers="r14c1-t9 r1c2-t9">(FTP only) Tick this for the IDE to communicate with the server in passive mode.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r15c1-t9" headers="r1c1-t9">&nbsp;&nbsp;&nbsp;&nbsp;External IP</td>
+<td align="left" headers="r15c1-t9 r1c2-t9">Allow to set the external IP address in active mode. Useful when there are multiple network cards.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r16c1-t9" headers="r1c1-t9">&nbsp;&nbsp;&nbsp;&nbsp;Port Range</td>
+<td align="left" headers="r16c1-t9 r1c2-t9">Set the client side port range in active mode.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r17c1-t9" headers="r1c1-t9">Ignore Disconnect Errors</td>
+<td align="left" headers="r17c1-t9 r1c2-t9">(FTP only) IDE ignores errors during disconnect() and logout() calls. Useful when upload-on-save is enabled, where in some cases every file change otherwise ends with an error dialog.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r18c1-t9" headers="r1c1-t9">Add...</td>
+<td align="left" headers="r18c1-t9 r1c2-t9">Click to add a remote connection. The Create New Connection panel opens.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r19c1-t9" headers="r1c1-t9">Remove</td>
+<td align="left" headers="r19c1-t9 r1c2-t9">Click to remove the selected connection.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r20c1-t9" headers="r1c1-t9">Test connection</td>
+<td align="left" headers="r20c1-t9 r1c2-t9">Click to send a test message to the selected connection. The results appear directly in the Manage Remote Connections panel.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r21c1-t9" headers="r1c1-t9">Configure Proxy</td>
+<td align="left" headers="r21c1-t9 r1c2-t9">Click to open the Options window and configure the global IDE proxy settings.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH3523" name="NBCSH3523"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1539">
+<param name="text" value="<html><u>&quot;Working with PHP Applications&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

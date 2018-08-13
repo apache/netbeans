@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/html/palette/items/resources/SELECT32.png</file>
+        <file>src/org/netbeans/modules/html/palette/items/resources/OL32.png</file>
+        <file>src/org/netbeans/modules/html/palette/items/resources/META32.png</file>
+        <file>src/org/netbeans/modules/html/palette/items/resources/META16.png</file>
+        <file>src/org/netbeans/modules/html/palette/items/resources/TABLE32.png</file>
+        <file>src/org/netbeans/modules/html/palette/items/resources/RADIO16.png</file>
+        <file>src/org/netbeans/modules/html/palette/items/resources/UL16.png</file>
+        <file>src/org/netbeans/modules/html/palette/items/resources/BUTTON32.png</file>
+        <file>src/org/netbeans/modules/html/palette/items/resources/CHECKBOX32.png</file>
+        <file>src/org/netbeans/modules/html/palette/items/resources/UL32.png</file>
+        <file>src/org/netbeans/modules/html/palette/items/resources/RADIO32.png</file>
+        <file>src/org/netbeans/modules/html/palette/items/resources/SELECT16.png</file>
+        <file>src/org/netbeans/modules/html/palette/items/resources/IMG32.png</file>
+        <file>src/org/netbeans/modules/html/palette/items/resources/BUTTON16.png</file>
+        <file>src/org/netbeans/modules/html/palette/items/resources/OL16.png</file>
+        <file>src/org/netbeans/modules/html/palette/items/resources/CHECKBOX16.png</file>
+        <file>src/org/netbeans/modules/html/palette/items/resources/INPUT32.png</file>
+        <file>src/org/netbeans/modules/html/palette/items/resources/FORM32.png</file>
+        <file>src/org/netbeans/modules/html/palette/items/resources/FILESEL16.png</file>
+        <file>src/org/netbeans/modules/html/palette/items/resources/A16.png</file>
+        <file>src/org/netbeans/modules/html/palette/items/resources/IMG16.png</file>
+        <file>src/org/netbeans/modules/html/palette/items/resources/TEXTAREA16.png</file>
+        <file>src/org/netbeans/modules/html/palette/items/resources/INPUT16.png</file>
+        <file>src/org/netbeans/modules/html/palette/items/resources/TEXTAREA32.png</file>
+        <file>src/org/netbeans/modules/html/palette/items/resources/FILESEL32.png</file>
+        <file>src/org/netbeans/modules/html/palette/items/resources/A32.png</file>
+        <file>src/org/netbeans/modules/html/palette/items/resources/TABLE16.png</file>
+        <file>src/org/netbeans/modules/html/palette/items/resources/FORM16.png</file>
+        <file>src/org/netbeans/modules/html/htmlObject32.gif</file>
+        <file>src/org/netbeans/modules/html/htmlObject.png</file>
+        <file>src/org/netbeans/modules/html/catalog/resources/DDCatalog.gif</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

@@ -1,0 +1,128 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+{
+// ****************************************************
+// default
+// ****************************************************
+  "DefaultDriver" = {
+    DriverName = "DefaultDriver";
+    get_Catalog = true;
+    get_Schema = true;
+
+    getTables_TableNamePattern = null;
+    getTables_Types = true;
+
+    getProcedures_ProcedureNamePattern = null;
+
+//    getPrimaryKeys_Table = true;
+
+//    getExportedKeys_Table = true;
+
+//    getIndexInfo_Table = true;
+    getIndexInfo_Unique = true;
+    getIndexInfo_Approximate = false;
+
+//    getColumns_TableNamePattern = true;
+//    getColumns_Schema = true;
+
+//    getProcedureColumns_ProcedureSchemaPattern = true;
+    getProcedureColumns_ColumnNamePattern = null;
+  };
+
+// ****************************************************
+// Cloudscape Embedded JDBC Driver
+// ****************************************************
+  "Cloudscape Embedded JDBC Driver" = {
+    DriverName = "Cloudscape Embedded JDBC Driver";
+  };
+
+// ****************************************************
+// Apache Derby Embedded JDBC Driver
+// ****************************************************
+  "Apache Derby Embedded JDBC Driver" = {
+    DriverName = "Apache Derby Embedded JDBC Driver";
+  };
+
+// ****************************************************
+// InstantDB JDBC Driver
+// ****************************************************
+  "InstantDB JDBC Driver" = {
+    DriverName = "InstantDB JDBC Driver";
+  };
+
+// ****************************************************
+// MySQL JDBC-ODBC bridge
+// ****************************************************
+  "JDBC-ODBC Bridge (myodbc.dll)" = {
+    DriverName = "JDBC-ODBC Bridge (myodbc.dll)";
+    get_Schema = null;
+  };
+
+// ****************************************************
+// MySQL Mark Matthews' Driver
+// ****************************************************
+  "Mark Matthews' MySQL Driver" = {
+    DriverName = "Mark Matthews' MySQL Driver";
+  };
+
+// ****************************************************
+// Oracle JDBC driver
+// ****************************************************
+  "Oracle JDBC driver" = {
+    DriverName = "Oracle JDBC driver";
+  };
+
+// ****************************************************
+// Oracle JDBC-ODBC Bridge (Oracle)
+// ****************************************************
+  "JDBC-ODBC Bridge (SQORA32.DLL)" = {
+    DriverName = "JDBC-ODBC Bridge (SQORA32.DLL)";
+  };
+
+// ****************************************************
+// Oracle JDBC-ODBC Bridge (Microsoft)
+// ****************************************************
+  "JDBC-ODBC Bridge (msorcl32.dll)" = {
+    DriverName = "JDBC-ODBC Bridge (msorcl32.dll)";
+  };
+
+// ****************************************************
+// PointBase JDBC driver
+// ****************************************************
+  "PointBase JDBC Driver" = {
+    DriverName = "PointBase JDBC Driver";
+  };
+
+// ****************************************************
+// Sybase JDBC-ODBC bridge
+// ****************************************************
+  "JDBC-ODBC Bridge (DBODBC6W.DLL)" = {
+    DriverName = "JDBC-ODBC Bridge (DBODBC6W.DLL)";
+    getIndexInfo_Unique = false;
+  };
+
+// ****************************************************
+// Sybase jConnect driver
+// ****************************************************
+  "jConnect (TM) for JDBC (TM)" = {
+    DriverName = "jConnect (TM) for JDBC (TM)";
+  };
+
+}

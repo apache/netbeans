@@ -1,0 +1,21 @@
+{
+    try {
+        org.codehaus.jettison.json.JSONObject jsonObject = new org.codehaus.jettison.json.JSONObject(response);
+        org.codehaus.jettison.json.JSONObject json = jsonObject;
+        java.util.StringTokenizer tok = new java.util.StringTokenizer(jsonPath, "/$.");
+        while (tok.hasMoreTokens()) {
+            String token = tok.nextToken();
+            Object obj = json.get(token);
+            if (obj instanceof String) {
+                return (String)obj;
+            } else if (obj instanceof org.codehaus.jettison.json.JSONObject) {
+                json = json.getJSONObject(token);
+            } else {
+                break;
+            }
+        }
+    } catch (org.codehaus.jettison.json.JSONException ex) {
+        ex.printStackTrace();
+    }
+    return null;
+}

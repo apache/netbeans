@@ -1,0 +1,13 @@
+public class ImportAnalysisDefaultPackage3 {
+    
+    public ImportAnalysisDefaultPackage3() {
+        ImportAnalysisDefaultPackage3A.B s;
+    }
+    
+    static void test() {}
+}
+
+class ImportAnalysisDefaultPackage3A {
+    static class B {
+    }
+}

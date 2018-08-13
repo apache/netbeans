@@ -1,0 +1,51 @@
+<LayoutModel>
+  <Root id="Form">
+    <DimensionLayout dim="horizontal">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <Group type="sequential" alignment="leading" attributes="0">
+              <EmptySpace min="$pref" max="$pref" attributes="0"/>
+              <Component id="jScrollPane1" min="$pref" max="$pref" attributes="0"/>
+              <Group type="parallel" groupAlignment="leading" attributes="0">
+                  <Group type="sequential" attributes="0">
+                      <EmptySpace max="$pref" attributes="0"/>
+                      <Component id="jProgressBar1" pref="339" max="Short.MAX_VALUE" attributes="0"/>
+                  </Group>
+                  <Group type="sequential" alignment="leading" attributes="0">
+                      <EmptySpace min="$pref" pref="47" max="$pref" attributes="0"/>
+                      <Group type="parallel" groupAlignment="trailing" attributes="0">
+                          <Component id="jTextField3" alignment="leading" pref="272" max="Short.MAX_VALUE" attributes="0"/>
+                          <Component id="jTextField2" alignment="leading" pref="272" max="Short.MAX_VALUE" attributes="0"/>
+                          <Component id="jTextField1" alignment="leading" pref="272" max="Short.MAX_VALUE" attributes="0"/>
+                          <Component id="jButton1" alignment="leading" max="Short.MAX_VALUE" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="26" pref="26" max="26" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace min="$pref" max="$pref" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="vertical">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <Group type="sequential" alignment="leading" attributes="0">
+              <EmptySpace max="$pref" attributes="16"/>
+              <Group type="parallel" groupAlignment="leading" attributes="16">
+                  <Group type="sequential" alignment="leading" attributes="0">
+                      <Component id="jProgressBar1" min="$pref" max="$pref" attributes="0"/>
+                      <EmptySpace min="$pref" pref="33" max="$pref" attributes="0"/>
+                      <Component id="jTextField1" min="$pref" max="$pref" attributes="0"/>
+                      <EmptySpace max="$pref" attributes="0"/>
+                      <Component id="jTextField2" min="$pref" max="$pref" attributes="0"/>
+                      <EmptySpace max="$pref" attributes="0"/>
+                      <Component id="jTextField3" min="$pref" max="$pref" attributes="0"/>
+                      <EmptySpace max="$pref" attributes="0"/>
+                      <Component id="jButton1" min="$pref" max="$pref" attributes="0"/>
+                  </Group>
+                  <Component id="jScrollPane1" alignment="leading" min="$pref" pref="192" max="$pref" attributes="0"/>
+              </Group>
+              <EmptySpace pref="97" max="Short.MAX_VALUE" attributes="12"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Root>
+</LayoutModel>

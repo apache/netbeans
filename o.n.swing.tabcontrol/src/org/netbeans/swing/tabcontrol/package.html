@@ -1,0 +1,44 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html><body>
+<h2>TabDisplayer and TabbedControl</h2>
+This package contains two gui components:
+<ul>
+<li><b>TabDisplayer</b> - A component which displays tabs, the contents of which are defined in a <code>TabDataModel</code>.  This can be used as a standalone component for tab-driven navigation.  It has several UI styles available to suit different purposes, such as scrollable tabs, fixed width tabs, or toggle buton tabs.</li>
+<li><b>TabbedContainer</b> - A component which also takes a <code>TabDataModel</code>, which offers similar functionality to a JTabbedPane, and (as an implementation detail) embeds a TabDisplayer to display its tabs.</li>
+</ul>
+
+Where these classes differ from JTabbedPane is as follows:
+<ul>
+<li>Fully model driven - the contents of the AWT hierarchy are an artifact, not the primary source of information about the contents of the tabbed container.  Several policies are available for when components to be displayed in tabs are to be physically added to a container</li>
+<li>Multiple UI styles supported up front - Several different UI styles are supported, with UI delegates for the major look and feels.</li>
+<li>Drag and drop visualization support - while the actual functionality of what to drag and what to do with it is left up to the application, there is built in support for creating drag images of tabs and visual feedback for where a tab will be placed if dropped.</li>
+<li>Support for using a single component across multiple tabs is designed in - there are some hacks one can do which (maybe) will allow a JTabbedPane to do this, but they are not recommended.  This is made easy using the <code>ComponentConverter</code> class, which determines how an element in the data model is translated into a GUI component</li>
+<li>Very granular event model - TabDataModel is designed on the assumption that the application may atomically add/remove/modify discontiguous ranges of tabs, their contents, titles or icons, and that such operations should be handled atomically, generating a single event/repaint</li>
+</ul>
+
+Besides this module the <a href="../popupswitcher/package-summary.html">org.netbeans.swing.popupswitcher</a>
+package is used from core/windows too. Classes contained in the package are
+rather general and therefore this package could be moved in the future. It is
+placed here only due to current modules dependencies. Consequently the package
+is not intended for external use.<br/>
+
+</body></html>

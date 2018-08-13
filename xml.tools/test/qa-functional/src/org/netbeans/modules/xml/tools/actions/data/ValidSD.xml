@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--- Created by tb115823 on January 3, 2002, 2:55 PM -->
+<tsp:test-spec xmlns:tsp="http://www.netbeans.org/xml/TestSpec" 
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                   xsi:schemaLocation="http://www.netbeans.org/xml/TestSpec schema/ts-schema-with-target-namespaces.xsd"
+                   module="XML" author="Martin Schovanek" email="martin.schovanek@sun.com" version="0.2" changed="02/27/2002">
+
+        <introduction>
+            This document contains test specifications for FFJ XML modules. 
+        </introduction>
+        
+        <suite title="XML Tree Editor" suite_id="tree_editor">
+            <setup>Mount xml_sample directory into filesystem (if not mounted).</setup>
+            <purpose>This suite tests XML Tree Editor.</purpose>
+            <suite-case ref="open_xml"/>
+            <suite-case ref="parse_xml"/>
+        </suite>
+</tsp:test-spec>

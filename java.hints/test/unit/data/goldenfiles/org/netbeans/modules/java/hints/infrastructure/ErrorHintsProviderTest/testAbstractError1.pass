@@ -1,0 +1,1 @@
+7:6-7:7:error:javahints.X is not abstract and does not override abstract method x() in javahints.AbstractError1

@@ -1,0 +1,8 @@
+development:ATTRIBUTE:[]:development:
+  adapter:ATTRIBUTE:[]:adapter:
+  database:ATTRIBUTE:[]:database:
+  host:ATTRIBUTE:[]:host:
+  password:ATTRIBUTE:[]:password:
+  socket:ATTRIBUTE:[]:socket:
+  username:ATTRIBUTE:[]:username:
+production:ATTRIBUTE:[]:production:

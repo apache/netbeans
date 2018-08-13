@@ -1,0 +1,49 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<h2>Search JavaDoc Package</h2>
+
+<h3>Entry Points</h3>
+{@link SearchDocAction} registered in module layer.
+
+
+<h3>Control Flow</h3>
+
+<pre>
+performAction() toFind
+    IndexSearch UI button_actionPerformed
+    JavadocSearchEngine[Impl]
+        foreach javadoc fs
+            javadocSearchType = fs.getJavadocSearchType()
+            javadocSearchType.getSearchThread(toFind)
+            IndexSearchThread (Jdk12SearchThread[_japan])
+                insertDocIndexItem()
+    JavadocSearchEngine[Impl] callback (presenting them in UI)
+</pre>
+
+
+<h3>Projectization Tasks</h3>
+
+DocFileSystems must be found in project resources.
+Define javadoc resources lookup criteria. Mimics classpath lookup.
+(Library ref FileObjects has something in their lookup. the
+something is provided by JavaDocVolumeProvider.)
+
+How do I list project resource PMs. In project resource (descriptor) containers.

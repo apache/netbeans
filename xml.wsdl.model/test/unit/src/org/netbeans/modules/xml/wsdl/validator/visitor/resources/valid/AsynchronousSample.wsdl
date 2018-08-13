@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions name="AsynchronousSample"
+             targetNamespace="http://www.mycomp.org/AsynchronousSample"
+             xmlns:tns="http://www.mycomp.org/AsynchronousSample"
+             xmlns:xs="http://www.mycomp.org/AsynchronousSampleSchemaNamespace"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"                          
+             xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype">
+
+
+
+    <types>
+        <xsd:schema xmlns="http://www.mycomp.org/AsynchronousSampleSchemaNamespace" 
+         targetNamespace="http://www.mycomp.org/AsynchronousSample"  >
+            <xsd:import namespace="http://www.mycomp.org/AsynchronousSampleSchemaNamespace" schemaLocation="AsynchronousSample.xsd"/>
+        </xsd:schema>
+    </types>
+        
+        
+    <wsdl:message name="requestMessage" >
+        <wsdl:part name="inputType" element="xs:typeA"/>
+    </wsdl:message>
+    <wsdl:message name="responseMessage">
+        <wsdl:part name="resultType" element="xs:typeA"/>
+    </wsdl:message>
+
+
+    <wsdl:portType name="MyPortType">
+        <wsdl:operation name="asyncOperation">
+            <wsdl:input  message="tns:requestMessage" />
+        </wsdl:operation>             
+    </wsdl:portType>
+
+
+    <wsdl:portType name="MyCallbackPortType">
+        <wsdl:operation name="onResult">
+            <wsdl:input message="tns:responseMessage"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+
+
+        <binding name="SoapBinding" type="tns:MyPortType">
+            <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+            <operation name="asyncOperation">
+                <soap:operation/>
+                <input>
+                    <soap:body use="literal" namespace="http://ebank.netjets.com"/>
+                </input>
+            </operation>           
+        </binding>
+
+         <wsdl:service name="AsynchronousSample_asyncService">
+        <wsdl:port name="AsynchronousSample_asyncPortName" binding="tns:SoapBinding">                    
+                     <soap:address location="http://localhost:18181/AsynchronousSample"/>
+        </wsdl:port>
+        </wsdl:service>
+
+
+        
+
+</wsdl:definitions>
+

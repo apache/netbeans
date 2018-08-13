@@ -1,0 +1,20 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package org.netbeans.test.java.testsources;
+
+/**
+ *
+ * @author
+ */
+public class JavaTestSourceFieldElem {
+    public static boolean newField1;
+    private static int newField2;
+    protected boolean newField3;
+    public synchronized float newField4;
+    public static final String newField5;
+    
+}
+

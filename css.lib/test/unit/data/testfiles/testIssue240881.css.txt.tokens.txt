@@ -1,0 +1,14 @@
+<Unnamed test>
+DOT             "."
+IDENT           "css"
+WS              " "
+LBRACE          "{"
+RBRACE          "}"
+NL              "\n"
+DOT             "."
+IDENT           "less"
+WS              " "
+LBRACE          "{"
+RBRACE          "}"
+----- EOF -----
+

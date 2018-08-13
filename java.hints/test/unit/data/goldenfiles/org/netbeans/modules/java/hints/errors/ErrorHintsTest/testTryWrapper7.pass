@@ -1,0 +1,33 @@
+/*
+ * AbstractClass.java
+ *
+ * Created on March 12, 2005, 7:22 PM
+ */
+
+package org.netbeans.test.java.hints;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
+/**
+ *
+ * @author lahvac
+ */
+public abstract class TryWrapper7 {
+    
+    /** Creates a new instance of AbstractClass */
+    public TryWrapper7() {
+        FileInputStream a, b, c, fis, d, e, f;
+        try {
+            a = null;
+            c = new FileInputStream(new File(""));
+            fis = new FileInputStream(new File(""));
+            e = new FileInputStream(new File(""));
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        
+        fis.read();
+    }
+    
+}

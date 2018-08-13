@@ -1,0 +1,53 @@
+<!-- The following DTD is a simple view of a book:
+book
+     index
+        +
+          word
+               #PCDATA
+          page
+               #PCDATA
+     chapter+
+          comment?
+               #PCDATA
+          paragraph*
+               #PCDATA
+     summary?
+          #PCDATA
+
+     good
+	EMPTY
+-->
+
+<!ELEMENT summary (#PCDATA)>
+
+<!ELEMENT book (summary?, chapter+, index+, available)>
+
+<!ELEMENT available EMPTY>
+
+<!ELEMENT index (word, ref+)>
+
+<!ELEMENT ref (page, line)>
+
+<!ELEMENT word (#PCDATA)>
+
+<!ELEMENT line (#PCDATA)>
+
+<!ELEMENT page (#PCDATA)>
+
+<!ELEMENT chapter (comment?, paragraph*)>
+
+<!ELEMENT paragraph (#PCDATA)>
+
+<!ELEMENT comment (#PCDATA)>
+
+<!ATTLIST book good (yes, no) 'yes'>
+<!ATTLIST summary length CDATA #REQUIRED>
+<!ATTLIST summary lang CDATA #IMPLIED>
+<!ATTLIST summary size CDATA #FIXED '12'>
+<!ATTLIST chapter title CDATA #IMPLIED>
+<!ATTLIST index color CDATA #IMPLIED>
+<!ATTLIST index cross-ref (yes no) "no">
+<!ATTLIST index glossary CDATA #FIXED "nope">
+<!ATTLIST word freq CDATA #IMPLIED>
+
+

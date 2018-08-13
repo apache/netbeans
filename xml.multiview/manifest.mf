@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.xml.multiview/1
+OpenIDE-Module-Implementation-Version: 2
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/xml/multiview/Bundle.properties
+

@@ -1,0 +1,2 @@
+public MoreCtors()
+public MoreCtors(MoreCtors inst)

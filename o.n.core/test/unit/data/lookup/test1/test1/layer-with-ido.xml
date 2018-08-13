@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC
+          "-//NetBeans//DTD Filesystem 1.0//EN"
+          "http://www.netbeans.org/dtds/filesystem-1_0.dtd">
+<filesystem>
+    <folder name="Services">
+        <folder name="Misc">
+            <file name="inst-1.instance">
+                <attr name="instanceClass" stringvalue="test1.SomeAction"/>
+                <attr name="instanceOf" stringvalue="javax.swing.Action,test1.SomeAction"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

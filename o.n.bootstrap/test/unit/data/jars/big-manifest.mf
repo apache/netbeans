@@ -1,0 +1,481 @@
+Manifest-Version: 1.0
+OpenIDE-Module: big.manifest
+X-Comment: should exceed 4k buffer size several times
+
+Name: file1a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file2a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file3a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file4a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file5a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file6a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file7a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file8a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file9a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file10a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file11a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file12a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file13a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file14a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file15a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file16a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file17a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file18a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file19a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file20a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file21a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file22a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file23a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file24a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file25a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file26a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file27a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file28a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file29a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file30a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file31a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file32a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file33a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file34a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file35a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file36a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file37a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file38a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file39a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file40a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file41a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file42a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file43a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file44a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file45a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file46a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file47a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file48a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file49a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file50a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file51a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file52a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file53a
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file1b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file2b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file3b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file4b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file5b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file6b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file7b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file8b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file9b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file10b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file11b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file12b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file13b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file14b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file15b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file16b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file17b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file18b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file19b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file20b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file21b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file22b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file23b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file24b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file25b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file26b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file27b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file28b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file29b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file30b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file31b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file32b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file33b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file34b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file35b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file36b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file37b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file38b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file39b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file40b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file41b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file42b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file43b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file44b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file45b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file46b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file47b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file48b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file49b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file50b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file51b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file52b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file53b
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file1c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file2c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file3c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file4c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file5c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file6c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file7c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file8c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file9c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file10c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file11c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file12c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file13c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file14c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file15c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file16c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file17c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file18c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file19c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file20c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file21c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file22c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file23c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file24c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file25c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file26c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file27c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file28c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file29c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file30c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file31c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file32c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file33c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file34c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file35c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file36c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file37c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file38c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file39c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file40c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file41c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file42c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file43c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file44c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file45c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file46c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file47c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file48c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file49c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file50c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file51c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file52c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+
+Name: file53c
+Attr: some value sdkhfg jkhag fdjhagdkfha gfdkjahdgf jkahsd gfjkashdg
+

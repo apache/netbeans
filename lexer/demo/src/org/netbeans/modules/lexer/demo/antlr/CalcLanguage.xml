@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE Language SYSTEM "../../../../../../../../gen/src/org/netbeans/modules/lexer/gen/language.dtd">
+<Language>
+    <HiddenTokenType name="EOF"/>
+    <HiddenTokenType name="NULL_TREE_LOOKAHEAD"/>
+    <HiddenTokenType name="FLOAT"/>
+    <HiddenTokenType name="INTEGER"/>
+    <HiddenTokenType name="DIGIT"/>
+
+    <TokenId name="whitespace">
+        <SampleText> </SampleText>
+    </TokenId>
+    <TokenId name="plus">
+        <SampleText>+</SampleText>
+        <Category name="operator"/>
+    </TokenId>
+    <TokenId name="minus">
+        <SampleText>-</SampleText>
+        <Category name="operator"/>
+    </TokenId>
+    <TokenId name="mul">
+        <SampleText>*</SampleText>
+        <Category name="operator"/>
+    </TokenId>
+    <TokenId name="div">
+        <SampleText>/</SampleText>
+        <Category name="operator"/>
+    </TokenId>
+    <TokenId name="lparen">
+        <SampleText>(</SampleText>
+        <Category name="separator"/>
+    </TokenId>
+    <TokenId name="rparen">
+        <SampleText>)</SampleText>
+        <Category name="separator"/>
+    </TokenId>
+    <TokenId name="constant">
+        <Category name="literal"/>
+    </TokenId>
+    <TokenId name="ml-comment">
+        <Category name="comment"/>
+    </TokenId>
+    <TokenId name="incomplete-ml-comment">
+        <Category name="comment"/>
+        <Category name="incomplete"/>
+        <Category name="error"/>
+    </TokenId>
+    <TokenId name="error">
+        <Category name="error"/>
+    </TokenId>
+</Language>

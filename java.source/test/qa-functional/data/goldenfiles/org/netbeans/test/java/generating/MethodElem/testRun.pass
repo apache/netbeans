@@ -1,0 +1,39 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package org.netbeans.test.java.testsources;
+
+/**
+ *
+ * @author
+ */
+public class JavaTestSourceMethodElem {
+
+    public static void method1(int param1) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private synchronized int method1(int param1, int param2) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private final float method1(float param1, int param2, String param3) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public static double method2(int param1) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public static boolean method2(int param1, int param2) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public static void method2(float param1, int param2, String param3) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+}
+

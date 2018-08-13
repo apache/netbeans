@@ -1,0 +1,45 @@
+<#--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+    <head>
+        <title>${TEMPLATENAME}</title>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <div data-bind="template: templateName"></div>
+        
+        <!-- UI of the main window -->
+        <script type="text/html" id="window">
+            <input data-bind="value: text"></input> 
+            <button data-bind="click: showDialog, enable: text">Ask!</button>
+        </script>
+        
+        <!-- UI of the dialog -->
+        <script type="text/html" id="dialog">
+            <div><span data-bind="text: text"></span> How are you?</div>
+            <!-- you need to check the checkbox to enabled the OK button -->
+            <input type="checkbox" data-bind="checked: ok">OK?<br>
+            <!-- next button is enabled when the checkbox is checked -->
+            <button id='OK' hidden data-bind="enable: ok">Good</button>
+            <button id='BAD' hidden>Bad</button>
+        </script>
+    </body>
+</html>

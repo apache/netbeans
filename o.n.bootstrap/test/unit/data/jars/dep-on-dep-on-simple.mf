@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.baz/1
+OpenIDE-Module-Name: Depends on bar test module
+OpenIDE-Module-Module-Dependencies: org.bar/1
+

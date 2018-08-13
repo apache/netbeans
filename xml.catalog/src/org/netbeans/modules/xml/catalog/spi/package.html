@@ -1,0 +1,85 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+</head>
+<body>
+<h2>XML Entity Catalog SPI</h2>
+
+<p><b>Maintainer</b>: Petr Kuzel
+<p><b>Updated on</b>: 31st June 2001
+
+
+<h2>SPI Overview</h2>
+
+The SPI is very simple, there is only one mandatory interface
+to be implemented. Then the implementation must be integrated
+with IDE.
+
+
+<h2>SPI Implementator Guide</h2>
+
+<p>Every SPI implementation must implement interface
+{@link org.netbeans.modules.xml.catalog.spi.CatalogReader CatalogReader}
+allowing quering catalog for entries, refreshing its content and optionaly
+listening on its content.
+
+<p>An SPI implementation should implement following interfaces:
+<ul>
+<li>{@link org.netbeans.modules.xml.catalog.spi.CatalogDescriptor CatalogDescriptor} describing catalog instance
+<li>{@link org.netbeans.modules.xml.catalog.spi.CatalogWriter CatalogWriter} allowing to modify catalog entries
+<li>SAX's org.xml.sax.EntityResolver if it can resolve more complicated cases than public => system ID mappings
+</ul>
+
+
+<h3>NetBeans IDE Platform Integration</h3>
+
+An SPI implementation can register its availability using NetBeans <b>Lookup</b>.
+A module providing a new SPI implementation registers its avaiability using
+{@link org.netbeans.modules.xml.catalog.spi.CatalogProvider CatalogProvider}</b> 
+instance (declared at its XML Layer):
+
+<pre>
+  &lt;folder name="Services">
+    &lt;folder name="Hidden">
+      &lt;file name="my-company-netbeans-catalog-impl-MyProvider.instance" />
+    &lt;/filder>
+  &lt;/folder>
+</pre>
+
+Where <tt>my.company.netbeans.catalog.impl.MyProvider</tt> public no-arg constructor 
+class implements the <tt>CatalogProvider</tt> interface.
+
+<p>Using <code>CatalogProvider</code> just provides a kind of factory, so that the user can add one or more
+instances of the catalog at will. You may instead register a <code>CatalogReader</code> instance directly in
+your layer in the folder <code>Plugins/XML/UserCatalogs/</code>; such catalogs will be preinstalled and not
+deletable.</p>
+
+<h3>Forte for Java 3.0 Specifics Feature</h3>
+
+If a catalog implements <tt>Serializable</tt> interface then
+its mounting point is <b>persistent</b> among IDE restarts. In such case it is
+highly recommended to explicitly declare <tt>serialVersionUID</tt> field.
+
+</body>
+</HTML>

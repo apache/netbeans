@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<tsp:test-spec xmlns:tsp="http://www.netbeans.org/xml/TestSpec" 
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                   xsi:schemaLocation="http://www.netbeans.org/xml/TestSpec NOWHERE/NONE.xsd"
+                   module="XML">
+    <introduction>
+        This document ...
+    </introduction>
+</tsp:test-spec>

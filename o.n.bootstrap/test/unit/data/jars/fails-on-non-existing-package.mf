@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.dol
+OpenIDE-Module-Name: Fails on non-existing class
+OpenIDE-Module-Package-Dependencies: must.not.exist
+OpenIDE-Module-Module-Dependencies: org.foo/1

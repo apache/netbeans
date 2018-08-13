@@ -1,0 +1,10 @@
+:java.lang.Runnable:
+#-org.foo.impl.Runnable1
+:java.util.Comparator:
+org.bar.Comparator2
+#position=5
+:java.util.Iterator:
+org.bar.Iterator2
+#position=100
+:org.foo.Interface:
+org.bar.Implementation2

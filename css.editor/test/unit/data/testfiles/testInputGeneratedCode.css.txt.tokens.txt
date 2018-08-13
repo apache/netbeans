@@ -1,0 +1,145 @@
+.t.e.s.t. templatingless source code
+IDENT           "h1", la=1, st=0
+S               " ", la=1, st=0
+LBRACE          "{", st=0
+S               "\n    ", la=1, st=0
+IDENT           "color", la=1, st=0
+COLON           ":", st=0
+S               " ", la=1, st=0
+IDENT           "red", la=1, st=0
+SEMICOLON       ";", st=0
+S               "\n", la=1, st=0
+RBRACE          "}", st=0
+----- EOF -----
+
+.t.e.s.t. templated source code
+IDENT           "h1", la=1, st=0
+S               " ", la=1, st=0
+LBRACE          "{", st=0
+S               "\n    ", la=1, st=0
+IDENT           "color", la=1, st=0
+COLON           ":", st=0
+S               " ", la=1, st=0
+GENERATED       "@@@", la=1, st=0
+SEMICOLON       ";", st=0
+S               "\n", la=1, st=0
+RBRACE          "}", st=0
+----- EOF -----
+
+.t.e.s.t. templated source code
+IDENT           "h1", la=1, st=0
+S               " ", la=1, st=0
+LBRACE          "{", st=0
+S               "\n    ", la=1, st=0
+GENERATED       "@@@", la=1, st=0
+COLON           ":", st=0
+S               " ", la=1, st=0
+IDENT           "red", la=1, st=0
+SEMICOLON       ";", st=0
+S               "\n", la=1, st=0
+RBRACE          "}", st=0
+----- EOF -----
+
+.t.e.s.t. templated source code
+HNUM            "#", la=1, st=0
+DOT             ".", la=1, st=0
+IDENT           "t", la=1, st=0
+DOT             ".", la=1, st=0
+IDENT           "e", la=1, st=0
+DOT             ".", la=1, st=0
+IDENT           "s", la=1, st=0
+DOT             ".", la=1, st=0
+IDENT           "t", la=1, st=0
+DOT             ".", la=1, st=0
+S               " ", la=1, st=0
+IDENT           "templated", la=1, st=0
+S               " ", la=1, st=0
+IDENT           "source", la=1, st=0
+S               " ", la=1, st=0
+IDENT           "code", la=1, st=0
+S               "\n", la=1, st=0
+HASH            "#h1", la=1, st=0
+S               " ", la=1, st=0
+LBRACE          "{", st=0
+S               "\n", la=1, st=0
+HNUM            "#", la=1, st=0
+S               "    ", la=1, st=0
+IDENT           "col", la=1, st=0
+GENERATED       "@@@", la=1, st=0
+IDENT           "r", la=1, st=0
+COLON           ":", st=0
+S               " ", la=1, st=0
+IDENT           "red", la=1, st=0
+SEMICOLON       ";", st=0
+S               "\n", la=1, st=0
+HNUM            "#", la=1, st=0
+RBRACE          "}", st=0
+S               "\n", la=1, st=0
+HNUM            "#", la=1, st=0
+DOT             ".", la=1, st=0
+IDENT           "e", la=1, st=0
+DOT             ".", la=1, st=0
+IDENT           "o", la=1, st=0
+DOT             ".", la=1, st=0
+IDENT           "f", la=1, st=0
+DOT             ".", la=1, st=0
+S               "\n\n", la=1, st=0
+HNUM            "#", la=1, st=0
+DOT             ".", la=1, st=0
+IDENT           "t", la=1, st=0
+DOT             ".", la=1, st=0
+IDENT           "e", la=1, st=0
+DOT             ".", la=1, st=0
+IDENT           "s", la=1, st=0
+DOT             ".", la=1, st=0
+IDENT           "t", la=1, st=0
+DOT             ".", la=1, st=0
+S               " ", la=1, st=0
+IDENT           "templated", la=1, st=0
+S               " ", la=1, st=0
+IDENT           "source", la=1, st=0
+S               " ", la=1, st=0
+IDENT           "code", la=1, st=0
+S               "\n", la=1, st=0
+HASH            "#h1", la=1, st=0
+S               " ", la=1, st=0
+LBRACE          "{", st=0
+S               "\n", la=1, st=0
+HNUM            "#", la=1, st=0
+S               "    ", la=1, st=0
+IDENT           "co", la=1, st=0
+IDENT           "@@@@@@", la=1, st=0
+IDENT           "r", la=1, st=0
+COLON           ":", st=0
+S               " ", la=1, st=0
+IDENT           "red", la=1, st=0
+SEMICOLON       ";", st=0
+S               "\n", la=1, st=0
+HNUM            "#", la=1, st=0
+RBRACE          "}", st=0
+S               "\n", la=1, st=0
+HNUM            "#", la=1, st=0
+DOT             ".", la=1, st=0
+IDENT           "e", la=1, st=0
+DOT             ".", la=1, st=0
+IDENT           "o", la=1, st=0
+DOT             ".", la=1, st=0
+IDENT           "f", la=1, st=0
+DOT             ".", la=1, st=0
+S               "\n", la=1, st=0
+GENERATED       "@@@", la=1, st=0
+S               " ", la=1, st=0
+IDENT           "h2", la=1, st=0
+S               " ", la=1, st=0
+GENERATED       "@@@", la=1, st=0
+S               " ", la=1, st=0
+IDENT           "h4", la=1, st=0
+S               " ", la=1, st=0
+LBRACE          "{", st=0
+S               "\n", la=1, st=0
+RBRACE          "}", st=0
+----- EOF -----
+
+<Unnamed test>
+----- EOF -----
+

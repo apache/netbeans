@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Old Method on Stack Alert Box</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="NetbeansDebuggerJPDAPopOldFrame" name="NetbeansDebuggerJPDAPopOldFrame"></a></p>
+<div id="NBCSH2683"><!-- infolevel="all" infotype="General" --><a id="sthref352" name="sthref352"></a>
+<h1>Old Method on Stack Alert Box</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to examines the current stack of the current thread. If the Old Method on Stack alert is displayed, the topmost call is associated with a class that was just swapped into the currently executing program, and there is more than one call on the call stack. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG896">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>Perform one of the following actions:</p>
+
+<table summary="Descriptions of stack alert box commands." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="38%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t21">Element</th>
+<th align="left" valign="bottom" id="r1c2-t21">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t21" headers="r1c1-t21">
+<p>Pop Call</p>
+</td>
+<td align="left" headers="r2c1-t21 r1c2-t21">Removes the most recent call from the current call stack. The program counter is moved to the line before the instruction that made the recently removed call.
+<p>If the source code is available, the focus of the Source Editor is set to that line. When you continue program execution, the call is repeated.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t21" headers="r1c1-t21">
+<p>Use Old and Step Out</p>
+</td>
+<td align="left" headers="r3c1-t21 r1c2-t21">Executes the original version of the call. Use this option when you need the old version of the call to perform an action that the new version might not perform.
+<p>If methods belonging to an old version of the class are on a stack in the virtual machine (VM), the VM keeps both the old and new versions of the class in memory so that the calls on the stack are not disrupted. If a class is fixed again before the older calls are removed, there might be more than two versions of the class in the VM at one time.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2686" name="NBCSH2686"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG863">
+<param name="text" value="<html><u>&quot;Managing Debugging Sessions&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

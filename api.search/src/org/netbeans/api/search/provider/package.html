@@ -1,0 +1,48 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE html>
+<html>
+    <body>
+        <p>
+            Classes that you may need to work with if you are implementing
+            a custom search provider.
+        </p>
+        <p>
+            <code><a href="@TOP@/org/netbeans/api/search/provider/SearchInfo.html">SearchInfo</a></code>
+            defines what should be searched. It contains set of files or folders (what should be searched)
+            with associated
+            <code><a href="@TOP@/org/netbeans/api/search/provider/SearchFilter.html">SearchFilter</a></code>s
+            (what should be skipped in those folders).
+        </p>
+        <p>
+            <code><a href="@TOP@/org/netbeans/api/search/provider/SearchListener.html">SearchListener</a></code>
+            is an object that will be passed to your implementation of
+            <code><a href="@TOP@/org/netbeans/api/search/provider/SearchInfo.html">SearchInfo</a></code>
+            and that you should inform about interesting events that occur during the search.
+        </p>
+        <p>
+            <code><a href="@TOP@/org/netbeans/api/search/provider/SearchInfoUtils.html">SearchInfoUtils</a></code>
+            contains utility methods for creation of search info for nodes or for files.
+            <code><a href="@TOP@/org/netbeans/api/search/provider/FileNameMatcher.html">FileNameMatcher</a></code>
+            matches files to current search options.
+        </p>
+    </body>
+</html>

@@ -1,0 +1,52 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+%%TestCase getBundle
+package test;
+import org.openide.util.NbBundle;
+class Test {
+     void m() {
+         NbBundle.getBundle(Test.class).getString("key");
+     }
+}
+%%=>
+package test;
+import org.openide.util.NbBundle;
+class Test {
+     void m() {
+         NbBundle.getMessage(Test.class, "key");
+     }
+}
+%%TestCase MessageFormat
+package test;
+import java.text.MessageFormat;
+import org.openide.util.NbBundle;
+class Test {
+     String m(int i, String s) {
+         return MessageFormat.format(NbBundle.getMessage(Test.class, "key"), new Object[] {i, s});
+     }
+}
+%%=>
+package test;
+import java.text.MessageFormat;
+import org.openide.util.NbBundle;
+class Test {
+     String m(int i, String s) {
+         return NbBundle.getMessage(Test.class, "key", i, s);
+     }
+}

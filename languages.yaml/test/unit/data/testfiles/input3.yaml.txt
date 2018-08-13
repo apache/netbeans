@@ -1,0 +1,7 @@
+.t.e.s.t. Comments
+<% for i in 1..1000 %>
+fix_<%= i %>:
+  id: <%= i %>
+  name: guy_<%= 1 %>
+<% end %>
+.e.o.f.

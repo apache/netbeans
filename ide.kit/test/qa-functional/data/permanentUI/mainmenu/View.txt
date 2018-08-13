@@ -1,0 +1,19 @@
+| View |                       V (mnemonics)
+========
+    Editors                >   E
+    Split                  >   S
+    Code Folds             >   C
+============================
+    IDE Log                    L
+============================
+    Toolbars               >   T
+[x] Show Editor Toolbar        h
+[x] Show Line Numbers          S
+[ ] Show Non-printable Characters      N
+[x] Show Breadcrumbs           B
+[x] Show Diff Sidebar          D
+[ ] Show Versioning Labels     V
+[ ] Synchronize Editor with Views      y
+============================
+[ ] Show Only Editor           O
+[ ] Full Screen                F

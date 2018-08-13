@@ -1,0 +1,35 @@
+String[] args
+MyGenericClass mc
+GenericInner<String> mcdgi
+GenericInner mcgi
+MyGenericClass<Integer> mci
+MyGenericClass<Long> mcl
+Inner mcsi
+MyGenericsTest<Integer,ArithmeticException> mgt
+public static final String CONST
+public static void main(String... args)
+GenericInner
+Inner
+accesscontroltest
+arraystest
+com
+ctorstest
+genericstest
+java
+javax
+localvarstest
+org
+test1
+test10
+test11
+test12
+test13
+test14
+test2
+test3
+test4
+test5
+test6
+test7
+test8
+test9

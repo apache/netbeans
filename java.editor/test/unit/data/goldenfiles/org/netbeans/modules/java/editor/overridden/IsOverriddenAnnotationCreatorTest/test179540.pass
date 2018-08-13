@@ -1,0 +1,3 @@
+IsOverriddenAnnotation: type=HAS_IMPLEMENTATION, elements:[<html>A <font color=#808080>(org.netbeans.modules.editor.java.T179540)]
+IsOverriddenAnnotation: type=HAS_IMPLEMENTATION, elements:[<html>A <font color=#808080>(org.netbeans.modules.editor.java.T179540)]
+IsOverriddenAnnotation: type=IMPLEMENTS, elements:[org.netbeans.modules.editor.java.T179540]

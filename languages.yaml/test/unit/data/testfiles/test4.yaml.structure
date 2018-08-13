@@ -1,0 +1,12 @@
+name:ATTRIBUTE:[]:name:
+age:ATTRIBUTE:[]:age:
+spouse:ATTRIBUTE:[]:spouse:
+  age:ATTRIBUTE:[]:age:
+  name:ATTRIBUTE:[]:name:
+children:ATTRIBUTE:[]:children:
+  list item:ATTRIBUTE:[]:list item:
+    age:ATTRIBUTE:[]:age:
+    name:ATTRIBUTE:[]:name:
+  list item:ATTRIBUTE:[]:list item:
+    age:ATTRIBUTE:[]:age:
+    name:ATTRIBUTE:[]:name:

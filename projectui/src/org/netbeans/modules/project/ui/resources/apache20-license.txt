@@ -1,0 +1,19 @@
+<#if licenseFirst??>
+${licenseFirst}
+</#if>
+${licensePrefix}Copyright ${date?date?string("yyyy")} ${project.organization!user}.
+${licensePrefix?replace(" +$", "", "r")}
+${licensePrefix}Licensed under the Apache License, Version 2.0 (the "License");
+${licensePrefix}you may not use this file except in compliance with the License.
+${licensePrefix}You may obtain a copy of the License at
+${licensePrefix?replace(" +$", "", "r")}
+${licensePrefix}     http://www.apache.org/licenses/LICENSE-2.0
+${licensePrefix?replace(" +$", "", "r")}
+${licensePrefix}Unless required by applicable law or agreed to in writing, software
+${licensePrefix}distributed under the License is distributed on an "AS IS" BASIS,
+${licensePrefix}WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+${licensePrefix}See the License for the specific language governing permissions and
+${licensePrefix}limitations under the License.
+<#if licenseLast??>
+${licenseLast}
+</#if>

@@ -1,0 +1,800 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><!-- -*- xhtml -*- -->
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Internationalization, Localization, and Branding of NetBeans</title>
+  <link rel="stylesheet" href="../../../../prose.css" type="text/css"/>
+</head>
+<body>
+<p class="overviewlink"><a href="../../../../overview-summary.html">Overview</a></p>
+
+<h1>Contents</h1>
+
+<dl>
+  <dd><a href="#overview">Overview and How to Test</a></dd>
+  <dd><a href="#features">I18N Features</a>
+      <dl>
+        <dd><a href="#bundles">Bundle messages</a>
+            <dl>
+              <dd><a href="#bundle-debug">Bundle debugging</a></dd>
+              <dd><a href="#bundle-recommendations">How to write good <samp>*.properties</samp> files</a></dd>
+            </dl></dd>
+        <dd><a href="#misc-i18nable">Other localized text (not in source code)</a></dd>
+        <dd><a href="#templates">Templates</a>
+            <dl>
+              <dd><a href="#template-descs">Template descriptions</a></dd>
+            </dl></dd>
+        <dd><a href="#loc-file-names">Localized file names</a></dd>
+        <dd><a href="#layers">Localizing layers</a></dd>
+        <dd><a href="#images">Images</a></dd>
+        <dd><a href="#javahelp">Help documentation</a></dd>
+        <dd><a href="#module-metainfo">Module names in manifest files</a></dd>
+      </dl></dd>
+  <dd><a href="#placement">Physical Placement of Localized Resources</a></dd>
+  <dd><a href="#l10n-list">Lists of files to be localized</a></dd>
+  <dd><a href="#branding">Branded Localization</a></dd>
+  <dd><a href="#discussion">Discussion</a></dd>
+</dl>
+
+<h1><a name="overview">Overview and How to Test</a></h1>
+
+<p>This document gives recommendations on how to organize I18N (localization)
+of modules in the IDE or platform.</p>
+
+<p>You will also want to see the
+
+<a href="http://java.sun.com/j2se/1.5.0/docs/guide/intl/index.html">JDK I18N documentation</a>
+
+(including the list of supported locales) for background information.</p>
+
+<p>Japanese localization is a likely candidate for a
+non-US-English locale, so if you are working heavily on I18N you probably
+want an OS with Japanese support installed: fonts and so on. To test
+localization, start the IDE with the <samp>-locale</samp> switch,
+e.g.:</p>
+
+<pre>
+-locale ja
+</pre>
+
+<p>Or the JDK may predefine this information for you depending on the
+host computer's native locale. Note that for this switch, language and
+country and variant may be separated with a colon (<em>not</em>
+underscore), e.g. <samp>ja:JP</samp>.</p>
+
+<p>There should be no problem starting the IDE with a different locale than you did the last time; every label
+you did not enter yourself should switch to the new locale. If you find a problem with localized strings
+"sticking" in the user directory, file a bug with details to reproduce.</p>
+
+<p>The bundle debugging mode (see below) is a great way for
+localization teams, Quality Assurance, and developers to see exactly
+how the IDE is dealing with localization. Many otherwise subtle
+problems can be made apparent and easy to fix this way.</p>
+
+<p>A complete I18N test plan should ideally check the result of
+starting the IDE in Turkish locale - since in Turkish capital
+<samp>I</samp> and lowercase <samp>i</samp> are <em>not</em> case
+variants (they also differ in an accent mark: <samp>&#x0130;</samp> and <samp>&#x0131;</samp> are valid),
+code which confuses
+locale-sensitive and -insensitive operations is likely to display
+errors in Turkish locale.</p>
+
+<h1><a name="features">I18N Features</a></h1>
+
+<p>Most of this document describes specific I18N features in NetBeans and
+how they are intended to be used.</p>
+
+<h2><a name="bundles">Bundle messages</a></h2>
+
+<p>All message strings should be contained in a <samp>Bundle.properties</samp>
+file (containing default message strings - i.e. in US English).
+This resource bundle is conventionally in the same directory (package)
+as the source files which use it; other source packages should have their
+own bundles.
+Localized (non-US-English) message strings should be inserted into a
+<samp>Bundle_<i>LOCALE</i>.properties</samp> file - this file must
+be placed in the same directory as the default bundle. For example,
+<samp>Bundle.properties</samp> might have:</p>
+
+<pre>
+<i># A simple bundle key:</i>
+LBL_some_text=Text in English for a button.
+<i># A nicely formatted one:</i>
+<i># {0} - number of missing files</i>
+EXC_missing_files=There {0,choice,1#is one file|1#are {0,number,integer} files} missing.
+</pre>
+
+<p>In <samp>Bundle_cs.properties</samp>, however, there may be:</p>
+
+<pre>
+LBL_some_text=Text v \u010De\u0161tin\u011B na tla\u010D\u00EDtko.
+EXC_missing_files=Chyb\u00ED {0,choice,1#jeden soubor|2#dva soubory|3#t\u0159i \
+        soubory|4#\u010Dty\u0159i soubory|4#{0,number,integer} soubor\u016F}.
+</pre>
+
+<p>Remember that <strong>all non-ASCII characters</strong> present in
+bundle files should be escaped in Unicode format
+(<samp>\uXXXX</samp>). The <samp>native2ascii</samp> utility present
+in the JDK can help with this.</p>
+
+<p>Message strings are identified by keys and these are
+entered in source files. These keys are non-localized strings.
+The recommended way to use these in a source file is like this:</p>
+
+<pre>
+import org.openide.util.NbBundle;
+<i>// Looks in Bundle.properties for LBL_some_text key:</i>
+String localized = NbBundle.getMessage(ThisClass.class, "LBL_some_text");
+<i>// Same, but formats the text as well:</i>
+throw new IOException(NbBundle.getMessage(ThisClass.class, "EXC_missing_files",
+                                          new Integer(missingFiles)));
+</pre>
+
+<!-- XXX talk about the Ant task instead? -->
+<p>There is a script
+
+<a href="http://www.netbeans.org/source/browse/~checkout~/nbbuild/misc/i18ncheck.pl"><code>nbbuild/misc/i18ncheck.pl</code></a>
+
+which can help check for I18N violations - unlocalized strings. You
+can run this script on source files just like a compiler: in fact,
+from the IDE if run as an external compiler its error messages should
+be hyperlinked. Standard constructions such as
+<code>NbBundle.getMessage</code> are recognized as code which
+retrieves localized text, so the bundle key itself does not trigger a
+warning. But if the bundle key is on a different line, or if in
+general you have a string literal in code which you know should never
+be localized, then end that line of source code with a comment like
+<b>//NOI18N</b>. This will indicate to the script that it should be
+silently passed over.</p>
+
+<p>Also the I18N module includes support for
+finding I18N violations like this, and correcting them. There is a setting to use
+<code>NbBundle.getMessage</code> as the localization device, which is
+suited to module code.</p>
+
+<h3><a name="bundle-debug">Bundle debugging</a></h3>
+
+<p>It is possible to start the IDE with the special command-line option
+
+<code>-J-Dorg.openide.util.NbBundle.DEBUG=true</code>
+
+which enables a special bundle debugging mode. In this mode, any
+string loaded from a bundle using the normal <code>NbBundle</code>
+automatically include a special numeric annotation and line number in parentheses.
+You can cross-reference the annotation to a indexed list, printed on the
+console, of bundle locations that strings are
+loaded from. (It only works when <code>NbBundle</code> is used, not plain <code>ResourceBundle</code>.)
+This has several purposes:</p>
+
+<ol>
+
+  <li>Any text visible in the IDE not referring to something codelike
+      (such as a method name or file name) which lacks this annotation
+      can be noticed as being unlocalized and therefore corrected.</li>
+
+  <li>Displayed text which is incorrect can be easily traced to the
+      offending file and line and corrected.</li>
+
+  <li>IDE features which <em>stop</em> working with this mode turned on
+      might be found to be erroneously over-localized, i.e. use of
+      localized messages in places where a hardcoded string is in
+      fact required.</li>
+
+</ol>
+
+<p>Strings which are looked up in a localized hashtable are also
+annotated with the key used to find them. Normally this would apply to
+localizable strings taken from module manifests, such as the module
+name.</p>
+
+<p>Currently localized files (such as HTML pages which may be selected
+by locale, or JavaHelp helpsets) are not annotated in any way.</p>
+
+<h3><a name="bundle-recommendations">How to write good <samp>*.properties</samp> files</a></h3>
+
+<p>There are some rules for how to write good <samp>*.properties</samp> files for easy
+localization, starting with the most important.</p>
+
+<ol>
+
+  <li>Localizable messages should be stored in files named
+  <samp>Bundle.properties</samp> by convention.</li>
+
+  <li>If it is necessary to mix localizable and nonlocalizable messages
+  in one <samp>Bundle.properties</samp> (to create groups of messages, where some of
+  these messages are localizable and part not, and it is unreasonable to
+  split off the unlocalizable ones): notate each nonlocalizable message with the preceding line
+  <code>#NOI18N</code>. For example:
+  <pre>
+#NOI18N
+var.POSSIBLE_FILE_STATUSES.value="Up-to-date", "Locally Modified", "Locally Added"
+var.POSSIBLE_FILE_STATUSES_LOCALIZED.value="Up-to-date", "Locally Modified", \
+        "Locally Added"
+  </pre>
+
+  In some cases it would be preferable to hardcode the unlocalizable messages in source to begin with.</li>
+
+  <li>If there is <samp>*.properties</samp> file which must have a name different from the default
+  and there are some localizable strings in it, the strings should be
+  individually notated with <code>#I18N</code>. For example:
+  <pre>
+var.POSSIBLE_FILE_STATUSES.value="Up-to-date", "Locally Modified", "Locally Added"
+#I18N
+var.POSSIBLE_FILE_STATUSES_LOCALIZED.value="Up-to-date", "Locally Modified", \
+        "Locally Added"
+  </pre></li>
+
+  <li>If (by the previous two cases) one message must be <em>partially</em> localized,
+      
+  the message should be annotated as
+  <code>#PARTI18N</code> or <code>#PARTNOI18N</code> (above
+  the message) indicating the exceptional part of the message. For example,
+  in a properties file not named <samp>Bundle.properties</samp>:
+  <pre>
+#PARTI18N The module name
+EXEC_CHECKOUT_MODULE=${RUN} ${QUOTE}${CVS_EXE}${QUOTE} ${USER_GLOBAL_PARAM} checkout \
+      ${USER_PARAM(-N -R)} ${PROMPT_FOR[SELECTOR_MODULES](The module name)} ${NUR}
+  </pre>
+  Where there is more than one exceptional part, indicate them separated by commas, for example:
+  <pre>
+#PARTI18N Directory to export into, Date, The module name
+EXEC_EXPORT_MODULE_DATE=${RUN} ${CD} ${PROMPT_FOR_DIR(Directory to export into)}&amp;&amp; \
+      ${CVS_EXE} ${USER_GLOBAL_PARAM} export -D ${PROMPT_FOR_DATE_CVS(Date)} \
+      ${USER_PARAM} ${PROMPT_FOR[SELECTOR_MODULES](The module name)} ${NUR}
+  </pre>
+  Analogously, for files named <samp>Bundle.properties</samp> with some nonlocalizable bits
+  in some messages, use <code>#PARTNOI18N</code>.</li>
+
+  <li>Use "&amp;" to denote mnemonic letter in text of <code>JLabel</code>s and buttons and
+  set this text by calling <code>org.openide.awt.Mnemonics</code> helper method.
+  This makes it easier to localize these texts together with assigned mnemonic.<br>
+  If <code>org.openide.awt.Mnemonics</code> cannot be used (for example installer has no access
+  to NetBeans API) then:
+    <ul>
+      <li>Always group label and mnemonic on adjacent lines
+    in a property file (label on the first mnemonic on next)
+      </li>
+      <li>Never resuse a label or mnemonic. When a new
+    mnemonic is added, create a new key/value pair. </li>
+      <li>Mark mnemonic key by adding the suffix <strong>_Mnemonic</strong>> to the label key. </li>
+    </ul>
+</ol>
+
+<p>The bundle debugging mode (above) recognizes these conventions and
+deals with them accordingly. For example, a message marked
+<samp>#NOI18N</samp> in a file <samp>Bundle.properties</samp> will not
+be annotated, though other messages in the same file will. Partial
+localization of messages is not supported; the message will not be
+annotated, and a warning will be printed on the IDE's console to
+remind you.</p>
+
+<p>When <em>changing the format</em> of a bundle value - for example, adding a
+<samp>{0}</samp>-style parameter or removing one, or changing a pair of label and
+mnemonic to just a label to be set with <code>org.openide.awt.Mnemonics</code> -
+always <strong>create a fresh key</strong>. Otherwise it could happen that an
+older localization could supply a value which is not of the correct form, causing
+runtime errors. If you use a fresh key, the worst that can happen is that the
+base locale value will be used; the localizers will notice the change of key name
+when refreshing the localization and be able to confirm that they are using the
+correct new format.</p>
+
+<h2><a name="misc-i18nable">Other localized text (not in source code)</a></h2>
+
+<p>There are files named <samp>README.html</samp> and <samp>LICENSE.txt</samp>
+and localized versions should exist in the same directories:
+by convention,
+<samp>README_<i>LOCALE</i>.html</samp> and <samp>LICENSE_<i>LOCALE</i>.txt</samp>.
+Similarly for other miscellaneous text.</p>
+
+<p>Note that while bundle files should always use Unicode escapes and
+not rely on the platform's encoding, HTML and XML files may specify
+the desired encoding for their bodies using standard metainformational
+tags, for example:</p>
+
+<dl>
+
+  <dt>XML</dt>
+  <dd><samp>&lt;?xml&nbsp;version="1.0"&nbsp;encoding="UTF-8"&nbsp;?&gt;</samp></dd>
+
+  <dt>HTML</dt>
+  <dd><samp>&lt;meta&nbsp;http-equiv="Content-Type"&nbsp;content="text/html;&nbsp;charset=UTF-8"&gt;</samp></dd>
+
+</dl>
+
+<p>Of course you may always use numeric character entity escapes instead.</p>
+
+<p>For textual files not used at runtime (such as licenses), please use UTF-8.</p>
+
+<h2><a name="templates">Templates</a></h2>
+
+<p>Templates can be localized too, if desired. Localized templates would have modified file contents (e.g. code
+comments in a different language). The simplest way to localize template content is to use the
+<code>nbresloc</code> URL protocol in the location of the content when specifying the template in the module's
+XML layer.</p>
+
+<h3><a name="template-descs">Template descriptions</a></h3>
+
+<p>Most templates, especially frequently-used ones, should have template
+descriptions. These are small blocks of HTML to be displayed to a user
+in the New wizard giving an overview of what the template is
+for. Descriptions should be HTML resources within the main module JAR; the API
+Support module provides a convenient way of associating the
+description to the template before packing the template JAR.</p>
+
+<p>All templates should have localized description files, and the template file attributes in the localized JAR
+should point to the localized descriptions; by convention, such descriptions should be named e.g.
+<samp>SomeTemplateDescription_<i>LOCALE</i>.html</samp>. (It is <em>not</em> necessary to localize the
+template's <em>contents</em> just to localize its description.) The URL used may be for example:</p>
+
+<pre>nbresloc:/org/netbeans/modules/html/TemplateHelp.html</pre>
+
+<p>where this URL loads the appropriate locale variant at
+runtime. When doing this, the naming scheme for localized template
+descriptions becomes a requirement rather than a convention.</p>
+
+<h2><a name="loc-file-names">Localized file names</a></h2>
+
+<p>The <em>system filesystem</em> is composed principally of files
+installed by XML layers in enabled modules, sometimes modified by
+overrides in the <samp>system/</samp> subdirectory of the user
+directory. Sometimes these files are presented to the user: templates
+under <samp>Templates/</samp>, for example, are displayed in the
+<b>New</b> dialog.</p>
+
+<p>In some cases the <em>contents</em> of the file suffice to provide
+a pleasant localized name and icon to the user. For example,
+<samp>*.instance</samp> files used to supply
+<code>SystemAction</code>s need no special treatment: the action
+itself provides a display name and icon.</p>
+
+<p>In most cases, however, you will give the file itself a simple,
+unlocalized name, and separately localize its display name.
+(Technically: you are affecting the display name but not the name of
+the data object's node delegate.) This is done with the file attribute
+<code>SystemFileSystem.localizingBundle</code>, which gives the
+abstract name of a resource bundle; in that bundle there should be a
+key named according to the resource path of the virtual (layer) file
+to be localized. Otherwise the raw file name is presented.
+Additionally, <code>SystemFileSystem.icon</code> can give a 16x16 icon
+to use instead of the default icon for that file type.
+(<code>SystemFileSystem.icon32</code> is rarely used but can supply a
+32x32 icon.)</p>
+
+<p>Here then is an example of a module adding a menu with a bookmark,
+and a template:</p>
+
+<table class="tablebg" cellpadding="1" cellspacing="0" border="0" >
+<tr><td>
+<table border="0" cellpadding="3" cellspacing="1" width="100%">
+<tr class="tablehbg">
+<td colspan="2" align="center"><span class="tablehfont">Localizing Bundle and Icon Example</span></td>
+</tr>
+<tr class="tablecbg">
+<td style="text-align: middle"><span class="tablecfont">File Path in JAR</span></td>
+<td style="text-align: middle"><span class="tablecfont">Contents</span></td>
+</tr>
+<tr class="tablerbg">
+<td style="text-align: center"><samp>com/power/module/<br/>resources/layer.xml</samp></td>
+<td>
+<pre>
+&lt;<span class="function-name">filesystem</span>&gt;
+  &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Menu"</span>&gt;
+    &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"PowerBuilder"</span>&gt;
+      &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"SystemFileSystem.localizingBundle"</span>
+            <span class="variable-name">stringvalue</span>=<span class="string">"com.power.module.Bundle"</span>/&gt;
+      &lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="string">"com-power-home-page.url"</span> <span class="variable-name">url</span>=<span class="string">"home-page.url"</span>&gt;
+        &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"SystemFileSystem.localizingBundle"</span>
+              <span class="variable-name">stringvalue</span>=<span class="string">"com.power.module.Bundle"</span>/&gt;
+        &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"SystemFileSystem.icon"</span>
+              <span class="variable-name">urlvalue</span>=<span class="string">"nbresloc:/com/power/module/resources/power.gif"</span>/&gt;
+      &lt;/<span class="function-name">file</span>&gt;
+    &lt;/<span class="function-name">folder</span>&gt;
+  &lt;/<span class="function-name">folder</span>&gt;
+  &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Templates"</span>&gt;
+    &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Power"</span>&gt;
+      &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"SystemFileSystem.localizingBundle"</span>
+            <span class="variable-name">stringvalue</span>=<span class="string">"com.power.module.Bundle"</span>/&gt;
+      &lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="string">"thing.pwr"</span> <span class="variable-name">url</span>=<span class="string">"thing.pwr.template"</span>&gt;
+        &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"SystemFileSystem.localizingBundle"</span>
+              <span class="variable-name">stringvalue</span>=<span class="string">"com.power.module.Bundle"</span>/&gt;
+        &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"SystemFileSystem.icon"</span>
+              <span class="variable-name">urlvalue</span>=<span class="string">"nbresloc:/com/power/module/resources/power.gif"</span>/&gt;
+        &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"template"</span> <span class="variable-name">boolvalue</span>=<span class="string">"true"</span>/&gt;
+        &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"templateWizardURL"</span>
+              <span class="variable-name">urlvalue</span>=<span class="string">"nbresloc:/com/power/module/resources/power.html"</span>/&gt;
+      &lt;/<span class="function-name">file</span>&gt;
+    &lt;/<span class="function-name">folder</span>&gt;
+  &lt;/<span class="function-name">folder</span>&gt;
+&lt;/<span class="function-name">filesystem</span>&gt;
+</pre>
+</td>
+</tr>
+<tr class="tablerbg">
+<td align="center"><samp>com/power/module/<br/>resources/home-page.url</samp></td>
+<td>
+<pre>
+http://www.power.com/powerbuilder/
+</pre>
+</td>
+</tr>
+<tr class="tablerbg">
+<td align="center"><samp>com/power/module/<br/>Bundle.properties</samp></td>
+<td>
+<pre>
+# Mnemonic: Alt-W
+Menu/PowerBuilder=Po&amp;wer Builder
+# Mnemonic: Alt-H
+Menu/PowerBuilder/com-power-home-page.url=Power Builder &amp;Home Page
+Templates/Power=Power
+Templates/Power/thing.pwr=Blank Power Builder Widget
+</pre>
+</td>
+</tr>
+<tr class="tablerbg">
+<td align="center"><samp>com/power/module/<br/>resources/power.gif</samp></td>
+<td>
+<em>a 16x16 color GIF icon</em>
+</td>
+</tr>
+<tr class="tablerbg">
+<td align="center"><samp>com/power/module/<br/>resources/power.html</samp></td>
+<td>
+<pre>
+<span class="variable-name">&lt;html&gt;&lt;body&gt;</span>
+Makes a blank Power Builder widget.
+Not really very exciting.
+<span class="variable-name">&lt;/body&gt;&lt;/html&gt;</span>
+</pre>
+</td>
+</tr>
+<tr class="tablerbg">
+<td align="center"><samp>com/power/module/<br/>resources/thing.pwr.template</samp></td>
+<td>
+<em>contents of the template</em>
+</td>
+</tr>
+</table>
+</td></tr>
+</table>
+
+<h2><a name="layers">Localizing layers</a></h2>
+
+<p>
+ XML layers themselves can be localized in the expected way: <samp>layer_<i>LOCALE</i>.xml</samp> can contain
+ overrides of <samp>layer.xml</samp>. (You can add files or folders, or <q>mask</q> files or folders using
+ special <samp>*_hidden</samp> files, or just replace layer file contents with a variant.) Localizing layers in
+ this way is however quite rare and not nice to potential translators. Usually there is a better way, such as
+ using a single fixed layer entry and looking up localizable text in a separate <samp>Bundle.properties</samp>.
+</p>
+<p>
+ <a href="#branding">Branding</a> layers (see below) is however reasonably common, for example to hide unwanted
+ menu items in an application based on the NetBeans Platform.
+</p>
+
+<h2><a name="images">Images</a></h2>
+
+<p>Images which are localized should be saved as <samp>imageName_<i>LOCALE</i>.gif</samp> or
+<samp>imageName_<i>LOCALE</i>.png</samp>. As usual, the localized image should be stored alongside that in the
+default locale. The filenames of images should not be stored in <samp>Bundle.properties</samp> files, because
+such files should be used for translatable text only. To access localized images, you may use
+<code>Utilities.loadImage(path, true)</code>; or use URLs with the <code>nbresloc</code> protocol, which
+accesses a resource by path (searching all enabled modules) considering also localized variants. Note that
+automatic localization <em>will not</em> change the extension of the image file, so it is preferable to use PNG
+format consistently in place of GIF, and name the base resource with the <samp>.png</samp> extension.</p>
+
+<h2><a name="javahelp">Help documentation</a></h2>
+
+<p>Help documentation should be localized according to the JavaHelp
+specification.
+The <samp>HelpSet.hs</samp> file should be localized as
+<samp>HelpSet_<i>LOCALE</i>.hs</samp> and stored in the same package as the
+default one.
+Additionally, each <em>individual</em> file referred to by the help set (especially
+HTML files) may be individually localized or not; URL links among the
+files can point to the "base" version while in fact a localized (or
+branded, see below) variant may be selected. Furthermore, cross-links
+between files contained in different physical locations (directories
+or JARs) are possible; the base URL for every document is considered
+to be a resource path rather than a physical path. (Offline browsing
+of such links will naturally not work as is.)</p>
+
+<p>For example, using only a single helpset, ID map, and navigation
+view files, all pointing to simple relative URLs, you can create a
+file <samp>moreinfo.html</samp> as well as
+<samp>moreinfo_f4j.html</samp>; the map (<samp>*.jhm</samp>) file as
+well as other HTML files should simply point to e.g.
+<samp>../moreinfo.html</samp>. When browsing offline, of course only
+the base file will be visible. But when viewed in the IDE with
+branding set to e.g. <code>f4j_ce</code>, then only
+<samp>moreinfo_f4j.html</samp> will be displayed. This may be
+convenient when most of a helpset is constant and only a couple of
+files need to be branded or otherwise localized.</p>
+
+<p>Note that XML files used by JavaHelp can specify a file encoding if
+localized text is required in these files (helpset title, etc.).</p>
+
+<h2><a name="module-metainfo">Module names</a></h2>
+
+<p>
+ Modules have several attributes which contain localizable text. They must be placed in a bundle file in the
+ module, and this bundle must be referred to from the manifest, e.g.
+</p>
+<pre>
+OpenIDE-Module-Localizing-Bundle: org/foo/mymodule/Bundle.properties
+</pre>
+<p>
+ Here the file is automatically localizable, so e.g. <code>Bundle_ja.properties</code> would be used in Japanese
+ locale.
+</p>
+<p>
+ The bundle may contain the keys <code>OpenIDE-Module-Name</code>, <code>OpenIDE-Module-Display-Category</code>,
+ <code>OpenIDE-Module-Short-Description</code>, and <code>OpenIDE-Module-Long-Description</code>.
+</p>
+<p>
+ Also, the bundle debug mode (above) will display special annotations for localizable manifest-derived text.
+</p>
+
+<h1><a name="placement">Physical Placement of Localized Resources</a></h1>
+
+<p>In the simplest case, localized resources may simply be placed
+directly inside a module's JAR, distinguished only by their locale
+suffixes in the resource path. For example, a single JAR might have
+both default and Japanese bundles:</p>
+
+<dl>
+<dt><samp>jar:file:/netbeans/ide/modules/mymodule.jar!/com/me/mymod/Some.class</samp></dt>
+<dd>(code referring to <samp>com.me.mymod.Bundle</samp>)</dd>
+<dt><samp>jar:file:/netbeans/ide/modules/mymodule.jar!/com/me/mymod/Bundle.properties</samp></dt>
+<dd><samp>Some_key=Some value in US English</samp></dd>
+<dt><samp>jar:file:/netbeans/ide/modules/mymodule.jar!/com/me/mymod/Bundle_ja.properties</samp></dt>
+<dd><samp>Some_key=\u540c\u671f\u5316</samp></dd>
+</dl>
+
+<p>Though simple, this system may be inconvenient for both users and
+localizers: there is no way to quickly tell if you have resources for
+a given locale available; no way to quickly remove unwanted locales;
+updates to a single localization require patching the entire module;
+and so on. For these reasons, NetBeans supports <em>splitting locale
+variants</em> off from the main contents of a module. For example, the
+module above could be stored as:</p>
+
+<dl>
+<dt><samp>jar:file:/netbeans/ide/modules/mymodule.jar!/com/me/mymod/Some.class</samp></dt>
+<dd>(code referring to <samp>com.me.mymod.Bundle</samp>)</dd>
+<dt><samp>jar:file:/netbeans/ide/modules/mymodule.jar!/com/me/mymod/Bundle.properties</samp></dt>
+<dd><samp>Some_key=Some value in US English</samp></dd>
+<dt><samp>jar:file:/netbeans/ide/modules/locale/mymodule_ja.jar!/com/me/mymod/Bundle_ja.properties</samp></dt>
+<dd><samp>Some_key=\u540c\u671f\u5316</samp></dd>
+</dl>
+
+<p>The rule here is that resources specific to a non-default locale can
+go into a separate JAR file, named according to the master JAR but
+with an appropriate locale suffix, and placed in a subdirectory
+<samp>locale</samp> below the position of the master JAR.
+(<samp>/netbeans/ide/lib/locale/</samp> works too to localize libraries
+present in <samp>/netbeans/ide/lib/</samp>, and similarly
+<samp>/netbeans/ide/modules/ext/locale/</samp>, etc.) If you are using country
+variants or branding (see below), you can analogously split off
+multiple variants, such as
+<samp>/netbeans/ide/modules/locale/mymodule_f4j_ce_ja.jar</samp>.</p>
+
+<p>Remember that resources inside locale variants must still be
+individually marked with locale suffixes! The presence of appropriate
+locale variant JARs just tells the IDE to search these JARs in
+addition to the master JAR, but the lookup is still ultimately
+controlled by the resource names.</p>
+
+<p>The <a href="http://translatedfiles.netbeans.org/">NetBeans translation project</a>
+normally creates these locale variants for modules included in the NetBeans
+distribution.</p>
+
+<p>There is no need to include a manifest in a locale variant JAR file. Any
+manifest present will just be ignored. The name of the JAR alone suffices to
+identify it.</p>
+
+<p>Another feature of locale variants is that you can have a
+<em>default locale variant</em> JAR. This just contains all
+localizable resources for the module, in the default locale.
+Analogously, it is stored in the <samp>locale</samp> subdirectory with
+no suffix. For example:</p>
+
+<dl>
+<dt><samp>jar:file:/netbeans/ide/modules/mymodule.jar!/com/me/mymod/Some.class</samp></dt>
+<dd>(code referring to <samp>com.me.mymod.Bundle</samp>)</dd>
+<dt><samp>jar:file:/netbeans/ide/modules/locale/mymodule.jar!/com/me/mymod/Bundle.properties</samp></dt>
+<dd><samp>Some_key=Some value in US English</samp></dd>
+<dt><samp>jar:file:/netbeans/ide/modules/locale/mymodule_ja.jar!/com/me/mymod/Bundle_ja.properties</samp></dt>
+<dd><samp>Some_key=\u540c\u671f\u5316</samp></dd>
+</dl>
+
+<p>This makes no difference to the IDE, it will continue to load and run
+the JAR as before. But seeing all localizable resources split off this
+way may be helpful to localizers, as it presents a compact summary of
+what is and is not localizable in the module.</p>
+
+<h1><a name="l10n-list">Lists of files to be localized</a></h1>
+
+<p>In each module root directory there should be an
+<samp>l10n.list</samp> file. This file should be kept up to date by
+the module owner and consists of a list of file names which should be
+localized or translated (HTML, <samp>*.properties</samp>, GIF images
+and so on). There must be one line per file or pattern,
+a path in the repository including the name of the module. Each
+line must start with module name. A pattern can use:</p>
+
+<ul>
+  <li><samp>**</samp> matches zero or more path segments of the name
+  (e.g. <samp>**/*.class</samp> matches all <samp>.class</samp>
+  files/dirs in a directory tree)</li>
+  <li><samp>*</samp> matches zero or more characters of the name</li>
+  <li><samp>?</samp> matches one character of the name</li>
+</ul>
+
+<p>Users of the Ant build tool will find the syntax familiar.</p>
+
+<p>Example for <samp>form</samp> module:</p>
+<pre>
+form/src/org/netbeans/modules/form/Bundle.properties
+form/src/org/netbeans/modules/form/actions/Bundle.properties
+form/src/org/netbeans/modules/form/resources/AWTForms.html
+form/src/org/netbeans/modules/form/resources/Application.html
+</pre>
+
+<p>An example using patterns:</p>
+<pre>
+form/**/Bundle.properties
+form/src/org/netbeans/modules/form/resources/*.html
+</pre>
+
+<p>To more easily see which actual files which will be matched by a given pattern, just run:</p>
+
+<pre>
+ant -f nbbuild/build.xml display-l10n-list-matches
+</pre>
+
+<p>and enter a module name when prompted. If run inside NetBeans, you can also click on each match to open the
+file.</p>
+
+<h1><a name="branding">Branded Localization</a></h1>
+
+<p>There is a special feature of <code>NbBundle</code> that permits
+people making distributions of the IDE to conveniently "brand" it,
+i.e. selectively replace a few prominent pieces of messaging,
+images, and so on with specialized versions suited to their product or
+distribution. Since in practice branding-related changes tend to be
+structurally very similar to localization, the IDE permits developers
+to brand items just as they would localize them.</p>
+
+<p>Within the IDE, there are public methods in <code>NbBundle</code>
+to examine and set the current "branding" (much like the default
+locale) - but there is no need to use these directly. Instead, decide
+on a branding token which will identify your brand. For example, Sun
+may use a token such as <samp>f4jce</samp> when creating its Forte for
+Java Community Edition (now Sun ONE Studio - a branded IDE based on NetBeans). Now you may
+create branded resources exactly as you would localized resources. The
+difference is that the search list for bundles and resources will
+include your branding suffix. (This suffix comes before any
+localization suffix, since it takes precedence over the localization
+suffix - though it is unlikely this would ever matter.) For example,
+in Japanese locale the search list for a bundle might look like this:</p>
+
+<ol>
+
+  <li><samp>/some/path/to/your/Bundle_f4jce_ja_JP.properties</samp></li>
+  <li><samp>/some/path/to/your/Bundle_f4jce_ja.properties</samp></li>
+  <li><samp>/some/path/to/your/Bundle_f4jce.properties</samp></li>
+  <li><samp>/some/path/to/your/Bundle_ja_JP.properties</samp></li>
+  <li><samp>/some/path/to/your/Bundle_ja.properties</samp></li>
+  <li><samp>/some/path/to/your/Bundle.properties</samp></li>
+
+</ol>
+
+<p>As with all localizations, searches automatically fall back to
+simpler resources if the specific locale plus branding was not found;
+when using bundle files (with <code>NbBundle.getBundle</code> and
+similar calls), there may be multiple matching bundles, in which case
+any given key will be searched in all available bundles in order (so
+that you can override only the keys you need). This makes it
+convenient to brand the IDE by only <em>adding</em> files and not
+<em>replacing</em> them - just as with localization. For example, a
+given directory which supported both the <code>cs_CZ</code> locale and
+the <code>yoyodyne</code> branding might have files such as these:</p>
+
+<dl>
+
+  <dt><samp>Bundle.properties</samp></dt>
+  <dd><pre>
+MSG_Welcome=Welcome to NetBeans!
+LBL_boring_feature=Choose a color for your text.
+</pre></dd>
+
+  <dt><samp>Bundle_cs.properties</samp></dt>
+  <dd><pre>
+MSG_Welcome=V&#x00ED;t&#x00E1;me V&#x00E1;s v NetBeansu!
+LBL_boring_feature=Vyberte si barvu pro sv&#x016F;j text.
+</pre></dd>
+
+  <dt><samp>Bundle_yoyodyne.properties</samp></dt>
+  <dd><pre>
+MSG_Welcome=Welcome to Yoyodyne HappyBuilder!
+</pre></dd>
+
+  <dt><samp>Bundle_yoyodyne_cs.properties</samp></dt>
+  <dd><pre>
+MSG_Welcome=V&#x00ED;t&#x00E1;me V&#x00E1;s v Yoyodynsk&#x00E9; Stavebni&#x010D;ce!
+</pre></dd>
+
+</dl>
+
+<p>You may also provide a branding token
+separated into segments with underscores. In this case, progressively
+shorter substrings will be searched, just as for locales. For example,
+in plain locale with branding <code>f4j_ce</code>, you would get the
+search sequence:</p>
+
+<ol>
+
+  <li><samp>/some/path/to/your/Bundle_f4j_ce.properties</samp></li>
+  <li><samp>/some/path/to/your/Bundle_f4j.properties</samp></li>
+  <li><samp>/some/path/to/your/Bundle.properties</samp></li>
+
+</ol>
+
+<p>This permits for example a single "brand" to encompass multiple
+"products", where some resources are product-specific and some apply
+across products within a brand, while minimizing the number of
+duplicated resources.</p>
+
+<p>To run the IDE in a particular branding mode, use the
+<samp>--branding</samp> startup switch, e.g.:</p>
+
+<pre>
+--branding yoyodyne
+</pre>
+
+<p>Since branding is generally used to provide product-specific overrides which ideally would live in a
+different location than the base NetBeans product, you are permitted to place branding JARs in
+parallel locations in other clusters. For example, if the NetBeans IDE lives in <samp>/opt/netbeans</samp> with
+clusters like <samp>platform</samp> and <samp>ide</samp>, and then
+<samp>/opt/netbeans/ide/modules/foo.jar</samp> may be branded by
+<samp>/opt/product1/modules/locale/foo_brand.jar</samp> if you pass <samp>--branding&nbsp;brand</samp> and
+<samp>/opt/product1</samp> is a cluster included in the NetBeans-based product.</p>
+
+<h1><a name="discussion">Discussion</a></h1>
+
+<p>If you have comments or questions on this document, or wish to discuss
+localization in the IDE in general, please use the mailing list
+
+<code>nbdev&#64;netbeans.org</code>.
+
+Discussions around UI strategies pertaining to localization may go to
+
+<code>nbui&#64;netbeans.org</code>.
+
+For discussions on use of the Open APIs to support localization of code, please use
+
+<code>dev&#64;openide.netbeans.org</code>.</p>
+
+  <hr/><p>@FOOTER@</p>
+
+</body>
+</html>

@@ -1,0 +1,26 @@
+.t.e.s.t. Comments
+DELIMITER       "<%", la=1, st=3
+RUBY            " for i in 1..1000 ", la=2, st=3
+DELIMITER       "%>", st=0
+TEXT            "\nfix_", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " i ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            ":\n", st=0
+TEXT            "  id: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " i ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  name: guy_", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " 1 ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n", la=3, st=0
+DELIMITER       "<%", la=1, st=3
+RUBY            " end ", la=2, st=3
+DELIMITER       "%>", st=0
+----- EOF -----
+
+<Unnamed test>
+----- EOF -----
+

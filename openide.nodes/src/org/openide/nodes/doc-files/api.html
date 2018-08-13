@@ -1,0 +1,1185 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<html>
+<head>
+<title>Nodes API</title>
+<link rel="Stylesheet" href="../../../../prose.css" type="text/css" title="NetBeans Open APIs Style">
+</head>
+<body>
+
+<p class="overviewlink"><a href="../../../../overview-summary.html">Overview</a></p>
+
+<h1>Javadoc</h1>
+
+The Javadoc for this API resides in
+
+<a href="../package-summary.html"><code>org.openide.nodes</code></a>.
+
+In particular, the class
+
+<a href="../Node.html"><code>Node</code></a>
+
+is the logical starting point.
+
+
+<h1>Contents</h1>
+
+<ul>
+
+<li><a href="#node-intro">What is a Node?</a>
+<ul>
+<li><a href="#javabean-intro">JavaBeans and nodes</a>
+<li><a href="#explorer">Nodes in the Explorer</a>
+<li><a href="#common-types">Common node types</a>
+</ul>
+
+<li><a href="#create">Creating Custom Nodes</a>
+<ul>
+<li><a href="#create-genl">General aspects</a>
+<li><a href="#create-prop">Properties, sets, and sheets</a>
+<li><a href="#create-hier">Hierarchy nodes and their children</a>
+<li><a href="#create-order">Indexing and reordering children</a>
+<li><a href="#create-cookie-act">Cookie and action support</a>
+<li><a href="#create-mod">Installing special nodes from modules</a>
+</ul>
+
+<li><a href="#special">Special Node Usage</a>
+<ul>
+<li><a href="#serial">Serialization and traversal</a>
+<li><a href="#javabean-bridge">JavaBean bridging</a>
+<li><a href="#delegate">Data object delegates</a>
+<li><a href="#filter">Filters and cloning</a>
+<li><a href="#event">Event model</a>
+<li><a href="#edit">Edit operations on nodes</a>
+</ul>
+
+<li><a href="#diagrams">UML diagrams</a>
+<ul>
+<li><a href="#diagram_nodes">General nodes API structure</a>
+<li><a href="#diagram_children">Node children class diagram</a>
+<li><a href="#diagram_events">Node events class diagram</a>
+<li><a href="#diagram_ordering">Node ordering class diagram</a>
+<li><a href="#diagram_properties">Node properties class diagram</a>
+</ul>
+
+</ul>
+
+<h1>Nodes API</h1>
+
+<p>The <b>Nodes API</b> controls the usage and creation of
+<em>nodes</em>, which are a variant of JavaBeans that may have
+adjustable property sets; provide cookies and actions; be visually
+displayed in the Explorer with full hierarchy support; and other
+features.</p>
+
+<div class="nonnormative">
+
+<h2><a name="node-intro">What is a Node?</a></h2>
+
+A node provides the visual representation and apparent behavior of
+most objects in NetBeans. It may be used to represent a data object
+from the Datasystems API (and provide a more UI-friendly wrapper
+around that data object), or it may be created separately for a
+special purpose. For example, every icon displayed in the Explorer is
+a node, and this is the primary UI interface to the entire hierarchy
+of nodes. (Many dialog boxes, the Component Palette, and so on, also
+operate based on nodes, via the Explorer API.)
+
+<p>Nodes themselves ought not be used to hold actual data; that should
+be stored in a data object, or in some other appropriate storage
+mechanism. Rather, they provide a presentation device for existing
+data.
+
+<h3><a name="javabean-intro">JavaBeans and nodes</a></h3>
+
+A node is a sort of extension to the JavaBeans concept, adding some
+features that were necessary for the full functioning of explorer views. Some
+key components that were missing from the
+
+<a href="http://java.sun.com/beans/docs/spec.html">JavaBeans specification</a>:
+
+<ul>
+
+<li>Full hierarchy support. The Java 2
+
+<a href="@JDK@/java/beans/beancontext/package-summary.html">Bean Context API</a>
+
+provides basic support for hierarchies of Beans in a tree structure,
+but not enough to handle the requirements of NetBeans, such as special
+support for various kinds of child containment policies.
+
+<li>Cookies, actions, and other NetBeans-specific interfaces are better
+placed as direct Java-level API requirements, rather than always
+needing to use casts or introspection to determine their availability.
+
+<li>Certain basic operations on nodes, such creating a serializable
+form of the node, or cut-and-paste support, are better implemented as
+an abstract base class.
+
+<li>Most importantly, regular use of JavaBeans requires that
+introspection be used whenever property lists are required for an
+object. This is a very frequent operation which was found to have
+unacceptable overhead. Also, introspection, due to the nature of Java
+and the Bean architecture, prevents dynamic modification of the set of
+properties supported by an object, which the Nodes API permits.
+
+</ul>
+
+That said, the JavaBeans architecture was by no means ignored while
+designing the Nodes system; it was used as a conceptual foundation. To
+blur the distinction, <a href="#javabean-bridge">special node
+implementations</a> are available which wrap around standard JavaBeans
+and present them as nodes, including handling any Bean Context
+available, introspected properties, and so on.
+
+<h3><a name="explorer">Nodes in the Explorer</a></h3>
+
+Using the
+
+<a href="@org-openide-explorer@/org/openide/explorer/doc-files/api.html">Explorer API</a>,
+
+you can create a variety of different
+<em>presentations</em> for any tree or subtree of the Nodes
+hierarchy.
+
+<p>The Explorer interactions with nodes include actions that the node
+provides (generally available in a right-click context menu);
+cookie-based action enabling (so that the node selection affects the
+availability of system actions, like Compile); cut, copy, and paste
+support, as well as reordering of children, deletion, and creation of
+new children; displayable names and icons, which may be sensitive to
+the state of the node; and so on.
+
+<p>Importantly, nodes are not dead data - they are live components.
+So, actions taken in one part of the system will frequently
+cause open Explorer views to refresh to display the new node structure
+(for example, after pasting a component onto a form); and conversely,
+actions that seem natural to do in the Explorer will usually be
+accessible there through its interface and update the rest of the
+system accordingly (for example, deleting a toolbar button in the
+Environment subtree has immediate effect). These capabilities owe to
+the <a href="#event">rich event notification</a> supported by the
+Nodes API.
+
+<h3><a name="common-types">Common node types</a></h3>
+
+This is a partial list of common types of nodes, some more apparent
+than others, to give an idea of what is possible with the API:
+
+<ul>
+
+<li>Data nodes, based on data objects. A simple example would be the
+node created for an HTML file on disk: you can edit it, open it in the
+browser, move it about, and so on.
+
+<p>A more complex example is a Java class representing a form - this
+node actually has one child subtree representing the Java source
+hierarchy (classes, methods, and fields); and one subtree representing
+the AWT/Swing component hierarchy (frames, panels, buttons,
+etc.). Each type of subnode has its own behavior - for example, the
+component nodes can display Layout and Events property sheets, and if
+containers, can permit pasting in of components onto the form.
+
+<li>Data folder nodes, possibly representing Java packages. These
+allow creation of new objects from template, compilation across the
+package, and so on.
+
+<li>A user-developed JavaBean on disk. The user is able to customize
+it, serialize it, and so on.
+
+<li>A node derived from a JavaBean, not representing one - in this
+case, the node's actual behaviors and properties would literally be
+the same as those of the JavaBean. The Bean would not generally be
+stored in a user filesystem, and its node may be present anywhere.
+
+<li>Settings in the (old) Advanced Options. These are used for their
+property sheets, which dynamically modify aspects of NetBeans'
+behavior and persist across sessions.
+
+<li>The Component Palette - the list of tabs, and the components on
+each tab, are actually nodes, and in fact the same nodes as appear in
+the Explorer under the Component Palette folder. The same is true of
+workspaces, actions on the toolbars, and so on.
+
+<li>A breakpoint in the debugger is a node, as well as the folder
+containing all breakpoints. The special Debugger window just displays
+these in a specific way.
+
+<li>A project desktop node contains various files associated only with
+a specific project, as well as settings controlling aspects of that
+project's operation, such as a build procedure.
+
+</ul>
+
+The point is that most aspects of UI integration can be handled well
+with appropriate use of nodes; modules which use them to good effect
+will blend into the rest of NetBeans naturally from a user's perspective,
+and probably be easier to write as well.
+
+</div>
+
+
+<h2><a name="create">Creating Custom Nodes</a></h2>
+
+This section details the steps you must take to create various kinds
+of customized nodes. In simple cases, you need do very little, as
+there exist prebuilt default implementations. For more sophisticated
+nodes, for example containing a structured list of children of a
+particular type (as is the case with e.g. the Active Processes list),
+some more work is necessary, but again much of it will involve
+subclassing existing supports.
+
+<h3><a name="create-genl">General Aspects</a></h3>
+
+All nodes must subclass the general
+
+<a href="../Node.html"><code>Node</code></a>
+
+abstract class. However, in practice it is most common to actually
+subclass a convenient base class,
+
+<a href="../AbstractNode.html"><code>AbstractNode</code></a>,
+
+or one of its subclasses. Your node class needs to specify a list of
+child nodes in the constructor (the contents of which may be changed
+later, but not the identity of the <code>Children</code> object
+itself); for the case of a leaf node, just pass in
+
+<a href="../Children.html#LEAF"><code>Children.LEAF</code></a>.
+
+<p>As this class is not abstract, there are no strict requirements on
+what needs to be overridden. However, the following general methods
+you are likely to want to override:
+
+<ul>
+
+<li><a href="../AbstractNode.html#canCopy--"><code>AbstractNode.canCopy()</code></a>
+
+and related methods (for cutting, renaming, and destroying) are all
+true by default, so that the node may be moved around somewhat
+arbitrarily (though to paste requires the permission of the new
+parent, of course). If it is inappropriate for your node to be
+relocated as data in this way, you should turn these abilities
+off. See the section on <a href="#edit">edit operations</a> for
+details.
+
+<li>The node has two names - a system name and a display name. The
+display name is the human-presentable name actually displayed next to
+the icon in the Explorer, and so forth, and its use is quite free. The
+system name should be set to something simpler, and ought not be
+tampered with gratuitously (unless the node is explicitly
+renamed) - this is because it is used for internal purposes such as
+reconstituting a node after serialization.
+
+<p>You may set these explicitly with
+
+<a href="../Node.html#setName-java.lang.String-"><code>Node.setName(...)</code></a>
+
+and
+
+<a href="../Node.html#setDisplayName-java.lang.String-"><code>Node.setDisplayName(...)</code></a>,
+
+or you may want to take advantage of <code>AbstractNode</code>'s
+ability to have the display name be calculated implicitly from the
+system name by means of a
+
+<a href="../AbstractNode.html#displayFormat">format string</a>.
+
+There is also a
+
+<a href="../Node.html#setShortDescription-java.lang.String-">short description</a>
+
+which is intended for things such as tool tips on the node.
+
+<li>Almost all nodes should have a properly set icon. You may actually
+specify a set of icons according to whether small or large icons are
+to be used, whether the node's hierarchy (if applicable) is expanded
+or collapsed, etc. The best approach is to use
+
+<a href="../AbstractNode.html#setIconBaseWithExtension-java.lang.String-"><code>AbstractNode.setIconBaseWithExtension(...)</code></a>
+
+to set the base name for the icon image resources.
+
+</ul>
+
+<h3><a name="create-prop">Properties, sets, and sheets</a></h3>
+
+There are three levels of organization for node properties:
+
+<ol>
+
+<li><a href="../Node.Property.html"><em>Properties</em></a>,
+
+which represent individual settable properties of the node object,
+with a definition class and so on, very similar to JavaBean properties
+(and in fact extending
+
+<a href="@JDK@/java/beans/FeatureDescriptor.html">Bean features</a>).
+
+<li><a href="../Node.PropertySet.html"><em>Property sets</em></a>,
+
+which are just collections of properties that typically would be
+displayed together - for example, all the event handlers for a form
+component.
+
+<li><a href="../Sheet.html"><em>Sheets</em></a>,
+
+which group together several named property sets - for example, the
+same form component may also have a normal Bean property set
+(foreground, etc.), and an expert set (with rarely-used properties).
+
+</ol>
+
+Nodes are only required to cluster properties into sets, by
+implementing
+
+<a href="../Node.html#getPropertySets--"><code>Node.getPropertySets()</code></a>;
+
+but sheets are convenient to handle, and they may be used from an
+<code>AbstractNode</code>, for example by overriding
+
+<a href="../AbstractNode.html#createSheet--"><code>AbstractNode.createSheet()</code></a>
+
+to provide the basic list of property sets desired for the
+node. (You should get the sheet set you need from it, checking
+whether it really exists yet, add properties to the sheet set, and
+then replace it into the sheet to be sure your changes take
+effect.)
+
+<p>Each property has a few interesting aspects to it:
+
+<ul>
+
+<li>It has a name, frequently corresponding to a Bean property name,
+obtainable from
+
+<a href="@JDK@/java/beans/FeatureDescriptor.html#getName--"><code>FeatureDescriptor.getName()</code></a>.
+
+It may also have a display name, similarly.
+
+<li>It may be read-only, read-write, or (rarely) write-only, according
+to
+
+<a href="../Node.Property.html#canRead--"><code>Node.Property.canRead()</code></a>
+
+and
+
+<a href="../Node.Property.html#canWrite--"><code>Node.Property.canWrite()</code></a>.
+
+<li>It has a defined value type, to which its actual value must be
+assignable, as determined by
+
+<a href="../Node.Property.html#getValueType--"><code>Node.Property.getValueType()</code></a>.
+
+There may also be a
+
+<a href="../Node.Property.html#supportsDefaultValue--">default value</a>.
+
+<li>It may be indexed (i.e. be an array type with access to the
+individual elements).
+
+</ul>
+
+There are a number of support classes from <code>Node.Property</code>
+which provide useful refinements:
+
+<ul>
+
+<li><a href="../PropertySupport.Name.html"><code>PropertySupport.Name</code></a>
+
+creates a property specifically binding the node's name (system name,
+not display name; if you are using <code>AbstractNode</code>, handling
+the system name only should suffice). This support ought to be used by
+any node for which it makes sense for the user to modify the name in
+the property sheet. If modifying the name should be permitted but
+would need to trigger other changes, the support probably would not be
+helpful (or it could be subclassed).
+
+<li><a href="../IndexedPropertySupport.html"><code>IndexedPropertySupport</code></a>
+
+helps create indexed properties.
+
+<li><a href="../PropertySupport.ReadOnly.html"><code>PropertySupport.ReadOnly</code></a>
+
+and similar classes restrict the directionality of the property.
+
+<li><a href="../PropertySupport.Reflection.html"><code>PropertySupport.Reflection</code></a>
+
+helps create a property based on JavaBean introspection.
+
+</ul>
+
+You may group whatever properties are needed for your node into
+different sets as desired (or put them all into one set, if there is
+no useful distinction); note that the property sets are also feature
+descriptors, and so may have internal and display names, etc.
+
+<p>Naturally, common node implementation classes such as
+
+<a href="@org-openide-loaders@/org/openide/loaders/DataNode.html"><code>DataNode</code></a>
+
+may automatically create a sheet with some useful properties on it;
+then this sheet should generally be appended to by overriding
+
+<a href="../AbstractNode.html#createSheet--"><code>AbstractNode.createSheet()</code></a>
+
+and calling the superclass method first.
+
+<p>For complex nodes, such as a system option controlling the
+appearance of an entire editor, it may be cumbersome for the user to
+edit individual properties, especially without getting a holistic
+preview. If this is the case, a customizing GUI component may be
+returned from
+
+<a href="../Node.html#getCustomizer--"><code>Node.getCustomizer()</code></a>,
+
+and
+
+<a href="../Node.html#hasCustomizer--"><code>Node.hasCustomizer()</code></a>
+
+turned on. The exact way in which the customizer will be displayed is
+determined by NetBeans, but typically it will be popped up in a dialog
+or non-modal window; it should be tied to the node's properties
+however appropriate.
+
+<p>If a full customizer is not required, individual properties may
+still have a custom editing style associated with them;
+
+<a href="../Node.Property.html#getPropertyEditor--"><code>Node.Property.getPropertyEditor()</code></a>
+
+is used to look for a property editor, defaulting to the standard
+JavaBeans property editor for the appropriate type.
+
+<p>Note that the Nodes API, unlike JavaBeans, permits a specific
+instance of
+
+<a href="@JDK@/java/beans/PropertyEditor.html"><code>PropertyEditor</code></a>
+
+to be associated with the node, not just its class - so if you override
+<code>getPropertyEditor()</code>, it is possible to select an editor
+based on the current state of the node (for example, a table may have
+a completely different editor when it is bound to a SQL rowset), or to
+keep an initialized editor associated with a node that may have some
+UI state not kept in the node itself.
+
+<h3><a name="create-hier">Hierarchy nodes and their children</a></h3>
+
+Creating a leaf node - a node with no children - is fairly
+straightforward, since the child list may simply be specified as
+
+<a href="../Node.html#EMPTY"><code>Node.EMPTY</code></a>.
+
+To create a hierarchy node that will act as a parent for other nodes,
+you must consider both what type of children it will have, and how
+those children should be managed.
+
+<p>The basic data structure for managing a child list is
+
+<a href="../Children.html"><code>Children</code></a>,
+
+which is not likely to be subclasses directly but rather used in the
+form of one of the support classes available for it. Note that the
+node must keep the same children object throughout its lifetime, and
+the children object is responsible for managing the addition, removal,
+and structure of children under it.
+
+<p>A simple child list may be created with
+
+<a href="../Children.Array.html"><code>Children.Array</code></a>.
+
+You need only create it with the default constructor, and add child
+nodes to it (at any time, or remove them later for that matter) using
+
+<a href="../Children.html#add-org.openide.nodes.Node:A-"><code>Children.add(...)</code></a>.
+
+<p>If it is desirable that the children be sorted when displayed, you can use e.g.
+
+<a href="../Children.SortedArray.html"><code>Children.SortedArray</code></a>
+
+to do this. In this case, the comparator (i.e. sort criteria) can be
+changed at any time.
+
+<p>If the children need to be accessed based on keys, as in a
+hashtable, this is possible with
+
+<a href="../Children.Map.html"><code>Children.Map</code></a>
+
+(and also
+
+<a href="../Children.SortedMap.html"><code>Children.SortedMap</code></a>).
+
+Along similar lines,
+
+<a href="../Children.Keys.html"><code>Children.Keys</code></a>
+
+permits clustering of the children by key, where several children may
+be associated with one key. This class may be especially useful when
+mirroring an external hierarchical system into a node hierarchy, such
+as Java class hierarchies, which need the children to be partitioned
+in a certain way (e.g. methods vs. fields).
+
+<p>This document will not go into the details of subclassing children
+lists, since doing so is not likely to be required very
+frequently - the provided support classes should handle the common
+cases. If it is necessary to subclass, the documentation for
+<code>Children</code> should suffice.
+
+<h3><a name="create-order">Indexing and reordering children</a></h3>
+
+Many structural constraints on children are probably satisfied by the
+children class itself - i.e. using <code>Children.SortedArray</code>
+guarantees that your children will be properly sorted without any work
+beyond providing the comparator. However, for an unsorted child list
+it may be useful to provide support for directed reordering of the
+children.
+
+<p>Generally you will want to make the children rearrangeable by
+the user, as well as by external code. To do so, you should implement the
+
+<a href="../Index.html"><code>Index</code></a>
+
+cookie on your node, which exists to handle this case. This cookie provides ways
+for the user to move particular children around, or to undertake a
+complete rearrangement using a
+
+<a href="../Index.Support.html#showIndexedCustomizer-org.openide.nodes.Index-">dialog box</a>.
+
+There is a generic
+
+<a href="../Index.Support.html">support class</a>
+
+which implements the raw requirements of the cookie, but this is
+usually used in a more friendly form by using a special children
+implementation such as
+
+<a href="../Index.ArrayChildren.html"><code>Index.ArrayChildren</code></a>.
+
+This implementation stores a list of children and makes it
+straightforward for the user to manipulate the order in several ways.
+
+<h3><a name="create-cookie-act">Cookie and action support</a></h3>
+
+One important ability provided by the Nodes API is to associate
+cookies and actions with nodes. What cookies are and how to create
+them is explained in the
+
+<a href="@org-openide-loaders@/org/openide/loaders/doc-files/api.html#cookie">Datasystems API</a>
+
+Actions in general are likewise described by the
+
+<a href="@org-openide-actions@/org/openide/actions/doc-files/api.html">Actions API</a>.
+
+<p>(If your node is actually a
+
+<a href="@org-openide-loaders@/org/openide/loaders/DataNode.html"><code>DataNode</code></a>
+
+representing a data object, there are already some conventions for
+attaching actions and cookies to the node, which prepopulate certain
+entries based on the data loader and/or data object. The Datasystems
+API describes these defaults.)
+
+<p>Attaching cookies to a node, so that it will be considered to
+implement certain behaviors, is quite straightforward. The basic
+interface for retrieving a cookie is
+
+<a href="../Node.html#getCookie-java.lang.Class-"><code>Node.getCookie(...)</code></a>.
+
+However, this is abstract in <code>Node</code>, and also
+<code>Node</code> itself does not set any policy for settings up the
+cookies for a node or changing them.
+
+<p>Rather, if you are subclassing <code>AbstractNode</code>, you may
+use
+
+<a href="../AbstractNode.html#setCookieSet-org.openide.nodes.CookieSet-"><code>AbstractNode.setCookieSet(...)</code></a>
+
+to specify a set of cookies to be returned by the node (and you should
+merge your cookies with those provided by the superclass, as a
+rule). The
+
+<a href="../CookieSet.html"><code>CookieSet</code></a>
+
+is a simple container for cookies looked up by their representation
+class. The <code>AbstractNode</code> will then use this as an index
+for implementing <code>getCookie(...)</code>.
+
+<p>To attach actions to a node, which are listed by
+
+<a href="../Node.html#getActions--"><code>Node.getActions()</code></a>
+
+(and sometimes a primary and obvious action in
+
+<a href="../Node.html#getDefaultAction--"><code>Node.getDefaultAction()</code></a>),
+
+you should merge the superclass' actions into your own (if desired),
+and override e.g.
+
+<a href="../AbstractNode.html#createActions--"><code>AbstractNode.createActions()</code></a>,
+
+which is called to set up the actions list when
+<code>getActions()</code> is first called.
+
+<p>These actions may be used by various UI components to clearly
+associate commands with the node, e.g. by providing them in a pop-up
+menu.
+
+<a href="../Node.html#getDefaultAction--"><code>Node.getDefaultAction()</code></a>
+
+and
+
+<a href="../Node.html#getContextActions--"><code>Node.getContextActions()</code></a>
+
+provide more refined variants of the actions list which may be
+appropriate for different presentations. Nodes with unusual needs for
+action presentation can override
+
+<a href="../Node.html#getContextMenu--"><code>Node.getContextMenu()</code></a>
+
+to define a particular UI for this presentation.
+
+<h3><a name="create-mod">Installing special nodes from modules</a></h3>
+
+Frequently nodes will be created secondarily, especially as a result
+of being delegates to data objects (in which case their creation is
+under the control of the data loader pool). However, for some modules
+it is appropriate to specially install nodes into defined places in
+the system.
+
+<p>Currently, system gives you ability to automatically install a node of your choice
+into (currently three) common places in the IDE:</p>
+
+<ul>
+
+<li><p>Runtime nodes are installed in the Explorer's
+Runtime hierarchy. This may be used for modules which need to
+provide user-level access to some transient aspect of the module's
+operation not otherwise apparent. For example, an HTTP filesystem
+might want to provide a node under the Runtime displaying
+information about its cache, and permitting operations such as
+clearing the cache.<br>
+Nodes of such type should be placed in the <samp>UI/Runtime/</samp> folder
+using <samp>*.instance</samp> syntax, 
+simply specifying class of the node in question.</p></li>
+
+<li><p>Root nodes are installed as roots for a whole new
+hierarchy. These roots may be displayed as switchable tab panes in the
+Explorer, to visually represent each root in parallel. Please do not
+create a new root without a compelling UI justification.<br>
+Nodes of type <samp>Root</samp> should be
+placed in the <samp>Windows/Components/</samp> folder using <samp>*.settings</samp> syntax, 
+defining org.openide.explorer.ExplorerPanel type of component. Use ability of 
+<samp>*.settings</samp> file to specify creator method to asociate explorer panel
+with your root node. Consult <a href="@org-openide-windows@/org/openide/windows/doc-files/api.html#xml">Winsys API,
+xml layers section</a> for details.</p></li>
+
+<li><p>Session nodes, appropriate to items which are neither transient nor
+project-oriented, are installed in the Tools/Options area, highest level.<br>
+Nodes of type <samp>Session</samp> should be
+placed in the <samp>UI/Services/</samp> folder, again using
+<samp>*.instance</samp> syntax.</p></li>
+
+</ul>
+
+<p>The basic definition of how settings in layers work is given in the
+<a href="@org-openide-util-ui@/org/openide/util/doc-files/api.html#settings">Services API</a>.
+
+
+<h2><a name="special">Special Node Usage</a></h2>
+
+There are a few sorts of special operations and techniques which it
+may be useful to apply to nodes, either in the course of implementing
+a node or node hierarchy, or just using nodes from other code.
+
+<h3><a name="serial">Serialization and traversal</a></h3>
+
+If you need to store (serialize) a node for any reason, this is
+generally impossible due to the welter of Java-level references
+connecting it to the rest of the system. Rather, you must use a
+special serializable handle which represents the node by its position
+in the hierarchy, and permits finding the original node again after
+deserialization (if it still exists). To create a handle, just call
+
+<a href="../Node.html#getHandle--"><code>Node.getHandle()</code></a>,
+
+and to restore the node call
+
+<a href="../Node.Handle.html#getNode--"><code>Node.Handle.getNode()</code></a>.
+
+<p>Creation of a usable handle is implemented in
+<code>AbstractNode</code>, and you should not need to override
+it. However, note that a handle consists of a handle for the root node
+of the target node's hierarchy together with a path (by system name)
+down to the target node; so if you are creating a root node, and want
+it or its children to be serializable, then you should create a
+specific implementation of <code>Node.Handle</code> capable of
+reconstructing your root from scratch, and return it from
+<code>Node.getHandle()</code>.
+
+<p>The methods in <code>NodeOp</code> such as
+
+<a href="../NodeOp.html#findPath-org.openide.nodes.Node-java.lang.String:A-"><code>NodeOp.findPath(...)</code></a>
+
+may also be used for general-purpose navigation along the hierarchy,
+should this be necessary.
+
+<h3><a name="javabean-bridge">JavaBean bridging</a></h3>
+
+It is possible to create a node which picks up its node behavior from
+an underlying JavaBean. That is, Bean introspection will be used to
+determine its properties (also categorizing them into normal, expert,
+and hidden property sets), find a customizer for it if the Bean
+specifies one, look for an icon from the BeanInfo, implement copying
+via serialization, create children according to Bean Context, and so
+on.
+
+<p>Since most of this behavior is automatic and driven by the
+JavaBeans API, you need do little to use it: just create a node using
+
+<a href="../BeanNode.html#BeanNode-java.lang.Object-"><code>new BeanNode(...)</code></a>.
+
+<p class="nonnormative">Do not confuse such a bean node, which may be any sort of node that
+just happens to use the JavaBeans API to implement its behavior, with
+the specific kind of node created to represent a data object whose
+file is found to be a JavaBean (serialized, or as a class) - this
+latter type of node behaves in most respects like any other data node,
+and just adds a couple of features like a Customize action.
+
+<h3><a name="delegate">Data object delegates</a></h3>
+
+Many nodes serve primarily to represent a data object, which would
+otherwise be invisible to the user. While such data nodes may be
+customized like any other node, including creating node hierarchies
+(even for non-folder data objects), there are special considerations
+and supports for creating these. Please refer to the
+
+<a href="@org-openide-loaders@/org/openide/loaders/doc-files/api.html#delegate">Datasystems API</a>
+
+for details.
+
+<h3><a name="filter">Filters and cloning</a></h3>
+
+Under some circumstances, it may be useful to create a node which does
+nothing except serve as a sort of symbolic link to another primary
+node; this may be used when the visual organization of a hierarchy
+requires one object to appear in more than one place. In such a case,
+you may use
+
+<a href="../FilterNode.html#FilterNode-org.openide.nodes.Node-"><code>new FilterNode(...)</code></a>
+
+to create such a proxy.
+
+<p>Or, you may use
+
+<a href="../AbstractNode.html#cloneNode--"><code>AbstractNode.cloneNode()</code></a>
+
+to create the filter if the node does not intrinsically support
+
+<a href="@JDK@/java/lang/Cloneable.html"><code>Cloneable</code></a>,
+
+or to really clone it if it does. Note that a properly-designed node
+does not actually store real data, but just provides an interface to
+that data; and so it is reasonable to implement <code>Cloneable</code>
+to provide a new node attached to the same data, if that behavior is
+desired. Some nodes, such as <code>DataNode</code>s, do not do this,
+as such behavior would be contrary to the UI goal of having a data
+node live in one place in the Repository according to the position of
+the data object and primary file object.
+
+<h3><a name="event">Event model</a></h3>
+
+Every interesting aspect of nodes may be listened to using the Java
+Event Model, as is routine in the IDE:
+
+<ul>
+
+<li>Changes to the basic structure or presence of nodes may be
+listened to. Attach a listener with
+
+<a href="../Node.html#addNodeListener-org.openide.nodes.NodeListener-"><code>Node.addNodeListener(...)</code></a>.
+
+This will report the changes mentioned directly in
+<code>NodeListener</code>, as well as several varieties of standard
+property changes (since <code>NodeListener</code> extends
+<code>PropertyChangeListener</code>): node name, parent, cookies,
+property sets (i.e. the available properties, <em>not</em> their
+values), and icons.
+
+<li>Changes to the values of node properties may be listened to;
+attach to
+
+<a href="../Node.html#addPropertyChangeListener-java.beans.PropertyChangeListener-"><code>Node.addPropertyChangeListener(...)</code></a>.
+
+This will report only changes relating to the exposed Bean-like
+properties of the node, <em>not</em> intrinsic properties like the
+parent.
+
+<li><a href="../CookieSet.html#addChangeListener-javax.swing.event.ChangeListener-">Cookie sets</a>,
+
+<a href="../Sheet.Set.html#addPropertyChangeListener-java.beans.PropertyChangeListener-">property sets</a>,
+
+and
+
+<a href="../Sheet.html#addPropertyChangeListener-java.beans.PropertyChangeListener-">property sheets</a>
+
+may all have listeners attached to them individually, although generally it
+is easier just to listen to the node holding them.
+
+</ul>
+
+<h3><a name="edit">Edit operations on nodes</a></h3>
+
+Nodes can support a variety of mechanisms for the basic edit
+operations.
+
+<h4>Simple operations</h4>
+
+<p>There are some simple node-level operations which do not need to
+use data transfer.
+
+<a href="../AbstractNode.html#setName-java.lang.String-"><code>AbstractNode.setName(...)</code></a>
+
+and
+
+<a href="../Node.html#destroy--"><code>Node.destroy()</code></a>
+
+may simply be overridden to handle customized renames and
+deletes. (Or, you could attach a <code>NodeListener</code> to take
+action after the fact, if that suffices.)
+
+<p>Supporting creation of fresh children is possible by overriding
+
+<a href="../Node.html#getNewTypes--"><code>Node.getNewTypes()</code></a>
+
+to provide a list of new types of data which can be created under your
+node. Each of these should implement
+
+<a href="@org-openide-util-ui@/org/openide/util/datatransfer/NewType.html#create--"><code>NewType.create()</code></a>
+
+to actually create a new child. Make sure that you include
+
+<a href="@org-openide-actions@/org/openide/actions/NewAction.html"><code>NewAction</code></a>
+
+in your
+
+<a href="../Node.html#getActions--">list of actions</a>.
+
+<h4>Data transfer</h4>
+
+By default, nodes provide hooks to permit other objects to receive
+them as pastes, and to permit other objects to paste to them, but do
+not provide any particular hookup between the two sides.
+
+<p>Certain standard subclasses of <code>AbstractNode</code> (such as the
+
+<a href="@org-openide-loaders@/org/openide/loaders/DataNode.html"><code>DataNode</code></a>
+
+commonly used to represent data objects) already have special
+implementations of data transfer appropriate to your task (such as
+actually moving a file object to a new folder), which may eliminate the need to deal
+with it directly.</p>
+
+<div class="nonnormative">
+
+<h5>Flow of control during node data transfer</h5>
+
+If you want to do more complex customization of node cut-copy-paste,
+or if you are debugging such an implementation, you will want to
+understand the flow of control, which is fairly subtle. This section
+will also be helpful for understanding the NetBeans
+
+<a href="@org-openide-loaders@/org/openide/loaders/doc-files/api.html#clipboard">data-transfer system</a>
+
+in general.
+
+<p>This flow assumes a copy-and-paste operation. Cut-and-paste is
+rather similar (the source node would be destroyed rather than cloned,
+typically). Also, use of <code>AbstractNode</code>s is assumed;
+otherwise the nodes involved would have to implement more.
+
+<p>The scenario is that Node B permits other nodes to be pasted into
+it, creating shortcuts; the user wants to create a shortcut to some
+arbitrary Node A.
+
+<ol>
+
+<li>The user selects node A. The action
+
+<a href="@org-openide-actions@/org/openide/actions/CopyAction.html">Copy</a>
+
+is enabled (from a context menu, the Edit menu, etc.), because node A
+indicated it could be copied using
+
+<a href="../Node.html#canCopy--"><code>Node.canCopy()</code></a>
+
+(turned on in <code>AbstractNode</code>).
+
+Note that
+
+<a href="@org-openide-explorer@/org/openide/explorer/ExplorerUtils.html"><code>ExplorerUtils</code></a>
+
+provides the regular implementation of <code>CopyAction</code> for any
+
+<a href="@org-openide-windows@/org/openide/windows/TopComponent.html"><code>TopComponent</code></a>.
+
+<li>The user invokes the Copy action.
+
+<a href="../AbstractNode.html#clipboardCopy--"><code>AbstractNode.clipboardCopy()</code></a>
+
+is called. It creates a transferable supporting only one flavor, which is invisible
+to the APIs. The creation of this transferable is done by a special utility method which
+hides the data flavor and transferables contents:
+
+<a href="../NodeTransfer.html#transferable-org.openide.nodes.Node-int-"><code>NodeTransfer.transferable(...)</code></a>.
+
+The copy action
+
+<a href="@JDK@/java/awt/datatransfer/Clipboard.html#setContents-java.awt.datatransfer.Transferable-java.awt.datatransfer.ClipboardOwner-">sets</a>
+
+that transferable to the clipboard.
+
+<li>Some time later, the user selects node B, a node capable of
+holding children. One effect of the change in selection is that the
+
+<a href="@org-openide-actions@/org/openide/actions/PasteAction.html">Paste</a>
+
+action checks to see if it should be enabled. To do so, it checks node
+B's
+
+<a href="../AbstractNode.html#getPasteTypes-java.awt.datatransfer.Transferable-"><code>AbstractNode.getPasteTypes(...)</code></a>,
+
+which in turns calls
+
+<a href="../AbstractNode.html#createPasteTypes-java.awt.datatransfer.Transferable-java.util.List-"><code>AbstractNode.createPasteTypes(...)</code></a>
+
+to do the work.
+
+<p>Now, <code>AbstractNode</code>'s implementation of
+<code>createPasteTypes(...)</code> only allows one data flavor to be
+accepted by the node (so-called "intelligent pastes"); this flavor is
+hidden from the APIs but can be tested for in a transferable using
+
+<a href="../NodeTransfer.html#findPaste-java.awt.datatransfer.Transferable-"><code>NodeTransfer.findPaste(Transferable)</code></a>.
+
+This is not the flavor that was provided by the copy, so no paste type
+is created in the super method. However, Node B
+in this example was specifically expecting to get copied nodes pasted
+into it, so it overrode <code>createPasteTypes(...)</code> like this:
+
+<pre>
+public class Shortcuts extends AbstractNode {
+  public Shortcuts () {
+    super (new Index.ArrayChildren ());
+    setName ("Shortcuts");
+    getCookieSet ().add (ch);
+  }
+  protected SystemAction[] createActions () {
+    return new SystemAction[] {
+      SystemAction.get (ReorderAction.class),
+      null,
+      SystemAction.get (PasteAction.class)
+    };
+  }
+  protected void createPasteTypes(Transferable t, List ls) {
+    final Node[] ns = NodeTransfer.nodes (t, NodeTransfer.COPY);
+    if (ns != null) {
+      ls.add (new PasteType () {
+        public Transferable paste () throws IOException {
+          Node[] nue = new Node[ns.length];
+          for (int i = 0; i < nue.length; i++)
+            nue[i] = ns[i].cloneNode ();
+          getChildren ().add (nue);
+          return null;
+        }
+      });
+    }
+    // Also try superclass, but give it lower priority:
+    super.createPasteTypes(t, ls);
+  }
+}
+</pre>
+
+Nothing is actually pasted yet. However, one paste type, that
+provided by Node B, has been added to the set of paste types. So, the
+Paste action sees that there is an option to paste, and provides a
+context menu item (by default labelled "Paste"), enables the toolbar
+button, etc.
+
+<li>The user selects this action. The paste type's
+<code>paste()</code> method is actually called, making an alias of
+Node A and inserting it as one of B's children. The method returns
+<code>null</code>, so the clipboard is left alone.
+
+</ol>
+
+</div>
+
+<h5>Directions of implementation</h5>
+
+The data transfer process, here looking at nodes, may be implemented
+from various directions:
+
+<ul>
+
+<li>Nodes may add more specialized data flavors in their cut or copy
+operations. Here is an example, permitting the display name of the
+node to be pasted (e.g. to the system clipboard) after it is copied:
+
+<pre>
+public Transferable clipboardCopy () throws IOException {
+  Transferable deflt = super.clipboardCopy ();
+  ExTransferable added = ExTransferable.create (deflt);
+  added.put (new ExTransferable.Single (DataFlavor.stringFlavor) {
+    protected Object getData () {
+      return getDisplayName ();
+    }
+  });
+  return added;
+}
+</pre>
+
+<li>Nodes may accept particular paste types to be pasted onto or into
+them. The example above demonstrated this; Node B specially indicated
+that it would accept other nodes to be pasted in. In a similar way, it
+could have permitted strings from the clipboard to be pasted onto it,
+performing some action of its choice.
+
+<p>If the node winds up having multiple paste types available at once,
+NetBeans may display all of them, say in a submenu. They will be
+displayed in the same order as they were added.
+
+<li>Since <code>AbstractNode</code> by default just looks for the secret data
+flavor represented by
+
+<a href="../NodeTransfer.html#createPaste-org.openide.nodes.NodeTransfer.Paste-"><code>NodeTransfer.createPaste(Paste)</code></a>
+
+and
+
+<a href="../NodeTransfer.html#findPaste-java.awt.datatransfer.Transferable-"><code>NodeTransfer.findPaste(Transferable)</code></a>,
+
+any part of the
+system that wants to be able to paste to nodes can do so without
+rewriting the node - provided it knows exactly what to do with the
+target node, of course! For example, the following copy implementation
+sets the display name of the target node to be the same as that of
+the current node:
+
+<pre>
+public Transferable clipboardCopy () throws IOException {
+  Transferable default = super.clipboardCopy ();
+  ExTransferable added = ExTransferable.create (default);
+  added.put (NodeTransfer.createPaste (new NodeTransfer.Paste () {
+    public PasteType[] types (final Node target) {
+      return new PasteType[] {
+        new PasteType () {
+          public Transferable paste () throws IOException {
+            target.setDisplayName (getDisplayName ());
+            // Clear the clipboard:
+            return ExTransferable.EMPTY;
+          }
+        }
+      };
+    }
+  }));
+  return added;
+}
+</pre>
+
+Of course, it would be possible to directly insert a
+transferable such as the one created here into the system
+clipboard, without needing to have <code>CopyAction</code> be
+invoked on a node, if that were the desired behavior. Then the
+transferable derived from <code>NodeTransfer.createPaste</code>
+could be added directly to the system clipboard (use lookup on <code>Clipboard</code>),
+
+or added as an alternate flavor to any transferable already there.
+
+<li>Other parts of the system which want to enable themselves to be
+pasted to from nodes may do so by accepting transferables in the
+clipboard satisfying
+
+<a href="../NodeTransfer.html#node-java.awt.datatransfer.Transferable-int-"><code>NodeTransfer.node(...)</code></a>,
+
+<a href="../NodeTransfer.html#nodes-java.awt.datatransfer.Transferable-int-"><code>NodeTransfer.nodes(...)</code></a>,
+
+or
+
+<a href="../NodeTransfer.html#cookie-java.awt.datatransfer.Transferable-int-java.lang.Class-"><code>NodeTransfer.cookie(...)</code></a>;
+
+then no special
+cooperation is required from the node (provided it is an
+<code>AbstractNode</code> or similarly implements
+<code>clipboardCopy()</code> and <code>clipboardCut()</code>).
+
+<li>Clipboard convertors permit any module in the system to
+manipulate how the clipboard flavors will be used, without needing
+direct control over either the source or target of the
+transfer. For example, you could write a convertor which would
+permit any string selection in the clipboard (say, placed there by
+the Editor) to be pasted onto node having
+
+<code>ClassElement</code> (from <samp>java-src-model.jar</samp>)
+
+as a cookie by way of inserting a new method with that name. Such a
+convertor should work with any editor, as well as with any implementation
+of the source hierarchy that provides the correct cookies. Care should be
+take, however, <strong>not to override</strong> existing flavors in the
+clipboard that might be more critical to users. E.g., do not add a
+<code>DataFlavor.stringFlavor</code> transferable if one already exists,
+or some important piece of functionality may be lost. In the case of intelligent
+node pastes, you could actually merge your own intelligent node paste into
+an existing one (several levels of inner classes would be required!).
+
+</ul>
+
+<div class="nonnormative">
+
+<h2><a name="diagrams">UML Diagrams</a></h2>
+
+First class diagram listed shows structure of the API in general, all other
+diagrams provides specialized view of specific section of the API.
+
+<h3><a name="diagram_nodes">General node structure class diagram</a></h3>
+
+<img src="nodes.gif" alt="general UML">
+
+<h3><a name="diagram_children">Node children class diagram</a></h3>
+
+<img src="children.gif" alt="children UML">
+
+<h3><a name="diagram_events">Node events class diagram</a></h3>
+
+<img src="events.gif" alt="events UML">
+
+<h3><a name="diagram_ordering">Node ordering class diagram</a></h3>
+
+<img src="ordering.gif" alt="ordering UML">
+
+<h3><a name="diagram_properties">Node properties class diagram</a></h3>
+
+<img src="properties.gif" alt="properties UML">
+
+</div>
+
+<hr>@FOOTER@
+
+</body>
+</html>

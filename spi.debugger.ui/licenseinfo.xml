@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/debugger/resources/actions/StepOut.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/Comment.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/Continue.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/NewWatch24.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/Kill.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/Finish.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/RunToMethod24.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/GoToCallingMethod.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/StepOut24.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/Attach.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/StepOver.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/Fix.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/RunToCursor.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/StepOverOperation.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/Pause.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/Folder.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/RunToMethod.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/DebuggerWindow.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/Attach24.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/Start.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/StepOver24.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/GoToCalledMethod.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/NewWatch.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/DebugProject.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/Fix24.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/StepInto24.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/RunToCursor24.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/StepOverOperation24.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/Continue24.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/StepInto.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/Pause24.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/actions/Kill24.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/debugSingle24.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/debugSingle.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/watchesView/FixedWatch.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/watchesView/create_new_watch_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/watchesView/SuperVariable.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/watchesView/StaticField.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/watchesView/PackageModifier.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/watchesView/ProtectedModifier.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/watchesView/Watch.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/watchesView/StaticModifier.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/watchesView/Field.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/watchesView/SyntheticModifier.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/watchesView/InheritedModifier.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/watchesView/PublicModifier.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/watchesView/PrivateModifier.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/watchesView/watch_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/watchesView/watch_type2_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/watchesView/watch_type3_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/debugTestSingle.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/evaluator/drop_down_arrow.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/evaluator/evaluator_result_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/evaluator/eval_history.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/evaluator/history_node_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/evaluator/eval_history_item.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/evaluator/evaluate.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/wrong_pass.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/debuggingView/resume_button_pressed_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/debuggingView/alphabetic_sort_order_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/debuggingView/thread_group_suspended_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/debuggingView/monitor_acquired_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/debuggingView/suspend_button_pressed_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/debuggingView/info_big.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/debuggingView/show_suspend_table_option_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/debuggingView/natural_sort_order_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/debuggingView/unvisited_bpkt_arrow_small_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/debuggingView/suspend_button_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/debuggingView/resume_button_focused_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/debuggingView/show_system_threads_option_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/debuggingView/resume_button_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/debuggingView/show_fqn_option_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/debuggingView/suspend_property_sort_order_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/debuggingView/unvisited_bpkt_arrow_big_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/debuggingView/debugging_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/debuggingView/show_suspended_threads_option_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/debuggingView/thread_group_running_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/debuggingView/suspend_button_focused_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/debuggingView/thread_group_mixed_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/classesView/Classes.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/localsView/LocalVariablesGroup.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/localsView/LocalVariable.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/localsView/show_watches_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/localsView/show_evaluator_result_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/localsView/local_variable_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/allInOneView/AllInOne.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/allInOneView/monitor_acquired_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/allInOneView/ContendedMonitor.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/allInOneView/Monitor.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/allInOneView/OwnedMonitors.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/allInOneView/Locals.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/allInOneView/CallStack.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/allInOneView/waiting_on_monitor_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/empty.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/sessionsView/Starting.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/sessionsView/Stopped.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/sessionsView/PausedOnBreakpoint.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/sessionsView/Paused.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/sessionsView/CurrentSession.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/sessionsView/Running.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/sessionsView/Session.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/sessionsView/session_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/jpdaDebugging.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/debugTestSingle24.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/sourcesView/sources_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/breakpointsView/NonLineBreakpoint_broken.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/breakpointsView/DisabledBreakpointHit.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/breakpointsView/ConditionalBreakpoint.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/breakpointsView/NonLineBreakpointHit.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/breakpointsView/BreakpointHit_broken.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/breakpointsView/ConditionalBreakpoint_broken.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/breakpointsView/DeactivatedDisabledBreakpoint.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/breakpointsView/NewBreakpoint.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/breakpointsView/DisabledConditionalBreakpoint.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/breakpointsView/NonLineBreakpoint.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/breakpointsView/BreakpointHit.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/breakpointsView/DisabledNonLineBreakpointHit.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/breakpointsView/DeactivatedBreakpoint.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/breakpointsView/DisabledNonLineBreakpoint.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/breakpointsView/ConditionalBreakpointHit.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/breakpointsView/Breakpoints.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/breakpointsView/DisabledBreakpoint.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/breakpointsView/BreakpointGroups_options_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/breakpointsView/Breakpoint.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/breakpointsView/Breakpoint_broken.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/Breakpoint_broken.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/Breakpoint_stroke.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/CallSite.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/MultiBreakpoint+PC_stroke.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/DisabledBreakpoint+PC_stroke.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/DisabledConditionalBreakpoint.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/other_threads_suspended.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/ConditionalBreakpoint_broken.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/ConditionalBreakpoint_stroke.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/MultiBreakpoint_stroke.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/MultiDisabledBreakpoint.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/other_threads_breakpoint_arrow.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/Breakpoint+PC_stroke.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/ConditionalBreakpoint+PC_broken.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/Breakpoint_nonline_broken.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/DisabledConditionalBreakpoint+PC.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/MultiBreakpoint+PC.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/DisabledBreakpoint_nonline.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/PC.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/Breakpoint.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/MultiDisabledBreakpoint+PC.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/Breakpoint_nonline.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/ConditionalBreakpoint+PC.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/DisabledConditionalBreakpoint_stroke.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/MultiBreakpoint_broken.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/DisabledBreakpoint_stroke.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/Breakpoint+PC_broken.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/MultiDisabledBreakpoint+PC_stroke.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/Breakpoint_nonline_stroke.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/DisabledBreakpoint.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/other_threads_arrow.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/DisabledConditionalBreakpoint.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/Breakpoint+PC.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/other_threads_breakpoint.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/MultiBreakpoint.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/DisabledBreakpoint_nonline_stroke.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/Breakpoint_nonline+PC.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/ConditionalBreakpoint.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/DisabledBreakpoint+PC.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/MultiBreakpoint+PC_broken.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/editor/MultiDisabledBreakpoint_stroke.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/callStackView/CurrentFrame.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/callStackView/call_stack_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/callStackView/NonCurrentFrame.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/debuggerExecution.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/debugProject.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/threadsView/thread_zombie_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/threadsView/thread_at_non_line_bpkt_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/threadsView/thread_at_line_bpkt_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/threadsView/ThreadGroup.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/threadsView/CurrentThreadGroup.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/threadsView/RunningThread.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/threadsView/thread_suspended_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/threadsView/CurrentThread.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/threadsView/call_stack_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/threadsView/thread_running_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/threadsView/thread_at_conditional_bpkt_16.png</file>
+        <file>src/org/netbeans/modules/debugger/resources/threadsView/SuspendedThread.gif</file>
+        <file>src/org/netbeans/modules/debugger/resources/debugProject24.png</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

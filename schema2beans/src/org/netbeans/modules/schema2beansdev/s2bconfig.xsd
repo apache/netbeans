@@ -1,0 +1,543 @@
+<?xml version="1.0"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!--
+Run
+   ant genmetadd
+Whenever content in this file is changed, in order to regenerate.
+Regeneration is an explicit step, since there's a circular dependency here.
+-->
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:java="http://schema2beans.netbeans.org/javaTypes" xmlns:s2b="http://schema2beans.netbeans.org">
+  <element name="s2bConfig">
+	<complexType>
+	  <sequence>
+		<element name="schemaType" type="string" default="xmlschema"/>
+		<element name="traceParse" type="boolean" minOccurs="0"/>
+		<element name="traceGen" type="boolean" minOccurs="0"/>
+		<element name="traceMisc" type="boolean" minOccurs="0"/>
+		<element name="traceDot" type="boolean" minOccurs="0"/>
+		<element name="filename" type="java:java.io.File" minOccurs="0">
+		  <annotation>
+			<documentation>filename is the name of the schema (eg, DTD) input file</documentation>
+			<appinfo>
+			  <s2b:switch>f</s2b:switch>
+			  <s2b:switchHelp>file name of the schema</s2b:switchHelp>
+			  <!-- <s2b:switchMandatory>true</s2b:switchMandatory> -->
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="fileIn" type="java:java.io.InputStream" minOccurs="0">
+		  <annotation>
+			<documentation>fileIn is the InputStream version of filename.  If fileIn is set, then filename is ignored.</documentation>
+		  </annotation>
+		</element>
+		<element name="docRoot" type="string" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>d</s2b:switch>
+			  <s2b:switchHelp>DTD root element name (for example webapp or ejb-jar)</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="rootDir" type="java:java.io.File" default='new java.io.File(".")'>
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>r</s2b:switch>
+			  <s2b:switchHelp>base root directory (root of the package path)</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="packagePath" type="string" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>p</s2b:switch>
+			  <s2b:switchHelp>package name</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="indent" type="string" default="&#x09;">
+		</element>
+		<element name="indentAmount" type="int" default="0" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>sp</s2b:switch>
+			  <s2b:switchHelp>set the indentation to use 'number' spaces instead of the default tab (\t) value</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="mddFile" type="java:java.io.File" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>mdd</s2b:switch>
+			  <s2b:switchHelp>provides extra information that the schema cannot provide. If the file doesn't exist, a skeleton file is created and no bean generation happens.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="mddIn" type="java:java.io.InputStream" minOccurs="0">
+		  <annotation>
+			<documentation>If mddIn is set, then the mdd file is read from there and we don't write out own.</documentation>
+		  </annotation>
+		</element>
+		<element name="metaDD" type="java:org.netbeans.modules.schema2beansdev.metadd.MetaDD" minOccurs="0"/>
+		<element name="doGeneration" type="boolean" default="true"/>
+		<element name="scalarException" type="boolean" default="true">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>noe</s2b:switch>
+			  <s2b:switchHelp>do not throw the NoSuchElement exception when a scalar property has no value, return a default '0' value instead (BaseBean only).</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="dumpToString" type="boolean" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>ts</s2b:switch>
+			  <s2b:switchHelp>the toString() of the bean returns the full content\n  of the bean sub-tree instead of its simple name.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="vetoable" type="boolean" minOccurs="0">
+		  <annotation>
+			<documentation>Enable veto events.</documentation>
+			<appinfo>
+			  <s2b:switch>veto</s2b:switch>
+			  <s2b:switchHelp>generate vetoable properties (only for non-bean properties).</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="standalone" type="boolean" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>st</s2b:switch>
+			  <s2b:switchHelp>standalone mode - do not generate NetBeans dependencies</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="auto" type="boolean" minOccurs="0">
+		  <annotation>
+			<documentation>auto is set when it is assumed that there is no user sitting in front of System.in</documentation>
+			<appinfo>
+			  <s2b:switch>auto</s2b:switch>
+			  <s2b:switchHelp>Don't ask the user any questions.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="messageOut" type="java:java.io.PrintStream" minOccurs="0"/>
+		<element name="outputStreamProvider" type="java:org.netbeans.modules.schema2beansdev.GenBeans.OutputStreamProvider" minOccurs="0"/>
+		<element name="throwErrors" type="boolean" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>throw</s2b:switch>
+			  <s2b:switchHelp>generate code that prefers to pass exceptions\n  through instead of converting them to RuntimeException (recommended).</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="generateXMLIO" type="boolean" default="true">
+		  <annotation>
+			<documentation>Whether or not to generate classes that do XML I/O.</documentation>
+		  </annotation>
+		</element>
+		<element name="generateValidate" type="boolean" minOccurs="0">
+		  <annotation>
+			<documentation>Whether or not to generate code to do validation</documentation>
+			<appinfo>
+			  <s2b:switch>validate</s2b:switch>
+			  <s2b:switchHelp>Generate a validate method for doing validation.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="generatePropertyEvents" type="boolean" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>propertyEvents</s2b:switch>
+			  <s2b:switchHelp>Generate methods for dealing with property events (always on for BaseBean type).</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="generateStoreEvents" type="boolean" minOccurs="0"/>
+		<element name="generateTransactions" type="boolean" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>transactions</s2b:switch>
+			  <s2b:switchHelp>experimental feature</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="attributesAsProperties" type="boolean" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>attrProp</s2b:switch>
+			  <s2b:switchHelp>Attributes become like any other property</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="generateDelegator" type="boolean" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>delegator</s2b:switch>
+			  <s2b:switchHelp>Generate a delegator class for every bean generated.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="delegateDir" type="java:java.io.File" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>delegateDir</s2b:switch>
+			  <s2b:switchHelp>The base directory to write every delegate into.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="delegatePackage" type="string" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>delegatePackage</s2b:switch>
+			  <s2b:switchHelp>The package to use for the delegates.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="generateCommonInterface" type="string" minOccurs="0">
+		  <annotation>
+			<documentation>Generate an interface with all common methods in it.  Setting the interface name to null will make it not use one.</documentation>
+			<appinfo>
+			  <s2b:switch>commonInterfaceName</s2b:switch>
+			  <s2b:switchHelp>Name the common interface between all beans.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="defaultsAccessable" type="boolean" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>defaultsAccessable</s2b:switch>
+			  <s2b:switchHelp>Generate methods to be able to get at default values.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="useInterfaces" type="boolean" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>useInterfaces</s2b:switch>
+			  <s2b:switchHelp>Getters and setters signatures would use the first defined interface on the bean.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="generateInterfaces" type="boolean" minOccurs="0">
+		  <annotation>
+			<documentation>Generate an interface for the bean info accessors</documentation>
+			<appinfo>
+			  <s2b:switch>genInterfaces</s2b:switch>
+			  <s2b:switchHelp>For every bean generated, generate an interfaces for it's accessors.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="keepElementPositions" type="boolean" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>keepElementPositions</s2b:switch>
+			  <s2b:switchHelp>Keep track of the positions of elements (no BaseBean support).</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="removeUnreferencedNodes" type="boolean" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>removeUnreferencedNodes</s2b:switch>
+			  <s2b:switchHelp>Do not generate unreferenced nodes from the bean graph.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="inputURI" type="string" minOccurs="0">
+		  <annotation>
+			<documentation>If we're passed in a simple InputStream, then the inputURI will help us find relative URI's if anything gets included for imported.</documentation>
+		  </annotation>
+		</element>
+		<element name="indexedPropertyType" type="string" default="java.util.ArrayList">
+		  <annotation>
+			<documentation>This is the name of the class to use for indexed properties.  It must implement java.util.List.  Use null to mean use arrays.</documentation>
+			<appinfo>
+			  <s2b:switch>indexedPropertyType</s2b:switch>
+			  <s2b:switchHelp>The name of the class to use for indexed properties.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="doCompile" type="boolean" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>compile</s2b:switch>
+			  <s2b:switchHelp>Compile all generated classes using javac.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="generateSwitches" type="boolean" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>generateSwitches</s2b:switch>
+			  <s2b:switchHelp>Generate parseArguments()</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="dumpBeanTree" type="java:java.io.File" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>dumpBeanTree</s2b:switch>
+			  <s2b:switchHelp>Write out the bean tree to filename.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="generateDotGraph" type="java:java.io.File" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>genDotGraph</s2b:switch>
+			  <s2b:switchHelp>Generate a .dot style file for use with GraphViz (http://www.graphviz.org/).</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="processComments" type="boolean" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>comments</s2b:switch>
+			  <s2b:switchHelp>Process and keep comments (always on for BaseBean type).</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="processDocType" type="boolean" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>docType</s2b:switch>
+			  <s2b:switchHelp>Process and keep Document Types (always on for BaseBean type)."</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="checkUpToDate" type="boolean" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>checkUpToDate</s2b:switch>
+			  <s2b:switchHelp>Only do generation if the source files are newer than the to be generated files.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="generateParentRefs" type="boolean" minOccurs="0"/>
+		<element name="generateHasChanged" type="boolean" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>hasChanged</s2b:switch>
+			  <s2b:switchHelp>Keep track of whether or not the beans have changed.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="newestSourceTime" type="long" minOccurs="0">
+		  <annotation>
+			<documentation>Of all our source files, newestSourceTime represents the most recently modified one.</documentation>
+		  </annotation>
+		</element>
+		<element name="writeBeanGraphFile" type="java:java.io.File" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>writeBeanGraph</s2b:switch>
+			  <s2b:switchHelp>Write out a beangraph XML file.  Useful for connecting separate bean graphs.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="readBeanGraphFiles" type="java:java.io.File" minOccurs="0" maxOccurs="unbounded">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>readBeanGraph</s2b:switch>
+			  <s2b:switchHelp>Read in and use the results of another bean graph.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="readBeanGraphs" type="java:org.netbeans.modules.schema2beansdev.beangraph.BeanGraph" minOccurs="0" maxOccurs="unbounded"/>
+		<element name="minFeatures" type="boolean" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>min</s2b:switch>
+			  <s2b:switchHelp>Generate the minimum Java Beans.  Reduce features in favor of reduced class file size.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="forME" type="boolean" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>forME</s2b:switch>
+			  <s2b:switchHelp>Generate code for use on J2ME.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="java5" type="boolean" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>java5</s2b:switch>
+			  <s2b:switchHelp>Generate code for use on Java 5 and newer.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="generateTagsFile" type="boolean" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>tagsFile</s2b:switch>
+			  <s2b:switchHelp>Generate a class that has all schema element and attribute names</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="codeGeneratorFactory" type="java:org.netbeans.modules.schema2beansdev.CodeGeneratorFactory" minOccurs="0">
+		  <annotation>
+			<documentation>Setting the factory to null will make it use the default one.</documentation>
+		  </annotation>
+		</element>
+		<element name="generateTimeStamp" type="boolean" default="true">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>generateTimeStamp</s2b:switch>
+			  <s2b:switchHelp>Output a born on date into generated files.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="quiet" type="boolean">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>quiet</s2b:switch>
+			  <s2b:switchHelp>Don't be as verbose.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="writeConfig" type="java:java.io.File" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>writeConfig</s2b:switch>
+			  <s2b:switchHelp>Write out Config as a file; this includes all command line switches.  Useful for seeing what switches are set, and for reloading a bunch of switches with -readConfig.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="readConfig" type="java:java.io.File" minOccurs="0" maxOccurs="unbounded">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>readConfig</s2b:switch>
+			  <s2b:switchHelp>Read in Config file.  See -writeConfig.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="makeDefaults" type="boolean" default='true'>
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>makeDefaults</s2b:switch>
+			  <s2b:switchHelp>Make properties that require a value have a default value even if the schema didn't say it had a default (defaults to true).</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="setDefaults" type="boolean" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>setDefaults</s2b:switch>
+			  <s2b:switchHelp>Fill in defaults.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="trimNonStrings" type="boolean" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>trimNonStrings</s2b:switch>
+			  <s2b:switchHelp>Trim non strings while reading XML.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="useRuntime" type="boolean" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>useRuntime</s2b:switch>
+			  <s2b:switchHelp>Make use of the schema2beans runtime (always on for BaseBean type).</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="extendBaseBean" type="boolean" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>extendBaseBean</s2b:switch>
+			  <s2b:switchHelp>Make every bean extend BaseBean (always on for BaseBean type).  For those who like -javabean's better performance, but can't seem to get away from BaseBean.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="finder" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>finder</s2b:switch>
+			  <s2b:switchHelp>Add a finder method.  Format: "on {start} find {selector} by {key}".  Example: "on /ejb-jar/enterprise-beans find session by ejb-name".</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+		<element name="target" type="string" minOccurs="0">
+		  <annotation>
+			<appinfo>
+			  <s2b:switch>target</s2b:switch>
+			  <s2b:switchHelp>Target JDK to generate for.</s2b:switchHelp>
+			</appinfo>
+		  </annotation>
+		</element>
+                <element name="staxProduceXMLEventReader" type="boolean" minOccurs="0">
+                    <annotation>
+                        <appinfo>
+                        <s2b:switch>staxProduceXMLEventReader</s2b:switch>
+                        <s2b:switchHelp>Produce a StAX XMLEventReader to read the beans as if they were XML.</s2b:switchHelp>
+                        </appinfo>
+                    </annotation>
+                </element>
+                <element name="staxUseXMLEventReader" type="boolean" minOccurs="0">
+                    <annotation>
+                        <appinfo>
+                        <s2b:switch>staxUseXMLEventReader</s2b:switch>
+                        <s2b:switchHelp>Use an StAX XMLEventReader for reading the beans.</s2b:switchHelp>
+                        </appinfo>
+                    </annotation>
+                </element>
+                <element name="optionalScalars" type="boolean" minOccurs="0">
+                  <annotation>
+                        <appinfo>
+                          <s2b:switch>optionalScalars</s2b:switch>
+                          <s2b:switchHelp>Whether or not scalars can be optional.  Default: false.  Recommended: true.</s2b:switchHelp>
+                        </appinfo>
+                  </annotation>
+                </element>
+                <element name="defaultElementType" type="string" minOccurs="0">
+                  <annotation>
+                        <appinfo>
+                          <s2b:switch>defaultElementType</s2b:switch>
+                          <s2b:switchHelp>When a type cannot be figured out, use this type.  Default: "{http://www.w3.org/2001/XMLSchema}boolean".</s2b:switchHelp>
+                        </appinfo>
+                  </annotation>
+                </element>
+                <element name="respectExtension" type="boolean" minOccurs="0">
+                  <annotation>
+                        <appinfo>
+                          <s2b:switch>respectExtension</s2b:switch>
+                          <s2b:switchHelp>Take advantage of when an extension is defined in the schema.</s2b:switchHelp>
+                        </appinfo>
+                  </annotation>
+                </element>
+                <element name="logSuspicious" type="boolean" minOccurs="0">
+                  <annotation>
+                        <appinfo>
+                          <s2b:switch>logSuspicious</s2b:switch>
+                          <s2b:switchHelp>Log suspicious things.</s2b:switchHelp>
+                        </appinfo>
+                  </annotation>
+                </element>
+	  </sequence>
+	</complexType>
+  </element>
+</schema>

@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.xml.xam/1
+OpenIDE-Module-Implementation-Version: 1
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/xml/xam/Bundle.properties
+OpenIDE-Module-Needs: org.netbeans.modules.xml.xam.spi.ModelAccessProvider, org.netbeans.modules.xml.xam.spi.DocumentModelAccessProvider
+

@@ -1,0 +1,35 @@
+| Source |                        S (mnemonics)
+==========
+Format                            F
+Remove Trailing Spaces            T
+Shift Left                        L
+Shift Right                       R
+Move Up                           v
+Move Down                         w
+Move Code Element Up              U
+Move Code Element Down            D
+Duplicate Up                      l
+Duplicate Down                    a
+Toggle Comment                    m
+===============================
+Complete Code...                  C
+Insert Code...                    I
+Remove Surrounding Code...
+Fix Code...                       x
+Fix Imports...                    o
+Organize Imports
+Organize Members
+Fix Uses...
+Show Method Parameters            S
+Show Documentation                D
+===============================
+Make Controller
+===============================
+Insert Next Matching Word         N
+Insert Previous Matching Word     P
+===============================
+Preprocessor Blocks >    B
+===============================
+Inspect...
+===============================
+Scan for External Changes

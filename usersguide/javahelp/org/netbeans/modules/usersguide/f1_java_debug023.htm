@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Debugging View</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="DebuggingView" name="DebuggingView"></a></p>
+<div id="NBCSH2767"><!-- infolevel="all" infotype="General" --><a id="sthref359" name="sthref359"></a>
+<h1>Debugging View</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>The Debugging View opens in the left pane of the IDE and displays a list of the threads in the current debugging session. The Debugging Vieww enables you to suspend and resume threads and view the sequence of calls made during the execution of the current thread. You can right-click threads and calls in the Debugging View to open a popup menu to perform actions on the item. You can use the toolbar at the bottom of the window to modify the displayed threads. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG886">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<a id="NBCSH2768" name="NBCSH2768"></a>
+<p><b>Icons</b></p>
+<p>The Debugging View displays the following thread icons:</p>
+
+<table summary="Descriptions of Variables window icons." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t34">Element</th>
+<th align="left" valign="bottom" id="r1c2-t34">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t34" headers="r1c1-t34">
+<p><img width="16" height="16" src="img/thread_running_16.png" alt="Running Thread icon" title="Running Thread icon" /></p></td>
+<td align="left" headers="r2c1-t34 r1c2-t34">Indicates a thread that is running</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t34" headers="r1c1-t34">
+<p><img width="16" height="16" src="img/suspend_thread_brkpt.png" alt="Thread suspended by breakpoint icon" title="Thread suspended by breakpoint icon" /></p></td>
+<td align="left" headers="r3c1-t34 r1c2-t34">Indicates a thread suspended by hitting a breakpoint</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t34" headers="r1c1-t34">
+<p><img width="16" height="16" src="img/thread_suspended_16.png" alt="Suspended thread icon" title="Suspended thread icon" /></p></td>
+<td align="left" headers="r4c1-t34 r1c2-t34">Indicates a suspended thread</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t34" headers="r1c1-t34">
+<p><img width="16" height="16" src="img/thread_group_running_16.png" alt="Thread group - running icon" title="Thread group - running icon" /></p></td>
+<td align="left" headers="r5c1-t34 r1c2-t34">Indicates a thread group where all threads are running</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t34" headers="r1c1-t34">
+<p><img width="16" height="16" src="img/thread_group_suspended_16.png" alt="Thread group - suspended icon" title="Thread group - suspended icon" /></p></td>
+<td align="left" headers="r6c1-t34 r1c2-t34">Indicates a thread group where all threads are suspended</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t34" headers="r1c1-t34"><img width="16" height="16" src="img/thread_group_mixed_16.png" alt="Thread group - mixed icon" title="Thread group - mixed icon" /></td>
+<td align="left" headers="r7c1-t34 r1c2-t34">Indicates a thread group with running and suspended threads</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t34" headers="r1c1-t34"><img width="16" height="16" src="img/call_stack_16.png" alt="Call stack frame icon" title="Call stack frame icon" /></td>
+<td align="left" headers="r8c1-t34 r1c2-t34">Indicates a call stack frame</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t34" headers="r1c1-t34"><img width="16" height="16" src="img/callstack-framegroup.gif" alt="Call Stack Frame Group icon" title="Call Stack Frame Group icon" /></td>
+<td align="left" headers="r9c1-t34 r1c2-t34">Indicates a call stack frame group</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2774" name="NBCSH2774"></a>
+<p><b>Debugging View Toolbar</b></p>
+<p>The Debugging View window has a toolbar at the bottom with the following buttons for modifying how threads and calls are displayed in the window.</p>
+
+<table summary="Descriptions of context menu commands in Variables window." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="31%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t35">Element</th>
+<th align="left" valign="bottom" id="r1c2-t35">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t35" headers="r1c1-t35">
+<p><img width="16" height="16" src="img/thread_group_mixed_16.png" alt="Show thread group button" title="Show thread group button" /></p></td>
+<td align="left" headers="r2c1-t35 r1c2-t35">Show thread groups</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t35" headers="r1c1-t35">
+<p><img width="16" height="16" src="img/show_suspend_table_opt.png" alt="Suspend / resume threads icon" title="Suspend / resume threads icon" /></p></td>
+<td align="left" headers="r3c1-t35 r1c2-t35">Shows or hides the controls for suspending and resuming threads</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t35" headers="r1c1-t35"><img width="16" height="16" src="img/show_system_threads_opt.png" alt="Show system threads button" title="Show system threads button" /></td>
+<td align="left" headers="r4c1-t35 r1c2-t35">Show system threads</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t35" headers="r1c1-t35">
+<p><img width="16" height="16" src="img/show_suspend_thrds_opt.png" alt="Show suspended and current threeads button" title="Show suspended and current threeads button" /></p></td>
+<td align="left" headers="r5c1-t35 r1c2-t35">Show suspended and current threads only</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t35" headers="r1c1-t35">
+<p><img width="16" height="16" src="img/filterhidenonpublic.png" alt="Show monitors button" title="Show monitors button" /></p></td>
+<td align="left" headers="r6c1-t35 r1c2-t35">Show monitors</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t35" headers="r1c1-t35">
+<p><img width="16" height="16" src="img/show_fqn_option_16.png" alt="Show qualified names button" title="Show qualified names button" /></p></td>
+<td align="left" headers="r7c1-t35 r1c2-t35">Show qualified names</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t35" headers="r1c1-t35">
+<p><img width="16" height="16" src="img/suspend_prop_sort_ord.png" alt="Sort by suspended / resumed button" title="Sort by suspended / resumed button" /></p></td>
+<td align="left" headers="r8c1-t35 r1c2-t35">Sort by suspended/resumed state</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t35" headers="r1c1-t35">
+<p><img width="16" height="16" src="img/sortalpha.png" alt="Sort by name button" title="Sort by name button" /></p></td>
+<td align="left" headers="r9c1-t35 r1c2-t35">Sort by name</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t35" headers="r1c1-t35">
+<p><img width="16" height="16" src="img/sortposition.png" alt="Sort by default button" title="Sort by default button" /></p></td>
+<td align="left" headers="r10c1-t35 r1c2-t35">Sort by default</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2783" name="NBCSH2783"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG885">
+<param name="text" value="<html><u>&quot;Viewing Program Information When Debugging&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG822">
+<param name="text" value="<html><u>&quot;Using the Debugger Windows&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

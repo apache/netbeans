@@ -1,0 +1,30 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.netbeans.modules.db.sql.visualeditor.querymodel;
+
+// The most basic Expression interface.
+// I.e., it represents both a boolean expression, a simple predicate and a literal
+// This is the most common type to talk to expressions
+// The methods provided here are mostly helpers for the editor and are used internally so they may disappear from here at some point
+// Usually a type test (instanceof) with a more derived interface (And, ExpressionList, etc.) defines the kind of expression
+public interface Expression extends QueryItem {
+    public Expression findExpression(String table1, String column1, String table2, String column2);
+    public boolean isParameterized();
+    public void renameTableSpec(String oldTableSpec, String corrName);
+}

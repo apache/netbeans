@@ -1,0 +1,264 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+  <head>
+    <title>Preferences API in NetBeans</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+    <h1 align="left">Preferences API in NetBeans</h1>
+    NetBeans adopts <a href="http://java.sun.com/j2se/1.5.0/docs/guide/preferences/">Java Preferences API</a>
+    standard to be used in NetBeans to
+    store preference and configuration data to be able to adapt to the needs
+    of different users. NetBeans keeps this standard and enhances it slightly
+    by providing its own preference tree in addition to default system and user
+    roots. The purpose for this enhancement is to
+    unify the way how persistent preference and configuration data are stored in NetBeans
+    whereas all changes go into userdir which is the central place where also
+    other configuration data are kept.This concept is convenient for developers
+    or power users for running more instances of NetBeans, for debugging,
+    for testing, for analysing structure or content of such files whenever any
+    problems occures whereas running NetBeans with various userdirs means
+    actually running NetBeans with different preferences. Running NetBeans with
+    fresh userdir means actually running NetBeans with factory preset
+    defaults.<P>
+    The decision whether to use standard or  enhanced NetBeans preference tree is left
+    up to the developer.
+    <h3 align="left">Usage Notes</h3>
+    <h4 align="left">How to obtain NetBeans Preferences?</h4>
+    To get preference node there are two <A
+      HREF="@org-openide-util@/org/openide/util/NbPreferences.html">factory
+    methods in Utilities API (org.openide.util)</A>:
+    <ul>
+      <li><code>NbPreferences.root()</code> returns root preference node. </li>
+      <li><code>NbPreferences.forModule(class cls)</code> returns
+      preference node which <a
+        href="@JDK@/java/util/prefs/Preferences.html#absolutePath%28%29">absolute path</a> 
+      depends whether class provided as a parameter was loaded as a
+      part of any module or not. If so, then absolute path corresponds to
+      slashified code name base of module. If not, then absolute path
+      corresponds to class's package </li>
+    </ul>
+    <h4 align="left">How to verify that preferences work properly?</h4>
+    Layout of files on disk:<br>
+    <p> </p>
+    <pre>
+    config/Preferences/
+    `-- org
+        |-- apache
+        |   `-- tools
+        |       `-- ant
+        |           `-- module.properties
+        `-- netbeans
+            `-- modules
+                `-- derby.properties
+    </pre>
+
+    <p> prefs.properties is regular properties file. See: </p>
+    <p> </p>
+<pre>#Thu Sep 28 18:15:22 CEST 2006<br>location=/tmp/location<br>systemHome=/tmp/systemHome<br>  </pre>
+    <H4 ALIGN=LEFT>How to migrate from SystemOptions into Preferences API?</H4>
+    <OL>
+      <LI>Remove registration from layer: 
+<PRE>
+-     &lt;folder name="Services"/&gt;
+-         &lt;file name="org-netbeans-modules-derby-DerbyOptions.settings" url="DerbyOptions.settings"/&gt;
+-     &lt;/folder&gt;
+</PRE>
+      <LI>Add module dependency on Utilities API (org.openide.util with specification
+      version &gt;= 7.4) if necessary
+      <LI>Remove module dependency on Settings Options API (org.openide.options)
+      <LI>Remove registration of Node which was used to visualize original
+      SystemOptions in Tools/Options
+      <PRE>
+-     &lt;folder name="Services"&gt;
+-         &lt;folder name="IDEConfiguration"&gt;
+-             &lt;folder name="ServerAndExternalToolSettings"&gt;
+-                    &lt;file name="org-netbeans-modules-derby-DerbyOptions.shadow"&gt;
+-                        &lt;attr name="originalFile" stringvalue="Services/org-netbeans-modules-derby-DerbyOptions.settings"/&gt;
+-                    &lt;/file&gt;
+-             &lt;/folder&gt;
+-         &lt;/folder&gt;
+-     &lt;/folder&gt;
+
+      </PRE>
+      <LI>Rewrite the code not to extend SystemOption anymore
+      <LI>Ensure visualization in Tools/Options if still needed.
+      <LI>Ensure import from previous version into preferences storage
+      <LI>Delete associated BeanInfo if it isn't necessary anymore
+      <LI>Document usage of Preferences API like any other API in arch document
+      <LI>Run tests to verify
+      that code after migration is working
+    </OL>
+    <H4 ALIGN=LEFT>Hints how to replace SystemOption </H4>
+    It is recommended to delete the whole settings class extending SystemOption
+    and call directly Preferences API. This approach isn't convenient when
+    except reading, writing from storage is necessary additional logic. Then
+    following steps can be used as a hint:  
+    <OL>
+      <LI>Change your setting class not to extend SystemOption anymore
+      <LI>Either use static methods for getters and setters or replace factory method SharedClassObject.findObject by common singleton
+      pattern:
+      <PRE>
+-public class DerbyOptions extends SystemOption {
+-
+-    private static final long serialVersionUID = 1101894610105398924L;
++public class DerbyOptions  {
++    private static DerbyOptions INSTANCE = new DerbyOptions();
+
+     public static DerbyOptions getDefault() {
+-        return (DerbyOptions)SharedClassObject.findObject(DerbyOptions.class, true);
++        return INSTANCE;
+     }
+      </PRE>
+      <LI>Replace all other SystemOption and SharedClassObject calls. E.g.:
+      <PRE>
++    protected final String putProperty(String key, String value, boolean notify) {
++        String retval = getPreferences().get(key, null);
++        if (value != null) {
++            NbPreferences.forModule(DerbyOptions.class).put(key, value);
++        } else {
++            NbPreferences.forModule(DerbyOptions.class).remove(key);
++        }
++        return retval;
++    }
+
++    protected final String getProperty(String key) {
++        return NbPreferences.forModule(DerbyOptions.class).get(key, null);
++    }
+      </PRE>
+    </OL>
+    <H4 ALIGN=LEFT>How to ensure visualization in Tools/Options?</H4>
+    If you need keep UI backward compatibility then the way is very easy:
+    provide a node representing your settings class. See:
+    <PRE>
+
++    public static BeanNode createViewNode() throws IntrospectionException {
++        return new BeanNode(DerbyOptions.getDefault());
++    }
+
+-    &lt;file name="org-netbeans-modules-derby-DerbyOptions.shadow"&gt;
+-        &lt;attr name="originalFile" stringvalue="Services/org-netbeans-modules-derby-DerbyOptions.settings"/&gt;
++    &lt;file name="DerbyOptionsNode.instance"&gt;
++        &lt;attr name="instanceCreate" methodvalue="org.netbeans.modules.derby.DerbyOptions.createViewNode"/&gt;
+
+    </PRE>
+    The other way means to go a little more farther and provide and install custom
+    options panels/categories to Options Dialog according to the
+    <A HREF="@org-netbeans-modules-options-api@/overview-summary.html">Options Dialog API</A>.
+    The module development support in NetBeans can help by generating boilerplate code and
+    registering the option into your layer.
+    <H4 ALIGN=LEFT>How to document usage of Preferences API?</H4>
+    Answer properly arch questions like any other <A
+      HREF="http://openide.netbeans.org/tutorial/api-design.html">APIs</A>. There was added new arch question related to
+    preferences (resources-preferences). See example:
+    <PRE>
+&lt;answer id="resources-preferences"&gt;
+  &lt;api group="preferences" name="org.netbeans.modules.derby" type="export" category="private" url=""&gt;
+      &lt;table&gt;
+          &lt;tbody&gt;
+              &lt;tr&gt;
+                  &lt;th&gt;key&lt;/th&gt;
+                  &lt;th&gt;description&lt;/th&gt;
+                  &lt;th&gt;read&lt;/th&gt;
+                  &lt;th&gt;write&lt;/th&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                  &lt;td&gt;location&lt;/td&gt;
+                  &lt;td&gt;Derby location or an empty string if the Derby location is not set&lt;/td&gt;
+                  &lt;td&gt;x&lt;/td&gt;
+                  &lt;td&gt;x&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                  &lt;td&gt;systemHome&lt;/td&gt;
+                  &lt;td&gt;Derby system home or an empty string if the system home is not set&lt;/td&gt;
+                  &lt;td&gt;x&lt;/td&gt;
+                  &lt;td&gt;x&lt;/td&gt;
+              &lt;/tr&gt;
+          &lt;/tbody&gt;
+      &lt;/table&gt;
+  &lt;/api&gt;
+ &lt;/answer&gt;
+    </PRE>
+    <H4 ALIGN=LEFT>How to ensure import from previous version?</H4>
+There is support for importing old serialized instances of SystemOptions into
+preferences storage in ide/launcher/upgrade module in package
+org.netbeans.upgrade.systemoptions. This infrastructure reads configuration file
+containing enumeration of settings files that should be imported. In simple
+cases there is actually no neeed to code anything, but this is rare case which
+may happen just when all the properties are primitive data types or String and
+if method writeExternal isn't overridden.<P>
+How to start? The best is to start with tests. But first you must have settings
+file that will be parsed and tested. Put this file among tests:
+<PRE>
+test/unit/src/org/netbeans/upgrade/systemoptions
+|-- BasicTestForImport.java
+|-- DerbyOptionsTest.java
+|-- org-netbeans-modules-derby-DerbyOptions.settings
+</PRE>
+Then write simple test that should contain assertions what actually will be
+parsed and imported. See:
+<PRE>
+public class DerbyOptionsTest extends BasicTestForImport {
+    public DerbyOptionsTest(String testName) {
+        super(testName, "org-netbeans-modules-derby-DerbyOptions.settings");
+    }    
+    public void testPreferencesNodePath() throws Exception {
+        assertPreferencesNodePath("/org/netbeans/modules/derby");
+    }    
+    public void testPropertyNames() throws Exception {
+        assertPropertyNames(new String[] {
+            "systemHome",
+            "location"
+        });
+    }    
+    public void testSystemHome() throws Exception {
+        assertPropertyType("systemHome","java.lang.String");
+        assertProperty("systemHome","/tmp/systemHome");
+    }
+    public void testLocation() throws Exception {
+        assertPropertyType("location","java.lang.String");
+        assertProperty("location","/tmp/location");
+    }    
+}
+</PRE>
+If the tests  didn't pass then probably there is more complicated object graph
+serialized then you must subclass <CODE>PropertyProcessor</CODE> and put your
+own code in.
+(See as an example: <A HREF="http://www.netbeans.org/source/browse/ide/launcher/upgrade/src/org/netbeans/upgrade/systemoptions/TaskTagsProcessor.java?view=markup">TaskTagsProcessor</A>
+ and here is a <A
+   HREF="http://www.netbeans.org/source/browse/ide/launcher/upgrade/test/unit/src/org/netbeans/upgrade/systemoptions/ExampleSettingsTest.java?view=markup">test</A>).
+ <H4 ALIGN=LEFT>How to write tests that needs Preferences API?</H4>
+ Not persistent implementation of <code>java.util.prefs.Preferences</code> 
+ is installed in place of the platform-specific default implementation for
+ running tests which is in spirit of unit testing because individual tests
+ shouldn't interact. But if this behaviour isn't suitable then there is possible
+ to reinstall platform-specific default implementation again:  
+<PRE>
++         public void run(final TestResult result) {
++             //just initialize Preferences before code NbTestCase
++             Preferences.userRoot();                        
++             super.run(result);
++         }
+</PRE>
+</body>
+</html>

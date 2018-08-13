@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>New Enterprise Application Wizard: Server and Settings</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.javaee.project.api.ant.ui.wizard.ProjectServerWizardPanel_EAR" name="org.netbeans.modules.javaee.project.api.ant.ui.wizard.ProjectServerWizardPanel_EAR"></a></p>
+<div id="NBCSH4646"><!-- infolevel="all" infotype="General" --><a id="sthref668" name="sthref668"></a>
+<h1>New Enterprise Application Wizard: Server and Settings</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>This wizard creates a new standard project&nbsp; containing an enterprise application client module. You open the wizard by opening the New Project wizard and selecting the Enterprise Application Client template from the Java EE category.</p>
+<p>In the Server and Settings page, you have to set the following properties:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t34">Element</th>
+<th align="left" valign="bottom" id="r1c2-t34">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t34" headers="r1c1-t34">
+<p>Add to Enterprise Application</p>
+</td>
+<td align="left" headers="r2c1-t34 r1c2-t34">Lets you add the application client to any open enterprise application project.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t34" headers="r1c1-t34">
+<p>Server</p>
+</td>
+<td align="left" headers="r3c1-t34 r1c2-t34">Specifies the server to which the application client's enterprise application is deployed. To register servers, choose <b>Tools</b> &gt; <b>Servers</b>.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t34" headers="r1c1-t34">
+<p>Java EE Version</p>
+</td>
+<td align="left" headers="r4c1-t34 r1c2-t34">Specifies the level of the Java EE specification that is used for the application client. If you set the Java EE version to 1.4, you should also set the source level to 1.4 in the drop-down list that appears.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t34" headers="r1c1-t34">Source Level Recommendations</td>
+<td align="left" headers="r5c1-t34 r1c2-t34">One of the following checkboxes will appear if the Java EE Version is set to J2EE 1.4 and JDK 1.5 or JDK 1.6 is set as the default platform in the Java Platform Manager. The J2EE 1.4 and J2EE 1.3 specifications do not recommend JDK 1.5. Therefore, if you want to create a portable application, select the appropriate checkbox:</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t34" headers="r1c1-t34">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Use JDK 1.4 and Set Source Level to 1.4</p>
+</td>
+<td align="left" headers="r6c1-t34 r1c2-t34">This checkbox appears if JDK 1.4 is available in the Java Platform Manager. Select this checkbox to set both your JDK level and your source level to 1.4.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t34" headers="r1c1-t34">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Set Source Level to 1.4</p>
+</td>
+<td align="left" headers="r7c1-t34 r1c2-t34">This checkbox appears if JDK 1.4 is not available in the Java Platform Manager. Select this checkbox so that at least your source level is set to 1.4.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t34" headers="r1c1-t34">Create EJB Module</td>
+<td align="left" headers="r8c1-t34 r1c2-t34">Sets whether an EJB module is created as a submodule of the enterprise application, and its name. By default, it is created and named <code dir="ltr">project-name-ejb</code>. If you do not let the IDE create the EJB module together with the enterprise application, you can create an EJB Module Project later.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t34" headers="r1c1-t34">Create Web Application Module</td>
+<td align="left" headers="r9c1-t34 r1c2-t34">Sets whether a web application module is created as a submodule of the enterprise application, and its name. By default, it is created and named <code dir="ltr">project-name-war</code>. If you do not let the IDE create the EJB module together with the enterprise application, you can create a Web Application project later.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>When you click <b>Finish</b>, the project is created on your computer and opened in the IDE. You can view its logical structure in the Projects window and its file structure in the Files window.</p>
+<p><b>Note</b>: If you are creating an application client with existing sources, you must click <b>Next</b> to specify existing sources and libraries.</p>
+<a id="NBCSH4652" name="NBCSH4652"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2901">
+<param name="text" value="<html><u>&quot;Creating Application Clients&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG370">
+<param name="text" value="<html><u>&quot;Using Java Project Templates&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG455">
+<param name="text" value="<html><u>&quot;Sharing Libraries with Other Users&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

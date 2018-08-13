@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Web Service Attributes Editor: Quality of Service: Port Binding</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.websvc.wsitconf.ui.nodes.ServiceNode" name="org.netbeans.modules.websvc.wsitconf.ui.nodes.ServiceNode"></a></p>
+<div id="NBCSH4939"><!-- infolevel="all" infotype="General" --><a id="sthref721" name="sthref721"></a>
+<h1>Web Service Attributes Editor: Quality of Service: Port Binding</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>In the Quality of Service tab's Port Binding section, on the service side, you can configure MTMOM, reliable messaging, and interoperable security policy. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2872">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+.</p>
+<p>You can set the following options:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t91">Element</th>
+<th align="left" valign="bottom" id="r1c2-t91">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t91" headers="r1c1-t91">
+<p>Version Compatibility</p>
+</td>
+<td align="left" headers="r2c1-t91 r1c2-t91">A drop-down list of .NET/METRO version compatibility. By default, this list is disabled and the user must use .NET 3.0/METRO 1.0. To enable more recent versions of .NET, you must add the latest METRO library to your project classpath.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t91" headers="r1c1-t91">Optimize Transport of Binary Data (MTOM)</td>
+<td align="left" headers="r3c1-t91 r1c2-t91">The MTOM feature is disabled in JAX-WS by default. It can be enabled on the client and server. Once enabled, all the XML binary data, XML elements of type xs:base64Binary and xs:hexBinary is optimally transmitted.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t91" headers="r1c1-t91">Reliable Message Delivery</td>
+<td align="left" headers="r4c1-t91 r1c2-t91">Specifies whether reliable messaging is enabled.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t91" headers="r1c1-t91">&nbsp;&nbsp;&nbsp;&nbsp;Deliver Messages In Exact Order</td>
+<td align="left" headers="r5c1-t91 r1c2-t91">Specifies whether the Reliable Messaging protocol ensures that the application messages for a given message sequence are delivered to the endpoint application in the order indicated by the message numbers. This option increases the time to process application message sequences and may result in the degradation of Web service performance.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t91" headers="r1c1-t91">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Advanced</p>
+</td>
+<td align="left" headers="r6c1-t91 r1c2-t91">Click the Advanced button to set the following options:</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t91" headers="r1c1-t91">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Flow Control</p>
+</td>
+<td align="left" headers="r7c1-t91 r1c2-t91">Specifies whether the Flow Control feature is enabled.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t91" headers="r1c1-t91">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Maximum Flow Control Buffer Size</p>
+</td>
+<td align="left" headers="r8c1-t91 r1c2-t91">If Flow control is enabled, specifies the number of messages for a sequence that will be buffered. The default setting is 32.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t91" headers="r1c1-t91">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Inactivity Timeout (ms)</p>
+</td>
+<td align="left" headers="r9c1-t91 r1c2-t91">Specifies the time interval beyond which either source or destination may terminate any message sequence due to inactivity. The default setting is 600,000 milliseconds (10 minutes). A Web service endpoint will always terminate a sequence whose inactivity timeout has expired. To keep the sequence active, an inactive client will always send a stand- alone message with an AckRequested header to act as a heartbeat as the end Inactivity timeout interval approaches.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t91" headers="r1c1-t91">
+<p>Secure Service</p>
+</td>
+<td align="left" headers="r10c1-t91 r1c2-t91">Specifies security for all of the operations of a web service.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r11c1-t91" headers="r1c1-t91">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Security Mechanism</p>
+</td>
+<td align="left" headers="r11c1-t91 r1c2-t91">Select one of the options from the list. Most of the mechanisms are fully functional without further configuration, however, if you'd like to customize the mechanism, click Configure to specify the configuration for that mechanism.
+<p>The mechanisms that use STS require that an STS be specified in the Configuration dialog. If a security mechanism is selected that requires this, select the buttons to configure keystore, truststore, and validator options.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r12c1-t91" headers="r1c1-t91">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Use Development Defaults</p>
+</td>
+<td align="left" headers="r12c1-t91 r1c2-t91">Select this option to import certificates into the GlassFish keystore and truststore, so that they can be used immediately for development. Because the default certificates are not in an appropriate format to be used in this context, this import is done for you, so that you do not need to do this manually yourself. In addition to importing certificates, a default user is created in the "file" realm, with username "wsitUser". In a production environment, you will probably want to provide your own certificates and user settings, however, in a development environment you may find these defaults useful.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r13c1-t91" headers="r1c1-t91">
+<p>Allow TCP Transport</p>
+</td>
+<td align="left" headers="r13c1-t91 r1c2-t91">Specifies that the service supports TCP and works with both TCP and HTTP transport. TCP provides better performance when sending smaller messages. The performance enhancement is visible mostly in smaller messages because the overhead of sending messages over the HTTP protocol is eliminated.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r14c1-t91" headers="r1c1-t91">
+<p>Disable Fast Infoset</p>
+</td>
+<td align="left" headers="r14c1-t91 r1c2-t91">Specifies that Fast Infoset is not used. Fast Infoset is useful for faster parsing, faster serializing, and smaller document sizes when compared with equivalent XML documents.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH4950" name="NBCSH4950"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1842">
+<param name="text" value="<html><u>&quot;Developing and Securing Web Services&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

@@ -1,0 +1,8 @@
+package org.netbeans.test;
+
+public abstract class ImportsTest6 {
+    
+    public ImportsTest6() {
+    }
+    
+}

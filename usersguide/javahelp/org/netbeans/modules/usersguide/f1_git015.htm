@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Git: Commit Dialog Box</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.git.ui.commit.CommitAction" name="org.netbeans.modules.git.ui.commit.CommitAction"></a></p>
+<div id="NBCSH1044"><!-- infolevel="all" infotype="General" --><a id="sthref104" name="sthref104"></a>
+<h1>Git: Commit Dialog Box</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>The Commit dialog box enables you to commit files to the Git repository. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG253">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>In the Commit dialog box, you have to set the following properties:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t22">Property</th>
+<th align="left" valign="bottom" id="r1c2-t22">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t22" headers="r1c1-t22">
+<p>Commit Message</p>
+</td>
+<td align="left" headers="r2c1-t22 r1c2-t22">Enter description of the change being committed. Click the Recent Messages button to view and select from a list of messages that you have previously entered. Click the Load Template button to select a message template.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t22" headers="r1c1-t22">
+<p>Author</p>
+</td>
+<td align="left" headers="r3c1-t22 r1c2-t22">Specify who made the change.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t22" headers="r1c1-t22">
+<p>Comitter</p>
+</td>
+<td align="left" headers="r4c1-t22 r1c2-t22">Specify who physically committed the file(s).</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t22" headers="r1c1-t22">
+<p>Files to commit</p>
+</td>
+<td align="left" headers="r5c1-t22 r1c2-t22">Clicking the Changes between HEAD and Index button displays a list of files that are staged. Clicking the Changes between HEAD and Working Tree button displays a list of files that are either already staged or only modified/created and not staged yet.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t22" headers="r1c1-t22">
+<p>Commit</p>
+</td>
+<td align="left" headers="r6c1-t22 r1c2-t22">Deselect to exclude individual files from the commit.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t22" headers="r1c1-t22">
+<p>File</p>
+</td>
+<td align="left" headers="r7c1-t22 r1c2-t22">Lists all files that are either:
+<ul>
+<li>new</li>
+<li>renamed</li>
+<li>modified</li>
+<li>deleted in the Working Tree (locally)</li>
+</ul>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t22" headers="r1c1-t22">
+<p>Status</p>
+</td>
+<td align="left" headers="r8c1-t22 r1c2-t22">Displays two status values for a file:
+<ul>
+<li>a status describing differences between the file's Working Tree and Index state (to the left of the slash)</li>
+<li>a status describing differences between the file's Index state and current HEAD commit (to the right of the slash)</li>
+</ul>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t22" headers="r1c1-t22">
+<p>Commit Action</p>
+</td>
+<td align="left" headers="r9c1-t22 r1c2-t22">Displays <code dir="ltr">Commit</code> if the file is selected or <code dir="ltr">Exclude from Commit</code> if the file is deselected in the Commit column.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t22" headers="r1c1-t22">
+<p>Repository Path</p>
+</td>
+<td align="left" headers="r10c1-t22 r1c2-t22">Displays path to the file in your local repository.
+<p>Right-click a file row to display the following popup menu items:</p>
+<ul>
+<li><b>Exclude From Commit/Include In Commit</b>. Select to either exclude the file from the commit or include it into the commit.</li>
+<li><b>Diff</b>. Select to display the Diff Viewer.</li>
+</ul>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r11c1-t22" headers="r1c1-t22">
+<p>Update Task</p>
+</td>
+<td align="left" headers="r11c1-t22 r1c2-t22">Track tasks related to the change being committed using the following fields:</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r12c1-t22" headers="r1c1-t22">
+<p>Task Repository</p>
+</td>
+<td align="left" headers="r12c1-t22 r1c2-t22">Choose a task repository from the list or press New to create a task repository.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r13c1-t22" headers="r1c1-t22">
+<p>Task</p>
+</td>
+<td align="left" headers="r13c1-t22 r1c2-t22">Specify the task using its summary or ID.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r14c1-t22" headers="r1c1-t22">
+<p>Resolve as Fixed</p>
+</td>
+<td align="left" headers="r14c1-t22 r1c2-t22">Select to change a task status to Resolved Fixed.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r15c1-t22" headers="r1c1-t22">
+<p>Add details to commit message and task</p>
+</td>
+<td align="left" headers="r15c1-t22 r1c2-t22">Select to provide an enhanced commit description.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r16c1-t22" headers="r1c1-t22">
+<p>After Commit</p>
+</td>
+<td align="left" headers="r16c1-t22 r1c2-t22">Choose to update an issue after the commit.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r17c1-t22" headers="r1c1-t22">
+<p>After Push</p>
+</td>
+<td align="left" headers="r17c1-t22 r1c2-t22">Choose to update an issue after the push.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH1061" name="NBCSH1061"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE,</i> 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG237">
+<param name="text" value="<html><u>&quot;Versioning Applications with Git&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

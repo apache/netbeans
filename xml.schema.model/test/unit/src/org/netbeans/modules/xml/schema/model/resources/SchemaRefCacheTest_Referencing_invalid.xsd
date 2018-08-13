@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="windows-1252"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://xml.netbeans.org/schema/refCacheTest"
+            xmlns:tns="http://xml.netbeans.org/schema/refCacheTest"
+            xmlns:imp="http://xml.netbeans.org/schema/imported"
+            elementFormDefault="qualified" >
+
+    <xsd:import schemaLocation="SchemaRefCacheTest_imported.xsd" namespace="http://xml.netbeans.org/schema/imported"/>
+    <xsd:include schemaLocation="SchemaRefCacheTest_included.xsd"/>
+    <xsd:redefine schemaLocation="SchemaRefCacheTest_redefined.xsd">
+        <xsd:complexType name="redefinedType">
+            <xsd:attribute name="redefinedAttr" type="xsd:string"/>
+        </xsd:complexType>
+    </xsd:redefine>
+    <xsd:element name="importedElement" type="imp:importedType"></xsd:element>
+    <xsd:element name="includedElement" type="tns:includedType"></xsd:element>
+    <xsd:element name="redefinedElement" type="tns:redefinedType"></xsd:element>
+/xsd:schema>

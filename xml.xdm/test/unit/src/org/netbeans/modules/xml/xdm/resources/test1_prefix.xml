@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns:test xmlns:ns="http://www.test.com/TestModel">
+    <ns:a index='1'></ns:a>
+    <ns:b index='1'></ns:b>
+    <ns:c index='1'></ns:c>
+</ns:test>

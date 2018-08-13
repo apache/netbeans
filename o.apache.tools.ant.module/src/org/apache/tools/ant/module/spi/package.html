@@ -1,0 +1,138 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<html>
+<body>
+Ways of influencing how Ant is run inside NetBeans.
+
+<p>{@link org.apache.tools.ant.module.spi.AutomaticExtraClasspathProvider} will be useful to modules which bundle
+libraries that may be needed for some optional tasks shipped with Ant.</p>
+
+<p>{@link org.apache.tools.ant.module.spi.AntLogger}, together with the auxiliary interfaces {@link org.apache.tools.ant.module.spi.AntSession},
+{@link org.apache.tools.ant.module.spi.AntEvent}, and {@link org.apache.tools.ant.module.spi.TaskStructure}, provides a powerful way of controlling
+the appearance of Ant process output.</p>
+
+<h2><a name="register-defs">Registering Tasks and Types</a></h2>
+
+<p>The Ant module provides a way for other modules to register custom Ant
+tasks and types that will automatically be available to any scripts running
+inside NetBeans.</p>
+
+<ol>
+
+<li><p><em>Do</em> consider this facility for tasks which would only make sense
+running inside the NetBeans VM, typically making direct Java method calls to
+internal NetBeans objects.</p></li>
+
+<li><p><em>Do not</em> consider this facility for tasks which would be useful
+in any context. You may bundle up such task JARs in <samp>ant/extra/*.jar</samp>
+in the NetBeans distribution and recommend users use them via
+<samp>&lt;taskdef&gt;</samp> with a <samp>&lt;classpath&gt;</samp>, as they would
+any other third-party task libraries.</p></li>
+
+</ol>
+
+<p>Examples of likely tasks: opening the GUI-configured web browser on a URL,
+reloading a NetBeans test module, attaching the NetBeans debugger to a running
+application, etc. You could consider these things IDE scripting using Ant.</p>
+
+<p>Registration is simple.
+(Assume for sake of illustration that the code name base of the host module is
+<samp>org.netbeans.modules.foo</samp>; in the following text, replace this package
+sequence with the actual code name base of your module, using whatever separator
+character is indicated.)
+Create a JAR file containing the task class(es), named
+<samp>org-netbeans-modules-foo.jar</samp>.
+Create an entry in that JAR <samp>org/netbeans/modules/foo/antlib.xml</samp>
+listing tasks (or types, macrodefs, etc.) you wish to define, in the
+<a href="http://ant.apache.org/manual/CoreTypes/antlib.html">standard Antlib format</a>.
+For example:</p>
+
+<pre>
+&lt;?<span class="keyword">xml</span> <span class="variable-name">version</span>=<span class="string">"1.0"</span> <span class="variable-name">encoding</span>=<span class="string">"UTF-8"</span>?&gt;
+&lt;<span class="function-name">antlib</span>&gt;
+    &lt;<span class="function-name">taskdef</span> <span class="variable-name">name</span>=<span class="string">"mytask1"</span> <span class="variable-name">classname</span>=<span class="string">"org.netbeans.modules.foo.MyTask1"</span>/&gt;
+    &lt;<span class="function-name">taskdef</span> <span class="variable-name">name</span>=<span class="string">"mytask2"</span> <span class="variable-name">classname</span>=<span class="string">"org.netbeans.modules.foo.MyTask2"</span>/&gt;
+&lt;/<span class="function-name">antlib</span>&gt;
+</pre>
+
+<p>(Note that when using Ant 1.5, only <code>&lt;taskdef&gt;</code>
+and <code>&lt;typedef&gt;</code> elements are supported, and only
+using the <code>name</code> and <code>classname</code>
+attributes.)</p>
+
+<p>Place the JAR file in the <samp>ant/nblib/</samp> directory of the NetBeans
+distribution, i.e. bundle it in your NBM as
+<samp>netbeans/ant/nblib/org-netbeans-modules-foo.jar</samp>. NetBeans will
+automatically load your task/type definitions and make them available to build
+scripts.</p>
+
+<p>The task classes will be loaded in a special class loader, not the one
+usually used for your module's classes. This loader will have access to:</p>
+
+<ol>
+
+<li>The JRE and JDK libraries.</li>
+
+<li>The installed copy of Ant, including any user-configured Ant classpath.</li>
+
+<li>Your module, including any extension JARs and anything your module
+can directly refer to, such as other modules it depends on.</li>
+
+</ol>
+
+<p>Do <em>not</em> include copies of your task or type definitions in the module
+JAR. They must reside only in <samp>ant/nblib/*.jar</samp>.</p>
+
+<p>Now whenever your module is enabled, Ant projects run inside
+NetBeans will have access to the definitions you provided. When running
+Ant 1.5, the definitions will be
+available with no namespace qualification, e.g.:</p>
+
+<pre>
+&lt;<span class="function-name">project</span> <span class="variable-name">default</span>=<span class="string">"all"</span>&gt;
+    &lt;<span class="function-name">target</span> <span class="variable-name">name</span>=<span class="string">"all"</span>&gt;
+        &lt;<span class="function-name">mytask1</span> <span class="variable-name">arg</span>=<span class="string">"val"</span>/&gt;
+    &lt;/<span class="function-name">target</span>&gt;
+&lt;/<span class="function-name">project</span>&gt;
+</pre>
+
+<p>When running Ant 1.6, the definitions will still be available with no namespace
+qualification. However it is recommended in 1.6 to namespace-qualify everything; so
+the antlib is loaded in the namespace you would expect, ensuring that
+there is no possibility of name clashes with unrelated tasks:</p>
+
+<pre>
+&lt;<span class="function-name">project</span> <span class="variable-name">default</span>=<span class="string">"all"</span>
+         <span class="variable-name">xmlns</span>=<span class="string">"antlib:org.apache.tools.ant"</span>
+         <span class="variable-name">xmlns:foo</span>=<span class="string">"antlib:org.netbeans.modules.foo"</span>&gt;
+    &lt;<span class="function-name">target</span> <span class="variable-name">name</span>=<span class="string">"all"</span>&gt;
+        &lt;<span class="function-name">foo:mytask1</span> <span class="variable-name">arg</span>=<span class="string">"val"</span>/&gt;
+    &lt;/<span class="function-name">target</span>&gt;
+&lt;/<span class="function-name">project</span>&gt;
+</pre>
+
+<p>Complete working example of task registration:
+<a href="http://www.netbeans.org/source/browse/ant/browsetask/"><samp>ant/browsetask</samp>
+module</a></p>
+
+</body>
+</html>

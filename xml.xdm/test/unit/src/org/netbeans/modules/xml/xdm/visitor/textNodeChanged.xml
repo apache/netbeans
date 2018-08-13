@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<company xmlns="http://org.company/schemas/company.xsd">
+    <employee ssn="xx-xx-xxxx" id="123"
+        address="16 Network Circle"
+        phone="123-456-7890">Srividhya Narayanan
+    </employee> <!-- comment -->    
+    <employee ssn="123-45-6789" id="456" address="1212 Loop 12">A Person</employee>
+</company>

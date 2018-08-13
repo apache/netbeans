@@ -1,0 +1,2 @@
+Create Constructor CreateConstructor1(int) in org.netbeans.test.java.hints.CreateConstructor1
+Change constructor from CreateConstructor1() to CreateConstructor1(int par)

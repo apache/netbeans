@@ -1,0 +1,25 @@
+generator:
+  class: sfDoctrineGenerator
+  param:
+    model_class:           JobeetJob
+    theme:                 admin
+    non_verbose_templates: true
+    with_show:             false
+    singular:              ~
+    plural:                ~
+    route_prefix:          jobeet_job_job
+    with_doctrine_route:   1
+
+    config:
+      actions: ~
+      fields:
+        is_activated: { label: Activated?, help: Whether the user has activated the job, or not }
+        is_public:    { label: Public, help: Whether the job can also be published on affiliate websites, or not }
+      list:
+        title: Job Management
+      filter:  ~
+      form:    ~
+      edit:
+        title: Editing Job "%%company%% is looking for a %%position%%"
+      new:
+        title: Job Creation

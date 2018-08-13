@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="qualified" attributeFormDefault="unqualified"> 
+  
+  <xsd:simpleType name="colorType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="red"/>
+      <xsd:enumeration value="green"/>
+      <xsd:enumeration value="blue"/>
+    </xsd:restriction>
+  </xsd:simpleType>  
+    
+  <xsd:element name="item">
+     <xsd:complexType>
+        <xsd:sequence>
+           <xsd:element name="color" type="colorType"/> 
+        </xsd:sequence>
+     </xsd:complexType>
+  </xsd:element> 
+</xsd:schema>

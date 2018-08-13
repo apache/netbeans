@@ -1,0 +1,192 @@
+Calling GenBeans.doIt
+Bean Tree:
+menus <menus> : Menus
+	menu <menu> : Menu[0,n]
+		name <name> : String
+		(
+		  | menuItem <menu-item> : String
+		  | separator <separator> : Separator
+		  | menu <menu> : Menu...
+		)[0,n]
+	foo <foo> : Foo
+		name <name> : String[0,n]
+		separator <separator> : Separator
+		name2 <name> : String[0,1]
+		name3 <name> : String[0,1]
+
+Compiling
+Finished compiling: 0
+out: TestPositions - creating the DOM document
+out: TestPositions - creating the bean graph
+out: TestPositions - bean graph created
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <menus>
+out: 	<menu>
+out: 		<name>Tools</name>
+out: 		<menu-item>Setup</menu-item>
+out: 		<menu-item>Update Center</menu-item>
+out: 		<separator/>
+out: 		<menu>
+out: 			<name>VCS</name>
+out: 			<menu-item>Update</menu-item>
+out: 			<menu-item>Commit</menu-item>
+out: 			<separator/>
+out: 			<menu-item>Revert</menu-item>
+out: 		</menu>
+out: 		<separator/>
+out: 		<menu-item>Help</menu-item>
+out: 	</menu>
+out: 	<foo>
+out: 		<name>name1-1</name>
+out: 		<name>name1-2</name>
+out: 		<separator/>
+out: 		<name>name2</name>
+out: 		<name>name3</name>
+out: 	</foo>
+out: </menus>
+out: TestPositions - Check to make sure that elements with the same name get put into the right spot
+out: TestPositions null There are 2 names -> OK
+out: TestPositions null name2 is in the right spot -> OK
+out: TestPositions null name3 is in the right spot -> OK
+out: TestPositions - Adding some colors to the menu.
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <menus>
+out: 	<menu>
+out: 		<name>Tools</name>
+out: 		<menu-item>Setup</menu-item>
+out: 		<menu-item>Update Center</menu-item>
+out: 		<separator/>
+out: 		<menu>
+out: 			<name>VCS</name>
+out: 			<menu-item>Update</menu-item>
+out: 			<menu-item>Commit</menu-item>
+out: 			<separator/>
+out: 			<menu-item>Revert</menu-item>
+out: 		</menu>
+out: 		<separator/>
+out: 		<menu-item>Help</menu-item>
+out: 		<menu-item>red</menu-item>
+out: 		<menu-item>magenta</menu-item>
+out: 		<menu-item>blue</menu-item>
+out: 		<separator/>
+out: 		<menu-item>cyan</menu-item>
+out: 		<separator/>
+out: 		<menu-item>green</menu-item>
+out: 	</menu>
+out: 	<foo>
+out: 		<name>name1-1</name>
+out: 		<name>name1-2</name>
+out: 		<separator/>
+out: 		<name>name2</name>
+out: 		<name>name3</name>
+out: 	</foo>
+out: </menus>
+out: TestPositions null sizeMenuItem=8 -> OK
+out: TestPositions - {
+out: TestPositions - 	Setup
+out: TestPositions - 	Update Center
+out: TestPositions - 	Help
+out: TestPositions - 	red
+out: TestPositions - 	magenta
+out: TestPositions - 	blue
+out: TestPositions - 	cyan
+out: TestPositions - 	green
+out: TestPositions - }
+out: TestPositions - Replacing menu items with many numbers
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <menus>
+out: 	<menu>
+out: 		<name>Tools</name>
+out: 		<menu-item>1</menu-item>
+out: 		<menu-item>2</menu-item>
+out: 		<separator/>
+out: 		<menu>
+out: 			<name>VCS</name>
+out: 			<menu-item>Update</menu-item>
+out: 			<menu-item>Commit</menu-item>
+out: 			<separator/>
+out: 			<menu-item>Revert</menu-item>
+out: 		</menu>
+out: 		<separator/>
+out: 		<menu-item>3</menu-item>
+out: 		<menu-item>4</menu-item>
+out: 		<menu-item>5</menu-item>
+out: 		<menu-item>6</menu-item>
+out: 		<separator/>
+out: 		<menu-item>7</menu-item>
+out: 		<separator/>
+out: 		<menu-item>8</menu-item>
+out: 		<menu-item>9</menu-item>
+out: 		<menu-item>10</menu-item>
+out: 	</menu>
+out: 	<foo>
+out: 		<name>name1-1</name>
+out: 		<name>name1-2</name>
+out: 		<separator/>
+out: 		<name>name2</name>
+out: 		<name>name3</name>
+out: 	</foo>
+out: </menus>
+out: TestPositions - Removing 7
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <menus>
+out: 	<menu>
+out: 		<name>Tools</name>
+out: 		<menu-item>1</menu-item>
+out: 		<menu-item>2</menu-item>
+out: 		<separator/>
+out: 		<menu>
+out: 			<name>VCS</name>
+out: 			<menu-item>Update</menu-item>
+out: 			<menu-item>Commit</menu-item>
+out: 			<separator/>
+out: 			<menu-item>Revert</menu-item>
+out: 		</menu>
+out: 		<separator/>
+out: 		<menu-item>3</menu-item>
+out: 		<menu-item>4</menu-item>
+out: 		<menu-item>5</menu-item>
+out: 		<menu-item>6</menu-item>
+out: 		<separator/>
+out: 		<separator/>
+out: 		<menu-item>8</menu-item>
+out: 		<menu-item>9</menu-item>
+out: 		<menu-item>10</menu-item>
+out: 	</menu>
+out: 	<foo>
+out: 		<name>name1-1</name>
+out: 		<name>name1-2</name>
+out: 		<separator/>
+out: 		<name>name2</name>
+out: 		<name>name3</name>
+out: 	</foo>
+out: </menus>
+out: TestPositions - Replacing menu items with few letters
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <menus>
+out: 	<menu>
+out: 		<name>Tools</name>
+out: 		<menu-item>a</menu-item>
+out: 		<menu-item>b</menu-item>
+out: 		<separator/>
+out: 		<menu>
+out: 			<name>VCS</name>
+out: 			<menu-item>Update</menu-item>
+out: 			<menu-item>Commit</menu-item>
+out: 			<separator/>
+out: 			<menu-item>Revert</menu-item>
+out: 		</menu>
+out: 		<separator/>
+out: 		<menu-item>c</menu-item>
+out: 		<separator/>
+out: 		<separator/>
+out: 	</menu>
+out: 	<foo>
+out: 		<name>name1-1</name>
+out: 		<name>name1-2</name>
+out: 		<separator/>
+out: 		<name>name2</name>
+out: 		<name>name3</name>
+out: 	</foo>
+out: </menus>
+Finished running TestPositions: 0

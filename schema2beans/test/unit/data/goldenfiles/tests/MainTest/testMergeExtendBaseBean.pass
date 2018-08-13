@@ -1,0 +1,650 @@
+Calling GenBeans.doIt
+Bean Tree:
+book <book> : Book
+	[attr: good ENUM ( yes no ) yes]
+	title <title> : String
+	author <author> : String[1,n]
+	index <index> : Index[0,n]
+		[attr: color CDATA #IMPLIED ]
+		[attr: cross-ref ENUM ( yes no ) no]
+		word <word> : String
+		ref <ref> : Ref[1,n]
+			page <page> : String
+			line <line> : String
+	chapter <chapter> : Chapter[1,n]
+		[attr: title CDATA #IMPLIED ]
+		number <number> : String
+		comment <comment> : String[0,1]
+		paragraph <paragraph> : String[0,n]
+			[attr: opt CDATA #IMPLIED ]
+	summary <summary> : String[0,1]
+		[attr: length CDATA #REQUIRED ]
+		[attr: lang CDATA #IMPLIED ]
+		[attr: size CDATA #FIXED 12]
+	instock <instock> : boolean
+		EMPTY : String
+	content <content> : Content
+		title <title> : String
+		comment <comment> : String
+		title2 <title> : String[0,1]
+
+Compiling
+Finished compiling: 0
+out: TestMergeExtendBaseBean - creating the DOM document
+out: TestMergeExtendBaseBean - creating the bean graph1
+out: TestMergeExtendBaseBean - creating the DOM document
+out: TestMergeExtendBaseBean - creating the bean graph2
+out: TestMergeExtendBaseBean - new listener for Book
+out: TestMergeExtendBaseBean - new listener for Book
+out: TestMergeExtendBaseBean - should not get any event
+out: TestMergeExtendBaseBean Merge(Update) - two identical xml files  - no diff -> OK
+out: TestMergeExtendBaseBean Merge(Update) - two identical xml files  - equals -> OK
+out: TestMergeExtendBaseBean - creating the DOM document
+out: TestMergeExtendBaseBean - creating the bean graph3
+out: TestMergeExtendBaseBean - new listener for Book
+out: TestMergeExtendBaseBean - <Chg Lnr:Book Evt:/Book/Author.-1 Src:book.Book>
+out: TestMergeExtendBaseBean - <Author[-1] - Parent: Book/book.Book>
+out: oldValue={
+out: 	John Smith
+out: 	, 
+out: 	Donald Duck
+out: 	, 
+out: 	Mikey Mouse
+out: 	}
+out: newValue={
+out: 	John Smith
+out: 	, 
+out: 	Mikey Mouse
+out: 	, 
+out: 	Donald Duck
+out: 	}
+out: TestMergeExtendBaseBean - <Add Lnr:Book Evt:/Book/Chapter.0/Comment Src:book.Chapter>
+out: TestMergeExtendBaseBean - <Comment[-1] - Parent: Chapter/book.Chapter>
+out: oldValue=null
+out: newValue=
+out: 		First chapter.
+out: 		
+out: TestMergeExtendBaseBean - <Chg Lnr:Book Evt:/Book/Chapter.0/Paragraph.-1 Src:book.Chapter>
+out: TestMergeExtendBaseBean - <Paragraph[-1] - Parent: Chapter/book.Chapter>
+out: oldValue={
+out: 			And the book lived a never ending happy life, read, copied
+out: 			and enjoyed by so many readers.
+out: 		}
+out: newValue={
+out: 			Once upon a time...
+out: 		, 
+out: 			And this is how the book met the fairy, and how all this
+out: 			story began.
+out: 		}
+out: TestMergeExtendBaseBean - <Rmv Lnr:Book Evt:/Book/Chapter.0/ParagraphOpt.1 Src:book.Chapter>
+out: TestMergeExtendBaseBean - <ParagraphOpt[1] - Parent: Chapter/book.Chapter>
+out: oldValue=null
+out: newValue=null
+out: TestMergeExtendBaseBean - <Rmv Lnr:Book Evt:/Book/Chapter.1/Comment Src:book.Chapter>
+out: TestMergeExtendBaseBean - <Comment[-1] - Parent: Chapter/book.Chapter>
+out: oldValue=
+out: 		First chapter.
+out: 		
+out: newValue=null
+out: TestMergeExtendBaseBean - <Chg Lnr:Book Evt:/Book/Chapter.1/Paragraph.-1 Src:book.Chapter>
+out: TestMergeExtendBaseBean - <Paragraph[-1] - Parent: Chapter/book.Chapter>
+out: oldValue={
+out: 			Once upon a time...
+out: 		, 
+out: 			And this is how the book met the fairy, and how all this
+out: 			story began.
+out: 		}
+out: newValue={
+out: 			And the book lived a never ending happy life, read, copied
+out: 			and enjoyed by so many readers.
+out: 		}
+out: TestMergeExtendBaseBean - <Rmv Lnr:Book Evt:/Book/Chapter.1/ParagraphOpt.1 Src:book.Chapter>
+out: TestMergeExtendBaseBean - <ParagraphOpt[1] - Parent: Chapter/book.Chapter>
+out: oldValue=null
+out: newValue=null
+out: TestMergeExtendBaseBean - should get one event for Summary
+out: TestMergeExtendBaseBean - <Chg Lnr:Book Evt:/Book/Summary Src:book.Book>
+out: TestMergeExtendBaseBean - <Summary[-1] - Parent: Book/book.Book>
+out: oldValue=
+out: 	This book is about the life of a book spent between books who dreamed
+out: 	to meet a fairy who could transform it into an XML book and travel
+out: 	in an electronic boundary-less world.
+out: 	
+out: newValue=This is the new summary
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <book good='yes'>
+out: 	<title></title>
+out: 	<author>
+out: 	John Smith
+out: 	</author>
+out: 	<author>
+out: 	Mikey Mouse
+out: 	</author>
+out: 	<author>
+out: 	Donald Duck
+out: 	</author>
+out: 	<index cross-ref='no'>
+out: 		<word>
+out: 			Good book
+out: 		</word>
+out: 		<ref>
+out: 			<page>
+out: 			22
+out: 		</page>
+out: 			<line>
+out: 			12
+out: 		</line>
+out: 		</ref>
+out: 	</index>
+out: 	<index cross-ref='no'>
+out: 		<word>
+out: 			E-Tool
+out: 		</word>
+out: 		<ref>
+out: 			<page>
+out: 			5
+out: 		</page>
+out: 			<line>
+out: 			15
+out: 		</line>
+out: 		</ref>
+out: 		<ref>
+out: 			<page>
+out: 			29
+out: 		</page>
+out: 			<line>
+out: 			31
+out: 		</line>
+out: 		</ref>
+out: 	</index>
+out: 	<chapter>
+out: 		<number></number>
+out: 		<comment>
+out: 		First chapter.
+out: 		</comment>
+out: 		<paragraph>
+out: 			Once upon a time...
+out: 		</paragraph>
+out: 		<paragraph>
+out: 			And this is how the book met the fairy, and how all this
+out: 			story began.
+out: 		</paragraph>
+out: 	</chapter>
+out: 	<chapter>
+out: 		<number></number>
+out: 		<paragraph>
+out: 			And the book lived a never ending happy life, read, copied
+out: 			and enjoyed by so many readers.
+out: 		</paragraph>
+out: 	</chapter>
+out: 	<chapter>
+out: 		<number></number>
+out: 		<comment>
+out: 		Empty chapter
+out: 		</comment>
+out: 	</chapter>
+out: 	<summary length='' size='12'>This is the new summary</summary>
+out: 	<content>
+out: 		<title></title>
+out: 		<comment></comment>
+out: 	</content>
+out: </book>
+out: TestMergeExtendBaseBean Merge(Update) - changing one property  - equals -> OK
+out: TestMergeExtendBaseBean - should not get any event
+out: TestMergeExtendBaseBean Merge(Update) - changing one property  - equals -> OK
+out: TestMergeExtendBaseBean Merge(Update) - mixing  array of strings initial match -> OK
+out: TestMergeExtendBaseBean Merge(Update) - mixing  array of strings initial match -> OK
+out: TestMergeExtendBaseBean Merge(Update) - mixing  array of strings initial match -> OK
+out: TestMergeExtendBaseBean - <Chg Lnr:Book Evt:/Book/Author.-1 Src:book.Book>
+out: TestMergeExtendBaseBean - <Author[-1] - Parent: Book/book.Book>
+out: oldValue={
+out: 	John Smith
+out: 	, 
+out: 	Mikey Mouse
+out: 	, 
+out: 	Donald Duck
+out: 	}
+out: newValue={
+out: 	Donald Duck
+out: 	, 
+out: 	Mikey Mouse
+out: 	, 
+out: 	John Smith
+out: 	}
+out: TestMergeExtendBaseBean Merge(Update) - mixing  array of strings mixed -> OK
+out: TestMergeExtendBaseBean Merge(Update) - mixing  array of strings mixed -> OK
+out: TestMergeExtendBaseBean Merge(Update) - mixing  array of strings mixed -> OK
+out: TestMergeExtendBaseBean - <Chg Lnr:Book Evt:/Book/Author.-1 Src:book.Book>
+out: TestMergeExtendBaseBean - <Author[-1] - Parent: Book/book.Book>
+out: oldValue={
+out: 	John Smith
+out: 	, 
+out: 	Mikey Mouse
+out: 	, 
+out: 	Donald Duck
+out: 	}
+out: newValue={
+out: 	Donald Duck
+out: 	, 
+out: 	Mikey Mouse
+out: 	, 
+out: 	John Smith
+out: 	}
+out: TestMergeExtendBaseBean Merge(Update) - mixing  array of strings  - equals -> OK
+out: TestMergeExtendBaseBean Merge(Update) - mixing  array of strings reset match -> OK
+out: TestMergeExtendBaseBean Merge(Update) - mixing  array of strings reset match -> OK
+out: TestMergeExtendBaseBean Merge(Update) - mixing  array of strings reset match -> OK
+out: TestMergeExtendBaseBean Merge(Update) - mixing  array of beans initial match -> OK
+out: TestMergeExtendBaseBean Merge(Update) - mixing  array of beans initial match -> OK
+out: TestMergeExtendBaseBean Merge(Update) - mixing  array of beans initial match -> OK
+out: TestMergeExtendBaseBean - <Chg Lnr:Book Evt:/Book/Chapter.-1 Src:book.Book>
+out: TestMergeExtendBaseBean - <Chapter[-1] - Parent: Book/book.Book>
+out: oldValue={<chapter>
+out: 	<number></number>
+out: 	<comment>
+out: 		First chapter.
+out: 		</comment>
+out: 	<paragraph>
+out: 			Once upon a time...
+out: 		</paragraph>
+out: 	<paragraph>
+out: 			And this is how the book met the fairy, and how all this
+out: 			story began.
+out: 		</paragraph>
+out: </chapter>
+out: , <chapter>
+out: 	<number></number>
+out: 	<paragraph>
+out: 			And the book lived a never ending happy life, read, copied
+out: 			and enjoyed by so many readers.
+out: 		</paragraph>
+out: </chapter>
+out: , <chapter>
+out: 	<number></number>
+out: 	<comment>
+out: 		Empty chapter
+out: 		</comment>
+out: </chapter>
+out: }
+out: newValue={<chapter>
+out: 	<number></number>
+out: 	<comment>
+out: 		Empty chapter
+out: 		</comment>
+out: </chapter>
+out: , <chapter>
+out: 	<number></number>
+out: 	<paragraph>
+out: 			And the book lived a never ending happy life, read, copied
+out: 			and enjoyed by so many readers.
+out: 		</paragraph>
+out: </chapter>
+out: , <chapter>
+out: 	<number></number>
+out: 	<comment>
+out: 		First chapter.
+out: 		</comment>
+out: 	<paragraph>
+out: 			Once upon a time...
+out: 		</paragraph>
+out: 	<paragraph>
+out: 			And this is how the book met the fairy, and how all this
+out: 			story began.
+out: 		</paragraph>
+out: </chapter>
+out: }
+out: TestMergeExtendBaseBean Merge(Update) - mixing  array of beans mixed -> OK
+out: TestMergeExtendBaseBean Merge(Update) - mixing  array of beans mixed -> OK
+out: TestMergeExtendBaseBean Merge(Update) - mixing  array of beans mixed -> OK
+out: TestMergeExtendBaseBean - <Chg Lnr:Book Evt:/Book/Author.-1 Src:book.Book>
+out: TestMergeExtendBaseBean - <Author[-1] - Parent: Book/book.Book>
+out: oldValue={
+out: 	Donald Duck
+out: 	, 
+out: 	Mikey Mouse
+out: 	, 
+out: 	John Smith
+out: 	}
+out: newValue={
+out: 	John Smith
+out: 	, 
+out: 	Mikey Mouse
+out: 	, 
+out: 	Donald Duck
+out: 	}
+out: TestMergeExtendBaseBean - <Chg Lnr:Book Evt:/Book/Chapter.0/Comment Src:book.Chapter>
+out: TestMergeExtendBaseBean - <Comment[-1] - Parent: Chapter/book.Chapter>
+out: oldValue=
+out: 		First chapter.
+out: 		
+out: newValue=
+out: 		Empty chapter
+out: 		
+out: TestMergeExtendBaseBean - <Chg Lnr:Book Evt:/Book/Chapter.0/Paragraph.-1 Src:book.Chapter>
+out: TestMergeExtendBaseBean - <Paragraph[-1] - Parent: Chapter/book.Chapter>
+out: oldValue={
+out: 			Once upon a time...
+out: 		, 
+out: 			And this is how the book met the fairy, and how all this
+out: 			story began.
+out: 		}
+out: newValue={}
+out: TestMergeExtendBaseBean - <Chg Lnr:Book Evt:/Book/Chapter.0/ParagraphOpt.-1 Src:book.Chapter>
+out: TestMergeExtendBaseBean - <ParagraphOpt[-1] - Parent: Chapter/book.Chapter>
+out: oldValue={null, null}
+out: newValue={}
+out: TestMergeExtendBaseBean - <Chg Lnr:Book Evt:/Book/Chapter.2/Comment Src:book.Chapter>
+out: TestMergeExtendBaseBean - <Comment[-1] - Parent: Chapter/book.Chapter>
+out: oldValue=
+out: 		Empty chapter
+out: 		
+out: newValue=
+out: 		First chapter.
+out: 		
+out: TestMergeExtendBaseBean - <Chg Lnr:Book Evt:/Book/Chapter.2/Paragraph.-1 Src:book.Chapter>
+out: TestMergeExtendBaseBean - <Paragraph[-1] - Parent: Chapter/book.Chapter>
+out: oldValue={}
+out: newValue={
+out: 			Once upon a time...
+out: 		, 
+out: 			And this is how the book met the fairy, and how all this
+out: 			story began.
+out: 		}
+out: TestMergeExtendBaseBean - <Chg Lnr:Book Evt:/Book/Chapter.2/ParagraphOpt.-1 Src:book.Chapter>
+out: TestMergeExtendBaseBean - <ParagraphOpt[-1] - Parent: Chapter/book.Chapter>
+out: oldValue={}
+out: newValue={null, null}
+out: TestMergeExtendBaseBean Merge(Update) - mixing  array of beans  - equals -> OK
+out: TestMergeExtendBaseBean Merge(Update) - mixing  array of beans reset match -> OK
+out: TestMergeExtendBaseBean Merge(Update) - mixing  array of beans reset match -> OK
+out: TestMergeExtendBaseBean Merge(Update) - mixing  array of beans reset match -> OK
+out: TestMergeExtendBaseBean Merge(Update) - remove elt from array of strings initial match -> OK
+out: TestMergeExtendBaseBean Merge(Update) - remove elt from array of strings initial match -> OK
+out: TestMergeExtendBaseBean Merge(Update) - remove elt from array of strings initial match -> OK
+out: TestMergeExtendBaseBean - should get one remove event from deletion
+out: TestMergeExtendBaseBean - <Rmv Lnr:Book Evt:/Book/Author.1 Src:book.Book>
+out: TestMergeExtendBaseBean - <Author[1] - Parent: Book/book.Book>
+out: oldValue=
+out: 	Mikey Mouse
+out: 	
+out: newValue=null
+out: TestMergeExtendBaseBean Merge(Update) - remove elt from array of strings match after rem -> OK
+out: TestMergeExtendBaseBean Merge(Update) - remove elt from array of strings match after rem -> OK
+out: TestMergeExtendBaseBean - should get one Book remove event from merge
+out: TestMergeExtendBaseBean - <Rmv Lnr:Book Evt:/Book/Author.1 Src:book.Book>
+out: TestMergeExtendBaseBean - <Author[1] - Parent: Book/book.Book>
+out: oldValue=
+out: 	Mikey Mouse
+out: 	
+out: newValue=null
+out: TestMergeExtendBaseBean Merge(Update) - remove elt from array of strings match -> OK
+out: TestMergeExtendBaseBean Merge(Update) - remove elt from array of strings match -> OK
+out: TestMergeExtendBaseBean Merge(Update) - remove elt from array of strings correct size -> OK
+out: TestMergeExtendBaseBean Merge(Update) - remove elt from array of strings  - equals -> OK
+out: TestMergeExtendBaseBean - should get one event for elt added
+out: TestMergeExtendBaseBean - <Add Lnr:Book Evt:/Book/Author.2 Src:book.Book>
+out: TestMergeExtendBaseBean - <Author[2] - Parent: Book/book.Book>
+out: oldValue=null
+out: newValue=
+out: 	Mikey Mouse
+out: 	
+out: TestMergeExtendBaseBean Merge(Update) - add elt from array of strings added -> OK
+out: TestMergeExtendBaseBean - should get one event for elt added from merge
+out: TestMergeExtendBaseBean - <Add Lnr:Book Evt:/Book/Author.2 Src:book.Book>
+out: TestMergeExtendBaseBean - <Author[2] - Parent: Book/book.Book>
+out: oldValue=null
+out: newValue=
+out: 	Mikey Mouse
+out: 	
+out: TestMergeExtendBaseBean Merge(Update) - add elt from array of strings match -> OK
+out: TestMergeExtendBaseBean Merge(Update) - add elt from array of strings match -> OK
+out: TestMergeExtendBaseBean Merge(Update) - add elt from array of strings match -> OK
+out: TestMergeExtendBaseBean Merge(Update) - add elt from array of strings correct size -> OK
+out: TestMergeExtendBaseBean Merge(Update) - add elt from array of strings  - equals -> OK
+out: TestMergeExtendBaseBean Merge(Update) - remove elt from array of beans initial match -> OK
+out: TestMergeExtendBaseBean Merge(Update) - remove elt from array of beans initial match -> OK
+out: TestMergeExtendBaseBean Merge(Update) - remove elt from array of beans initial match -> OK
+out: TestMergeExtendBaseBean - should get one remove event from deletion
+out: TestMergeExtendBaseBean - <Rmv Lnr:Book Evt:/Book/Chapter.1 Src:book.Book>
+out: TestMergeExtendBaseBean - <Chapter[1] - Parent: Book/book.Book>
+out: oldValue=<chapter>
+out: 	<number></number>
+out: 	<paragraph>
+out: 			And the book lived a never ending happy life, read, copied
+out: 			and enjoyed by so many readers.
+out: 		</paragraph>
+out: </chapter>
+out: 
+out: newValue=null
+out: TestMergeExtendBaseBean Merge(Update) - remove elt from array of beans match after rem -> OK
+out: TestMergeExtendBaseBean Merge(Update) - remove elt from array of beans match after rem -> OK
+out: TestMergeExtendBaseBean - should get one Chapter remove event from merge
+out: TestMergeExtendBaseBean - <Rmv Lnr:Book Evt:/Book/Chapter.1 Src:book.Book>
+out: TestMergeExtendBaseBean - <Chapter[1] - Parent: Book/book.Book>
+out: oldValue=<chapter>
+out: 	<number></number>
+out: 	<paragraph>
+out: 			And the book lived a never ending happy life, read, copied
+out: 			and enjoyed by so many readers.
+out: 		</paragraph>
+out: </chapter>
+out: 
+out: newValue=null
+out: TestMergeExtendBaseBean Merge(Update) - remove elt from array of beans match -> OK
+out: TestMergeExtendBaseBean Merge(Update) - remove elt from array of beans match -> OK
+out: TestMergeExtendBaseBean Merge(Update) - remove elt from array of beans correct size -> OK
+out: TestMergeExtendBaseBean Merge(Update) - remove elt from array of beans  - equals -> OK
+out: TestMergeExtendBaseBean - should get one event for elt added
+out: TestMergeExtendBaseBean - <Add Lnr:Book Evt:/Book/Chapter.2 Src:book.Book>
+out: TestMergeExtendBaseBean - <Chapter[2] - Parent: Book/book.Book>
+out: oldValue=null
+out: newValue=<chapter>
+out: 	<number></number>
+out: 	<paragraph>
+out: 			And the book lived a never ending happy life, read, copied
+out: 			and enjoyed by so many readers.
+out: 		</paragraph>
+out: </chapter>
+out: 
+out: TestMergeExtendBaseBean Merge(Update) - add elt from array of strings added -> OK
+out: TestMergeExtendBaseBean - should get one event for elt added from merge
+out: TestMergeExtendBaseBean - <Add Lnr:Book Evt:/Book/Chapter.2 Src:book.Book>
+out: TestMergeExtendBaseBean - <Chapter[2] - Parent: Book/book.Book>
+out: oldValue=null
+out: newValue=<chapter>
+out: 	<number></number>
+out: 	<paragraph>
+out: 			And the book lived a never ending happy life, read, copied
+out: 			and enjoyed by so many readers.
+out: 		</paragraph>
+out: </chapter>
+out: 
+out: TestMergeExtendBaseBean Merge(Update) - add elt from array of strings match -> OK
+out: TestMergeExtendBaseBean Merge(Update) - add elt from array of strings match -> OK
+out: TestMergeExtendBaseBean Merge(Update) - add elt from array of strings match -> OK
+out: TestMergeExtendBaseBean Merge(Update) - add elt from array of strings correct size -> OK
+out: TestMergeExtendBaseBean Merge(Update) - add elt from array of strings  - equals -> OK
+out: TestMergeExtendBaseBean - creating the DOM document
+out: TestMergeExtendBaseBean - creating the bean graph1
+out: TestMergeExtendBaseBean comparing graphs with 1 null elts -> OK
+out: TestMergeExtendBaseBean comparing graphs with 1 null elts -> OK
+out: TestMergeExtendBaseBean comparing graphs with 1 null elts -> OK
+out: TestMergeExtendBaseBean comparing graphs with null indexed elts -> OK
+out: TestMergeExtendBaseBean comparing graphs with null indexed elts correct new array sise -> OK
+out: TestMergeExtendBaseBean comparing graphs with null indexed elts elt ok -> OK
+out: TestMergeExtendBaseBean comparing graphs with null indexed elts elt ok -> OK
+out: TestMergeExtendBaseBean comparing graphs with null indexed elts elt ok -> OK
+out: TestMergeExtendBaseBean comparing graphs with null single bean elt -> OK
+out: TestMergeExtendBaseBean comparing graphs with null single bean elt -> OK
+out: TestMergeExtendBaseBean comparing graphs with null single bean elt -> OK
+out: TestMergeExtendBaseBean - <Add Lnr:Book Evt:/Book/Chapter.3 Src:book.Book>
+out: TestMergeExtendBaseBean - <Chapter[3] - Parent: Book/book.Book>
+out: oldValue=null
+out: newValue=<chapter>
+out: 	<number>123</number>
+out: 	<comment>This is a comment</comment>
+out: 	<paragraph>This is a new paragraph</paragraph>
+out: </chapter>
+out: 
+out: TestMergeExtendBaseBean - <Add Lnr:Book Evt:/Book/Chapter.3 Src:book.Book>
+out: TestMergeExtendBaseBean - <Chapter[3] - Parent: Book/book.Book>
+out: oldValue=null
+out: newValue=<chapter>
+out: 	<number>123</number>
+out: 	<comment>This is a comment</comment>
+out: 	<paragraph>This is a new paragraph</paragraph>
+out: </chapter>
+out: 
+out: TestMergeExtendBaseBean cloning a new bean objects equal -> OK
+out: TestMergeExtendBaseBean cloning a new bean same graph once added -> OK
+out: TestMergeExtendBaseBean - creating the DOM document
+out: TestMergeExtendBaseBean - creating the bean graph1
+out: TestMergeExtendBaseBean - creating the DOM document
+out: TestMergeExtendBaseBean - creating the bean graph2
+out: TestMergeExtendBaseBean - <chapter title='First'>
+out: 	<number></number>
+out: 	<paragraph>
+out: 			And the book lived a never ending happy life, read, copied
+out: 			and enjoyed by so many readers.
+out: 		</paragraph>
+out: </chapter>
+out: 
+out: TestMergeExtendBaseBean - <chapter title='First'>
+out: 	<number></number>
+out: 	<paragraph>
+out: 			And the book lived a never ending happy life, read, copied
+out: 			and enjoyed by so many readers.
+out: 		</paragraph>
+out: </chapter>
+out: 
+out: TestMergeExtendBaseBean - new listener for Book
+out: TestMergeExtendBaseBean - new listener for Book
+out: TestMergeExtendBaseBean Merging attributes shouldn't be equals (diff an attr) -> OK
+out: TestMergeExtendBaseBean - <Chg Lnr:Book Evt:/Book/Good Src:book.Book>
+out: TestMergeExtendBaseBean - <Good[-1] - Parent: Book/book.Book>
+out: oldValue=yes
+out: newValue=no
+out: TestMergeExtendBaseBean - <Add Lnr:Book Evt:/Book/Index.0/Color Src:book.Index>
+out: TestMergeExtendBaseBean - <Color[-1] - Parent: Index/book.Index>
+out: oldValue=null
+out: newValue=blue
+out: TestMergeExtendBaseBean - <Add Lnr:Book Evt:/Book/Chapter.0/Title Src:book.Chapter>
+out: TestMergeExtendBaseBean - <Title[-1] - Parent: Chapter/book.Chapter>
+out: oldValue=null
+out: newValue=First
+out: TestMergeExtendBaseBean - <Add Lnr:Book Evt:/Book/Chapter.1/Title Src:book.Chapter>
+out: TestMergeExtendBaseBean - <Title[-1] - Parent: Chapter/book.Chapter>
+out: oldValue=null
+out: newValue=Second
+out: TestMergeExtendBaseBean - <Chg Lnr:Book Evt:/Book/SummaryLength Src:book.Book>
+out: TestMergeExtendBaseBean - <SummaryLength[-1] - Parent: Book/book.Book>
+out: oldValue=
+out: newValue=123
+out: TestMergeExtendBaseBean - <Add Lnr:Book Evt:/Book/SummaryLang Src:book.Book>
+out: TestMergeExtendBaseBean - <SummaryLang[-1] - Parent: Book/book.Book>
+out: oldValue=null
+out: newValue=us
+out: TestMergeExtendBaseBean Merging attributes should be equals -> OK
+out: TestMergeExtendBaseBean Merging attributes attr on root != null -> OK
+out: TestMergeExtendBaseBean Merging attributes attr on root -> OK
+out: TestMergeExtendBaseBean Merging attributes attr on summary != null -> OK
+out: TestMergeExtendBaseBean Merging attributes attr on summary -> OK
+out: TestMergeExtendBaseBean Merging attributes attr on summary != null -> OK
+out: TestMergeExtendBaseBean Merging attributes attr on summary -> OK
+out: TestMergeExtendBaseBean - First
+out: TestMergeExtendBaseBean Merging attributes attr on chapter != null -> OK
+out: TestMergeExtendBaseBean Merging attributes attr on chapter -> OK
+out: TestMergeExtendBaseBean - Second
+out: TestMergeExtendBaseBean Merging attributes attr on chapter != null -> OK
+out: TestMergeExtendBaseBean Merging attributes attr on chapter -> OK
+out: TestMergeExtendBaseBean - creating the DOM document
+out: TestMergeExtendBaseBean - creating the DOM document
+out: TestMergeExtendBaseBean - creating the bean graph for the comment merge test
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <book good='no'>
+out: 	<!-- BLUE -->
+out: 	<!-- GREEN -->
+out: 	<title></title>
+out: 	<author>
+out: 	John Smith
+out: 	</author>
+out: 	<author>
+out: 	Donald Duck
+out: 	</author>
+out: 	<author>
+out: 	Mikey Mouse
+out: 	</author>
+out: 	<index color='blue' cross-ref='no'>
+out: 		<!-- MAUVE -->
+out: 		<!-- CYAN -->
+out: 		<word>
+out: 			Good book
+out: 		</word>
+out: 		<ref>
+out: 			<page>
+out: 			22
+out: 		</page>
+out: 			<line>
+out: 			12
+out: 		</line>
+out: 		</ref>
+out: 	</index>
+out: 	<index cross-ref='no'>
+out: 		<!--RED-->
+out: 		<word>
+out: 			E-Tool
+out: 		</word>
+out: 		<ref>
+out: 			<page>
+out: 			5
+out: 		</page>
+out: 			<line>
+out: 			15
+out: 		</line>
+out: 		</ref>
+out: 		<ref>
+out: 			<page>
+out: 			29
+out: 		</page>
+out: 			<line>
+out: 			31
+out: 		</line>
+out: 		</ref>
+out: 	</index>
+out: 	<chapter title='First'>
+out: 		<number></number>
+out: 		<paragraph>
+out: 			And the book lived a never ending happy life, read, copied
+out: 			and enjoyed by so many readers.
+out: 		</paragraph>
+out: 	</chapter>
+out: 	<chapter title='Second'>
+out: 		<number></number>
+out: 		<comment>
+out: 		First chapter.
+out: 		</comment>
+out: 		<paragraph>
+out: 			Once upon a time...
+out: 		</paragraph>
+out: 		<paragraph>
+out: 			And this is how the book met the fairy, and how all this
+out: 			story began.
+out: 		</paragraph>
+out: 	</chapter>
+out: 	<chapter>
+out: 		<number></number>
+out: 		<comment>
+out: 		Empty chapter
+out: 		</comment>
+out: 	</chapter>
+out: 	<summary length='123' lang='us' size='12'>
+out: 	This book is about the life of a book spent between books who dreamed
+out: 	to meet a fairy who could transform it into an XML book and travel
+out: 	in an electronic boundary-less world.
+out: 	</summary>
+out: 	<content>
+out: 		<title></title>
+out: 		<comment></comment>
+out: 	</content>
+out: </book>
+Finished running TestMergeExtendBaseBean: 0

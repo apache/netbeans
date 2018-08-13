@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.settings.examples/1
+OpenIDE-Module-Specification-Version: 0.1
+OpenIDE-Module-Module-Dependencies: org.netbeans.modules.settings/1 > 1.0
+OpenIDE-Module-Short-Description: Module demonstrates using of settings library
+OpenIDE-Module-Layer: org/netbeans/modules/settings/examples/resources/mf-layer
+ .xml
+OpenIDE-Module-Name: Settings Examples module
+

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://xml.netbeans.org/schema/TNSC"
+            xmlns:tns="http://xml.netbeans.org/schema/TNSC"
+            elementFormDefault="qualified">
+    <xsd:element name="rootC1">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:any minOccurs="0"/>
+                <xsd:element name="C11"/>
+                <xsd:element name="C12"/>
+            </xsd:sequence>
+            <xsd:attribute name="attrC11" type="xsd:string"/>
+            <xsd:attribute name="attrC12" type="xsd:string"/>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="rootC2">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="C21"/>
+                <xsd:element name="C22"/>
+            </xsd:sequence>
+            <xsd:attribute name="attrC21" type="xsd:string"/>
+            <xsd:attribute name="attrC22" type="xsd:string"/>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

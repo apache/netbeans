@@ -1,0 +1,88 @@
+Calling GenBeans.doIt
+Bean Tree:
+book <book> : Book
+	index <index> : Index[1,n]
+		word <word> : String
+		ref <ref> : Ref[1,n]
+			page <page> : String
+			line <line> : String
+	chapter <chapter> : Chapter[1,n]
+		comment <comment> : String[0,1]
+		paragraph <paragraph> : String[0,n]
+	summary <summary> : String[0,1]
+	author <author> : String[1,n]
+	reviews <reviews> : String[0,1]
+	available <available> : boolean
+		EMPTY : String
+
+Compiling
+Finished compiling: 0
+out: TestVeto - creating the DOM document
+out: TestVeto - creating the bean graph
+out: TestVeto - bean graph created
+out: TestVeto - new listener for Book listener / Book
+out: TestVeto - Book listener received veto event:
+out: TestVeto - <Lnr:Book Evt:/Book/Summary Src:book.Book>
+out: TestVeto - <Summary[-1] - Parent: Book/book.Book>
+out: TestVeto simple change event on the root - no veto (old value) -> OK
+out: TestVeto simple change event on the root - no veto (new value) -> OK
+out: TestVeto simple change event on the root - no veto (new value) -> OK
+out: TestVeto - Book listener received veto event:
+out: TestVeto - <Lnr:Book Evt:/Book/Summary Src:book.Book>
+out: TestVeto - <Summary[-1] - Parent: Book/book.Book>
+out: TestVeto - Listener: raising PropertyVetoException
+out: TestVeto - Book listener received an undo event:
+out: TestVeto - <Lnr:Book Evt:/Book/Summary Src:book.Book>
+out: TestVeto - <Summary[-1] - Parent: Book/book.Book>
+out: TestVeto simple change event on the root - veto (got exception & same value) -> OK
+out: TestVeto Try to listen for a non vetoable property got exception:
+out: The property "Reviews" has not been generated to support vetoable exceptions. -> OK
+out: TestVeto - Book listener received veto event:
+out: TestVeto - <Lnr:Book Evt:/Book/Author.-1 Src:book.Book>
+out: TestVeto - <Author[-1] - Parent: Book/book.Book>
+out: TestVeto - oldValues.length = 0
+out: TestVeto - newValues[0]=Author1
+out: TestVeto - newValues[1]=Author2
+out: TestVeto - newValues[2]=Author3
+out: TestVeto - Book listener received veto event:
+out: TestVeto - <Lnr:Book Evt:/Book/Author.-1 Src:book.Book>
+out: TestVeto - <Author[-1] - Parent: Book/book.Book>
+out: TestVeto - oldValues[0]=Author1
+out: TestVeto - oldValues[1]=Author2
+out: TestVeto - oldValues[2]=Author3
+out: TestVeto - newValues[0]=Author1_new
+out: TestVeto - newValues[1]=Author2_new
+out: TestVeto - Listener: raising PropertyVetoException
+out: TestVeto - Book listener received an undo event:
+out: TestVeto - <Lnr:Book Evt:/Book/Author.-1 Src:book.Book>
+out: TestVeto - <Author[-1] - Parent: Book/book.Book>
+out: TestVeto - oldValues[0]=Author1_new
+out: TestVeto - oldValues[1]=Author2_new
+out: TestVeto - newValues[0]=Author1
+out: TestVeto - newValues[1]=Author2
+out: TestVeto - newValues[2]=Author3
+out: TestVeto Indexed final property (got exception) -> OK
+out: TestVeto - getAuthor()[0]=Author1
+out: TestVeto - getAuthor()[1]=Author2
+out: TestVeto - getAuthor()[2]=Author3
+out: TestVeto - new listener for Author listener / Book
+out: TestVeto - Author listener received veto event:
+out: TestVeto - <Lnr:Book Evt:/Book/Author.-1 Src:book.Book>
+out: TestVeto - <Author[-1] - Parent: Book/book.Book>
+out: TestVeto - Book listener received veto event:
+out: TestVeto - <Lnr:Book Evt:/Book/Author.-1 Src:book.Book>
+out: TestVeto - <Author[-1] - Parent: Book/book.Book>
+out: TestVeto - getAuthor()[0]=re-Author1_new
+out: TestVeto - getAuthor()[1]=re-Author2_new
+out: TestVeto - Author listener received veto event:
+out: TestVeto - <Lnr:Book Evt:/Book/Author.-1 Src:book.Book>
+out: TestVeto - <Author[-1] - Parent: Book/book.Book>
+out: TestVeto - Book listener received veto event:
+out: TestVeto - <Lnr:Book Evt:/Book/Author.-1 Src:book.Book>
+out: TestVeto - <Author[-1] - Parent: Book/book.Book>
+out: TestVeto - Listener: raising PropertyVetoException
+out: TestVeto - Book listener received an undo event:
+out: TestVeto - <Lnr:Book Evt:/Book/Author.-1 Src:book.Book>
+out: TestVeto - <Author[-1] - Parent: Book/book.Book>
+out: TestVeto Set a second listener to get two events (got exception) -> OK
+Finished running TestVeto: 0

@@ -1,0 +1,30 @@
+<LayoutModel>
+  <Root id="Form">
+    <DimensionLayout dim="horizontal">
+      <Group type="parallel" groupAlignment="leading" attributes="2048">
+          <Group type="sequential" alignment="leading" attributes="0">
+              <EmptySpace min="$pref" pref="84" max="$pref" attributes="0"/>
+              <Group type="parallel" groupAlignment="leading" max="$pref" attributes="0">
+                  <Component id="jLabel1" min="$pref" max="$pref" attributes="0"/>
+                  <Component id="jTextField2" pref="128" max="Short.MAX_VALUE" attributes="1"/>
+                  <Component id="jTextField3" max="Short.MAX_VALUE" attributes="513"/>
+              </Group>
+              <EmptySpace pref="188" max="Short.MAX_VALUE" attributes="4"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="vertical">
+      <Group type="parallel" groupAlignment="leading" attributes="2048">
+          <Group type="sequential" alignment="leading" attributes="0">
+              <EmptySpace min="$pref" pref="81" max="$pref" attributes="0"/>
+              <Component id="jLabel1" min="$pref" max="$pref" attributes="0"/>
+              <EmptySpace max="$pref" attributes="0"/>
+              <Component id="jTextField2" min="$pref" max="$pref" attributes="0"/>
+              <EmptySpace max="$pref" attributes="0"/>
+              <Component id="jTextField3" min="$pref" max="$pref" attributes="0"/>
+              <EmptySpace pref="153" max="Short.MAX_VALUE" attributes="4"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Root>
+</LayoutModel>

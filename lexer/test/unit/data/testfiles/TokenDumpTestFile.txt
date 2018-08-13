@@ -1,0 +1,19 @@
+.t.e.s.t. Test tokens
+ This is a text
+ Empty line follows - newline should be added
+
+ Follows empty line
+.\.u.0061.
+Texts follows
+.\.u.0061
+.\.u.
+Virtual EOF follows
+.e.o.f.
+Unnamed test
+.e.o.f.
+Test all except \r and \n
+.t.e.s.t. Test name not at the begining of test also works
+.\.t.
+.\.f.
+.\.b.
+End of test - does not need to be .e.o.f.

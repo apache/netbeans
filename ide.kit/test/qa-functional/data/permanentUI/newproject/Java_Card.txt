@@ -1,0 +1,6 @@
+Java Card
+Classic Applet Project
+Extended Applet Project
+Classic Library Project
+Extension Library Project
+Web Project

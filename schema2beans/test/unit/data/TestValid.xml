@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<!DOCTYPE book [
+<!ELEMENT book (title?, chapter+, note?, paperback?, summary?, isbn?, price?)> 
+<!ELEMENT title (#PCDATA)> 
+<!ELEMENT chapter (title, summary?, paragraph*, conclusion?, ending?)> 
+<!ELEMENT note ((year | date), copyright)>
+<!ELEMENT year (#PCDATA)> 
+<!ELEMENT date (#PCDATA)> 
+<!ELEMENT summary (#PCDATA)> 
+<!ELEMENT price (#PCDATA)> 
+<!ELEMENT isbn (#PCDATA)> 
+<!ELEMENT conclusion (#PCDATA)> 
+<!ELEMENT ending (#PCDATA)> 
+<!ELEMENT paragraph (#PCDATA)> 
+<!ELEMENT paperback EMPTY> 
+<!ATTLIST book instock (yes | no) "yes"> 
+<!ATTLIST title lang CDATA #FIXED "en"> 
+<!ATTLIST chapter length CDATA #IMPLIED>
+]>
+
+<book> 
+<chapter> 
+<title>The sand castle</title> 
+<paragraph> 
+Once upon a time, on a far sunny island, ... 
+</paragraph> 
+</chapter> 
+</book>
+

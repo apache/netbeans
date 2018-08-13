@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.0//EN" "http://www.netbeans.org/dtds/filesystem-1_0.dtd">
+
+<filesystem>
+    <folder name="Editors">
+        <folder name="AnnotationTypes">
+            <file name="testAnnotation.xml" url="testAnnotation.xml"/>
+            <file name="testAnnotation1.xml" url="testAnnotation1.xml"/>
+            <file name="testAnnotation2.xml" url="testAnnotation2.xml"/>
+            <file name="testAnnotation3.xml" url="testAnnotation3.xml"/>
+            <file name="testAnnotation4.xml" url="testAnnotation4.xml"/>
+            <file name="testAnnotation5.xml" url="testAnnotation5.xml"/>
+            <file name="testAnnotation6.xml" url="testAnnotation6.xml"/>
+	    <!--throws exception:
+            <file name="testAnnotation7.xml" url="testAnnotation7.xml"/>
+	    -->
+            <file name="testAnnotation8.xml" url="testAnnotation8.xml"/>
+            <file name="testAnnotationBrowseable1.xml" url="testAnnotationBrowseable1.xml"/>
+            <file name="testAnnotationBrowseable2.xml" url="testAnnotationBrowseable2.xml"/>
+            <file name="testAnnotationBrowseable3.xml" url="testAnnotationBrowseable3.xml"/>
+            
+            <file name="testAnnotationPriority1.xml" url="testAnnotationPriority1.xml"/>
+            <file name="testAnnotationPriority2.xml" url="testAnnotationPriority2.xml"/>
+            <file name="testAnnotationPriority3.xml" url="testAnnotationPriority3.xml"/>
+            <file name="testAnnotationPriority4.xml" url="testAnnotationPriority4.xml"/>
+        </folder>
+    </folder>
+</filesystem>

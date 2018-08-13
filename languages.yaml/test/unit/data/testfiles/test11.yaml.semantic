@@ -1,0 +1,6 @@
+|>METHOD:yaml<|:
+  |>METHOD:id<|: 1
+  |>METHOD:name<|: YAML
+  |>METHOD:description<|: |
+    YAML is a human friendly data serialization
+    standard for all programming languages.

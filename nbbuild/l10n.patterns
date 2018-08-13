@@ -1,0 +1,75 @@
+**/*.jar:**/Bundle*.properties
+**/*.jar:**/*.gif
+**/*.jar:**/*.html
+**/*.jar:**/*.png 
+**/*.jar:**/*.css
+**/docs/*.jar:**/*.hs
+**/docs/*.jar:**/*.jhm
+**/docs/*.jar:**/*.jpeg
+**/docs/*.jar:**/*.jpg
+**/docs/*.jar:**/*.toc
+**/docs/*.jar:**/*.xml
+**/docs/*.jar:**/*.png
+**/org-netbeans-modules-javahelp.jar:org/netbeans/modules/javahelp/resources/masterHelpSet.xml
+**/*.jar:**/*.url
+**/defaulttheme*.jar:**/messages.properties
+**/org-netbeans-modules-deployment-deviceanywhere.jar:org/netbeans/modules/deployment/deviceanywhere/messages.properties
+**/docs/syntaxref20.zip:
+**/docs/GUIExamplesDescription.html:
+**/org-netbeans-modules-apisupport-ant.jar:org/netbeans/modules/apisupport/ant/TemplateNames.properties
+**/modules/ext/debugger.html:
+**/*.jar:**/filtersets-default.xml:
+**/*.jar:**/filters-default.xml:
+**/*.jar:**/heapwalk/oqlqueries-default.xml:
+**/*.jar:**/java/hints/resources/default.properties
+**/*.jar:**/java/hints/resources/jdk*.properties
+exclude **/*.jar:**/Bundle_noi18n.properties
+exclude **/batik-mod.jar:
+exclude **/json-*.jar:
+exclude **/tidy-mod.jar:
+exclude **/commons-*.jar:
+exclude **/jsf-extensions-*.jar:
+exclude **/jsf-impl.jar:
+exclude **/webui-jsf.jar:
+exclude **/webui-jsf_*.jar:
+exclude **/webui-jsf-dt*.jar:
+exclude **/webui-jsf-suntheme*.jar:
+exclude **/Info/info.xml:
+exclude **/lucene-core-*.jar:
+exclude **/javac-api-nb-*.jar:
+exclude **/javac-impl-nb-*.jar:
+exclude **/jbi-admin-common.jar:
+exclude **/JGo5.1.jar:
+exclude **/jersey.jar:
+exclude **/wadl2java.jar:
+exclude **/bdi-1.0.0.jar:
+exclude **/itext-2.0.5.jar:
+exclude **/jxpath1.1.jar:
+exclude **/prefuse-beta.jar:
+exclude **/httpunit-1.6.2.jar:
+exclude **/wsdl4j-1.5.2.zip:
+exclude **/xmlbeans-2.1.0.zip:
+exclude **/org-netbeans-modules-html.jar:org/netbeans/modules/html/templates/html.html
+exclude **/org-netbeans-modules-reglib.jar:org/netbeans/modules/servicetag/resources/register*.html
+exclude **/core-renderer.jar:
+exclude **/junit-3.8.2.jar:
+exclude **/junit-4.1.jar:
+exclude **/jaxb-xjc.jar:
+exclude **/script-api.jar:
+exclude **/jh-2.0_05.jar:
+exclude **/*jmeter*:
+exclude **/junit-*.jar:
+exclude **/svnjavahl-1.5.0.jar:
+exclude **/jtidy-r8-20060801.jar:
+exclude **/hibernate-tools.jar:
+exclude **/FastInfoset.jar:
+exclude **/appframework-1.0.3.jar:
+exclude **/shale-remoting-1.0.4.jar:
+exclude **/jsp-parser-ext.jar:
+exclude **/groovy-all.jar:
+exclude **/dynalang-0.3.jar:
+exclude **/itext-2.0.5.jar:
+exclude **/JGo5.1.jar:
+exclude **/Tidy.jar:
+exclude **/ant.jar:
+exclude **/locale/*_${locales}.jar:

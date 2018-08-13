@@ -1,0 +1,53 @@
+<#-- FreeMarker template (see http://freemarker.org/) -->
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+<#if package?? && package != "">
+package ${package};
+
+</#if>
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
+/**
+ *
+ * @author ${user}
+ */
+public class ${name} extends TestCase {
+    
+    public ${name}(String testName) {
+        super(testName);
+    }
+
+    <#-- classNames:  "FooA,FooB" -->
+    <#-- classes:     "FooA.class,FooB.class" -->
+    public static Test suite() {
+        TestSuite suite = new TestSuite("${name}");
+        <#list "${classes}"?split(",") as class>
+        suite.addTest(new TestSuite(${class}));
+        </#list>
+        return suite;
+    }
+
+<#if methodSetUp!false>
+    <#if useAnnotations!false>
+    @Override
+    </#if>
+    protected void setUp() throws Exception {
+        super.setUp();
+    }
+
+</#if>
+<#if methodTearDown!false>
+    <#if useAnnotations!false>
+    @Override
+    </#if>
+    protected void tearDown() throws Exception {
+        super.tearDown();
+    }
+
+</#if>
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+</head>
+<body>
+MultiView API lets the developers create new multiview components
+(without specifying their content), manipulate existing multiview
+components, eg. examine what is inside the component, request focus for
+one of the views etc.<br>
+This API allows to access the multiview component's content.<p>
+To query if a TopComponent is a multiview component, use
+{@link org.netbeans.core.api.multiview.MultiViews#findMultiViewHandler}.
+If a {@link org.netbeans.core.api.multiview.MultiViewHandler} instance is
+returned, it is a multiview component.<br>
+<code>MultiViewHandler</code> can be used to examine the multiview component. <br>
+Array
+of defined perspectives (elements) and the currently selected
+perspective are available.&nbsp; <br>
+The handler can be used to switch the
+current selection programatically.<br>
+<br>
+Possible usecases include: <br>
+<ul>
+  <li>Deciding wheather a certain TopComponentGroup shall be visible or
+not.</li>
+  <li>Etc.</li>
+</ul>
+<br>
+<span style="font-weight: bold;"></span>
+</body>
+</html>

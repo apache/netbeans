@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Add Module Dependency Dialog Box</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.apisupport.project.ui.customizer.AddModulePanel" name="org.netbeans.modules.apisupport.project.ui.customizer.AddModulePanel"></a></p>
+<div id="NBCSH1789"><!-- infolevel="all" infotype="General" --><a id="sthref227" name="sthref227"></a>
+<h1>Add Module Dependency Dialog Box</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>The Add Module Dependency dialog box lets you add the modules that your module needs. When you do so, the IDE adds entries to the module's <code dir="ltr">project.xml</code> file. You can open the Add Module Dependency dialog box by right-clicking a project's Libraries node and then choosing Add Module Dependency. Alternatively, right-click a project and then choose Properties. In the Project Properties dialog box, choose Libraries and then click Add next to the Module Dependencies list.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t4">Element</th>
+<th align="left" valign="bottom" id="r1c2-t4">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t4" headers="r1c1-t4">
+<p>Filter</p>
+</td>
+<td align="left" headers="r2c1-t4 r1c2-t4">Search for the modules you need by typing the class that you want to use. The module dependencies list narrows, listing only those modules that can provide the class that you are typing.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t4" headers="r1c1-t4">
+<p>Show Non-API Modules</p>
+</td>
+<td align="left" headers="r3c1-t4 r1c2-t4">If unchecked (default), the IDE excludes any module for which the current module cannot access any packages without an implementation dependency. These are known as "non-API modules". In other words, only modules with public packages are included, or friend packages where this module is a friend.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>Once you have found the module you need, click OK, and then the IDE will add the associated entries in the project.xml file.</p>
+<a id="NBCSH1792" name="NBCSH1792"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG3071">
+<param name="text" value="<html><u>&quot;About NetBeans Platform and Module Development&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG3059">
+<param name="text" value="<html><u>&quot;About the NetBeans Platform&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

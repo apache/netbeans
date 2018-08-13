@@ -1,0 +1,125 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+  <xs:element name="settings" type="Settings">
+
+  <xs:complexType name="Settings">
+      <xs:element name="localRepository" minOccurs="0" type="xs:string">
+      <xs:element name="interactiveMode" minOccurs="0" type="xs:boolean" default="true">
+      <xs:element name="usePluginRegistry" minOccurs="0" type="xs:boolean" default="false">
+      <xs:element name="offline" minOccurs="0" type="xs:boolean" default="false">
+      <xs:element name="proxies" minOccurs="0">
+            <xs:element name="proxy" minOccurs="0" maxOccurs="unbounded" type="Proxy"/>
+      <xs:element name="servers" minOccurs="0">
+            <xs:element name="server" minOccurs="0" maxOccurs="unbounded" type="Server"/>
+      <xs:element name="mirrors" minOccurs="0">
+            <xs:element name="mirror" minOccurs="0" maxOccurs="unbounded" type="Mirror"/>
+      <xs:element name="profiles" minOccurs="0">
+            <xs:element name="profile" minOccurs="0" maxOccurs="unbounded" type="Profile"/>
+      <xs:element name="activeProfiles" minOccurs="0">
+            <xs:element name="activeProfile" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+      <xs:element name="pluginGroups" minOccurs="0">
+            <xs:element name="pluginGroup" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+
+
+
+  <xs:complexType name="Mirror">
+      <xs:element name="mirrorOf" minOccurs="0" type="xs:string">
+      <xs:element name="name" minOccurs="0" type="xs:string">
+      <xs:element name="url" minOccurs="0" type="xs:string">
+      <xs:element name="id" minOccurs="0" type="xs:string" default="default">
+
+  <xs:complexType name="Server">
+      <xs:element name="username" minOccurs="0" type="xs:string">
+      <xs:element name="password" minOccurs="0" type="xs:string">
+      <xs:element name="privateKey" minOccurs="0" type="xs:string">
+      <xs:element name="passphrase" minOccurs="0" type="xs:string">
+      <xs:element name="filePermissions" minOccurs="0" type="xs:string">
+      <xs:element name="directoryPermissions" minOccurs="0" type="xs:string">
+      <xs:element name="configuration" minOccurs="0">
+            <xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip"/>
+      <xs:element name="id" minOccurs="0" type="xs:string" default="default">
+
+
+  <xs:complexType name="Profile">
+      <xs:element name="activation" minOccurs="0" type="Activation">
+      <xs:element name="properties" minOccurs="0">
+            <xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip"/>
+      <xs:element name="repositories" minOccurs="0">
+            <xs:element name="repository" minOccurs="0" maxOccurs="unbounded" type="Repository"/>
+      <xs:element name="pluginRepositories" minOccurs="0">
+            <xs:element name="pluginRepository" minOccurs="0" maxOccurs="unbounded" type="Repository"/>
+      <xs:element name="id" minOccurs="0" type="xs:string" default="default">
+
+
+
+  <xs:complexType name="Repository">
+      <xs:element name="releases" minOccurs="0" type="RepositoryPolicy">
+      <xs:element name="snapshots" minOccurs="0" type="RepositoryPolicy">
+      <xs:element name="id" minOccurs="0" type="xs:string">
+      <xs:element name="name" minOccurs="0" type="xs:string">
+      <xs:element name="url" minOccurs="0" type="xs:string">
+      <xs:element name="layout" minOccurs="0" type="xs:string" default="default">
+
+
+  <xs:complexType name="RepositoryPolicy">
+      <xs:element name="enabled" minOccurs="0" type="xs:boolean" default="true">
+      <xs:element name="updatePolicy" minOccurs="0" type="xs:string">
+      <xs:element name="checksumPolicy" minOccurs="0" type="xs:string">
+
+
+
+  <xs:complexType name="Activation">
+      <xs:element name="activeByDefault" minOccurs="0" type="xs:boolean" default="false">
+      <xs:element name="jdk" minOccurs="0" type="xs:string">
+      <xs:element name="os" minOccurs="0" type="ActivationOS">
+      <xs:element name="property" minOccurs="0" type="ActivationProperty">
+      <xs:element name="file" minOccurs="0" type="ActivationFile">
+
+
+  <xs:complexType name="ActivationProperty">
+      <xs:element name="name" minOccurs="0" type="xs:string">
+      <xs:element name="value" minOccurs="0" type="xs:string">
+
+
+
+  <xs:complexType name="ActivationFile">
+      <xs:element name="missing" minOccurs="0" type="xs:string">
+      <xs:element name="exists" minOccurs="0" type="xs:string">
+
+
+  <xs:complexType name="ActivationOS">
+      <xs:element name="name" minOccurs="0" type="xs:string">
+      <xs:element name="family" minOccurs="0" type="xs:string">
+      <xs:element name="arch" minOccurs="0" type="xs:string">
+      <xs:element name="version" minOccurs="0" type="xs:string">
+
+
+
+  <xs:complexType name="Proxy">
+      <xs:element name="active" minOccurs="0" type="xs:boolean" default="false">
+      <xs:element name="protocol" minOccurs="0" type="xs:string" default="http">
+      <xs:element name="username" minOccurs="0" type="xs:string">
+      <xs:element name="password" minOccurs="0" type="xs:string">
+      <xs:element name="port" minOccurs="0" type="xs:int" default="8080">
+      <xs:element name="host" minOccurs="0" type="xs:string">
+      <xs:element name="nonProxyHosts" minOccurs="0" type="xs:string">
+      <xs:element name="id" minOccurs="0" type="xs:string" default="default">
+

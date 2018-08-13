@@ -1,0 +1,30 @@
+[auth]
+store-auth-creds = no
+
+[helpers]
+editor-cmd = editor
+diff-cmd = diff_program
+diff3-cmd = diff3_program
+diff3-has-program-arg = false
+
+[tunnels]
+ssh = ssh -l pvcs 
+rsh = /path/to/rsh -l myusername
+
+[miscellany]
+global-ignores = *.o *.lo *.la #*# .*.rej *.rej .*~ *~ .#* .DS_Store
+log-encoding = iso-8859-2
+use-commit-times = yes
+enable-auto-props = yes
+
+[auto-props]
+*.c = svn:eol-style=native
+*.cpp = svn:eol-style=native
+*.h = svn:eol-style=native
+*.dsp = svn:eol-style=CRLF
+*.dsw = svn:eol-style=CRLF
+*.sh = svn:eol-style=native;svn:executable
+*.txt = svn:eol-style=native
+*.png = svn:mime-type=image/png
+*.jpg = svn:mime-type=image/jpeg
+Makefile = svn:eol-style=native

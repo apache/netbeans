@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<project name="Shorter Paths Test" basedir="." default="all" >
+    <taskdef name="shorterpaths" classname="org.netbeans.nbbuild.ShorterPaths" classpath="${nbantext.jar}"/>
+
+    <target name="all" >
+        <property name="nb.root.test.prop" location="${test.modules.dir}"/>
+        <property name="test-unit-sys-prop.prop1" value="value1"/>
+        <property name="test-unit-sys-prop.prop2" value="${test.modules.dir}/module.jar"/>
+        <property name="test-unit-sys-prop.prop3" value="${test.modules.dir}/module.jar:${test.modules.dir}/not-exists.jar"/>
+        <property name="test-unit-sys-prop.xtest.data" value="${test.modules.dir}"/>
+        <path id="in.test.prop">
+          <path location="${test.modules.dir}/module.jar"/>
+          <path location="${test.ext.lib}"/>
+        </path>  
+        <shorterpaths inref="in.test.prop" 
+                      out="out.test.prop" 
+                      extralibs="extra.test.libs.prop" 
+                      extralibsdir="${extra.test.libs.dir}"
+                      testproperties="${test.properties}">
+            <replacement dir="${nb.root.test.prop}" name="nb.root.test.dir"/>
+        </shorterpaths> 
+        <echo>out.test.prop= ${out.test.prop}</echo>
+        <echo>extra.test.libs.prop= ${extra.test.libs.prop}</echo>
+        
+        <condition property="out.test.prop.ok" >
+            <contains string="${out.test.prop}" substring="${nb.root.test.dir}/module.jar" />
+        </condition>
+        <condition property="extra.test.libs.ok" >
+            <contains string="${extra.test.libs.prop}" substring="$${extra.test.libs.dir}/extlib.jar" />
+        </condition>
+        
+          <fail message="{out.test.prop.ok}" unless="out.test.prop.ok" />
+          <fail message="{test.ext.lib.ok}" unless="extra.test.libs.ok" />
+    </target>
+    
+<!--    <target name="withjavadoc" >
+        <parseprojectxml 
+            projectfile="${project.file}"
+            publicpackagesproperty="pub.pac"
+            javadocpackagesproperty="javadoc.pac"
+        />
+    </target>-->
+</project>

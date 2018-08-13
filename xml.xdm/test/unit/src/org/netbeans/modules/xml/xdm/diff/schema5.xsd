@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+     targetNamespace="http://www.example.com/test"
+     xmlns="http://www.w3.org/2001/XMLSchema">
+     <element name="test3" other="abc" someOther="abc">    
+         <annotation></annotation>
+     </element>
+     <element name="test1" some="abc1">
+         <annotation></annotation>
+     </element>
+     <element name="test2">
+         <annotation></annotation>
+     </element>     
+</schema>

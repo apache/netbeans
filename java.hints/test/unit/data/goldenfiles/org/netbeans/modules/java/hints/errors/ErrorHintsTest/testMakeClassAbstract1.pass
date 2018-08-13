@@ -1,0 +1,10 @@
+package org.netbeans.test.java.hints;
+
+public abstract class MakeClassAbstract1 {
+    
+    public MakeClassAbstract1() {
+    }
+    
+    public abstract void test();
+    
+}

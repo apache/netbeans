@@ -1,0 +1,10 @@
+#minimized version of the original test file
+
+.slide-back.out.reverse {
+
+-webkit-animation-name: slideLeftOut; z-index: 0;
+}
+@-webkit-keyframes slideRightIn {
+
+from { -webkit-transform: translateX(100%); } to { -webkit-transform: translateX(0); 
+}

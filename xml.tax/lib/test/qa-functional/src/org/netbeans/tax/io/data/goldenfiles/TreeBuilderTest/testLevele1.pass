@@ -1,0 +1,6 @@
+
+
+<!ELEMENT element ( #PCDATA )*>
+<!ENTITY % b SYSTEM "dir-b/level2.dtd">
+%b;
+

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project name="All tests runner" default="all" basedir=".">
+    <target name="all" depends="runtests,failtests"/>
+    <target name="runtests" depends="-prepare-test-modules,-prepare-modules-list">
+        <fail unless="netbeans.dest.dir" message="Property netbeans.dest.dir doesn't exist."/>
+        <available file="${netbeans.dest.dir}/etc/netbeans.conf" property="exist.netbeans.dest.dir"/>
+        <fail unless="exist.netbeans.dest.dir" message="Path netbeans.dest.dir doesn't contain  netbeans dir."/>
+        <taskdef name="testdistfilter" classpath="../tasks.jar" classname="org.netbeans.nbbuild.testdist.TestDistFilter"/>
+        <!-- only for these module on runtime classpath -->
+        <property name="test.required.modules" value=""/>
+        <property name="test.dist.dir" location=".."/>
+        <property name="test.dist.timeout" value="600000"/>
+        <basename file="${basedir}" property="test.type"/>
+        <testdistfilter testlistproperty="modules.list" testdistdir=".." requiredmodules="${test.required.modules}" testtype="${test.type}"/>
+        <echo>Running modules: ${modules.list}</echo>
+        <property name="extra.test.libs.dir" location="../extralibs"/>
+        <property name="test.results.dir" location="results"/>
+        <subant buildpath="${modules.list}" genericantfile="../one-module.xml" failonerror="false">
+            <property name="test.disable.fails" value="true"/>
+            <property name="test.timeout" value="${test.dist.timeout}"/>
+        </subant>
+        <antcall target="generate-html-results"/>
+        <available file="${test.results.dir}/failed-test-var" type="dir" property="test.failed"/>
+    </target>
+    <target name="generate-html-results" unless="no.html.results">
+        <mkdir dir="${test.results.dir}"/>
+        <junitreport todir="${test.results.dir}">
+            <fileset dir="${test.results.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${test.results.dir}/html"/>
+        </junitreport>
+        <echo>Report is available at ${test.results.dir}/html/index.html</echo>
+    </target>
+    <target name="failtests" unless="test.disable.fails">
+        <fail if="test.failed">Some tests failed; see details above.
+        </fail>
+    </target>
+    <target name="-prepare-modules-list" if="test.modules">
+        <property name="test.clusters" value="*"/>
+        <pathconvert property="test.path" pathsep=",">
+            <path path="${test.modules}"/>
+            <chainedmapper>
+                <flattenmapper/>
+                <filtermapper>
+                    <replacestring from="." to="-"/>
+                </filtermapper>
+                <globmapper from="*" to="${test.clusters}/*"/>
+            </chainedmapper>
+        </pathconvert>
+        <pathconvert property="modules.list">
+            <dirset dir="." includes="${test.path}"/>
+        </pathconvert>
+    </target>
+    <target name="-prepare-test-modules" if="test.clusters">
+        <property name="test.modules" value="*"/>
+    </target>
+</project>

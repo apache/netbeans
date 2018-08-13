@@ -1,0 +1,48 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+  <head>
+    <title>org.netbeans.api.lexer</TITLE>
+  </head>
+  <body>
+    The entrance point into Lexer API is
+    {@link org.netbeans.api.lexer.TokenHierarchy} class with
+    its static methods that provide its instance for the given input source.
+    <br/>
+    {@link org.netbeans.api.lexer.TokenHierarchy#tokenSequence()}
+    allows to walk through the tokens that were created for the given input.
+    <br/>
+    {@link org.netbeans.api.lexer.Token} models a single token recognized in the input.
+    It carries a token identification {@link org.netbeans.api.lexer.TokenId} returned by
+    {@link org.netbeans.api.lexer.Token#id()}
+    and token text represented as {@link java.lang.CharSequence}
+    returned by {@link org.netbeans.api.lexer.Token#text()}.
+    <br/>
+    {@link org.netbeans.api.lexer.Language} represents
+    all the token ids for a single language.
+    <br/>
+    Each token id may belong to one or more token categories that allow to better operate
+    tokens of the same type (e.g. keywords or operators).
+  </body>
+</html>

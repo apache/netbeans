@@ -1,0 +1,86 @@
+%%TestCase no-null-check
+package test;
+import org.netbeans.api.javahelp.Help;
+import org.openide.util.HelpCtx;
+import org.openide.util.Lookup;
+public class Test {
+    void m() {
+        Lookup.getDefault().lookup(Help.class).showHelp(new HelpCtx("id"));
+    }
+}
+%%=>
+package test;
+import org.netbeans.api.javahelp.Help;
+import org.openide.util.HelpCtx;
+import org.openide.util.Lookup;
+public class Test {
+    void m() {
+        new HelpCtx("id").display();
+    }
+}
+%%TestCase no-null-check-pass-true
+package test;
+import org.netbeans.api.javahelp.Help;
+import org.openide.util.HelpCtx;
+import org.openide.util.Lookup;
+public class Test {
+    void m() {
+        Lookup.getDefault().lookup(Help.class).showHelp(new HelpCtx("id"), true);
+    }
+}
+%%=>
+package test;
+import org.netbeans.api.javahelp.Help;
+import org.openide.util.HelpCtx;
+import org.openide.util.Lookup;
+public class Test {
+    void m() {
+        new HelpCtx("id").display();
+    }
+}
+%%TestCase null-check
+package test;
+import org.netbeans.api.javahelp.Help;
+import org.openide.util.HelpCtx;
+import org.openide.util.Lookup;
+public class Test {
+    void m() {
+        Help help = Lookup.getDefault().lookup(Help.class);
+        if (help != null) {
+            help.showHelp(new HelpCtx("id"));
+        }
+    }
+}
+%%=>
+package test;
+import org.netbeans.api.javahelp.Help;
+import org.openide.util.HelpCtx;
+import org.openide.util.Lookup;
+public class Test {
+    void m() {
+        new HelpCtx("id").display();
+    }
+}
+%%TestCase null-check-pass-true
+package test;
+import org.netbeans.api.javahelp.Help;
+import org.openide.util.HelpCtx;
+import org.openide.util.Lookup;
+public class Test {
+    void m() {
+        Help help = Lookup.getDefault().lookup(Help.class);
+        if (help != null) {
+            help.showHelp(new HelpCtx("id"), true);
+        }
+    }
+}
+%%=>
+package test;
+import org.netbeans.api.javahelp.Help;
+import org.openide.util.HelpCtx;
+import org.openide.util.Lookup;
+public class Test {
+    void m() {
+        new HelpCtx("id").display();
+    }
+}

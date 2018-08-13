@@ -1,0 +1,8 @@
+'token image' [offset, length]; tokenID name; tokenID id; token category name; <list of token context names>
+--------------------
+
+'<' [0, 1]; tag-open-symbol; 14; tag; HTMLTokenContext
+'meta' [1, 4]; open-tag; 4; tag; HTMLTokenContext
+' ' [5, 1]; ws; 2; -; HTMLTokenContext
+'2' [6, 1]; error; 3; -; HTMLTokenContext
+' http-equiv="Content-Type" content@="text/html; charset=UTF-8">' [7, 63]; text; 1; -; HTMLTokenContext

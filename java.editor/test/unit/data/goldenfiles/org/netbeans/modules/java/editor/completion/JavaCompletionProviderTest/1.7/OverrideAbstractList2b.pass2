@@ -1,0 +1,14 @@
+package test;
+
+import java.util.AbstractList;
+
+public class Test<T extends Number> extends AbstractList<T> {
+    
+    public Test() {}
+    
+    @Override
+    public T get(int arg0) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+}

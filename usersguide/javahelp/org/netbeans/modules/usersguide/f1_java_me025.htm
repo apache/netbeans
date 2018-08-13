@@ -1,0 +1,280 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Java ME Embedded Project Properties Dialog Box: Application Descriptor</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.j2me.project.ui.customizer.J2MEApplicationDescriptorPanel" name="org.netbeans.modules.j2me.project.ui.customizer.J2MEApplicationDescriptorPanel"></a></p>
+<div id="NBCSH5270"><!-- infolevel="all" infotype="General" --><a id="sthref784" name="sthref784"></a>
+<h1>Java ME Embedded Project Properties Dialog Box: Application Descriptor</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use the tabs of the Application Descriptor panel to customize the project configuration as follows:</p>
+<ul>
+<li>add, edit, or delete the attributes of a MIDlet suite or a LIBlet on the Attributes tab</li>
+<li>add, remove, or change the order of MIDlets within a MIDlet suite on the MIDlets tab</li>
+<li>register MIDlets with a suite's push registry on the Push Registry tab</li>
+<li>set permission attributes for protected APIs called by the MIDlet Suite on the API Permissions tab</li>
+</ul>
+
+<table summary="Descriptions of elements in Application Descriptor Attributes dialog box." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="33%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t26">Element</th>
+<th align="left" valign="bottom" id="r1c2-t26">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t26" headers="r1c1-t26">
+<p>Attributes tab</p>
+</td>
+<td align="left" headers="r2c1-t26 r1c2-t26">Use the buttons on the right side of the tab to add, remove, and modify an attribute. You can perform any of the following:
+<ul>
+<li><b>Add</b>. Enables you to add an attribute.</li>
+<li><b>Edit</b>. Enables you to edit the selected custom attribute.</li>
+<li><b>Remove</b>. Removes the selected attribute. You cannot remove a required attribute.</li>
+</ul>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t26" headers="r1c1-t26">
+<p>Packaging Model</p>
+</td>
+<td align="left" headers="r3c1-t26 r1c2-t26">Specifies a MIDlet suite or a LIBlet package.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t26" headers="r1c1-t26">
+<p>General Attributes for JAD and JAR Manifest</p>
+</td>
+<td align="left" headers="r4c1-t26 r1c2-t26">Displays the type, name, and value of an attribute.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t26" headers="r1c1-t26">
+<p>Type</p>
+</td>
+<td align="left" headers="r5c1-t26 r1c2-t26">Displays a field that cannot be edited, and lists whether the attribute is: <b>Required</b>, <b>Optional</b>, <b>Custom</b>, <b>JAD only</b>, <b>Manifest only</b>, or <b>Forced</b>.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t26" headers="r1c1-t26">
+<p>Required</p>
+</td>
+<td align="left" headers="r6c1-t26 r1c2-t26">Indicates an attribute that is required by the MIDP standard.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t26" headers="r1c1-t26">
+<p>Optional</p>
+</td>
+<td align="left" headers="r7c1-t26 r1c2-t26">Indicates an attribute that provides information about the MIDlet suite. This is information that is not required by MIDP to run the MIDlet.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t26" headers="r1c1-t26">
+<p>Custom</p>
+</td>
+<td align="left" headers="r8c1-t26 r1c2-t26">Indicates a user-defined attribute.
+<p>Custom attributes cannot begin with the prefix <code dir="ltr">Midlet-</code>.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t26" headers="r1c1-t26">
+<p>JAD only</p>
+</td>
+<td align="left" headers="r9c1-t26 r1c2-t26">Indicates a custom attribute stored only in the JAD file.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t26" headers="r1c1-t26">
+<p>Manifest only</p>
+</td>
+<td align="left" headers="r10c1-t26 r1c2-t26">Indicates a custom attribute stored only in the JAR Manifest file.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r11c1-t26" headers="r1c1-t26">
+<p>Forced</p>
+</td>
+<td align="left" headers="r11c1-t26 r1c2-t26">Indicates an attribute that overrides the value for a Profile or Configuration version than is shown in the Platform Properties page.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r12c1-t26" headers="r1c1-t26">
+<p>Name</p>
+</td>
+<td align="left" headers="r12c1-t26 r1c2-t26">Displays he name of the attribute.
+<p>Only custom field names can be edited.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r13c1-t26" headers="r1c1-t26">
+<p>Value</p>
+</td>
+<td align="left" headers="r13c1-t26 r1c2-t26">Displays the values for each attribute.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r14c1-t26" headers="r1c1-t26">
+<p>Override JAR URL in JAD</p>
+</td>
+<td align="left" headers="r14c1-t26 r1c2-t26">Enables you to customize the URL for the JAR file.
+<p>Check this option and enter a custom JAR file name.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r15c1-t26" headers="r1c1-t26">
+<p>MIDlets tab</p>
+</td>
+<td align="left" headers="r15c1-t26 r1c2-t26">Use the buttons on the right side of the tab to add, remove, modify, and change the order of MIDlets. You can perform any of the following:
+<ul>
+<li>
+<p><b>Add</b>. Enables you to add a MIDlet. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1572">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+</li>
+<li><b>Edit</b>. Enables you to edit the selected MIDlet.</li>
+<li><b>Remove</b>. Removes the selected MIDlet.</li>
+<li><b>Move Up</b>. Places the selected MIDlet higher in the list.</li>
+<li><b>Move Down</b>. Places the selected MIDlet lower in the list.</li>
+</ul>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r16c1-t26" headers="r1c1-t26">
+<p>Name</p>
+</td>
+<td align="left" headers="r16c1-t26 r1c2-t26">Shows the displayable name of the MIDlet that the user sees when the MIDlet is run on a mobile device.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r17c1-t26" headers="r1c1-t26">
+<p>Class</p>
+</td>
+<td align="left" headers="r17c1-t26 r1c2-t26">Displays the Java class that for the MIDlet.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r18c1-t26" headers="r1c1-t26">
+<p>Icon</p>
+</td>
+<td align="left" headers="r18c1-t26 r1c2-t26">Displays an icon (a <code dir="ltr">.png</code> file), representing the MIDlet, that the user sees when the MIDlet is run on a mobile device.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r19c1-t26" headers="r1c1-t26">
+<p>Push Registry tab</p>
+</td>
+<td align="left" headers="r19c1-t26 r1c2-t26">Use the buttons on the right side of the tab to add, remove, modify, and change the order of push registry entries. You can perform any of the following:
+<ul>
+<li>
+<p><b>Add</b>. Enables you to add a push registry entry. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1574">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+</li>
+<li><b>Edit</b>. Enables you to edit the selected push registry entry.</li>
+<li><b>Remove</b>. Removes the selected push registry entry.</li>
+<li><b>Move Up</b>. Places the selected push registry entry higher in the list.</li>
+<li><b>Move Down</b>. Places the selected push registry entry lower in the list.</li>
+</ul>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r20c1-t26" headers="r1c1-t26">
+<p>MIDlet Class</p>
+</td>
+<td align="left" headers="r20c1-t26 r1c2-t26">Displays the MIDlet's class name.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r21c1-t26" headers="r1c1-t26">
+<p>Sender IP.</p>
+</td>
+<td align="left" headers="r21c1-t26 r1c2-t26">Displays a valid sender that can launch the associated MIDlet.
+<p>If the value is the wildcard (<code dir="ltr">*</code>), connections from any source are accepted. If datagram or socket connections are used, the value of Allowed Sender can be a numeric IP address. For example, <code dir="ltr">129.70.40.*</code></p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r22c1-t26" headers="r1c1-t26">
+<p>Connection String</p>
+</td>
+<td align="left" headers="r22c1-t26 r1c2-t26">Displays a connection string that identifies the connection protocol and port number. For example, <code dir="ltr">sms://:50000</code></td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r23c1-t26" headers="r1c1-t26">
+<p>API Permissions tab</p>
+</td>
+<td align="left" headers="r23c1-t26 r1c2-t26">Use the buttons on the right side of the tab to add, remove, and modify a permission. You can perform any of the following:
+<ul>
+<li><b>Add</b>. Enables you to add a permission.</li>
+<li><b>Edit</b>. Enables you to edit the selected permission.</li>
+<li><b>Remove</b>. Removes the selected permission.</li>
+</ul>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r24c1-t26" headers="r1c1-t26">
+<p>API</p>
+</td>
+<td align="left" headers="r24c1-t26 r1c2-t26">Displays the API permissions requested by the MIDlet.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r25c1-t26" headers="r1c1-t26">
+<p>Required</p>
+</td>
+<td align="left" headers="r25c1-t26 r1c2-t26">Makes the permission required. At installation, if the required permission cannot be granted by the application management software, the application is not installed.
+<p>If this option is not checked, the permission is optional. If an optional permission is denied, the application might continue to function, although its functionality can be limited</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH5295" name="NBCSH5295"></a>
+<hr><p><b>Related Topics</b></p>
+<p>Developing Applications with NetBeans IDE, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1558">
+<param name="text" value="<html><u>&quot;Creating Java ME Projects&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

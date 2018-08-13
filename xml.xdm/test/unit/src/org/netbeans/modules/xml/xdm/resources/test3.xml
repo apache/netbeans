@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test xmlns="http://www.test.com/TestModel" targetNamespace="myTargetNS">
+    <a index='1'></a>
+    <myNS:a xmlns:myNS='http://www.test2.com/TestModel' index='2'>
+        <d index='1'/>
+    </myNS:a>
+    <b index='1'></b>
+    <c index='1'></c>
+</test>

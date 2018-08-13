@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://xml.netbeans.org/schema/Main"
+            xmlns:tns="http://xml.netbeans.org/schema/Main"
+            elementFormDefault="qualified"
+            xmlns:ns1="http://xml.netbeans.org/schema/TNSB"
+            xmlns:ns0="http://xml.netbeans.org/schema/TNSA">
+    <xsd:import schemaLocation="A.xsd" namespace="http://xml.netbeans.org/schema/TNSA"/>
+    <xsd:import schemaLocation="B.xsd" namespace="http://xml.netbeans.org/schema/TNSB"/>
+    <xsd:include schemaLocation="Main2.xsd"/>
+    
+    <xsd:element name="Main">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="MainA" type="ns0:AType"/>
+                <xsd:element name="MainB" type="ns1:BType"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    
+    <xsd:element name="Main2" type="tns:MainType"/>
+    
+</xsd:schema>

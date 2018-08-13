@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.core.browser.webview/1
+OpenIDE-Module-Implementation-Version: 1
+OpenIDE-Module-Localizing-Bundle: org/netbeans/core/browser/webview/Bundle.properties
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module-Layer: org/netbeans/core/browser/webview/layer.xml

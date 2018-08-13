@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Profiler Window</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="ProfilerControlPanel.HelpCtx" name="ProfilerControlPanel.HelpCtx"></a></p>
+<div id="NBCSH3289"><!-- infolevel="all" infotype="General" --><a id="sthref419" name="sthref419"></a>
+<h1>Profiler Window</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to control the profiling session and manage profiling results. Choose <b>Window</b> &gt; <b>Profiling</b> &gt; <b>Profiler Control Panel</b> to open the Profiler window. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG691">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>In the Profiler window, you can do the following operations:</p>
+<ul>
+<li>Control the profiling task</li>
+<li>View the status of the current profiling session</li>
+<li>Open profiling results windows</li>
+<li>Take and manage profiling snapshots</li>
+<li>See basic telemetry statistics</li>
+</ul>
+<p>The Profiler window contains the following sections. You can click the section name or node to hide or reveal the section.</p>
+<p><b>Controls</b></p>
+<p>This section contains commands for controlling the profiling session.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="32%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t21">Element</th>
+<th align="left" valign="bottom" id="r1c2-t21">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t21" headers="r1c1-t21">
+<p>Rerun Profiling Session</p>
+<p>(Ctrl-Shift-F2)</p>
+<p><img width="16" height="16" src="img/rerun-icon.png" alt="Rerun icon." title="Rerun icon." /></p>
+</td>
+<td align="left" headers="r2c1-t21 r1c2-t21">Runs the last profiling command again.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t21" headers="r1c1-t21">
+<p>Stop Profiling Session</p>
+<p><img width="16" height="16" src="img/stop-icon.png" alt="Stop profiling icon." title="Stop profiling icon." /></p>
+</td>
+<td align="left" headers="r3c1-t21 r1c2-t21">Stops the current profiling command.
+<p>Also stops the target application if the application was started by Profiler.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t21" headers="r1c1-t21">
+<p>Reset Collected Results</p>
+<p><img width="16" height="16" src="img/reset_results.png" alt="Reset results icon." title="Reset results icon." /></p>
+</td>
+<td align="left" headers="r4c1-t21 r1c2-t21">Discards the already accumulated profiling results.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t21" headers="r1c1-t21">
+<p>Run GC</p>
+<p><img width="16" height="16" src="img/trash-icon.png" alt="Run garbage collection icon." title="Run garbage collection icon." /></p>
+</td>
+<td align="left" headers="r5c1-t21 r1c2-t21">Runs Garbage Collection.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t21" headers="r1c1-t21">
+<p>Modify Profiling Session</p>
+<p>(Alt+Shift+F2)</p>
+<p><img width="16" height="16" src="img/clock-icon.png" alt="Modify profiling task icon." title="Modify profiling task icon." /></p>
+</td>
+<td align="left" headers="r6c1-t21 r1c2-t21">Opens the Modify Profiling Task dialog box and enables you to run a new profiling command without stopping the target application.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t21" headers="r1c1-t21">
+<p>VM Telemetry Overview</p>
+<p><img width="16" height="16" src="img/telemetry_overview_wdw.png" alt="Telemetry overview icon." title="Telemetry overview icon." /></p>
+</td>
+<td align="left" headers="r7c1-t21 r1c2-t21">Opens the VM Telemetry Overview in the Output window of the IDE, displaying smaller versions of the telemetry graphs.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t21" headers="r1c1-t21">
+<p>Detach</p>
+<p><img width="16" height="16" src="img/detach.png" alt="Detach icon." title="Detach icon." /></p>
+</td>
+<td align="left" headers="r8c1-t21 r1c2-t21">Detaches the IDE from the profiled application if the IDE is attached to an application.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p><b>Status</b></p>
+<p>This section displays the status and type of the current profiling task.</p>
+<p><b>Profiling Results</b></p>
+<p>This section contains commands for displaying profiling results.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="32%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t22">Element</th>
+<th align="left" valign="bottom" id="r1c2-t22">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t22" headers="r1c1-t22">
+<p>Take Snapshot</p>
+<p><img width="32" height="32" src="img/takesnapshotcpu32.png" alt="Take snapshot icon." title="Take snapshot icon." /></p>
+</td>
+<td align="left" headers="r2c1-t22 r1c2-t22">Takes a snapshot of the current profiling results and opens the snapshot in the main editor window.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t22" headers="r1c1-t22">
+<p>Dump Heap</p>
+<p><img width="32" height="32" src="img/takesnapshotmem32.png" alt="Dump heap icon." title="Dump heap icon." /></p>
+</td>
+<td align="left" headers="r3c1-t22 r1c2-t22">Takes a heap snapshot of the application.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t22" headers="r1c1-t22">
+<p>Live Results</p>
+<p><img width="32" height="32" src="img/live_resultsview.png" alt="Live results icon." title="Live results icon." /></p>
+</td>
+<td align="left" headers="r4c1-t22 r1c2-t22">Opens the Live Results window.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p><b>Saved Snapshots</b></p>
+<p>This section enables you to manage the profiling results snapshots associated with your project. When you select an open project in the drop-down list, the saved snapshots associated with that project are displayed. Double-clicking the name of the snapshot opens the snapshot in the Source Editor window.</p>
+<p>The buttons to the right of the listed snapshots enable you to open and delete your saved snapshots. The <b>Save As</b> button enables you to save the selected snapshot to a location outside your project. The <b>Load</b> button enables you to locate and open snapshots saved outside your project.</p>
+<p>Snapshots are listed according to when the snapshot was taken, with the most recent at the bottom. To open a snapshot, select the snapshot from the list and click <b>Open</b>, or double-click the name. Bold indicates that the snapshot tab is already open in the Source Editor window. The snapshot icon identifies the type of snapshot.</p>
+<p><b>View</b></p>
+<p>This section contains commands for displaying the results of application monitoring.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="33%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t23">Element</th>
+<th align="left" valign="bottom" id="r1c2-t23">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t23" headers="r1c1-t23">
+<p>VM Telemetry</p>
+<p><img width="32" height="32" src="img/vmtelemetry_view.png" alt="VM telemetry icon." title="VM telemetry icon." /></p>
+</td>
+<td align="left" headers="r2c1-t23 r1c2-t23">Opens the VM Telemetry window that displays data on thread activity and memory heap and garbage collection</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t23" headers="r1c1-t23">
+<p>Threads</p>
+<p><img width="32" height="32" src="img/threadsview.png" alt="Threads icon." title="Threads icon." /></p>
+</td>
+<td align="left" headers="r3c1-t23 r1c2-t23">Opens the Threads window that displays thread activity.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t23" headers="r1c1-t23">
+<p>Lock Contention</p>
+<p><img width="32" height="32" src="img/locksview32.png" alt="Lock Contention icon" title="Lock Contention icon" /></p>
+</td>
+<td align="left" headers="r4c1-t23 r1c2-t23">Opens the Lock Contention window that displays locked threads and lock monitors.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH3318" name="NBCSH3318"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG689">
+<param name="text" value="<html><u>&quot;Starting a Profiling Session&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

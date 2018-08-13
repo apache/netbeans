@@ -1,0 +1,36 @@
+            if (ssverbose)
+                System.out.println("SS:  => do next step!");
+            if (smartSteppingStepOut) {
+                setStepRequest (StepRequest.STEP_OUT);
+            } else if (stepRequest != null) {
+                stepRequest.enable ();
+            } else {
+                setStepRequest (StepRequest.STEP_INTO);
+            }
+        }
+    }
+    
+    private void setStepRequest (int step) {
+        ThreadReference tr = ((JPDAThreadImpl) getDebuggerImpl ().
+            getCurrentThread ()).getThreadReference ();
+        removeStepRequests (tr);
+        stepRequest = getDebuggerImpl ().getVirtualMachine ().
+        eventRequestManager ().createStepRequest (
+            tr,
+            StepRequest.STEP_LINE,
+            step
+        );
+        getDebuggerImpl ().getOperator ().register (stepRequest, this);
+        stepRequest.setSuspendPolicy (getDebuggerImpl ().getSuspend ());
+        
+        if (ssverbose)
+            System.out.println("SS:    set patterns:");
+        addPatternsToRequest (
+            getSmartSteppingFilterImpl ().getExclusionPatterns ()
+        );
+        stepRequest.enable ();
+    }
+
+    private SmartSteppingFilterImpl smartSteppingFilterImpl;
+    
+}

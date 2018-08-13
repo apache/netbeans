@@ -1,0 +1,336 @@
+.t.e.s.t. Comments
+COMMENT         "# :title, :string, :limit => 255\n", st=0
+COMMENT         "# :permalink, :string, :limit => 255\n", st=0
+COMMENT         "# :excerpt, :text\n", st=0
+COMMENT         "# :body, :text\n", st=0
+COMMENT         "# :created_at, :datetime\n", st=0
+COMMENT         "# :updated_at, :datetime\n", st=0
+COMMENT         "# :published_at, :datetime\n", st=0
+TEXT            "welcome:\n", st=0
+TEXT            "  id: 1\n", st=0
+TEXT            "  site_id: 1\n", st=0
+TEXT            "  title: Welcome to Mephisto\n", st=0
+TEXT            "  permalink: welcome-to-mephisto\n", st=0
+TEXT            "  excerpt: welcome summary\n", st=0
+TEXT            "  excerpt_html: welcome summary\n", st=0
+TEXT            "  body: "quentin's \\"welcome\\" *description* <script>hi</script><a onclick=\\"foo\\" href=\\"#\\">linkage</a>"\n", st=0
+TEXT            "  body_html: "<p>quentin&#8217;s &#8220;welcome&#8221; <strong>description</strong> <script>hi</script><a onclick=\\"foo\\" href=\\"#\\">linkage</a></p>"\n", st=0
+TEXT            "  created_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " 5.days.ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  updated_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " 5.days.ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  published_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " 3.days.ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  comment_age: 30\n", st=0
+TEXT            "  user_id: 1\n", st=0
+TEXT            "  comments_count: 1\n", st=0
+TEXT            "  type: Article\n", st=0
+TEXT            "  filter: textile_filter\n", st=0
+TEXT            "  version: 2\n", st=0
+TEXT            "  updater_id: 1\n", st=0
+TEXT            "another:\n", st=0
+TEXT            "  id: 2\n", st=0
+TEXT            "  site_id: 1\n", st=0
+TEXT            "  title: Another Welcome to Mephisto\n", st=0
+TEXT            "  permalink: another-welcome-to-mephisto\n", st=0
+TEXT            "  body: another welcome description\n", st=0
+TEXT            "  body_html: another welcome description\n", st=0
+TEXT            "  created_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " 4.days.ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  updated_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " 4.days.ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  published_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " 4.days.ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  comment_age: 1\n", st=0
+TEXT            "  user_id: 3\n", st=0
+TEXT            "  type: Article\n", st=0
+TEXT            "welcome_comment:\n", st=0
+TEXT            "  id: 3\n", st=0
+TEXT            "  site_id: 1\n", st=0
+TEXT            "  article_id: 1\n", st=0
+TEXT            "  title: Welcome to Mephisto\n", st=0
+TEXT            "  permalink: welcome-to-mephisto\n", st=0
+TEXT            "  body: "rico's evil <script>hi</script> and <a onclick=\\"foo\\" href=\\"#\\">linkage</a>"\n", st=0
+TEXT            "  body_html: "<p>rico&#8217;s evil <script>hi</script> and <a onclick=\\"foo\\" href=\\"#\\">linkage</a></p>"\n", st=0
+TEXT            "  created_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " (3.days + 55.minutes).ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  updated_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " (3.days + 55.minutes).ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  published_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " 3.days.ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  type: Comment\n", st=0
+TEXT            "  author: rico\n", st=0
+TEXT            "  author_ip: 1dfasd\n", st=0
+TEXT            "  approved: true\n", st=0
+TEXT            "  filter: textile_filter\n", st=0
+TEXT            "future:\n", st=0
+TEXT            "  id: 5\n", st=0
+TEXT            "  site_id: 1\n", st=0
+TEXT            "  title: Article in the Future\n", st=0
+TEXT            "  body: future\n", st=0
+TEXT            "  permalink: article-in-the-future\n", st=0
+TEXT            "  excerpt: This is my own little blogging tool\n", st=0
+TEXT            "  excerpt_html: This is my own little blogging tool\n", st=0
+TEXT            "  created_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " (4.days - 15.minutes).ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  updated_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " (4.days - 15.minutes).ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  published_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " (4.days - 15.minutes).from_now.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  comment_age: 30\n", st=0
+TEXT            "  user_id: 1\n", st=0
+TEXT            "  type: Article\n", st=0
+TEXT            "about:\n", st=0
+TEXT            "  id: 6\n", st=0
+TEXT            "  site_id: 1\n", st=0
+TEXT            "  title: About this page\n", st=0
+TEXT            "  permalink: about-this-page\n", st=0
+TEXT            "  excerpt: This is my own about page\n", st=0
+TEXT            "  excerpt_html: This is my own about page\n", st=0
+TEXT            "  body: This is my own about page\n", st=0
+TEXT            "  body_html: This is my own about page\n", st=0
+TEXT            "  created_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " (4.days - 13.minutes).ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  updated_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " (4.days - 13.minutes).ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  published_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " (4.days - 13.minutes).ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  comment_age: 2\n", st=0
+TEXT            "  user_id: 1\n", st=0
+TEXT            "  type: Article\n", st=0
+TEXT            "site_map:\n", st=0
+TEXT            "  id: 7\n", st=0
+TEXT            "  site_id: 1\n", st=0
+TEXT            "  title: The Site Map\n", st=0
+TEXT            "  permalink: the-site-map\n", st=0
+TEXT            "  excerpt: This is my own site map\n", st=0
+TEXT            "  excerpt_html: This is my own site map\n", st=0
+TEXT            "  body: This is my own site map\n", st=0
+TEXT            "  body_html: This is my own site map\n", st=0
+TEXT            "  created_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " (4.days - 5.minutes).ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  updated_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " (4.days - 5.minutes).ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  published_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " (4.days - 5.minutes).ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  comment_age: -1\n", st=0
+TEXT            "  user_id: 4\n", st=0
+TEXT            "  type: Article\n", st=0
+TEXT            "cupcake_welcome:\n", st=0
+TEXT            "  id: 8\n", st=0
+TEXT            "  site_id: 2\n", st=0
+TEXT            "  title: Welcome to Cupcake\n", st=0
+TEXT            "  permalink: welcome-to-cupcake\n", st=0
+TEXT            "  excerpt: welcome summary\n", st=0
+TEXT            "  excerpt_html: welcome summary\n", st=0
+TEXT            "  body: welcome description\n", st=0
+TEXT            "  body_html: welcome description\n", st=0
+TEXT            "  created_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " 5.days.ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  updated_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " 5.days.ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  published_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " 3.days.ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  comment_age: 30\n", st=0
+TEXT            "  user_id: 1\n", st=0
+TEXT            "  comments_count: 1\n", st=0
+TEXT            "  type: Article\n", st=0
+TEXT            "cupcake_welcome_comment:\n", st=0
+TEXT            "  id: 9\n", st=0
+TEXT            "  site_id: 2\n", st=0
+TEXT            "  article_id: 8\n", st=0
+TEXT            "  title: Welcome to Cupcake\n", st=0
+TEXT            "  permalink: welcome-to-cupcake\n", st=0
+TEXT            "  body: This blogging tool tastes like fudge.\n", st=0
+TEXT            "  body_html: This blogging tool tastes like fudge.\n", st=0
+TEXT            "  created_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " (3.days + 55.minutes).ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  updated_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " (3.days + 55.minutes).ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  published_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " 3.days.ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  type: Comment\n", st=0
+TEXT            "  author: rico\n", st=0
+TEXT            "  approved: true\n", st=0
+TEXT            "unwelcome_comment:\n", st=0
+TEXT            "  id: 10\n", st=0
+TEXT            "  site_id: 1\n", st=0
+TEXT            "  article_id: 1\n", st=0
+TEXT            "  title: Welcome to Mephisto\n", st=0
+TEXT            "  permalink: welcome-to-mephisto\n", st=0
+TEXT            "  body: This blogging tool sucks.\n", st=0
+TEXT            "  body_html: This blogging tool sucks.\n", st=0
+TEXT            "  created_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " (2.days + 55.minutes).ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  updated_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " (2.days + 55.minutes).ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  published_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " 3.days.ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  type: Comment\n", st=0
+TEXT            "  author: rico\n", st=0
+TEXT            "  author_ip: '127.0.0.1'\n", st=0
+TEXT            "draft:\n", st=0
+TEXT            "  id: 11\n", st=0
+TEXT            "  site_id: 1\n", st=0
+TEXT            "  title: Test Draft\n", st=0
+TEXT            "  permalink: test-draft\n", st=0
+TEXT            "  body: This is a test draft\n", st=0
+TEXT            "  body_html: This is a test draft\n", st=0
+TEXT            "  created_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " 1.day.ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  updated_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " 1.day.ago.utc.to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  comment_age: 30\n", st=0
+TEXT            "  user_id: 1\n", st=0
+TEXT            "  type: Article\n", st=0
+TEXT            "at_beginning_of_month:\n", st=0
+TEXT            "  id: 12\n", st=0
+TEXT            "  site_id: 1\n", st=0
+TEXT            "  title: At beginning of the month\n", st=0
+TEXT            "  permalink: at-beginning-of-the-month\n", st=0
+TEXT            "  body: Lalala\n", st=0
+TEXT            "  body_html: Lalala\n", st=0
+TEXT            "  created_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " date = Time.now.utc.beginning_of_month.advance(:months => -2).to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  updated_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " date ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  published_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " date ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  comment_age: 30\n", st=0
+TEXT            "  user_id: 1\n", st=0
+TEXT            "  type: Article\n", st=0
+TEXT            "at_middle_of_month:\n", st=0
+TEXT            "  id: 13\n", st=0
+TEXT            "  site_id: 1\n", st=0
+TEXT            "  title: At middle of the month\n", st=0
+TEXT            "  permalink: at-middle-of-the-month\n", st=0
+TEXT            "  body: Lalala\n", st=0
+TEXT            "  body_html: Lalala\n", st=0
+TEXT            "  created_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " date = Time.now.utc.beginning_of_month.advance(:months => -1, :days => -15).to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  updated_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " date ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  published_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " date ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  comment_age: 30\n", st=0
+TEXT            "  user_id: 1\n", st=0
+TEXT            "  type: Article\n", st=0
+TEXT            "at_end_of_month:\n", st=0
+TEXT            "  id: 14\n", st=0
+TEXT            "  site_id: 1\n", st=0
+TEXT            "  title: At end of the month\n", st=0
+TEXT            "  permalink: at-end-of-the-month\n", st=0
+TEXT            "  body: Lalala\n", st=0
+TEXT            "  body_html: Lalala\n", st=0
+TEXT            "  created_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " date = (Time.now.utc.beginning_of_month.advance(:months => -1) -1).to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  updated_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " date ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  published_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " date ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  comment_age: 30\n", st=0
+TEXT            "  user_id: 1\n", st=0
+TEXT            "  type: Article\n", st=0
+TEXT            "at_beginning_of_next_month:\n", st=0
+TEXT            "  id: 15\n", st=0
+TEXT            "  site_id: 1\n", st=0
+TEXT            "  title: At beginning of next month\n", st=0
+TEXT            "  permalink: at-beginning-of-next-month\n", st=0
+TEXT            "  body: Lalala\n", st=0
+TEXT            "  body_html: Lalala\n", st=0
+TEXT            "  created_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " date = Time.now.utc.beginning_of_month.advance(:months => -1).to_s(:db) ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  updated_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " date ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  published_at: ", la=3, st=0
+DELIMITER       "<%=", st=7
+RUBY_EXPR       " date ", la=2, st=7
+DELIMITER       "%>", st=0
+TEXT            "\n  comment_age: 30\n", st=0
+TEXT            "  user_id: 1\n", st=0
+TEXT            "  type: Article", la=1, st=10
+----- EOF -----
+
+<Unnamed test>
+----- EOF -----
+

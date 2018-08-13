@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- 
+    This is the DTD for TOC
+    Copyright (c) 1998 Sun Microsystems
+
+    @(#)toc_2_0.dtd 1.4 06/05/03
+-->
+
+
+<!-- A TOC.  It is versioned -->
+
+<!ELEMENT toc (tocitem*)>
+  <!ATTLIST toc version ( 1.0 | 2.0) #IMPLIED>
+  <!ATTLIST toc xml:lang CDATA #IMPLIED>
+  <!ATTLIST toc categoryopenimage CDATA #IMPLIED>
+  <!ATTLIST toc categoryclosedimage CDATA #IMPLIED>
+  <!ATTLIST toc topicimage CDATA #IMPLIED>
+
+<!-- an item -->
+
+<!ELEMENT tocitem (tocitem)*>
+  <!ATTLIST tocitem xml:lang CDATA #IMPLIED>
+  <!ATTLIST tocitem text CDATA #REQUIRED>
+  <!ATTLIST tocitem image CDATA #IMPLIED>
+  <!ATTLIST tocitem target CDATA #IMPLIED>
+  <!ATTLIST tocitem mergetype CDATA #IMPLIED>
+  <!ATTLIST tocitem expand (true | false ) #IMPLIED>
+  <!ATTLIST tocitem presentationtype CDATA #IMPLIED>
+  <!ATTLIST tocitem presentationname CDATA #IMPLIED>
+
+<!-- 
+  Change list:
+
+  Created - epll, 16 Dec '98
+  Added mergetype attribute into tocitem -rgregor 6 June '01
+ -->

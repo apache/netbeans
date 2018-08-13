@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>New Persistence Unit Wizard: Provider and Database</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.j2ee.persistence.wizard.unit.PersistenceUnitWizardDescriptor" name="org.netbeans.modules.j2ee.persistence.wizard.unit.PersistenceUnitWizardDescriptor"></a></p>
+<div id="NBCSH5082"><!-- infolevel="all" infotype="General" --><a id="sthref754" name="sthref754"></a>
+<h1>New Persistence Unit Wizard: Provider and Database</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to create a persistence unit for your project. In this panel you supply the information that will be used to enable the persistence of your entity classes. The properties of the persistence unit are stored in <code dir="ltr">persistence.xml</code>. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2772">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>After <code dir="ltr">persistence.xml</code> is created, you can open the file by double-clicking <code dir="ltr">persistence.xml</code> in the Projects window. In a web or enterprise application, persistence.xml is located under the Configuration Files node in the Projects window (<code dir="ltr">src/conf</code> directory in the Files window).</p>
+<p>You see this panel when you open the New File wizard and select the Persistence category and then select Persistence Unit.</p>
+<p>In the New Persistence Unit wizard, you specify the following:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t9">Element</th>
+<th align="left" valign="bottom" id="r1c2-t9">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t9" headers="r1c1-t9">
+<p>Persistence Unit Name</p>
+</td>
+<td align="left" headers="r2c1-t9 r1c2-t9">Specifies the name for the persistence unit.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t9" headers="r1c1-t9">
+<p>Persistence Provider</p>
+</td>
+<td align="left" headers="r3c1-t9 r1c2-t9">Specifies the persistence provider supplies the functionality for managing entities. The IDE comes bundled with the EclipseLink persistence provider. Choose New Persistence Library to specify a different persistence provider.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t9" headers="r1c1-t9">
+<p>Data Source</p>
+</td>
+<td align="left" headers="r4c1-t9 r1c2-t9">Specifies the data source specifies the connection information for your database.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t9" headers="r1c1-t9">
+<p>Use Java Transaction APIs</p>
+</td>
+<td align="left" headers="r5c1-t9 r1c2-t9">Specifies the transaction type. If selected, the transactions involving the entity manager are set to JTA and managed by the container. If not selected, the transaction type is set to resource-local and managed by the application.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t9" headers="r1c1-t9">
+<p>Table Generation Strategy</p>
+</td>
+<td align="left" headers="r6c1-t9 r1c2-t9">Specifies the type of table generation for your database.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH5088" name="NBCSH5088"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2764">
+<param name="text" value="<html><u>&quot;About Developing with Java Persistence&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2767">
+<param name="text" value="<html><u>&quot;Creating a Persistence Unit&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

@@ -1,0 +1,12 @@
+OpenIDE-Module: org.netbeans.modules.debugger.importd/1
+OpenIDE-Module-Name: Import Debugger II.
+OpenIDE-Module-Display-Category: Debugging
+OpenIDE-Module-Install: org/netbeans/modules/debugger/importd2/ImportDebuggerModule.class
+OpenIDE-Module-Module-Dependencies: org.netbeans.modules.debugger.core/3 > 2.1
+OpenIDE-Module-Specification-Version: 1.1
+OpenIDE-Module-Implementation-Version: 1.0
+OpenIDE-Module-Short-Description: Enables debugging of Java imports - testing implementation.
+OpenIDE-Module-Long-Description: Testing implementaion of debugger which should demonstrate ability of Debugger Core.
+
+Name: org/netbeans/modules/debugger/importd2/ImportDebuggerType.class
+OpenIDE-Module-Class: Service

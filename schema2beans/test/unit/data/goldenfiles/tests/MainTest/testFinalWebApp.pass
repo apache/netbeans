@@ -1,0 +1,458 @@
+Calling GenBeans.doIt
+Bean Tree:
+webApp <web-app> : WebApp
+	[attr: version CDATA #REQUIRED 2.4 : java.lang.String] 	[enumeration (2.4)]
+	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	[attr: qname-test-attrib CDATA #REQUIRED  : org.netbeans.modules.schema2beans.QName]
+	(
+	  | description <description> : java.lang.String[0,n]
+	  | 	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | displayName <display-name> : java.lang.String[0,n] 	[whiteSpace (collapse)]
+	  | 	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | icon <icon> : IconType[0,n]
+	  | 	[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	smallIcon <small-icon> : java.lang.String[0,1]
+	  | 	largeIcon <large-icon> : java.lang.String[0,1]
+	  | distributable <distributable> : EmptyType
+	  | 	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | contextParam <context-param> : ParamValueType
+	  | 	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	description <description> : java.lang.String[0,n]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 	paramName <param-name> : java.lang.String 	[whiteSpace (collapse)]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	paramValue <param-value> : java.lang.String
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | filter <filter> : FilterType
+	  | 	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	description <description> : java.lang.String[0,n]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 	displayName <display-name> : java.lang.String[0,n] 	[whiteSpace (collapse)]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 	icon <icon> : IconType[0,n]
+	  | 		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		smallIcon <small-icon> : java.lang.String[0,1]
+	  | 		largeIcon <large-icon> : java.lang.String[0,1]
+	  | 	filterName <filter-name> : java.lang.String 	[minLength (1)]
+	  | 	filterClass <filter-class> : java.lang.String
+	  | 	initParam <init-param> : ParamValueType[0,n]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		description <description> : java.lang.String[0,n]
+	  | 			[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 		paramName <param-name> : java.lang.String 	[whiteSpace (collapse)]
+	  | 			[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		paramValue <param-value> : java.lang.String
+	  | 			[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | filterMapping <filter-mapping> : FilterMappingType
+	  | 	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	filterName <filter-name> : java.lang.String 	[minLength (1)]
+	  | 	| urlPattern <url-pattern> : java.lang.String
+	  | 	| servletName <servlet-name> : java.lang.String 	[minLength (1)]
+	  | 	dispatcher <dispatcher> : java.lang.String[0,n] 	[enumeration (FORWARD), enumeration (INCLUDE), enumeration (REQUEST), enumeration (ERROR), maxOccurs (4)]
+	  | listener <listener> : ListenerType
+	  | 	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	description <description> : java.lang.String[0,n]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 	displayName <display-name> : java.lang.String[0,n] 	[whiteSpace (collapse)]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 	icon <icon> : IconType[0,n]
+	  | 		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		smallIcon <small-icon> : java.lang.String[0,1]
+	  | 		largeIcon <large-icon> : java.lang.String[0,1]
+	  | 	listenerClass <listener-class> : java.lang.String
+	  | servlet <servlet> : ServletType
+	  | 	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	description <description> : java.lang.String[0,n]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 	displayName <display-name> : java.lang.String[0,n] 	[whiteSpace (collapse)]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 	icon <icon> : IconType[0,n]
+	  | 		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		smallIcon <small-icon> : java.lang.String[0,1]
+	  | 		largeIcon <large-icon> : java.lang.String[0,1]
+	  | 	servletName <servlet-name> : java.lang.String 	[minLength (1)]
+	  | 	| servletClass <servlet-class> : java.lang.String
+	  | 	| jspFile <jsp-file> : java.lang.String
+	  | 	initParam <init-param> : ParamValueType[0,n]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		description <description> : java.lang.String[0,n]
+	  | 			[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 		paramName <param-name> : java.lang.String 	[whiteSpace (collapse)]
+	  | 			[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		paramValue <param-value> : java.lang.String
+	  | 			[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	loadOnStartup <load-on-startup> : java.math.BigInteger[0,1]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	runAs <run-as> : RunAsType[0,1]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		description <description> : java.lang.String[0,n]
+	  | 			[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 		roleName <role-name> : java.lang.String
+	  | 	securityRoleRef <security-role-ref> : SecurityRoleRefType[0,n]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		description <description> : java.lang.String[0,n]
+	  | 			[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 		roleName <role-name> : java.lang.String
+	  | 		roleLink <role-link> : java.lang.String[0,1]
+	  | servletMapping <servlet-mapping> : ServletMappingType
+	  | 	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	servletName <servlet-name> : java.lang.String 	[minLength (1)]
+	  | 	urlPattern <url-pattern> : java.lang.String
+	  | sessionConfig <session-config> : SessionConfigType
+	  | 	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	sessionTimeout <session-timeout> : java.math.BigInteger[0,1]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | mimeMapping <mime-mapping> : MimeMappingType
+	  | 	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	extension <extension> : java.lang.String 	[whiteSpace (collapse)]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	mimeType <mime-type> : java.lang.String 	[pattern ([\p{L}\-\p{Nd}]+/[\p{L}\-\p{Nd}\.]+)]
+	  | welcomeFileList <welcome-file-list> : WelcomeFileListType
+	  | 	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	welcomeFile <welcome-file> : java.lang.String[1,n] 	[whiteSpace (collapse)]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | errorPage <error-page> : ErrorPageType
+	  | 	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	| errorCode <error-code> : java.lang.Long 	[pattern (\d{3})]
+	  | 	| exceptionType <exception-type> : java.lang.String
+	  | 	location <location> : java.lang.String 	[pattern (/.*)]
+	  | jspConfig <jsp-config> : JspConfigType
+	  | 	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	taglib <taglib> : TaglibType[0,n]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		taglibUri <taglib-uri> : java.lang.String 	[whiteSpace (collapse)]
+	  | 			[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		taglibLocation <taglib-location> : java.lang.String
+	  | 	jspPropertyGroup <jsp-property-group> : JspPropertyGroupType[0,n]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		description <description> : java.lang.String[0,n]
+	  | 			[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 		displayName <display-name> : java.lang.String[0,n] 	[whiteSpace (collapse)]
+	  | 			[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 		icon <icon> : IconType[0,n]
+	  | 			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 			[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 			smallIcon <small-icon> : java.lang.String[0,1]
+	  | 			largeIcon <large-icon> : java.lang.String[0,1]
+	  | 		urlPattern <url-pattern> : java.lang.String[1,n]
+	  | 		elIgnored <el-ignored> : boolean[0,1] 	[pattern ((true|false))]
+	  | 		pageEncoding <page-encoding> : java.lang.String[0,1] 	[whiteSpace (collapse)]
+	  | 			[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		scriptingInvalid <scripting-invalid> : boolean[0,1] 	[pattern ((true|false))]
+	  | 		isXml <is-xml> : boolean[0,1] 	[pattern ((true|false))]
+	  | 		includePrelude <include-prelude> : java.lang.String[0,n]
+	  | 		includeCoda <include-coda> : java.lang.String[0,n]
+	  | securityConstraint <security-constraint> : SecurityConstraintType
+	  | 	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	displayName <display-name> : java.lang.String[0,n] 	[whiteSpace (collapse)]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 	webResourceCollection <web-resource-collection> : WebResourceCollectionType[1,n]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		webResourceName <web-resource-name> : java.lang.String 	[whiteSpace (collapse)]
+	  | 			[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		description <description> : java.lang.String[0,n]
+	  | 			[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 		urlPattern <url-pattern> : java.lang.String[1,n]
+	  | 		httpMethod <http-method> : java.lang.String[0,n] 	[enumeration (GET), enumeration (POST), enumeration (PUT), enumeration (DELETE), enumeration (HEAD), enumeration (OPTIONS), enumeration (TRACE)]
+	  | 	authConstraint <auth-constraint> : AuthConstraintType[0,1]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		description <description> : java.lang.String[0,n]
+	  | 			[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 		roleName <role-name> : java.lang.String[0,n]
+	  | 	userDataConstraint <user-data-constraint> : UserDataConstraintType[0,1]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		description <description> : java.lang.String[0,n]
+	  | 			[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 		transportGuarantee <transport-guarantee> : java.lang.String 	[enumeration (NONE), enumeration (INTEGRAL), enumeration (CONFIDENTIAL)]
+	  | loginConfig <login-config> : LoginConfigType
+	  | 	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	authMethod <auth-method> : java.lang.String[0,1]
+	  | 	realmName <realm-name> : java.lang.String[0,1] 	[whiteSpace (collapse)]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	formLoginConfig <form-login-config> : FormLoginConfigType[0,1]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		formLoginPage <form-login-page> : java.lang.String 	[pattern (/.*)]
+	  | 		formErrorPage <form-error-page> : java.lang.String 	[pattern (/.*)]
+	  | securityRole <security-role> : SecurityRoleType
+	  | 	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	description <description> : java.lang.String[0,n]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 	roleName <role-name> : java.lang.String
+	  | envEntry <env-entry> : EnvEntryType[0,n]
+	  | 	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	description <description> : java.lang.String[0,n]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 	envEntryName <env-entry-name> : java.lang.String
+	  | 	envEntryType <env-entry-type> : java.lang.String 	[enumeration (java.lang.Boolean), enumeration (java.lang.Byte), enumeration (java.lang.Character), enumeration (java.lang.String), enumeration (java.lang.Short), enumeration (java.lang.Integer), enumeration (java.lang.Long), enumeration (java.lang.Float), enumeration (java.lang.Double)]
+	  | 	envEntryValue <env-entry-value> : java.lang.String[0,1]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | ejbRef <ejb-ref> : EjbRefType[0,n]
+	  | 	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	description <description> : java.lang.String[0,n]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 	ejbRefName <ejb-ref-name> : java.lang.String
+	  | 	ejbRefType <ejb-ref-type> : java.lang.String 	[enumeration (Entity), enumeration (Session)]
+	  | 	home <home> : java.lang.String
+	  | 	remote <remote> : java.lang.String
+	  | 	ejbLink <ejb-link> : java.lang.String[0,1]
+	  | ejbLocalRef <ejb-local-ref> : EjbLocalRefType[0,n]
+	  | 	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	description <description> : java.lang.String[0,n]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 	ejbRefName <ejb-ref-name> : java.lang.String
+	  | 	ejbRefType <ejb-ref-type> : java.lang.String 	[enumeration (Entity), enumeration (Session)]
+	  | 	localHome <local-home> : java.lang.String
+	  | 	local <local> : java.lang.String
+	  | 	ejbLink <ejb-link> : java.lang.String[0,1]
+	  | serviceRef <service-ref> : ServiceRefType[0,n] 	[key name='service-ref_handler-name-key']
+	  | 	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	description <description> : java.lang.String[0,n]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 	displayName <display-name> : java.lang.String[0,n] 	[whiteSpace (collapse)]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 	icon <icon> : IconType[0,n]
+	  | 		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		smallIcon <small-icon> : java.lang.String[0,1]
+	  | 		largeIcon <large-icon> : java.lang.String[0,1]
+	  | 	serviceRefName <service-ref-name> : java.lang.String
+	  | 	serviceInterface <service-interface> : java.lang.String
+	  | 	wsdlFile <wsdl-file> : java.net.URI[0,1]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	jaxrpcMappingFile <jaxrpc-mapping-file> : java.lang.String[0,1]
+	  | 	serviceQname <service-qname> : org.netbeans.modules.schema2beans.QName[0,1]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	portComponentRef <port-component-ref> : PortComponentRefType[0,n]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		serviceEndpointInterface <service-endpoint-interface> : java.lang.String
+	  | 		portComponentLink <port-component-link> : java.lang.String[0,1] 	[whiteSpace (collapse)]
+	  | 			[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	handler <handler> : ServiceRefHandlerType[0,n]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		description <description> : java.lang.String[0,n]
+	  | 			[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 		displayName <display-name> : java.lang.String[0,n] 	[whiteSpace (collapse)]
+	  | 			[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 		icon <icon> : IconType[0,n]
+	  | 			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 			[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 			smallIcon <small-icon> : java.lang.String[0,1]
+	  | 			largeIcon <large-icon> : java.lang.String[0,1]
+	  | 		handlerName <handler-name> : java.lang.String 	[whiteSpace (collapse)]
+	  | 			[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		handlerClass <handler-class> : java.lang.String
+	  | 		initParam <init-param> : ParamValueType[0,n]
+	  | 			[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 			description <description> : java.lang.String[0,n]
+	  | 				[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 				[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 			paramName <param-name> : java.lang.String 	[whiteSpace (collapse)]
+	  | 				[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 			paramValue <param-value> : java.lang.String
+	  | 				[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		soapHeader <soap-header> : org.netbeans.modules.schema2beans.QName[0,n]
+	  | 			[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		soapRole <soap-role> : java.lang.String[0,n] 	[whiteSpace (collapse)]
+	  | 			[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		portName <port-name> : java.lang.String[0,n] 	[whiteSpace (collapse)]
+	  | 			[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | resourceRef <resource-ref> : ResourceRefType[0,n]
+	  | 	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	description <description> : java.lang.String[0,n]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 	resRefName <res-ref-name> : java.lang.String
+	  | 	resType <res-type> : java.lang.String
+	  | 	resAuth <res-auth> : java.lang.String 	[enumeration (Application), enumeration (Container)]
+	  | 	resSharingScope <res-sharing-scope> : java.lang.String[0,1] 	[enumeration (Shareable), enumeration (Unshareable)]
+	  | resourceEnvRef <resource-env-ref> : ResourceEnvRefType[0,n]
+	  | 	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	description <description> : java.lang.String[0,n]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 	resourceEnvRefName <resource-env-ref-name> : java.lang.String
+	  | 	resourceEnvRefType <resource-env-ref-type> : java.lang.String
+	  | messageDestinationRef <message-destination-ref> : MessageDestinationRefType[0,n]
+	  | 	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	description <description> : java.lang.String[0,n]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 	messageDestinationRefName <message-destination-ref-name> : java.lang.String
+	  | 	messageDestinationType <message-destination-type> : java.lang.String
+	  | 	messageDestinationUsage <message-destination-usage> : java.lang.String 	[enumeration (Consumes), enumeration (Produces), enumeration (ConsumesProduces)]
+	  | 	messageDestinationLink <message-destination-link> : java.lang.String[0,1]
+	  | messageDestination <message-destination> : MessageDestinationType
+	  | 	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	description <description> : java.lang.String[0,n]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 	displayName <display-name> : java.lang.String[0,n] 	[whiteSpace (collapse)]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 	icon <icon> : IconType[0,n]
+	  | 		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		smallIcon <small-icon> : java.lang.String[0,1]
+	  | 		largeIcon <large-icon> : java.lang.String[0,1]
+	  | 	messageDestinationName <message-destination-name> : java.lang.String 	[whiteSpace (collapse)]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | localeEncodingMappingList <locale-encoding-mapping-list> : LocaleEncodingMappingListType
+	  | 	[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 	localeEncodingMapping <locale-encoding-mapping> : LocaleEncodingMappingType[1,n]
+	  | 		[attr: id CDATA #IMPLIED  : java.lang.String] 	[whiteSpace (collapse)]
+	  | 		locale <locale> : java.lang.String 	[pattern ([a-z]{2}(_|-)?([\p{L}\-\p{Nd}]{2})?)]
+	  | 		encoding <encoding> : java.lang.String 	[pattern ([^\s]+)]
+	)[0,n]
+
+Compiling
+Finished compiling: 0
+out: TestFinalWebApp - creating the DOM document
+out: TestFinalWebApp - creating the bean graph
+out: TestFinalWebApp - bean graph created
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <web-app xmlns='http://java.sun.com/xml/ns/j2ee' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='foo' xmlns:testNS='http://testNS' version='2.4' qname-test-attrib='testNS:at'>
+out: 	<description>This is my Web App</description>
+out: 	<display-name>MyWebApp</display-name>
+out: 	<filter>
+out: 		<filter-name>Bob</filter-name>
+out: 		<filter-class></filter-class>
+out: 	</filter>
+out: 	<service-ref>
+out: 		<description>First ref</description>
+out: 		<service-ref-name></service-ref-name>
+out: 		<service-interface></service-interface>
+out: 		<service-qname>noNS</service-qname>
+out: 	</service-ref>
+out: 	<service-ref xmlns:foo='http://blue'>
+out: 		<description>Second ref</description>
+out: 		<service-ref-name></service-ref-name>
+out: 		<service-interface></service-interface>
+out: 		<service-qname>foo:someNS</service-qname>
+out: 	</service-ref>
+out: 	<service-ref xmlns:otherNS='http://green'>
+out: 		<description>Third ref</description>
+out: 		<service-ref-name></service-ref-name>
+out: 		<service-interface></service-interface>
+out: 		<service-qname>otherNS:outerNS</service-qname>
+out: 		<handler xmlns:bar='http://bar.com'>
+out: 			<handler-name>P</handler-name>
+out: 			<handler-class></handler-class>
+out: 			<soap-header>a</soap-header>
+out: 			<soap-header>bar:b</soap-header>
+out: 			<soap-header>otherNS:c</soap-header>
+out: 		</handler>
+out: 	</service-ref>
+out: </web-app>
+out: TestFinalWebApp - Adding filters
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <web-app xmlns='http://java.sun.com/xml/ns/j2ee' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='foo' xmlns:testNS='http://testNS' version='2.4' qname-test-attrib='testNS:at'>
+out: 	<description>This is my Web App</description>
+out: 	<display-name>MyWebApp</display-name>
+out: 	<filter>
+out: 		<filter-name>Bob</filter-name>
+out: 		<filter-class></filter-class>
+out: 	</filter>
+out: 	<filter>
+out: 		<display-name xml:lang='en'>filter BLUE</display-name>
+out: 		<filter-name></filter-name>
+out: 		<filter-class></filter-class>
+out: 	</filter>
+out: 	<service-ref>
+out: 		<description>First ref</description>
+out: 		<service-ref-name></service-ref-name>
+out: 		<service-interface></service-interface>
+out: 		<service-qname>noNS</service-qname>
+out: 	</service-ref>
+out: 	<service-ref xmlns:foo='http://blue'>
+out: 		<description>Second ref</description>
+out: 		<service-ref-name></service-ref-name>
+out: 		<service-interface></service-interface>
+out: 		<service-qname>foo:someNS</service-qname>
+out: 	</service-ref>
+out: 	<service-ref xmlns:otherNS='http://green'>
+out: 		<description>Third ref</description>
+out: 		<service-ref-name></service-ref-name>
+out: 		<service-interface></service-interface>
+out: 		<service-qname>otherNS:outerNS</service-qname>
+out: 		<handler xmlns:bar='http://bar.com'>
+out: 			<handler-name>P</handler-name>
+out: 			<handler-class></handler-class>
+out: 			<soap-header>a</soap-header>
+out: 			<soap-header>bar:b</soap-header>
+out: 			<soap-header>otherNS:c</soap-header>
+out: 		</handler>
+out: 	</service-ref>
+out: </web-app>
+out: TestFinalWebApp - Validating
+out: TestFinalWebApp - Got exception: getFilterName() minLength (1)
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <web-app xmlns='http://java.sun.com/xml/ns/j2ee' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='foo' xmlns:testNS='http://testNS' version='2.4' qname-test-attrib='testNS:at'>
+out: 	<description>This is my Web App</description>
+out: 	<display-name>MyWebApp</display-name>
+out: 	<filter>
+out: 		<filter-name>Bob</filter-name>
+out: 		<filter-class></filter-class>
+out: 	</filter>
+out: 	<filter>
+out: 		<display-name xml:lang='en'>filter BLUE</display-name>
+out: 		<filter-name></filter-name>
+out: 		<filter-class></filter-class>
+out: 	</filter>
+out: 	<service-ref>
+out: 		<description>First ref</description>
+out: 		<service-ref-name></service-ref-name>
+out: 		<service-interface></service-interface>
+out: 		<service-qname>noNS</service-qname>
+out: 	</service-ref>
+out: 	<service-ref xmlns:foo='http://blue'>
+out: 		<description>Second ref</description>
+out: 		<service-ref-name></service-ref-name>
+out: 		<service-interface></service-interface>
+out: 		<service-qname>foo:someNS</service-qname>
+out: 	</service-ref>
+out: 	<service-ref xmlns:otherNS='http://green'>
+out: 		<description>Third ref</description>
+out: 		<service-ref-name></service-ref-name>
+out: 		<service-interface></service-interface>
+out: 		<service-qname>otherNS:outerNS</service-qname>
+out: 		<handler xmlns:bar='http://bar.com'>
+out: 			<handler-name>P</handler-name>
+out: 			<handler-class></handler-class>
+out: 			<soap-header>a</soap-header>
+out: 			<soap-header>bar:b</soap-header>
+out: 			<soap-header>otherNS:c</soap-header>
+out: 		</handler>
+out: 	</service-ref>
+out: </web-app>
+Finished running TestFinalWebApp: 0

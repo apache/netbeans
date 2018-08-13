@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Debugging: Variables Window</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="NetbeansDebuggerVariableNode" name="NetbeansDebuggerVariableNode"></a></p>
+<div id="NBCSH2737"><!-- infolevel="all" infotype="General" --><a id="sthref356" name="sthref356"></a>
+<h1>Debugging: Variables Window</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to lists the local variables in the current call. By default, the Variables window opens automatically whenever you start a debugging session. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG886">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>You can click the control to the left of the name to expand or collapse the variable. If the object type is displayed in blue underlined text, clicking the text jumps to the object type in the source code. You can click the Value cell to edit the value directly in the Variables window.</p>
+<a id="NBCSH2738" name="NBCSH2738"></a>
+<p><b>Icons</b></p>
+<p>The Variables window displays the following thread icons:</p>
+
+<table summary="Descriptions of Variables window icons." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t30">Element</th>
+<th align="left" valign="bottom" id="r1c2-t30">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t30" headers="r1c1-t30">
+<p><img width="16" height="16" src="img/localvariable.gif" alt="Local Variable icon." title="Local Variable icon." /></p></td>
+<td align="left" headers="r2c1-t30 r1c2-t30">Local variable</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t30" headers="r1c1-t30">
+<p><img width="16" height="16" src="img/supervariable.gif" alt="Static Field icon" title="Static Field icon" /></p></td>
+<td align="left" headers="r3c1-t30 r1c2-t30">Container for a superclass</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t30" headers="r1c1-t30">
+<p><img width="16" height="16" src="img/staticvariable.gif" alt="Static Field icon" title="Static Field icon" /></p></td>
+<td align="left" headers="r4c1-t30 r1c2-t30">Static field of an object.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t30" headers="r1c1-t30">
+<p><img width="16" height="16" src="img/field.gif" alt="Non-static Field icon" title="Non-static Field icon" /></p></td>
+<td align="left" headers="r5c1-t30 r1c2-t30">Non-static field of an object.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t30" headers="r1c1-t30">
+<p><img width="16" height="16" src="img/filter.gif" alt="Return Values of Methods icon" title="Return Values of Methods icon" /></p></td>
+<td align="left" headers="r6c1-t30 r1c2-t30">Return values of executed methods when using expression step</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t30" headers="r1c1-t30"><img width="16" height="16" src="img/exprarguments.gif" alt="Expression Arguments icon." title="Expression Arguments icon." /></td>
+<td align="left" headers="r7c1-t30 r1c2-t30">Input values for next method when using expression step</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2744" name="NBCSH2744"></a>
+<p><b>Actions</b></p>
+<p>The Variables window has the following commands in the context menus:</p>
+
+<table summary="Descriptions of context menu commands in Variables window." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="31%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t31">Element</th>
+<th align="left" valign="bottom" id="r1c2-t31">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t31" headers="r1c1-t31">
+<p>Create Fixed Watch</p>
+</td>
+<td align="left" headers="r2c1-t31 r1c2-t31">Creates a fixed watch of the selected object. A fixed watch displays the specified object or memory location regardless of the current context.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t31" headers="r1c1-t31">
+<p>Display As</p>
+</td>
+<td align="left" headers="r3c1-t31 r1c2-t31">For objects of type integer only. Determines how the value of the selected object is shown. The choices are decimal, hexadecimal, octal, and binary.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t31" headers="r1c1-t31">Go to Source</td>
+<td align="left" headers="r4c1-t31 r1c2-t31">Opens the source file containing the variable.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t31" headers="r1c1-t31">
+<p>Show References</p>
+</td>
+<td align="left" headers="r5c1-t31 r1c2-t31">Opens the Instance view showing list of instances and the referrers (not available if IDE is running on JDK 1.5). See Instances Window for more information.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t31" headers="r1c1-t31">
+<p>List Option</p>
+</td>
+<td align="left" headers="r6c1-t31 r1c2-t31">Enables you to customize the display of the Variables window, including adding and removing columns of information, reordering the columns, and sorting the columns. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2393">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2749" name="NBCSH2749"></a>
+<p><b>Properties</b></p>
+<p>By default, all thread properties are displayed directly in the Variables window, except for the <code dir="ltr">toString()</code> property. To display the <code dir="ltr">toString()</code> property in the Variables window, click <img width="17" height="18" src="img/changecolumn.gif" alt="Change Column icon." title="Change Column icon." /> in the upper right corner of the window, or right-click in the window and choose <b>List Options</b> &gt; <b>Change Visible Columns</b> and then select <code dir="ltr">toString()</code> in the dialog box.</p>
+<a id="NBCSH2750" name="NBCSH2750"></a>
+<hr><p><b>Related Topics</b></p>
+<p>Developing Applications with NetBeans IDE, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG824">
+<param name="text" value="<html><u>&quot;Choosing Current Context in the Debugger&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>Developing Applications with NetBeans IDE, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG887">
+<param name="text" value="<html><u>&quot;Evaluating Variables in the Source Editor&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG885">
+<param name="text" value="<html><u>&quot;Viewing Program Information When Debugging&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG822">
+<param name="text" value="<html><u>&quot;Using the Debugger Windows&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

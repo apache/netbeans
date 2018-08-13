@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: test1
+OpenIDE-Module-Layer: test1/layer-with-ido.xml
+OpenIDE-Module-Name: IDOM test1
+

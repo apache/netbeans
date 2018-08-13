@@ -1,0 +1,41 @@
+package org.netbeans.test.java.hints;
+
+import java.util.List;
+import javax.swing.JFrame;
+
+public class Test2 {
+    
+    void test1() {
+        List l = null;
+        l.add("");
+    }
+    
+    @SuppressWarnings(KEY)
+    private void test2() {
+        List l = null;
+        l.add("");
+    }
+    
+    @SuppressWarnings({KEY})
+    private void test3() {
+        List l = null;
+        l.add("");
+    }
+    
+    public static final String KEY = "deprecation";
+    
+    private void test4() {
+        switch (1) {
+            case 0:
+                System.err.println("");
+            case 1:
+                System.err.println("");
+                break;
+        }
+        
+        JFrame f = null;
+        
+        f.show();
+    }
+    
+}

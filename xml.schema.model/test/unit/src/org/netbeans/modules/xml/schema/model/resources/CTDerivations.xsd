@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : CTDerivations.xsd
+    Created on : January 20, 2006, 3:58 PM
+    Author     : jerlock
+    Description:
+        Purpose of XML Schema document follows.
+-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+ <!-- base type -->
+ <xs:complexType name="Base-For-Restriction">
+  <xs:sequence>
+   <xs:element name="numPosts" type="xs:integer" minOccurs="0" maxOccurs="1" /> 
+   <xs:element name="signature" type="xs:string" nillable="true" />
+   <xs:element name="email" type="xs:string"  minOccurs="0" maxOccurs="1" />
+  </xs:sequence>
+  <xs:attribute name="firstSubscribed" type="xs:date" use="optional" />
+  <xs:attribute name="mailReader" type="xs:string"/>
+ </xs:complexType>
+
+ <!-- derived type --> 
+  <xs:complexType name="RestrictedCT">
+   <xs:complexContent>
+   <xs:restriction base="Base-For-Restriction">
+   <xs:sequence>
+    <xs:element name="numPosts" type="xs:integer" minOccurs="1" /> 
+    <xs:element name="signature" type="xs:string" nillable="false" />
+    <xs:element name="email" type="xs:string"  minOccurs="0" maxOccurs="0" />
+   </xs:sequence>
+   <xs:attribute name="firstSubscribed" type="xs:date" use="required" />
+   <xs:attribute name="mailReader" type="xs:string" fixed="Microsoft Outlook" />
+   </xs:restriction>
+   </xs:complexContent>
+  </xs:complexType> 
+  
+  <!-- same as above, but without restriction-->
+  <!-- two unrelated CTs-->
+<xs:complexType name="CT1">
+  <xs:sequence>
+   <xs:element name="numPosts" type="xs:integer" minOccurs="0" maxOccurs="1" /> 
+   <xs:element name="signature" type="xs:string" nillable="true" />
+   <xs:element name="email" type="xs:string"  minOccurs="0" maxOccurs="1" />
+  </xs:sequence>
+  <xs:attribute name="firstSubscribed" type="xs:date" use="optional" />
+  <xs:attribute name="mailReader" type="xs:string"/>
+ </xs:complexType>
+
+  <xs:complexType name="CT2">
+   <xs:sequence>
+    <xs:element name="numPosts" type="xs:integer" minOccurs="1" /> 
+    <xs:element name="signature" type="xs:string" nillable="false" />
+    <xs:element name="email" type="xs:string"  minOccurs="0" maxOccurs="0" />
+   </xs:sequence>
+   <xs:attribute name="firstSubscribed" type="xs:date" use="required" />
+   <xs:attribute name="mailReader" type="xs:string" fixed="Microsoft Outlook" />
+  </xs:complexType> 
+  
+  <!-- EXTENSION -->
+  <!-- base type -->
+ <xs:complexType name="Base-For-Extension">
+  <xs:sequence>
+   <xs:element name="numPosts" type="xs:integer" minOccurs="0" maxOccurs="1" /> 
+   <xs:element name="email" type="xs:string"  />
+  </xs:sequence>
+  <xs:attribute name="firstSubscribed" type="xs:date" use="optional" />
+  <xs:attribute name="lastPostDate" type="xs:date" use="optional" />
+ </xs:complexType>
+
+ <!-- derived type --> 
+  <xs:complexType name="ExtendedCT">
+   <xs:complexContent>
+   <xs:extension base="Base-For-Extension">
+   <xs:sequence>
+    <xs:element name="signature" type="xs:string"  />
+   </xs:sequence>
+   <xs:attribute name="mailReader" type="xs:string" fixed="Microsoft Outlook" />
+   </xs:extension>
+   </xs:complexContent>
+  </xs:complexType> 
+  
+  
+    <xs:element name="Element-Containing-Restricted-CT">
+            <xs:annotation>
+                    <xs:documentation xml:lang="en">An Element containing derived CTs.</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+               <xs:complexContent>
+                   <xs:restriction base="Base-For-Restriction">
+                       <xs:sequence>
+                            <xs:element name="numPosts" type="xs:integer" minOccurs="1" /> 
+                            <xs:element name="signature" type="xs:string" nillable="false" />
+                            <xs:element name="email" type="xs:string"  minOccurs="0" maxOccurs="0" />
+                       </xs:sequence>
+                       <xs:attribute name="firstSubscribed" type="xs:date" use="required" />
+                       <xs:attribute name="mailReader" type="xs:string" fixed="Microsoft Outlook" />
+                   </xs:restriction>
+               </xs:complexContent>
+            </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="Element-Containing-Extended-CT">
+            <xs:annotation>
+                    <xs:documentation xml:lang="en">Another Element containing derived CT.</xs:documentation>
+            </xs:annotation>
+          <xs:complexType >
+               <xs:complexContent>
+                   <xs:extension base="Base-For-Extension">
+                       <xs:sequence>
+                            <xs:element name="signature" type="xs:string"  />
+                       </xs:sequence>
+                   <xs:attribute name="mailReader" type="xs:string" fixed="Microsoft Outlook" />
+                   </xs:extension>
+               </xs:complexContent>
+          </xs:complexType> 
+    </xs:element>
+    
+	<xs:complexType name="CTX">
+		<xs:sequence>
+			<xs:element name="CTX-inner-elem" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="en">Air reservation ticket information.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType name="CTX-inner-CT">
+                                    <xs:sequence>
+                                        <xs:element type="CT1"/>
+                                    </xs:sequence>    
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ItineraryPricing" type="ItinPricingType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation xml:lang="en">Cost of ALL itinerary reservation items.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SpecialRequestDetails">
+				<xs:annotation>
+					<xs:documentation xml:lang="en">Remarks, OSIs, Seat Requests etc. </xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="SpecialReqDetailsType">
+							<xs:sequence>
+								<xs:element ref="TPA_Extensions" minOccurs="0"/>
+							</xs:sequence>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element ref="TPA_Extensions" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+    
+    <xs:element name="Element-Containing-Base-CT" type="Base-For-Extension"/>
+</xs:schema>

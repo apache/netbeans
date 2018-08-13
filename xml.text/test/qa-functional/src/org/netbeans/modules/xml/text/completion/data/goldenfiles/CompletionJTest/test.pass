@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC '-//Test//DTD XHTML 1.0 Subset//EN' 'xhtml.dtd'>
+<html>
+<head>
+<title>Test page</title>
+</head>
+<body>
+<h1 title="test">Test</h1>
+<table border="1">
+<tr align="center">
+<td>1</td><td>2</td>
+</tr>
+</table>
+</body>
+</html>
+

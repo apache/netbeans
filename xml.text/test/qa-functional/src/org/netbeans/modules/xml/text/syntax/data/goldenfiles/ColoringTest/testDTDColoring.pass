@@ -1,0 +1,587 @@
+symbol: <?
+target: xml
+plain:  
+keyword: encoding
+plain: =
+plain: "UTF-8"
+plain:  
+symbol: ?>
+error:                                        
+comment: <!--
+comment:  Created by mschovanek on October 23, 2000, 4:56 PM 
+comment: -->
+plain: 
+
+symbol: <!
+keyword: ELEMENT
+symbol:  
+plain: Books
+symbol:  (
+plain: Product
+symbol: +,
+plain: Image
+symbol: ?, 
+plain: Custom
+symbol: ?)*
+symbol: >
+error:                     
+symbol: <!
+keyword: ELEMENT
+symbol:  
+plain: Product
+symbol:  (
+keyword: #PCDATA
+symbol: |
+plain: Descript
+symbol: )*
+symbol: >
+plain: 
+
+symbol: <!
+keyword: ELEMENT
+symbol:  
+plain: Descript
+symbol:  (
+keyword: #PCDATA
+symbol: )
+symbol: >
+symbol: <!
+keyword: ELEMENT
+symbol:  
+plain: Custom
+symbol:  
+keyword: ANY
+symbol: >
+error:               
+symbol: <!
+keyword: ATTLIST
+plain:  
+plain: Books
+plain:  
+plain: owner
+plain:  
+keyword: CDATA
+plain:  
+keyword: #IMPLIED
+plain:  
+plain: idow
+plain:  
+keyword: ID
+plain:  
+keyword: #IMPLIED
+plain:  
+symbol: >
+plain: 
+
+symbol: <!
+keyword: ATTLIST
+plain:  
+plain: Price
+plain:  
+plain: isbn
+plain:   
+keyword: CDATA
+plain:  
+keyword: #IMPLIED
+plain:  
+plain: id
+plain:  
+keyword: ID
+plain:  
+keyword: #IMPLIED
+symbol: >
+error:             
+symbol: <!
+keyword: ATTLIST
+plain:  
+plain: Product
+plain:  
+plain: isbn
+plain:  
+keyword: CDATA
+plain:  
+keyword: #IMPLIED
+plain:  
+plain: id
+plain:  
+keyword: ID
+plain:  
+keyword: #IMPLIED
+symbol: >
+plain: 
+
+symbol: <!
+keyword: ELEMENT
+symbol:  
+plain: Price
+symbol:  (
+keyword: #PCDATA
+symbol: )
+symbol: >
+error:                                       
+comment: <!--
+comment:  FULL ATTLIST 
+comment: -->
+plain: 
+
+symbol: <!
+keyword: NOTATION
+plain:  
+plain: pdf
+plain:  
+keyword: SYSTEM
+plain:  
+string: "
+string: xpdf
+string: "
+symbol: >
+error:                                    
+symbol: <!
+keyword: NOTATION
+plain:  
+plain: dvi
+plain:  
+keyword: SYSTEM
+plain:  
+string: "
+string: gv
+string: "
+symbol: >
+plain: 
+
+symbol: <!
+keyword: ELEMENT
+symbol:  
+plain: Image
+symbol:  
+keyword: EMPTY
+symbol: >
+plain: 
+
+symbol: <!
+keyword: ATTLIST
+plain:  
+plain: Image
+plain:  
+plain: 
+
+plain:   
+plain: src
+plain:        
+keyword: ENTITY
+plain:       
+keyword: #REQUIRED
+plain:                                
+plain: descr
+plain:      
+keyword: CDATA
+plain:        
+keyword: #IMPLIED
+plain: 
+
+plain:   
+plain: visible
+plain:    
+keyword: CDATA
+plain:        
+keyword: #FIXED
+plain:       
+string: "
+string: true
+string: "
+plain:                       
+plain: format
+plain:     
+plain: (jpg
+plain:  
+plain: |
+plain:  
+plain: gif)
+plain:  
+keyword: #IMPLIED
+plain: 
+
+plain:   
+plain: os
+plain:         
+plain: (unix
+plain:  
+plain: |
+plain:  
+plain: os2)
+plain:              
+string: "
+string: unix
+string: "
+plain:                      
+plain: entity
+plain:     
+keyword: ENTITY
+plain:       
+keyword: #IMPLIED
+plain: 
+
+plain:   
+plain: entities
+plain:   
+keyword: ENTITIES
+plain:     
+keyword: #IMPLIED
+plain:                                 
+plain: id
+plain:         
+keyword: ID
+plain:           
+keyword: #IMPLIED
+plain: 
+
+plain:   
+plain: idref
+plain:      
+keyword: IDREF
+plain:        
+keyword: #IMPLIED
+plain:                                 
+plain: idrefs
+plain:     
+keyword: IDREFS
+plain:       
+keyword: #IMPLIED
+plain: 
+
+plain:   
+plain: nmtoken
+plain:    
+keyword: NMTOKEN
+plain:      
+keyword: #IMPLIED
+plain:                                 
+plain: nmtokens
+plain:   
+keyword: NMTOKENS
+plain:     
+keyword: #IMPLIED
+plain: 
+
+plain:   
+plain: notation
+plain:   
+keyword: NOTATION
+plain:     
+plain: (pdf|dvi)
+plain:  
+keyword: #IMPLIED
+symbol: >
+plain: 
+
+comment: <!--
+comment:  GENERAL ENTITY 
+comment: -->
+error:                                          
+symbol: <!
+keyword: ENTITY
+plain:  
+plain: company
+plain:  
+string: "
+string: Tisk &amp; spol.
+string: "
+symbol: >
+plain: 
+
+symbol: <!
+keyword: ENTITY
+plain:  
+plain: thorn
+plain:  
+string: '
+string: &#222;
+string: '
+symbol: >
+error:                                         
+comment: <!--
+comment:  EXTERNAL ENTITY 
+comment: -->
+plain: 
+
+symbol: <!
+keyword: ENTITY
+plain:  
+plain: extern
+plain:  
+keyword: SYSTEM
+plain:  
+string: "
+string: externalEntity.xml
+string: "
+symbol: >
+error:                     
+comment: <!--
+comment:  PARAMETR ENTITY 
+comment: -->
+plain: 
+
+symbol: <!
+keyword: ENTITY
+plain:  
+ref: %
+ref:  
+plain: sourceinfo
+plain:  
+string: "
+string: lang   CDATA #REQUIRED cprght CDATA #IMPLIED
+string: "
+symbol: >
+error:    
+symbol: <!
+keyword: ATTLIST
+plain:  
+plain: Descript
+plain:  
+ref: %
+ref: sourceinfo
+ref: ;
+symbol: >
+plain: 
+
+comment: <!--
+comment:  EXTERNAL PARAMETR ENTITY 
+comment: -->
+error:                                
+symbol: <!
+keyword: ENTITY
+plain:  
+ref: %
+ref:  
+plain: states
+plain:  
+keyword: SYSTEM
+plain:  
+string: "
+string: states.dtd
+string: "
+symbol: >
+plain: 
+
+ref: %
+ref: states
+ref: ;
+error:                                                         
+comment: <!--
+comment:  UNPARSED ENTITY 
+comment: -->
+plain: 
+
+symbol: <!
+keyword: ENTITY
+plain:  
+plain: image1
+plain:  
+keyword: SYSTEM
+plain:  
+string: "
+string: http://'''.../ora.gif
+string: "
+plain:  
+keyword: NDATA
+plain:  
+plain: GIF89a
+symbol: >
+error:        
+symbol: <!
+keyword: NOTATION
+plain:  
+plain: GIF89a
+plain:  
+keyword: PUBLIC
+plain:  
+string: "
+string: -//CS//GIF 89a//EN
+string: "
+symbol: >
+plain: 
+
+symbol: <!
+keyword: NOTATION
+plain:  
+plain: eps
+plain:  
+keyword: SYSTEM
+plain:  
+string: '
+string: """gv
+string: '
+symbol: >
+error:          
+symbol: <!
+keyword: ENTITY
+plain:  
+ref: %
+ref:  
+plain: X
+plain:  
+string: "
+string: INCLUDE
+string: "
+symbol: >
+error:      
+symbol: <!
+keyword: ENTITY
+plain:  
+ref: %
+ref:  
+plain: Y
+plain:  
+string: "
+string: IGNORE
+string: "
+symbol: >
+plain: 
+
+symbol: <!
+symbol: [
+ref: %
+ref: X
+ref: ;
+plain:  
+symbol: [
+symbol: <!
+keyword: ENTITY
+plain:  
+plain: notice
+plain:  
+string: "
+string: X = INCLUDE
+string: "
+symbol: >
+symbol: <!
+keyword: ELEMENT
+symbol:  
+plain: x-include
+symbol:  (
+keyword: #PCDATA
+symbol: )
+symbol: >
+symbol: ]]>
+plain: 
+
+symbol: <!
+symbol: [
+ref: %
+ref: Y
+ref: ;
+plain:  
+symbol: [
+symbol: <!
+keyword: ENTITY
+plain:  
+plain: notice
+plain:  
+string: "
+string: Y = INCLUDE
+string: "
+symbol: >
+symbol: <!
+keyword: ELEMENT
+symbol:  
+plain: y-include
+symbol:  (
+keyword: #PCDATA
+symbol: )
+symbol: >
+symbol: ]]>
+error:  
+plain: 
+
+symbol: <!
+symbol: [
+plain:  
+keyword: INCLUDE
+plain:  
+symbol: [
+symbol: <!
+keyword: ELEMENT
+symbol:  
+plain: inc-level-1
+symbol:  (
+keyword: #PCDATA
+symbol: )
+symbol: >
+symbol: <!
+symbol: [
+plain:  
+keyword: INCLUDE
+plain:  
+symbol: [
+symbol: <!
+keyword: ELEMENT
+symbol:  
+plain: inc-level-2
+symbol:  (
+keyword: #PCDATA
+symbol: )
+symbol: >
+symbol: ]]>
+plain: 
+
+error:     
+symbol: <!
+symbol: [
+plain:  
+keyword: IGNORE
+plain:   
+symbol: [
+symbol: <!
+keyword: ELEMENT
+symbol:  
+plain: ign-in-include
+symbol:  (
+keyword: #PCDATA
+symbol: )
+symbol: >
+symbol: ]]>
+symbol: ]]>
+plain: 
+
+symbol: <!
+symbol: [
+plain:  
+keyword: IGNORE
+plain:  
+symbol: [
+symbol: <!
+keyword: ELEMENT
+symbol:  
+plain: ign_level_1
+symbol:  (
+keyword: #PCDATA
+symbol: )
+symbol: >
+symbol: <!
+symbol: [
+plain:  
+keyword: INCLUDE
+plain:  
+symbol: [
+symbol: <!
+keyword: ELEMENT
+symbol:  
+plain: inc-in-ignore
+symbol:  (
+keyword: #PCDATA
+symbol: )
+symbol: >
+symbol: ]]>
+error:  
+symbol: ]]>
+plain: 
+
+symbol: <?
+target: test
+symbol:  
+plain: end
+symbol: ?>
+error:  
+comment: <!--
+comment: ENTITY amp "&#38";
+comment: -->

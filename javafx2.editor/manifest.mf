@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.modules.javafx2.editor
+OpenIDE-Module-Layer: org/netbeans/modules/javafx2/editor/resources/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/javafx2/editor/Bundle.properties
+

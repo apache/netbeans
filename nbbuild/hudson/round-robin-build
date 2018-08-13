@@ -1,0 +1,54 @@
+#!/bin/sh
+
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+dobuild() {
+    RESULT=`pwd`/nbbuild/build/test-results.txt
+    export RESULT
+    rm -f $RESULT
+
+    ant build-nozip $ANT_PARAM || exit 2
+    ant commit-validation $ANT_PARAM || exit 3
+    ant check-sigtests-release $ANT_PARAM || exit 35
+#    ant build-test-dist $ANT_PARAM || exit 4
+    # At least check that there are no cycles in the dep list, as e.g. in 2ca8e9e6fb71:
+    ant init-test-dist $ANT_PARAM || exit 4
+
+    testmodule openide.awt || exit 5
+
+    if ant check-sigtests-version $ANT_PARAM -Dsigtest.fail.on.error=true; then
+        echo Sigtest version check OK
+    else
+        echo ***************************************************
+        echo
+        echo More info at http://wiki.netbeans.org/SignatureTest
+        echo
+        echo ***************************************************
+        exit 6
+    fi
+
+    FAILED=`cat $RESULT | wc -l`
+    if [ "$FAILED" -gt 0 ]; then
+        echo "No push. Failed tests in following modules:"
+        cat $RESULT
+        exit 5
+    fi
+
+    # Clean up some to save on disk space:
+    rm -rf */build/classes */build/javahelp nbbuild/netbeans nbbuild/build/public-package-jars
+}

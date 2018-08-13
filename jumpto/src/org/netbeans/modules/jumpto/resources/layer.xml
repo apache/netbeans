@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!--
+Contributor(s): Leon Chiver
+ -->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+
+    <!-- Install the action -->
+    <folder name="Actions">
+        <folder name="Edit">
+            <!-- attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.project.ui.Bundle" / -->
+            <file name="org-netbeans-modules-jumpto-type-GoToType.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.jumpto.type.GoToTypeAction"/>
+            </file>
+            <file name="org-netbeans-modules-jumpto-symbol-GoToSymbol.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.jumpto.symbol.GoToSymbolAction"/>
+            </file>
+        </folder>
+        <folder name="Tools">
+            <file name="org-netbeans-modules-jumpto-file-FileSearchAction.instance"/>
+        </folder>
+    </folder>
+
+    <!-- Register the menu item -->
+    <folder name="Menu">
+
+        <folder name="GoTo">
+            <file name="org-netbeans-modules-jumpto-file-FileSearchAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Tools/org-netbeans-modules-jumpto-file-FileSearchAction.instance"/>
+                <attr name="position" intvalue="100"/>
+            </file>
+            <file name="org-netbeans-modules-jumpto-type-GoToType.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-jumpto-type-GoToType.instance"/>
+                <attr name="position" intvalue="150"/>
+            </file>
+            <file name="org-netbeans-modules-jumpto-symbol-GoToSymbol.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-jumpto-symbol-GoToSymbol.instance"/>
+                <attr name="position" intvalue="151"/>
+            </file>
+        </folder>
+    </folder>
+      
+    <!-- Install the action shortcuts -->
+    <!--
+    <folder name="Keymaps">
+        <folder name="NetBeans">
+            <file name="OS-O.shadow">
+                <attr name="originalFile" stringvalue="Actions/Tools/org-netbeans-modules-jumpto-file-FileSearchAction.instance"/>
+            </file>
+            <file name="D-O.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-jumpto-type-GoToType.instance"/>
+            </file>
+        </folder>
+    </folder>
+    -->
+    
+    
+    <folder name="Editors">
+        <file name="org-netbeans-modules-jumpto-file-FileIndexer$Factory.instance">
+            <attr name="instaceOf" stringvalue="org.netbeans.modules.parsing.spi.indexing.CustomIndexerFactory"/>
+        </file>
+    </folder>
+
+    <folder name="OptionsDialog">
+        <!-- This is highly suspicious, but it was this way in java/source - Hrebejk, can you check this? -->
+        <folder name="Actions">
+            <folder name="GoTo">
+                <file name="GoToType.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-jumpto-type-GoToType.instance"/>
+                </file>
+            </folder>    
+        </folder>
+    </folder>
+    
+    <folder name="QuickSearch">
+        <folder name="GoToType">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.jumpto.resources.Bundle"/>
+            <attr name="command" stringvalue="t"/>
+            <attr name="position" intvalue="300"/>
+            <file name="org-netbeans-modules-jumpto-quicksearch-JavaTypeSearchProvider.instance"/>
+        </folder>
+        <folder name="GoToSymbol">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.jumpto.resources.Bundle"/>
+            <attr name="command" stringvalue="s"/>
+            <attr name="position" intvalue="350"/>
+            <file name="org-netbeans-modules-jumpto-quicksearch-GoToSymbolProvider.instance"/>
+        </folder>
+
+    </folder>
+</filesystem>

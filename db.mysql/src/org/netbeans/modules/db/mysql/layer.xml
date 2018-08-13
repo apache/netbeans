@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+    <folder name="Databases">
+        <folder name="Explorer">
+            <folder name="Root">
+                <folder name="NodeProviders">
+                    <file name="ServerNodeProviderFactory.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.db.mysql.impl.ServerNodeProvider.getFactory"/>
+                        <attr name="instanceOf" stringvalue="org.netbeans.api.db.explorer.node.NodeProviderFactory"/>
+                        <attr name="position" intvalue="50"/>
+                    </file>
+                </folder>
+                <folder name="Actions">
+                    <file name="Separator.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="120"/>
+                    </file>
+                    <file name="org-netbeans-modules-db-mysql-actions-RegisterServerAction.instance">
+                        <attr name="position" intvalue="125"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+        <folder name="MySQL">
+            <folder name="SampleProviders">
+                <file name="BaseProvider.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.db.mysql.impl.BaseSampleProvider.getDefault"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.db.mysql.spi.sample.SampleProvider"/>
+                </file>
+            </folder>
+            <folder name="Installations">
+                <file name="MAMPInstallation.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.db.mysql.installations.MAMPInstallation.getDefault"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.db.mysql.impl.Installation"/>
+                </file>
+                <file name="LinuxXAMPPInstallation.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.db.mysql.installations.LinuxXAMPPInstallation.getDefault"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.db.mysql.impl.Installation"/>
+                </file>
+                <file name="LinuxStandaloneInstallation.instance">
+                    <!-- So far only tested on Ubuntu... -->
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.db.mysql.installations.LinuxStandaloneInstallation.getDefault"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.db.mysql.impl.Installation"/>
+                </file>
+                <file name="SXDEWebStackInstallation.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.db.mysql.installations.SXDEWebStackInstallation.getDefault"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.db.mysql.impl.Installation"/>
+                </file>
+                <file name="WindowsXAMPPInstallation.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.db.mysql.installations.WindowsXAMPPInstallation.getDefault"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.db.mysql.impl.Installation"/>
+                </file>
+                <file name="WindowsStandaloneMultiInstallation.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.db.mysql.installations.WindowsStandaloneMultiInstallation.getDefault"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.db.mysql.impl.MultiInstallation"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

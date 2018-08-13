@@ -1,0 +1,58 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<html>
+<body>
+<h2>Terminals for netbeans</h2>
+<p>
+This module provides terminal services inside netbeans.
+It does so at several levels:
+<ul>
+    <li>
+        Actions to start a terminal running a shell or a command of users choice
+        in a default terminal TopComponent.
+        <br>
+        The actions are tentatively placed under the Run menu.
+    </li>
+    <li>
+        API for creating a Terminal and running a Program under it.
+        <br>
+            See the class comment for {@link org.netbeans.modules.terminal.api.Terminal} for an example.
+    </li>
+    <li>
+        API for constructing custom TopComponents for harboring Terminals.
+        <br>
+            See the class comment for {@link org.netbeans.modules.terminal.api.TerminalContainer} for an example
+            of how to do this.
+    </li>
+    <li>
+        An alternative implementation of NetBeans's standard {@link org.openide.windows.IOProvider} API.
+        <br>
+            See the class comment for {@link org.netbeans.modules.terminal.ioprovider.TerminalIOProvider} for an example
+            of how to aquire such a service.
+        <br>
+            See the class comment for {@link org.netbeans.modules.terminal.ioprovider.TerminalInputOutput} for a
+            discussion of how to take extra advantage of the underlying
+            {@link org.netbeans.lib.terminalemulator.Term}.
+    </li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!--
+    Typical usage:
+
+    <?xml version="1.0"?>
+
+    <!DOCTYPE adresses SYSTEM "adress.dtd">
+
+    <adresses>
+    ...
+    </adresses>
+-->
+
+  <!ELEMENT addres (first-name|email|country|last-name)*>
+
+  <!ELEMENT first-name (#PCDATA)>
+
+  <!ELEMENT email (#PCDATA)>
+
+  <!ELEMENT country (#PCDATA)>
+
+  <!ELEMENT last-name (#PCDATA)>
+
+  <!ELEMENT adresses (addres)*>

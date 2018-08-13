@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.dlight.nativeexecution
+OpenIDE-Module-Implementation-Version: 1
+OpenIDE-Module-Layer: org/netbeans/modules/nativeexecution/resources/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/nativeexecution/resources/Bundle.properties
+OpenIDE-Module-Recommends: org.netbeans.modules.nativeexecution.api.ProcessInfoProviderFactory,org.netbeans.modules.nativeexecution.spi.NativeExecutionUIProvider
+OpenIDE-Module-Provides: org.netbeans.modules.nativeexecution.spi.ExecutionEnvironmentFactoryService

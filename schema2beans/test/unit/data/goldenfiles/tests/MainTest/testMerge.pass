@@ -1,0 +1,336 @@
+Calling GenBeans.doIt
+Bean Tree:
+book <book> : Book
+	[attr: good ENUM ( yes no ) yes]
+	title <title> : String
+	author <author> : String[1,n]
+	index <index> : Index[0,n]
+		[attr: color CDATA #IMPLIED ]
+		[attr: cross-ref ENUM ( yes no ) no]
+		word <word> : String
+		ref <ref> : Ref[1,n]
+			page <page> : String
+			line <line> : String
+	chapter <chapter> : Chapter[1,n]
+		[attr: title CDATA #IMPLIED ]
+		number <number> : String
+		comment <comment> : String[0,1]
+		paragraph <paragraph> : String[0,n]
+			[attr: opt CDATA #IMPLIED ]
+	summary <summary> : String[0,1]
+		[attr: length CDATA #REQUIRED ]
+		[attr: lang CDATA #IMPLIED ]
+		[attr: size CDATA #FIXED 12]
+	instock <instock> : boolean
+		EMPTY : String
+	content <content> : Content
+		title <title> : String
+		comment <comment> : String
+
+Compiling
+Finished compiling: 0
+out: TestMerge - creating the DOM document
+out: TestMerge - creating the bean graph1
+out: TestMerge - creating the DOM document
+out: TestMerge - creating the bean graph2
+out: TestMerge - new listener for Book
+out: TestMerge - new listener for Book
+out: TestMerge - should not get any event
+out: TestMerge Merge(Update) - two identical xml files  - no diff -> OK
+out: TestMerge Merge(Update) - two identical xml files  - equals -> OK
+out: TestMerge - creating the DOM document
+out: TestMerge - creating the bean graph3
+out: TestMerge - new listener for Book
+out: TestMerge Merge(Update) - two identical xml files (one mixed up)  - equals -> OK
+out: TestMerge - should get one event for Summary
+out: TestMerge - <Chg Lnr:Book Evt:/Book/Summary Src:book.Book>
+out: TestMerge - <Summary[-1] - Parent: Book/book.Book>
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <book>
+out:   <author>
+out: 	John Smith
+out: 	</author>
+out:   <author>
+out: 	Mikey Mouse
+out: 	</author>
+out:   <chapter>
+out:     <paragraph>
+out: 			Once upon a time...
+out: 		</paragraph>
+out:     <paragraph>
+out: 			And this is how the book met the fairy, and how all this
+out: 			story began.
+out: 		</paragraph>
+out:     <comment>
+out: 		First chapter.
+out: 		</comment>
+out:   </chapter>
+out:   <chapter>
+out:     <paragraph>
+out: 			And the book lived a never ending happy life, read, copied
+out: 			and enjoyed by so many readers.
+out: 		</paragraph>
+out:   </chapter>
+out:   <index>
+out:     <ref>
+out:       <line>
+out: 			12
+out: 		</line>
+out:       <page>
+out: 			22
+out: 		</page>
+out:     </ref>
+out:     <word>
+out: 			Good book
+out: 		</word>
+out:   </index>
+out:   <author>
+out: 	Donald Duck
+out: 	</author>
+out:   <chapter>
+out:     <comment>
+out: 		Empty chapter
+out: 		</comment>
+out:   </chapter>
+out:   <good/>
+out:   <index>
+out:     <ref>
+out:       <page>
+out: 			5
+out: 		</page>
+out:       <line>
+out: 			15
+out: 		</line>
+out:     </ref>
+out:     <word>
+out: 			E-Tool
+out: 		</word>
+out:     <ref>
+out:       <page>
+out: 			29
+out: 		</page>
+out:       <line>
+out: 			31
+out: 		</line>
+out:     </ref>
+out:   </index>
+out:   <summary size="12">This is the new summary</summary>
+out: </book>
+out: TestMerge Merge(Update) - changing one property  - equals -> OK
+out: TestMerge - should not get any event
+out: TestMerge Merge(Update) - changing one property  - equals -> OK
+out: TestMerge Merge(Update) - mixing  array of strings initial match -> OK
+out: TestMerge Merge(Update) - mixing  array of strings initial match -> OK
+out: TestMerge Merge(Update) - mixing  array of strings initial match -> OK
+out: TestMerge - <Chg Lnr:Book Evt:/Book/Author.-1 Src:book.Book>
+out: TestMerge - <Author[-1] - Parent: Book/book.Book>
+out: TestMerge Merge(Update) - mixing  array of strings mixed -> OK
+out: TestMerge Merge(Update) - mixing  array of strings mixed -> OK
+out: TestMerge Merge(Update) - mixing  array of strings mixed -> OK
+out: TestMerge - should not get any event
+out: TestMerge Merge(Update) - mixing  array of strings  - equals -> OK
+out: TestMerge Merge(Update) - mixing  array of strings reset match -> OK
+out: TestMerge Merge(Update) - mixing  array of strings reset match -> OK
+out: TestMerge Merge(Update) - mixing  array of strings reset match -> OK
+out: TestMerge Merge(Update) - mixing  array of beans initial match -> OK
+out: TestMerge Merge(Update) - mixing  array of beans initial match -> OK
+out: TestMerge Merge(Update) - mixing  array of beans initial match -> OK
+out: TestMerge - <Chg Lnr:Book Evt:/Book/Chapter.-1 Src:book.Book>
+out: TestMerge - <Chapter[-1] - Parent: Book/book.Book>
+out: TestMerge Merge(Update) - mixing  array of beans mixed -> OK
+out: TestMerge Merge(Update) - mixing  array of beans mixed -> OK
+out: TestMerge Merge(Update) - mixing  array of beans mixed -> OK
+out: TestMerge - should not get any event
+out: TestMerge Merge(Update) - mixing  array of beans  - equals -> OK
+out: TestMerge Merge(Update) - mixing  array of beans reset match -> OK
+out: TestMerge Merge(Update) - mixing  array of beans reset match -> OK
+out: TestMerge Merge(Update) - mixing  array of beans reset match -> OK
+out: TestMerge Merge(Update) - remove elt from array of strings initial match -> OK
+out: TestMerge Merge(Update) - remove elt from array of strings initial match -> OK
+out: TestMerge Merge(Update) - remove elt from array of strings initial match -> OK
+out: TestMerge - should get one remove event from deletion
+out: TestMerge - <Rmv Lnr:Book Evt:/Book/Author.1ci1 Src:book.Book>
+out: TestMerge - <Author[1] - Parent: Book/book.Book>
+out: TestMerge Merge(Update) - remove elt from array of strings match after rem -> OK
+out: TestMerge Merge(Update) - remove elt from array of strings match after rem -> OK
+out: TestMerge - should get one remove event from merge
+out: TestMerge - <Rmv Lnr:Book Evt:/Book/Author.2i1 Src:book.Book>
+out: TestMerge - <Author[1] - Parent: Book/book.Book>
+out: TestMerge Merge(Update) - remove elt from array of strings match -> OK
+out: TestMerge Merge(Update) - remove elt from array of strings match -> OK
+out: TestMerge Merge(Update) - remove elt from array of strings correct size -> OK
+out: TestMerge Merge(Update) - remove elt from array of strings  - equals -> OK
+out: TestMerge - should get one event for elt added
+out: TestMerge - <Add Lnr:Book Evt:/Book/Author.4e Src:book.Book>
+out: TestMerge - <Author[2] - Parent: Book/book.Book>
+out: TestMerge Merge(Update) - add elt from array of strings added -> OK
+out: TestMerge - should get one event for elt added from merge
+out: TestMerge - <Add Lnr:Book Evt:/Book/Author.4f Src:book.Book>
+out: TestMerge - <Author[2] - Parent: Book/book.Book>
+out: TestMerge Merge(Update) - add elt from array of strings match -> OK
+out: TestMerge Merge(Update) - add elt from array of strings match -> OK
+out: TestMerge Merge(Update) - add elt from array of strings match -> OK
+out: TestMerge Merge(Update) - add elt from array of strings correct size -> OK
+out: TestMerge Merge(Update) - add elt from array of strings  - equals -> OK
+out: TestMerge Merge(Update) - remove elt from array of beans initial match -> OK
+out: TestMerge Merge(Update) - remove elt from array of beans initial match -> OK
+out: TestMerge Merge(Update) - remove elt from array of beans initial match -> OK
+out: TestMerge - should get one remove event from deletion
+out: TestMerge - <Rmv Lnr:Book Evt:/Book/Chapter.21i1 Src:book.Book>
+out: TestMerge - <Chapter[1] - Parent: Book/book.Book>
+out: TestMerge Merge(Update) - remove elt from array of beans match after rem -> OK
+out: TestMerge Merge(Update) - remove elt from array of beans match after rem -> OK
+out: TestMerge - should get one remove event from merge
+out: TestMerge - <Rmv Lnr:Book Evt:/Book/Chapter.7i1 Src:book.Book>
+out: TestMerge - <Chapter[1] - Parent: Book/book.Book>
+out: TestMerge Merge(Update) - remove elt from array of beans match -> OK
+out: TestMerge Merge(Update) - remove elt from array of beans match -> OK
+out: TestMerge Merge(Update) - remove elt from array of beans correct size -> OK
+out: TestMerge Merge(Update) - remove elt from array of beans  - equals -> OK
+out: TestMerge - should get one event for elt added
+out: TestMerge - <Add Lnr:Book Evt:/Book/Chapter.51 Src:book.Book>
+out: TestMerge - <Chapter[2] - Parent: Book/book.Book>
+out: TestMerge Merge(Update) - add elt from array of strings added -> OK
+out: TestMerge - should get one event for elt added from merge
+out: TestMerge - <Add Lnr:Book Evt:/Book/Chapter.53 Src:book.Book>
+out: TestMerge - <Chapter[2] - Parent: Book/book.Book>
+out: TestMerge Merge(Update) - add elt from array of strings match -> OK
+out: TestMerge Merge(Update) - add elt from array of strings match -> OK
+out: TestMerge Merge(Update) - add elt from array of strings match -> OK
+out: TestMerge Merge(Update) - add elt from array of strings correct size -> OK
+out: TestMerge Merge(Update) - add elt from array of strings  - equals -> OK
+out: TestMerge - creating the DOM document
+out: TestMerge - creating the bean graph1
+out: TestMerge comparing graphs with 1 null elts -> OK
+out: TestMerge comparing graphs with 1 null elts -> OK
+out: TestMerge comparing graphs with 1 null elts -> OK
+out: TestMerge comparing graphs with null indexed elts -> OK
+out: TestMerge comparing graphs with null indexed elts correct new array sise -> OK
+out: TestMerge comparing graphs with null indexed elts elt ok -> OK
+out: TestMerge comparing graphs with null indexed elts elt ok -> OK
+out: TestMerge comparing graphs with null indexed elts elt ok -> OK
+out: TestMerge comparing graphs with null single bean elt -> OK
+out: TestMerge comparing graphs with null single bean elt -> OK
+out: TestMerge comparing graphs with null single bean elt -> OK
+out: TestMerge cloning a new bean objects equal -> OK
+out: TestMerge cloning a new bean same graph once added -> OK
+out: TestMerge - creating the DOM document
+out: TestMerge - creating the bean graph1
+out: TestMerge - creating the DOM document
+out: TestMerge - creating the bean graph2
+out: TestMerge - chapter - element
+out: attribute: title=First
+out:   paragraph - element
+out:     #text=
+out: 			And the book lived a never ending happy life, read, copied
+out: 			and enjoyed by so many readers.
+out: 		 - text
+out: 
+out: TestMerge - chapter - element
+out: attribute: title=First
+out:   paragraph - element
+out:     #text=
+out: 			And the book lived a never ending happy life, read, copied
+out: 			and enjoyed by so many readers.
+out: 		 - text
+out: 
+out: TestMerge - new listener for Book
+out: TestMerge - new listener for Book
+out: TestMerge Merging attributes shouldn't be equals (diff an attr) -> OK
+out: TestMerge Merging attributes should be equals -> OK
+out: TestMerge Merging attributes attr on root != null -> OK
+out: TestMerge Merging attributes attr on root -> OK
+out: TestMerge Merging attributes attr on summary != null -> OK
+out: TestMerge Merging attributes attr on summary -> OK
+out: TestMerge Merging attributes attr on summary != null -> OK
+out: TestMerge Merging attributes attr on summary -> OK
+out: TestMerge - First
+out: TestMerge Merging attributes attr on chapter != null -> OK
+out: TestMerge Merging attributes attr on chapter -> OK
+out: TestMerge - Second
+out: TestMerge Merging attributes attr on chapter != null -> OK
+out: TestMerge Merging attributes attr on chapter -> OK
+out: TestMerge - creating the DOM document
+out: TestMerge - creating the DOM document
+out: TestMerge - creating the bean graph for the comment merge test
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <book good="no">
+out:   <!-- BLUE -->
+out:   <summary lang="us" length="123" size="12">
+out: 	This book is about the life of a book spent between books who dreamed
+out: 	to meet a fairy who could transform it into an XML book and travel
+out: 	in an electronic boundary-less world.
+out: 	</summary>
+out:   <author>
+out: 	John Smith
+out: 	</author>
+out:   <author>
+out: 	Donald Duck
+out: 	</author>
+out:   <author>
+out: 	Mikey Mouse
+out: 	</author>
+out:   <chapter title="First">
+out:     <paragraph>
+out: 			And the book lived a never ending happy life, read, copied
+out: 			and enjoyed by so many readers.
+out: 		</paragraph>
+out:   </chapter>
+out:   <chapter title="Second">
+out:     <comment>
+out: 		First chapter.
+out: 		</comment>
+out:     <paragraph>
+out: 			Once upon a time...
+out: 		</paragraph>
+out:     <paragraph>
+out: 			And this is how the book met the fairy, and how all this
+out: 			story began.
+out: 		</paragraph>
+out:   </chapter>
+out:   <chapter>
+out:     <comment>
+out: 		Empty chapter
+out: 		</comment>
+out:   </chapter>
+out:   <index color="blue" cross-ref="no">
+out:     <word>
+out: 			Good book
+out: 		</word>
+out:     <!-- MAUVE -->
+out:     <!-- CYAN -->
+out:     <ref>
+out:       <page>
+out: 			22
+out: 		</page>
+out:       <line>
+out: 			12
+out: 		</line>
+out:     </ref>
+out:   </index>
+out:   <index>
+out:     <!--RED-->
+out:     <word>
+out: 			E-Tool
+out: 		</word>
+out:     <ref>
+out:       <page>
+out: 			5
+out: 		</page>
+out:       <line>
+out: 			15
+out: 		</line>
+out:     </ref>
+out:     <ref>
+out:       <page>
+out: 			29
+out: 		</page>
+out:       <line>
+out: 			31
+out: 		</line>
+out:     </ref>
+out:   </index>
+out:   <good/>
+out:   <!-- GREEN -->
+out: </book>
+Finished running TestMerge: 0

@@ -1,0 +1,75 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!--
+-//NetBeans//DTD Window Manager Properties 1.0//EN
+-->
+
+<!-- The root element for window manager properties. Consists of subelements
+     for specific properties.
+     Atribute "version" is optional versioning attribute, which in fact specifies
+     version of this DTD. Attribute is used to perform simple versioning
+     without the need to use time-consuming xml validation using this DTD.
+-->
+<!ELEMENT windowmanager (main-window?, screen?, ui-mode, active) >
+<!ATTLIST windowmanager
+    version CDATA #IMPLIED
+>
+
+<!-- Element "main-window" contains properties of main window.
+     "bounds" gives size of main window in format x, y, width, height
+-->
+<!ELEMENT main-window   EMPTY >
+<!ATTLIST main-window
+    x CDATA #REQUIRED
+    y CDATA #REQUIRED
+    width CDATA #REQUIRED
+    height CDATA #REQUIRED
+>
+
+<!-- Element "screen" contains properties of screen.
+     "size" size of screen in pixels, format is width, height
+-->
+<!ELEMENT screen    EMPTY >
+<!ATTLIST screen
+    width CDATA #REQUIRED
+    height CDATA #REQUIRED
+>
+
+<!-- Element "ui-mode" gives type of ui.
+     "ui" type of ui, possible values are "sdi","mdi"
+     This attribute should NOT be used for setting default mode. Use command line
+     switch -J-Dnetbeans.windows=sdi or -J-Dnetbeans.windows=mdi to set mode instead
+     of this attribute.
+-->
+<!ELEMENT ui-mode    EMPTY >
+<!ATTLIST ui-mode
+    ui (sdi | mdi) #REQUIRED
+>
+
+<!-- Element "active" contains ID of active workspace.
+     "workspace" ID of active workspace
+-->
+<!ELEMENT active  EMPTY >
+<!ATTLIST active
+    workspace CDATA #IMPLIED
+>
+

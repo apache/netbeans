@@ -1,0 +1,9 @@
+Remote  >   Clone...            C
+            ========================================
+            Fetch from Upstream F
+            Fetch...            E
+            Pull from Upstream  P
+            Pull...             U
+            ========================================
+            Push to Upstream    S
+            Push...             H

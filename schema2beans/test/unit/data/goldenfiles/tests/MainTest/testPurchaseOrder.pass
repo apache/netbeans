@@ -1,0 +1,212 @@
+Calling GenBeans.doIt
+Bean Tree:
+purchaseOrder <purchaseOrder> : PurchaseOrder
+	[attr: orderDate CDATA #IMPLIED  : int]
+	shipTo <shipTo> : USAddress
+		[attr: country CDATA #FIXED US : java.lang.String] 	[whiteSpace (collapse)]
+		name <name> : java.lang.String
+		street <street> : java.lang.String
+		city <city> : java.lang.String 	[whiteSpace (collapse)]
+		state <state> : java.lang.String
+		zip <zip> : java.math.BigDecimal
+	billTo <billTo> : USAddress
+		[attr: country CDATA #FIXED US : java.lang.String] 	[whiteSpace (collapse)]
+		name <name> : java.lang.String
+		street <street> : java.lang.String
+		city <city> : java.lang.String 	[whiteSpace (collapse)]
+		state <state> : java.lang.String
+		zip <zip> : java.math.BigDecimal
+	comment <comment> : java.lang.String[0,1]
+	items <items> : Items
+		item <item> : Item[0,n] 	[maxOccurs (25)]
+			[attr: partNum CDATA #REQUIRED  : java.lang.String] 	[pattern (\d{3}-[A-Z]{2})]
+			productName <productName> : java.lang.String
+			quantity <quantity> : long 	[maxExclusive (100)]
+			USPrice <USPrice> : java.math.BigDecimal
+			comment <comment> : java.lang.String[0,1]
+			comment2 <comment2> : java.lang.String[0,1]
+				[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+			shipDate <shipDate> : java.lang.String[0,1]
+			relatedpartnum <relatedpartnum> : java.lang.String 	[pattern (\d{3}-[A-Z]{2})]
+
+Compiling
+Finished compiling: 0
+out: TestPurchaseOrder - creating the DOM document
+out: TestPurchaseOrder - creating the bean graph
+out: TestPurchaseOrder - bean graph created
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <purchaseOrder orderDate='20021010'>
+out: 	<shipTo country='US'>
+out: 		<name>J</name>
+out: 		<street></street>
+out: 		<city>Foster City</city>
+out: 		<state></state>
+out: 		<zip>0</zip>
+out: 	</shipTo>
+out: 	<billTo country='US'>
+out: 		<name>C</name>
+out: 		<street></street>
+out: 		<city></city>
+out: 		<state></state>
+out: 		<zip>0</zip>
+out: 	</billTo>
+out: 	<comment>comment for the purchase order</comment>
+out: 	<items>
+out: 		<item partNum='123'>
+out: 			<productName>Stargazer lily</productName>
+out: 			<quantity>5</quantity>
+out: 			<USPrice>1.21</USPrice>
+out: 			<relatedpartnum></relatedpartnum>
+out: 		</item>
+out: 		<item partNum='124'>
+out: 			<productName>Red Rose</productName>
+out: 			<quantity>2</quantity>
+out: 			<USPrice>2</USPrice>
+out: 			<relatedpartnum></relatedpartnum>
+out: 		</item>
+out: 	</items>
+out: </purchaseOrder>
+out: TestPurchaseOrder - Adjusting shipTo
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <purchaseOrder orderDate='20021010'>
+out: 	<shipTo country='B&amp;B&apos;s are us'>
+out: 		<name>To you &amp; me</name>
+out: 		<street></street>
+out: 		<city></city>
+out: 		<state></state>
+out: 		<zip>0</zip>
+out: 	</shipTo>
+out: 	<billTo country='US'>
+out: 		<name>C</name>
+out: 		<street></street>
+out: 		<city></city>
+out: 		<state></state>
+out: 		<zip>0</zip>
+out: 	</billTo>
+out: 	<comment>comment for the purchase order</comment>
+out: 	<items>
+out: 		<item partNum='123'>
+out: 			<productName>Stargazer lily</productName>
+out: 			<quantity>5</quantity>
+out: 			<USPrice>1.21</USPrice>
+out: 			<relatedpartnum></relatedpartnum>
+out: 		</item>
+out: 		<item partNum='124'>
+out: 			<productName>Red Rose</productName>
+out: 			<quantity>2</quantity>
+out: 			<USPrice>2</USPrice>
+out: 			<relatedpartnum></relatedpartnum>
+out: 		</item>
+out: 	</items>
+out: </purchaseOrder>
+out: TestPurchaseOrder - Adding a Daffodil
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <purchaseOrder orderDate='20021010'>
+out: 	<shipTo country='B&amp;B&apos;s are us'>
+out: 		<name>To you &amp; me</name>
+out: 		<street></street>
+out: 		<city></city>
+out: 		<state></state>
+out: 		<zip>0</zip>
+out: 	</shipTo>
+out: 	<billTo country='US'>
+out: 		<name>C</name>
+out: 		<street></street>
+out: 		<city></city>
+out: 		<state></state>
+out: 		<zip>0</zip>
+out: 	</billTo>
+out: 	<comment>comment for the purchase order</comment>
+out: 	<items>
+out: 		<item partNum='123'>
+out: 			<productName>Stargazer lily</productName>
+out: 			<quantity>5</quantity>
+out: 			<USPrice>1.21</USPrice>
+out: 			<relatedpartnum></relatedpartnum>
+out: 		</item>
+out: 		<item partNum='124'>
+out: 			<productName>Red Rose</productName>
+out: 			<quantity>2</quantity>
+out: 			<USPrice>2</USPrice>
+out: 			<relatedpartnum></relatedpartnum>
+out: 		</item>
+out: 		<item partNum=''>
+out: 			<productName>Daffodil</productName>
+out: 			<quantity>3</quantity>
+out: 			<USPrice>1.00</USPrice>
+out: 			<comment>Yellow &amp; Green</comment>
+out: 			<relatedpartnum></relatedpartnum>
+out: 		</item>
+out: 	</items>
+out: </purchaseOrder>
+out: TestPurchaseOrder null addItem returned correct position -> OK
+out: TestPurchaseOrder - Removing that Daffodil
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <purchaseOrder orderDate='20021010'>
+out: 	<shipTo country='B&amp;B&apos;s are us'>
+out: 		<name>To you &amp; me</name>
+out: 		<street></street>
+out: 		<city></city>
+out: 		<state></state>
+out: 		<zip>0</zip>
+out: 	</shipTo>
+out: 	<billTo country='US'>
+out: 		<name>C</name>
+out: 		<street></street>
+out: 		<city></city>
+out: 		<state></state>
+out: 		<zip>0</zip>
+out: 	</billTo>
+out: 	<comment>comment for the purchase order</comment>
+out: 	<items>
+out: 		<item partNum='123'>
+out: 			<productName>Stargazer lily</productName>
+out: 			<quantity>5</quantity>
+out: 			<USPrice>1.21</USPrice>
+out: 			<relatedpartnum></relatedpartnum>
+out: 		</item>
+out: 		<item partNum='124'>
+out: 			<productName>Red Rose</productName>
+out: 			<quantity>2</quantity>
+out: 			<USPrice>2</USPrice>
+out: 			<relatedpartnum></relatedpartnum>
+out: 		</item>
+out: 	</items>
+out: </purchaseOrder>
+out: TestPurchaseOrder null sizeItem should return 2 -> OK
+out: TestPurchaseOrder null po should not be po2 -> OK
+out: TestPurchaseOrder null po should equal po2 -> OK
+out: TestPurchaseOrder null po2 should equal po -> OK
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <purchaseOrder xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='flurp' orderDate='20021010'>
+out: 	<shipTo country='B&amp;B&apos;s are us'>
+out: 		<name>To you &amp; me</name>
+out: 		<street></street>
+out: 		<city></city>
+out: 		<state></state>
+out: 		<zip>0</zip>
+out: 	</shipTo>
+out: 	<billTo country='US'>
+out: 		<name>C</name>
+out: 		<street></street>
+out: 		<city></city>
+out: 		<state></state>
+out: 		<zip>0</zip>
+out: 	</billTo>
+out: 	<comment>comment for the purchase order</comment>
+out: 	<items>
+out: 		<item partNum='123'>
+out: 			<productName>Stargazer lily</productName>
+out: 			<quantity>5</quantity>
+out: 			<USPrice>1.21</USPrice>
+out: 			<relatedpartnum></relatedpartnum>
+out: 		</item>
+out: 		<item partNum='124'>
+out: 			<productName>Red Rose</productName>
+out: 			<quantity>2</quantity>
+out: 			<USPrice>2</USPrice>
+out: 			<relatedpartnum></relatedpartnum>
+out: 		</item>
+out: 	</items>
+out: </purchaseOrder>
+Finished running TestPurchaseOrder: 0

@@ -1,0 +1,91 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!--
+-//NetBeans//DTD annotation type 1.1//EN
+http://www.netbeans.org/dtds/annotation-type-1_1.dtd
+Document type declaration for AnnotationType.
+-->
+
+<!ELEMENT type (combination?)>
+<!ATTLIST type name CDATA #REQUIRED>
+
+<!ATTLIST type visible (true | false) #IMPLIED>
+<!-- The annotation is visible=true by default -->
+
+<!ATTLIST type localizing_bundle CDATA #IMPLIED>
+<!ATTLIST type description_key CDATA #IMPLIED>
+<!-- No localization/no description by defualt.
+   In fact, bundle/description is #REQUIRED for visible=true -->
+
+<!ATTLIST type glyph CDATA #IMPLIED>
+<!ATTLIST type highlight CDATA #IMPLIED>
+<!ATTLIST type foreground CDATA #IMPLIED>
+<!ATTLIST type waveunderline CDATA #IMPLIED>
+
+<!ATTLIST type type (line|linepart) #IMPLIED>
+<!-- The type=line by default -->
+
+<!ATTLIST type actions CDATA #IMPLIED>
+
+<!--Should a custom color be used when showing in the editor side bar (Error Stripe)?
+    default: true if custom_sidebar_color attribute is specified, false otherwise
+-->
+<!ATTLIST type use_custom_sidebar_color (true | false) #IMPLIED>
+
+<!--The custom color for the editor side bar (Error Stripe).
+    Valid values are 0xRRGGBB, where RR, GG, BB are hexadecimal numbers.
+    default: no color
+-->
+<!ATTLIST type custom_sidebar_color CDATA #IMPLIED>
+
+<!--Severity of the annotation. Used to recognize errors and warnings. If
+    none, the annotation is not visible in certain views (editor side bar).
+    default: none
+-->
+<!ATTLIST type severity (error | warning | ok | none) #IMPLIED>
+
+<!--Whether the annotation should be browseable by some kind "Show Next Error" action.
+    default: false
+-->
+<!ATTLIST type browseable (true | false) #IMPLIED>
+
+<!--Determines some "priority" of the annotation.
+    The smaller number, the higher priority.
+    default: 0
+-->
+<!ATTLIST type priority CDATA #IMPLIED>
+
+<!ELEMENT combination (combine+)>
+<!ATTLIST combination tiptext_key CDATA #IMPLIED>
+<!ATTLIST combination order CDATA #IMPLIED>
+<!ATTLIST combination min_optionals CDATA #IMPLIED>
+
+<!ELEMENT combine EMPTY>
+<!ATTLIST combine annotationtype CDATA #REQUIRED>
+
+<!ATTLIST combine absorb_all (true | false) #IMPLIED>
+<!-- The absorb_all=false by default -->
+
+<!ATTLIST combine optional (true | false) #IMPLIED>
+<!-- The optional=false by default -->
+
+<!ATTLIST combine min CDATA #IMPLIED>
+

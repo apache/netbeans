@@ -1,0 +1,12 @@
+--- !omap
+   - |>METHOD:parent<|:
+       |>METHOD:id<|:         1
+       |>METHOD:parent_id<|:  NULL
+       |>METHOD:title<|:      Parent
+   - |>METHOD:child<|:
+       |>METHOD:id<|:         2
+       |>METHOD:parent_id<|:  1
+       |>METHOD:title<|:      Child
+
+# See http://yaml.org/type/omap.html
+

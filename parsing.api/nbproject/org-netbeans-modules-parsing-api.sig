@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.5.1
+#Version 9.9.1
 
 CLSS public abstract interface java.io.Serializable
 
@@ -174,7 +174,7 @@ meth public static org.netbeans.modules.parsing.api.Source create(org.openide.fi
 meth public static org.netbeans.modules.parsing.api.Source create(org.openide.filesystems.FileObject,org.openide.util.Lookup)
 supr java.lang.Object
 hfds LOG,cache,cachedParser,context,ctrl,document,eventId,fileObject,flags,listeningOnChanges,mimeType,peFwd,preferFile,schedulerEvents,sourceEnv,sourceModificationEvent,suppressListening,taskCount,unspecifiedSourceModificationEvent
-hcls ASourceModificationEvent,MySourceAccessor
+hcls AComposite,ASourceModificationEvent,ExtendableSourceModificationEvent,MySourceAccessor
 
 CLSS public abstract org.netbeans.modules.parsing.api.Task
 cons public init()
@@ -309,6 +309,7 @@ CLSS public org.netbeans.modules.parsing.spi.SourceModificationEvent
 cons protected init(java.lang.Object)
  anno 0 java.lang.Deprecated()
 cons protected init(java.lang.Object,boolean)
+innr public static Composite
 meth public boolean sourceChanged()
 meth public int getAffectedEndOffset()
 meth public int getAffectedStartOffset()
@@ -316,6 +317,16 @@ meth public java.lang.String toString()
 meth public org.netbeans.modules.parsing.api.Source getModifiedSource()
 supr java.util.EventObject
 hfds sourceChanged
+
+CLSS public static org.netbeans.modules.parsing.spi.SourceModificationEvent$Composite
+ outer org.netbeans.modules.parsing.spi.SourceModificationEvent
+cons public init(org.netbeans.modules.parsing.spi.SourceModificationEvent,org.netbeans.modules.parsing.spi.SourceModificationEvent)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.modules.parsing.spi.SourceModificationEvent getReadEvent()
+meth public org.netbeans.modules.parsing.spi.SourceModificationEvent getWriteEvent()
+supr org.netbeans.modules.parsing.spi.SourceModificationEvent
+hfds read,write
 
 CLSS public abstract org.netbeans.modules.parsing.spi.TaskFactory
 cons public init()

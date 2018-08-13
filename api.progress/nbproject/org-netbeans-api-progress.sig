@@ -1,5 +1,8 @@
 #Signature file v4.1
-#Version 1.46.1
+#Version 1.49.1
+
+CLSS public abstract interface java.lang.AutoCloseable
+meth public abstract void close() throws java.lang.Exception
 
 CLSS public java.lang.Object
 cons public init()
@@ -28,6 +31,8 @@ hfds DISPLAY_DIALOG_MS,DISPLAY_WAIT_CURSOR_MS,PROVIDER,TRIVIAL
 hcls CancellableRunnableWrapper,RunnableWrapper,Trivial
 
 CLSS public final org.netbeans.api.progress.ProgressHandle
+intf java.lang.AutoCloseable
+meth public final void close()
 meth public final void finish()
 meth public final void progress(int)
 meth public final void progress(java.lang.String)
@@ -52,7 +57,9 @@ CLSS public abstract interface org.netbeans.api.progress.ProgressRunnable<%0 ext
 meth public abstract {org.netbeans.api.progress.ProgressRunnable%0} run(org.netbeans.api.progress.ProgressHandle)
 
 CLSS public final org.netbeans.api.progress.aggregate.AggregateProgressHandle
+intf java.lang.AutoCloseable
 meth public void addContributor(org.netbeans.api.progress.aggregate.ProgressContributor)
+meth public void close()
 meth public void finish()
 meth public void setDisplayName(java.lang.String)
 meth public void setInitialDelay(int)

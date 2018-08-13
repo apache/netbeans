@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.7.1
+#Version 9.12.1
 
 CLSS public java.io.IOException
 cons public init()
@@ -97,6 +97,12 @@ meth public java.lang.Object getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
 hfds serialVersionUID
+
+CLSS public abstract org.openide.filesystem.spi.FileChooserBuilderProvider
+cons public init()
+meth public abstract org.openide.filesystems.FileChooserBuilder createFileChooserBuilder(org.openide.filesystems.FileSystem)
+meth public abstract org.openide.filesystems.FileChooserBuilder createFileChooserBuilder(org.openide.filesystems.FileSystem,java.lang.String)
+supr java.lang.Object
 
 CLSS public abstract org.openide.filesystems.AbstractFileSystem
 cons public init()
@@ -269,6 +275,7 @@ meth public org.openide.filesystems.FileChooserBuilder setFileHiding(boolean)
 meth public org.openide.filesystems.FileChooserBuilder setFilesOnly(boolean)
 meth public org.openide.filesystems.FileChooserBuilder setSelectionApprover(org.openide.filesystems.FileChooserBuilder$SelectionApprover)
 meth public org.openide.filesystems.FileChooserBuilder setTitle(java.lang.String)
+meth public static org.openide.filesystems.FileChooserBuilder create(org.openide.filesystems.FileSystem)
 supr java.lang.Object
 hfds DONT_STORE_DIRECTORIES,PREVENT_SYMLINK_TRAVERSAL,aDescription,approveText,approver,badger,controlButtonsShown,dirKey,dirsOnly,failoverDir,fileHiding,filesOnly,filter,filters,force,title,useAcceptAllFileFilter
 hcls BadgeIconProvider,CustomFileView,IconProvider,MergedIcon,SavedDirFileChooser
@@ -494,6 +501,8 @@ meth public final static void runAtomicAction(org.openide.filesystems.FileSystem
 meth public static <%0 extends java.lang.Object> {%%0} getConfigObject(java.lang.String,java.lang.Class<{%%0}>)
 meth public static <%0 extends java.lang.Object> {%%0} getSystemConfigObject(java.lang.String,java.lang.Class<{%%0}>)
 meth public static boolean affectsOrder(org.openide.filesystems.FileAttributeEvent)
+meth public static boolean isArchiveArtifact(java.net.URL)
+meth public static boolean isArchiveArtifact(org.openide.filesystems.FileObject)
 meth public static boolean isArchiveFile(java.net.URL)
 meth public static boolean isArchiveFile(org.openide.filesystems.FileObject)
 meth public static boolean isParentOf(org.openide.filesystems.FileObject,org.openide.filesystems.FileObject)
@@ -555,7 +564,7 @@ meth public static void removeRecursiveListener(org.openide.filesystems.FileChan
 meth public static void setMIMEType(java.lang.String,java.lang.String)
 meth public static void setOrder(java.util.List<org.openide.filesystems.FileObject>) throws java.io.IOException
 supr java.lang.Object
-hfds LOG,REFRESH_RP,ZIP_HEADER_1,ZIP_HEADER_2,archiveFileCache,diskFileSystem,normalizedRef,refreshTask,transientAttributes
+hfds LOG,REFRESH_RP,archiveRootProviders,diskFileSystem,normalizedRef,refreshTask,transientAttributes
 hcls NonCanonicalizingFile
 
 CLSS public abstract interface org.openide.filesystems.ImageDecorator

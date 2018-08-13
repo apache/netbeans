@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.16.1
+#Version 1.20.1
 
 CLSS public java.lang.Object
 cons public init()
@@ -33,7 +33,7 @@ meth public org.netbeans.modules.java.hints.test.api.HintTest$HintOutput run(jav
 meth public org.netbeans.modules.java.hints.test.api.HintTest$HintOutput run(java.lang.Class<?>,java.lang.String) throws java.lang.Exception
 meth public static org.netbeans.modules.java.hints.test.api.HintTest create() throws java.lang.Exception
 supr java.lang.Object
-hfds DEBUGGING_HELPER,EMPTY_SFBQ_RESULT,ERRORS_COMPARATOR,INDEXING_LOGGER,JUNIT_PROPERTIES_FILENAME,JUNIT_PROPERTIES_LOCATION_PROPERTY,NBJUNIT_WORKDIR,bootClassPath,buildRoot,cache,caret,caretMarker,checkCompilable,compileClassPath,hintSettings,log,sourceLevel,sourcePath,sourceRoot,testFile,testPreferences,usedPaths,workDir
+hfds DEBUGGING_HELPER,EMPTY_SFBQ_RESULT,ERRORS_COMPARATOR,INDEXING_LOGGER,JUNIT_PROPERTIES_FILENAME,JUNIT_PROPERTIES_LOCATION_PROPERTY,NBJUNIT_WORKDIR,buildRoot,cache,caret,caretMarker,checkCompilable,compileClassPath,hintSettings,log,sourceLevel,sourcePath,sourceRoot,testFile,testPreferences,usedPaths,workDir
 hcls DeadlockTask,TempPreferences,TestProxyClassPathProvider,TestSourceForBinaryQuery,TestSourceLevelQueryImplementation
 
 CLSS public final org.netbeans.modules.java.hints.test.api.HintTest$AppliedFix
@@ -61,6 +61,7 @@ hfds errors,requiresJavaFix
 CLSS public final org.netbeans.modules.java.hints.test.api.HintTest$HintWarning
  outer org.netbeans.modules.java.hints.test.api.HintTest
 meth public !varargs org.netbeans.modules.java.hints.test.api.HintTest$HintWarning assertFixes(java.lang.String[]) throws java.lang.Exception
+meth public !varargs org.netbeans.modules.java.hints.test.api.HintTest$HintWarning assertFixesNotPresent(java.lang.String[]) throws java.lang.Exception
 meth public org.netbeans.modules.java.hints.test.api.HintTest$AppliedFix applyFix() throws java.lang.Exception
 meth public org.netbeans.modules.java.hints.test.api.HintTest$AppliedFix applyFix(java.lang.String) throws java.lang.Exception
 supr java.lang.Object

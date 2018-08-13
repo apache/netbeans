@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.27.1
+#Version 1.32.1
 
 CLSS public abstract interface java.io.Serializable
 
@@ -89,7 +89,7 @@ meth public !varargs static org.netbeans.spi.editor.hints.ErrorDescription forSp
 meth public !varargs static org.netbeans.spi.editor.hints.ErrorDescription forTree(org.netbeans.spi.java.hints.HintContext,com.sun.source.tree.Tree,java.lang.String,org.netbeans.spi.editor.hints.Fix[])
 meth public !varargs static org.netbeans.spi.editor.hints.ErrorDescription forTree(org.netbeans.spi.java.hints.HintContext,com.sun.source.util.TreePath,java.lang.String,org.netbeans.spi.editor.hints.Fix[])
 supr java.lang.Object
-hfds DECLARATION
+hfds DECLARATION,LOG
 hcls DisableConfigure,FixImpl,InspectFix,TopLevelConfigureFix
 
 CLSS public abstract interface !annotation org.netbeans.spi.java.hints.Hint
@@ -101,6 +101,7 @@ intf java.lang.annotation.Annotation
 meth public abstract !hasdefault boolean enabled()
 meth public abstract !hasdefault java.lang.Class<? extends org.netbeans.spi.java.hints.CustomizerProvider> customizerProvider()
 meth public abstract !hasdefault java.lang.String id()
+meth public abstract !hasdefault java.lang.String minSourceVersion()
 meth public abstract !hasdefault java.lang.String[] suppressWarnings()
 meth public abstract !hasdefault org.netbeans.spi.editor.hints.Severity severity()
 meth public abstract !hasdefault org.netbeans.spi.java.hints.Hint$Kind hintKind()
@@ -211,6 +212,8 @@ hfds canShowUI,fileChanges,path,resourceContentChanges,workingCopy
 
 CLSS public org.netbeans.spi.java.hints.JavaFixUtilities
 cons public init()
+meth public static boolean isPrimary(com.sun.source.tree.Tree)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public static boolean requiresParenthesis(com.sun.source.tree.Tree,com.sun.source.tree.Tree,com.sun.source.tree.Tree)
 meth public static org.netbeans.spi.editor.hints.Fix removeFromParent(org.netbeans.spi.java.hints.HintContext,java.lang.String,com.sun.source.util.TreePath)
 meth public static org.netbeans.spi.editor.hints.Fix rewriteFix(org.netbeans.spi.java.hints.HintContext,java.lang.String,com.sun.source.util.TreePath,java.lang.String)

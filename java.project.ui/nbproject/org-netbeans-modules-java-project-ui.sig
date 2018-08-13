@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.66.1
+#Version 1.77.1
 
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
@@ -55,6 +55,7 @@ fld public final static java.lang.String COMMAND_JAVADOC = "javadoc"
 fld public final static java.lang.String SOURCES_HINT_MAIN = "main"
 fld public final static java.lang.String SOURCES_HINT_TEST = "test"
 fld public final static java.lang.String SOURCES_TYPE_JAVA = "java"
+fld public final static java.lang.String SOURCES_TYPE_MODULES = "modules"
 fld public final static java.lang.String SOURCES_TYPE_RESOURCES = "resources"
 supr java.lang.Object
 
@@ -71,6 +72,7 @@ meth public static boolean removeRoots(java.net.URL[],org.openide.filesystems.Fi
 meth public static org.netbeans.spi.java.project.classpath.ProjectClassPathExtender extenderForModifier(org.netbeans.api.project.Project)
 meth public static org.netbeans.spi.java.project.classpath.ProjectClassPathExtender extenderForModifier(org.netbeans.spi.java.project.classpath.ProjectClassPathModifierImplementation)
 supr java.lang.Object
+hfds LOG
 hcls Extensible
 
 CLSS public final org.netbeans.api.java.project.runner.JavaRunner
@@ -79,6 +81,7 @@ fld public final static java.lang.String PROP_APPLICATION_ARGS = "application.ar
 fld public final static java.lang.String PROP_CLASSNAME = "classname"
 fld public final static java.lang.String PROP_EXECUTE_CLASSPATH = "execute.classpath"
 fld public final static java.lang.String PROP_EXECUTE_FILE = "execute.file"
+fld public final static java.lang.String PROP_EXECUTE_MODULEPATH = "execute.modulepath"
 fld public final static java.lang.String PROP_PLATFORM = "platform"
 fld public final static java.lang.String PROP_PLATFORM_JAVA = "platform.java"
 fld public final static java.lang.String PROP_PROJECT_NAME = "project.name"
@@ -127,6 +130,13 @@ meth protected static java.net.URI[] convertURLsToURIs(java.net.URL[])
 supr java.lang.Object
 hcls Accessor
 
+CLSS public abstract interface org.netbeans.spi.java.project.classpath.ProjectModulesModifier
+meth public abstract boolean addRequiredModules(java.lang.String,org.openide.filesystems.FileObject,java.util.Collection<java.net.URL>) throws java.io.IOException
+meth public abstract boolean removeRequiredModules(java.lang.String,org.openide.filesystems.FileObject,java.util.Collection<java.net.URL>) throws java.io.IOException
+meth public abstract java.lang.String provideModularClasspath(org.openide.filesystems.FileObject,java.lang.String)
+meth public abstract java.util.Map<java.net.URL,java.util.Collection<org.netbeans.api.java.classpath.ClassPath>> findModuleUsages(org.openide.filesystems.FileObject,java.util.Collection<java.net.URL>)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+
 CLSS public org.netbeans.spi.java.project.classpath.support.ProjectClassPathSupport
 meth public static org.netbeans.spi.java.classpath.ClassPathImplementation createPropertyBasedClassPathImplementation(java.io.File,org.netbeans.spi.project.support.ant.PropertyEvaluator,java.lang.String[])
 supr java.lang.Object
@@ -159,6 +169,8 @@ CLSS public final org.netbeans.spi.java.project.support.LookupMergerSupport
 cons public init()
 meth public static org.netbeans.spi.project.LookupMerger<org.netbeans.spi.java.classpath.ClassPathProvider> createClassPathProviderMerger(org.netbeans.spi.java.classpath.ClassPathProvider)
 meth public static org.netbeans.spi.project.LookupMerger<org.netbeans.spi.java.project.classpath.ProjectClassPathModifierImplementation> createClassPathModifierMerger()
+meth public static org.netbeans.spi.project.LookupMerger<org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation> createCompilerOptionsQueryMerger()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public static org.netbeans.spi.project.LookupMerger<org.netbeans.spi.java.queries.JavadocForBinaryQueryImplementation> createJFBLookupMerger()
 meth public static org.netbeans.spi.project.LookupMerger<org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation> createSFBLookupMerger()
 supr java.lang.Object
@@ -173,6 +185,15 @@ meth public static void setPreferredPlatform(org.netbeans.api.java.platform.Java
 supr java.lang.Object
 hfds PLATFORM_ANT_NAME,PREFERRED_PLATFORM
 
+CLSS public final org.netbeans.spi.java.project.support.ProjectPlatform
+meth public static org.netbeans.api.java.platform.JavaPlatform forProject(org.netbeans.api.project.Project,org.netbeans.spi.project.support.ant.PropertyEvaluator,java.lang.String)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+ anno 3 org.netbeans.api.annotations.common.NonNull()
+supr java.lang.Object
+hfds PLATFORM_ACTIVE,homesByProject,platformsByHome,platformsByProject
+
 CLSS public org.netbeans.spi.java.project.support.ui.BrokenReferencesSupport
 innr public abstract interface static LibraryDefiner
 innr public abstract interface static PlatformUpdatedCallBack
@@ -184,6 +205,15 @@ meth public !varargs static org.netbeans.spi.project.ui.ProjectProblemsProvider 
  anno 4 org.netbeans.api.annotations.common.NonNull()
  anno 5 org.netbeans.api.annotations.common.NonNull()
  anno 6 org.netbeans.api.annotations.common.NonNull()
+meth public !varargs static org.netbeans.spi.project.ui.ProjectProblemsProvider createPlatformVersionProblemProvider(org.netbeans.spi.project.support.ant.AntProjectHelper,org.netbeans.spi.project.support.ant.PropertyEvaluator,org.netbeans.spi.java.project.support.ui.BrokenReferencesSupport$PlatformUpdatedCallBack,java.lang.String,org.openide.modules.SpecificationVersion,java.lang.String,java.lang.String[])
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+ anno 3 org.netbeans.api.annotations.common.NullAllowed()
+ anno 4 org.netbeans.api.annotations.common.NonNull()
+ anno 5 org.netbeans.api.annotations.common.NonNull()
+ anno 6 org.netbeans.api.annotations.common.NonNull()
+ anno 7 org.netbeans.api.annotations.common.NonNull()
 meth public !varargs static org.netbeans.spi.project.ui.ProjectProblemsProvider createProfileProblemProvider(org.netbeans.spi.project.support.ant.AntProjectHelper,org.netbeans.spi.project.support.ant.ReferenceHelper,org.netbeans.spi.project.support.ant.PropertyEvaluator,java.lang.String,java.lang.String[])
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
@@ -200,6 +230,14 @@ meth public static org.netbeans.spi.project.ui.ProjectProblemsProvider createRef
  anno 3 org.netbeans.api.annotations.common.NonNull()
  anno 4 org.netbeans.api.annotations.common.NonNull()
  anno 5 org.netbeans.api.annotations.common.NonNull()
+meth public static org.netbeans.spi.project.ui.ProjectProblemsProvider createReferenceProblemsProvider(org.netbeans.spi.project.support.ant.AntProjectHelper,org.netbeans.spi.project.support.ant.ReferenceHelper,org.netbeans.spi.project.support.ant.PropertyEvaluator,org.netbeans.spi.java.project.support.ui.BrokenReferencesSupport$PlatformUpdatedCallBack,java.lang.String[],java.lang.String[])
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+ anno 3 org.netbeans.api.annotations.common.NonNull()
+ anno 4 org.netbeans.api.annotations.common.NullAllowed()
+ anno 5 org.netbeans.api.annotations.common.NonNull()
+ anno 6 org.netbeans.api.annotations.common.NonNull()
 meth public static void showAlert()
  anno 0 java.lang.Deprecated()
 meth public static void showAlert(org.netbeans.spi.project.support.ant.AntProjectHelper,org.netbeans.spi.project.support.ant.ReferenceHelper,org.netbeans.spi.project.support.ant.PropertyEvaluator,java.lang.String[],java.lang.String[])
@@ -278,6 +316,11 @@ meth public static void setLastProjectSharable(boolean)
 supr java.lang.Object
 hfds PROP_ACTIONS,PROP_HELPER,PROP_JAR_REFS,PROP_LAST_SHARABLE,PROP_LIBRARIES,PROP_LOCATION,PROP_REFERENCE_HELPER
 hcls CopyIterator,CopyJars,CopyLibraryJars,ErrorProvider,KeepJarAtLocation,KeepLibraryAtLocation
+
+CLSS public abstract interface org.netbeans.spi.java.project.support.ui.templates.JavaFileWizardIteratorFactory
+meth public abstract org.openide.WizardDescriptor$Iterator<org.openide.WizardDescriptor> createIterator(org.openide.filesystems.FileObject)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 
 CLSS public org.netbeans.spi.java.project.support.ui.templates.JavaTemplates
 fld public final static java.lang.String ANNOTATION_TYPE_ICON = "org/netbeans/spi/java/project/support/ui/templates/annotation.png"

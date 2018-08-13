@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.5.1
+#Version 9.9.1
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -114,8 +114,8 @@ meth public void readFully(byte[]) throws java.io.IOException
 meth public void readFully(byte[],int,int) throws java.io.IOException
 meth public void registerValidation(java.io.ObjectInputValidation,int) throws java.io.InvalidObjectException,java.io.NotActiveException
 supr java.io.InputStream
-hfds NULL_HANDLE,bin,closed,curContext,defaultDataEnd,depth,enableOverride,enableResolve,handles,passHandle,primClasses,primVals,unsharedMarker,vlist
-hcls BlockDataInputStream,Caches,GetFieldImpl,HandleTable,PeekInputStream,ValidationList
+hfds NULL_HANDLE,bin,closed,curContext,defaultDataEnd,depth,enableOverride,enableResolve,handles,passHandle,primClasses,primVals,serialFilter,totalObjectRefs,unsharedMarker,validator,vlist
+hcls BlockDataInputStream,Caches,FilterValues,GetFieldImpl,HandleTable,Logging,PeekInputStream,ValidationList
 
 CLSS public abstract interface java.io.ObjectOutput
 intf java.io.DataOutput
@@ -232,8 +232,16 @@ cons public init(java.lang.Throwable)
 supr java.lang.Throwable
 hfds serialVersionUID
 
+CLSS public abstract interface !annotation java.lang.FunctionalInterface
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+
 CLSS public abstract interface java.lang.Iterable<%0 extends java.lang.Object>
 meth public abstract java.util.Iterator<{java.lang.Iterable%0}> iterator()
+meth public java.util.Spliterator<{java.lang.Iterable%0}> spliterator()
+meth public void forEach(java.util.function.Consumer<? super {java.lang.Iterable%0}>)
 
 CLSS public java.lang.Object
 cons public init()
@@ -250,6 +258,7 @@ meth public int hashCode()
 meth public java.lang.String toString()
 
 CLSS public abstract interface java.lang.Runnable
+ anno 0 java.lang.FunctionalInterface()
 meth public abstract void run()
 
 CLSS public java.lang.RuntimeException
@@ -395,6 +404,10 @@ meth public abstract int size()
 meth public abstract java.lang.Object[] toArray()
 meth public abstract java.util.Iterator<{java.util.Collection%0}> iterator()
 meth public abstract void clear()
+meth public boolean removeIf(java.util.function.Predicate<? super {java.util.Collection%0}>)
+meth public java.util.Spliterator<{java.util.Collection%0}> spliterator()
+meth public java.util.stream.Stream<{java.util.Collection%0}> parallelStream()
+meth public java.util.stream.Stream<{java.util.Collection%0}> stream()
 
 CLSS public abstract interface java.util.EventListener
 
@@ -423,6 +436,17 @@ meth public abstract void putAll(java.util.Map<? extends {java.util.Map%0},? ext
 meth public abstract {java.util.Map%1} get(java.lang.Object)
 meth public abstract {java.util.Map%1} put({java.util.Map%0},{java.util.Map%1})
 meth public abstract {java.util.Map%1} remove(java.lang.Object)
+meth public boolean remove(java.lang.Object,java.lang.Object)
+meth public boolean replace({java.util.Map%0},{java.util.Map%1},{java.util.Map%1})
+meth public void forEach(java.util.function.BiConsumer<? super {java.util.Map%0},? super {java.util.Map%1}>)
+meth public void replaceAll(java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
+meth public {java.util.Map%1} compute({java.util.Map%0},java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
+meth public {java.util.Map%1} computeIfAbsent({java.util.Map%0},java.util.function.Function<? super {java.util.Map%0},? extends {java.util.Map%1}>)
+meth public {java.util.Map%1} computeIfPresent({java.util.Map%0},java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
+meth public {java.util.Map%1} getOrDefault(java.lang.Object,{java.util.Map%1})
+meth public {java.util.Map%1} merge({java.util.Map%0},{java.util.Map%1},java.util.function.BiFunction<? super {java.util.Map%1},? super {java.util.Map%1},? extends {java.util.Map%1}>)
+meth public {java.util.Map%1} putIfAbsent({java.util.Map%0},{java.util.Map%1})
+meth public {java.util.Map%1} replace({java.util.Map%0},{java.util.Map%1})
 
 CLSS public abstract interface java.util.Set<%0 extends java.lang.Object>
 intf java.util.Collection<{java.util.Set%0}>
@@ -441,6 +465,7 @@ meth public abstract int size()
 meth public abstract java.lang.Object[] toArray()
 meth public abstract java.util.Iterator<{java.util.Set%0}> iterator()
 meth public abstract void clear()
+meth public java.util.Spliterator<{java.util.Set%0}> spliterator()
 
 CLSS public abstract interface java.util.concurrent.Executor
 meth public abstract void execute(java.lang.Runnable)

@@ -1,7 +1,13 @@
 #Signature file v4.1
-#Version 2.51.1
+#Version 2.56.1
+
+CLSS public abstract interface java.awt.event.ActionListener
+intf java.util.EventListener
+meth public abstract void actionPerformed(java.awt.event.ActionEvent)
 
 CLSS public abstract interface java.io.Serializable
+
+CLSS public abstract interface java.lang.Cloneable
 
 CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
 meth public abstract int compareTo({java.lang.Comparable%0})
@@ -62,6 +68,77 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
+
+CLSS public abstract interface java.util.EventListener
+
+CLSS public abstract javax.swing.AbstractAction
+cons public init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,javax.swing.Icon)
+fld protected boolean enabled
+fld protected javax.swing.event.SwingPropertyChangeSupport changeSupport
+intf java.io.Serializable
+intf java.lang.Cloneable
+intf javax.swing.Action
+meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
+meth protected void firePropertyChange(java.lang.String,java.lang.Object,java.lang.Object)
+meth public boolean isEnabled()
+meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners()
+meth public java.lang.Object getValue(java.lang.String)
+meth public java.lang.Object[] getKeys()
+meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
+meth public void putValue(java.lang.String,java.lang.Object)
+meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
+meth public void setEnabled(boolean)
+supr java.lang.Object
+hfds RECONFIGURE_ON_NULL,arrayTable
+
+CLSS public abstract interface javax.swing.Action
+fld public final static java.lang.String ACCELERATOR_KEY = "AcceleratorKey"
+fld public final static java.lang.String ACTION_COMMAND_KEY = "ActionCommandKey"
+fld public final static java.lang.String DEFAULT = "Default"
+fld public final static java.lang.String DISPLAYED_MNEMONIC_INDEX_KEY = "SwingDisplayedMnemonicIndexKey"
+fld public final static java.lang.String LARGE_ICON_KEY = "SwingLargeIconKey"
+fld public final static java.lang.String LONG_DESCRIPTION = "LongDescription"
+fld public final static java.lang.String MNEMONIC_KEY = "MnemonicKey"
+fld public final static java.lang.String NAME = "Name"
+fld public final static java.lang.String SELECTED_KEY = "SwingSelectedKey"
+fld public final static java.lang.String SHORT_DESCRIPTION = "ShortDescription"
+fld public final static java.lang.String SMALL_ICON = "SmallIcon"
+intf java.awt.event.ActionListener
+meth public abstract boolean isEnabled()
+meth public abstract java.lang.Object getValue(java.lang.String)
+meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeListener)
+meth public abstract void putValue(java.lang.String,java.lang.Object)
+meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
+meth public abstract void setEnabled(boolean)
+
+CLSS public final org.netbeans.api.debugger.Watch
+fld public final static java.lang.String PROP_ENABLED = "enabled"
+fld public final static java.lang.String PROP_EXPRESSION = "expression"
+fld public final static java.lang.String PROP_VALUE = "value"
+innr public abstract interface static Pin
+meth public boolean isEnabled()
+meth public java.lang.String getExpression()
+meth public org.netbeans.api.debugger.Watch$Pin getPin()
+meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
+meth public void remove()
+meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
+meth public void setEnabled(boolean)
+meth public void setExpression(java.lang.String)
+supr java.lang.Object
+hfds enabled,expression,pcs,pin
+
+CLSS public abstract interface static org.netbeans.api.debugger.Watch$Pin
+ outer org.netbeans.api.debugger.Watch
+
+CLSS public abstract org.netbeans.spi.debugger.ui.AbstractExpandToolTipAction
+cons protected init()
+meth protected abstract void openTooltipView()
+meth protected final org.netbeans.editor.ext.ToolTipSupport openTooltipView(java.lang.String,java.lang.Object)
+meth public final void actionPerformed(java.awt.event.ActionEvent)
+supr javax.swing.AbstractAction
+hfds expanded,toCollapsIcon,toExpandIcon
 
 CLSS public abstract org.netbeans.spi.debugger.ui.AttachType
 cons public init()
@@ -366,6 +443,23 @@ supr java.lang.Object
 hfds NO_FILE,NO_FILE_CHANGE,NO_TEXT_COMPONENT,ccrp,context,currentFile,currentFileChangeListener,currentFileChangeListenerWeak,currentTextComponent,currentURL,erListener,lastFiredMIMEType,lastMIMETypeEvents,logger,lookupCoalescedChange,mostRecentFileChangeListener,mostRecentFileChangeListenerWeak,mostRecentFileRef,pcs,pcsByMIMEType,refreshProcessor,resFileObject
 hcls AddRemoveFileListenerInEQThread,CoalescedChange,EditorLookupListener,EditorRegistryListener,EventFirer,FileRenameListener
 
+CLSS public final org.netbeans.spi.debugger.ui.EditorPin
+cons public init(org.openide.filesystems.FileObject,int,java.awt.Point)
+fld public final static java.lang.String PROP_COMMENT = "comment"
+fld public final static java.lang.String PROP_LINE = "line"
+fld public final static java.lang.String PROP_LOCATION = "location"
+intf org.netbeans.api.debugger.Watch$Pin
+meth public int getLine()
+meth public java.awt.Point getLocation()
+meth public java.lang.String getComment()
+meth public org.openide.filesystems.FileObject getFile()
+meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
+meth public void move(int,java.awt.Point)
+meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
+meth public void setComment(java.lang.String)
+supr java.lang.Object
+hfds comment,file,line,location,pchs,vpId
+
 CLSS public abstract interface org.netbeans.spi.debugger.ui.EngineComponentsProvider
 innr public abstract interface static ComponentProvider
 innr public final static ComponentInfo
@@ -431,8 +525,54 @@ meth public abstract boolean load(org.netbeans.api.debugger.Properties)
 meth public abstract java.lang.String getDisplayName()
 meth public abstract void save(org.netbeans.api.debugger.Properties)
 
+CLSS public final org.netbeans.spi.debugger.ui.PinWatchUISupport
+innr public abstract interface static ValueProvider
+meth public static org.netbeans.spi.debugger.ui.PinWatchUISupport getDefault()
+meth public void pin(org.netbeans.api.debugger.Watch,java.lang.String)
+supr java.lang.Object
+hfds INSTANCE,valueProviders,valueProvidersLock
+hcls DelegatingValueProvider
+
+CLSS public abstract interface static org.netbeans.spi.debugger.ui.PinWatchUISupport$ValueProvider
+ outer org.netbeans.spi.debugger.ui.PinWatchUISupport
+innr public abstract interface static ValueChangeListener
+meth public abstract java.lang.String getId()
+meth public abstract java.lang.String getValue(org.netbeans.api.debugger.Watch)
+meth public abstract void setChangeListener(org.netbeans.api.debugger.Watch,org.netbeans.spi.debugger.ui.PinWatchUISupport$ValueProvider$ValueChangeListener)
+meth public abstract void unsetChangeListener(org.netbeans.api.debugger.Watch)
+meth public boolean setValue(org.netbeans.api.debugger.Watch,java.lang.String)
+meth public java.lang.String getEditableValue(org.netbeans.api.debugger.Watch)
+meth public java.lang.String getEvaluatingText()
+meth public javax.swing.Action[] getHeadActions(org.netbeans.api.debugger.Watch)
+meth public javax.swing.Action[] getTailActions(org.netbeans.api.debugger.Watch)
+
+CLSS public abstract interface static org.netbeans.spi.debugger.ui.PinWatchUISupport$ValueProvider$ValueChangeListener
+ outer org.netbeans.spi.debugger.ui.PinWatchUISupport$ValueProvider
+meth public abstract void valueChanged(org.netbeans.api.debugger.Watch)
+
+CLSS public final org.netbeans.spi.debugger.ui.ToolTipUI
+innr public final static Expandable
+innr public final static Pinnable
+meth public org.netbeans.editor.ext.ToolTipSupport show(javax.swing.JEditorPane)
+supr java.lang.Object
+hfds editorPane,et
+hcls ExpansionListener,PinListener
+
+CLSS public final static org.netbeans.spi.debugger.ui.ToolTipUI$Expandable
+ outer org.netbeans.spi.debugger.ui.ToolTipUI
+cons public init(java.lang.String,java.lang.Object)
+supr java.lang.Object
+hfds expression,variable
+
+CLSS public final static org.netbeans.spi.debugger.ui.ToolTipUI$Pinnable
+ outer org.netbeans.spi.debugger.ui.ToolTipUI
+cons public init(java.lang.String,int,java.lang.String)
+supr java.lang.Object
+hfds expression,line,valueProviderId
+
 CLSS public org.netbeans.spi.debugger.ui.ViewFactory
 meth public javax.swing.JComponent createViewComponent(java.lang.String,java.lang.String,java.lang.String,java.lang.String)
+meth public org.netbeans.spi.debugger.ui.ToolTipUI createToolTip(java.lang.String,org.netbeans.spi.debugger.ui.ToolTipUI$Expandable,org.netbeans.spi.debugger.ui.ToolTipUI$Pinnable)
 meth public org.netbeans.spi.debugger.ui.ViewLifecycle createViewLifecycle(java.lang.String,java.lang.String)
 meth public org.openide.windows.TopComponent createViewTC(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
 meth public static org.netbeans.spi.debugger.ui.ViewFactory getDefault()

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.64.1
+#Version 1.73.1
 
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
@@ -55,6 +55,7 @@ fld public final static java.lang.String COMMAND_JAVADOC = "javadoc"
 fld public final static java.lang.String SOURCES_HINT_MAIN = "main"
 fld public final static java.lang.String SOURCES_HINT_TEST = "test"
 fld public final static java.lang.String SOURCES_TYPE_JAVA = "java"
+fld public final static java.lang.String SOURCES_TYPE_MODULES = "modules"
 fld public final static java.lang.String SOURCES_TYPE_RESOURCES = "resources"
 supr java.lang.Object
 
@@ -71,6 +72,7 @@ meth public static boolean removeRoots(java.net.URL[],org.openide.filesystems.Fi
 meth public static org.netbeans.spi.java.project.classpath.ProjectClassPathExtender extenderForModifier(org.netbeans.api.project.Project)
 meth public static org.netbeans.spi.java.project.classpath.ProjectClassPathExtender extenderForModifier(org.netbeans.spi.java.project.classpath.ProjectClassPathModifierImplementation)
 supr java.lang.Object
+hfds LOG
 hcls Extensible
 
 CLSS public abstract interface org.netbeans.spi.java.project.classpath.ProjectClassPathExtender
@@ -100,6 +102,13 @@ meth protected static java.net.URI[] convertURLsToURIs(java.net.URL[])
 supr java.lang.Object
 hcls Accessor
 
+CLSS public abstract interface org.netbeans.spi.java.project.classpath.ProjectModulesModifier
+meth public abstract boolean addRequiredModules(java.lang.String,org.openide.filesystems.FileObject,java.util.Collection<java.net.URL>) throws java.io.IOException
+meth public abstract boolean removeRequiredModules(java.lang.String,org.openide.filesystems.FileObject,java.util.Collection<java.net.URL>) throws java.io.IOException
+meth public abstract java.lang.String provideModularClasspath(org.openide.filesystems.FileObject,java.lang.String)
+meth public abstract java.util.Map<java.net.URL,java.util.Collection<org.netbeans.api.java.classpath.ClassPath>> findModuleUsages(org.openide.filesystems.FileObject,java.util.Collection<java.net.URL>)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+
 CLSS public org.netbeans.spi.java.project.classpath.support.ProjectClassPathSupport
 meth public static org.netbeans.spi.java.classpath.ClassPathImplementation createPropertyBasedClassPathImplementation(java.io.File,org.netbeans.spi.project.support.ant.PropertyEvaluator,java.lang.String[])
 supr java.lang.Object
@@ -128,6 +137,8 @@ CLSS public final org.netbeans.spi.java.project.support.LookupMergerSupport
 cons public init()
 meth public static org.netbeans.spi.project.LookupMerger<org.netbeans.spi.java.classpath.ClassPathProvider> createClassPathProviderMerger(org.netbeans.spi.java.classpath.ClassPathProvider)
 meth public static org.netbeans.spi.project.LookupMerger<org.netbeans.spi.java.project.classpath.ProjectClassPathModifierImplementation> createClassPathModifierMerger()
+meth public static org.netbeans.spi.project.LookupMerger<org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation> createCompilerOptionsQueryMerger()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public static org.netbeans.spi.project.LookupMerger<org.netbeans.spi.java.queries.JavadocForBinaryQueryImplementation> createJFBLookupMerger()
 meth public static org.netbeans.spi.project.LookupMerger<org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation> createSFBLookupMerger()
 supr java.lang.Object
@@ -141,4 +152,13 @@ meth public static void setPreferredPlatform(org.netbeans.api.java.platform.Java
  anno 1 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
 hfds PLATFORM_ANT_NAME,PREFERRED_PLATFORM
+
+CLSS public final org.netbeans.spi.java.project.support.ProjectPlatform
+meth public static org.netbeans.api.java.platform.JavaPlatform forProject(org.netbeans.api.project.Project,org.netbeans.spi.project.support.ant.PropertyEvaluator,java.lang.String)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+ anno 3 org.netbeans.api.annotations.common.NonNull()
+supr java.lang.Object
+hfds PLATFORM_ACTIVE,homesByProject,platformsByHome,platformsByProject
 

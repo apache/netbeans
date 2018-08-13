@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.31.1
+#Version 1.35.1
 
 CLSS public java.lang.Object
 cons public init()
@@ -40,6 +40,7 @@ meth public org.netbeans.api.editor.guards.InteriorSection createInteriorSection
 meth public org.netbeans.api.editor.guards.InteriorSection findInteriorSection(java.lang.String)
 meth public org.netbeans.api.editor.guards.SimpleSection createSimpleSection(javax.swing.text.Position,java.lang.String) throws javax.swing.text.BadLocationException
 meth public org.netbeans.api.editor.guards.SimpleSection findSimpleSection(java.lang.String)
+meth public org.netbeans.api.editor.guards.SimpleSection protectSimpleRegion(javax.swing.text.Position,javax.swing.text.Position,java.lang.String) throws javax.swing.text.BadLocationException
 meth public static org.netbeans.api.editor.guards.GuardedSectionManager getInstance(javax.swing.text.StyledDocument)
 supr java.lang.Object
 hfds impl

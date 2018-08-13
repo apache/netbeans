@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.8.1
+#Version 9.12.1
 
 CLSS public java.io.IOException
 cons public init()
@@ -473,6 +473,8 @@ meth public final static void runAtomicAction(org.openide.filesystems.FileSystem
 meth public static <%0 extends java.lang.Object> {%%0} getConfigObject(java.lang.String,java.lang.Class<{%%0}>)
 meth public static <%0 extends java.lang.Object> {%%0} getSystemConfigObject(java.lang.String,java.lang.Class<{%%0}>)
 meth public static boolean affectsOrder(org.openide.filesystems.FileAttributeEvent)
+meth public static boolean isArchiveArtifact(java.net.URL)
+meth public static boolean isArchiveArtifact(org.openide.filesystems.FileObject)
 meth public static boolean isArchiveFile(java.net.URL)
 meth public static boolean isArchiveFile(org.openide.filesystems.FileObject)
 meth public static boolean isParentOf(org.openide.filesystems.FileObject,org.openide.filesystems.FileObject)
@@ -534,7 +536,7 @@ meth public static void removeRecursiveListener(org.openide.filesystems.FileChan
 meth public static void setMIMEType(java.lang.String,java.lang.String)
 meth public static void setOrder(java.util.List<org.openide.filesystems.FileObject>) throws java.io.IOException
 supr java.lang.Object
-hfds LOG,REFRESH_RP,ZIP_HEADER_1,ZIP_HEADER_2,archiveFileCache,diskFileSystem,normalizedRef,refreshTask,transientAttributes
+hfds LOG,REFRESH_RP,archiveRootProviders,diskFileSystem,normalizedRef,refreshTask,transientAttributes
 hcls NonCanonicalizingFile
 
 CLSS public org.openide.filesystems.JarFileSystem
@@ -962,6 +964,16 @@ supr java.lang.Exception
 hfds erroneousAnnotation,erroneousAnnotationValue,erroneousElement
 
 CLSS abstract interface org.openide.filesystems.annotations.package-info
+
+CLSS public abstract interface org.openide.filesystems.spi.ArchiveRootProvider
+meth public abstract boolean isArchiveArtifact(java.net.URL)
+meth public abstract boolean isArchiveFile(java.net.URL,boolean)
+meth public abstract java.net.URL getArchiveFile(java.net.URL)
+meth public abstract java.net.URL getArchiveRoot(java.net.URL)
+meth public boolean isArchiveArtifact(org.openide.filesystems.FileObject)
+meth public boolean isArchiveFile(org.openide.filesystems.FileObject,boolean)
+meth public org.openide.filesystems.FileObject getArchiveFile(org.openide.filesystems.FileObject)
+meth public org.openide.filesystems.FileObject getArchiveRoot(org.openide.filesystems.FileObject)
 
 CLSS public abstract interface org.openide.filesystems.spi.CustomInstanceFactory
 meth public abstract <%0 extends java.lang.Object> {%%0} createInstance(java.lang.Class<{%%0}>)

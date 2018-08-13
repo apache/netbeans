@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.46.1
+#Version 2.50.1
 
 CLSS public abstract interface java.io.Serializable
 
@@ -1061,6 +1061,7 @@ hcls LayoutSceneListener
 
 CLSS public org.netbeans.api.visual.model.ObjectScene
 cons public init()
+meth protected org.netbeans.api.visual.model.ObjectState findObjectState(java.lang.Object)
 meth public !varargs final void addObject(java.lang.Object,org.netbeans.api.visual.widget.Widget[])
 meth public !varargs final void addObjectSceneListener(org.netbeans.api.visual.model.ObjectSceneListener,org.netbeans.api.visual.model.ObjectSceneEventType[])
 meth public !varargs final void removeObjectSceneListener(org.netbeans.api.visual.model.ObjectSceneListener,org.netbeans.api.visual.model.ObjectSceneEventType[])
@@ -1078,11 +1079,13 @@ meth public final org.netbeans.api.visual.action.WidgetAction createSelectAction
 meth public final org.netbeans.api.visual.model.ObjectState getObjectState(java.lang.Object)
 meth public final org.netbeans.api.visual.widget.Widget findWidget(java.lang.Object)
 meth public final void removeObject(java.lang.Object)
+meth public final void removeObjectMapping(java.lang.Object)
 meth public final void setFocusedObject(java.lang.Object)
 meth public final void setHighlightedObjects(java.util.Set<?>)
 meth public final void setHoveredObject(java.lang.Object)
 meth public final void setSelectedObjects(java.util.Set<?>)
 meth public java.lang.Comparable getIdentityCode(java.lang.Object)
+meth public void clearObjectState(java.lang.Object)
 meth public void userSelectionSuggested(java.util.Set<?>,boolean)
 supr org.netbeans.api.visual.widget.Scene
 hfds EMPTY_LISTENERS,EMPTY_SET,EMPTY_WIDGETS_ARRAY,EMPTY_WIDGETS_LIST,event,focusedObject,highlightedObjects,highlightedObjectsUm,hoveredObject,listeners,object2widget,object2widgets,objectHoverAction,objectStates,objects,objectsUm,selectAction,selectedObjects,selectedObjectsUm,widget2object
@@ -1539,6 +1542,7 @@ meth public final void validate()
 meth public final void validate(java.awt.Graphics2D)
 meth public java.awt.Font getDefaultFont()
 meth public java.awt.Point convertViewToScene(java.awt.Point)
+meth public java.awt.Rectangle convertViewToScene(java.awt.Rectangle)
 meth public javax.swing.JComponent createSatelliteView()
 meth public javax.swing.JComponent createView()
 meth public javax.swing.JComponent getView()

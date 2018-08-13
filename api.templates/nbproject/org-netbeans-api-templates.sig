@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.6.1
+#Version 1.10.1
 
 CLSS public abstract interface java.io.Serializable
 
@@ -87,6 +87,15 @@ hfds freeExtension,locale,name,parameters,preformatted,proposedName,target,templ
 
 CLSS public abstract interface org.netbeans.api.templates.CreateFromTemplateAttributes
 meth public abstract java.util.Map<java.lang.String,?> attributesFor(org.netbeans.api.templates.CreateDescriptor)
+
+CLSS public abstract interface org.netbeans.api.templates.CreateFromTemplateDecorator
+meth public abstract boolean accept(org.netbeans.api.templates.CreateDescriptor)
+meth public abstract boolean isAfterCreation()
+meth public abstract boolean isBeforeCreation()
+meth public abstract java.util.List<org.openide.filesystems.FileObject> decorate(org.netbeans.api.templates.CreateDescriptor,java.util.List<org.openide.filesystems.FileObject>) throws java.io.IOException
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
 
 CLSS public abstract org.netbeans.api.templates.CreateFromTemplateHandler
 cons public init()

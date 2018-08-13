@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.26.1
+#Version 1.29.1
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -28,18 +28,22 @@ intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
 
 CLSS public abstract interface !annotation javax.annotation.Nonnull
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=CLASS)
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 javax.annotation.meta.TypeQualifier(java.lang.Class<?> applicableTo=class java.lang.Object)
+innr public static Checker
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault javax.annotation.meta.When when()
 
 CLSS public abstract interface !annotation javax.annotation.meta.TypeQualifier
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=CLASS)
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault java.lang.Class<?> applicableTo()
 
 CLSS public abstract interface !annotation javax.annotation.meta.TypeQualifierNickname
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=CLASS)
+ anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
 
@@ -47,6 +51,8 @@ CLSS public abstract interface !annotation org.netbeans.api.annotations.common.C
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=CLASS)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
+ anno 0 javax.annotation.Nonnull(javax.annotation.meta.When when=MAYBE)
+ anno 0 javax.annotation.meta.TypeQualifierNickname()
 intf java.lang.annotation.Annotation
 
 CLSS public abstract interface !annotation org.netbeans.api.annotations.common.CheckReturnValue
@@ -59,18 +65,24 @@ CLSS public abstract interface !annotation org.netbeans.api.annotations.common.N
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=CLASS)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[FIELD, METHOD, PARAMETER, LOCAL_VARIABLE])
+ anno 0 javax.annotation.Nonnull(javax.annotation.meta.When when=ALWAYS)
+ anno 0 javax.annotation.meta.TypeQualifierNickname()
 intf java.lang.annotation.Annotation
 
 CLSS public abstract interface !annotation org.netbeans.api.annotations.common.NullAllowed
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=CLASS)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[FIELD, PARAMETER, LOCAL_VARIABLE])
+ anno 0 javax.annotation.Nonnull(javax.annotation.meta.When when=MAYBE)
+ anno 0 javax.annotation.meta.TypeQualifierNickname()
 intf java.lang.annotation.Annotation
 
 CLSS public abstract interface !annotation org.netbeans.api.annotations.common.NullUnknown
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=CLASS)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[FIELD, METHOD, PARAMETER, LOCAL_VARIABLE])
+ anno 0 javax.annotation.Nonnull(javax.annotation.meta.When when=UNKNOWN)
+ anno 0 javax.annotation.meta.TypeQualifierNickname()
 intf java.lang.annotation.Annotation
 
 CLSS public abstract interface !annotation org.netbeans.api.annotations.common.StaticResource

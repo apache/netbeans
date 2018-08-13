@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 8.32.1
+#Version 8.35.1
 
 CLSS public abstract interface java.io.Serializable
 
@@ -267,7 +267,7 @@ hfds originatingElementsByProcessor,outputFilesByProcessor,verifiedClasses
 CLSS public final org.openide.util.lookup.implspi.ActiveQueue
 meth public static java.lang.ref.ReferenceQueue<java.lang.Object> queue()
 supr java.lang.Object
-hfds ACTIVE,LOGGER,activeReferenceQueue
+hfds LOGGER,activeReferenceQueue
 hcls Daemon,Impl
 
 CLSS public abstract org.openide.util.lookup.implspi.NamedServicesProvider

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.41.1
+#Version 1.45.1
 
 CLSS public java.lang.Object
 cons public init()
@@ -102,6 +102,7 @@ fld public final static java.lang.String EDITABLE_HINT_NAME = "editable"
 fld public final static java.lang.String LINE_HINT_NAME = "line"
 fld public final static java.lang.String NO_FORMAT_PARAMETER_NAME = "no-format"
 fld public final static java.lang.String NO_INDENT_PARAMETER_NAME = "no-indent"
+fld public final static java.lang.String ORDERING_HINT_NAME = "ordering"
 fld public final static java.lang.String SELECTION_PARAMETER_NAME = "selection"
 meth public boolean isEditable()
 meth public boolean isSlave()

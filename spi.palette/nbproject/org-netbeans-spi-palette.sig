@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.45.1
+#Version 1.48.1
 
 CLSS public abstract interface java.io.Externalizable
 intf java.io.Serializable
@@ -12,6 +12,12 @@ CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation java.lang.FunctionalInterface
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
 intf java.lang.annotation.Annotation
 
 CLSS public java.lang.Object
@@ -29,6 +35,7 @@ meth public int hashCode()
 meth public java.lang.String toString()
 
 CLSS public abstract interface java.lang.Runnable
+ anno 0 java.lang.FunctionalInterface()
 meth public abstract void run()
 
 CLSS public abstract interface java.lang.annotation.Annotation

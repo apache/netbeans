@@ -25,5 +25,5 @@ script:
   - if [ "x$EOL" == "xtrue" ]; then ./travis-check-line-endings.sh; fi
   - if [ "x$SIGTEST" == "xtrue" ]; then ant check-sigtests; fi
 env:
-  - SIGTEST=false COMPILETEST=false RAT=true EOL=true LICENSE=true
-  - SIGTEST=true COMPILETEST=true RAT=false EOL=false LICENSE=false
+  - SIGTEST=false COMPILETEST=true RAT=true EOL=false LICENSE=true
+  - SIGTEST=true COMPILETEST=false RAT=false EOL=true LICENSE=false

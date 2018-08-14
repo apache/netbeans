@@ -64,6 +64,8 @@ import org.netbeans.nbbuild.extlibs.licenseinfo.Licenseinfo;
  */
 public class VerifyLibsAndLicenses extends Task {
 
+    private static final Pattern URL_PATTERN = Pattern.compile("(https?://\\S*[^/\\s]+)\\s+(\\S+)$");
+
     private File nball;
     public void setNball(File nball) {
         this.nball = nball;
@@ -678,10 +680,13 @@ public class VerifyLibsAndLicenses extends Task {
                     if (hashAndFile.length < 2) {
                         throw new BuildException("Bad line '" + line + "' in " + list);
                     }
+                    Matcher urlMatcher = URL_PATTERN.matcher(hashAndFile[1]);
                     if (MavenCoordinate.isMavenFile(hashAndFile[1])) {
                         MavenCoordinate coordinate = MavenCoordinate.fromGradleFormat(hashAndFile[1]);
                         String artifactFile = coordinate.toArtifactFilename();
                         files.add(artifactFile);
+                    } else if (urlMatcher.matches()) {
+                        files.add(urlMatcher.group(2));
                     } else {
                         files.add(hashAndFile[1]);
                     }

@@ -53,7 +53,6 @@ const char *NbLauncher::CON_ATTACH_MSG =
 
 const char *NbLauncher::staticOptions[] = {
     "-J-Dnetbeans.importclass=org.netbeans.upgrade.AutoUpgrade",
-    "-J-Dnetbeans.accept_license_class=org.netbeans.license.AcceptLicense",
     "--branding",
     "nb"
 };

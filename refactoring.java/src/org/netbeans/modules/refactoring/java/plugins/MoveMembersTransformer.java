@@ -25,6 +25,7 @@ import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.source.util.Trees;
+
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -108,6 +109,14 @@ public class MoveMembersTransformer extends RefactoringVisitor {
         return super.visitMethodInvocation(node, target);
     }
 
+    @Override
+    public Tree visitMemberReference(MemberReferenceTree node, Element target) {
+        if (changeIfMatch(getCurrentPath(), node, target)) {
+            return node;
+        }
+        return super.visitMemberReference(node, target);
+    }
+
     private boolean changeIfMatch(TreePath currentPath, Tree node, final Element target) throws IllegalArgumentException {
         Element el = workingCopy.getTrees().getElement(currentPath);
         if (el == null) {
@@ -129,6 +138,9 @@ public class MoveMembersTransformer extends RefactoringVisitor {
                 changeIdentifier(el, (IdentifierTree) node, currentPath, target);
             } else if (node instanceof MemberSelectTree) {
                 changeMemberSelect(el, (MemberSelectTree) node, currentPath, target);
+            } else if (node.getKind() == Tree.Kind.MEMBER_REFERENCE) {
+                changeMemberRefer(el, (MemberReferenceTree) node, currentPath, target);
+
             }
             return true;
         } else {
@@ -157,6 +169,20 @@ public class MoveMembersTransformer extends RefactoringVisitor {
             return node;
         } else {
             return super.visitMethod(node, target);
+        }
+    }
+
+    private void changeMemberRefer(Element el, final MemberReferenceTree node, TreePath currentPath, final Element target) {
+        if (el.getModifiers().contains(Modifier.STATIC)) {
+            Tree oldT = node.getQualifierExpression();
+            Tree newT = make.QualIdent(make.setLabel(make.QualIdent(target), target.getSimpleName()).toString());
+            rewrite(oldT, newT);
+        } else {
+            SourcePositions positions = workingCopy.getTrees().getSourcePositions();
+            long startPosition = positions.getStartPosition(workingCopy.getCompilationUnit(), node);
+            long lineNumber = workingCopy.getCompilationUnit().getLineMap().getLineNumber(startPosition);
+            String source = FileUtil.getFileDisplayName(workingCopy.getFileObject()) + ':' + lineNumber;
+            problem = JavaPluginUtils.chainProblems(problem, new Problem(false, NbBundle.getMessage(MoveMembersRefactoringPlugin.class, "WRN_NoAccessor", source))); //NOI18N
         }
     }
 

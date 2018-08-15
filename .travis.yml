@@ -22,4 +22,5 @@ script:
   - ant -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false
   - ant -quiet test -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest.includes=NoTestsJustBuild
   - ant -quiet verify-libs-and-licenses -Dverify-libs-and-licenses.haltonfailure=true
+  - ant -quiet -f ide.ergonomics/ test -Dtest.config=commit
   - ./travis-check-line-endings.sh

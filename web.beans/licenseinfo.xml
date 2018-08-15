@@ -32,7 +32,7 @@
         <file>src/org/netbeans/modules/web/beans/resources/Interceptor.template</file>
         <file>src/org/netbeans/modules/web/beans/resources/Qualifier.template</file>
         <file>src/org/netbeans/modules/web/beans/resources/Scope.template</file>
-        <file>src/org/netbeans/modules/web/beans/resources/Stereotype.template </file>
+        <file>src/org/netbeans/modules/web/beans/resources/Stereotype.template</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="TEMPLATE_MINIMAL_IP"/>
     </fileset>

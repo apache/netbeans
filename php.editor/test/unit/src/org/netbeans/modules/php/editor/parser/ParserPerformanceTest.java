@@ -47,17 +47,17 @@ public class ParserPerformanceTest extends NbTestCase {
     }
 
     // the current time is around 1200 ms
-    public void testBigFile() throws Exception {
-        File testFile = new File(getDataDir(), "testfiles/parser/performance/performance.php");
-        assertTrue(testFile.exists());
-        String testSource = TestUtilities.copyFileToString(testFile);
-        ASTPHP5Scanner scanner = new ASTPHP5Scanner(new StringReader(testSource));
-        ASTPHP5Parser parser = new ASTPHP5Parser(scanner);
-        Date start = new Date();
-        Symbol root = parser.parse();
-        Date end = new Date();
-        long time = end.getTime() - start.getTime();
-        System.out.println("Parsing of big files takes: " + time);
-        assertTrue(time < 2500);
-    }
+//    public void testBigFile() throws Exception {
+//        File testFile = new File(getDataDir(), "testfiles/parser/performance/performance.php");
+//        assertTrue(testFile.exists());
+//        String testSource = TestUtilities.copyFileToString(testFile);
+//        ASTPHP5Scanner scanner = new ASTPHP5Scanner(new StringReader(testSource));
+//        ASTPHP5Parser parser = new ASTPHP5Parser(scanner);
+//        Date start = new Date();
+//        Symbol root = parser.parse();
+//        Date end = new Date();
+//        long time = end.getTime() - start.getTime();
+//        System.out.println("Parsing of big files takes: " + time);
+//        assertTrue(time < 2500);
+//    }
 }

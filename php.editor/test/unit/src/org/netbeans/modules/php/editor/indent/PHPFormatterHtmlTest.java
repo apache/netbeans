@@ -48,10 +48,10 @@ public class PHPFormatterHtmlTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/html/html03.php", options);
     }
 
-    public void testHtml04() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
-        reformatFileContents("testfiles/formatting/html/html04.php", options);
-    }
+//    public void testHtml04() throws Exception {
+//        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+//        reformatFileContents("testfiles/formatting/html/html04.php", options);
+//    }
 
     public void testHtml05() throws Exception {
         HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());

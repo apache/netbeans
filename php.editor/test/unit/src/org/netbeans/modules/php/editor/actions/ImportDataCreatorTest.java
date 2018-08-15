@@ -56,30 +56,30 @@ public class ImportDataCreatorTest extends PHPTestBase {
         super(testName);
     }
 
-    public void testImportData_01() throws Exception {
-        performTest("Homepage^Presenter");
-    }
-
-    public void testImportData_02() throws Exception {
-        performTest("Homepage^Presenter");
-    }
-
-    public void testImportData_03() throws Exception {
-        performTest("Homepage^Presenter");
-    }
-
-    public void testImportData_04() throws Exception {
-        // see issue #219548
-        performTest("Homepage^Presenter");
-    }
-
-    public void testImportData_05() throws Exception {
-        performTest("Homepage^Presenter", new Options(true, false, false, false, false));
-    }
-
-    public void testImportData_06() throws Exception {
-        performTest("Homepage^Presenter", new Options(false, false, false, false, false));
-    }
+//    public void testImportData_01() throws Exception {
+//        performTest("Homepage^Presenter");
+//    }
+//
+//    public void testImportData_02() throws Exception {
+//        performTest("Homepage^Presenter");
+//    }
+//
+//    public void testImportData_03() throws Exception {
+//        performTest("Homepage^Presenter");
+//    }
+//
+//    public void testImportData_04() throws Exception {
+//        // see issue #219548
+//        performTest("Homepage^Presenter");
+//    }
+//
+//    public void testImportData_05() throws Exception {
+//        performTest("Homepage^Presenter", new Options(true, false, false, false, false));
+//    }
+//
+//    public void testImportData_06() throws Exception {
+//        performTest("Homepage^Presenter", new Options(false, false, false, false, false));
+//    }
 
     public void testImportData_07() throws Exception {
         performTest("class ^Blah");

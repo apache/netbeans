@@ -34,6 +34,10 @@ public class ProjectConvertorCheck extends NbTestCase {
 
     public void testGetConvertors() throws Exception {
         FileObject fo = FileUtil.getConfigFile("Services/ProjectConvertors");
+        if (fo == null) {
+            // basic IDE may not provide any convertors
+            return;
+        }
         assertNotNull("Convertor folder found found", fo);
         assertTrue("Convertor folder is not empty found", fo.getChildren().length > 0);
         StringBuilder sb = new StringBuilder();

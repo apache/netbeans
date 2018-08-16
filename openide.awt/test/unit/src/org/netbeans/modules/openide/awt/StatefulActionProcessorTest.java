@@ -31,6 +31,8 @@ import java.util.Collection;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.DefaultListModel;
+import javax.swing.DefaultListSelectionModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -1376,5 +1378,45 @@ public class StatefulActionProcessorTest extends NbTestCase implements ContextGl
         public void actionPerformed(ActionEvent e) {
             received = e;
         }
+    }
+    
+    public void testCustomContextAwareInstance() {
+        Action a = Actions.forID("Foo", "test.ListAction");
+        DefaultListSelectionModel model = new DefaultListSelectionModel();
+        
+        InstanceContent localContent1 = new InstanceContent();
+        AbstractLookup localLookup1 = new AbstractLookup(localContent1);
+        
+        Action la = ((ContextAwareAction)a).createContextAwareInstance(localLookup1);
+        
+        assertFalse(a.isEnabled());
+        assertFalse(la.isEnabled());
+        
+        localContent1.add(model);
+        
+        assertFalse(a.isEnabled());
+        assertTrue(la.isEnabled());
+        assertFalse((Boolean)la.getValue(Action.SELECTED_KEY));
+        
+        // checks that the context-bound instance changes its selected state
+        // if the model changes (relevant property change event is fired)
+        model.setSelectionInterval(1, 2);
+        assertTrue((Boolean)la.getValue(Action.SELECTED_KEY));
+    }
+    
+    public void testCustomListenerAction() {
+        Action a = Actions.forID("Foo", "test.ListAction");
+        DefaultListSelectionModel model = new DefaultListSelectionModel();
+        
+        assertFalse(a.isEnabled());
+        assertFalse((Boolean)a.getValue(Action.SELECTED_KEY));
+        
+        lookupContent.add(model);
+        assertTrue(a.isEnabled());
+        assertFalse((Boolean)a.getValue(Action.SELECTED_KEY));
+        
+        model.addSelectionInterval(1, 1);
+        assertTrue(a.isEnabled());
+        assertTrue((Boolean)a.getValue(Action.SELECTED_KEY));
     }
 }

@@ -33,6 +33,6 @@
         <file>src/org/netbeans/modules/web/core/syntax/resources/ELExample</file>
         <file>src/org/netbeans/modules/web/core/syntax/resources/JSPExample</file>
         <license ref="Apache-2.0-ASF" />
-        <comment type="TEMPLATE_MINIMAL_IP"/>        
+        <comment type="GUI_USABILITY"/>        
     </fileset>   
 </licenseinfo>

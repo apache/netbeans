@@ -36,13 +36,4 @@
         <license ref="Apache-2.0-ASF" />
         <comment type="TEMPLATE_MINIMAL_IP"/>
     </fileset>
-    <fileset>
-        <file>test/unit/src/org/netbeans/modules/web/beans/xdm/model/alternatives-beans-orig.xml</file>
-        <file>test/unit/src/org/netbeans/modules/web/beans/xdm/model/alternatives-beans.xml</file>
-        <file>test/unit/src/org/netbeans/modules/web/beans/xdm/model/beans-orig.xml</file>
-        <file>test/unit/src/org/netbeans/modules/web/beans/xdm/model/beans.xml</file>
-        <file>test/unit/src/org/netbeans/modules/web/beans/xdm/model/empty-beans.xml</file>
-        <license ref="Apache-2.0-ASF" />
-        <comment type="TEMPLATE_MINIMAL_IP"/>        
-    </fileset>
 </licenseinfo>

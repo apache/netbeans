@@ -1,5 +1,5 @@
-<?xml version="1.0"?>
-<#--
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
 
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
@@ -19,18 +19,10 @@
     under the License.
 
 -->
-<#assign licenseFirst = "<!--">
-<#assign licensePrefix = "">
-<#assign licenseLast = "-->">
-<#include "${project.licensePath}">
-
-<!-- see http://www.phpunit.de/wiki/Documentation -->
-<!--phpunit bootstrap="/path/to/bootstrap.php"
-         colors="false"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         stopOnFailure="true">
-</phpunit-->
-
-<phpunit colors="false" />
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/php/phpunit/ui/resources/PHPUnitBootstrap.php</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="TEMPLATE_MINIMAL_IP"/>
+    </fileset>
+</licenseinfo>

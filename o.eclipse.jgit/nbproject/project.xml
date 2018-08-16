@@ -50,7 +50,7 @@
             <public-packages/>
             <class-path-extension>
                 <runtime-relative-path>org-eclipse-jgit.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.jgit-4.11.0.201803080745-r.jar</binary-origin>
+                <binary-origin>external/org.eclipse.jgit-4.11.1.201807311124-r.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

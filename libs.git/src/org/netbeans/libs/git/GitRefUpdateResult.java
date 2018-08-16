@@ -148,6 +148,15 @@ public enum GitRefUpdateResult {
     AWAITING_REPORT,
 
     /**
+     * One or more objects aren't in the repository.
+     * <p>
+     * This is severe indication of either repository corruption on the
+     * server side, or a bug in the client wherein the client did not supply
+     * all required objects during the pack transfer.
+     */
+    REJECTED_MISSING_OBJECT,
+
+    /**
      * Remote ref was successfully updated.
      */
     OK;

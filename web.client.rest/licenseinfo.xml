@@ -1,4 +1,5 @@
-<#--
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
 
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
@@ -18,26 +19,10 @@
     under the License.
 
 -->
-<#assign licenseFirst = "<!--">
-<#assign licensePrefix = "">
-<#assign licenseLast = "-->">
-<#include "${project.licensePath}">
-${doctype}
-<html>
-  <head>
-    <title></title>
-    <meta http-equiv="Content-Type" content="text/html; charset=${encoding}">
-    ${script}
-  </head>
-  <body>
-	${header}
-	${sidebar}
-        ${content}
-
-	<!-- Templates -->
-	${tpl_create}
-	${tpl_list_item}
-	${tpl_details}
-
-  </body>
-</html>
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/web/client/rest/resources/restservice.png</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

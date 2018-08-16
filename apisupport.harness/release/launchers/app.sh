@@ -35,6 +35,18 @@ done
 
 progdir=`dirname "$PRG"`
 APPNAME=`basename "$PRG"`
+case "`uname`" in
+    Darwin*)
+        # set default userdir and cachedir on Mac OS X
+        DEFAULT_USERDIR_ROOT="${HOME}/Library/Application Support/${APPNAME}"
+        DEFAULT_CACHEDIR_ROOT=${HOME}/Library/Caches/${APPNAME}
+        ;;
+    *) 
+        # set default userdir and cachedir on unix systems
+        DEFAULT_USERDIR_ROOT=${HOME}/.${APPNAME}
+        DEFAULT_CACHEDIR_ROOT=${HOME}/.cache/${APPNAME}
+        ;;
+esac
 
 if [ -f "$progdir/../etc/$APPNAME".conf ] ; then
     . "$progdir/../etc/$APPNAME".conf

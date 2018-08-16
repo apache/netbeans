@@ -363,6 +363,8 @@ bool NbLauncher::findUserDir(const char *str) {
         }
         userDir = userHome + (str + strlen(HOME_TOKEN));
     } else if (strncmp(str, DEFAULT_USERDIR_ROOT_TOKEN, strlen(DEFAULT_USERDIR_ROOT_TOKEN)) == 0) {       
+        std::string s = std::string("Replacing ") + DEFAULT_USERDIR_ROOT_TOKEN;
+        logMsg(s.c_str());
         userDir = getDefaultUserDirRoot() + (str + strlen(DEFAULT_USERDIR_ROOT_TOKEN));
     } else {
         getDefaultUserDirRoot();
@@ -389,7 +391,9 @@ bool NbLauncher::findCacheDir(const char *str) {
             logMsg("User home: %s", userHome.c_str());
         }
         cacheDir = userHome + (str + strlen(HOME_TOKEN));
-    } else if (strncmp(str, DEFAULT_CACHEDIR_ROOT_TOKEN, strlen(DEFAULT_CACHEDIR_ROOT_TOKEN)) == 0) {        
+    } else if (strncmp(str, DEFAULT_CACHEDIR_ROOT_TOKEN, strlen(DEFAULT_CACHEDIR_ROOT_TOKEN)) == 0) {   
+        std::string s = std::string("Replacing ") + DEFAULT_CACHEDIR_ROOT_TOKEN;
+        logMsg(s.c_str());
         cacheDir = getDefaultCacheDirRoot() + (str + strlen(DEFAULT_CACHEDIR_ROOT_TOKEN));
     } else {
         getDefaultCacheDirRoot();
@@ -403,7 +407,7 @@ string NbLauncher::getDefaultUserDirRoot() {
     if (FAILED(SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, 0, defUserDirRootChar))) {
         return std::string();
     }
-    defUserDirRoot = ((string) defUserDirRootChar) + NETBEANS_DIRECTORY;
+    defUserDirRoot = constructApplicationDir((string) defUserDirRootChar, false);
     defUserDirRoot.erase(defUserDirRoot.rfind('\\'));
     logMsg("Default Userdir Root: %s", defUserDirRoot.c_str());
     return defUserDirRoot;
@@ -414,7 +418,7 @@ string NbLauncher::getDefaultCacheDirRoot() {
     if (FAILED(SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, 0, defCacheDirRootChar))) {
         return std::string();
     }
-    defCacheDirRoot = ((string) defCacheDirRootChar) + NETBEANS_CACHES_DIRECTORY;
+    defCacheDirRoot = constructApplicationDir((string) defCacheDirRootChar, true);
     defCacheDirRoot.erase(defCacheDirRoot.rfind('\\'));
     logMsg("Default Cachedir Root: %s", defCacheDirRoot.c_str());
     return defCacheDirRoot;
@@ -562,4 +566,12 @@ const char * NbLauncher::getJdkHomeOptName() {
 
 const char * NbLauncher::getCurrentDir() {
     return 0;
+}
+
+std::string NbLauncher::constructApplicationDir(const std::string& dir, bool cache) {
+   if (cache) {
+       return dir + NETBEANS_CACHES_DIRECTORY;
+   } else {
+       return dir + NETBEANS_DIRECTORY;
+   }
 }

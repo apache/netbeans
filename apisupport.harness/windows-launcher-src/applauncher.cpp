@@ -32,6 +32,7 @@ const char *AppLauncher::OPT_DEFAULT_OPTIONS = "default_options=";
 const char *AppLauncher::OPT_EXTRA_CLUSTERS = "extra_clusters=";
 const char *AppLauncher::OPT_JDK_HOME = "jdkhome=";
 const char *AppLauncher::APPNAME_TOKEN = "${APPNAME}";
+const char *AppLauncher::CACHE_SUFFIX = "\\Cache\\";
 
 AppLauncher::AppLauncher() {
 }
@@ -75,51 +76,25 @@ bool AppLauncher::initBaseNames() {
 
 bool AppLauncher::findUserDir(const char *str) {
     logMsg("AppLauncher::findUserDir()");
-    if (strncmp(str, HOME_TOKEN, strlen(HOME_TOKEN)) == 0) {
-        if (userHome.empty()) {
-            TCHAR userHomeChar[MAX_PATH];
-            if (FAILED(SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, 0, userHomeChar))) {
-                return false;
-            }
-            userHome = userHomeChar;           
-            logMsg("User home: %s", userHome.c_str());
-        }
-        str += strlen(HOME_TOKEN);
-        userDir = userHome;
+    if (!NbLauncher::findUserDir(str)) {    // will set userDir and possibly userHome.
+        return false;
     }
-    const char *appToken = strstr(str, APPNAME_TOKEN);
-    if (appToken) {
-        userDir += string(str, appToken - str);
-        str += appToken - str;
-        userDir += appName;
-        str += strlen(APPNAME_TOKEN);
+    int pos = userDir.find(APPNAME_TOKEN);
+    if (pos != string::npos) {
+        userDir.replace(pos, strlen(APPNAME_TOKEN), appName);
     }
-    userDir += str;
     return true;
 }
 
 bool AppLauncher::findCacheDir(const char *str) {
     logMsg("AppLauncher::findCacheDir");
-    if (strncmp(str, HOME_TOKEN, strlen(HOME_TOKEN)) == 0) {
-        if (userHome.empty()) {
-            TCHAR userHomeChar[MAX_PATH];
-            if (FAILED(SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, 0, userHomeChar))) {
-                return false;
-            }
-            userHome = userHomeChar;
-            logMsg("User home: %s", userHome.c_str());
-        }
-        str += strlen(HOME_TOKEN);
-        cacheDir = userHome;
+    if (!NbLauncher::findCacheDir(str)) {    // will set userDir and possibly userHome.
+        return false;
     }
-    const char *appToken = strstr(str, APPNAME_TOKEN);
-    if (appToken) {
-        cacheDir += string(str, appToken - str);
-        str += appToken - str;
-        cacheDir += appName;
-        str += strlen(APPNAME_TOKEN);
+    int pos = cacheDir.find(APPNAME_TOKEN);
+    if (pos != string::npos) {
+        cacheDir.replace(pos, strlen(APPNAME_TOKEN), appName);
     }
-    cacheDir += str;
     return true;
 }
 
@@ -155,4 +130,16 @@ const char * AppLauncher::getJdkHomeOptName() {
 
 const char * AppLauncher::getCurrentDir() {
     return baseDir.c_str();
+}
+
+std::string AppLauncher::appendNetBeansToDirs(const std::string& dir, bool cache) {
+    return dir;
+}
+
+std::string AppLauncher::constructApplicationDir(const std::string& dir, bool cache) {
+    if (cache) {
+        return dir + "\\" + getAppName() + CACHE_SUFFIX;
+    } else {
+        return dir + "\\" + getAppName() + "\\";
+    }
 }

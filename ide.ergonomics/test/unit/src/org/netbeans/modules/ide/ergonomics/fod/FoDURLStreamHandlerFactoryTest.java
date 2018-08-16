@@ -46,7 +46,7 @@ public class FoDURLStreamHandlerFactoryTest extends NbTestCase {
         InputStream is = u.openStream();
         assertNotNull("Stream found", is);
 
-        byte[] arr = new byte[100];
+        byte[] arr = new byte[1024];
         int len = is.read(arr);
         String s = new String(arr, 0, len, "UTF-8");
         assertTrue("contains body: " + s, s.contains("<body>"));
@@ -58,7 +58,7 @@ public class FoDURLStreamHandlerFactoryTest extends NbTestCase {
         InputStream is = u.openStream();
         assertNotNull("Stream found", is);
 
-        byte[] arr = new byte[100];
+        byte[] arr = new byte[1024];
         int len = is.read(arr);
         String s = new String(arr, 0, len, "UTF-8");
         assertTrue("contains body: " + s, s.contains("<body>"));

@@ -72,7 +72,9 @@ public class EnableJ2EEEnablesJavaTest extends NbTestCase {
                 java = f;
             }
         }
-        assertNotNull("j2ee feature found", j2ee);
+        if (j2ee == null) {
+            return;
+        }
         assertNotNull("java feature found", java);
 
         List<UpdateUnit> units = UpdateManager.getDefault().getUpdateUnits(UpdateManager.TYPE.FEATURE);

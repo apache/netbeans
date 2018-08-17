@@ -26,6 +26,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EventListener;
 import java.util.List;
@@ -520,6 +521,14 @@ class PropertyMonitor<T> implements ContextAction.StatefulMonitor<T>, PropertyCh
             }
         }
         if (checkedValue == null) {
+            // v is not null;
+            if (v instanceof Collection) {
+                return !((Collection) v).isEmpty();
+            } else if (v instanceof Map) {
+                return !((Map) v).isEmpty();
+            } else if (Number.class.isInstance(v)) {
+                return ((Number)v).intValue() > 0;
+            }
             return false;
         }
         if (checkedValue == ActionState.NON_NULL_VALUE) {
@@ -551,6 +560,7 @@ class PropertyMonitor<T> implements ContextAction.StatefulMonitor<T>, PropertyCh
         this.listenerType = other.listenerType;
         this.refGetter = other.refGetter;
         this.valueFactory = other.valueFactory;
+        this.valType = other.valType;
         this.refAddListener = other.refAddListener;
         this.refRemoveListener = other.refRemoveListener;
         this.listenerInterface = other.listenerInterface;

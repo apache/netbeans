@@ -59,6 +59,9 @@ import org.openide.util.actions.Presenter;
  * <li>if {@link #checkValue} is {@link #NON_NULL_VALUE}, the action is checked if and only if
  * the value is not {@code null}. 
  * <li>if the value type is an enum, its {@link Enum#name} is compared to {@link #checkValue}
+ * <li>if the value is a {@link Collection} or {@link Map}, state evaluates to the {@link Collection#isEmpty} or
+ * {@link Map#isEmpty}, respectively.
+ * <li>if the value is a {@link Number}, state will be true if value evaluates to <b>a positive integer</b>.
  * <li>the state will be {@code false} (unchecked) otherwise.
  * <p/>
  * If {@link #type} is set to {@link Action}.class, the annotated element <b>must

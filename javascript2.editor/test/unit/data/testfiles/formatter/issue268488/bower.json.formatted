@@ -1,0 +1,20 @@
+{
+    "name": "sample-app",
+    "version": "0.0.1",
+    "ignore": [
+        "**/.*", "node_modules", "bower_components"
+    ],
+    "dependencies": {
+        "spoonjs": "*",
+        "requirejs": "~2.1",
+        "requirejs-text": "~1.0",
+        "require-css": "*",
+        "almond": "~0.2.1",
+        "jquery": "~1.8.2",
+        "doT": "~0.2.0",
+        "bootstrap": ""
+    },
+    "resolutions": {
+        "jquery": "~1.8.2"
+    }
+}

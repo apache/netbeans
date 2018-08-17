@@ -1,0 +1,118 @@
+<FunctionNode name='decorators9.js' kind='MODULE' start='0' end='73'>
+  <isProgram/>
+  <ExportNode start='8' end='71'>
+    <ClassNode ident='Test' start='15' end='71'>
+      <!-- ClassNode Constructor -->
+      <PropertyNode name='Test' start='15' end='71'>
+        <!-- PropertyNode Key -->
+        <IdentNode start='21' end='25'>
+          <name>Test</name>
+        </IdentNode>
+        <!-- PropertyNode Value -->
+        <FunctionNode name='Test' kind='NORMAL' start='15' end='71'>
+          <isClassConstructor/>
+          <isMethod/>
+          <isNamedFunctionExpression/>
+          <!-- FunctionNode Parameters -->
+          <!-- FunctionNode Body -->
+          <Block start='15' end='71'>
+            <isFunctionBody/>
+            <!-- Block Statements -->
+          </Block>
+        </FunctionNode>
+        <!-- PropertyNode Decorators -->
+      </PropertyNode>
+      <!-- ClassNode Elements -->
+      <PropertyNode name='test2' start='44' end='68'>
+        <isStatic/>
+        <!-- PropertyNode Key -->
+        <IdentNode start='44' end='49'>
+          <name>test2</name>
+          <isPropertyName/>
+        </IdentNode>
+        <!-- PropertyNode Value -->
+        <FunctionNode name='test2' kind='NORMAL' start='44' end='68'>
+          <isMethod/>
+          <isNamedFunctionExpression/>
+          <!-- FunctionNode Parameters -->
+          <!-- FunctionNode Body -->
+          <Block start='52' end='53'>
+            <isFunctionBody/>
+            <!-- Block Statements -->
+          </Block>
+        </FunctionNode>
+        <!-- PropertyNode Decorators -->
+      </PropertyNode>
+      <!-- ClassNode Decorators -->
+      <IdentNode start='2' end='7'>
+        <name>test2</name>
+      </IdentNode>
+    </ClassNode>
+  </ExportNode>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='71'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='Test' start='15' end='25'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isConst/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='21' end='25'>
+        <name>Test</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <ClassNode ident='Test' start='15' end='71'>
+        <!-- ClassNode Constructor -->
+        <PropertyNode name='Test' start='15' end='71'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='21' end='25'>
+            <name>Test</name>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <FunctionNode name='Test' kind='NORMAL' start='15' end='71'>
+            <isClassConstructor/>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='15' end='71'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <!-- ClassNode Elements -->
+        <PropertyNode name='test2' start='44' end='68'>
+          <isStatic/>
+          <!-- PropertyNode Key -->
+          <IdentNode start='44' end='49'>
+            <name>test2</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <FunctionNode name='test2' kind='NORMAL' start='44' end='68'>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='52' end='53'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <!-- ClassNode Decorators -->
+        <IdentNode start='2' end='7'>
+          <name>test2</name>
+        </IdentNode>
+      </ClassNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

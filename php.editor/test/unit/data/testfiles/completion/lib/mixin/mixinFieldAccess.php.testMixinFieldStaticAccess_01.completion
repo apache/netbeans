@@ -1,0 +1,11 @@
+Code completion result for source line:
+$fieldAccess->C1::|publicStaticMethodC1(); // CC
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     publicStaticMethodC1()          [STATIC]   C1
+METHOD     publicStaticMethodC2()          [STATIC]   C2
+VARIABLE   ? $publicStaticFieldC1          [STATIC]   C1
+VARIABLE   ? $publicStaticFieldC2          [STATIC]   C2
+CONSTANT   PUBLIC_CONST_C1 "PUBLIC_CONST_  [PUBLIC]   C1
+CONSTANT   PUBLIC_CONST_C2 "PUBLIC_CONST_  [PUBLIC]   C2
+CONSTANT   class \C1                       [PUBLIC]   Magic Constant

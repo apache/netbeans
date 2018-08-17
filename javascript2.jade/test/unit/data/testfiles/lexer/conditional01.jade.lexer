@@ -1,0 +1,14 @@
+[CODE_DELIMITER(1):-][WHITESPACE(1): ][JAVASCRIPT(41):var user = { description: 'foo bar baz' }][EOL(1):\n]
+[CODE_DELIMITER(1):-][WHITESPACE(1): ][JAVASCRIPT(22):var authorised = false][EOL(1):\n]
+[CSS_ID(5):#user][EOL(1):\n]
+[WHITESPACE(2):  ][KEYWORD_IF(2):if][WHITESPACE(1): ][JAVASCRIPT(16):user.description][EOL(1):\n]
+[WHITESPACE(4):    ][TAG(2):h2][WHITESPACE(1): ][TEXT(11):Description][EOL(1):\n]
+[WHITESPACE(4):    ][TAG(1):p][CSS_CLASS(12):.description][CODE_DELIMITER(1):=][WHITESPACE(1): ][JAVASCRIPT(16):user.description][EOL(1):\n]
+[WHITESPACE(2):  ][KEYWORD_ELSE(4):else][WHITESPACE(1): ][KEYWORD_IF(2):if][WHITESPACE(1): ][JAVASCRIPT(10):authorised][EOL(1):\n]
+[WHITESPACE(4):    ][TAG(2):h2][WHITESPACE(1): ][TEXT(11):Description][EOL(1):\n]
+[WHITESPACE(4):    ][TAG(1):p][CSS_CLASS(12):.description][PLAIN_TEXT_DELIMITER(1):.][EOL(1):\n]
+[PLAIN_TEXT(56):      User has no description,
+      why not add one...
+][WHITESPACE(2):  ][KEYWORD_ELSE(4):else][EOL(1):\n]
+[WHITESPACE(4):    ][TAG(2):h1][WHITESPACE(1): ][TEXT(11):Description][EOL(1):\n]
+[WHITESPACE(4):    ][TAG(1):p][CSS_CLASS(12):.description][WHITESPACE(1): ][TEXT(23):User has no description][EOL(1):\n]

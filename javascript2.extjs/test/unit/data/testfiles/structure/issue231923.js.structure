@@ -1,0 +1,7 @@
+My:CLASS:[PUBLIC]:ESCAPED{My}:
+  app:CLASS:[PUBLIC]:ESCAPED{app}:
+    Panel:CLASS:[PUBLIC]:ESCAPED{Panel}:
+      constructor:METHOD:[PUBLIC]:ESCAPED{constructor}ESCAPED{(}ESCAPED{config}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    PanelPart2:CLASS:[PUBLIC]:ESCAPED{PanelPart2}:
+      constructor:METHOD:[PUBLIC]:ESCAPED{constructor}ESCAPED{(}ESCAPED{config}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+      override:FIELD:[PUBLIC]:ESCAPED{override}<font color="#999999">ESCAPED{ : }String</font>:

@@ -1,5 +1,14 @@
 #Signature file v4.1
-#Version 1.46.1
+#Version 1.49.1
+
+CLSS public abstract interface java.lang.AutoCloseable
+meth public abstract void close() throws java.lang.Exception
+
+CLSS public abstract interface !annotation java.lang.FunctionalInterface
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
 
 CLSS public java.lang.Object
 cons public init()
@@ -16,7 +25,34 @@ meth public int hashCode()
 meth public java.lang.String toString()
 
 CLSS public abstract interface java.lang.Runnable
+ anno 0 java.lang.FunctionalInterface()
 meth public abstract void run()
+
+CLSS public abstract interface java.lang.annotation.Annotation
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract int hashCode()
+meth public abstract java.lang.Class<? extends java.lang.annotation.Annotation> annotationType()
+meth public abstract java.lang.String toString()
+
+CLSS public abstract interface !annotation java.lang.annotation.Documented
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation java.lang.annotation.Retention
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.RetentionPolicy value()
+
+CLSS public abstract interface !annotation java.lang.annotation.Target
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.ElementType[] value()
 
 CLSS public abstract interface java.util.concurrent.Executor
 meth public abstract void execute(java.lang.Runnable)
@@ -34,6 +70,8 @@ hfds DISPLAY_DIALOG_MS,DISPLAY_WAIT_CURSOR_MS,PROVIDER,TRIVIAL
 hcls CancellableRunnableWrapper,RunnableWrapper,Trivial
 
 CLSS public final org.netbeans.api.progress.ProgressHandle
+intf java.lang.AutoCloseable
+meth public final void close()
 meth public final void finish()
 meth public final void progress(int)
 meth public final void progress(java.lang.String)
@@ -92,7 +130,9 @@ meth public static org.netbeans.api.progress.aggregate.AggregateProgressHandle c
 supr org.netbeans.api.progress.aggregate.BasicAggregateProgressFactory
 
 CLSS public final org.netbeans.api.progress.aggregate.AggregateProgressHandle
+intf java.lang.AutoCloseable
 meth public void addContributor(org.netbeans.api.progress.aggregate.ProgressContributor)
+meth public void close()
 meth public void finish()
 meth public void setDisplayName(java.lang.String)
 meth public void setInitialDelay(int)

@@ -377,7 +377,7 @@ implements PropertyChangeListener, ContextAwareAction {
             return new CheckBox(map, this, actionContext, equals);
         }
 
-        private boolean isPreferencesSelected() {
+        boolean isPreferencesSelected() {
             String key = (String) getValue(PREFERENCES_KEY);
             Preferences prefs = prefs();
             boolean value;

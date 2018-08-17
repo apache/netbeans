@@ -21,11 +21,15 @@ package org.netbeans.lib.nbjavac.services;
 import com.sun.tools.javac.comp.Attr;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Env;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
+import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.util.Context;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -85,4 +89,38 @@ public class NBAttr extends Attr {
         }
     }
 
+    private boolean fullyAttribute;
+    private Env<AttrContext> fullyAttributeResult;
+
+    protected void breakTreeFound(Env<AttrContext> env) {
+        if (fullyAttribute) {
+            fullyAttributeResult = env;
+        } else {
+            try {
+                MethodHandles.lookup()
+                             .findSpecial(Attr.class, "breakTreeFound", MethodType.methodType(void.class, Env.class), NBAttr.class)
+                             .invokeExact(this, env);
+            } catch (Throwable ex) {
+                sneakyThrows(ex);
+            }
+        }
+    }
+
+    private <T extends Throwable> void sneakyThrows(Throwable t) throws T {
+        throw (T) t;
+    }
+
+    public Env<AttrContext> attributeAndCapture(JCTree tree, Env<AttrContext> env, JCTree to) {
+        try {
+            fullyAttribute = true;
+
+            Env<AttrContext> result = tree instanceof JCExpression ?
+                    attribExprToTree((JCExpression) tree, env, (JCTree) to) :
+                    attribStatToTree((JCTree) tree, env, (JCTree) to);
+
+            return fullyAttributeResult != null ? fullyAttributeResult : result;
+        } finally {
+            fullyAttribute = false;
+        }
+    }
 }

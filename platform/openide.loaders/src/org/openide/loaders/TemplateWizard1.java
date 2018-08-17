@@ -195,7 +195,7 @@ final class TemplateWizard1 extends javax.swing.JPanel implements DataFilter,
         @Override
         protected Node[] createNodes(Node key) {
             Node n = key;
-            String nodeName = n.getDisplayName();
+            String nodeName = null;
             
             DataObject obj = null;
             DataShadow shadow = n.getCookie(DataShadow.class);
@@ -239,7 +239,7 @@ final class TemplateWizard1 extends javax.swing.JPanel implements DataFilter,
         }
         
         public String getDisplayName() {
-            return name;
+            return name != null ? name : super.getDisplayName();
         }
         
         // issue 29867, rename should be prohibited

@@ -343,7 +343,7 @@
     <mkdir dir="${netbeans.dest.dir}/bin" />
     <copy file="../ide/launcher/unix/netbeans" todir="${netbeans.dest.dir}/bin" />
     <chmod file="${netbeans.dest.dir}/bin/netbeans" perm="ugo+rx"/>
-    <unzip src="../ide/external/launchers.zip" dest="${netbeans.dest.dir}/bin" />
+    <unzip src="../ide/external/launchers-9.0.zip" dest="${netbeans.dest.dir}/bin" />
     <!-- if anybody knows better place for icons, let me know: jtulach@netbeans.org -->
 
     <mkdir dir="${netbeans.dest.dir}/etc" />
@@ -1029,11 +1029,11 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
    >
     <script language="javascript">
         v = ''
-        i = new java.util.TreeMap(project.properties).entrySet().iterator()
+        i = new Packages.java.util.TreeMap(project.getProperties()).entrySet().iterator()
         while (i.hasNext()) {
             e = i.next()
-            if (e.key.startsWith('tryme.arg.')) {
-                v += ' ' + e.value
+            if (e.getKey().startsWith('tryme.arg.')) {
+                v += ' ' + e.getValue()
             }
         }
         project.setNewProperty('tryme.args', v)
@@ -1553,8 +1553,8 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
           <filterchain>
               <tokenfilter>
                   <filetokenizer />
-                  <replaceregex pattern="(\r?\n)(\r?\n)+"
-                                replace="\1\1"
+                  <replaceregex pattern="(\r?\n)(\r?\n)(\r?\n)+"
+                                replace="\1\1\1"
                                 flags="g" />
              </tokenfilter>
           </filterchain>

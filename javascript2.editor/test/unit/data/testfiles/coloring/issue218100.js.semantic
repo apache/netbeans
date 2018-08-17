@@ -1,0 +1,13 @@
+function |>METHOD:additionalInfo<|(n) {
+
+    var |>CLASS:container<| = {};
+    container.|>FIELD:name<| = n;
+    container.|>FIELD:course<| = 1;
+
+    function |>METHOD,UNUSED:finalize<|(|>UNUSED:microitem<|) {
+        var |>CLASS:a<| = {};
+        a.|>FIELD:url<| = container.|>FIELD:name<|;
+    }
+
+    return container;
+}

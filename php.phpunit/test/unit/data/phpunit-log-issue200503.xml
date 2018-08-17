@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="" tests="8" assertions="11" failures="0" errors="0" time="0.013598">
+    <testsuite name="PrivatBankTest\Root\Helper\StringTest" file="/home/gapon/NetBeansProjects/php01/test/StringTest.php" namespace="PrivatBankTest\Root\Helper" fullPackage="PrivatBankTest.Root.Helper" tests="8" assertions="11" failures="0" errors="0" time="0.013598">
+      <testsuite name="PrivatBankTest\Root\Helper\StringTest::testSubstituteWorksAsItHasTo" tests="3" assertions="3" failures="0" errors="0" time="0.005382">
+        <testcase name="testSubstituteWorksAsItHasTo with data set #0" assertions="1" time="0.004051"/>
+        <testcase name="testSubstituteWorksAsItHasTo with data set #1" assertions="1" time="0.000686"/>
+        <testcase name="testSubstituteWorksAsItHasTo with data set #2" assertions="1" time="0.000645"/>
+      </testsuite>
+      <testsuite name="PrivatBankTest\Root\Helper\StringTest::testSubstitutionFails" tests="3" assertions="6" failures="0" errors="0" time="0.005656">
+        <testcase name="testSubstitutionFails with data set #0" assertions="2" time="0.001702"/>
+        <testcase name="testSubstitutionFails with data set #1" assertions="2" time="0.002013"/>
+        <testcase name="testSubstitutionFails with data set #2" assertions="2" time="0.001941"/>
+      </testsuite>
+      <testsuite name="PrivatBankTest\Root\Helper\StringTest::testUrlConcatContextWorksAsItHasTo" tests="2" assertions="2" failures="0" errors="0" time="0.002560">
+        <testcase name="testUrlConcatContextWorksAsItHasTo with data set #0" assertions="1" time="0.001907"/>
+        <testcase name="testUrlConcatContextWorksAsItHasTo with data set #1" assertions="1" time="0.000653"/>
+      </testsuite>
+    </testsuite>
+  </testsuite>
+</testsuites>

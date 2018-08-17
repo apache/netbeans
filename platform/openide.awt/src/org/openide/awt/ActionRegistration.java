@@ -127,4 +127,28 @@ public @interface ActionRegistration {
      */
     boolean lazy() default true;
 
+    /**
+     * Specifies a property that enables the action for context-sensitive actions. 
+     * The property can be on  the context object (implies single selection mode), or on another object
+     * type in the context Lookup. The default enables the action if the context
+     * object is present (with no additional constraints).
+     * <p/>
+     * Specify the value if the action should be enabled based on <b>certain property</b> and
+     * its value. See {@link ActionState} for detailed explanation of the
+     * state evaluation and tracking.
+     * 
+     * @return the specification of enabled state
+     * @since 7.71
+     */
+    ActionState enabledOn() default @ActionState(type=Void.class);
+    
+    /**
+     * Controls action's enable state. If unspecified, the action will not represent the state value,
+     * and will be presented as normal item or button. If specified, the action will be presented as
+     * checkbox or toggle button. * Similar to {@link #enableOn}, type and its property can be used to determine whether the
+     * action is checked or unchecked. See {@link ActionState} for more details.
+     * @return specification of the checked state.
+     * @since 7.71
+     */
+    ActionState checkedOn() default @ActionState(type=Void.class);
 }

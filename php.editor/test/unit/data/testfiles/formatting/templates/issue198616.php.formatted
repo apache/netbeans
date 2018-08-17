@@ -1,0 +1,20 @@
+<?php
+
+class newPHPClass
+{
+    protected $_foo;
+
+    public function getFoo()
+    {
+        return $this->_foo;
+    }
+
+    public function setFoo($_foo)
+    {
+        $this->_foo = $_foo;
+    }
+
+     
+}
+
+?>

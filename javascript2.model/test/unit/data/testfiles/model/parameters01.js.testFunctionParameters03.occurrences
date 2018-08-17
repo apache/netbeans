@@ -1,0 +1,2 @@
+function Joke (name, |>MARK_OCCURRENCES:autor<|, description) {
+       formatter.println("Author: " + |>MARK_OCCURRENCES:au^tor<|);

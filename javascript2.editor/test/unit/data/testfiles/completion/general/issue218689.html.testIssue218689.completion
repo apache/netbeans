@@ -1,0 +1,7 @@
+Code completion result for source line:
+b.v|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     valueOf(): Object               [PUBLIC]   JS Platform
+METHOD     values(obj: Object): Array      [PUBLIC,   JS Platform
+FIELD      value: Number                   [PUBLIC]   issue218689.html

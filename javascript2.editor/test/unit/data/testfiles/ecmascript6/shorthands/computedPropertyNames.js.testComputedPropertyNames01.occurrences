@@ -1,0 +1,2 @@
+var |>MARK_OCCURRENCES:pro^p<| = "foo";
+  [|>MARK_OCCURRENCES:prop<|]: |>MARK_OCCURRENCES:prop<| + " " + |>MARK_OCCURRENCES:prop<|,

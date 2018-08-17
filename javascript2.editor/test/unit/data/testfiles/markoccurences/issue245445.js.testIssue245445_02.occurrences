@@ -1,0 +1,3 @@
+    this.myMethod = function MyLib_myMethod(|>MARK_OCCURRENCES:array<|) {
+        for( var i = 0; i < |>MARK_OCCURRENCES:array<|.length; i++ ) {
+            r = r + |>MARK_OCCURRENCES:ar^ray<|[i];

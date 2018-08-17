@@ -1,0 +1,19 @@
+<?php
+
+while (true)
+    echo "baf";
+if (true)
+    echo "ba";
+for (;;)
+    echo "marek";
+foreach ($array as $value)
+    echo $value;
+if (true)
+    echo "ba";
+elseif (false)
+    echo"la";
+do {
+    echo "1";
+} while (true);
+
+

@@ -1,0 +1,42 @@
+<Program start='0' end='164'>
+    <Comments>
+    </Comments>
+    <Statements>
+        <ClassDeclaration start='9' end='160' modifier='NONE'>
+            <ClassName>
+                <Identifier start='15' end='18' name='cls'/>
+            </ClassName>
+            <SuperClassName>
+            </SuperClassName>
+            <Interfaces>
+            </Interfaces>
+            <Block start='19' end='160' isCurly='true'>
+                <MethodDeclaration start='29' end='77' modifiers='public'>
+                    <FunctionDeclaration start='29' end='77' isReference='false'>
+                        <Identifier start='38' end='39' name='a'/>
+                        <FormalParameters>
+                        </FormalParameters>
+                        <Block start='42' end='77' isCurly='true'>
+                            <ReturnStatement start='56' end='67'>
+                                <Scalar start='63' end='66' type='STRING' value='"a"'/>
+                            </ReturnStatement>
+                        </Block>
+                    </FunctionDeclaration>
+                </MethodDeclaration>
+                <MethodDeclaration start='107' end='155' modifiers='public'>
+                    <FunctionDeclaration start='107' end='155' isReference='false'>
+                        <Identifier start='116' end='117' name='c'/>
+                        <FormalParameters>
+                        </FormalParameters>
+                        <Block start='120' end='155' isCurly='true'>
+                            <ReturnStatement start='134' end='145'>
+                                <Scalar start='141' end='144' type='STRING' value='"c"'/>
+                            </ReturnStatement>
+                        </Block>
+                    </FunctionDeclaration>
+                </MethodDeclaration>
+            </Block>
+        </ClassDeclaration>
+        <EmptyStatement start='161' end='164'/>
+    </Statements>
+</Program>

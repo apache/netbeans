@@ -19,6 +19,8 @@
 
 package org.netbeans.modules.lexer.nbbridge;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.lexer.InputAttributes;
@@ -28,6 +30,8 @@ import org.netbeans.api.lexer.Token;
 import org.netbeans.spi.lexer.LanguageEmbedding;
 import org.netbeans.spi.lexer.LanguageProvider;
 import org.openide.util.Lookup;
+import org.openide.util.LookupEvent;
+import org.openide.util.LookupListener;
 
 /**
  *
@@ -36,18 +40,50 @@ import org.openide.util.Lookup;
 @org.openide.util.lookup.ServiceProvider(service=org.netbeans.spi.lexer.LanguageProvider.class)
 public final class MimeLookupLanguageProvider extends LanguageProvider {
     
+    private final Map<String, Lookup.Result<Language>> langLkpResultsMap = 
+                  new HashMap<>();
+    private final Map<String, Lookup.Result<LanguagesEmbeddingMap>> embeddingsLkpResultsMap = 
+                  new HashMap<>();
+    private final String LOCK = new String("MimeLookupLanguageProvider.LOCK"); //NOI18N
+ 
     public MimeLookupLanguageProvider() {
         super();
     }
 
     public Language<?> findLanguage(String mimeType) {
         Lookup lookup = MimeLookup.getLookup(MimePath.parse(mimeType));
+ 
+        //268649: add lookup listener for Language.class
+        synchronized (LOCK) {
+            Lookup.Result result = langLkpResultsMap.get(mimeType);
+            if (result == null) {
+                result = lookup.lookup(new Lookup.Template(Language.class));
+                result.addLookupListener((LookupEvent evt) -> {
+                    firePropertyChange(PROP_LANGUAGE);
+                });
+                langLkpResultsMap.put(mimeType, result);
+            }
+        } 
         return (Language<?>)lookup.lookup(Language.class);
     }
 
     public LanguageEmbedding<?> findLanguageEmbedding(
     Token<?> token, LanguagePath languagePath, InputAttributes inputAttributes) {
-        Lookup lookup = MimeLookup.getLookup(MimePath.parse(languagePath.mimePath()));
+        String mimePath = languagePath.mimePath();
+        Lookup lookup = MimeLookup.getLookup(MimePath.parse(mimePath));
+        
+        //268649: add lookup listener for LanguagesEmbeddingMap.class            
+        synchronized (LOCK) {
+            Lookup.Result result = embeddingsLkpResultsMap.get(mimePath);
+            if (result == null) {
+                result = lookup.lookup(new Lookup.Template(LanguagesEmbeddingMap.class));
+                result.addLookupListener((LookupEvent evt) -> {
+                    firePropertyChange(PROP_EMBEDDED_LANGUAGE);
+                });
+                embeddingsLkpResultsMap.put(mimePath, result);
+            }
+        }
+
         LanguagesEmbeddingMap map = lookup.lookup(LanguagesEmbeddingMap.class);
         return map == null ? null : map.getLanguageEmbeddingForTokenName(token.id().name());
     }

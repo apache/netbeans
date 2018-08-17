@@ -1,0 +1,1 @@
+|-readShippingCosts [16, 111] : ESCAPED{readShippingCosts}ESCAPED{(}ESCAPED{$ordersId}ESCAPED{, }ESCAPED{$cost}ESCAPED{, }ESCAPED{$nachnahme}ESCAPED{, }ESCAPED{$uebermittlungsentgelt}ESCAPED{)}

@@ -21,6 +21,7 @@ package org.netbeans.modules.openide.awt;
 
 import java.awt.event.ActionListener;
 import java.util.Collections;
+import java.util.EventListener;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -41,6 +42,8 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.MirroredTypeException;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.swing.Action;
@@ -51,6 +54,8 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
+import org.openide.awt.ActionState;
+import org.openide.awt.Actions;
 import org.openide.awt.DynamicMenuContent;
 import org.openide.filesystems.annotations.LayerBuilder;
 import org.openide.filesystems.annotations.LayerBuilder.File;
@@ -83,6 +88,7 @@ public final class ActionProcessor extends LayerGeneratingProcessor {
         hash.add(ActionID.class.getCanonicalName());
         hash.add(ActionReference.class.getCanonicalName());
         hash.add(ActionReferences.class.getCanonicalName());
+//        hash.add(ActionState.class.getCanonicalName());
         return hash;
     }
     
@@ -156,6 +162,11 @@ public final class ActionProcessor extends LayerGeneratingProcessor {
         TypeMirror p3 = type(Presenter.Popup.class);
         TypeMirror caa = type(ContextAwareAction.class);
         TypeMirror dmc = type(DynamicMenuContent.class);
+        TypeMirror at = type(Action.class);
+        TypeMirror ot = type(Object.class);
+        TypeMirror lt = type(EventListener.class);
+        TypeMirror vt = type(Void.class);
+        
         for (Element e : roundEnv.getElementsAnnotatedWith(ActionRegistration.class)) {
             ActionRegistration ar = e.getAnnotation(ActionRegistration.class);
             if (ar == null) {
@@ -260,6 +271,7 @@ public final class ActionProcessor extends LayerGeneratingProcessor {
                 }
                 f.instanceAttribute("instanceCreate", Action.class);
             } else {
+                TypeMirror selectType = null;
                 if (key.length() == 0) {
                     f.methodvalue("instanceCreate", "org.openide.awt.Actions", "alwaysEnabled");
                 } else {
@@ -273,7 +285,7 @@ public final class ActionProcessor extends LayerGeneratingProcessor {
                     try {
                         f.instanceAttribute("delegate", ActionListener.class, ar, null);
                     } catch (LayerGenerationException ex) {
-                        generateContext(e, f, ar);
+                        selectType = generateContext(e, f, ar);
                     }
                 }
                 if (ar.iconBase().length() > 0) {
@@ -285,8 +297,10 @@ public final class ActionProcessor extends LayerGeneratingProcessor {
                     f.boolvalue("asynchronous", true);
                 }
                 if (ar.surviveFocusChange()) {
-                    f.boolvalue("surviveFocusChange", true);
+                    f.boolvalue("surviveFocusChange", true); 
                 }
+                processActionState(e, ar.enabledOn(), f, selectType, true, at, ot, lt, vt);
+                processActionState(e, ar.checkedOn(), f, selectType, false, at, ot, lt, vt);
             }
             f.write();
             
@@ -344,13 +358,222 @@ public final class ActionProcessor extends LayerGeneratingProcessor {
         }
         return true;
     }
+    
+    private void processActionState(Element e, ActionState as, File f, TypeMirror selectType, boolean enable, 
+            TypeMirror actionType, TypeMirror objectType, TypeMirror eventListenerType, TypeMirror voidType) 
+        throws LayerGenerationException {
+        String property = as.property();
+        TypeMirror enabledType = null;
+        try {
+            as.type();
+        } catch (MirroredTypeException mte) {
+            enabledType = mte.getTypeMirror();
+        }
+        if (enabledType == null || enabledType.getKind() != TypeKind.DECLARED) {
+            throw new LayerGenerationException("Invalid enabled-on type in @ActionState", e, processingEnv, as, "type");
+        }
+        if (processingEnv.getTypeUtils().isSameType(enabledType, voidType)) {
+            return;
+        }
+        if (!as.useActionInstance()) {
+            if (processingEnv.getTypeUtils().isSameType(enabledType, objectType) && "".equals(as.property())) {
+                if (!enable) {
+                    throw new LayerGenerationException("Property must be specified", e, processingEnv, as);
+                }
+            }
+        }
+        DeclaredType dt = (DeclaredType) enabledType;
+        if (processingEnv.getTypeUtils().isSameType(dt, objectType)) {
+            if (selectType == null) {
+                throw new LayerGenerationException("Property owner type must be specified", e, processingEnv, as);
+            }
+            dt = (DeclaredType)selectType;
+        }
+        String dtName = processingEnv.getElementUtils().getBinaryName((TypeElement)dt.asElement()).toString();
+
+        f.stringvalue(enable ? "enableOnType" : "checkedOnType", dtName);
+        
+        if (!enable) {
+            f.boolvalue(Actions.ACTION_VALUE_TOGGLE, true);
+        }
+
+        boolean isAction = processingEnv.getTypeUtils().isSameType(dt, actionType);
+        switch (property) {
+            case "": 
+                if (as.useActionInstance()) {
+                    property = null;
+                    break;
+                }
+                property = enable ? "enabled" : Action.SELECTED_KEY; break;
+            case ActionState.NULL_VALUE: property = null;
+        }
+
+        TypeElement tel = (TypeElement)dt.asElement();
+        if (property != null && !isAction) {
+            ExecutableElement getter = null;
+            ExecutableElement invalidGetter = null;
+
+            String capitalizedName = Character.toUpperCase(property.charAt(0)) + property.substring(1);
+            String isGetter = "is" + capitalizedName;
+            String getGetter = "get" + capitalizedName;
+            
+            for (ExecutableElement el : ElementFilter.methodsIn(processingEnv.getElementUtils().getAllMembers(tel))) {
+                if (el.getSimpleName().contentEquals(isGetter)) {
+                    if (!el.getParameters().isEmpty()) {
+                        invalidGetter = el;
+                    } else {
+                        getter = el;
+                        break;
+                    }
+                }
+                if (el.getSimpleName().contentEquals(getGetter)) {
+                    if (!el.getParameters().isEmpty()) {
+                        if (invalidGetter == null) {
+                            invalidGetter = el;
+                        }
+                    } else {
+                        getter = el;
+                    }
+                }
+            }
+
+            if (getter == null) {
+                if (invalidGetter != null) {
+                    throw new LayerGenerationException("Getter " + dtName + "." + invalidGetter.toString() + " must take no parameters", 
+                            e, processingEnv, as, "property");
+                } else {
+                    throw new LayerGenerationException("Property " + property + " not found in " + dtName + ".", 
+                            e, processingEnv, as, "property");
+                }
+            }
+
+            Set<Modifier> mods = getter.getModifiers();
+            if (!mods.contains(Modifier.PUBLIC)) {
+                    throw new LayerGenerationException("Getter " + dtName + "." + getter.toString() + " must be public", 
+                            e, processingEnv, as, "property");
+            }
+        }
+        if (property != null) {
+            f.stringvalue(enable ? "enableOnProperty" : "checkedOnProperty", property); // NOI18N
+        }
+        
+        TypeMirror listenType = null;
+        try {
+            as.listenOn();
+            return;
+        } catch (MirroredTypeException ex) {
+            listenType = ex.getTypeMirror();
+        }
+        boolean explicitListenerType = !processingEnv.getTypeUtils().isSameType(listenType, eventListenerType);
+        
+        TypeElement lfaceElement = (TypeElement)((DeclaredType)listenType).asElement();
+        String lfaceName = lfaceElement.getSimpleName().toString();
+        String lfaceFQN = processingEnv.getElementUtils().getBinaryName(lfaceElement).toString();
+        String addName = "add" + lfaceName;
+        String removeName = "remove" + lfaceName;
+
+        if (explicitListenerType) {
+            if (lfaceElement.getKind() != ElementKind.INTERFACE) {
+                throw new LayerGenerationException(lfaceFQN + " is not an interface", e, processingEnv, as, "listenOn");
+            }
+            if (!lfaceElement.getModifiers().contains(Modifier.PUBLIC)) {
+                throw new LayerGenerationException(lfaceFQN + " is not public", e, processingEnv, as, "listenOn");
+            }
+        }
+
+        ExecutableElement addMethod = null;
+        ExecutableElement addCandidate = null;
+        ExecutableElement removeMethod = null;
+        ExecutableElement removeCandidate = null;
+        for (ExecutableElement el : ElementFilter.methodsIn(processingEnv.getElementUtils().getAllMembers(tel))) {
+            if (el.getSimpleName().contentEquals(addName)) {
+                addCandidate = el;
+                if (!el.getModifiers().contains(Modifier.PUBLIC) || el.getModifiers().contains(Modifier.STATIC)) {
+                    continue;
+                }
+                if (el.getParameters().size() == 1 && 
+                    processingEnv.getTypeUtils().isSameType(listenType, el.getParameters().get(0).asType())) {
+                    addMethod = el;
+                }
+            } else if (el.getSimpleName().contentEquals(removeName)) {
+                removeCandidate = el;
+                if (!el.getModifiers().contains(Modifier.PUBLIC) || el.getModifiers().contains(Modifier.STATIC)) {
+                    continue;
+                }
+                if (el.getParameters().size() == 1 && 
+                    processingEnv.getTypeUtils().isSameType(listenType, el.getParameters().get(0).asType())) {
+                    removeMethod = el;
+                }
+            }
+        }
+        if (addMethod == null) {
+            if (addCandidate != null) {
+                throw new LayerGenerationException("Method add" + 
+                        addCandidate.getSimpleName() + " must be public and take exactly one parameter of type " +
+                        lfaceName + ".", e, processingEnv, as, "listenOn");
+            } else if (explicitListenerType) {
+                throw new LayerGenerationException("Method add" + 
+                        lfaceName + " not found on " + dtName, e, processingEnv, as, "listenOn");
+            }
+        }
+        if (removeMethod == null) {
+            if (removeCandidate != null) {
+                throw new LayerGenerationException("Method remove" + 
+                        removeCandidate.getSimpleName() + " must be public and take exactly one parameter of type " +
+                        lfaceName + ".", e,processingEnv, as, "listenOn");
+            } else if (explicitListenerType) {
+                throw new LayerGenerationException("Method remove" + 
+                        lfaceName + " not found on " + dtName, e, processingEnv, as, "listenOn");
+            }
+        }
+        boolean wantsListen = explicitListenerType || (addMethod != null && removeMethod != null);
+        if (wantsListen) {
+            f.stringvalue(enable ? "enableOnChangeListener" : "checkedOnChangeListener", lfaceFQN);
+        }
+        if (!"".equals(as.listenOnMethod())) {
+            if (!explicitListenerType) {
+                throw new LayerGenerationException("Cannot specify listenOnMethod() without listenOn().", e,processingEnv, as, "listenOnMethod");
+            }
+            String m = as.listenOnMethod();
+            boolean found = false;
+            for (ExecutableElement el : ElementFilter.methodsIn(processingEnv.getElementUtils().getAllMembers(lfaceElement))) {
+                if (el.getSimpleName().contentEquals(m)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                throw new LayerGenerationException("Interface " + lfaceFQN + " does not contain method " + m,
+                    e, processingEnv, as, "listenOnMethod");
+            }
+            f.stringvalue(enable ? "enableOnMethod" : "checkedOnMethod", m);
+        }
+        
+        if (!"".equals(as.checkedValue())) {
+            switch (as.checkedValue()) {
+                case ActionState.NULL_VALUE:
+                    f.boolvalue(enable ? "enableOnNull" : "checkedOnNull", true);
+                    break;
+                case ActionState.NON_NULL_VALUE:
+                    f.boolvalue(enable ? "enableOnNull" : "checkedOnNull", false);
+                    break;
+                default:
+                    f.stringvalue(enable ? "enableOnValue" : "checkedOnValue", as.checkedValue());
+                    break;
+            }
+        }
+        if (as.useActionInstance()) {
+            f.stringvalue(enable ? "enableOnActionProperty" : "checkedOnActionProperty", 
+                    enable ? "enabled" : Action.SELECTED_KEY);
+        }
+    }
 
     private TypeMirror type(Class<?> type) {
         final TypeElement e = processingEnv.getElementUtils().getTypeElement(type.getCanonicalName());
         return e == null ? null : e.asType();
     }
 
-    private void generateContext(Element e, File f, ActionRegistration ar) throws LayerGenerationException {
+    private TypeMirror generateContext(Element e, File f, ActionRegistration ar) throws LayerGenerationException {
         ExecutableElement ee = null;
         ExecutableElement candidate = null;
         for (ExecutableElement element : ElementFilter.constructorsIn(e.getEnclosedElements())) {
@@ -396,7 +619,7 @@ public final class ActionProcessor extends LayerGeneratingProcessor {
             f.stringvalue("injectable", processingEnv.getElementUtils().getBinaryName((TypeElement) e).toString());
             f.stringvalue("selectionType", "ANY");
             f.methodvalue("instanceCreate", "org.openide.awt.Actions", "context");
-            return;
+            return dt.getTypeArguments().get(0);
         }
         if (!dt.getTypeArguments().isEmpty()) {
             throw new LayerGenerationException("No type parameters allowed in ", ee);
@@ -407,7 +630,9 @@ public final class ActionProcessor extends LayerGeneratingProcessor {
         f.stringvalue("injectable", processingEnv.getElementUtils().getBinaryName((TypeElement)e).toString());
         f.stringvalue("selectionType", "EXACTLY_ONE");
         f.methodvalue("instanceCreate", "org.openide.awt.Actions", "context");
+        return ctorType;
     }
+    
     private String binaryName(TypeMirror t) {
         Element e = processingEnv.getTypeUtils().asElement(t);
         if (e != null && (e.getKind().isClass() || e.getKind().isInterface())) {

@@ -23,6 +23,7 @@ import com.sun.jdi.ArrayReference;
 import com.sun.jdi.StringReference;
 import com.sun.jdi.Value;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
@@ -30,8 +31,16 @@ import java.util.List;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import org.netbeans.api.debugger.DebuggerManager;
+import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.source.ClasspathInfo;
+import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.project.FileOwnerQuery;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.debugger.jpda.expr.JDIVariable;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 
 /**
  * Tests evaluation of various expressions.
@@ -58,6 +67,15 @@ public class EvaluatorTest extends NbTestCase {
     
     protected void setUp () throws Exception {
         super.setUp ();
+        //PreferredCCParser is using SourceUtils.isScanInProgress() to modify behavior; ensure indexing is not running.
+        FileObject prjRoot = FileUtil.toFileObject(new File(System.getProperty("test.dir.src")));
+        assertNotNull(prjRoot);
+        Project prj = FileOwnerQuery.getOwner(prjRoot);
+        assertNotNull(prj);
+        Project annotationsPrj = FileOwnerQuery.getOwner(prj.getProjectDirectory().getParent().getFileObject("api.annotations.common"));
+        assertNotNull(annotationsPrj);
+        OpenProjects.getDefault().open(new Project[] {annotationsPrj}, false);
+        JavaSource.create(ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY)).runWhenScanFinished(p -> {}, true).get();
         System.setProperty("debugger.evaluator2", "true");
         JPDASupport.removeAllBreakpoints ();
         Utils.BreakPositions bp = Utils.getBreakPositions(System.getProperty ("test.dir.src")+

@@ -1,0 +1,96 @@
+<testresult testFile='uniformVariableSyntax_03.php'>
+    <scanner>
+        <token id='T_STRING' start='7' end='10'>
+            <text>foo</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='10' end='11'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='11' end='12'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_RECT' start='12' end='13'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='13' end='14'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='14' end='15'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='15' end='16'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='16' end='17'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='17' end='19'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='19' end='23'>
+            <text>$MAX</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='23' end='25'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='25' end='28'>
+            <text>MIN</text>
+        </token>
+        <token id='T_SEMICOLON' start='28' end='29'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='30' end='30'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='30'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='29'>
+                <StaticConstantAccess start='7' end='28'>
+                    <StaticFieldAccess start='7' end='23'>
+                        <FunctionInvocation start='7' end='17'>
+                            <FucntionName start='7' end='15'>
+                                <DereferencedArrayAccess start='7' end='15'>
+                                    <ArrayDimension start='12' end='15'>
+                                        <Index>
+                                            <Scalar start='13' end='14' type='INT' value='0'/>
+                                        </Index>
+                                    </ArrayDimension>
+                                    <FunctionInvocation start='7' end='12'>
+                                        <FucntionName start='7' end='10'>
+                                            <NamespaceName start='7' end='10' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='7' end='10' name='foo'/>
+                                            </NamespaceName>
+                                        </FucntionName>
+                                        <Parameters>
+                                        </Parameters>
+                                    </FunctionInvocation>
+                                </DereferencedArrayAccess>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                        <Field>
+                            <Variable start='19' end='23' isDollared='true'>
+                                <Identifier start='20' end='23' name='MAX'/>
+                            </Variable>
+                        </Field>
+                        <Member>
+                            <Variable start='19' end='23' isDollared='true'>
+                                <Identifier start='20' end='23' name='MAX'/>
+                            </Variable>
+                        </Member>
+                    </StaticFieldAccess>
+                    <Constant>
+                        <Identifier start='25' end='28' name='MIN'/>
+                    </Constant>
+                    <Member>
+                        <Identifier start='25' end='28' name='MIN'/>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

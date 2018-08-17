@@ -146,8 +146,6 @@ public class MoveClassTransformer extends RefactoringVisitor {
             cut = make.CompilationUnit(cut.getPackageName(), imports, cut.getTypeDecls(), cut.getSourceFile());
         }
         
-        cut = GeneratorUtilities.get(workingCopy).importFQNs(cut);
-
         rewrite(node, cut);
         
         return result;
@@ -245,6 +243,7 @@ public class MoveClassTransformer extends RefactoringVisitor {
                     }
                     get.copyComments(origTree, newClass, true);
                     get.copyComments(origTree, newClass, false);
+                    newClass = get.importFQNs(newClass);
                     newClass = get.insertClassMember(node, newClass);
                     original2Translated.put(node, newClass);
                 }

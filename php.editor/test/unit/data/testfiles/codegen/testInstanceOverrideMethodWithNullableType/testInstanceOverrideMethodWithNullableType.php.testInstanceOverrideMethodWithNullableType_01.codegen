@@ -1,0 +1,3 @@
+public function myFoo(?string $string, int $int): ?\Foo{
+return parent::myFoo($string, $int);
+}

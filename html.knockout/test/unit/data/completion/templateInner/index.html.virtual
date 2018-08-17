@@ -1,0 +1,167 @@
+(function(){
+var $element;
+var $root = ko.$bindings;
+var $parentContext = undefined;
+var $context = {
+$parentContext :undefined,
+$root : ko.$bindings,
+};
+$context.$parentContext.$data = undefined;
+$parentContext.$data = undefined;
+var $parent = undefined;
+var $parents = [];
+var $data = ko.$bindings;
+with ($data) {
+({ name: 'seasonTemplate', foreach: seasons, as: 'season' });}
+});
+(function(){
+var $element;
+var $root = ko.$bindings;
+var $index = 0;
+var $parentContext = {
+$parentContext :undefined,
+$root : ko.$bindings,
+};
+var $context = {
+$parentContext :{
+$parentContext :undefined,
+$root : ko.$bindings,
+},
+$root : ko.$bindings,
+$index : 0,
+};
+var $parent = ko.$bindings;
+$context.$parentContext.$data = ko.$bindings;
+$parentContext.$data = ko.$bindings;
+var $parents = [$parentContext.$data];
+with (ko.$bindings) {
+var $data = (seasons)[0];
+var season = (seasons)[0];
+}
+with ($data) {
+ ;}
+});
+(function(){
+var $element;
+var $root = ko.$bindings;
+var $index = 0;
+var $parentContext = {
+$parentContext :undefined,
+$root : ko.$bindings,
+};
+var $context = {
+$parentContext :{
+$parentContext :undefined,
+$root : ko.$bindings,
+},
+$root : ko.$bindings,
+$index : 0,
+};
+var $parent = ko.$bindings;
+$context.$parentContext.$data = ko.$bindings;
+$parentContext.$data = ko.$bindings;
+var $parents = [$parentContext.$data];
+with (ko.$bindings) {
+var $data = (seasons)[0];
+var season = (seasons)[0];
+}
+with ($data) {
+({ name: 'monthTemplate', foreach: months, as: 'month' });}
+});
+
+(function(){
+var $element;
+var $root = ko.$bindings;
+var $index = 0;
+var $parentContext = {
+$parentContext :{
+$parentContext :undefined,
+$root : ko.$bindings,
+},
+$root : ko.$bindings,
+$index : 0,
+};
+var $context = {
+$parentContext :{
+$parentContext :{
+$parentContext :undefined,
+$root : ko.$bindings,
+},
+$root : ko.$bindings,
+$index : 0,
+},
+$root : ko.$bindings,
+$index : 0,
+};
+with (ko.$bindings) {
+var $parent = (seasons)[0];
+$context.$parentContext.$data = (seasons)[0];
+$parentContext.$data = (seasons)[0];
+}
+$context.$parentContext.$parentContext.$data = ko.$bindings;
+$parentContext.$parentContext.$data = ko.$bindings;
+var $parents = [$parentContext.$parentContext.$data,$parentContext.$data];
+with (ko.$bindings) {
+var season = (seasons)[0];
+with ((seasons)[0]) {
+var $data = (months)[0];
+var month = (months)[0];
+}
+}
+with ($data) {
+(month);}
+});
+(function(){
+var $element;
+var $root = ko.$bindings;
+var $index = 0;
+var $parentContext = {
+$parentContext :{
+$parentContext :undefined,
+$root : ko.$bindings,
+},
+$root : ko.$bindings,
+$index : 0,
+};
+var $context = {
+$parentContext :{
+$parentContext :{
+$parentContext :undefined,
+$root : ko.$bindings,
+},
+$root : ko.$bindings,
+$index : 0,
+},
+$root : ko.$bindings,
+$index : 0,
+};
+with (ko.$bindings) {
+var $parent = (seasons)[0];
+$context.$parentContext.$data = (seasons)[0];
+$parentContext.$data = (seasons)[0];
+}
+$context.$parentContext.$parentContext.$data = ko.$bindings;
+$parentContext.$parentContext.$data = ko.$bindings;
+var $parents = [$parentContext.$parentContext.$data,$parentContext.$data];
+with (ko.$bindings) {
+var season = (seasons)[0];
+with ((seasons)[0]) {
+var $data = (months)[0];
+var month = (months)[0];
+}
+}
+with ($data) {
+(season.name);}
+});
+
+
+    var viewModel = {
+        seasons: [
+            { name: 'Spring', months: [ 'March', 'April', 'May' ] },
+            { name: 'Summer', months: [ 'June', 'July', 'August' ] },
+            { name: 'Autumn', months: [ 'September', 'October', 'November' ] },
+            { name: 'Winter', months: [ 'December', 'January', 'February' ] }
+        ]
+    };
+    ko.applyBindings(viewModel);
+

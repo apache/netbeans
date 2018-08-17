@@ -1,0 +1,63 @@
+<testresult testFile='nowdoc02.php'>
+    <scanner>
+        <token id='T_INLINE_HTML' start='0' end='213'>
+            <text>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"&gt;\n&lt;html&gt;\n    &lt;head&gt;\n        &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8"&gt;\n        &lt;title&gt;&lt;/title&gt;\n    &lt;/head&gt;\n    &lt;body&gt;\n        </text>
+        </token>
+        <token id='T_ECHO' start='231' end='235'>
+            <text>echo</text>
+        </token>
+        <token id='T_START_NOWDOC' start='236' end='249'>
+            <text>&lt;&lt;&lt; &apos;NOWDOC&apos;\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='272' end='278'>
+            <text>\nNOWDO</text>
+        </token>
+        <token id='T_END_NOWDOC' start='278' end='279'>
+            <text>C</text>
+        </token>
+        <token id='T_SEMICOLON' start='279' end='280'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='306' end='308'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='309' end='310'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='311' end='317'>
+            <text>"ahoj"</text>
+        </token>
+        <token id='T_SEMICOLON' start='317' end='318'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='327' end='330'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='T_INLINE_HTML' start='330' end='350'>
+            <text>    &lt;/body&gt;\n&lt;/html&gt;\n</text>
+        </token>
+        <token id='EOF' start='350' end='350'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='349'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <InLineHtml start='0' end='213'/>
+            <EchoStatement start='231' end='280'>
+                <Scalar start='236' end='279' type='STRING' value='\n'/>
+            </EchoStatement>
+            <ExpressionStatement start='306' end='318'>
+                <Assignment start='306' end='317' operator='EQUAL'>
+                    <Variable start='306' end='308' isDollared='true'>
+                        <Identifier start='307' end='308' name='x'/>
+                    </Variable>
+                    <Scalar start='311' end='317' type='STRING' value='"ahoj"'/>
+                </Assignment>
+            </ExpressionStatement>
+            <EmptyStatement start='327' end='330'/>
+            <InLineHtml start='330' end='349'/>
+        </Statements>
+    </Program>
+</testresult>

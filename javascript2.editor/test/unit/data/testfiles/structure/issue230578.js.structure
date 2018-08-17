@@ -1,0 +1,4 @@
+getDisplayName:METHOD:[PUBLIC]:ESCAPED{getDisplayName}ESCAPED{(}ESCAPED{a}ESCAPED{)}<font color="#999999">ESCAPED{ : }String</font>:
+test:METHOD:[PUBLIC]:ESCAPED{test}ESCAPED{(}ESCAPED{bar}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  bar:PARAMETER:[PUBLIC]:ESCAPED{bar}:
+    leaderUsername:FIELD:[PUBLIC]:ESCAPED{leaderUsername}<font color="#999999">ESCAPED{ : }String</font>:

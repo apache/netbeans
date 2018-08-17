@@ -1,0 +1,5 @@
+Code completion result for source line:
+$this->a->|one();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     one()                           [PUBLIC]   A
+METHOD     two()                           [PUBLIC]   A

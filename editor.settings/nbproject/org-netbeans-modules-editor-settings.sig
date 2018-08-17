@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.55.1
+#Version 1.59.1
 
 CLSS public java.lang.Object
 cons public init()
@@ -134,6 +134,7 @@ fld public final static java.lang.String COMPLETION_PAIR_CHARACTERS = "pair-char
 fld public final static java.lang.String COMPLETION_PANE_MAX_SIZE = "completion-pane-max-size"
 fld public final static java.lang.String COMPLETION_PANE_MIN_SIZE = "completion-pane-min-size"
 fld public final static java.lang.String EDITOR_SEARCH_TYPE = "editor-search-type"
+fld public final static java.lang.String ENABLE_INDENTATION = "enable-indent"
 fld public final static java.lang.String EXPAND_TABS = "expand-tabs"
 fld public final static java.lang.String HIGHLIGHT_CARET_ROW = "highlight-caret-row"
 fld public final static java.lang.String HIGHLIGHT_MATCH_BRACE = "highlight-match-brace"

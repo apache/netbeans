@@ -424,7 +424,17 @@ public class SourceUtils {
                 importScope.prependSubScope(((PackageSymbol)toImport).members());
                 unit.starImportScope = importScope;
             } else {
-                NamedImportScope importScope = new NamedImportScope(unit.packge, unit.toplevelScope);
+                Class<NamedImportScope> nisClazz = NamedImportScope.class;
+                NamedImportScope importScope;
+                try {
+                    importScope = nisClazz.getConstructor(Symbol.class, com.sun.tools.javac.code.Scope.class).newInstance(unit.packge, unit.toplevelScope);
+                } catch (ReflectiveOperationException ex) {
+                    try {
+                        importScope = nisClazz.getConstructor(Symbol.class).newInstance(unit.packge);
+                    } catch (ReflectiveOperationException ex2) {
+                        throw new IllegalStateException(ex2);
+                    }
+                }
                 for (Symbol symbol : unit.namedImportScope.getSymbols()) {
                     importScope.importType(symbol.owner.members(), symbol.owner.members(), symbol);
                 }

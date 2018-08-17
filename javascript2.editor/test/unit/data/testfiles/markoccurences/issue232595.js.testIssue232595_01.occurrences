@@ -1,0 +1,2 @@
+   for (var |>MARK_OCCURRENCES:loc2<| = 30, loc3 = {}; |>MARK_OCCURRENCES:lo^c2<| < 100; |>MARK_OCCURRENCES:loc2<|++) {
+      myloc1 += |>MARK_OCCURRENCES:loc2<|;

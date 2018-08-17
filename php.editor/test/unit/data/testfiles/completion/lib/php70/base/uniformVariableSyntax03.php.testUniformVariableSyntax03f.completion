@@ -1,0 +1,4 @@
+Code completion result for source line:
+UVS3::myStatic3()::myStatic2()::$INSTANCE::mySta|tic1();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     myStatic1()                     [STATIC]   UVS1

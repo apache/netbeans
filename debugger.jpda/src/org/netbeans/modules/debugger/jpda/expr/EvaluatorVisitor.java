@@ -1992,7 +1992,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
                 identifierPath = getCurrentPath();
             }
             elm = evaluationContext.getTrees().getElement(identifierPath);
-            if (elm instanceof TypeElement && ((TypeElement) elm).asType() instanceof ErrorType) {
+            if (elm instanceof TypeElement && ((TypeElement) elm).asType().getKind() == TypeKind.ERROR) {
                 currentPath = null; // Elements not resolved correctly
             }
         }

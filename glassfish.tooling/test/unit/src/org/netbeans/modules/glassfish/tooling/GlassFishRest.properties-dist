@@ -1,0 +1,8 @@
+name=GlassFish Server 4
+serverHome=/users/tomas/WS/gf4/glassfish
+domainsFolder=/users/tomas/WS/gf4/glassfish/domains
+port=4080
+adminPort=4048
+url=https://localhost:4048
+version=4
+adminInterface=REST

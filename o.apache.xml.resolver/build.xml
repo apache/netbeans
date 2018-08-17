@@ -34,7 +34,9 @@
          (see external/binaries-list).
          Then if 'external/resolver-1.2.jar does NOT exist...
     -->
-    <target name="-prepare-patched-binary" depends="-check-requires-patching-maven-sources" unless="sources-already-patched">
+    <target name="-prepare-patched-binary" depends="-check-requires-patching-maven-sources,-define-FileCRC32Calculator" unless="sources-already-patched">
+        <FileCRC32Calculator file="external/xml-resolver-1.2.jar" property="o.apache.xml.resolver.crc32" />
+
         <echo message="Patching xml-resolver-1.2-sources.jar for Netbeans..." />
         <taskdef name="patchfile" classname="org.netbeans.nbbuild.extlibs.PatchFile" classpath="${nbantext.jar}"/>
         <!-- ... 1. Prepares a 'build/external-patch/[sources|classes]' working directories -->
@@ -54,6 +56,10 @@
         <!-- ... 5. Creates a jar in 'external/resolver-1.2.jar' -->
         <jar destfile="external/resolver-1.2.jar">
             <fileset dir="build/external-patch/classes" />
+            <zipfileset src="external/xml-resolver-1.2.jar" includes="org/apache/xml/resolver/etc/**" />
+            <manifest>
+                <attribute name="NB-Original-CRC" value="${o.apache.xml.resolver.crc32}"/>
+            </manifest>
         </jar>
     </target>
 

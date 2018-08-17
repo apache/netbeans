@@ -1,0 +1,2 @@
+var f3, f4, |>MARK_OCCURRENCES:f^5<| = f3 = f4 = function (){
+|>MARK_OCCURRENCES:f5<|();

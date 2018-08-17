@@ -1,0 +1,3 @@
+        public $|>MARK_OCCURRENCES:invalidLinkMode<|;
+            $this->|>MARK_OCCURRENCES:invalid^LinkMode<| = 10;
+            $this->|>MARK_OCCURRENCES:invalidLinkMode<|;

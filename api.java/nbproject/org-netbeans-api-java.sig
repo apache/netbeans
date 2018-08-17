@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.58.1
+#Version 1.67.1
 
 CLSS public abstract interface java.io.Serializable
 
@@ -95,6 +95,7 @@ fld public final static org.netbeans.api.java.classpath.ClassPath EMPTY
 innr public final Entry
 innr public final static !enum Flag
 innr public final static !enum PathConversionMode
+innr public final static !enum PathEmbeddingMode
 meth public boolean equals(java.lang.Object)
 meth public final boolean contains(org.openide.filesystems.FileObject)
 meth public final boolean isResourceVisible(org.openide.filesystems.FileObject)
@@ -109,7 +110,14 @@ meth public final void addPropertyChangeListener(java.beans.PropertyChangeListen
 meth public final void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public int hashCode()
 meth public java.lang.String toString()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public java.lang.String toString(org.netbeans.api.java.classpath.ClassPath$PathConversionMode)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public java.lang.String toString(org.netbeans.api.java.classpath.ClassPath$PathConversionMode,org.netbeans.api.java.classpath.ClassPath$PathEmbeddingMode)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
 meth public java.util.List<org.netbeans.api.java.classpath.ClassPath$Entry> entries()
 meth public java.util.Set<org.netbeans.api.java.classpath.ClassPath$Flag> getFlags()
  anno 0 org.netbeans.api.annotations.common.NonNull()
@@ -119,7 +127,7 @@ meth public static org.netbeans.api.java.classpath.ClassPath getClassPath(org.op
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
-hfds EMPTY_REF,LOG,caller,entriesCache,impl,implementations,invalidEntries,invalidRoots,pListener,propSupport,refClassLoader,root2Filter,rootsCache,rootsListener,weakPListeners
+hfds EMPTY_REF,LOG,URL_EMBEDDING,caller,entriesCache,impl,implementations,invalidEntries,invalidRoots,pListener,propSupport,refClassLoader,root2Filter,rootsCache,rootsListener,weakPListeners
 hcls RootsListener,SPIListener
 
 CLSS public final org.netbeans.api.java.classpath.ClassPath$Entry
@@ -154,6 +162,15 @@ fld public final static org.netbeans.api.java.classpath.ClassPath$PathConversion
 meth public static org.netbeans.api.java.classpath.ClassPath$PathConversionMode valueOf(java.lang.String)
 meth public static org.netbeans.api.java.classpath.ClassPath$PathConversionMode[] values()
 supr java.lang.Enum<org.netbeans.api.java.classpath.ClassPath$PathConversionMode>
+
+CLSS public final static !enum org.netbeans.api.java.classpath.ClassPath$PathEmbeddingMode
+ outer org.netbeans.api.java.classpath.ClassPath
+fld public final static org.netbeans.api.java.classpath.ClassPath$PathEmbeddingMode EXCLUDE
+fld public final static org.netbeans.api.java.classpath.ClassPath$PathEmbeddingMode FAIL
+fld public final static org.netbeans.api.java.classpath.ClassPath$PathEmbeddingMode INCLUDE
+meth public static org.netbeans.api.java.classpath.ClassPath$PathEmbeddingMode valueOf(java.lang.String)
+meth public static org.netbeans.api.java.classpath.ClassPath$PathEmbeddingMode[] values()
+supr java.lang.Enum<org.netbeans.api.java.classpath.ClassPath$PathEmbeddingMode>
 
 CLSS public final org.netbeans.api.java.classpath.GlobalPathRegistry
 meth public java.util.Set<org.netbeans.api.java.classpath.ClassPath> getPaths(java.lang.String)
@@ -190,15 +207,48 @@ meth public abstract void pathsRemoved(org.netbeans.api.java.classpath.GlobalPat
 CLSS public org.netbeans.api.java.classpath.JavaClassPathConstants
 cons public init()
 fld public final static java.lang.String COMPILE_ONLY = "classpath/compile_only"
+fld public final static java.lang.String MODULE_BOOT_PATH = "modules/boot"
+fld public final static java.lang.String MODULE_CLASS_PATH = "modules/classpath"
+fld public final static java.lang.String MODULE_COMPILE_PATH = "modules/compile"
+fld public final static java.lang.String MODULE_EXECUTE_CLASS_PATH = "modules/execute-classpath"
+fld public final static java.lang.String MODULE_EXECUTE_PATH = "modules/execute"
+fld public final static java.lang.String MODULE_PROCESSOR_PATH = "modules/processor"
+fld public final static java.lang.String MODULE_SOURCE_PATH = "modules/source"
 fld public final static java.lang.String PROCESSOR_PATH = "classpath/processor"
 supr java.lang.Object
 
 CLSS public org.netbeans.api.java.queries.AccessibilityQuery
+innr public abstract static !enum Accessibility
+innr public final static Result
 meth public static java.lang.Boolean isPubliclyAccessible(org.openide.filesystems.FileObject)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public static org.netbeans.api.java.queries.AccessibilityQuery$Result isPubliclyAccessible2(org.openide.filesystems.FileObject)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
-hfds implementations
+hfds implementations,implementations2
+hcls Adapter
+
+CLSS public abstract static !enum org.netbeans.api.java.queries.AccessibilityQuery$Accessibility
+ outer org.netbeans.api.java.queries.AccessibilityQuery
+fld public final static org.netbeans.api.java.queries.AccessibilityQuery$Accessibility EXPORTED
+fld public final static org.netbeans.api.java.queries.AccessibilityQuery$Accessibility PRIVATE
+fld public final static org.netbeans.api.java.queries.AccessibilityQuery$Accessibility UNKNOWN
+meth public static org.netbeans.api.java.queries.AccessibilityQuery$Accessibility valueOf(java.lang.String)
+meth public static org.netbeans.api.java.queries.AccessibilityQuery$Accessibility[] values()
+supr java.lang.Enum<org.netbeans.api.java.queries.AccessibilityQuery$Accessibility>
+
+CLSS public final static org.netbeans.api.java.queries.AccessibilityQuery$Result
+ outer org.netbeans.api.java.queries.AccessibilityQuery
+meth public org.netbeans.api.java.queries.AccessibilityQuery$Accessibility getAccessibility()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public void addChangeListener(javax.swing.event.ChangeListener)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public void removeChangeListener(javax.swing.event.ChangeListener)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+supr java.lang.Object
+hfds delegate,listeners,spiListener
 
 CLSS public org.netbeans.api.java.queries.AnnotationProcessingQuery
 innr public abstract interface static Result
@@ -245,6 +295,25 @@ meth public abstract java.net.URL[] getRoots()
 meth public abstract void addChangeListener(javax.swing.event.ChangeListener)
 meth public abstract void removeChangeListener(javax.swing.event.ChangeListener)
 
+CLSS public final org.netbeans.api.java.queries.CompilerOptionsQuery
+innr public final static Result
+meth public static org.netbeans.api.java.queries.CompilerOptionsQuery$Result getOptions(org.openide.filesystems.FileObject)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+supr java.lang.Object
+hfds impls
+
+CLSS public final static org.netbeans.api.java.queries.CompilerOptionsQuery$Result
+ outer org.netbeans.api.java.queries.CompilerOptionsQuery
+meth public java.util.List<? extends java.lang.String> getArguments()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public void addChangeListener(javax.swing.event.ChangeListener)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public void removeChangeListener(javax.swing.event.ChangeListener)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+supr java.lang.Object
+hfds EMPTY,changeListener,listeners,results
+
 CLSS public org.netbeans.api.java.queries.JavadocForBinaryQuery
 innr public abstract interface static Result
 meth public static org.netbeans.api.java.queries.JavadocForBinaryQuery$Result findJavadoc(java.net.URL)
@@ -264,7 +333,7 @@ innr public static Result2
 meth public static org.netbeans.api.java.queries.SourceForBinaryQuery$Result findSourceRoots(java.net.URL)
 meth public static org.netbeans.api.java.queries.SourceForBinaryQuery$Result2 findSourceRoots2(java.net.URL)
 supr java.lang.Object
-hfds EMPTY_RESULT,EMPTY_RESULT2,LOG,implementations
+hfds EMPTY_RESULT,LOG,implementations
 hcls EmptyResult
 
 CLSS public abstract interface static org.netbeans.api.java.queries.SourceForBinaryQuery$Result
@@ -300,6 +369,7 @@ meth public abstract void attachmentFailed()
 meth public abstract void attachmentSucceeded()
 
 CLSS public org.netbeans.api.java.queries.SourceLevelQuery
+fld public final static org.openide.modules.SpecificationVersion MINIMAL_SOURCE_LEVEL
 innr public final static Result
 innr public static !enum Profile
 meth public static java.lang.String getSourceLevel(org.openide.filesystems.FileObject)
@@ -307,7 +377,7 @@ meth public static org.netbeans.api.java.queries.SourceLevelQuery$Result getSour
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
-hfds JDK8,LOGGER,SOURCE_LEVEL,SYNONYM,implementations,implementations2
+hfds JDK8,LOGGER,ORIG_VERSION_SCHEME,VERONA_VERSION_SCHEME,implementations,implementations2
 
 CLSS public static !enum org.netbeans.api.java.queries.SourceLevelQuery$Profile
  outer org.netbeans.api.java.queries.SourceLevelQuery
@@ -402,15 +472,29 @@ meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeLis
 meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
 
 CLSS public org.netbeans.spi.java.classpath.support.ClassPathSupport
+innr public abstract interface static Selector
 meth public !varargs static org.netbeans.api.java.classpath.ClassPath createClassPath(java.net.URL[])
 meth public !varargs static org.netbeans.api.java.classpath.ClassPath createClassPath(org.openide.filesystems.FileObject[])
 meth public !varargs static org.netbeans.api.java.classpath.ClassPath createProxyClassPath(org.netbeans.api.java.classpath.ClassPath[])
 meth public !varargs static org.netbeans.spi.java.classpath.ClassPathImplementation createProxyClassPathImplementation(org.netbeans.spi.java.classpath.ClassPathImplementation[])
 meth public static org.netbeans.api.java.classpath.ClassPath createClassPath(java.lang.String)
 meth public static org.netbeans.api.java.classpath.ClassPath createClassPath(java.util.List<? extends org.netbeans.spi.java.classpath.PathResourceImplementation>)
+meth public static org.netbeans.api.java.classpath.ClassPath createMultiplexClassPath(org.netbeans.spi.java.classpath.support.ClassPathSupport$Selector)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public static org.netbeans.spi.java.classpath.ClassPathImplementation createClassPathImplementation(java.util.List<? extends org.netbeans.spi.java.classpath.PathResourceImplementation>)
 meth public static org.netbeans.spi.java.classpath.PathResourceImplementation createResource(java.net.URL)
 supr java.lang.Object
+
+CLSS public abstract interface static org.netbeans.spi.java.classpath.support.ClassPathSupport$Selector
+ outer org.netbeans.spi.java.classpath.support.ClassPathSupport
+fld public final static java.lang.String PROP_ACTIVE_CLASS_PATH = "activeClassPath"
+meth public abstract org.netbeans.api.java.classpath.ClassPath getActiveClassPath()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeListener)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 
 CLSS public abstract org.netbeans.spi.java.classpath.support.CompositePathResourceBase
 cons public init()
@@ -438,11 +522,45 @@ meth public abstract java.lang.Boolean isPubliclyAccessible(org.openide.filesyst
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
 
+CLSS public abstract interface org.netbeans.spi.java.queries.AccessibilityQueryImplementation2
+innr public abstract interface static Result
+meth public abstract org.netbeans.spi.java.queries.AccessibilityQueryImplementation2$Result isPubliclyAccessible(org.openide.filesystems.FileObject)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+
+CLSS public abstract interface static org.netbeans.spi.java.queries.AccessibilityQueryImplementation2$Result
+ outer org.netbeans.spi.java.queries.AccessibilityQueryImplementation2
+meth public abstract org.netbeans.api.java.queries.AccessibilityQuery$Accessibility getAccessibility()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public abstract void addChangeListener(javax.swing.event.ChangeListener)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public abstract void removeChangeListener(javax.swing.event.ChangeListener)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+
 CLSS public abstract interface org.netbeans.spi.java.queries.AnnotationProcessingQueryImplementation
 meth public abstract org.netbeans.api.java.queries.AnnotationProcessingQuery$Result getAnnotationProcessingOptions(org.openide.filesystems.FileObject)
 
 CLSS public abstract interface org.netbeans.spi.java.queries.BinaryForSourceQueryImplementation
 meth public abstract org.netbeans.api.java.queries.BinaryForSourceQuery$Result findBinaryRoots(java.net.URL)
+
+CLSS public abstract interface org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation
+innr public abstract static Result
+meth public abstract org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation$Result getOptions(org.openide.filesystems.FileObject)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+
+CLSS public abstract static org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation$Result
+ outer org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation
+cons public init()
+meth protected final java.util.List<java.lang.String> parseLine(java.lang.String)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public abstract java.util.List<? extends java.lang.String> getArguments()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public abstract void addChangeListener(javax.swing.event.ChangeListener)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public abstract void removeChangeListener(javax.swing.event.ChangeListener)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+supr java.lang.Object
 
 CLSS public abstract interface org.netbeans.spi.java.queries.JavadocForBinaryQueryImplementation
 meth public abstract org.netbeans.api.java.queries.JavadocForBinaryQuery$Result findJavadoc(java.net.URL)

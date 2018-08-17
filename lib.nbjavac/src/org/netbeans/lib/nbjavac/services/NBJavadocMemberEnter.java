@@ -20,6 +20,7 @@ package org.netbeans.lib.nbjavac.services;
 
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.api.JavacTrees;
+import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.comp.MemberEnter;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
@@ -92,6 +93,9 @@ public class NBJavadocMemberEnter extends JavadocMemberEnter {
         } finally {
             //reinstall init:
             tree.init = init;
+            if (init != null) {
+                tree.sym.flags_field |= Flags.HASINIT; //XXX: hack
+            }
         }
     }
 

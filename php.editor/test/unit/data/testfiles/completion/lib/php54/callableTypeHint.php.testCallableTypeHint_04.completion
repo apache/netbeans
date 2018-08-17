@@ -1,0 +1,6 @@
+Code completion result for source line:
+function __construct(call|able $arg) {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      CallableClass                   [PUBLIC]   callableTypeHint.php
+------------------------------------
+KEYWORD    callable                                   null

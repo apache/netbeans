@@ -373,7 +373,7 @@ public class BeanNode<T> extends AbstractNode {
     */
     @Override
     public java.awt.Component getCustomizer() {
-        Class clazz = beanInfo.getBeanDescriptor().getCustomizerClass();
+        Class<?> clazz = beanInfo.getBeanDescriptor().getCustomizerClass();
 
         if (clazz == null) {
             return null;

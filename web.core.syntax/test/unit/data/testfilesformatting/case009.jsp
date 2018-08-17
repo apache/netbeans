@@ -1,0 +1,9 @@
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<table>
+<tr><th>HEADER</th></tr>
+<c:if test="false">
+<tr>
+<td>CODE</td>
+</tr>
+</c:if>
+</table>

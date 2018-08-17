@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.2.1
+#Version 9.5.1
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -55,6 +55,12 @@ CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
 
+CLSS public abstract interface !annotation java.lang.FunctionalInterface
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
@@ -70,6 +76,7 @@ meth public int hashCode()
 meth public java.lang.String toString()
 
 CLSS public abstract interface java.lang.Runnable
+ anno 0 java.lang.FunctionalInterface()
 meth public abstract void run()
 
 CLSS public abstract interface java.lang.annotation.Annotation

@@ -43,7 +43,6 @@ import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
-import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -67,8 +66,6 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import org.netbeans.api.java.source.CompilationInfo;
-import org.netbeans.api.java.source.ElementUtilities.ElementAcceptor;
-import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.TreeUtilities;
@@ -83,6 +80,7 @@ import org.netbeans.spi.java.hints.JavaFix;
 import org.netbeans.spi.java.hints.JavaFixUtilities;
 import org.netbeans.spi.java.hints.TriggerPattern;
 import org.netbeans.spi.java.hints.TriggerTreeKind;
+import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -91,6 +89,8 @@ import org.openide.util.NbBundle.Messages;
  */
 public class Lambda {
     
+    private static final String[] LAMBDA_PARAMETER_ERROR_CODES = {"compiler.err.invalid.lambda.parameter.declaration"};// NOI18N
+
     @Hint(displayName="#DN_lambda2Class", description="#DESC_lambda2Class", category="suggestions", hintKind=Hint.Kind.ACTION,
             minSourceVersion = "8")
     @Messages({
@@ -238,6 +238,29 @@ public class Lambda {
         return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_addExplicitLambdaParameters(), new AddExplicitLambdaParameterTypes(ctx.getInfo(), ctx.getPath()).toEditorFix());
     }
     
+    @Hint(displayName = "#DN_ConvertVarLambdaParameters", description = "#DESC_ConvertVarLambdaParameters", category = "suggestions", hintKind = Hint.Kind.ACTION, minSourceVersion = "11")
+    @TriggerTreeKind(Kind.LAMBDA_EXPRESSION)
+    public static ErrorDescription implicitVarParameterTypes(HintContext ctx) {
+        // hint will be enable only for JDK-11 or above.
+        if (ctx.getInfo().getSourceVersion().compareTo(SourceVersion.RELEASE_9) < 2) {
+            return null;
+        }
+        // Check invalid lambda parameter declaration
+        if (ctx.getInfo().getTreeUtilities().hasError(ctx.getPath().getLeaf(), LAMBDA_PARAMETER_ERROR_CODES)) {
+            return null;
+        }
+        // Check var parameter types
+        LambdaExpressionTree let = (LambdaExpressionTree) ctx.getPath().getLeaf();
+        if (let.getParameters() != null && let.getParameters().size() > 0) {
+            VariableTree var = let.getParameters().get(0);
+            if (ctx.getInfo().getTreeUtilities().isVarType(new TreePath(ctx.getPath(), var))) {
+                return null;
+            }
+        }
+
+        return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), NbBundle.getMessage(Lambda.class, "ERR_ConvertVarLambdaParameters"), new AddVarLambdaParameterTypes(ctx.getInfo(), ctx.getPath()).toEditorFix());
+    }
+
     private static ExecutableElement findAbstractMethod(CompilationInfo info, TypeMirror type) {
         if (type.getKind() != TypeKind.DECLARED) {
             return null;
@@ -627,6 +650,29 @@ public class Lambda {
                     Tree imported = ctx.getWorkingCopy().getTreeMaker().Type(ctx.getWorkingCopy().getTrees().getTypeMirror(typePath));
                     ctx.getWorkingCopy().rewrite(var.getType(), imported);
                 }
+            }
+        }
+    }
+    
+    private static final class AddVarLambdaParameterTypes extends JavaFix {
+
+        public AddVarLambdaParameterTypes(CompilationInfo info, TreePath tp) {
+            super(info, tp);
+        }
+
+        @Override
+        protected String getText() {
+            return NbBundle.getMessage(Lambda.class, "FIX_ConvertVarLambdaParameters");
+        }
+
+        @Override
+        protected void performRewrite(JavaFix.TransformationContext ctx) throws Exception {
+            if (ctx.getPath().getLeaf().getKind() == Kind.LAMBDA_EXPRESSION) {
+                LambdaExpressionTree let = (LambdaExpressionTree) ctx.getPath().getLeaf();
+                TreeMaker make = ctx.getWorkingCopy().getTreeMaker();
+                let.getParameters().forEach((var) -> {
+                    ctx.getWorkingCopy().rewrite(var.getType(), make.Type("var")); // NOI18N
+                });
             }
         }
     }

@@ -1,0 +1,5 @@
+token #0 T_HTML --TEST--\nHeredoc with double quotes\n--FILE--\n
+token #1 T_PHP_OPEN_DELIMITER <?php
+token #2 T_PHP \n$test = "foo";\n$var = <<<"MYLABEL"\ntest: $test\nMYLABEL;\necho $var;\n
+token #3 T_PHP_CLOSE_DELIMITER ?>
+token #4 T_HTML \n--EXPECT--\ntest: foo\n

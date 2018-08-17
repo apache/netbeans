@@ -184,3 +184,11 @@ Copyright 2003-2015 The Apache Software Foundation
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
 
+
+Plexus Cipher
+
+The code in this component contains a class - Base64 taken from http://juliusdavies.ca/svn/not-yet-commons-ssl/tags/commons-ssl-0.3.10/src/java/org/apache/commons/ssl/Base64.java
+which is Apache license: http://www.apache.org/licenses/LICENSE-2.0
+
+The PBE key processing routine PBECipher.createCipher() is adopted from http://juliusdavies.ca/svn/not-yet-commons-ssl/tags/commons-ssl-0.3.10/src/java/org/apache/commons/ssl/OpenSSL.java
+which is also Apache APL-2.0 license: http://www.apache.org/licenses/LICENSE-2.0 

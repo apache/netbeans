@@ -1,0 +1,13 @@
+'token image' [offset, length]; tokenID name; tokenID id; token category name; <list of token context names>
+--------------------
+
+'<' [0, 1]; tag-open-symbol; 14; tag; HtmlTokenContext, JspMultiTokenContext
+'html' [1, 4]; open-tag; 4; tag; HtmlTokenContext, JspMultiTokenContext
+'>' [5, 1]; tag-close-symbol; 15; tag; HtmlTokenContext, JspMultiTokenContext
+'<%-- text ' [6, 10]; comment; 6; -; JspTagTokenContext, JspMultiTokenContext
+'<NL>' [16, 1]; EOL; 9; -; JspTagTokenContext, JspMultiTokenContext
+' new line --%>' [17, 14]; comment; 6; -; JspTagTokenContext, JspMultiTokenContext
+'</' [31, 2]; tag-open-symbol; 14; tag; HtmlTokenContext, JspMultiTokenContext
+'html' [33, 4]; close-tag; 5; tag; HtmlTokenContext, JspMultiTokenContext
+'>' [37, 1]; tag-close-symbol; 15; tag; HtmlTokenContext, JspMultiTokenContext
+'<NL>' [38, 1]; text; 1; -; HtmlTokenContext, JspMultiTokenContext

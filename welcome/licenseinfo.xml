@@ -22,14 +22,10 @@
 <licenseinfo>
     <fileset>
         <file>src/org/netbeans/modules/welcome/resources/xhtml1-transitional.dtd</file>
-        <license ref="W3C2" />
-        <comment>DTDs and XMLSchemata are used at runtime to enable html entity resolution in RSS feeds.</comment>
-    </fileset>
-    <fileset>
         <file>src/org/netbeans/modules/welcome/resources/xhtml-lat1.ent</file>
         <file>src/org/netbeans/modules/welcome/resources/xhtml-special.ent</file>
         <file>src/org/netbeans/modules/welcome/resources/xhtml-symbol.ent</file>
-        <license ref="ISO-8879-SGML" />
+        <license ref="W3C2" />
         <comment>DTDs and XMLSchemata are used at runtime to enable html entity resolution in RSS feeds.</comment>
     </fileset>
     <fileset>
@@ -44,13 +40,13 @@
         <file>src/org/netbeans/modules/welcome/resources/picture_frame.png</file>
         <file>src/org/netbeans/modules/welcome/resources/btn_left.png</file>
         <file>src/org/netbeans/modules/welcome/resources/welcome.gif</file>
-        <file>src/org/netbeans/modules/welcome/resources/oracle_logo_dark.png</file>
+        <file>src/org/netbeans/modules/welcome/resources/apache_feather_dark.png</file>
         <file>src/org/netbeans/modules/welcome/resources/startpage.gif</file>
         <file>src/org/netbeans/modules/welcome/resources/sel_btn_center.png</file>
         <file>src/org/netbeans/modules/welcome/resources/tab_selected_dark.png</file>
         <file>src/org/netbeans/modules/welcome/resources/nb_logo_dark.png</file>
         <file>src/org/netbeans/modules/welcome/resources/sel_btn_left.png</file>
-        <file>src/org/netbeans/modules/welcome/resources/oracle_logo.png</file>
+        <file>src/org/netbeans/modules/welcome/resources/apache_feather.png</file>
         <file>src/org/netbeans/modules/welcome/resources/tab_rollover_dark.png</file>
         <file>src/org/netbeans/modules/welcome/resources/tab_selected.png</file>
         <file>src/org/netbeans/modules/welcome/resources/content_banner_dark.png</file>

@@ -1,0 +1,195 @@
+<testresult testFile='heredoc_005.php'>
+    <scanner>
+        <token id='T_INLINE_HTML' start='0' end='71'>
+            <text>--TEST--\nunbraced complex variable replacement test (heredoc)\n--FILE--\n</text>
+        </token>
+        <token id='T_REQUIRE_ONCE' start='78' end='90'>
+            <text>require_once</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='91' end='103'>
+            <text>&apos;nowdoc.inc&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='103' end='104'>
+            <text>;</text>
+        </token>
+        <token id='T_PRINT' start='106' end='111'>
+            <text>print</text>
+        </token>
+        <token id='T_START_HEREDOC' start='112' end='128'>
+            <text>&lt;&lt;&lt;ENDOFHEREDOC\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='128' end='152'>
+            <text>This is heredoc test #s </text>
+        </token>
+        <token id='T_VARIABLE' start='152' end='154'>
+            <text>$a</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='154' end='156'>
+            <text>, </text>
+        </token>
+        <token id='T_VARIABLE' start='156' end='158'>
+            <text>$b</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='158' end='160'>
+            <text>, </text>
+        </token>
+        <token id='T_VARIABLE' start='160' end='162'>
+            <text>$c</text>
+        </token>
+        <token id='T_OPEN_RECT' start='162' end='163'>
+            <text>[</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='163' end='163'>
+            <text></text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='163' end='173'>
+            <text>&apos;c&apos;], and </text>
+        </token>
+        <token id='T_VARIABLE' start='173' end='175'>
+            <text>$d</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='175' end='177'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='177' end='178'>
+            <text>d</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='178' end='192'>
+            <text>.\n\nENDOFHEREDO</text>
+        </token>
+        <token id='T_END_HEREDOC' start='192' end='193'>
+            <text>C</text>
+        </token>
+        <token id='T_SEMICOLON' start='193' end='194'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='196' end='198'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='199' end='200'>
+            <text>=</text>
+        </token>
+        <token id='T_START_HEREDOC' start='201' end='217'>
+            <text>&lt;&lt;&lt;ENDOFHEREDOC\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='217' end='241'>
+            <text>This is heredoc test #s </text>
+        </token>
+        <token id='T_VARIABLE' start='241' end='243'>
+            <text>$a</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='243' end='245'>
+            <text>, </text>
+        </token>
+        <token id='T_VARIABLE' start='245' end='247'>
+            <text>$b</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='247' end='249'>
+            <text>, </text>
+        </token>
+        <token id='T_VARIABLE' start='249' end='251'>
+            <text>$c</text>
+        </token>
+        <token id='T_OPEN_RECT' start='251' end='252'>
+            <text>[</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='252' end='252'>
+            <text></text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='252' end='262'>
+            <text>&apos;c&apos;], and </text>
+        </token>
+        <token id='T_VARIABLE' start='262' end='264'>
+            <text>$d</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='264' end='266'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='266' end='267'>
+            <text>d</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='267' end='281'>
+            <text>.\n\nENDOFHEREDO</text>
+        </token>
+        <token id='T_END_HEREDOC' start='281' end='282'>
+            <text>C</text>
+        </token>
+        <token id='T_SEMICOLON' start='282' end='283'>
+            <text>;</text>
+        </token>
+        <token id='T_PRINT' start='285' end='290'>
+            <text>print</text>
+        </token>
+        <token id='T_QUATE' start='291' end='292'>
+            <text>"</text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='292' end='293'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='293' end='295'>
+            <text>$x</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='295' end='296'>
+            <text>}</text>
+        </token>
+        <token id='T_QUATE' start='296' end='297'>
+            <text>"</text>
+        </token>
+        <token id='T_SEMICOLON' start='297' end='298'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='300' end='303'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='T_INLINE_HTML' start='303' end='460'>
+            <text>--EXPECTF--\nParse error: syntax error, unexpected T_ENCAPSED_AND_WHITESPACE, expecting T_STRING or T_VARIABLE or T_NUM_STRING in %sheredoc_005.php on line 6\n</text>
+        </token>
+        <token id='EOF' start='460' end='460'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='460'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <InLineHtml start='0' end='71'/>
+            <ExpressionStatement start='78' end='104'>
+                <Include start='78' end='103' type='REQUIRE_ONCE'>
+                    <Scalar start='91' end='103' type='STRING' value='&apos;nowdoc.inc&apos;'/>
+                </Include>
+            </ExpressionStatement>
+            <ASTError start='106' end='163'/>
+            <ASTError start='163' end='163'/>
+            <ASTError start='163' end='173'/>
+            <ASTError start='173' end='178'/>
+            <ASTError start='178' end='192'/>
+            <EmptyStatement start='193' end='194'/>
+            <ASTError start='196' end='252'/>
+            <ASTError start='252' end='252'/>
+            <ASTError start='252' end='262'/>
+            <ASTError start='262' end='267'/>
+            <ASTError start='267' end='281'/>
+            <EmptyStatement start='282' end='283'/>
+            <ExpressionStatement start='285' end='298'>
+                <FunctionInvocation start='285' end='297'>
+                    <FucntionName start='285' end='290'>
+                        <Identifier start='285' end='290' name='print'/>
+                    </FucntionName>
+                    <Parameters>
+                        <Quote start='291' end='297' type='QUOTE'>
+                            <Expressions>
+                                <ReflectionVariable start='292' end='296'>
+                                    <Variable start='293' end='295' isDollared='true'>
+                                        <Identifier start='294' end='295' name='x'/>
+                                    </Variable>
+                                </ReflectionVariable>
+                            </Expressions>
+                        </Quote>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <EmptyStatement start='300' end='303'/>
+            <InLineHtml start='303' end='460'/>
+        </Statements>
+    </Program>
+</testresult>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE jax-ws PUBLIC "-//NetBeans//DTD JAX-WS 1.0//EN" "http://www.netbeans.org/ns/jax-ws/1">
+
+<jax-ws>
+    <services>
+        <service name="A">
+            <implementation-class>a.AImpl</implementation-class>
+            <wsdl-file>A.wsdl</wsdl-file>
+            <package-name>generated.a</package-name>
+            <bindings>
+                <binding>b1.xml</binding>
+                <binding>b2.xml</binding>
+            </bindings>
+        </service>
+        <service name="B">
+            <implementation-class>b.BImpl</implementation-class>
+            <wsdl-file>B.wsdl</wsdl-file>
+            <package-name>generated.b</package-name>
+            <bindings>
+                <binding>b1.xml</binding>
+                <binding>b2.xml</binding>
+            </bindings>
+        </service>
+    </services>
+    <clients>
+        <client name="A">
+            <wsdl-file>A.wsdl</wsdl-file>
+            <url-mapping>/A</url-mapping>
+            <package-name>generated.a</package-name>
+            <bindings>
+                <binding>b1.xml</binding>
+                <binding>b2.xml</binding>
+            </bindings>
+        </client>
+        <client name="B">
+            <wsdl-file>B.wsdl</wsdl-file>
+            <url-mapping>/B</url-mapping>
+            <package-name>generated.b</package-name>
+            <bindings>
+                <binding>b1.xml</binding>
+                <binding>b2.xml</binding>
+            </bindings>
+        </client>
+    </clients>
+</jax-ws>

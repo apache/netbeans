@@ -29,7 +29,7 @@ import org.netbeans.modules.java.hints.test.api.HintTest;
 public class ConvertToVarHintTest {
 
     private static final String VAR_CONV_DESC = "Explict type can be replaced with 'var'"; //NOI18N
-    private static final String VAR_CONV_WARNING = "verifier:" + VAR_CONV_DESC; //NOI18N
+    private static final String VAR_CONV_WARNING = "hint:" + VAR_CONV_DESC; //NOI18N
 
     @Test
     public void testIntLiteralRefToVar() throws Exception {
@@ -492,5 +492,38 @@ public class ConvertToVarHintTest {
                         + "    }\n"
                         + "}");
     }
+
+    @Test
+    public void testCompoundVariableDeclStatement() throws Exception {
+        HintTest.create()
+                .input("package test;\n"
+                        + "import java.util.List;\n"
+                        + "public class Test {\n"
+                        + "    void m() {\n"
+                        + "         int i =10,j=20;\n"
+                        + "    }\n"
+                        + "}")
+                .sourceLevel("1.10")
+                .run(ConvertToVarHint.class)
+                .assertNotContainsWarnings(VAR_CONV_DESC);
+
+    }
+
+    @Test
+    public void testCompoundVariableDeclStatement2() throws Exception {
+        HintTest.create()
+                .input("package test;\n"
+                        + "import java.util.List;\n"
+                        + "public class Test {\n"
+                        + "    void m() {\n"
+                        + "        final int /*comment*/l =10/*comment*/,i=20/*comment*/,j=5/*comment*/;\n"
+                        + "    }\n"
+                        + "}")
+                .sourceLevel("1.10")
+                .run(ConvertToVarHint.class)
+                .assertNotContainsWarnings(VAR_CONV_DESC);
+
+    }
+
     
 }

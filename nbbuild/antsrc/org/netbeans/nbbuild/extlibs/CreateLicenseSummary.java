@@ -149,7 +149,7 @@ public class CreateLicenseSummary extends Task {
         
         try (PrintWriter licenseWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(license), "UTF-8"));
                 PrintWriter noticeWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(notice), "UTF-8"))) {
-            
+
             try (Reader r = new InputStreamReader(new FileInputStream(licenseStub), "UTF-8")) {
                 int read;
                 while ((read = r.read()) != (-1)) {
@@ -271,14 +271,7 @@ public class CreateLicenseSummary extends Task {
                     licenseNames.add(fs.getLicenseRef());
                 }
                 
-                String notice = fs.getNotice();
-                if (notice != null) {
-                    notice = notice.trim();
-                    if (!notices.contains(notice)) {
-                        notices.add(notice);
-                        addNotice(noticeWriter, notice);
-                    }
-                }
+                addNotice(noticeWriter, fs.getNotice(), notices);
             }
         }
         
@@ -340,15 +333,7 @@ public class CreateLicenseSummary extends Task {
                 System.err.println("No license for: " + binary);
             }
             
-            String notice = headers.get("notice");
-            if (notice != null) {
-                notice = notice.trim();
-                if (!notices.contains(notice)) {
-                    notices.add(notice);
-                    addNotice(noticeWriter, notice);
-                }
-            }
-            
+            addNotice(noticeWriter, headers.get("notice"), notices);
         }
 //                String[] otherHeaders = {"Name", "Version", "Description", "Origin"};
 //                Map<Map<String,String>,Set<String>> licenseHeaders2Binaries = new LinkedHashMap<Map<String,String>,Set<String>>();
@@ -435,27 +420,32 @@ public class CreateLicenseSummary extends Task {
         return crc2LicenseHeaders;
     }
 
-    private void addNotice(PrintWriter output, String notice) throws IOException {
-        String[] lines = notice.split("\n");
-        boolean previousLineEmpty = true;
-        int n = lines.length;
-        for (int i = 0; i < n; i++) {
-            String line = lines[i];
-            line = line.trim();
-            boolean empty = line.length() == 0;
-            if (empty && previousLineEmpty) {
-                // Skip line
-            } else {
-                previousLineEmpty = empty;
-                if (!empty && i < n - 1 && line.startsWith("This product includes software") && lines[i + 1].startsWith("The Apache Software Foundation")) {
-                    i += 2;
-                    previousLineEmpty = false;
-                    // Skip
-                } else {
-                    output.println(line);
-                }
-            }
+    private String normalizeNotice(String inputNotice) {
+        if(inputNotice == null) {
+            inputNotice = "";
         }
+        return inputNotice
+                // Remove the common part required for all ASF project, that is
+                // inserted in the header
+                .replaceAll("This product includes software.*\nThe Apache Software Foundation.*\n?", "")
+                // remove excessive whitespace (the notice entries will be separated
+                // by empty lines, while inside each block only one empty line will
+                // remain)
+                .replaceAll("\n{3,}", "\n\n")
+                // the license file is written with platform line endings, so adjust here
+                .replaceAll("\n", System.getProperty("line.separator"))
+                .trim();
+    }
+
+    private void addNotice(PrintWriter output, String notice, Set<String> alreadyWrittenNotices) throws IOException {
+        notice = normalizeNotice(notice);
+        if(notice.isEmpty() || alreadyWrittenNotices.contains(notice)) {
+            return;
+        }
+        alreadyWrittenNotices.add(notice);
+        output.println(notice);
+        output.println();
+        output.println();
     }
 
     private Entry<Map<String, String>, Long> getHeaders(Map<Long, Map<String, String>> crc2License,

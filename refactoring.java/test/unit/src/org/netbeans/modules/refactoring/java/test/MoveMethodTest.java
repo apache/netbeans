@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.refactoring.java.test;
 
+import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.java.api.JavaMoveMembersProperties.Visibility;
 
@@ -27,10 +28,15 @@ import org.netbeans.modules.refactoring.java.api.JavaMoveMembersProperties.Visib
  */
 public class MoveMethodTest extends MoveBase {
 
+    private static String SOURCE_LEVEL = "1.8"; //NOI18N
+
     public MoveMethodTest(String name) {
-        super(name);
+        super(name, SOURCE_LEVEL);
     }
     
+    static {
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+    }
     public void test236877() throws Exception {
         writeFilesAndWaitForScan(src,
                 new File("t/SourceClass.java", "package t;\n"
@@ -1912,5 +1918,121 @@ public class MoveMethodTest extends MoveBase {
                 + "    }\n"
                 + "\n"
                 + "}"));
+    }
+
+    public void testMoveMethodRef1() throws Exception {
+        writeFilesAndWaitForScan(src,
+                new File("t/TargetClass.java", "package t;\n"
+                + "import java.util.function.BooleanSupplier;\n"
+                + "public class TargetClass {\n"
+                + "    public static void doStuff(BooleanSupplier source) {\n"
+                + "        boolean val = source.getAsBoolean();\n"
+                + "    }\n"
+                + "    public static void prepareStuff() {\n"
+                + "       doStuff(SourceClass::moveThis);\n"
+                + "    }\n"
+                + "}\n"),
+                new File("t/SourceClass.java", "package t;\n"
+                + "public class SourceClass {\n"
+                + "   public static boolean moveThis() {\n"
+                + "      return true;\n"
+                + "   }\n"
+                + "}\n"));
+        performMove(src.getFileObject("t/SourceClass.java"), new int[]{1}, "t.TargetClass", Visibility.PUBLIC);
+        verifyContent(src,
+                new File("t/TargetClass.java", "package t;\n"
+                + "import java.util.function.BooleanSupplier;\n"
+                + "public class TargetClass {\n"
+                + "   public static void doStuff(BooleanSupplier source) {\n"
+                + "        boolean val = source.getAsBoolean();\n"
+                + "    }\n"
+                + "    public static void prepareStuff() {\n"
+                + "       doStuff(TargetClass::moveThis);\n"
+                + "    }\n"
+                + "   public static boolean moveThis() {\n"
+                + "      return true;\n"
+                + "   }\n"
+                + "}\n"),
+                new File("t/SourceClass.java", "package t;\n"
+                + "public class SourceClass {\n"
+                + "}\n"));
+    }
+
+    public void testMoveMethodRef2() throws Exception {
+        writeFilesAndWaitForScan(src,
+                new File("t/TargetClass.java", "package t;\n"
+                + "public class TargetClass {\n"
+                + "    public static void main(String[] args) { \n"
+                + "        // Referring non-static method  \n"
+                + "       SourceClass obj = new SourceClass();  \n"
+                + "       Sayable sayable = obj::saySomething;  \n"
+                + "        sayable.say();  \n"
+                + "    }\n"
+                + "    interface Sayable{\n"
+                + "    void say();  \n"
+                + "} \n"
+                + "}\n"),
+                new File("t/SourceClass.java", "package t;\n"
+                + "public class SourceClass {\n"
+                + "  public  void saySomething() {\n"
+                + "    }\n"
+                + "}\n"));
+        performMove(src.getFileObject("t/SourceClass.java"), new int[]{1}, "t.TargetClass", Visibility.PUBLIC, new Problem(false, "WRN_NoAccessor"));
+        verifyContent(src,
+                new File("t/TargetClass.java", "package t;\n"
+                + "public class TargetClass {\n"
+                + "    public static void main(String[] args) { \n"
+                + "        // Referring non-static method  \n"
+                + "       SourceClass obj = new SourceClass();  \n"
+                + "       Sayable sayable = obj::saySomething;  \n"
+                + "        sayable.say();  \n"
+                + "    }\n"
+                + "  public void saySomething() {\n"
+                + "    }\n"
+                + "    interface Sayable{\n"
+                + "    void say();  \n"
+                + "} \n"
+                + "}\n"),
+                new File("t/SourceClass.java", "package t;\n"
+                + "public class SourceClass {\n"
+                + "}\n"));
+    }
+
+    public void testMoveMethodRef3() throws Exception {
+        writeFilesAndWaitForScan(src,
+                new File("t/TargetClass.java", "package t;\n"
+                + "public class TargetClass {\n"
+                + "    public static void main(String[] args) { \n"
+                + "        // Referring static method  \n"
+                + "       Sayable sayable = SourceClass::saySomething;  \n"
+                + "        sayable.say();  \n"
+                + "    }\n"
+                + "    interface Sayable{\n"
+                + "    void say();  \n"
+                + "} \n"
+                + "}\n"),
+                new File("t/SourceClass.java", "package t;\n"
+                + "public class SourceClass {\n"
+                + "  public  static void saySomething() {\n"
+                + "    }\n"
+                + "}\n"));
+        performMove(src.getFileObject("t/SourceClass.java"), new int[]{1}, "t.TargetClass", Visibility.PUBLIC);
+        verifyContent(src,
+                new File("t/TargetClass.java", "package t;\n"
+                + "public class TargetClass {\n"
+                + "    public static void main(String[] args) { \n"
+                + "        // Referring static method  \n"
+                + "       Sayable sayable = TargetClass::saySomething;  \n"
+                + "        sayable.say();  \n"
+                + "    }\n"
+                + "  public static void saySomething() {\n"
+                + "    }\n"
+                + "    interface Sayable{\n"
+                + "    void say();  \n"
+                + "} \n"
+                + "}\n"),
+                new File("t/SourceClass.java", "package t;\n"
+                + "public class SourceClass {\n"
+                + "}\n"));
     }
 }

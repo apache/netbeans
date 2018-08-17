@@ -38,6 +38,18 @@
         </description>
         <class name="TreeUtilities" package="org.netbeans.api.java.source"/>
     </change>
+    <change id="TreeUtilities.isTreeHasError">
+        <api name="javasource_base"/>
+        <summary>Check the tree has compile error in given collection of errors.</summary>
+        <version major="1" minor="2.37"/>
+        <date day="18" month="7" year="2018"/>
+        <author login="vikasprabhakar"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"/>
+        <description>
+            Check the tree has compile error in given collection of errors.
+        </description>
+        <class name="TreeUtilities" package="org.netbeans.api.java.source"/>
+    </change>
     <change id="TreeUtilities.isVarType">
         <api name="javasource_base"/>
         <summary>Check the var type variable in given tree path.</summary>
@@ -59,6 +71,18 @@
         <compatibility addition="yes" binary="compatible" source="compatible"/>
         <description>
             Check the tree end with comma.
+        </description>
+        <class name="TreeUtilities" package="org.netbeans.api.java.source"/>
+    </change>
+    <change id="TreeUtilities.isPartOfCompoundVariableDeclaration">
+        <api name="javasource_base"/>
+        <summary>Check the tree is the end of compound declaration.</summary>
+        <version major="1" minor="2.34"/>
+        <date day="14" month="5" year="2018"/>
+        <author login="arusinha"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"/>
+        <description>
+            Check whether tree is part of compound declaration.
         </description>
         <class name="TreeUtilities" package="org.netbeans.api.java.source"/>
     </change>

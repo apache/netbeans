@@ -1,0 +1,23 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE  
+token #2 PHP_FOREACH foreach
+token #3 WHITESPACE  
+token #4 PHP_TOKEN (
+token #5 PHP_VARIABLE $news_list
+token #6 WHITESPACE  
+token #7 PHP_AS as
+token #8 WHITESPACE  
+token #9 PHP_VARIABLE $news
+token #10 PHP_TOKEN )
+token #11 WHITESPACE  
+token #12 PHP_CURLY_OPEN {
+token #13 WHITESPACE  
+token #14 PHP_CLOSETAG ?>
+token #15 T_INLINE_HTML \n<br>\n
+token #16 PHP_OPENTAG <?php
+token #17 WHITESPACE  
+token #18 PHP_CURLY_CLOSE }
+token #19 WHITESPACE  
+token #20 PHP_LINE_COMMENT //
+token #21 PHP_LINE_COMMENT end of foreach 
+token #22 PHP_CLOSETAG ?>\n

@@ -1,0 +1,21 @@
+common:
+	doctrine < %databaseInfo%:
+		metadata:
+			App\Entities: '%appDir%/entities'
+
+master < common:
+	parameters:
+		databaseInfo:
+			host: a
+			user: a
+			password: a
+			dbname: a
+
+
+test < common:
+	parameters:
+		databaseInfo:
+			host: b
+			user: b
+			password: b
+			dbname: b

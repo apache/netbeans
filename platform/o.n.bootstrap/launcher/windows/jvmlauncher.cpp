@@ -21,8 +21,7 @@
  */
 
 #include "jvmlauncher.h"
-#include <cassert>
-#include <fstream>
+#include <assert.h>
 
 using namespace std;
 

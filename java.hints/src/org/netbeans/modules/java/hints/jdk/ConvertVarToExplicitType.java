@@ -19,21 +19,20 @@
 package org.netbeans.modules.java.hints.jdk;
 
 import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.tools.Diagnostic;
-import javax.tools.Diagnostic.Kind;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.java.hints.errors.Utilities;
 import org.netbeans.spi.editor.hints.ErrorDescription;
+import org.netbeans.spi.editor.hints.Severity;
 import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
 import org.netbeans.spi.java.hints.Hint;
 import org.netbeans.spi.java.hints.HintContext;
@@ -48,7 +47,7 @@ import org.openide.util.NbBundle.Messages;
  *
  * @author rtaneja
  */
-@Hint(displayName = "#DN_ConvertVarToExplicitType", description = "#DESC_ConvertVarToExplicitType", category = "rules15", minSourceVersion = "10")
+@Hint(displayName = "#DN_ConvertVarToExplicitType", description = "#DESC_ConvertVarToExplicitType", category = "rules15", severity = Severity.HINT, minSourceVersion = "10")
 @Messages("MSG_ConvertibleToExplicitType=Convert var to explicit type")
 public class ConvertVarToExplicitType {
 
@@ -59,7 +58,7 @@ public class ConvertVarToExplicitType {
             return null;
         }
         TreePath treePath = ctx.getPath();
-        if (hasDiagnosticErrors(ctx.getInfo(), treePath.getLeaf())) {
+        if (ctx.getInfo().getTreeUtilities().hasError(treePath.getLeaf())) {
             return null;
         }
 
@@ -134,33 +133,23 @@ public class ConvertVarToExplicitType {
         return info.getTreeUtilities().isVarType(treePath);
     }
 
-    private static boolean hasDiagnosticErrors(CompilationInfo info, Tree tree) {
-        long startPos = info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
-        long endPos = info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree);
-
-        for (Diagnostic<?> d : info.getDiagnostics()) {
-            if (d.getKind() == Kind.ERROR) {
-                if ((d.getPosition() >= startPos) && (d.getPosition() <= endPos)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     //filter anonymous class and intersection types
     private static boolean isValidType(HintContext ctx) {
         TreePath treePath = ctx.getPath();
-        TreePath initTreePath = ctx.getVariables().get("$init");  //NOI18N
+        TypeMirror variableTypeMirror = ctx.getInfo().getTrees().getElement(treePath).asType();
 
-        if (initTreePath.getLeaf().getKind() == Tree.Kind.NEW_CLASS) {
-            NewClassTree nct = ((NewClassTree) initTreePath.getLeaf());
-            if (nct.getClassBody() != null) {
-                return false;
+        if (Utilities.isAnonymousType(variableTypeMirror)) {
+            return false;
+        } else if (variableTypeMirror.getKind() == TypeKind.DECLARED) {
+            DeclaredType dt = (DeclaredType) variableTypeMirror;
+            if (dt.getTypeArguments().size() > 0) {
+                for (TypeMirror paramType : dt.getTypeArguments()) {
+                    if (Utilities.isAnonymousType(paramType)) {
+                        return false;
+                    }
+                }
             }
         }
-
-        TypeMirror variableTypeMirror = ctx.getInfo().getTrees().getElement(treePath).asType();
 
         if (!Utilities.isValidType(variableTypeMirror) ||(variableTypeMirror.getKind() == TypeKind.INTERSECTION)) {
             return false;

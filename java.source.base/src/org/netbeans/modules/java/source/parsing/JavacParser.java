@@ -146,6 +146,7 @@ public class JavacParser extends Parser {
     private static final int MAX_DUMPS = Integer.getInteger("org.netbeans.modules.java.source.parsing.JavacParser.maxDumps", 255);  //NOI18N
     //Command line switch disabling partial reparse
     private static final boolean DISABLE_PARTIAL_REPARSE = Boolean.getBoolean("org.netbeans.modules.java.source.parsing.JavacParser.no_reparse");   //NOI18N
+    private static final boolean DISABLE_PARAMETER_NAMES_READING = Boolean.getBoolean("org.netbeans.modules.java.source.parsing.JavacParser.no_parameter_names");   //NOI18N
     public static final String LOMBOK_DETECTED = "lombokDetected";
 
     /**
@@ -823,8 +824,10 @@ public class JavacParser extends Parser {
             options.add(validatedSourceLevel.requiredTarget().name);
         }
         options.add("-XDide");   // NOI18N, javac runs inside the IDE
-        options.add("-XDsave-parameter-names");   // NOI18N, javac runs inside the IDE
-        options.add("-parameters");   // NOI18N, save and read parameter names
+        if (!DISABLE_PARAMETER_NAMES_READING) {
+            options.add("-XDsave-parameter-names");   // NOI18N, javac runs inside the IDE
+            options.add("-parameters");   // NOI18N, save and read parameter names
+        }
         options.add("-XDsuppressAbortOnBadClassFile");   // NOI18N, when a class file cannot be read, produce an error type instead of failing with an exception
         options.add("-XDshould-stop.at=GENERATE");   // NOI18N, parsing should not stop in phase where an error is found
         options.add("-g:source"); // NOI18N, Make the compiler to maintian source file info
@@ -871,7 +874,7 @@ public class JavacParser extends Parser {
             options.add("-proc:none"); // NOI18N, Disable annotation processors
         }
         if (compilerOptions != null) {
-            for (String compilerOption : validateCompilerOptions(compilerOptions.getArguments())) {
+            for (String compilerOption : validateCompilerOptions(compilerOptions.getArguments(), validatedSourceLevel)) {
                 options.add(compilerOption);
             }
         }
@@ -1029,8 +1032,9 @@ public class JavacParser extends Parser {
     }
 
     @NonNull
-    public static List<? extends String> validateCompilerOptions(@NonNull final List<? extends String> options) {
+    public static List<? extends String> validateCompilerOptions(@NonNull final List<? extends String> options, @NullAllowed com.sun.tools.javac.code.Source sourceLevel) {
         final List<String> res = new ArrayList<>();
+        boolean allowModularOptions = sourceLevel == null || com.sun.tools.javac.code.Source.lookup("9").compareTo(sourceLevel) <= 0;
         boolean xmoduleSeen = false;
         for (int i = 0; i < options.size(); i++) {
             String option = options.get(i);
@@ -1047,12 +1051,13 @@ public class JavacParser extends Parser {
                 xmoduleSeen = true;
             } else if (option.equals("-parameters") || option.startsWith("-Xlint")) {     //NOI18N
                 res.add(option);
-            } else if (
+            } else if ((
                     option.startsWith("--add-modules") ||   //NOI18N
                     option.startsWith("--limit-modules") || //NOI18N
                     option.startsWith("--add-exports") ||   //NOI18N
                     option.startsWith("--add-reads")  ||
-                    option.startsWith(OPTION_PATCH_MODULE)) {
+                    option.startsWith(OPTION_PATCH_MODULE)) &&
+                    allowModularOptions) {
                 int idx = option.indexOf('=');
                 if (idx > 0) {
                    res.add(option);

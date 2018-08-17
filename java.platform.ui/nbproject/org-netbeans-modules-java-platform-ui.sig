@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.39.1
+#Version 1.44.1
 
 CLSS public java.lang.Object
 cons public init()
@@ -33,6 +33,7 @@ meth public abstract org.netbeans.api.java.classpath.ClassPath getSourceFolders(
 meth public abstract org.netbeans.api.java.classpath.ClassPath getStandardLibraries()
 meth public abstract org.netbeans.api.java.platform.Specification getSpecification()
 meth public abstract org.openide.filesystems.FileObject findTool(java.lang.String)
+meth public boolean isValid()
 meth public final java.util.Map<java.lang.String,java.lang.String> getSystemProperties()
 meth public final void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public final void removePropertyChangeListener(java.beans.PropertyChangeListener)
@@ -98,6 +99,19 @@ supr org.netbeans.spi.java.platform.GeneralPlatformInstall
 CLSS public abstract org.netbeans.spi.java.platform.GeneralPlatformInstall
 meth public abstract java.lang.String getDisplayName()
 supr java.lang.Object
+
+CLSS public abstract interface org.netbeans.spi.java.platform.JavaPlatformFactory
+innr public abstract interface static Provider
+meth public abstract org.netbeans.api.java.platform.JavaPlatform create(org.openide.filesystems.FileObject,java.lang.String,boolean) throws java.io.IOException
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+
+CLSS public abstract interface static org.netbeans.spi.java.platform.JavaPlatformFactory$Provider
+ outer org.netbeans.spi.java.platform.JavaPlatformFactory
+meth public abstract org.netbeans.spi.java.platform.JavaPlatformFactory forType(java.lang.String)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 
 CLSS public abstract org.netbeans.spi.java.platform.PlatformInstall
 cons public init()

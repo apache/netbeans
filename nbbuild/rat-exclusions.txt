@@ -18,6 +18,7 @@
 ###### BEGIN OF EXCLUSIONS (Do not remove this marker!)
 ###### build artifacts 
 **/build/**
+licenses/**
 nbbuild/licenses/**
 nbbuild/netbeans/**
 nbbuild/testuserdir/**

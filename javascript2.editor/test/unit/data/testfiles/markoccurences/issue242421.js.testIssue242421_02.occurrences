@@ -1,0 +1,2 @@
+var myF = function MyLib_Function (path, |>MARK_OCCURRENCES:r^ef<|, pfx, options) {
+   var v = expand(path, |>MARK_OCCURRENCES:ref<|, pfx, options);

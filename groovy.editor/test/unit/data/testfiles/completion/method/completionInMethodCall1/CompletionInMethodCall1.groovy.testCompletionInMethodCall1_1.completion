@@ -1,0 +1,22 @@
+Code completion result for source line:
+new File("something").ea|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     each(Closure)                              Object
+METHOD     eachByte(Closure)                          void
+METHOD     eachByte(int, Closure)                     void
+METHOD     eachDir(Closure)                           void
+METHOD     eachDirMatch(Object, Closure)              void
+METHOD     eachDirRecurse(Closure)                    void
+METHOD     eachFile(Closure)                          void
+METHOD     eachFile(FileType, Closure)                void
+METHOD     eachFileMatch(FileType, Object             void
+METHOD     eachFileMatch(Object, Closure)             void
+METHOD     eachFileRecurse(Closure)                   void
+METHOD     eachFileRecurse(FileType, Clos             void
+METHOD     eachLine(Closure)                          Object
+METHOD     eachLine(String,  int, Closure             Object
+METHOD     eachLine(String, Closure)                  Object
+METHOD     eachLine(int, Closure)                     Object
+METHOD     eachObject(Closure)                        void
+METHOD     eachWithIndex(Closure)                     Object

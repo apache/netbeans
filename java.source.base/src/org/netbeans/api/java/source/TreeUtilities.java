@@ -92,6 +92,7 @@ import org.netbeans.api.java.lexer.JavadocTokenId;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.lib.nbjavac.services.CancelService;
+import org.netbeans.lib.nbjavac.services.NBAttr;
 import org.netbeans.lib.nbjavac.services.NBParserFactory;
 import org.netbeans.lib.nbjavac.services.NBResolve;
 import org.netbeans.lib.nbjavac.services.NBTreeMaker.IndexedClassDecl;
@@ -377,6 +378,21 @@ public final class TreeUtilities {
                 return super.visitMethod(node, p);
             }
 
+            @Override
+            public Void visitEnhancedForLoop(EnhancedForLoopTree node, Void p) {
+                int exprEndPos = (int) sourcePositions.getEndPosition(getCurrentPath().getCompilationUnit(), node.getExpression());
+                TokenSequence<JavaTokenId> ts = info.getTokenHierarchy().tokenSequence(JavaTokenId.language()).subSequence(exprEndPos, pos);
+                boolean hasNonWhiteSpace;
+                while (hasNonWhiteSpace = ts.moveNext()) {
+                    if (!IGNORE_TOKENS.contains(ts.token().id()))
+                        break;
+                }
+                if (!hasNonWhiteSpace) {
+                    pos = exprEndPos;
+                }
+                return super.visitEnhancedForLoop(node, p);
+            }
+
         }
         
         try {
@@ -388,7 +404,7 @@ public final class TreeUtilities {
         if (path.getLeaf() == path.getCompilationUnit())
             return path;
         
-        TokenSequence<JavaTokenId> tokenList = tokensFor(path.getLeaf(), sourcePositions);
+        TokenSequence<JavaTokenId> tokenList = tokensFor(path.getLeaf(), sourcePositions, pos);
         tokenList.moveEnd();
         if (tokenList.movePrevious() && tokenList.offset() < pos) {
             switch (tokenList.token().id()) {
@@ -413,6 +429,11 @@ public final class TreeUtilities {
                             (path.getLeaf().getKind() == Tree.Kind.FOR_LOOP &&
                             tokenList.offset() <= sourcePositions.getStartPosition(path.getCompilationUnit(), ((ForLoopTree)path.getLeaf()).getUpdate().get(0))))
                         break;
+                    if (path.getParentPath().getLeaf().getKind() == Tree.Kind.TRY &&
+                        ((TryTree) path.getParentPath().getLeaf()).getResources().contains(path.getLeaf())) {
+                        path = path.getParentPath();
+                        break;
+                    }
                 case RBRACE:
                     path = path.getParentPath();
                     switch (path.getLeaf().getKind()) {
@@ -438,6 +459,11 @@ public final class TreeUtilities {
         return path;
     }
     
+    private static final Set<JavaTokenId> IGNORE_TOKENS = EnumSet.of(
+            JavaTokenId.BLOCK_COMMENT, JavaTokenId.JAVADOC_COMMENT,
+            JavaTokenId.LINE_COMMENT, JavaTokenId.WHITESPACE
+    );
+
     /**Return the deepest DocTreePath at the given position.
      * 
      * @param treepath for which the {@code doc} comment was determined
@@ -846,6 +872,9 @@ public final class TreeUtilities {
             Env<AttrContext> env = getEnv(scope);
             if (tree instanceof JCExpression)
                 return attr.attribExpr((JCTree) tree,env, Type.noType);
+            if (env.tree != null && env.tree.getKind() == Kind.VARIABLE) {
+                env = env.next;
+            }
             return attr.attribStat((JCTree) tree,env);
         } finally {
 //            cacheContext.leave();
@@ -872,11 +901,9 @@ public final class TreeUtilities {
 //        ArgumentAttr argumentAttr = ArgumentAttr.instance(jti.getContext());
 //        ArgumentAttr.LocalCacheContext cacheContext = argumentAttr.withLocalCacheContext();
         try {
-            Attr attr = Attr.instance(jti.getContext());
+            NBAttr attr = (NBAttr) NBAttr.instance(jti.getContext());
             Env<AttrContext> env = getEnv(scope);
-            Env<AttrContext> result = tree instanceof JCExpression ?
-                attr.attribExprToTree((JCExpression) tree, env, (JCTree) to) :
-                attr.attribStatToTree((JCTree) tree, env, (JCTree) to);
+            Env<AttrContext> result = attr.attributeAndCapture((JCTree) tree, env, (JCTree) to);
             try {
                 Constructor<JavacScope> c = JavacScope.class.getDeclaredConstructor(Env.class);
                 c.setAccessible(true);
@@ -902,10 +929,14 @@ public final class TreeUtilities {
     /**Returns tokens for a given tree. Uses specified {@link SourcePositions}.
      */
     public TokenSequence<JavaTokenId> tokensFor(Tree tree, SourcePositions sourcePositions) {
+        return tokensFor(tree, sourcePositions, -1);
+    }
+
+    private TokenSequence<JavaTokenId> tokensFor(Tree tree, SourcePositions sourcePositions, int farEnd) {
         int start = (int)sourcePositions.getStartPosition(info.getCompilationUnit(), tree);
         int end   = (int)sourcePositions.getEndPosition(info.getCompilationUnit(), tree);
         
-        return info.getTokenHierarchy().tokenSequence(JavaTokenId.language()).subSequence(start, end);
+        return info.getTokenHierarchy().tokenSequence(JavaTokenId.language()).subSequence(start, Math.max(end, farEnd));
     }
     
     /**
@@ -1883,6 +1914,79 @@ public final class TreeUtilities {
         return false;
     }
  
+    /**
+     * Checks whether tree is part of compound variable declaration.
+     *
+     * @param tree tree to examine.
+     * @return true if {@code tree} is part of compound var declaration.
+     * @since 2.34.0
+     */
+    public boolean isPartOfCompoundVariableDeclaration(@NonNull Tree tree) {
+        TokenSequence<JavaTokenId> tokenSequence = tokensFor(tree);
+
+        if (tree.getKind() != Tree.Kind.VARIABLE) {
+            return false;
+        }
+
+        // If tree ends with comma then tree is part of compound variable declaration.
+        tokenSequence.moveEnd();
+        if (tokenSequence.movePrevious() && tokenSequence.token().id() == JavaTokenId.COMMA) {
+            return true;
+        }
+
+        int startPos = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
+        tokenSequence.moveStart();
+
+        int tokensLength = 0;
+
+        // To find out the first subtree from compound varaible declaration statement(if any).
+        while (tokenSequence.moveNext()) {
+            tokensLength += tokenSequence.token().length();
+            if (tokenSequence.token().id() == JavaTokenId.IDENTIFIER) {
+
+                Tree path = pathFor(startPos + tokensLength).getLeaf();
+                TokenSequence<JavaTokenId> TokenSeq = tokensFor(path);
+                TokenSeq.moveEnd();
+
+                if (TokenSeq.movePrevious() && TokenSeq.token().id() == JavaTokenId.COMMA) {
+                    return true;
+                }
+                break;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check the tree has compile error in given errors.
+     *
+     * @param tree compilation tree
+     * @param errors Array of error code
+     * @return true if tree has compile error present in list of errors.
+     * @since 2.37
+     */
+    public boolean hasError(@NonNull Tree tree, String... errors) {
+        long startPos = info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
+        long endPos = info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree);
+
+        List<Diagnostic> diagnosticsList = info.getDiagnostics();
+        for (Diagnostic d : diagnosticsList) {
+            if ((d.getKind() == Diagnostic.Kind.ERROR) && ((d.getStartPosition() >= startPos) && (d.getEndPosition() <= endPos))) {
+                if (errors == null || errors.length == 0) {
+                    return true;
+                } else {
+                    for (String error : errors) {
+                        if (error.equals(d.getCode())) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     private static final class NBScope implements Scope {
 
         private final JavacScope delegate;

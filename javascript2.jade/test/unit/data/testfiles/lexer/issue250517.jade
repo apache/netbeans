@@ -1,0 +1,18 @@
+input(type='hidden', value= user._id)#userId
+
+#account-form-container
+	form( method="post")#account-form.form-horizontal.well.span6
+		h1
+		p#sub1.subheading Please tell us a little about yourself.
+		hr
+		fieldset
+			#clist-cg.control-group
+				label.control-label(for='country-list') Location
+				.controls
+					select#country-list(name='country')
+						each item in countries
+							option(selected=item.name == per.country)= item.name
+			hr
+			p#sub2.subheading
+			#user-cg.control-group
+				label.control-label(fora='user-tf') Username

@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!-- =========== FULL CONFIGURATION FILE ================================== -->
+
+<faces-config version="2.0" 
+              xmlns="http://java.sun.com/xml/ns/javaee" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+              
+     <application>
+     	<system-event-listener>
+     		<system-event-listener-class>a.Listener</system-event-listener-class>
+     		<system-event-class>a.Event</system-event-class>
+     		<source-class>a.Source</source-class>
+     	</system-event-listener>
+     </application>
+     <converter>
+     	<converter-class>twoConverterClass</converter-class>
+     	<converter-for-class>twoConverterForClass</converter-for-class>
+     	<converter-id>twoConvertedId</converter-id>
+     </converter>
+     <lifecycle/>
+     <managed-bean>
+     	<managed-bean-name>twoManagedBean</managed-bean-name>
+     	<managed-bean-class>twoManagedBeanClass</managed-bean-class>
+     	<managed-bean-scope>some expression</managed-bean-scope>
+     </managed-bean>
+     <navigation-rule/>
+     <render-kit>
+     	<renderer>
+     		<renderer-class>twoRendererClass</renderer-class>
+     		<renderer-type>twoRendererType</renderer-type>
+     		<description>twoComponentFamily</description>
+     	</renderer>
+     </render-kit>
+     <validator>
+     	<validator-id>twoValidatorId</validator-id>
+     	<validator-class>twoValidatorClass</validator-class>
+     </validator>
+              
+</faces-config>

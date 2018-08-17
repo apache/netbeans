@@ -39,7 +39,7 @@ class BottomBar extends JPanel {
         setOpaque(true);
         setBackground( Utils.getBottomBarColor() );
         
-        add( Logo.createOracleLogo(), new GridBagConstraints(0,0,1,1,0.0,0.0,
+        add( Logo.createApacheLogo(), new GridBagConstraints(0,0,1,1,0.0,0.0,
                 GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(0,12,0,5),0,0 ) );
         
         add( new JLabel(), new GridBagConstraints(1,0,1,1,1.0,0.0,

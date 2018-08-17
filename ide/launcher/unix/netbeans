@@ -196,7 +196,6 @@ case "`uname`" in
             --branding nb \
             --clusters '"$netbeans_clusters"' \
             -J-Dnetbeans.importclass=org.netbeans.upgrade.AutoUpgrade \
-            -J-Dnetbeans.accept_license_class=org.netbeans.license.AcceptLicense \
             ${netbeans_default_options} \
             '"$@"'
         ;;
@@ -206,7 +205,6 @@ case "`uname`" in
             --branding nb \
             --clusters '"$netbeans_clusters"' \
             -J-Dnetbeans.importclass=org.netbeans.upgrade.AutoUpgrade \
-            -J-Dnetbeans.accept_license_class=org.netbeans.license.AcceptLicense \
             ${netbeans_default_options} \
             '"$@"'
         ;;

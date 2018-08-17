@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.4.1
+#Version 2.19.1
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -102,26 +102,40 @@ meth public abstract void putValue(java.lang.String,java.lang.Object)
 meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public abstract void setEnabled(boolean)
 
-CLSS public abstract interface javax.swing.text.Document
-fld public final static java.lang.String StreamDescriptionProperty = "stream"
-fld public final static java.lang.String TitleProperty = "title"
-meth public abstract int getLength()
-meth public abstract java.lang.Object getProperty(java.lang.Object)
-meth public abstract java.lang.String getText(int,int) throws javax.swing.text.BadLocationException
-meth public abstract javax.swing.text.Element getDefaultRootElement()
-meth public abstract javax.swing.text.Element[] getRootElements()
-meth public abstract javax.swing.text.Position createPosition(int) throws javax.swing.text.BadLocationException
-meth public abstract javax.swing.text.Position getEndPosition()
-meth public abstract javax.swing.text.Position getStartPosition()
-meth public abstract void addDocumentListener(javax.swing.event.DocumentListener)
-meth public abstract void addUndoableEditListener(javax.swing.event.UndoableEditListener)
-meth public abstract void getText(int,int,javax.swing.text.Segment) throws javax.swing.text.BadLocationException
-meth public abstract void insertString(int,java.lang.String,javax.swing.text.AttributeSet) throws javax.swing.text.BadLocationException
-meth public abstract void putProperty(java.lang.Object,java.lang.Object)
-meth public abstract void remove(int,int) throws javax.swing.text.BadLocationException
-meth public abstract void removeDocumentListener(javax.swing.event.DocumentListener)
-meth public abstract void removeUndoableEditListener(javax.swing.event.UndoableEditListener)
-meth public abstract void render(java.lang.Runnable)
+CLSS public abstract interface javax.swing.text.Caret
+meth public abstract boolean isSelectionVisible()
+meth public abstract boolean isVisible()
+meth public abstract int getBlinkRate()
+meth public abstract int getDot()
+meth public abstract int getMark()
+meth public abstract java.awt.Point getMagicCaretPosition()
+meth public abstract void addChangeListener(javax.swing.event.ChangeListener)
+meth public abstract void deinstall(javax.swing.text.JTextComponent)
+meth public abstract void install(javax.swing.text.JTextComponent)
+meth public abstract void moveDot(int)
+meth public abstract void paint(java.awt.Graphics)
+meth public abstract void removeChangeListener(javax.swing.event.ChangeListener)
+meth public abstract void setBlinkRate(int)
+meth public abstract void setDot(int)
+meth public abstract void setMagicCaretPosition(java.awt.Point)
+meth public abstract void setSelectionVisible(boolean)
+meth public abstract void setVisible(boolean)
+
+CLSS public javax.swing.text.NavigationFilter
+cons public init()
+innr public abstract static FilterBypass
+meth public int getNextVisualPositionFrom(javax.swing.text.JTextComponent,int,javax.swing.text.Position$Bias,int,javax.swing.text.Position$Bias[]) throws javax.swing.text.BadLocationException
+meth public void moveDot(javax.swing.text.NavigationFilter$FilterBypass,int,javax.swing.text.Position$Bias)
+meth public void setDot(javax.swing.text.NavigationFilter$FilterBypass,int,javax.swing.text.Position$Bias)
+supr java.lang.Object
+
+CLSS public abstract static javax.swing.text.NavigationFilter$FilterBypass
+ outer javax.swing.text.NavigationFilter
+cons public init()
+meth public abstract javax.swing.text.Caret getCaret()
+meth public abstract void moveDot(int,javax.swing.text.Position$Bias)
+meth public abstract void setDot(int,javax.swing.text.Position$Bias)
+supr java.lang.Object
 
 CLSS public abstract javax.swing.text.TextAction
 cons public init(java.lang.String)
@@ -140,16 +154,22 @@ supr java.lang.Object
 hfds LOG
 
 CLSS public final org.netbeans.api.editor.EditorActionNames
+fld public final static java.lang.String addCaretDown = "add-caret-down"
+fld public final static java.lang.String addCaretUp = "add-caret-up"
 fld public final static java.lang.String gotoDeclaration = "goto-declaration"
+fld public final static java.lang.String gotoNextOccurrence = "next-marked-occurrence"
+fld public final static java.lang.String gotoPrevOccurrence = "prev-marked-occurrence"
 fld public final static java.lang.String moveCodeElementDown = "move-code-element-down"
 fld public final static java.lang.String moveCodeElementUp = "move-code-element-up"
 fld public final static java.lang.String organizeImports = "organize-imports"
 fld public final static java.lang.String organizeMembers = "organize-members"
+fld public final static java.lang.String removeLastCaret = "remove-last-caret"
 fld public final static java.lang.String removeSurroundingCode = "remove-surrounding-code"
 fld public final static java.lang.String toggleLineNumbers = "toggle-line-numbers"
 fld public final static java.lang.String toggleNonPrintableCharacters = "toggle-non-printable-characters"
 fld public final static java.lang.String toggleRectangularSelection = "toggle-rectangular-selection"
 fld public final static java.lang.String toggleToolbar = "toggle-toolbar"
+fld public final static java.lang.String toggleTypingMode = "toggle-typing-mode"
 fld public final static java.lang.String transposeLetters = "transpose-letters"
 fld public final static java.lang.String zoomTextIn = "zoom-text-in"
 fld public final static java.lang.String zoomTextOut = "zoom-text-out"
@@ -166,6 +186,7 @@ meth public abstract !hasdefault int menuPosition()
 meth public abstract !hasdefault int popupPosition()
 meth public abstract !hasdefault int toolBarPosition()
 meth public abstract !hasdefault int weight()
+meth public abstract !hasdefault java.lang.String category()
 meth public abstract !hasdefault java.lang.String iconResource()
 meth public abstract !hasdefault java.lang.String menuPath()
 meth public abstract !hasdefault java.lang.String menuText()
@@ -189,6 +210,7 @@ fld public final static java.lang.String FOCUS_GAINED_PROPERTY = "focusGained"
 fld public final static java.lang.String FOCUS_LOST_PROPERTY = "focusLost"
 fld public final static java.lang.String LAST_FOCUSED_REMOVED_PROPERTY = "lastFocusedRemoved"
 meth public static java.util.List<? extends javax.swing.text.JTextComponent> componentList()
+meth public static javax.swing.text.JTextComponent findComponent(javax.swing.text.Document)
 meth public static javax.swing.text.JTextComponent focusedComponent()
 meth public static javax.swing.text.JTextComponent lastFocusedComponent()
 meth public static void addPropertyChangeListener(java.beans.PropertyChangeListener)
@@ -198,7 +220,9 @@ hfds LOG,USED_BY_CLONEABLE_EDITOR_PROPERTY,ignoredAncestorClass,items,pcs
 hcls AncestorL,CloneableEditorUsageL,FocusL,Item,PackageAccessor,PropertyDocL
 
 CLSS public final org.netbeans.api.editor.EditorUtilities
+fld public final static java.lang.String CARET_OVERWRITE_MODE_PROPERTY = "caret-overwrite-mode"
 meth public static javax.swing.Action getAction(javax.swing.text.EditorKit,java.lang.String)
+meth public static void addCaretUndoableEdit(javax.swing.text.Document,javax.swing.text.Caret)
 supr java.lang.Object
 
 CLSS public final org.netbeans.api.editor.NavigationHistory
@@ -231,124 +255,155 @@ meth public javax.swing.text.JTextComponent getComponent()
 supr java.lang.Object
 hfds compRef,navigationHistory,pos,rawIndex,url
 
-CLSS public abstract interface org.netbeans.api.editor.document.AtomicLockDocument
-meth public abstract javax.swing.text.Document getDocument()
+CLSS public final org.netbeans.api.editor.StickyWindowSupport
+meth public java.awt.Point convertPoint(java.awt.Point)
  anno 0 org.netbeans.api.annotations.common.NonNull()
-meth public abstract void addAtomicLockListener(org.netbeans.api.editor.document.AtomicLockListener)
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public abstract void atomicUndo()
-meth public abstract void removeAtomicLockListener(org.netbeans.api.editor.document.AtomicLockListener)
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public abstract void runAtomic(java.lang.Runnable)
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public abstract void runAtomicAsUser(java.lang.Runnable)
- anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public void addWindow(javax.swing.JComponent)
+meth public void removeWindow(javax.swing.JComponent)
+supr java.lang.Object
+hfds jtc
 
-CLSS public org.netbeans.api.editor.document.AtomicLockEvent
-cons public init(javax.swing.text.Document)
+CLSS public final org.netbeans.api.editor.caret.CaretInfo
+meth public boolean isSelection()
+meth public boolean isSelectionShowing()
+meth public int getDot()
+meth public int getMark()
+meth public int getSelectionEnd()
+meth public int getSelectionStart()
+meth public java.awt.Point getMagicCaretPosition()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public java.lang.String toString()
+meth public javax.swing.text.Position getDotPosition()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public javax.swing.text.Position getMarkPosition()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public javax.swing.text.Position$Bias getDotBias()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public javax.swing.text.Position$Bias getMarkBias()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+supr java.lang.Object
+hfds LOG,caretItem,dotBias,dotPos,magicCaretPosition,markBias,markPos
+
+CLSS public final org.netbeans.api.editor.caret.CaretMoveContext
+meth public boolean moveDot(org.netbeans.api.editor.caret.CaretInfo,javax.swing.text.Position,javax.swing.text.Position$Bias)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+ anno 3 org.netbeans.api.annotations.common.NonNull()
+meth public boolean setDot(org.netbeans.api.editor.caret.CaretInfo,javax.swing.text.Position,javax.swing.text.Position$Bias)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+ anno 3 org.netbeans.api.annotations.common.NonNull()
+meth public boolean setDotAndMark(org.netbeans.api.editor.caret.CaretInfo,javax.swing.text.Position,javax.swing.text.Position$Bias,javax.swing.text.Position,javax.swing.text.Position$Bias)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+ anno 3 org.netbeans.api.annotations.common.NonNull()
+ anno 4 org.netbeans.api.annotations.common.NonNull()
+ anno 5 org.netbeans.api.annotations.common.NonNull()
+meth public boolean setMagicCaretPosition(org.netbeans.api.editor.caret.CaretInfo,java.awt.Point)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public java.util.List<org.netbeans.api.editor.caret.CaretInfo> getOriginalCarets()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public java.util.List<org.netbeans.api.editor.caret.CaretInfo> getOriginalSortedCarets()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public javax.swing.text.Document getDocument()
-meth public org.netbeans.api.editor.document.AtomicLockDocument getAtomicLock()
+meth public javax.swing.text.JTextComponent getComponent()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.api.editor.caret.CaretInfo getOriginalLastCaret()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+supr java.lang.Object
+hfds transaction
+
+CLSS public final org.netbeans.api.editor.caret.EditorCaret
+cons public init()
+intf javax.swing.text.Caret
+meth public boolean isSelectionVisible()
+meth public boolean isVisible()
+meth public final java.awt.Point getMagicCaretPosition()
+meth public int addCaret(javax.swing.text.Position,javax.swing.text.Position$Bias,javax.swing.text.Position,javax.swing.text.Position$Bias)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+ anno 3 org.netbeans.api.annotations.common.NonNull()
+ anno 4 org.netbeans.api.annotations.common.NonNull()
+meth public int addCarets(java.util.List<javax.swing.text.Position>,java.util.List<javax.swing.text.Position$Bias>)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public int getBlinkRate()
+meth public int getDot()
+meth public int getMark()
+meth public int moveCarets(org.netbeans.spi.editor.caret.CaretMoveHandler)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public int moveCarets(org.netbeans.spi.editor.caret.CaretMoveHandler,org.netbeans.api.editor.caret.MoveCaretsOrigin)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public int removeLastCaret()
+meth public int replaceCarets(java.util.List<javax.swing.text.Position>,java.util.List<javax.swing.text.Position$Bias>)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public int retainLastCaretOnly()
+meth public java.util.List<org.netbeans.api.editor.caret.CaretInfo> getCarets()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public java.util.List<org.netbeans.api.editor.caret.CaretInfo> getSortedCarets()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public javax.swing.text.Position$Bias getDotBias()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public javax.swing.text.Position$Bias getMarkBias()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.api.editor.caret.CaretInfo getCaretAt(int)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public org.netbeans.api.editor.caret.CaretInfo getLastCaret()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public static javax.swing.text.NavigationFilter getNavigationFilter(javax.swing.text.JTextComponent,org.netbeans.api.editor.caret.MoveCaretsOrigin)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+meth public static void setNavigationFilter(javax.swing.text.JTextComponent,org.netbeans.api.editor.caret.MoveCaretsOrigin,javax.swing.text.NavigationFilter)
+ anno 3 org.netbeans.api.annotations.common.NullAllowed()
+meth public void addChangeListener(javax.swing.event.ChangeListener)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public void addEditorCaretListener(org.netbeans.api.editor.caret.EditorCaretListener)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public void deinstall(javax.swing.text.JTextComponent)
+meth public void install(javax.swing.text.JTextComponent)
+meth public void moveDot(int)
+meth public void moveDot(int,javax.swing.text.Position$Bias,org.netbeans.api.editor.caret.MoveCaretsOrigin)
+meth public void paint(java.awt.Graphics)
+meth public void removeChangeListener(javax.swing.event.ChangeListener)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public void removeEditorCaretListener(org.netbeans.api.editor.caret.EditorCaretListener)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public void setBlinkRate(int)
+meth public void setDot(int)
+meth public void setDot(int,javax.swing.text.Position$Bias,org.netbeans.api.editor.caret.MoveCaretsOrigin)
+meth public void setMagicCaretPosition(java.awt.Point)
+meth public void setSelectionVisible(boolean)
+meth public void setVisible(boolean)
+supr java.lang.Object
+hfds CHAIN_FILTER_PROPERTY,LOG,NAVIGATION_FILTER_PROPERTY,RECTANGULAR_SELECTION_PROPERTY,RECTANGULAR_SELECTION_REGIONS_PROPERTY,activeDoc,activeTransaction,atomicSectionAnyCaretChange,atomicSectionEndChangeOffset,atomicSectionImplicitSetDotOffset,atomicSectionStartChangeOffset,blinkCurrentDelay,blinkDefaultDelay,blinkTimer,caretInfos,caretItems,caretUpdatePending,changeListenerList,component,dndDisabled,inAtomicSection,inAtomicUnlock,lastBlinkTime,lastCaretVisualOffset,listenerImpl,listenerList,lockDepth,lockThread,logPaint,minSelectionEndOffset,minSelectionStartOffset,mouseState,overrideCaretBlinkRate,overwriteMode,prefs,rectangularSelection,rsDotRect,rsMarkRect,rsPaintRect,rsRegions,scrollToLastCaret,selectLineAction,selectWordAction,selectionVisible,serialVersionUID,showing,showingTextCursor,sortedCaretInfos,sortedCaretItems,thickCaretWidth,type,updateLaterDuringPaint,visible,weakPrefsListener,weakTimerListener
+hcls CaretType,ChainNavigationFilter,ListenerImpl,MouseState
+
+CLSS public final org.netbeans.api.editor.caret.EditorCaretEvent
+meth public int getAffectedEndOffset()
+meth public int getAffectedStartOffset()
+meth public org.netbeans.api.editor.caret.EditorCaret getCaret()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
 supr java.util.EventObject
+hfds affectedEndOffset,affectedStartOffset,origin
 
-CLSS public abstract interface org.netbeans.api.editor.document.AtomicLockListener
+CLSS public abstract interface org.netbeans.api.editor.caret.EditorCaretListener
 intf java.util.EventListener
-meth public abstract void atomicLock(org.netbeans.api.editor.document.AtomicLockEvent)
-meth public abstract void atomicUnlock(org.netbeans.api.editor.document.AtomicLockEvent)
-
-CLSS public abstract interface org.netbeans.api.editor.document.DocumentLockState
-meth public abstract boolean isReadLocked()
-meth public abstract boolean isWriteLocked()
-
-CLSS public final org.netbeans.api.editor.document.EditorDocumentUtils
-meth public static org.openide.filesystems.FileObject getFileObject(javax.swing.text.Document)
- anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public abstract void caretChanged(org.netbeans.api.editor.caret.EditorCaretEvent)
  anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static void runExclusive(javax.swing.text.Document,java.lang.Runnable)
+
+CLSS public final org.netbeans.api.editor.caret.MoveCaretsOrigin
+cons public init(java.lang.String)
+cons public init(java.lang.String,int)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+fld public final static java.lang.String DIRECT_NAVIGATION = "navigation.action"
+fld public final static org.netbeans.api.editor.caret.MoveCaretsOrigin DEFAULT
+fld public final static org.netbeans.api.editor.caret.MoveCaretsOrigin DISABLE_FILTERS
+meth public int getDirection()
+meth public java.lang.String getActionType()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public java.lang.String toString()
 supr java.lang.Object
-hfds LOG
-
-CLSS public final org.netbeans.api.editor.document.EditorMimeTypes
-fld public final static java.lang.String PROP_SUPPORTED_MIME_TYPES = "supportedMimeTypes"
-meth public java.util.Set<java.lang.String> getSupportedMimeTypes()
- anno 0 org.netbeans.api.annotations.common.NonNull()
-meth public static org.netbeans.api.editor.document.EditorMimeTypes getDefault()
- anno 0 org.netbeans.api.annotations.common.NonNull()
-meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
- anno 1 org.netbeans.api.annotations.common.NonNull()
-supr java.lang.Object
-hfds impl,instance,listener,listeners
-
-CLSS public abstract interface org.netbeans.api.editor.document.LineDocument
-intf javax.swing.text.Document
-meth public abstract javax.swing.text.Element getParagraphElement(int)
-meth public abstract javax.swing.text.Position createPosition(int,javax.swing.text.Position$Bias) throws javax.swing.text.BadLocationException
-
-CLSS public final org.netbeans.api.editor.document.LineDocumentUtils
-meth public static <%0 extends java.lang.Object> {%%0} as(javax.swing.text.Document,java.lang.Class<{%%0}>)
- anno 0 org.netbeans.api.annotations.common.CheckForNull()
- anno 1 org.netbeans.api.annotations.common.NullAllowed()
-meth public static <%0 extends java.lang.Object> {%%0} asRequired(javax.swing.text.Document,java.lang.Class<{%%0}>)
- anno 0 org.netbeans.api.annotations.common.NonNull()
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static boolean isLineEmpty(org.netbeans.api.editor.document.LineDocument,int) throws javax.swing.text.BadLocationException
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static boolean isLineWhitespace(org.netbeans.api.editor.document.LineDocument,int) throws javax.swing.text.BadLocationException
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static int getLineCount(org.netbeans.api.editor.document.LineDocument)
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static int getLineCount(org.netbeans.api.editor.document.LineDocument,int,int)
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static int getLineEnd(org.netbeans.api.editor.document.LineDocument,int) throws javax.swing.text.BadLocationException
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static int getLineFirstNonWhitespace(org.netbeans.api.editor.document.LineDocument,int) throws javax.swing.text.BadLocationException
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static int getLineIndex(org.netbeans.api.editor.document.LineDocument,int) throws javax.swing.text.BadLocationException
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static int getLineLastNonWhitespace(org.netbeans.api.editor.document.LineDocument,int) throws javax.swing.text.BadLocationException
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static int getLineStart(org.netbeans.api.editor.document.LineDocument,int)
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static int getLineStartFromIndex(org.netbeans.api.editor.document.LineDocument,int)
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static int getNextNonNewline(org.netbeans.api.editor.document.LineDocument,int) throws javax.swing.text.BadLocationException
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static int getNextNonWhitespace(org.netbeans.api.editor.document.LineDocument,int) throws javax.swing.text.BadLocationException
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static int getNextNonWhitespace(org.netbeans.api.editor.document.LineDocument,int,int) throws javax.swing.text.BadLocationException
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static int getNextWhitespace(org.netbeans.api.editor.document.LineDocument,int) throws javax.swing.text.BadLocationException
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static int getNextWhitespace(org.netbeans.api.editor.document.LineDocument,int,int) throws javax.swing.text.BadLocationException
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static int getNextWordStart(org.netbeans.api.editor.document.LineDocument,int) throws javax.swing.text.BadLocationException
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static int getPreviousNonNewline(org.netbeans.api.editor.document.LineDocument,int) throws javax.swing.text.BadLocationException
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static int getPreviousNonWhitespace(org.netbeans.api.editor.document.LineDocument,int) throws javax.swing.text.BadLocationException
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static int getPreviousNonWhitespace(org.netbeans.api.editor.document.LineDocument,int,int) throws javax.swing.text.BadLocationException
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static int getPreviousWhitespace(org.netbeans.api.editor.document.LineDocument,int) throws javax.swing.text.BadLocationException
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static int getPreviousWhitespace(org.netbeans.api.editor.document.LineDocument,int,int) throws javax.swing.text.BadLocationException
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static int getPreviousWordEnd(org.netbeans.api.editor.document.LineDocument,int) throws javax.swing.text.BadLocationException
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static int getPreviousWordStart(org.netbeans.api.editor.document.LineDocument,int) throws javax.swing.text.BadLocationException
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static int getWordEnd(org.netbeans.api.editor.document.LineDocument,int) throws javax.swing.text.BadLocationException
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static int getWordStart(org.netbeans.api.editor.document.LineDocument,int) throws javax.swing.text.BadLocationException
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static java.lang.String getWord(org.netbeans.api.editor.document.LineDocument,int) throws javax.swing.text.BadLocationException
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static org.netbeans.api.editor.document.LineDocument createDocument(java.lang.String)
- anno 0 org.netbeans.api.annotations.common.NonNull()
-supr java.lang.Object
-hfds NOT_FOUND,WRONG_POSITION_LOCALE
-hcls V
+hfds actionType,direction
 
 CLSS public abstract org.netbeans.modules.editor.lib2.document.DocumentSpiPackageAccessor
 cons public init()
@@ -396,12 +451,40 @@ meth public javax.swing.JMenuItem getMenuPresenter()
 meth public javax.swing.JMenuItem getPopupPresenter()
 meth public void setEnabled(boolean)
 supr javax.swing.text.TextAction
-hfds LOG,LOGGED_ACTION_NAMES,MASK_NULL_VALUE,UILOG,UNITIALIZED_ACTION,attrs,delegateAction,preferencesNodeAndListener,properties,serialVersionUID
+hfds LOG,LOGGED_ACTION_NAMES,MASK_NULL_VALUE,UILOG,UI_LOG_DETAILED,UNITIALIZED_ACTION,attrs,delegateAction,preferencesNodeAndListener,properties,serialVersionUID
 hcls DelegateActionPropertyChangeListener,PreferencesNodeAndListener
 
 CLSS public abstract interface org.netbeans.spi.editor.SideBarFactory
  anno 0 org.netbeans.spi.editor.mimelookup.MimeLocation(java.lang.Class<? extends org.netbeans.spi.editor.mimelookup.InstanceProvider> instanceProviderClass=class org.netbeans.spi.editor.mimelookup.InstanceProvider, java.lang.String subfolderName="SideBar")
 meth public abstract javax.swing.JComponent createSideBar(javax.swing.text.JTextComponent)
+
+CLSS public abstract interface org.netbeans.spi.editor.caret.CaretMoveHandler
+meth public abstract void moveCarets(org.netbeans.api.editor.caret.CaretMoveContext)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+
+CLSS public abstract org.netbeans.spi.editor.caret.CascadingNavigationFilter
+cons public init()
+meth protected final javax.swing.text.NavigationFilter getNextFilter()
+meth public final void register(javax.swing.text.JTextComponent,org.netbeans.api.editor.caret.MoveCaretsOrigin)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+meth public final void unregister()
+meth public int getNextVisualPositionFrom(javax.swing.text.JTextComponent,int,javax.swing.text.Position$Bias,int,javax.swing.text.Position$Bias[]) throws javax.swing.text.BadLocationException
+meth public void moveDot(javax.swing.text.NavigationFilter$FilterBypass,int,javax.swing.text.Position$Bias)
+meth public void setDot(javax.swing.text.NavigationFilter$FilterBypass,int,javax.swing.text.Position$Bias)
+meth public void setOwnerAndPrevious(javax.swing.text.JTextComponent,org.netbeans.api.editor.caret.MoveCaretsOrigin,javax.swing.text.NavigationFilter)
+supr javax.swing.text.NavigationFilter
+hfds owner,previous,regKey
+
+CLSS public abstract org.netbeans.spi.editor.caret.NavigationFilterBypass
+cons public init()
+meth public abstract org.netbeans.api.editor.caret.CaretInfo getCaretItem()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public abstract org.netbeans.api.editor.caret.EditorCaret getEditorCaret()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public abstract org.netbeans.api.editor.caret.MoveCaretsOrigin getOrigin()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+supr javax.swing.text.NavigationFilter$FilterBypass
 
 CLSS public abstract interface org.netbeans.spi.editor.codegen.CodeGenerator
 innr public abstract interface static Factory
@@ -528,6 +611,11 @@ meth public abstract javax.swing.text.AttributeSet getAttributes()
 CLSS public abstract interface org.netbeans.spi.editor.highlighting.ReleasableHighlightsContainer
 intf org.netbeans.spi.editor.highlighting.HighlightsContainer
 meth public abstract void released()
+
+CLSS public abstract interface org.netbeans.spi.editor.highlighting.SplitOffsetHighlightsSequence
+intf org.netbeans.spi.editor.highlighting.HighlightsSequence
+meth public abstract int getEndSplitOffset()
+meth public abstract int getStartSplitOffset()
 
 CLSS public final org.netbeans.spi.editor.highlighting.ZOrder
 fld public final static org.netbeans.spi.editor.highlighting.ZOrder BOTTOM_RACK

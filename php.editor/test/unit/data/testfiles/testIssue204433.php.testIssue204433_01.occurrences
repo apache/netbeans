@@ -1,0 +1,4 @@
+class |>MARK_OCCURRENCES:EditForm<| extends \Zend_Form {
+    use UserManager\|>MARK_OCCURRENCES:EditForm<|;
+            $form = new |>MARK_OCCURRENCES:Edit^Form<|();
+    use UserManager\|>MARK_OCCURRENCES:EditForm<| as EF;

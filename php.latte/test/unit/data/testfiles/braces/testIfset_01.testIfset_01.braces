@@ -1,0 +1,9 @@
+<html>
+{*i^fset* true }
+text
+{*elseifset* true}
+text
+{*else*}
+text
+{*/ifset*}
+</html>

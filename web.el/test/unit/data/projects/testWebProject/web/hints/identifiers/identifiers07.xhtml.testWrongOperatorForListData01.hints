@@ -1,0 +1,2 @@
+#{[1,2,3].stream().limity(2).sum()}                   ---------
+HINT:Unknown method "limity"

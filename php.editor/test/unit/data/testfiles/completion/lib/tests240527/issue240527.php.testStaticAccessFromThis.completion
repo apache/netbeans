@@ -1,0 +1,22 @@
+Code completion result for source line:
+$this::|privateStaticExMethod(); // test
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     newInstance()                   [STATIC]   ExClass
+METHOD     privateStaticBaseTraitMethod()  [PRIVATE,  BaseTrait
+METHOD     privateStaticExMethod()         [PRIVATE,  ExClass
+METHOD     protectedStaticBaseTraitMethod  [PROTECTE  BaseTrait
+METHOD     protectedStaticExMethod()       [PROTECTE  ExClass
+METHOD     protectedStaticSAMethod()       [PROTECTE  StaticAccessTest
+METHOD     publicStaticBaseTraitMethod()   [STATIC]   BaseTrait
+METHOD     publicStaticExMethod()          [STATIC]   ExClass
+METHOD     publicStaticSAMethod()          [STATIC]   StaticAccessTest
+VARIABLE   ? $privateStaticBaseTraitField  [PRIVATE,  BaseTrait
+VARIABLE   ? $privateStaticExField         [PRIVATE,  ExClass
+VARIABLE   ? $protectedStaticBaseTraitFie  [PROTECTE  BaseTrait
+VARIABLE   ? $protectedStaticExField       [PROTECTE  ExClass
+VARIABLE   ? $protectedStaticSAField       [PROTECTE  StaticAccessTest
+VARIABLE   ? $publicStaticBaseTraitField   [STATIC]   BaseTrait
+VARIABLE   ? $publicStaticExField          [STATIC]   ExClass
+VARIABLE   ? $publicStaticSAField          [STATIC]   StaticAccessTest
+CONSTANT   CONSTANT_EX 'CONSTANT_EX'       [PUBLIC]   ExClass
+CONSTANT   CONSTANT_SA 'CONSTANT_SA'       [PUBLIC]   StaticAccessTest

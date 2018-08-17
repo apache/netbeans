@@ -1,0 +1,1 @@
+config=loadConfig('./server-config.json') || {};

@@ -272,8 +272,8 @@
                 <friend>org.netbeans.modules.javascript2.editor</friend>
                 <friend>org.netbeans.modules.javascript2.jade</friend>
                 <friend>org.netbeans.modules.javascript2.jquery</friend>
-                <friend>org.netbeans.modules.javascript2.requirejs</friend>
                 <friend>org.netbeans.modules.javascript2.react</friend>
+                <friend>org.netbeans.modules.javascript2.requirejs</friend>
                 <friend>org.netbeans.modules.php.latte</friend>
                 <friend>org.netbeans.modules.ruby.rhtml</friend>
                 <friend>org.netbeans.modules.web.core.syntax</friend>
@@ -283,6 +283,7 @@
                 <friend>org.netbeans.modules.web.jsf.editor</friend>
                 <friend>org.netbeans.modules.web.jsfapi</friend>
                 <friend>org.netbeans.modules.web.livehtml</friend>
+                <friend>org.netbeans.modules.web.wicket</friend>
                 <package>org.netbeans.modules.html.editor.lib.api</package>
                 <package>org.netbeans.modules.html.editor.lib.api.dtd</package>
                 <package>org.netbeans.modules.html.editor.lib.api.elements</package>

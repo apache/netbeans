@@ -1,0 +1,9 @@
+    public static function |>MARK_OCCURRENCES:myStatic1<|() {
+UVS3::myStatic3()::myStatic2()::|>MARK_OCCURRENCES:myStatic1<|()::MAX;
+UVS3::myStatic3()::myStatic2()::|>MARK_OCCURRENCES:myStatic1<|()::AVG;
+UVS3::myStatic3()::myStatic2()::|>MARK_OCCURRENCES:myStatic1<|()::$MIN;
+UVS3::myStatic3()::myStatic2()::|>MARK_OCCURRENCES:myStatic1<|()::$TOTAL;
+UVS3::myStatic3()::myStatic2()::|>MARK_OCCURRENCES:myStatic1<|()::$INSTANCE::|>MARK_OCCURRENCES:myStatic1<|();
+UVS3::myStatic3()::myStatic2()::|>MARK_OCCURRENCES:myStatic1<|()::myStatic2();
+UVS3::myStatic3()->myStatic2()::|>MARK_OCCURRENCES:my^Static1<|()->myStatic2();
+UVS3::myStatic3()->myStatic2()::|>MARK_OCCURRENCES:myStatic1<|()->test;

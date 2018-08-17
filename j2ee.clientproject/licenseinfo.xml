@@ -30,4 +30,15 @@
         <license ref="Apache-2.0-ASF" />
         <comment type="TEMPLATE_MINIMAL_IP"/>
     </fileset>
+    <fileset>      
+        <file>src/org/netbeans/modules/j2ee/clientproject/ui/resources/appclient.gif</file>
+        <file>src/org/netbeans/modules/j2ee/clientproject/ui/resources/application_16.gif</file>
+        <file>src/org/netbeans/modules/j2ee/clientproject/ui/resources/debug.gif</file>
+        <file>src/org/netbeans/modules/j2ee/clientproject/ui/resources/general.gif</file>  
+        <file>src/org/netbeans/modules/j2ee/clientproject/ui/resources/packageRoot.gif</file>
+        <file>src/org/netbeans/modules/j2ee/clientproject/ui/resources/packageRootOpen.gif</file>
+        <file>src/org/netbeans/modules/j2ee/clientproject/ui/resources/test.gif</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
 </licenseinfo>

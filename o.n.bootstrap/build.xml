@@ -39,4 +39,17 @@
         </javac>
     </target>
 
+    <target name="release" depends="projectized.release,-build-windows-launchers" />
+
+    <target name="-build-windows-launchers" if="do.build.windows.launchers">
+        <exec executable="make" dir="launcher/windows">
+            <arg value="-f"/>
+            <arg value="Makefile.mingw"/>
+        </exec>
+        <copy file="launcher/windows/nbexec.exe" tofile="${cluster}/lib/nbexec.exe" overwrite="true" />
+        <copy file="launcher/windows/nbexec64.exe" tofile="${cluster}/lib/nbexec64.exe" overwrite="true" />
+        <copy file="launcher/windows/nbexec.dll" tofile="${cluster}/lib/nbexec.dll" overwrite="true" />
+        <copy file="launcher/windows/nbexec64.dll" tofile="${cluster}/lib/nbexec64.dll" overwrite="true" />
+    </target>
+
 </project>

@@ -38,6 +38,7 @@ class AppLauncher : public NbLauncher {
     static const char *OPT_JDK_HOME;
     static const char *APPNAME_TOKEN;
     static const char *REG_APPDATA_NAME;
+    static const char *CACHE_SUFFIX;
 
 public:
     AppLauncher();
@@ -56,6 +57,7 @@ protected:
     virtual const char * getExtraClustersOptName();
     virtual const char * getJdkHomeOptName();
     virtual const char * getCurrentDir();
+    virtual std::string constructApplicationDir(const std::string& dir, bool cache);
 
 private:
     AppLauncher(const AppLauncher& orig);

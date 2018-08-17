@@ -16,6 +16,14 @@
 /nbi/engine/native/*/*/dist/
 /nb-javac/
 /java.source.nbjavac/test/test-nb-javac/nbproject/private/
+/apisupport.harness/windows-launcher-src/*.exe
+/apisupport.harness/windows-launcher-src/*.res
+/ide/launcher/windows/*.exe
+/ide/launcher/windows/*.res
+/o.n.bootstrap/launcher/windows/*.dll
+/o.n.bootstrap/launcher/windows/*.exe
+/o.n.bootstrap/launcher/windows/*.res
+
 
 # OS generated files #
 ######################

@@ -57,7 +57,6 @@ protected:
     virtual const char * getExtraClustersOptName();
     virtual const char * getJdkHomeOptName();
     virtual const char * getCurrentDir();
-    virtual std::string appendNetBeansToDirs(const std::string& dir, bool cache);
     virtual std::string constructApplicationDir(const std::string& dir, bool cache);
 
 private:

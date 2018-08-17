@@ -132,10 +132,6 @@ const char * AppLauncher::getCurrentDir() {
     return baseDir.c_str();
 }
 
-std::string AppLauncher::appendNetBeansToDirs(const std::string& dir, bool cache) {
-    return dir;
-}
-
 std::string AppLauncher::constructApplicationDir(const std::string& dir, bool cache) {
     if (cache) {
         return dir + "\\" + getAppName() + CACHE_SUFFIX;

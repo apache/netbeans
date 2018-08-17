@@ -21,10 +21,14 @@
 -->
 <licenseinfo>
     <fileset>
-        <file>src/org/netbeans/modules/languages/neon/resources/NeonExample.neon</file>
         <file>src/org/netbeans/modules/languages/neon/resources/NeonTemplate.neon</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="TEMPLATE_MINIMAL_IP"/>
+    </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/languages/neon/resources/NeonExample.neon</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="GUI_USABILITY"/>
     </fileset>
     <fileset>
         <file>tools/skeleton.netbeans</file>

@@ -19,10 +19,21 @@
     under the License.
 
 -->
-<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <coverage xmlns="http://www.netbeans.org/ns/code-coverage/1" enabled="true"/>
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
-    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
-    </open-files>
-</project-private>
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/php/smarty/resources/TplTemplate.tpl</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="TEMPLATE_MINIMAL_IP"/>
+    </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/php/smarty/resources/TplExample</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="GUI_USABILITY"/>
+    </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/php/smarty/resources/smarty-badge-8.png</file>
+        <file>src/org/netbeans/modules/php/smarty/resources/tpl-cc-icon.png</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

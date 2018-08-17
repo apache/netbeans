@@ -24,6 +24,7 @@ script:
   - if [ "x$LICENSE" == "xtrue" ]; then ant -quiet verify-libs-and-licenses -Dverify-libs-and-licenses.haltonfailure=true; fi
   - if [ "x$EOL" == "xtrue" ]; then ./travis-check-line-endings.sh; fi
   - if [ "x$SIGTEST" == "xtrue" ]; then ant check-sigtests; fi
+  - if [ "x$CV" == "xtrue" ]; then ant -quiet -f ide.ergonomics/ test -Dtest.config=commit; fi
 env:
-  - SIGTEST=false COMPILETEST=true RAT=true EOL=false LICENSE=true
-  - SIGTEST=true COMPILETEST=false RAT=false EOL=true LICENSE=false
+  - SIGTEST=false COMPILETEST=true RAT=true EOL=false LICENSE=true CV=false
+  - SIGTEST=true COMPILETEST=false RAT=false EOL=true LICENSE=false CV=true

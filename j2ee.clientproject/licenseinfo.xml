@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,10 +20,14 @@
     under the License.
 
 -->
-<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <coverage xmlns="http://www.netbeans.org/ns/code-coverage/1" enabled="true"/>
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
-    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
-    </open-files>
-</project-private>
+
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/j2ee/clientproject/ui/resources/application-client-1.4.xml</file>
+        <file>src/org/netbeans/modules/j2ee/clientproject/ui/resources/application-client-5.xml</file>
+        <file>src/org/netbeans/modules/j2ee/clientproject/ui/resources/application-client-6.xml</file>
+        <file>src/org/netbeans/modules/j2ee/clientproject/ui/resources/application-client-7.xml</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="TEMPLATE_MINIMAL_IP"/>
+    </fileset>
+</licenseinfo>

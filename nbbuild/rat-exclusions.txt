@@ -156,6 +156,7 @@ platform/openide.util/test/unit/src/org/openide/util/LookupUsesRequestProcessorT
 ### generated, no degree of creativity 
 **/nbproject/build-impl.xml
 **/nbproject/genfiles.properties
+**/nbproject/groovy-build.xml
 **/nbproject/jfx-impl.xml
 nbi/engine/nbproject/profiler-build-impl.xml
 websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/jaxb/*

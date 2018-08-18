@@ -877,7 +877,7 @@ public final class ModuleManager extends Modules {
             throw new IllegalStateException("Missing hosting module " + fragmentHost + " for fragment " + m.getCodeName());
         }
         if (!theHost.isEnabled()) {
-            return null;
+            throw new IllegalStateException("Host module for " + m.getCodeName() + " should have been enabled: " + theHost);
         }
         return theHost.getClassLoader();
     }
@@ -1000,15 +1000,15 @@ public final class ModuleManager extends Modules {
      * 
      * @param m module to attach if it is a fragment
      */
-    private void attachModuleFragment(Module m) {
+    private Module attachModuleFragment(Module m) {
         String codeNameBase = m.getFragmentHostCodeName();
         if (codeNameBase == null) {
-            return;
+            return null;
         }
         Module host = modulesByName.get(codeNameBase);
         if (host != null && host.isEnabled()) {
             Util.err.info("Module " + host.getCodeName() + " is already enabled");
-            return;
+            return host;
         }
         Collection<Module> frags = fragmentModules.get(codeNameBase);
         if (frags == null) {
@@ -1016,6 +1016,7 @@ public final class ModuleManager extends Modules {
             fragmentModules.put(codeNameBase, frags);
         }
         frags.add(m);
+        return host;
     }
     
     /**
@@ -1585,7 +1586,10 @@ public final class ModuleManager extends Modules {
         }
         // need to register fragments eagerly, so they are available during
         // dependency sort
-        attachModuleFragment(m);
+        Module host = attachModuleFragment(m);
+        if (host != null) {
+            maybeAddToEnableList(willEnable, mightEnable, host, okToFail);
+        }
         // Also add anything it depends on, if not already there,
         // or already enabled.
         for (Dependency dep : m.getDependenciesArray()) {

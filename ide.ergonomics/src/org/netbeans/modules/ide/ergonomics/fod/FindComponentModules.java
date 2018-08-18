@@ -51,6 +51,7 @@ import org.openide.util.TaskListener;
  */
 public final class FindComponentModules extends Task {
     private static final RequestProcessor RP = new RequestProcessor("Find Modules");
+    private static boolean refreshedOnce;
     
     private final Collection<String> codeNames;
     private final FeatureInfo[] infos;
@@ -180,13 +181,16 @@ public final class FindComponentModules extends Task {
 
     private void findComponentModules () {
         long start = System.currentTimeMillis();
-        List <UpdateUnitProvider> providers = UpdateUnitProviderFactory.getDefault ().getUpdateUnitProviders (true);
-        for (UpdateUnitProvider p : providers) {
-            try {
-                p.refresh (null, true);
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
+        if (!refreshedOnce) {
+            List <UpdateUnitProvider> providers = UpdateUnitProviderFactory.getDefault ().getUpdateUnitProviders (true);
+            for (UpdateUnitProvider p : providers) {
+                try {
+                    p.refresh (null, true);
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             }
+            refreshedOnce = true;
         }
         Collection<UpdateUnit> units = UpdateManager.getDefault ().getUpdateUnits (UpdateManager.TYPE.MODULE);
 

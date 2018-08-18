@@ -1,0 +1,70 @@
+<ul>
+	<li>lower: {$hello |lower}</li>
+	<li>upper: {$hello |upper}</li>
+	<li>lower & capitalize: {$hello |lower|capitalize}</li>
+	<li>nl2br: {$hello |nl2br}</li>
+	<li>truncate: {$hello |truncate:"10 "|lower}</li>
+	<li>date: {$date|date:'%d.%m.%Y %H:%M:%S'}</li>
+	<li>translated: {_$hello|truncate:3}</li>
+	<li>Translated HTML: {_}ahoj{/_}</li>
+	<li>Translated HTML: {_}ahoj{/}</li>
+	<li>Translated HTML: {_'ahoj|ahojahojahojahoj'}</li>
+	<li>spaces: {$hello |types , '' , ""	,	"$hello"  }</li>
+	<li>dynamic: {$hello |dynamic} {$hello |dynamic2}</li>
+</ul>
+
+<ul>
+	<li>{$hello |h1|h2}</li>
+	<li>{$hello |h1|h2|noescape}</li>
+	<li>{$hello |h2|h1}</li>
+	<li>{$hello |noescape|h2|h1}</li>
+</ul>
+
+<ul>
+	<li>{$hello*0 |types:0,0.0,"0"}</li>
+	<li>{$hello*1 |types:1:"1"}</li>
+	<li>{$hello |types:true,null,false}</li>
+	<li>{$hello |types:TRUE,NULL,FALSE}</li>
+	<li>{$hello |types:'',"","$hello"}</li>
+</ul>
+
+
+
+{block  |strip}  <a   href="#"
+> test</a
+
+>
+AŠA
+
+<script>
+// comment
+alert();
+</script>
+{/block}
+
+
+
+{capture$capture}
+<ul>
+	<li>lower: {$hello |lower}</li>
+</ul>
+{/capture}
+
+<p>
+Captured: {$capture}
+</p>
+
+
+{capture$capture|upper}
+Hello
+{/capture}
+
+<p>
+Captured with modifier: {$capture}
+</p>
+
+
+
+<p>
+Nested blocks: {block|truncate:20} Outer   {block|upper} Inner Block {/block}  Block {/block}
+</p>

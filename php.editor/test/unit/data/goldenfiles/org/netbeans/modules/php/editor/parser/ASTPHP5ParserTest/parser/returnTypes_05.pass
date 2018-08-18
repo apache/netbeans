@@ -1,0 +1,78 @@
+<testresult testFile='returnTypes_05.php'>
+    <scanner>
+        <token id='T_STATIC' start='7' end='13'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='14' end='22'>
+            <text>function</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='22' end='23'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='23' end='25'>
+            <text>$a</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='25' end='26'>
+            <text>)</text>
+        </token>
+        <token id='T_USE' start='27' end='30'>
+            <text>use</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='30' end='31'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='31' end='33'>
+            <text>$b</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='33' end='34'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='35' end='36'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='37' end='43'>
+            <text>string</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='44' end='45'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='46' end='47'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='47' end='48'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='49' end='49'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='49'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='48'>
+                <LambdaFunctionDeclaration start='14' end='47' isReference='false'>
+                    <FormalParameter start='23' end='25' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='23' end='25' isDollared='true'>
+                                <Identifier start='24' end='25' name='a'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <Variable start='31' end='33' isDollared='true'>
+                        <Identifier start='32' end='33' name='b'/>
+                    </Variable>
+                    <NamespaceName start='37' end='43' isCurrent='false' isGlobal='false'>
+                        <Identifier start='37' end='43' name='string'/>
+                    </NamespaceName>
+                    <Block start='44' end='47' isCurly='true'>
+                    </Block>
+                </LambdaFunctionDeclaration>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

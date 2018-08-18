@@ -1,0 +1,17 @@
+Code completion result for source line:
+|
+        // comment
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    Froo                            [PUBLIC]   null
+PACKAGE    Trest                           [PUBLIC]   null
+CLASS      Bar                             [PUBLIC]   Froo
+CLASS      TestClass                       [PUBLIC]   Trest
+------------------------------------
+KEYWORD    array                                      null
+KEYWORD    bool                                       null
+KEYWORD    callable                                   null
+KEYWORD    float                                      null
+KEYWORD    int                                        null
+KEYWORD    iterable                                   null
+KEYWORD    object                                     null
+KEYWORD    string                                     null

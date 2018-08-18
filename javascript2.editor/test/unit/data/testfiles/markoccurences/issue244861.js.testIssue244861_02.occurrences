@@ -1,0 +1,7 @@
+    self.|>MARK_OCCURRENCES:myField<| = {};
+    this.|>MARK_OCCURRENCES:myFi^eld<| = "something else";
+    this.|>MARK_OCCURRENCES:myField<|.doFirst();
+    self.|>MARK_OCCURRENCES:myField<|.doAgain();
+    self.|>MARK_OCCURRENCES:myField<|.doSomething(); // click on myField
+    this.|>MARK_OCCURRENCES:myField<| = "foo"; // click on myField
+    self.|>MARK_OCCURRENCES:myField<|.doAgain(); // in myMethod

@@ -1,0 +1,2 @@
+var [, protocol, |>MARK_OCCURRENCES:ful^lhost<|, fullpath] = parsedURL;
+console.log(|>MARK_OCCURRENCES:fullhost<|); // netbeans.org

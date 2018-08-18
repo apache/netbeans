@@ -1,0 +1,3 @@
+# j2ee/earproject
+read global
+${l10n-module}/src/org/netbeans/modules/j2ee/earproject/ui/wizards/dd/applicationXml.html 

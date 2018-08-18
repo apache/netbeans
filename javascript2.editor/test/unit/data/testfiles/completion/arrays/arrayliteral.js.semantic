@@ -1,0 +1,11 @@
+function |>METHOD:getdate<|() {
+    return new Date();
+}
+var |>GLOBAL:ar<| = ["ahoj", "cau", 10, getdate()];
+//var a = "t";
+//a.toUpperCase()   
+|>GLOBAL:console<|.log(|>GLOBAL:ar<|[0].toUpperCase());
+   
+var |>GLOBAL:prom1<| = |>GLOBAL:ar<|[1].toUpperCase();
+var |>GLOBAL:prom2<| = |>GLOBAL:ar<|[3].getDay();
+var |>GLOBAL:prom3<| = |>GLOBAL:ar<|[2].toPrecision();

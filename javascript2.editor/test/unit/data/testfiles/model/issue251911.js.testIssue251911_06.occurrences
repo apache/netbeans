@@ -1,0 +1,5 @@
+    function _myLib_in(item, |>MARK_OCCURRENCES:con^tainer<|) {
+        if( _myLib_isArray(|>MARK_OCCURRENCES:container<|) || _myLib_isStr(|>MARK_OCCURRENCES:container<|) )
+            return _myLib_indexOf(|>MARK_OCCURRENCES:container<|, item) >= 0;
+        for( var key in |>MARK_OCCURRENCES:container<| ) {
+            if( |>MARK_OCCURRENCES:container<|[key] === item )

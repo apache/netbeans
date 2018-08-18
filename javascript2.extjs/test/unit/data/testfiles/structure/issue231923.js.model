@@ -1,0 +1,54 @@
+FUNCTION issue231923 [ANONYMOUS: false, DECLARED: true - issue231923, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+Ext                 : OBJECT Ext [ANONYMOUS: false, DECLARED: false - Ext, MODIFIERS: PUBLIC, OBJECT]
+                    # PROPERTIES
+                    define : FUNCTION define [ANONYMOUS: false, DECLARED: false - define, MODIFIERS: PUBLIC, METHOD]
+                           # PARAMETERS
+                           OBJECT param1 [ANONYMOUS: false, DECLARED: true - param1, MODIFIERS: PUBLIC, PARAMETER]
+                           OBJECT param2 [ANONYMOUS: false, DECLARED: true - param2, MODIFIERS: PUBLIC, PARAMETER]
+                           # PROPERTIES
+                           arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+My                  : OBJECT My [ANONYMOUS: false, DECLARED: true - My, MODIFIERS: PUBLIC, OBJECT]
+                    # PROPERTIES
+                    app : OBJECT app [ANONYMOUS: false, DECLARED: true - app, MODIFIERS: PUBLIC, OBJECT]
+                        # PROPERTIES
+                        Panel      : OBJECT Panel [ANONYMOUS: false, DECLARED: true - Panel, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+                                   # PROPERTIES
+                                   constructor : FUNCTION constructor [ANONYMOUS: false, DECLARED: true - constructor, MODIFIERS: PUBLIC, METHOD]
+                                               # RETURN TYPES
+                                               undefined, RESOLVED: true
+                                               # PARAMETERS
+                                               OBJECT config [ANONYMOUS: false, DECLARED: true - config, MODIFIERS: PUBLIC, PARAMETER]
+                                               # PROPERTIES
+                                               arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                        PanelPart2 : OBJECT PanelPart2 [ANONYMOUS: false, DECLARED: true - PanelPart2, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+                                   # PROPERTIES
+                                   constructor : FUNCTION constructor [ANONYMOUS: false, DECLARED: true - constructor, MODIFIERS: PUBLIC, METHOD]
+                                               # RETURN TYPES
+                                               undefined, RESOLVED: true
+                                               # PARAMETERS
+                                               OBJECT config [ANONYMOUS: false, DECLARED: true - config, MODIFIERS: PUBLIC, PARAMETER]
+                                               # PROPERTIES
+                                               arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                   override    : OBJECT override [ANONYMOUS: false, DECLARED: true - override, MODIFIERS: PUBLIC, PROPERTY]
+issue231923Anonym$0 : OBJECT issue231923Anonym$0 [ANONYMOUS: true, DECLARED: true, MODIFIERS: PUBLIC, ANONYMOUS_OBJECT]
+                    # PROPERTIES
+                    constructor : FUNCTION constructor [ANONYMOUS: false, DECLARED: true - constructor, MODIFIERS: PUBLIC, METHOD]
+                                # RETURN TYPES
+                                undefined, RESOLVED: true
+                                # PARAMETERS
+                                OBJECT config [ANONYMOUS: false, DECLARED: true - config, MODIFIERS: PUBLIC, PARAMETER]
+                                # PROPERTIES
+                                arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+issue231923Anonym$1 : OBJECT issue231923Anonym$1 [ANONYMOUS: true, DECLARED: true, MODIFIERS: PUBLIC, ANONYMOUS_OBJECT]
+                    # PROPERTIES
+                    constructor : FUNCTION constructor [ANONYMOUS: false, DECLARED: true - constructor, MODIFIERS: PUBLIC, METHOD]
+                                # RETURN TYPES
+                                undefined, RESOLVED: true
+                                # PARAMETERS
+                                OBJECT config [ANONYMOUS: false, DECLARED: true - config, MODIFIERS: PUBLIC, PARAMETER]
+                                # PROPERTIES
+                                arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                    override    : OBJECT override [ANONYMOUS: false, DECLARED: true - override, MODIFIERS: PUBLIC, PROPERTY]

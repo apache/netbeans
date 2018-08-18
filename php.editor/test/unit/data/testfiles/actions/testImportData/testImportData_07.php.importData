@@ -1,0 +1,12 @@
+Caret position: 80
+Should show uses panel: true
+Defaults:
+ \GlobalClass
+
+Names:
+ GlobalClass
+
+Variants:
+ \GlobalClass
+ Don't use type.
+

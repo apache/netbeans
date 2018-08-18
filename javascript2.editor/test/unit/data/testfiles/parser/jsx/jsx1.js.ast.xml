@@ -1,0 +1,143 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='287'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='287'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='Test' start='0' end='10'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isConst/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='6' end='10'>
+        <name>Test</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <ClassNode ident='Test' start='0' end='287'>
+        <!-- ClassNode Constructor -->
+        <PropertyNode name='Test' start='0' end='287'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='6' end='10'>
+            <name>Test</name>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <FunctionNode name='Test' kind='NORMAL' start='0' end='287'>
+            <isClassConstructor/>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='0' end='287'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <!-- ClassNode Elements -->
+        <PropertyNode name='render' start='17' end='285'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='17' end='23'>
+            <name>render</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <FunctionNode name='render' kind='NORMAL' start='17' end='285'>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <IdentNode start='24' end='30'>
+              <name>syntax</name>
+            </IdentNode>
+            <!-- FunctionNode Body -->
+            <Block start='32' end='279'>
+              <isFunctionBody/>
+              <isTerminal/>
+              <!-- Block Statements -->
+              <ReturnNode start='43' end='279'>
+                <JsxElementNode name='li' start='62' end='268'>
+                  <!-- JSX Element Attributes -->
+                  <JsxAttributeNode name='className' start='66' end='108'>
+                    <!-- JSX Attribute Value -->
+                    <BinaryNode type='ADD' start='78' end='106'>
+                      <!-- BinaryNode lhs -->
+                      <BinaryNode type='ADD' start='78' end='104'>
+                        <!-- BinaryNode lhs -->
+                        <StringLiteralNode value='aaaaa' start='78' end='84'/>
+                        <!-- BinaryNode rhs -->
+                        <RuntimeNode start='91' end='104'>
+                          <TernaryNode start='91' end='104'>
+                            <IdentNode start='86' end='90'>
+                              <name>root</name>
+                            </IdentNode>
+                            <JoinPredecessorExpression start='94' end='99'>
+                              <StringLiteralNode value='bbbbb' start='94' end='99'/>
+                            </JoinPredecessorExpression>
+                            <JoinPredecessorExpression start='104' end='104'>
+                              <StringLiteralNode value='' start='104' end='104'/>
+                            </JoinPredecessorExpression>
+                          </TernaryNode>
+                        </RuntimeNode>
+                      </BinaryNode>
+                      <!-- BinaryNode rhs -->
+                      <StringLiteralNode value='' start='106' end='106'/>
+                    </BinaryNode>
+                  </JsxAttributeNode>
+                  <JsxAttributeNode name='key' start='123' end='135'>
+                    <!-- JSX Attribute Value -->
+                    <IdentNode start='128' end='134'>
+                      <name>syntax</name>
+                    </IdentNode>
+                  </JsxAttributeNode>
+                  <!-- JSX Element Children -->
+                  <JsxElementNode name='a' start='149' end='252'>
+                    <!-- JSX Element Attributes -->
+                    <JsxAttributeNode name='onClick' start='152' end='197'>
+                      <!-- JSX Attribute Value -->
+                      <CallNode start='161' end='196'>
+                        <!-- CallNode Arguments -->
+                        <IdentNode start='183' end='187'>
+                          <name>this</name>
+                        </IdentNode>
+                        <IdentNode start='189' end='195'>
+                          <name>syntax</name>
+                        </IdentNode>
+                        <!-- CallNode Function -->
+                        <AccessNode property='bind' start='161' end='182'>
+                          <!-- AccessNode Base -->
+                          <AccessNode property='handleClick' start='161' end='177'>
+                            <!-- AccessNode Base -->
+                            <IdentNode start='161' end='165'>
+                              <name>this</name>
+                            </IdentNode>
+                          </AccessNode>
+                        </AccessNode>
+                      </CallNode>
+                    </JsxAttributeNode>
+                    <!-- JSX Element Children -->
+                    <CallNode start='214' end='234'>
+                      <!-- CallNode Arguments -->
+                      <!-- CallNode Function -->
+                      <AccessNode property='toUpperCase' start='214' end='232'>
+                        <!-- AccessNode Base -->
+                        <IdentNode start='214' end='220'>
+                          <name>syntax</name>
+                        </IdentNode>
+                      </AccessNode>
+                    </CallNode>
+                  </JsxElementNode>
+                </JsxElementNode>
+              </ReturnNode>
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <!-- ClassNode Decorators -->
+      </ClassNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

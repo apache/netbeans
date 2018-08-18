@@ -506,6 +506,17 @@ public class JavacParserTest extends NbTestCase {
         });
     }
 
+    public void testValidateCompilerOptions() {
+        List<String> input = Arrays.asList("--add-exports", "foo/bar=foobar",
+                                           "--add-exports=foo2/bar=foobar",
+                                           "--limit-modules", "foo",
+                                           "--add-modules", "foo",
+                                           "--add-reads", "foo=foo2");
+        assertEquals(Collections.emptyList(), JavacParser.validateCompilerOptions(input, com.sun.tools.javac.code.Source.lookup("1.8")));
+        assertEquals(input, JavacParser.validateCompilerOptions(input, com.sun.tools.javac.code.Source.lookup("9")));
+        assertEquals(input, JavacParser.validateCompilerOptions(input, com.sun.tools.javac.code.Source.lookup("10")));
+    }
+
     private FileObject createFile(String path, String content) throws Exception {
         FileObject file = FileUtil.createData(sourceRoot, path);
         TestUtilities.copyStringToFile(file, content);

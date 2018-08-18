@@ -1,0 +1,4 @@
+Animal:CONSTRUCTOR:[PUBLIC]:ESCAPED{Animal}ESCAPED{(}ESCAPED{name}ESCAPED{)}<font color="#999999">ESCAPED{ : }Animal</font>:
+  getName:METHOD:[PROTECTED]:ESCAPED{getName}ESCAPED{(}ESCAPED{)}:
+  name:FIELD:[PUBLIC]:ESCAPED{name}:
+  toString:METHOD:[PROTECTED]:ESCAPED{toString}ESCAPED{(}ESCAPED{)}:

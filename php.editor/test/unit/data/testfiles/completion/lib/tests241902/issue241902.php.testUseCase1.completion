@@ -1,0 +1,8 @@
+Code completion result for source line:
+use |; //ns
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    First                           [PUBLIC]   null
+------------------------------------
+PACKAGE    Second                          [PUBLIC]   First
+CLASS      ThirdC                          [PUBLIC]   First\Second
+CLASS      ThirdI                          [PUBLIC]   First\Second

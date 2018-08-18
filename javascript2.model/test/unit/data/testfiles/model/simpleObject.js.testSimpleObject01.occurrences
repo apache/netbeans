@@ -1,0 +1,4 @@
+var |>MARK_OCCURRENCES:Car^rot<| = {
+|>MARK_OCCURRENCES:Carrot<|.isVegitable = function () {
+formatter.println(|>MARK_OCCURRENCES:Carrot<|.getColor());
+formatter.println(|>MARK_OCCURRENCES:Carrot<|.isVegitable());

@@ -1,0 +1,5 @@
+Test:CONSTRUCTOR:[PUBLIC]:ESCAPED{Test}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Test</font>:
+  i:VARIABLE:[PRIVATE]:ESCAPED{i}<font color="#999999">ESCAPED{ : }Number</font>:
+  listeners:FIELD:[PUBLIC]:ESCAPED{listeners}<font color="#999999">ESCAPED{ : }Array</font>:
+  max:VARIABLE:[PRIVATE]:ESCAPED{max}<font color="#999999">ESCAPED{ : }Array.length</font>:
+  subs:VARIABLE:[PRIVATE]:ESCAPED{subs}<font color="#999999">ESCAPED{ : }Array</font>:

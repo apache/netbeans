@@ -1,0 +1,4 @@
+a:METHOD:[PUBLIC]:ESCAPED{a}ESCAPED{(}<font color="#999999">ESCAPED{String}ESCAPED{ }</font>ESCAPED{x}ESCAPED{)}<font color="#999999">ESCAPED{ : }Boolean</font>:
+b:METHOD:[PUBLIC]:ESCAPED{b}ESCAPED{(}<font color="#999999">ESCAPED{String}ESCAPED{ }</font>ESCAPED{y}ESCAPED{)}<font color="#999999">ESCAPED{ : }Number</font>:
+c:METHOD:[PUBLIC]:ESCAPED{c}ESCAPED{(}<font color="#999999">ESCAPED{String}ESCAPED{ }</font>ESCAPED{z}ESCAPED{)}<font color="#999999">ESCAPED{ : }Number</font>:
+ok:METHOD:[PUBLIC]:ESCAPED{ok}ESCAPED{(}<font color="#999999">ESCAPED{Number}ESCAPED{ }</font>ESCAPED{n}ESCAPED{)}<font color="#999999">ESCAPED{ : }String</font>:

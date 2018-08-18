@@ -1,0 +1,8 @@
+
+<h3>Attachments <small>({{(specification.attachments| filter:lengthFilter).length}})</small></h3>
+<table>
+    <tr data-ng-repeat="attachment in specification.attachments| filter:titleQuery">
+        <td><a href="{{attachmentBase}}?id={{attachment.id}}">&rightarrow; {{attachment.name}}&nbsp;&nbsp;</a></td>                
+    </tr>
+
+</table><br/>

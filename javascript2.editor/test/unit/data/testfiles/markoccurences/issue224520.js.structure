@@ -1,0 +1,4 @@
+diff:METHOD:[PUBLIC]:ESCAPED{diff}ESCAPED{(}ESCAPED{data}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  team:CLASS:[PRIVATE]:ESCAPED{team}:
+    bugSets:FIELD:[PUBLIC]:ESCAPED{bugSets}<font color="#999999">ESCAPED{ : }Array</font>:
+    name:FIELD:[PUBLIC]:ESCAPED{name}<font color="#999999">ESCAPED{ : }String</font>:

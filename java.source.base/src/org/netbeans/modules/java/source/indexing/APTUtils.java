@@ -447,7 +447,7 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
                     return vote;
                 }
             }
-            final String cmpOptsStr = JavacParser.validateCompilerOptions(compilerOptions.getArguments())
+            final String cmpOptsStr = JavacParser.validateCompilerOptions(compilerOptions.getArguments(), null)
                     .stream()
                     .collect(Collectors.joining(" "));  //NOI18N
             if (JavaIndex.ensureAttributeValue(url, COMPILER_OPTIONS, cmpOptsStr, checkOnly)) {

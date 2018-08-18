@@ -1,0 +1,11 @@
+Code completion result for source line:
+ko.observable("Tom").|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     isDifferent(param1, param2)     [PUBLIC]   <font color=#999999>Knockout</font>
+METHOD     peek(): ko.observable._latestV  [PUBLIC]   <font color=#999999>Knockout</font>
+METHOD     valueHasMutated(): undefined    [PUBLIC]   <font color=#999999>Knockout</font>
+METHOD     valueWillMutate(): undefined    [PUBLIC]   <font color=#999999>Knockout</font>
+FIELD      _latestValue                    [PUBLIC,   <font color=#999999>Knockout</font>
+FIELD      equalityComparer                [PUBLIC]   <font color=#999999>Knockout</font>
+FIELD      notifySubscribers               [PUBLIC]   <font color=#999999>Knockout</font>

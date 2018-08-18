@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.50.1
+#Version 1.55.1
 
 CLSS public abstract interface java.io.Serializable
 
@@ -63,6 +63,7 @@ fld public final static org.netbeans.api.java.classpath.ClassPath EMPTY
 innr public final Entry
 innr public final static !enum Flag
 innr public final static !enum PathConversionMode
+innr public final static !enum PathEmbeddingMode
 meth public boolean equals(java.lang.Object)
 meth public final boolean contains(org.openide.filesystems.FileObject)
 meth public final boolean isResourceVisible(org.openide.filesystems.FileObject)
@@ -77,7 +78,14 @@ meth public final void addPropertyChangeListener(java.beans.PropertyChangeListen
 meth public final void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public int hashCode()
 meth public java.lang.String toString()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public java.lang.String toString(org.netbeans.api.java.classpath.ClassPath$PathConversionMode)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public java.lang.String toString(org.netbeans.api.java.classpath.ClassPath$PathConversionMode,org.netbeans.api.java.classpath.ClassPath$PathEmbeddingMode)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
 meth public java.util.List<org.netbeans.api.java.classpath.ClassPath$Entry> entries()
 meth public java.util.Set<org.netbeans.api.java.classpath.ClassPath$Flag> getFlags()
  anno 0 org.netbeans.api.annotations.common.NonNull()
@@ -87,7 +95,7 @@ meth public static org.netbeans.api.java.classpath.ClassPath getClassPath(org.op
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
-hfds EMPTY_REF,LOG,caller,entriesCache,impl,implementations,invalidEntries,invalidRoots,pListener,propSupport,refClassLoader,root2Filter,rootsCache,rootsListener,weakPListeners
+hfds EMPTY_REF,LOG,URL_EMBEDDING,caller,entriesCache,impl,implementations,invalidEntries,invalidRoots,pListener,propSupport,refClassLoader,root2Filter,rootsCache,rootsListener,weakPListeners
 hcls RootsListener,SPIListener
 
 CLSS public final org.netbeans.api.java.classpath.ClassPath$Entry
@@ -122,6 +130,15 @@ fld public final static org.netbeans.api.java.classpath.ClassPath$PathConversion
 meth public static org.netbeans.api.java.classpath.ClassPath$PathConversionMode valueOf(java.lang.String)
 meth public static org.netbeans.api.java.classpath.ClassPath$PathConversionMode[] values()
 supr java.lang.Enum<org.netbeans.api.java.classpath.ClassPath$PathConversionMode>
+
+CLSS public final static !enum org.netbeans.api.java.classpath.ClassPath$PathEmbeddingMode
+ outer org.netbeans.api.java.classpath.ClassPath
+fld public final static org.netbeans.api.java.classpath.ClassPath$PathEmbeddingMode EXCLUDE
+fld public final static org.netbeans.api.java.classpath.ClassPath$PathEmbeddingMode FAIL
+fld public final static org.netbeans.api.java.classpath.ClassPath$PathEmbeddingMode INCLUDE
+meth public static org.netbeans.api.java.classpath.ClassPath$PathEmbeddingMode valueOf(java.lang.String)
+meth public static org.netbeans.api.java.classpath.ClassPath$PathEmbeddingMode[] values()
+supr java.lang.Enum<org.netbeans.api.java.classpath.ClassPath$PathEmbeddingMode>
 
 CLSS public final org.netbeans.api.java.classpath.GlobalPathRegistry
 meth public java.util.Set<org.netbeans.api.java.classpath.ClassPath> getPaths(java.lang.String)
@@ -174,7 +191,7 @@ innr public static Result2
 meth public static org.netbeans.api.java.queries.SourceForBinaryQuery$Result findSourceRoots(java.net.URL)
 meth public static org.netbeans.api.java.queries.SourceForBinaryQuery$Result2 findSourceRoots2(java.net.URL)
 supr java.lang.Object
-hfds EMPTY_RESULT,EMPTY_RESULT2,LOG,implementations
+hfds EMPTY_RESULT,LOG,implementations
 hcls EmptyResult
 
 CLSS public abstract interface static org.netbeans.api.java.queries.SourceForBinaryQuery$Result
@@ -244,15 +261,29 @@ meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeLis
 meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
 
 CLSS public org.netbeans.spi.java.classpath.support.ClassPathSupport
+innr public abstract interface static Selector
 meth public !varargs static org.netbeans.api.java.classpath.ClassPath createClassPath(java.net.URL[])
 meth public !varargs static org.netbeans.api.java.classpath.ClassPath createClassPath(org.openide.filesystems.FileObject[])
 meth public !varargs static org.netbeans.api.java.classpath.ClassPath createProxyClassPath(org.netbeans.api.java.classpath.ClassPath[])
 meth public !varargs static org.netbeans.spi.java.classpath.ClassPathImplementation createProxyClassPathImplementation(org.netbeans.spi.java.classpath.ClassPathImplementation[])
 meth public static org.netbeans.api.java.classpath.ClassPath createClassPath(java.lang.String)
 meth public static org.netbeans.api.java.classpath.ClassPath createClassPath(java.util.List<? extends org.netbeans.spi.java.classpath.PathResourceImplementation>)
+meth public static org.netbeans.api.java.classpath.ClassPath createMultiplexClassPath(org.netbeans.spi.java.classpath.support.ClassPathSupport$Selector)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public static org.netbeans.spi.java.classpath.ClassPathImplementation createClassPathImplementation(java.util.List<? extends org.netbeans.spi.java.classpath.PathResourceImplementation>)
 meth public static org.netbeans.spi.java.classpath.PathResourceImplementation createResource(java.net.URL)
 supr java.lang.Object
+
+CLSS public abstract interface static org.netbeans.spi.java.classpath.support.ClassPathSupport$Selector
+ outer org.netbeans.spi.java.classpath.support.ClassPathSupport
+fld public final static java.lang.String PROP_ACTIVE_CLASS_PATH = "activeClassPath"
+meth public abstract org.netbeans.api.java.classpath.ClassPath getActiveClassPath()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeListener)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 
 CLSS public abstract org.netbeans.spi.java.classpath.support.CompositePathResourceBase
 cons public init()

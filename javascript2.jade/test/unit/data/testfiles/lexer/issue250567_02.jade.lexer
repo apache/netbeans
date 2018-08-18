@@ -1,0 +1,5 @@
+[DOCTYPE(7):doctype][WHITESPACE(1): ][DOCTYPE_TEMPLATE(4):html][EOL(1):\n]
+[TAG(4):html][EOL(1):\n]
+[WHITESPACE(2):  ][TAG(4):head][EOL(1):\n]
+[WHITESPACE(2):  ][TAG(4):body][WHITESPACE(3):   ][EOL(1):\n]
+[WHITESPACE(4):    ][CSS_ID(5):#city][TEXT(5):@text]

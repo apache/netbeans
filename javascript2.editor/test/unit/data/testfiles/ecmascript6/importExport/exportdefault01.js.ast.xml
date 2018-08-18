@@ -1,0 +1,159 @@
+<FunctionNode name='exportdefault01.js' kind='MODULE' start='0' end='134'>
+  <isProgram/>
+  <ExportNode start='0' end='133'>
+    <CallNode start='15' end='133'>
+      <!-- CallNode Arguments -->
+      <ObjectNode start='22' end='132'>
+        <!-- ObjectNode Elements -->
+        <PropertyNode name='content' start='29' end='110'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='29' end='36'>
+            <name>content</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <CallNode start='38' end='110'>
+            <!-- CallNode Arguments -->
+            <StringLiteralNode value='source.[]' start='48' end='57'/>
+            <FunctionNode name='content' kind='NORMAL' start='60' end='109'>
+              <isAnonymous/>
+              <!-- FunctionNode Parameters -->
+              <!-- FunctionNode Body -->
+              <Block start='71' end='103'>
+                <isFunctionBody/>
+                <isTerminal/>
+                <!-- Block Statements -->
+                <ReturnNode start='81' end='103'>
+                  <CallNode start='88' end='102'>
+                    <!-- CallNode Arguments -->
+                    <!-- CallNode Function -->
+                    <AccessNode property='compute' start='88' end='100'>
+                      <!-- AccessNode Base -->
+                      <IdentNode start='88' end='92'>
+                        <name>this</name>
+                      </IdentNode>
+                    </AccessNode>
+                  </CallNode>
+                </ReturnNode>
+              </Block>
+            </FunctionNode>
+            <!-- CallNode Function -->
+            <IdentNode start='38' end='46'>
+              <name>computed</name>
+            </IdentNode>
+          </CallNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <PropertyNode name='compute' start='117' end='130'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='117' end='124'>
+            <name>compute</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <FunctionNode name='compute' kind='NORMAL' start='117' end='130'>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='127' end='128'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+      </ObjectNode>
+      <!-- CallNode Function -->
+      <IdentNode start='15' end='21'>
+        <name>extend</name>
+      </IdentNode>
+    </CallNode>
+  </ExportNode>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='134'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='*default*' start='15' end='133'>
+      <hasInit/>
+      <isAssignment/>
+      <isExport/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='15' end='133'>
+        <name>*default*</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <CallNode start='15' end='133'>
+        <!-- CallNode Arguments -->
+        <ObjectNode start='22' end='132'>
+          <!-- ObjectNode Elements -->
+          <PropertyNode name='content' start='29' end='110'>
+            <!-- PropertyNode Key -->
+            <IdentNode start='29' end='36'>
+              <name>content</name>
+              <isPropertyName/>
+            </IdentNode>
+            <!-- PropertyNode Value -->
+            <CallNode start='38' end='110'>
+              <!-- CallNode Arguments -->
+              <StringLiteralNode value='source.[]' start='48' end='57'/>
+              <FunctionNode name='content' kind='NORMAL' start='60' end='109'>
+                <isAnonymous/>
+                <!-- FunctionNode Parameters -->
+                <!-- FunctionNode Body -->
+                <Block start='71' end='103'>
+                  <isFunctionBody/>
+                  <isTerminal/>
+                  <!-- Block Statements -->
+                  <ReturnNode start='81' end='103'>
+                    <CallNode start='88' end='102'>
+                      <!-- CallNode Arguments -->
+                      <!-- CallNode Function -->
+                      <AccessNode property='compute' start='88' end='100'>
+                        <!-- AccessNode Base -->
+                        <IdentNode start='88' end='92'>
+                          <name>this</name>
+                        </IdentNode>
+                      </AccessNode>
+                    </CallNode>
+                  </ReturnNode>
+                </Block>
+              </FunctionNode>
+              <!-- CallNode Function -->
+              <IdentNode start='38' end='46'>
+                <name>computed</name>
+              </IdentNode>
+            </CallNode>
+            <!-- PropertyNode Decorators -->
+          </PropertyNode>
+          <PropertyNode name='compute' start='117' end='130'>
+            <!-- PropertyNode Key -->
+            <IdentNode start='117' end='124'>
+              <name>compute</name>
+              <isPropertyName/>
+            </IdentNode>
+            <!-- PropertyNode Value -->
+            <FunctionNode name='compute' kind='NORMAL' start='117' end='130'>
+              <isMethod/>
+              <isNamedFunctionExpression/>
+              <!-- FunctionNode Parameters -->
+              <!-- FunctionNode Body -->
+              <Block start='127' end='128'>
+                <isFunctionBody/>
+                <!-- Block Statements -->
+              </Block>
+            </FunctionNode>
+            <!-- PropertyNode Decorators -->
+          </PropertyNode>
+        </ObjectNode>
+        <!-- CallNode Function -->
+        <IdentNode start='15' end='21'>
+          <name>extend</name>
+        </IdentNode>
+      </CallNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

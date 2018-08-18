@@ -1,0 +1,2 @@
+function |>MARK_OCCURRENCES:functionName<|() {
+|>MARK_OCCURRENCES:function^Name<|()[0]->foo();

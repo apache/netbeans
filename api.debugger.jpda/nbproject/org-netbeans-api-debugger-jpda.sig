@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 3.3.1
+#Version 3.8.1
 
 CLSS public abstract interface java.io.Serializable
 
@@ -279,11 +279,14 @@ hcls FieldBreakpointImpl
 CLSS public org.netbeans.api.debugger.jpda.InvalidExpressionException
 cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.String,java.lang.Throwable,boolean)
 cons public init(java.lang.Throwable)
+cons public init(java.lang.Throwable,boolean)
+meth public final boolean hasApplicationTarget()
 meth public java.lang.String getMessage()
 meth public java.lang.Throwable getTargetException()
 supr java.lang.Exception
-hfds message
+hfds isFromApp,message
 
 CLSS public abstract interface org.netbeans.api.debugger.jpda.JPDAArrayType
 intf org.netbeans.api.debugger.jpda.JPDAClassType
@@ -854,8 +857,10 @@ hfds v,var
 CLSS public abstract org.netbeans.spi.debugger.jpda.SmartSteppingCallback
 cons public init()
 innr public abstract interface static !annotation Registration
+innr public final static StopOrStep
 meth public abstract boolean stopHere(org.netbeans.spi.debugger.ContextProvider,org.netbeans.api.debugger.jpda.JPDAThread,org.netbeans.api.debugger.jpda.SmartSteppingFilter)
 meth public abstract void initFilter(org.netbeans.api.debugger.jpda.SmartSteppingFilter)
+meth public org.netbeans.spi.debugger.jpda.SmartSteppingCallback$StopOrStep stopAt(org.netbeans.spi.debugger.ContextProvider,org.netbeans.api.debugger.jpda.CallStackFrame,org.netbeans.api.debugger.jpda.SmartSteppingFilter)
 supr java.lang.Object
 hcls ContextAware
 
@@ -865,6 +870,20 @@ CLSS public abstract interface static !annotation org.netbeans.spi.debugger.jpda
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault java.lang.String path()
+
+CLSS public final static org.netbeans.spi.debugger.jpda.SmartSteppingCallback$StopOrStep
+ outer org.netbeans.spi.debugger.jpda.SmartSteppingCallback
+meth public boolean equals(java.lang.Object)
+meth public boolean isStop()
+meth public int getStepDepth()
+meth public int getStepSize()
+meth public int hashCode()
+meth public java.lang.String toString()
+meth public static org.netbeans.spi.debugger.jpda.SmartSteppingCallback$StopOrStep skip()
+meth public static org.netbeans.spi.debugger.jpda.SmartSteppingCallback$StopOrStep step(int,int)
+meth public static org.netbeans.spi.debugger.jpda.SmartSteppingCallback$StopOrStep stop()
+supr java.lang.Object
+hfds SKIP,STOP,stepDepth,stepSize,stop
 
 CLSS public abstract org.netbeans.spi.debugger.jpda.SourcePathProvider
 cons public init()

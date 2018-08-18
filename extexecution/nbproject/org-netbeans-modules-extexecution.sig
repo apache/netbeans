@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.47.1
+#Version 1.50.1
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -30,6 +30,12 @@ meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Cl
 supr java.lang.Object
 hfds name,ordinal
 
+CLSS public abstract interface !annotation java.lang.FunctionalInterface
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
@@ -45,6 +51,7 @@ meth public int hashCode()
 meth public java.lang.String toString()
 
 CLSS public abstract interface java.lang.Runnable
+ anno 0 java.lang.FunctionalInterface()
 meth public abstract void run()
 
 CLSS public abstract interface java.lang.annotation.Annotation
@@ -74,6 +81,7 @@ intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
 
 CLSS public abstract interface java.util.concurrent.Callable<%0 extends java.lang.Object>
+ anno 0 java.lang.FunctionalInterface()
 meth public abstract {java.util.concurrent.Callable%0} call() throws java.lang.Exception
 
 CLSS public final org.netbeans.api.extexecution.ExecutionDescriptor

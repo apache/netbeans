@@ -1,0 +1,11 @@
+<style type="text/css">
+    day { 
+        background-color: black;
+    color: rgb(${"R"},${"G"},${"B"});
+    top:0; left:0;
+    width:150px; 
+    height:150px;
+    z-index:1;
+    border:1px solid #a0a0a0;
+}
+</style>

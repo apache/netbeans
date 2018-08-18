@@ -1,0 +1,2 @@
+        formatter.println(|>MARK_OCCURRENCES:m^sg<|); // uses private var
+    var |>MARK_OCCURRENCES:msg<| = "private"; // private variable

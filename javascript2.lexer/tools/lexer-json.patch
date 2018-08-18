@@ -1,0 +1,104 @@
+--- JsonColoringLexer.java	2012-09-11 23:40:18.801590325 +0200
++++ JsonColoringLexer.java.patched	2012-09-11 23:40:18.877590343 +0200
+@@ -515,7 +515,7 @@
+    * Returns the text matched by the current regular expression.
+    */
+   public final String yytext() {
+-    return new String( zzBuffer, zzStartRead, zzMarkedPos-zzStartRead );
++    return input.readText().toString();
+   }
+ 
+ 
+@@ -531,7 +531,7 @@
+    * @return the character at position pos
+    */
+   public final char yycharat(int pos) {
+-    return zzBuffer[zzStartRead+pos];
++    return input.readText().charAt(pos);
+   }
+ 
+ 
+@@ -539,7 +539,7 @@
+    * Returns the length of the matched text region.
+    */
+   public final int yylength() {
+-    return zzMarkedPos-zzStartRead;
++    return input.readLength();
+   }
+ 
+ 
+@@ -582,7 +582,7 @@
+     if ( number > yylength() )
+       zzScanError(ZZ_PUSHBACK_2BIG);
+ 
+-    zzMarkedPos -= number;
++    input.backup(number);
+   }
+ 
+ 
+@@ -615,7 +615,7 @@
+ 
+       zzAction = -1;
+ 
+-      zzCurrentPosL = zzCurrentPos = zzStartRead = zzMarkedPosL;
++      int tokenLength = 0;
+   
+       zzState = ZZ_LEXSTATE[zzLexicalState];
+ 
+@@ -623,30 +623,15 @@
+       zzForAction: {
+         while (true) {
+     
+-          if (zzCurrentPosL < zzEndReadL)
+-            zzInput = zzBufferL[zzCurrentPosL++];
+-          else if (zzAtEOF) {
++          zzInput = input.read();
++
++          if(zzInput == LexerInput.EOF) {
++              //end of input reached
+             zzInput = YYEOF;
+             break zzForAction;
++              //notice: currently LexerInput.EOF == YYEOF
+           }
+-          else {
+-            // store back cached positions
+-            zzCurrentPos  = zzCurrentPosL;
+-            zzMarkedPos   = zzMarkedPosL;
+-            boolean eof = zzRefill();
+-            // get translated positions and possibly new buffer
+-            zzCurrentPosL  = zzCurrentPos;
+-            zzMarkedPosL   = zzMarkedPos;
+-            zzBufferL      = zzBuffer;
+-            zzEndReadL     = zzEndRead;
+-            if (eof) {
+-              zzInput = YYEOF;
+-              break zzForAction;
+-            }
+-            else {
+-              zzInput = zzBufferL[zzCurrentPosL++];
+-            }
+-          }
++
+           int zzNext = zzTransL[ zzRowMapL[zzState] + zzCMapL[zzInput] ];
+           if (zzNext == -1) break zzForAction;
+           zzState = zzNext;
+@@ -654,7 +639,7 @@
+           int zzAttributes = zzAttrL[zzState];
+           if ( (zzAttributes & 1) == 1 ) {
+             zzAction = zzState;
+-            zzMarkedPosL = zzCurrentPosL;
++            tokenLength = input.readLength();
+             if ( (zzAttributes & 8) == 8 ) break zzForAction;
+           }
+ 
+@@ -662,7 +647,9 @@
+       }
+ 
+       // store back cached position
+-      zzMarkedPos = zzMarkedPosL;
++      if(zzInput != YYEOF) {
++         input.backup(input.readLength() - tokenLength);
++      }
+ 
+       switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
+         case 13: 

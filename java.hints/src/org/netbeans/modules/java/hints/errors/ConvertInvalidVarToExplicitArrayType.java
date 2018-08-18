@@ -96,9 +96,9 @@ public class ConvertInvalidVarToExplicitArrayType implements ErrorRule<Void> {
 
                 TypeMirror etType = trees.getTypeMirror(new TreePath(initArrayTreePath, tree));
 
-                //skipped fix for invalid array member and for parameterized array member.
+                //skipped fix for invalid array member, anonymous class and parameterized array member.
                 if (etType == null || etType.getKind() == TypeKind.ERROR || (etType.getKind() == TypeKind.DECLARED
-                        && !((DeclaredType) etType).getTypeArguments().isEmpty())) {
+                        && !((DeclaredType) etType).getTypeArguments().isEmpty()) || Utilities.isAnonymousType(etType)) {
                     return null;
                 }
 

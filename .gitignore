@@ -1,5 +1,6 @@
 /*/build/
 /*/nbproject/private/
+/*/*/nbproject/private/
 /*/*/build/
 /*/*/dist/
 /*/external/*.zip
@@ -8,6 +9,12 @@
 /*/external/*.exe
 /*/external/*.js
 /*/external/*/**
+/*/*/external/*.zip
+/*/*/external/*.jar
+/*/*/external/*.dll
+/*/*/external/*.exe
+/*/*/external/*.js
+/*/*/external/*/**
 /nbbuild/netbeans/
 /nbbuild/nbms/
 /nbbuild/testuserdir/
@@ -16,6 +23,14 @@
 /nbi/engine/native/*/*/dist/
 /nb-javac/
 /java.source.nbjavac/test/test-nb-javac/nbproject/private/
+/apisupport.harness/windows-launcher-src/*.exe
+/apisupport.harness/windows-launcher-src/*.res
+/ide/launcher/windows/*.exe
+/ide/launcher/windows/*.res
+/o.n.bootstrap/launcher/windows/*.dll
+/o.n.bootstrap/launcher/windows/*.exe
+/o.n.bootstrap/launcher/windows/*.res
+
 
 # OS generated files #
 ######################

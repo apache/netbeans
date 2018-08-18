@@ -1,0 +1,4 @@
+var myF = function MyLib_Function (|>MARK_OCCURRENCES:pa^th<|, ref, pfx, options) {
+   var v = expand(|>MARK_OCCURRENCES:path<|, ref, pfx, options);
+   if( options && options.option1 && (v === |>MARK_OCCURRENCES:path<|) )
+       return |>MARK_OCCURRENCES:path<|;

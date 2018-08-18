@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.modules.hibernateweb
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/hibernateweb/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.27
+OpenIDE-Module-Layer: org/netbeans/modules/hibernateweb/resources/layer.xml
+OpenIDE-Module-Provides: org.netbeans.modules.web.project.framework
+

@@ -1,0 +1,7 @@
+<!ELEMENT target-module-list ( target-module+ ) >
+<!ELEMENT target-module EMPTY >
+<!ATTLIST target-module id CDATA #REQUIRED >
+<!ATTLIST target-module instance-url CDATA #REQUIRED >
+<!ATTLIST target-module target-name CDATA #REQUIRED >
+<!ATTLIST target-module timestamp CDATA #REQUIRED >
+

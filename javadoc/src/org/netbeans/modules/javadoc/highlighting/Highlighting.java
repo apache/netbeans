@@ -20,6 +20,7 @@
 package org.netbeans.modules.javadoc.highlighting;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.Enumeration;
@@ -45,6 +46,7 @@ import org.netbeans.api.lexer.TokenHierarchyEvent;
 import org.netbeans.api.lexer.TokenHierarchyListener;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.spi.editor.highlighting.HighlightsSequence;
 import org.netbeans.spi.editor.highlighting.support.AbstractHighlightsContainer;
 import org.openide.util.WeakListeners;
@@ -55,21 +57,26 @@ import org.openide.util.WeakListeners;
 public class Highlighting extends AbstractHighlightsContainer implements TokenHierarchyListener {
 
     private static final Logger LOG = Logger.getLogger(Highlighting.class.getName());
-    
+    private static final String WS = " \t\n"; // NOI18N
+    private static final String JAPANESE_PERIOD = "\u3002"; // 。 NOI18N
+    private static final List<String> PERIODS = Arrays.asList(
+            JAPANESE_PERIOD
+    );
+
     public static final String LAYER_ID = "org.netbeans.modules.javadoc.highlighting"; //NOI18N
-    
+
     private final AttributeSet fontColor;
-    
+
     private final Document document;
     private TokenHierarchy<? extends Document> hierarchy = null;
     private final AtomicLong version = new AtomicLong();
-    
+
     /** Creates a new instance of Highlighting */
     public Highlighting(Document doc) {
         AttributeSet firstLineFontColor = MimeLookup.getLookup(MimePath.get("text/x-java")).lookup(FontColorSettings.class).getTokenFontColors("javadoc-first-sentence"); //NOI18N
         AttributeSet commentFontColor = MimeLookup.getLookup(MimePath.get("text/x-java")).lookup(FontColorSettings.class).getTokenFontColors("comment"); //NOI18N
         if(firstLineFontColor != null && commentFontColor != null) {
-            Collection<Object> attrs = new LinkedList<Object>();
+            Collection<Object> attrs = new LinkedList<>();
             for (Enumeration<?> e = firstLineFontColor.getAttributeNames(); e.hasMoreElements(); ) {
                 Object key = e.nextElement();
                 Object value = firstLineFontColor.getAttribute(key);
@@ -110,7 +117,7 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
     public void tokenHierarchyChanged(TokenHierarchyEvent evt) {
         TokenChange<?> tc = evt.tokenChange();
         int affectedArea [] = null;
-        
+
         TokenSequence<? extends TokenId> seq = tc.currentTokenSequence();
         if (seq.language().equals(JavadocTokenId.language())) {
             // Change inside javadoc
@@ -131,7 +138,7 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
             // find out whether it really involves javadoc or not.
             affectedArea = new int [] { tc.offset(), evt.affectedEndOffset() };
         }
-        
+
         if (affectedArea != null) {
             version.incrementAndGet();
             fireHighlightsChange(affectedArea[0], affectedArea[1]);
@@ -147,6 +154,18 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
         if (seq.moveNext()) {
             int start = seq.offset();
             do {
+                String period = null;
+                int indexOfPeriod = -1;
+                for (String p : PERIODS) {
+                    int index = TokenUtilities.indexOf(seq.token().text(), p);
+                    if (index != -1) {
+                        if (indexOfPeriod == -1 || index < indexOfPeriod) {
+                            indexOfPeriod = index;
+                            period = p;
+                        }
+                    }
+                }
+
                 if (seq.token().id() == JavadocTokenId.DOT) {
                     if (seq.moveNext()) {
                         if (isWhiteSpace(seq.token())) {
@@ -154,6 +173,15 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
                         }
                         seq.movePrevious();
                      }
+                } else if (period != null && indexOfPeriod != -1) {
+                    // NETBEANS-791
+                    int offset = indexOfPeriod + 1;
+                    while (offset < seq.token().length()
+                            && isPeriod(seq.token().text().subSequence(offset, offset + 1))) {
+                        // e.g. 。。。
+                        offset++;
+                    }
+                    return new int[]{start, seq.offset() + offset};
                 } else if (seq.token().id() == JavadocTokenId.TAG) {
                     if (seq.movePrevious()) {
                         if (!seq.token().text().toString().trim().endsWith("{")) {
@@ -172,21 +200,24 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
         if (token == null || token.id() != JavadocTokenId.OTHER_TEXT) {
             return false;
         }
-        String ws = " \t\n";
-        return ws.indexOf(token.text().charAt(0)) >= 0;
+        return WS.indexOf(token.text().charAt(0)) >= 0;
+    }
+
+    private static boolean isPeriod(CharSequence cs) {
+        return PERIODS.stream().anyMatch(period -> TokenUtilities.equals(cs, period));
     }
 
     private final class HSImpl implements HighlightsSequence {
-        
-        private long version;
-        private TokenHierarchy<? extends Document> scanner;
+
+        private final long version;
+        private final TokenHierarchy<? extends Document> scanner;
         private List<TokenSequence<? extends TokenId>> sequences;
-        private int startOffset;
-        private int endOffset;
-        
+        private final int startOffset;
+        private final int endOffset;
+
         private List<Integer> lines = null;
         private int linesIdx = -1;
-        
+
         public HSImpl(long version, TokenHierarchy<? extends Document> scanner, int startOffset, int endOffset) {
             this.version = version;
             this.scanner = scanner;
@@ -195,10 +226,11 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
             this.sequences = null;
         }
 
+        @Override
         public boolean moveNext() {
             synchronized (Highlighting.this) {
                 checkVersion();
-                
+
                 if (sequences == null) {
                     // initialize
                     TokenSequence<?> tokenSequence = scanner.tokenSequence();
@@ -208,7 +240,7 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
                         return false;
                     }
                     TokenSequence<?> seq = tokenSequence.subSequence(startOffset, endOffset);
-                    sequences = new ArrayList<TokenSequence<? extends TokenId>>();
+                    sequences = new ArrayList<>();
                     sequences.add(seq);
                 }
 
@@ -217,11 +249,11 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
                         linesIdx += 2;
                         return true;
                     }
-                    
+
                     lines = null;
                     linesIdx = -1;
                 }
-                
+
                 while (!sequences.isEmpty()) {
                     TokenSequence<? extends TokenId> seq = sequences.get(sequences.size() - 1);
 
@@ -257,10 +289,11 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
             }
         }
 
+        @Override
         public int getStartOffset() {
             synchronized (Highlighting.this) {
                 checkVersion();
-                
+
                 if (sequences == null) {
                     throw new NoSuchElementException("Call moveNext() first."); //NOI18N
                 }
@@ -273,10 +306,11 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
             }
         }
 
+        @Override
         public int getEndOffset() {
             synchronized (Highlighting.this) {
                 checkVersion();
-                
+
                 if (sequences == null) {
                     throw new NoSuchElementException("Call moveNext() first."); //NOI18N
                 }
@@ -289,10 +323,11 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
             }
         }
 
+        @Override
         public AttributeSet getAttributes() {
             synchronized (Highlighting.this) {
                 checkVersion();
-                
+
                 if (sequences == null) {
                     throw new NoSuchElementException("Call moveNext() first."); //NOI18N
                 }
@@ -304,17 +339,17 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
                 }
             }
         }
-        
+
         private void checkVersion() {
             if (this.version != Highlighting.this.version.get()) {
                 throw new ConcurrentModificationException();
             }
         }
-        
+
         private List<Integer> splitByLines(int sentenceStart, int sentenceEnd) {
-            ArrayList<Integer> lines = new ArrayList<Integer>();
+            ArrayList<Integer> lines = new ArrayList<>();
             int offset = sentenceStart;
-            
+
             try {
                 while (offset < sentenceEnd) {
                     Element lineElement = document.getDefaultRootElement().getElement(
@@ -325,9 +360,9 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
 
                     String line = document.getText(rowStart, rowEnd - rowStart);
                     int idx = 0;
-                    while (idx < line.length() && 
-                        (line.charAt(idx) == ' ' || 
-                        line.charAt(idx) == '\t' || 
+                    while (idx < line.length() &&
+                        (line.charAt(idx) == ' ' ||
+                        line.charAt(idx) == '\t' ||
                         line.charAt(idx) == '*'))
                     {
                         idx++;
@@ -343,7 +378,7 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
             } catch (BadLocationException e) {
                 LOG.log(Level.WARNING, "Can't determine javadoc first sentence", e);
             }
-            
+
             return lines.isEmpty() ? null : lines;
         }
     } // End of HSImpl class

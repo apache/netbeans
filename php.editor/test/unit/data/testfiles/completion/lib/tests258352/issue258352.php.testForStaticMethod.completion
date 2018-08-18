@@ -1,0 +1,4 @@
+Code completion result for source line:
+$a->|publicAMethod(); // test
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicAMethod()                 [PUBLIC]   A

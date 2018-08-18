@@ -1,0 +1,7 @@
+interface |>MARK_OCCURRENCES:TestInterface<| {}
+function testParameterType(?TestClass $testClass, ?|>MARK_OCCURRENCES:TestInterface<| $testInterface) {
+    public function testClassParameterType(?TestClass $testClass, ?|>MARK_OCCURRENCES:TestInterface<| $testInterface) {
+    public static function testStaticClassReturnType(): ?|>MARK_OCCURRENCES:TestInterface<| {
+    public static function testStaticClassParameterType(?TestClass $testClass, ?|>MARK_OCCURRENCES:TestInt^erface<| $testInterface) {
+    public function testTraitParameterType(?TestClass $testClass, ?|>MARK_OCCURRENCES:TestInterface<| $testInterface) {
+    public function testInterfaceParameterType(?TestClass $testClass, ?|>MARK_OCCURRENCES:TestInterface<| $testInterface);

@@ -1,0 +1,2 @@
+    private $|>MARK_OCCURRENCES:num<|;
+        $this->|>MARK_OCCURRENCES:n^um<| = $num;

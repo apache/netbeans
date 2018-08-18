@@ -217,11 +217,12 @@ class XMLResultItem implements CompletionItem {
         }
         return true;
     }
-    
+
     private boolean isRemovingAvailableLocked(TokenSequence ts, Document doc, int offset, String replaceToText) {
-        boolean isTextRemovingAllowable = true;
-        
-        while (ts.moveNext() && isTextRemovingAllowable) {
+        ts.move(offset);
+        boolean isTextRemovingAllowable = false;
+
+        if (ts.moveNext()) {
             Token<XMLTokenId> tokenItem = ts.token();
             String tokenItemImage = tokenItem.text().toString();
             if ((tokenItemImage != null) && (tokenItemImage.length() > 0)) {

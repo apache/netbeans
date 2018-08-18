@@ -17,12 +17,12 @@
  * under the License.
  */
 
-#define COMPANY "Oracle Corporation"
+#define COMPANY ""
 #define COMPONENT "NetBeans IDE"
 #define VER "9.0.0.0"
 #define FVER 9,0,0,0
-#define BUILD_ID "04012017"
+#define BUILD_ID "03062018"
 #define INTERNAL_NAME "netbeans"
-#define COPYRIGHT "\xA9 2007, 2017 Oracle and/or its affiliates. All rights reserved."
+#define COPYRIGHT "Based on Apache NetBeans from the Apache Software Foundation and is licensed under Apache License Version 2.0"
 #define NAME "NetBeans IDE 9.0"
 

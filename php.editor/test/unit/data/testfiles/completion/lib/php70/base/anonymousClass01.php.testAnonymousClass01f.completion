@@ -1,0 +1,4 @@
+Code completion result for source line:
+$thi|s->testBnon();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+KEYWORD    {} $this->                                 null

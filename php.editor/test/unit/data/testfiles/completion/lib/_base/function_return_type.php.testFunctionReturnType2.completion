@@ -1,0 +1,6 @@
+Code completion result for source line:
+$result_from_standalone_function->|foo();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     foo()                           [PUBLIC]   TestClass
+METHOD     foo_static()                    [STATIC]   TestClass
+VARIABLE   ? tst                           [PUBLIC]   TestClass

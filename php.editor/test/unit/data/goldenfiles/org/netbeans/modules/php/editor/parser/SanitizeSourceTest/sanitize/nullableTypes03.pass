@@ -1,0 +1,32 @@
+<Program start='0' end='96'>
+    <Comments>
+    </Comments>
+    <Statements>
+        <NamespaceDeclaration start='7' end='95' isBracketed='false'>
+            <NamespaceName start='17' end='23' isCurrent='false' isGlobal='false'>
+                <Identifier start='17' end='19' name='My'/>
+                <Identifier start='20' end='23' name='Sub'/>
+            </NamespaceName>
+            <Block start='24' end='95' isCurly='true'>
+                <ClassDeclaration start='26' end='95' modifier='NONE'>
+                    <ClassName>
+                        <Identifier start='32' end='58' name='NullableTypesInterfaceTest'/>
+                    </ClassName>
+                    <SuperClassName>
+                    </SuperClassName>
+                    <Interfaces>
+                    </Interfaces>
+                    <Block start='59' end='95' isCurly='true'>
+                        <MethodDeclaration start='65' end='93' modifiers='public'>
+                            <FunctionDeclaration start='72' end='93' isReference='false'>
+                                <Identifier start='81' end='87' name='create'/>
+                                <FormalParameters>
+                                </FormalParameters>
+                            </FunctionDeclaration>
+                        </MethodDeclaration>
+                    </Block>
+                </ClassDeclaration>
+            </Block>
+        </NamespaceDeclaration>
+    </Statements>
+</Program>

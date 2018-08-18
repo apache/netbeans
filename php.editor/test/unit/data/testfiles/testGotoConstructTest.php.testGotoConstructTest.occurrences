@@ -1,0 +1,3 @@
+class |>MARK_OCCURRENCES:MyClassConstr<|  {
+class MyClassConstr2 extends |>MARK_OCCURRENCES:MyClassConstr<|  {}//MyClassConstr2
+$a = new |>MARK_OCCURRENCES:MyCla^ssConstr<|();

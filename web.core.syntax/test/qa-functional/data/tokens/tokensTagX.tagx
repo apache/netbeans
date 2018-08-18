@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<jsp:root
+version="2.0"
+xmlns:jsp="http://java.sun.com/JSP/Page" 
+xmlns:c="http://java.sun.com/jstl/core_rt"
+xmlns:tag="urn:jsptagdir:/WEB-INF/tags"
+xmlns:tld="urn:jsptld:/WEB-INF/MyTld.tld">
+
+    <jsp:directive.tag pageEncoding="UTF-8"/>
+
+    <jsp:element name='books'>
+    <h3>books</h3>
+    <tr />
+    </jsp:element>
+
+    <jsp:scriptlet>
+        String var = "str";
+        var.getBytes();
+    </jsp:scriptlet>
+    
+    <c:out value="Hello"/>
+    
+    <tag:testSelect name="select" items="h1,h2,h3,h4" size="2"/>
+    
+    <tld:EchoTagHandler message=""/>
+
+</jsp:root>
+
+<!-- comment -->

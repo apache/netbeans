@@ -1,0 +1,10 @@
+[EOL(1):\n]
+[FILTER(9)::markdown][FILTER_TEXT(69):
+      # Markdown
+
+      I often like including markdown documents.
+
+][TAG(6):script][EOL(1):\n]
+[WHITESPACE(2):  ][FILTER(7)::coffee][FILTER_TEXT(41):
+    console.log 'This is coffee script'
+]

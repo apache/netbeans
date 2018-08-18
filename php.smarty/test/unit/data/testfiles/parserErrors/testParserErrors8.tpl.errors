@@ -1,0 +1,5 @@
+Detected parser errors in the file:
+Unopened "if" tag : offset <1364:1368>
+Unopened "if" tag : offset <1474:1477>
+Unexpected "/if" tag, expected "/foreach" : offset <2097:2100>
+Unclosed "foreach" tag : offset <1909:1941>

@@ -1,0 +1,13 @@
+[[113,114]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}] 113-114:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}
+[[180,181]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}] 180-181:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}
+[[64,71]-Syntax error
+ unexpected:	private
+ after:	{
+ expected:	exit, if, integer, double, identifier, STRING_VARNAME, variable, inline html, String, String, echo, do, while, for, foreach, declare, clone, switch, break, continue, goto, function, return, yield, yield from, try, throw, use, global, unset, isset, empty, class, interface, list, array, __CLASS__, __TRAIT__, __METHOD__, __FUNCTION__, __LINE__, __FILE__, <<<"...", {, }, namespace, __NAMESPACE__, __DIR__, \, VAR_COMMENT, define, include, include_once, eval, require, require_once, print, ;, +, -, !, ~, ++, --, (int), (double), (string), (array), (object), (bool), (unset), @, [, new, static, abstract, final, (, $, '"', '`', <<<'...', trait] 64-71:Syntax error
+ unexpected:	private
+ after:	{
+ expected:	exit, if, integer, double, identifier, STRING_VARNAME, variable, inline html, String, String, echo, do, while, for, foreach, declare, clone, switch, break, continue, goto, function, return, yield, yield from, try, throw, use, global, unset, isset, empty, class, interface, list, array, __CLASS__, __TRAIT__, __METHOD__, __FUNCTION__, __LINE__, __FILE__, <<<"...", {, }, namespace, __NAMESPACE__, __DIR__, \, VAR_COMMENT, define, include, include_once, eval, require, require_once, print, ;, +, -, !, ~, ++, --, (int), (double), (string), (array), (object), (bool), (unset), @, [, new, static, abstract, final, (, $, '"', '`', <<<'...', trait

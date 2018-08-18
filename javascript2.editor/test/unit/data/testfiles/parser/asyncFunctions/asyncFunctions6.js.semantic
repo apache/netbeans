@@ -1,0 +1,10 @@
+(|>CUSTOM2:async<| function(){})();
+
+ 
+ export default { 
+
+  |>METHOD:action<|() {
+    |>GLOBAL:test<|;
+  }
+
+};

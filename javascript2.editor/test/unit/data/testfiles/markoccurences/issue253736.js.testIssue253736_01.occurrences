@@ -1,0 +1,4 @@
+		var |>MARK_OCCURRENCES:addre^ss<| = {baseUrl:'', id:0};
+			|>MARK_OCCURRENCES:address<|.baseUrl = protocol + server;
+			|>MARK_OCCURRENCES:address<|.id = parseInt(id);
+		return |>MARK_OCCURRENCES:address<|;

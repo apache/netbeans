@@ -1,0 +1,7 @@
+class X extends function() {
+    var x =1; let y = 2;
+} {
+    test() {
+        let x = 0;
+    }
+}

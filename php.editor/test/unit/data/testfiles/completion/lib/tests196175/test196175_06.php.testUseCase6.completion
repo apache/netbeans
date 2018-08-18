@@ -1,0 +1,7 @@
+Code completion result for source line:
+$a->|doesNotWorkHere();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     alsoWorksHere()                 [PUBLIC]   \Brite\Controller\ViewController
+METHOD     doesNotWorkHere()               [PUBLIC]   \App\Test\IndexController
+METHOD     worksHere()                     [PUBLIC]   \Brite\Controller\Controller

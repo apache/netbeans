@@ -97,9 +97,11 @@ public final class SingleModuleProperties extends ModuleProperties {
     private static final String[] IDE_TOKENS = new String[]{
         "org.openide.modules.os.Windows", // NOI18N
         "org.openide.modules.os.Unix", // NOI18N
+        "org.openide.modules.os.Linux", // NOI18N
         "org.openide.modules.os.MacOSX", // NOI18N
         "org.openide.modules.os.PlainUnix", // NOI18N
-        "org.openide.modules.os.OS2" // NOI18N
+        "org.openide.modules.os.OS2", // NOI18N
+        "org.openide.modules.jre.JavaFX", // NOI18N
     };
     // property keys for project.properties
     public static final String BUILD_COMPILER_DEBUG = "build.compiler.debug"; // NOI18N
@@ -856,6 +858,15 @@ public final class SingleModuleProperties extends ModuleProperties {
             }
         }
         return allTokens;
+    }
+
+    static boolean isBuiltInToken(String token) {
+        for (String t : IDE_TOKENS) {
+            if (t.equals(token)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     PublicPackagesTableModel getPublicPackagesModel() {

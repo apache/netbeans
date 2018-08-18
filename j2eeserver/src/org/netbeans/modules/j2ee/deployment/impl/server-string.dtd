@@ -1,0 +1,5 @@
+<!ELEMENT server-string ( target+ ) >
+<!ATTLIST server-string plugin CDATA #REQUIRED >
+<!ATTLIST server-string url CDATA #REQUIRED >
+<!ELEMENT target EMPTY>
+<!ATTLIST target name CDATA #REQUIRED >

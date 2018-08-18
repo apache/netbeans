@@ -1,0 +1,2 @@
+    test["|>MARK_OCCURRENCES:myProperty<|"] = 20;
+    test.anotherProperty = test.|>MARK_OCCURRENCES:myPrope^rty<|;

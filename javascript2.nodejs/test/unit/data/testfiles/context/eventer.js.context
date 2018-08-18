@@ -1,0 +1,6 @@
+[GLOBAL]server[UNKNOWN].on('[ASSIGN_LISTENER]connection'[UNKNOWN], [GLOBAL]f[UNKNOWN]unction (request) {[GLOBAL]
+    console[UNKNOWN].log('Connection');[GLOBAL]
+}[UNKNOWN]);[GLOBAL]
+
+server[UNKNOWN].on('[ASSIGN_LISTENER]'[UNKNOWN]);[GLOBAL]
+server[UNKNOWN].on('

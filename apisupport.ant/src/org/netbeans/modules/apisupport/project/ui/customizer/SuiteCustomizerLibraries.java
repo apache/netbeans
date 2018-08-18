@@ -1357,14 +1357,18 @@ public final class SuiteCustomizerLibraries extends NbPropertyPanel.Suite
         }
         public Set<String> getRequiredTokens() {
             Set<String> s = new TreeSet<String>(Arrays.asList(mm.getRequiredTokens()));
+            s.addAll(Arrays.asList(mm.getNeededTokens()));
             Iterator<String> it = s.iterator();
             while (it.hasNext()) {
                 String tok = it.next();
-                if (tok.startsWith("org.openide.modules.ModuleFormat") || tok.startsWith("org.openide.modules.os.")) { // NOI18N
+                if (tok.startsWith("org.openide.modules.ModuleFormat")) { // NOI18N
+                    it.remove();
+                    continue;
+                }
+                if (SingleModuleProperties.isBuiltInToken(tok)) {
                     it.remove();
                 }
             }
-            s.addAll(Arrays.asList(mm.getNeededTokens()));
             return s;
         }
         @Override

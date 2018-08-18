@@ -1,0 +1,93 @@
+
+<html>
+    <head>
+        <title> TITULEK
+        </title>
+
+
+        <style type="text/css">
+            h1 {
+                color: black;
+            }
+        </style>
+        <style type="text/css">
+            h2 {
+                color: blue;
+            }
+            col.prvni address #15 col.druhy {
+                font-family: cursive;
+                font-size: 36cm;
+                font-variant: normal;
+                left: 4in;
+                text-decoration: overline;
+                top: 4px;
+                vertical-align: text-top;
+                word-spacing: 4px
+            }
+        </style>
+    </head>
+    <body>
+
+        <!-- text elements-->
+        <h1>Header 1 </h1>
+        <h2>Header 2 </h2>
+        <b>bold</b>
+        <i>italic</i>
+        <big>BIG</big>
+        <small>small</small>
+
+        <!-- lists -->
+        <ul>
+            <li>first</li>
+            <li>second</li>
+        </ul>
+
+        <!-- link -->
+        <a href='syntax.html'></a>
+
+        <table border='1'>
+            <tr >
+                <th></th>
+            </tr>
+            <tr>
+                <td align='center'></td>
+            </tr>
+        </table>
+        <div style=" text-align: center" >
+            <form name='questionnaire' action='save'>
+                <input type='input' name='name' value='Jirka'>
+                <textarea cols='10' rows='5'>
+Any text
+                </textarea>
+                <input type='button' value='Hotovo'>
+            </form>
+        </div>
+
+        <script type='text/javascript'>
+            function(){
+                alert('Message');
+            }
+        </script>
+
+        <img alt='short_desc' src='syntax.png'>
+
+        <pre>
+some text
+        </pre>
+        <table>
+            <tr>
+                <td style="color: blue;">
+                    INLINE STYLE
+                </td>
+            </tr>
+        </table>
+        <!--
+
+                test comment
+
+
+        --> 
+
+    </body>
+</html>
+

@@ -1,0 +1,42 @@
+<%-- The tag file segment can be statically included to tag file using include directive, e.g.:
+    <%@include file="table_header.tagf" %>
+--%>
+
+<%-- This is the example of a table header created as a Tag File segment --%>
+
+<%-- completion for methods and fields in scriptlet declaration --%>
+<%--
+<%! void f() { this.|
+ServletConfig getServletConfig ()
+<%! void f() { this.getServletConfig()
+--%>
+
+<%-- completion for body HTML tag --%>
+<%--CC
+<b|
+body
+<body
+--%>
+
+<%-- Java completion for HttpSession object methods --%>
+<%--
+<% request.getSession().|
+boolean isNew ()
+<% request.getSession().isNew()
+--%>
+
+<%-- completion for TAG directives --%>
+<%--CC
+<%@|
+attribute
+<%@attribute  %>
+--%>
+
+<%-- completion for TAG attributes --%>
+<%--CC
+<%@tag |
+large-icon
+<%@tag large-icon=""
+--%>
+
+

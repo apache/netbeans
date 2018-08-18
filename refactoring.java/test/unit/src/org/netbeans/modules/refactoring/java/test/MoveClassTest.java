@@ -74,6 +74,55 @@ public class MoveClassTest extends MoveBase {
                 + "}\n"));
     }
     
+    public void testNETBEANS892() throws Exception { // #204444 - Improve Move Refactoring to support nested/inner classes
+        writeFilesAndWaitForScan(src,
+                new File("a/A.java", "package a;\n"
+                + "import java.util.List;\n"
+                + "import java.util.function.Function;\n"
+                + "public class A {\n"
+                + "public void v() {try{String bar = \"foo\";}catch (RuntimeException | AssertionError e){}}\n"
+                + "public void breaks(){doStuff(x->x.substring(5));}\n"
+                + "public void doStuff(Function<String, String> stuff){}\n"
+                + "}\n"),
+                new File("a/B.java", "package a;\n"
+                + "import java.util.List;\n"
+                + "/** Class B */\n"
+                + "public class B {\n"
+                + "    public int i = 42;\n"
+                + "    private List list;\n"
+                + "}\n"),
+                new File("a/C.java", "package a;\n"
+                + "import java.util.function.Function;\n"
+                + "public class C {\n"
+                + "public void v() {try{String bar = \"foo\";}catch (RuntimeException | AssertionError e){}}\n"
+                + "public void breaks(){doStuff(x->x.substring(5));}\n"
+                + "public void doStuff(Function<String, String> stuff){}\n"
+                + "}\n"));
+        performMove(src.getFileObject("a/B.java"), 0, src.getFileObject("a/C.java"), 0);
+        verifyContent(src,
+                new File("a/A.java", "package a;\n"                
+                + "import java.util.List;\n"
+                + "import java.util.function.Function;\n"
+                + "public class A {\n"
+                + "public void v() {try{String bar = \"foo\";}catch (RuntimeException | AssertionError e){}}\n"
+                + "public void breaks(){doStuff(x->x.substring(5));}\n"
+                + "public void doStuff(Function<String, String> stuff){}\n"
+                + "}\n"),
+                new File("a/C.java", "package a;\n"
+                + "import java.util.List;\n"
+                + "import java.util.function.Function;\n"
+                + "public class C {\n"
+                + "public void v() {try{String bar = \"foo\";}catch (RuntimeException | AssertionError e){}}\n"
+                + "public void breaks(){doStuff(x->x.substring(5));}\n"
+                + "public void doStuff(Function<String, String> stuff){}\n"
+                + "/** Class B */\n"
+                + "public static class B {\n"
+                + "    public int i = 42;\n"
+                + "    private List list;\n"
+                + "}\n"
+                + "}\n"));
+    }
+    
     public void test243552() throws Exception { // #204444 - Improve Move Refactoring to support nested/inner classes
         writeFilesAndWaitForScan(src,
                 new File("t/A.java", "package t;\n"

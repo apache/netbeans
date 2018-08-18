@@ -1452,11 +1452,13 @@ public class CasualDiff {
                 localPointer = oldT.pos;
                 printer.suppressVariableType = suppressParameterTypes;
                 int l = printer.out.length();
-                printer.print(newT.vartype);
-                printer.suppressVariableType = false;
-                if (l < printer.out.length()) {
-                    printer.print(" ");
+                if (!suppressParameterTypes) {
+                    printer.print(newT.vartype);
+                    if (l < printer.out.length()) {
+                        printer.print(" ");
+                    }
                 }
+                printer.suppressVariableType = false;
             }
         } else {
             if (suppressParameterTypes) {
@@ -3760,7 +3762,8 @@ public class CasualDiff {
 
     protected int diffUnionType(JCTypeUnion oldT, JCTypeUnion newT, int[] bounds) {
         int localPointer = bounds[0];
-        return diffParameterList(oldT.alternatives, newT.alternatives, null, localPointer, Measure.MEMBER, diffContext.style.spaceAroundBinaryOps(), diffContext.style.spaceAroundBinaryOps(), false, "|");
+        int pos = diffParameterList(oldT.alternatives, newT.alternatives, null, localPointer, Measure.MEMBER, diffContext.style.spaceAroundBinaryOps(), diffContext.style.spaceAroundBinaryOps(), false, "|");
+        return Math.min(pos, bounds[1]);
     }
 
     private boolean commaNeeded(ResultItem[] arr, ResultItem item) {

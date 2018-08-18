@@ -300,6 +300,58 @@ public class MultiCatchTest extends GeneratorTestBase {
         System.err.println(res);
         assertEquals(golden, res);
     }
+
+    public void testRemoveAddInMultiCatch() throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile,
+            "package hierbas.del.litoral;\n" +
+            "import java.io.*;\n" +
+            "import java.net.*;\n" +
+            "public class Test {\n" +
+            "    public void taragui() {\n" +
+            "        try {\n" +
+            "        } catch (MalformedURLException | FileNotFoundException ex) {\n" +
+            "        }\n" +
+            "    }\n" +
+            "}\n"
+            );
+        String golden =
+            "package hierbas.del.litoral;\n" +
+            "import java.io.*;\n" +
+            "import java.net.*;\n" +
+            "public class Test {\n" +
+            "    public void taragui() {\n" +
+            "        try {\n" +
+            "        } catch (IOException | RuntimeException ex) {\n" +
+            "        }\n" +
+            "    }\n" +
+            "}\n";
+        JavaSource testSource = JavaSource.forFileObject(FileUtil.toFileObject(testFile));
+        Task task = new Task<WorkingCopy>() {
+
+            public void run(final WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                final TreeMaker make = workingCopy.getTreeMaker();
+
+                new ErrorAwareTreeScanner<Void, Void>() {
+                    @Override public Void visitUnionType(UnionTypeTree node, Void p) {
+                        List<Tree> alternatives = new ArrayList<Tree>(node.getTypeAlternatives());
+                        alternatives.remove(0);
+                        alternatives.remove(0);
+                        alternatives.add(0, make.Identifier("IOException"));
+                        alternatives.add(1, make.Identifier("RuntimeException"));
+                        workingCopy.rewrite(node, make.UnionType(alternatives));
+                        return null;
+                    }
+                }.scan(workingCopy.getCompilationUnit(), null);
+            }
+
+        };
+        testSource.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        System.err.println(res);
+        assertEquals(golden, res);
+    }
     
     String getGoldenPckg() {
         return "";

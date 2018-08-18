@@ -61,7 +61,7 @@ public class Lib {
 
             return null;
         }
-        Class clazz = beanInfo.getBeanDescriptor().getCustomizerClass();
+        Class<?> clazz = beanInfo.getBeanDescriptor().getCustomizerClass();
         if (clazz == null) {
             return null;
         }

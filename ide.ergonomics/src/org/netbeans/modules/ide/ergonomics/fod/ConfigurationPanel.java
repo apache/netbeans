@@ -192,7 +192,7 @@ public class ConfigurationPanel extends JPanel implements Runnable {
     }// </editor-fold>//GEN-END:initComponents
 
     public void run() {
-        ModulesInstaller.installModules(progressMonitor, featureInfo);
+        ModulesInstaller.installModules(progressMonitor, featureInfo, featureInstall);
     }
 
     private void activateButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_activateButtonActionPerformed

@@ -78,16 +78,15 @@ public class ModulesInstaller {
         }
     }
     
-    public static boolean installModules (FeatureInfo info) {
-        return installModules(null, info);
-    }
-
     static boolean success = false;
-    public static boolean installModules (ProgressMonitor monitor, FeatureInfo info) {
+    public static boolean installModules (
+        ProgressMonitor monitor, FeatureInfo info, Collection<UpdateElement> alreadyOffered
+    ) {
         assert ! SwingUtilities.isEventDispatchThread () : "Cannot run in EQ!";
         
         FindComponentModules findModules = new FindComponentModules(info);
         Collection<UpdateElement> toInstall = findModules.getModulesForInstall();
+        toInstall.removeAll(alreadyOffered);
         Collection<UpdateElement> toEnable = findModules.getModulesForEnable();
         if (toInstall != null && !toInstall.isEmpty()) {
             ModulesInstaller installer = new ModulesInstaller(toInstall, findModules, monitor);

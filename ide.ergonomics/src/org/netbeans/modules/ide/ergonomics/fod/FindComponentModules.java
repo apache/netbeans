@@ -51,7 +51,6 @@ import org.openide.util.TaskListener;
  */
 public final class FindComponentModules extends Task {
     private static final RequestProcessor RP = new RequestProcessor("Find Modules");
-    private static boolean refreshedOnce;
     
     private final Collection<String> codeNames;
     private final FeatureInfo[] infos;
@@ -181,21 +180,24 @@ public final class FindComponentModules extends Task {
 
     private void findComponentModules () {
         long start = System.currentTimeMillis();
-        if (!refreshedOnce) {
-            List <UpdateUnitProvider> providers = UpdateUnitProviderFactory.getDefault ().getUpdateUnitProviders (true);
-            for (UpdateUnitProvider p : providers) {
-                try {
-                    p.refresh (null, true);
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
+        Collection<UpdateUnit> units = null;
+        Collection<UpdateElement> elementsForInstall = null;
+        for (int[] refresh = { 2 }; refresh[0] > 0; ) {
+            if (units != null) {
+                List<UpdateUnitProvider> providers = UpdateUnitProviderFactory.getDefault().getUpdateUnitProviders(true);
+                for (UpdateUnitProvider p : providers) {
+                    try {
+                        p.refresh(null, true);
+                    } catch (IOException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
                 }
+                
             }
-            refreshedOnce = true;
+            units = UpdateManager.getDefault ().getUpdateUnits (UpdateManager.TYPE.MODULE);
+            // install missing modules
+            elementsForInstall = getMissingModules(units, refresh);
         }
-        Collection<UpdateUnit> units = UpdateManager.getDefault ().getUpdateUnits (UpdateManager.TYPE.MODULE);
-
-        // install missing modules
-        Collection<UpdateElement> elementsForInstall = getMissingModules (units);
         forInstall = getAllForInstall (elementsForInstall);
 
         // install disabled modules
@@ -203,16 +205,33 @@ public final class FindComponentModules extends Task {
         forEnable = getAllForEnable (elementsForEnable, units);
     }
     
-    private Collection<UpdateElement> getMissingModules (Collection<UpdateUnit> allUnits) {
+    private Collection<UpdateElement> getMissingModules(Collection<UpdateUnit> allUnits, int[] refresh) {
         Set<UpdateElement> res = new HashSet<UpdateElement> ();
         for (UpdateUnit unit : allUnits) {
             if (unit.getInstalled () == null && (
-                codeNames.contains(unit.getCodeName ()) ||
-                "org.netbeans.modules.nbjavac".equals(unit.getCodeName())
+                codeNames.contains(unit.getCodeName ())
             )) {
                 res.add (unit.getAvailableUpdates ().get (0));
             }
         }
+        for (FeatureInfo fi : this.infos) {
+            Set<String> extraModules = fi.getExtraModules();
+            FOUND: for (String cnb : extraModules) {
+                for (UpdateUnit unit : allUnits) {
+                    if (cnb.equals(unit.getCodeName())) {
+                        if (unit.getInstalled() != null) {
+                            continue FOUND;
+                        } else {
+                            res.add(unit.getAvailableUpdates().get(0));
+                            continue FOUND;
+                        }
+                    }
+                }
+                refresh[0]--;
+                return res;
+            }
+        }
+        refresh[0] = 0;
         return res;
     }
     

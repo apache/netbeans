@@ -67,7 +67,7 @@ public class Utilities {
         descriptor[0] = Mutex.EVENT.readAccess(new Mutex.Action<DialogDescriptor>() {
             @Override
             public DialogDescriptor run() {
-                arr[0] = new ConfigurationPanel(featureName, call, featureInfo, true);
+                arr[0] = new ConfigurationPanel(featureName, call, featureInfo);
                 return new DialogDescriptor(arr[0], notFoundMessage);
             }
         });

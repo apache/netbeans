@@ -189,7 +189,10 @@ public final class FindComponentModules extends Task {
     private Collection<UpdateElement> getMissingModules (Collection<UpdateUnit> allUnits) {
         Set<UpdateElement> res = new HashSet<UpdateElement> ();
         for (UpdateUnit unit : allUnits) {
-            if (unit.getInstalled () == null && codeNames.contains(unit.getCodeName ())) {
+            if (unit.getInstalled () == null && (
+                codeNames.contains(unit.getCodeName ()) ||
+                "org.netbeans.modules.nbjavac".equals(unit.getCodeName())
+            )) {
                 res.add (unit.getAvailableUpdates ().get (0));
             }
         }

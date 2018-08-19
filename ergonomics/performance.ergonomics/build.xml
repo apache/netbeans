@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="performance.ergonomics">
+<project basedir="." default="build" name="ergonomics/performance.ergonomics">
     <description>Builds and runs performance ergonomics tests</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

@@ -37,6 +37,7 @@ import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
@@ -909,7 +910,12 @@ public final class DocumentViewOp
             Document doc = docView.getDocument();
             updateTextLimitLine(doc);
             clearStatusBits(AVAILABLE_WIDTH_VALID);
-            DocumentUtilities.addPropertyChangeListener(doc, WeakListeners.propertyChange(this, doc));
+            /* DocumentUtilities.addPropertyChangeListener does not work with weak listeners, so add the listener explicitly
+            to the underlying PropertyChangeSupport instead. */
+            PropertyChangeSupport pcs = (PropertyChangeSupport) doc.getProperty(PropertyChangeSupport.class);
+            if(pcs != null) {
+                pcs.addPropertyChangeListener(WeakListeners.propertyChange(this, pcs));
+            }
         }
     }
     

@@ -966,6 +966,8 @@ public final class DocumentUtilities {
      * <p>Additionally, the list of document properties that clients can listen on
      * is not part of this contract.
      *
+     * <p>Note that this method does <em>not</em> work with {@code WeakListeners}.
+     *
      * @param doc The document to add the listener to.
      * @param l The listener to add to the document.
      *

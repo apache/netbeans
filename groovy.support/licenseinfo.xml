@@ -1,4 +1,5 @@
-<#--
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
 
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
@@ -18,49 +19,11 @@
     under the License.
 
 -->
-<#assign licenseFirst = "/*">
-<#assign licensePrefix = " * ">
-<#assign licenseLast = " */">
-<#include "${project.licensePath}">
-
-<#if package?? && package != "">
-package ${package}
-</#if>
-
-import org.junit.After
-import org.junit.AfterClass
-import org.junit.Before
-import org.junit.BeforeClass
-import org.junit.Test
-import static org.junit.Assert.*
-
-/**
- *
- * @author ${user}
- */
-class ${name} {
-
-    public ${name}() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
-}
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/groovy/support/resources/GroovyFile16x16.png</file>
+        <file>src/org/netbeans/modules/groovy/support/resources/runSingle.png</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

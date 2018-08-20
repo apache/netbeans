@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="groovy.grails">
+<project basedir="." default="build" name="groovy/groovy.grails">
     <description>Builds, tests, and runs the project org.netbeans.modules.groovy.grails</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

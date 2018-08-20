@@ -20,7 +20,7 @@
         <file>src/org/netbeans/modules/javascript2/knockout/model/resources/knockout-2.2.1.model</file>
         <file>src/org/netbeans/modules/javascript2/knockout/model/resources/knockout-3.0.0.model</file>
         <file>src/org/netbeans/modules/javascript2/knockout/model/resources/knockout-3.2.0.model</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
     </fileset>
-    <license ref="Apache-2.0-ASF" />
-    <comment type="COMMENT_UNSUPPORTED" />
 </licenseinfo>

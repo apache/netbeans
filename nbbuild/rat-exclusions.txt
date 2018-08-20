@@ -130,6 +130,7 @@ websvc.saas.api/src/org/netbeans/modules/websvc/saas/oauth/*.template
 **/*.ser
 ide/launcher/macosx/NetBeansLauncher/ReadMe.rtf
 harness/jellytools.platform/src/org/netbeans/jellytools/version_info
+javascript2.knockout/src/org/netbeans/modules/javascript2/knockout/model/resources/knockout-*.model
 
 ######  generated test files 
 **/*.pass

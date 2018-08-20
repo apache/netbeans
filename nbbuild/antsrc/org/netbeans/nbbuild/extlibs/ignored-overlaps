@@ -33,3 +33,6 @@ java/maven.embedder/external/apache-maven-3.3.9-bin.zip o.apache.commons.lang/ex
 # Contains test data (badPackageFileInJar.jar is packaged twice) - this is an
 # upstream problem
 nbbuild/external/langtools-9.zip nbbuild/external/langtools-9.zip
+
+# JFlex is used by multiple modules.
+javascript2.jade/external/jflex-1.4.3.jar javascript2.lexer/external/jflex-1.4.3.jar

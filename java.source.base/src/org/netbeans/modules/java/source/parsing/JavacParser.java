@@ -134,6 +134,7 @@ import org.openide.util.lookup.ServiceProvider;
 //@NotThreadSafe
 public class JavacParser extends Parser {
     public static final String OPTION_PATCH_MODULE = "--patch-module";          //NOI18N
+    public static final String NB_X_MODULE = "-Xnb-Xmodule:";                   //NOI18N
     //Timer logger
     private static final Logger TIME_LOGGER = Logger.getLogger("TIMER");        //NOI18N
     //Debug logger
@@ -1044,10 +1045,14 @@ public class JavacParser extends Parser {
                         "Removed javac option -Xmodule: {0}",   //NOI18N
                         option);
                 //Compatibility handle -Xmodule
-                res.add("-XD"+option);  //NOI18N
+                res.add(NB_X_MODULE + option.substring("-Xmodule:".length()));  //NOI18N
                 xmoduleSeen = true;
             } else if (option.startsWith("-XD-Xmodule:") && !xmoduleSeen) { //NOI18N
-                res.add(option);
+                //Compatibility handle -XD-Xmodule:
+                res.add(NB_X_MODULE + option.substring("-XD-Xmodule:".length()));  //NOI18N
+                xmoduleSeen = true;
+            } else if (option.startsWith(NB_X_MODULE) && !xmoduleSeen) { //NOI18N
+                res.add(option);  //NOI18N
                 xmoduleSeen = true;
             } else if (option.equals("-parameters") || option.startsWith("-Xlint")) {     //NOI18N
                 res.add(option);

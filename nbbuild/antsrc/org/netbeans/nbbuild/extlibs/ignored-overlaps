@@ -30,3 +30,6 @@ db.sql.visualeditor/external/javacc-3.2.jar performance/external/javacc-3.2.jar
 # These are used independently, different functional goals
 maven.embedder/external/apache-maven-3.3.9-bin.zip o.apache.commons.lang/external/commons-lang-2.6.jar
 
+# Contains test data (badPackageFileInJar.jar is packaged twice) - this is an
+# upstream problem
+nbbuild/external/langtools-9.zip nbbuild/external/langtools-9.zip

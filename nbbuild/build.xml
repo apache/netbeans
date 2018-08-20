@@ -107,9 +107,7 @@
     <echo>Downloading external binaries (*/external/ directories)...</echo>
     <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
         <manifest dir="${nb_all}">
-            <include name="*/external/binaries-list"/>
-            <include name="contrib/*/external/binaries-list"/>
-            <include name="otherlicenses/*/external/binaries-list"/>
+            <include name="**/external/binaries-list"/>
         </manifest>
     </downloadbinaries>
     <property name="ext.binaries.downloaded" value="true"/>
@@ -328,7 +326,7 @@
   </target>
   <target name="finish-build" depends="finish-build-platform,finish-build-nb"/>
   <target name="finish-build-platform" depends="init,-check-nb-cluster" unless="has.nb.cluster">
-    <copy file="../o.n.bootstrap/readme/README-bin.txt" tofile="${netbeans.dest.dir}/README.txt" overwrite="true"/>
+    <copy file="../platform/o.n.bootstrap/readme/README-bin.txt" tofile="${netbeans.dest.dir}/README.txt" overwrite="true"/>
     <fixcrlf eol="lf" srcdir="${netbeans.dest.dir}" >
       <include name="${nb.cluster.platform.dir}/lib/nbexec" />
     </fixcrlf>

@@ -89,9 +89,18 @@ public class VerifyLibsAndLicenses extends Task {
     public @Override void execute() throws BuildException {
         try { // XXX workaround for http://issues.apache.org/bugzilla/show_bug.cgi?id=43398
         pseudoTests = new LinkedHashMap<>();
-        modules = new TreeSet<>();
-        for (String cluster : getProject().getProperty("nb.clusters.list").split("[, ]+")) {
-            modules.addAll(Arrays.asList(getProject().getProperty(cluster).split("[, ]+")));
+        if(getProject().getProperty("allmodules") != null) {
+            modules = new TreeSet<>(Arrays.asList(getProject().getProperty("allmodules").split("[, ]+")));
+            modules.add("nbbuild");
+        } else {
+            Path nbAllPath = nball.toPath();
+            modules = new TreeSet<>(
+                    Files.walk(nbAllPath)
+                            .filter(p -> Files.exists(p.resolve("external/binaries-list")))
+                            .map(p -> nbAllPath.relativize(p))
+                            .map(p -> p.toString())
+                            .collect(Collectors.toSet())
+            );
         }
         try {
             testNoStrayThirdPartyBinaries();
@@ -108,7 +117,7 @@ public class VerifyLibsAndLicenses extends Task {
                                      pseudoTests.values().stream().filter(err -> err != null).collect(Collectors.joining("\n")),
                                      getLocation());
         }
-        } catch (NullPointerException x) {x.printStackTrace(); throw x;}
+        } catch (NullPointerException | IOException x) {x.printStackTrace(); throw new BuildException(x);}
     }
 
     private void testBinaryUniqueness() throws IOException {

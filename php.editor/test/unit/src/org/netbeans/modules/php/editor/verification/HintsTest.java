@@ -339,9 +339,9 @@ public class HintsTest extends PHPHintsTestBase {
         checkHints(new SuperglobalsHint.RequestSuperglobalHint(), "testRequestSuperglobalsHint.php");
     }
 
-//    public void testEmptyStatementHint() throws Exception {
-//        checkHints(new EmptyStatementHint(), "testEmptyStatementHint.php");
-//    }
+    public void testEmptyStatementHint() throws Exception {
+        checkHints(new EmptyStatementHint(), "testEmptyStatementHint.php");
+    }
 
     public void testUnreachableStatementHint() throws Exception {
         checkHints(new UnreachableStatementHint(), "testUnreachableStatementHint.php");

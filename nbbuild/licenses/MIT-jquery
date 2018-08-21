@@ -1,9 +1,3 @@
-Name: jquery-api.xml
-Version: jQuery 1.10
-Description: Documentation api file for jQuery
-License: MIT-jquery
-Source: http://api.jquery.com/resources/api.xml
-
 Copyright (c) 2011 John Resig, http://jquery.com/
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this
@@ -22,4 +16,3 @@ PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS 
 LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
 THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-

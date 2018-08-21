@@ -20,7 +20,7 @@
 
 -->
 <project basedir="." default="all" name="changeme">
-    <property name="netbeans.home" location="../../nbbuild/netbeans"/>
+    <property name="netbeans.home" location="../../../nbbuild/netbeans"/>
     <!--the directory where the script will find ide.cfg files to start
         netbeans with -->
     <property name="configdir" value="configfiles"/>
@@ -31,7 +31,7 @@
     <!--the directory that will be used as the user directory for the
         runs of NetBeans -->
     <property name="userdir" location="userdir"/>
-    <property name="ant.home" location="../../nbbuild/external/ant-1.4.1.jar"/>
+    <property name="ant.home" location="../../../nbbuild/external/ant-1.4.1.jar"/>
     <!-- the DateFormat string for dates that are logged into log files -->
     <property name="logtime.pattern" value="yyyy.MM.dd hh:mm:ss:S z"/>
     <!-- the prefix string for garbage collection log files (e.g. gclog_1, gclog_2) -->

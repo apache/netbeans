@@ -21,7 +21,7 @@
 -->
 <project basedir="." default="build" name="ant.freeform">
 
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
     <target name="try-TargetMappingPanel" depends="compile" description="Check appearance of TargetMappingPanel.">
         <java fork="true" classname="org.netbeans.modules.ant.freeform.ui.TargetMappingPanel">

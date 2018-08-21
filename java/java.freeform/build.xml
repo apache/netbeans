@@ -21,6 +21,6 @@
 -->
 <project basedir="." default="build" name="java.freeform">
 
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
 </project>

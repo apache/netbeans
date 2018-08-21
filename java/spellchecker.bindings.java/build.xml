@@ -24,5 +24,5 @@
 <!-- If you delete this file and reopen the project it will be recreated. -->
 <project name="spellchecker.bindings.java" default="build" basedir=".">
     <description>Builds, tests, and runs the project org.netbeans.modules.spellchecker.bindings.java.</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

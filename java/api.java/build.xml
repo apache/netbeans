@@ -20,5 +20,5 @@
 
 -->
 <project basedir="." default="build" name="api.java">
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

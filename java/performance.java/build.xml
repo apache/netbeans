@@ -28,7 +28,7 @@
             -Dnetbeans.keyring.no.master=true
             -Xverify:none -Dsun.java2d.noddraw=true"/>
 
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
 </project>
 

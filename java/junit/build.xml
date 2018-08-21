@@ -21,7 +21,7 @@
 -->
 <project name="junit" default="build" basedir=".">
 
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
     <target name="files-init" depends="projectized.files-init">
         <property name="extra.arch.files.dir" value="arch"/>

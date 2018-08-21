@@ -21,7 +21,7 @@
 -->
 <project name="java.examples" default="build" basedir=".">
 
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
     <target name="clean" depends="projectized-common.clean"/>
 

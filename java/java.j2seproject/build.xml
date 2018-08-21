@@ -20,7 +20,7 @@
 
 -->
 <project basedir="." default="build" name="java.j2seproject">
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
     <target name="-jar-ant">
 	<ant dir="copylibstask" target="jar" inheritall="false" />

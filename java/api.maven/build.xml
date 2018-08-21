@@ -22,5 +22,5 @@
 
 <project basedir="." default="build" name="api.maven">
     <description>Builds, tests, and runs the project org.netbeans.api.maven</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

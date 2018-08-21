@@ -22,5 +22,5 @@
 
 <project basedir="." default="build" name="maven.spring">
     <description>Builds, tests, and runs the project org.netbeans.modules.maven.spring</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

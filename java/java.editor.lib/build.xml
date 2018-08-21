@@ -21,6 +21,6 @@
 -->
 
 <project name="java.editor.lib" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
 </project>

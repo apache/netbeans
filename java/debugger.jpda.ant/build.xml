@@ -21,7 +21,7 @@
 -->
 <project basedir="." default="build" name="debugger.jpda.ant">
 
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
     <target name="nblib" depends="init">
         <mkdir dir="build/antclasses"/>

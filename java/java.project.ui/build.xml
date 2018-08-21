@@ -20,7 +20,7 @@
 
 -->
 <project basedir="." default="build" name="java.project.ui">
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>
 
 

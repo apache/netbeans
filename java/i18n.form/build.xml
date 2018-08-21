@@ -20,5 +20,5 @@
 
 -->
 <project basedir="." default="build" name="i18n.form">
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

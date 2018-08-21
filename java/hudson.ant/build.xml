@@ -20,5 +20,5 @@
 
 -->
 <project basedir="." default="build" name="hudson.ant">
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

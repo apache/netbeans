@@ -21,7 +21,7 @@
 -->
 <project basedir="." default="build" name="i18n">
 
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
     <target name="build-init" depends="projectized.build-init">
         <available property="have.bogus.javahelp" file="javahelp/CVS/Entries"/>

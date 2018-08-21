@@ -20,12 +20,12 @@
 
 -->
 <project basedir="." default="build" name="projectimport.eclipse.core">
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
     <target name="debug" depends="netbeans" description="Build related modules and debug them.">
         <ant dir="../projectimport.eclipse.j2se" target="netbeans" inheritall="false" inheritrefs="false"/>
         <ant dir="../projectimport.eclipse.web" target="netbeans" inheritall="false" inheritrefs="false"/>
         <path id="clusters">
-            <dirset dir="../nbbuild/netbeans">
+            <dirset dir="../../nbbuild/netbeans">
                 <include name="ide*"/>
                 <exclude name="identity*"/>
                 <include name="java*"/>
@@ -36,7 +36,7 @@
             </dirset>
         </path>
         <property name="clusters.toString" refid="clusters"/>
-        <ant dir="../nbbuild" target="tryme-debug" inheritall="false" inheritrefs="false">
+        <ant dir="../../nbbuild" target="tryme-debug" inheritall="false" inheritrefs="false">
             <property name="tryme.arg.eclipseimport" value="-J-Dorg.netbeans.modules.projectimport.eclipse.level=0 --clusters ${clusters.toString}"/>
         </ant>
     </target>

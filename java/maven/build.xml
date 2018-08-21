@@ -22,7 +22,7 @@
 
 <project basedir="." default="build" name="maven">
     <description>Builds, tests, and runs the project org.netbeans.modules.maven</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
     
     <target name="nblib" depends="init">
         <mkdir dir="build/mavenclasses"/>

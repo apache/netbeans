@@ -21,5 +21,5 @@
 -->
 <project basedir="." default="build" name="java.testrunner.ui">
     <description>Builds, tests, and runs the project org.netbeans.modules.java.testrunner.ui</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

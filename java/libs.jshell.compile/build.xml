@@ -20,5 +20,5 @@
 
 -->
 <project name="libs.jshell.compile" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

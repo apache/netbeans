@@ -20,7 +20,7 @@
 
 -->
 <project basedir="." default="build" name="debugger.jpda.visual">
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
     
     <target name="compile" depends="projectized-common.compile, -compile-debugger-remote"/>
     

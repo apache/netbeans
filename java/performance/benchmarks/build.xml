@@ -22,12 +22,12 @@
 
 <project name="performance/benchmarks" default="jars" basedir=".">
 
-    <import file="../../nbbuild/templates/projectized.xml"/>
+    <import file="../../../nbbuild/templates/projectized.xml"/>
 
     <target name="compile" depends="grammar">
         <javac srcdir="src:build/classes-generated" destdir="build/classes" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}">
             <classpath>
-                <fileset dir="../../libs.junit4/external" includes="junit-*.jar"/>
+                <fileset dir="../../../platform/libs.junit4/external" includes="junit-*.jar"/>
             </classpath>
         </javac>
     </target>

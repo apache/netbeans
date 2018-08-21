@@ -22,5 +22,5 @@
 
 <project basedir="." default="build" name="maven.graph">
     <description>Builds, tests, and runs the project org.netbeans.modules.maven.graph</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

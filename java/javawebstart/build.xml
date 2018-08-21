@@ -21,7 +21,7 @@
 -->
 <project basedir="." default="build" name="javawebstart">
     
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
     
     <target name="-jar-ant">
         <ant dir="AntTasks" target="jar" inheritall="false"/>

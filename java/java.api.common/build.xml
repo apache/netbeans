@@ -20,6 +20,6 @@
 
 -->
 <project basedir="." default="build" name="java.api.common">
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>
 

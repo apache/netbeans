@@ -20,7 +20,7 @@
 
 -->
 <project basedir="." default="build" name="j2ee.persistence">
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
 
 </project>

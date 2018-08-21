@@ -20,5 +20,5 @@
 
 -->
 <project basedir="." default="build" name="nashorn.execution">
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

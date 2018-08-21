@@ -20,5 +20,5 @@
 
 -->
 <project basedir="." default="build" name="form.j2ee">
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

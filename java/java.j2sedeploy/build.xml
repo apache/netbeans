@@ -21,5 +21,5 @@
 -->
 <project basedir="." default="build" name="java.j2sedeploy">
     <description>Builds, tests, and runs the project org.netbeans.modules.java.j2sedeploy</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

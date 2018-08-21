@@ -21,7 +21,7 @@
 -->
 <project basedir="." default="build" name="form">
 
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
     <target name="absolute-layout" depends="build-init">
         <mkdir dir="${build.dir}/absolutelayoutclasses"/>

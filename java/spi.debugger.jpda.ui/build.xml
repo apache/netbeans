@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="spi.debugger.jpda.ui">
+<project basedir="." default="build" name="java/spi.debugger.jpda.ui">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

@@ -20,7 +20,7 @@
 
 -->
 
-<project name="performance" default="build" basedir=".">
+<project name="java/performance" default="build" basedir=".">
 <description>Builds, tests, and runs the project org.netbeans.performance</description>
 
     <property name="test.timeout" value="7200000"/>

@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="hudson.ant">
+<project basedir="." default="build" name="java/hudson.ant">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

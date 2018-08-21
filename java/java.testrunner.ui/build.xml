@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="java.testrunner.ui">
+<project basedir="." default="build" name="java/java.testrunner.ui">
     <description>Builds, tests, and runs the project org.netbeans.modules.java.testrunner.ui</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

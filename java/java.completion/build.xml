@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="java.completion">
+<project basedir="." default="build" name="java/java.completion">
     <description>Builds, tests, and runs the project org.netbeans.modules.java.completion</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

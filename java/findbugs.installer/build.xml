@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="findbugs.installer">
+<project basedir="." default="build" name="java/findbugs.installer">
     <description>Builds, tests, and runs the project org.netbeans.modules.findbugs.installer</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

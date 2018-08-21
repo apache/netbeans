@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="api.java">
+<project basedir="." default="build" name="java/api.java">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

@@ -20,7 +20,7 @@
 
 -->
 
-<project basedir="." default="build" name="maven.kit">
+<project basedir="." default="build" name="java/maven.kit">
     <description>Builds, tests, and runs the project org.netbeans.modules.maven.kit</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

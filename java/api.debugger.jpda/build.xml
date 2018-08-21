@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="api.debugger.jpda">
+<project basedir="." default="build" name="java/api.debugger.jpda">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

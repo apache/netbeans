@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="ant.grammar" default="build" basedir=".">
+<project name="java/ant.grammar" default="build" basedir=".">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

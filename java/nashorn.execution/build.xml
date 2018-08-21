@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="nashorn.execution">
+<project basedir="." default="build" name="java/nashorn.execution">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="ant.browsetask" basedir="." default="build">
+<project name="java/ant.browsetask" basedir="." default="build">
 
     <import file="../../nbbuild/templates/projectized.xml"/>
 

@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="junit" default="build" basedir=".">
+<project name="java/junit" default="build" basedir=".">
 
     <import file="../../nbbuild/templates/projectized.xml"/>
 

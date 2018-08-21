@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="junit.ui">
+<project basedir="." default="build" name="java/junit.ui">
     <description>Builds, tests, and runs the project org.netbeans.modules.junit.ui</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

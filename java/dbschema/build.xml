@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="dbschema">
+<project basedir="." default="build" name="java/dbschema">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

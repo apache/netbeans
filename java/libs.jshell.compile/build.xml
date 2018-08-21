@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="libs.jshell.compile" default="build" basedir=".">
+<project name="java/libs.jshell.compile" default="build" basedir=".">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

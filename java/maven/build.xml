@@ -20,7 +20,7 @@
 
 -->
 
-<project basedir="." default="build" name="maven">
+<project basedir="." default="build" name="java/maven">
     <description>Builds, tests, and runs the project org.netbeans.modules.maven</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
     
@@ -56,12 +56,12 @@
         <copy overwrite="true" tofile="build/mavenclasses/META-INF/plexus/components.xml" file="mavensrc/org/netbeans/modules/maven/event/components.xml"/>
         <!-- we use jarjar to repackage simple json, to avoid clashes with 3rd party maven plugins possibly including it in their dependencies -->
         <taskdef name="jarjar" classpath="./external/jarjar-1.5.jar" classname="org.pantsbuild.jarjar.JarJarTask" loaderref="lib.path.loader"/>
-        <jarjar jarfile="${cluster}/maven-nblib/netbeans-eventspy.jar" compress="false">
+        <jarjar jarfile="../${cluster}/maven-nblib/netbeans-eventspy.jar" compress="false">
             <fileset dir="build/mavenclasses" >
                 <include name="org/netbeans/modules/maven/event/**"/>
                 <include name="META-INF/plexus/**"/>
             </fileset>
-            <zipfileset src="../libs.json_simple/external/json-simple-1.1.1.jar"/>
+            <zipfileset src="../../libs.json_simple/external/json-simple-1.1.1.jar"/>
             <rule pattern="org.json.**" result="org.netbeans.shaded.json.@1"/>
         </jarjar>
     </target>

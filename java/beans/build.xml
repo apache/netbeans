@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="beans">
+<project basedir="." default="build" name="java/beans">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

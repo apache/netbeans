@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="spi.java.hints">
+<project basedir="." default="build" name="java/spi.java.hints">
     <description>Builds, tests, and runs the project org.netbeans.spi.java.hints</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

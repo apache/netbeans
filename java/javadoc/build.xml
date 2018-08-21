@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="javadoc">
+<project basedir="." default="build" name="java/javadoc">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

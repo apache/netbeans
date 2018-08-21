@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="java.hints.ui">
+<project basedir="." default="build" name="java/java.hints.ui">
     <description>Builds, tests, and runs the project org.netbeans.modules.java.hints.ui</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="i18n.form">
+<project basedir="." default="build" name="java/i18n.form">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

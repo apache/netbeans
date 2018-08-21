@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="websvc.jaxws21" default="build" basedir=".">
+<project name="java/websvc.jaxws21" default="build" basedir=".">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

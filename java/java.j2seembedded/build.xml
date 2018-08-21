@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="java.j2seembedded">
+<project basedir="." default="build" name="java/java.j2seembedded">
     <description>Builds, tests, and runs the project org.netbeans.modules.java.j2seembedded</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 

@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="j2ee.core.utilities">
+<project basedir="." default="build" name="java/j2ee.core.utilities">
     <description>Builds, tests, and runs the project org.netbeans.modules.j2ee.core.utilities</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

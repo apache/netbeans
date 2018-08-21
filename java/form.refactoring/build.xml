@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="form.refactoring">
+<project basedir="." default="build" name="java/form.refactoring">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="testng" default="build" basedir=".">
+<project name="java/testng" default="build" basedir=".">
     <description>Builds, tests, and runs the project org.netbeans.modules.testng.</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

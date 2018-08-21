@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="libs.javacapi" default="build" basedir=".">
+<project name="java/libs.javacapi" default="build" basedir=".">
     <import file="../../nbbuild/templates/projectized.xml"/>
     <target name="-check-nb-javac-exists">
         <available property="nb-javac.exists" file="../nb-javac/make/netbeans/nb-javac/build.xml"/>

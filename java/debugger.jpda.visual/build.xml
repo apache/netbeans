@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="debugger.jpda.visual">
+<project basedir="." default="build" name="java/debugger.jpda.visual">
     <import file="../../nbbuild/templates/projectized.xml"/>
     
     <target name="compile" depends="projectized-common.compile, -compile-debugger-remote"/>

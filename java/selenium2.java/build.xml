@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="selenium2.java">
+<project basedir="." default="build" name="java/selenium2.java">
     <description>Builds, tests, and runs the project org.netbeans.modules.selenium2.java</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

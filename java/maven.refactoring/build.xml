@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="maven.refactoring">
+<project basedir="." default="build" name="java/maven.refactoring">
     <description>Builds, tests, and runs the project org.netbeans.modules.maven.refactoring</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

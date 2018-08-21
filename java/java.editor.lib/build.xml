@@ -20,7 +20,7 @@
 
 -->
 
-<project name="java.editor.lib" default="build" basedir=".">
+<project name="java/java.editor.lib" default="build" basedir=".">
     <import file="../../nbbuild/templates/projectized.xml"/>
 
 </project>

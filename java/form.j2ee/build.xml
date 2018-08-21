@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="form.j2ee">
+<project basedir="." default="build" name="java/form.j2ee">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

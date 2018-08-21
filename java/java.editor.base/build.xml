@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="java.editor.base">
+<project basedir="." default="build" name="java/java.editor.base">
     <description>Builds, tests, and runs the project org.netbeans.modules.java.editor.base</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

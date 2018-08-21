@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="debugger.jpda">
+<project basedir="." default="build" name="java/debugger.jpda">
     <import file="../../nbbuild/templates/projectized.xml"/>
 
     <target name="gen-compile" depends="init">

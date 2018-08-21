@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="performance.java" default="build" basedir=".">
+<project name="java/performance.java" default="build" basedir=".">
     <description>Builds and runs performance java tests</description>
 
     <property name="test.timeout" value="7200000"/>

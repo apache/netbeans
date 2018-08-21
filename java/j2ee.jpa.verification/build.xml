@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="j2ee.jpa.verification">
+<project basedir="." default="build" name="java/j2ee.jpa.verification">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

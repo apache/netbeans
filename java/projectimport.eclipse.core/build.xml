@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="projectimport.eclipse.core">
+<project basedir="." default="build" name="java/projectimport.eclipse.core">
     <import file="../../nbbuild/templates/projectized.xml"/>
     <target name="debug" depends="netbeans" description="Build related modules and debug them.">
         <ant dir="../projectimport.eclipse.j2se" target="netbeans" inheritall="false" inheritrefs="false"/>

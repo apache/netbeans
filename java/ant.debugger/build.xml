@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="ant.debugger">
+<project basedir="." default="build" name="java/ant.debugger">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

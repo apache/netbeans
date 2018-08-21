@@ -2,12 +2,14 @@ Name: com.oracle.js.parser.jar
 Version: ba7a8bc42268
 Description: An ECMAScript 6 (ECMAScript 2015) compliant parser for JavaScript source code. Based on the parser of Project Nashorn in OpenJDK (http://openjdk.java.net/projects/nashorn/).
 License: GPL-2-CP
-Source: http://hg.openjdk.java.net/graal/graal-js-parser
+Origin: http://hg.openjdk.java.net/graal/graal-js-parser
+Type: compile-time
+Comment: NetBeans JS support will be broken unless Nashorn is compatible-licensed, or a download is provided similar to nb-javac. See NETBEANS-1159, NETBEANS-1160.
 
 The GNU General Public License (GPL)
 Version 2, June 1991
 
- Copyright (C) 1989, 1991 Free Software Foundation, Inc.
+ Copyright 1989, 1991 Free Software Foundation, Inc.
  59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  Everyone is permitted to copy and distribute verbatim
  copies of this license document, but changing it is not
@@ -405,16 +407,16 @@ Public License instead of this License.
 
 Certain source files distributed by Sun Microsystems, Inc.
 are subject to the following clarification and special
-exception to the GPL Version 2, but only where Sun has expressly
+exception to the GPL, but only where Sun has expressly
 included in the particular source file's header the words
 "Sun designates this particular file as subject to the
-"Classpath" exception as provided by Sun in the License file
+"Classpath" exception as provided by Sun in the LICENSE file
 that accompanied this code."
 
 Linking this library statically or dynamically with other
 modules is making a combined work based on this library.
 Thus, the terms and conditions of the GNU General Public
-License Version 2 cover the whole combination.
+License cover the whole combination.
 
 As a special exception, the copyright holders of this
 library give you permission to link this library with

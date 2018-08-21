@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="welcome">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project basedir="." default="build" name="nb/welcome">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

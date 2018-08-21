@@ -22,9 +22,9 @@
 <!--
 Contributor(s): Vincent Brabant, Maxym Mykhalchuk
  -->
-<project basedir="." default="build" name="ide.branding">
+<project basedir="." default="build" name="nb/ide.branding">
 
-  <import file="../nbbuild/templates/projectized.xml"/>
+  <import file="../../nbbuild/templates/projectized.xml"/>
 
   <taskdef name="locjar" classname="org.netbeans.nbbuild.LocalizedJar"
            classpath="${nbantext.jar}"/>

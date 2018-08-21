@@ -20,8 +20,8 @@
 
 -->
 
-<project name="updatecenters" default="build" basedir=".">
+<project name="nb/updatecenters" default="build" basedir=".">
 
-  <import file="../nbbuild/templates/projectized.xml"/>
+  <import file="../../nbbuild/templates/projectized.xml"/>
 
 </project>

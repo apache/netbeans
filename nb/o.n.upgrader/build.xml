@@ -20,8 +20,8 @@
 
 -->
 
-<project name="o.n.upgrader" default="build" basedir=".">
+<project name="nb/o.n.upgrader" default="build" basedir=".">
 
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
 </project>

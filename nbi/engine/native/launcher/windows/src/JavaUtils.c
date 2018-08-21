@@ -125,58 +125,79 @@ DWORD isJavaCompatible(JavaProperties *currentJava, JavaCompatible ** compatible
 JavaVersion * getJavaVersionFromString(char * string, DWORD * result) {
     JavaVersion *vers = NULL;
     if(getLengthA(string)>=3) {
-        //hope that at least we "major.minor" : 1.5
-        if(string[1]=='.') {
-            char c = string[0];
+        char *p = string;
+        
+        // get major 
+        long major = 0;
+        while(p!=NULL) {
+            char c = p[0];
             if(c>='0' && c<='9') {
-                long major = c - '0';
-                c = string[2];
-                if(c>='0' && c<='9') {
-                    char *p = string + 3;
-                    long minor = c - '0';
-                    *result = ERROR_OK;
-                    vers = (JavaVersion*) LocalAlloc(LPTR, sizeof(JavaVersion));
-                    vers->major  = major;
-                    vers->minor  = minor;
-                    vers->micro  = 0;
-                    vers->update = 0;
-                    ZERO(vers->build, 128);
-                    if(p!=NULL) {
-                        if(p[0]=='.') { // micro...
+                major = (major) * 10 + c - '0';
+                p++;
+                continue;
+            }
+            else if(c=='.'){
+                p++;
+            }
+            else{
+                return vers;
+            }
+            break;
+        }
+        
+        // get minor 
+        long minor = 0;
+        while(p!=NULL) {
+            char c = p[0];
+            if(c>='0' && c<='9') {
+                minor = (minor) * 10 + c - '0';
+                p++;
+                continue;
+            }
+            break;
+        }
+        
+        *result = ERROR_OK;
+        vers = (JavaVersion*) LocalAlloc(LPTR, sizeof(JavaVersion));
+        vers->major  = major;
+        vers->minor  = minor;
+        vers->micro  = 0;
+        vers->update = 0;
+        ZERO(vers->build, 128);
+        
+        if(p!=NULL) {
+            if(p[0]=='.') { // micro...
+                p++;
+                while(p!=NULL) {
+                    char c = p[0];
+                    if(c>='0' && c<='9') {
+                        vers->micro = (vers->micro) * 10 + c - '0';
+                        p++;
+                        continue;
+                    }
+                    else if(c=='_') {//update
+                        p++;
+                        while(p!=NULL) {
+                            c = p[0];
                             p++;
-                            while(p!=NULL) {
-                                char c = p[0];
-                                if(c>='0' && c<='9') {
-                                    vers->micro = (vers->micro) * 10 + c - '0';
-                                    p++;
-                                    continue;
-                                }
-                                else if(c=='_') {//update
-                                    p++;
-                                    while(p!=NULL) {
-                                        c = p[0];
-                                        p++;
-                                        if(c>='0' && c<='9') {
-                                            vers->update = (vers->update) * 10 + c - '0';
-                                            continue;
-                                        } else {
-                                            break;
-                                        }
-                                    }
-                                } else {
-                                    if(p!=NULL) p++;
-                                }
-                                if(c=='-' && p!=NULL) { // build number
-                                    lstrcpyn(vers->build, p, min(127, getLengthA(p)+1));
-                                }
+                            if(c>='0' && c<='9') {
+                                vers->update = (vers->update) * 10 + c - '0';
+                                continue;
+                            } else {
                                 break;
                             }
                         }
+                    } else {
+                        if(p!=NULL) p++;
                     }
+                    if(c=='-' && p!=NULL) { // build number
+                        lstrcpyn(vers->build, p, min(127, getLengthA(p)+1));
+                    }
+                    break;
                 }
             }
         }
-    }
+    } 
     return vers;
 }
 

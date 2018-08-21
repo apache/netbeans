@@ -6,15 +6,15 @@
     "main": "index.js",
     "author": {
         "name": "Tomas Mysik",
-        "email": "tomas.mysik@oracle.com"
+        "email": "tmysik@apache.org"
     },
     "dependencies": {
     },
     "peerDependencies": {
         "karma": ">=0.10"
     },
-    "license": "CDDL-GPL-2-CP",
+    "license": "Apache-2.0",
     "bugs": {
-        "url": "https://netbeans.org/community/issues.html"
+        "url": "https://issues.apache.org/jira/projects/NETBEANS/issues"
     }
 }

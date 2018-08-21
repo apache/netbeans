@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="apisupport.installer.maven">
+<project basedir="." default="build" name="apisupport/apisupport.installer.maven">
     <description>Builds, tests, and runs the project org.netbeans.modules.apisupport.installer.maven</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

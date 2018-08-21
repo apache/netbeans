@@ -62,13 +62,13 @@ public interface ModuleEntry extends Comparable<ModuleEntry> {
     
     /**
      * Get the directory to which the module is built.
-     * @return e.g. .../nbbuild/netbeans/ide
+     * @return e.g. .../../nbbuild/netbeans/ide
      */
     File getClusterDirectory();
     
     /**
      * Get the module JAR file.
-     * @return e.g. .../nbbuild/netbeans/ide/modules/org-netbeans-modules-java-project.jar
+     * @return e.g. .../../nbbuild/netbeans/ide/modules/org-netbeans-modules-java-project.jar
      */
     File getJarLocation();
     

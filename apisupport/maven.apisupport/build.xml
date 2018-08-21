@@ -20,7 +20,7 @@
 
 -->
 
-<project basedir="." default="build" name="maven.apisupport">
+<project basedir="." default="build" name="apisupport/maven.apisupport">
     <description>Builds, tests, and runs the project org.netbeans.modules.maven.apisupport</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

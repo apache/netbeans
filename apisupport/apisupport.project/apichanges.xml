@@ -21,7 +21,7 @@
 
 -->
 <?xml-stylesheet type="text/xml" href="CHANGEME/nbbuild/javadoctools/apichanges.xsl"?>
-<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../nbbuild/javadoctools/apichanges.dtd">
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
 
 <!--
 

@@ -65,10 +65,10 @@ public class ProjectConfiguration {
         public Lookup createAdditionalLookup(Lookup baseContext) {
             Project prj = baseContext.lookup(Project.class);
 
-            FileObject nbbuildMisc = prj.getProjectDirectory().getFileObject("../nbbuild/misc");
+            FileObject nbbuildMisc = prj.getProjectDirectory().getFileObject("../../nbbuild/misc");
 
             if (nbbuildMisc == null) {
-                nbbuildMisc = prj.getProjectDirectory().getFileObject("../../nbbuild/misc");
+                nbbuildMisc = prj.getProjectDirectory().getFileObject("../../../nbbuild/misc");
             }
 
             if (nbbuildMisc != null) {
@@ -149,10 +149,10 @@ public class ProjectConfiguration {
 
             final PerProjectHintsPanel panel = PerProjectHintsPanel.create(customizersFolder);
 
-            FileObject nbbuildMisc = prj.getProjectDirectory().getFileObject("../nbbuild/misc");
+            FileObject nbbuildMisc = prj.getProjectDirectory().getFileObject("../../nbbuild/misc");
 
             if (nbbuildMisc == null) {
-                nbbuildMisc = prj.getProjectDirectory().getFileObject("../../nbbuild/misc");
+                nbbuildMisc = prj.getProjectDirectory().getFileObject("../../../nbbuild/misc");
             }
 
             if (nbbuildMisc != null) {

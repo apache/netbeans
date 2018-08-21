@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." name="apisupport.installer" default="build">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project basedir="." name="apisupport/apisupport.installer" default="build">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

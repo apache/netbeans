@@ -19,6 +19,9 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="welcome">
-    <import file="../nbbuild/templates/projectized.xml"/>
+
+<project name="nb/o.n.upgrader" default="build" basedir=".">
+
+    <import file="../../nbbuild/templates/projectized.xml"/>
+
 </project>

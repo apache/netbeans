@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='ISO-8859-1' ?>
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,7 +19,9 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="bugzilla.exceptionreporter">
-    <description>Builds, tests, and runs the project org.netbeans.modules.bugzilla.exceptionreporter</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+
+<project name="nb/updatecenters" default="build" basedir=".">
+
+  <import file="../../nbbuild/templates/projectized.xml"/>
+
 </project>

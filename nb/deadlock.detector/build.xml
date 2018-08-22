@@ -19,7 +19,8 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="uihandler.exceptionreporter">
-    <description>Builds, tests, and runs the project org.netbeans.modules.uihandler.exceptionreporter</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+
+<project basedir="." default="build" name="nb/deadlock.detector">
+    <description>Builds, tests, and runs the project org.netbeans.modules.deadlock.detector</description>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

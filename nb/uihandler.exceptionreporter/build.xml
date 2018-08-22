@@ -19,9 +19,7 @@
     under the License.
 
 -->
-
-<project name="o.n.upgrader" default="build" basedir=".">
-
-    <import file="../nbbuild/templates/projectized.xml"/>
-
+<project basedir="." default="build" name="nb/uihandler.exceptionreporter">
+    <description>Builds, tests, and runs the project org.netbeans.modules.uihandler.exceptionreporter</description>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

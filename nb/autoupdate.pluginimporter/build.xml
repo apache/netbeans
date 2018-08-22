@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='ISO-8859-1' ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,9 +19,7 @@
     under the License.
 
 -->
-
-<project name="updatecenters" default="build" basedir=".">
-
-  <import file="../nbbuild/templates/projectized.xml"/>
-
+<project basedir="." default="build" name="nb/autoupdate.pluginimporter">
+    <description>Builds, tests, and runs the project org.netbeans.modules.autoupdate.pluginsimporter</description>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

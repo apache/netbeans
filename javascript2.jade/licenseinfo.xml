@@ -1,4 +1,5 @@
-<#--
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
 
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
@@ -18,15 +19,10 @@
     under the License.
 
 -->
-<#-- This is a FreeMarker template -->
-<#-- You can change the contents of the license inserted into
- #   each template by opening Tools | Templates and editing
- #   Licenses | Default License  -->
-<#assign licenseFirst = "//- ">
-<#assign licensePrefix = "    ">
-<#assign licenseLast = "     ">
-<#include "${project.licensePath}">
-
-html
-    title TODO supply a title
-    body
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/javascript2/jade/resources/JadeExample.jade</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="GUI_USABILITY" />
+    </fileset>
+</licenseinfo>

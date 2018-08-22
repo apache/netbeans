@@ -104,8 +104,8 @@ xml/test/unit/src/org/netbeans/modules/xml/resources/*
 xsl/test/unit/src/org/netbeans/modules/xsl/utils/data/*
 
 ###### template file
-apisupport.ant/src/org/netbeans/modules/apisupport/project/resources/license-*.txt
-apisupport.project/src/org/netbeans/modules/apisupport/project/ui/resources/layer_template.xml
+apisupport/apisupport.ant/src/org/netbeans/modules/apisupport/project/resources/license-*.txt
+apisupport/apisupport.project/src/org/netbeans/modules/apisupport/project/ui/resources/layer_template.xml
 java/dbschema/src/org/netbeans/modules/dbschema/jdbcimpl/resources/templates/*
 editor/demosrc/base/org/netbeans/editor/example/res/template.html_
 editor/demosrc/base/org/netbeans/editor/example/res/template.java_
@@ -166,7 +166,7 @@ websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/wadl/*
 java/java.api.common/src/org/netbeans/modules/java/api/common/project/ui/customizer/vmo/gen/CommandLine.tokens
 
 ###### license files 
-apisupport.installer/src/org/netbeans/modules/apisupport/installer/resources/licenses/**
+apisupport/apisupport.installer/src/org/netbeans/modules/apisupport/installer/resources/licenses/**
 ### companion files for CDDL licensed binaries
 lib.profiler/release/lib/deployed/**/*.map
 platform/o.n.core/licenses/**

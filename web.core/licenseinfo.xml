@@ -79,10 +79,6 @@
         <file>src/org/netbeans/modules/web/core/resources/templates/TagFileFX.template</file>
         <file>src/org/netbeans/modules/web/core/resources/templates/TagFileX.template</file>
         <file>src/org/netbeans/modules/web/core/resources/templates/WebModule.template</file>
-
-        <file>src/org/netbeans/modules/web/core/resources/web-jsptaglibrary_1_1.dtd</file>
-        <file>src/org/netbeans/modules/web/core/resources/web-jsptaglibrary_1_2.dtd</file>
-                
         <license ref="Apache-2.0-ASF" />
         <comment type="TEMPLATE_MINIMAL_IP" />
     </fileset>

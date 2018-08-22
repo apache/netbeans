@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -18,20 +20,14 @@
     under the License.
 
 -->
-<!--
-Just artifical DTD designed to the current knowledge of tomee resources.xml.
-We didn't find a DTD or xml schema.
--->
 
-<!ELEMENT resources (Resource*, Container*, TransactionManager*) >
-
-<!ELEMENT Resource (#PCDATA) >
-<!ATTLIST Resource id CDATA #REQUIRED>
-<!ATTLIST Resource type CDATA #REQUIRED>
-
-<!ELEMENT Container (#PCDATA) >
-<!ATTLIST Container id CDATA #REQUIRED>
-<!ATTLIST Container type CDATA #REQUIRED>
-
-<!ELEMENT TransactionManager (#PCDATA) >
-<!ATTLIST TransactionManager type CDATA #REQUIRED>
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/tomcat5/resources/error-glyph.gif</file>
+        <file>src/org/netbeans/modules/tomcat5/resources/tomcat.png</file>
+        <file>src/org/netbeans/modules/tomcat5/resources/tomcat5.gif</file>
+        <file>src/org/netbeans/modules/tomcat5/resources/wait.gif</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

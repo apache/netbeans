@@ -106,7 +106,7 @@ xsl/test/unit/src/org/netbeans/modules/xsl/utils/data/*
 ###### template file
 apisupport.ant/src/org/netbeans/modules/apisupport/project/resources/license-*.txt
 apisupport.project/src/org/netbeans/modules/apisupport/project/ui/resources/layer_template.xml
-dbschema/src/org/netbeans/modules/dbschema/jdbcimpl/resources/templates/*
+java/dbschema/src/org/netbeans/modules/dbschema/jdbcimpl/resources/templates/*
 editor/demosrc/base/org/netbeans/editor/example/res/template.html_
 editor/demosrc/base/org/netbeans/editor/example/res/template.java_
 editor/demosrc/properties-addon/org/netbeans/editor/example/res/template.properties

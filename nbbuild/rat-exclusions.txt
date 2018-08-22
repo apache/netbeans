@@ -183,7 +183,7 @@ css.editor/src/org/netbeans/modules/css/resources/CascadeStyleSheet.css.template
 css.editor/src/org/netbeans/modules/css/resources/CssExample
 db.sql.editor/src/org/netbeans/modules/db/sql/editor/resources/SQLExample
 editor.plain/src/org/netbeans/modules/editor/plain/resources/PlainTextExample
-javafx2.project/src/org/netbeans/modules/javafx2/project/templates/**
+javafx/javafx2.project/src/org/netbeans/modules/javafx2/project/templates/**
 jshell.support/src/org/netbeans/modules/jshell/resources/consoleExample.jsh
 junit.ui/src/org/netbeans/modules/junit/ui/resources/*.template
 languages.diff/src/org/netbeans/modules/languages/diff/DiffExample.diff

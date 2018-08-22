@@ -3,7 +3,7 @@ Version: 8.4.0
 License: MIT-nodejs
 Origin: https://nodejs.org/en/
 Source: https://github.com/nodejs/node/archive/v8.4.0.zip
-Description: Nodejs 
+Description: Nodejs
 Type: compile-time
 Comment: Nodejs files are used for testing only, they are not distributed in the convenience binary.
 

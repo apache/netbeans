@@ -33,7 +33,6 @@
         </unjar>
         <javac srcdir="agentsrc" destdir="build/agent/classes" debug="true" deprecation="true" target="1.8" source="1.8">
 	    <classpath>
-		<pathelement path="${agentsrc.asm.cp}"/>
 		<pathelement path="${module.classpath}"/>
 	    </classpath>
 	</javac>

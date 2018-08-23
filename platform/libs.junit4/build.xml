@@ -20,7 +20,7 @@
 
 -->
 <project name="platform/libs.junit4" default="build" basedir=".">
-    <property name="license.file" location="../nbbuild/licenses/CPL-1.0"/>
+    <property name="license.file" location="../../nbbuild/licenses/CPL-1.0"/>
     <target name="-create-license.file"/>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

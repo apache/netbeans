@@ -75,7 +75,7 @@ java/java.j2seproject/copylibstask/test/org/netbeans/modules/java/j2seproject/mo
 lexer/demo/src/org/netbeans/modules/lexer/demo/**/*.txt
 platform/lib.uihandler/test/unit/src/**
 platform/o.n.core/test/unit/src/org/netbeans/core/projects/cache/data/**
-openide.nodes/test/unit/src/org/openide/nodes/data/**
+platform/openide.nodes/test/unit/src/org/openide/nodes/data/**
 projectuiapi/test/unit/src/org/netbeans/modules/project/uiapi/data/*.txt
 platform/queries/test/unit/src/org/netbeans/api/queries/data/*
 utilities/test/unit/src/org/netbeans/modules/openfile/resources/recent_files/*

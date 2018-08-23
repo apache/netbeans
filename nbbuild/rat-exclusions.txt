@@ -168,7 +168,7 @@ java/java.api.common/src/org/netbeans/modules/java/api/common/project/ui/customi
 ###### license files 
 apisupport/apisupport.installer/src/org/netbeans/modules/apisupport/installer/resources/licenses/**
 ### companion files for CDDL licensed binaries
-lib.profiler/release/lib/deployed/**/*.map
+profiler/lib.profiler/release/lib/deployed/**/*.map
 platform/o.n.core/licenses/**
 ### A prefix that is added to license file
 nbbuild/license-dialog-stub.txt

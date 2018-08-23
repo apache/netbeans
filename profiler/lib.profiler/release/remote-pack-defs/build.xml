@@ -23,7 +23,7 @@
 
 <project name="remote-packs" basedir="." default="profiler-server-all">
   <!--
-  <import file="../../../nbbuild/templates/projectized.xml"/>
+  <import file="../../../../nbbuild/templates/projectized.xml"/>
   -->
   
   <property name="lib.dir" value="${cluster}/lib"/>

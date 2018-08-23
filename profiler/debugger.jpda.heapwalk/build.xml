@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="debugger.jpda.heapwalk">
+<project basedir="." default="build" name="profiler/debugger.jpda.heapwalk">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

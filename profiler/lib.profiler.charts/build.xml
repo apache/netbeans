@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="lib.profiler.charts">
+<project basedir="." default="build" name="profiler/lib.profiler.charts">
     <description>Builds, tests, and runs the project org.netbeans.lib.profiler.charts</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

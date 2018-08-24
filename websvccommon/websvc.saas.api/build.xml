@@ -21,7 +21,7 @@
 
 -->
 
-<project basedir="." default="build" name="websvc.saas.api">
+<project basedir="." default="build" name="websvccommon/websvc.saas.api">
     <description>Builds, tests, and runs the project org.netbeans.modules.websvc.saas.api</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 

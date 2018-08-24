@@ -79,8 +79,8 @@ platform/openide.nodes/test/unit/src/org/openide/nodes/data/**
 projectuiapi/test/unit/src/org/netbeans/modules/project/uiapi/data/*.txt
 platform/queries/test/unit/src/org/netbeans/api/queries/data/*
 utilities/test/unit/src/org/netbeans/modules/openfile/resources/recent_files/*
-websvc.saas.api/test/unit/src/org/netbeans/modules/websvc/saas/model/application.wadl
-websvc.saas.api/test/unit/src/org/netbeans/modules/websvc/saas/util/rootGroup.xml
+websvccommon/websvc.saas.api/test/unit/src/org/netbeans/modules/websvc/saas/model/application.wadl
+websvccommon/websvc.saas.api/test/unit/src/org/netbeans/modules/websvc/saas/util/rootGroup.xml
 xml.axi/test/unit/src/org/netbeans/modules/xml/axi/resources/**
 xml.lexer/test/unit/src/org/netbeans/api/xml/lexer/resources/*.dtd
 xml.lexer/test/unit/src/org/netbeans/api/xml/lexer/resources/*.xml
@@ -120,7 +120,7 @@ mercurial/src/org/netbeans/modules/mercurial/util/log*
 properties/src/org/netbeans/modules/properties/sample.properties.template
 java/selenium2.java/src/org/netbeans/modules/selenium2/java/SeleneseIT.java.template
 java/testng.ui/src/org/netbeans/modules/testng/ui/resources/*.template
-websvc.saas.api/src/org/netbeans/modules/websvc/saas/oauth/*.template
+websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/oauth/*.template
 
 ###### do not natively support comments 
 **/*.mf
@@ -159,9 +159,9 @@ platform/openide.util/test/unit/src/org/openide/util/LookupUsesRequestProcessorT
 **/nbproject/groovy-build.xml
 **/nbproject/jfx-impl.xml
 nbi/engine/nbproject/profiler-build-impl.xml
-websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/jaxb/*
-websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/oauth/*
-websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/wadl/*
+websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/jaxb/*
+websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/oauth/*
+websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/wadl/*
 ### generated ANTLR
 java/java.api.common/src/org/netbeans/modules/java/api/common/project/ui/customizer/vmo/gen/CommandLine.tokens
 

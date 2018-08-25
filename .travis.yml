@@ -29,4 +29,5 @@ script:
 env:
 #  - SIGTEST=false COMPILETEST=true RAT=true EOL=false LICENSE=true CV=false RUN_JAVA_TESTS=false
 #  - SIGTEST=true COMPILETEST=false RAT=false EOL=true LICENSE=false CV=true RUN_JAVA_TESTS=false
-  - SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_JAVA_TESTS=true TEST_DOWNLOAD_JDK="" TEST_RUN_OPTIONS="" TEST_MODULES="java/java.completion"
+#  - SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_JAVA_TESTS=true TEST_DOWNLOAD_JDK="" TEST_RUN_OPTIONS="" TEST_MODULES="java/java.completion"
+  - SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_JAVA_TESTS=true TEST_DOWNLOAD_JDK="wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh; export TEST_JDK=`bash install-jdk.sh --feature 12 --license GPL --emit-java-home --silent | tail -1`" TEST_RUN_OPTIONS='"-Dtest.nbjdk.home=$TEST_JDK" -Dtest.run.args=--add-exports=jdk.javadoc/com.sun.tools.javadoc.main=ALL-UNNAMED -Dtest.use.jdk.javac=true' TEST_MODULES="java/java.completion"

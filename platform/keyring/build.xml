@@ -24,7 +24,7 @@
     <target name="debug" depends="netbeans">
         <ant dir="../keyring.impl" inheritall="false"/>
         <input addproperty="nonative" defaultvalue="false" validargs="true,false" message="Suppress native keyrings?"/>
-        <ant dir="../nbbuild" target="tryme-debug">
+        <ant dir="../../nbbuild" target="tryme-debug">
             <property name="tryme.arg.keyring" value="-J-Dorg.netbeans.modules.keyring.level=0 -J-Dnetbeans.keyring.no.native=${nonative}"/>
         </ant>
     </target>

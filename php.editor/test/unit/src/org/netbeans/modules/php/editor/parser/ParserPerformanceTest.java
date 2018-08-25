@@ -46,18 +46,32 @@ public class ParserPerformanceTest extends NbTestCase {
         super.tearDown();
     }
 
-    // the current time is around 1200 ms
-//    public void testBigFile() throws Exception {
-//        File testFile = new File(getDataDir(), "testfiles/parser/performance/performance.php");
-//        assertTrue(testFile.exists());
-//        String testSource = TestUtilities.copyFileToString(testFile);
-//        ASTPHP5Scanner scanner = new ASTPHP5Scanner(new StringReader(testSource));
-//        ASTPHP5Parser parser = new ASTPHP5Parser(scanner);
-//        Date start = new Date();
-//        Symbol root = parser.parse();
-//        Date end = new Date();
-//        long time = end.getTime() - start.getTime();
-//        System.out.println("Parsing of big files takes: " + time);
-//        assertTrue(time < 2500);
-//    }
+    public void testBigFile_01() throws Exception {
+        testBigFile("testfiles/parser/performance/Mpdf.php"); // 1.01MB
+    }
+
+    public void testBigFile_02() throws Exception {
+        testBigFile("testfiles/actions/testImportData/libs/nette.min.php"); // 537KB
+    }
+
+    private void testBigFile(String filePath) throws Exception {
+        File testFile = new File(getDataDir(), filePath);
+        assertTrue(testFile.exists());
+        String testSource = TestUtilities.copyFileToString(testFile);
+        ASTPHP5Scanner scanner = new ASTPHP5Scanner(new StringReader(testSource));
+        ASTPHP5Parser parser = new ASTPHP5Parser(scanner);
+        Date start = new Date();
+        Symbol root = parser.parse();
+        Date end = new Date();
+        long time = end.getTime() - start.getTime();
+        long fileSize = testFile.length() / 1024;
+        String output = String.format(
+                "Parsing of big file(%s: %sKB) takes: %sms",
+                testFile.getName(),
+                fileSize,
+                time
+        );
+        System.out.println(output);
+        assertTrue(time < 2500);
+    }
 }

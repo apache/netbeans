@@ -29,4 +29,4 @@ script:
 env:
 #  - SIGTEST=false COMPILETEST=true RAT=true EOL=false LICENSE=true CV=false RUN_JAVA_TESTS=false
 #  - SIGTEST=true COMPILETEST=false RAT=false EOL=true LICENSE=false CV=true RUN_JAVA_TESTS=false
-  - SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_JAVA_TESTS=true TEST_DOWNLOAD_JDK="" TEST_RUN_OPTIONS="" TEST_MODULES="java.completion"
+  - SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_JAVA_TESTS=true TEST_DOWNLOAD_JDK="" TEST_RUN_OPTIONS="" TEST_MODULES="java/java.completion"

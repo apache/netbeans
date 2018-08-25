@@ -74,11 +74,17 @@ public final class Splash implements Stamps.Updater {
     private static final String ICON_16 = "org/netbeans/core/startup/frame.gif"; // NOI18N
     private static final String ICON_32 = "org/netbeans/core/startup/frame32.gif"; // NOI18N
     private static final String ICON_48 = "org/netbeans/core/startup/frame48.gif"; // NOI18N
+    private static final String ICON_256 = "org/netbeans/core/startup/frame256.png"; // NOI18N
+    private static final String ICON_512 = "org/netbeans/core/startup/frame512.png"; // NOI18N
+    private static final String ICON_1024 = "org/netbeans/core/startup/frame1024.png"; // NOI18N
     private void initFrameIcons (Frame f) {
         f.setIconImages(Arrays.asList(
                 ImageUtilities.loadImage(ICON_16, true),
                 ImageUtilities.loadImage(ICON_32, true),
-                ImageUtilities.loadImage(ICON_48, true)));
+                ImageUtilities.loadImage(ICON_48, true),
+                ImageUtilities.loadImage(ICON_256, true),
+                ImageUtilities.loadImage(ICON_512, true),
+                ImageUtilities.loadImage(ICON_1024, true)));
     }
     
     private Frame frame;

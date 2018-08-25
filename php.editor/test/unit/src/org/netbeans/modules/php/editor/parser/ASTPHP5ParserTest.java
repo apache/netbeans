@@ -107,10 +107,10 @@ public class ASTPHP5ParserTest extends ParserTestBase {
     public void testUseSubNamespace() throws Exception {
         performTest("parser/useSubNamespace");
     }
-//    public void testTextSearchQuery () throws Exception {
-//        // testing real file from phpwiki
-//        performTest("parser/TextSearchQuery");
-//    }
+    public void testTextSearchQuery () throws Exception {
+        // testing real file from phpwiki
+        performTest("parser/TextSearchQuery");
+    }
 
     public void testPHPDoc () throws Exception {
         //unfinished phpdoc

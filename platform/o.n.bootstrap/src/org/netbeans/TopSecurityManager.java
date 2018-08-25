@@ -387,7 +387,6 @@ public class TopSecurityManager extends SecurityManager {
 
     private final Set<Class> warnedSunMisc = new WeakSet<Class>();
     private final Set<String> callerWhiteList = createCallerWhiteList();
-    @Override
     public void checkMemberAccess(Class<?> clazz, int which) {
         final String n = clazz.getName();
         if (n.startsWith("sun.misc")) { // NOI18N
@@ -425,7 +424,6 @@ public class TopSecurityManager extends SecurityManager {
             Exception ex = new Exception(msg.toString()); // NOI18N
             LOG.log(l, null, ex);
         }
-        super.checkMemberAccess(clazz, which);
     }
     
     /**

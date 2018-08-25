@@ -15,8 +15,6 @@
 # specific language governing permissions and limitations
 # under the License.
 language: java
-jdk:
-  - oraclejdk8
 script:
   - if [ "x$RAT" == "xtrue" ]; then (ant -quiet build-source-config && mkdir scratch && cd scratch && unzip -qq ../nbbuild/build/basic-src* && ant -quiet rat -Drat-report.haltonfailure=true && cd .. && rm -rf scratch); fi
   - ant -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false
@@ -25,6 +23,14 @@ script:
   - if [ "x$EOL" == "xtrue" ]; then ./travis-check-line-endings.sh; fi
   - if [ "x$SIGTEST" == "xtrue" ]; then ant check-sigtests; fi
   - if [ "x$CV" == "xtrue" ]; then ant -quiet -f ergonomics/ide.ergonomics/ test -Dtest.config=commit; fi
-env:
-  - SIGTEST=false COMPILETEST=true RAT=true EOL=false LICENSE=true CV=false
-  - SIGTEST=true COMPILETEST=false RAT=false EOL=true LICENSE=false CV=true
+
+matrix:
+    include:
+        - env: SIGTEST=false COMPILETEST=true RAT=true EOL=false LICENSE=true CV=false
+          jdk: oraclejdk8
+
+        - env: SIGTEST=true COMPILETEST=false RAT=false EOL=true LICENSE=false CV=true
+          jdk: oraclejdk8
+
+        - env: SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false
+          jdk: oraclejdk11

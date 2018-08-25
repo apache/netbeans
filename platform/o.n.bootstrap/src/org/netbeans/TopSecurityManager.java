@@ -197,14 +197,17 @@ public class TopSecurityManager extends SecurityManager {
         super.checkExit(status);
     }
 
-    public @Override boolean checkTopLevelWindow(Object window) {
+    public boolean checkTopLevelWindow(Object window) {
+        return checkTopLevelWindow(new AWTPermission("showWindowWithoutWarningBanner"), window); // NOI18N
+    }
+
+    private boolean checkTopLevelWindow(Permission windowPermission, Object window) {
         synchronized (delegates) {
             for (SecurityManager sm : delegates) {
-                sm.checkTopLevelWindow(window);
+                sm.checkPermission(windowPermission, window);
             }
         }
-        
-        return super.checkTopLevelWindow(window);
+        return true;
     }
 
     /* XXX probably unnecessary:
@@ -476,6 +479,9 @@ public class TopSecurityManager extends SecurityManager {
                 } else {
                     checkWhetherAccessedFromSwingTransfer ();
                 }
+            }
+            if ("showWindowWithoutWarningBanner".equals(perm.getName())) { // NOI18N
+                checkTopLevelWindow(perm, null);
             }
         }
         return;

@@ -85,8 +85,20 @@ public class SecMan extends SecurityManager {
             //throw new ExitSecurityException();
         }
     }
-    
+
     @Override
+    public void checkPermission(Permission perm) {
+        checkPermission(perm, null);
+    }
+
+    @Override
+    public void checkPermission(Permission perm, Object context) {
+        if ("showWindowWithoutWarningBanner".equals(perm.getName())) { // NOI18N
+            checkTopLevelWindow(context);
+        }
+        super.checkPermission(perm, context);
+    }
+
     public boolean checkTopLevelWindow(Object window) {
         IOPermissionCollection iopc = AccController.getIOPermissionCollection();
         if (iopc != null && iopc.grp != null && (window instanceof java.awt.Window)) {

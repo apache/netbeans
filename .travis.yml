@@ -25,7 +25,7 @@ script:
   - if [ "x$EOL" == "xtrue" ]; then ./travis-check-line-endings.sh; fi
   - if [ "x$SIGTEST" == "xtrue" ]; then ant check-sigtests; fi
   - if [ "x$CV" == "xtrue" ]; then ant -quiet -f ergonomics/ide.ergonomics/ test -Dtest.config=commit; fi
-  - if [ "x$RUN_JAVA_TESTS" == "xtrue" ]; then $TEST_DOWNLOAD_JDK; for MODULE in $TEST_MODULES; do cd $MODULE; ant $TEST_RUN_OPTIONS test; done
+  - if [ "x$RUN_JAVA_TESTS" == "xtrue" ]; then $TEST_DOWNLOAD_JDK; for MODULE in $TEST_MODULES; do cd $MODULE; ant $TEST_RUN_OPTIONS test; done; fi
 env:
   - SIGTEST=false COMPILETEST=true RAT=true EOL=false LICENSE=true CV=false RUN_JAVA_TESTS=false
   - SIGTEST=true COMPILETEST=false RAT=false EOL=true LICENSE=false CV=true RUN_JAVA_TESTS=false

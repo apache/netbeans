@@ -22,10 +22,10 @@
 
 <project name="ide/lexer-gen" default="compile-src" basedir=".">
 
-  <property name="ide/lexer.module.root" location=".."/>
-  <property name="ide/src.demo" location="src/org/netbeans/modules/lexer/demo"/>
-  <!-- <property name="ide/build.compiler.debug" value="on"/> -->
-  <!-- <property name="ide/build.compiler.deprecation" value="on"/> -->
+  <property name="lexer.module.root" location=".."/>
+  <property name="src.demo" location="src/org/netbeans/modules/lexer/demo"/>
+  <!-- <property name="build.compiler.debug" value="on"/> -->
+  <!-- <property name="build.compiler.deprecation" value="on"/> -->
 
   <target name="compile-base">
     <ant dir="${lexer.module.root}" target="netbeans" inheritAll="false"/>

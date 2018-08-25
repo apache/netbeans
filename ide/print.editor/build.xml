@@ -24,7 +24,7 @@
 
     <target name="check">
         <ant dir="../../_code" inheritAll="true">
-            <property name="ide/check.dir" value="${basedir}"/>
+            <property name="check.dir" value="${basedir}"/>
         </ant>
     </target>
 </project>

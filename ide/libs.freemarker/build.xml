@@ -22,8 +22,8 @@
 <project name="ide/libs.freemarker" default="build" basedir=".">
   <import file="../../nbbuild/templates/projectized.xml"/>
   
-  <property name="ide/freemarker.jar" location="${basedir}/external/freemarker.jar"/>
-  <property name="ide/freemarkerTrimm.jar" location="${basedir}/external/freemarkerTrimm.jar"/>
+  <property name="freemarker.jar" location="${basedir}/external/freemarker.jar"/>
+  <property name="freemarkerTrimm.jar" location="${basedir}/external/freemarkerTrimm.jar"/>
   
   <!-- this makes the freemarker-2.3.8.jar smaller by 300Kb -->
   <target name="trimm">

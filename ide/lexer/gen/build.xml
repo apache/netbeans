@@ -22,8 +22,8 @@
 
 <project name="ide/lexer" default="compile" basedir=".">
 
-  <property name="ide/nbroot" location="../.."/>
-  <property name="ide/lexerroot" location=".."/>
+  <property name="nbroot" location="../.."/>
+  <property name="lexerroot" location=".."/>
 
   <target name="compile">
     <mkdir dir="build/classes"/>

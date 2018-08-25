@@ -28,7 +28,7 @@ ide/db.sql.visualeditor/external/javacc-3.2.jar java/performance/external/javacc
 
 # It happens that maven 3.3.9 uses commons-lang-2.6.jar, same as o.apache.commons.lang
 # These are used independently, different functional goals
-java/maven.embedder/external/apache-maven-3.3.9-bin.zip o.apache.commons.lang/external/commons-lang-2.6.jar
+ide/o.apache.commons.lang/external/commons-lang-2.6.jar java/maven.embedder/external/apache-maven-3.3.9-bin.zip
 
 # Contains test data (badPackageFileInJar.jar is packaged twice) - this is an
 # upstream problem

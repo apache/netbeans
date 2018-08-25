@@ -22,7 +22,7 @@
 
 <project name="ide/standalone-editor" default="standalone" basedir=".">
 
-  <property name="ide/target_dir" value="../netbeans/standalone" />
+  <property name="target_dir" value="../netbeans/standalone" />
 
   <target name="init">
      <mkdir dir="${target_dir}" />

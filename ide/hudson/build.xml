@@ -29,7 +29,7 @@
         <ant dir="../hudson.mercurial" target="netbeans"/>
         <ant dir="../hudson.git" target="netbeans"/>
         <ant dir="../hudson.tasklist" target="netbeans"/>
-        <property name="ide/tryme.arg.hudson" value="-J-Dorg.netbeans.modules.hudson.level=FINER"/>
+        <property name="tryme.arg.hudson" value="-J-Dorg.netbeans.modules.hudson.level=FINER"/>
         <ant dir="../../nbbuild" target="tryme-debug"/>
     </target>
 </project>

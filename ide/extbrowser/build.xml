@@ -24,7 +24,7 @@
     <import file="../../nbbuild/templates/projectized.xml"/>
 
     <target name="jnlp" depends="netbeans,-jnlp-init">
-        <property name="ide/dir" location="${jnlp.dest.dir}/${code.name.base.dashes}"/>
+        <property name="dir" location="${jnlp.dest.dir}/${code.name.base.dashes}"/>
         <mkdir dir="${dir}"/>
         <copy file="${cluster}/${module.jar}" todir="${dir}"/>
         <nb-ext-jar jarfile="${dir}/windows.jar">

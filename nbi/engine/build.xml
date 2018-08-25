@@ -141,7 +141,7 @@
     </target>
 
     <target name="probe">
-        <javac srcdir="probesrc" destdir="${build.classes.dir}/org/netbeans/installer/utils/applications/" source="1.3" debug="true" deprecation="true" target="1.1"/>
+        <javac srcdir="probesrc" destdir="${build.classes.dir}/org/netbeans/installer/utils/applications/" source="1.6" debug="true" deprecation="true" target="1.6"/>
     </target>
 
 </project>

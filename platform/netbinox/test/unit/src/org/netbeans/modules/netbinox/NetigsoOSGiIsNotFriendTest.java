@@ -22,7 +22,11 @@ package org.netbeans.modules.netbinox;
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
-import org.netbeans.*;
+import org.netbeans.InvalidException;
+import org.netbeans.MockEvents;
+import org.netbeans.MockModuleInstaller;
+import org.netbeans.Module;
+import org.netbeans.ModuleManager;
 
 public class NetigsoOSGiIsNotFriendTest extends NetigsoHid {
     public NetigsoOSGiIsNotFriendTest(String name) {

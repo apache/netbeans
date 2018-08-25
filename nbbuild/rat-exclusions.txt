@@ -69,7 +69,7 @@ ide/editor.settings.storage/test/unit/src/org/netbeans/modules/editor/settings/s
 ide/extbrowser/test/unit/src/org/netbeans/modules/extbrowser/data/mac_defaults_*
 ide/html/test/unit/src/org/netbeans/modules/html/data/**
 ide/hudson.subversion/test/unit/src/org/netbeans/modules/hudson/subversion/sample-entries-file
-ide.kit/test/qa-functional/**/*.txt
+ide/ide.kit/test/qa-functional/**/*.txt
 ###   module-info.bin (compiled Java class)
 java/java.j2seproject/copylibstask/test/org/netbeans/modules/java/j2seproject/moduletask/resources/module-info.bin
 ide/lexer/demo/src/org/netbeans/modules/lexer/demo/**/*.txt

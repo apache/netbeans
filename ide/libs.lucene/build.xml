@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="libs.lucene" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/libs.lucene" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

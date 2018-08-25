@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="xsl" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/xsl" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

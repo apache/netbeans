@@ -19,8 +19,8 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="derby">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project basedir="." default="build" name="ide/derby">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
     <target name="-check-derbysampledb" depends="basic-init">
         <condition property="derbysampledb.exists">

@@ -20,8 +20,8 @@
 
 -->
 
-<project name="html.lexer" default="build" basedir=".">
+<project name="ide/html.lexer" default="build" basedir=".">
 
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
 </project>

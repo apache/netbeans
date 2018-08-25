@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="hudson.subversion">
+<project basedir="." default="build" name="ide/hudson.subversion">
     <description>Builds, tests, and runs the project org.netbeans.modules.hudson.subversion</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

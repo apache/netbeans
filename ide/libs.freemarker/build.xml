@@ -19,28 +19,28 @@
     under the License.
 
 -->
-<project name="libs.freemarker" default="build" basedir=".">
-  <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/libs.freemarker" default="build" basedir=".">
+  <import file="../../nbbuild/templates/projectized.xml"/>
   
-  <property name="freemarker.jar" location="${basedir}/external/freemarker.jar"/>
-  <property name="freemarkerTrimm.jar" location="${basedir}/external/freemarkerTrimm.jar"/>
+  <property name="ide/freemarker.jar" location="${basedir}/external/freemarker.jar"/>
+  <property name="ide/freemarkerTrimm.jar" location="${basedir}/external/freemarkerTrimm.jar"/>
   
   <!-- this makes the freemarker-2.3.8.jar smaller by 300Kb -->
   <target name="trimm">
     <jar destfile="${freemarkerTrimm.jar}" compress="true">
       <zipfileset src="${freemarker.jar}">
-        <include name="**/*"/>
-        <exclude name="freemarker/ext/*"/>
-        <exclude name="freemarker/ext/dom/*"/>
-        <exclude name="freemarker/ext/jdom/*"/>
-        <exclude name="freemarker/ext/rhino/*"/>
-        <exclude name="freemarker/ext/jsp/*"/>
-        <exclude name="freemarker/ext/servlet/*"/>
-        <exclude name="freemarker/ext/xml/*"/>
-        <exclude name="freemarker/log/**/Log4J*"/>
-        <exclude name="freemarker/log/**/Avalon*"/>
-        <exclude name="freemarker/**/*Jython*"/>
-        <exclude name="freemarker/cache/WebappTemplateLoader*"/>
+        <include name="ide/**/*"/>
+        <exclude name="ide/freemarker/ext/*"/>
+        <exclude name="ide/freemarker/ext/dom/*"/>
+        <exclude name="ide/freemarker/ext/jdom/*"/>
+        <exclude name="ide/freemarker/ext/rhino/*"/>
+        <exclude name="ide/freemarker/ext/jsp/*"/>
+        <exclude name="ide/freemarker/ext/servlet/*"/>
+        <exclude name="ide/freemarker/ext/xml/*"/>
+        <exclude name="ide/freemarker/log/**/Log4J*"/>
+        <exclude name="ide/freemarker/log/**/Avalon*"/>
+        <exclude name="ide/freemarker/**/*Jython*"/>
+        <exclude name="ide/freemarker/cache/WebappTemplateLoader*"/>
       </zipfileset>
     </jar>
   </target>

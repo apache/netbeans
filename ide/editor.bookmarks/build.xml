@@ -19,8 +19,8 @@
     under the License.
 
 -->
-<project name="editor.bookmarks" default="build" basedir=".">
+<project name="ide/editor.bookmarks" default="build" basedir=".">
 
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
 </project>

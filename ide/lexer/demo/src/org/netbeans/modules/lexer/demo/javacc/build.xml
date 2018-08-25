@@ -20,7 +20,7 @@
 
 -->
 
-<project name="calc-build" default="compile" basedir=".">
+<project name="ide/calc-build" default="compile" basedir=".">
     <!-- Read http://lexer.netbeans.org/doc/javacc.html for furhter info.
        It's necessary to set the following properties in order to call javaccLangBuild.xml
        ${lexer.module.root} to dir that corresponds to root dir of the lexer module - ".../nb_all/lexer"
@@ -29,22 +29,22 @@
        ${grammar.root} to root dir of the grammar file e.g. "/space/nb_all/lexer/demo/src"
       -->
          
-    <property name="lexer.module.root" location="../../../../../../../.."/>
-    <property name="javacc.support" location="${lexer.module.root}/gen/src/org/netbeans/modules/lexer/gen/javacc"/>
-    <property name="javacc.support.antfile" location="${javacc.support}/javaccLangBuild.xml"/>
+    <property name="ide/lexer.module.root" location="../../../../../../../.."/>
+    <property name="ide/javacc.support" location="${lexer.module.root}/gen/src/org/netbeans/modules/lexer/gen/javacc"/>
+    <property name="ide/javacc.support.antfile" location="${javacc.support}/javaccLangBuild.xml"/>
 
-    <property name="grammar.name" value="Calc"/>
-    <property name="grammar.pkg" value="org.netbeans.modules.lexer.demo.javacc"/>
-    <property name="grammar.root" location="${lexer.module.root}/demo/src"/>
+    <property name="ide/grammar.name" value="Calc"/>
+    <property name="ide/grammar.pkg" value="org.netbeans.modules.lexer.demo.javacc"/>
+    <property name="ide/grammar.root" location="${lexer.module.root}/demo/src"/>
     
 
     <!-- Read http://lexer.netbeans.org/doc/javacc.html#tuning before uncommenting
-    <property name="tokenmanager.src.postprocess" value="true"/>
+    <property name="ide/tokenmanager.src.postprocess" value="true"/>
     -->
 
     <!-- Read http://lexer.netbeans.org/doc/javacc.html#options before uncommenting
-    <property name="tokentypes.ignore" value="true"/>
-    <property name="lang.description.xml.ignore" value="true"/>
+    <property name="ide/tokentypes.ignore" value="true"/>
+    <property name="ide/lang.description.xml.ignore" value="true"/>
     -->
 
     <target name="check-lexer-gen">

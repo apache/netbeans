@@ -20,7 +20,7 @@
 
 -->
 
-<project name="calc-build" default="compile" basedir=".">
+<project name="ide/calc-build" default="compile" basedir=".">
     <!-- It's necessary to set the following properties in order to call antlrLangBuild.xml
        ${lexer.module.root} to dir that corresponds to root dir of the lexer module - ".../nb_all/lexer"
        ${grammar.name} to name of .g grammar file without ".g" suffix e.g. "Calc"
@@ -28,21 +28,21 @@
        ${grammar.root} to root dir of the grammar file e.g. "/space/nb_all/lexer/demo/src"
       -->
          
-    <property name="lexer.module.root" location="../../../../../../../.."/>
-    <property name="antlr.support" location="${lexer.module.root}/gen/src/org/netbeans/modules/lexer/gen/antlr"/>
-    <property name="antlr.support.antfile" location="${antlr.support}/antlrLangBuild.xml"/>
+    <property name="ide/lexer.module.root" location="../../../../../../../.."/>
+    <property name="ide/antlr.support" location="${lexer.module.root}/gen/src/org/netbeans/modules/lexer/gen/antlr"/>
+    <property name="ide/antlr.support.antfile" location="${antlr.support}/antlrLangBuild.xml"/>
 
-    <property name="grammar.name" value="Calc"/>
-    <property name="grammar.pkg" value="org.netbeans.modules.lexer.demo.antlr"/>
-    <property name="grammar.root" location="${lexer.module.root}/demo/src"/>
+    <property name="ide/grammar.name" value="Calc"/>
+    <property name="ide/grammar.pkg" value="org.netbeans.modules.lexer.demo.antlr"/>
+    <property name="ide/grammar.root" location="${lexer.module.root}/demo/src"/>
     
     <!-- Read http://lexer.netbeans.org/doc/antlr.html#tuning before uncommenting
-    <property name="scanner.src.postprocess" value="true"/>
+    <property name="ide/scanner.src.postprocess" value="true"/>
     -->
 
     <!-- Read http://lexer.netbeans.org/doc/antlr.html#options before uncommenting
-    <property name="tokentypes.ignore" value="true"/>
-    <property name="lang.description.xml.ignore" value="true"/>
+    <property name="ide/tokentypes.ignore" value="true"/>
+    <property name="ide/lang.description.xml.ignore" value="true"/>
     -->
     
     <target name="check-lexer-gen">

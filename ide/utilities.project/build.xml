@@ -20,6 +20,6 @@
 
 -->
 
-<project name="utilities.project" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/utilities.project" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

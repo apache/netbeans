@@ -20,6 +20,6 @@
     under the License.
 
 -->
-<project name="xml.schema.completion" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/xml.schema.completion" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

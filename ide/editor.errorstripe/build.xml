@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="editor.errorstripe" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/editor.errorstripe" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

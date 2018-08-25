@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="utilities" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/utilities" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
 </project>

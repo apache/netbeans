@@ -40,13 +40,13 @@
 .DS_Store
 
 #the following should only be transient, until resolved more appropriately:
-/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/JavaCharStream.java
-/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/ParseException.java
-/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/SQLParser.java
-/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/SQLParserConstants.java
-/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/SQLParserTokenManager.java
-/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/Token.java
-/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/TokenMgrError.java
+/ide/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/JavaCharStream.java
+/ide/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/ParseException.java
+/ide/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/SQLParser.java
+/ide/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/SQLParserConstants.java
+/ide/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/SQLParserTokenManager.java
+/ide/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/Token.java
+/ide/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/TokenMgrError.java
 /debugger.jpda.ui/test/qa-functional/data/debugTestProject/nbproject/private/
 /debugger.jpda.ui/test/qa-functional/data/debugTestProjectAnt/nbproject/private/
 /hibernate/src/org/netbeans/modules/hibernate/resources/hibernate-configuration-3.0.dtd

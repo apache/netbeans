@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="spi.debugger.ui">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project basedir="." default="build" name="ide/spi.debugger.ui">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

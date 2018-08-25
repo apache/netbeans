@@ -19,9 +19,9 @@
     under the License.
 
 -->
-<project name="schema2beans" default="build" basedir=".">
+<project name="ide/schema2beans" default="build" basedir=".">
 
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
     <!-- The genmetadd target should never be part of the regular build.
          These files should only be generated when we know that schema2beans

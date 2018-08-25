@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="project.ant.ui">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project basedir="." default="build" name="ide/project.ant.ui">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

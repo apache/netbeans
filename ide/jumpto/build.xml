@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="jumpto">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project basedir="." default="build" name="ide/jumpto">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

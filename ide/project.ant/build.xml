@@ -19,9 +19,9 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="project.ant">
+<project basedir="." default="build" name="ide/project.ant">
 
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
     <target name="anttask" depends="netbeans" description="Build special Ant task.">
         <mkdir dir="build/antclasses"/>

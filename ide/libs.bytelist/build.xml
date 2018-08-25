@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="libs.bytelist" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/libs.bytelist" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

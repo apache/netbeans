@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="diff" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/diff" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

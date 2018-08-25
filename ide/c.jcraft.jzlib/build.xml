@@ -19,8 +19,8 @@
     under the License.
 
 -->
-<project name="c.jcraft.jzlib" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/c.jcraft.jzlib" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
     <target name="jar" depends="-define-FileCRC32Calculator">
         <FileCRC32Calculator file="external/jzlib-1.0.7.jar" property="c.jcraft.jzlib.crc32" />
         <jar jarfile="${cluster}/${module.jar}">

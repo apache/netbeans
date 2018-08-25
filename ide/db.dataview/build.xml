@@ -22,6 +22,6 @@
 <!-- You may freely edit this file. See harness/README in the NetBeans platform -->
 <!-- for some information on what you could do (e.g. targets to override). -->
 <!-- If you delete this file and reopen the project it will be recreated. -->
-<project name="db.dataview" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/db.dataview" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

@@ -19,9 +19,9 @@
     under the License.
 
 -->
-<project name="xml.tax" default="build" basedir=".">
+<project name="ide/xml.tax" default="build" basedir=".">
 
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
     <target name="lib-compile" depends="build-init">
         <mkdir dir="${build.dir}/libclasses"/>

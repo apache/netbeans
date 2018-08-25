@@ -20,9 +20,9 @@
 
 -->
 
-<project name="usersguide" default="build" basedir=".">
+<project name="ide/usersguide" default="build" basedir=".">
 
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
     <target name="javahelp" depends="projectized.javahelp">
         <mkdir dir="${cluster}/docs/org/netbeans/modules/usersguide"/>

@@ -20,8 +20,8 @@
 
 -->
 
-<project name="csl_anttask" default="jars" basedir=".">
-  <import file="../../nbbuild/default-properties.xml"/>
+<project name="ide/csl_anttask" default="jars" basedir=".">
+  <import file="../../../nbbuild/default-properties.xml"/>
 
   <target name="jars" depends="compile">
     <mkdir dir="build"/>

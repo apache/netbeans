@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="xml.wsdl.model" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/xml.wsdl.model" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

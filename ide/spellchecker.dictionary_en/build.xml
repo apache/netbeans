@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="spellchecker.dictionary_en" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/spellchecker.dictionary_en" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

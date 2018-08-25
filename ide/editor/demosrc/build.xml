@@ -20,9 +20,9 @@
 
 -->
 
-<project name="standalone-editor" default="standalone" basedir=".">
+<project name="ide/standalone-editor" default="standalone" basedir=".">
 
-  <property name="target_dir" value="../netbeans/standalone" />
+  <property name="ide/target_dir" value="../netbeans/standalone" />
 
   <target name="init">
      <mkdir dir="${target_dir}" />
@@ -34,8 +34,8 @@
 
   <target name="compile" depends="editor">
      <copy todir="${target_dir}">
-        <fileset dir="../../nbbuild/netbeans">
-            <filename name="ide*/modules/org-netbeans-modules-editor-lib.jar"/>
+        <fileset dir="../../../nbbuild/netbeans">
+            <filename name="ide/ide*/modules/org-netbeans-modules-editor-lib.jar"/>
         </fileset>
      </copy>
      <javac srcdir="base" destdir="base" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}">
@@ -68,7 +68,7 @@
   <target name="clean">
     <delete>
       <fileset dir="base">
-        <include name="**/*.class"/>
+        <include name="ide/**/*.class"/>
       </fileset>
     </delete>
     <delete dir="${target_dir}"/>

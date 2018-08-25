@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="libs.git" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/libs.git" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

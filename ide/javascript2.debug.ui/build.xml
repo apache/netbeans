@@ -20,7 +20,7 @@
 
 -->
 
-<project name="javascript2.debug.ui" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/javascript2.debug.ui" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>
 

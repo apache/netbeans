@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="core.browser">
+<project basedir="." default="build" name="ide/core.browser">
     <description>Builds, tests, and runs the project org.netbeans.core.browser</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

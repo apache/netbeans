@@ -128,7 +128,7 @@ websvc.saas.api/src/org/netbeans/modules/websvc/saas/oauth/*.template
 **/*.nib
 **/*.oql
 **/*.ser
-ide/launcher/macosx/NetBeansLauncher/ReadMe.rtf
+ide.etc/launcher/macosx/NetBeansLauncher/ReadMe.rtf
 harness/jellytools.platform/src/org/netbeans/jellytools/version_info
 
 ######  generated test files 

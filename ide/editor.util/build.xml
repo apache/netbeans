@@ -20,7 +20,7 @@
 
 -->
 
-<project name="editor.util" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/editor.util" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
 </project>

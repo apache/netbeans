@@ -20,17 +20,17 @@
 
 -->
 
-<project name="link-build" default="compile" basedir=".">
-    <property name="lexer.module.root" location="../../../../../../../../.."/>
-    <property name="handcoded.support" location="${lexer.module.root}/gen/src/org/netbeans/modules/lexer/gen/handcoded"/>
-    <property name="handcoded.support.antfile" location="${handcoded.support}/handcodedLangBuild.xml"/>
+<project name="ide/link-build" default="compile" basedir=".">
+    <property name="ide/lexer.module.root" location="../../../../../../../../.."/>
+    <property name="ide/handcoded.support" location="${lexer.module.root}/gen/src/org/netbeans/modules/lexer/gen/handcoded"/>
+    <property name="ide/handcoded.support.antfile" location="${handcoded.support}/handcodedLangBuild.xml"/>
 
-    <property name="grammar.name" value="Link"/>
-    <property name="grammar.pkg" value="org.netbeans.modules.lexer.demo.handcoded.link"/>
-    <property name="grammar.root" location="${lexer.module.root}/demo/src"/>
+    <property name="ide/grammar.name" value="Link"/>
+    <property name="ide/grammar.pkg" value="org.netbeans.modules.lexer.demo.handcoded.link"/>
+    <property name="ide/grammar.root" location="${lexer.module.root}/demo/src"/>
 
   <!-- Please read http://lexer.netbeans.org/doc/handcoded.html before uncommenting
-    <property name="lang.description.xml.ignore" value="true"/>
+    <property name="ide/lang.description.xml.ignore" value="true"/>
   -->
 
     <target name="check-lexer-gen">

@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="extexecution.base">
+<project basedir="." default="build" name="ide/extexecution.base">
     <description>Builds, tests, and runs the project org.netbeans.modules.extexecution.base</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

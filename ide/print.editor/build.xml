@@ -19,12 +19,12 @@
     under the License.
 
 -->
-<project name="print.editor" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/print.editor" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
     <target name="check">
         <ant dir="../../_code" inheritAll="true">
-            <property name="check.dir" value="${basedir}"/>
+            <property name="ide/check.dir" value="${basedir}"/>
         </ant>
     </target>
 </project>

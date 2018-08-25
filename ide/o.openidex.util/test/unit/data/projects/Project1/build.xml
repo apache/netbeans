@@ -22,7 +22,7 @@
 <!-- You may freely edit this file. See commented blocks below for -->
 <!-- some examples of how to customize the build. -->
 <!-- (If you delete it and reopen the project it will be recreated.) -->
-<project name="Project1" default="default" basedir=".">
+<project name="ide/Project1" default="default" basedir=".">
     <description>Builds, tests, and runs the project Project1.</description>
     <import file="nbproject/build-impl.xml"/>
     <!--

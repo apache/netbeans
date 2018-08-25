@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="css.visual" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/css.visual" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
     <target name="test" depends="test-unit"/>
 </project>

@@ -20,9 +20,9 @@
 
 -->
 
-<project name="properties.syntax" default="build" basedir=".">
+<project name="ide/properties.syntax" default="build" basedir=".">
 
-  <import file="../nbbuild/templates/projectized.xml"/>
+  <import file="../../nbbuild/templates/projectized.xml"/>
 
 </project>
 

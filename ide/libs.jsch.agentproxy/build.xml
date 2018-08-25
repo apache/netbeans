@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="libs.jsch.agentproxy" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/libs.jsch.agentproxy" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

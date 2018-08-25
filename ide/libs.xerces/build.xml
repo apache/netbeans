@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="libs.xerces" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/libs.xerces" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

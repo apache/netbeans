@@ -19,8 +19,8 @@
     under the License.
 
 -->
-<project name="o.apache.commons.httpclient" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/o.apache.commons.httpclient" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
     <target name="jar" depends="-define-FileCRC32Calculator">
         <FileCRC32Calculator file="external/commons-httpclient-3.1.jar" property="o.apache.commons.httpclient.crc32" />
         <jar jarfile="${cluster}/${module.jar}">

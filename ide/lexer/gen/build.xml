@@ -20,10 +20,10 @@
 
 -->
 
-<project name="lexer" default="compile" basedir=".">
+<project name="ide/lexer" default="compile" basedir=".">
 
-  <property name="nbroot" location="../.."/>
-  <property name="lexerroot" location=".."/>
+  <property name="ide/nbroot" location="../.."/>
+  <property name="ide/lexerroot" location=".."/>
 
   <target name="compile">
     <mkdir dir="build/classes"/>
@@ -32,7 +32,7 @@
            debug="${build.compiler.debug}">
       <classpath>
         <fileset dir="${lexerroot}/external">
-          <include name="antlr*.jar"/>
+          <include name="ide/antlr*.jar"/>
         </fileset>
         <pathelement location="${lexerroot}/build/classes"/>
       </classpath>
@@ -42,7 +42,7 @@
     <javac srcdir="antsrc" destdir="build/antclasses" deprecation="true" debug="${build.compiler.debug}">
       <classpath>
         <fileset dir="${lexerroot}/external">
-          <include name="antlr*.jar"/>
+          <include name="ide/antlr*.jar"/>
         </fileset>
 	<pathelement location="build/classes"/>
         <pathelement location="${lexerroot}/build/classes"/>

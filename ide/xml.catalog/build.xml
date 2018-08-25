@@ -19,8 +19,8 @@
     under the License.
 
 -->
-<project name="xml.catalog" default="build" basedir=".">
+<project name="ide/xml.catalog" default="build" basedir=".">
 
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
 </project>

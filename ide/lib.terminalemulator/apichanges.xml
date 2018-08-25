@@ -20,8 +20,8 @@
 
 -->
 
-<?xml-stylesheet href="../nbbuild/javadoctools/apichanges.xsl" type="text/xsl"?>
-<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../nbbuild/javadoctools/apichanges.dtd">
+<?xml-stylesheet href="../../nbbuild/javadoctools/apichanges.xsl" type="text/xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
 
 <!-- INFO FOR PEOPLE ADDING CHANGES:
 For details see:

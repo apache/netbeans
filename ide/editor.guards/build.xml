@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="editor.guards">
+<project basedir="." default="build" name="ide/editor.guards">
     <description>Builds, tests, and runs the project org.netbeans.modules.editor.guards</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

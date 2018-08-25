@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="xml" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/xml" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

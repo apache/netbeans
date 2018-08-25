@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="o.eclipse.equinox.preferences" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/o.eclipse.equinox.preferences" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
     <target name="jar"/>
 </project>

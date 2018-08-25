@@ -20,25 +20,25 @@
 
 -->
 
-<project name="whitelist-test" default="test" basedir=".">
+<project name="ide/whitelist-test" default="test" basedir=".">
 
     <dirname property="whitelist-test.basedir" file="${ant.file.whitelist-test}"/>
 
-    <property name="nb_all" location="${whitelist-test.basedir}/../../.."/>
-    <property name="temp_dir" location="${whitelist-test.basedir}/temp"/>
-    <property name="tomcat6_zip" location="${temp_dir}/tomcat6.zip"/>
-    <property name="tomcat6_dir" location="${temp_dir}/tomcat6"/>
-    <property name="tomcat6_dest_dir" location="${whitelist-test.basedir}/../qa-functional/data/tomcat6"/>
-    <property name="work_dir" location="${whitelist-test.basedir}/../../build/test/qa-functional/work"/>
+    <property name="ide/nb_all" location="${whitelist-test.basedir}/../../.."/>
+    <property name="ide/temp_dir" location="${whitelist-test.basedir}/temp"/>
+    <property name="ide/tomcat6_zip" location="${temp_dir}/tomcat6.zip"/>
+    <property name="ide/tomcat6_dir" location="${temp_dir}/tomcat6"/>
+    <property name="ide/tomcat6_dest_dir" location="${whitelist-test.basedir}/../qa-functional/data/tomcat6"/>
+    <property name="ide/work_dir" location="${whitelist-test.basedir}/../../build/test/qa-functional/work"/>
     <condition property="ant.executable" value="ant.bat" else="ant">
         <os family="windows"/>
     </condition>
-    <property name="allowed.violations" value="0"/>
-    <property name="debug.pause" value="y"/>
+    <property name="ide/allowed.violations" value="0"/>
+    <property name="ide/debug.pause" value="y"/>
     <condition property="debug.args" value="-agentlib:jdwp=transport=dt_socket,suspend=${debug.pause},server=y,address=${debug.port}">
         <isset property="debug.port"/>
     </condition>
-    <property name="debug.args" value=""/>
+    <property name="ide/debug.args" value=""/>
 
     <target name="help">
         <echo>

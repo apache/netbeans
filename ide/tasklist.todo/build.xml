@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="tasklist.todo">
+<project basedir="." default="build" name="ide/tasklist.todo">
     <description>Builds, tests, and runs the project org.netbeans.modules.tasklist.todo</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="projectuiapi">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project basedir="." default="build" name="ide/projectuiapi">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

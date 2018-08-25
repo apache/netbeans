@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="api.debugger">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project basedir="." default="build" name="ide/api.debugger">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

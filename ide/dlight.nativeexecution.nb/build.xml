@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="dlight.nativeexecution.nb">
+<project basedir="." default="build" name="ide/dlight.nativeexecution.nb">
     <description>Builds, tests, and runs the project org.netbeans.modules.dlight.nativeexecution.nb</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

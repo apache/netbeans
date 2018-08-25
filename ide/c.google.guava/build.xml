@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="c.google.guava" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/c.google.guava" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
     <target name="jar"/>
 </project>

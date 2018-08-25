@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="xml.lexer">
+<project basedir="." default="build" name="ide/xml.lexer">
     <description>Builds, tests, and runs the project org.netbeans.modules.xml.lexer</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="xml.retriever" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/xml.retriever" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

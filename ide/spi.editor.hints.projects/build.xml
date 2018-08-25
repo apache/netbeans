@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="spi.editor.hints.projects">
+<project basedir="." default="build" name="ide/spi.editor.hints.projects">
     <description>Builds, tests, and runs the project org.netbeans.spi.editor.hints.projects</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

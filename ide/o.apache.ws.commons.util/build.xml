@@ -19,8 +19,8 @@
     under the License.
 
 -->
-<project name="o.apache.ws.commons.util" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/o.apache.ws.commons.util" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
     <target name="jar" depends="-define-FileCRC32Calculator">
         <FileCRC32Calculator file="external/ws-commons-util-1.0.1.jar" property="o.apache.ws.commons.util.crc32" />
         <jar jarfile="${cluster}/${module.jar}">

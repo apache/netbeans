@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="o.eclipse.mylyn.wikitext.markdown.core" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/o.eclipse.mylyn.wikitext.markdown.core" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
     <target name="jar"/>
 </project>

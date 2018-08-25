@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="parsing.indexing">
+<project basedir="." default="build" name="ide/parsing.indexing">
     <description>Builds, tests, and runs the project org.netbeans.modules.parsing.indexing</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

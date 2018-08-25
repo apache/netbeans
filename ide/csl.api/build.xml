@@ -19,8 +19,8 @@
     under the License.
 
 -->
-<project name="csl.api" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/csl.api" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
     <target name="javadoc" depends="init-javadoc, projectized.javadoc"/>
     <target name="init-javadoc">

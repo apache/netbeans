@@ -20,8 +20,8 @@
 
 -->
 
-<project name="xml.xdm" default="build" basedir=".">
+<project name="ide/xml.xdm" default="build" basedir=".">
 
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
 </project>

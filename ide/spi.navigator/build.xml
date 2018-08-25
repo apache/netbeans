@@ -20,8 +20,8 @@
 
 -->
 
-<project name="spi.navigator" default="build" basedir=".">
+<project name="ide/spi.navigator" default="build" basedir=".">
 
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
 </project>

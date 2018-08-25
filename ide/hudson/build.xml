@@ -19,8 +19,8 @@
     under the License.
 
 -->
-<project name="hudson" default="build" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+<project name="ide/hudson" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
     <target name="debug">
         <ant dir="../hudson" target="netbeans"/>
         <ant dir="../hudson.ant" target="netbeans"/>
@@ -29,7 +29,7 @@
         <ant dir="../hudson.mercurial" target="netbeans"/>
         <ant dir="../hudson.git" target="netbeans"/>
         <ant dir="../hudson.tasklist" target="netbeans"/>
-        <property name="tryme.arg.hudson" value="-J-Dorg.netbeans.modules.hudson.level=FINER"/>
-        <ant dir="../nbbuild" target="tryme-debug"/>
+        <property name="ide/tryme.arg.hudson" value="-J-Dorg.netbeans.modules.hudson.level=FINER"/>
+        <ant dir="../../nbbuild" target="tryme-debug"/>
     </target>
 </project>

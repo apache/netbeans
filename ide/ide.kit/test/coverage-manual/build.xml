@@ -20,38 +20,38 @@
 
 -->
 
-<project name="coverage-manual" default="default" basedir=".">
+<project name="ide/coverage-manual" default="default" basedir=".">
 
     <dirname property="coverage-manual.basedir" file="${ant.file.coverage-manual}"/>
 
-    <property name="nb_all" location="${coverage-manual.basedir}/../../.."/>
-    <property name="emma.dir" location="${nb_all}/xtest/external/"/>
+    <property name="ide/nb_all" location="${coverage-manual.basedir}/../../.."/>
+    <property name="ide/emma.dir" location="${nb_all}/xtest/external/"/>
 
-    <property name="netbeans.instr.dir" location="netbeans-instrumented"/>
-    <property name="netbeans.user.dir" location="${netbeans.instr.dir}/coverage-userdir"/>
-    <property name="coverage.data.dir" location="coverage-data"/>
-    <property name="coverage.report.dir" location="coverage-report"/>
+    <property name="ide/netbeans.instr.dir" location="netbeans-instrumented"/>
+    <property name="ide/netbeans.user.dir" location="${netbeans.instr.dir}/coverage-userdir"/>
+    <property name="ide/coverage.data.dir" location="coverage-data"/>
+    <property name="ide/coverage.report.dir" location="coverage-report"/>
     
     <!-- ===== User defined properties ! ===== -->
     
     <!-- Provide path to JDK which you want to run the IDE with -->
-    <property name="jdkhome" value="e:/jdks/jdk1.5.0_04"/>
+    <property name="ide/jdkhome" value="e:/jdks/jdk1.5.0_04"/>
     <!-- Define what build of NetBeans you want to instrument -->
-    <property name="netbeans.dir" location="${nb_all}/nbbuild/netbeans"/>
+    <property name="ide/netbeans.dir" location="${nb_all}/nbbuild/netbeans"/>
     <!-- Provide filter for included packages -->
-    <property name="included.packages" 
+    <property name="ide/included.packages" 
         value="org.netbeans.*,org.openide.*,org.openidex.*,org.apache.tools.ant.module.*,javax.jmi.*"/>
     <!-- File for writing EMMA runtime coverage data -->
-    <property name="coverage.runtime.file" value="coverage.ec"/>
+    <property name="ide/coverage.runtime.file" value="coverage.ec"/>
     <!-- Provide additional IDE arguments -->
-    <property name="ide.args" 
+    <property name="ide/ide.args" 
         value="--cp:p ${emma.dir}/emma.jar -J-Dnetbeans.security.nocheck=true -J-Demma.coverage.out.file=${coverage.data.dir}/${coverage.runtime.file}"/>
     <!-- File for logging instrumentation details; not defined == no logging -->
-    <property name="emma.logfile" value="instrumented.txt"/>
+    <property name="ide/emma.logfile" value="instrumented.txt"/>
     
     <!-- ===== End of User defined properties ===== -->
     
-    <property name="emma.enabled" value="true"/>
+    <property name="ide/emma.enabled" value="true"/>
     
     <!-- EMMA setup -->
     
@@ -67,7 +67,7 @@
     
     <target name="define-other-tasks">
         <ant dir="selectjars" antfile="build.xml" target="jar"/>
-        <taskdef name="select-jars" classname="selectjars.SelectJars" 
+        <taskdef name="ide/select-jars" classname="selectjars.SelectJars" 
              classpath="selectjars/dist/selectjars.jar"/>
     </target>
     
@@ -94,7 +94,7 @@
     <target name="create-instrpath" depends="copy-ide">
         <select-jars pathrefprop="instr.path.id" inclpackages="${included.packages}" logfile="${emma.logfile}">
             <fileset dir="${netbeans.instr.dir}">
-                <include name="**/*.jar"/>
+                <include name="ide/**/*.jar"/>
             </fileset>
         </select-jars>
     </target>
@@ -180,8 +180,8 @@
         <emma enabled="${emma.enabled}">
             <report sort="+name,+block,+method,+class">
                 <fileset dir="${coverage.data.dir}">
-                    <include name="*.em"/>
-                    <include name="*.ec"/>
+                    <include name="ide/*.em"/>
+                    <include name="ide/*.ec"/>
                 </fileset>
                 <txt outfile="${coverage.report.dir}/coverage.txt"/>
                 <html outfile="${coverage.report.dir}/coverage.html"/>

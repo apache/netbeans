@@ -22,7 +22,7 @@
 <!-- You may freely edit this file. See commented blocks below for -->
 <!-- some examples of how to customize the build. -->
 <!-- (If you delete it and reopen the project it will be recreated.) -->
-<project name="ide/DTDActionsTestProject" default="default" basedir=".">
+<project name="DTDActionsTestProject" default="default" basedir=".">
     <description>Builds, tests, and runs the project DTDActionsTestProject.</description>
     <import file="nbproject/build-impl.xml"/>
     <!--

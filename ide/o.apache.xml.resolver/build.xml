@@ -38,7 +38,7 @@
         <FileCRC32Calculator file="external/xml-resolver-1.2.jar" property="o.apache.xml.resolver.crc32" />
 
         <echo message="Patching xml-resolver-1.2-sources.jar for Netbeans..." />
-        <taskdef name="ide/patchfile" classname="org.netbeans.nbbuild.extlibs.PatchFile" classpath="${nbantext.jar}"/>
+        <taskdef name="patchfile" classname="org.netbeans.nbbuild.extlibs.PatchFile" classpath="${nbantext.jar}"/>
         <!-- ... 1. Prepares a 'build/external-patch/[sources|classes]' working directories -->
         <delete dir="build/external-patch" />
         <mkdir dir="build/external-patch/sources" />
@@ -51,7 +51,7 @@
         <mkdir dir="build/external-patch/classes" />
         <javac srcdir="build/external-patch/sources"
             destdir="build/external-patch/classes" >
-            <exclude name="ide/org/apache/xml/resolver/tests/**" />
+            <exclude name="org/apache/xml/resolver/tests/**" />
         </javac>
         <!-- ... 5. Creates a jar in 'external/resolver-1.2.jar' -->
         <jar destfile="external/resolver-1.2.jar">

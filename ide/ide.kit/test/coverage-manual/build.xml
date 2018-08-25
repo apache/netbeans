@@ -67,7 +67,7 @@
     
     <target name="define-other-tasks">
         <ant dir="selectjars" antfile="build.xml" target="jar"/>
-        <taskdef name="ide/select-jars" classname="selectjars.SelectJars" 
+        <taskdef name="select-jars" classname="selectjars.SelectJars" 
              classpath="selectjars/dist/selectjars.jar"/>
     </target>
     
@@ -94,7 +94,7 @@
     <target name="create-instrpath" depends="copy-ide">
         <select-jars pathrefprop="instr.path.id" inclpackages="${included.packages}" logfile="${emma.logfile}">
             <fileset dir="${netbeans.instr.dir}">
-                <include name="ide/**/*.jar"/>
+                <include name="**/*.jar"/>
             </fileset>
         </select-jars>
     </target>
@@ -180,8 +180,8 @@
         <emma enabled="${emma.enabled}">
             <report sort="+name,+block,+method,+class">
                 <fileset dir="${coverage.data.dir}">
-                    <include name="ide/*.em"/>
-                    <include name="ide/*.ec"/>
+                    <include name="*.em"/>
+                    <include name="*.ec"/>
                 </fileset>
                 <txt outfile="${coverage.report.dir}/coverage.txt"/>
                 <html outfile="${coverage.report.dir}/coverage.html"/>

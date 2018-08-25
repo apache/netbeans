@@ -35,7 +35,7 @@
   <target name="compile" depends="editor">
      <copy todir="${target_dir}">
         <fileset dir="../../../nbbuild/netbeans">
-            <filename name="ide/ide*/modules/org-netbeans-modules-editor-lib.jar"/>
+            <filename name="**/ide*/modules/org-netbeans-modules-editor-lib.jar"/>
         </fileset>
      </copy>
      <javac srcdir="base" destdir="base" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}">
@@ -68,7 +68,7 @@
   <target name="clean">
     <delete>
       <fileset dir="base">
-        <include name="ide/**/*.class"/>
+        <include name="**/*.class"/>
       </fileset>
     </delete>
     <delete dir="${target_dir}"/>

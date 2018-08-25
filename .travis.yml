@@ -17,7 +17,8 @@
 language: java
 script:
   - if [ "x$RAT" == "xtrue" ]; then (ant -quiet build-source-config && mkdir scratch && cd scratch && unzip -qq ../nbbuild/build/basic-src* && ant -quiet rat -Drat-report.haltonfailure=true && cd .. && rm -rf scratch); fi
-  - ant -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false
+  - if [ "x$OPTS" == "x" ]; then OPTS="-quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"; fi
+  - ant $OPTS
   - if [ "x$COMPILETEST" == "xtrue" ]; then ant -quiet test -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest.includes=NoTestsJustBuild; fi
   - if [ "x$LICENSE" == "xtrue" ]; then ant -quiet verify-libs-and-licenses -Dverify-libs-and-licenses.haltonfailure=true; fi
   - if [ "x$EOL" == "xtrue" ]; then ./travis-check-line-endings.sh; fi
@@ -32,5 +33,5 @@ matrix:
         - env: SIGTEST=true COMPILETEST=false RAT=false EOL=true LICENSE=false CV=true
           jdk: oraclejdk8
 
-        - env: SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false
+        - env: OPTS="build-platform -Dpermit.jdk9.builds=true -Dvanilla.javac.exists=true"
           jdk: oraclejdk11

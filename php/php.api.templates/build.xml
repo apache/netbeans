@@ -21,5 +21,5 @@
 -->
 <project basedir="." default="netbeans" name="php.api.templates">
     <description>Builds, tests, and runs the project org.netbeans.modules.php.api.templates</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

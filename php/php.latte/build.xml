@@ -21,7 +21,7 @@
 -->
 <project basedir="." default="netbeans" name="php.latte">
     <description>Builds, tests, and runs the project org.netbeans.modules.php.latte</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
     <!--taskdef name="jflex"
         classname="JFlex.anttask.JFlexTask"

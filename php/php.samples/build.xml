@@ -24,7 +24,7 @@
     <!--
     <import file="nbproject/build-impl.xml"/>
     -->
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
     <target name="jar" depends="zip-examples,projectized-common.jar"/>
 

@@ -17,9 +17,9 @@
  - specific language governing permissions and limitations
  - under the License.
  -->
-<project basedir="." default="netbeans" name="java.openjdk.project">
+<project basedir="." default="netbeans" name="java/java.openjdk.project">
     <description>Builds, tests, and runs the project org.netbeans.modules.java.openjdk.project</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
     <target name="compile" depends="projectized-common.compile">
         <mkdir dir="${build.dir}/fakeJdkClasses/java/lang" />
         <mkdir dir="${build.dir}/fakeJdkClasses/java/util/stream" />

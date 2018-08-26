@@ -31,7 +31,7 @@
                     <attr name="position" intvalue="150"/>
                 </file>
                 <file name="select-tool.instance">
-                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.jdk.project.ActionProviderImpl.selectToolAction" />
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.java.openjdk.project.ActionProviderImpl.selectToolAction" />
                     <attr intvalue="151" name="position"/>
                 </file>
                 <file name="sep-1.instance">

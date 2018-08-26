@@ -108,19 +108,19 @@ public class ActionProviderImpl implements ActionProvider {
 
         repository = repo;
 
-        File scriptFile = InstalledFileLocator.getDefault().locate("scripts/build-generic.xml", "org.netbeans.modules.jdk.project", false);
+        File scriptFile = InstalledFileLocator.getDefault().locate("scripts/build-generic.xml", "org.netbeans.modules.java.openjdk.project", false);
 
         genericScript = FileUtil.toFileObject(scriptFile);
 
         if (project.moduleRepository.isConsolidatedRepo()) {
             String repoName = ShortcutUtils.getDefault().inferLegacyRepository(project);
-            File fastBuild = InstalledFileLocator.getDefault().locate("scripts/build-" + repoName + "-consol.xml", "org.netbeans.modules.jdk.project", false);
+            File fastBuild = InstalledFileLocator.getDefault().locate("scripts/build-" + repoName + "-consol.xml", "org.netbeans.modules.java.openjdk.project", false);
             if (fastBuild != null && ShortcutUtils.getDefault().shouldUseCustomBuild(repoName, FileUtil.getRelativePath(repo, project.getProjectDirectory()))) {
                 scriptFile = fastBuild;
             }
         } else {
             String repoName = repo.getNameExt();
-            File fastBuild = InstalledFileLocator.getDefault().locate("scripts/build-" + repoName + ".xml", "org.netbeans.modules.jdk.project", false);
+            File fastBuild = InstalledFileLocator.getDefault().locate("scripts/build-" + repoName + ".xml", "org.netbeans.modules.java.openjdk.project", false);
             if (fastBuild != null && ShortcutUtils.getDefault().shouldUseCustomBuild(repoName, FileUtil.getRelativePath(repo, project.getProjectDirectory()))) {
                 scriptFile = fastBuild;
             }

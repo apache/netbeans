@@ -132,9 +132,10 @@ public class ActionProviderImpl implements ActionProvider {
         final ActionProgress progress = ActionProgress.start(context);
         ProfileSupport profiler = COMMAND_PROFILE_TEST_SINGLE.equals(command) ? Lookup.getDefault().lookup(ProfileSupport.Factory.class).create() : null;
         Project prj = FileOwnerQuery.getOwner(file);
-        File jtregHome = new File(prj.getLookup().lookup(Settings.class).getJTregLocation());
-        File jtregJar = new File(new File(jtregHome, "lib"), "jtreg.jar");
-        if (!jtregJar.canRead()) {
+        String jtregLocation = prj.getLookup().lookup(Settings.class).getJTregLocation();
+        File jtregHome = jtregLocation != null ? new File(jtregLocation) : null;
+        File jtregJar = jtregHome != null ? new File(new File(jtregHome, "lib"), "jtreg.jar") : null;
+        if (jtregJar == null || !jtregJar.canRead()) {
             CustomizerProvider2 p = prj.getLookup().lookup(CustomizerProvider2.class);
             p.showCustomizer("test", null);
             return null;
@@ -631,7 +632,7 @@ public class ActionProviderImpl implements ActionProvider {
         @Messages("DESC_Stop=Stop")
         public StopAction() {
             setEnabledEQ(false);
-            putValue(SMALL_ICON, ImageUtilities.loadImageIcon("org/netbeans/modules/jdk/jtreg/resources/stop.png", true));
+            putValue(SMALL_ICON, ImageUtilities.loadImageIcon("org/netbeans/modules/java/openjdk/jtreg/resources/stop.png", true));
             putValue(SHORT_DESCRIPTION, Bundle.DESC_Stop());
         }
 
@@ -695,7 +696,7 @@ public class ActionProviderImpl implements ActionProvider {
         public ReRunAction(String command) {
             setEnabledEQ(false);
             boolean debug = COMMAND_DEBUG_TEST_SINGLE.equals(command);
-            putValue(SMALL_ICON, ImageUtilities.loadImageIcon(debug ? "org/netbeans/modules/jdk/jtreg/resources/redebug.png" : "org/netbeans/modules/jdk/jtreg/resources/rerun.png", true));
+            putValue(SMALL_ICON, ImageUtilities.loadImageIcon(debug ? "org/netbeans/modules/java/openjdk/jtreg/resources/redebug.png" : "org/netbeans/modules/java/openjdk/jtreg/resources/rerun.png", true));
             putValue(SHORT_DESCRIPTION, debug ? Bundle.DESC_ReDebug() : Bundle.DESC_ReRun());
             this.command = command;
         }

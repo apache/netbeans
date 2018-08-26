@@ -78,7 +78,7 @@ public class ClassPathProviderImpl implements ClassPathProvider {
     public ClassPathProviderImpl(JDKProject project) {
         bootCP = ClassPath.EMPTY;
         
-        File fakeJdk = InstalledFileLocator.getDefault().locate("modules/ext/fakeJdkClasses.zip", "org.netbeans.modules.jdk.project", false);
+        File fakeJdk = InstalledFileLocator.getDefault().locate("modules/ext/fakeJdkClasses.zip", "org.netbeans.modules.java.openjdk.project", false);
         URL fakeJdkURL = null;
         if (fakeJdk != null) {
             fakeJdkURL = FileUtil.urlForArchiveOrDir(fakeJdk);

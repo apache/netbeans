@@ -1,3 +1,11 @@
+Name: Taglibrary documentation for Mojarra JSF Implementation
+Version: 1.2-20
+Description: Taglibrary documentation for Reference Implementation of the JSF Specification
+License: CDDL-1.0
+Origin: Generated from taglibrary jar
+Source: https://github.com/javaserverfaces/mojarra
+Type: generated
+
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
 
 1. Definitions.

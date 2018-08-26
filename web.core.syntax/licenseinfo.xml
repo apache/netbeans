@@ -33,6 +33,24 @@
         <file>src/org/netbeans/modules/web/core/syntax/resources/ELExample</file>
         <file>src/org/netbeans/modules/web/core/syntax/resources/JSPExample</file>
         <license ref="Apache-2.0-ASF" />
-        <comment type="GUI_USABILITY"/>        
-    </fileset>   
+        <comment type="GUI_USABILITY"/>
+    </fileset>
+    <fileset>
+        <file>tlddoc/xslt/alltags-frame.html.xsl</file>
+        <file>tlddoc/xslt/alltags-noframe.html.xsl</file>
+        <file>tlddoc/xslt/function.html.xsl</file>
+        <file>tlddoc/xslt/help-doc.html.xsl</file>
+        <file>tlddoc/xslt/index.html.xsl</file>
+        <file>tlddoc/xslt/overview-frame.html.xsl</file>
+        <file>tlddoc/xslt/overview-summary.html.xsl</file>
+        <file>tlddoc/xslt/tag.html.xsl</file>
+        <file>tlddoc/xslt/tld-frame.html.xsl</file>
+        <file>tlddoc/xslt/tld-summary.html.xsl</file>
+        <file>tlddoc/xslt/tld1_1-tld1_2.xsl</file>
+        <file>tlddoc/xslt/tld1_2-tld2_0.xsl</file>
+        <file>tlddoc/xslt/tld2_0-tld2_1.xsl</file>
+        <file>tlddoc/xslt/tld2_1-tld2_1.xsl</file>
+        <license ref="BSD-tldxslt" />
+        <sourceOnly />
+    </fileset>
 </licenseinfo>

@@ -61,7 +61,7 @@
                 <include name="org/netbeans/modules/maven/event/**"/>
                 <include name="META-INF/plexus/**"/>
             </fileset>
-            <zipfileset src="../../libs.json_simple/external/json-simple-1.1.1.jar"/>
+            <zipfileset src="../../ide/libs.json_simple/external/json-simple-1.1.1.jar"/>
             <rule pattern="org.json.**" result="org.netbeans.shaded.json.@1"/>
         </jarjar>
     </target>

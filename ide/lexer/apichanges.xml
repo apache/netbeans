@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC
+	"-//NetBeans//DTD API changes list 1.0//EN"
+        "../../nbbuild/javadoctools/apichanges.dtd"
+>
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, this will be done periodically; just
+change the XML. If you can, validate the XML against the DTD, if not
+do not worry about it. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+  <!-- First, a list of API names you may use: -->
+  <apidefs>
+    <!-- org.netbeans.api.lexer -->
+    <apidef name="api">Lexer API</apidef>
+    <!-- org.netbeans.api.lexer.swing -->
+    <apidef name="swing">Lexer Swing API</apidef>
+    <!-- org.netbeans.api.lexer.embed -->
+    <apidef name="embed">Lexer Language Embedding API</apidef>
+    <!-- org.netbeans.spi.lexer -->
+    <apidef name="spi">Lexer SPI</apidef>
+  </apidefs>
+
+<!-- ACTUAL CHANGES BEGIN HERE: -->
+
+  <changes>
+  <change id="Joined-sections-Lexing">
+      <api name="api"/>
+      <summary>Joined Sections Lexing</summary>
+      <version major="1" minor="28"/>
+      <date day="28" month="5" year="2008"/>
+      <author login="mmetelka"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+        <p>
+            Embeddings that request input sections to be joined before lexing
+            are now lexed as a single section.
+            <br/>
+            <code>Token.isRemoved()</code> was added to check whether a particular token
+            is still present in token hierarchy or whether it was removed as part of a modification.
+        </p>
+      </description>
+      <issue number="117450"/>
+  </change>
+
+  <change id="Lexer-API-Cleanup">
+      <api name="api"/>
+      <summary>Lexer API Cleanup</summary>
+      <version major="1" minor="25"/>
+      <date day="5" month="11" year="2007"/>
+      <author login="mmetelka"/>
+      <compatibility source="incompatible" binary="incompatible" semantic="incompatible" deletion="yes" addition="no" modification="yes"/>
+      <description>
+        <p>
+            Support for token hierarchy snapshots and generic character preprocessing
+            was removed from the API and SPI since there were no usecases yet
+            and it should be possible to add the functionality later in a backward compatible way.
+            Some more changes regarding generification etc. were performed.
+        </p>
+      </description>
+      <issue number="120052"/>
+  </change>
+
+  <change id="LexerInput.integerState-removed">
+      <api name="api"/>
+      <summary>Removing LexerInput.integerState</summary>
+      <version major="1" minor="24"/>
+      <date day="3" month="11" year="2007"/>
+      <author login="vstejskal"/>
+      <compatibility source="incompatible" binary="incompatible" semantic="incompatible" deletion="yes" addition="no" modification="no"/>
+      <description>
+        <p>
+            <code>LexerInput.integerState()</code> was removed.
+        </p>
+      </description>
+      <issue number="88641"/>
+  </change>
+
+  <change id="TokenSequence.removeEmbedding-added">
+      <api name="api"/>
+      <summary>Possibility to remove a previously created custom embedding</summary>
+      <version major="1" minor="23"/>
+      <date day="5" month="10" year="2007"/>
+      <author login="mmetelka"/>
+      <compatibility source="compatible" deletion="no" addition="yes" modification="yes"/>
+      <description>
+        <p>
+            <code>TokenSequence.removeEmbedding()</code> was added as counterpart
+            to <code>TokenSequence.createEmbedding()</code>.
+            <br/>
+            Also <code>TokenSequence.isValid()</code> was added to check whether
+            the token sequence can be used for iteration (no modifications
+            of the underlying input in the meantime).
+        </p>
+      </description>
+      <issue number="94365"/>
+  </change>
+
+  <change id="embedding.joinSections.support">
+      <api name="api"/>
+      <summary>Support for embeddings that join sections</summary>
+      <version major="1" minor="22"/>
+      <date day="30" month="8" year="2007"/>
+      <author login="mmetelka"/>
+      <compatibility source="incompatible" deletion="yes" addition="yes" modification="no"/>
+      <description>
+        <p>
+            Joining sections embeddings now supported and some minor changes
+            were introduced like adding <code>LanguagePath.parent()</code>.
+            Some is* methods with trivial implementations were removed from LanguagePath.
+            <code>TokenChange.embeddedChange(Language)</code> was removed because
+            there might be multiple such changes and they can be gathered
+            with existing methods.
+        </p>
+      </description>
+      <issue number="87014"/>
+  </change>
+
+  <change id="api.LanguageHierarchy.embeddingPresence.added">
+      <api name="api"/>
+      <summary>Added LanguageHierarchy.embeddingPresence()</summary>
+      <version major="1" minor="21"/>
+      <date day="17" month="8" year="2007"/>
+      <author login="mmetelka"/>
+      <compatibility source="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+        <p>
+            Added <code>LanguageHierarchy.embeddingPresence()</code> method
+            and <code>EmbeddingPresence</code> enum to speed up queries
+            for embedded token sequences.
+        </p>
+      </description>
+      <issue number="112465"/>
+  </change>
+
+  <change id="api.TokenHierarchy.embeddedTokenSequences.added">
+      <api name="api"/>
+      <summary>Added TokenHierarchy.embeddedTokenSequences</summary>
+      <version major="1" minor="20"/>
+      <date day="5" month="6" year="2007"/>
+      <author login="vstejskal"/>
+      <compatibility source="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+        <p>
+            Added <code>TokenHierarchy.embeddedTokenSequences</code> method.
+        </p>
+      </description>
+  </change>
+
+  <change id="api.Language.refresh.remove">
+      <api name="api"/>
+      <summary>Removed previously added Language.refresh().</summary>
+      <version major="1" minor="19"/>
+      <date day="16" month="5" year="2007"/>
+      <author login="mmetelka"/>
+      <compatibility source="incompatible" deletion="yes" addition="no" modification="no"/>
+      <description>
+        <p>
+            Removed previously added <code>Language.refresh()</code> since
+            there is an alternative in using LanguageProvider.firePropertyChange(PROP_LANGUAGE).
+        </p>
+      </description>
+      <issue number="102435"/>
+  </change>
+
+  <change id="api.Language.refresh">
+      <api name="api"/>
+      <summary>Added Language.refresh().</summary>
+      <version major="1" minor="18"/>
+      <date day="27" month="4" year="2007"/>
+      <author login="mmetelka"/>
+      <compatibility source="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+        <p>
+            Added <code>Language.refresh()</code> to allow languages framework
+            and other clients to update contents of a language dynamically.
+        </p>
+      </description>
+      <issue number="102435"/>
+  </change>
+
+  <change id="api.TokenHierarchy.tokenSequenceList">
+      <api name="api"/>
+      <summary>Added TokenHierarchy.tokenSequenceList().</summary>
+      <version major="1" minor="17"/>
+      <date day="13" month="4" year="2007"/>
+      <author login="mmetelka"/>
+      <compatibility source="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+        <p>
+            Added <code>TokenHierarchy.tokenSequenceList()</code> to find
+            token sequences having certain language path throughout the whole input source
+            or just within given offset bounds.
+            <br/>
+            Also added <code>LanguagePath.embedded(language)</code>
+            and <code>LanguagePath.embedded(suffixLanguagePath)</code>.
+        </p>
+      </description>
+      <issue number="95569"/>
+  </change>
+
+  <change id="api.TokenChange.isBoundsChange">
+      <api name="api"/>
+      <summary>Added TokenChange.isBoundsChange().</summary>
+      <version major="1" minor="16"/>
+      <date day="23" month="3" year="2007"/>
+      <author login="mmetelka"/>
+      <compatibility source="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+        <p>
+            Added <code>TokenChange.isBoundsChange()</code> to check
+            for changes that only modify token bounds (see method's javadoc).
+            <br/>
+            Improved incrementality for embedded sections for bounds changes.
+        </p>
+      </description>
+      <issue number="93644"/>
+  </change>
+
+  <change id="api.PartType.added">
+      <api name="api"/>
+      <summary>Added PartType for token parts support</summary>
+      <version major="1" minor="14"/>
+      <date day="1" month="3" year="2007"/>
+      <author login="mmetelka"/>
+      <compatibility source="incompatible" deletion="yes" addition="yes" modification="yes"/>
+      <description>
+        <p>
+            Added <code>PartType</code> enum and <code>Token.partType()</code>
+            that identifies whether the token is COMPLETE or which part
+            of a complete token this part represents (START, INNER or END).
+        </p>
+      </description>
+      <issue number="91184"/>
+  </change>
+
+  <change id="api.tokensequence.move.semantics">
+      <api name="api"/>
+      <summary>Changed TokenSequence.move() and moveIndex() use</summary>
+      <version major="1" minor="13"/>
+      <date day="16" month="1" year="2007"/>
+      <author login="mmetelka"/>
+      <compatibility source="incompatible" deletion="yes" addition="yes" modification="yes"/>
+      <description>
+        <p>
+            Changed the <code>TokenSequence.move()</code> to position <b>before</b> the particular token
+            that "contains" the offset (or after the last token if the given offset
+            is too high). Additional <code>moveNext()</code> is necessary
+            to actually move to the next token.
+            <br/>
+            <code>TokenSequence.moveIndex()</code> was modified in a similar way
+            (see javadocs).
+            <br/>
+            <code>TokenSequence.moveFirst()</code> and <code>moveLast()</code>
+            were replaced by <code>moveStart()</code> that positionins before
+            the first token and by <code>moveEnd()</code> that positions
+            after the last token.
+            <br/>
+            <code>TokenSequence.isEmpty()</code> added to check whether there are
+            no tokens in the TS.
+        </p>
+      </description>
+      <issue number="90796"/>
+  </change>
+
+  <change id="api.lexer.release">
+      <api name="api"/>
+      <summary>Added Lexer.release()</summary>
+      <version major="1" minor="12"/>
+      <date day="7" month="12" year="2006"/>
+      <author login="mmetelka"/>
+      <compatibility source="incompatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+        <p>
+            Added <code>Lexer.release()</code> useful for lexer instances caching.
+        </p>
+      </description>
+      <issue number="89000"/>
+  </change>
+
+  <change id="api.customembedding">
+      <api name="api"/>
+      <summary>Adding custom embedding creation TokenSequence.createEmbedding()</summary>
+      <version major="1" minor="11"/>
+      <date day="23" month="11" year="2006"/>
+      <author login="mmetelka"/>
+      <compatibility source="incompatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+        <p>
+            Extracted <code>TokenHierarchyEvent.Type</code> inner class
+            into <code>TokenHierarchyEventType</code> top-level class.
+            <br/>
+            Adding <code>TokenSequence.createEmbedding()</code>
+            method for creation of a custom embedding.
+            <code>TokenHierarchyEventType.EMBEDDING</code> fired
+            after embedding creation.
+            <br/>
+            Affected offset information (<code>affectedStartOffset()</code>
+            and <code>affectedEndOffset()</code>) moved
+            from <code>TokenChange</code> to <code>TokenHierarchyEvent</code>
+            <br/>
+            There can be now more than one embedded change in a TokenChange.
+            <br/>
+            Removed <code>tokenComplete</code> parameter from
+            <code>LanguageHierarchy.embedding()</code> because the token incompletness
+            will be handled in a different way.
+            <br/>
+            Swapped order of <code>token</code> and <code>languagePath</code>
+            parameters in <code>LanguageProvider</code> to be in sync with
+            <code>LanguageHierarchy.embedding()</code>.
+            <br/>
+            <code>LanguageEmbedding</code> is now a final class
+            (instead of abstract class) with private constructor
+            and static <code>create()</code> method. That allows better control
+            over the evolution of the class and it also allows to cache the created embeddings
+            to save memory.
+            <br/>
+            <code>LanguageEmbedding</code> is now generified with the
+            <code>T extends TokenId</code> which is a generification
+            of the language which it contains.
+            <br/>
+            <code>TokenHierarchy.languagePaths()</code> set contains all language paths
+            used in the token hierarchy. <code>TokenHierarchyEventType.LANGUAGE_PATHS</code>
+            fired after change of that set.
+        </p>
+      </description>
+      <issue number="86473"/>
+  </change>
+
+  <change id="api.languageDescription.find">
+      <api name="api"/>
+      <summary>Adding LanguageDescription.find(String mimePath)</summary>
+      <version major="1" minor="10"/>
+      <date day="18" month="10" year="2006"/>
+      <author login="vstejskal"/>
+      <compatibility source="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+        <p>
+            Adding the LanguageDescription.find(String mimePath) method, which can
+            be used for looking up <code>LanguageDescription</code>s by their
+            mime types.
+        </p>
+      </description>
+  </change>
+
+  <change id="spi.languageprovider.findLanguageEmbedding">
+      <api name="spi"/>
+      <summary>LanguageProvider.findEmbeddedLanguage() changed to findLanguageEmbedding</summary>
+      <version major="1" minor="9"/>
+      <date day="12" month="10" year="2006"/>
+      <author login="vstejskal"/>
+      <compatibility source="incompatible" deletion="no" addition="no" modification="yes"/>
+      <description>
+        <p>
+            LanguageProvider.findEmbeddedLanguage() method signature was changed.
+            The method is now called findLanguageEmbedding and returns
+            LanguageEmbedding instead of just LanguageDescription.
+        </p>
+      </description>
+  </change>
+
+  <change id="generification.improved">
+      <api name="api"/>
+      <summary>Improved generification</summary>
+      <version major="1" minor="8"/>
+      <date day="11" month="10" year="2006"/>
+      <author login="mmetelka"/>
+      <compatibility source="incompatible" deletion="no" addition="no" modification="yes"/>
+      <description>
+        <p>
+            Generification of methods of LanguagePath, TokenSequence and other classes
+            has been improved.
+        </p>
+      </description>
+  </change>
+
+  <change id="api.tokensequence.move">
+      <api name="spi"/>
+      <summary>TokenSequence.moveOffset() renamed to move()</summary>
+      <version major="1" minor="7"/>
+      <date day="18" month="9" year="2006"/>
+      <author login="mmetelka"/>
+      <compatibility source="incompatible" deletion="no" addition="no" modification="yes"/>
+      <description>
+        <p>
+            TokenSequence.moveOffset() was renamed to TokenSequence.move().
+            The original TokenSequence.move() which is seldom used
+            was renamed to TokenSequence.moveIndex().
+        </p>
+      </description>
+  </change>
+
+  <change id="spi.languageprovider">
+      <api name="spi"/>
+      <summary>Added LanguageProvider</summary>
+      <version major="1" minor="6"/>
+      <date day="14" month="9" year="2006"/>
+      <author login="vstejskal"/>
+      <compatibility source="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+        <p>
+            The LanguageProvider class was added to the SPI package. It is possible
+            to register instances of this class in the default lookup. The lexer
+            module will use them to find LanguageDescriptions for documents (
+            according to their mime types) and for tokens, which contain embedded
+            language.
+        </p>
+      </description>
+  </change>
+
+  <change id="spi.tokenhandler">
+      <api name="spi"/>
+      <summary>Removed TokenIdFilter and TokenHandler</summary>
+      <version major="1" minor="5"/>
+      <date day="30" month="8" year="2006"/>
+      <author login="mmetelka"/>
+      <compatibility source="incompatible" deletion="yes" addition="yes" modification="yes"/>
+      <description>
+        <p>
+            The TokenIdFilter class was removed from the API. Instead of it
+            Set&lt;? extends TokenId&gt; should be used where appropriate.
+            <br/>
+            With the TokenFactory now being final the TokenHandler is no longer needed.
+            The few remaining overridable SPI methods were moved to LanguageHierarchy
+            and the TokenHandler class was removed.
+            <br/>
+            LanguagePath and InputAttributes parameters were added
+            to LanguageHierarchy.createLexer() (to the end of the existing
+            parameters) in order to allow the lexer to react to input attributes.
+            <br/>
+            For consistency the parameters of LanguageHierarchy.embedding()
+            were reordered so that the LanguagePath and InputAttributes parameters
+            are also at the end of the list and in the same order.
+        </p>
+      </description>
+  </change>
+
+  <change id="api.rebuild">
+      <api name="api"/>
+      <summary>Rebuilt the API and SPI completely</summary>
+      <version major="1" minor="4"/>
+      <date day="5" month="5" year="2006"/>
+      <author login="mmetelka"/>
+      <compatibility source="incompatible" deletion="yes" addition="yes" modification="yes"/>
+      <description>
+        <p>
+          The original API and SPI were <b>rebuilt completely</b> (under editor_api branch)
+          to comply with the standard requirements for the NetBeans APIs and allow
+          for better API evolution in the future.
+          <br/>
+          The major version of the lexer module was increased to 2.
+        </p>
+      </description>
+  </change>
+
+  <change id="lexerinput.getreadtext">
+      <api name="api"/>
+      <summary>Added LexerInput.getReadText() and LexerInput.isEOFLookahead()</summary>
+      <version major="1" minor="3"/>
+      <date day="16" month="5" year="2003"/>
+      <author login="mmetelka"/>
+      <compatibility addition="yes"/>
+      <description>
+          There were two methods added into <code>org.netbeans.api.lexer.LexerInput</code>:
+          <ul>
+              <li><code>LexerInput.getReadText(int start, int end)</code></li>
+              <li><code>LexerInput.isEOFLookahead()</code></li>
+          </ul>
+
+        <p>LexerInput.backup(int count) now accepts negative values too
+          to redo character backups.
+        </p>
+
+        <p>These methods are necessary for more efficient handling of the input.</p>
+
+        <p>Unfortunately this change is incompatible as the LexerInput is interface.</p>
+        
+      </description>
+  </change>
+
+  <change id="lexerinput.readlength">
+      <api name="api"/>
+      <summary>Added LexerInput.getReadLength() and LexerInput.createToken(TokenId, tokenLength)
+        and renamed TokenTextMatcher to SampleTextMatcher</summary>
+      <version major="1" minor="2"/>
+      <date day="20" month="9" year="2002"/>
+      <author login="mmetelka"/>
+      <compatibility addition="yes"/>
+      <description>
+          There were two methods added into <code>org.netbeans.api.lexer.LexerInput</code>:
+          <ul>
+              <li><code>LexerInput.getReadLength()</code></li>
+              <li><code>LexerInput.createToken(TokenId id, int tokenLength)</code></li>
+          </ul>
+          These methods are necessary for efficient support of the Antlr lexers.
+          <br></br>Unfortunately this change is incompatible as the LexerInput
+          is interface.
+        
+        <p>
+          The <code>TokenTextMatcher</code> was renamed to <code>SampleTextMatcher</code>
+          which should be better name than the original one. Documentation was also updatged.
+          It should be now more clear that there can be zero or more samples for the text
+          of each token and that the <code>SampleTextMatcher</code> encapsulates
+          the given samples and can check whether the token's text matches one of them.
+        </p>
+      </description>
+  </change>
+
+  <change id="api.lexer.swing">
+      <api name="swing"/>
+      <summary>Added swing subpackage to API</summary>
+      <version major="1" minor="1"/>
+      <date day="20" month="9" year="2002"/>
+      <author login="mmetelka"/>
+      <compatibility addition="yes"/>
+      <description>
+        <p>
+          That API subpackage will contain swing-related API of the lexer
+          in the org.netbeans.api.lexer.swing package.
+          <br></br>I have removed Language.find(String mimeType) - it never worked.
+          <br></br>I have added Language.getValidId(int intId).
+
+          <br></br>The whole API and implementation was moved from libsrc
+          to src (libsrc is now abandoned) in order to better adhere
+          to module conventions.
+        </p>
+      </description>
+  </change>
+
+  </changes>
+
+  <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <======================
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE lexer/api/doc/changes/apichanges.xml
+
+-->
+    <head>
+      <title>Lexer API Changes by Date</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+      <meta name="CATEGORY" content="OtherDevelopmentDoc"/>
+      <meta name="DESCRIPTION" content="A cross-indexed list of all changes made to the Lexer API."/>
+    </head>
+    <body>
+
+<h1>Introduction</h1>
+
+<h2>What do the Dates Mean?</h2>
+
+<p>The supplied dates indicate when the API change was made, on the CVS
+trunk. From this you can generally tell whether the change should be
+present in a given build or not; for trunk builds, simply whether it
+was made before or after the change; for builds on a stabilization
+branch, whether the branch was made before or after the given date. In
+some cases corresponding API changes have been made both in the trunk
+and in an in-progress stabilization branch, if they were needed for a
+bug fix; this ought to be marked in this list.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+
+      <hr/><standard-changelists module-code-name="org.netbeans.modules.lexer/1"/>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

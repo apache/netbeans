@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!-- INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, this will be done periodically; just
+change the XML. If you can, validate the XML against the DTD, if not
+do not worry about it. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+  <!-- First, a list of API names you may use: -->
+  <apidefs>
+    <!-- Probably should not be used much: -->
+    <apidef name="general">XML tools API</apidef>
+    <apidef name="cookies">Cookies API</apidef>
+    <apidef name="services">XML Services</apidef>
+    <apidef name="parsers">Parsers Integration API</apidef>
+    <apidef name="cookies-spi">Cookies SPI</apidef>
+    <apidef name="services-spi">XML Services SPI</apidef>
+    <apidef name="utils-spi">Utilities SPI</apidef>
+  </apidefs>
+
+<!-- ACTUAL CHANGES BEGIN HERE: -->
+
+  <changes>
+
+    <change>
+        <api name="cookies"/>
+        <summary>Split api.xml into api.xml and api.xml.ui</summary>
+        <version major="1" minor="41"/>
+        <date day="5" month="9" year="2014"/>
+        <author login="tzezula"/>
+        <compatibility binary="compatible" source="compatible"/>
+        <description>
+            The <code>org.netbeans.api.xml.cookies</code> and the
+            <code>org.netbeans.spi.xml.cookies</code> packages were moved into
+            a new module <code>api.xml.ui</code>.
+        </description>
+    </change>
+    <change>
+        <api name="utils-spi"/>
+        <summary>AbstractUtil class removed.</summary>
+        <version major="1" minor="0"/>
+        <date day="19" month="7" year="2002"/>
+        <author login="pkuzel"/>
+        <compatibility deletion="yes"/>
+        <description>Removed class <code>AbstractUtil</code> because it
+        was not XML specifics. It should go to some general utility API such
+        us OpenIDE util.
+        </description>
+    </change>
+
+    <change>
+        <api name="cookies-spi"/>
+        <summary>DataObjectAdapters' methods don't throw IOException.</summary>
+        <version major="0" minor="10"/>
+        <date day="17" month="6" year="2002"/>
+        <author login="lkramolis"/>
+        <compatibility deletion="yes"/>
+        <description>
+        <code>DataObjectAdapters</code>' methods <code>inputSource</code> and
+        <code>source</code> do not throw <code>IOException</code> any more.
+        </description>
+    </change>
+    
+    <change id="cookie-generalization">
+        <api name="cookies-spi"/>
+        <summary>Cookie supports take more general arguments.</summary>
+        <version major="0" minor="9"/>
+        <date day="5" month="6" year="2002"/>
+        <author login="pkuzel"/>
+        <compatibility deletion="yes" addition="yes"/>
+        <description>
+        All references to <code>DataObject</code> from support classes were
+        replaced by <code>InputSource</code> or <code>Source</code> respectively.
+        New class <code>DataObjectAdapters</code> was introduced to simplify
+        providers.
+        </description>
+    </change>
+    
+    <change>
+        <api name="services"/>
+        <summary>UserCatalog context parameters removed</summary>
+        <version major="0" minor="9"/>
+        <date day="5" month="6" year="2002"/>
+        <author login="pkuzel"/>
+        <compatibility deletion="yes" addition="yes"/>
+        <description>
+        It can be introduced anytime as <code>getDefault(Lookup ctx)</code>
+        method. Now it is not needed, there are no clients until new projects
+        scope lookups will be introduced.
+        </description>
+    </change>
+  
+    <change>
+        <api name="cookies"/>
+        <summary>Cookie message made standalone and immutable.</summary>
+        <version major="0" minor="8"/>
+        <date day="5" month="6" year="2002"/>
+        <author login="pkuzel"/>
+        <compatibility deletion="yes" addition="yes"/>
+        <description>
+        <code>CookieObserver.Message</code> static inner replaced by standalone
+        <code>CookieObserver</code> class. New class is immutable.
+        </description>
+    </change>
+  
+    <change id="UserCatalogProvider">
+        <api name="services-spi"/>
+        <summary>UserCatalogProvider removed.</summary>
+        <version major="0" minor="7"/>
+        <date day="31" month="5" year="2002"/>
+        <author login="pkuzel"/>
+        <compatibility deletion="yes" />
+        <description>It contained only JavaDoc that was invalidated
+        by <code>UserCatalog</code> contextualization.
+        </description>
+    </change>
+  
+    <change>
+        <api name="services"/>
+        <summary>UserCatalog contextualized.</summary>
+        <version major="0" minor="7"/>
+        <date day="31" month="5" year="2002"/>
+        <author login="pkuzel"/>
+        <compatibility deletion="yes" addition="yes"/>
+        <description>All methods of <code>UserCatalog</code> takes context
+        parameter.
+        </description>
+    </change>
+  
+    <change id="message-subclass">
+        <api name="cookies-spi"/>
+        <summary>Default message subclass replaced by default detail.</summary>
+        <version major="0" minor="5"/>
+        <date day="23" month="5" year="2002"/>
+        <author login="pkuzel"/>
+        <compatibility deletion="yes" addition="yes"/>
+        <description>
+        <code>DefaultXMLProcessorMessage</code> replaced by
+        <code>DefaultXMLProcessorDetail</code>.
+        </description>
+    </change>
+
+    <change>
+        <api name="parsers"/>
+        <summary>SAXEntityParser method renamed.</summary>
+        <version major="0" minor="6"/>
+        <date day="27" month="5" year="2002"/>
+        <author login="pkuzel"/>
+        <compatibility deletion="yes" addition="yes"/>
+        <description>Method <code>createInputSource</code> renamed to
+        <code>wrapInputSource</code> taking one parameter.
+        </description>
+    </change>
+      
+    <change id="Message-structuring">
+        <api name="cookies"/>
+        <summary>Message structuring system improved.</summary>
+        <version major="0" minor="5"/>
+        <date day="23" month="5" year="2002"/>
+        <author login="pkuzel"/>
+        <compatibility deletion="yes" addition="yes"/>
+        <description>Discontinued to support subclassing based message
+        structuring and replaced by new <code>addDetail</code> and
+        <code>getDetail</code> methods. <code>CookieObserver.Message</code>
+        turned into non-abstarct class.
+        <code>XMLProcessorMessage</code> replaced by
+        <code>XMLProcessorDetail</code>.
+        </description>
+    </change>
+
+    <change id="UsersCatalog">
+        <api name="services"/>
+        <summary>UsersCatalog renamed.</summary>
+        <version major="0" minor="5"/>
+        <date day="23" month="5" year="2002"/>
+        <author login="pkuzel"/>
+        <compatibility deletion="yes" addition="yes"/>
+        <description>Renamed <code>UsersCatalog</code> to 
+        <code>UserCatalog</code> as original name have not
+        been understood as <i>User's</i>.
+        </description>
+    </change>
+            
+    <change>
+        <api name="services-spi"/>
+        <summary>UsersCatalogProvider renamed.</summary>
+        <version major="0" minor="5"/>
+        <date day="23" month="5" year="2002"/>
+        <author login="pkuzel"/>
+        <compatibility deletion="yes" addition="yes"/>
+        <description>Renamed <code>UsersCatalogProvider</code> to 
+        <code>UserCatalogProvider</code> as original name have not
+        been understood as <i>User's</i>.
+        </description>
+    </change>
+  
+    <change>
+        <api name="utils-spi"/>
+        <summary>AbstractUtil class introduced.</summary>
+        <version major="0" minor="4"/>
+        <date day="6" month="5" year="2002"/>
+        <author login="lkramolis"/>
+        <compatibility addition="yes"/>
+        <description>Introduced new class <code>AbstractUtil</code> which is
+        used just for debugging and string localizing purposes.
+        </description>
+    </change>
+
+    <change id="default-XMLProcessorMessage">
+        <api name="cookies-spi"/>
+        <summary>Default implementation of XMLProcessorMessage provided.</summary>
+        <version major="0" minor="3"/>
+        <date day="1" month="5" year="2002"/>
+        <author login="pkuzel"/>
+        <compatibility addition="yes" />
+        <description>
+        <code>DafaultXMLProcessorMessage</code> introduced.
+        </description>
+    </change>
+  
+    <change id="cookie-callback-change">
+        <api name="cookies"/>
+        <summary>Cookie callback interface changed.</summary>
+        <version major="0" minor="3"/>
+        <date day="1" month="5" year="2002"/>
+        <author login="pkuzel"/>
+        <compatibility addition="yes" />
+        <description>
+        <code>CookieObserver</code> and <code>XMLProcessorMessage</code> introduced.
+        </description>
+    </change>
+  
+    <change>
+        <api name="parsers"/>
+        <summary>Cookie callback interface changed.</summary>
+        <version major="0" minor="3"/>
+        <date day="1" month="5" year="2002"/>
+        <author login="pkuzel"/>
+        <compatibility deletion="yes" />
+        <description>
+        <code>ProcessorListener</code> removed.
+        It is moved to cookies as <code>CookieObserver</code>.
+        </description>
+    </change>
+  
+    <change id="SourceResolver">
+        <api name="services-spi"/>
+        <summary>SourceResolver replaced by UsersCatalog</summary>
+        <version major="0" minor="2"/>
+        <date day="30" month="4" year="2002"/>
+        <author login="pkuzel"/>
+        <compatibility addition="yes" />
+        <description>
+        <code>UsersCatalogProvider</code> introduced to express what is role of 
+        SPI and what is client API.
+        </description>
+    </change>
+  
+    <change>
+        <api name="services"/>
+        <summary>SourceResolver replaced by UsersCatalog</summary>
+        <version major="0" minor="2"/>
+        <date day="30" month="4" year="2002"/>
+        <author login="pkuzel"/>
+        <compatibility addition="yes" deletion="yes" />
+        <description><code>SourceResolver</code> was not well evolvable.
+        <code>UsersCatalog</code> is a wrapper class consisting of set of
+        methods each of them is by default implemented to indicate that
+        its functionality is not provided by the default implementation.        
+        </description>
+    </change>
+  
+    <change>
+        <api name="general"/>
+        <summary>First version and request for API/SPI review.</summary>
+        <version major="0" minor="1"/>
+        <date day="26" month="4" year="2002"/>
+        <author login="pkuzel"/>
+        <compatibility addition="yes"/>
+        <description><p>Minimal XML tools API subset seems to be found. Asked
+        API gurus and <code>dev@openide.netbeans.org</code>code> for its review.
+        </p>
+        <p>The minimal subset consists of:</p>
+        <ul>
+          <li>CheckXML, ValidateXML and Transformable cookies</li>
+          <li>User's entity catalog service interface</li>
+          <li>XML processors integration API</li>
+          <li>Cookie providers support</li>
+        </ul>
+        </description>
+    </change>
+
+  </changes>
+
+  <!-- Now the surrounding HTML text and document structure: -->
+
+  <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <======================
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE xml/api/doc/changes/apichanges.xml
+
+-->
+    <head>
+      <title>XML Tools API Changes by Date</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+      <meta name="CATEGORY" content="OtherDevelopmentDoc"/>
+      <meta name="DESCRIPTION" content="A cross-indexed list of all changes made to the NetBeans XML tools APIs."/>
+    </head>
+    <body>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the <a href="index.html">XML tools
+APIs</a>. Please ask on the <code>dev@xml.netbeans.org</code> or <code>nbdev@netbeans.org</code>
+mailing list if you have any questions about the details of a
+change, or are wondering how to convert existing code to be compatible.
+Ask there also for new backward compatible API enhancements.</p>
+
+<h1>Changes Listings</h1>
+<p>No incompatible changes following version "1.0" should be introduced.</p>
+
+      <hr/><standard-changelists module-code-name="org.netbeans.api.xml/1"/>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

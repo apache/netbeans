@@ -805,17 +805,31 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
     }
 
     protected final CaseTree rewriteChildren(CaseTree tree) {
-	ExpressionTree pat = (ExpressionTree)translate(tree.getExpression());
-	List<? extends StatementTree> stats = translate(tree.getStatements());
-	if (pat!=tree.getExpression() || !stats.equals(tree.getStatements())) {
-            if (stats != tree.getStatements())
-                stats = optimize(stats);
-	    CaseTree n = make.Case(pat, stats);
-            model.setType(n, model.getType(tree));
-	    copyCommentTo(tree,n);
-            copyPosTo(tree,n);
-	    tree = n;
-	}
+        Tree body = copy.getTreeUtilities().getBody(tree);
+        List<? extends ExpressionTree> expressions = copy.getTreeUtilities().getExpressions(tree);
+        if (body == null) {
+            List<? extends ExpressionTree> pats = translate(expressions);
+            List<? extends StatementTree> stats = translate(tree.getStatements());
+            if (!pats.equals(expressions) || !stats.equals(tree.getStatements())) {
+                if (stats != tree.getStatements())
+                    stats = optimize(stats);
+                CaseTree n = make.Case(pats, stats);
+                model.setType(n, model.getType(tree));
+                copyCommentTo(tree,n);
+                copyPosTo(tree,n);
+                tree = n;
+            }
+        } else {
+            List<? extends ExpressionTree> pats = translate(expressions);
+            Tree nueBody = translate(body);
+            if (!pats.equals(expressions) || body != nueBody) {
+                CaseTree n = make.Case(pats, nueBody);
+                model.setType(n, model.getType(tree));
+                copyCommentTo(tree,n);
+                copyPosTo(tree,n);
+                tree = n;
+            }
+        }
 	return tree;
     }
 

@@ -84,6 +84,7 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Names;
+import java.lang.reflect.Method;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -1999,5 +2000,32 @@ public final class TreeUtilities {
                 return parseStatementImpl(task, stmt, sourcePositions);
             }
         });
+    }
+    
+    public List<? extends ExpressionTree> getExpressions(CaseTree node) {
+        try {
+            Method getExpressions = CaseTree.class.getDeclaredMethod("getExpressions");
+            return (List<? extends ExpressionTree>) getExpressions.invoke(node);
+        } catch (NoSuchMethodException ex) {
+            return Collections.singletonList(node.getExpression());
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw this.<RuntimeException>throwAny(ex);
+        }
+    }
+    
+    public Tree getBody(CaseTree node) {
+        try {
+            Method getBody = CaseTree.class.getDeclaredMethod("getBody");
+            return (Tree) getBody.invoke(node);
+        } catch (NoSuchMethodException ex) {
+            return null;
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw this.<RuntimeException>throwAny(ex);
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+    private <T extends Throwable> RuntimeException throwAny(Throwable t) throws T {
+        throw (T) t;
     }
 }

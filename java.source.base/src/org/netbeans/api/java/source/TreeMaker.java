@@ -242,6 +242,29 @@ public final class TreeMaker {
     }
     
     /**
+     * Creates a new CaseTree.
+     *
+     * @param patterns the label for this case statement.
+     * @param statements the list of statements.
+     * @see com.sun.source.tree.CaseTree
+     */
+    //XXX: source incompatible:
+    public CaseTree Case(List<? extends ExpressionTree> patterns, List<? extends StatementTree> statements) {
+        return delegate.Case(patterns, statements);
+    }
+    
+    /**
+     * Creates a new CaseTree.
+     *
+     * @param expression XXX
+     * @param statements XXX
+     * @see com.sun.source.tree.CaseTree
+     */
+    public CaseTree Case(List<? extends ExpressionTree> patterns, Tree body) {
+        return delegate.Case(patterns, body);
+    }
+    
+    /**
      * Creates a new CatchTree.
      *
      * @param parameter the exception variable declaration.

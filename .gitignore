@@ -1,13 +1,23 @@
 /*/build/
 /*/nbproject/private/
+/*/*/nbproject/private/
 /*/*/build/
 /*/*/dist/
+/*/*/*/nbproject/private/
+/*/*/*/build/
+/*/*/*/dist/
 /*/external/*.zip
 /*/external/*.jar
 /*/external/*.dll
 /*/external/*.exe
 /*/external/*.js
 /*/external/*/**
+/*/*/external/*.zip
+/*/*/external/*.jar
+/*/*/external/*.dll
+/*/*/external/*.exe
+/*/*/external/*.js
+/*/*/external/*/**
 /nbbuild/netbeans/
 /nbbuild/nbms/
 /nbbuild/testuserdir/
@@ -16,19 +26,27 @@
 /nbi/engine/native/*/*/dist/
 /nb-javac/
 /java.source.nbjavac/test/test-nb-javac/nbproject/private/
+/apisupport.harness/windows-launcher-src/*.exe
+/apisupport.harness/windows-launcher-src/*.res
+/ide/launcher/windows/*.exe
+/ide/launcher/windows/*.res
+/o.n.bootstrap/launcher/windows/*.dll
+/o.n.bootstrap/launcher/windows/*.exe
+/o.n.bootstrap/launcher/windows/*.res
+
 
 # OS generated files #
 ######################
 .DS_Store
 
 #the following should only be transient, until resolved more appropriately:
-/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/JavaCharStream.java
-/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/ParseException.java
-/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/SQLParser.java
-/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/SQLParserConstants.java
-/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/SQLParserTokenManager.java
-/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/Token.java
-/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/TokenMgrError.java
+/ide/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/JavaCharStream.java
+/ide/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/ParseException.java
+/ide/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/SQLParser.java
+/ide/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/SQLParserConstants.java
+/ide/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/SQLParserTokenManager.java
+/ide/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/Token.java
+/ide/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/TokenMgrError.java
 /debugger.jpda.ui/test/qa-functional/data/debugTestProject/nbproject/private/
 /debugger.jpda.ui/test/qa-functional/data/debugTestProjectAnt/nbproject/private/
 /hibernate/src/org/netbeans/modules/hibernate/resources/hibernate-configuration-3.0.dtd

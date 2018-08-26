@@ -56,12 +56,6 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.modules.php.phpdoc.documentation</code-name-base>
-                    <run-dependency>
-                        <specification-version>0.11</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.netbeans.modules.php.project</code-name-base>
                     <run-dependency>
                         <specification-version>2.54</specification-version>

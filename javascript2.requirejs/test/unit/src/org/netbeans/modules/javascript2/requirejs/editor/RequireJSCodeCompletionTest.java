@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
+import org.netbeans.junit.RandomlyFails;
 import org.netbeans.modules.javascript2.editor.JsCodeCompletionBase;
 import static org.netbeans.modules.javascript2.editor.JsTestBase.JS_SOURCE_ID;
 import org.netbeans.modules.javascript2.requirejs.RequireJsPreferences;
@@ -73,6 +74,7 @@ public class RequireJSCodeCompletionTest extends JsCodeCompletionBase {
 
     }
 
+    @RandomlyFails
     public void testObjectLiteral01() throws Exception {
         checkCompletion("TestProject1/js/folder1/usingObjectLiteral.js", "   ob.ol1^", false);
     }

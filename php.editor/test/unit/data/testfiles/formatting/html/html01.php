@@ -1,8 +1,8 @@
 <?php
-if ($fail_count > 0) {
+if ($a == 1) {
 ?>
-    <p><?php _e('All Akismet servers are available.'); ?></p>
-    <p><?php _e('Akismet is working correctly.  All servers are accessible.'); ?></p>
+     <p><?php echo "This is a test." ?></p>
+       <p><?php echo "This is a test." ?></p>
 <?php
 }
 ?>

@@ -94,7 +94,8 @@ change of the file headers to Apache. But then the magic comes:
 ```bash
 $ git remote add emilian https://github.com/emilianbold/netbeans-releases.git
 $ git fetch emilian # this takes a while, the history is huge!
-$ git replace 6daa72c98 32042637
+$ git replace 6daa72c98 32042637 # the 1st donation
+$ git replace 6035076ee 32042637 # the 2nd donation
 ```
 
 When you search the log, or use the blame tool, the full history is available:

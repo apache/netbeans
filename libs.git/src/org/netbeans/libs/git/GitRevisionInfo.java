@@ -173,9 +173,8 @@ public final class GitRevisionInfo {
     }
     
     private void listFiles() throws GitException {
-        RevWalk revWalk = new RevWalk(repository);
-        TreeWalk walk = new TreeWalk(repository);
-        try {
+        try (TreeWalk walk = new TreeWalk(repository);
+             RevWalk revWalk = new RevWalk(repository)) {
             List<GitFileInfo> result;
             walk.reset();
             walk.setRecursive(true);
@@ -206,9 +205,6 @@ public final class GitRevisionInfo {
             this.modifiedFiles = result.toArray(new GitFileInfo[result.size()]);
         } catch (IOException ex) {
             throw new GitException(ex);
-        } finally {
-            revWalk.release();
-            walk.release();
         }
     }
 

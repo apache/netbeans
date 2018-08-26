@@ -1,0 +1,2 @@
+OpenIDE-Module: org.slf4j.api
+OpenIDE-Module-Specification-Version: 1.7.2

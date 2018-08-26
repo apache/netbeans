@@ -204,9 +204,9 @@ public class ExportDiffTest extends AbstractGitTestCase {
             assertEquals("Missing blob 7b34a309b8dbae2686c9e597efef28a612e48aff", ex.getMessage());
         } finally {
             if (or != null) {
-                or.release();
+                or.close();
             }
-            formatter.release();
+            formatter.close();
         }
         
     }

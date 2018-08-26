@@ -57,7 +57,7 @@ public class SetUpstreamBranchCommand extends GitCommand {
         Repository repository = getRepository();
         
         try {
-            Ref ref = repository.getRef(trackedBranchName);
+            Ref ref = repository.findRef(trackedBranchName);
             if (ref == null) {
                 throw new GitException(MessageFormat.format(Utils.getBundle(SetUpstreamBranchCommand.class)
                         .getString("MSG_Error_UpdateTracking_InvalidReference"), trackedBranchName)); //NOI18N)

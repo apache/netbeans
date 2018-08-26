@@ -23,7 +23,7 @@ package org.netbeans.libs.git.jgit;
  *
  * @author ondra
  */
-public class IgnoreRule extends org.eclipse.jgit.ignore.IgnoreRule {
+public class IgnoreRule extends org.eclipse.jgit.ignore.FastIgnoreRule {
 
     private final String pattern;
     private final String noNegationPattern;

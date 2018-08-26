@@ -96,7 +96,7 @@ public class CheckoutRevisionCommand extends GitCommand {
     protected void run () throws GitException {
         Repository repository = getRepository();
         try {
-            Ref headRef = repository.getRef(Constants.HEAD);
+            Ref headRef = repository.findRef(Constants.HEAD);
             if (headRef == null) {
                 throw new GitException("Corrupted repository, missing HEAD file in .git folder.");
             }
@@ -104,7 +104,7 @@ public class CheckoutRevisionCommand extends GitCommand {
             try {
                 headTree = Utils.findCommit(repository, Constants.HEAD).getTree();
             } catch (GitException.MissingObjectException ex) { }
-            Ref ref = repository.getRef(revision);
+            Ref ref = repository.findRef(revision);
             if (ref != null && !ref.getName().startsWith(Constants.R_HEADS) && !ref.getName().startsWith(Constants.R_REMOTES)) {
                 ref = null;
             }
@@ -241,10 +241,9 @@ public class CheckoutRevisionCommand extends GitCommand {
 
     private void cacheContents (List<String> conflicts) throws IOException {
         File workTree = getRepository().getWorkTree();
-        ObjectInserter inserter = getRepository().newObjectInserter();
         WorkingTreeOptions opt = getRepository().getConfig().get(WorkingTreeOptions.KEY);
         boolean autocrlf = opt.getAutoCRLF() != CoreConfig.AutoCRLF.FALSE;
-        try {
+        try (ObjectInserter inserter = getRepository().newObjectInserter()) {
             for (String path : conflicts) {
                 File f = new File(workTree, path);
                 Path p = null;
@@ -269,22 +268,19 @@ public class CheckoutRevisionCommand extends GitCommand {
                 }
             }
             inserter.flush();
-        } finally {
-            inserter.release();
         }
     }
 
     private void mergeConflicts (List<String> conflicts, DirCache cache) throws GitException {
         DirCacheBuilder builder = cache.builder();
         DirCacheBuildIterator dci = new DirCacheBuildIterator(builder);
-        TreeWalk walk = new TreeWalk(getRepository());
         ObjectDatabase od = null;
         DiffAlgorithm.SupportedAlgorithm diffAlg = getRepository().getConfig().getEnum(
                         ConfigConstants.CONFIG_DIFF_SECTION, null,
                         ConfigConstants.CONFIG_KEY_ALGORITHM,
                         DiffAlgorithm.SupportedAlgorithm.HISTOGRAM);
         MergeAlgorithm merger = new MergeAlgorithm(DiffAlgorithm.getAlgorithm(diffAlg));
-        try {
+        try (TreeWalk walk = new TreeWalk(getRepository())) {
             od = getRepository().getObjectDatabase();
             walk.addTree(dci);
             walk.setFilter(PathFilterGroup.create(Utils.getPathFilters(conflicts)));
@@ -310,7 +306,6 @@ public class CheckoutRevisionCommand extends GitCommand {
         } catch (IOException ex) {
             throw new GitException(ex);
         } finally {
-            walk.release();
             if (od != null) {
                 od.close();
             }

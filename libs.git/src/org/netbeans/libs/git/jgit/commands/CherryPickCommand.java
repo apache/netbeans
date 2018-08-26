@@ -54,7 +54,6 @@ import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.WorkingTreeIterator;
 import org.eclipse.jgit.util.IO;
-import org.eclipse.jgit.util.io.SafeBufferedOutputStream;
 import org.netbeans.libs.git.GitCherryPickResult;
 import org.netbeans.libs.git.GitClient;
 import org.netbeans.libs.git.GitException;
@@ -388,7 +387,7 @@ public class CherryPickCommand extends GitCommand {
     }
 
     private void writeFile (File file, ObjectId id) throws IOException {
-        try (BufferedOutputStream bos = new SafeBufferedOutputStream(new FileOutputStream(file))) {
+        try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file))) {
             id.copyTo(bos);
             bos.write('\n');
         }
@@ -432,8 +431,10 @@ public class CherryPickCommand extends GitCommand {
                                 treeWalk.getTree(T_OURS, CanonicalTreeParser.class),
                                 treeWalk.getTree(T_THEIRS, CanonicalTreeParser.class),
                                 treeWalk.getTree(T_INDEX, DirCacheBuildIterator.class),
-                                hasWorkingTreeIterator ? treeWalk.getTree(T_FILE,
-                                                WorkingTreeIterator.class) : null, ignoreConflicts)) {
+                                hasWorkingTreeIterator ? treeWalk.getTree(T_FILE, WorkingTreeIterator.class)
+                                                       : null,
+                                ignoreConflicts,
+                                null)) {
                             ok = false;
                         }
                         if (treeWalk.isSubtree() && enterSubtree) {

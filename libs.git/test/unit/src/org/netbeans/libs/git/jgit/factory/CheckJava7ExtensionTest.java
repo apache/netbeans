@@ -45,7 +45,7 @@ public class CheckJava7ExtensionTest extends AbstractGitTestCase {
         Field f = FS.class.getDeclaredField("factory");
         f.setAccessible(true);
         FSFactory fact = (FSFactory) f.get(FS.class);
-        assertEquals("org.eclipse.jgit.util.Java7FSFactory", fact.getClass().getName());
+        assertEquals("org.eclipse.jgit.util.FSFactory", fact.getClass().getName());
     }
     
 }

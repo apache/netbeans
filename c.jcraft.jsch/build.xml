@@ -28,7 +28,7 @@
             <manifest>
                 <attribute name="Bundle-SymbolicName" value="com.jcraft.jsch"/>
                 <attribute name="Bundle-Version" value="0.1.54"/>
-                <attribute name="Export-Package" value="com.jcraft.jsch"/>
+                <attribute name="Export-Package" value="com.jcraft.jsch;version=0.1.54"/>
                 <attribute name="Import-Package" value="javax.crypto,javax.crypto.spec,javax.crypto.interfaces,org.ietf.jgss"/>
                 <attribute name="Require-Bundle" value="com.jcraft.jzlib"/>
                 <attribute name="NB-Original-CRC" value="${c.jcraft.jsch.crc32}"/>

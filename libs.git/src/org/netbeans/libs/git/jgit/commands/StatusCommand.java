@@ -110,8 +110,7 @@ public class StatusCommand extends GitCommand {
         Repository repository = getRepository();
         try {
             DirCache cache = repository.readDirCache();
-            ObjectReader od = repository.newObjectReader();
-            try {
+            try (ObjectReader od = repository.newObjectReader()) {
                 String workTreePath = repository.getWorkTree().getAbsolutePath();
                 Collection<PathFilter> pathFilters = Utils.getPathFilters(repository.getWorkTree(), roots);
                 ObjectId commitId = Utils.parseObjectId(repository, revision);
@@ -263,7 +262,6 @@ public class StatusCommand extends GitCommand {
                 handleConflict(conflicts, workTreePath);
                 handleSymlink(symLinks, workTreePath);
             } finally {
-                od.release();
                 cache.unlock();
             }
         } catch (CorruptObjectException ex) {
@@ -279,8 +277,7 @@ public class StatusCommand extends GitCommand {
 
     private Map<String, DiffEntry> detectRenames (Repository repository, DirCache cache, ObjectId commitId) {
         List<DiffEntry> entries;
-        TreeWalk treeWalk = new TreeWalk(repository);
-        try {
+        try (TreeWalk treeWalk = new TreeWalk(repository)) {
             treeWalk.setRecursive(true);
             treeWalk.reset();
             if (commitId != null) {
@@ -297,8 +294,6 @@ public class StatusCommand extends GitCommand {
             entries = d.compute();
         } catch (IOException ex) {
             entries = Collections.<DiffEntry>emptyList();
-        } finally {
-            treeWalk.release();
         }
         Map<String, DiffEntry> renames = new HashMap<String, DiffEntry>();
         for (DiffEntry e : entries) {

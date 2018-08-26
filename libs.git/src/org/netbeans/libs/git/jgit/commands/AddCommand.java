@@ -86,9 +86,8 @@ public class AddCommand extends GitCommand {
         Repository repository = getRepository();
         try {
             DirCache cache = null;
-            ObjectInserter inserter = repository.newObjectInserter();
-            ObjectReader or = repository.newObjectReader();
-            try {
+            try (ObjectReader or = repository.newObjectReader();
+                 ObjectInserter inserter = repository.newObjectInserter()) {
                 cache = repository.lockDirCache();
                 DirCacheBuilder builder = cache.builder();
                 TreeWalk treeWalk = new TreeWalk(repository);
@@ -179,8 +178,6 @@ public class AddCommand extends GitCommand {
                     builder.commit();
                 }
             } finally {
-                inserter.release();
-                or.release();
                 if (cache != null ) {
                     cache.unlock();
                 }

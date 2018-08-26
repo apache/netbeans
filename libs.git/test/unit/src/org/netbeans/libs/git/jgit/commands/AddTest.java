@@ -429,7 +429,7 @@ public class AddTest extends AbstractGitTestCase {
                 assertEquals("Input did not match supplied length. 10000 bytes are missing.", ex.getMessage());
             } finally {
                 in.close();
-                inserter.release();
+                inserter.close();
             }
             break;
         }
@@ -547,7 +547,7 @@ public class AddTest extends AbstractGitTestCase {
         assertTrue(reader.has(e2.getObjectId()));
         bytes = reader.open(e2.getObjectId()).getBytes();
         assertEquals(path, RawParseUtils.decode(bytes));
-        reader.release();
+        reader.close();
     }
     
     public void testAddMissingSymlink () throws Exception {
@@ -568,7 +568,7 @@ public class AddTest extends AbstractGitTestCase {
         assertTrue(reader.has(e.getObjectId()));
         byte[] bytes = reader.open(e.getObjectId()).getBytes();
         assertEquals(path, RawParseUtils.decode(bytes));
-        reader.release();
+        reader.close();
     }
     
     public void testAdd_243092 () throws Exception {

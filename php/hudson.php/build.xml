@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="hudson.php">
+<project basedir="." default="build" name="php/hudson.php">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

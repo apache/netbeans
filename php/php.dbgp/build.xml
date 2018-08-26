@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="php.dbgp">
+<project basedir="." default="build" name="php/php.dbgp">
     <description>Builds, tests, and runs the project org.netbeans.modules.php.dbgp</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

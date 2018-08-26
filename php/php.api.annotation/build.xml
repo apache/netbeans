@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="php.api.annotation">
+<project basedir="." default="build" name="php/php.api.annotation">
     <description>Builds, tests, and runs the project org.netbeans.modules.php.api.annotation</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

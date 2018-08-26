@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="php.refactoring">
+<project basedir="." default="build" name="php/php.refactoring">
     <description>Builds, tests, and runs the project org.netbeans.modules.php.refactoring</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

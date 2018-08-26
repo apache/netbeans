@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="php.api.phpmodule">
+<project basedir="." default="build" name="php/php.api.phpmodule">
     <description>Builds, tests, and runs the project org.netbeans.modules.php.api.phpmodule</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

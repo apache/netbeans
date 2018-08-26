@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="php.symfony2">
+<project basedir="." default="build" name="php/php.symfony2">
     <description>Builds, tests, and runs the project org.netbeans.modules.php.symfony2</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

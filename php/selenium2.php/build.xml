@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="selenium2.php">
+<project basedir="." default="build" name="php/selenium2.php">
     <description>Builds, tests, and runs the project org.netbeans.modules.selenium2.php</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

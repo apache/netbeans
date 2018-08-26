@@ -1,12 +1,12 @@
 Name: Open JavaFX
-Description: Sources of the master/rt repository of openjfx
-Version: 8
+Description: APIs of JavaFX
+Version: 13.03
 License: GPL-2-CP
-Source: file://openjfx-master-rt-8.zip
+Files: lib-javafx-13.03-beta.nbm
 Origin: OpenJDK
 URL: http://hg.openjdk.java.net/openjfx/8/master/rt/
 Type: compile-time
-Comment: Allows to build code leveraging OpenJavaFX on JDKs that don't contain OpenJavaFX.
+Comment: Allows to build code leveraging JavaFX on JDKs that don't contain JavaFX.
 
 The GNU General Public License (GPL)
 Version 2, June 1991

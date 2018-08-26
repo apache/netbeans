@@ -17,6 +17,7 @@
 /*/*/external/*.dll
 /*/*/external/*.exe
 /*/*/external/*.js
+/*/*/external/*.nbm
 /*/*/external/*/**
 /nbbuild/netbeans/
 /nbbuild/nbms/

@@ -515,9 +515,9 @@ public final class MainWindow {
                ImageUtilities.loadImage(ICON_16, true),
                ImageUtilities.loadImage(ICON_32, true),
                ImageUtilities.loadImage(ICON_48, true),
-                ImageUtilities.loadImage(ICON_256, true),
-                ImageUtilities.loadImage(ICON_512, true),
-                ImageUtilities.loadImage(ICON_1024, true)));
+               ImageUtilities.loadImage(ICON_256, true),
+               ImageUtilities.loadImage(ICON_512, true),
+               ImageUtilities.loadImage(ICON_1024, true)));
    }
 
    private void initListeners() {

@@ -24,6 +24,6 @@
     <import file="../nbbuild/templates/projectized.xml"/>
 
     <target name="build-init" depends="projectized.build-init">
-        <unzip src="external/jquery-api-resources.zip" dest="./external"/>
+        <unzip src="external/jquery-api-resources-1.10.zip" dest="./external"/>
     </target>
 </project>

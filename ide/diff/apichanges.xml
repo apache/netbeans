@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl" type="text/xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, this will be done periodically; just
+change the XML. If you can, validate the XML against the DTD, if not
+do not worry about it. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+  <!-- First, a list of API names you may use: -->
+  <apidefs>
+    <!-- Probably should not be used much: -->
+    <apidef name="general">Cross-API</apidef>
+    <!-- org.netbeans.spi -->
+    <apidef name="services">Services API</apidef>
+    <!-- org.netbeans.api.diff -->
+    <apidef name="diff">Diff API</apidef>
+    <!-- org.netbeans.api.merge -->
+    <apidef name="merge">Merge API</apidef>
+  </apidefs>
+
+<!-- ACTUAL CHANGES BEGIN HERE: -->
+
+  <changes>
+  
+    <change id="netbeans_diff_default_compact">
+        <api name="diff"/>
+        <summary>Show compact diff with netbeans.diff.default.compact system property</summary>
+        <version major="1" minor="52"/>
+        <date day="2" month="5" year="2018"/>
+        <author login="emi"/>
+        <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+        <description>
+            Added the system property netbeans.diff.default.compact which instructs the default DiffControllerProvider to
+            show only the graphical diff (instead of the tabbed pane with the graphical and textual diffs).
+        </description>
+    </change>
+    <change id="diff-api">
+      <api name="diff"/>
+      <summary>The Diff APIs created</summary>
+      <version major="1" minor="3"/>            
+      <date day="18" month="2" year="2002"/>
+      <author login="mentlicher"/>
+      <compatibility addition="yes"/>
+      <description>
+        The base classes adedd.
+      </description>
+    </change>
+
+    <change id="StreamSource">
+      <api name="diff"/>
+      <summary>StreamSource class added</summary>
+      <version major="1" minor="4"/>
+      <date day="24" month="4" year="2002"/>
+      <author login="mentlicher"/>
+      <compatibility addition="yes"/>
+      <description>
+        Class, that is used as a source of named streams for diff and merge stuff.
+      </description>
+    </change>
+
+    <change id="MergeVisualizer">
+      <api name="merge"/>
+      <summary>MergeVisualizer class added</summary>
+      <version major="1" minor="5"/>
+      <date day="24" month="4" year="2002"/>
+      <author login="mentlicher"/>
+      <compatibility addition="yes"/>
+      <description>
+        Service, that is used to resolve merge collisions.
+      </description>
+    </change>
+
+    <change id="DiffView">
+      <api name="diff"/>
+      <summary>DiffView interface added</summary>
+      <version major="1" minor="13"/>
+      <date day="23" month="5" year="2005"/>
+      <author login="mentlicher"/>
+      <compatibility addition="yes"/>
+      <description>
+        A controler interface, that allows to programmatically control the
+        diff component.
+      </description>
+    </change>
+
+    <change id="StreamSource-extended">
+        <api name="diff"/>
+        <summary>StreamSource extended</summary>
+        <version major="1" minor="17"/>
+        <date day="21" month="2" year="2007"/>
+        <author login="msandor"/>
+        <compatibility addition="yes"/>
+        <description>
+            StreamSource provides more ways of defining the source (a FileObject) and can declare its editability.  
+        </description>
+    </change>
+
+    <change>
+        <api name="diff"/>
+        <summary>New DiffController API</summary>
+        <version major="1" minor="18"/>
+        <date day="17" month="4" year="2007"/>
+        <author login="msandor"/>
+        <compatibility addition="yes"/>
+        <description>
+            DiffController class is a successor to DiffView interface that provides more features.
+        </description>
+    </change>
+
+    <change>
+        <api name="diff"/>
+        <summary>New DiffController API</summary>
+        <version major="1" minor="19"/>
+        <date day="7" month="7" year="2009"/>
+        <author login="tstupka"/>
+        <compatibility addition="yes"/>
+        <description>
+            Adding PatchUtils.java to the API. Contains two new methods - isPatch(patchFile) and applyPatch(patchFile, contextFile)
+        </description>
+    </change>
+
+    <change>
+        <api name="diff"/>
+        <summary>Enhanced UI in diff views</summary>
+        <version major="1" minor="27"/>
+        <date day="4" month="3" year="2010"/>
+        <author login="ovrabec"/>
+        <compatibility addition="yes"/>
+        <description>
+            Adding new methods to the API/SPI which create a Diff Controller capable of providing a diff view with enhanced UI.
+        </description>
+    </change>
+
+  </changes>
+
+  <!-- Now the surrounding HTML text and document structure: -->
+
+  <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <======================
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE openide/api/doc/changes/apichanges.xml
+
+-->
+    <head>
+      <title>Diff API Changes by Date</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the <b>Diff
+API</b>s. Please ask on the <code>nbdev@netbeans.org</code> mailing list
+if you have any questions about the details of a
+change, or are wondering how to convert existing code to be compatible.</p>
+
+<p>In general the NetBeans core API team has several responsibilities:</p>
+
+<ol>
+
+<li>Avoid incompatible changes to the APIs whenever possible. This
+refers to both literal incompatibilities to the signatures of
+accessible API classes (including both source compatibility and binary
+compatibility, which sometimes differ); and semantic
+incompatibilities, for example changes in threading behavior of a
+method call.</li>
+
+<li>Document all API changes, incompatible or compatible, in this
+document, with proper explanation of the change and timestamp, and
+document the changes at the same time the actual change is made.</li>
+
+<li>Maintain API documentation so that it is up-to-date with respect
+to the actual APIs, both in prose documentation and Javadoc. When an
+API feature is ambiguously described, clarify the documentation to
+state precisely what it is expected to do; it is acceptable to specify
+that some aspect of its behavior is undefined, provided this is
+explicitly documented. If a feature is publicly accessible only for
+unavoidable technical reasons, document that this is so, and who is
+permitted to actually make use of it.</li>
+
+<li>Annotate new APIs with their time of addition: in Javadoc using
+the <code>@since</code> tag, or as appropriate in prose. The
+annotation should include both the date, and the current OpenIDE
+specification version, to make it easy for module authors to depend on
+the new API.</li>
+
+<li>Announce API changes on the mailing list; incompatible changes
+must be announced <em>in advance</em> to give any users of the old API
+a chance to veto the change.</li>
+
+<li>Be prepared to publicly explain the meaning and intended use of
+an API feature, and defend changes to it if requested.</li>
+
+<li>Assist anyone posting to the mailing list in fixing their code to
+be compatible with a change, if this is necessary and desired.</li>
+
+<li>Provide a workaround to restore compatibility for a previously
+incompatible API change, if this is requested on the mailing list and
+deemed feasible.</li>
+
+<li>Minimize the size of the APIs by rejecting compatible changes
+which substantially increase complexity and are not strictly needed.</li>
+
+<li>Attempt to maintain an API design which permits interesting
+and useful changes to be compatible.</li>
+
+<li>Attempt to cluster incompatible changes into infrequent batches
+of changes, specified and discussed well in advance, to be applied
+when making a new major release of the IDE. This should be done to
+remove previously deprecated features with a longstanding better
+alternative, and otherwise to enhance the clarity, consistency, and
+flexibility of the APIs.</li>
+
+<li>Make changes only on the trunk, not stabilization branches. When
+an API change is required in a stabilization branch to support an
+important bug fix, explicitly mention that in this document. (Bug fixes
+to API-related code not affecting its signature or documented
+semantics may be made at any time.)</li>
+
+<li>Increase the OpenIDE specification version listed in the core
+whenever a compatible API change is made, if some module is also being
+changed to take advantage of a newer API. The module should then list
+a dependency on the newer specification version in its manifest, to
+ensure that the newer version of the module is not accidentally run on
+an API-older core. Confirm that the specification version is also
+bumped up both before and after a branch is made which affects the
+APIs, to ensure that API changes can be cleanly ordered relative to
+branch points.</li>
+
+</ol>
+
+<h2>What do the Dates Mean?</h2>
+
+<p>The supplied dates indicate when the API change was made, on the CVS
+trunk. From this you can generally tell whether the change should be
+present in a given build or not; for trunk builds, simply whether it
+was made before or after the change; for builds on a stabilization
+branch, whether the branch was made before or after the given date. In
+some cases corresponding API changes have been made both in the trunk
+and in an in-progress stabilization branch, if they were needed for a
+bug fix; this ought to be marked in this list.</p>
+
+<ul>
+
+<li>The <code>release33</code> branch was made on Nov 23 '01 for use in
+the NetBeans 3.3.1 release, and later for development of Forte for Java (codename Orion).</li>
+
+<li>The <code>release330</code> branch was made on Nov 23 '01 for use in
+the NetBeans 3.3 release.</li>
+
+<li>The <code>release32</code> branch was made on Mar 10 '01 for use in
+the NetBeans 3.2 release, and later for NetBeans 3.2.1 and Forte for Java
+3.0.</li>
+
+<li>The <code>release31</code> branch was made on Nov 7 '00 for use in
+the NetBeans 3.1 release.</li>
+
+<li>The <code>boston</code> branch was made on Jun 29 '00 and
+used for betas and the FCS of Forte for Java 2.0.
+A number of API changes made after this date
+have in fact been incorporated into the branch.</li>
+
+<li>All changes listed here were made after the <code>postfcs</code>
+branch, which produced the Forte for Java 8xx series builds (1.0.x FCS
+and betas) and also the NetBeans 3.0 release. So they do not
+apply to these builds; this version of the change list was started
+immediately after this branch was made (early Feb '00).</li>
+
+</ul>
+
+<!-- The actual lists of changes, as summaries and details: -->
+
+      <hr/><standard-changelists module-code-name="org.netbeans.modules.diff/1"/>
+
+<hr/>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

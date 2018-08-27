@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<?xml-stylesheet href="../../nbbuild/javadoctools/apichanges.xsl" type="text/xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!-- INFO FOR PEOPLE ADDING CHANGES:
+[most of contents snipped - see openide's apichanges for how-to instructions]
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+-->
+
+<apichanges>
+
+<!-- First, a list of API names you may use: -->
+<apidefs>
+        <apidef name="ViewModelAPI">View Model API</apidef>
+</apidefs>
+
+<!-- ACTUAL CHANGES BEGIN HERE: -->
+
+<changes>
+    <change>
+        <api name="ViewModelAPI"/>
+        <summary>Support for pop-up menu actions fixed.</summary>
+        <date day="29" month="4" year="2004"/>
+        <author login="jjancura"/>
+        <compatibility>
+            <p>
+                Incompatile changes (additions / removals).
+            </p>
+        </compatibility>
+        <description>
+            Support for different models in multiselection has been added. 
+        </description>
+    </change>
+    <change>
+        <api name="ViewModelAPI"/>
+        <summary>TreeModel.getChildrenCount (Object node) method added.</summary>
+        <date day="23" month="7" year="2004"/>
+        <author login="jjancura"/>
+        <compatibility addition="yes"/>
+        <description>
+                TreeModel uses indexed approach (getChildren (Object node, int from, int to). But 
+                the children count has not been accesible through the API. This was important problem.
+        </description>
+        <class package="org.netbeans.spi.viewmodel" name="TreeModel" />
+        <issue number="46368"/>
+    </change>
+    <change>
+        <api name="ViewModelAPI"/>
+        <summary>Support for synchronous and asynchronous ViewModels implementation fixed.</summary>
+        <date day="7" month="1" year="2005"/>
+        <author login="jjancura"/>
+        <compatibility binary="incompatible" source="incompatible" deletion="yes" modification="yes"/>
+        <description>
+                Support for synchronous and asynchronous ViewModels implementations is one of the major 
+                ViewModel API requirements. During fixing of #46614 (toString update should not run 
+                in AWT thread) I have realized, that current support for asynchronous ViewModels 
+                implementations is not usable. This change fixes the problem:
+                    1) ComputingException, and NoInformationException removed - as completely useless.
+                    2) All methods throwing these exceptions changed.
+                    3) New ViewModel implementation supports asynchronous model only. Its fast and safe.
+                How to update your code using these exceptions:
+                    Old code:
+                    public Object getValueAt (Object row, String columnId) throws ComputingException {
+                        if (....)
+                            throw new ComputingException ();
+                        ...
+                    }
+                    
+                    Fixed code:
+                    public Object getValueAt (Object row, String columnId) {
+                        if (....)
+                            return "Computing";
+                        ...
+                    }
+        </description>
+        <issue number="53073"/>
+    </change>
+    <change>
+        <api name="ViewModelAPI"/>
+        <summary>Access to tree node expansion added.</summary>
+        <date day="13" month="1" year="2005"/>
+        <author login="jjancura"/>
+        <compatibility binary="incompatible" source="incompatible" deletion="yes" addition="yes" modification="yes"/>
+        <description>
+                This change has been done to cover user requirement #46167.
+                List of changes:
+                    1) new TreeExpansionModel introduced
+                    2) new class Models.TreeFeatures contains tree expansion methods.
+                During implementation of this user requirement I have discovered important problem in ViewModel API. 
+                There is no possibility to add a new model to it. List of changes fixing this problem:
+                    1) Models.createView (...) and Models.setModelsToView (...) methods do not use fixed set of models as parameters,
+                       but they use Models.CompoundModel.
+                    2) Models.CompoundModel is final class implementing all currently supported models. The only way how to create
+                       a new instance of it is Models.createCompoundModel (List listOfModels). It allows future additions of new
+                       models.
+                    3) Methods Models.createCompoundTreeModel (...), Models.createCompoundNodeModel (...), 
+                       Models.createCompoundTableModel (...), Models.createCompoundNodeActionsProvider (...), and field
+                       Models.EMPTY_TREE_MODEL has been removed as useless.
+                How to update your code using these exceptions:
+                    No changes required for most of clients. You should change your code only if you are providing some 
+                    new view based on ViewModel. In this case you should put all your model instances to one list, 
+                    and call Models.createCompountModel (list), in place of calling create*Model* methods.
+        </description>
+        <class package="org.netbeans.spi.viewmodel" name="Models" />
+        <class package="org.netbeans.spi.viewmodel" name="TreeExpansionModel" />
+        <issue number="46167"/>
+    </change>
+    <change>
+        <api name="ViewModelAPI"/>
+        <summary>I need to add TreeModelEvent to ViewModelAPI.</summary>
+        <date day="31" month="3" year="2005"/>
+        <author login="jjancura"/>
+        <compatibility binary="incompatible" source="incompatible" deletion="yes" addition="yes" modification="yes"/>
+        <description>
+            NB4.0 version of ViewModelAPI had several event firing related issues:
+
+            1) It supported two types of changes only:
+                i) whole tree has been changed notification
+                ii) node and all subnodes change notification
+                There where no support for small grained changes (one table cell change).
+
+            2) The same listener type (TreeModelListener) has been used for all model types (TreeModel, NodeModel, ...)
+            3) There was no TreeModelEvent, so evolving of this api was problematic.
+
+            I have done folowing incompatible api change, to fix this problem:
+
+            1) TreeModelListener has been renamed to ModelListener (Because its used for other models too).
+            2) ModelEvent class has been added.
+            3) Two methods removed from TreeModelListener:
+                public void treeNodeChanged (Object node);
+                public void treeNodeChanged (TreeModelEvent event);
+            and replaced by folowing method:
+                public void modelChanged (ModelEvent event);
+            4) three innerclasses added to ModelEvent
+                TreeChanged
+                TableValueChanged
+                NodeChanged
+            These three innerclasses are designed to support firing of all kinds of model changes.
+            TreeChanged - Designed to notify about chages of whole tree content / structure. This event has no parameters.
+            TableValueChanged - Designed to notify about chages of one cell in table. Two parameters: Object row, String columnID
+            NodeChanged - Designed to notify about chages of one node - icon and display name. One parameter: Object node.
+        </description>
+        <issue number="57273"/>
+    </change>
+    <change>
+        <api name="ViewModelAPI"/>
+        <summary>ModelEvent enhanced with more fine-grained changes</summary>
+        <version major="1" minor="6"/>
+        <date day="21" month="7" year="2005"/>
+        <author login="mentlicher"/>
+        <compatibility binary="compatible" source="compatible" deletion="no" addition="yes" modification="no"/>
+        <description>
+            NodeChanged events need to distinguish what node property has changed. Mask constant were added for
+            display name, icon, short description and children properties. By default, mask that aggregates all
+            these properties is used - to assure compatibility.
+        </description>
+        <class package="org.netbeans.spi.viewmodel" name="ModelEvent" />
+        <issue number="60499"/>
+    </change>
+    <change>
+        <api name="ViewModelAPI"/>
+        <summary>CompoundModel enhanced with a possibility to set help ID.</summary>
+        <version major="1" minor="7"/>
+        <date day="25" month="8" year="2005"/>
+        <author login="mentlicher"/>
+        <compatibility binary="compatible" source="compatible" deletion="no" addition="yes" modification="no"/>
+        <description>
+            In order to have a help ID defined for the GUI component that is
+            created from the compound model, it's necessary to be able to set
+            that help ID on the compound model instance.
+            Two methods are added for that purpose:
+            <code>CompoundModel Models.createCompoundModel (List, String)</code>
+            and <code>String CompoundModel.getHelpId()</code>.
+        </description>
+        <class package="org.netbeans.spi.viewmodel" name="Models" />
+        <issue number="62617"/>
+    </change>
+    <change>
+        <api name="ViewModelAPI"/>
+        <summary>getDisplayedMnemonic() method added to ColumnModel.</summary>
+        <version major="1" minor="11"/>
+        <date day="30" month="1" year="2006"/>
+        <author login="mentlicher"/>
+        <compatibility binary="compatible" source="compatible" deletion="no" addition="yes" modification="no"/>
+        <description>
+            In order to be able to provide mnemonics for columns in tree table views,
+            <code>Character ColumnModel.getDisplayedMnemonic()</code> method was
+            added to ColumnModel class.
+        </description>
+        <class package="org.netbeans.spi.viewmodel" name="ColumnModel" />
+        <issue number="71858"/>
+    </change>
+    <change>
+        <api name="ViewModelAPI"/>
+        <summary>Extension to NodeModel.</summary>
+        <version major="1" minor="12"/>
+        <date day="6" month="6" year="2007"/>
+        <author login="mentlicher"/>
+        <compatibility binary="compatible" source="compatible" deletion="no" addition="yes" modification="no"/>
+        <description>
+            Add ability to in-place rename and copy/paste functionality to nodes
+            in debugger views. Also, the models needs to have a way to provide
+            an icon with arbitrary extension. Therefore following methods are
+            provided with new <code>ExtendedNodeModel</code> and <code>ExtendedNodeModelFilter</code> interfaces
+            and are also added into <code>CompoundModel</code>:
+            <code>canRename()</code>, <code>canCopy()</code>, <code>canCut()</code>,
+            <code>clipboardCopy()</code>, <code>clipboardCut()</code>, <code>getPasteTypes()</code>,
+            <code>setName()</code>, <code>getIconBaseWithExtension()</code>.
+        </description>
+        <class package="org.netbeans.spi.viewmodel" name="ExtendedNodeModel" />
+        <class package="org.netbeans.spi.viewmodel" name="ExtendedNodeModelFilter" />
+        <class package="org.netbeans.spi.viewmodel" name="Models" />
+        <issue number="104281"/>
+    </change>
+    <change>
+        <api name="ViewModelAPI"/>
+        <summary>Extension to NodeModel.</summary>
+        <version major="1" minor="15"/>
+        <date day="2" month="6" year="2008"/>
+        <author login="mentlicher"/>
+        <compatibility binary="compatible" source="compatible" deletion="no" addition="yes" modification="no"/>
+        <description>
+            This API change is necessary for the redesign of the debugger UI and
+            to be able to better control node expansions.
+            <p>
+                Added classes:<br/>
+                <code>org.netbeans.spi.viewmodel.TreeExpansionModelFilter</code>
+            </p>
+            <p>
+                Changed classes:<br/>
+                <code>Models.TreeFeatures</code> - final class with a private
+                constructor changed to an abstract class.
+            </p>
+            <p>
+                Added methods:<br/>
+                <code>Models.createNodes()</code>,
+            </p>
+            <p>
+                Added fields:<br/>
+                <code>ModelEvent.EXPANSION_MASK</code>
+            </p>
+        </description>
+        <class package="org.netbeans.spi.viewmodel" name="TreeExpansionModelFilter" />
+        <class package="org.netbeans.spi.viewmodel" name="Models" />
+        <issue number="136099"/>
+    </change>
+    <change>
+        <api name="ViewModelAPI"/>
+        <summary>Check extension to NodeModel.</summary>
+        <version major="1" minor="17"/>
+        <date day="8" month="3" year="2009"/>
+        <author login="mentlicher"/>
+        <compatibility binary="compatible" source="compatible" deletion="no" addition="yes" modification="no"/>
+        <description>
+            This API change allows to display check-boxes next to the node icons
+            in the tree column.
+            <p>
+                Added classes:<br/>
+                <code>org.netbeans.spi.viewmodel.CheckNodeModel</code>,
+                <code>org.netbeans.spi.viewmodel.CheckNodeModelFilter</code>
+            </p>
+        </description>
+        <class package="org.netbeans.spi.viewmodel" name="CheckNodeModel" />
+        <class package="org.netbeans.spi.viewmodel" name="CheckNodeModelFilter" />
+        <issue number="159545"/>
+    </change>
+    <change>
+        <api name="ViewModelAPI"/>
+        <summary>Check extension to NodeModel.</summary>
+        <version major="1" minor="19"/>
+        <date day="1" month="9" year="2009"/>
+        <author login="mentlicher"/>
+        <compatibility binary="compatible" source="compatible" deletion="no" addition="yes" modification="no"/>
+        <description>
+            This API change allows to change a node selection in the tree table view.
+            SelectionChanged event is used to select a set of nodes (rows).
+            <p>
+                Added classes:<br/>
+                <code>org.netbeans.spi.viewmodel.ModelEvent.SelectionChanged</code>,
+            </p>
+        </description>
+        <class package="org.netbeans.spi.viewmodel" name="ModelEvent" />
+        <issue number="171194"/>
+    </change>
+        <change>
+        <api name="ViewModelAPI"/>
+        <summary>Introduction of AsynchronousModelFilter.</summary>
+        <version major="1" minor="20"/>
+        <date day="25" month="9" year="2009"/>
+        <author login="mentlicher"/>
+        <compatibility binary="compatible" source="compatible" deletion="no" addition="yes" modification="no"/>
+        <description>
+            This API introduced AsynchronousModelFilter that
+            can be used by clients to override the default threading of their model implementations.
+        </description>
+        <class package="org.netbeans.spi.viewmodel" name="AsynchronousModelFilter" />
+        <issue number="172694"/>
+    </change>
+    <change>
+        <api name="ViewModelAPI"/>
+        <summary>Drag and Drop support.</summary>
+        <version major="1" minor="24"/>
+        <date day="4" month="12" year="2009"/>
+        <author login="mentlicher"/>
+        <compatibility binary="compatible" source="compatible" deletion="no" addition="yes" modification="no"/>
+        <description>
+            This API introduce DnDNodeModel and DnDNodeModelFilter that
+            can be used by clients to implement Drag and Drop.
+        </description>
+        <class package="org.netbeans.spi.viewmodel" name="DnDNodeModel" />
+        <class package="org.netbeans.spi.viewmodel" name="DnDNodeModelFilter" />
+        <issue number="177506"/>
+    </change>
+    <change>
+        <api name="ViewModelAPI"/>
+        <summary>Drag and Drop support.</summary>
+        <version major="1" minor="25"/>
+        <date day="15" month="12" year="2009"/>
+        <author login="mentlicher"/>
+        <compatibility binary="compatible" source="compatible" deletion="no" addition="yes" modification="no"/>
+        <description>
+            This API introduce ReorderableTreeModel and ReorderableTreeModelFilter
+            that can be used to alter the order of children nodes.
+        </description>
+        <class package="org.netbeans.spi.viewmodel" name="ReorderableTreeModel" />
+        <class package="org.netbeans.spi.viewmodel" name="ReorderableTreeModelFilter" />
+        <issue number="178301"/>
+    </change>
+    <change>
+        <api name="ViewModelAPI"/>
+        <summary>Custom table cell renderers and editors.</summary>
+        <version major="1" minor="28"/>
+        <date day="7" month="6" year="2010"/>
+        <author login="mentlicher"/>
+        <compatibility binary="compatible" source="compatible" deletion="no" addition="yes" modification="no"/>
+        <description>
+            This API introduce TableRendererModel and TableRendererModelFilter
+            that can be used to provide custom table cell renderers and cell editors.
+        </description>
+        <class package="org.netbeans.spi.viewmodel" name="TableRendererModel" />
+        <class package="org.netbeans.spi.viewmodel" name="TableRendererModelFilter" />
+        <issue number="186672"/>
+    </change>
+    <change>
+        <api name="ViewModelAPI"/>
+        <summary>Separate the value and HTML value and allow custom property editors.</summary>
+        <version major="1" minor="42"/>
+        <date day="30" month="4" year="2013"/>
+        <author login="mentlicher"/>
+        <compatibility binary="compatible" source="compatible" deletion="no" addition="yes" modification="no"/>
+        <description>
+            So far the HTML value is automatically retrieved from the value provided
+            by the <code>TableModel</code> when the value is a <code>String</code>
+            and contains HTML code. This is not flexible enough and therefore
+            we separate the value and HTML value by introduction of <code>TableHTMLModel</code>
+            and <code>TableHTMLModelFilter</code>.<br/>
+            In addition to that, this API change also brings a prossibility
+            to provide custom property editor, separately for every value.
+            Two interfaces are introduced for this purpose: <code>TablePropertyEditorsModel</code>
+            and <code>TablePropertyEditorsModelFilter</code>.<br/>
+            This also implies, that <code>Models.CompoundModel</code> now implements
+            <code>TableHTMLModel</code> and <code>TablePropertyEditorsModel</code>.<br/>
+            In order to be able to fire changes in HTML value and also in r/w state,
+            an additional constructor of <code>ModelEvent.TableValueChanged</code>
+            is added, which takes the change mask. Three change masks are defined:
+            <code>VALUE_MASK</code>, <code>HTML_VALUE_MASK</code> and <code>IS_READ_ONLY_MASK</code>.
+            To get the change mask, <code>ModelEvent.TableValueChanged.getChange()</code>
+            method is added.
+        </description>
+        <class package="org.netbeans.spi.viewmodel" name="TableHTMLModel" />
+        <class package="org.netbeans.spi.viewmodel" name="TableHTMLModelFilter" />
+        <class package="org.netbeans.spi.viewmodel" name="TablePropertyEditorsModel" />
+        <class package="org.netbeans.spi.viewmodel" name="TablePropertyEditorsModelFilter" />
+        <class package="org.netbeans.spi.viewmodel" name="ModelEvent" />
+        <issue number="228909"/>
+    </change>
+    <change>
+        <api name="ViewModelAPI"/>
+        <summary>Add an abstract children caching model.</summary>
+        <version major="1" minor="49"/>
+        <date day="28" month="11" year="2014"/>
+        <author login="mentlicher"/>
+        <compatibility binary="compatible" source="compatible" deletion="no" addition="yes" modification="no"/>
+        <description>
+            Views that show asynchronously loaded children nodes, have problems
+            with visible refreshes of the children tree.
+            <code>CachedChildrenTreeModel</code> is introduced to allow seamless
+            refresh of children tree.
+        </description>
+        <class package="org.netbeans.spi.viewmodel" name="CachedChildrenTreeModel" />
+        <issue number="248775"/>
+    </change>
+
+
+</changes>
+
+  <!-- Now the surrounding HTML text and document structure: -->
+
+  <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <======================
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE xml/api/doc/changes/apichanges.xml
+
+-->
+    <head>
+      <title>View Model API changes by date</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the View Model APIs. Please ask on the 
+    <code>nbdev@netbeans.org</code>
+    mailing list if you have any questions about the details of a
+    change, or are wondering how to convert existing code to be compatible.
+</p>
+
+      <hr/><standard-changelists module-code-name="org.netbeans.spi.viewmodel/2"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+</apichanges>

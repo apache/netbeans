@@ -1,3 +1,5 @@
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.
+
 The weird module's code name base org.netbeans.modules.jsfapi needs to be used
 since the natural org.netbeans.modules.jsf is already taken by the legacy
 "JSF Support" module.

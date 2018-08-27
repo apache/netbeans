@@ -23,6 +23,6 @@
     <fileset>
         <file>src/org/netbeans/modules/websvc/metro/model/catalog/resources/metro.xsd</file>
         <license ref="CDDL-1.1"/>
-        <comment>XMLSchema is used to generate class files required for module compilation.</comment>
+        <comment>Schema file is used to generate java files required for module compilation.</comment>
     </fileset>
 </licenseinfo>

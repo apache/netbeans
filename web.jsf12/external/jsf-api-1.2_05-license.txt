@@ -1,5 +1,5 @@
 Name: Java Server Faces
-Version: 1.2
+Version: 1.2_05
 License: CDDL-1.0
 Description: Java Server Faces
 Origin: http://java.sun.com/javaee/javaserverfaces/download.html

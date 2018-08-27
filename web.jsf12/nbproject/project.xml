@@ -39,7 +39,7 @@
                 <subpackages>javax.faces</subpackages>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/jsf-1_2/jsf-api.jar</runtime-relative-path>
+                <runtime-relative-path>ext/jsf-1_2/jsf-api-1.2_05.jar</runtime-relative-path>
             </class-path-extension>
         </data>
     </configuration>

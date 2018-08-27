@@ -24,6 +24,6 @@
     <import file="../nbbuild/templates/projectized.xml"/>
 
     <target name="build-init" depends="projectized.build-init">
-        <unzip src="external/javascript2.nodejs-nodejs-resources.zip" dest="./test/unit/data/NodeJsRuntime"/>
+        <unzip src="external/nodejs-resources-8.4.0.zip" dest="./test/unit/data/NodeJsRuntime"/>
    </target>
 </project>

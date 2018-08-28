@@ -32,7 +32,7 @@
     <target name="rebuild-main" unless="main.up.to.date">
         <mkdir dir="${build.classes.dir}"/>
         <delete file="${build.classes.dir}/org/netbeans/Main.class"/>
-        <javac srcdir="${src.dir}" destdir="${build.classes.dir}" debug="${build.compiler.debug}" debuglevel="${build.compiler.debuglevel}" deprecation="${build.compiler.deprecation}" optimize="${build.compiler.optimize}" source="1.4" target="1.4" includeantruntime="false">
+        <javac srcdir="${src.dir}" destdir="${build.classes.dir}" debug="${build.compiler.debug}" debuglevel="${build.compiler.debuglevel}" deprecation="${build.compiler.deprecation}" optimize="${build.compiler.optimize}" source="1.6" target="1.6" includeantruntime="false">
             <classpath refid="cp"/>
             <include name="org/netbeans/Main.java"/>
             <compilerarg line="${javac.compilerargs}"/>

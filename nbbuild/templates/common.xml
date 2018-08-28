@@ -65,7 +65,7 @@
         <condition property="javahelp.class.path.extension" value="docs/${javahelp.jar.basename}">
             <isset property="has.javahelp"/>
         </condition>
-        <property name="javac.source" value="1.4"/>
+        <property name="javac.source" value="1.7"/>
         <property name="javac.target" value="${javac.source}"/>
         <property name="javac.compilerargs" value=""/>
         <property name="module.auto.deps.xml" location="module-auto-deps.xml"/>

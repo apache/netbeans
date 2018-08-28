@@ -1,5 +1,5 @@
 Name: PrimeFaces
-Version: 5.0 (Community edition)
+Version: 5.0
 Description: PrimeFaces components library that can be used with JSF 2.0+ framework
 License: Apache-2.0
 Origin: http://www.primefaces.org/downloads.html

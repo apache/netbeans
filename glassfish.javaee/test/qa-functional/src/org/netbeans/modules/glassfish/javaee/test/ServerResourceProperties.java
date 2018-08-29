@@ -16,10 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- /*
  * @author davisn
- *
- * Portions Copyrighted 2009 Sun Microsystems, Inc.
  */
 
 package org.netbeans.modules.glassfish.javaee.test;

@@ -26,6 +26,7 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.tree.JCTree;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.io.File;
 import java.io.IOException;
@@ -237,6 +238,9 @@ public class SwitchTest extends GeneratorTestBase {
     }
 
     public void testCaseMultiTest() throws Exception {
+        if (!enhancedSwitchAvailable())
+            return;
+
         class TestCase {
             public final String caseText;
             public final BiFunction<WorkingCopy, CaseTree, CaseTree> convertCase;
@@ -254,14 +258,14 @@ public class SwitchTest extends GeneratorTestBase {
                          (copy, tree) -> {
                              List<ExpressionTree> labels = new ArrayList<>(copy.getTreeUtilities().getExpressions(tree));
                              labels.add(copy.getTreeMaker().Literal(1));
-                             return copy.getTreeMaker().Case(labels, tree.getStatements());
+                             return copy.getTreeMaker().CaseMultipleLabels(labels, tree.getStatements());
                          },
                          "case 0, 1:"),
             new TestCase("case 0:",
                          (copy, tree) -> {
                              List<ExpressionTree> labels = new ArrayList<>(copy.getTreeUtilities().getExpressions(tree));
                              labels.add(0, copy.getTreeMaker().Literal(-1));
-                             return copy.getTreeMaker().Case(labels, tree.getStatements());
+                             return copy.getTreeMaker().CaseMultipleLabels(labels, tree.getStatements());
                          },
                          "case -1, 0:"),
             new TestCase("case 0:",
@@ -269,48 +273,48 @@ public class SwitchTest extends GeneratorTestBase {
                              List<ExpressionTree> labels = new ArrayList<>(copy.getTreeUtilities().getExpressions(tree));
                              labels.add(0, copy.getTreeMaker().Literal(-1));
                              labels.add(copy.getTreeMaker().Literal(1));
-                             return copy.getTreeMaker().Case(labels, tree.getStatements());
+                             return copy.getTreeMaker().CaseMultipleLabels(labels, tree.getStatements());
                          },
                          "case -1, 0, 1:"),
             new TestCase("case -1, 1:",
                          (copy, tree) -> {
                              List<ExpressionTree> labels = new ArrayList<>(copy.getTreeUtilities().getExpressions(tree));
                              labels.add(1, copy.getTreeMaker().Literal(0));
-                             return copy.getTreeMaker().Case(labels, tree.getStatements());
+                             return copy.getTreeMaker().CaseMultipleLabels(labels, tree.getStatements());
                          },
                          "case -1, 0, 1:"),
             new TestCase("case -1, 0, 1:",
                          (copy, tree) -> {
                              List<ExpressionTree> labels = new ArrayList<>(copy.getTreeUtilities().getExpressions(tree));
                              labels.remove(0);
-                             return copy.getTreeMaker().Case(labels, tree.getStatements());
+                             return copy.getTreeMaker().CaseMultipleLabels(labels, tree.getStatements());
                          },
                          "case " + /*XXX: too many spaces:*/ " " + "0, 1:"),
             new TestCase("case -1, 0, 1:",
                          (copy, tree) -> {
                              List<ExpressionTree> labels = new ArrayList<>(copy.getTreeUtilities().getExpressions(tree));
                              labels.remove(1);
-                             return copy.getTreeMaker().Case(labels, tree.getStatements());
+                             return copy.getTreeMaker().CaseMultipleLabels(labels, tree.getStatements());
                          },
                          "case -1, 1:"),
             new TestCase("case -1, 0, 1:",
                          (copy, tree) -> {
                              List<ExpressionTree> labels = new ArrayList<>(copy.getTreeUtilities().getExpressions(tree));
                              labels.remove(2);
-                             return copy.getTreeMaker().Case(labels, tree.getStatements());
+                             return copy.getTreeMaker().CaseMultipleLabels(labels, tree.getStatements());
                          },
                          "case -1, 0:"),
             new TestCase("default:",
                          (copy, tree) -> {
                              List<ExpressionTree> labels = new ArrayList<>(copy.getTreeUtilities().getExpressions(tree));
                              labels.add(copy.getTreeMaker().Literal(0));
-                             return copy.getTreeMaker().Case(labels, tree.getStatements());
+                             return copy.getTreeMaker().CaseMultipleLabels(labels, tree.getStatements());
                          },
                          "case 0:"),
             new TestCase("case 0:",
                          (copy, tree) -> {
                              List<ExpressionTree> labels = new ArrayList<>();
-                             return copy.getTreeMaker().Case(labels, tree.getStatements());
+                             return copy.getTreeMaker().CaseMultipleLabels(labels, tree.getStatements());
                          },
                          "default:"),
         };
@@ -365,6 +369,9 @@ public class SwitchTest extends GeneratorTestBase {
     }
 
     public void testStatement2Rule() throws Exception {
+        if (!enhancedSwitchAvailable())
+            return;
+
         testFile = new File(getWorkDir(), "Test.java");
         String test = "public class Test {\n" +
                       "    void m(int p) {\n" +
@@ -410,6 +417,9 @@ public class SwitchTest extends GeneratorTestBase {
     }
 
     public void testRule2Statement() throws Exception {
+        if (!enhancedSwitchAvailable())
+            return;
+
         testFile = new File(getWorkDir(), "Test.java");
         String test = "public class Test {\n" +
                       "    void m(int p) {\n" +
@@ -444,7 +454,7 @@ public class SwitchTest extends GeneratorTestBase {
                         List<StatementTree> statements = new ArrayList<>(((BlockTree) copy.getTreeUtilities().getBody(node)).getStatements());
                         statements.add(make.Break(null));
                         copy.rewrite(getCurrentPath().getLeaf(),
-                                     make.Case(copy.getTreeUtilities().getExpressions(node), statements));
+                                     make.CaseMultipleLabels(copy.getTreeUtilities().getExpressions(node), statements));
                         return super.visitCase(node, p);
                     }
                 }.scan(copy.getCompilationUnit(), null);
@@ -457,6 +467,9 @@ public class SwitchTest extends GeneratorTestBase {
     }
 
     public void testDefaultRewrite() throws Exception {
+        if (!enhancedSwitchAvailable())
+            return;
+
         testFile = new File(getWorkDir(), "Test.java");
         String test = "public class Test {\n" +
                       "    void m(int p) {\n" +
@@ -498,6 +511,9 @@ public class SwitchTest extends GeneratorTestBase {
     }
 
     public void testStatement2RuleNoSpace() throws Exception {
+        if (!enhancedSwitchAvailable())
+            return;
+
         testFile = new File(getWorkDir(), "Test.java");
         String test = "public class Test {\n" +
                       "    void m(int p) {\n" +
@@ -545,6 +561,9 @@ public class SwitchTest extends GeneratorTestBase {
     }
 
     public void testNestedSwitches() throws Exception {
+        if (!enhancedSwitchAvailable())
+            return;
+
         testFile = new File(getWorkDir(), "Test.java");
         String test = "public class Test {\n" +
                       "    void m(int p) {\n" +
@@ -593,6 +612,16 @@ public class SwitchTest extends GeneratorTestBase {
         String res = TestUtilities.copyFileToString(testFile);
         System.err.println(res);
         assertEquals(golden, res);
+    }
+    
+    private boolean enhancedSwitchAvailable() {
+        try {
+            Class.forName("com.sun.source.tree.CaseTree$CaseKind", false, JCTree.class.getClassLoader());
+            return true;
+        } catch (ClassNotFoundException ex) {
+            //OK
+            return false;
+        }
     }
 
     // XXX I don't understand what these are used for

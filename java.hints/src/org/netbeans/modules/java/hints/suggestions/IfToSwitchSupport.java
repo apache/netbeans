@@ -690,7 +690,7 @@ public class IfToSwitchSupport {
                 statements.add(make.Break(null));
             }
             if (desc.literals == null) {
-                CaseTree ct = make.Case(Collections.emptyList(), statements);
+                CaseTree ct = make.Case(null, statements);
                 if (replacedByCase != null) {
                     ct = make.asReplacementOf(ct, replacedByCase, true);
                 }

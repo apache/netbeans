@@ -377,7 +377,7 @@ public class Tiny {
                 StatementTree stmt = ctx.getWorkingCopy().getTreeUtilities().parseStatement(defaultTemplate, new SourcePositions[1]);
                 Scope s = ctx.getWorkingCopy().getTrees().getScope(tp);
                 ctx.getWorkingCopy().getTreeUtilities().attributeTree(stmt, s);
-                st = GeneratorUtilities.get(ctx.getWorkingCopy()).importFQNs(make.addSwitchCase(st, make.Case(Collections.emptyList(), Collections.singletonList(stmt))));
+                st = GeneratorUtilities.get(ctx.getWorkingCopy()).importFQNs(make.addSwitchCase(st, make.Case(null, Collections.singletonList(stmt))));
                 new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override public Void visitIdentifier(IdentifierTree node, Void p) {
                         if (node.getName().contentEquals("$expression")) {

@@ -18,7 +18,10 @@
  */
 package org.netbeans.modules.java.hints.jdk;
 
+import com.sun.tools.javac.tree.JCTree;
 import javax.lang.model.SourceVersion;
+import junit.framework.Test;
+import junit.framework.TestSuite;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.hints.test.api.HintTest;
 
@@ -285,4 +288,17 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                 .assertWarnings();
     }
 
+    public static Test suite() {
+        TestSuite suite = new TestSuite();
+        try {
+            Class.forName("com.sun.source.tree.CaseTree$CaseKind", false, JCTree.class.getClassLoader());
+            suite.addTestSuite(ConvertSwitchToRuleSwitchTest.class);
+        } catch (ClassNotFoundException ex) {
+            //OK
+            suite.addTest(new ConvertSwitchToRuleSwitchTest("noop"));
+        }
+        return suite;
+    }
+
+    public void noop() {}
 }

@@ -248,8 +248,7 @@ public final class TreeMaker {
      * @param statements the list of statements.
      * @see com.sun.source.tree.CaseTree
      */
-    //XXX: source incompatible:
-    public CaseTree Case(List<? extends ExpressionTree> patterns, List<? extends StatementTree> statements) {
+    public CaseTree CaseMultipleLabels(List<? extends ExpressionTree> patterns, List<? extends StatementTree> statements) {
         return delegate.Case(patterns, statements);
     }
     

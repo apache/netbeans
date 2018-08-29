@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.libs.javaee11/1
+OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/javaee/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.1
+

@@ -1,0 +1,31 @@
+<#-- FreeMarker template (see http://freemarker.org/) -->
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}"> 
+
+<#if package?? && package != "">
+package ${package};
+
+</#if>
+
+/**
+ * REST Web Service
+ *
+ * @author ${user}
+ */
+
+public class ${name} {
+    ${field_list}
+    /** Creates a new instance of ${name} */
+    private ${name}(${param_list}) {
+        ${assignment_list}
+    }
+
+    /** Get instance of the ${name} */
+    public static ${name} getInstance(${param_list}) {
+        // The user may use some kind of persistence mechanism
+        // to store and restore instances of ${name} class.
+        return new ${name}(${argument_list});
+    }
+}

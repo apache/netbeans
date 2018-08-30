@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE faces-config PUBLIC
+  "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.1//EN"
+  "http://java.sun.com/dtd/web-facesconfig_1_1.dtd">
+<faces-config>
+    <navigation-rule>
+        <from-view-id>index.jsp</from-view-id>
+        <navigation-case>
+            <to-view-id>NotReal3.jsp</to-view-id>
+            <from-outcome>case1</from-outcome>
+        </navigation-case>
+        <navigation-case>
+            <to-view-id>NotReal3.jsp</to-view-id>
+            <from-outcome>case2</from-outcome>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>AnotherRealPage2.jsp</from-view-id>
+        <navigation-case>
+            <to-view-id>index.jsp</to-view-id>
+            <from-outcome>case1</from-outcome>
+        </navigation-case>
+    </navigation-rule>
+</faces-config>

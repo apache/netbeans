@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>glassfish-web.xml Visual Editor: General</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.j2ee.sun.ddloaders.multiview.web.SunWebView,org.netbeans.modules.j2ee.sun.ddloaders.multiview.web.SunWebDetailsNode,org.netbeans.modules.j2ee.sun.ddloaders.multiview.web.SunWebClassLoaderNode" name="org.netbeans.modules.j2ee.sun.ddloaders.multiview.web.SunWebView,org.netbeans.modules.j2ee.sun.ddloaders.multiview.web.SunWebDetailsNode,org.netbeans.modules.j2ee.sun.ddloaders.multiview.web.SunWebClassLoaderNode"></a></p>
+<div id="NBCSH4717"><!-- infolevel="all" infotype="General" --><a id="sthref689" name="sthref689"></a>
+<h1>glassfish-web.xml Visual Editor: General</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to set the context root, additional classpath, the servlet security provider, and configure the class loader for the web application. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1114">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<table summary="Descriptions of name and location properties of new Java Project existing sources wizard." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="36%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t50">Element</th>
+<th align="left" valign="bottom" id="r1c2-t50">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t50" headers="r1c1-t50">
+<p>Module</p>
+</td>
+<td align="left" headers="r2c1-t50 r1c2-t50">Sets the properties for the module.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t50" headers="r1c1-t50">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Context Root</p>
+</td>
+<td align="left" headers="r3c1-t50 r1c2-t50">Select the platform folder. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2195">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+
+<p>The context root is the base directory of the WAR file. The Servlet Context uses the context root to resolve the path to the WAR file. The URL to a JSP page or servlet takes this form:</p>
+<p><code dir="ltr">hostname:port/contextRoot/relative_URLs_in_WAR_file</code></p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t50" headers="r1c1-t50">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Error Url</p>
+</td>
+<td align="left" headers="r4c1-t50 r1c2-t50">Specifies a redirect URL in case of an error.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t50" headers="r1c1-t50">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;HTTP Servlet Security Provider</p>
+</td>
+<td align="left" headers="r5c1-t50 r1c2-t50">Specifies the security provider.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t50" headers="r1c1-t50">
+<p>Class Loader</p>
+</td>
+<td align="left" headers="r6c1-t50 r1c2-t50">Sets the properties for a class loader configuration.
+<p>Use the class loader settings to specify additional classes that are to be loaded by the Web module.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t50" headers="r1c1-t50">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Enable Class Loader Configuration</p>
+</td>
+<td align="left" headers="r7c1-t50 r1c2-t50">When selected, the Web module loads the additional classes in the Extra Class Path field.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t50" headers="r1c1-t50">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Extra Class Path</p>
+</td>
+<td align="left" headers="r8c1-t50 r1c2-t50">Specifies the classpath for the additional classes to be loaded by the Web module.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t50" headers="r1c1-t50">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Dynamic Reload Interval</p>
+</td>
+<td align="left" headers="r9c1-t50 r1c2-t50">Specifies the interval (in seconds) after which the deployed application is checked for modifications and reloaded if necessary.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t50" headers="r1c1-t50">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Delegate Class Loader</p>
+</td>
+<td align="left" headers="r10c1-t50 r1c2-t50">When selected, the Web module follows the standard classloader delegation model and delegates to its parent classloader first before looking in the local classloader.
+<p>If not selected, the Web module follows the delegation model specified in the Servlet specification and looks in its classloader before looking in the parent classloader.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH4727" name="NBCSH4727"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2805">
+<param name="text" value="<html><u>&quot;Configuring Web Services&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1111">
+<param name="text" value="<html><u>&quot;Configuring a Web Application&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1651">
+<param name="text" value="<html><u>&quot;About Working with Web and Application Servers&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

@@ -1,0 +1,4 @@
+[<% appl| %>, ..., <% application %>, 417]
+[<% tB| %>, ..., <% tBean %>, 542]
+[<% tBean.setN| %>, ..., <% tBean.setName(name); %>, 686]
+[<% "Hello World !".o| %>, ..., <% "Hello World !".offsetByCodePoints(index, codePointOffset) %>, 850]

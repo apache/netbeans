@@ -1,0 +1,3 @@
+var |>MARK_OCCURRENCES:Test<| = {
+|>MARK_OCCURRENCES:Test<|.debug();
+console.log(|>MARK_OCCURRENCES:T^est<|.options.debug);

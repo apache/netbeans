@@ -1,0 +1,21 @@
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+package ${package};
+
+import java.rmi.RemoteException;
+import javax.ejb.EJBObject;
+
+/**
+ *
+ * @author ${user}
+ */
+public interface ${name} extends EJBObject {
+
+    <#if !primaryKeyName??>
+    ${primaryKey} getPk() throws RemoteException;
+    </#if>
+    
+}

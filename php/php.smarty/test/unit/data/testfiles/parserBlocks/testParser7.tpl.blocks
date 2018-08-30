@@ -1,0 +1,85 @@
+Detected parser blocks in the file:
+
+{eval <391:415> -  var=$conf_data.text}
+
+{eval <440:459> -  var=$form.text}
+
+{if <355:380> -  isset($conf_data.text)}
+ |
+ -- {else <425:429> - }
+ |
+ -- {/if <469:472> - }
+
+{null <679:696> - $conf_data.action}
+
+{null <708:725> - $conf_data.method}
+
+{null <850:862> - $form.method}
+
+{null <901:916> - $smarty.get.url}
+
+{null <928:940> - $form.method}
+
+{if <783:807> -  $smarty.get.url == ""}
+ |
+ -- {else <873:877> - }
+ |
+ -- {/if <951:954> - }
+
+{null <989:1001> - $form.action}
+
+{null <1013:1025> - $form.method}
+
+{if <746:774> -  $form.action == "GET_URL"}
+ |
+ -- {else <962:966> - }
+ |
+ -- {/if <1035:1038> - }
+
+{if <630:657> -  isset($conf_data.action)}
+ |
+ -- {else <734:738> - }
+ |
+ -- {/if <1045:1048> - }
+
+{null <1391:1405> - $conf_data.yes}
+
+{null <1574:1587> - $conf_data.no}
+
+{null <1764:1773> - $form.yes}
+
+{null <1942:1950> - $form.no}
+
+{if <1298:1346> -  isset($conf_data.no) && isset($conf_data.yes)}
+ |
+ -- {else <1715:1719> - }
+ |
+ -- {/if <2078:2081> - }
+
+{if <1055:1096> -  ($form.type == 1) || ($form.type == 3)}
+ |
+ -- {elseif <1266:1290> -  ($form.type == 2)}
+ |
+ -- {/if <2088:2091> - }
+
+{eval <2214:2233> -  var=$item.name}
+
+{eval <2244:2264> -  var=$item.value}
+
+{foreach <2136:2177> -  from=$conf_data.hiddens item=item}
+ |
+ -- {/foreach <2275:2283> - }
+
+{eval <2377:2396> -  var=$item.name}
+
+{eval <2407:2427> -  var=$item.value}
+
+{foreach <2304:2340> -  from=$form.hiddens item=item}
+ |
+ -- {/foreach <2438:2446> - }
+
+{if <2099:2127> -  isset($conf_data.hiddens)}
+ |
+ -- {else <2291:2295> - }
+ |
+ -- {/if <2454:2457> - }

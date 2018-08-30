@@ -1,0 +1,6 @@
+Code completion result for source line:
+BaseClass::|$publicStaticBaseTrait1Field;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticBaseTrait1Method()  [STATIC]   BaseTrait1
+VARIABLE   ? $publicStaticBaseTrait1Field  [STATIC]   BaseTrait1
+CONSTANT   class \BaseClass                [PUBLIC]   Magic Constant

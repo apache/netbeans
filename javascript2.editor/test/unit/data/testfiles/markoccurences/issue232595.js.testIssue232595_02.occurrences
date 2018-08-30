@@ -1,0 +1,2 @@
+   var |>MARK_OCCURRENCES:myloc1<| = 20;       
+      |>MARK_OCCURRENCES:myl^oc1<| += loc2;

@@ -1,0 +1,15 @@
+Code completion result for source line:
+$this->|privateExtendedClassField;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     privateStaticExtendedClassMeth  [PRIVATE,  ExtendedClass
+METHOD     protectedBaseTrait1Method()     [PROTECTE  BaseTrait1
+METHOD     protectedStaticBaseTrait1Metho  [PROTECTE  BaseTrait1
+METHOD     protectedStaticExtendedClassMe  [PROTECTE  ExtendedClass
+METHOD     publicBaseClassMethod()         [PUBLIC]   BaseClass
+METHOD     publicBaseTrait1Method()        [PUBLIC]   BaseTrait1
+METHOD     publicExtendedClassMethod()     [PUBLIC]   ExtendedClass
+METHOD     publicStaticBaseTrait1Method()  [STATIC]   BaseTrait1
+METHOD     publicStaticExtendedClassMetho  [STATIC]   ExtendedClass
+VARIABLE   ? privateExtendedClassField     [PRIVATE]  ExtendedClass
+VARIABLE   ? protectedBaseTrait1Field      [PROTECTE  BaseTrait1
+VARIABLE   ? publicBaseTrait1Field         [PUBLIC]   BaseTrait1

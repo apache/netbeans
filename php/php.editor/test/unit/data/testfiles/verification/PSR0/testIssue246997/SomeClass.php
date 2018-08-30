@@ -1,0 +1,11 @@
+<?php
+
+namespace {
+
+    class SomeClass {
+
+    }
+
+}
+
+?>

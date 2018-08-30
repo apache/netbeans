@@ -1,0 +1,173 @@
+<testresult testFile='heredoc_004.php'>
+    <scanner>
+        <token id='T_INLINE_HTML' start='0' end='61'>
+            <text>--TEST--\nbraces variable replacement test (heredoc)\n--FILE--\n</text>
+        </token>
+        <token id='T_REQUIRE_ONCE' start='68' end='80'>
+            <text>require_once</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='81' end='93'>
+            <text>&apos;nowdoc.inc&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='93' end='94'>
+            <text>;</text>
+        </token>
+        <token id='T_PRINT' start='96' end='101'>
+            <text>print</text>
+        </token>
+        <token id='T_START_HEREDOC' start='102' end='118'>
+            <text>&lt;&lt;&lt;ENDOFHEREDOC\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='118' end='140'>
+            <text>This is heredoc test #</text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='140' end='141'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='141' end='143'>
+            <text>$a</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='143' end='144'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='144' end='158'>
+            <text>.\n\nENDOFHEREDO</text>
+        </token>
+        <token id='T_END_HEREDOC' start='158' end='159'>
+            <text>C</text>
+        </token>
+        <token id='T_SEMICOLON' start='159' end='160'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='162' end='164'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='165' end='166'>
+            <text>=</text>
+        </token>
+        <token id='T_START_HEREDOC' start='167' end='183'>
+            <text>&lt;&lt;&lt;ENDOFHEREDOC\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='183' end='205'>
+            <text>This is heredoc test #</text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='205' end='206'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='206' end='208'>
+            <text>$b</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='208' end='209'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='209' end='223'>
+            <text>.\n\nENDOFHEREDO</text>
+        </token>
+        <token id='T_END_HEREDOC' start='223' end='224'>
+            <text>C</text>
+        </token>
+        <token id='T_SEMICOLON' start='224' end='225'>
+            <text>;</text>
+        </token>
+        <token id='T_PRINT' start='227' end='232'>
+            <text>print</text>
+        </token>
+        <token id='T_QUATE' start='233' end='234'>
+            <text>"</text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='234' end='235'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='235' end='237'>
+            <text>$x</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='237' end='238'>
+            <text>}</text>
+        </token>
+        <token id='T_QUATE' start='238' end='239'>
+            <text>"</text>
+        </token>
+        <token id='T_SEMICOLON' start='239' end='240'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='242' end='245'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='T_INLINE_HTML' start='245' end='306'>
+            <text>--EXPECT--\nThis is heredoc test #1.\nThis is heredoc test #2.\n</text>
+        </token>
+        <token id='EOF' start='306' end='306'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='306'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <InLineHtml start='0' end='61'/>
+            <ExpressionStatement start='68' end='94'>
+                <Include start='68' end='93' type='REQUIRE_ONCE'>
+                    <Scalar start='81' end='93' type='STRING' value='&apos;nowdoc.inc&apos;'/>
+                </Include>
+            </ExpressionStatement>
+            <ExpressionStatement start='96' end='160'>
+                <FunctionInvocation start='96' end='159'>
+                    <FucntionName start='96' end='101'>
+                        <Identifier start='96' end='101' name='print'/>
+                    </FucntionName>
+                    <Parameters>
+                        <Quote start='102' end='159' type='HEREDOC'>
+                            <Expressions>
+                                <Scalar start='118' end='140' type='STRING' value='This is heredoc test #'/>
+                                <ReflectionVariable start='140' end='144'>
+                                    <Variable start='141' end='143' isDollared='true'>
+                                        <Identifier start='142' end='143' name='a'/>
+                                    </Variable>
+                                </ReflectionVariable>
+                                <Scalar start='144' end='158' type='STRING' value='.\n\n'/>
+                            </Expressions>
+                        </Quote>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='162' end='225'>
+                <Assignment start='162' end='224' operator='EQUAL'>
+                    <Variable start='162' end='164' isDollared='true'>
+                        <Identifier start='163' end='164' name='x'/>
+                    </Variable>
+                    <Quote start='167' end='224' type='HEREDOC'>
+                        <Expressions>
+                            <Scalar start='183' end='205' type='STRING' value='This is heredoc test #'/>
+                            <ReflectionVariable start='205' end='209'>
+                                <Variable start='206' end='208' isDollared='true'>
+                                    <Identifier start='207' end='208' name='b'/>
+                                </Variable>
+                            </ReflectionVariable>
+                            <Scalar start='209' end='223' type='STRING' value='.\n\n'/>
+                        </Expressions>
+                    </Quote>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='227' end='240'>
+                <FunctionInvocation start='227' end='239'>
+                    <FucntionName start='227' end='232'>
+                        <Identifier start='227' end='232' name='print'/>
+                    </FucntionName>
+                    <Parameters>
+                        <Quote start='233' end='239' type='QUOTE'>
+                            <Expressions>
+                                <ReflectionVariable start='234' end='238'>
+                                    <Variable start='235' end='237' isDollared='true'>
+                                        <Identifier start='236' end='237' name='x'/>
+                                    </Variable>
+                                </ReflectionVariable>
+                            </Expressions>
+                        </Quote>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <EmptyStatement start='242' end='245'/>
+            <InLineHtml start='245' end='306'/>
+        </Statements>
+    </Program>
+</testresult>

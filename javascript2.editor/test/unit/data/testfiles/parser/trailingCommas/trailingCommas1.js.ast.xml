@@ -1,0 +1,59 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='135'>
+  <hasDeclaredFunctions/>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='135'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='x' start='0' end='135'>
+      <hasInit/>
+      <isAssignment/>
+      <isFunctionDeclaration/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='9' end='10'>
+        <name>x</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <FunctionNode name='x' kind='NORMAL' start='0' end='135'>
+        <isDeclared/>
+        <!-- FunctionNode Parameters -->
+        <IdentNode start='11' end='12'>
+          <name>a</name>
+        </IdentNode>
+        <IdentNode start='14' end='15'>
+          <name>b</name>
+        </IdentNode>
+        <IdentNode start='17' end='18'>
+          <name>c</name>
+        </IdentNode>
+        <!-- FunctionNode Body -->
+        <Block start='21' end='133'>
+          <isFunctionBody/>
+          <isTerminal/>
+          <!-- Block Statements -->
+          <ReturnNode start='27' end='133'>
+            <CallNode start='34' end='132'>
+              <!-- CallNode Arguments -->
+              <IdentNode start='56' end='69'>
+                <name>componentName</name>
+              </IdentNode>
+              <IdentNode start='83' end='91'>
+                <name>location</name>
+              </IdentNode>
+              <IdentNode start='105' end='117'>
+                <name>propFullName</name>
+              </IdentNode>
+              <!-- CallNode Function -->
+              <IdentNode start='34' end='42'>
+                <name>validate</name>
+              </IdentNode>
+            </CallNode>
+          </ReturnNode>
+        </Block>
+      </FunctionNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

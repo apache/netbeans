@@ -1,0 +1,5 @@
+token #0 NEON_VALUED_BLOCK separator
+token #1 NEON_INTERPUNCTION :
+token #2 NEON_WHITESPACE  
+token #3 NEON_STRING "=======\n"
+token #4 NEON_WHITESPACE \n

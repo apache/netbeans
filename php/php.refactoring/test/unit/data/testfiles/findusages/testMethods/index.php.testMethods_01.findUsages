@@ -1,0 +1,9 @@
+Display text: public static function <b>stMethod</b>() {}
+File name: index.php
+Name: stMethod
+Position: BEGIN: 60 END: 68
+
+Display text: Foo::<b>stMethod</b>();
+File name: index.php
+Name: stMethod
+Position: BEGIN: 200 END: 208

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+<apichanges>
+    <apidefs>
+        <apidef name="filesystems_nb">Filesystems API - NetBeans extensions</apidef>
+    </apidefs>
+    <changes>
+        <change id="FileSystemStatus.icons2">
+            <api name="filesystems_nb"/>
+            <summary>FileSystem.Status API removed</summary>
+            <version major="9" minor="1"/>
+            <date year="2014" month="10" day="3"/>
+            <author login="sdedic"/>
+            <compatibility modification="yes" deletion="yes" addition="yes" binary="compatible" source="compatible" semantic="incompatible"/>
+            <description>
+                <p>
+                    The FileSystem.Status was entirely removed, as it references class java.awt.Image, which 
+                    is not available in compact jdk profiles and may trigger GUI system initialization. See
+                    javadocs of <a href="@org-openide-filesystems@/org/openide/filesystems/StatusDecorator.html">StatusDecorator</a>
+                    for details.
+                </p>
+            </description>
+            <class package="org.openide.filesystems" name="StatusDecorator" link="no"/>
+            <class package="org.openide.filesystems" name="FileSystem" link="no"/>
+            <issue number="247200"/>
+        </change>
+        <change id="FileSystemStatus.icons">
+            <api name="filesystems_nb"/>
+            <summary>FileSystem.Status icon annotation moved</summary>
+            <version major="9" minor="0"/>
+            <date year="2014" month="4" day="11"/>
+            <author login="sdedic"/>
+            <compatibility modification="yes" addition="yes" binary="compatible" source="compatible" semantic="incompatible"/>
+            <description>
+                <p>
+                    The default implementation of FileSystem.Status annotated file's icon using ImageUtilities
+                    which uses AWT graphics etc. Such dependency is not desirable in a standalone FileSystem API
+                    library.
+                </p>
+                <p>
+                    The builtin implementation now does not work with the icon at all and returns null. A proper
+                    implementation for FileSystem.Status is looked up in default Lookup and is implemented
+                    properly (with Icon annotations) in <code>openide.filesystems.nb</code> module.
+                </p>
+            </description>
+            <class package="org.openide.filesystems" name="FileSystem" link="no"/>
+            <issue number="243561"/>
+        </change>
+    </changes>
+    <htmlcontents>
+        <head>
+            <title>Change History for the File Systems API</title>
+            <link rel="stylesheet" href="prose.css" type="text/css"/>
+        </head>
+        <body>
+            <p class="overviewlink">
+                <a href="overview-summary.html">Overview</a>
+            </p>
+            <h1>Introduction</h1>
+            <h2>What do the Dates Mean?</h2>
+            <p>
+                The supplied dates indicate when the API change was made, on the CVS
+                trunk. From this you can generally tell whether the change should be
+                present in a given build or not; for trunk builds, simply whether it
+                was made before or after the change; for builds on a stabilization
+                branch, whether the branch was made before or after the given date. In
+                some cases corresponding API changes have been made both in the trunk
+                and in an in-progress stabilization branch, if they were needed for a
+                bug fix; this ought to be marked in this list.
+            </p>
+            <ul>
+                <li>The <code>release41</code> branch was made on Apr 03 '05 for use in the NetBeans 4.1 release.
+                    Specification versions: 6.0 begins after this point.</li>
+                <li>The <code>release40</code> branch was made on Nov 01 '04 for use in the NetBeans 4.0 release.
+                    Specification versions: 5.0 begins after this point.</li>
+            </ul>
+            <hr/>
+            <standard-changelists module-code-name="$codebase"/>
+            <hr/>
+            <p>@FOOTER@</p>
+        </body>
+    </htmlcontents>
+</apichanges>

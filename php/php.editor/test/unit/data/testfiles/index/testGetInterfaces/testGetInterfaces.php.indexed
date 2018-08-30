@@ -1,0 +1,43 @@
+
+
+Document 0
+Searchable Keys:
+
+Not Searchable Keys:
+
+
+Document 1
+Searchable Keys:
+  identifier_used : aaa;
+  identifier_used : aaa;
+  identifier_used : bbb;
+  identifier_used : bbb;
+  identifier_used : ccc;
+
+Not Searchable Keys:
+
+
+Document 2
+Searchable Keys:
+  iface : aaa;AAA;16;;;0;<TESTURL>/testGetInterfaces.php;
+  top : aaa
+
+Not Searchable Keys:
+
+
+Document 3
+Searchable Keys:
+  iface : bbb;BBB;34;AAA|\AAA;;0;<TESTURL>/testGetInterfaces.php;
+  superiface : aaa;AAA;
+  top : bbb
+
+Not Searchable Keys:
+
+
+Document 4
+Searchable Keys:
+  iface : ccc;CCC;64;BBB|\BBB;;0;<TESTURL>/testGetInterfaces.php;
+  superiface : bbb;BBB;
+  top : ccc
+
+Not Searchable Keys:

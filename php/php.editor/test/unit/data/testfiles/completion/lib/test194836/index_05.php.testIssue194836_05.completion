@@ -1,0 +1,8 @@
+Code completion result for source line:
+$user->|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     getLastName()                   [PUBLIC]   \XUser\XUser
+METHOD     getName()                       [PUBLIC]   \XUser\XUserAbstract
+METHOD     setLastName($lastName)          [PUBLIC]   \XUser\XUserAbstract
+METHOD     setName($name)                  [PUBLIC]   \XUser\XUserAbstract

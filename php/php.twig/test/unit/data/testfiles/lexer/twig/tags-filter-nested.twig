@@ -1,0 +1,7 @@
+{% filter lower|title %}
+  {{ var }}
+  {% filter upper %}
+    {{ var }}
+  {% endfilter %}
+  {{ var }}
+{% endfilter %}

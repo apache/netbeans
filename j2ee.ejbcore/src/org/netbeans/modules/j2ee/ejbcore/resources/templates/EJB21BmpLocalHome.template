@@ -1,0 +1,19 @@
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+package ${package};
+
+import javax.ejb.EJBLocalHome;
+import javax.ejb.FinderException;
+
+/**
+ *
+ * @author ${user}
+ */
+public interface ${name} extends EJBLocalHome {
+
+    ${localInterface} findByPrimaryKey(${primaryKey} key) throws FinderException;
+    
+}

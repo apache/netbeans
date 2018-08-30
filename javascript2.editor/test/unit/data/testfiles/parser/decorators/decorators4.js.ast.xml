@@ -1,0 +1,154 @@
+<FunctionNode name='decorators4.js' kind='MODULE' start='0' end='121'>
+  <isProgram/>
+  <ImportNode start='0' end='41'>
+    <ImportClauseNode start='7' end='17'>
+      <NamedImportsNode start='7' end='17'>
+        <ImportSpecifierNode start='9' end='15'>
+          <IdentNode start='9' end='15'>
+            <name>inject</name>
+          </IdentNode>
+        </ImportSpecifierNode>
+      </NamedImportsNode>
+    </ImportClauseNode>
+    <FromNode start='18' end='41'>
+      <StringLiteralNode value='aurelia-framework' start='24' end='22'/>
+    </FromNode>
+  </ImportNode>
+  <ExportNode start='56' end='119'>
+    <ClassNode ident='Decorators' start='63' end='119'>
+      <!-- ClassNode Constructor -->
+      <PropertyNode name='Decorators' start='63' end='119'>
+        <!-- PropertyNode Key -->
+        <IdentNode start='77' end='87'>
+          <name>Decorators</name>
+        </IdentNode>
+        <!-- PropertyNode Value -->
+        <FunctionNode name='Decorators' kind='NORMAL' start='63' end='119'>
+          <isClassConstructor/>
+          <isMethod/>
+          <isNamedFunctionExpression/>
+          <!-- FunctionNode Parameters -->
+          <!-- FunctionNode Body -->
+          <Block start='63' end='119'>
+            <isFunctionBody/>
+            <!-- Block Statements -->
+          </Block>
+        </FunctionNode>
+        <!-- PropertyNode Decorators -->
+      </PropertyNode>
+      <!-- ClassNode Elements -->
+      <PropertyNode name='test' start='94' end='117'>
+        <!-- PropertyNode Key -->
+        <IdentNode start='94' end='98'>
+          <name>test</name>
+          <isPropertyName/>
+        </IdentNode>
+        <!-- PropertyNode Value -->
+        <FunctionNode name='test' kind='NORMAL' start='94' end='117'>
+          <isMethod/>
+          <isNamedFunctionExpression/>
+          <!-- FunctionNode Parameters -->
+          <!-- FunctionNode Body -->
+          <Block start='101' end='102'>
+            <isFunctionBody/>
+            <!-- Block Statements -->
+          </Block>
+        </FunctionNode>
+        <!-- PropertyNode Decorators -->
+      </PropertyNode>
+      <!-- ClassNode Decorators -->
+      <CallNode start='47' end='55'>
+        <!-- CallNode Arguments -->
+        <!-- CallNode Function -->
+        <IdentNode start='47' end='53'>
+          <name>inject</name>
+        </IdentNode>
+      </CallNode>
+      <CallNode start='64' end='70'>
+        <!-- CallNode Arguments -->
+        <!-- CallNode Function -->
+        <IdentNode start='64' end='68'>
+          <name>test</name>
+        </IdentNode>
+      </CallNode>
+    </ClassNode>
+  </ExportNode>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='120'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='Decorators' start='63' end='87'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isConst/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='77' end='87'>
+        <name>Decorators</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <ClassNode ident='Decorators' start='63' end='119'>
+        <!-- ClassNode Constructor -->
+        <PropertyNode name='Decorators' start='63' end='119'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='77' end='87'>
+            <name>Decorators</name>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <FunctionNode name='Decorators' kind='NORMAL' start='63' end='119'>
+            <isClassConstructor/>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='63' end='119'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <!-- ClassNode Elements -->
+        <PropertyNode name='test' start='94' end='117'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='94' end='98'>
+            <name>test</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <FunctionNode name='test' kind='NORMAL' start='94' end='117'>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='101' end='102'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <!-- ClassNode Decorators -->
+        <CallNode start='47' end='55'>
+          <!-- CallNode Arguments -->
+          <!-- CallNode Function -->
+          <IdentNode start='47' end='53'>
+            <name>inject</name>
+          </IdentNode>
+        </CallNode>
+        <CallNode start='64' end='70'>
+          <!-- CallNode Arguments -->
+          <!-- CallNode Function -->
+          <IdentNode start='64' end='68'>
+            <name>test</name>
+          </IdentNode>
+        </CallNode>
+      </ClassNode>
+    </VarNode>
+    <EmptyNode start='119' end='120'>
+    </EmptyNode>
+  </Block>
+</FunctionNode>

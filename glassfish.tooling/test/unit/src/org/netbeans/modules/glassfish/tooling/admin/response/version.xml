@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<map>
+  <entry key="extraProperties">
+    <map>
+      <entry key="methods">
+	<list>
+	  <map>
+	    <entry key="name" value="GET"/>
+	  </map>
+	  <map>
+	    <entry key="messageParameters">
+	      <map>
+		<entry key="verbose">
+		  <map>
+		    <entry key="acceptableValues" value=""/>
+		    <entry key="optional" value="true"/>
+		    <entry key="defaultValue" value="false"/>
+		    <entry key="type" value="boolean"/>
+		  </map>
+		</entry>
+	      </map>
+	    </entry>
+	  </map>
+	  </list>
+      </entry>
+    </map>
+  </entry>
+  <entry key="message" value="GlassFish Server Open Source Edition 3.1.1 (build 12)"/>
+  <entry key="exit_code" value="SUCCESS"/>
+  <entry key="command" value="version AdminCommand"/>
+</map>

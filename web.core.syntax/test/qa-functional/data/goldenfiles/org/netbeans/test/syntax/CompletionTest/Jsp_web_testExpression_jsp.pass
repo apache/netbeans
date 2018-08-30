@@ -1,0 +1,691 @@
+[${|, Integer integer, ${integer, 856]
+applicationScope
+Calendar calendar
+cookie
+FlowDiscoveryCDIHelper csfFLOW
+Date date
+javax.faces.context.FacesConte
+header
+headerValues
+initParam
+Integer integer
+javax.servlet.jsp.PageContext 
+pageScope
+param
+paramValues
+requestScope
+sessionScope
+javax.faces.component.UIViewRo
+and
+div
+empty
+eq
+false
+ge
+gt
+instanceof
+le
+lt
+mod
+ne
+not
+null
+or
+true
+java.lang.AbstractMethodError 
+java.lang.AbstractStringBuilde
+java.lang.ApplicationShutdownH
+java.lang.ArithmeticException 
+java.lang.ArrayIndexOutOfBound
+java.lang.ArrayStoreException 
+java.lang.AssertionError Asser
+java.lang.AssertionStatusDirec
+java.lang.Boolean Boolean
+java.lang.BootstrapMethodError
+java.lang.Byte Byte
+java.lang.Character Character
+java.lang.CharacterData Charac
+java.lang.CharacterData00 Char
+java.lang.CharacterData01 Char
+java.lang.CharacterData02 Char
+java.lang.CharacterData0E Char
+java.lang.CharacterDataLatin1 
+java.lang.CharacterDataPrivate
+java.lang.CharacterDataUndefin
+java.lang.CharacterName Charac
+java.lang.Class Class
+java.lang.ClassCastException C
+java.lang.ClassCircularityErro
+java.lang.ClassFormatError Cla
+java.lang.ClassLoader ClassLoa
+java.lang.ClassLoaderHelper Cl
+java.lang.ClassNotFoundExcepti
+java.lang.ClassValue ClassValu
+java.lang.CloneNotSupportedExc
+java.lang.Compiler Compiler
+java.lang.ConditionalSpecialCa
+java.lang.Double Double
+java.lang.Enum Enum
+java.lang.EnumConstantNotPrese
+java.lang.Error Error
+java.lang.Exception Exception
+java.lang.ExceptionInInitializ
+java.lang.Float Float
+java.lang.IllegalAccessError I
+java.lang.IllegalAccessExcepti
+java.lang.IllegalArgumentExcep
+java.lang.IllegalMonitorStateE
+java.lang.IllegalStateExceptio
+java.lang.IllegalThreadStateEx
+java.lang.IncompatibleClassCha
+java.lang.IndexOutOfBoundsExce
+java.lang.InheritableThreadLoc
+java.lang.InstantiationError I
+java.lang.InstantiationExcepti
+java.lang.Integer Integer
+java.lang.InternalError Intern
+java.lang.InterruptedException
+java.lang.LinkageError Linkage
+java.lang.Long Long
+java.lang.Math Math
+java.lang.NegativeArraySizeExc
+java.lang.NoClassDefFoundError
+java.lang.NoSuchFieldError NoS
+java.lang.NoSuchFieldException
+java.lang.NoSuchMethodError No
+java.lang.NoSuchMethodExceptio
+java.lang.NullPointerException
+java.lang.Number Number
+java.lang.NumberFormatExceptio
+java.lang.Object Object
+java.lang.OutOfMemoryError Out
+java.lang.Package Package
+java.lang.Process Process
+java.lang.ProcessBuilder Proce
+java.lang.ProcessEnvironment P
+java.lang.ProcessImpl ProcessI
+java.lang.ReflectiveOperationE
+java.lang.Runtime Runtime
+java.lang.RuntimeException Run
+java.lang.RuntimePermission Ru
+java.lang.SecurityException Se
+java.lang.SecurityManager Secu
+java.lang.Short Short
+java.lang.Shutdown Shutdown
+java.lang.StackOverflowError S
+java.lang.StackTraceElement St
+java.lang.StrictMath StrictMat
+java.lang.String String
+java.lang.StringBuffer StringB
+java.lang.StringBuilder String
+java.lang.StringCoding StringC
+java.lang.StringIndexOutOfBoun
+java.lang.System System
+java.lang.SystemClassLoaderAct
+java.lang.Terminator Terminato
+java.lang.Thread Thread
+java.lang.ThreadDeath ThreadDe
+java.lang.ThreadGroup ThreadGr
+java.lang.ThreadLocal ThreadLo
+java.lang.Throwable Throwable
+java.lang.TypeNotPresentExcept
+java.lang.UNIXProcess UNIXProc
+java.lang.UnknownError Unknown
+java.lang.UnsatisfiedLinkError
+java.lang.UnsupportedClassVers
+java.lang.UnsupportedOperation
+java.lang.VerifyError VerifyEr
+java.lang.VirtualMachineError 
+java.lang.Void Void
+java java
+javax javax
+End cursor position = 866
+[${|, Date date, ${date, 890]
+applicationScope
+Calendar calendar
+cookie
+FlowDiscoveryCDIHelper csfFLOW
+Date date
+javax.faces.context.FacesConte
+header
+headerValues
+initParam
+Integer integer
+javax.servlet.jsp.PageContext 
+pageScope
+param
+paramValues
+requestScope
+sessionScope
+javax.faces.component.UIViewRo
+and
+div
+empty
+eq
+false
+ge
+gt
+instanceof
+le
+lt
+mod
+ne
+not
+null
+or
+true
+java.lang.AbstractMethodError 
+java.lang.AbstractStringBuilde
+java.lang.ApplicationShutdownH
+java.lang.ArithmeticException 
+java.lang.ArrayIndexOutOfBound
+java.lang.ArrayStoreException 
+java.lang.AssertionError Asser
+java.lang.AssertionStatusDirec
+java.lang.Boolean Boolean
+java.lang.BootstrapMethodError
+java.lang.Byte Byte
+java.lang.Character Character
+java.lang.CharacterData Charac
+java.lang.CharacterData00 Char
+java.lang.CharacterData01 Char
+java.lang.CharacterData02 Char
+java.lang.CharacterData0E Char
+java.lang.CharacterDataLatin1 
+java.lang.CharacterDataPrivate
+java.lang.CharacterDataUndefin
+java.lang.CharacterName Charac
+java.lang.Class Class
+java.lang.ClassCastException C
+java.lang.ClassCircularityErro
+java.lang.ClassFormatError Cla
+java.lang.ClassLoader ClassLoa
+java.lang.ClassLoaderHelper Cl
+java.lang.ClassNotFoundExcepti
+java.lang.ClassValue ClassValu
+java.lang.CloneNotSupportedExc
+java.lang.Compiler Compiler
+java.lang.ConditionalSpecialCa
+java.lang.Double Double
+java.lang.Enum Enum
+java.lang.EnumConstantNotPrese
+java.lang.Error Error
+java.lang.Exception Exception
+java.lang.ExceptionInInitializ
+java.lang.Float Float
+java.lang.IllegalAccessError I
+java.lang.IllegalAccessExcepti
+java.lang.IllegalArgumentExcep
+java.lang.IllegalMonitorStateE
+java.lang.IllegalStateExceptio
+java.lang.IllegalThreadStateEx
+java.lang.IncompatibleClassCha
+java.lang.IndexOutOfBoundsExce
+java.lang.InheritableThreadLoc
+java.lang.InstantiationError I
+java.lang.InstantiationExcepti
+java.lang.Integer Integer
+java.lang.InternalError Intern
+java.lang.InterruptedException
+java.lang.LinkageError Linkage
+java.lang.Long Long
+java.lang.Math Math
+java.lang.NegativeArraySizeExc
+java.lang.NoClassDefFoundError
+java.lang.NoSuchFieldError NoS
+java.lang.NoSuchFieldException
+java.lang.NoSuchMethodError No
+java.lang.NoSuchMethodExceptio
+java.lang.NullPointerException
+java.lang.Number Number
+java.lang.NumberFormatExceptio
+java.lang.Object Object
+java.lang.OutOfMemoryError Out
+java.lang.Package Package
+java.lang.Process Process
+java.lang.ProcessBuilder Proce
+java.lang.ProcessEnvironment P
+java.lang.ProcessImpl ProcessI
+java.lang.ReflectiveOperationE
+java.lang.Runtime Runtime
+java.lang.RuntimeException Run
+java.lang.RuntimePermission Ru
+java.lang.SecurityException Se
+java.lang.SecurityManager Secu
+java.lang.Short Short
+java.lang.Shutdown Shutdown
+java.lang.StackOverflowError S
+java.lang.StackTraceElement St
+java.lang.StrictMath StrictMat
+java.lang.String String
+java.lang.StringBuffer StringB
+java.lang.StringBuilder String
+java.lang.StringCoding StringC
+java.lang.StringIndexOutOfBoun
+java.lang.System System
+java.lang.SystemClassLoaderAct
+java.lang.Terminator Terminato
+java.lang.Thread Thread
+java.lang.ThreadDeath ThreadDe
+java.lang.ThreadGroup ThreadGr
+java.lang.ThreadLocal ThreadLo
+java.lang.Throwable Throwable
+java.lang.TypeNotPresentExcept
+java.lang.UNIXProcess UNIXProc
+java.lang.UnknownError Unknown
+java.lang.UnsatisfiedLinkError
+java.lang.UnsupportedClassVers
+java.lang.UnsupportedOperation
+java.lang.VerifyError VerifyEr
+java.lang.VirtualMachineError 
+java.lang.Void Void
+java java
+javax javax
+End cursor position = 897
+[${i|, initParam, ${initParam, 930]
+initParam
+Integer integer
+instanceof
+java.lang.AbstractMethodError 
+java.lang.AbstractStringBuilde
+java.lang.ApplicationShutdownH
+java.lang.ArithmeticException 
+java.lang.ArrayIndexOutOfBound
+java.lang.ArrayStoreException 
+java.lang.AssertionError Asser
+java.lang.AssertionStatusDirec
+java.lang.Boolean Boolean
+java.lang.BootstrapMethodError
+java.lang.Byte Byte
+java.lang.Character Character
+java.lang.CharacterData Charac
+java.lang.CharacterData00 Char
+java.lang.CharacterData01 Char
+java.lang.CharacterData02 Char
+java.lang.CharacterData0E Char
+java.lang.CharacterDataLatin1 
+java.lang.CharacterDataPrivate
+java.lang.CharacterDataUndefin
+java.lang.CharacterName Charac
+java.lang.Class Class
+java.lang.ClassCastException C
+java.lang.ClassCircularityErro
+java.lang.ClassFormatError Cla
+java.lang.ClassLoader ClassLoa
+java.lang.ClassLoaderHelper Cl
+java.lang.ClassNotFoundExcepti
+java.lang.ClassValue ClassValu
+java.lang.CloneNotSupportedExc
+java.lang.Compiler Compiler
+java.lang.ConditionalSpecialCa
+java.lang.Double Double
+java.lang.Enum Enum
+java.lang.EnumConstantNotPrese
+java.lang.Error Error
+java.lang.Exception Exception
+java.lang.ExceptionInInitializ
+java.lang.Float Float
+java.lang.IllegalAccessError I
+java.lang.IllegalAccessExcepti
+java.lang.IllegalArgumentExcep
+java.lang.IllegalMonitorStateE
+java.lang.IllegalStateExceptio
+java.lang.IllegalThreadStateEx
+java.lang.IncompatibleClassCha
+java.lang.IndexOutOfBoundsExce
+java.lang.InheritableThreadLoc
+java.lang.InstantiationError I
+java.lang.InstantiationExcepti
+java.lang.Integer Integer
+java.lang.InternalError Intern
+java.lang.InterruptedException
+java.lang.LinkageError Linkage
+java.lang.Long Long
+java.lang.Math Math
+java.lang.NegativeArraySizeExc
+java.lang.NoClassDefFoundError
+java.lang.NoSuchFieldError NoS
+java.lang.NoSuchFieldException
+java.lang.NoSuchMethodError No
+java.lang.NoSuchMethodExceptio
+java.lang.NullPointerException
+java.lang.Number Number
+java.lang.NumberFormatExceptio
+java.lang.Object Object
+java.lang.OutOfMemoryError Out
+java.lang.Package Package
+java.lang.Process Process
+java.lang.ProcessBuilder Proce
+java.lang.ProcessEnvironment P
+java.lang.ProcessImpl ProcessI
+java.lang.ReflectiveOperationE
+java.lang.Runtime Runtime
+java.lang.RuntimeException Run
+java.lang.RuntimePermission Ru
+java.lang.SecurityException Se
+java.lang.SecurityManager Secu
+java.lang.Short Short
+java.lang.Shutdown Shutdown
+java.lang.StackOverflowError S
+java.lang.StackTraceElement St
+java.lang.StrictMath StrictMat
+java.lang.String String
+java.lang.StringBuffer StringB
+java.lang.StringBuilder String
+java.lang.StringCoding StringC
+java.lang.StringIndexOutOfBoun
+java.lang.System System
+java.lang.SystemClassLoaderAct
+java.lang.Terminator Terminato
+java.lang.Thread Thread
+java.lang.ThreadDeath ThreadDe
+java.lang.ThreadGroup ThreadGr
+java.lang.ThreadLocal ThreadLo
+java.lang.Throwable Throwable
+java.lang.TypeNotPresentExcept
+java.lang.UNIXProcess UNIXProc
+java.lang.UnknownError Unknown
+java.lang.UnsatisfiedLinkError
+java.lang.UnsupportedClassVers
+java.lang.UnsupportedOperation
+java.lang.VerifyError VerifyEr
+java.lang.VirtualMachineError 
+java.lang.Void Void
+java java
+javax javax
+End cursor position = 942
+[#{|, sessionScope, #{sessionScope, 975]
+applicationScope
+Calendar calendar
+cookie
+FlowDiscoveryCDIHelper csfFLOW
+Date date
+javax.faces.context.FacesConte
+header
+headerValues
+initParam
+Integer integer
+javax.servlet.jsp.PageContext 
+pageScope
+param
+paramValues
+requestScope
+sessionScope
+javax.faces.component.UIViewRo
+and
+div
+empty
+eq
+false
+ge
+gt
+instanceof
+le
+lt
+mod
+ne
+not
+null
+or
+true
+java.lang.AbstractMethodError 
+java.lang.AbstractStringBuilde
+java.lang.ApplicationShutdownH
+java.lang.ArithmeticException 
+java.lang.ArrayIndexOutOfBound
+java.lang.ArrayStoreException 
+java.lang.AssertionError Asser
+java.lang.AssertionStatusDirec
+java.lang.Boolean Boolean
+java.lang.BootstrapMethodError
+java.lang.Byte Byte
+java.lang.Character Character
+java.lang.CharacterData Charac
+java.lang.CharacterData00 Char
+java.lang.CharacterData01 Char
+java.lang.CharacterData02 Char
+java.lang.CharacterData0E Char
+java.lang.CharacterDataLatin1 
+java.lang.CharacterDataPrivate
+java.lang.CharacterDataUndefin
+java.lang.CharacterName Charac
+java.lang.Class Class
+java.lang.ClassCastException C
+java.lang.ClassCircularityErro
+java.lang.ClassFormatError Cla
+java.lang.ClassLoader ClassLoa
+java.lang.ClassLoaderHelper Cl
+java.lang.ClassNotFoundExcepti
+java.lang.ClassValue ClassValu
+java.lang.CloneNotSupportedExc
+java.lang.Compiler Compiler
+java.lang.ConditionalSpecialCa
+java.lang.Double Double
+java.lang.Enum Enum
+java.lang.EnumConstantNotPrese
+java.lang.Error Error
+java.lang.Exception Exception
+java.lang.ExceptionInInitializ
+java.lang.Float Float
+java.lang.IllegalAccessError I
+java.lang.IllegalAccessExcepti
+java.lang.IllegalArgumentExcep
+java.lang.IllegalMonitorStateE
+java.lang.IllegalStateExceptio
+java.lang.IllegalThreadStateEx
+java.lang.IncompatibleClassCha
+java.lang.IndexOutOfBoundsExce
+java.lang.InheritableThreadLoc
+java.lang.InstantiationError I
+java.lang.InstantiationExcepti
+java.lang.Integer Integer
+java.lang.InternalError Intern
+java.lang.InterruptedException
+java.lang.LinkageError Linkage
+java.lang.Long Long
+java.lang.Math Math
+java.lang.NegativeArraySizeExc
+java.lang.NoClassDefFoundError
+java.lang.NoSuchFieldError NoS
+java.lang.NoSuchFieldException
+java.lang.NoSuchMethodError No
+java.lang.NoSuchMethodExceptio
+java.lang.NullPointerException
+java.lang.Number Number
+java.lang.NumberFormatExceptio
+java.lang.Object Object
+java.lang.OutOfMemoryError Out
+java.lang.Package Package
+java.lang.Process Process
+java.lang.ProcessBuilder Proce
+java.lang.ProcessEnvironment P
+java.lang.ProcessImpl ProcessI
+java.lang.ReflectiveOperationE
+java.lang.Runtime Runtime
+java.lang.RuntimeException Run
+java.lang.RuntimePermission Ru
+java.lang.SecurityException Se
+java.lang.SecurityManager Secu
+java.lang.Short Short
+java.lang.Shutdown Shutdown
+java.lang.StackOverflowError S
+java.lang.StackTraceElement St
+java.lang.StrictMath StrictMat
+java.lang.String String
+java.lang.StringBuffer StringB
+java.lang.StringBuilder String
+java.lang.StringCoding StringC
+java.lang.StringIndexOutOfBoun
+java.lang.System System
+java.lang.SystemClassLoaderAct
+java.lang.Terminator Terminato
+java.lang.Thread Thread
+java.lang.ThreadDeath ThreadDe
+java.lang.ThreadGroup ThreadGr
+java.lang.ThreadLocal ThreadLo
+java.lang.Throwable Throwable
+java.lang.TypeNotPresentExcept
+java.lang.UNIXProcess UNIXProc
+java.lang.UnknownError Unknown
+java.lang.UnsatisfiedLinkError
+java.lang.UnsupportedClassVers
+java.lang.UnsupportedOperation
+java.lang.VerifyError VerifyEr
+java.lang.VirtualMachineError 
+java.lang.Void Void
+java java
+javax javax
+End cursor position = 990
+[#{c|, Calendar calendar, #{calendar, 1021]
+Calendar calendar
+cookie
+FlowDiscoveryCDIHelper csfFLOW
+java.lang.AbstractMethodError 
+java.lang.AbstractStringBuilde
+java.lang.ApplicationShutdownH
+java.lang.ArithmeticException 
+java.lang.ArrayIndexOutOfBound
+java.lang.ArrayStoreException 
+java.lang.AssertionError Asser
+java.lang.AssertionStatusDirec
+java.lang.Boolean Boolean
+java.lang.BootstrapMethodError
+java.lang.Byte Byte
+java.lang.Character Character
+java.lang.CharacterData Charac
+java.lang.CharacterData00 Char
+java.lang.CharacterData01 Char
+java.lang.CharacterData02 Char
+java.lang.CharacterData0E Char
+java.lang.CharacterDataLatin1 
+java.lang.CharacterDataPrivate
+java.lang.CharacterDataUndefin
+java.lang.CharacterName Charac
+java.lang.Class Class
+java.lang.ClassCastException C
+java.lang.ClassCircularityErro
+java.lang.ClassFormatError Cla
+java.lang.ClassLoader ClassLoa
+java.lang.ClassLoaderHelper Cl
+java.lang.ClassNotFoundExcepti
+java.lang.ClassValue ClassValu
+java.lang.CloneNotSupportedExc
+java.lang.Compiler Compiler
+java.lang.ConditionalSpecialCa
+java.lang.Double Double
+java.lang.Enum Enum
+java.lang.EnumConstantNotPrese
+java.lang.Error Error
+java.lang.Exception Exception
+java.lang.ExceptionInInitializ
+java.lang.Float Float
+java.lang.IllegalAccessError I
+java.lang.IllegalAccessExcepti
+java.lang.IllegalArgumentExcep
+java.lang.IllegalMonitorStateE
+java.lang.IllegalStateExceptio
+java.lang.IllegalThreadStateEx
+java.lang.IncompatibleClassCha
+java.lang.IndexOutOfBoundsExce
+java.lang.InheritableThreadLoc
+java.lang.InstantiationError I
+java.lang.InstantiationExcepti
+java.lang.Integer Integer
+java.lang.InternalError Intern
+java.lang.InterruptedException
+java.lang.LinkageError Linkage
+java.lang.Long Long
+java.lang.Math Math
+java.lang.NegativeArraySizeExc
+java.lang.NoClassDefFoundError
+java.lang.NoSuchFieldError NoS
+java.lang.NoSuchFieldException
+java.lang.NoSuchMethodError No
+java.lang.NoSuchMethodExceptio
+java.lang.NullPointerException
+java.lang.Number Number
+java.lang.NumberFormatExceptio
+java.lang.Object Object
+java.lang.OutOfMemoryError Out
+java.lang.Package Package
+java.lang.Process Process
+java.lang.ProcessBuilder Proce
+java.lang.ProcessEnvironment P
+java.lang.ProcessImpl ProcessI
+java.lang.ReflectiveOperationE
+java.lang.Runtime Runtime
+java.lang.RuntimeException Run
+java.lang.RuntimePermission Ru
+java.lang.SecurityException Se
+java.lang.SecurityManager Secu
+java.lang.Short Short
+java.lang.Shutdown Shutdown
+java.lang.StackOverflowError S
+java.lang.StackTraceElement St
+java.lang.StrictMath StrictMat
+java.lang.String String
+java.lang.StringBuffer StringB
+java.lang.StringBuilder String
+java.lang.StringCoding StringC
+java.lang.StringIndexOutOfBoun
+java.lang.System System
+java.lang.SystemClassLoaderAct
+java.lang.Terminator Terminato
+java.lang.Thread Thread
+java.lang.ThreadDeath ThreadDe
+java.lang.ThreadGroup ThreadGr
+java.lang.ThreadLocal ThreadLo
+java.lang.Throwable Throwable
+java.lang.TypeNotPresentExcept
+java.lang.UNIXProcess UNIXProc
+java.lang.UnknownError Unknown
+java.lang.UnsatisfiedLinkError
+java.lang.UnsupportedClassVers
+java.lang.UnsupportedOperation
+java.lang.VerifyError VerifyEr
+java.lang.VirtualMachineError 
+java.lang.Void Void
+java java
+javax javax
+End cursor position = 1032
+[#{calendar.|, timeInMillis, #{calendar.timeInMillis, 1083]
+void add(int field,int amount)
+boolean after(Object when)
+boolean before(Object when)
+void clear()
+void clear(int field)
+Object clone()
+int compareTo(Calendar another
+boolean equals(Object obj)
+int firstDayOfWeek
+int get(int field)
+int getActualMaximum(int field
+int getActualMinimum(int field
+String getDisplayName(int fiel
+Map getDisplayNames(int field,
+int getGreatestMinimum(int fie
+int getLeastMaximum(int field)
+int getMaximum(int field)
+int getMinimum(int field)
+int hashCode()
+boolean lenient
+int minimalDaysInFirstWeek
+void roll(int field,boolean up
+void roll(int field,int amount
+void set(int field,int value)
+void set(int year,int month,in
+void set(int year,int month,in
+void set(int year,int month,in
+void setFirstDayOfWeek(int val
+void setLenient(boolean lenien
+void setMinimalDaysInFirstWeek
+void setTimeZone(TimeZone valu
+void setWeekDate(int weekYear,
+Date time
+long timeInMillis
+TimeZone timeZone
+String toString()
+boolean weekDateSupported
+int weekYear
+int weeksInWeekYear
+End cursor position = 1107

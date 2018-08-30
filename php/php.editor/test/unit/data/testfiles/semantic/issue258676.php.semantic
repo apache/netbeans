@@ -1,0 +1,13 @@
+<?php
+class |>CLASS:Example<|
+{
+    public function |>METHOD:doSomething<|()
+    {
+        throw new \Exception($this->|>CUSTOM1:getMessage<|());
+    }
+
+    private function |>METHOD:getMessage<|()
+    {
+        return 'Hello World!';
+    }
+}

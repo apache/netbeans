@@ -1,0 +1,5 @@
+obj:CLASS:[PRIVATE]:ESCAPED{obj}:
+  methodA:METHOD:[PROTECTED]:ESCAPED{methodA}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  methodB:METHOD:[PRIVATE]:ESCAPED{methodB}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  propertyA:FIELD:[PUBLIC]:ESCAPED{propertyA}<font color="#999999">ESCAPED{ : }String</font>:
+  propertyC:FIELD:[PUBLIC]:ESCAPED{propertyC}<font color="#999999">ESCAPED{ : }String</font>:

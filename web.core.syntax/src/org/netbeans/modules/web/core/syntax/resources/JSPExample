@@ -1,0 +1,14 @@
+<%@page contentType="text/html"%>
+
+<% boolean b = true; request.getMehod (); // Java code
+%>
+<html>
+    <jsp:setProperty name="test" property="JSP" />
+    <%-- HTML --%>
+    <jsp:useBean id="bean" scope="request" class="some.Bean">
+        <jsp:setProperty name="bean" property="amount" value="10" /> 
+    </jsp:useBean #error>
+
+    <!-- Let's welcome the user ${param.name} -->
+    Hello ${param.name}!
+</html>

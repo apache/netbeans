@@ -1,0 +1,49 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+export {|>GLOBAL:a<| |>CUSTOM2:as<| |>GLOBAL:x1<|};
+export {|>GLOBAL:a<| |>CUSTOM2:as<| |>GLOBAL:x2<|} |>CUSTOM2:from<| 'uuu';
+export * |>CUSTOM2:from<| 'ooo';
+
+import |>GLOBAL:i1<| |>CUSTOM2:from<| 'ddd';
+import * |>CUSTOM2:as<| |>GLOBAL:star<| |>CUSTOM2:from<| 'fff';
+
+import {i2 |>CUSTOM2:as<| |>GLOBAL:i3<|} |>CUSTOM2:from<| 'sss';
+
+|>CUSTOM2:let<| |>GLOBAL:test<| = 7;
+
+class |>CLASS,GLOBAL:Test<| {
+    |>CUSTOM2:static<| test1() {
+        
+    }
+    
+    |>METHOD:as<|() {
+        //ok
+    }
+    
+    |>METHOD:from<|() {
+        //ok
+    }
+    
+    |>METHOD:test1<|() {
+        |>CUSTOM2:let<| |>LOCAL_VARIABLE_DECLARATION,UNUSED:a<| = 7;
+        |>CUSTOM2:let<| |>LOCAL_VARIABLE_DECLARATION,UNUSED:from<| = 0;
+        |>CUSTOM2:let<| |>LOCAL_VARIABLE_DECLARATION,UNUSED:as<| = 0;
+    }
+}
+

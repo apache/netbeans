@@ -1,0 +1,5 @@
+Code completion result for source line:
+double |
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+VARIABLE   d                                          null

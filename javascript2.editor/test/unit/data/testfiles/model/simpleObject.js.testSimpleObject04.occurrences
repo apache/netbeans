@@ -1,0 +1,2 @@
+    |>MARK_OCCURRENCES:getCo^lor<|: function () {
+formatter.println(Carrot.|>MARK_OCCURRENCES:getColor<|());

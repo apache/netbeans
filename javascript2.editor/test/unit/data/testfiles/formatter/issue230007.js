@@ -1,0 +1,1 @@
+"function" != typeof/./ && x || typeof  n;

@@ -1,0 +1,9 @@
+<?php
+
+class Test4 {
+
+    private function testMethod4(): string
+    {
+        
+    }
+}

@@ -1,0 +1,2 @@
+    static $|>MARK_OCCURRENCES:MIN<| = "MIN";
+UVS3::myStatic3()::myStatic2()::myStatic1()::$|>MARK_OCCURRENCES:M^IN<|;

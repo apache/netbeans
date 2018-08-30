@@ -1,0 +1,23 @@
+Code completion result for source line:
+jQuery('#f-emblem').addClass('.has-menu').a|dd(':checked');
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     add(html): jQuery               [PUBLIC]   <font color=#999999>jquery-api.xml</font>
+METHOD     addBack(selector): jQuery       [PUBLIC]   <font color=#999999>jquery-api.xml</font>
+METHOD     addClass(className): jQuery     [PUBLIC]   <font color=#999999>jquery-api.xml</font>
+METHOD     after(content): jQuery          [PUBLIC]   <font color=#999999>jquery-api.xml</font>
+METHOD     ajax(url, settings): jqXHR      [PUBLIC]   <font color=#999999>jquery-api.xml</font>
+METHOD     ajaxComplete(handler(event, XM  [PUBLIC]   <font color=#999999>jquery-api.xml</font>
+METHOD     ajaxError(handler(event, jqXHR  [PUBLIC]   <font color=#999999>jquery-api.xml</font>
+METHOD     ajaxPrefilter(dataTypes, handl  [PUBLIC]   <font color=#999999>jquery-api.xml</font>
+METHOD     ajaxSend(handler(event, jqXHR,  [PUBLIC]   <font color=#999999>jquery-api.xml</font>
+METHOD     ajaxSetup(options)              [PUBLIC]   <font color=#999999>jquery-api.xml</font>
+METHOD     ajaxStart(handler()): jQuery    [PUBLIC]   <font color=#999999>jquery-api.xml</font>
+METHOD     ajaxStop(handler()): jQuery     [PUBLIC]   <font color=#999999>jquery-api.xml</font>
+METHOD     ajaxSuccess(handler(event, XML  [PUBLIC]   <font color=#999999>jquery-api.xml</font>
+METHOD     ajaxTransport(dataType, handle  [PUBLIC]   <font color=#999999>jquery-api.xml</font>
+METHOD     andSelf(): jQuery               [PUBLIC]   <font color=#999999>jquery-api.xml</font>
+METHOD     animate(properties, options, n  [PUBLIC]   <font color=#999999>jquery-api.xml</font>
+METHOD     append(content): jQuery         [PUBLIC]   <font color=#999999>jquery-api.xml</font>
+METHOD     appendTo(target): jQuery        [PUBLIC]   <font color=#999999>jquery-api.xml</font>
+METHOD     attr(attributes): jQuery        [PUBLIC]   <font color=#999999>jquery-api.xml</font>

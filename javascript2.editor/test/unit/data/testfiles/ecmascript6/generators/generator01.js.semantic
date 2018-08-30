@@ -1,0 +1,9 @@
+function* |>METHOD:gen01<|(|>UNUSED:start<|) {
+    yield "A";
+    yield "C";
+    yield "1";
+    yield "Tomas";
+}
+
+var |>GLOBAL:g<| = gen01();
+var |>GLOBAL:d<| = |>GLOBAL:g<|.next().v

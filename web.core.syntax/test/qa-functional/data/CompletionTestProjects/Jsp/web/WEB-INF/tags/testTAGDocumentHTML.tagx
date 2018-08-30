@@ -1,0 +1,31 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+
+<!-- completion for HTML tags -->
+<%--CC
+<jsp:body><h|
+html
+<jsp:body><html
+--%>
+
+<!-- completion for HTML attributes -->
+<%--CC
+<jsp:body><html |
+lang
+<jsp:body><html lang=""
+--%>
+
+<!-- completion for HTML values -->
+<%--CC
+<jsp:body><html dir="|
+rtl
+<jsp:body><html dir="rtl
+--%>
+
+<!-- completion for HTML end tags -->
+<%--CC
+<jsp:body><html></|
+/html
+    <jsp:body><html></html>
+--%>
+
+</jsp:root>

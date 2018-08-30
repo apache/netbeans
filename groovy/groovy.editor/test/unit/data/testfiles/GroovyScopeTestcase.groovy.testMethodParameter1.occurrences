@@ -1,0 +1,2 @@
+    def test (Object |>MARK_OCCURRENCES:xy<| = 0 ) {
+        |>MARK_OCCURRENCES:x^y<| = 5

@@ -1,0 +1,5 @@
+Code completion result for source line:
+document.createTextNode("null").replaceWholeText("flajfda").le|ngth;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      length                          [PUBLIC]   <font color=#999999>basicDocumentCC.js</font>

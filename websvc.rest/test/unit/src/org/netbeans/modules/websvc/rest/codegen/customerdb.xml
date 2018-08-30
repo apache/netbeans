@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<application xmlns="http://research.sun.com/wadl/2006/10">
+    <resources base="http://localhost:8080/CustomerDB/resources/">
+        <resource path="/customers/">
+            <method name="GET" id="get">
+                <request>
+                    <param xmlns:xs="http://www.w3.org/2001/XMLSchema" default="0" type="xs:int" style="query" name="start"/>
+                    <param xmlns:xs="http://www.w3.org/2001/XMLSchema" default="10" type="xs:int" style="query" name="max"/>
+                    <param xmlns:xs="http://www.w3.org/2001/XMLSchema" default="1" type="xs:int" style="query" name="expandLevel"/>
+                    <param xmlns:xs="http://www.w3.org/2001/XMLSchema" default="SELECT e FROM Customer e" type="xs:string" style="query" name="query"/>
+                </request>
+                <response>
+                    <representation mediaType="application/xml"/>
+                    <representation mediaType="application/json"/>
+                </response>
+            </method>
+            <method name="POST" id="post">
+                <request>
+                    <representation mediaType="application/xml"/>
+                    <representation mediaType="application/json"/>
+                </request>
+                <response>
+                    <representation mediaType="*/*"/>
+                </response>
+            </method>
+            <resource path="{customerId}/">
+                <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:int" style="template" name="customerId"/>
+                <method name="GET" id="get">
+                    <request>
+                        <param xmlns:xs="http://www.w3.org/2001/XMLSchema" default="1" type="xs:int" style="query" name="expandLevel"/>
+                    </request>
+                    <response>
+                        <representation mediaType="application/xml"/>
+                        <representation mediaType="application/json"/>
+                    </response>
+                </method>
+                <method name="PUT" id="put">
+                    <request>
+                        <representation mediaType="application/xml"/>
+                        <representation mediaType="application/json"/>
+                    </request>
+                </method>
+                <method name="DELETE" id="delete"/>
+                <resource path="discountCode/">
+                    <method name="GET" id="get">
+                        <request>
+                            <param xmlns:xs="http://www.w3.org/2001/XMLSchema" default="1" type="xs:int" style="query" name="expandLevel"/>
+                        </request>
+                        <response>
+                            <representation mediaType="application/xml"/>
+                            <representation mediaType="application/json"/>
+                        </response>
+                    </method>
+                    <method name="PUT" id="put">
+                        <request>
+                            <representation mediaType="application/xml"/>
+                            <representation mediaType="application/json"/>
+                        </request>
+                    </method>
+                    <method name="DELETE" id="delete"/>
+                    <resource path="customerCollection/"/>
+                </resource>
+            </resource>
+        </resource>
+        <resource path="/discountCodes/">
+            <method name="GET" id="get">
+                <request>
+                    <param xmlns:xs="http://www.w3.org/2001/XMLSchema" default="0" type="xs:int" style="query" name="start"/>
+                    <param xmlns:xs="http://www.w3.org/2001/XMLSchema" default="10" type="xs:int" style="query" name="max"/>
+                    <param xmlns:xs="http://www.w3.org/2001/XMLSchema" default="1" type="xs:int" style="query" name="expandLevel"/>
+                    <param xmlns:xs="http://www.w3.org/2001/XMLSchema" default="SELECT e FROM DiscountCode e" type="xs:string" style="query" name="query"/>
+                </request>
+                <response>
+                    <representation mediaType="application/xml"/>
+                    <representation mediaType="application/json"/>
+                </response>
+            </method>
+            <method name="POST" id="post">
+                <request>
+                    <representation mediaType="application/xml"/>
+                    <representation mediaType="application/json"/>
+                </request>
+                <response>
+                    <representation mediaType="*/*"/>
+                </response>
+            </method>
+            <resource path="{discountCode}/">
+                <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string" style="template" name="discountCode"/>
+            </resource>
+        </resource>
+    </resources>
+</application>

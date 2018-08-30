@@ -1,0 +1,2 @@
+<input type="number" ng-model="servo.np" value="{{servo.np}}" min="{{servo.min}}" max="{{servo.max}}" ng-change="change(servo.id, servo.np)"
+     ng-class="{true    :'servoNewPosChanged', false:   'servoNewPosUnchanged'}[servo.np != servo.cp]"/>

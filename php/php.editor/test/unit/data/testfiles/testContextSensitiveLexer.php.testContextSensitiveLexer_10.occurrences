@@ -1,0 +1,4 @@
+    const |>MARK_OCCURRENCES:CONST<| = "CONST";
+        parent::|>MARK_OCCURRENCES:CONST<|;
+$parent::|>MARK_OCCURRENCES:CONST<|;
+ParentClass::|>MARK_OCCURRENCES:CONST^<|;

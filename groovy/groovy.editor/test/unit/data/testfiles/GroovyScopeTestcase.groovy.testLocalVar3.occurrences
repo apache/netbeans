@@ -1,0 +1,2 @@
+        int |>MARK_OCCURRENCES:local^var1<| = 3
+        def localvar3 = membervar1 + param1 + |>MARK_OCCURRENCES:localvar1<| + localvar2

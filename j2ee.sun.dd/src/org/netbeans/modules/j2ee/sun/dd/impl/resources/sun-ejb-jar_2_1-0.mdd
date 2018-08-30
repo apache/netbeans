@@ -1,0 +1,790 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<metaDD>
+        <extends>org.netbeans.modules.j2ee.sun.dd.impl.common.SunBaseBean</extends>
+        <meta-element>
+		<import>org.netbeans.modules.j2ee.sun.dd.impl.common.model_2_1_0.SecurityRoleMapping</import>
+		<dtd-name>sun-ejb-jar</dtd-name>
+		<bean-name>SunEjbJar</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.SunEjbJar</implements>
+                <user-code>
+                public void setVersion(java.math.BigDecimal value) {
+                }
+                public java.math.BigDecimal getVersion() {
+//                    return new java.math.BigDecimal(org.netbeans.modules.j2ee.sun.dd.api.ejb.SunEjbJar.VERSION_2_1_0);
+                    return new java.math.BigDecimal("2.10");
+                }
+                public org.xml.sax.SAXParseException getError() {
+                    return null;
+                }
+                public int getStatus() {
+                    return STATE_VALID;
+                }
+                public boolean isEventSource(org.netbeans.modules.j2ee.sun.dd.api.RootInterface rootDD) {
+                    return this == rootDD;
+                }
+                </user-code>
+	</meta-element>
+	<meta-element>
+		<skip-generation/>
+		<dtd-name>security-role-mapping</dtd-name>
+		<bean-name>SecurityRoleMapping</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.SecurityRoleMapping</implements>
+	</meta-element>
+	<meta-element>
+                <import>org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException</import>
+		<import>org.netbeans.modules.j2ee.sun.dd.impl.common.model_2_1_1.WebserviceDescription</import>
+                <import>org.netbeans.modules.j2ee.sun.dd.impl.common.model_2_1_1.MessageDestination</import>
+		<dtd-name>enterprise-beans</dtd-name>
+		<bean-name>EnterpriseBeans</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.EnterpriseBeans</implements>
+                <user-code>
+                    public void setPropertyElement(int index, org.netbeans.modules.j2ee.sun.dd.api.ejb.PropertyElement value) throws VersionNotSupportedException {
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                    }
+                    public org.netbeans.modules.j2ee.sun.dd.api.ejb.PropertyElement getPropertyElement(int index) throws VersionNotSupportedException {
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                    }
+                    public int sizePropertyElement() throws VersionNotSupportedException {
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                    }
+                    public void setPropertyElement(org.netbeans.modules.j2ee.sun.dd.api.ejb.PropertyElement[] value) throws VersionNotSupportedException {
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                    }
+                    public org.netbeans.modules.j2ee.sun.dd.api.ejb.PropertyElement[] getPropertyElement() throws VersionNotSupportedException {
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                    }
+                    public int addPropertyElement(org.netbeans.modules.j2ee.sun.dd.api.ejb.PropertyElement value) throws VersionNotSupportedException {
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                    }
+                    public int removePropertyElement(org.netbeans.modules.j2ee.sun.dd.api.ejb.PropertyElement value) throws VersionNotSupportedException {
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                    }
+                    public org.netbeans.modules.j2ee.sun.dd.api.ejb.PropertyElement newPropertyElement() throws VersionNotSupportedException {
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                    }
+                </user-code>
+	</meta-element>
+	<meta-element>
+		<dtd-name>name</dtd-name>
+		<bean-name>Name</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>unique-id</dtd-name>
+		<bean-name>UniqueId</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<import>org.netbeans.modules.j2ee.sun.dd.impl.common.model_2_1_0.ResourceRef</import>
+		<import>org.netbeans.modules.j2ee.sun.dd.impl.common.model_2_1_0.EjbRef</import>
+		<import>org.netbeans.modules.j2ee.sun.dd.impl.common.model_2_1_0.ResourceEnvRef</import>
+		<import>org.netbeans.modules.j2ee.sun.dd.impl.common.model_2_1_1.ServiceRef</import>
+		<import>org.netbeans.modules.j2ee.sun.dd.impl.common.model_2_1_1.WebserviceEndpoint</import>
+		<dtd-name>ejb</dtd-name>
+		<bean-name>Ejb</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.Ejb</implements>
+                <user-code>
+                    //needed for 3_0-0
+                    public void setMessageDestinationRef(int index, org.netbeans.modules.j2ee.sun.dd.api.common.MessageDestinationRef value) throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException { 
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                    } 
+                    public org.netbeans.modules.j2ee.sun.dd.api.common.MessageDestinationRef getMessageDestinationRef(int index) throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException { 
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                    }  
+                    public int sizeMessageDestinationRef() throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException { 
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                    } 
+                    public void setMessageDestinationRef(org.netbeans.modules.j2ee.sun.dd.api.common.MessageDestinationRef[] value) throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException { 
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                    } 
+                    public org.netbeans.modules.j2ee.sun.dd.api.common.MessageDestinationRef[] getMessageDestinationRef() throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException { 
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                    } 
+                    public int addMessageDestinationRef(org.netbeans.modules.j2ee.sun.dd.api.common.MessageDestinationRef value) throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException { 
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                    } 
+                    public int removeMessageDestinationRef(org.netbeans.modules.j2ee.sun.dd.api.common.MessageDestinationRef value) throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException { 
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                    } 
+                    public org.netbeans.modules.j2ee.sun.dd.api.common.MessageDestinationRef newMessageDestinationRef() throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException { 
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                    }
+                    // needed for 2_1-1
+                    public void setFlushAtEndOfMethod (org.netbeans.modules.j2ee.sun.dd.api.ejb.FlushAtEndOfMethod  value) throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException {
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                    }
+                    public org.netbeans.modules.j2ee.sun.dd.api.ejb.FlushAtEndOfMethod getFlushAtEndOfMethod () throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException {
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                    }
+                    public void setCheckpointedMethods (java.lang.String  value) throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException {
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                    }
+                    public java.lang.String getCheckpointedMethods () throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException {
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                    }
+                    public void setCheckpointAtEndOfMethod (org.netbeans.modules.j2ee.sun.dd.api.ejb.CheckpointAtEndOfMethod value) throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException {
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                    }
+                    public org.netbeans.modules.j2ee.sun.dd.api.ejb.CheckpointAtEndOfMethod getCheckpointAtEndOfMethod () throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException {
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                    }
+                    public org.netbeans.modules.j2ee.sun.dd.api.ejb.FlushAtEndOfMethod newFlushAtEndOfMethod () throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException {
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                    }
+                    public org.netbeans.modules.j2ee.sun.dd.api.ejb.CheckpointAtEndOfMethod newCheckpointAtEndOfMethod () throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException {
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                    }
+                    public void setAvailabilityEnabled (java.lang.String  value) throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException {
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                    }
+                    public java.lang.String getAvailabilityEnabled() throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException {
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                    }
+                </user-code>
+	</meta-element>
+	<meta-element>
+		<dtd-name>pm-descriptors</dtd-name>
+		<bean-name>PmDescriptors</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.PmDescriptors</implements>
+	</meta-element>
+	<meta-element>
+		<import>org.netbeans.modules.j2ee.sun.dd.impl.common.model_2_1_0.DefaultResourcePrincipal</import>
+		<dtd-name>cmp-resource</dtd-name>
+		<bean-name>CmpResource</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.CmpResource</implements>
+	</meta-element>
+	<meta-element>
+		<skip-generation/>
+		<dtd-name>message-destination</dtd-name>
+		<bean-name>MessageDestination</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.MessageDestination</implements>
+	</meta-element>
+	<meta-element>
+		<skip-generation/>
+		<dtd-name>webservice-description</dtd-name>
+		<bean-name>WebserviceDescription</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.WebserviceDescription</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>webservice-description-name</dtd-name>
+		<bean-name>WebserviceDescriptionName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>wsdl-publish-location</dtd-name>
+		<bean-name>WsdlPublishLocation</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>#PCDATA</dtd-name>
+		<bean-name>Pcdata</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>message-destination-name</dtd-name>
+		<bean-name>MessageDestinationName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>jndi-name</dtd-name>
+		<bean-name>JndiName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<skip-generation/>
+		<dtd-name>default-resource-principal</dtd-name>
+		<bean-name>DefaultResourcePrincipal</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.DefaultResourcePrincipal</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>property</dtd-name>
+		<bean-name>PropertyElement</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.PropertyElement</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>create-tables-at-deploy</dtd-name>
+		<bean-name>CreateTablesAtDeploy</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>drop-tables-at-undeploy</dtd-name>
+		<bean-name>DropTablesAtUndeploy</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>database-vendor-name</dtd-name>
+		<bean-name>DatabaseVendorName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>schema-generator-properties</dtd-name>
+		<bean-name>SchemaGeneratorProperties</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.SchemaGeneratorProperties</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>value</dtd-name>
+		<bean-name>Value</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>password</dtd-name>
+		<bean-name>Password</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>pm-descriptor</dtd-name>
+		<bean-name>PmDescriptor</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.PmDescriptor</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>pm-inuse</dtd-name>
+		<bean-name>PmInuse</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.PmInuse</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>pm-identifier</dtd-name>
+		<bean-name>PmIdentifier</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>pm-version</dtd-name>
+		<bean-name>PmVersion</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>pm-config</dtd-name>
+		<bean-name>PmConfig</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>pm-class-generator</dtd-name>
+		<bean-name>PmClassGenerator</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>pm-mapping-factory</dtd-name>
+		<bean-name>PmMappingFactory</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>ejb-name</dtd-name>
+		<bean-name>EjbName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<skip-generation/>
+		<dtd-name>ejb-ref</dtd-name>
+		<bean-name>EjbRef</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.EjbRef</implements>
+	</meta-element>
+	<meta-element>
+		<skip-generation/>
+		<dtd-name>resource-ref</dtd-name>
+		<bean-name>ResourceRef</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.ResourceRef</implements>
+	</meta-element>
+	<meta-element>
+		<skip-generation/>
+		<dtd-name>resource-env-ref</dtd-name>
+		<bean-name>ResourceEnvRef</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.ResourceEnvRef</implements>
+	</meta-element>
+	<meta-element>
+		<skip-generation/>
+		<dtd-name>service-ref</dtd-name>
+		<bean-name>ServiceRef</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.ServiceRef</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>pass-by-reference</dtd-name>
+		<bean-name>PassByReference</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>cmp</dtd-name>
+		<bean-name>Cmp</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.Cmp</implements>
+                <user-code>
+                // needed for with 2_1-1
+                public void setPrefetchDisabled (org.netbeans.modules.j2ee.sun.dd.api.ejb.PrefetchDisabled  value) throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException {
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                }
+                public org.netbeans.modules.j2ee.sun.dd.api.ejb.PrefetchDisabled getPrefetchDisabled () throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException {
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                }
+                public org.netbeans.modules.j2ee.sun.dd.api.ejb.PrefetchDisabled newPrefetchDisabled () throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException {
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                }
+                </user-code>
+	</meta-element>
+	<meta-element>
+		<dtd-name>principal</dtd-name>
+		<bean-name>Principal</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.Principal</implements>
+	</meta-element>
+	<meta-element>
+		<import>org.netbeans.modules.j2ee.sun.dd.impl.common.model_2_1_0.DefaultResourcePrincipal</import>
+		<dtd-name>mdb-connection-factory</dtd-name>
+		<bean-name>MdbConnectionFactory</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.MdbConnectionFactory</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>jms-durable-subscription-name</dtd-name>
+		<bean-name>JmsDurableSubscriptionName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>jms-max-messages-load</dtd-name>
+		<bean-name>JmsMaxMessagesLoad</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>ior-security-config</dtd-name>
+		<bean-name>IorSecurityConfig</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.IorSecurityConfig</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>is-read-only-bean</dtd-name>
+		<bean-name>IsReadOnlyBean</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>refresh-period-in-seconds</dtd-name>
+		<bean-name>RefreshPeriodInSeconds</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>commit-option</dtd-name>
+		<bean-name>CommitOption</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>cmt-timeout-in-seconds</dtd-name>
+		<bean-name>CmtTimeoutInSeconds</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>gen-classes</dtd-name>
+		<bean-name>GenClasses</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.GenClasses</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>bean-pool</dtd-name>
+		<bean-name>BeanPool</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.BeanPool</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>bean-cache</dtd-name>
+		<bean-name>BeanCache</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.BeanCache</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>mdb-resource-adapter</dtd-name>
+		<bean-name>MdbResourceAdapter</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.MdbResourceAdapter</implements>
+	</meta-element>
+	<meta-element>
+		<skip-generation/>
+		<dtd-name>webservice-endpoint</dtd-name>
+		<bean-name>WebserviceEndpoint</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.WebserviceEndpoint</implements>
+                <user-code>
+                // needed for with 2_1-1
+                public void setMessageSecurityBinding (org.netbeans.modules.j2ee.sun.dd.api.common.MessageSecurityBinding  value) throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException {
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                }
+                public org.netbeans.modules.j2ee.sun.dd.api.common.MessageSecurityBinding getMessageSecurityBinding () throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException {
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                }
+                </user-code>
+	</meta-element>
+	<meta-element>
+		<dtd-name>session</dtd-name>
+		<bean-name>Session</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.Session</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>checkpoint-location</dtd-name>
+		<bean-name>CheckpointLocation</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>quick-checkpoint</dtd-name>
+		<bean-name>QuickCheckpoint</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>checkpointed-methods</dtd-name>
+		<bean-name>CheckpointedMethods</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.CheckpointedMethods</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>description</dtd-name>
+		<bean-name>Description</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>method</dtd-name>
+		<bean-name>Method</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.Method</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>method-intf</dtd-name>
+		<bean-name>MethodIntf</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>method-name</dtd-name>
+		<bean-name>MethodName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>method-params</dtd-name>
+		<bean-name>MethodParams</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.MethodParams</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>method-param</dtd-name>
+		<bean-name>MethodParam</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>port-component-name</dtd-name>
+		<bean-name>PortComponentName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>endpoint-address-uri</dtd-name>
+		<bean-name>EndpointAddressUri</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<skip-generation/>
+		<dtd-name>login-config</dtd-name>
+		<bean-name>LoginConfig</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.LoginConfig</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>transport-guarantee</dtd-name>
+		<bean-name>TransportGuarantee</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<skip-generation/>
+		<dtd-name>service-qname</dtd-name>
+		<bean-name>ServiceQname</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.ServiceQname</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>tie-class</dtd-name>
+		<bean-name>TieClass</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>servlet-impl-class</dtd-name>
+		<bean-name>ServletImplClass</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>namespaceURI</dtd-name>
+		<bean-name>NamespaceURI</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>localpart</dtd-name>
+		<bean-name>Localpart</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>auth-method</dtd-name>
+		<bean-name>AuthMethod</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>resource-adapter-mid</dtd-name>
+		<bean-name>ResourceAdapterMid</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>activation-config</dtd-name>
+		<bean-name>ActivationConfig</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.ActivationConfig</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>activation-config-property</dtd-name>
+		<bean-name>ActivationConfigProperty</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.ActivationConfigProperty</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>activation-config-property-name</dtd-name>
+		<bean-name>ActivationConfigPropertyName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>activation-config-property-value</dtd-name>
+		<bean-name>ActivationConfigPropertyValue</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>max-cache-size</dtd-name>
+		<bean-name>MaxCacheSize</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>resize-quantity</dtd-name>
+		<bean-name>ResizeQuantity</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>is-cache-overflow-allowed</dtd-name>
+		<bean-name>IsCacheOverflowAllowed</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>cache-idle-timeout-in-seconds</dtd-name>
+		<bean-name>CacheIdleTimeoutInSeconds</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>removal-timeout-in-seconds</dtd-name>
+		<bean-name>RemovalTimeoutInSeconds</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>victim-selection-policy</dtd-name>
+		<bean-name>VictimSelectionPolicy</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>steady-pool-size</dtd-name>
+		<bean-name>SteadyPoolSize</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>max-pool-size</dtd-name>
+		<bean-name>MaxPoolSize</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>pool-idle-timeout-in-seconds</dtd-name>
+		<bean-name>PoolIdleTimeoutInSeconds</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>max-wait-time-in-millis</dtd-name>
+		<bean-name>MaxWaitTimeInMillis</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>remote-impl</dtd-name>
+		<bean-name>RemoteImpl</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>local-impl</dtd-name>
+		<bean-name>LocalImpl</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>remote-home-impl</dtd-name>
+		<bean-name>RemoteHomeImpl</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>local-home-impl</dtd-name>
+		<bean-name>LocalHomeImpl</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>transport-config</dtd-name>
+		<bean-name>TransportConfig</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.TransportConfig</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>as-context</dtd-name>
+		<bean-name>AsContext</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.AsContext</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>sas-context</dtd-name>
+		<bean-name>SasContext</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.SasContext</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>caller-propagation</dtd-name>
+		<bean-name>CallerPropagation</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>realm</dtd-name>
+		<bean-name>Realm</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>required</dtd-name>
+		<bean-name>Required</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>integrity</dtd-name>
+		<bean-name>Integrity</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>confidentiality</dtd-name>
+		<bean-name>Confidentiality</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>establish-trust-in-target</dtd-name>
+		<bean-name>EstablishTrustInTarget</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>establish-trust-in-client</dtd-name>
+		<bean-name>EstablishTrustInClient</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>mapping-properties</dtd-name>
+		<bean-name>MappingProperties</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>is-one-one-cmp</dtd-name>
+		<bean-name>IsOneOneCmp</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>one-one-finders</dtd-name>
+		<bean-name>OneOneFinders</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.OneOneFinders</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>finder</dtd-name>
+		<bean-name>Finder</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.Finder</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>query-params</dtd-name>
+		<bean-name>QueryParams</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>query-filter</dtd-name>
+		<bean-name>QueryFilter</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>query-variables</dtd-name>
+		<bean-name>QueryVariables</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>query-ordering</dtd-name>
+		<bean-name>QueryOrdering</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>service-ref-name</dtd-name>
+		<bean-name>ServiceRefName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<skip-generation/>
+		<dtd-name>port-info</dtd-name>
+		<bean-name>PortInfo</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.PortInfo</implements>
+                <user-code>
+                // needed for with 2_1-1
+                public void setMessageSecurityBinding (org.netbeans.modules.j2ee.sun.dd.api.common.MessageSecurityBinding  value) throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException {
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                }
+                public org.netbeans.modules.j2ee.sun.dd.api.common.MessageSecurityBinding getMessageSecurityBinding () throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException {
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunEjbJar.VERSION_2_1_0);
+                }
+                </user-code>
+	</meta-element>
+	<meta-element>
+		<skip-generation/>
+		<dtd-name>call-property</dtd-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.StubProperty</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>wsdl-override</dtd-name>
+		<bean-name>WsdlOverride</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>service-impl-class</dtd-name>
+		<bean-name>ServiceImplClass</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>service-endpoint-interface</dtd-name>
+		<bean-name>ServiceEndpointInterface</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<skip-generation/>
+		<dtd-name>wsdl-port</dtd-name>
+		<bean-name>WsdlPort</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.WsdlPort</implements>
+	</meta-element>
+	<meta-element>
+		<skip-generation/>
+		<dtd-name>stub-property</dtd-name>
+		<bean-name>StubProperty</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.StubProperty</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>resource-env-ref-name</dtd-name>
+		<bean-name>ResourceEnvRefName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>res-ref-name</dtd-name>
+		<bean-name>ResRefName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>ejb-ref-name</dtd-name>
+		<bean-name>EjbRefName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>role-name</dtd-name>
+		<bean-name>RoleName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>principal-name</dtd-name>
+		<bean-name>PrincipalName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>group-name</dtd-name>
+		<bean-name>GroupName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+</metaDD>

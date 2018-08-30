@@ -1,0 +1,41 @@
+FUNCTION variables01 [ANONYMOUS: false, DECLARED: true - variables01, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+Address   : FUNCTION Address [ANONYMOUS: false, DECLARED: true - Address, MODIFIERS: PUBLIC, CONSTRUCTOR]
+          # RETURN TYPES
+          Address, RESOLVED: true
+          # PARAMETERS
+          OBJECT town [ANONYMOUS: false, DECLARED: true - town, MODIFIERS: PUBLIC, PARAMETER]
+          OBJECT state [ANONYMOUS: false, DECLARED: true - state, MODIFIERS: PUBLIC, PARAMETER]
+          OBJECT number [ANONYMOUS: false, DECLARED: true - number, MODIFIERS: PUBLIC, PARAMETER]
+          # PROPERTIES
+          arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+          city      : OBJECT city [ANONYMOUS: false, DECLARED: true - city, MODIFIERS: PRIVATE, VARIABLE]
+          id        : OBJECT id [ANONYMOUS: false, DECLARED: true - id, MODIFIERS: PUBLIC, PROPERTY]
+          print     : FUNCTION print [ANONYMOUS: false, DECLARED: true - print, MODIFIERS: PROTECTED, METHOD]
+                    # RETURN TYPES
+                    @exp;Address@pro;print@pro;result, RESOLVED: false
+                    # PROPERTIES
+                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                    result    : OBJECT result [ANONYMOUS: false, DECLARED: true - result, MODIFIERS: PRIVATE, VARIABLE]
+          street    : OBJECT street [ANONYMOUS: false, DECLARED: true - street, MODIFIERS: PUBLIC, PROPERTY]
+          zip       : OBJECT zip [ANONYMOUS: false, DECLARED: true - zip, MODIFIERS: PRIVATE, VARIABLE]
+MyApp     : OBJECT MyApp [ANONYMOUS: false, DECLARED: true - MyApp, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+          # PROPERTIES
+          country : OBJECT country [ANONYMOUS: false, DECLARED: true - country, MODIFIERS: PUBLIC, PROPERTY]
+address   : OBJECT address [ANONYMOUS: false, DECLARED: true - address, MODIFIERS: PUBLIC, VARIABLE]
+          # PROPERTIES
+          id    : OBJECT id [ANONYMOUS: false, DECLARED: false - id, MODIFIERS: PUBLIC, PROPERTY]
+          print : FUNCTION print [ANONYMOUS: false, DECLARED: false - print, MODIFIERS: PUBLIC, METHOD]
+                # PROPERTIES
+                arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+country   : OBJECT country [ANONYMOUS: false, DECLARED: true - country, MODIFIERS: PUBLIC, VARIABLE]
+formatter : OBJECT formatter [ANONYMOUS: false, DECLARED: false - formatter, MODIFIERS: PUBLIC, OBJECT]
+          # PROPERTIES
+          println : FUNCTION println [ANONYMOUS: false, DECLARED: false - println, MODIFIERS: PUBLIC, METHOD]
+                  # PARAMETERS
+                  OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                  # PROPERTIES
+                  arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+telefon   : OBJECT telefon [ANONYMOUS: false, DECLARED: true - telefon, MODIFIERS: PUBLIC, VARIABLE]

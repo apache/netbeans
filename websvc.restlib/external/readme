@@ -1,0 +1,10 @@
+jaxrs-ri-2.5.1.zip - ZIP downloaded from following URL:
+    http://search.maven.org/remotecontent?filepath=org/glassfish/jersey/bundles/jaxrs-ri/2.5.1/jaxrs-ri-2.5.1.zip
+
+jersey-media-moxy-2.5.1.jar, downloaded from URL:
+    http://search.maven.org/remotecontent?filepath=org/glassfish/jersey/media/jersey-media-moxy/2.5.1/jersey-media-moxy-2.5.1.jar
+
+jersey-entity-filtering-2.5.1.jar, downloaded from URL:
+    http://search.maven.org/remotecontent?filepath=org/glassfish/jersey/ext/jersey-entity-filtering/2.5.1/jersey-entity-filtering-2.5.1.jar
+
+eclipselink.jar (2.5), taken from Netbeans EclipseLink library

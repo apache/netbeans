@@ -1,0 +1,4 @@
+<?php ?>
+<style>
+    .foo {}
+</style>

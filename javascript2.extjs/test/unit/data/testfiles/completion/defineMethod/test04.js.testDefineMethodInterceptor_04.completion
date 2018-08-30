@@ -1,0 +1,7 @@
+Code completion result for source line:
+NetBeans.stuff.engineer.d|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      developer                       [PUBLIC]   defineMethod.js
+METHOD     defineProperties(obj, props):   [PUBLIC,   JS Platform
+METHOD     defineProperty(obj, prop, desc  [PUBLIC,   JS Platform

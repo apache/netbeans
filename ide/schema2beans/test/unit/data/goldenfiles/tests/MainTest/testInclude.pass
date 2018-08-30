@@ -1,0 +1,9 @@
+Calling GenBeans.doIt
+Bean Tree:
+root <root> : Root
+	(
+	  item <item> : ItemType[0,n]
+	  	name <name> : java.lang.String
+	  	available <available> : boolean[0,1]
+	)[0,n]
+

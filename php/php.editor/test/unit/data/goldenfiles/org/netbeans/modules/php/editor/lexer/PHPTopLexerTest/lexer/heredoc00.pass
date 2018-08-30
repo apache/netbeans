@@ -1,0 +1,4 @@
+token #0 T_PHP_OPEN_DELIMITER <?php
+token #1 T_PHP \n$name="Petr";\n$age=10;\necho <<<HEREDOC\nName: $name<br>\nMy age is: $age<br>\nHEREDOC;\n$name="Honza";\n\n$x = <<<ENDOFHEREDOC\nThis is another heredoc test.\nWith another line in it.\nENDOFHEREDOC;\n\n\n$x = <<<ENDOFHEREDOC\nThis is a heredoc test.\nNOTREALLYEND;\nAnother line\nNOTENDEITHER;\nENDOFHEREDOCWILLBESOON\nNow let's finish it\nENDOFHEREDOC;\n\n\nprint "{$x}";\n
+token #2 T_PHP_CLOSE_DELIMITER ?>
+token #3 T_HTML \n

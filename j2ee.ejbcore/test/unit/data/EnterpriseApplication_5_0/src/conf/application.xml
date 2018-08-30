@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application version="5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/application_5.xsd">
+  <display-name>EnterpriseApplication_5_0</display-name>
+  <module>
+    <ejb>EJBModule_5_0.jar</ejb>
+  </module>
+  <module>
+    <java>ApplicationClient_5_0.jar</java>
+  </module>
+  <module>
+    <web>
+      <web-uri>WebApplication_5_0.war</web-uri>
+      <context-root>/WebApplication_5_0</context-root>
+    </web>
+  </module>
+</application>

@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.libs.jstl/1
+OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/jstl/Bundle.properties
+OpenIDE-Module-Implementation-Version: 123
+OpenIDE-Module-Layer: org/netbeans/libs/jstl/layer.xml
+AutoUpdate-Show-In-Client: false
+

@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.web.refactoring
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/web/refactoring/Bundle.properties
+AutoUpdate-Show-In-Client: false
+

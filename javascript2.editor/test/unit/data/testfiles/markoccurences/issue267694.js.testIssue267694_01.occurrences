@@ -1,0 +1,3 @@
+        var |>MARK_OCCURRENCES:bu^f<| = this.buf;
+        |>MARK_OCCURRENCES:buf<| = 20;
+        console.log(|>MARK_OCCURRENCES:buf<|);

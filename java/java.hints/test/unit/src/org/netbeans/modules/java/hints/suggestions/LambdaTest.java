@@ -603,6 +603,31 @@ public class LambdaTest {
                                       "    }\n" +
                                       "}\n");
     }
+    
+    @Test
+    public void testConvertVarToExplicitParameterTypes() throws Exception {
+        HintTest.create()
+                .setCaretMarker('^')
+                .input("package test;\n" +
+                       "import java.util.*;\n" +
+                       "public class Test {\n" +
+                       "    public void main(List<String> list) {\n" +
+                       "        Collections.sort(list, (var l, var r) -^> l.compareTo(r));\n" +
+                       "    }\n" +
+                       "}\n")
+                .sourceLevel("1.11")
+                .run(Lambda.class)
+                .findWarning("4:47-4:47:verifier:ERR_addExplicitLambdaParameters")
+                .applyFix()
+                .assertCompilable()
+                .assertVerbatimOutput("package test;\n" +
+                                      "import java.util.*;\n" +
+                                      "public class Test {\n" +
+                                      "    public void main(List<String> list) {\n" +
+                                      "        Collections.sort(list, (String l, String r) -> l.compareTo(r));\n" +
+                                      "    }\n" +
+                                      "}\n");
+    }
 
     static {
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;

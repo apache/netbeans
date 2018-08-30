@@ -225,6 +225,11 @@ public class Lambda {
     @TriggerTreeKind(Kind.LAMBDA_EXPRESSION)
     public static ErrorDescription explicitParameterTypes(HintContext ctx) {
         LambdaExpressionTree let = (LambdaExpressionTree) ctx.getPath().getLeaf();
+
+        if (ctx.getInfo().getTreeUtilities().hasError(let)) {
+            return null;
+        }
+
         boolean hasSyntheticParameterName = false;
         
         for (VariableTree var : let.getParameters()) {

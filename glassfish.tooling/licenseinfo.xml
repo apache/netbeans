@@ -17,8 +17,8 @@
 -->
 <licenseinfo>
     <fileset>
-        <file>src/org/netbeans/modules/glassfish/tooling/admin/response/list-jdbc-resources.json</file>
-        <file>src/org/netbeans/modules/glassfish/tooling/admin/response/location.json</file>
+        <file>test/unit/src/org/netbeans/modules/glassfish/tooling/admin/response/list-jdbc-resources.json</file>
+        <file>test/unit/src/org/netbeans/modules/glassfish/tooling/admin/response/location.json</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>

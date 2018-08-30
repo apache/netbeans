@@ -46,11 +46,11 @@ import java.util.Set;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.VariableElement;
+import org.netbeans.api.java.queries.CompilerOptionsQuery;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.java.hints.TreeShims;
-import org.netbeans.modules.java.hints.jdk.Bundle;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
 import org.netbeans.spi.java.hints.Hint;
@@ -71,7 +71,8 @@ public class ConvertSwitchToRuleSwitch {
     @TriggerTreeKind(Tree.Kind.SWITCH)
     @Messages("ERR_ConverSwitchToRuleSwitch=Convert switch to rule switch")
     public static ErrorDescription switch2RuleSwitch(HintContext ctx) {
-        //TODO: only enable for 12 if preview enabled!
+        if (!CompilerOptionsQuery.getOptions(ctx.getInfo().getFileObject()).getArguments().contains("--enable-preview"))
+            return null;
         SwitchTree st = (SwitchTree) ctx.getPath().getLeaf();
         boolean completesNormally = false;
         boolean wasDefault = false;
@@ -91,7 +92,6 @@ public class ConvertSwitchToRuleSwitch {
             wasDefault = ct.getExpression() == null;
             wasEmpty = ct.getStatements().isEmpty();
         }
-        //TODO: checks
         return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_ConverSwitchToRuleSwitch(), new FixImpl(ctx.getInfo(), ctx.getPath()).toEditorFix());
     }
     private static boolean completesNormally(CompilationInfo info, TreePath tp) {
@@ -177,11 +177,11 @@ public class ConvertSwitchToRuleSwitch {
                 patterns.addAll(TreeShims.getExpressions(ct));
                 List<StatementTree> statements = new ArrayList<>(ct.getStatements());
                 if (statements.isEmpty()) {
-                    continue;
-                }
-                //TODO: trailing empty case(s)
-                if (statements.get(statements.size() - 1).getKind() == Kind.BREAK &&
-                        ctx.getWorkingCopy().getTreeUtilities().getBreakContinueTarget(new TreePath(new TreePath(tp, ct), statements.get(statements.size() - 1))) == st) {
+                    if (it.hasNext())
+                        continue;
+                    //last case, no break
+                } else if (statements.get(statements.size() - 1).getKind() == Kind.BREAK &&
+                    ctx.getWorkingCopy().getTreeUtilities().getBreakContinueTarget(new TreePath(new TreePath(tp, ct), statements.get(statements.size() - 1))) == st) {
                     statements.remove(statements.size() - 1);
                 } else {
                     new TreePathScanner<Void, Void>() {

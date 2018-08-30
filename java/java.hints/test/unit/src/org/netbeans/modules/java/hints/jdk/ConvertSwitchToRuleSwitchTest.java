@@ -25,7 +25,7 @@ import junit.framework.TestSuite;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.hints.test.api.HintTest;
 
-/**XXX: disable when not running on JDK 12+
+/**
  *
  * @author lahvac
  */
@@ -284,6 +284,61 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "}\n")
                 .sourceLevel(SourceVersion.latest().name())
                 .options("--enable-preview")
+                .run(ConvertSwitchToRuleSwitch.class)
+                .assertWarnings();
+    }
+
+    public void testTrailingEmptyCase() throws Exception {
+        HintTest.create()
+                .input("package test;" +
+                       "public class Test {\n" +
+                       "     private void test(int p) {\n" +
+                       "         String result;\n" +
+                       "         switch (p) {\n" +
+                       "             case 0:\n" +
+                       "                 int i = 0;\n" +
+                       "                 int j = 0;\n" +
+                       "                 break;\n" +
+                       "             default:\n" +
+                       "         }\n" +
+                       "     }\n" +
+                       "}\n")
+                .sourceLevel(SourceVersion.latest().name())
+                .options("--enable-preview")
+                .run(ConvertSwitchToRuleSwitch.class)
+                .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConverSwitchToRuleSwitch())
+                .applyFix()
+                .assertCompilable()
+                .assertOutput("package test;" +
+                              "public class Test {\n" +
+                              "     private void test(int p) {\n" +
+                              "         String result;\n" +
+                              "         switch (p) {\n" +
+                              "             case 0 -> {\n" +
+                              "                 int i = 0;\n" +
+                              "                 int j = 0;\n" +
+                              "             }\n" +
+                              "             default -> { }\n" +
+                              "         }\n" +
+                              "     }\n" +
+                              "}\n");
+    }
+
+    public void testNeedsPreview() throws Exception {
+        HintTest.create()
+                .input("package test;" +
+                       "public class Test {\n" +
+                       "     private void test(int p) {\n" +
+                       "         String result;\n" +
+                       "         switch (p) {\n" +
+                       "             case 0:\n" +
+                       "                 int i = 0;\n" +
+                       "                 int j = 0;\n" +
+                       "                 break;\n" +
+                       "         }\n" +
+                       "     }\n" +
+                       "}\n")
+                .sourceLevel(SourceVersion.latest().name())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .assertWarnings();
     }

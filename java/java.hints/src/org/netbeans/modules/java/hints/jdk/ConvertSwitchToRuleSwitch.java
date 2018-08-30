@@ -49,6 +49,7 @@ import javax.lang.model.element.VariableElement;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
+import org.netbeans.modules.java.hints.TreeShims;
 import org.netbeans.modules.java.hints.jdk.Bundle;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
@@ -173,7 +174,7 @@ public class ConvertSwitchToRuleSwitch {
             for (Iterator<? extends CaseTree> it = st.getCases().iterator(); it.hasNext();) {
                 CaseTree ct = it.next();
                 TreePath casePath = new TreePath(tp, ct);
-                patterns.addAll(ctx.getWorkingCopy().getTreeUtilities().getExpressions(ct));
+                patterns.addAll(TreeShims.getExpressions(ct));
                 List<StatementTree> statements = new ArrayList<>(ct.getStatements());
                 if (statements.isEmpty()) {
                     continue;

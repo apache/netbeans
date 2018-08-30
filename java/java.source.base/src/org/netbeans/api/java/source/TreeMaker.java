@@ -244,20 +244,22 @@ public final class TreeMaker {
     /**
      * Creates a new CaseTree.
      *
-     * @param patterns the label for this case statement.
+     * @param patterns the labels for this case statement.
      * @param statements the list of statements.
      * @see com.sun.source.tree.CaseTree
+     * @since 2.38
      */
     public CaseTree CaseMultipleLabels(List<? extends ExpressionTree> patterns, List<? extends StatementTree> statements) {
         return delegate.Case(patterns, statements);
     }
     
     /**
-     * Creates a new CaseTree.
+     * Creates a new CaseTree for a rule case (case &lt;constants&gt; -> &lt;body&gt;).
      *
-     * @param expression XXX
-     * @param statements XXX
+     * @param patterns the labels for this case statement.
+     * @param body the case's body
      * @see com.sun.source.tree.CaseTree
+     * @since 2.38
      */
     public CaseTree Case(List<? extends ExpressionTree> patterns, Tree body) {
         return delegate.Case(patterns, body);

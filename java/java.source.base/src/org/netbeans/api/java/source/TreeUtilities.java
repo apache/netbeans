@@ -21,7 +21,6 @@ package org.netbeans.api.java.source;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.nio.CharBuffer;
 
@@ -2029,32 +2028,5 @@ public final class TreeUtilities {
                 return parseStatementImpl(task, stmt, sourcePositions);
             }
         });
-    }
-
-    public List<? extends ExpressionTree> getExpressions(CaseTree node) {
-        try {
-            Method getExpressions = CaseTree.class.getDeclaredMethod("getExpressions");
-            return (List<? extends ExpressionTree>) getExpressions.invoke(node);
-        } catch (NoSuchMethodException ex) {
-            return Collections.singletonList(node.getExpression());
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            throw this.<RuntimeException>throwAny(ex);
-        }
-    }
-
-    public Tree getBody(CaseTree node) {
-        try {
-            Method getBody = CaseTree.class.getDeclaredMethod("getBody");
-            return (Tree) getBody.invoke(node);
-        } catch (NoSuchMethodException ex) {
-            return null;
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            throw this.<RuntimeException>throwAny(ex);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T extends Throwable> RuntimeException throwAny(Throwable t) throws T {
-        throw (T) t;
     }
 }

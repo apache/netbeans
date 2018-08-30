@@ -39,6 +39,7 @@ import javax.lang.model.util.Elements;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
+import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.builder.ASTService;
 import org.netbeans.modules.java.source.builder.CommentHandlerService;
 import org.netbeans.modules.java.source.builder.QualIdentTree;
@@ -805,8 +806,8 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
     }
 
     protected final CaseTree rewriteChildren(CaseTree tree) {
-        Tree body = copy.getTreeUtilities().getBody(tree);
-        List<? extends ExpressionTree> expressions = copy.getTreeUtilities().getExpressions(tree);
+        Tree body = TreeShims.getBody(tree);
+        List<? extends ExpressionTree> expressions = TreeShims.getExpressions(tree);
         if (body == null) {
             List<? extends ExpressionTree> pats = translate(expressions);
             List<? extends StatementTree> stats = translate(tree.getStatements());

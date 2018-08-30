@@ -394,6 +394,7 @@ public class HintTest {
      *
      * @param options the additional command line options to use while parsing Java files
      * @return itself
+     * @since 1.22
      */
     public HintTest options(String... options) {
         extraOptions.addAll(Arrays.asList(options));

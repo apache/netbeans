@@ -1,9 +1,11 @@
-Name: NetBeans Installer Binaries
-Description: NetBeans Installer Binaries
-Version: 8.2
+Name: Taglibrary documentation for Mojarra JSF Implementation
+Version: 1.2-20
+Description: Taglibrary documentation for Reference Implementation of the JSF Specification
 License: CDDL-1.0
-Source: https://netbeans.org/
-Origin: NetBeans
+Origin: Generated from taglibrary jar
+Source: https://github.com/javaserverfaces/mojarra
+Type: compile-time
+Comment: Only used to create tag library documentation
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
 

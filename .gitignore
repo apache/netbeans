@@ -51,9 +51,9 @@
 /debugger.jpda.ui/test/qa-functional/data/debugTestProject/nbproject/private/
 /debugger.jpda.ui/test/qa-functional/data/debugTestProjectAnt/nbproject/private/
 /profiler/lib.profiler/release/lib/
-/websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/jaxb/
-/websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/oauth/
-/websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/wadl/
+/websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/jaxb/
+/websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/oauth/
+/websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/wadl/
 /xml/test/qa-functional/data/DTDActionsTestProject/nbproject/private/
 /xml/test/qa-functional/data/ActionsTestProject/nbproject/private/
 /xml/test/qa-functional/data/CoreTemplatesTestProject/nbproject/private/

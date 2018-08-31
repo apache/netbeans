@@ -44,7 +44,7 @@
             </friend-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/el-impl.jar</runtime-relative-path>
-                <binary-origin>external/el-impl.jar</binary-origin>
+                <binary-origin>external/el-impl-3.0-b07.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
-
+    
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
     distributed with this work for additional information
@@ -10,7 +10,7 @@
     with the License.  You may obtain a copy of the License at
 
       http://www.apache.org/licenses/LICENSE-2.0
-
+      
     Unless required by applicable law or agreed to in writing,
     software distributed under the License is distributed on an
     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -19,33 +19,11 @@
     under the License.
 
 -->
-<map>
-  <entry key="extraProperties">
-    <map>
-      <entry key="methods">
-	<list>
-	  <map>
-	    <entry key="name" value="GET"/>
-	  </map>
-	  <map>
-	    <entry key="messageParameters">
-	      <map>
-		<entry key="verbose">
-		  <map>
-		    <entry key="acceptableValues" value=""/>
-		    <entry key="optional" value="true"/>
-		    <entry key="defaultValue" value="false"/>
-		    <entry key="type" value="boolean"/>
-		  </map>
-		</entry>
-	      </map>
-	    </entry>
-	  </map>
-	  </list>
-      </entry>
-    </map>
-  </entry>
-  <entry key="message" value="GlassFish Server Open Source Edition 3.1.1 (build 12)"/>
-  <entry key="exit_code" value="SUCCESS"/>
-  <entry key="command" value="version AdminCommand"/>
-</map>
+<licenseinfo>
+    <fileset>
+        <file>test/unit/src/org/netbeans/modules/glassfish/tooling/admin/response/list-jdbc-resources.json</file>
+        <file>test/unit/src/org/netbeans/modules/glassfish/tooling/admin/response/location.json</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

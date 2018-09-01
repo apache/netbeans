@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="lsp.client">
+<project basedir="." default="netbeans" name="ide/lsp.client">
     <description>Builds, tests, and runs the project org.netbeans.modules.lsp.client</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

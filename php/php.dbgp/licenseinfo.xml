@@ -21,13 +21,8 @@
 -->
 <licenseinfo>
     <fileset>
-        <file>samples_src/Calculator-Codeception/composer.json</file>
-        <file>samples_src/Calculator-Nette-Tester/composer.json</file>
-        <file>samples_src/Calculator-PHPUnit/composer.json</file>
-        <file>samples_src/Calculator-atoum/composer.json</file>
-        <file>samples_src/TodoList/web/favicon.ico</file>
-        <file>samples_src/TodoList/web/img/NB-IDE-logo.png</file>
-        <file>src/org/netbeans/modules/php/samples/icons/calculator.png</file>
+        <file>src/org/netbeans/modules/php/dbgp/resources/notice-glyph.gif</file>
+        <file>src/org/netbeans/modules/php/dbgp/resources/undefined.gif</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>

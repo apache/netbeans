@@ -46,6 +46,7 @@ import org.openide.util.Exceptions;
 
 /** TODO: asynchronous
  *  TODO: follow the synchronization options
+ *  TODO: close
  *
  * @author lahvac
  */
@@ -85,6 +86,7 @@ public class TextDocumentSyncServerCapabilityHandler {
                                                                          opened.getDocument().getText(0, opened.getDocument().getLength())); //XXX: should do in render!
 
                 server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(textDocumentItem));
+                server.scheduleBackgroundTasks(file);
             } catch (BadLocationException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -128,6 +130,7 @@ public class TextDocumentSyncServerCapabilityHandler {
                         VersionedTextDocumentIdentifier di = new VersionedTextDocumentIdentifier(++version);
                         di.setUri(file.toURI().toString());
                         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(di, Arrays.asList(event)));
+                        server.scheduleBackgroundTasks(file);
                     } catch (BadLocationException ex) {
                         Exceptions.printStackTrace(ex);
                     }

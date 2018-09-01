@@ -98,7 +98,6 @@ public class LanguageClientImpl implements LanguageClient {
                     ErrorDescriptionFactory.createErrorDescription(severityMap.get(d.getSeverity()), d.getMessage(), new DiagnosticFixList(pdp.getUri(), d), file, Utils.getOffset(doc, d.getRange().getStart()), Utils.getOffset(doc, d.getRange().getEnd()))
             ).collect(Collectors.toList());
             HintsController.setErrors(doc, LanguageClientImpl.class.getName(), diags);
-            bindings.runBackgroundTasks(file);
         } catch (URISyntaxException | MalformedURLException ex) {
             LOG.log(Level.FINE, null, ex);
         }

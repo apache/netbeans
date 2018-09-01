@@ -26,6 +26,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -60,10 +62,11 @@ import org.openide.util.RequestProcessor;
 public class LSPBindings {
 
     private static final RequestProcessor WORKER = new RequestProcessor(LanguageClientImpl.class.getName(), 1, false, false);
+    private static final int DELAY = 500;
 
     private static final Map<Project, Map<String, LSPBindings>> project2MimeType2Server = new WeakHashMap<>();
     private static final Map<FileObject, Map<String, LSPBindings>> workspace2Extension2Server = new HashMap<>();
-    private final Map<FileObject, List<BackgroundTask>> backgroundTasks = new WeakHashMap<>();
+    private final Map<FileObject, Map<BackgroundTask, RequestProcessor.Task>> backgroundTasks = new WeakHashMap<>();
 
     public static LSPBindings getBindings(FileObject file) {
         for (Entry<FileObject, Map<String, LSPBindings>> e : workspace2Extension2Server.entrySet()) {
@@ -174,8 +177,10 @@ public class LSPBindings {
         if (bindings == null)
             return ;
 
-        bindings.backgroundTasks.computeIfAbsent(file, f -> new ArrayList<>()).add(task);
-        bindings.runOnBackground(() -> task.run(bindings, file));
+        RequestProcessor.Task req = WORKER.create(() -> task.run(bindings, file));
+
+        bindings.backgroundTasks.computeIfAbsent(file, f -> new LinkedHashMap<>()).put(task, req);
+        bindings.scheduleBackgroundTask(req);
     }
 
     public static void removeBackgroundTask(FileObject file, BackgroundTask task) {
@@ -184,15 +189,23 @@ public class LSPBindings {
         if (bindings == null)
             return ;
 
-        bindings.backgroundTasks.computeIfAbsent(file, f -> new ArrayList<>()).remove(task);
+        RequestProcessor.Task req = bindings.backgroundTasks.computeIfAbsent(file, f -> new LinkedHashMap<>()).remove(task);
+
+        if (req != null) {
+            req.cancel();
+        }
     }
 
     public void runOnBackground(Runnable r) {
         WORKER.post(r);
     }
 
-    public void runBackgroundTasks(FileObject file) {
-        backgroundTasks.computeIfAbsent(file, f -> new ArrayList<>()).stream().forEach(bt -> runOnBackground(() -> bt.run(this, file)));
+    public void scheduleBackgroundTask(RequestProcessor.Task req) {
+        WORKER.post(req, DELAY);
+    }
+
+    public void scheduleBackgroundTasks(FileObject file) {
+        backgroundTasks.computeIfAbsent(file, f -> new IdentityHashMap<>()).values().stream().forEach(this::scheduleBackgroundTask);
     }
 
     public interface BackgroundTask {

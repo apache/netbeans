@@ -1,0 +1,5 @@
+o:CLASS:[PUBLIC]:ESCAPED{o}:
+  p:FIELD:[PUBLIC]:ESCAPED{p}<font color="#999999">ESCAPED{ : }Number</font>:
+  q:FIELD:[PUBLIC]:ESCAPED{q}<font color="#999999">ESCAPED{ : }Boolean</font>:
+foo:VARIABLE:[PUBLIC]:ESCAPED{foo}<font color="#999999">ESCAPED{ : }Number</font>:
+bar:VARIABLE:[PUBLIC]:ESCAPED{bar}<font color="#999999">ESCAPED{ : }Boolean</font>:

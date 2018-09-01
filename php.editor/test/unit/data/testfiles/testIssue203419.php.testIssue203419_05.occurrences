@@ -1,0 +1,7 @@
+class |>MARK_OCCURRENCES:MyClass203419<|
+ * @var \test\sub\|>MARK_OCCURRENCES:MyClass203419<|
+ public function test2(|>MARK_OCCURRENCES:MyClass203419<| $param) {
+$v1 = new \test\sub\|>MARK_OCCURRENCES:MyClass203419<|();
+$v2 = new |>MARK_OCCURRENCES:MyClass203^419<|();
+$v3 = new sub\|>MARK_OCCURRENCES:MyClass203419<|();
+$v4 = new baf\|>MARK_OCCURRENCES:MyClass203419<|();

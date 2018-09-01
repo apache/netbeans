@@ -1,0 +1,4 @@
+if ($a == true)^ {}
+    ----------
+HINT:Comparison with "equal (==)" operator should be avoided, use "identical (===)" operator instead
+FIX:Fix comparison: ===

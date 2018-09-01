@@ -1,0 +1,71 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='55'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='55'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='Test' start='0' end='10'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isConst/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='6' end='10'>
+        <name>Test</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <ClassNode ident='Test' start='0' end='55'>
+        <!-- ClassNode Constructor -->
+        <PropertyNode name='Test' start='0' end='55'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='6' end='10'>
+            <name>Test</name>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <FunctionNode name='Test' kind='NORMAL' start='0' end='55'>
+            <isClassConstructor/>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='0' end='55'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <!-- ClassNode Elements -->
+        <PropertyNode name='method' start='22' end='53'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='22' end='28'>
+            <name>method</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <FunctionNode name='method' kind='NORMAL' start='22' end='53'>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <IdentNode start='30' end='31'>
+              <name>a</name>
+            </IdentNode>
+            <IdentNode start='33' end='34'>
+              <name>b</name>
+            </IdentNode>
+            <!-- FunctionNode Body -->
+            <Block start='37' end='38'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <!-- ClassNode Decorators -->
+      </ClassNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

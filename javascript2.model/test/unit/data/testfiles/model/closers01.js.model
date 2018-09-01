@@ -1,0 +1,57 @@
+FUNCTION closers01 [ANONYMOUS: false, DECLARED: true - closers01, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+closers01L#1 : FUNCTION closers01L#1 [ANONYMOUS: true, DECLARED: true - closers01L#1, MODIFIERS: PUBLIC, FUNCTION]
+             # RETURN TYPES
+             undefined, RESOLVED: true
+             # PROPERTIES
+             MyContext : OBJECT MyContext [ANONYMOUS: false, DECLARED: true - MyContext, MODIFIERS: PRIVATE, OBJECT_LITERAL]
+                       # PROPERTIES
+                       createTextWrapper : FUNCTION createTextWrapper [ANONYMOUS: false, DECLARED: true - createTextWrapper, MODIFIERS: PUBLIC, METHOD]
+                                         # RETURN TYPES
+                                         closers01L#1.MyContext.createTextWrapper.wrapper, RESOLVED: true
+                                         # PROPERTIES
+                                         CreateNeco : FUNCTION CreateNeco [ANONYMOUS: false, DECLARED: true - CreateNeco, MODIFIERS: PRIVATE, CONSTRUCTOR]
+                                                    # RETURN TYPES
+                                                    closers01L#1.MyContext.createTextWrapper.CreateNeco, RESOLVED: true
+                                                    # PROPERTIES
+                                                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                                    nazdar    : FUNCTION nazdar [ANONYMOUS: false, DECLARED: true - nazdar, MODIFIERS: PROTECTED, METHOD]
+                                                              # RETURN TYPES
+                                                              String, RESOLVED: true
+                                                              # PROPERTIES
+                                                              arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                         arguments  : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                         begin      : OBJECT begin [ANONYMOUS: false, DECLARED: true - begin, MODIFIERS: PRIVATE, VARIABLE]
+                                         end        : OBJECT end [ANONYMOUS: false, DECLARED: true - end, MODIFIERS: PRIVATE, VARIABLE]
+                                         neco       : OBJECT neco [ANONYMOUS: false, DECLARED: true - neco, MODIFIERS: PRIVATE, VARIABLE]
+                                                    # PROPERTIES
+                                                    nazdar : FUNCTION nazdar [ANONYMOUS: false, DECLARED: false - nazdar, MODIFIERS: PUBLIC, METHOD]
+                                                           # PROPERTIES
+                                                           arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                         wrapper    : OBJECT wrapper [ANONYMOUS: false, DECLARED: true - wrapper, MODIFIERS: PRIVATE, OBJECT_LITERAL]
+                                                    # PROPERTIES
+                                                    print : FUNCTION print [ANONYMOUS: false, DECLARED: true - print, MODIFIERS: PUBLIC, METHOD]
+                                                          # RETURN TYPES
+                                                          closers01L#1.MyContext.createTextWrapper.wrapper, RESOLVED: true
+                                                          # PARAMETERS
+                                                          OBJECT text [ANONYMOUS: false, DECLARED: true - text, MODIFIERS: PUBLIC, PARAMETER]
+                                                          # PROPERTIES
+                                                          arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                                          result    : OBJECT result [ANONYMOUS: false, DECLARED: true - result, MODIFIERS: PRIVATE, VARIABLE]
+             arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+             myWrapper : OBJECT myWrapper [ANONYMOUS: false, DECLARED: true - myWrapper, MODIFIERS: PRIVATE, VARIABLE]
+                       # PROPERTIES
+                       print : FUNCTION print [ANONYMOUS: false, DECLARED: false - print, MODIFIERS: PUBLIC, METHOD]
+                             # PARAMETERS
+                             OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                             # PROPERTIES
+                             arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+formatter    : OBJECT formatter [ANONYMOUS: false, DECLARED: false - formatter, MODIFIERS: PUBLIC, OBJECT]
+             # PROPERTIES
+             println : FUNCTION println [ANONYMOUS: false, DECLARED: false - println, MODIFIERS: PUBLIC, METHOD]
+                     # PARAMETERS
+                     OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                     # PROPERTIES
+                     arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

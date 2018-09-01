@@ -1,0 +1,6 @@
+Code completion result for source line:
+this.f|;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     f3(f3arg): undefined            [PROTECTE  issue242472B.js
+FIELD      f                               [PUBLIC]   issue242472B.js

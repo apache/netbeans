@@ -1,0 +1,60 @@
+<testresult testFile='uniformVariableSyntax_22.php'>
+    <scanner>
+        <token id='T_STRING' start='7' end='10'>
+            <text>Foo</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='10' end='12'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='12' end='16'>
+            <text>$bar</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='16' end='18'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='18' end='22'>
+            <text>$baz</text>
+        </token>
+        <token id='T_SEMICOLON' start='22' end='23'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='24' end='24'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='24'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='23'>
+                <StaticFieldAccess start='7' end='22'>
+                    <StaticFieldAccess start='7' end='16'>
+                        <NamespaceName start='7' end='10' isCurrent='false' isGlobal='false'>
+                            <Identifier start='7' end='10' name='Foo'/>
+                        </NamespaceName>
+                        <Field>
+                            <Variable start='12' end='16' isDollared='true'>
+                                <Identifier start='13' end='16' name='bar'/>
+                            </Variable>
+                        </Field>
+                        <Member>
+                            <Variable start='12' end='16' isDollared='true'>
+                                <Identifier start='13' end='16' name='bar'/>
+                            </Variable>
+                        </Member>
+                    </StaticFieldAccess>
+                    <Field>
+                        <Variable start='18' end='22' isDollared='true'>
+                            <Identifier start='19' end='22' name='baz'/>
+                        </Variable>
+                    </Field>
+                    <Member>
+                        <Variable start='18' end='22' isDollared='true'>
+                            <Identifier start='19' end='22' name='baz'/>
+                        </Variable>
+                    </Member>
+                </StaticFieldAccess>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

@@ -1,0 +1,2 @@
+var |>MARK_OCCURRENCES:pe<| = new Person("John");
+|>MARK_OCCURRENCES:p^e<|.hi();

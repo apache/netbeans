@@ -1,0 +1,217 @@
+<testresult testFile='argumentUnpacking_01.php'>
+    <scanner>
+        <token id='T_FUNCTION' start='6' end='14'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='15' end='18'>
+            <text>add</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='18' end='19'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='19' end='21'>
+            <text>$a</text>
+        </token>
+        <token id='T_COMMA' start='21' end='22'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='23' end='25'>
+            <text>$b</text>
+        </token>
+        <token id='T_COMMA' start='25' end='26'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='27' end='29'>
+            <text>$c</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='29' end='30'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='31' end='32'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='37' end='43'>
+            <text>return</text>
+        </token>
+        <token id='T_VARIABLE' start='44' end='46'>
+            <text>$a</text>
+        </token>
+        <token id='T_PLUS' start='47' end='48'>
+            <text>+</text>
+        </token>
+        <token id='T_VARIABLE' start='49' end='51'>
+            <text>$b</text>
+        </token>
+        <token id='T_PLUS' start='52' end='53'>
+            <text>+</text>
+        </token>
+        <token id='T_VARIABLE' start='54' end='56'>
+            <text>$c</text>
+        </token>
+        <token id='T_SEMICOLON' start='56' end='57'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='58' end='59'>
+            <text>}</text>
+        </token>
+        <token id='T_VARIABLE' start='61' end='71'>
+            <text>$operators</text>
+        </token>
+        <token id='T_EQUAL' start='72' end='73'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='74' end='75'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='75' end='76'>
+            <text>2</text>
+        </token>
+        <token id='T_COMMA' start='76' end='77'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='78' end='79'>
+            <text>3</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='79' end='80'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='80' end='81'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='82' end='86'>
+            <text>echo</text>
+        </token>
+        <token id='T_STRING' start='87' end='90'>
+            <text>add</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='90' end='91'>
+            <text>(</text>
+        </token>
+        <token id='T_LNUMBER' start='91' end='92'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='92' end='93'>
+            <text>,</text>
+        </token>
+        <token id='T_ELLIPSIS' start='94' end='97'>
+            <text>...</text>
+        </token>
+        <token id='T_VARIABLE' start='97' end='107'>
+            <text>$operators</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='107' end='108'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='108' end='109'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='110' end='113'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='113' end='113'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='112'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <FunctionDeclaration start='6' end='59' isReference='false'>
+                <Identifier start='15' end='18' name='add'/>
+                <FormalParameters>
+                    <FormalParameter start='19' end='21' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='19' end='21' isDollared='true'>
+                                <Identifier start='20' end='21' name='a'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <FormalParameter start='23' end='25' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='23' end='25' isDollared='true'>
+                                <Identifier start='24' end='25' name='b'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <FormalParameter start='27' end='29' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='27' end='29' isDollared='true'>
+                                <Identifier start='28' end='29' name='c'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                </FormalParameters>
+                <Block start='31' end='59' isCurly='true'>
+                    <ReturnStatement start='37' end='57'>
+                        <InfixExpression start='44' end='56' operator='PLUS'>
+                            <InfixExpression start='44' end='51' operator='PLUS'>
+                                <Variable start='44' end='46' isDollared='true'>
+                                    <Identifier start='45' end='46' name='a'/>
+                                </Variable>
+                                <Variable start='49' end='51' isDollared='true'>
+                                    <Identifier start='50' end='51' name='b'/>
+                                </Variable>
+                            </InfixExpression>
+                            <Variable start='54' end='56' isDollared='true'>
+                                <Identifier start='55' end='56' name='c'/>
+                            </Variable>
+                        </InfixExpression>
+                    </ReturnStatement>
+                </Block>
+            </FunctionDeclaration>
+            <ExpressionStatement start='61' end='81'>
+                <Assignment start='61' end='80' operator='EQUAL'>
+                    <Variable start='61' end='71' isDollared='true'>
+                        <Identifier start='62' end='71' name='operators'/>
+                    </Variable>
+                    <ArrayCreation start='74' end='80' type='NEW'>
+                        <ArrayElement start='75' end='76'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='75' end='76' type='INT' value='2'/>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='78' end='79'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='78' end='79' type='INT' value='3'/>
+                            </Value>
+                        </ArrayElement>
+                    </ArrayCreation>
+                </Assignment>
+            </ExpressionStatement>
+            <EchoStatement start='82' end='109'>
+                <FunctionInvocation start='87' end='108'>
+                    <FucntionName start='87' end='90'>
+                        <NamespaceName start='87' end='90' isCurrent='false' isGlobal='false'>
+                            <Identifier start='87' end='90' name='add'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='91' end='92' type='INT' value='1'/>
+                        <Variadic start='94' end='107'>
+                            <Variable start='97' end='107' isDollared='true'>
+                                <Identifier start='98' end='107' name='operators'/>
+                            </Variable>
+                        </Variadic>
+                    </Parameters>
+                </FunctionInvocation>
+            </EchoStatement>
+            <EmptyStatement start='110' end='112'/>
+        </Statements>
+    </Program>
+</testresult>

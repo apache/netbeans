@@ -1,0 +1,54 @@
+
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ *//*
+ * Handler.java
+ *
+ * Created on March 19, 2006, 9:04 AM
+ *
+ * To change this template, choose Tools | Template Manager
+ * and open the template in the editor.
+ */
+
+package org.netbeans.modules.websvc.api.jaxws.project.config;
+
+/**
+ *
+ * @author rico
+ */
+public class Handler {
+    org.netbeans.modules.websvc.jaxwsmodel.handler_config1_0.Handler handler;
+    /** Creates a new instance of Handler */
+    public Handler(org.netbeans.modules.websvc.jaxwsmodel.handler_config1_0.Handler handler) {
+        this.handler=handler;
+    }
+    
+    public String getHandlerName() {
+        return handler.getHandlerName();
+    }
+    public String getHandlerClass() {
+        return handler.getHandlerClass();
+    }
+    public void setHandlerName(String name) {
+        handler.setHandlerName(name);
+    }
+    public void setHandlerClass(String value) {
+        handler.setHandlerClass(value);
+    }
+    
+}

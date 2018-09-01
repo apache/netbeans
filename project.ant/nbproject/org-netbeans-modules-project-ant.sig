@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.64.1
+#Version 1.69.1
 
 CLSS public abstract interface java.io.Serializable
 
@@ -96,6 +96,17 @@ meth public abstract void putAll(java.util.Map<? extends {java.util.Map%0},? ext
 meth public abstract {java.util.Map%1} get(java.lang.Object)
 meth public abstract {java.util.Map%1} put({java.util.Map%0},{java.util.Map%1})
 meth public abstract {java.util.Map%1} remove(java.lang.Object)
+meth public boolean remove(java.lang.Object,java.lang.Object)
+meth public boolean replace({java.util.Map%0},{java.util.Map%1},{java.util.Map%1})
+meth public void forEach(java.util.function.BiConsumer<? super {java.util.Map%0},? super {java.util.Map%1}>)
+meth public void replaceAll(java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
+meth public {java.util.Map%1} compute({java.util.Map%0},java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
+meth public {java.util.Map%1} computeIfAbsent({java.util.Map%0},java.util.function.Function<? super {java.util.Map%0},? extends {java.util.Map%1}>)
+meth public {java.util.Map%1} computeIfPresent({java.util.Map%0},java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
+meth public {java.util.Map%1} getOrDefault(java.lang.Object,{java.util.Map%1})
+meth public {java.util.Map%1} merge({java.util.Map%0},{java.util.Map%1},java.util.function.BiFunction<? super {java.util.Map%1},? super {java.util.Map%1},? extends {java.util.Map%1}>)
+meth public {java.util.Map%1} putIfAbsent({java.util.Map%0},{java.util.Map%1})
+meth public {java.util.Map%1} replace({java.util.Map%0},{java.util.Map%1})
 
 CLSS public abstract org.netbeans.api.project.ant.AntArtifact
 cons protected init()
@@ -419,10 +430,11 @@ meth public void registerExternalRoots(int)
 meth public void registerExternalRoots(int,boolean)
 supr java.lang.Object
 hfds LOG,aph,evaluator,knownSources,lastRegisteredRoots,minimalSubfolders,nonSourceRoots,ownedFiles,principalSourceRoots,project,propChangeL,registeredRootAlgorithm,typedSourceRoots
-hcls PropChangeL,Root,SourceGroupModifierImpl,SourceRoot,SourcesImpl,TypedSourceRoot
+hcls Key,PropChangeL,Root,SourceGroupModifierImpl,SourceRoot,SourcesImpl,TypedSourceRoot
 
 CLSS public final org.netbeans.spi.project.support.ant.SourcesHelper$SourceRootConfig
  outer org.netbeans.spi.project.support.ant.SourcesHelper
+meth public !varargs org.netbeans.spi.project.support.ant.SourcesHelper$SourceRootConfig inParts(java.lang.String[])
 meth public org.netbeans.spi.project.support.ant.SourcesHelper$SourceRootConfig add()
 meth public org.netbeans.spi.project.support.ant.SourcesHelper$SourceRootConfig displayName(java.lang.String)
 meth public org.netbeans.spi.project.support.ant.SourcesHelper$SourceRootConfig excludes(java.lang.String)
@@ -432,5 +444,5 @@ meth public org.netbeans.spi.project.support.ant.SourcesHelper$SourceRootConfig 
 meth public org.netbeans.spi.project.support.ant.SourcesHelper$SourceRootConfig openedIcon(javax.swing.Icon)
 meth public org.netbeans.spi.project.support.ant.SourcesHelper$SourceRootConfig type(java.lang.String)
 supr java.lang.Object
-hfds displayName,excludes,hint,icon,includes,location,openedIcon,type
+hfds displayName,excludes,hint,icon,includes,location,openedIcon,parts,type
 

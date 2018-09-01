@@ -1,0 +1,9 @@
+Display text: $retFoo2 = $this-><b>retFoo2</b>();
+File name: index.php
+Name: retFoo2
+Position: BEGIN: 350 END: 357
+
+Display text: private function <b>retFoo2</b>() {
+File name: index.php
+Name: retFoo2
+Position: BEGIN: 526 END: 533

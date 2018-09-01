@@ -1,0 +1,20 @@
+<PHPDocBlock start='3' end='92'>
+    <Tags>
+        <PHPDocVarTypeTag start='23' end='65' kind='property-read'>
+            <Variable>
+                <PHPDocNode start='42' end='47' value='$ahoj'/>
+            </Variable>
+            <Types>
+                <PHPDocTypeNode start='38' end='41' value='int' isArray='false'/>
+            </Types>
+        </PHPDocVarTypeTag>
+        <PHPDocVarTypeTag start='69' end='95' kind='property-write'>
+            <Variable>
+                <PHPDocNode start='89' end='95' value='$death'/>
+            </Variable>
+            <Types>
+                <PHPDocTypeNode start='85' end='88' value='int' isArray='false'/>
+            </Types>
+        </PHPDocVarTypeTag>
+    </Tags>
+</PHPDocBlock>

@@ -1,0 +1,6 @@
+            var |>MARK_OCCURRENCES:A^<| = function() {
+            |>MARK_OCCURRENCES:A<|.prototype.constructor = |>MARK_OCCURRENCES:A<|;
+            |>MARK_OCCURRENCES:A<|.prototype.test = function() {
+               |>MARK_OCCURRENCES:A<|.call(this);
+            B.prototype = new |>MARK_OCCURRENCES:A<|;
+                |>MARK_OCCURRENCES:A<|.prototype.test.call(this);

@@ -82,7 +82,7 @@
      <pathelement location="${ant.core.lib}"/>
      <fileset dir="..">
         <!-- For JavaHelp indexing and link checking: -->
-        <include name="javahelp/external/jhall*.jar"/>
+        <include name="platform/javahelp/external/jhall*.jar"/>
       </fileset>
     </path>
     <javac srcdir="antsrc" destdir="${build.ant.classes.dir}" deprecation="true" debug="${build.compiler.debug}" source="1.8" target="1.8">
@@ -107,9 +107,7 @@
     <echo>Downloading external binaries (*/external/ directories)...</echo>
     <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
         <manifest dir="${nb_all}">
-            <include name="*/external/binaries-list"/>
-            <include name="contrib/*/external/binaries-list"/>
-            <include name="otherlicenses/*/external/binaries-list"/>
+            <include name="**/external/binaries-list"/>
         </manifest>
     </downloadbinaries>
     <property name="ext.binaries.downloaded" value="true"/>
@@ -172,7 +170,7 @@
     <fail message="You need to have some modules checked out to build NetBeans. For example, try running the 'checkout' target.">
         <condition>
             <not>
-                <available file="../core.startup/"/>
+                <available file="../platform/core.startup/"/>
             </not>
         </condition>
     </fail>
@@ -328,7 +326,7 @@
   </target>
   <target name="finish-build" depends="finish-build-platform,finish-build-nb"/>
   <target name="finish-build-platform" depends="init,-check-nb-cluster" unless="has.nb.cluster">
-    <copy file="../o.n.bootstrap/readme/README-bin.txt" tofile="${netbeans.dest.dir}/README.txt" overwrite="true"/>
+    <copy file="../platform/o.n.bootstrap/readme/README-bin.txt" tofile="${netbeans.dest.dir}/README.txt" overwrite="true"/>
     <fixcrlf eol="lf" srcdir="${netbeans.dest.dir}" >
       <include name="${nb.cluster.platform.dir}/lib/nbexec" />
     </fixcrlf>
@@ -343,7 +341,7 @@
     <mkdir dir="${netbeans.dest.dir}/bin" />
     <copy file="../ide/launcher/unix/netbeans" todir="${netbeans.dest.dir}/bin" />
     <chmod file="${netbeans.dest.dir}/bin/netbeans" perm="ugo+rx"/>
-    <unzip src="../ide/external/launchers.zip" dest="${netbeans.dest.dir}/bin" />
+    <unzip src="../ide/external/launchers-9.0.zip" dest="${netbeans.dest.dir}/bin" />
     <!-- if anybody knows better place for icons, let me know: jtulach@netbeans.org -->
 
     <mkdir dir="${netbeans.dest.dir}/etc" />

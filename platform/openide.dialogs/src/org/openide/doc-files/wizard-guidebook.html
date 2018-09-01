@@ -1,0 +1,281 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+ <title>Wizard guidebook</title>
+    <link rel="stylesheet" href="../../../prose.css" type="text/css"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <meta name="topic" content="openide/dialogs"/>
+    <meta name="type" content="article"/>
+    <meta name="audience" content="nbdeveloper"/>
+    <meta name="description" content="Guidebook of using WizardDescriptor API."/>
+    <meta name="author" content="jrojcek@netbeans.org,jrechtacek@netbeans.org"/>
+    <meta name="indexed" content="y"/>
+    <style type="text/css">
+    </style>
+</head>
+
+<h1>Wizard Descriptor API</h1>
+
+<body>
+
+Class <a href="../WizardDescriptor.html"><code>WizardDescriptor</code></a>
+
+allows developer to create wizard from supplied 
+<a href="../WizardDescriptor.Iterator.html"><code>WizardDescriptor.Iterator</code></a>
+or array of 
+<a href="../WizardDescriptor.Panel.html"><code>WizardDesriptor.Panel</code></a>.
+
+<br><br>
+
+<code>WizardDescriptor</code> can create wizard panel (steps, graphics, help on
+the left; subtitle and user panel on the right). To achieve that, developer
+have to use <code>WizardDescriptor.putProperty()</code> or 
+<code>JComponent.putClientProperty()</code>
+
+in his/her panel to set needed properties (e.g. <code>String[]</code> for steps, 
+<code>URL</code> for help, some <code>Boolean</code> for layout control, ...). 
+
+<br><br>
+
+To create simple wizard try this: 
+
+<pre>
+WizardDescriptor wd = new WizardDescriptor(
+    new WizardDescriptor.Panel[] { 
+        myPanel1, 
+        myPanel2, 
+        myPanel3,
+        myPanel4 
+}); 
+</pre>
+
+It will create four steps wizard with no additional graphic.
+To achieve creation of subtitle, steps pane, help tab, ... one have to
+set initialization properties. 
+
+<br><br>
+
+<h2>Wizard panel initialization</h2>
+
+Use 
+<a href="../WizardDescriptor.html#putProperty-java.lang.String-java.lang.Object-">
+<code>WizardDescriptor.putProperty()</code></a> to set following initialization 
+properties.
+<ul>
+<li><tt>
+Name <b> <code>"WizardPanel_autoWizardStyle"</code></b>, type <b> <code>Boolean</code></b>
+
+<br>
+    The key property for layouting of wizard dialog. <b>Recommended to be set <code>Boolean.TRUE</code></b> to most cases.
+    <br>If switch on <code>WizardPanel_autoWizardStyle</code> then wizard can display wizards steps
+    on the left side, create a subtitle on active panel, display of error messages and others.
+    Wizards infrastructure will check the properties:
+    <ul>
+        <li><code>WizardPanel_contentDisplayed</code></li>
+        <li><code>WizardPanel_helpDisplayed</code></li>
+        <li><code>WizardPanel_contentNumbered</code></li>
+    </ul>
+    If doesn't set or set to <code>Boolean.FALSE</code> then these properties <b>are ignored</b>.
+<br>
+<br>
+Also set to <code>Boolean.TRUE</code> to turn on subtitle creation from
+<a href="../WizardDescriptor.Panel.html#getComponent--">
+<code>WizardDesriptor.Panel.getComponent()</code></a><code>.getName()</code>
+as first and 
+<a href="../WizardDescriptor.Iterator.html#name--">
+<code>WizardDescriptor.Iterator.name()</code></a> as second parameter in subtitle
+format set with 
+<a href="../WizardDescriptor.html#setTitleFormat-java.text.MessageFormat-">
+<code>WizardDesriptor.setTitleFormat()</code></a>. 
+Default subtitle format is <code>"{0} wizard ({1})"</code> and name of default 
+
+<a href="../WizardDescriptor.ArrayIterator.html">
+<code>WizardDescriptor.ArrayIterator</code></a> is 
+<code>"{0} of {1}"</code>
+where <code>{0}</code> is number of current panel and <code>{1}</code> is size of iterator. 
+<br>
+
+</tt></li>
+<br><br>
+
+<li><tt>
+Name <b> <code>"WizardPanel_contentDisplayed"</code></b>, type <b> <code>Boolean</code></b>
+<br>
+Set to <code>Boolean.TRUE</code> to turn on displaying of steps pane 
+(content, behind which can be displayed image).
+Content will be constructed from not initialization property <code>"WizardPanel_contentData"</code>.
+
+</tt></li>
+
+<br><br>
+
+<li><tt>
+Name <b> <code>"WizardPanel_helpDisplayed"</code></b>, type <b> <code>Boolean</code></b>
+<br>
+Set to <code>Boolean.TRUE</code> to turn on displaying of help (html browser)
+in a special tabbed pane of wizard panel. <br>
+Help will be taken from not initialization property <code>"WizardPanel_helpURL"</code>.
+If also steps are displayed then put help and content panes into tabbed pane.
+<br>
+<br>
+<i>Note: If do you need a help on invoking the Help button then ensure
+a <code>WizardDescriptor.Panel</code> supply a non-default <code>HelpCtx</code>.</i>
+
+</tt></li>
+
+<br><br>
+
+<li><tt>
+Name <b> <code>"WizardPanel_contentNumbered"</code></b>, type <b> <code>Boolean</code></b>
+<br>
+Set to <code>Boolean.TRUE</code> to turn on numbering of steps (before every step
+is placed it's sequence number). 
+
+</tt></li>
+
+<br><br>
+
+<li><tt>
+Name <b> <code>"WizardPanel_leftDimension"</code></b>, type <b> <code>Dimension</code></b>
+<br>
+Set size of left pane (steps and help pane). 
+</tt></li>
+</ul>
+
+That was initialization part. All <code>Boolean</code> properties are <code>Boolean.FALSE</code>
+by default. Initialization properties could be set
+also in the first panel (through <code>JComponent.putClientProperty()</code>) of supplied
+iterator. Later change of these properties will not cause change of wizard
+behavior. Properties have to be set before <code>TopManager.getDefault().createDialog(wd)</code>
+is called. 
+<br>
+Follow properties which could be changed at wizard runtime.
+
+<br><br>
+
+<h2>Wizard panel properties</h2>
+
+These properties could be changed dynamically.
+
+<ul>
+<li><tt>
+Name <b> <code>"WizardPanel_contentData"</code></b>, type <b> <code>String[]</code></b>
+<br>
+Set step names which will be displayed in the content pane.
+
+<br><br>
+
+<li><tt>
+Name <b> <code>"WizardPanel_image"</code></b>, type <b> <code>java.awt.Image</code></b>
+
+<br>
+Set image displayed as background of content. 
+</tt></li>
+
+<br><br>
+
+<li><tt>
+Set subtitle (!!!) format with 
+<a href="../WizardDescriptor.html#setTitleFormat-java.text.MessageFormat-">
+<code>WizardDescriptor.setTitleFormat()</code></a>.
+</tt></li>
+
+<br><br>
+
+<li><tt>
+Set title of the wizard with 
+
+<a href="../NotifyDescriptor.html#setTitle-java.lang.String-">
+<code>WizardDescriptor.setTitle()</code></a>. 
+</tt></li>
+<br><br>
+
+<li><tt>
+Name <b><code>"WizardPanel_errorMessage"</code></b>, type <b> <code>String</code></b>
+<br>
+Set the localized message which is then shown at the bottom of the wizard panel.
+This message should be set when panel becomes invalid and Next/Finish
+buttons are disabled. It helps user to understand what is wrong. The property
+must be set to null value to clear the message. This property is supported since
+NetBeans 3.5.
+</tt></li>
+
+</ul>
+
+In every
+panel set these client properties (<code>JComponent.putClientProperty()</code>): 
+
+<ul>
+<li><tt>
+Name <b> <code>"WizardPanel_helpURL"</code></b>, type <b> <code>java.net.URL</code></b>
+<br>
+Help url which explains your pane. 
+</tt></li>
+
+<br><br>
+
+<li><tt>
+Name <b> <code>"WizardPanel_contentSelectedIndex"</code></b>, type <b> <code>java.lang.Integer</code></b>
+<br>
+Index of highlighted step in the content, the index is zero-based.
+</tt></li>
+
+<br><br>
+
+<li><tt>
+Name <b> <code>"WizardPanel_contentBackgroundColor"</code></b>, type <b> <code>java.awt.Color</code></b>
+<br>
+Color used as background of content pane. 
+</tt></li>
+
+<br><br>
+
+<li><tt>
+Set name of panel <code>JComponent.setName("First wizard panel")</code>, 
+used as first part of subtitle, second
+is 
+
+<a href="../WizardDescriptor.Iterator.html#name--">
+<code>WizardDescriptor.Panel.name()</code></a> when you use <code>"{0}{1}"</code> message format.
+</tt></li>
+
+</ul>
+
+All properties could be set with
+both alternatives (<a href="../WizardDescriptor.html#putProperty-java.lang.String-java.lang.Object-"><code>WizardDescriptor.putProperty()</code></a> or 
+<code>JComponent.putClientProperty()</code>)
+except <b><code>"WizardPanel_helpURL"</code></b> which can be set only with 
+<code>JComponent.putClientProperty()</code> and the property <b><code>"WizardPanel_errorMessage"</code></b> which can be set only by
+<a href="../WizardDescriptor.html#putProperty-java.lang.String-java.lang.Object-"><code>WizardDescriptor.putProperty()</code></a>.
+<br>
+If both are used at the same time then 
+<a href="../WizardDescriptor.html#putProperty-java.lang.String-java.lang.Object-">
+<code>WizardDescriptor.putProperty()</code></a> matters.
+<a href="../WizardDescriptor.html">
+<code>WizardDescriptor</code></a> listens on property changes of not initialization properties
+and makes immediate changes.
+
+</body>
+</html>

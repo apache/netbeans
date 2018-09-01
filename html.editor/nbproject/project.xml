@@ -536,9 +536,9 @@
                 <friend>org.netbeans.modules.html.knockout</friend>
                 <friend>org.netbeans.modules.html.ojet</friend>
                 <friend>org.netbeans.modules.javascript2.editor</friend>
-                <friend>org.netbeans.modules.javascript2.requirejs</friend>
                 <friend>org.netbeans.modules.javascript2.nodejs</friend>
                 <friend>org.netbeans.modules.javascript2.react</friend>
+                <friend>org.netbeans.modules.javascript2.requirejs</friend>
                 <friend>org.netbeans.modules.php.latte</friend>
                 <friend>org.netbeans.modules.ruby.rhtml</friend>
                 <friend>org.netbeans.modules.web.clientproject</friend>
@@ -547,6 +547,7 @@
                 <friend>org.netbeans.modules.web.el</friend>
                 <friend>org.netbeans.modules.web.jsf</friend>
                 <friend>org.netbeans.modules.web.jsf.editor</friend>
+                <friend>org.netbeans.modules.web.wicket</friend>
                 <package>org.netbeans.modules.html.editor.api</package>
                 <package>org.netbeans.modules.html.editor.api.actions</package>
                 <package>org.netbeans.modules.html.editor.api.completion</package>

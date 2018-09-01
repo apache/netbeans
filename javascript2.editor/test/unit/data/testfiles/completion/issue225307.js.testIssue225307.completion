@@ -1,0 +1,9 @@
+Code completion result for source line:
+/*HERE*/ d|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    debugger                                   null
+KEYWORD    default                                    null
+KEYWORD    delete                                     null
+KEYWORD    do                                         null
+PARAMETER  day: Date                       [PUBLIC]   issue225307.js

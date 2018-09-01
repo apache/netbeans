@@ -1,0 +1,5 @@
+Code completion result for source line:
+this.name = p|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+PARAMETER  param1                          [PUBLIC]   issue218631.html

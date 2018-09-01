@@ -1,0 +1,11 @@
+Code completion result for source line:
+$('[h|]')
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+ATTRIBUTE  headers                                    null
+ATTRIBUTE  height                                     null
+ATTRIBUTE  hidden                                     null
+ATTRIBUTE  high                                       null
+ATTRIBUTE  href                                       null
+ATTRIBUTE  hreflang                                   null
+ATTRIBUTE  http-equiv                                 null

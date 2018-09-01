@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sun-ejb-jar PUBLIC "-//Sun Microsystems, Inc.//DTD Application Server 8.1 EJB 2.1//EN" "http://www.sun.com/software/appserver/dtds/sun-ejb-jar_2_1-1.dtd">
+<sun-ejb-jar>
+  <enterprise-beans>
+    <ejb>
+      <ejb-name>TestingSessionBean</ejb-name>
+      <jndi-name>ejb/TestingSessionBean</jndi-name>
+      <ejb-ref>
+        <ejb-ref-name>ejb/MyTestingEntityBean</ejb-ref-name>
+        <jndi-name>TestingEntityBean</jndi-name>
+      </ejb-ref>
+    </ejb>
+    <ejb>
+      <ejb-name>TestingEntityBean</ejb-name>
+      <jndi-name>ejb/TestingEntityBean</jndi-name>
+    </ejb>
+    <ejb>
+      <ejb-name>TestingMessageBean</ejb-name>
+      <jndi-name>jms/TestingMessageBean</jndi-name>
+      <mdb-connection-factory>
+        <jndi-name>jms/TestingMessageDestinationFactory</jndi-name>
+      </mdb-connection-factory>
+    </ejb>
+    <cmp-resource>
+      <jndi-name>jdo/pmf</jndi-name>
+    </cmp-resource>
+    <message-destination>
+      <message-destination-name>TestingMessageDestination</message-destination-name>
+      <jndi-name>jms/TestingMessageBean</jndi-name>
+    </message-destination>
+  </enterprise-beans>
+</sun-ejb-jar>

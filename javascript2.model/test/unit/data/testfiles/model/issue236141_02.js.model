@@ -1,0 +1,31 @@
+FUNCTION issue236141_02 [ANONYMOUS: false, DECLARED: true - issue236141_02, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+angular           : OBJECT angular [ANONYMOUS: false, DECLARED: false - angular, MODIFIERS: PUBLIC, OBJECT]
+                  # PROPERTIES
+                  module : FUNCTION module [ANONYMOUS: false, DECLARED: false - module, MODIFIERS: PUBLIC, METHOD]
+                         # PARAMETERS
+                         OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                         # PROPERTIES
+                         arguments  : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                         controller : FUNCTION controller [ANONYMOUS: false, DECLARED: false - controller, MODIFIERS: PUBLIC, METHOD]
+                                    # PARAMETERS
+                                    OBJECT param1 [ANONYMOUS: false, DECLARED: true - param1, MODIFIERS: PUBLIC, PARAMETER]
+                                    OBJECT param2 [ANONYMOUS: false, DECLARED: true - param2, MODIFIERS: PUBLIC, PARAMETER]
+                                    # PROPERTIES
+                                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                    directive : FUNCTION directive [ANONYMOUS: false, DECLARED: false - directive, MODIFIERS: PUBLIC, METHOD]
+                                              # PARAMETERS
+                                              OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                                              # PROPERTIES
+                                              arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+issue236141_02L#1 : FUNCTION issue236141_02L#1 [ANONYMOUS: true, DECLARED: true - issue236141_02L#1, MODIFIERS: PUBLIC, FUNCTION]
+                  # RETURN TYPES
+                  undefined, RESOLVED: true
+                  # PARAMETERS
+                  OBJECT $scope [ANONYMOUS: false, DECLARED: true - $scope, MODIFIERS: PUBLIC, PARAMETER]
+                          # PROPERTIES
+                          user : OBJECT user [ANONYMOUS: false, DECLARED: true - user, MODIFIERS: PUBLIC, PROPERTY]
+                  # PROPERTIES
+                  arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

@@ -1,0 +1,8 @@
+n:VARIABLE:[PUBLIC]:ESCAPED{n}<font color="#999999">ESCAPED{ : }Name</font>:
+t:VARIABLE:[PUBLIC]:ESCAPED{t}:
+Name:CONSTRUCTOR:[PUBLIC]:ESCAPED{Name}ESCAPED{(}ESCAPED{name}ESCAPED{)}<font color="#999999">ESCAPED{ : }Name</font>:
+  name:FIELD:[PUBLIC]:ESCAPED{name}:
+  privateGen:METHOD:[PRIVATE]:ESCAPED{privateGen}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Generator</font>:
+  prototype:CLASS:[PUBLIC]:ESCAPED{prototype}:
+    getName:METHOD:[PUBLIC]:ESCAPED{getName}ESCAPED{(}ESCAPED{)}:
+  used:METHOD:[PROTECTED]:ESCAPED{used}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Generator</font>:

@@ -1,0 +1,7 @@
+<?php
+if (true)
+    echo "OK";
+        if (true) {
+
+    }
+?>

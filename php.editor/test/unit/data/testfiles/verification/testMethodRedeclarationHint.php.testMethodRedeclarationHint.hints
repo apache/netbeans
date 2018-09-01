@@ -1,0 +1,12 @@
+    function functionNameSame($param) {
+             ----------------
+HINT:Method or function "functionNameSame" has already been declared
+    function ifaceFunctionNameSame($param);
+             ---------------------
+HINT:Method or function "ifaceFunctionNameSame" has already been declared
+    function traitFunctionNameSame($param) {
+             ---------------------
+HINT:Method or function "traitFunctionNameSame" has already been declared
+function globalFunctionNameSame($param) {
+         ----------------------
+HINT:Method or function "globalFunctionNameSame" has already been declared

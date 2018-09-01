@@ -1,0 +1,2 @@
+            var d = this.options.|>MARK_OCCURRENCES:debug<|;
+console.log(Test.options.|>MARK_OCCURRENCES:deb^ug<|);

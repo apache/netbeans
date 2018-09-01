@@ -1,0 +1,4 @@
+EventEmitter:VARIABLE:[PRIVATE]:ESCAPED{EventEmitter}<font color="#999999">ESCAPED{ : }EventEmitter</font>:
+editor_emitter:VARIABLE:[PRIVATE]:ESCAPED{editor_emitter}<font color="#999999">ESCAPED{ : }EventEmitter</font>:
+exports:CLASS:[PUBLIC]:ESCAPED{exports}:
+  emitter:FIELD:[PUBLIC]:ESCAPED{emitter}<font color="#999999">ESCAPED{ : }EventEmitter</font>:

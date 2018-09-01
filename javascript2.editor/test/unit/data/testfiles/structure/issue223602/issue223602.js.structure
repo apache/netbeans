@@ -1,0 +1,11 @@
+p223602_1:VARIABLE:[PUBLIC]:ESCAPED{p223602_1}<font color="#999999">ESCAPED{ : }Test223602</font>:
+p223602_2:VARIABLE:[PUBLIC]:ESCAPED{p223602_2}<font color="#999999">ESCAPED{ : }String</font>:
+p223602_3:VARIABLE:[PUBLIC]:ESCAPED{p223602_3}<font color="#999999">ESCAPED{ : }String</font>:
+EventEmitter:VARIABLE:[PUBLIC]:ESCAPED{EventEmitter}:
+getTest223602:METHOD:[PUBLIC]:ESCAPED{getTest223602}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Test223602</font>:
+Test223602:CLASS:[PUBLIC]:ESCAPED{Test223602}:
+  complex:CLASS:[PUBLIC]:ESCAPED{complex}:
+    name:FIELD:[PUBLIC]:ESCAPED{name}<font color="#999999">ESCAPED{ : }String</font>:
+    number:FIELD:[PUBLIC]:ESCAPED{number}<font color="#999999">ESCAPED{ : }Number</font>:
+  event:FIELD:[PUBLIC]:ESCAPED{event}<font color="#999999">ESCAPED{ : }String</font>:
+  id:FIELD:[PUBLIC]:ESCAPED{id}<font color="#999999">ESCAPED{ : }Number</font>:

@@ -74,6 +74,7 @@ protected:
     virtual const char * getExtraClustersOptName();
     virtual const char * getJdkHomeOptName();
     virtual const char * getCurrentDir();
+    virtual std::string constructApplicationDir(const std::string& dir, bool cache);
 
 private:
     NbLauncher(const NbLauncher& orig);

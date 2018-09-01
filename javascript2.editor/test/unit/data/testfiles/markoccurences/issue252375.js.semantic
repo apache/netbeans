@@ -1,0 +1,11 @@
+var |>GLOBAL:MyOb<| = {
+    |>METHOD:fn1<|: function (data) {
+        var |>LOCAL_VARIABLE_DECLARATION:xxx<| = data;
+
+        this.|>FIELD:xxx<| = |>LOCAL_VARIABLE:xxx<|;    // <- here is the second xxx marked as global
+    }
+};
+  
+|>GLOBAL:console<|.log(|>GLOBAL:MyOb<|.|>FIELD:xxx<|);
+|>GLOBAL:MyOb<|.fn1("sranda");
+|>GLOBAL:console<|.log(|>GLOBAL:MyOb<|.|>FIELD:xxx<|);

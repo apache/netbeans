@@ -1,0 +1,3 @@
+ * @param {|>MARK_OCCURRENCES:Dat^es<|} what
+ * @returns {|>MARK_OCCURRENCES:Dates<|} description
+function |>MARK_OCCURRENCES:Dates<|(){

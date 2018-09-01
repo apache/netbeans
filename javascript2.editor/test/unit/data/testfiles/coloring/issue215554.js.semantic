@@ -1,0 +1,11 @@
+var |>GLOBAL:Bug<| = |>GLOBAL:Backbone<|.Model.extend({
+    |>CLASS:defaults<|: {
+        |>FIELD:url<|: "http://netbeans.org/bugzilla/show_bug.cgi?id="
+    }
+});
+
+
+//define directory collection
+var |>GLOBAL:BugList<| = |>GLOBAL:Backbone<|.Collection.extend({
+    |>FIELD:model<|: |>GLOBAL:Bug<|
+});   

@@ -1,0 +1,4 @@
+Code completion result for source line:
+/*second comment*//* @var $hello|2 type */
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   mixed $hello                    [PUBLIC]   varTypeComment.php

@@ -1,0 +1,22 @@
+<?php
+
+class Application_Model_Categoria extends Zend_Db_Table_Abstract {
+
+    public function deleteNode($id = NULL, $subtree = 0) {
+        if ($id != NULL) {
+            if ($subtree) {
+                return true;
+            } elseif (!$subtree) {
+                return true;
+            } else
+                return false;
+        }
+    }
+
+    private function moveNode($params = array()) {
+        return true;
+    }
+
+}
+
+//end class

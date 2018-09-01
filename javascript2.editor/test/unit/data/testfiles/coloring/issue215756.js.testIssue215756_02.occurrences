@@ -1,0 +1,2 @@
+        |>MARK_OCCURRENCES:test<|: function () {
+    TEST.|>MARK_OCCURRENCES:te^st<|();

@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<metaDD>
+	<meta-element>
+		<dtd-name>constraints</dtd-name>
+		<bean-name>Constraints</bean-name>
+		<meta-property>
+			<bean-name>CheckInfo</bean-name>
+		</meta-property>
+	</meta-element>
+	<meta-element>
+		<dtd-name>check-info</dtd-name>
+		<bean-name>CheckInfo</bean-name>
+		<meta-property>
+			<bean-name>Name</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>Classname</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>Arguments</bean-name>
+		</meta-property>
+	</meta-element>
+	<meta-element>
+		<dtd-name>name</dtd-name>
+		<bean-name>Name</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>classname</dtd-name>
+		<bean-name>Classname</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>arguments</dtd-name>
+		<bean-name>Arguments</bean-name>
+		<meta-property>
+			<bean-name>Argument</bean-name>
+		</meta-property>
+	</meta-element>
+	<meta-element>
+		<dtd-name>argument</dtd-name>
+		<bean-name>Argument</bean-name>
+		<meta-property>
+			<bean-name>Name</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>Type</bean-name>
+		</meta-property>
+	</meta-element>
+	<meta-element>
+		<dtd-name>type</dtd-name>
+		<bean-name>Type</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>#PCDATA</dtd-name>
+		<bean-name>Pcdata</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+</metaDD>

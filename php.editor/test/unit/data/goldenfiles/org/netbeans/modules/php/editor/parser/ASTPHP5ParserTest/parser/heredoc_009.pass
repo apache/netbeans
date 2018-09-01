@@ -1,0 +1,157 @@
+<testresult testFile='heredoc_009.php'>
+    <scanner>
+        <token id='T_INLINE_HTML' start='0' end='60'>
+            <text>--TEST--\nTorture the T_END_HEREDOC rules (heredoc)\n--FILE--\n</text>
+        </token>
+        <token id='T_REQUIRE_ONCE' start='67' end='79'>
+            <text>require_once</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='80' end='92'>
+            <text>&apos;nowdoc.inc&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='92' end='93'>
+            <text>;</text>
+        </token>
+        <token id='T_PRINT' start='95' end='100'>
+            <text>print</text>
+        </token>
+        <token id='T_START_HEREDOC' start='101' end='117'>
+            <text>&lt;&lt;&lt;ENDOFHEREDOC\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='117' end='187'>
+            <text>ENDOFHEREDOC    ;\n    ENDOFHEREDOC;\nENDOFHEREDOC    \n    ENDOFHEREDOC\n</text>
+        </token>
+        <token id='T_VARIABLE' start='187' end='200'>
+            <text>$ENDOFHEREDOC</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='200' end='214'>
+            <text>;\n\nENDOFHEREDO</text>
+        </token>
+        <token id='T_END_HEREDOC' start='214' end='215'>
+            <text>C</text>
+        </token>
+        <token id='T_SEMICOLON' start='215' end='216'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='218' end='220'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='221' end='222'>
+            <text>=</text>
+        </token>
+        <token id='T_START_HEREDOC' start='223' end='239'>
+            <text>&lt;&lt;&lt;ENDOFHEREDOC\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='239' end='309'>
+            <text>ENDOFHEREDOC    ;\n    ENDOFHEREDOC;\nENDOFHEREDOC    \n    ENDOFHEREDOC\n</text>
+        </token>
+        <token id='T_VARIABLE' start='309' end='322'>
+            <text>$ENDOFHEREDOC</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='322' end='336'>
+            <text>;\n\nENDOFHEREDO</text>
+        </token>
+        <token id='T_END_HEREDOC' start='336' end='337'>
+            <text>C</text>
+        </token>
+        <token id='T_SEMICOLON' start='337' end='338'>
+            <text>;</text>
+        </token>
+        <token id='T_PRINT' start='340' end='345'>
+            <text>print</text>
+        </token>
+        <token id='T_QUATE' start='346' end='347'>
+            <text>"</text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='347' end='348'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='348' end='350'>
+            <text>$x</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='350' end='351'>
+            <text>}</text>
+        </token>
+        <token id='T_QUATE' start='351' end='352'>
+            <text>"</text>
+        </token>
+        <token id='T_SEMICOLON' start='352' end='353'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='355' end='358'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='T_INLINE_HTML' start='358' end='631'>
+            <text>--EXPECTF--\nNotice: Undefined variable: ENDOFHEREDOC in %s on line %d\nENDOFHEREDOC    ;\n    ENDOFHEREDOC;\nENDOFHEREDOC    \n    ENDOFHEREDOC\n;\n\nNotice: Undefined variable: ENDOFHEREDOC in %s on line %d\nENDOFHEREDOC    ;\n    ENDOFHEREDOC;\nENDOFHEREDOC    \n    ENDOFHEREDOC\n;\n</text>
+        </token>
+        <token id='EOF' start='631' end='631'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='631'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <InLineHtml start='0' end='60'/>
+            <ExpressionStatement start='67' end='93'>
+                <Include start='67' end='92' type='REQUIRE_ONCE'>
+                    <Scalar start='80' end='92' type='STRING' value='&apos;nowdoc.inc&apos;'/>
+                </Include>
+            </ExpressionStatement>
+            <ExpressionStatement start='95' end='216'>
+                <FunctionInvocation start='95' end='215'>
+                    <FucntionName start='95' end='100'>
+                        <Identifier start='95' end='100' name='print'/>
+                    </FucntionName>
+                    <Parameters>
+                        <Quote start='101' end='215' type='HEREDOC'>
+                            <Expressions>
+                                <Scalar start='117' end='187' type='STRING' value='ENDOFHEREDOC    ;\n    ENDOFHEREDOC;\nENDOFHEREDOC    \n    ENDOFHEREDOC\n'/>
+                                <Variable start='187' end='200' isDollared='true'>
+                                    <Identifier start='188' end='200' name='ENDOFHEREDOC'/>
+                                </Variable>
+                                <Scalar start='200' end='214' type='STRING' value=';\n\n'/>
+                            </Expressions>
+                        </Quote>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='218' end='338'>
+                <Assignment start='218' end='337' operator='EQUAL'>
+                    <Variable start='218' end='220' isDollared='true'>
+                        <Identifier start='219' end='220' name='x'/>
+                    </Variable>
+                    <Quote start='223' end='337' type='HEREDOC'>
+                        <Expressions>
+                            <Scalar start='239' end='309' type='STRING' value='ENDOFHEREDOC    ;\n    ENDOFHEREDOC;\nENDOFHEREDOC    \n    ENDOFHEREDOC\n'/>
+                            <Variable start='309' end='322' isDollared='true'>
+                                <Identifier start='310' end='322' name='ENDOFHEREDOC'/>
+                            </Variable>
+                            <Scalar start='322' end='336' type='STRING' value=';\n\n'/>
+                        </Expressions>
+                    </Quote>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='340' end='353'>
+                <FunctionInvocation start='340' end='352'>
+                    <FucntionName start='340' end='345'>
+                        <Identifier start='340' end='345' name='print'/>
+                    </FucntionName>
+                    <Parameters>
+                        <Quote start='346' end='352' type='QUOTE'>
+                            <Expressions>
+                                <ReflectionVariable start='347' end='351'>
+                                    <Variable start='348' end='350' isDollared='true'>
+                                        <Identifier start='349' end='350' name='x'/>
+                                    </Variable>
+                                </ReflectionVariable>
+                            </Expressions>
+                        </Quote>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <EmptyStatement start='355' end='358'/>
+            <InLineHtml start='358' end='631'/>
+        </Statements>
+    </Program>
+</testresult>

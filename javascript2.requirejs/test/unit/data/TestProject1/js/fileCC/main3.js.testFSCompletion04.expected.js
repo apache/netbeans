@@ -1,0 +1,2 @@
+requirejs(['./folder1/']);
+

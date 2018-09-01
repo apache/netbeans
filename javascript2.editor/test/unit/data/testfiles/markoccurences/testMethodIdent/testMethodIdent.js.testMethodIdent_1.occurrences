@@ -1,0 +1,3 @@
+ * @param {Color} |>MARK_OCCURRENCES:color<| car color
+function Car (|>MARK_OCCURRENCES:color<|, maker) {
+    this.color = |>MARK_OCCURRENCES:col^or<|;

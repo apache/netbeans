@@ -4,7 +4,7 @@ Origin: Apache Software Foundation
 Version: 1.2
 License: Apache-2.0
 URL: http://xml.apache.org/commons/
-Files: xml-resolver-1.2-sources.jar
+Files: xml-resolver-1.2-sources.jar, xml-resolver-1.2.jar
 Comment: See readme.txt for important information about patched sources.
 
                                  Apache License

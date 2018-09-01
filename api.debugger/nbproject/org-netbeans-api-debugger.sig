@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.52.1
+#Version 1.56.1
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -238,6 +238,7 @@ meth public org.netbeans.api.debugger.DebuggerEngine[] getDebuggerEngines()
 meth public org.netbeans.api.debugger.DebuggerEngine[] startDebugging(org.netbeans.api.debugger.DebuggerInfo)
 meth public org.netbeans.api.debugger.Session getCurrentSession()
 meth public org.netbeans.api.debugger.Session[] getSessions()
+meth public org.netbeans.api.debugger.Watch createPinnedWatch(java.lang.String,org.netbeans.api.debugger.Watch$Pin)
 meth public org.netbeans.api.debugger.Watch createWatch(int,java.lang.String)
 meth public org.netbeans.api.debugger.Watch createWatch(java.lang.String)
 meth public org.netbeans.api.debugger.Watch[] getWatches()
@@ -394,15 +395,20 @@ CLSS public final org.netbeans.api.debugger.Watch
 fld public final static java.lang.String PROP_ENABLED = "enabled"
 fld public final static java.lang.String PROP_EXPRESSION = "expression"
 fld public final static java.lang.String PROP_VALUE = "value"
+innr public abstract interface static Pin
 meth public boolean isEnabled()
 meth public java.lang.String getExpression()
+meth public org.netbeans.api.debugger.Watch$Pin getPin()
 meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void remove()
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void setEnabled(boolean)
 meth public void setExpression(java.lang.String)
 supr java.lang.Object
-hfds enabled,expression,pcs
+hfds enabled,expression,pcs,pin
+
+CLSS public abstract interface static org.netbeans.api.debugger.Watch$Pin
+ outer org.netbeans.api.debugger.Watch
 
 CLSS public abstract org.netbeans.spi.debugger.ActionsProvider
 cons public init()

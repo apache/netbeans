@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.86.1
+#Version 1.90.1
 
 CLSS public abstract interface java.io.Serializable
 
@@ -396,10 +396,13 @@ meth public static org.netbeans.api.project.Project getNonConvertorOwner(org.ope
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public static org.netbeans.spi.queries.FileEncodingQueryImplementation createFileEncodingQuery()
  anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public static org.openide.util.Lookup createDelegateToOwnerLookup(org.openide.filesystems.FileObject)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public static void unregisterConvertorProject(org.netbeans.api.project.Project)
  anno 1 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
-hcls CloseableLookup,ConvertorFileEncodingQuery
+hcls CloseableLookup,ConvertorFileEncodingQuery,OwnerLookup
 
 CLSS public final org.netbeans.spi.project.ui.support.ProjectCustomizer
 innr public abstract interface static CategoryComponentProvider

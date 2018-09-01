@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.32.1
+#Version 1.36.1
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -29,8 +29,16 @@ meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Cl
 supr java.lang.Object
 hfds name,ordinal
 
+CLSS public abstract interface !annotation java.lang.FunctionalInterface
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+
 CLSS public abstract interface java.lang.Iterable<%0 extends java.lang.Object>
 meth public abstract java.util.Iterator<{java.lang.Iterable%0}> iterator()
+meth public java.util.Spliterator<{java.lang.Iterable%0}> spliterator()
+meth public void forEach(java.util.function.Consumer<? super {java.lang.Iterable%0}>)
 
 CLSS public java.lang.Object
 cons public init()
@@ -45,6 +53,32 @@ meth public final void wait(long) throws java.lang.InterruptedException
 meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
+
+CLSS public abstract interface java.lang.annotation.Annotation
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract int hashCode()
+meth public abstract java.lang.Class<? extends java.lang.annotation.Annotation> annotationType()
+meth public abstract java.lang.String toString()
+
+CLSS public abstract interface !annotation java.lang.annotation.Documented
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation java.lang.annotation.Retention
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.RetentionPolicy value()
+
+CLSS public abstract interface !annotation java.lang.annotation.Target
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.ElementType[] value()
 
 CLSS public abstract java.util.AbstractCollection<%0 extends java.lang.Object>
 cons protected init()
@@ -115,10 +149,31 @@ meth public abstract int size()
 meth public abstract java.lang.Object[] toArray()
 meth public abstract java.util.Iterator<{java.util.Collection%0}> iterator()
 meth public abstract void clear()
+meth public boolean removeIf(java.util.function.Predicate<? super {java.util.Collection%0}>)
+meth public java.util.Spliterator<{java.util.Collection%0}> spliterator()
+meth public java.util.stream.Stream<{java.util.Collection%0}> parallelStream()
+meth public java.util.stream.Stream<{java.util.Collection%0}> stream()
 
 CLSS public abstract interface java.util.Comparator<%0 extends java.lang.Object>
+ anno 0 java.lang.FunctionalInterface()
+meth public <%0 extends java.lang.Comparable<? super {%%0}>> java.util.Comparator<{java.util.Comparator%0}> thenComparing(java.util.function.Function<? super {java.util.Comparator%0},? extends {%%0}>)
+meth public <%0 extends java.lang.Object> java.util.Comparator<{java.util.Comparator%0}> thenComparing(java.util.function.Function<? super {java.util.Comparator%0},? extends {%%0}>,java.util.Comparator<? super {%%0}>)
 meth public abstract boolean equals(java.lang.Object)
 meth public abstract int compare({java.util.Comparator%0},{java.util.Comparator%0})
+meth public java.util.Comparator<{java.util.Comparator%0}> reversed()
+meth public java.util.Comparator<{java.util.Comparator%0}> thenComparing(java.util.Comparator<? super {java.util.Comparator%0}>)
+meth public java.util.Comparator<{java.util.Comparator%0}> thenComparingDouble(java.util.function.ToDoubleFunction<? super {java.util.Comparator%0}>)
+meth public java.util.Comparator<{java.util.Comparator%0}> thenComparingInt(java.util.function.ToIntFunction<? super {java.util.Comparator%0}>)
+meth public java.util.Comparator<{java.util.Comparator%0}> thenComparingLong(java.util.function.ToLongFunction<? super {java.util.Comparator%0}>)
+meth public static <%0 extends java.lang.Comparable<? super {%%0}>> java.util.Comparator<{%%0}> naturalOrder()
+meth public static <%0 extends java.lang.Comparable<? super {%%0}>> java.util.Comparator<{%%0}> reverseOrder()
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Comparable<? super {%%1}>> java.util.Comparator<{%%0}> comparing(java.util.function.Function<? super {%%0},? extends {%%1}>)
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Comparator<{%%0}> comparing(java.util.function.Function<? super {%%0},? extends {%%1}>,java.util.Comparator<? super {%%1}>)
+meth public static <%0 extends java.lang.Object> java.util.Comparator<{%%0}> comparingDouble(java.util.function.ToDoubleFunction<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> java.util.Comparator<{%%0}> comparingInt(java.util.function.ToIntFunction<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> java.util.Comparator<{%%0}> comparingLong(java.util.function.ToLongFunction<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> java.util.Comparator<{%%0}> nullsFirst(java.util.Comparator<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> java.util.Comparator<{%%0}> nullsLast(java.util.Comparator<? super {%%0}>)
 
 CLSS public abstract interface java.util.EventListener
 
@@ -133,19 +188,30 @@ intf java.util.Map<{java.util.HashMap%0},{java.util.HashMap%1}>
 meth public boolean containsKey(java.lang.Object)
 meth public boolean containsValue(java.lang.Object)
 meth public boolean isEmpty()
+meth public boolean remove(java.lang.Object,java.lang.Object)
+meth public boolean replace({java.util.HashMap%0},{java.util.HashMap%1},{java.util.HashMap%1})
 meth public int size()
 meth public java.lang.Object clone()
 meth public java.util.Collection<{java.util.HashMap%1}> values()
 meth public java.util.Set<java.util.Map$Entry<{java.util.HashMap%0},{java.util.HashMap%1}>> entrySet()
 meth public java.util.Set<{java.util.HashMap%0}> keySet()
 meth public void clear()
+meth public void forEach(java.util.function.BiConsumer<? super {java.util.HashMap%0},? super {java.util.HashMap%1}>)
 meth public void putAll(java.util.Map<? extends {java.util.HashMap%0},? extends {java.util.HashMap%1}>)
+meth public void replaceAll(java.util.function.BiFunction<? super {java.util.HashMap%0},? super {java.util.HashMap%1},? extends {java.util.HashMap%1}>)
+meth public {java.util.HashMap%1} compute({java.util.HashMap%0},java.util.function.BiFunction<? super {java.util.HashMap%0},? super {java.util.HashMap%1},? extends {java.util.HashMap%1}>)
+meth public {java.util.HashMap%1} computeIfAbsent({java.util.HashMap%0},java.util.function.Function<? super {java.util.HashMap%0},? extends {java.util.HashMap%1}>)
+meth public {java.util.HashMap%1} computeIfPresent({java.util.HashMap%0},java.util.function.BiFunction<? super {java.util.HashMap%0},? super {java.util.HashMap%1},? extends {java.util.HashMap%1}>)
 meth public {java.util.HashMap%1} get(java.lang.Object)
+meth public {java.util.HashMap%1} getOrDefault(java.lang.Object,{java.util.HashMap%1})
+meth public {java.util.HashMap%1} merge({java.util.HashMap%0},{java.util.HashMap%1},java.util.function.BiFunction<? super {java.util.HashMap%1},? super {java.util.HashMap%1},? extends {java.util.HashMap%1}>)
 meth public {java.util.HashMap%1} put({java.util.HashMap%0},{java.util.HashMap%1})
+meth public {java.util.HashMap%1} putIfAbsent({java.util.HashMap%0},{java.util.HashMap%1})
 meth public {java.util.HashMap%1} remove(java.lang.Object)
+meth public {java.util.HashMap%1} replace({java.util.HashMap%0},{java.util.HashMap%1})
 supr java.util.AbstractMap<{java.util.HashMap%0},{java.util.HashMap%1}>
-hfds ALTERNATIVE_HASHING_THRESHOLD_DEFAULT,DEFAULT_INITIAL_CAPACITY,DEFAULT_LOAD_FACTOR,EMPTY_TABLE,MAXIMUM_CAPACITY,entrySet,hashSeed,loadFactor,modCount,serialVersionUID,size,table,threshold
-hcls Entry,EntryIterator,EntrySet,HashIterator,Holder,KeyIterator,KeySet,ValueIterator,Values
+hfds DEFAULT_INITIAL_CAPACITY,DEFAULT_LOAD_FACTOR,MAXIMUM_CAPACITY,MIN_TREEIFY_CAPACITY,TREEIFY_THRESHOLD,UNTREEIFY_THRESHOLD,entrySet,loadFactor,modCount,serialVersionUID,size,table,threshold
+hcls EntryIterator,EntrySet,EntrySpliterator,HashIterator,HashMapSpliterator,KeyIterator,KeySet,KeySpliterator,Node,TreeNode,ValueIterator,ValueSpliterator,Values
 
 CLSS public java.util.HashSet<%0 extends java.lang.Object>
 cons public init()
@@ -162,6 +228,7 @@ meth public boolean remove(java.lang.Object)
 meth public int size()
 meth public java.lang.Object clone()
 meth public java.util.Iterator<{java.util.HashSet%0}> iterator()
+meth public java.util.Spliterator<{java.util.HashSet%0}> spliterator()
 meth public void clear()
 supr java.util.AbstractSet<{java.util.HashSet%0}>
 hfds PRESENT,map,serialVersionUID
@@ -182,6 +249,17 @@ meth public abstract void putAll(java.util.Map<? extends {java.util.Map%0},? ext
 meth public abstract {java.util.Map%1} get(java.lang.Object)
 meth public abstract {java.util.Map%1} put({java.util.Map%0},{java.util.Map%1})
 meth public abstract {java.util.Map%1} remove(java.lang.Object)
+meth public boolean remove(java.lang.Object,java.lang.Object)
+meth public boolean replace({java.util.Map%0},{java.util.Map%1},{java.util.Map%1})
+meth public void forEach(java.util.function.BiConsumer<? super {java.util.Map%0},? super {java.util.Map%1}>)
+meth public void replaceAll(java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
+meth public {java.util.Map%1} compute({java.util.Map%0},java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
+meth public {java.util.Map%1} computeIfAbsent({java.util.Map%0},java.util.function.Function<? super {java.util.Map%0},? extends {java.util.Map%1}>)
+meth public {java.util.Map%1} computeIfPresent({java.util.Map%0},java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
+meth public {java.util.Map%1} getOrDefault(java.lang.Object,{java.util.Map%1})
+meth public {java.util.Map%1} merge({java.util.Map%0},{java.util.Map%1},java.util.function.BiFunction<? super {java.util.Map%1},? super {java.util.Map%1},? extends {java.util.Map%1}>)
+meth public {java.util.Map%1} putIfAbsent({java.util.Map%0},{java.util.Map%1})
+meth public {java.util.Map%1} replace({java.util.Map%0},{java.util.Map%1})
 
 CLSS public abstract interface java.util.Set<%0 extends java.lang.Object>
 intf java.util.Collection<{java.util.Set%0}>
@@ -200,6 +278,7 @@ meth public abstract int size()
 meth public abstract java.lang.Object[] toArray()
 meth public abstract java.util.Iterator<{java.util.Set%0}> iterator()
 meth public abstract void clear()
+meth public java.util.Spliterator<{java.util.Set%0}> spliterator()
 
 CLSS public abstract interface javax.xml.namespace.NamespaceContext
 meth public abstract java.lang.String getNamespaceURI(java.lang.String)

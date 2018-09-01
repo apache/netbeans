@@ -1,0 +1,4 @@
+        Foo::ahoj(^);
+        -----------
+HINT:Introduce Hint
+FIX:Create Method " ahoj()" in Class "Foo" (Issue239277.php)

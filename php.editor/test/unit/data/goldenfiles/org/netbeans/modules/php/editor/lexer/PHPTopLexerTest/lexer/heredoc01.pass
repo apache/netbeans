@@ -1,0 +1,2 @@
+token #0 T_PHP_OPEN_DELIMITER <?php
+token #1 T_PHP \n$name="Petr";\n$age=10;\necho <<<HEREDOC\nName:\n

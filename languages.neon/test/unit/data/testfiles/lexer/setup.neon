@@ -1,0 +1,37 @@
+parameters:
+	class: Ipsum
+	property: test
+
+services:
+	lorem:
+		factory: Factory::createLorem
+		arguments: [1]
+		setup:
+			# local methods
+			- test(2)
+			- @lorem::test(3)
+			- [@self, test](4)
+
+			# static class method
+			- Ipsum::test(5)
+
+			# other service method
+			- @ipsum::test(6)
+
+			# global function
+			- ::test(7)
+
+			# local properties
+			- @lorem::$test(...)
+			- [@self, $test](true)
+			- $test(false)
+			- $%property%(8)
+
+			# static class property
+			- Ipsum::$staticTest(9)
+
+			# other service property
+			- @ipsum::$%property%(10)
+
+	ipsum:
+		class: %class%

@@ -1,0 +1,12 @@
+<?php
+
+    include_once "__SAAS_FOLDER__/RestConnection.php";
+    include_once "__NAME__Authenticator.php";
+
+    class __NAME__ {
+
+        public function __NAME__() {
+        }
+    }
+
+?>

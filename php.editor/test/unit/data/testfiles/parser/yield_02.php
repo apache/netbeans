@@ -1,0 +1,5 @@
+<?php
+
+$data = (yield $value);
+
+?>

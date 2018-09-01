@@ -1,0 +1,5 @@
+a:VARIABLE:[PUBLIC]:ESCAPED{a}<font color="#999999">ESCAPED{ : }Runner</font>:
+test:METHOD:[PUBLIC]:ESCAPED{test}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Runner</font>:
+Runner:CONSTRUCTOR:[PUBLIC]:ESCAPED{Runner}ESCAPED{(}ESCAPED{object}ESCAPED{, }ESCAPED{name}ESCAPED{, }ESCAPED{dispose}ESCAPED{)}<font color="#999999">ESCAPED{ : }Runner</font>:
+  name:FIELD:[PUBLIC]:ESCAPED{name}:
+  notify:METHOD:[PROTECTED]:ESCAPED{notify}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:

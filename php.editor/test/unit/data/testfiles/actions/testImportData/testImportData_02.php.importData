@@ -1,0 +1,32 @@
+Caret position: 138
+Should show uses panel: true
+Defaults:
+ \Nette\Utils\Arrays
+ <html><font color='#FF0000'>&lt;cannot be resolved&gt;
+ \Nette\Utils\Html
+ \Nette\Http\Request
+ \Nette\Utils\Strings
+
+Names:
+ Arrays
+ BasePresenter
+ Html
+ Request
+ Strings
+
+Variants:
+ \Nette\Utils\Arrays
+ Don't use type.
+
+ <html><font color='#FF0000'>&lt;cannot be resolved&gt;
+
+ \Nette\Utils\Html
+ Don't use type.
+
+ \Nette\Application\Request
+ \Nette\Http\Request
+ Don't use type.
+
+ \Nette\Utils\Strings
+ Don't use type.
+

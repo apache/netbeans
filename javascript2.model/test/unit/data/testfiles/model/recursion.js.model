@@ -1,0 +1,22 @@
+FUNCTION recursion [ANONYMOUS: false, DECLARED: true - recursion, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+a   : OBJECT a [ANONYMOUS: false, DECLARED: false - a, MODIFIERS: PUBLIC, VARIABLE]
+b   : OBJECT b [ANONYMOUS: false, DECLARED: false - b, MODIFIERS: PUBLIC, VARIABLE]
+koo : OBJECT koo [ANONYMOUS: false, DECLARED: false - koo, MODIFIERS: PUBLIC, OBJECT]
+    # PROPERTIES
+    test      : FUNCTION test [ANONYMOUS: false, DECLARED: true - test, MODIFIERS: PUBLIC, METHOD]
+              # RETURN TYPES
+              Boolean, RESOLVED: true
+              # PARAMETERS
+              OBJECT instance [ANONYMOUS: false, DECLARED: true - instance, MODIFIERS: PUBLIC, PARAMETER]
+                      # PROPERTIES
+                      test : OBJECT test [ANONYMOUS: false, DECLARED: false - test, MODIFIERS: PUBLIC, PROPERTY]
+              # PROPERTIES
+              arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+    test_test : FUNCTION test_test [ANONYMOUS: false, DECLARED: true - test_test, MODIFIERS: PUBLIC, METHOD]
+              # RETURN TYPES
+              Boolean, RESOLVED: true
+              # PROPERTIES
+              arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

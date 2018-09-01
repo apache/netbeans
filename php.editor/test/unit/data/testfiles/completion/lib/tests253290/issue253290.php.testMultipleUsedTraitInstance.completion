@@ -1,0 +1,39 @@
+Code completion result for source line:
+$this->|privateMultipleUsedTraitField;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     privateBaseTrait1Method()       [PRIVATE]  BaseTrait1
+METHOD     privateBaseTrait2Method()       [PRIVATE]  BaseTrait2
+METHOD     privateMultipleUsedTraitMethod  [PRIVATE]  MultipleUsedTrait
+METHOD     privateStaticBaseTrait1Method(  [PRIVATE,  BaseTrait1
+METHOD     privateStaticBaseTrait2Method(  [PRIVATE,  BaseTrait2
+METHOD     privateStaticMultipleUsedTrait  [PRIVATE,  MultipleUsedTrait
+METHOD     privateStaticTraitedTraitMetho  [PRIVATE,  TraitedTrait
+METHOD     privateTraitedTraitMethod()     [PRIVATE]  TraitedTrait
+METHOD     protectedBaseTrait1Method()     [PROTECTE  BaseTrait1
+METHOD     protectedBaseTrait2Method()     [PROTECTE  BaseTrait2
+METHOD     protectedMultipleUsedTraitMeth  [PROTECTE  MultipleUsedTrait
+METHOD     protectedStaticBaseTrait1Metho  [PROTECTE  BaseTrait1
+METHOD     protectedStaticBaseTrait2Metho  [PROTECTE  BaseTrait2
+METHOD     protectedStaticMultipleUsedTra  [PROTECTE  MultipleUsedTrait
+METHOD     protectedStaticTraitedTraitMet  [PROTECTE  TraitedTrait
+METHOD     protectedTraitedTraitMethod()   [PROTECTE  TraitedTrait
+METHOD     publicBaseTrait1Method()        [PUBLIC]   BaseTrait1
+METHOD     publicBaseTrait2Method()        [PUBLIC]   BaseTrait2
+METHOD     publicMultipleUsedTraitMethod(  [PUBLIC]   MultipleUsedTrait
+METHOD     publicStaticBaseTrait1Method()  [STATIC]   BaseTrait1
+METHOD     publicStaticBaseTrait2Method()  [STATIC]   BaseTrait2
+METHOD     publicStaticMultipleUsedTraitM  [STATIC]   MultipleUsedTrait
+METHOD     publicStaticTraitedTraitMethod  [STATIC]   TraitedTrait
+METHOD     publicTraitedTraitMethod()      [PUBLIC]   TraitedTrait
+VARIABLE   ? privateBaseTrait1Field        [PRIVATE]  BaseTrait1
+VARIABLE   ? privateBaseTrait2Field        [PRIVATE]  BaseTrait2
+VARIABLE   ? privateMultipleUsedTraitFiel  [PRIVATE]  MultipleUsedTrait
+VARIABLE   ? privateTraitedTraitField      [PRIVATE]  TraitedTrait
+VARIABLE   ? protectedBaseTrait1Field      [PROTECTE  BaseTrait1
+VARIABLE   ? protectedBaseTrait2Field      [PROTECTE  BaseTrait2
+VARIABLE   ? protectedMultipleUsedTraitFi  [PROTECTE  MultipleUsedTrait
+VARIABLE   ? protectedTraitedTraitField    [PROTECTE  TraitedTrait
+VARIABLE   ? publicBaseTrait1Field         [PUBLIC]   BaseTrait1
+VARIABLE   ? publicBaseTrait2Field         [PUBLIC]   BaseTrait2
+VARIABLE   ? publicMultipleUsedTraitField  [PUBLIC]   MultipleUsedTrait
+VARIABLE   ? publicTraitedTraitField       [PUBLIC]   TraitedTrait

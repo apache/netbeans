@@ -1,0 +1,4 @@
+      let |>MARK_OCCURRENCES:matches<| = [];
+          |>MARK_OCCURRENCES:matches<| = _difference(|>MARK_OCCURRENCES:matches<|, match);
+          |>MARK_OCCURRENCES:matches<| = _union(|>MARK_OCCURRENCES:matc^hes<|, match);
+      const prefixedPaths = _addFileListPathPrefix(|>MARK_OCCURRENCES:matches<|, dest, util.destPath(cwd));

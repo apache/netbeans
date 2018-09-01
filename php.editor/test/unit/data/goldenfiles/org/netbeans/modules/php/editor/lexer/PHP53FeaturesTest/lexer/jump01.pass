@@ -1,0 +1,42 @@
+token #0 T_INLINE_HTML --TEST--\njump 01: goto backward\n--FILE--\n
+token #1 PHP_OPENTAG <?php
+token #2 WHITESPACE \n
+token #3 PHP_VARIABLE $n
+token #4 WHITESPACE  
+token #5 PHP_OPERATOR =
+token #6 WHITESPACE  
+token #7 PHP_NUMBER 1
+token #8 PHP_SEMICOLON ;
+token #9 WHITESPACE \n
+token #10 PHP_STRING L1
+token #11 PHP_TOKEN :
+token #12 WHITESPACE \n
+token #13 PHP_ECHO echo
+token #14 WHITESPACE  
+token #15 PHP_CONSTANT_ENCAPSED_STRING "
+token #16 PHP_VARIABLE $n
+token #17 PHP_ENCAPSED_AND_WHITESPACE : ok\n
+token #18 PHP_CONSTANT_ENCAPSED_STRING "
+token #19 PHP_SEMICOLON ;
+token #20 WHITESPACE \n
+token #21 PHP_VARIABLE $n
+token #22 PHP_OPERATOR ++
+token #23 PHP_SEMICOLON ;
+token #24 WHITESPACE \n
+token #25 PHP_IF if
+token #26 WHITESPACE  
+token #27 PHP_TOKEN (
+token #28 PHP_VARIABLE $n
+token #29 WHITESPACE  
+token #30 PHP_OPERATOR <=
+token #31 WHITESPACE  
+token #32 PHP_NUMBER 3
+token #33 PHP_TOKEN )
+token #34 WHITESPACE  
+token #35 PHP_GOTO goto
+token #36 WHITESPACE  
+token #37 PHP_STRING L1
+token #38 PHP_SEMICOLON ;
+token #39 WHITESPACE \n
+token #40 PHP_CLOSETAG ?>
+token #41 T_INLINE_HTML \n--EXPECT--\n1: ok\n2: ok\n3: ok\n

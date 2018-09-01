@@ -1,0 +1,4 @@
+   public function |>MARK_OCCURRENCES:fMe^thod<|()
+      self::$first->|>MARK_OCCURRENCES:fMethod<|();
+      static::$first->|>MARK_OCCURRENCES:fMethod<|();
+      Second::$first->|>MARK_OCCURRENCES:fMethod<|();

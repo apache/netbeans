@@ -1,0 +1,10 @@
+export default class {
+        
+        |>METHOD:constructor<|() {
+            
+        }
+        
+        |>METHOD:method<|(|>UNUSED:x<|, |>UNUSED:y<|) {
+            
+        }
+}

@@ -1,0 +1,63 @@
+<?php
+
+function test() {
+    if (!isset($lc_artr)) {
+        $lc_artr = "";
+    }
+
+    if (true) {
+        echo "bal";
+    }
+
+    foreach ($array as $value) {
+        echo $value;
+    }
+
+    foreach ($array as $value) {
+        echo $value;
+    }
+
+    for ($index = 0; $index < count($array); $index++) {
+        echo $index;
+    }
+
+    for ($index = 0; $index < count($array); $index++) {
+        echo $index;
+    }
+
+    while (true) {
+        echo "true";
+    }
+
+    while (true) {
+        echo "true";
+    }
+
+    do {
+        echo "true";
+    } while (true);
+
+    do {
+        echo "true";
+    } while (true);
+}
+
+function test() {
+    echo "test";
+}
+
+class Simple {
+
+    public $field;
+
+}
+
+class Simple2 {
+
+    function method() {
+        echo "test";
+    }
+
+}
+
+?>

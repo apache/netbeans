@@ -1,0 +1,16 @@
+<?php
+
+class Example {
+
+    public function foreachEample() {
+        $arr = array(1, 2, 3, 4);
+        foreach ($arr as &$value) {
+            $value = $value * 2;
+        }
+    }
+
+}
+
+$arr2 = array("a" => 1, "b" => 2,
+    "c" => array(10, 22, "uuuu"));
+?>

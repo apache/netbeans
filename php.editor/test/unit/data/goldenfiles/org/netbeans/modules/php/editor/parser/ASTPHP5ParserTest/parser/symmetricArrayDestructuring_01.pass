@@ -1,0 +1,403 @@
+<testresult testFile='symmetricArrayDestructuring_01.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='6' end='11'>
+            <text>$data</text>
+        </token>
+        <token id='T_EQUAL' start='12' end='13'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='14' end='15'>
+            <text>[</text>
+        </token>
+        <token id='T_OPEN_RECT' start='20' end='21'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='21' end='22'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='22' end='23'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='24' end='29'>
+            <text>&apos;Tom&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='29' end='30'>
+            <text>]</text>
+        </token>
+        <token id='T_COMMA' start='30' end='31'>
+            <text>,</text>
+        </token>
+        <token id='T_OPEN_RECT' start='36' end='37'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='37' end='38'>
+            <text>2</text>
+        </token>
+        <token id='T_COMMA' start='38' end='39'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='40' end='46'>
+            <text>&apos;Fred&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='46' end='47'>
+            <text>]</text>
+        </token>
+        <token id='T_COMMA' start='47' end='48'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='49' end='50'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='50' end='51'>
+            <text>;</text>
+        </token>
+        <token id='T_LIST' start='53' end='57'>
+            <text>list</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='57' end='58'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='58' end='62'>
+            <text>$id1</text>
+        </token>
+        <token id='T_COMMA' start='62' end='63'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='64' end='70'>
+            <text>$name1</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='70' end='71'>
+            <text>)</text>
+        </token>
+        <token id='T_EQUAL' start='72' end='73'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='74' end='79'>
+            <text>$data</text>
+        </token>
+        <token id='T_OPEN_RECT' start='79' end='80'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='80' end='81'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='81' end='82'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='82' end='83'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_RECT' start='85' end='86'>
+            <text>[</text>
+        </token>
+        <token id='T_VARIABLE' start='86' end='90'>
+            <text>$id1</text>
+        </token>
+        <token id='T_COMMA' start='90' end='91'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='92' end='98'>
+            <text>$name1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='98' end='99'>
+            <text>]</text>
+        </token>
+        <token id='T_EQUAL' start='100' end='101'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='102' end='107'>
+            <text>$data</text>
+        </token>
+        <token id='T_OPEN_RECT' start='107' end='108'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='108' end='109'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='109' end='110'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='110' end='111'>
+            <text>;</text>
+        </token>
+        <token id='T_FOREACH' start='113' end='120'>
+            <text>foreach</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='121' end='122'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='122' end='127'>
+            <text>$data</text>
+        </token>
+        <token id='T_AS' start='128' end='130'>
+            <text>as</text>
+        </token>
+        <token id='T_LIST' start='131' end='135'>
+            <text>list</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='135' end='136'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='136' end='139'>
+            <text>$id</text>
+        </token>
+        <token id='T_COMMA' start='139' end='140'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='141' end='146'>
+            <text>$name</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='146' end='147'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='147' end='148'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='149' end='150'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='151' end='152'>
+            <text>}</text>
+        </token>
+        <token id='T_FOREACH' start='154' end='161'>
+            <text>foreach</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='162' end='163'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='163' end='168'>
+            <text>$data</text>
+        </token>
+        <token id='T_AS' start='169' end='171'>
+            <text>as</text>
+        </token>
+        <token id='T_OPEN_RECT' start='172' end='173'>
+            <text>[</text>
+        </token>
+        <token id='T_VARIABLE' start='173' end='176'>
+            <text>$id</text>
+        </token>
+        <token id='T_COMMA' start='176' end='177'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='178' end='183'>
+            <text>$name</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='183' end='184'>
+            <text>]</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='184' end='185'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='186' end='187'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='188' end='189'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='190' end='190'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='190'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='6' end='51'>
+                <Assignment start='6' end='50' operator='EQUAL'>
+                    <Variable start='6' end='11' isDollared='true'>
+                        <Identifier start='7' end='11' name='data'/>
+                    </Variable>
+                    <ArrayCreation start='14' end='50' type='NEW'>
+                        <ArrayElement start='20' end='30'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <ArrayCreation start='20' end='30' type='NEW'>
+                                    <ArrayElement start='21' end='22'>
+                                        <Key>
+                                        </Key>
+                                        <Value>
+                                            <Scalar start='21' end='22' type='INT' value='1'/>
+                                        </Value>
+                                    </ArrayElement>
+                                    <ArrayElement start='24' end='29'>
+                                        <Key>
+                                        </Key>
+                                        <Value>
+                                            <Scalar start='24' end='29' type='STRING' value='&apos;Tom&apos;'/>
+                                        </Value>
+                                    </ArrayElement>
+                                </ArrayCreation>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='36' end='47'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <ArrayCreation start='36' end='47' type='NEW'>
+                                    <ArrayElement start='37' end='38'>
+                                        <Key>
+                                        </Key>
+                                        <Value>
+                                            <Scalar start='37' end='38' type='INT' value='2'/>
+                                        </Value>
+                                    </ArrayElement>
+                                    <ArrayElement start='40' end='46'>
+                                        <Key>
+                                        </Key>
+                                        <Value>
+                                            <Scalar start='40' end='46' type='STRING' value='&apos;Fred&apos;'/>
+                                        </Value>
+                                    </ArrayElement>
+                                </ArrayCreation>
+                            </Value>
+                        </ArrayElement>
+                    </ArrayCreation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='53' end='83'>
+                <Assignment start='53' end='82' operator='EQUAL'>
+                    <ListVariable start='53' end='71' type='OLD'>
+                        <ArrayElement start='58' end='62'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Variable start='58' end='62' isDollared='true'>
+                                    <Identifier start='59' end='62' name='id1'/>
+                                </Variable>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='64' end='70'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Variable start='64' end='70' isDollared='true'>
+                                    <Identifier start='65' end='70' name='name1'/>
+                                </Variable>
+                            </Value>
+                        </ArrayElement>
+                    </ListVariable>
+                    <ArrayAccess start='74' end='82' type='VARIABLE_ARRAY' isDollared='false'>
+                        <ArrayDimension start='79' end='82'>
+                            <Index>
+                                <Scalar start='80' end='81' type='INT' value='0'/>
+                            </Index>
+                        </ArrayDimension>
+                        <Name>
+                            <Variable start='74' end='79' isDollared='true'>
+                                <Identifier start='75' end='79' name='data'/>
+                            </Variable>
+                        </Name>
+                    </ArrayAccess>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='85' end='111'>
+                <Assignment start='85' end='110' operator='EQUAL'>
+                    <ListVariable start='85' end='99' type='NEW'>
+                        <ArrayElement start='86' end='90'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Variable start='86' end='90' isDollared='true'>
+                                    <Identifier start='87' end='90' name='id1'/>
+                                </Variable>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='92' end='98'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Variable start='92' end='98' isDollared='true'>
+                                    <Identifier start='93' end='98' name='name1'/>
+                                </Variable>
+                            </Value>
+                        </ArrayElement>
+                    </ListVariable>
+                    <ArrayAccess start='102' end='110' type='VARIABLE_ARRAY' isDollared='false'>
+                        <ArrayDimension start='107' end='110'>
+                            <Index>
+                                <Scalar start='108' end='109' type='INT' value='0'/>
+                            </Index>
+                        </ArrayDimension>
+                        <Name>
+                            <Variable start='102' end='107' isDollared='true'>
+                                <Identifier start='103' end='107' name='data'/>
+                            </Variable>
+                        </Name>
+                    </ArrayAccess>
+                </Assignment>
+            </ExpressionStatement>
+            <ForEachStatement start='113' end='152'>
+                <Key>
+                </Key>
+                <Expression>
+                    <Variable start='122' end='127' isDollared='true'>
+                        <Identifier start='123' end='127' name='data'/>
+                    </Variable>
+                </Expression>
+                <Statement>
+                    <Block start='149' end='152' isCurly='true'>
+                    </Block>
+                </Statement>
+                <Value>
+                    <ListVariable start='131' end='147' type='OLD'>
+                        <ArrayElement start='136' end='139'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Variable start='136' end='139' isDollared='true'>
+                                    <Identifier start='137' end='139' name='id'/>
+                                </Variable>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='141' end='146'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Variable start='141' end='146' isDollared='true'>
+                                    <Identifier start='142' end='146' name='name'/>
+                                </Variable>
+                            </Value>
+                        </ArrayElement>
+                    </ListVariable>
+                </Value>
+            </ForEachStatement>
+            <ForEachStatement start='154' end='189'>
+                <Key>
+                </Key>
+                <Expression>
+                    <Variable start='163' end='168' isDollared='true'>
+                        <Identifier start='164' end='168' name='data'/>
+                    </Variable>
+                </Expression>
+                <Statement>
+                    <Block start='186' end='189' isCurly='true'>
+                    </Block>
+                </Statement>
+                <Value>
+                    <ListVariable start='172' end='184' type='NEW'>
+                        <ArrayElement start='173' end='176'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Variable start='173' end='176' isDollared='true'>
+                                    <Identifier start='174' end='176' name='id'/>
+                                </Variable>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='178' end='183'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Variable start='178' end='183' isDollared='true'>
+                                    <Identifier start='179' end='183' name='name'/>
+                                </Variable>
+                            </Value>
+                        </ArrayElement>
+                    </ListVariable>
+                </Value>
+            </ForEachStatement>
+        </Statements>
+    </Program>
+</testresult>

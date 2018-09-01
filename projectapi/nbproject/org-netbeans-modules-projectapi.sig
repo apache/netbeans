@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.65.1
+#Version 1.69.1
 
 CLSS public java.lang.Object
 cons public init()
@@ -141,6 +141,7 @@ meth public abstract void removePropertyChangeListener(java.beans.PropertyChange
 
 CLSS public final org.netbeans.api.project.SourceGroupModifier
 innr public final static Future
+meth public !varargs final static org.netbeans.api.project.SourceGroup createAssociatedSourceGroup(org.netbeans.api.project.Project,org.netbeans.api.project.SourceGroup,java.lang.String,java.lang.String,java.lang.String[])
 meth public final static org.netbeans.api.project.SourceGroup createSourceGroup(org.netbeans.api.project.Project,java.lang.String,java.lang.String)
 meth public final static org.netbeans.api.project.SourceGroupModifier$Future createSourceGroupFuture(org.netbeans.api.project.Project,java.lang.String,java.lang.String)
 supr java.lang.Object
@@ -402,6 +403,9 @@ hfds file,methodName
 CLSS public abstract interface org.netbeans.spi.project.SourceGroupModifierImplementation
 meth public abstract boolean canCreateSourceGroup(java.lang.String,java.lang.String)
 meth public abstract org.netbeans.api.project.SourceGroup createSourceGroup(java.lang.String,java.lang.String)
+
+CLSS public abstract interface org.netbeans.spi.project.SourceGroupRelativeModifierImplementation
+meth public abstract !varargs org.netbeans.spi.project.SourceGroupModifierImplementation relativeTo(org.netbeans.api.project.SourceGroup,java.lang.String[])
 
 CLSS public abstract interface org.netbeans.spi.project.SubprojectProvider
 meth public abstract java.util.Set<? extends org.netbeans.api.project.Project> getSubprojects()

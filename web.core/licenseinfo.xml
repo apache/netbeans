@@ -82,5 +82,22 @@
         <license ref="Apache-2.0-ASF" />
         <comment type="TEMPLATE_MINIMAL_IP" />
     </fileset>
-
+    <fileset>
+        <file>src/org/netbeans/modules/web/taglib/resources/xml.xsd</file>
+        <license ref="W3C2" />
+        <comment type="CATEGORY_B" />
+    </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/web/taglib/resources/j2ee_1_4.xsd</file>
+        <file>src/org/netbeans/modules/web/taglib/resources/j2ee_web_services_client_1_1.xsd</file>
+        <file>src/org/netbeans/modules/web/taglib/resources/javaee_5.xsd</file>
+        <file>src/org/netbeans/modules/web/taglib/resources/javaee_web_services_client_1_2.xsd</file>
+        <file>src/org/netbeans/modules/web/taglib/resources/web-jsptaglibrary_1_1.dtd</file>
+        <file>src/org/netbeans/modules/web/taglib/resources/web-jsptaglibrary_1_2.dtd</file>
+        <file>src/org/netbeans/modules/web/taglib/resources/web-jsptaglibrary_2_0.xsd</file>
+        <file>src/org/netbeans/modules/web/taglib/resources/web-jsptaglibrary_2_1.xsd</file>
+        <file>src/org/netbeans/modules/web/taglib/resources/web-jsptaglibrary_2_1.mdd</file>
+        <license ref="CDDL-1.1" />
+        <comment type="CATEGORY_B" />
+    </fileset>
 </licenseinfo>

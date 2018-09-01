@@ -28,8 +28,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.ProtectionDomain;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -183,5 +184,12 @@ final class NbInstrumentation implements Instrumentation {
     public void setNativeMethodPrefix(ClassFileTransformer transformer, String prefix) {
         throw new UnsupportedOperationException();
     }
-    
+
+    public void redefineModule(java.lang.Module module, Set<java.lang.Module> extraReads, Map<String, Set<java.lang.Module>> extraExports, Map<String, Set<java.lang.Module>> extraOpens, Set<Class<?>> extraUses, Map<Class<?>, List<Class<?>>> extraProvides) {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean isModifiableModule(java.lang.Module module) {
+        return false;
+    }
 }

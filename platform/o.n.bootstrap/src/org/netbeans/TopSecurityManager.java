@@ -197,14 +197,17 @@ public class TopSecurityManager extends SecurityManager {
         super.checkExit(status);
     }
 
-    public @Override boolean checkTopLevelWindow(Object window) {
+    public boolean checkTopLevelWindow(Object window) {
+        return checkTopLevelWindow(new AWTPermission("showWindowWithoutWarningBanner"), window); // NOI18N
+    }
+
+    private boolean checkTopLevelWindow(Permission windowPermission, Object window) {
         synchronized (delegates) {
             for (SecurityManager sm : delegates) {
-                sm.checkTopLevelWindow(window);
+                sm.checkPermission(windowPermission, window);
             }
         }
-        
-        return super.checkTopLevelWindow(window);
+        return true;
     }
 
     /* XXX probably unnecessary:
@@ -384,7 +387,6 @@ public class TopSecurityManager extends SecurityManager {
 
     private final Set<Class> warnedSunMisc = new WeakSet<Class>();
     private final Set<String> callerWhiteList = createCallerWhiteList();
-    @Override
     public void checkMemberAccess(Class<?> clazz, int which) {
         final String n = clazz.getName();
         if (n.startsWith("sun.misc")) { // NOI18N
@@ -422,7 +424,6 @@ public class TopSecurityManager extends SecurityManager {
             Exception ex = new Exception(msg.toString()); // NOI18N
             LOG.log(l, null, ex);
         }
-        super.checkMemberAccess(clazz, which);
     }
     
     /**
@@ -476,6 +477,9 @@ public class TopSecurityManager extends SecurityManager {
                 } else {
                     checkWhetherAccessedFromSwingTransfer ();
                 }
+            }
+            if ("showWindowWithoutWarningBanner".equals(perm.getName())) { // NOI18N
+                checkTopLevelWindow(perm, null);
             }
         }
         return;

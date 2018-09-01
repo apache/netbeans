@@ -96,7 +96,7 @@ is the proper place.
                 allow dynamic registration of NavigatorPanels.
             </p>
         </description>
-        <class package="org.netbeans.spi.navigator" name="NavigatorPanel.DynamicRegistration"/>
+        <class package="org.netbeans.spi.navigator" name="NavigatorPanel"/>
     </change>
     <change id="NavigatorPanelWithToolbar">
         <api name="navigator_api"/>

@@ -20,14 +20,19 @@ package org.netbeans.modules.php.editor.parser.astnodes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Represents function invocation.
+ *
  * Holds the function name and the invocation parameters.
- * <pre>e.g.<pre> foo(),
+ * <pre>e.g.
+ * foo(),
  * $a(),
- * foo($a, 'a', 12)
+ * foo($a, 'a', 12),
+ * foo($a, 'a', 12,) // PHP 7.3
+ * </pre>
  */
 public class FunctionInvocation extends VariableBase {
 
@@ -57,7 +62,7 @@ public class FunctionInvocation extends VariableBase {
      * @return the parameters component of this function invocation expression
      */
     public List<Expression> getParameters() {
-        return parameters;
+        return Collections.unmodifiableList(parameters);
     }
 
     @Override

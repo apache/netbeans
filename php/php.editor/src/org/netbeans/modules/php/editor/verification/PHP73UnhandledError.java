@@ -37,9 +37,13 @@ import org.netbeans.modules.php.editor.lexer.LexUtilities;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrayElement;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionInvocation;
+import org.netbeans.modules.php.editor.parser.astnodes.ListVariable;
+import org.netbeans.modules.php.editor.parser.astnodes.Reference;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
@@ -83,6 +87,7 @@ public class PHP73UnhandledError extends UnhandledErrorRule {
         private final List<VerificationError> errors = new ArrayList<>();
         private final List<ASTNode> nodes = new ArrayList<>();
         private final FileObject fileObject;
+        private boolean isInListVariable = false;
 
         public CheckVisitor(FileObject fileObject) {
             this.fileObject = fileObject;
@@ -109,6 +114,29 @@ public class PHP73UnhandledError extends UnhandledErrorRule {
             }
             nodes.add(node);
             super.visit(node);
+        }
+
+        @Override
+        public void visit(ListVariable node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            checkListReferenceAssignment(node.getElements());
+            isInListVariable = true;
+            super.visit(node);
+            isInListVariable = false;
+        }
+
+        @Override
+        public void visit(ArrayCreation node) {
+            // nested new list syntax has ArrayCreation
+            // e.g. [$a, [$b, $c]] = $array;
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            if (isInListVariable) {
+                checkListReferenceAssignment(node.getElements());
+            }
         }
 
         private void checkFunctionCallTrailingCommas() {
@@ -169,6 +197,16 @@ public class PHP73UnhandledError extends UnhandledErrorRule {
                 }
             }
             return LexUtilities.findPrevious(ts, Arrays.asList(PHPTokenId.WHITESPACE));
+        }
+
+        private void checkListReferenceAssignment(List<ArrayElement> elements) {
+            // e.g. list($a, &$b) = $array;
+            elements.forEach(element -> {
+                Expression value = element.getValue();
+                if (value instanceof Reference) {
+                    createError(value);
+                }
+            });
         }
 
         private void createError(ASTNode node) {

@@ -796,4 +796,8 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/functionCallTrailingCommas_04.php");
     }
 
+    public void testListReferenceAssignment_01() throws Exception {
+        checkErrors("testfiles/parser/listReferenceAssignment_01.php");
+    }
+
 }

@@ -18,11 +18,11 @@
         <token id='T_START_HEREDOC' start='87' end='104'>
             <text>b&lt;&lt;&lt;ENDOFHEREDOC\n</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='104' end='140'>
-            <text>This is a heredoc test.\n\nENDOFHEREDO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='104' end='129'>
+            <text>This is a heredoc test.\n\n</text>
         </token>
-        <token id='T_END_HEREDOC' start='140' end='141'>
-            <text>C</text>
+        <token id='T_END_HEREDOC' start='129' end='141'>
+            <text>ENDOFHEREDOC</text>
         </token>
         <token id='T_SEMICOLON' start='141' end='142'>
             <text>;</text>
@@ -36,11 +36,11 @@
         <token id='T_START_HEREDOC' start='149' end='166'>
             <text>b&lt;&lt;&lt;ENDOFHEREDOC\n</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='166' end='208'>
-            <text>This is another heredoc test.\n\nENDOFHEREDO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='166' end='197'>
+            <text>This is another heredoc test.\n\n</text>
         </token>
-        <token id='T_END_HEREDOC' start='208' end='209'>
-            <text>C</text>
+        <token id='T_END_HEREDOC' start='197' end='209'>
+            <text>ENDOFHEREDOC</text>
         </token>
         <token id='T_SEMICOLON' start='209' end='210'>
             <text>;</text>
@@ -94,7 +94,7 @@
                     <Parameters>
                         <Quote start='87' end='141' type='HEREDOC'>
                             <Expressions>
-                                <Scalar start='104' end='140' type='STRING' value='This is a heredoc test.\n\n'/>
+                                <Scalar start='104' end='129' type='STRING' value='This is a heredoc test.\n\n'/>
                             </Expressions>
                         </Quote>
                     </Parameters>
@@ -107,7 +107,7 @@
                     </Variable>
                     <Quote start='149' end='209' type='HEREDOC'>
                         <Expressions>
-                            <Scalar start='166' end='208' type='STRING' value='This is another heredoc test.\n\n'/>
+                            <Scalar start='166' end='197' type='STRING' value='This is another heredoc test.\n\n'/>
                         </Expressions>
                     </Quote>
                 </Assignment>

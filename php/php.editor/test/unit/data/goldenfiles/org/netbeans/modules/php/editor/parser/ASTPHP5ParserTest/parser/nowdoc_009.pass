@@ -18,11 +18,11 @@
         <token id='T_START_NOWDOC' start='99' end='116'>
             <text>&lt;&lt;&lt;&apos;ENDOFNOWDOC&apos;\n</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='116' end='207'>
-            <text>ENDOFNOWDOC    ;\n    ENDOFNOWDOC;\nENDOFNOWDOC    \n    ENDOFNOWDOC\n$ENDOFNOWDOC;\n\nENDOFNOWDO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='116' end='197'>
+            <text>ENDOFNOWDOC    ;\n    ENDOFNOWDOC;\nENDOFNOWDOC    \n    ENDOFNOWDOC\n$ENDOFNOWDOC;\n\n</text>
         </token>
-        <token id='T_END_NOWDOC' start='207' end='208'>
-            <text>C</text>
+        <token id='T_END_NOWDOC' start='197' end='208'>
+            <text>ENDOFNOWDOC</text>
         </token>
         <token id='T_SEMICOLON' start='208' end='209'>
             <text>;</text>
@@ -36,11 +36,11 @@
         <token id='T_START_NOWDOC' start='216' end='233'>
             <text>&lt;&lt;&lt;&apos;ENDOFNOWDOC&apos;\n</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='233' end='324'>
-            <text>ENDOFNOWDOC    ;\n    ENDOFNOWDOC;\nENDOFNOWDOC    \n    ENDOFNOWDOC\n$ENDOFNOWDOC;\n\nENDOFNOWDO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='233' end='314'>
+            <text>ENDOFNOWDOC    ;\n    ENDOFNOWDOC;\nENDOFNOWDOC    \n    ENDOFNOWDOC\n$ENDOFNOWDOC;\n\n</text>
         </token>
-        <token id='T_END_NOWDOC' start='324' end='325'>
-            <text>C</text>
+        <token id='T_END_NOWDOC' start='314' end='325'>
+            <text>ENDOFNOWDOC</text>
         </token>
         <token id='T_SEMICOLON' start='325' end='326'>
             <text>;</text>

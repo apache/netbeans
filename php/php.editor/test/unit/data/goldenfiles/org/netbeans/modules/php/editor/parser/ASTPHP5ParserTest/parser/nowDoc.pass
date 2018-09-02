@@ -6,11 +6,11 @@
         <token id='T_START_NOWDOC' start='11' end='20'>
             <text>&lt;&lt;&lt;&apos;EOT&apos;\n</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='20' end='153'>
-            <text>My name is "$name".I am printing some $foo-&gt;foo.\nNow, I am printing some {$foo-&gt;bar[1]}.\nThis should not print a capital &apos;A&apos;: \x41\nEO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='20' end='151'>
+            <text>My name is "$name".I am printing some $foo-&gt;foo.\nNow, I am printing some {$foo-&gt;bar[1]}.\nThis should not print a capital &apos;A&apos;: \x41\n</text>
         </token>
-        <token id='T_END_NOWDOC' start='153' end='154'>
-            <text>T</text>
+        <token id='T_END_NOWDOC' start='151' end='154'>
+            <text>EOT</text>
         </token>
         <token id='T_SEMICOLON' start='154' end='155'>
             <text>;</text>

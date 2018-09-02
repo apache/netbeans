@@ -64,7 +64,7 @@
     <!--target name="gen-astparser">
         <taskdef name="javacup"
             classname="java_cup.anttask.CUPTask"
-            classpath="${nb_all}/libs.javacup/external/java-cup-11a.jar" />
+            classpath="${nb_all}/php/libs.javacup/external/java-cup-11a.jar" />
             <javacup srcfile="tools/ASTPHP5Parser.cup"
             destdir="src"
             parser="ASTPHP5Parser"

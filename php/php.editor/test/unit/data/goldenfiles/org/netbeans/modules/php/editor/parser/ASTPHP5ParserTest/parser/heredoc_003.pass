@@ -24,11 +24,11 @@
         <token id='T_VARIABLE' start='140' end='142'>
             <text>$a</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='142' end='156'>
-            <text>.\n\nENDOFHEREDO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='142' end='145'>
+            <text>.\n\n</text>
         </token>
-        <token id='T_END_HEREDOC' start='156' end='157'>
-            <text>C</text>
+        <token id='T_END_HEREDOC' start='145' end='157'>
+            <text>ENDOFHEREDOC</text>
         </token>
         <token id='T_SEMICOLON' start='157' end='158'>
             <text>;</text>
@@ -48,11 +48,11 @@
         <token id='T_VARIABLE' start='203' end='205'>
             <text>$b</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='205' end='219'>
-            <text>.\n\nENDOFHEREDO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='205' end='208'>
+            <text>.\n\n</text>
         </token>
-        <token id='T_END_HEREDOC' start='219' end='220'>
-            <text>C</text>
+        <token id='T_END_HEREDOC' start='208' end='220'>
+            <text>ENDOFHEREDOC</text>
         </token>
         <token id='T_SEMICOLON' start='220' end='221'>
             <text>;</text>
@@ -110,7 +110,7 @@
                                 <Variable start='140' end='142' isDollared='true'>
                                     <Identifier start='141' end='142' name='a'/>
                                 </Variable>
-                                <Scalar start='142' end='156' type='STRING' value='.\n\n'/>
+                                <Scalar start='142' end='145' type='STRING' value='.\n\n'/>
                             </Expressions>
                         </Quote>
                     </Parameters>
@@ -127,7 +127,7 @@
                             <Variable start='203' end='205' isDollared='true'>
                                 <Identifier start='204' end='205' name='b'/>
                             </Variable>
-                            <Scalar start='205' end='219' type='STRING' value='.\n\n'/>
+                            <Scalar start='205' end='208' type='STRING' value='.\n\n'/>
                         </Expressions>
                     </Quote>
                 </Assignment>

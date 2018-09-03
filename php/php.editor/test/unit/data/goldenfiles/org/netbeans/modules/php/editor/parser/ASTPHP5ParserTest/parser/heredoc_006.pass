@@ -81,11 +81,11 @@
         <token id='T_CURLY_CLOSE' start='183' end='184'>
             <text>}</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='184' end='198'>
-            <text>.\n\nENDOFHEREDO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='184' end='187'>
+            <text>.\n\n</text>
         </token>
-        <token id='T_END_HEREDOC' start='198' end='199'>
-            <text>C</text>
+        <token id='T_END_HEREDOC' start='187' end='199'>
+            <text>ENDOFHEREDOC</text>
         </token>
         <token id='T_SEMICOLON' start='199' end='200'>
             <text>;</text>
@@ -162,11 +162,11 @@
         <token id='T_CURLY_CLOSE' start='280' end='281'>
             <text>}</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='281' end='295'>
-            <text>.\n\nENDOFHEREDO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='281' end='284'>
+            <text>.\n\n</text>
         </token>
-        <token id='T_END_HEREDOC' start='295' end='296'>
-            <text>C</text>
+        <token id='T_END_HEREDOC' start='284' end='296'>
+            <text>ENDOFHEREDOC</text>
         </token>
         <token id='T_SEMICOLON' start='296' end='297'>
             <text>;</text>
@@ -260,7 +260,7 @@
                                         </Field>
                                     </FieldAccess>
                                 </ReflectionVariable>
-                                <Scalar start='184' end='198' type='STRING' value='.\n\n'/>
+                                <Scalar start='184' end='187' type='STRING' value='.\n\n'/>
                             </Expressions>
                         </Quote>
                     </Parameters>
@@ -313,7 +313,7 @@
                                     </Field>
                                 </FieldAccess>
                             </ReflectionVariable>
-                            <Scalar start='281' end='295' type='STRING' value='.\n\n'/>
+                            <Scalar start='281' end='284' type='STRING' value='.\n\n'/>
                         </Expressions>
                     </Quote>
                 </Assignment>

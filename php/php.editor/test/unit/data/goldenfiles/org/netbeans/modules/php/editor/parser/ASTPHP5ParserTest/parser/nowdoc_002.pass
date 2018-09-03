@@ -18,11 +18,11 @@
         <token id='T_START_NOWDOC' start='86' end='104'>
             <text>b&lt;&lt;&lt;&apos;ENDOFNOWDOC&apos;\n</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='104' end='138'>
-            <text>This is a nowdoc test.\n\nENDOFNOWDO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='104' end='128'>
+            <text>This is a nowdoc test.\n\n</text>
         </token>
-        <token id='T_END_NOWDOC' start='138' end='139'>
-            <text>C</text>
+        <token id='T_END_NOWDOC' start='128' end='139'>
+            <text>ENDOFNOWDOC</text>
         </token>
         <token id='T_SEMICOLON' start='139' end='140'>
             <text>;</text>
@@ -36,11 +36,11 @@
         <token id='T_START_NOWDOC' start='147' end='165'>
             <text>b&lt;&lt;&lt;&apos;ENDOFNOWDOC&apos;\n</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='165' end='205'>
-            <text>This is another nowdoc test.\n\nENDOFNOWDO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='165' end='195'>
+            <text>This is another nowdoc test.\n\n</text>
         </token>
-        <token id='T_END_NOWDOC' start='205' end='206'>
-            <text>C</text>
+        <token id='T_END_NOWDOC' start='195' end='206'>
+            <text>ENDOFNOWDOC</text>
         </token>
         <token id='T_SEMICOLON' start='206' end='207'>
             <text>;</text>

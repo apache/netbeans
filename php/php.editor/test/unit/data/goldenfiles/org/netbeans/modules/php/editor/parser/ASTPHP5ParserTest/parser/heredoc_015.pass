@@ -24,11 +24,11 @@
         <token id='T_START_HEREDOC' start='100' end='120'>
             <text>&lt;&lt;&lt;THISMUSTNOTERROR\n</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='120' end='170'>
-            <text>If you see this, everything is ok.\nTHISMUSTNOTERRO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='120' end='155'>
+            <text>If you see this, everything is ok.\n</text>
         </token>
-        <token id='T_END_HEREDOC' start='170' end='171'>
-            <text>R</text>
+        <token id='T_END_HEREDOC' start='155' end='171'>
+            <text>THISMUSTNOTERROR</text>
         </token>
         <token id='T_SEMICOLON' start='171' end='172'>
             <text>;</text>
@@ -114,7 +114,7 @@
                         <InitialValues>
                             <Quote start='100' end='171' type='HEREDOC'>
                                 <Expressions>
-                                    <Scalar start='120' end='170' type='STRING' value='If you see this, everything is ok.\n'/>
+                                    <Scalar start='120' end='155' type='STRING' value='If you see this, everything is ok.\n'/>
                                 </Expressions>
                             </Quote>
                         </InitialValues>

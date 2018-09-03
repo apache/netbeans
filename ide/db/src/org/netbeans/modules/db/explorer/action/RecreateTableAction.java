@@ -28,7 +28,6 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
-import javax.xml.ws.Holder;
 import org.netbeans.api.db.explorer.node.BaseNode;
 import org.netbeans.lib.ddl.DDLException;
 import org.netbeans.lib.ddl.impl.AbstractCommand;
@@ -135,35 +134,35 @@ public class RecreateTableAction extends BaseAction {
                             }
                     });
                     
-                    final Holder<String> error = new Holder<>();
+                    final String[] error = new String[1];
                     while (true) {
-                        final Holder<Boolean> isEditable = new Holder<>(false);
-                        final Holder<Boolean> okPressed = new Holder<>(false);
-                        final Holder<String> tableName = new Holder<>("");
-                        final Holder<String> edittedCmd = new Holder<>("");
+                        final boolean[] isEditable = new boolean[1];
+                        final boolean[] okPressed = new boolean[1];
+                        final String[] tableName = new String[] {""};
+                        final String[] edittedCmd = new String[] {""};
                         
                         Mutex.EVENT.readAccess(new Mutex.Action<Void>() {
 
                             @Override
                             public Void run() {
                                 assert SwingUtilities.isEventDispatchThread();
-                                dlg.setErrors(error.value);
+                                dlg.setErrors(error[0]);
                                 dlg.setStringValue(newtab);
-                                okPressed.value = dlg.run();
-                                isEditable.value = dlg.isEditable();
-                                tableName.value = dlg.getStringValue();
-                                edittedCmd.value = dlg.getEditedCommand();
+                                okPressed[0] = dlg.run();
+                                isEditable[0] = dlg.isEditable();
+                                tableName[0] = dlg.getStringValue();
+                                edittedCmd[0] = dlg.getEditedCommand();
                                 return null;
                             }
                         });
                         
-                        if (okPressed.value) { // OK option
-                            if (! isEditable.value) {
-                                error.value = runCommand(tableName.value, cmd);
+                        if (okPressed[0]) { // OK option
+                            if (! isEditable[0]) {
+                                error[0] = runCommand(tableName[0], cmd);
                             } else { // from editable text area
-                                error.value = runCommand(connection, edittedCmd.value);
+                                error[0] = runCommand(connection, edittedCmd[0]);
                             }
-                            if (error.value == null) {
+                            if (error[0] == null) {
                                 break;
                             }
                         } else { // CANCEL option

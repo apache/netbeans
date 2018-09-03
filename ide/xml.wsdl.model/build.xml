@@ -21,4 +21,33 @@
 -->
 <project name="ide/xml.wsdl.model" default="build" basedir=".">
     <import file="../../nbbuild/templates/projectized.xml"/>
+
+    <!-- Hook into harness "-process.release.files" task -->
+    <target name="-process.release.files" depends="prepare-wsdl"/>
+
+    <!-- Check if taglib doc was already generated -->
+    <target name="-check-prepared-wsdl">
+        <condition property="xml.wsdl.model.wsdlgenerated" value="present">
+            <and>
+                <available file="external/generated-wsdl-xsd-2004.08.24-license.jar" />
+            </and>
+        </condition>
+    </target>
+
+    <target name="prepare-wsdl" depends="-check-prepared-wsdl,-define-FileCRC32Calculator" unless="xml.wsdl.model.wsdlgenerated">
+        <!--
+
+        This task prepares the XSD for WSDLs by repackaging the XSD contained
+        in the CXF artifacts. Its unclear why the netbeans project may not
+        hold the XSDs, while the CXF project may, but the IPMC member made
+        it clear, that he'd veto a release if removal was not planned.
+
+        -->
+
+        <jar destfile="external/generated-wsdl-xsd-2004.08.24.jar">
+            <zipfileset src="external/cxf-core-3.2.6-sources.jar" 
+                        includes="schemas/wsdl/wsdl.xsd" 
+                        fullpath="org/netbeans/modules/xml/wsdl/validator/resources/external/wsdl-2004-08-24.xsd" />
+        </jar>
+    </target>
 </project>

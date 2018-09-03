@@ -25,7 +25,6 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import javax.xml.ws.Holder;
 import org.netbeans.api.db.explorer.DatabaseException;
 import org.netbeans.api.db.explorer.JDBCDriver;
 import org.netbeans.api.db.explorer.JDBCDriverManager;
@@ -123,7 +122,7 @@ public class DerbyDatabasesTest extends TestBase {
     }
 
     public void testDatabaseNotExtractedToExistingDirectoryIssue80122() {
-        final Holder<Boolean> exceptionHappend = new Holder<>(false);
+        final boolean[] exceptionHappend = new boolean[1];
         
         Lookups.executeWith(sampleDBLookup, new Runnable() {
 
@@ -139,16 +138,16 @@ public class DerbyDatabasesTest extends TestBase {
 
                     DerbyDatabasesImpl.getDefault().extractSampleDatabase("sample", false);
                 } catch (IOException ex) {
-                    exceptionHappend.value = true;
+                    exceptionHappend[0] = true;
                 }
             }
         });
         
-        assertTrue("Extracting sample db was interrupted", exceptionHappend.value);
+        assertTrue("Extracting sample db was interrupted", exceptionHappend[0]);
     }
 
     public void testDatabaseNotExtractedIfDBExists() {
-        final Holder<Boolean> exceptionHappend = new Holder<>(false);
+        final boolean[] exceptionHappend = new boolean[1];
         
         Lookups.executeWith(sampleDBLookup, new Runnable() {
 
@@ -158,16 +157,16 @@ public class DerbyDatabasesTest extends TestBase {
                     DerbyDatabasesImpl.getDefault().extractSampleDatabase("sample1", true);
                     DerbyDatabasesImpl.getDefault().extractSampleDatabase("sample1", true);
                 } catch (IOException ex) {
-                    exceptionHappend.value = true;
+                    exceptionHappend[0] = true;
                 }
             }
         });
         
-        assertTrue("Extracting sample db was interrupted", exceptionHappend.value);
+        assertTrue("Extracting sample db was interrupted", exceptionHappend[0]);
     }
     
     public void testDatabaseSilentlyNotExtractedIfExists() {
-        final Holder<Boolean> exceptionHappend = new Holder<>(false);
+        final boolean[] exceptionHappend = new boolean[1];
         
         Lookups.executeWith(sampleDBLookup, new Runnable() {
 
@@ -177,12 +176,12 @@ public class DerbyDatabasesTest extends TestBase {
                     DerbyDatabasesImpl.getDefault().extractSampleDatabase("sample2", false);
                     DerbyDatabasesImpl.getDefault().extractSampleDatabase("sample2", false);
                 } catch (IOException ex) {
-                    exceptionHappend.value = true;
+                    exceptionHappend[0] = true;
                 }
             }
         });
         
-        assertFalse("Extracting sample db was not interrupted", exceptionHappend.value);
+        assertFalse("Extracting sample db was not interrupted", exceptionHappend[0]);
     }
     
     public static final class SampleDatabaseLocator extends InstalledFileLocator {

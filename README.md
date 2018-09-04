@@ -43,7 +43,7 @@ Apache NetBeans is an open source development environment, tooling platform, and
 
 ### Building NetBeans
 
-Build the basic project:
+Build the basic project (mainly, JavaSE features):
 ```
 $ ant
 ```
@@ -51,7 +51,7 @@ or
 ```
 $ ant -Dcluster.config=basic
 ```
-Build the full project:
+Build the full project (including Groovy, PHP, JavaEE/JakartaEE, and JavaScript features):
 ```
 $ ant -Dcluster.confg=full
 ```

@@ -1,4 +1,11 @@
-The MIT License (MIT) - http://www.opensource.org/licenses/mit-license.php
+Name: KnockoutJS
+Version: 2.2.1
+Description: KnockoutJS library
+License: MIT
+Origin: http://knockoutjs.com/
+Type: compile-time
+
+The MIT License
 
 Copyright (c) Steven Sanderson, the Knockout.js team, and other contributors
 http://knockoutjs.com/

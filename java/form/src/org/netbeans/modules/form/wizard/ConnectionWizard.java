@@ -40,7 +40,7 @@ public class ConnectionWizard extends WizardDescriptor {
 
     ConnectionIterator iterator;
 
-    private boolean finished = false;  // whether the wizard was finished sucessfully
+    private boolean finished = false;  // whether the wizard was finished successfully
 
     private Event selEvent;         // selected activating event
     private String eventName;       // selected event handler name

@@ -41,7 +41,7 @@ import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
 
 @NbBundle.Messages({
-    "MSG_ConnectionPassed=Connection sucessfull.",
+    "MSG_ConnectionPassed=Connection successful.",
     "MSG_CannotConnect=Cannot establish connection.",
     "MSG_InaccessibleSocket=Socket is not accessible."
 })

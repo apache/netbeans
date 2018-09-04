@@ -42,7 +42,7 @@ public final class LibrariesCustomizer {
     /**
      * Shows libraries customizer for given library manager.
      * @param activeLibrary if not null the activeLibrary is selected in the opened customizer
-     * @return true if user pressed OK and libraries were sucessfully modified
+     * @return true if user pressed OK and libraries were successfully modified
      */
     @Messages("TXT_LibrariesManager=Ant Library Manager")
     public static boolean showCustomizer (Library activeLibrary, LibraryManager libraryManager) {
@@ -71,7 +71,7 @@ public final class LibrariesCustomizer {
     /**
      * Shows libraries customizer for global libraries.
      * @param activeLibrary if not null the activeLibrary is selected in the opened customizer
-     * @return true if user pressed OK and libraries were sucessfully modified
+     * @return true if user pressed OK and libraries were successfully modified
      */
     public static boolean showCustomizer (Library activeLibrary) {
         return showCustomizer(activeLibrary, LibraryManager.getDefault());

@@ -655,8 +655,8 @@
             }
         }
 
-        protected function onCollectSucessHeaderVars(&$headerVars) {
-            parent::onCollectSucessHeaderVars($headerVars);
+        protected function onCollectSuccessHeaderVars(&$headerVars) {
+            parent::onCollectSuccessHeaderVars($headerVars);
 
             if ($this->getExtender("step")->isFinaling()) {
                 $headerVars['wizardForm'][self::FINISHED] = true;

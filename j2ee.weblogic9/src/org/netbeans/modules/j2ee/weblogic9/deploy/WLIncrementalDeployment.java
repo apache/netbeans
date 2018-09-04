@@ -278,7 +278,7 @@ public class WLIncrementalDeployment extends IncrementalDeployment implements In
                             NbBundle.getMessage(CommandBasedDeployer.class, "MSG_Redeploying", module.getModuleID())));
 // DISABLED SINCE 7.1.1 see #206798
 //                    if (deployFastSwap(module)) {
-//                        LOGGER.log(Level.FINE, "Fast swap sucessfull");
+//                        LOGGER.log(Level.FINE, "Fast swap successful");
 //                        progress.fireProgressEvent(null, new WLDeploymentStatus(
 //                                ActionType.EXECUTE, CommandType.REDEPLOY, StateType.COMPLETED,
 //                                NbBundle.getMessage(CommandBasedDeployer.class, "MSG_Redeployment_Completed")));

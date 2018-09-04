@@ -1,10 +1,7 @@
-Name: GlassFish Logging
+Name: Commons Logging
 License: Apache-2.0
-OSR: 4101
-Description: GlassFish Logging
-Origin: Oracle (https://glassfish.dev.java.net/)
-Source: https://glassfish.dev.java.net/
-Version: 2.0
+Description: Commons Logging
+Version: 1.0.4
 
 Apache License
                            Version 2.0, January 2004
@@ -207,4 +204,3 @@ Apache License
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-   

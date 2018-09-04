@@ -26,6 +26,7 @@
             <code-name-base>org.netbeans.modules.libs.lsp</code-name-base>
             <module-dependencies/>
             <friend-packages>
+                <friend>org.netbeans.modules.java.lsp.server</friend>
                 <friend>org.netbeans.modules.kotlin.support</friend>
                 <friend>org.netbeans.modules.lsp.client</friend>
                 <package>com.google.common.annotations</package>

@@ -364,19 +364,20 @@ public class VerifyLibsAndLicenses extends Task {
                         }
                     }
                 }
-                if(! headers.getOrDefault("Type", "").equals("generated")) {
-                    // Generated files are created by the build system, for
-                    // example by post-procession other downloaded files
-                    String files = headers.get("Files");
-                    if (files != null) {
-                        for (String file : files.split("[, ]+")) {
-                            referencedBinaries.add(file);
-                            String nested = null;
-                            if (file.contains("!/")) {
-                                final int nestedStart = file.indexOf("!/");
-                                nested = file.substring(nestedStart + 2);
-                                file = file.substring(0, nestedStart);
-                            }
+
+                String files = headers.get("Files");
+                if (files != null) {
+                    for (String file : files.split("[, ]+")) {
+                        referencedBinaries.add(file);
+                        String nested = null;
+                        if (file.contains("!/")) {
+                            final int nestedStart = file.indexOf("!/");
+                            nested = file.substring(nestedStart + 2);
+                            file = file.substring(0, nestedStart);
+                        }
+                        if (!headers.getOrDefault("Type", "").equals("generated")) {
+                            // Generated files are created by the build system, for
+                            // example by post-procession other downloaded files
                             if (!hgFiles.contains(file)) {
                                 msg.append("\n" + path + " mentions a nonexistent binary in Files: " + file);
                             } else if (nested != null) {
@@ -388,16 +389,21 @@ public class VerifyLibsAndLicenses extends Task {
                                 }
                             }
                         }
-                    } else {
-                        String matchingJar = n.replaceFirst("-license\\.txt$", ".jar");
-                        String matchingZip = n.replaceFirst("-license\\.txt$", ".zip");
-                        referencedBinaries.add(matchingJar);
-                        referencedBinaries.add(matchingZip);
+                    }
+                } else {
+                    String matchingJar = n.replaceFirst("-license\\.txt$", ".jar");
+                    String matchingZip = n.replaceFirst("-license\\.txt$", ".zip");
+                    referencedBinaries.add(matchingJar);
+                    referencedBinaries.add(matchingZip);
+                    if (!headers.getOrDefault("Type", "").equals("generated")) {
+                        // Generated files are created by the build system, for
+                        // example by post-procession other downloaded files
                         if (!hgFiles.contains(matchingJar) && !hgFiles.contains(matchingZip)) {
                             msg.append("\n" + path + " has no Files header and no corresponding " + matchingJar + " or " + matchingZip + " could be found");
                         }
                     }
                 }
+
             }
             for (String n : hgFiles) {
                 if (!n.endsWith(".jar") && !n.endsWith(".zip")) {

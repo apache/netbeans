@@ -1,6 +1,7 @@
-Name: Commons Logging
+Name: GlassFish Logging
 License: Apache-2.0
-Description: Commons Logging
+Description: GlassFish Logging
+Origin: Distributed with Sun GlassFish Enterprise Server v2.1
 Version: 1.0.4
 
 Apache License

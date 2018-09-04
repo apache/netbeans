@@ -209,7 +209,7 @@ class XMLResultItem implements CompletionItem {
             //reformat the line
             //((ExtFormatter)doc.getFormatter()).reformat(doc, Utilities.getRowStart(doc, offset), offset+text.length(), true);
         } catch (BadLocationException exc) {
-            return false;    //not sucessfull
+            return false;    //not successful
             // } catch (IOException e) {
             //     return false;
         } finally {

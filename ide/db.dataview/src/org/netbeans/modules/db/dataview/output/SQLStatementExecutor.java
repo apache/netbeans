@@ -122,7 +122,7 @@ abstract class SQLStatementExecutor implements Runnable, Cancellable {
 
     protected abstract void execute() throws SQLException, DBException;
 
-    protected void executeOnSucess() {}
+    protected void executeOnSuccess() {}
 
     protected void reinstateToolbar() {
         // reinstate the toolbar
@@ -137,7 +137,7 @@ abstract class SQLStatementExecutor implements Runnable, Cancellable {
             String execTimeStr = SQLExecutionHelper.millisecondsToSeconds(executionTime);
             String infoMsg = cmdName + " " + NbBundle.getMessage(SQLStatementExecutor.class, "MSG_execution_success", execTimeStr);
             dataView.setInfoStatusText(infoMsg);
-            executeOnSucess(); // delegate 
+            executeOnSuccess(); // delegate 
         } else {
             rollback(conn);
             reinstateToolbar();

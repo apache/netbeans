@@ -6,5 +6,4 @@ AutoUpdate-Show-In-Client: false
 AutoUpdate-Essential-Module: true
 OpenIDE-Module-Recommends: org.netbeans.core.ProxySettings.Reloader 
 OpenIDE-Module-Specification-Version: 3.54
-OpenIDE-Module-Hide-Classpath-Packages: org.objectweb.asm.**
 

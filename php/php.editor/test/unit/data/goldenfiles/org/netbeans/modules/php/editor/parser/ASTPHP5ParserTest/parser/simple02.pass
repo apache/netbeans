@@ -1,0 +1,77 @@
+<testresult testFile='simple02.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='30' end='36'>
+            <text>$hello</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='36' end='38'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='38' end='45'>
+            <text>getCity</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='45' end='46'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='46' end='47'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='47' end='48'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='49' end='52'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='52' end='52'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='51'>
+        <Comments>
+            <PHPVarComment start='6' end='29'>
+                <Variable>
+                    <PHPDocVarTypeTag start='9' end='27' kind='var'>
+                        <Variable>
+                            <PHPDocNode start='14' end='20' value='$hello'/>
+                        </Variable>
+                        <Types>
+                            <PHPDocTypeNode start='21' end='27' value='person' isArray='false'/>
+                        </Types>
+                    </PHPDocVarTypeTag>
+                </Variable>
+            </PHPVarComment>
+            <PHPVarComment start='6' end='29'>
+                <Variable>
+                    <PHPDocVarTypeTag start='9' end='27' kind='var'>
+                        <Variable>
+                            <PHPDocNode start='14' end='20' value='$hello'/>
+                        </Variable>
+                        <Types>
+                            <PHPDocTypeNode start='21' end='27' value='person' isArray='false'/>
+                        </Types>
+                    </PHPDocVarTypeTag>
+                </Variable>
+            </PHPVarComment>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='30' end='48'>
+                <MethodInvocation start='30' end='47'>
+                    <Variable start='30' end='36' isDollared='true'>
+                        <Identifier start='31' end='36' name='hello'/>
+                    </Variable>
+                    <Method>
+                        <FunctionInvocation start='38' end='47'>
+                            <FucntionName start='38' end='45'>
+                                <Variable start='38' end='45' isDollared='false'>
+                                    <Identifier start='38' end='45' name='getCity'/>
+                                </Variable>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Method>
+                </MethodInvocation>
+            </ExpressionStatement>
+            <EmptyStatement start='49' end='51'/>
+        </Statements>
+    </Program>
+</testresult>

@@ -1,0 +1,12 @@
+var |>GLOBAL:obj<| = new function(){
+    this.|>FIELD:propertyA<| = "A";
+
+    this.|>METHOD:methodA<| = function(){
+
+    };
+
+    this.methodB = methodB;   // <- the methodB is marked as global
+    function |>METHOD:methodB<|(){
+
+    }
+}

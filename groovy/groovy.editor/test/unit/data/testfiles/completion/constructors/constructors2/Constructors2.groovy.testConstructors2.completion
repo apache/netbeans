@@ -1,0 +1,9 @@
+Code completion result for source line:
+StringBuffer sb = new stringbuffer|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTRUCTO StringBuffer()                             null
+CONSTRUCTO StringBuffer(CharSequence)                 null
+CONSTRUCTO StringBuffer(String)                       null
+CONSTRUCTO StringBuffer(int)                          null
+------------------------------------
+CLASS      StringBufferInputStream                    null

@@ -1,0 +1,4 @@
+public static function getFoo() {
+return self::$$foo;
+}
+

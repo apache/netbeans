@@ -1,0 +1,5 @@
+Code completion result for source line:
+public function fnc(\Blah\C|l) { //CC
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      ClsOmg                          [PUBLIC]   Blah

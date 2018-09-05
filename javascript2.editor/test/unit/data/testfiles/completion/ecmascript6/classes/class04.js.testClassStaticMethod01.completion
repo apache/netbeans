@@ -1,0 +1,8 @@
+Code completion result for source line:
+Point.|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CONSTRUCTO constructor                     [PUBLIC]   class04.js
+METHOD     distance(a: Point, b: Point)    [PUBLIC,   class04.js
+FIELD      x                               [PUBLIC]   class04.js
+FIELD      y                               [PUBLIC]   class04.js

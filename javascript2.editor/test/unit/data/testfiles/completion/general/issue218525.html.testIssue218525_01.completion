@@ -1,0 +1,5 @@
+Code completion result for source line:
+<li style="cursor: pointer" onclick="operator.r|emoveMe(this);">Remove me (breakpoint on node removal + breakpoint on nonDOM line)</li>
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     removeMe(el): undefined         [PROTECTE  issue218525.html

@@ -1,0 +1,224 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<metaDD>
+        <extends>org.netbeans.modules.j2ee.sun.dd.impl.common.SunBaseBean</extends>
+	<meta-element>
+                <import>org.netbeans.modules.j2ee.sun.dd.impl.common.model_2_1_0.EjbRef</import>
+                <import>org.netbeans.modules.j2ee.sun.dd.impl.common.model_2_1_0.ResourceRef</import>
+                <import>org.netbeans.modules.j2ee.sun.dd.impl.common.model_2_1_0.ResourceEnvRef</import>
+                <import>org.netbeans.modules.j2ee.sun.dd.impl.common.model_2_1_1.ServiceRef</import>
+                <import>org.netbeans.modules.j2ee.sun.dd.impl.common.model_2_1_1.MessageDestination</import>
+		<dtd-name>sun-application-client</dtd-name>
+		<bean-name>SunApplicationClient</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.client.SunApplicationClient</implements>
+		<user-code>
+                public void setVersion(java.math.BigDecimal value) {
+                }
+                public java.math.BigDecimal getVersion() {
+                    return new java.math.BigDecimal("1.40");
+                }
+                public org.xml.sax.SAXParseException getError() {
+                    return null;
+                }
+                public int getStatus() {
+                    return STATE_VALID;
+                }
+                public boolean isEventSource(org.netbeans.modules.j2ee.sun.dd.api.RootInterface rootDD) {
+                    return this == rootDD;
+                }
+                public void setMessageDestinationRef(int index, org.netbeans.modules.j2ee.sun.dd.api.common.MessageDestinationRef value) throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException { 
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunApplicationClient.VERSION_1_4_1);
+                } 
+                public org.netbeans.modules.j2ee.sun.dd.api.common.MessageDestinationRef getMessageDestinationRef(int index) throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException { 
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunApplicationClient.VERSION_1_4_1);
+                }  
+                public int sizeMessageDestinationRef() throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException { 
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunApplicationClient.VERSION_1_4_1);
+                } 
+                public void setMessageDestinationRef(org.netbeans.modules.j2ee.sun.dd.api.common.MessageDestinationRef[] value) throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException { 
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunApplicationClient.VERSION_1_4_1);
+                } 
+                public org.netbeans.modules.j2ee.sun.dd.api.common.MessageDestinationRef[] getMessageDestinationRef() throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException { 
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunApplicationClient.VERSION_1_4_1);
+                } 
+                public int addMessageDestinationRef(org.netbeans.modules.j2ee.sun.dd.api.common.MessageDestinationRef value) throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException { 
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunApplicationClient.VERSION_1_4_1);
+                } 
+                public int removeMessageDestinationRef(org.netbeans.modules.j2ee.sun.dd.api.common.MessageDestinationRef value) throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException { 
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunApplicationClient.VERSION_1_4_1);
+                } 
+                public org.netbeans.modules.j2ee.sun.dd.api.common.MessageDestinationRef newMessageDestinationRef() throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException { 
+                        throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunApplicationClient.VERSION_1_4_1);
+                }  
+                public void setJavaWebStartAccess(org.netbeans.modules.j2ee.sun.dd.api.client.JavaWebStartAccess value) throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunApplicationClient.VERSION_1_4_1);
+                }
+                public org.netbeans.modules.j2ee.sun.dd.api.client.JavaWebStartAccess getJavaWebStartAccess() throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunApplicationClient.VERSION_1_4_1);
+                }
+                public org.netbeans.modules.j2ee.sun.dd.api.client.JavaWebStartAccess newJavaWebStartAccess() throws org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(SunApplicationClient.VERSION_1_4_1);
+                }
+                </user-code>
+	</meta-element>
+	<meta-element>
+                <skip-generation/>
+		<dtd-name>ejb-ref</dtd-name>
+		<bean-name>EjbRef</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.EjbRef</implements>
+	</meta-element>
+	<meta-element>
+                <skip-generation/>
+		<dtd-name>resource-ref</dtd-name>
+		<bean-name>ResourceRef</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.ResourceRef</implements>
+	</meta-element>
+	<meta-element>
+                <skip-generation/>
+		<dtd-name>resource-env-ref</dtd-name>
+		<bean-name>ResourceEnvRef</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.ResourceEnvRef</implements>
+	</meta-element>
+	<meta-element>
+                <skip-generation/>
+		<dtd-name>service-ref</dtd-name>
+		<bean-name>ServiceRef</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.ServiceRef</implements>
+	</meta-element>
+	<meta-element>
+                <skip-generation/>
+		<dtd-name>message-destination</dtd-name>
+		<bean-name>MessageDestination</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.MessageDestination</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>message-destination-name</dtd-name>
+		<bean-name>MessageDestinationName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>jndi-name</dtd-name>
+		<bean-name>JndiName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>#PCDATA</dtd-name>
+		<bean-name>Pcdata</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>service-ref-name</dtd-name>
+		<bean-name>ServiceRefName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+                <skip-generation/>
+		<dtd-name>port-info</dtd-name>
+		<bean-name>PortInfo</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.PortInfo</implements>
+	</meta-element>
+	<meta-element>
+                <skip-generation/>
+		<dtd-name>call-property</dtd-name>
+		<bean-name>CallProperty</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.CallProperty</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>wsdl-override</dtd-name>
+		<bean-name>WsdlOverride</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>service-impl-class</dtd-name>
+		<bean-name>ServiceImplClass</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+                <skip-generation/>
+		<dtd-name>service-qname</dtd-name>
+		<bean-name>ServiceQname</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.ServiceQname</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>namespaceURI</dtd-name>
+		<bean-name>NamespaceURI</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>localpart</dtd-name>
+		<bean-name>Localpart</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>name</dtd-name>
+		<bean-name>Name</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>value</dtd-name>
+		<bean-name>Value</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>service-endpoint-interface</dtd-name>
+		<bean-name>ServiceEndpointInterface</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+                <skip-generation/>
+		<dtd-name>wsdl-port</dtd-name>
+		<bean-name>WsdlPort</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.WsdlPort</implements>
+	</meta-element>
+	<meta-element>
+                <skip-generation/>
+		<dtd-name>stub-property</dtd-name>
+		<bean-name>StubProperty</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.StubProperty</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>resource-env-ref-name</dtd-name>
+		<bean-name>ResourceEnvRefName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>res-ref-name</dtd-name>
+		<bean-name>ResRefName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+                <skip-generation/>
+		<dtd-name>default-resource-principal</dtd-name>
+		<bean-name>DefaultResourcePrincipal</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.DefaultResourcePrincipal</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>password</dtd-name>
+		<bean-name>Password</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>ejb-ref-name</dtd-name>
+		<bean-name>EjbRefName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+</metaDD>

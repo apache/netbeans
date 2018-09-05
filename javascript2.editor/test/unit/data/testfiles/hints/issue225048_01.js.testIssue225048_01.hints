@@ -1,0 +1,8 @@
+if(bar){
+   ---
+HINT:The global variable "bar" is not declared.
+FIX:Generate JsHint global directive for variable bar
+    if (bar === foo) {
+        ---
+HINT:The global variable "bar" is not declared.
+FIX:Generate JsHint global directive for variable bar

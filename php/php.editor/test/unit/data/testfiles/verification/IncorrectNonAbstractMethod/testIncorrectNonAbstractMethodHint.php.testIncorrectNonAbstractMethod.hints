@@ -1,0 +1,24 @@
+    function testClass1();
+    ----------------------
+HINT:Non-abstract method "testClass1" must contain body
+FIX:Add body of the method: testClass1
+    public function testClass2();
+    -----------------------------
+HINT:Non-abstract method "testClass2" must contain body
+FIX:Add body of the method: testClass2
+    private function testClass3();
+    ------------------------------
+HINT:Non-abstract method "testClass3" must contain body
+FIX:Add body of the method: testClass3
+    protected function testClass4();
+    --------------------------------
+HINT:Non-abstract method "testClass4" must contain body
+FIX:Add body of the method: testClass4
+    public function testAbstractClass();
+    ------------------------------------
+HINT:Non-abstract method "testAbstractClass" must contain body
+FIX:Add body of the method: testAbstractClass
+    public function testTrait();
+    ----------------------------
+HINT:Non-abstract method "testTrait" must contain body
+FIX:Add body of the method: testTrait

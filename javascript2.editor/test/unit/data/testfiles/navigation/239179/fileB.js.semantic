@@ -1,0 +1,9 @@
+with(|>GLOBAL:MySpace<|.cls1) {
+    |>GLOBAL:console<|.log(firstName);
+    
+    with(|>GLOBAL:MySpace<|.cls2) {
+        |>GLOBAL:console<|.log(foo);
+        firstName;
+        secondName;
+    }
+} 

@@ -1,0 +1,2 @@
+o.c.|>MARK_OCCURRENCES:sayHello<| = function () {
+console.log(c.|>MARK_OCCURRENCES:sa^yHello<|());  // Hello

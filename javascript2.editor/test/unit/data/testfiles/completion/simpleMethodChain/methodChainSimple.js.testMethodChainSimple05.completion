@@ -1,0 +1,73 @@
+Code completion result for source line:
+MyObj.create().getInfo().|big();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      prototype                       [PUBLIC]   JS Platform
+METHOD     anchor(name: String): String    [PUBLIC]   JS Platform
+METHOD     assign(target: Object): Object  [PUBLIC,   JS Platform
+METHOD     big(): String                   [PUBLIC,   JS Platform
+METHOD     bold(): String                  [PUBLIC,   JS Platform
+METHOD     charAt(index: Number): String   [PUBLIC]   JS Platform
+METHOD     charCodeAt(index: Number): Num  [PUBLIC]   JS Platform
+METHOD     codePointAt(pos: String): Numb  [PUBLIC]   JS Platform
+METHOD     concat(string2, string3): Stri  [PUBLIC]   JS Platform
+METHOD     create(proto: Object): Object   [PUBLIC,   JS Platform
+METHOD     defineProperties(obj: Object,   [PUBLIC,   JS Platform
+METHOD     defineProperty(obj: Object, pr  [PUBLIC,   JS Platform
+METHOD     endsWith(searchString: String)  [PUBLIC]   JS Platform
+METHOD     entries(obj: Object): Array     [PUBLIC,   JS Platform
+METHOD     fixed(): String                 [PUBLIC,   JS Platform
+METHOD     fontcolor(color: String): Stri  [PUBLIC,   JS Platform
+METHOD     fontsize(size: Number): Number  [PUBLIC,   JS Platform
+METHOD     freeze(obj: Object): Object     [PUBLIC,   JS Platform
+METHOD     fromCharCode(num1): String      [PUBLIC,   JS Platform
+METHOD     fromCodePoint(num1): String     [PUBLIC,   JS Platform
+METHOD     getOwnPropertyDescriptor(obj:   [PUBLIC,   JS Platform
+METHOD     getOwnPropertyDescriptors(obj:  [PUBLIC,   JS Platform
+METHOD     getOwnPropertyNames(obj: Objec  [PUBLIC,   JS Platform
+METHOD     getOwnPropertySymbols(obj: Obj  [PUBLIC,   JS Platform
+METHOD     getPrototypeOf(obj: Object): O  [PUBLIC,   JS Platform
+METHOD     hasOwnProperty(prop: String):   [PUBLIC]   JS Platform
+METHOD     includes(searchString: String)  [PUBLIC]   JS Platform
+METHOD     indexOf(searchValue: String):   [PUBLIC]   JS Platform
+METHOD     is(value1: String, value2: Str  [PUBLIC,   JS Platform
+METHOD     isExtensible(obj: Object): Boo  [PUBLIC,   JS Platform
+METHOD     isFrozen(obj: Object): Boolean  [PUBLIC,   JS Platform
+METHOD     isPrototypeOf(obj): Boolean     [PUBLIC]   JS Platform
+METHOD     isSealed(obj: Object): Boolean  [PUBLIC,   JS Platform
+METHOD     italics(): String               [PUBLIC,   JS Platform
+METHOD     keys(obj: Object): Array        [PUBLIC,   JS Platform
+METHOD     lastIndexOf(searchValue: Strin  [PUBLIC]   JS Platform
+METHOD     link(url: String): String       [PUBLIC]   JS Platform
+METHOD     localeCompare(compareString: S  [PUBLIC]   JS Platform
+METHOD     match(regexp: RegExp): Array    [PUBLIC]   JS Platform
+METHOD     normalize(): String             [PUBLIC]   JS Platform
+METHOD     padEnd(maxLength: Number): Str  [PUBLIC]   JS Platform
+METHOD     padStart(maxLength: Number): S  [PUBLIC]   JS Platform
+METHOD     preventExtensions(obj: Object)  [PUBLIC,   JS Platform
+METHOD     propertyIsEnumerable(prop: Str  [PUBLIC]   JS Platform
+METHOD     raw(callSite: Object): String   [PUBLIC,   JS Platform
+METHOD     repeat(count: Number): String   [PUBLIC]   JS Platform
+METHOD     replace(regexp, newSubStr): St  [PUBLIC]   JS Platform
+METHOD     seal(obj: Object): Object       [PUBLIC,   JS Platform
+METHOD     search(regexp: RegExp): Number  [PUBLIC]   JS Platform
+METHOD     slice(beginSlice: Number): Str  [PUBLIC]   JS Platform
+METHOD     small(): String                 [PUBLIC,   JS Platform
+METHOD     split(): Array                  [PUBLIC]   JS Platform
+METHOD     startsWith(searchString: Strin  [PUBLIC]   JS Platform
+METHOD     strike(): String                [PUBLIC,   JS Platform
+METHOD     sub(): String                   [PUBLIC,   JS Platform
+METHOD     substr(start: Number): String   [PUBLIC]   JS Platform
+METHOD     substring(indexStart: Number):  [PUBLIC]   JS Platform
+METHOD     sup(): String                   [PUBLIC,   JS Platform
+METHOD     toLocaleLowerCase(): String     [PUBLIC]   JS Platform
+METHOD     toLocaleString(): String        [PUBLIC]   JS Platform
+METHOD     toLocaleUpperCase(): String     [PUBLIC]   JS Platform
+METHOD     toLowerCase(): String           [PUBLIC]   JS Platform
+METHOD     toString(): String              [PUBLIC]   JS Platform
+METHOD     toUpperCase(): String           [PUBLIC]   JS Platform
+METHOD     trim(): String                  [PUBLIC]   JS Platform
+METHOD     valueOf(): String               [PUBLIC]   JS Platform
+METHOD     values(obj: Object): Array      [PUBLIC,   JS Platform
+FIELD      constructor: Function           [PUBLIC]   JS Platform
+FIELD      length: Number                  [PUBLIC,   JS Platform

@@ -1,0 +1,5 @@
+public static function setFoo($$foo) {
+self::$$foo = $foo;
+return self;
+}
+

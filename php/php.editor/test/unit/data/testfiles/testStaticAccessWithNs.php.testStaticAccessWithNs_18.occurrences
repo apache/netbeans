@@ -1,0 +1,3 @@
+        const |>MARK_OCCURRENCES:BAR<| = 2;
+            ClassName::|>MARK_OCCURRENCES:BAR<|;
+            \Foo\Bar\ClassName::|>MARK_OCCURRENCES:B^AR<|;

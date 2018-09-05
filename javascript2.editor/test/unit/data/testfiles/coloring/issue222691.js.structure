@@ -1,0 +1,4 @@
+testObject:CLASS:[PUBLIC]:ESCAPED{testObject}:
+  f_4_222691:METHOD:[PUBLIC]:ESCAPED{f_4_222691}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }String</font>:
+Create:METHOD:[PUBLIC]:ESCAPED{Create}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  f_3_222691:METHOD:[PRIVATE]:ESCAPED{f_3_222691}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }String</font>:

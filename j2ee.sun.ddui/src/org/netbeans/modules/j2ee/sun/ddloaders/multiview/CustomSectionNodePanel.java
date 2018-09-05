@@ -1,0 +1,70 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.netbeans.modules.j2ee.sun.ddloaders.multiview;
+
+import java.awt.Dimension;
+import java.awt.Image;
+import javax.swing.ImageIcon;
+import org.netbeans.modules.xml.multiview.SectionNode;
+import org.netbeans.modules.xml.multiview.ui.SectionNodePanel;
+import org.openide.util.ImageUtilities;
+
+/**
+ *
+ * @author Peter Williams
+ */
+public class CustomSectionNodePanel extends SectionNodePanel {
+
+    public static final int MAX_WIDTH = 600;
+    
+    public CustomSectionNodePanel(final SectionNode node) {
+        super(node, false);
+
+        setAlignmentX(LEFT_ALIGNMENT);
+//        setBorder(javax.swing.BorderFactory.createTitledBorder("custom section node panel"));
+    }
+    
+    public void setTitleIcon(String iconBase) {
+        Image iconImage = ImageUtilities.loadImage(iconBase, true);
+        getTitleButton().setIcon(iconImage != null ? new ImageIcon(iconImage) : null);
+    }
+
+//    @Override
+//    protected void openInnerPanel() {
+//        System.out.println(this.getNode().getClass().getName() + " : SectionNodePanel.openInnerPanel()");
+//        super.openInnerPanel();
+//    }
+//
+//    /** Return reasonable maximum size.  Usage of GridBagLayout + stretch fields
+//     * in this panel cause the default maximum size behavior to too wide.
+//     */
+//    @Override
+//    public Dimension getMaximumSize() {
+//        return new Dimension(MAX_WIDTH, super.getMaximumSize().height);
+//    }
+    
+    /** Return correct preferred size.  The multiline JLabels in this panel cause
+     *  the default preferred size behavior to be incorrect (too wide).
+     */
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(getMinimumSize().width, super.getPreferredSize().height);
+    }
+    
+}

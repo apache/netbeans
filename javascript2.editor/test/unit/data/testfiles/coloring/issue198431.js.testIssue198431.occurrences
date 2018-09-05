@@ -1,0 +1,3 @@
+    function |>MARK_OCCURRENCES:doit<|(){
+    |>MARK_OCCURRENCES:doit<|();// Becomes green if statement below is added
+    this.doitPublic = |>MARK_OCCURRENCES:do^it<|;

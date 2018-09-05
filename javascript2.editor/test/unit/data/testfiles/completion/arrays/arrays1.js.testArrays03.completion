@@ -1,0 +1,6 @@
+Code completion result for source line:
+arr03.l|ength;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     lastIndexOf(searchElement: Obj  [PUBLIC]   JS Platform
+FIELD      length: Number                  [PUBLIC]   JS Platform

@@ -1,0 +1,21 @@
+<?php
+abstract class |>CLASS:base<| {
+    function |>METHOD:show<|() {
+        echo "base\n";
+    }
+
+    abstract function |>METHOD:test<|();
+}
+
+abstract class |>CLASS:animal<| extends base {};
+
+class |>CLASS:derived<| extends base {
+    function |>METHOD:test<|() {
+        return 0;
+    }
+}
+
+class |>CLASS:fail<| {
+	abstract function |>METHOD:show<|();
+}
+?>

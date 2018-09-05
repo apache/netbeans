@@ -1,0 +1,15 @@
+    if( a == b) {
+        ------
+HINT:Expected "===" and instead saw "==".
+    while (a != b) {
+           ------
+HINT:Expected "!==" and instead saw "!=".
+    for (var i = a; a != b; a++) {
+                    ------
+HINT:Expected "!==" and instead saw "!=".
+    } while (a == 20);
+             -------
+HINT:Expected "===" and instead saw "==".
+    if (emptyLine == undefined || !(emptyLine instanceof Boolean)) {
+        ----------------------
+HINT:Expected "===" and instead saw "==".

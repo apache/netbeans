@@ -1,0 +1,4 @@
+    function __construct(?string $tes^t) {
+                         -------------
+HINT:Initialize Field: $test
+FIX:Initialize Field: $test

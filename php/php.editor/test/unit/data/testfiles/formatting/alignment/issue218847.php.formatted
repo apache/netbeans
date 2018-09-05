@@ -1,0 +1,69 @@
+<?php
+
+abstract
+        class ClassName {
+
+    var
+            $vr;
+    public
+            $pub;
+    protected
+            $pro;
+    private
+            $pri;
+    public static
+            $pubSta;
+
+    public abstract
+            function functionNameA();
+
+    public static
+            function functionNameS() {
+        
+    }
+
+    public
+            function functionName1() {
+        
+    }
+
+    protected
+            function functionName2() {
+        
+    }
+
+    private
+            function functionName3() {
+        
+    }
+
+}
+
+class Foo {
+    
+}
+
+trait Trt {
+
+    private
+            $foo;
+
+    public
+            function foo() {
+        
+    }
+
+}
+
+interface Iface {
+
+    const
+            FOO = 15;
+    const
+            MY_CONST = 5, CCC = 10;
+
+    public
+            function ifaceFnc();
+}
+
+?>

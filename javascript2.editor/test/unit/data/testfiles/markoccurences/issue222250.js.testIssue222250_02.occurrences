@@ -1,0 +1,2 @@
+   start: function(|>MARK_OCCURRENCES:xhr<|) {
+       this.xhr = |>MARK_OCCURRENCES:x^hr<|;

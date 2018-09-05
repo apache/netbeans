@@ -1,0 +1,20 @@
+Code completion result for source line:
+localString.get|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     getAt(Collection)                          String
+METHOD     getAt(EmptyRange)                          String
+METHOD     getAt(IntRange)                            String
+METHOD     getAt(Range)                               String
+METHOD     getAt(String)                              Object
+METHOD     getAt(int)                                 String
+METHOD     getBytes()                      [PUBLIC]   byte[]
+METHOD     getBytes(Charset)               [PUBLIC]   byte[]
+METHOD     getBytes(String)                [PUBLIC]   byte[]
+METHOD     getBytes(int, int, byte[], int  [PUBLIC]   void
+METHOD     getChars()                                 char[]
+METHOD     getChars(int, int, char[], int  [PUBLIC]   void
+METHOD     getClass()                      [PUBLIC]   Class<?>
+METHOD     getMetaClass()                             MetaClass
+METHOD     getMetaPropertyValues()                    List
+METHOD     getProperties()                            Map

@@ -1,0 +1,3 @@
+function Joke (name, autor, |>MARK_OCCURRENCES:descri^ption<|) {
+       return |>MARK_OCCURRENCES:description<|;
+       formatter.println(|>MARK_OCCURRENCES:description<|)

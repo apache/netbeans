@@ -1,0 +1,4 @@
+echo "fff".|>MARK_OCCURRENCES:test<|."dddd";
+define('|>MARK_OCCURRENCES:test<|', 'testttttt');
+echo "fff".|>MARK_OCCURRENCES:t^est<|."ddddd";
+echo "fff".|>MARK_OCCURRENCES:test<|."dddd";

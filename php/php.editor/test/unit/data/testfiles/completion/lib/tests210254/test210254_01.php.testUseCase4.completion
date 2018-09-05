@@ -1,0 +1,4 @@
+Code completion result for source line:
+use FirstTrait, S|econdTrait, MyTrait;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      SecondTrait                     [PUBLIC]   Baz\Bat

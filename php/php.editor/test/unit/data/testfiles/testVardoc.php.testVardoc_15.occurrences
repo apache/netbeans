@@ -1,0 +1,3 @@
+/* @var  $|>MARK_OCCURRENCES:var^Type2<|   VarType  */
+$|>MARK_OCCURRENCES:varType2<| = getVarType();
+$|>MARK_OCCURRENCES:varType2<|->test();

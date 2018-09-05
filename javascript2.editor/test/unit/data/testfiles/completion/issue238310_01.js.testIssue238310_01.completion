@@ -1,0 +1,5 @@
+Code completion result for source line:
+var x = {a238310:{oneA:"test", twoA:2}}.a|;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      a238310                         [PUBLIC]   issue238310_01.js

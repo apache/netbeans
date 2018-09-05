@@ -1,0 +1,48 @@
+FUNCTION jQueryFragment02 [ANONYMOUS: false, DECLARED: true - jQueryFragment02, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+jQueryFragment02L#1 : FUNCTION jQueryFragment02L#1 [ANONYMOUS: true, DECLARED: true - jQueryFragment02L#1, MODIFIERS: PUBLIC, FUNCTION]
+                    # RETURN TYPES
+                    undefined, RESOLVED: true
+                    # PARAMETERS
+                    OBJECT window [ANONYMOUS: false, DECLARED: true - window, MODIFIERS: PUBLIC, PARAMETER]
+                            # PROPERTIES
+                            $         : OBJECT $ [ANONYMOUS: false, DECLARED: false - $, MODIFIERS: PUBLIC, PROPERTY]
+                            document  : OBJECT document [ANONYMOUS: false, DECLARED: false - document, MODIFIERS: PUBLIC, PROPERTY]
+                            jQuery    : OBJECT jQuery [ANONYMOUS: false, DECLARED: false - jQuery, MODIFIERS: PUBLIC, PROPERTY]
+                            location  : OBJECT location [ANONYMOUS: false, DECLARED: false - location, MODIFIERS: PUBLIC, PROPERTY]
+                            navigator : OBJECT navigator [ANONYMOUS: false, DECLARED: false - navigator, MODIFIERS: PUBLIC, PROPERTY]
+                    OBJECT undefined [ANONYMOUS: false, DECLARED: true - undefined, MODIFIERS: PUBLIC, PARAMETER]
+                    # PROPERTIES
+                    arguments                  : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                    document                   : OBJECT document [ANONYMOUS: false, DECLARED: true - document, MODIFIERS: PRIVATE, VARIABLE]
+                    jQuery                     : OBJECT jQuery [ANONYMOUS: false, DECLARED: true - jQuery, MODIFIERS: PRIVATE, VARIABLE]
+                    jQueryFragment02L#1#jQuery : FUNCTION jQueryFragment02L#1#jQuery [ANONYMOUS: true, DECLARED: true - jQueryFragment02L#1#jQuery, MODIFIERS: PRIVATE, METHOD]
+                                               # RETURN TYPES
+                                               undefined, RESOLVED: true
+                                               # PROPERTIES
+                                               _$         : OBJECT _$ [ANONYMOUS: false, DECLARED: true - _$, MODIFIERS: PRIVATE, VARIABLE]
+                                               _jQuery    : OBJECT _jQuery [ANONYMOUS: false, DECLARED: true - _jQuery, MODIFIERS: PRIVATE, VARIABLE]
+                                               arguments  : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                               jQuery     : FUNCTION jQuery [ANONYMOUS: false, DECLARED: true - jQuery, MODIFIERS: PRIVATE, METHOD]
+                                                          # RETURN TYPES
+                                                          jQueryFragment02L#1.jQueryFragment02L#1#jQuery.jQuery.fn.init, RESOLVED: true
+                                                          # PARAMETERS
+                                                          OBJECT selector [ANONYMOUS: false, DECLARED: true - selector, MODIFIERS: PUBLIC, PARAMETER]
+                                                          OBJECT context [ANONYMOUS: false, DECLARED: true - context, MODIFIERS: PUBLIC, PARAMETER]
+                                                          # PROPERTIES
+                                                          arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                                          fn        : OBJECT fn [ANONYMOUS: false, DECLARED: false - fn, MODIFIERS: PUBLIC, OBJECT]
+                                                                    # PROPERTIES
+                                                                    init : FUNCTION init [ANONYMOUS: false, DECLARED: false - init, MODIFIERS: PUBLIC, METHOD]
+                                                                         # PARAMETERS
+                                                                         OBJECT param1 [ANONYMOUS: false, DECLARED: true - param1, MODIFIERS: PUBLIC, PARAMETER]
+                                                                         OBJECT param2 [ANONYMOUS: false, DECLARED: true - param2, MODIFIERS: PUBLIC, PARAMETER]
+                                                                         OBJECT param3 [ANONYMOUS: false, DECLARED: true - param3, MODIFIERS: PUBLIC, PARAMETER]
+                                                                         # PROPERTIES
+                                                                         arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                               rootjQuery : OBJECT rootjQuery [ANONYMOUS: false, DECLARED: true - rootjQuery, MODIFIERS: PRIVATE, VARIABLE]
+                    location                   : OBJECT location [ANONYMOUS: false, DECLARED: true - location, MODIFIERS: PRIVATE, VARIABLE]
+                    navigator                  : OBJECT navigator [ANONYMOUS: false, DECLARED: true - navigator, MODIFIERS: PRIVATE, VARIABLE]
+window              : OBJECT window [ANONYMOUS: false, DECLARED: false - window, MODIFIERS: PUBLIC, VARIABLE]

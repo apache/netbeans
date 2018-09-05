@@ -1,0 +1,5 @@
+Code completion result for source line:
+$c->getm|odel;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   ? getModel                      [PUBLIC]   ClassName123
+VARIABLE   ? getmodel                      [PUBLIC]   ClassName123

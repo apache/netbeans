@@ -1,0 +1,10 @@
+var test = [1, 2, 3]
+
+  test2 = ["a", "b"][0];
+
+ test3 = [1,2,[1,2]];
+
+ test4 = ["aaaaa", "bbbbb", "cccccccccccccccccccccccccccccccccccccccccccccccccccccccc"]
+
+ test5 = ["aaaaa", "bbbbb", ["cccccccccccccccccccccccccccccccccccccccccccccccccccccccc"]]
+ 

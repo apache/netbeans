@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="execution">Execution API</apidef>
+        <!-- etc. -->
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+
+    <changes>
+        <change id="NbClassLoader.no.FileStateInvalidException">
+            <api name="execution"/>
+            <summary><code>NbClassLoader(FileObject[], ...)</code> does not throw <code>FileStateInvalidException</code></summary>
+            <version major="1" minor="26"/>
+            <date year="2012" month="1" day="20"/>
+            <author login="jglick"/>
+            <compatibility source="incompatible">
+                <p>
+                    No <code>NbClassLoader</code> constructor throws <code>FileStateInvalidException</code> any longer,
+                    which can cause some existing source code to not compile.
+                </p>
+            </compatibility>
+            <description>
+                <p>
+                    <code>NbClassLoader(FileObject[], ClassLoader, InputOutput)</code> does not throw <code>FileStateInvalidException</code> any more.
+                </p>
+            </description>
+            <class package="org.openide.execution" name="NbClassLoader"/>
+            <issue number="207294"/>
+        </change>
+    <change id="automatic-request-of-engine-impl">
+      <api name="execution"/>
+      <summary> No need to require ExecutionEngine token anymore</summary>
+      <version major="1" minor="10"/>
+      <date day="19" month="7" year="2006"/>
+      <author login="jtulach"/>
+      <compatibility addition="yes" binary="compatible" semantic="compatible" />
+      <description>
+        <p>If your module depends on <code>org.openide.execution > 1.9</code> or higher
+        there is no need to specify that it also requires an implementation of
+        the API by use of <code>OpenIDE-Module-Requires: org.openide.execution.ExecutionEngine</code>,
+        this token will be requested automatically by the <code>org.openide.execution</code>
+        module itself.
+        </p>
+      </description>
+      <class package="org.openide.execution" name="ExecutionEngine"/>
+      <issue number="34699" />
+    </change>
+
+        <change>
+            <api name="execution"/>
+            <summary>Execution of <code>Startup</code> folder removed</summary>
+            <version major="1" minor="2"/>
+            <date day="16" month="3" year="2004"/>
+            <author login="jglick"/>
+            <compatibility semantic="incompatible">
+                <p>
+                    There is no direct equivalent in NetBeans 4.0.
+                </p>
+            </compatibility>
+            <description>
+                <p>
+                    Previously it was possible to place objects with an
+                    <code>ExecCookie</code> into the <code>Startup</code> folder
+                    of the system filesystem, and they would be run during
+                    startup.
+                </p>
+                <p>
+                    In NetBeans 4.0 there is no such cookie any more, and that
+                    old style of execution is no longer supported. Modules may
+                    continue to use <code>ModuleInstall.restored</code> for
+                    startup hooks, possibly providing special modes for user
+                    customization, but there is no generic infrastructure for
+                    this.
+                </p>
+            </description>
+        </change>
+
+        <change id="NbClassLoader-constructors">
+            <api name="execution"/>
+            <summary><code>NbClassLoader</code> constructors deprecated</summary>
+            <version major="1" minor="2"/>
+            <date day="16" month="3" year="2004"/>
+            <author login="jglick"/>
+            <compatibility semantic="incompatible" deprecation="yes">
+                <p>
+                    Old constructors continue to behave as before but that
+                    behavior is unlikely to be useful in NetBeans 4.0.
+                </p>
+            </compatibility>
+            <description>
+                <p>
+                    All of the existing constructors of
+                    <code>NbClassLoader</code> were deprecated since they used
+                    Filesystems to refer to the classpath; one new classpath-safe
+                    constructor was added instead.
+                </p>
+                <p>
+                    For similar reasons, a number of static methods in the class
+                    were deprecated as well.
+                </p>
+            </description>
+            <class package="org.openide.execution" name="NbClassLoader"/>
+        </change>
+
+        <change id="split">
+            <api name="execution"/>
+            <summary>Execution API split into deprecated and nondeprecated halves</summary>
+            <version major="1" minor="2"/>
+            <date day="16" month="3" year="2004"/>
+            <author login="jglick"/>
+            <compatibility binary="compatible" source="incompatible" deprecation="yes">
+                <p>
+                    New code must declare which of the two modules (or both) it
+                    wishes to compile against and use.
+                </p>
+            </compatibility>
+            <description>
+                <p>
+                    As part of the NetBeans 4.0 build system, the Execution API
+                    was split into two halves. The first half continues to be
+                    used as before. The second half is now deprecated and lives
+                    in a separate module.
+                </p>
+            </description>
+            <class link="no" package="org.openide.actions" name="ExecuteAction"/>
+            <class link="no" package="org.openide.cookies" name="ArgumentsCookie"/>
+            <class link="no" package="org.openide.cookies" name="ExecCookie"/>
+            <class link="no" package="org.openide.execution" name="ExecInfo"/>
+            <class link="no" package="org.openide.execution" name="Executor"/>
+            <class link="no" package="org.openide.execution" name="ExecutorType"/>
+            <class link="no" package="org.openide.execution" name="NbfsStreamHandlerFactory"/>
+            <class link="no" package="org.openide.execution" name="NbfsURLConnection"/>
+            <class link="no" package="org.openide.execution" name="ProcessExecutor"/>
+            <class link="no" package="org.openide.execution" name="ThreadExecutor"/>
+            <class link="no" package="org.openide.loaders" name="ExecutionSupport"/>
+        </change>
+
+    </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <==============
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE openide/execution/api/doc/changes/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the Execution API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the <a href="@TOP@">Execution API</a>.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+
+      <hr/><standard-changelists module-code-name="org.openide.execution"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

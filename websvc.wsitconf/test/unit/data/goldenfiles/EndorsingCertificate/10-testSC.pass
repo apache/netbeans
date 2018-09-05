@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<definitions
+ xmlns="http://schemas.xmlsoap.org/wsdl/"
+ xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+ xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+ name="NewWebServiceService" targetNamespace="http://policy/" xmlns:tns="http://policy/" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp1="http://www.w3.org/ns/ws-policy" xmlns:fi="http://java.sun.com/xml/ns/wsit/2006/09/policy/fastinfoset/service" xmlns:tcp="http://java.sun.com/xml/ns/wsit/2006/09/policy/soaptcp/service" xmlns:wsaw="http://www.w3.org/2005/08/addressing" xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"
+ >
+    <message name="sample_operation"/>
+    <message name="sample_operationResponse"/>
+    <portType name="NewWebService">
+        <operation name="sample_operation">
+            <input message="tns:sample_operation"/>
+            <output message="tns:sample_operationResponse"/>
+        </operation>
+    </portType>
+    <binding name="NewWebServicePortBinding" type="tns:NewWebService">
+        <wsp:PolicyReference URI="#NewWebServicePortBindingPolicy"/>
+        <operation name="sample_operation">
+            <input>
+                <wsp:PolicyReference URI="#NewWebServicePortBinding_sample_operation_Input_Policy"/>
+            </input>
+            <output>
+                <wsp:PolicyReference URI="#NewWebServicePortBinding_sample_operation_Output_Policy"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="NewWebServiceService">
+        <port name="NewWebServicePort" binding="tns:NewWebServicePortBinding"/>
+    </service>
+    <wsp:Policy wsu:Id="NewWebServicePortBindingPolicy">
+        <wsp:ExactlyOne>
+            <wsp:All>
+                <wsaw:UsingAddressing xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" wsp:Optional="false"/>
+                <sp:SymmetricBinding>
+                    <wsp:Policy>
+                        <sp:ProtectionToken>
+                            <wsp:Policy>
+                                <sp:SecureConversationToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+                                    <wsp:Policy>
+                                        <sp:RequireDerivedKeys/>
+                                        <sp:BootstrapPolicy>
+                                            <wsp:Policy>
+                                                    <sp:SymmetricBinding>
+                                                            <wsp:Policy>
+                                                                    <sp:ProtectionToken>
+                                                                            <wsp:Policy>
+                                                                                    <sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never">
+                                                                                            <wsp:Policy>
+                                                                                                    <sp:WssX509V3Token10/>
+                                                                                                        <sp:RequireIssuerSerialReference/>
+                                                                                                </wsp:Policy>
+                                                                                        </sp:X509Token>
+                                                                                </wsp:Policy>
+                                                                        </sp:ProtectionToken>
+                                                                        <sp:Layout>
+                                                                            <wsp:Policy>
+                                                                                    <sp:Lax/>
+                                                                                </wsp:Policy>
+                                                                        </sp:Layout>
+                                                                        <sp:IncludeTimestamp/>
+                                                                        <sp:OnlySignEntireHeadersAndBody/>
+                                                                        <sp:AlgorithmSuite>
+                                                                            <wsp:Policy>
+                                                                                    <sp:Basic128/>
+                                                                                </wsp:Policy>
+                                                                        </sp:AlgorithmSuite>
+                                                                </wsp:Policy>
+                                                        </sp:SymmetricBinding>
+                                                        <sp:EndorsingSupportingTokens>
+                                                            <wsp:Policy>
+                                                                    <sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+                                                                            <wsp:Policy>
+                                                                                    <sp:WssX509V3Token10/>
+                                                                                </wsp:Policy>
+                                                                        </sp:X509Token>
+                                                                </wsp:Policy>
+                                                        </sp:EndorsingSupportingTokens>
+                                                <sp:Wss11>
+                                                    <wsp:Policy>
+                                                            <sp:MustSupportRefIssuerSerial/>
+                                                                <sp:MustSupportRefThumbprint/>
+                                                                <sp:MustSupportRefEncryptedKey/>
+                                                        </wsp:Policy>
+                                                </sp:Wss11>
+                                                <sp:EncryptedParts>
+                                                    <sp:Body/>
+                                                </sp:EncryptedParts>
+                                                <sp:SignedParts>
+                                                    <sp:Body/>
+                                                    <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing"/>
+                                                    <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing"/>
+                                                    <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing"/>
+                                                    <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing"/>
+                                                    <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing"/>
+                                                    <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing"/>
+                                                    <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing"/>
+                                                    <sp:Header Name="AckRequested" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm/policy"/>
+                                                    <sp:Header Name="SequenceAcknowledgement" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm/policy"/>
+                                                    <sp:Header Name="Sequence" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm/policy"/>
+                                                    <sp:Header Name="CreateSequence" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm/policy"/>
+                                                </sp:SignedParts>
+                                            </wsp:Policy>
+                                        </sp:BootstrapPolicy>
+                                    </wsp:Policy>
+                                </sp:SecureConversationToken>
+                            </wsp:Policy>
+                        </sp:ProtectionToken>
+                        <sp:Layout>
+                            <wsp:Policy>
+                                <sp:Strict/>
+                            </wsp:Policy>
+                        </sp:Layout>
+                        <sp:AlgorithmSuite>
+                            <wsp:Policy>
+                                <sp:Basic128/>
+                            </wsp:Policy>
+                        </sp:AlgorithmSuite>
+                        <sp:IncludeTimestamp/>
+                        <sp:OnlySignEntireHeadersAndBody/>
+                    </wsp:Policy>
+                </sp:SymmetricBinding>
+                <sp:Wss11>
+                    <wsp:Policy>
+                        <sp:MustSupportRefIssuerSerial/>
+                        <sp:MustSupportRefThumbprint/>
+                        <sp:MustSupportRefEncryptedKey/>
+                    </wsp:Policy>
+                </sp:Wss11>
+                <sp:Trust10>
+                    <wsp:Policy>
+                        <sp:RequireClientEntropy/>
+                        <sp:RequireServerEntropy/>
+                        <sp:MustSupportIssuedTokens/>
+                    </wsp:Policy>
+                </sp:Trust10>
+            </wsp:All>
+        </wsp:ExactlyOne>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="NewWebServicePortBinding_sample_operation_Input_Policy">
+        <wsp:ExactlyOne>
+            <wsp:All>
+                <sp:EncryptedParts>
+                    <sp:Body/>
+                </sp:EncryptedParts>
+                <sp:SignedParts>
+                    <sp:Body/>
+                    <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing"/>
+                    <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing"/>
+                    <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing"/>
+                    <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing"/>
+                    <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing"/>
+                    <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing"/>
+                    <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing"/>
+                    <sp:Header Name="AckRequested" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm/policy"/>
+                    <sp:Header Name="SequenceAcknowledgement" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm/policy"/>
+                    <sp:Header Name="Sequence" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm/policy"/>
+                    <sp:Header Name="CreateSequence" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm/policy"/>
+                </sp:SignedParts>
+            </wsp:All>
+        </wsp:ExactlyOne>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="NewWebServicePortBinding_sample_operation_Output_Policy">
+        <wsp:ExactlyOne>
+            <wsp:All>
+                <sp:EncryptedParts>
+                    <sp:Body/>
+                </sp:EncryptedParts>
+                <sp:SignedParts>
+                    <sp:Body/>
+                    <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing"/>
+                    <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing"/>
+                    <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing"/>
+                    <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing"/>
+                    <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing"/>
+                    <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing"/>
+                    <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing"/>
+                    <sp:Header Name="AckRequested" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm/policy"/>
+                    <sp:Header Name="SequenceAcknowledgement" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm/policy"/>
+                    <sp:Header Name="Sequence" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm/policy"/>
+                    <sp:Header Name="CreateSequence" Namespace="http://schemas.xmlsoap.org/ws/2005/02/rm/policy"/>
+                </sp:SignedParts>
+            </wsp:All>
+        </wsp:ExactlyOne>
+    </wsp:Policy>
+</definitions>

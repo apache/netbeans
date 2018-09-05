@@ -1,0 +1,21 @@
+<?php
+
+namespace Foo\Bar;
+class ClassName {}
+
+namespace Fom\Bom;
+class ClassName {}
+
+namespace Baz\Bat;
+class ClassName {}
+
+namespace Omg;
+
+use Baz\Bat\ClassName as ClassName3;
+use Fom\Bom\ClassName;
+use Foo\Bar\ClassName as ClassName2;
+
+$a = new ClassName2();//HERE
+$b = new ClassName3();
+$b = new ClassName();
+?>

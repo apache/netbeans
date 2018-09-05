@@ -126,7 +126,7 @@ final class ModuleListParser {
                             while (tok2.hasMoreTokens()) {
                                 String module = tok2.nextToken();
                                 standardModules.add(module);
-                                doFastScan |= new File(root, module.replace('/', File.separatorChar)).equals(basedirF);
+                                // doFastScan |= new File(root, module.replace('/', File.separatorChar)).equals(basedirF);
                             }
                         }
                     }

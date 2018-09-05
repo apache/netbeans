@@ -1,0 +1,7 @@
+Code completion result for source line:
+class PrefixMatchPackageCaseInsensitive extends Ja| {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      JarURLConnection                           null
+CLASS      JavadocAssertionTestBuilder                null
+CLASS      JavadocAssertionTestSuite                  null

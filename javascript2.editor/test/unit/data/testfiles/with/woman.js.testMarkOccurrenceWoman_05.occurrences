@@ -1,0 +1,3 @@
+    |>MARK_OCCURRENCES:console<|.log(getFirstName());
+        |>MARK_OCCURRENCES:console<|.log(city);
+|>MARK_OCCURRENCES:conso^le<|.log(martin.address.city);

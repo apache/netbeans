@@ -1,0 +1,15 @@
+newObject:VARIABLE:[PUBLIC]:ESCAPED{newObject}<font color="#999999">ESCAPED{ : }SomeConstructor</font>:
+literal:CLASS:[PUBLIC]:ESCAPED{literal}:
+  field06:FIELD:[PUBLIC]:ESCAPED{field06}<font color="#999999">ESCAPED{ : }String</font>:
+  method03:METHOD:[PUBLIC]:ESCAPED{method03}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+SomeConstructor:CONSTRUCTOR:[PUBLIC]:ESCAPED{SomeConstructor}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }SomeConstructor</font>:
+  field01:FIELD:[PUBLIC]:ESCAPED{field01}<font color="#999999">ESCAPED{ : }String</font>:
+  field03:FIELD:[PUBLIC]:ESCAPED{field03}<font color="#999999">ESCAPED{ : }SomeConstructor.privateFn</font>:
+  field04:FIELD:[PUBLIC]:ESCAPED{field04}<font color="#999999">ESCAPED{ : }String</font>:
+  field05:FIELD:[PUBLIC]:ESCAPED{field05}<font color="#999999">ESCAPED{ : }String</font>:
+  method01:METHOD:[PROTECTED]:ESCAPED{method01}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  privateFn:CONSTRUCTOR:[PRIVATE]:ESCAPED{privateFn}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }SomeConstructor.privateFn</font>:
+    field02:FIELD:[PUBLIC]:ESCAPED{field02}<font color="#999999">ESCAPED{ : }String</font>:
+  prototype:CLASS:[PUBLIC]:ESCAPED{prototype}:
+    method02:METHOD:[PUBLIC]:ESCAPED{method02}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+representsGlobal:VARIABLE:[PUBLIC]:ESCAPED{representsGlobal}<font color="#999999">ESCAPED{ : }String</font>:

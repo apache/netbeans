@@ -1,0 +1,27 @@
+token #0 T_INLINE_HTML --TEST--\nHeredoc with double quotes\n--FILE--\n
+token #1 PHP_OPENTAG <?php
+token #2 WHITESPACE \n
+token #3 PHP_VARIABLE $test
+token #4 WHITESPACE  
+token #5 PHP_OPERATOR =
+token #6 WHITESPACE  
+token #7 PHP_CONSTANT_ENCAPSED_STRING "foo"
+token #8 PHP_SEMICOLON ;
+token #9 WHITESPACE \n
+token #10 PHP_VARIABLE $var
+token #11 WHITESPACE  
+token #12 PHP_OPERATOR =
+token #13 WHITESPACE  
+token #14 PHP_HEREDOC_TAG_START <<<"MYLABEL"\n
+token #15 PHP_ENCAPSED_AND_WHITESPACE test: 
+token #16 PHP_VARIABLE $test
+token #17 PHP_HEREDOC_TAG_END \nMYLABEL
+token #18 PHP_SEMICOLON ;
+token #19 WHITESPACE \n
+token #20 PHP_ECHO echo
+token #21 WHITESPACE  
+token #22 PHP_VARIABLE $var
+token #23 PHP_SEMICOLON ;
+token #24 WHITESPACE \n
+token #25 PHP_CLOSETAG ?>
+token #26 T_INLINE_HTML \n--EXPECT--\ntest: foo\n

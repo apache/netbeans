@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<script><meta n:if=1 /></script>
+
+{contentType application/xml; charset=utf-8}
+
+<ul>
+	<li>Escaped: {$hello}</li>
+	<li>Non-escaped: {$hello|noescape}</li>
+	<li>Escaped expression: {='<' . 'b' . '>hello' . '</b>'}</li>
+	<li>Non-escaped expression: {='<' . 'b' . '>hello' . '</b>'|noescape}</li>
+	<li>Array access: {$people[1]}</li>
+	<li>Html: {$el}</li>
+</ul>
+
+<style type="text/css">
+<!--
+#{$id} {
+	background: blue;
+}
+-->
+</style>
+
+
+<script>
+<!--
+var html = {$el};
+-->
+</script>
+
+
+<p onclick =
+'alert({$id});alert("hello");'
+ title='{$id}"'
+ style =
+ "color:{$id};'"
+ alt='{$el}'
+ onfocus="alert({$el})"
+>click on me</p>
+
+
+<!-- {$comment} -->
+
+
+</ul>
+
+
+<ul>
+	<li n:foreach="$people as $person">{$person}</li>
+</ul>
+
+<p n:if="true">
+	<div><p>true</div>
+</p>

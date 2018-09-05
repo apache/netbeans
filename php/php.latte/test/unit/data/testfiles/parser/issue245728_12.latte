@@ -1,0 +1,232 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ul>
+	<li>Escaped: {$hello}</li>
+	<li>Non-escaped: {$hello|noescape}</li>
+	<li>Escaped expression: {='<' . 'b' . '>hello' . '</b>'}</li>
+	<li>Non-escaped expression: {='<' . 'b' . '>hello' . '</b>'|noescape}</li>
+	<li>Array access: {$people[1]}</li>
+	<li>Html: {$el}</li>
+	<li>Translated: {_$people[1]}</li>
+	<li>Translated string: {_ahoj}</li>
+	<li>Non-escaped and translated: {_$people[1]|noescape}</li>
+	<li>Condition: {$hello ? yes} {=$hello ? yes}</li>
+	<li>Array: {$hello ? [a, b, c]|join} {=[a, b, $hello ? c]|join}</li>
+</ul>
+
+<input/> <input /> <input>
+
+<input checked> <input checked="checked">
+
+{ test} {"test} {'test}
+
+<p n:attr="title => $hello, lang => isset($lang) ? $lang"> </p>
+
+<p val = {if true}"a"{else}"b"{/if}> </p>
+
+<p val0 val1 = tmp val2=tmp val3="x"/> </p>
+
+<p val = {$xss} val2={$mxss}> </p>
+
+<p onclick = {$xss}> </p>
+
+<p ONCLICK ="{$xss}" {$xss}> </p>
+
+<p val = />{$xss}</p>
+
+{= (string) (bool) (float) (int) (array) 10}
+
+{if $hello}
+	{$hello}
+{elseif $any}
+	{$any}
+{else}
+	none
+{/}
+
+
+{foreach array(TRUE) as $foo}
+	{foreach $people as $person}
+	{if $iterator->isFirst()}<ul>{/if}
+	<li id="item-{$iterator->getCounter()}" class="{$iterator->isOdd() ? 'odd' : 'even'}">{$person}</li>
+	{if $iterator->isLast()}</ul>{/if}
+	{/foreach}
+{/foreach}
+
+
+
+<STYLE type="text/css">
+<!--
+#{$xss} {
+	background: blue;
+}
+-->
+</style>
+
+
+
+<script>
+<!--
+alert('</div>');
+
+var prop = {$people};
+
+document.getElementById({$xss}).style.backgroundColor = 'red';
+
+var html = {$el};
+-->
+</script>
+
+
+<SCRIPT>
+/* <![CDATA[ */
+
+var prop2 = {$people};
+
+/* ]]> */
+</script>
+
+
+<p onclick =
+'alert({$xss});alert("hello");'
+ title='{$xss}'
+ STYLE =
+ "color:{$xss};"
+ rel="{$xss}"
+ onblur="alert({$xss})"
+ alt='{$el}'
+ onfocus="alert({$el})"
+>click on me {$xss}</p>
+
+
+
+{var $counter = 0}
+{block #menu}
+<ul>
+	{foreach $menu as $item}
+	<li>{$counter++} {if is_array($item)} {include #this, 'menu' => $item} {else}{$item}{/if}</li>
+	{/foreach}
+</ul>
+{/block}
+
+
+{default $varx = 2}{$varx}
+{default varx => 4}{$varx}
+
+{var varx => 8}{$varx}
+{var $varx => 9}{$varx}
+
+{var $now = new DateTime}
+{var $foo = $now->format('u')}
+{default $foo = $now->format('u')}
+
+
+
+</ul>
+
+
+<ul title="foreach">
+	<li n:foreach="$people as $person">{$person}</li>
+</ul>
+
+<ul title="for">
+	<li n:for="$i=0;$i<3;$i++">{$i}</li>
+</ul>
+
+<ul title="white">
+	<li n:while="--$i>0">{$i}</li>
+</ul>
+
+<p n:if="true">
+	<div><p>true</div>
+</p>
+
+<p n:if="true">
+	<div><p>true</p></div>
+</p>
+
+<p n:if="false">
+	<div><p>false</div>
+</p>
+
+<p n:if="false">
+	<div><p>false</p></div>
+</p>
+
+<p n:if="strlen('{$xss}') > 5">noLatte</p>
+
+<ul title="if + foreach">
+	<li n:if="strlen($person)===4" n:foreach="$people as $person">{$person}</li>
+</ul>
+
+<ul title="if + inner-if + inner-foreach">
+	<li n:if="empty($iterator)" n:inner-if="strlen($person)===4" n:inner-foreach="$people as $person">{$person}</li>
+</ul>
+
+<ul title="inner-if + inner-foreach" n:inner-if="strlen($person)===4" n:inner-foreach="$people as $person">
+	<li>{$person|lower}</li>
+</ul>
+
+<ul title="block + if + foreach" n:block="#bl">
+	<li n:if="strlen($person)===4" n:foreach="$people as $person">{$person}</li>
+</ul>
+
+<b n:tag-if="true">bold</b> <b n:tag-if="false">normal</b>
+
+<b n:tag-if="true" n:class="first">bold</b>
+
+{?
+
+	echo 'test'
+
+}
+
+{l} {r}
+
+<p n:class="foo, (false ? first), odd, ($hello ? foo : bar)">n:class</p>
+
+<p n:class="false ? first">n:class empty</p>
+
+<meta>
+<meta n:if="true">
+<meta n:tag-if="true">
+<meta n:inner-if="true">
+<meta>
+
+{if}TRUE{/if TRUE}
+{if}FALSE{/if FALSE}
+{if}TRUE{else}FALSE{/if TRUE}
+
+{foreach [1,2,3] as $foo}
+	<b n:class="$iterator->even ? even">item</b>
+{/foreach}
+
+<p n:foreach="[1, 2, 3] as $foo" n:class="$iterator->even ? even">{$foo}</p>
+
+<span n:tag-if="0" n:if="1" n:inner-if="2" n:foreach="[0] as $foo" n:tag-foreach="[1] as $foo" n:inner-foreach="[2] as $foo">Hello</span>
+
+
+<ul title="foreach break">
+	<li n:foreach="$people as $person">{$person}{breakIf TRUE}</li>
+</ul>
+
+<ul title="foreach continue">
+	<li n:foreach="$people as $person">{$person}{continueIf TRUE}</li>
+</ul>
+
+
+<ul title="inner foreach break">
+	<li n:inner-foreach="$people as $person">{$person}{breakIf TRUE}</li>
+</ul>
+
+<ul title="inner foreach continue">
+	<li n:inner-foreach="$people as $person">{$person}{continueIf TRUE}</li>
+</ul>
+
+{switch 2}
+{case x}x
+{case 2}y
+{default}z
+{/switch}
+
+{="\n"|nl2br|noescape}

@@ -1,0 +1,3 @@
+<%-- any content can be specified here e.g.: --%>
+<%@ page pageEncoding="${encoding}" %>
+<h2><h:outputText value="Hello World!"/></h2>

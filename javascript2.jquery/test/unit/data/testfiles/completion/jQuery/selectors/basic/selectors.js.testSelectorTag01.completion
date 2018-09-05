@@ -1,0 +1,8 @@
+Code completion result for source line:
+$("ta|ble").css("border","3px solid red");
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CALL       :target                                    null
+TAG        table                                      null
+TAG        tan                                        null
+TAG        tanh                                       null

@@ -1,0 +1,4 @@
+Core:CLASS:[PUBLIC]:ESCAPED{Core}:
+  ItemsCache:CONSTRUCTOR:[PUBLIC]:ESCAPED{ItemsCache}ESCAPED{(}ESCAPED{par1}ESCAPED{)}<font color="#999999">ESCAPED{ : }Core.ItemsCache</font>:
+    par1:FIELD:[PUBLIC]:ESCAPED{par1}:
+    par2:CLASS:[PUBLIC]:ESCAPED{par2}:

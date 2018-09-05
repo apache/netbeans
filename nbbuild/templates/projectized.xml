@@ -172,7 +172,7 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         <property name="locmakenbm.brands" value="${brandings}"/>
         <!-- When requires.nb.javac property is true, prepend javac-api and javac-impl on bootclasspath to allow override the default annotation
              processing API located in rt.jar. -->
-        <property name="bootclasspath.prepend.nb" value="${nb_all}/libs.javacapi/external/nb-javac-9-api.jar${path.separator}${nb_all}/libs.javacimpl/external/nb-javac-9-impl.jar" />
+        <property name="bootclasspath.prepend.nb" value="${nb_all}/java/libs.javacapi/external/nb-javac-9-api.jar${path.separator}${nb_all}/java/libs.javacimpl/external/nb-javac-9-impl.jar" />
         <property name="bootclasspath.prepend.vanilla" value="${nb_all}/nbbuild/external/vanilla-javac-api.jar${path.separator}${nb_all}/nbbuild/external/vanilla-javac-impl.jar" />
         <condition property="bootclasspath.prepend" value="${bootclasspath.prepend.nb}">
             <istrue value="${requires.nb.javac.impl}"/>
@@ -266,7 +266,7 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         </condition>
     </target>
     <target name="-build-libs.junit4" depends="-check-for-libs.junit4" if="build.libs.junit4">
-        <ant dir="${nb_all}/libs.junit4" inheritall="false"/>
+        <ant dir="${nb_all}/platform/libs.junit4" inheritall="false"/>
     </target>
     <target name="test-lib-init" depends="init,-build-libs.junit4">
         <path id="test.unit.lib.cp"/>
@@ -492,7 +492,7 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
             <classpath>
                 <pathelement location="${nbantext.jar}"/>
                 <fileset dir="${nb_all}">
-                    <include name="javahelp/external/jhall*.jar"/>
+                    <include name="platform/javahelp/external/jhall*.jar"/>
                 </fileset>
                 <fileset dir="${netbeans.dest.dir}">
                     <include name="platform/modules/ext/jhall*.jar"/>
@@ -700,7 +700,7 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         <property name="sigtest.public.packages" value="${public.packages}"/>
         <property name="sigtest.fail.on.error" value="true"/>
         <taskdef name="sigtest" classname="org.netbeans.nbbuild.Sigtest" classpath="${nbantext.jar}"/>
-        <property name="sigtest.jar" location="${nb_all}/nbbuild/external/apitest.jar"/> 
+        <property name="sigtest.jar" location="${nb_all}/nbbuild/external/apitest-70.jar"/> 
         <loadproperties srcFile="${manifest.mf}" prefix="mf.">
             <filterchain>
                 <replaceregex pattern="[\n\r]+ ([^ ][^\n\r]*)"

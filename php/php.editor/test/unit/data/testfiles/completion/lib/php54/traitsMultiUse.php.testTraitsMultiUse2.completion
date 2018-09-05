@@ -1,0 +1,8 @@
+Code completion result for source line:
+$wmu->|publicFirstField;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     functionName()                  [PUBLIC]   WithMultiUses
+METHOD     publicFirstMethod()             [PUBLIC]   FirstTrait
+METHOD     publicSecondMethod()            [PUBLIC]   SecondTrait
+VARIABLE   ? publicFirstField              [PUBLIC]   FirstTrait
+VARIABLE   ? publicSecondField             [PUBLIC]   SecondTrait

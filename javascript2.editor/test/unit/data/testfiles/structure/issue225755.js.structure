@@ -1,0 +1,4 @@
+name1:CLASS:[PUBLIC]:ESCAPED{name1}:
+  name2:CLASS:[PUBLIC]:ESCAPED{name2}:
+    obj:CLASS:[PUBLIC]:ESCAPED{obj}:
+      x:FIELD:[PUBLIC]:ESCAPED{x}<font color="#999999">ESCAPED{ : }Number</font>:

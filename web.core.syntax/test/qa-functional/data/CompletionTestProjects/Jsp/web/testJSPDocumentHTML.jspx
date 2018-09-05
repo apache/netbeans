@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+
+    <jsp:directive.page contentType="text/html" pageEncoding="UTF-8"/>
+    
+    <jsp:element name="text">
+        <jsp:attribute name="lang">EN</jsp:attribute>
+        <jsp:body>
+
+<!-- completion for HTML tags -->
+<%--CC
+<h|
+html
+<html
+--%>
+
+<!-- completion for HTML attributes -->
+<%--CC
+<html |
+dir
+<html dir=""
+--%>
+
+<!-- completion for HTML values -->
+<%--CC
+<html dir="|
+rtl
+<html dir="rtl
+--%>
+
+<!-- completion for HTML entities -->
+|%--CC
+&|
+&quot;
+&quot;
+--%|
+
+<!-- completion + indentation for HTML end tags -->
+<%--CC
+<html></|
+/html
+<html></html>
+--%>
+
+        </jsp:body>
+    </jsp:element>
+</jsp:root>

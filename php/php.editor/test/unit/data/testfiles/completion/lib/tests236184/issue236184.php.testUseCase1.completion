@@ -1,0 +1,4 @@
+Code completion result for source line:
+$myCls->fnc("", new DateTime())->| // CC here
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     fnc($prm, DateTime $param)      [PUBLIC]   MyCls

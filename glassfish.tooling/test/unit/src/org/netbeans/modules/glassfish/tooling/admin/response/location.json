@@ -1,0 +1,13 @@
+{
+    "message": "\/home\/piotro\/software\/ogs\/glassfish3\/glassfish\/domains\/domain1",
+    "command": "__locations AdminCommand",
+    "exit_code": "SUCCESS",
+    "properties": {
+        "Instance-Root": "\/home\/piotro\/software\/ogs\/glassfish3\/glassfish\/domains\/domain1",
+        "Domain-Root": "\/home\/piotro\/software\/ogs\/glassfish3\/glassfish\/domains\/domain1",
+        "Uptime": "2561406",
+        "Base-Root": "\/home\/piotro\/software\/ogs\/glassfish3\/glassfish",
+        "Restart-Required": "false",
+        "Pid": "5744"
+    }
+}

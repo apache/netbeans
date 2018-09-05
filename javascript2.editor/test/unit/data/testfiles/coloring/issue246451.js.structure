@@ -1,0 +1,14 @@
+Synergy:CLASS:[PRIVATE]:ESCAPED{Synergy}:
+  control:CLASS:[PUBLIC]:ESCAPED{control}:
+    ArchiveDataFilter:CONSTRUCTOR:[PUBLIC]:ESCAPED{ArchiveDataFilter}ESCAPED{(}ESCAPED{allData}ESCAPED{)}<font color="#999999">ESCAPED{ : }Synergy.control.ArchiveDataFilter</font>:
+      allData:CLASS:[PUBLIC]:ESCAPED{allData}:
+        issues:FIELD:[PUBLIC]:ESCAPED{issues}<font color="#999999">ESCAPED{ : }Array</font>:
+      filteredAssignments:CLASS:[PRIVATE]:ESCAPED{filteredAssignments}:
+      issues:FIELD:[PUBLIC]:ESCAPED{issues}<font color="#999999">ESCAPED{ : }Array</font>:
+      self:VARIABLE:[PRIVATE]:ESCAPED{self}<font color="#999999">ESCAPED{ : }Synergy.control.ArchiveDataFilter</font>:
+test:CONSTRUCTOR:[PUBLIC]:ESCAPED{test}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }test</font>:
+  context:CLASS:[PUBLIC]:ESCAPED{context}:
+    data:FIELD:[PUBLIC]:ESCAPED{data}:
+    data2:FIELD:[PUBLIC]:ESCAPED{data2}<font color="#999999">ESCAPED{ : }Array</font>:
+  data:FIELD:[PUBLIC]:ESCAPED{data}<font color="#999999">ESCAPED{ : }Number</font>:
+  data2:FIELD:[PUBLIC]:ESCAPED{data2}<font color="#999999">ESCAPED{ : }Array</font>:

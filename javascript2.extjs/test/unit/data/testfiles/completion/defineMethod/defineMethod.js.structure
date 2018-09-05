@@ -1,0 +1,10 @@
+NetBeans:CLASS:[PUBLIC]:ESCAPED{NetBeans}:
+  stuff:CLASS:[PUBLIC]:ESCAPED{stuff}:
+    engineer:CLASS:[PUBLIC]:ESCAPED{engineer}:
+      developer:CLASS:[PUBLIC]:ESCAPED{developer}:
+        address:CLASS:[PUBLIC]:ESCAPED{address}:
+          city:FIELD:[PUBLIC]:ESCAPED{city}<font color="#999999">ESCAPED{ : }String</font>:
+          street:FIELD:[PUBLIC]:ESCAPED{street}<font color="#999999">ESCAPED{ : }String</font>:
+          zip:FIELD:[PUBLIC]:ESCAPED{zip}<font color="#999999">ESCAPED{ : }Number</font>:
+        name:FIELD:[PUBLIC]:ESCAPED{name}<font color="#999999">ESCAPED{ : }String</font>:
+        surname:FIELD:[PUBLIC]:ESCAPED{surname}<font color="#999999">ESCAPED{ : }String</font>:

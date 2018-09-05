@@ -1,0 +1,7 @@
+    use \Foo\Bar as |>MARK_OCCURRENCES:Omg<|;
+            (new |>MARK_OCCURRENCES:Omg<|\AliasedClassName())->bar();
+            new |>MARK_OCCURRENCES:O^mg<|\AliasedClassName();
+            |>MARK_OCCURRENCES:Omg<|\AliasedClassName::foo();
+            |>MARK_OCCURRENCES:Omg<|\AliasedClassName::FOO;
+            |>MARK_OCCURRENCES:Omg<|\AliasedClassName::$foo;
+            if ($x instanceof |>MARK_OCCURRENCES:Omg<|\AliasedClassName) {}

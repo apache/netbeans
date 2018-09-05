@@ -24,6 +24,12 @@
     <import file="../nbbuild/templates/projectized.xml"/>
 
     <target name="build-init" depends="projectized.build-init">
-        <unzip src="external/html.knockout-knockout-resources.zip" dest="."/>
+        <unzip src="external/knockout-2.2.1.jar" dest=".">
+            <patternset>
+                <include name="META-INF/resources/webjars/knockout/2.2.1/knockout.js"/>
+            </patternset>
+            <globmapper from="META-INF/resources/webjars/knockout/2.2.1/knockout.js" 
+                        to="test/unit/data/KOTestProject/public_html/js/libs/knockout-2.2.1/knockout-min.js"/>
+        </unzip>
     </target>
 </project>

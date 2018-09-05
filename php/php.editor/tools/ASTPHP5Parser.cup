@@ -1422,7 +1422,7 @@ T_CURLY_OPEN:token inner_statement_list:statementList T_CURLY_CLOSE:end
 	RESULT = expressionStatement;
 :}
 
-| T_UNSET:start T_OPEN_PARENTHESE unset_variables:list T_CLOSE_PARENTHESE:closePar T_SEMICOLON:end
+| T_UNSET:start T_OPEN_PARENTHESE unset_variables:list possible_comma T_CLOSE_PARENTHESE:closePar T_SEMICOLON:end
 {:
 	Identifier id = new Identifier(startleft, startright, "unset");
 	FunctionName functionName = new FunctionName(startleft, startright, id);
@@ -2262,7 +2262,7 @@ fully_qualified_class_name:className
 ;
 
 function_call_parameter_list ::=
-non_empty_function_call_parameter_list:paramsList
+non_empty_function_call_parameter_list:paramsList possible_comma
 {:
 	RESULT = paramsList;
 :}
@@ -4823,7 +4823,7 @@ string_st:string
 ;
 
 internal_functions_in_yacc ::=
-T_ISSET:start T_OPEN_PARENTHESE isset_variables:varList T_CLOSE_PARENTHESE:end
+T_ISSET:start T_OPEN_PARENTHESE isset_variables:varList possible_comma T_CLOSE_PARENTHESE:end
 {:
 	Identifier id = new Identifier(startleft, startright, "isset");
 	FunctionName name = new FunctionName(startleft, startright, id);

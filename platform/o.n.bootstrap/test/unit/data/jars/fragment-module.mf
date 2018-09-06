@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.foo.fragment
+OpenIDE-Module-Fragment-Host: org.foo.host
+OpenIDE-Module-Name: Fragment Content Module
+

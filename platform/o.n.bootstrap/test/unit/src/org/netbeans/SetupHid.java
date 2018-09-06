@@ -233,6 +233,9 @@ public abstract class SetupHid extends NbTestCase {
         createTestJAR("medium-manifest", null);
         createTestJAR("big-manifest", null);
         createTestJAR("patchable", null);
+        
+        createTestJAR("fragment-module", null);
+        createTestJAR("host-module", null);
         { // Make the patch JAR specially:
             File src = new File(data, "patch");
             String srcS = src.getAbsolutePath();

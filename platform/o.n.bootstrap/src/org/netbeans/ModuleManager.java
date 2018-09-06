@@ -902,7 +902,7 @@ public final class ModuleManager extends Modules {
             throw new IllegalStateException("Missing hosting module " + fragmentHost + " for fragment " + m.getCodeName());
         }
         if (!theHost.isEnabled()) {
-            return null;
+            throw new IllegalStateException("Host module for " + m.getCodeName() + " should have been enabled: " + theHost);
         }
         return theHost.getClassLoader();
     }
@@ -1066,6 +1066,8 @@ public final class ModuleManager extends Modules {
         modules.add(m);
         modulesByName.put(m.getCodeNameBase(), m);
         providersOf.possibleProviderAdded(m);
+        // must register module fragments early, to be enabled along with their hosts.
+        registerModuleFragment(m);
         
         lookup.add(m);
         firer.created(m);
@@ -1085,15 +1087,26 @@ public final class ModuleManager extends Modules {
      * 
      * @param m module to attach if it is a fragment
      */
-    private void attachModuleFragment(Module m) {
+    private Module attachModuleFragment(Module m) {
         String codeNameBase = m.getFragmentHostCodeName();
         if (codeNameBase == null) {
-            return;
+            return null;
+        }
+        Module host = modulesByName.get(codeNameBase);
+        if (host != null && host.isEnabled() && host.getClassLoader() != null) {
+            throw new IllegalStateException("Host module " + host + " was enabled before, will not accept fragment " + m);
+        }
+        return host;
+    }
+    
+    private boolean registerModuleFragment(Module m) {
+        String codeNameBase = m.getFragmentHostCodeName();
+        if (codeNameBase == null) {
+            return true;
         }
         Module host = modulesByName.get(codeNameBase);
         if (host != null && host.isEnabled()) {
-            Util.err.info("Module " + host.getCodeName() + " is already enabled");
-            return;
+            return false;
         }
         Collection<Module> frags = fragmentModules.get(codeNameBase);
         if (frags == null) {
@@ -1101,6 +1114,7 @@ public final class ModuleManager extends Modules {
             fragmentModules.put(codeNameBase, frags);
         }
         frags.add(m);
+        return true;
     }
     
     /**
@@ -1118,7 +1132,7 @@ public final class ModuleManager extends Modules {
             return;
         }
         Module hostMod = modulesByName.get(fragHost);
-        if (hostMod != null && hostMod.isEnabled()) {
+        if (hostMod != null && hostMod.isEnabled() && m.isEnabled()) {
             throw new IllegalStateException("Host module " + m.getCodeName() + " was loaded, cannot remove fragment");
         }
         Collection<Module> frags = fragmentModules.get(fragHost);
@@ -1670,7 +1684,10 @@ public final class ModuleManager extends Modules {
         }
         // need to register fragments eagerly, so they are available during
         // dependency sort
-        attachModuleFragment(m);
+        Module host = attachModuleFragment(m);
+        if (host != null && !host.isEnabled()) {
+            maybeAddToEnableList(willEnable, mightEnable, host, okToFail);
+        }
         // Also add anything it depends on, if not already there,
         // or already enabled.
         for (Dependency dep : m.getDependenciesArray()) {

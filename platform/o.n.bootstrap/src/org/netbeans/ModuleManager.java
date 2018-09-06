@@ -29,6 +29,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.security.AllPermission;
 import java.security.CodeSource;
@@ -50,11 +52,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
+import java.util.WeakHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.openide.modules.Dependency;
 import org.openide.modules.ModuleInfo;
 import org.openide.modules.Modules;
@@ -91,6 +93,12 @@ public final class ModuleManager extends Modules {
     private final Set<Module> modules = new HashSet<Module>(100);
     // the same, indexed by code name base
     private final Map<String,Module> modulesByName = new HashMap<String,Module>(100);
+    
+    /**
+     * Registers classloaders and module objects for bootstrap modules.
+     */
+    // @GuardedBy(this)
+    private final Map<ClassLoader, Collection<Reference<Module>>> bootstrapModules = new WeakHashMap<>();
 
     /**
      * Modules whose contents is injected into 
@@ -848,6 +856,23 @@ public final class ModuleManager extends Modules {
         Module m = moduleFactory.createFixed(mani, history, loader, autoload, eager, this, ev);
         ev.log(Events.FINISH_CREATE_BOOT_MODULE, history);
         subCreate(m);
+        synchronized (this) {
+            Collection<Reference<Module>> oldMods = bootstrapModules.get(loader);
+            Collection<Reference<Module>> mods;
+            if (oldMods == null) {
+                mods = new ArrayList<>();
+            } else {
+                mods = new ArrayList<>(oldMods);
+                for (Iterator<Reference<Module>> rit = mods.iterator(); rit.hasNext(); ) {
+                    Reference<Module> r = rit.next();
+                    if (r.get() == null) {
+                        rit.remove();
+                    }
+                }
+            }
+            mods.add(new WeakReference<>(m));
+            bootstrapModules.put(loader, mods);
+        }
         return m;
     }
 
@@ -906,11 +931,71 @@ public final class ModuleManager extends Modules {
             path.addAll(allJars);
         }
     }
-    
-    /** Use by OneModuleClassLoader to communicate with the ModuleInstaller re. masking. */
+
+    /** Use by OneModuleClassLoader to communicate with the ModuleInstaller re. masking. 
+     * @deprecated Use {@link #shouldDelegateResource(org.netbeans.Module, org.netbeans.Module, java.lang.String, java.lang.ClassLoader)}.
+     */
+    @Deprecated
     public boolean shouldDelegateResource(Module m, Module parent, String pkg) {
+        return shouldDelegateResource(m, parent, pkg, null);
+    }
+    
+    /**
+     * Determines if module `m' should delegate loading resources from package `p' to the
+     * `parent'. The parent is identified either by module specification (parent) or by a classloader
+     * which should load the package. For system or bootstrap classes, `parent' may be {@code null}, since
+     * boostrap classloaders load more modules together.
+     * <p/>
+     * If <b>both</b> `parent' and `ldr' are {@code null}, access to system/application classpath will be checked.
+     * 
+     * @param m module that attempts to load resources.
+     * @param parent parent classloader which may eventually load the resource, could be {@code null} to indicate bootstrap or system class
+     * @param pkg package (folder) with the resource
+     * @param ldr the classloader which should load the resource; may be {@code null}
+     * @return true, if the loading should be delegated to the classloader
+     * @since 2.80
+     */
+    public boolean shouldDelegateResource(Module m, Module parent, String pkg, ClassLoader ldr) {
         // Cf. #19621:
-        Module.PackageExport[] exports = (parent == null) ? null : parent.getPublicPackages();
+        Module.PackageExport[] exports;
+        if (parent != null) {
+            exports = parent.getPublicPackages();
+        } else if (ldr != null) {
+            Collection<Module> loaderMods = null;
+            synchronized (this) {
+                // create exports from modules for that classloader
+                Collection<Reference<Module>> refMods = bootstrapModules.get(ldr);
+                if (refMods != null) {
+                    loaderMods = new HashSet<>();
+                    for (Iterator<Reference<Module>> rmit = refMods.iterator(); rmit.hasNext(); ) {
+                        Reference<Module> refMod = rmit.next();
+                        Module mm = refMod.get();
+                        if (mm == null) {
+                            rmit.remove();
+                        } else {
+                            loaderMods.add(mm);
+                        }
+                    }
+                }
+            }
+            Set<String> cbn = new HashSet<>();
+            for (Dependency d : m.getDependenciesArray()) {
+                if (d.getType() == Dependency.TYPE_MODULE) {
+                    cbn.add(d.getName());
+                }
+            }
+            if (loaderMods != null) {
+                for (Module lm : loaderMods) {
+                    if (cbn.remove(lm.getCodeName()) && shouldDelegateResource(m, lm, pkg, ldr)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            exports = null;
+        } else {
+            exports = null;
+        }
         if (exports != null) {
             //Util.err.fine("exports=" + Arrays.asList(exports));
             // Packages from parent are restricted: #19621.

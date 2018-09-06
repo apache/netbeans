@@ -40,17 +40,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.DuplicateException;
 import org.netbeans.Events;
+import org.netbeans.JarClassLoader;
 import org.netbeans.JaveleonModule;
 import org.netbeans.Module;
 import org.netbeans.ModuleManager;
 import org.netbeans.Stamps;
-import org.netbeans.TopSecurityManager;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.ModuleInfo;
 import org.openide.modules.OnStop;
-import org.openide.modules.Places;
 import org.openide.util.Exceptions;
 import org.openide.util.Utilities;
 
@@ -176,54 +175,23 @@ public final class ModuleSystem {
         ev.log(Events.START_LOAD_BOOT_MODULES);
         try {
             bootModules = new HashSet<Module>(10);
-            ClassLoader loader = ModuleSystem.class.getClassLoader();
+            ClassLoader upperLoader = ModuleSystem.class.getClassLoader();
+            // wrap alien loader, so it can be used among parent loaders of module (instanceof ProxyClassLoader)
+            ClassLoader loader = new JarClassLoader(Collections.<File>emptyList(), new ClassLoader[] { Module.class.getClassLoader() });
+            
             Enumeration<URL> e = loader.getResources("META-INF/MANIFEST.MF"); // NOI18N
+            Enumeration<URL> upperE = upperLoader.getResources("META-INF/MANIFEST.MF"); // NOI18N
             ev.log(Events.PERF_TICK, "got all manifests"); // NOI18N
             
             // There will be duplicates: cf. #32576.
             Set<URL> checkedManifests = new HashSet<URL>();
-            MANIFESTS:
-            while (e.hasMoreElements()) {
-                URL manifestUrl = e.nextElement();
-                if (!checkedManifests.add(manifestUrl)) {
-                    // Already seen, ignore.
-                    continue;
-                }
-                URL jarURL = FileUtil.getArchiveFile(manifestUrl);
-                if (jarURL != null && jarURL.getProtocol().equals("file") &&
-                        /* #121777 */ jarURL.getPath().startsWith("/")) {
-                    LOG.log(Level.FINE, "Considering JAR: {0}", jarURL);
-                try {
-                        if (ignoredJars.contains(Utilities.toFile(jarURL.toURI()))) {
-                        LOG.log(Level.FINE, "ignoring JDK/JRE manifest: {0}", manifestUrl);
-                        continue MANIFESTS;
-                    }
-                } catch (URISyntaxException x) {
-                    Exceptions.printStackTrace(x);
-                }
-                }
-                LOG.log(Level.FINE, "Checking boot manifest: {0}", manifestUrl);
-                
-                InputStream is;
-                try {
-                    is = manifestUrl.openStream();
-                } catch (IOException ioe) {
-                    // Debugging for e.g. #32493 - which JAR was guilty?
-                    Exceptions.attachMessage(ioe, "URL: " + manifestUrl); // NOI18N
-                    throw ioe;
-                }
-                try {
-                    Manifest mani = new Manifest(is);
-                    Attributes attr = mani.getMainAttributes();
-                    if (attr.getValue("OpenIDE-Module") == null) { // NOI18N
-                        // Not a module.
-                        continue;
-                    }
-                    bootModules.add(mgr.createFixed(mani, manifestUrl, loader));
-                } finally {
-                    is.close();
-                }
-            }
+            
+            // process libs in 2 passes; first, process bootstrap libraries in platform/libs, creating
+            // FixedModules with a classloader that only loads from those libs.
+            // 2nd pass will process the remaining libraries, using this classloader.
+            createBootModules(e, checkedManifests, ignoredJars, loader);
+            createBootModules(upperE, checkedManifests, ignoredJars, upperLoader);
+
             if (list == null) {
                 // Plain calling us, we have to install now.
                 // Do it the simple way.
@@ -243,6 +211,60 @@ public final class ModuleSystem {
             // Not 100% accurate in this case:
             ev.log(Events.FINISH_LOAD_BOOT_MODULES);
             mgr.mutexPrivileged().exitWriteAccess();
+        }
+    }
+
+    /**
+     * Creates bootstrap (fixed) modules for the given manifests.
+     * 
+     * @param e manifest URLs.
+     * @param checkedManifests manifests already processed earlier
+     * @param ignoredJars JARs which should be ignored
+     * @param loader module classloader for the created modules
+     * 
+     * @throws IOException
+     * @throws DuplicateException 
+     */
+    private void createBootModules(Enumeration<URL> e, Set<URL> checkedManifests, Set<File> ignoredJars, ClassLoader loader) throws IOException, DuplicateException {
+        while (e.hasMoreElements()) {
+            URL manifestUrl = e.nextElement();
+            if (!checkedManifests.add(manifestUrl)) {
+                // Already seen, ignore.
+                continue;
+            }
+            URL jarURL = FileUtil.getArchiveFile(manifestUrl);
+            if (jarURL != null && jarURL.getProtocol().equals("file") &&
+                    /* #121777 */ jarURL.getPath().startsWith("/")) {
+                LOG.log(Level.FINE, "Considering JAR: {0}", jarURL);
+                try {
+                    if (ignoredJars.contains(Utilities.toFile(jarURL.toURI()))) {
+                        LOG.log(Level.FINE, "ignoring JDK/JRE manifest: {0}", manifestUrl);
+                        continue;
+                    }
+                } catch (URISyntaxException x) {
+                    Exceptions.printStackTrace(x);
+                }
+            }
+            LOG.log(Level.FINE, "Checking boot manifest: {0}", manifestUrl);
+            
+            InputStream is;
+            try {
+                is = manifestUrl.openStream();
+            } catch (IOException ioe) {
+                // Debugging for e.g. #32493 - which JAR was guilty?
+                throw Exceptions.attachMessage(ioe, "URL: " + manifestUrl); // NOI18N
+            }
+            try {
+                Manifest mani = new Manifest(is);
+                Attributes attr = mani.getMainAttributes();
+                if (attr.getValue("OpenIDE-Module") == null) { // NOI18N
+                    // Not a module.
+                    continue;
+                }
+                bootModules.add(mgr.createFixed(mani, manifestUrl, loader));
+            } finally {
+                is.close();
+            }
         }
     }
     

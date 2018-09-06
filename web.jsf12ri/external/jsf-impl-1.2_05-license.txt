@@ -1,7 +1,7 @@
-Name: Java Server Faces
+Name: Java Server Faces - Reference Implementation
 Version: 1.2_05
 License: CDDL-1.0
-Description: Java Server Faces
+Description: Java Server Faces - Reference Implementation
 Origin: http://java.sun.com/javaee/javaserverfaces/download.html
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0

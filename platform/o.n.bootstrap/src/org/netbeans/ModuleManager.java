@@ -953,7 +953,7 @@ public final class ModuleManager extends Modules {
      * @param pkg package (folder) with the resource
      * @param ldr the classloader which should load the resource; may be {@code null}
      * @return true, if the loading should be delegated to the classloader
-     * @since 
+     * @since 2.80
      */
     public boolean shouldDelegateResource(Module m, Module parent, String pkg, ClassLoader ldr) {
         // Cf. #19621:

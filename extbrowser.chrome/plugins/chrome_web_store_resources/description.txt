@@ -1,3 +1,5 @@
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.
+
 *** The NetBeans Connector is a Beta Release ***
 
 With the release of NetBeans 7.3 Beta comes a new feature for editing and interacting with HTML5, JavaScript, and CSS3 based applications.  This connector allows for tight integration with Google Chrome. 

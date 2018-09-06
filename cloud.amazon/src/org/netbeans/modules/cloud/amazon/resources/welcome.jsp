@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-
+<%-- 
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
     distributed with this work for additional information
@@ -8,9 +6,7 @@
     to you under the Apache License, Version 2.0 (the
     "License"); you may not use this file except in compliance
     with the License.  You may obtain a copy of the License at
-
       http://www.apache.org/licenses/LICENSE-2.0
-
     Unless required by applicable law or agreed to in writing,
     software distributed under the License is distributed on an
     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,18 +14,15 @@
     specific language governing permissions and limitations
     under the License.
 
--->
-<project basedir="." default="netbeans" name="cloud.amazon">
-    <description>Builds, tests, and runs the project org.netbeans.modules.cloud.amazon</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
-    <property name="resourcesdir" value="./src/org/netbeans/modules/cloud/amazon/resources/"/>
-
-    <war destfile = "${resourcesdir}/empty.war" webxml = "${resourcesdir}/web.xml">
-        <fileset dir="${resourcesdir}/">
-            <include name="welcome.jsp"/>
-        </fileset>
-        <classes dir="${resourcesdir}/">
-            <exclude name="**/*"/>
-        </classes>
-    </war>
-</project>
+--%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Welcome Page</title>
+    </head>
+    <body>
+       <h1>Welcome!!</h1>          .
+    </body>
+</html>

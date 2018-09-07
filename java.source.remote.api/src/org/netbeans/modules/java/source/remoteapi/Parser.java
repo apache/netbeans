@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.source.remote.api;
+package org.netbeans.modules.java.source.remoteapi;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -33,7 +33,6 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.Task;
-import org.netbeans.modules.java.source.remoteapi.SourceLevelQueryImpl;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -108,7 +107,7 @@ public class Parser {
             //caching...
             try {
                 EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
-                StyledDocument doc = ec.getDocument();
+                StyledDocument doc = ec != null ? ec.getDocument() : null;
                 String[] text = new String[1];
                 
                 if (doc != null) {

@@ -19,11 +19,21 @@
 package org.netbeans.modules.java.source.remote.api;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import javax.swing.event.ChangeListener;
-import org.junit.Test;
+import org.netbeans.api.java.source.CompilationController;
+import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.modules.java.source.remote.api.Parser.Config;
 import org.netbeans.modules.java.source.remoteapi.RemoteProvider;
 import org.netbeans.spi.java.queries.SourceLevelQueryImplementation2;
 import org.openide.filesystems.FileObject;
@@ -40,27 +50,89 @@ public class RemoteRunnerTest extends NbTestCase {
         super(name);
     }
 
+    private FileObject src;
+
     @Override
     protected void setUp() throws Exception {
-        RemoteProvider.extraClassPathElements = new File(TestRemoteResource.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+        RemoteProvider.extraClassPathElements = new File(TestRemoteParserTask.class.getProtectionDomain().getCodeSource().getLocation().toURI());
         super.setUp();
-    }
-    
-    @Test
-    public void testGetRemoteURL() throws Exception {
         clearWorkDir();
         File wd = getWorkDir();
         File userDir = new File(wd, "ud");
         System.setProperty("netbeans.user", userDir.getAbsolutePath());
         File root = new File(wd, "src");
-        File src  = new File(root, "Test.java");
-        assertTrue(src.getParentFile().mkdirs());
+        src = FileUtil.createData(new File(root, "Test.java"));
         TestUtilities.copyStringToFile(src, "public class Test { }");
-        RemoteRunner runner = RemoteRunner.create(FileUtil.toFileObject(src));
+    }
+    
+    public void testGetRemoteURL() throws Exception {
+        RemoteRunner runner = RemoteRunner.create(src);
         assertNotNull(runner);
-        String actual = runner.readAndDecode(Config.create(FileUtil.toFileObject(src)), "/test", String.class);
+        String actual = runner.readAndDecode(src, TestRemoteParserTask.class, String.class, 42).get();
         
-        assertEquals("good: Test/RELEASE_7", actual);
+        assertEquals("good: Test/RELEASE_7/42", actual);
+
+        actual = runner.readAndDecode(src, TestRemoteParserTask.class, String.class, 42).get();
+        
+        assertEquals("good: Test/RELEASE_7/42", actual);
+    }
+
+    public void testException() throws Exception {
+        RemoteRunner runner = RemoteRunner.create(src);
+        assertNotNull(runner);
+        
+        try {
+            runner.readAndDecode(src, ExceptionRemoteParserTask.class, String.class, null).get();
+            fail("Expected exception did not occur.");
+        } catch (ExecutionException ex) {
+            Throwable cause = ex.getCause();
+            assertTrue(cause.getClass().getName(), cause instanceof IOException);
+            cause = ex.getCause().getCause();
+            assertTrue(cause.getClass().getName(), cause instanceof IOException);
+            assertEquals("java.util.concurrent.ExecutionException:java.lang.IllegalStateException: expected", cause.getMessage());
+        }
+    }
+
+    public void testCancel() throws Exception {
+        RemoteRunner runner = RemoteRunner.create(src);
+        assertNotNull(runner);
+
+        Future<String> future1 = runner.readAndDecode(src, CancelRemoteParserTask.class, String.class, null);
+
+        assertNotNull(future1);
+
+        new Thread(() -> {
+            future1.cancel(true);
+        }).start();
+
+        try {
+            future1.get();
+            fail("Expected exception did not occur.");
+        } catch (CancellationException ex) {
+            //OK
+        }
+
+        ServerSocket ser = new ServerSocket(0, 1, InetAddress.getLoopbackAddress());
+        Future<String> future2 = runner.readAndDecode(src, DelayedCancelRemoteParserTask.class, String.class, ser.getLocalPort());
+
+        assertNotNull(future2);
+
+        ser.accept().close();
+
+        new Thread(() -> {
+            future2.cancel(true);
+        }).start();
+
+        try {
+            future2.get();
+            fail("Expected exception did not occur.");
+        } catch (CancellationException ex) {
+            //OK
+        }
+
+        String actual = runner.readAndDecode(src, TestRemoteParserTask.class, String.class, 42).get();
+        
+        assertEquals("good: Test/RELEASE_7/42", actual);
     }
 
     @Override
@@ -71,6 +143,7 @@ public class RemoteRunnerTest extends NbTestCase {
 
     static {
         System.setProperty("java.use.remote.platform", "true");
+        System.setProperty("jdk.home", System.getProperty("java.home")); //so that default JavaPlatform works
     }
     
     @ServiceProvider(service=SourceLevelQueryImplementation2.class, position=1)
@@ -95,4 +168,55 @@ public class RemoteRunnerTest extends NbTestCase {
         }
         
     }
+
+    @ServiceProvider(service=RemoteParserTask.class)
+    public static class TestRemoteParserTask implements RemoteParserTask<String, CompilationController, Integer> {
+
+        @Override
+        public Future<String> computeResult(CompilationController info, Integer param) throws IOException {
+            info.toPhase(JavaSource.Phase.RESOLVED);
+            CompletableFuture<String> cf = new CompletableFuture<>();
+
+            cf.complete("good: " + info.getTopLevelElements().get(0).getQualifiedName() + "/" + info.getSourceVersion() + "/" + param);
+            return cf;
+        }
+
+    }
+
+    @ServiceProvider(service=RemoteParserTask.class)
+    public static class ExceptionRemoteParserTask implements RemoteParserTask<String, CompilationController, Integer> {
+
+        @Override
+        public Future<String> computeResult(CompilationController info, Integer param) throws IOException {
+            CompletableFuture<String> cf = new CompletableFuture<>();
+
+            cf.completeExceptionally(new IllegalStateException("expected"));
+            return cf;
+        }
+
+    }
+
+    @ServiceProvider(service=RemoteParserTask.class)
+    public static class CancelRemoteParserTask implements RemoteParserTask<String, CompilationController, Integer> {
+
+        @Override
+        public Future<String> computeResult(CompilationController info, Integer param) throws IOException {
+            return new CompletableFuture<>();
+        }
+
+    }
+
+    @ServiceProvider(service=RemoteParserTask.class)
+    public static class DelayedCancelRemoteParserTask implements RemoteParserTask<String, CompilationController, Integer> {
+
+        @Override
+        public Future<String> computeResult(CompilationController info, Integer param) throws IOException {
+            Socket s = new Socket();
+            s.connect(new InetSocketAddress(InetAddress.getLoopbackAddress(), param));
+            s.close();
+            return new CompletableFuture<>();
+        }
+
+    }
+
 }

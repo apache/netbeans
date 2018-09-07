@@ -42,6 +42,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.editor.mimelookup</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.43</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.java.platform</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -183,63 +192,9 @@
                 <package>com.google.gson.annotations</package>
                 <package>com.google.gson.reflect</package>
                 <package>com.google.gson.stream</package>
-                <package>javax.ws.rs</package>
-                <package>javax.ws.rs.core</package>
-                <package>javax.ws.rs.ext</package>
                 <package>org.netbeans.modules.java.source.remote.api</package>
+                <package>org.netbeans.modules.java.source.remote.api.support</package>
             </public-packages>
-            <class-path-extension>
-                <runtime-relative-path>ext/jersey-common-2.26.jar</runtime-relative-path>
-                <binary-origin>external/jersey-common-2.26.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/jersey-server-2.26.jar</runtime-relative-path>
-                <binary-origin>external/jersey-server-2.26.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/jersey-client-2.26.jar</runtime-relative-path>
-                <binary-origin>external/jersey-client-2.26.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/javax.ws.rs-api-2.1.jar</runtime-relative-path>
-                <binary-origin>external/javax.ws.rs-api-2.1.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/jersey-container-jdk-http-2.26.jar</runtime-relative-path>
-                <binary-origin>external/jersey-container-jdk-http-2.26.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/jersey-hk2-2.26.jar</runtime-relative-path>
-                <binary-origin>external/jersey-hk2-2.26.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/javax.annotation-api-1.3.1.jar</runtime-relative-path>
-                <binary-origin>external/javax.annotation-api-1.3.1.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/javax.inject-2.5.0-b60.jar</runtime-relative-path>
-                <binary-origin>external/javax.inject-2.5.0-b60.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/hk2-api-2.5.0-b60.jar</runtime-relative-path>
-                <binary-origin>external/hk2-api-2.5.0-b60.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/hk2-core-2.5.0-b60.jar</runtime-relative-path>
-                <binary-origin>external/hk2-core-2.5.0-b60.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/hk2-locator-2.5.0-b60.jar</runtime-relative-path>
-                <binary-origin>external/hk2-locator-2.5.0-b60.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/hk2-utils-2.5.0-b60.jar</runtime-relative-path>
-                <binary-origin>external/hk2-utils-2.5.0-b60.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/validation-api-1.0.0.GA.jar</runtime-relative-path>
-                <binary-origin>external/validation-api-1.0.0.GA.jar</binary-origin>
-            </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/gson-2.8.2.jar</runtime-relative-path>
                 <binary-origin>external/gson-2.8.2.jar</binary-origin>

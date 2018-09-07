@@ -36,6 +36,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -62,17 +65,20 @@ import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.editor.NbEditorDocument;
 import org.netbeans.modules.editor.java.Utilities;
 import org.netbeans.modules.java.hints.friendapi.OverrideErrorMessage;
-import org.netbeans.modules.java.hints.infrastructure.ErrorHintsRemoteResource.EditShim;
-import org.netbeans.modules.java.hints.infrastructure.ErrorHintsRemoteResource.ErrorShim;
-import org.netbeans.modules.java.hints.infrastructure.ErrorHintsRemoteResource.FixShim;
+import org.netbeans.modules.java.hints.infrastructure.ErrorHintsRemoteParserTask.ApplyFix;
+import org.netbeans.modules.java.hints.infrastructure.ErrorHintsRemoteParserTask.EditShim;
+import org.netbeans.modules.java.hints.infrastructure.ErrorHintsRemoteParserTask.ErrorShim;
+import org.netbeans.modules.java.hints.infrastructure.ErrorHintsRemoteParserTask.Errors;
+import org.netbeans.modules.java.hints.infrastructure.ErrorHintsRemoteParserTask.FixShim;
+import org.netbeans.modules.java.hints.infrastructure.ErrorHintsRemoteParserTask.GetFixes;
 import org.netbeans.modules.java.hints.jdk.ConvertToDiamondBulkHint;
 import org.netbeans.modules.java.hints.jdk.ConvertToLambda;
 import org.netbeans.modules.java.hints.legacy.spi.RulesManager;
 import org.netbeans.modules.java.hints.spi.ErrorRule;
 import org.netbeans.modules.java.hints.spi.ErrorRule.Data;
 import org.netbeans.modules.java.source.parsing.Hacks;
-import org.netbeans.modules.java.source.remote.api.Parser.Config;
 import org.netbeans.modules.java.source.remote.api.RemoteRunner;
+import org.netbeans.modules.java.source.remote.api.support.CancelSupport;
 import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.Scheduler;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
@@ -711,18 +717,18 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
         return ex.getResult(soff, endOffset);
     }
     
-    private boolean cancel;
+    private final CancelSupport cancel = new CancelSupport();
     
-    synchronized boolean isCanceled() {
-        return cancel;
+    boolean isCanceled() {
+        return cancel.isCancelled();
     }
     
-    public synchronized void cancel() {
-        cancel = true;
+    public void cancel() {
+        cancel.cancel();
     }
     
     synchronized void resume() {
-        cancel = false;
+        cancel.resume();
     }
     
     @Override
@@ -753,21 +759,46 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
             RemoteRunner remote = RemoteRunner.create(info.getFileObject());
             
             if (remote != null) {
-                Config conf = Config.create(info);
-
                 errors = new ArrayList<>();
 
-                for (ErrorShim shim : remote.readAndDecode(conf, "/errors/get", ErrorShim[].class)) {
+                ErrorShim[] errorShims;
+
+                try {
+                    Future<ErrorShim[]> future = remote.readAndDecode(info, Errors.class, ErrorShim[].class, null);
+                    cancel.setFuture(future);
+                    errorShims = future.get();
+                } catch (CancellationException ex) {
+                    return ;
+                } catch (InterruptedException | ExecutionException ex) {
+                    Exceptions.printStackTrace(ex);
+                    return ;
+                } finally {
+                    cancel.setFuture(null);
+                }
+
+                for (ErrorShim shim : errorShims) {
                     LazyFixList fixes;
 
                     if (shim.probablyContainsFixes) {
                         int callbackId = shim.callbackId;
                         fixes = new CreatorBasedLazyFixListBase(info.getFileObject()) {
+                            private final CancelSupport cancel = new CancelSupport();
                             @Override
                             protected List<Fix> doCompute(CompilationInfo info, AtomicBoolean cancelled) {
                                 List<Fix> fixes = new ArrayList<>();
                                 try {
-                                    for (FixShim shim : remote.readAndDecode(conf, "/errors/fixes/get", FixShim[].class, "id=" + callbackId)) {
+                                    FixShim[] fixShims;
+                                    try {
+                                        Future<FixShim[]> fixFuture = remote.readAndDecode(info, GetFixes.class, FixShim[].class, callbackId);
+                                        cancel.setFuture(fixFuture);
+                                        fixShims = fixFuture.get();
+                                    } catch (InterruptedException | ExecutionException ex) {
+                                        Exceptions.printStackTrace(ex);
+                                        return fixes;
+                                    } finally {
+                                        cancel.setFuture(null);
+                                    }
+                                    for (FixShim shim : fixShims) {
                                         fixes.add(new Fix() {
                                             @Override
                                             public String getText() {
@@ -776,7 +807,7 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
                                             @Override
                                             public ChangeInfo implement() throws Exception {
                                                 try {
-                                                    EditShim[] edits = remote.readAndDecode(conf, "/errors/fixes/apply", EditShim[].class, "id=" + shim.callbackId);
+                                                    EditShim[] edits = remote.readAndDecode(info.getFileObject(), ApplyFix.class, EditShim[].class, shim.callbackId).get();
 
                                                     NbDocument.runAtomic((StyledDocument) doc, () -> {
                                                         try {
@@ -788,7 +819,7 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
                                                             Exceptions.printStackTrace(ex);
                                                         }
                                                     });
-                                                } catch (IOException ex) {
+                                                } catch (ExecutionException | IOException | InterruptedException ex) {
                                                     Exceptions.printStackTrace(ex);
                                                 }
 
@@ -800,6 +831,10 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
                                     Exceptions.printStackTrace(ex);
                                 }
                                 return fixes;
+                            }
+                            @Override
+                            public void cancel() {
+                                cancel.cancel();
                             }
                         };
                     } else {

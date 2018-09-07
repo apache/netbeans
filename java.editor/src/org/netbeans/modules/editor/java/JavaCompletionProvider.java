@@ -50,11 +50,11 @@ import org.netbeans.api.java.source.*;
 import org.netbeans.api.java.source.ui.ElementJavadoc;
 import org.netbeans.api.whitelist.WhiteListQuery;
 import org.netbeans.editor.ext.ToolTipSupport;
-import org.netbeans.modules.editor.java.CompletionRemoteResource.CompletionShim;
+import org.netbeans.modules.editor.java.CompletionRemoteParserTask.CompletionItemShim;
+import org.netbeans.modules.editor.java.CompletionRemoteParserTask.CompletionShim;
 import org.netbeans.modules.java.completion.JavaCompletionTask;
 import org.netbeans.modules.java.completion.JavaDocumentationTask;
 import org.netbeans.modules.java.completion.JavaTooltipTask;
-import org.netbeans.modules.java.source.remote.api.Parser;
 import org.netbeans.modules.java.source.remote.api.RemoteRunner;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.Source;
@@ -192,10 +192,9 @@ public class JavaCompletionProvider implements CompletionProvider {
             
                             if (remote != null) {
                                 WhiteListQuery.WhiteList whiteList = WhiteListQuery.getWhiteList(source.getFileObject());
-                                Parser.Config conf = Parser.Config.create(source.getFileObject());
-                                CompletionShim cs = remote.readAndDecode(conf, "/completion/compute", CompletionShim.class, "caretOffset=" + caretOffset);
+                                CompletionShim cs = remote.readAndDecode(source.getFileObject(), CompletionRemoteParserTask.Compute.class, CompletionShim.class, caretOffset).get();
                                 
-                                for (CompletionRemoteResource.CompletionItemShim cis : cs.completions) {
+                                for (CompletionItemShim cis : cs.completions) {
                                     resultSet.addItem(JavaCompletionItem.create(cis.content, whiteList));
                                 }
                             } else {

@@ -18,76 +18,64 @@
  */
 package org.netbeans.modules.java.editor.base.semantic;
 
-import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.java.editor.base.semantic.ColoringAttributes.Coloring;
-import org.netbeans.modules.java.source.remote.api.Parser;
-import org.netbeans.modules.java.source.remote.api.Parser.Config;
-import org.netbeans.modules.java.source.remote.api.ResourceRegistration;
+import org.netbeans.modules.java.editor.base.semantic.SemanticHighlighterRemoteParserTask.HighlightData;
+import org.netbeans.modules.java.source.remote.api.RemoteParserTask;
 import org.openide.cookies.EditorCookie;
 import org.openide.util.lookup.ServiceProvider;
 
-/** TODO: duplicates code in remoting!
+/**
  *
  * @author lahvac
  */
-@Path("/highlightData")
-public class SemanticHighlighterRemoteResource {
-    
-    @GET
-    public String highlightData(@QueryParam("parser-config") String config) throws IOException {
-        try {
-        Gson gson = new Gson();
-        Config conf = gson.fromJson(config, Config.class);
-        HighlightData highlights = Parser.runTask(conf, info -> colorTokens(info));
-        
-        return gson.toJson(highlights);
-        } catch (Throwable t) {
-            t.printStackTrace();
-            throw t;
-        }
-    }
+@ServiceProvider(service=RemoteParserTask.class)
+public class SemanticHighlighterRemoteParserTask implements RemoteParserTask<HighlightData, CompilationInfo, Void> {
 
-    static HighlightData colorTokens(CompilationInfo info) throws IOException, InterruptedException {
+    @Override
+    public Future<HighlightData> computeResult(CompilationInfo info, Void unused) throws IOException {
         SemanticHighlighterBase shb = new SemanticHighlighterBase() {
             @Override
             protected boolean process(CompilationInfo info, Document doc) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
         };
-        EditorCookie ec = info.getFileObject().getLookup().lookup(EditorCookie.class);
-        Map<Token, Coloring> semanticHighlights = new HashMap<>();
-        StyledDocument doc = ec.openDocument();
-        TokenSequence<?> ts = TokenHierarchy.get(doc).tokenSequence(); //XXX: embedding!
-        shb.doCompute(info, doc, new SemanticHighlighterBase.ErrorDescriptionSetter() {
-            @Override
-            public void setHighlights(Document doc, Collection<int[]> highlights) {
-                //TODO: ????
-            }
-            @Override
-            public void setColorings(Document doc, Map<Token, Coloring> colorings) {
-                semanticHighlights.putAll(colorings);
-            }
-        });
+        return new SynchronousFuture<HighlightData>(() -> {
+            EditorCookie ec = info.getFileObject().getLookup().lookup(EditorCookie.class);
+            Map<Token, Coloring> semanticHighlights = new HashMap<>();
+            StyledDocument doc = ec.openDocument();
+            TokenSequence<?> ts = TokenHierarchy.get(doc).tokenSequence(); //XXX: embedding!
+            shb.doCompute(info, doc, new SemanticHighlighterBase.ErrorDescriptionSetter() {
+                @Override
+                public void setHighlights(Document doc, Collection<int[]> highlights) {
+                    //TODO: ????
+                }
+                @Override
+                public void setColorings(Document doc, Map<Token, Coloring> colorings) {
+                    semanticHighlights.putAll(colorings);
+                }
+            });
 
-        return colorTokens(ts, semanticHighlights);
+            return colorTokens(ts, semanticHighlights);
+        }, () -> shb.cancel());
     }
 
-    static HighlightData colorTokens(TokenSequence<?> ts, Map<Token, Coloring> semanticHighlights) throws IOException, InterruptedException {
+    static HighlightData colorTokens(TokenSequence<?> ts, Map<Token, Coloring> semanticHighlights) throws IOException {
         List<Long> spans = new ArrayList<Long>(ts.tokenCount());
         List<String> cats  = new ArrayList<String>(ts.tokenCount());
         long currentOffset = 0;
@@ -124,13 +112,4 @@ public class SemanticHighlighterRemoteResource {
         }
     }
 
-    @ServiceProvider(service=ResourceRegistration.class)
-    public static final class RegistrationImpl implements ResourceRegistration {
-
-        @Override
-        public Class<?> getResourceClass() {
-            return SemanticHighlighterRemoteResource.class;
-        }
-        
-    }
 }

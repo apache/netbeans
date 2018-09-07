@@ -77,6 +77,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -86,7 +87,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.lang.model.element.Element;
@@ -109,8 +114,9 @@ import org.netbeans.api.lexer.TokenSequence;
 //import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.java.editor.base.imports.UnusedImports;
 import org.netbeans.modules.java.editor.base.semantic.ColoringAttributes.Coloring;
-import org.netbeans.modules.java.source.remote.api.Parser;
+import org.netbeans.modules.java.editor.base.semantic.SemanticHighlighterRemoteParserTask.HighlightData;
 import org.netbeans.modules.java.source.remote.api.RemoteRunner;
+import org.netbeans.modules.java.source.remote.api.support.CancelSupport;
 import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.Scheduler;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
@@ -125,7 +131,7 @@ import org.openide.util.Exceptions;
  */
 public abstract class SemanticHighlighterBase extends JavaParserResultTask {
     
-    private AtomicBoolean cancel = new AtomicBoolean();
+    private final CancelSupport cancel = new CancelSupport();
     
     protected SemanticHighlighterBase() {
         super(Phase.RESOLVED, TaskIndexingMode.ALLOWED_DURING_SCAN);
@@ -139,7 +145,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             return ;
         }
         
-        cancel.set(false);
+        cancel.resume();
         
         final Document doc = result.getSnapshot().getSource().getDocument(false);
         
@@ -166,7 +172,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
     
     @Override
     public void cancel() {
-        cancel.set(true);
+        cancel.cancel();
     }
     
 
@@ -274,30 +280,39 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
     protected boolean process(CompilationInfo info, final Document doc, ErrorDescriptionSetter setter) throws IOException {
         RemoteRunner remote = RemoteRunner.create(info.getFileObject());
         if (remote != null) {
-            Parser.Config conf = Parser.Config.create(info);
-            SemanticHighlighterRemoteResource.HighlightData remoteData = remote.readAndDecode(conf, "/highlightData", SemanticHighlighterRemoteResource.HighlightData.class);
-            Iterator<String> categoriesIt = remoteData.categories.iterator();
-            Map<Token, Coloring> newColoring = new IdentityHashMap<>();
-            doc.render(() -> {
-                TokenSequence<JavaTokenId> ts = TokenHierarchy.get(doc).tokenSequence(JavaTokenId.language()); //XXX: embedding
+            Future<HighlightData> futureRemoteData = remote.readAndDecode(info, SemanticHighlighterRemoteParserTask.class, SemanticHighlighterRemoteParserTask.HighlightData.class, null);
+            try {
+                cancel.setFuture(futureRemoteData);
+                HighlightData remoteData = futureRemoteData.get();
+                Iterator<String> categoriesIt = remoteData.categories.iterator();
+                Map<Token, Coloring> newColoring = new IdentityHashMap<>();
+                doc.render(() -> {
+                    TokenSequence<JavaTokenId> ts = TokenHierarchy.get(doc).tokenSequence(JavaTokenId.language()); //XXX: embedding
 
-                while (ts.moveNext() && categoriesIt.hasNext()) {
-                    String category = categoriesIt.next();
+                    while (ts.moveNext() && categoriesIt.hasNext()) {
+                        String category = categoriesIt.next();
 
-                    if (category.isEmpty())
-                        continue;
+                        if (category.isEmpty())
+                            continue;
 
-                    Coloring c = ColoringAttributes.empty();
+                        Coloring c = ColoringAttributes.empty();
 
-                    for (String key : category.split(" ")) {
-                        c = ColoringAttributes.add(c, ColoringAttributes.valueOf(key.toUpperCase(Locale.US)));
+                        for (String key : category.split(" ")) {
+                            c = ColoringAttributes.add(c, ColoringAttributes.valueOf(key.toUpperCase(Locale.US)));
+                        }
+
+                        newColoring.put(ts.token(), c);
                     }
+                });
 
-                    newColoring.put(ts.token(), c);
-                }
-            });
-
-            setter.setColorings(doc, newColoring);
+                setter.setColorings(doc, newColoring);
+            } catch (CancellationException ex) {
+                //OK
+            } catch (ExecutionException | InterruptedException ex) {
+                Exceptions.printStackTrace(ex);
+            } finally {
+                cancel.setFuture(null);
+            }
 
             return false;
         }
@@ -306,7 +321,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
     }
     
     boolean doCompute(CompilationInfo info, final Document doc, ErrorDescriptionSetter setter) throws IOException {
-        DetectorVisitor v = new DetectorVisitor(info, doc, cancel);
+        DetectorVisitor v = new DetectorVisitor(info, doc, cancel.getCancelBoolean());
         
         Map<Token, Coloring> newColoring = new IdentityHashMap<>();
 
@@ -314,7 +329,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         
         v.scan(cu, null);
         
-        if (cancel.get())
+        if (cancel.isCancelled())
             return true;
         
         boolean computeUnusedImports = "text/x-java".equals(FileUtil.getMIMEType(info.getFileObject()));
@@ -322,12 +337,12 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         List<int[]> imports = computeUnusedImports ? new ArrayList<int[]>() : null;
 
         if (computeUnusedImports) {
-            Collection<TreePath> unusedImports = UnusedImports.process(info, cancel);
+            Collection<TreePath> unusedImports = UnusedImports.process(info, cancel.getCancelBoolean());
 
             if (unusedImports == null) return true;
             
             for (TreePath tree : unusedImports) {
-                if (cancel.get()) {
+                if (cancel.isCancelled()) {
                     return true;
                 }
 
@@ -340,7 +355,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         }
         
         for (Element decl : v.type2Uses.keySet()) {
-            if (cancel.get())
+            if (cancel.isCancelled())
                 return true;
             
             List<Use> uses = v.type2Uses.get(decl);
@@ -386,7 +401,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             newColoring.put(kw, kwc);
         }
         
-        if (cancel.get())
+        if (cancel.isCancelled())
             return true;
         
         if (computeUnusedImports) {

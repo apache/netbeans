@@ -19,12 +19,11 @@
 package org.netbeans.modules.java.source.remoteapi;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -34,10 +33,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.modules.java.source.remote.api.RemoteRunner;
 
 import org.netbeans.modules.java.source.remoteapi.Server;
 import org.netbeans.modules.java.source.remote.spi.RemotePlatform;
@@ -59,7 +60,7 @@ public class RemoteProvider {
     @NbBundle.Messages({
         "CAP_StartingRemote=Starting Java editor support on target platform"
     })
-    public static URI getRemoteURL(FileObject source) {
+    public static RemoteRunner getRunner(FileObject source, BiFunction<DataInputStream, DataOutputStream, RemoteRunner> createRunner) {
         synchronized (platform2Remote) {
         RemotePlatform p = null;
 
@@ -79,7 +80,7 @@ public class RemoteProvider {
         RemoteProcessDescription desc = platform2Remote.get(p);
         
         if (desc != null) {
-            return desc.baseURI;
+            return desc.runner;
         }
 
         ProgressHandle h = ProgressHandle.createHandle(Bundle.CAP_StartingRemote());
@@ -103,7 +104,7 @@ public class RemoteProvider {
             ServerSocket ss = new ServerSocket(0);
             List<String> options = new ArrayList<>();
             options.add(p.getJavaCommand());
-//            options.add("-agentlib:jdwp=transport=dt_socket,suspend=n,server=y,address=8887");
+//            options.add("-agentlib:jdwp=transport=dt_socket,suspend=y,server=y,address=8887");
             options.addAll(p.getJavaArguments());
             options.add("-classpath"); options.add(jars.stream().map(f -> f.getAbsolutePath()).collect(Collectors.joining(System.getProperty("path.separator"))));
             options.add("--add-exports=jdk.javadoc/com.sun.tools.javadoc.main=ALL-UNNAMED");
@@ -113,14 +114,14 @@ public class RemoteProvider {
             options.add(userdir.getAbsolutePath());
             options.add(Places.getCacheDirectory().getAbsolutePath());
             Process process = new ProcessBuilder(options.toArray(new String[0])).inheritIO().start();
-            try (Socket s = ss.accept();
-                 InputStream in = s.getInputStream();
-                 DataInputStream dis = new DataInputStream(in)) {
-                desc = new RemoteProcessDescription(URI.create("http://localhost:" + dis.readInt() + "/"), process, p);
-            }
+            Socket endpoint = ss.accept();
+            DataInputStream input = new DataInputStream(endpoint.getInputStream());
+            DataOutputStream output = new DataOutputStream(endpoint.getOutputStream());
+
+            desc = new RemoteProcessDescription(process, p, createRunner.apply(input, output));
             
             platform2Remote.put(p, desc);
-            return desc.baseURI;
+            return desc.runner;
         } catch (NoSuchAlgorithmException | IOException | URISyntaxException ex) {
             throw new IllegalStateException(ex);
         } finally {
@@ -146,17 +147,17 @@ public class RemoteProvider {
 
 
     private static final class RemoteProcessDescription implements ChangeListener {
-        public final URI baseURI;
         public final Process process;
         public final RemotePlatform platform;
+        public final RemoteRunner runner;
 
-        public RemoteProcessDescription(URI baseURI,
-                                        Process process,
-                                        RemotePlatform platform) {
-            this.baseURI = baseURI;
+        public RemoteProcessDescription(Process process,
+                                        RemotePlatform platform,
+                                        RemoteRunner runner) throws IOException {
             this.process = process;
             this.platform = platform;
             this.platform.addChangeListener(this);
+            this.runner = runner;
         }
 
         @Override

@@ -79,19 +79,10 @@
                 <package>com.sun.faces.taglib.jsf_core</package>
                 <package>com.sun.faces.util</package>
                 <package>com.sun.faces.vendor</package>
-                <package>com.sun.org.apache.commons.beanutils</package>
-                <package>com.sun.org.apache.commons.beanutils.converters</package>
-                <package>com.sun.org.apache.commons.beanutils.locale</package>
-                <package>com.sun.org.apache.commons.beanutils.locale.converters</package>
-                <package>com.sun.org.apache.commons.collections</package>
-                <package>com.sun.org.apache.commons.collections.comparators</package>
-                <package>com.sun.org.apache.commons.collections.iterators</package>
-                <package>com.sun.org.apache.commons.digester</package>
-                <package>com.sun.org.apache.commons.digester.rss</package>
-                <package>com.sun.org.apache.commons.digester.xmlrules</package>
             </friend-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/jsf-1_2/jsf-impl.jar</runtime-relative-path>
+                <binary-origin>external/jsf-impl-1.2_05.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

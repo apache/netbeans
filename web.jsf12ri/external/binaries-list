@@ -15,5 +15,5 @@
 # specific language governing permissions and limitations
 # under the License.
 
-release.external/jsf-api-1.2_05.jar=modules/ext/jsf-1_2/jsf-api.jar
-spec.version.base=1.28.0
+909BD7A44E88905187DAE1E8B880486206C8893F javax.faces:jsf-impl:1.2_05
+

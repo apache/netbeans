@@ -46,6 +46,7 @@ import javax.swing.undo.UndoableEdit;
 import org.netbeans.lib.editor.util.AbstractCharSequence;
 import org.netbeans.lib.editor.util.CharSequenceUtilities;
 import org.netbeans.lib.editor.util.CompactMap;
+import org.openide.util.WeakListeners;
 
 /**
  * Various utility methods related to swing text documents.
@@ -966,6 +967,9 @@ public final class DocumentUtilities {
      * <p>Additionally, the list of document properties that clients can listen on
      * is not part of this contract.
      *
+     * <p>Note that this method does <em>not</em> work with {@code WeakListeners}.
+     * Use {@link #addWeakPropertyChangeListener} for that purpose.
+     *
      * @param doc The document to add the listener to.
      * @param l The listener to add to the document.
      *
@@ -991,5 +995,35 @@ public final class DocumentUtilities {
         if (pcs != null) {
             pcs.removePropertyChangeListener(l);
         }
+    }
+
+    /**
+     * Adds a weak <code>PropertyChangeListener</code> to a document.
+     *
+     * <p>In general, document properties are key-value pairs where both the key
+     * and the value can be any <code>Object</code>. Contrary to that <code>PropertyChangeListener</code>s
+     * can only handle named properties that can have an arbitrary value, but have <code>String</code> names.
+     * Therefore the listenera attached to a document will only ever recieve document
+     * properties, which keys are of <code>java.lang.String</code> type.
+     *
+     * <p>Additionally, the list of document properties that clients can listen on
+     * is not part of this contract.
+     *
+     * @param doc The document to add the listener to.
+     * @param listenerImplementation The listener to be added weakly to the document.
+     * @return the created weak listener - only the returned listener can be
+     * used with {@link #removePropertyChangeListener}. If the document does not
+     * support {@code PropertyChangeLister} {@code null} is returned.
+     *
+     * @since 1.68
+     */
+    public static PropertyChangeListener addWeakPropertyChangeListener(Document doc, PropertyChangeListener listenerImplementation) {
+        PropertyChangeSupport pcs = (PropertyChangeSupport) doc.getProperty(PropertyChangeSupport.class);
+        PropertyChangeListener weakListener = null;
+        if (pcs != null) {
+            weakListener = WeakListeners.propertyChange(listenerImplementation, pcs);
+            pcs.addPropertyChangeListener(weakListener);
+        }
+        return weakListener;
     }
 }

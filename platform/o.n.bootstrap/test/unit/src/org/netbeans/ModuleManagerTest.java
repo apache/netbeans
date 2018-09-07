@@ -2760,6 +2760,57 @@ public class ModuleManagerTest extends SetupHid {
         Module client = mgr.create(jar, null, false, false, false);
         assertEquals(1, client.getProblems().size());
     }
+    
+    public void testEnableFragmentBeforeItsHost() throws Exception {
+        MockModuleInstaller installer = new MockModuleInstaller();
+        MockEvents ev = new MockEvents();
+        ModuleManager mgr = new ModuleManager(installer, ev);
+        mgr.mutexPrivileged().enterWriteAccess();
+
+        // m1 autoload, m2 normal, m3 eager
+        Module m1 = mgr.create(new File(jars, "host-module.jar"), null, false, false, false);
+        Module m2 = mgr.create(new File(jars, "fragment-module.jar"), null, false, false, false);
+        List toEnable = mgr.simulateEnable(Collections.singleton(m2));
+        
+        assertTrue("Host will be enabled", toEnable.contains(m1));
+        assertTrue("Known fragment must be merged in", toEnable.contains(m2));
+        mgr.enable(new HashSet<>(toEnable));
+    }
+    
+    public void testEnableHostWithoutFragment() throws Exception {
+        MockModuleInstaller installer = new MockModuleInstaller();
+        MockEvents ev = new MockEvents();
+        ModuleManager mgr = new ModuleManager(installer, ev);
+        mgr.mutexPrivileged().enterWriteAccess();
+
+        // m1 autoload, m2 normal, m3 eager
+        Module m1 = mgr.create(new File(jars, "host-module.jar"), null, false, false, false);
+        Module m2 = mgr.create(new File(jars, "fragment-module.jar"), null, false, false, false);
+        List toEnable = mgr.simulateEnable(Collections.singleton(m2));
+        
+        assertTrue("Host will be enabled", toEnable.contains(m1));
+        assertTrue("Known fragment must be merged in", toEnable.contains(m2));
+        mgr.enable(new HashSet<>(toEnable));
+    }
+    
+    public void testInstallFragmentAfterHostEnabled() throws Exception {
+        MockModuleInstaller installer = new MockModuleInstaller();
+        MockEvents ev = new MockEvents();
+        ModuleManager mgr = new ModuleManager(installer, ev);
+        mgr.mutexPrivileged().enterWriteAccess();
+
+        // m1 autoload, m2 normal, m3 eager
+        Module m1 = mgr.create(new File(jars, "host-module.jar"), null, false, false, false);
+        mgr.enable(m1);
+
+        Module m2 = mgr.create(new File(jars, "fragment-module.jar"), null, false, false, false);
+        try {
+            mgr.simulateEnable(Collections.singleton(m2));
+            fail("Enabling fragment must fail if host is already live");
+        } catch (IllegalStateException ex) {
+            // ok
+        }
+    }
 
     private File copyJar(File file, String manifest) throws IOException {
         File ret = File.createTempFile(file.getName(), "2ndcopy", file.getParentFile());

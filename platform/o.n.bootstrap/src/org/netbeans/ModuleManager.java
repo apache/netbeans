@@ -551,6 +551,13 @@ public final class ModuleManager extends Modules {
         return mdc.getCnb(jar.getPath());
     }
 
+    final String fragmentFor(File jar) {
+        if (jar == null) {
+            return null;
+        }
+        return mdc.getFragment(jar.getPath());
+    }
+
     private Map<String, Set<Module>> getProvidersOf() {
         return providersOf.getProvidersOf();
     }
@@ -2286,6 +2293,7 @@ public final class ModuleManager extends Modules {
         private final Map<String,byte[]> path2Data;
         private final Map<String,Boolean> path2OSGi;
         private final Map<String,String> path2Cnb;
+        private final Map<String,String> path2Fragment;
         private final int moduleCount;
         private Set<String> toEnable;
         private List<String> willEnable;
@@ -2295,6 +2303,7 @@ public final class ModuleManager extends Modules {
             Map<String,byte[]> map = null;
             Map<String,Boolean> osgi = null;
             Map<String,String> cnbs = null;
+            Map<String,String> frags = null;
             Set<String> toEn = null;
             List<String> toWi = null;
             int cnt = -1;
@@ -2315,6 +2324,7 @@ public final class ModuleManager extends Modules {
                 map = new HashMap<String, byte[]>();
                 osgi = new HashMap<String, Boolean>();
                 cnbs = new HashMap<String, String>();
+                frags = new HashMap<String, String>();
                 cnt = dis.readInt();
                 for (;;) {
                     String path = Stamps.readRelativePath(dis).replace(otherChar, File.separatorChar);
@@ -2328,6 +2338,11 @@ public final class ModuleManager extends Modules {
                     byte[] data = new byte[len];
                     dis.readFully(data);
                     map.put(path, data);
+                    String fhost = dis.readUTF();
+                    if (fhost != null) {
+                        // retain empty Strings, as they count as "known data".
+                        frags.put(path, fhost);
+                    }
                 }
                 toEn = readCnbs(dis, new HashSet<String>());
                 toWi = readCnbs(dis, new ArrayList<String>());
@@ -2339,10 +2354,12 @@ public final class ModuleManager extends Modules {
                 cnbs = null;
                 toEn = null;
                 toWi = null;
+                frags = null;
             }
             path2Data = map;
             path2OSGi = osgi;
             path2Cnb = cnbs;
+            path2Fragment = frags;
             toEnable = toEn;
             willEnable = toWi;
             moduleCount = cnt;
@@ -2372,6 +2389,10 @@ public final class ModuleManager extends Modules {
             return path2Cnb == null ? null : path2Cnb.get(path);
         }
         
+        final String getFragment(String path) {
+            return path2Fragment == null ? null : path2Fragment.get(path);
+        }
+        
         @Override
         public void flushCaches(DataOutputStream os) throws IOException {
             os.writeUTF(Locale.getDefault().toString());
@@ -2397,6 +2418,9 @@ public final class ModuleManager extends Modules {
                 byte[] arr = data.toByteArray();
                 os.writeInt(arr.length);
                 os.write(arr);
+                
+                String s = m.getFragmentHostCodeName();
+                os.writeUTF(s == null ? "" : s);  // NOI18N
             }
             Stamps.writeRelativePath("", os);
             synchronized (this) {

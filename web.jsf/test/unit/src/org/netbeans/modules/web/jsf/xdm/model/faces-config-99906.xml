@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+
+<!DOCTYPE faces-config PUBLIC
+    "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
+    "http://java.sun.com/dtd/web-facesconfig_1_1.dtd">
+
+<!-- =========== FULL CONFIGURATION FILE ================================== -->
+
+<faces-config>
+    <!-- comment 1 -->
+    <navigation-rule>
+        <!-- comment 2 -->
+        <navigation-case>
+            <!-- comment 3 -->
+            <to-view-id>RealPage5.jsp</to-view-id>
+            <!-- comment 4 -->
+        </navigation-case>
+    </navigation-rule>
+    <!-- comment 6 -->
+</faces-config>

@@ -306,16 +306,7 @@ Participant Software against such Participant either
 unilaterally or pursuant to a written agreement with
 Participant.
 
-6.3. If You assert a patent infringement claim against
-Participant alleging that the Participant Software directly
-or indirectly infringes any patent where such claim is
-resolved (such as by license or settlement) prior to the
-initiation of patent infringement litigation, then the
-reasonable value of the licenses granted by such Participant
-under Sections 2.1 or 2.2 shall be taken into account in
-determining the amount or value of any payment or license.
-
-6.4. In the event of termination under Sections 6.1 or 6.2
+6.3. In the event of termination under Sections 6.1 or 6.2
 above, all end user licenses that have been validly granted
 by You or any distributor hereunder prior to termination
 (excluding licenses granted to You by any distributor)
@@ -329,7 +320,7 @@ INITIAL DEVELOPER, ANY OTHER CONTRIBUTOR, OR ANY DISTRIBUTOR OF
 COVERED SOFTWARE, OR ANY SUPPLIER OF ANY OF SUCH PARTIES, BE
 LIABLE TO ANY PERSON FOR ANY INDIRECT, SPECIAL, INCIDENTAL, OR
 CONSEQUENTIAL DAMAGES OF ANY CHARACTER INCLUDING, WITHOUT
-LIMITATION, DAMAGES FOR LOSS OF GOODWILL, WORK
+LIMITATION, DAMAGES FOR LOST PROFITS, LOSS OF GOODWILL, WORK
 STOPPAGE, COMPUTER FAILURE OR MALFUNCTION, OR ANY AND ALL OTHER
 COMMERCIAL DAMAGES OR LOSSES, EVEN IF SUCH PARTY SHALL HAVE BEEN
 INFORMED OF THE POSSIBILITY OF SUCH DAMAGES. THIS LIMITATION OF
@@ -345,7 +336,7 @@ APPLY TO YOU.
 The Covered Software is a "commercial item," as that term is
 defined in 48 C.F.R. 2.101 (Oct. 1995), consisting of "commercial
 computer software" (as that term is defined at 48 C.F.R.
-§ 252.227-7014(a)(1)) and "commercial computer software
+252.227-7014(a)(1)) and "commercial computer software
 documentation" as such terms are used in 48 C.F.R. 12.212 (Sept.
 1995). Consistent with 48 C.F.R. 12.212 and 48 C.F.R. 227.7202-1
 through 227.7202-4 (June 1995), all U.S. Government End Users
@@ -387,13 +378,3 @@ and You agree to work with Initial Developer and Contributors to
 distribute such responsibility on an equitable basis. Nothing
 herein is intended or shall be deemed to constitute any admission
 of liability.
-
-NOTICE PURSUANT TO SECTION 9 OF THE COMMON DEVELOPMENT AND
-DISTRIBUTION LICENSE (CDDL)
-
-The code released under the CDDL shall be governed by the laws
-of the State of California (excluding conflict-of-law provisions).
-Any litigation relating to this License shall be subject to the
-jurisdiction of the Federal Courts of the Northern District of
-California and the state courts of the State of California, with
-venue lying in Santa Clara County, California.

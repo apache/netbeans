@@ -1,0 +1,22 @@
+Code completion result for source line:
+ko.observableArray("Tom").|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     destroy(valueOrPredicate): und  [PUBLIC]   <font color=#999999>Knockout</font>
+METHOD     destroyAll(arrayOfValues): Arr  [PUBLIC]   <font color=#999999>Knockout</font>
+METHOD     extend(param)                   [PUBLIC]   <font color=#999999>Knockout</font>
+METHOD     indexOf(item)                   [PUBLIC]   <font color=#999999>Knockout</font>
+METHOD     peek()                          [PUBLIC]   <font color=#999999>Knockout</font>
+METHOD     pop()                           [PUBLIC]   <font color=#999999>Knockout</font>
+METHOD     push()                          [PUBLIC]   <font color=#999999>Knockout</font>
+METHOD     remove(valueOrPredicate): Arra  [PUBLIC]   <font color=#999999>Knockout</font>
+METHOD     removeAll(arrayOfValues): Arra  [PUBLIC]   <font color=#999999>Knockout</font>
+METHOD     replace(oldItem, newItem): und  [PUBLIC]   <font color=#999999>Knockout</font>
+METHOD     reverse()                       [PUBLIC]   <font color=#999999>Knockout</font>
+METHOD     shift()                         [PUBLIC]   <font color=#999999>Knockout</font>
+METHOD     slice(start, end)               [PUBLIC]   <font color=#999999>Knockout</font>
+METHOD     sort(comparefn)                 [PUBLIC]   <font color=#999999>Knockout</font>
+METHOD     splice(start, deleteCount)      [PUBLIC]   <font color=#999999>Knockout</font>
+METHOD     unshift()                       [PUBLIC]   <font color=#999999>Knockout</font>
+METHOD     valueHasMutated()               [PUBLIC]   <font color=#999999>Knockout</font>
+METHOD     valueWillMutate()               [PUBLIC]   <font color=#999999>Knockout</font>

@@ -43,14 +43,24 @@ Apache NetBeans is an open source development environment, tooling platform, and
 
 ### Building NetBeans
 
-Build the full project:
+Build the basic project (mainly, JavaSE features):
 ```
 $ ant
+```
+or
+```
+$ ant -Dcluster.config=basic
+```
+Build the full project (including Groovy, PHP, JavaEE/JakartaEE, and JavaScript features):
+```
+$ ant -Dcluster.confg=full
 ```
 Build the NetBeans Platform:
 ```
 $ ant -Dcluster.config=platform
 ```
+
+**Note:** You can also use `php`, `enterprise`, e.t.c. See the [cluster.properties](https://github.com/apache/incubator-netbeans/blob/master/nbbuild/cluster.properties) file.
 
 ### Running NetBeans
 
@@ -94,7 +104,8 @@ change of the file headers to Apache. But then the magic comes:
 ```bash
 $ git remote add emilian https://github.com/emilianbold/netbeans-releases.git
 $ git fetch emilian # this takes a while, the history is huge!
-$ git replace 6daa72c98 32042637
+$ git replace 6daa72c98 32042637 # the 1st donation
+$ git replace 6035076ee 32042637 # the 2nd donation
 ```
 
 When you search the log, or use the blame tool, the full history is available:

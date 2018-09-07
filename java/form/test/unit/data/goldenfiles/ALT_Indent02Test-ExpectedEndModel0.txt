@@ -1,0 +1,56 @@
+<LayoutModel>
+  <Root id="jPanel5">
+    <DimensionLayout dim="horizontal">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <Group type="sequential" attributes="0">
+              <EmptySpace min="20" pref="20" max="$pref" attributes="12"/>
+              <Group type="parallel" groupAlignment="leading" attributes="16">
+                  <Component id="jLabel22" alignment="leading" min="$pref" max="$pref" attributes="0"/>
+                  <Group type="sequential" attributes="0">
+                      <EmptySpace min="10" pref="10" max="$pref" attributes="0"/>
+                      <Group type="parallel" groupAlignment="leading" attributes="0">
+                          <Component id="jLabel23" alignment="leading" min="$pref" max="$pref" attributes="0"/>
+                          <Component id="jLabel27" alignment="leading" min="$pref" max="$pref" attributes="0"/>
+                          <Component id="jLabel20" alignment="leading" min="$pref" max="$pref" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="$pref" attributes="0"/>
+                      <Group type="parallel" groupAlignment="leading" attributes="0">
+                          <Component id="jComboBox9" alignment="leading" pref="230" max="Short.MAX_VALUE" attributes="0"/>
+                          <Component id="jComboBox11" alignment="leading" pref="230" max="Short.MAX_VALUE" attributes="0"/>
+                          <Component id="jComboBox13" alignment="leading" pref="230" max="Short.MAX_VALUE" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Component id="jLabel19" min="$pref" max="$pref" attributes="0"/>
+              </Group>
+              <EmptySpace max="$pref" attributes="16"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="vertical">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <Group type="sequential" alignment="leading" attributes="0">
+              <EmptySpace max="$pref" attributes="16"/>
+              <Component id="jLabel19" min="$pref" max="$pref" attributes="16"/>
+              <EmptySpace max="$pref" attributes="16"/>
+              <Group type="parallel" groupAlignment="baseline" attributes="16">
+                  <Component id="jComboBox9" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+                  <Component id="jLabel20" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+              </Group>
+              <EmptySpace min="$pref" pref="30" max="$pref" attributes="16"/>
+              <Component id="jLabel22" min="$pref" max="$pref" attributes="16"/>
+              <EmptySpace max="$pref" attributes="16"/>
+              <Group type="parallel" groupAlignment="baseline" attributes="16">
+                  <Component id="jLabel23" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+                  <Component id="jComboBox11" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+              </Group>
+              <EmptySpace max="$pref" attributes="16"/>
+              <Group type="parallel" groupAlignment="baseline" attributes="16">
+                  <Component id="jLabel27" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+                  <Component id="jComboBox13" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+              </Group>
+              <EmptySpace pref="155" max="Short.MAX_VALUE" attributes="12"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Root>
+</LayoutModel>

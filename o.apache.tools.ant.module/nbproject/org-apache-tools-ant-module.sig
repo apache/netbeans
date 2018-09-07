@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 3.79.1
+#Version 3.86.1
 
 CLSS public java.beans.FeatureDescriptor
 cons public init()
@@ -124,10 +124,17 @@ meth public void setConcealedProperties(java.util.Set<? extends java.lang.String
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public void setLogger(java.io.OutputStream)
  anno 0 java.lang.Deprecated()
+meth public void setPreferredName(java.lang.String)
+ anno 1 org.netbeans.api.annotations.common.NullAllowed()
 meth public void setProperties(java.util.Properties)
+meth public void setSaveAllDocuments(boolean)
+meth public void setTabReplaceStrategy(java.util.function.Predicate<java.lang.String>,java.util.function.Predicate<java.lang.String>)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+meth public void setUserAction(boolean)
 meth public void setVerbosity(int)
 supr java.lang.Object
-hfds concealedProperties,outputStream,properties,verbosity
+hfds canBeReplaced,canReplace,concealedProperties,outputStream,preferredName,properties,shouldSaveAllDocs,userAction,verbosity
 
 CLSS public abstract interface org.apache.tools.ant.module.api.ElementCookie
  anno 0 java.lang.Deprecated()

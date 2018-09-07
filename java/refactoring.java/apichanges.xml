@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+<apichanges>
+    <apidefs>
+        <apidef name="JavaRefactoringAPI">Java Refactoring API</apidef>
+    </apidefs>
+    <changes>
+        <change id="FilterDependency">
+            <api name="JavaRefactoringAPI"/>
+            <summary>Added BINARYFILE, DEPENDENCY, PLATFORM constants to JavaWhereUsedFilters.</summary>
+            <version major="1" minor="55"/>
+            <date day="27" month="6" year="2015"/>
+            <author login="ralphbenjamin"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    To support filtering of results from dependencies, the constants
+                    BINARYFILE, DEPENDENCY and PLATFORM are added to the enum
+                    JavaWhereUsedFilters.
+                </p>    
+            </description>
+            <class package="org.netbeans.modules.refactoring.java.spi" name="JavaWhereUsedFilters"/>
+            <issue number="252994"/>
+        </change>
+        <change id="FilterSourcePackages">
+            <api name="JavaRefactoringAPI"/>
+            <summary>Added SOURCEFILE constant to JavaWhereUsedFilters.</summary>
+            <version major="1" minor="54"/>
+            <date day="16" month="12" year="2014"/>
+            <author login="ralphbenjamin"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    To support filtering the opposite of test sources, the constant
+                    SOURCEFILE is added to the enum JavaWhereUsedFilters.
+                </p>    
+            </description>
+            <class package="org.netbeans.modules.refactoring.java.spi" name="JavaWhereUsedFilters"/>
+            <issue number="248250"/>
+        </change>
+        <change id="DocTrees">
+            <api name="JavaRefactoringAPI"/>
+            <summary>RefactoringVisitor has support for visiting DocTrees</summary>
+            <version major="1" minor="45"/>
+            <date day="2" month="5" year="2013"/>
+            <author login="ralphbenjamin"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    The RefactoringVisitor now implements DocTreeVisitor&lt;DocTree, Element&gt;.
+                </p>    
+            </description>
+            <class package="org.netbeans.modules.refactoring.java.spi" name="RefactoringVisitor"/>
+            <issue number="999999"/>
+        </change>
+        <change id="JavaWhereUsedSearchOverloaded">
+            <api name="JavaRefactoringAPI"/>
+            <summary>Added new constant to WhereUsedQueryConstants to search for usages of overloaded methods.</summary>
+            <version major="1" minor="45"/>
+            <date day="27" month="2" year="2013"/>
+            <author login="ralphbenjamin"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added new constant to WhereUsedQueryConstants to search for usages of overloaded methods.
+                </p>    
+            </description>
+            <class package="org.netbeans.modules.refactoring.java.api" name="WhereUsedQueryConstants"/>
+            <issue number="216534"/>
+        </change>
+        <change id="JavaWhereUsedFilters">
+            <api name="JavaRefactoringAPI"/>
+            <summary>Added refactoring filter keys for find usages results.</summary>
+            <version major="1" minor="39"/>
+            <date day="8" month="8" year="2012"/>
+            <author login="ralphbenjamin"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>Added an enumeration with keys to identify different filters used by Java Refactoring's Find Usages.</p>
+                <ul>
+                    <li>IMPORT("filter-import")</li>
+                    <li>COMMENT("filter-comment")</li>
+                    <li>TESTFILE("filter-testfile")</li>
+                    <li>READ("filter-read")</li>
+                    <li>WRITE("filter-write")</li>
+                    <li>READ_WRITE("filter-readwrite")</li>
+                </ul>
+            </description>
+            <class package="org.netbeans.modules.refactoring.java.spi"
+                   name="JavaWhereUsedFilters"/>
+            <issue number="215361"/>
+        </change>
+        <change id="ReplaceConstructorWithBuilder-ReplaceConstructorWithFactory-InvertBoolean">
+            <api name="JavaRefactoringAPI"/>
+            <summary>New refactorings on board: ReplaceConstructorWithFactory,
+                ReplaceConstructorWithBuilder and InvertBoolean
+            </summary>
+            <version major="1" minor="36"/>
+            <date day="29" month="3" year="2012"/>
+            <author login="jbecicka"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    New refactorings on board:
+                    ReplaceConstructorWithFactoryRefactoring,
+                    ReplaceConstructorWithBuilderRefactoring and InvertBooleanRefactoring.
+                </p>    
+            </description>
+            <class package="org.netbeans.modules.refactoring.java.api"
+                   name="ReplaceConstructorWithFactoryRefactoring"/>
+            <class package="org.netbeans.modules.refactoring.java.api"
+                   name="ReplaceConstructorWithBuilderRefactoring"/>
+            <class package="org.netbeans.modules.refactoring.java.api"
+                   name="InvertBooleanRefactoring"/>
+            <issue number="208240"/>
+        </change>
+        
+        <change id="IntroduceLocalExtension">
+            <api name="JavaRefactoringAPI"/>
+            <summary>Added support for Introduce Local Extension Refactoring.</summary>
+            <version major="1" minor="34"/>
+            <date day="8" month="2" year="2012"/>
+            <author login="ralphbenjamin"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added support for Introduce Local Extension Refactoring.
+                </p>    
+            </description>
+            <class package="org.netbeans.modules.refactoring.java.api" name="IntroduceLocalExtensionRefactoring"/>
+            <class package="org.netbeans.modules.refactoring.java.spi.ui" name="JavaActionsImplementationProvider"/>
+            <issue number="208164"/>
+        </change>
+        <change id="EncapsulateFieldRefactoring-PropertyChangeSupport">
+            <api name="JavaRefactoringAPI"/>
+            <summary>Added option to generate PropertyChangeSupport in EncapsulateFieldRefactoring.</summary>
+            <version major="1" minor="32"/>
+            <date day="8" month="12" year="2011"/>
+            <author login="jbecicka"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added option to generate PropertyChangeSupport in EncapsulateFieldRefactoring.
+                </p>    
+            </description>
+            <class package="org.netbeans.modules.refactoring.java.api" name="EncapsulateFieldRefactoring"/>
+            <issue number="205996"/>
+        </change>
+        <change id="JavaMoveMembersProperties">
+            <api name="JavaRefactoringAPI"/>
+            <summary>Added new Move Members Properties.</summary>
+            <version major="1" minor="31"/>
+            <date day="7" month="12" year="2011"/>
+            <author login="ralphbenjamin"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Add an api for the Java Move Members Properties.
+                </p>    
+            </description>
+            <class package="org.netbeans.modules.refactoring.java.api" name="JavaMoveMembersProperties"/>
+            <issue number="205696"/>
+        </change>
+        <change id="IntroduceParameterRefactoring">
+            <api name="JavaRefactoringAPI"/>
+            <summary>Added new refactoring and dependent change in ChangeParameterRefactoring.</summary>
+            <version major="1" minor="28"/>
+            <date day="29" month="8" year="2011"/>
+            <author login="ralphbenjamin"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Add an api for the introduce parameter refactoring. Also changed
+                    the Change Paramters refactoring to support the creation of
+                    compatible overloaded methods.
+                </p>    
+            </description>
+            <class package="org.netbeans.modules.refactoring.java.api" name="IntroduceParameterRefactoring"/>
+            <class package="org.netbeans.modules.refactoring.java.api" name="ChangeParametersRefactoring"/>
+            <issue number="201399"/>
+        </change>
+        <change id="JavaScopeBuilder">
+            <api name="JavaRefactoringAPI"/>
+            <summary>UI support for creating a new Scope.</summary>
+            <version major="1" minor="27"/>
+            <date day="17" month="8" year="2011"/>
+            <author login="ralphbenjamin"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    UI support for creating a new Scope. Opens a dialog to select
+                    different parts of open projects to include in the new scope.
+                </p>    
+            </description>
+            <class package="org.netbeans.modules.refactoring.java.api.ui" name="JavaScopeBuilder"/>
+            <issue number="200572"/>
+        </change>
+        <change id="ChangeParameters">
+            <api name="JavaRefactoringAPI"/>
+            <summary>Method name and return type added, to allow them to be changed from the refactoring.</summary>
+            <version major="1" minor="18"/>
+            <date day="19" month="7" year="2011"/>
+            <author login="ralphbenjamin"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    The Change Method Parameters refactoring should be changed to
+                    allow changing the method signature. The api needs to store the
+                    new name for the method, if the method needs to be renamed, and
+                    it needs to store the new return type, if the return type needs
+                    to be changed.
+                </p>    
+            </description>
+            <class package="org.netbeans.modules.refactoring.java.api" name="ChangeParametersRefactoring"/>
+            <issue number="200232"/>
+        </change>
+    </changes>
+    <htmlcontents>
+        <head>
+            <title>Change History for the Java Refactoring API</title>
+            <link rel="stylesheet" href="prose.css" type="text/css"/>
+        </head>
+        <body>
+            <p class="overviewlink">
+                <a href="overview-summary.html">Overview</a>
+            </p>
+            <h1>Introduction</h1>
+            <p>This document lists changes made to the Java Refactoring API.</p>
+            
+            <!-- The actual lists of changes, as summaries and details: -->
+            <hr/>
+            <standard-changelists module-code-name="$codebase"/>
+            
+            <hr/>
+            <p>@FOOTER@</p>
+        </body>
+    </htmlcontents>
+</apichanges>

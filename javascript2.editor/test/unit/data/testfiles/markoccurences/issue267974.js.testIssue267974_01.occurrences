@@ -1,0 +1,6 @@
+var |>MARK_OCCURRENCES:onreadystatec^hange<|;
+            |>MARK_OCCURRENCES:onreadystatechange<| = function() {
+                    |>MARK_OCCURRENCES:onreadystatechange<| = function () {console.log("true");};
+                    |>MARK_OCCURRENCES:onreadystatechange<| = function () {console.log("false");};
+|>MARK_OCCURRENCES:onreadystatechange<|();
+|>MARK_OCCURRENCES:onreadystatechange<|();

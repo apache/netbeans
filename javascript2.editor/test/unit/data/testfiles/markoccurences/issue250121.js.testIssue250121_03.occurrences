@@ -1,0 +1,2 @@
+ * @param {MyContext~Address} |>MARK_OCCURRENCES:add^ressDescription<|
+MyContext.prototype.createAddress = function (|>MARK_OCCURRENCES:addressDescription<|){};              

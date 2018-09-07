@@ -1,0 +1,50 @@
+<Program start='0' end='89'>
+    <Comments>
+    </Comments>
+    <Statements>
+        <FunctionDeclaration start='6' end='89' isReference='false'>
+            <Identifier start='15' end='16' name='f'/>
+            <FormalParameters>
+                <FormalParameter start='18' end='26' isMandatory='true' isVariadic='false'>
+                    <ParametrType>
+                    </ParametrType>
+                    <ParametrName>
+                        <Variable start='18' end='26' isDollared='true'>
+                            <Identifier start='19' end='26' name='request'/>
+                        </Variable>
+                    </ParametrName>
+                    <DefaultValue>
+                    </DefaultValue>
+                </FormalParameter>
+            </FormalParameters>
+            <Block start='27' end='89' isCurly='true'>
+                <ExpressionStatement start='33' end='52'>
+                    <Assignment start='33' end='51' operator='EQUAL'>
+                        <Variable start='33' end='40' isDollared='true'>
+                            <Identifier start='34' end='40' name='source'/>
+                        </Variable>
+                        <Variable start='43' end='51' isDollared='true'>
+                            <Identifier start='44' end='51' name='request'/>
+                        </Variable>
+                    </Assignment>
+                </ExpressionStatement>
+                <IfStatement start='57' end='88'>
+                    <Condition>
+                        <Variable start='61' end='63' isDollared='true'>
+                            <Identifier start='62' end='63' name='a'/>
+                        </Variable>
+                    </Condition>
+                    <Then>
+                        <Block start='65' end='88' isCurly='true'>
+                            <EchoStatement start='75' end='86'>
+                                <Scalar start='80' end='85' type='STRING' value='"yes"'/>
+                            </EchoStatement>
+                        </Block>
+                    </Then>
+                    <Else>
+                    </Else>
+                </IfStatement>
+            </Block>
+        </FunctionDeclaration>
+    </Statements>
+</Program>

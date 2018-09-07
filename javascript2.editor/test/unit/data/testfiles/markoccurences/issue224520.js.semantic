@@ -1,0 +1,17 @@
+function |>METHOD:diff<|(data) {
+    var |>LOCAL_VARIABLE_DECLARATION:offset<| = 0;
+    for (var |>LOCAL_VARIABLE_DECLARATION:i<| = 0; |>LOCAL_VARIABLE:i<| < |>GLOBAL:rows<|; |>LOCAL_VARIABLE:i<|++) {
+        var |>CLASS:team<| = data[|>LOCAL_VARIABLE:i<|+|>LOCAL_VARIABLE:offset<|]; // mark occurrences or rename|refactor team
+        if (team.|>FIELD:name<| === "Plugin Portal UC") {
+            if (|>LOCAL_VARIABLE:i<| + 1 < data.length) {
+                team = data[|>LOCAL_VARIABLE:i<| + 1];
+                |>LOCAL_VARIABLE:offset<| = |>LOCAL_VARIABLE:offset<|+1;
+            } else { // fallback
+                team = {
+                    "|>FIELD:name<|": "",
+                    "|>FIELD:bugSets<|": []
+                };
+            }
+        }
+    }
+}

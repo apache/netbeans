@@ -1,0 +1,7 @@
+<div n:foreach="$foo as $bar">
+    <div>
+        {if true}
+            {$var}
+        {/if}
+    </div>
+</div>

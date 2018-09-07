@@ -1,0 +1,630 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="general">Project API</apidef>
+        <!-- etc. -->
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+
+    <changes>
+        <change id="SourceGroupRelativeModifierImplementation">
+            <api name="general"/>
+            <summary>Added a <code>SourceGroupRelativeModifierImplementation</code> to improve source root creation</summary>
+            <version major="1" minor="68"/>
+            <date day="20" month="3" year="2017"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    In presence of multiple source roots, e.g. several source folders, or test folders, some of them may be more
+                    related to the 
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.support" name="LookupProviderSupport"/>
+            <issue number="253355"/>
+        </change>
+        <change id="SharabilityQueryMerger">
+            <api name="general"/>
+            <summary>Added a <code>LookupMerger</code> for <code>SharabilityQueryImplementation2</code></summary>
+            <version major="1" minor="64"/>
+            <date day="8" month="6" year="2015"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added a factory method into the <code>LookupProviderSupport</code> creating a
+                    <code>LookupMerger</code> for <code>SharabilityQueryImplementation2</code>.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.support" name="LookupProviderSupport"/>
+            <issue number="253355"/>
+        </change>
+        <change id="ProjectManagerImplementation">
+            <api name="general"/>
+            <summary>SPI interface for <code>ProjectManager</code></summary>
+            <version major="1" minor="59"/>
+            <date day="7" month="4" year="2014"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added a SPI internface for <code>ProjectManager</code> allowing
+                    different implementations of <code>ProjectManager</code>
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project" name="ProjectManagerImplementation"/>
+            <class package="org.netbeans.api.project" name="ProjectManager"/>
+            <issue number="210465"/>
+        </change>
+         <change id="ProjectManager.Result">
+            <api name="general"/>
+            <summary>More information in <code>ProjectManager.Result</code></summary>
+            <version major="1" minor="60"/>
+            <date day="30" month="4" year="2014"/>
+            <author login="tstupka"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                  Introduced <code>ProjectManager.Result.getDisplayName()</code> and <code>ProjectManager.Result.getProjectType()</code>
+                  to provide more information about a potential project via <code>ProjectManager.isProject2(FileObject)</code>.
+                </p>
+            </description>
+            <class package="org.netbeans.api.project" name="ProjectManager"/>
+            <issue number="244126"/>
+        </change>
+        <change id="DependencyProjectProvider">
+            <api name="general"/>
+            <summary></summary>
+            <version major="1" minor="56"/>
+            <date day="20" month="11" year="2013"/>
+            <author login="mkleint"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    Newly introduced interfaces <code>DependencyProjectProvider</code> and <code>ProjectContainerProvider</code> are meant as less general replacement for <code>SubprojectProvider</code>
+                    as they explicitly declaring their contract 
+                    (<code>DependencyProjectProvider</code> the project's dependency projects and <code>ProjectContainerProvider</code> projects that are build as part of this project). Code using <code>SubprojectProvider</code> currently
+                    should evaluate if <code>DependencyProjectProvider</code> or <code>ProjectContainerProvider</code> contracts suit their usage better. Please note that the new interfaces are not
+                    mandatory for project types to implement and if it's missing, <code>SubprojectProvider</code> should be used.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project" name="DependencyProjectProvider"/>
+            <class package="org.netbeans.spi.project" name="ProjectContainerProvider"/>
+            <class package="org.netbeans.api.project" name="ProjectUtils"/>
+            <issue number="210465"/>
+        </change>
+        
+        <change id="LookupProviderSupport.multi">
+            <api name="general"/>
+            <summary>New method createCompositeLookup(Lookup, Lookup) in LookupProviderSupport</summary>
+            <version major="1" minor="49"/>
+            <date day="26" month="9" year="2012"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Introducing method <code>LookupProviderSupport.createCompositeLookup(Lookup, Lookup)</code> which is a more freeform variant of 
+                    already existing method. The first parameter is expected to be the base lookup containing instances to be found in project lookup,
+                    the second parameter is a lookup containing just <code>LookupProvider</code>s.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.support" name="LookupProviderSupport"/>
+            <issue number="200711"/>
+        </change>
+        
+        <change id="FOQ.UNOWNED">
+            <api name="general"/>
+            <summary>New constant UNOWNED in FileOwnerQuery to mark a folder as definitely not owned by any project.</summary>
+            <version major="1" minor="46"/>
+            <date day="30" month="5" year="2012"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Introducing constant <code>FileOwnerQuery.UNOWNED</code>, a pseudoproject indicating just that a directory is definitely unowned. May
+                     be returned by either 
+                     <code>FileOwnerQueryImplementation.getOwner</code>, in which case null is returned from
+                     <code>FileOwnerQuery.getOwner</code>. May also be passed to either
+                    <code>FileOwnerQuery.markExternalOwner</code> overload, in which case the standard directory search will be pruned at this point with no result. 
+                </p>
+            </description>
+            <class package="org.netbeans.api.project" name="FileOwnerQuery"/>
+            <issue number="212015"/>
+        </change>
+        <change id="Profiler.Actions">
+            <api name="general"/>
+            <summary>Profiler actions are an integral part of the project infrastructure - just like the debugger actions</summary>
+            <version major="1" minor="44"/>
+            <date day="27" month="3" year="2011"/>
+            <author login="yardus"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    In order to be able to fully integrate the profiler with the project infrastructure
+                    it is necessary to add three new constants to 
+                    <code>ActionProvider</code> SPI for profiling a project, profiling a single file and
+                    profiling a test for single file. 
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project" name="ActionProvider"/>
+            <issue number="203519"/>
+        </change>
+        <change id="ActionProgress">
+            <api name="general"/>
+            <summary>Added <code>ActionProgress</code></summary>
+            <version major="1" minor="43"/>
+            <date year="2012" month="3" day="20"/>
+            <author login="jglick"/>
+            <compatibility addition="yes">
+                <p>
+                    <code>ActionProvider</code> implementations should call the
+                    new progress listener if possible.
+                </p>
+            </compatibility>
+            <description>
+                <p>
+                    A new callback was added permitting the invoker of a project
+                    action to be notified when the action completes.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project" name="ActionProgress"/>
+            <issue number="71515"/>
+        </change>
+
+        <change id="SourceGroup.contains.IAE">
+            <api name="general"/>
+            <summary><code>SourceGroup.contains</code> no longer throws <code>IllegalArgumentException</code></summary>
+            <version major="1" minor="40"/>
+            <date day="15" month="11" year="2011"/>
+            <author login="jglick"/>
+            <compatibility source="compatible" binary="incompatible" modification="yes">
+                <p>
+                    Implementations previously throwing this exception should just return false now instead.
+                    Callers previously catching the exception, or making a special effort to ensure the precondition, no longer need do so.
+                </p>
+            </compatibility>
+            <description>
+                <p>
+                    For convenience and safety, the <code>contains</code> method no longer throws an unchecked exception;
+                    it proved infeasible to ensure the precondition even in the face of projects
+                    being renamed or deleted or similar dynamic changes to directory structure.
+                </p>
+            </description>
+            <class package="org.netbeans.api.project" name="SourceGroup"/>
+            <issue number="204271"/>
+        </change>
+
+        <change id="ActionProviderMerger">
+            <api name="general"/>
+            <summary>Added <code>LookupProviderSupport.createActionProviderMerger</code> factory method</summary>
+            <version major="1" minor="38"/>
+            <date day="10" month="9" year="2011"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added <code>LookupProviderSupport.createActionProviderMerger</code> factory method to
+                    create a <code>LookupMerger</code> for merging multiple instances of <code>ActionProvider</code>
+                    in the project's <code>Lookup</code>.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.support" name="LookupProviderSupport"/>
+            <issue number="201737"/>
+        </change>
+
+        <change id="ProjectIconAnnotator">
+            <api name="general"/>
+            <summary>Added <code>ProjectIconAnnotator</code></summary>
+            <version major="1" minor="33"/>
+            <date day="24" month="6" year="2010"/>
+            <author login="jbecicka"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    A mechanism for changing the project node icon.
+                    You can use it for example to add a badge to the project's icon.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project" name="ProjectIconAnnotator"/>
+            <issue number="171516"/>
+        </change>
+
+        <change id="MoveOrRenameOperationImplementation">
+            <api name="general"/>
+            <summary>Added <code>MoveOrRenameOperationImplementation</code></summary>
+            <version major="1" minor="31"/>
+            <date day="15" month="4" year="2010"/>
+            <author login="jglick"/>
+            <compatibility addition="yes">
+                <p>
+                    Existing implementations of <code>MoveOperationImplementation</code>
+                    should be revised to implement the extended interface.
+                </p>
+            </compatibility>
+            <description>
+                <p>
+                    Extended interface giving projects the ability to implement
+                    a simple display name change more safely and efficiently.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project" name="MoveOrRenameOperationImplementation"/>
+            <issue number="183680"/>
+        </change>
+
+        <change id="ProjectUtils.getCacheDirectory">
+            <api name="general"/>
+            <summary>API complement to <code>CacheDirectoryProvider</code></summary>
+            <version major="1" minor="26"/>
+            <date day="21" month="7" year="2009"/>
+            <author login="jglick"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added <code>ProjectUtils.getCacheDirectory</code> to complement
+                    the SPI interface <code>CacheDirectoryProvider</code>.
+                </p>
+            </description>
+            <class package="org.netbeans.api.project" name="ProjectUtils"/>
+            <issue number="168414"/>
+        </change>
+
+        <change id="source-group-modifier">
+            <api name="general"/>
+            <summary>introduction of SourceGroupModifier, a way to create SourceGroup if missing</summary>
+            <version major="1" minor="24"/>
+            <date day="18" month="2" year="2009"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    <code>SourceGroupModifier</code> provides ways of create specific folders (<code>SourceGroup</code> root folders)
+                    in case they don't exist, eg. cannot be retrieved from <code>Sources</code>.
+                    The project supporting automated creation of SourceGroup root folders needs to
+                    provide <code>SourceGroupModifierImplementation</code> in the project's lookup.
+                </p>
+            </description>
+            <class package="org.netbeans.api.project" name="SourceGroupModifier"/>
+            <class package="org.netbeans.spi.project" name="SourceGroupModifierImplementation"/>
+            <issue number="102711"/>
+        </change>
+
+        <change id="projectfactory2">
+            <api name="general"/>
+            <summary>Provide project icon without actually loading the project</summary>
+            <version major="1" minor="22"/>
+            <date day="13" month="1" year="2009"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                <p>
+                  Introducing <code>ProjectFactory2</code> that extends <code>ProjectFactory</code>
+                  and return <code>ProjectManager.Result</code> instead of a simple boolean value.
+                  Also add <code>ProjectManager.isProject2(FileObject)</code> method that can be used by
+                  3rd party modules that need a fast (yet not 100% reliable) way of finding the project icon for a folder.
+                </p>
+            </description>
+            <class package="org.netbeans.api.project" name="ProjectManager"/>
+            <class package="org.netbeans.spi.project" name="ProjectFactory2"/>
+            <issue number="153923"/>
+        </change>
+
+        <change id="ProjectServiceProvider">
+            <api name="general"/>
+            <summary>Add annotations <code>@ProjectServiceProvider</code> and <code>@LookupMerger.Registration</code></summary>
+            <version major="1" minor="23"/>
+            <date day="23" month="1" year="2009"/>
+            <author login="jglick"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible">
+                <p>
+                    Implementations of <code>LookupProvider</code> should be converted wherever possible.
+                </p>
+            </compatibility>
+            <description>
+                <p>
+                  Added annotations to register entries to project lookup individually.
+                  These can be used instead of implementing a <code>LookupProvider</code>.
+                  Since the entries are loaded on demand, this can help avoid needless class loading.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project" name="ProjectServiceProvider"/>
+            <class package="org.netbeans.spi.project" name="LookupMerger"/>
+            <issue number="150194"/>
+        </change>
+        <change id="lookupprovider-ann">
+            <api name="general"/>
+            <summary>Add annotation @LookupProvider.Registration</summary>
+            <version major="1" minor="21"/>
+            <date day="13" month="11" year="2008"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                <p>
+                  Add annotation @LookupProvider.Registration to replace registration in layer files.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project" name="LookupProvider"/>
+            <issue number="152392"/>
+        </change>
+
+        <change id="test-single-method">
+            <api name="general"/>
+            <summary>Added class <code>SingleMethod</code></summary>
+            <version major="1" minor="19"/>
+            <date day="9" month="7" year="2008"/>
+            <author login="mpetras"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                <p>
+                    Added class <code>SingleMethod</code>,
+                    which represents identification of a single method/function
+                    in a file. The new class also contains new constants
+                    (<code>COMMAND_RUN_SINGLE_TEST_METHOD</code> and
+                    <code>COMMAND_DEBUG_SINGLE_TEST_METHOD</code>) corresponding
+                    to commands for running debugging test methods.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project" name="SingleMethod"/>
+            <issue number="137191"/>
+        </change>
+
+        <change id="ProjectUtils.getAuxiliaryConfiguration">
+            <api name="general"/>
+            <summary>Added <code>ProjectUtils.getAuxiliaryConfiguration</code></summary>
+            <version major="1" minor="17"/>
+            <date day="9" month="6" year="2008"/>
+            <author login="jglick"/>
+            <compatibility addition="yes">
+                <p>
+                    Modules which formerly looked for <code>AuxiliaryConfiguration</code>
+                    directly in project lookup are strongly encouraged to migrate to the
+                    new method instead.
+                </p>
+            </compatibility>
+            <description>
+                <p>
+                    A new API method was introduced to match the <code>AuxiliaryConfiguration</code>
+                    SPI interface. The change simplifies caller code, provides a path for future
+                    changes in the SPI, and allows project types to avoid providing an explicit
+                    implementation of this SPI if the fallback implementation suffices for their needs.
+                </p>
+            </description>
+            <class package="org.netbeans.api.project" name="ProjectUtils"/>
+            <issue number="136333"/>
+        </change>
+
+        <change id="projectutils-getPreferences">
+            <api name="general"/>
+            <summary>Added ProjectUtils.getPreferences.</summary>
+            <version major="1" minor="16"/>
+            <date day="9" month="6" year="2008"/>
+            <author login="jlahoda"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible">
+            </compatibility>
+            <description>
+	        <p>
+                    Added new API method <code>ProjectUtils.getPreferences</code> and new SPI interface <code>AuxiliaryProperties</code>.
+		</p>
+            </description>
+            <class package="org.netbeans.api.project" name="ProjectUtils"/>
+            <class package="org.netbeans.spi.project" name="AuxiliaryProperties"/>
+            <issue number="134580"/>
+        </change>
+        
+        <change id="lookup-provider">
+            <api name="general"/>
+            <summary>Added support for composing project's lookup from multiple sources.</summary>
+            <version major="1" minor="12"/>
+            <date day="5" month="10" year="2006"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible">
+            </compatibility>
+            <description>
+	        <p>
+                    Added interfaces and support classes that can be used to compose the project's lookup
+                    from multiple 3rd party sources. Framework for creating merged instances included. 
+                    <code>LookupMerger</code> implementation for <code>Sources</code> added.
+		</p>
+            </description>
+            <class package="org.netbeans.spi.project" name="LookupProvider"/>
+            <class package="org.netbeans.spi.project" name="LookupMerger"/>
+            <class package="org.netbeans.spi.project.support" name="LookupProviderSupport"/>
+            <issue number="83343"/>
+        </change>
+        
+        <change id="ProjectConfigurationProvider">
+            <api name="general"/>
+            <summary>Added support for project configurations</summary>
+            <version major="1" minor="11"/>
+            <date day="8" month="9" year="2006"/>
+            <author login="jglick"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added an interface <code>ProjectConfigurationProvider</code>
+                    which can be included in a project's lookup to support
+                    switchable configurations / profiles.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project" name="ProjectConfiguration"/>
+            <class package="org.netbeans.spi.project" name="ProjectConfigurationProvider"/>
+            <issue number="49652"/>
+        </change>
+
+        <change id="copy-move-support">
+            <api name="general"/>
+            <summary>Added support for project delete/copy/rename/move</summary>
+            <version major="1" minor="7"/>
+            <date day="22" month="8" year="2005"/>
+            <author login="jlahoda"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible">
+            </compatibility>
+            <description>
+	        <p>
+                    Introduced:
+                            New method <code>notifyDeleted</code> added to <code>ProjectState</code>.
+                            Interfaces DataFilesProviderImplementation, DeleteOperationImplementation, CopyOperationImplementation, MoveOperationImplementation has
+                            been added to support project delete/copy/rename/move.
+                            Support class ProjectOperations has been added to simplify operations on compound projects.
+		</p>
+            </description>
+            <issue number="61546"/>
+        </change>
+        
+        <change id="markExternal-for-file-and-URIs">
+            <api name="general"/>
+            <summary>The FileOwnerQuery.markExternalOwner allows registration of individal files and URIs</summary>
+            <version major="1" minor="5"/>
+            <date day="27" month="5" year="2005"/>
+            <author login="jlahoda"/>
+            <compatibility addition="yes" semantic="compatible" binary="compatible">
+                <p>
+                    This changes add a new method <code>FileOwnerQuery.markExternalOwner(URI, FileObject, int)</code>,
+                    and also extends sematics of the existing
+                    <code>FileOwnerQuery.markExternalOwner(FileObject, FileObject, int)</code> method to allow registration
+                    of individual files.
+                </p>
+            </compatibility>
+            <description>
+                <p>
+                    It is possible to register owner of an individual file using <code>FileOwnerQuery.markExternalOwner</code>.
+                    It is possible to register owner of a folder or file using URI, so the folder or file does not
+                    have to exist at the time of registration.
+                </p>
+            </description>
+            <issue number="58313"/>
+        </change>
+        
+        <change id="rel-vers-1">
+            <api name="general"/>
+            <summary>Switched to major release version 1</summary>
+            <version major="1" minor="3"/>
+            <date day="22" month="12" year="2004"/>
+            <author login="jglick"/>
+            <compatibility>
+                <p>
+                    Clients should begin requesting the new version to avoid a warning at startup.
+                </p>
+            </compatibility>
+            <description>
+                <p>
+                    To indicate that this is now considered a stable API, the major release version was
+                    incremented to 1 from 0.
+                </p>
+            </description>
+            <issue number="51468"/>
+        </change>
+
+    </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <==============
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE projects/projectapi/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the Project API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the <a href="@org-netbeans-modules-projectapi@/index.html">Project API</a>.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+      <hr/>
+      <standard-changelists module-code-name="org.netbeans.modules.projectapi/1"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

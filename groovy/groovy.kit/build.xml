@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project basedir="." default="build" name="groovy/groovy.kit">
+    <description>Builds, tests, and runs the project org.netbeans.modules.groovy.kit</description>
+    <import file="../../nbbuild/templates/projectized.xml"/>
+
+    <target name="groovy-build" description="Builds all the modules constituting the Groovy/Grails support">
+        <ant dir="../groovy.support" inheritAll="false" target="netbeans"/>
+        <ant dir="../groovy.editor" inheritAll="false" target="netbeans"/>
+        <ant dir="../groovy.grails" inheritAll="false" target="netbeans"/>
+        <ant dir="../groovy.grailsproject" inheritAll="false" target="netbeans"/>
+        <ant dir="../groovy.gsp" inheritAll="false" target="netbeans"/>
+    </target>
+
+    <target name="groovy-clean" description="Cleans all the modules constituting the Groovy/Grails support">
+        <ant dir="../groovy.gsp" inheritAll="false" target="clean"/>
+        <ant dir="../groovy.grailsproject" inheritAll="false" target="clean"/>
+        <ant dir="../groovy.grails" inheritAll="false" target="clean"/>
+        <ant dir="../groovy.editor" inheritAll="false" target="clean"/>
+        <ant dir="../groovy.support" inheritAll="false" target="clean"/>
+    </target>
+
+    <target name="groovy-nbm" description="Creates nbm archives for all Groovy/Grails modules">
+        <ant dir="../groovy.support" inheritAll="false" target="nbm"/>
+        <ant dir="../groovy.editor" inheritAll="false" target="nbm"/>
+        <ant dir="../groovy.grails" inheritAll="false" target="nbm"/>
+        <ant dir="../groovy.grailsproject" inheritAll="false" target="nbm"/>
+        <ant dir="../groovy.gsp" inheritAll="false" target="nbm"/>
+        <move todir="." flatten="true">
+            <fileset dir="..">
+                <include name="groovy.*/**/*.nbm"/>
+            </fileset>
+        </move>
+    </target>
+
+</project>

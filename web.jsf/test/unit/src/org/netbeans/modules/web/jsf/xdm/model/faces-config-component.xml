@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!-- =========== FULL CONFIGURATION FILE ================================== -->
+
+<faces-config version="1.2" 
+              xmlns="http://java.sun.com/xml/ns/javaee" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd">
+              
+     <component>
+     	<component-type>type</component-type>
+     	<component-class>class</component-class>
+     	<facet>
+     		<facet-name>facet1</facet-name>
+     	</facet>
+     	<facet>
+     		<facet-name>facet2</facet-name>
+    	</facet>
+    	<attribute>
+    		<attribute-name>attr1</attribute-name>
+    		<attribute-class></attribute-class>
+    	</attribute>
+    	<attribute>
+    		<attribute-name>attr2</attribute-name>
+    		<attribute-class></attribute-class>
+    	</attribute>
+    	<property>
+    		<property-name>prop1</property-name>
+    		<property-class></property-class>
+    	</property>
+     </component>
+              
+</faces-config>

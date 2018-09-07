@@ -1,0 +1,6 @@
+Code completion result for source line:
+println TestSamePack|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      TestSamePackage1                           null
+CLASS      TestSamePackage2                           null

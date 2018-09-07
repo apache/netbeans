@@ -1,0 +1,2 @@
+var Polygon = class |>MARK_OCCURRENCES:Polygon2<| {
+        var p = new |>MARK_OCCURRENCES:Polygo^n2<|(1,2);

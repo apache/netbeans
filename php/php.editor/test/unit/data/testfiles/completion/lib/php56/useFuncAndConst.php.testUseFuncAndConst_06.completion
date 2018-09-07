@@ -1,0 +1,5 @@
+Code completion result for source line:
+use const Name\Space\F|OO as FOO2;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   FOO 42                          [PUBLIC]   Name\Space
+CONSTANT   FOO 42                          [PUBLIC]   Name\Space

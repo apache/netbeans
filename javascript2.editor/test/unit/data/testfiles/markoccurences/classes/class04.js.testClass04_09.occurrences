@@ -1,0 +1,2 @@
+    constructor(|>MARK_OCCURRENCES:x<|, y) {
+        this.x = |>MARK_OCCURRENCES:x^<|;

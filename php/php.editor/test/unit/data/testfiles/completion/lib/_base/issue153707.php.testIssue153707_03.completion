@@ -1,0 +1,4 @@
+Code completion result for source line:
+echo "class property: $thi|s->name\n";
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+KEYWORD    Book $this->                               null

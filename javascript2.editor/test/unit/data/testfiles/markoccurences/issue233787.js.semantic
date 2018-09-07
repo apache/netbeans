@@ -1,0 +1,15 @@
+var |>GLOBAL:ondra<| = {
+    |>CLASS:address<| : {
+        |>FIELD:city<|: "Prague",
+        |>FIELD:street<|: "",
+        |>FIELD:zip<|: "15000"
+    } 
+};
+
+var |>GLOBAL:address<| = {
+    |>FIELD:street<|: "haha",
+    |>FIELD:state<| : "cr"
+};
+
+|>GLOBAL:ondra<|.address.|>FIELD:street<| = "Piseckeho";
+|>GLOBAL:console<|.log(|>GLOBAL:address<|.|>FIELD:street<|);

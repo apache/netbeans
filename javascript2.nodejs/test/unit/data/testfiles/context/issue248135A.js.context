@@ -1,0 +1,13 @@
+[GLOBAL]   
+ v[UNKNOWN]ar  e =[AFTER_ASSIGNMENT] require[UNKNOWN]('[MODULE_PATH]fs'[UNKNOWN]);[GLOBAL]
+
+f[UNKNOWN]unction name(parameters) {[GLOBAL]
+    i[UNKNOWN]f (a) {[GLOBAL]
+        require[UNKNOWN]('[MODULE_PATH]ddd'[UNKNOWN]);[GLOBAL]
+        
+    }
+}
+
+
+
+

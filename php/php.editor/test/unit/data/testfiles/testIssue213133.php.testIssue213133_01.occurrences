@@ -1,0 +1,3 @@
+class |>MARK_OCCURRENCES:Te^st<| {
+echo $test->{|>MARK_OCCURRENCES:Test<|::$CHECK};
+echo |>MARK_OCCURRENCES:Test<|::$CHECK;

@@ -1,0 +1,7 @@
+foo:CLASS:[PUBLIC]:ESCAPED{foo}:
+  bar:METHOD:[PUBLIC]:ESCAPED{bar}ESCAPED{(}ESCAPED{name}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+cube:VARIABLE:[PUBLIC]:ESCAPED{cube}<font color="#999999">ESCAPED{ : }Cube</font>:
+test:METHOD:[PUBLIC]:ESCAPED{test}ESCAPED{(}ESCAPED{name}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+Cube:CONSTRUCTOR:[PUBLIC]:ESCAPED{Cube}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Cube</font>:
+  prototype:CLASS:[PUBLIC]:ESCAPED{prototype}:
+    foo:METHOD:[PUBLIC]:ESCAPED{foo}ESCAPED{(}ESCAPED{name}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:

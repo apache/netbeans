@@ -1,0 +1,201 @@
+token #0 T_INLINE_HTML --TEST--\nTest nowdoc and line numbering\n--FILE--\n
+token #1 PHP_OPENTAG <?php
+token #2 WHITESPACE \n
+token #3 PHP_FUNCTION function
+token #4 WHITESPACE  
+token #5 PHP_STRING error_handler
+token #6 PHP_TOKEN (
+token #7 PHP_VARIABLE $num
+token #8 PHP_TOKEN ,
+token #9 WHITESPACE  
+token #10 PHP_VARIABLE $msg
+token #11 PHP_TOKEN ,
+token #12 WHITESPACE  
+token #13 PHP_VARIABLE $file
+token #14 PHP_TOKEN ,
+token #15 WHITESPACE  
+token #16 PHP_VARIABLE $line
+token #17 PHP_TOKEN ,
+token #18 WHITESPACE  
+token #19 PHP_VARIABLE $vars
+token #20 PHP_TOKEN )
+token #21 WHITESPACE  
+token #22 PHP_CURLY_OPEN {
+token #23 WHITESPACE \n\t
+token #24 PHP_ECHO echo
+token #25 WHITESPACE  
+token #26 PHP_VARIABLE $line
+token #27 PHP_TOKEN ,
+token #28 PHP_CONSTANT_ENCAPSED_STRING "\n"
+token #29 PHP_SEMICOLON ;
+token #30 WHITESPACE \n
+token #31 PHP_CURLY_CLOSE }
+token #32 WHITESPACE \n
+token #33 PHP_STRING set_error_handler
+token #34 PHP_TOKEN (
+token #35 PHP_CONSTANT_ENCAPSED_STRING 'error_handler'
+token #36 PHP_TOKEN )
+token #37 PHP_SEMICOLON ;
+token #38 WHITESPACE \n
+token #39 PHP_STRING trigger_error
+token #40 PHP_TOKEN (
+token #41 PHP_CONSTANT_ENCAPSED_STRING "line"
+token #42 PHP_TOKEN ,
+token #43 WHITESPACE  
+token #44 PHP_STRING E_USER_ERROR
+token #45 PHP_TOKEN )
+token #46 PHP_SEMICOLON ;
+token #47 WHITESPACE \n
+token #48 PHP_VARIABLE $x
+token #49 WHITESPACE  
+token #50 PHP_OPERATOR =
+token #51 WHITESPACE  
+token #52 PHP_HEREDOC_TAG_START <<<EOF\n
+token #53 PHP_HEREDOC_TAG_END EOF
+token #54 PHP_SEMICOLON ;
+token #55 WHITESPACE \n
+token #56 PHP_STRING var_dump
+token #57 PHP_TOKEN (
+token #58 PHP_VARIABLE $x
+token #59 PHP_TOKEN )
+token #60 PHP_SEMICOLON ;
+token #61 WHITESPACE \n
+token #62 PHP_STRING trigger_error
+token #63 PHP_TOKEN (
+token #64 PHP_CONSTANT_ENCAPSED_STRING "line"
+token #65 PHP_TOKEN ,
+token #66 WHITESPACE  
+token #67 PHP_STRING E_USER_ERROR
+token #68 PHP_TOKEN )
+token #69 PHP_SEMICOLON ;
+token #70 WHITESPACE \n
+token #71 PHP_VARIABLE $x
+token #72 WHITESPACE  
+token #73 PHP_OPERATOR =
+token #74 WHITESPACE  
+token #75 PHP_NOWDOC_TAG_START <<<'EOF'\n
+token #76 PHP_NOWDOC_TAG_END EOF;\n
+token #77 PHP_STRING var_dump
+token #78 PHP_TOKEN (
+token #79 PHP_VARIABLE $x
+token #80 PHP_TOKEN )
+token #81 PHP_SEMICOLON ;
+token #82 WHITESPACE \n
+token #83 PHP_STRING trigger_error
+token #84 PHP_TOKEN (
+token #85 PHP_CONSTANT_ENCAPSED_STRING "line"
+token #86 PHP_TOKEN ,
+token #87 WHITESPACE  
+token #88 PHP_STRING E_USER_ERROR
+token #89 PHP_TOKEN )
+token #90 PHP_SEMICOLON ;
+token #91 WHITESPACE \n
+token #92 PHP_VARIABLE $x
+token #93 WHITESPACE  
+token #94 PHP_OPERATOR =
+token #95 WHITESPACE  
+token #96 PHP_HEREDOC_TAG_START <<<EOF\n
+token #97 PHP_CONSTANT_ENCAPSED_STRING test
+token #98 PHP_HEREDOC_TAG_END \nEOF
+token #99 PHP_SEMICOLON ;
+token #100 WHITESPACE \n
+token #101 PHP_STRING var_dump
+token #102 PHP_TOKEN (
+token #103 PHP_VARIABLE $x
+token #104 PHP_TOKEN )
+token #105 PHP_SEMICOLON ;
+token #106 WHITESPACE \n
+token #107 PHP_STRING trigger_error
+token #108 PHP_TOKEN (
+token #109 PHP_CONSTANT_ENCAPSED_STRING "line"
+token #110 PHP_TOKEN ,
+token #111 WHITESPACE  
+token #112 PHP_STRING E_USER_ERROR
+token #113 PHP_TOKEN )
+token #114 PHP_SEMICOLON ;
+token #115 WHITESPACE \n
+token #116 PHP_VARIABLE $x
+token #117 WHITESPACE  
+token #118 PHP_OPERATOR =
+token #119 WHITESPACE  
+token #120 PHP_NOWDOC_TAG_START <<<'EOF'\n
+token #121 PHP_CONSTANT_ENCAPSED_STRING test\n
+token #122 PHP_NOWDOC_TAG_END EOF;\n
+token #123 PHP_STRING var_dump
+token #124 PHP_TOKEN (
+token #125 PHP_VARIABLE $x
+token #126 PHP_TOKEN )
+token #127 PHP_SEMICOLON ;
+token #128 WHITESPACE \n
+token #129 PHP_STRING trigger_error
+token #130 PHP_TOKEN (
+token #131 PHP_CONSTANT_ENCAPSED_STRING "line"
+token #132 PHP_TOKEN ,
+token #133 WHITESPACE  
+token #134 PHP_STRING E_USER_ERROR
+token #135 PHP_TOKEN )
+token #136 PHP_SEMICOLON ;
+token #137 WHITESPACE \n
+token #138 PHP_VARIABLE $x
+token #139 WHITESPACE  
+token #140 PHP_OPERATOR =
+token #141 WHITESPACE  
+token #142 PHP_HEREDOC_TAG_START <<<EOF\n
+token #143 PHP_CONSTANT_ENCAPSED_STRING test1
+token #144 PHP_CONSTANT_ENCAPSED_STRING \ntest2
+token #145 PHP_CONSTANT_ENCAPSED_STRING \n
+token #146 PHP_CONSTANT_ENCAPSED_STRING \ntest3
+token #147 PHP_CONSTANT_ENCAPSED_STRING \n
+token #148 PHP_CONSTANT_ENCAPSED_STRING \n
+token #149 PHP_HEREDOC_TAG_END \nEOF
+token #150 PHP_SEMICOLON ;
+token #151 WHITESPACE \n
+token #152 PHP_STRING var_dump
+token #153 PHP_TOKEN (
+token #154 PHP_VARIABLE $x
+token #155 PHP_TOKEN )
+token #156 PHP_SEMICOLON ;
+token #157 WHITESPACE \n
+token #158 PHP_STRING trigger_error
+token #159 PHP_TOKEN (
+token #160 PHP_CONSTANT_ENCAPSED_STRING "line"
+token #161 PHP_TOKEN ,
+token #162 WHITESPACE  
+token #163 PHP_STRING E_USER_ERROR
+token #164 PHP_TOKEN )
+token #165 PHP_SEMICOLON ;
+token #166 WHITESPACE \n
+token #167 PHP_VARIABLE $x
+token #168 WHITESPACE  
+token #169 PHP_OPERATOR =
+token #170 WHITESPACE  
+token #171 PHP_NOWDOC_TAG_START <<<'EOF'\n
+token #172 PHP_CONSTANT_ENCAPSED_STRING test1\n
+token #173 PHP_CONSTANT_ENCAPSED_STRING test2\n
+token #174 PHP_CONSTANT_ENCAPSED_STRING \ntest3
+token #175 PHP_CONSTANT_ENCAPSED_STRING \n\n\n
+token #176 PHP_NOWDOC_TAG_END EOF
+token #177 PHP_SEMICOLON ;
+token #178 WHITESPACE \n
+token #179 PHP_STRING var_dump
+token #180 PHP_TOKEN (
+token #181 PHP_VARIABLE $x
+token #182 PHP_TOKEN )
+token #183 PHP_SEMICOLON ;
+token #184 WHITESPACE \n
+token #185 PHP_STRING trigger_error
+token #186 PHP_TOKEN (
+token #187 PHP_CONSTANT_ENCAPSED_STRING "line"
+token #188 PHP_TOKEN ,
+token #189 WHITESPACE  
+token #190 PHP_STRING E_USER_ERROR
+token #191 PHP_TOKEN )
+token #192 PHP_SEMICOLON ;
+token #193 WHITESPACE \n
+token #194 PHP_ECHO echo
+token #195 WHITESPACE  
+token #196 PHP_CONSTANT_ENCAPSED_STRING "ok\n"
+token #197 PHP_SEMICOLON ;
+token #198 WHITESPACE \n
+token #199 PHP_CLOSETAG ?>
+token #200 T_INLINE_HTML \n--EXPECT--\n6\nstring(0) ""\n10\nstring(0) ""\n14\nstring(4) "test"\n19\nstring(4) "test"\n24\nstring(20) "test1\ntest2\n\ntest3\n\n"\n34\nstring(20) "test1\ntest2\n\ntest3\n\n"\n44\nok\n

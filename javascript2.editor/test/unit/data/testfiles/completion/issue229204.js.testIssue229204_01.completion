@@ -1,0 +1,6 @@
+Code completion result for source line:
+(new Test()).r|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     rod(): undefined                [PROTECTE  issue229204.js
+METHOD     run(): undefined                [PROTECTE  issue229204.js

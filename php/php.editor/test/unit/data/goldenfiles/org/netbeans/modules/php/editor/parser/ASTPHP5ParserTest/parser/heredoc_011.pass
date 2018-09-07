@@ -1,0 +1,143 @@
+<testresult testFile='heredoc_011.php'>
+    <scanner>
+        <token id='T_INLINE_HTML' start='0' end='58'>
+            <text>--TEST--\nHeredocs can be used as static scalars.\n--FILE--\n</text>
+        </token>
+        <token id='T_REQUIRE_ONCE' start='65' end='77'>
+            <text>require_once</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='78' end='90'>
+            <text>&apos;nowdoc.inc&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='90' end='91'>
+            <text>;</text>
+        </token>
+        <token id='T_CLASS' start='93' end='98'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='99' end='100'>
+            <text>e</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='101' end='102'>
+            <text>{</text>
+        </token>
+        <token id='T_CONST' start='108' end='113'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='114' end='115'>
+            <text>E</text>
+        </token>
+        <token id='T_EQUAL' start='116' end='117'>
+            <text>=</text>
+        </token>
+        <token id='T_START_HEREDOC' start='118' end='138'>
+            <text>&lt;&lt;&lt;THISMUSTNOTERROR\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='138' end='173'>
+            <text>If you see this, everything is ok.\n</text>
+        </token>
+        <token id='T_END_HEREDOC' start='173' end='189'>
+            <text>THISMUSTNOTERROR</text>
+        </token>
+        <token id='T_SEMICOLON' start='189' end='190'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='192' end='193'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='193' end='194'>
+            <text>;</text>
+        </token>
+        <token id='T_PRINT' start='196' end='201'>
+            <text>print</text>
+        </token>
+        <token id='T_STRING' start='202' end='203'>
+            <text>e</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='203' end='205'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='205' end='206'>
+            <text>E</text>
+        </token>
+        <token id='T_NEKUDA' start='207' end='208'>
+            <text>.</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='209' end='213'>
+            <text>"\n"</text>
+        </token>
+        <token id='T_SEMICOLON' start='213' end='214'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='216' end='219'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='T_INLINE_HTML' start='219' end='265'>
+            <text>--EXPECT--\nIf you see this, everything is ok.\n</text>
+        </token>
+        <token id='EOF' start='265' end='265'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='265'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <InLineHtml start='0' end='58'/>
+            <ExpressionStatement start='65' end='91'>
+                <Include start='65' end='90' type='REQUIRE_ONCE'>
+                    <Scalar start='78' end='90' type='STRING' value='&apos;nowdoc.inc&apos;'/>
+                </Include>
+            </ExpressionStatement>
+            <ClassDeclaration start='93' end='193' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='99' end='100' name='e'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='101' end='193' isCurly='true'>
+                    <ClassConstantDeclaration start='108' end='190' modifier='public'>
+                        <Names>
+                            <Identifier start='114' end='115' name='E'/>
+                        </Names>
+                        <Initializers>
+                            <Quote start='118' end='189' type='HEREDOC'>
+                                <Expressions>
+                                    <Scalar start='138' end='173' type='STRING' value='If you see this, everything is ok.\n'/>
+                                </Expressions>
+                            </Quote>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <EmptyStatement start='193' end='194'/>
+            <ExpressionStatement start='196' end='214'>
+                <FunctionInvocation start='196' end='213'>
+                    <FucntionName start='196' end='201'>
+                        <Identifier start='196' end='201' name='print'/>
+                    </FucntionName>
+                    <Parameters>
+                        <InfixExpression start='202' end='213' operator='CONCAT'>
+                            <StaticConstantAccess start='202' end='206'>
+                                <NamespaceName start='202' end='203' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='202' end='203' name='e'/>
+                                </NamespaceName>
+                                <Constant>
+                                    <Identifier start='205' end='206' name='E'/>
+                                </Constant>
+                                <Member>
+                                    <Identifier start='205' end='206' name='E'/>
+                                </Member>
+                            </StaticConstantAccess>
+                            <Scalar start='209' end='213' type='STRING' value='"\n"'/>
+                        </InfixExpression>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <EmptyStatement start='216' end='219'/>
+            <InLineHtml start='219' end='265'/>
+        </Statements>
+    </Program>
+</testresult>

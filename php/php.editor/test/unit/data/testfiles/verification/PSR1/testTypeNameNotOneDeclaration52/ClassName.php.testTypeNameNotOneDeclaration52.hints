@@ -1,0 +1,4 @@
+class Vendor_ClassName {
+      ----------------
+HINT:PSR-1 Violation:
+Each type MUST be in a file by itself.

@@ -1,0 +1,56 @@
+Calling GenBeans.doIt
+Bean Tree:
+root <root> : Root
+	in <in> : AnalogInput
+		pointNumber <pointNumber> : java.math.BigInteger
+			[attr: longname CDATA #IMPLIED Point Number : java.lang.String]
+		subelement <subelement> : Subelement
+			a <a> : double
+			b <b> : int
+	out <out> : AnalogOutput
+		pointNumber <pointNumber> : java.math.BigInteger
+			[attr: longname CDATA #IMPLIED Point Number : java.lang.String]
+		subelement <subelement> : SubelementAnalogOutput
+			a <a> : java.lang.String
+			c <c> : int
+
+Compiling
+Finished compiling: 0
+out: TestDupInternalNames - creating the DOM document
+out: TestDupInternalNames - creating the bean graph
+out: TestDupInternalNames - bean graph created
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <root xmlns='http://multitrode.com/config'>
+out: 	<in>
+out: 		<pointNumber longname='#345'>1</pointNumber>
+out: 		<subelement>
+out: 			<a>2.3</a>
+out: 			<b>7</b>
+out: 		</subelement>
+out: 	</in>
+out: 	<out>
+out: 		<pointNumber longname='#45'>-9</pointNumber>
+out: 		<subelement>
+out: 			<a>bar</a>
+out: 			<c>90</c>
+out: 		</subelement>
+out: 	</out>
+out: </root>
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <root xmlns='http://multitrode.com/config'>
+out: 	<in>
+out: 		<pointNumber longname='#345'>5</pointNumber>
+out: 		<subelement>
+out: 			<a>2.3</a>
+out: 			<b>7</b>
+out: 		</subelement>
+out: 	</in>
+out: 	<out>
+out: 		<pointNumber longname='#45'>89</pointNumber>
+out: 		<subelement>
+out: 			<a>bar</a>
+out: 			<c>90</c>
+out: 		</subelement>
+out: 	</out>
+out: </root>
+Finished running TestDupInternalNames: 0

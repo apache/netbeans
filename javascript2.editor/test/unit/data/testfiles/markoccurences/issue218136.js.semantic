@@ -1,0 +1,7 @@
+function |>METHOD:Player<|(|>UNUSED:url<|, |>UNUSED:name<|){
+    var |>UNUSED:static_int<| = 0;
+    Player.prototype.|>METHOD:setStatic<| = function(v){ |>UNUSED:static_int<| = v; };
+}
+
+var |>GLOBAL:p1<| = new Player();
+|>GLOBAL:p1<|.setStatic(100);

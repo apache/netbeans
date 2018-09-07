@@ -1,0 +1,130 @@
+[b|, background, background:, 142]
+Transformations 3d backface-vi
+Background background
+Background background-attachme
+Background background-clip
+Background background-color
+Background background-image
+Background background-origin
+Background background-position
+Chrome background-position-x
+Chrome background-position-y
+Background background-repeat
+Background background-size
+Line baseline-shift
+Internet explorer behavior
+Default bleed
+Default bookmark-label
+Default bookmark-level
+Default bookmark-state
+Default bookmark-target
+Box border
+Box border-bottom
+Box border-bottom-color
+Box border-bottom-left-radius
+Box border-bottom-right-radius
+Box border-bottom-style
+Box border-bottom-width
+Default border-collapse
+Box border-color
+Box border-image
+Box border-image-outset
+Box border-image-repeat
+Box border-image-slice
+Box border-image-source
+Box border-image-width
+Box border-left
+Box border-left-color
+Box border-left-style
+Box border-left-width
+Box border-radius
+Box border-right
+Box border-right-color
+Box border-right-style
+Box border-right-width
+Default border-spacing
+Box border-style
+Box border-top
+Box border-top-color
+Box border-top-left-radius
+Box border-top-right-radius
+Box border-top-style
+Box border-top-width
+Box border-width
+Default bottom
+Box box-decoration-break
+Box box-shadow
+User interface box-sizing
+Multi column layout break-afte
+Multi column layout break-befo
+Multi column layout break-insi
+End cursor position = 154
+[c|, clip, clip:, 168]
+Default caption-side
+Box clear
+Default clip
+Colors color
+Multi column layout column-cou
+Multi column layout column-fil
+Multi column layout column-gap
+Multi column layout column-rul
+Multi column layout column-rul
+Multi column layout column-rul
+Multi column layout column-rul
+Multi column layout column-spa
+Writing modes column-width
+Multi column layout columns
+Content content
+Content counter-increment
+Content counter-reset
+Speech cue
+Speech cue-after
+Speech cue-before
+User interface cursor
+End cursor position = 174
+[font-s|, font-size, font-size:, 228]
+Fonts font-size
+Fonts font-size-adjust
+Fonts font-stretch
+Fonts font-style
+Fonts font-synthesis
+End cursor position = 239
+[caption{co|}, color, caption{color: }, 279]
+Colors color
+Multi column layout column-cou
+Multi column layout column-fil
+Multi column layout column-gap
+Multi column layout column-rul
+Multi column layout column-rul
+Multi column layout column-rul
+Multi column layout column-rul
+Multi column layout column-spa
+Writing modes column-width
+Multi column layout columns
+Content content
+Content counter-increment
+Content counter-reset
+End cursor position = 295
+[caption{color:blue; p|}, position, caption{color:blue; position: }, 356]
+Box padding
+Box padding-bottom
+Box padding-left
+Box padding-right
+Box padding-top
+Paged media page
+Paged media page-break-after
+Paged media page-break-before
+Paged media page-break-inside
+Content page-policy
+Speech pause
+Speech pause-after
+Speech pause-before
+Transformations 3d perspective
+Transformations 3d perspective
+Default pitch
+Default pitch-range
+Default play-during
+Chrome pointer-events
+Default position
+Default presentation-level
+End cursor position = 387

@@ -1,0 +1,6 @@
+common:
+    parameters:
+        localization:
+            available: [
+                    ['cs', 'Czech', 'Czech version'],
+                    ['en', 'English', 'English version']]

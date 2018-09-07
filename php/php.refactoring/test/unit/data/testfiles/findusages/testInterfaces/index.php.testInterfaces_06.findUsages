@@ -1,0 +1,14 @@
+Display text: interface <b>AnotherFace</b> extends MyFace {}
+File name: index.php
+Name: AnotherFace
+Position: BEGIN: 94 END: 105
+
+Display text: use Second\<b>AnotherFace</b>;
+File name: index.php
+Name: AnotherFace
+Position: BEGIN: 154 END: 165
+
+Display text: class Foo implements <b>AnotherFace</b> {}
+File name: index.php
+Name: AnotherFace
+Position: BEGIN: 189 END: 200

@@ -1,0 +1,13 @@
+"use strict";
+
+class |>CLASS,GLOBAL:Keybord<| {
+    
+    * |>METHOD:keys<|() {
+        yield 'A';
+        yield 'B';
+    }
+}
+
+var |>GLOBAL:keyboard<| = new |>GLOBAL:Keybord<|;
+
+|>GLOBAL:console<|.log(|>GLOBAL:keyboard<|.keys().next());

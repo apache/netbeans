@@ -1,0 +1,2 @@
+    var |>MARK_OCCURRENCES:ag^e<| = 10;
+        number : |>MARK_OCCURRENCES:age<|

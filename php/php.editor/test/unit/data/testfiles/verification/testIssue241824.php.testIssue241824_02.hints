@@ -1,0 +1,4 @@
+(new \MyFoo("Whatever can be here"))->notMyFnc()^;
+------------------------------------------------
+HINT:Introduce Hint
+FIX:Create Method " notMyFnc()" in Class "MyFoo" (testIssue241824.php)

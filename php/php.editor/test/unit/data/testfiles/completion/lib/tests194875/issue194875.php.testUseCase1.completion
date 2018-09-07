@@ -1,0 +1,7 @@
+Code completion result for source line:
+} catch (|ExMyException $ex) {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    Extra                           [PUBLIC]   null
+PACKAGE    MySpace                         [PUBLIC]   null
+CLASS      ExMyException                   [PUBLIC]   issue194875.php
+CLASS      Exception                       [PUBLIC]   issue194875.php

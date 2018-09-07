@@ -1,0 +1,9 @@
+Code completion result for source line:
+class SpecialGroovyClass implements R|unnable, Serializable {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      RandomAccess                               null
+CLASS      Range                                      null
+CLASS      Readable                                   null
+CLASS      ResourceConnector                          null
+CLASS      Runnable                                   null

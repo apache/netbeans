@@ -1,0 +1,8 @@
+man:CLASS:[PRIVATE]:ESCAPED{man}:
+  prop1:FIELD:[PUBLIC]:ESCAPED{prop1}<font color="#999999">ESCAPED{ : }Number</font>:
+  prop2:FIELD:[PUBLIC]:ESCAPED{prop2}<font color="#999999">ESCAPED{ : }Number</font>:
+  prop3:FIELD:[PUBLIC]:ESCAPED{prop3}<font color="#999999">ESCAPED{ : }String</font>:
+window:CLASS:[PUBLIC]:ESCAPED{window}:
+  prom01:FIELD:[PUBLIC]:ESCAPED{prom01}<font color="#999999">ESCAPED{ : }String</font>:
+  prom02:FIELD:[PUBLIC]:ESCAPED{prom02}<font color="#999999">ESCAPED{ : }String</font>:
+  prom03:FIELD:[PUBLIC]:ESCAPED{prom03}<font color="#999999">ESCAPED{ : }Number</font>:

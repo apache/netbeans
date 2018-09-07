@@ -1,0 +1,51 @@
+Code completion result for source line:
+TestDomain.findByAge|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     findByAge(Object)               [PROTECTE  Object
+METHOD     findByAge(Object, Map)          [PROTECTE  Object
+METHOD     findByAgeAndAge(Object, Object  [PROTECTE  Object
+METHOD     findByAgeAndAge(Object, Object  [PROTECTE  Object
+METHOD     findByAgeAndAge...              [PROTECTE  Object
+METHOD     findByAgeAndName(Object, Objec  [PROTECTE  Object
+METHOD     findByAgeAndName(Object, Objec  [PROTECTE  Object
+METHOD     findByAgeAndName...             [PROTECTE  Object
+METHOD     findByAgeBetween(Object, Objec  [PROTECTE  Object
+METHOD     findByAgeBetween(Object, Objec  [PROTECTE  Object
+METHOD     findByAgeBetween...             [PROTECTE  Object
+METHOD     findByAgeEqual(Object)          [PROTECTE  Object
+METHOD     findByAgeEqual(Object, Map)     [PROTECTE  Object
+METHOD     findByAgeEqual...               [PROTECTE  Object
+METHOD     findByAgeGreaterThan(Object)    [PROTECTE  Object
+METHOD     findByAgeGreaterThan(Object, M  [PROTECTE  Object
+METHOD     findByAgeGreaterThan...         [PROTECTE  Object
+METHOD     findByAgeGreaterThanEquals(Obj  [PROTECTE  Object
+METHOD     findByAgeGreaterThanEquals(Obj  [PROTECTE  Object
+METHOD     findByAgeGreaterThanEquals...   [PROTECTE  Object
+METHOD     findByAgeILike(Object)          [PROTECTE  Object
+METHOD     findByAgeILike(Object, Map)     [PROTECTE  Object
+METHOD     findByAgeILike...               [PROTECTE  Object
+METHOD     findByAgeIsNotNull()            [PROTECTE  Object
+METHOD     findByAgeIsNotNull(Map)         [PROTECTE  Object
+METHOD     findByAgeIsNotNull...           [PROTECTE  Object
+METHOD     findByAgeIsNull()               [PROTECTE  Object
+METHOD     findByAgeIsNull(Map)            [PROTECTE  Object
+METHOD     findByAgeIsNull...              [PROTECTE  Object
+METHOD     findByAgeLessThan(Object)       [PROTECTE  Object
+METHOD     findByAgeLessThan(Object, Map)  [PROTECTE  Object
+METHOD     findByAgeLessThan...            [PROTECTE  Object
+METHOD     findByAgeLessThanEquals(Object  [PROTECTE  Object
+METHOD     findByAgeLessThanEquals(Object  [PROTECTE  Object
+METHOD     findByAgeLessThanEquals...      [PROTECTE  Object
+METHOD     findByAgeLike(Object)           [PROTECTE  Object
+METHOD     findByAgeLike(Object, Map)      [PROTECTE  Object
+METHOD     findByAgeLike...                [PROTECTE  Object
+METHOD     findByAgeNotEqual(Object)       [PROTECTE  Object
+METHOD     findByAgeNotEqual(Object, Map)  [PROTECTE  Object
+METHOD     findByAgeNotEqual...            [PROTECTE  Object
+METHOD     findByAgeOrAge(Object, Object)  [PROTECTE  Object
+METHOD     findByAgeOrAge(Object, Object,  [PROTECTE  Object
+METHOD     findByAgeOrAge...               [PROTECTE  Object
+METHOD     findByAgeOrName(Object, Object  [PROTECTE  Object
+METHOD     findByAgeOrName(Object, Object  [PROTECTE  Object
+METHOD     findByAgeOrName...              [PROTECTE  Object

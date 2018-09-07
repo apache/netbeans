@@ -545,11 +545,7 @@ public class AutoupdateCatalogParser extends DefaultHandler {
             String autoload = module.getValue (MODULE_ATTR_AUTOLOAD);
             String preferred = module.getValue(MODULE_ATTR_IS_PREFERRED_UPDATE);
                         
-            if (isFragment) {
-                needsRestart = true;
-            } else {
-                needsRestart = needsrestart == null || needsrestart.trim ().length () == 0 ? null : Boolean.valueOf (needsrestart);
-            }
+            needsRestart = isFragment || needsrestart == null || needsrestart.trim ().length () == 0 ? null : Boolean.valueOf (needsrestart);
             isGlobal = global == null || global.trim ().length () == 0 ? null : Boolean.valueOf (global);
             isEager = Boolean.parseBoolean (eager);
             isAutoload = Boolean.parseBoolean (autoload);

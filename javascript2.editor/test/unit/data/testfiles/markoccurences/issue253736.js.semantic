@@ -1,0 +1,11 @@
+function |>METHOD:GlobalUriHelper<|(myPattern) {
+	var |>LOCAL_VARIABLE_DECLARATION,UNUSED:_self<| = this;
+	this.|>METHOD:parse<| = function (systemUri) {
+		var |>CLASS:address<| = {|>FIELD:baseUrl<|:'', |>FIELD:id<|:0};
+		systemUri.replace(myPattern, function(|>UNUSED:a<|, protocol, server, id) {
+			address.|>FIELD:baseUrl<| = protocol + server;
+			address.|>FIELD:id<| = parseInt(id);
+		});
+		return address;
+	};
+}

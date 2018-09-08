@@ -1,0 +1,26 @@
+<Program start='0' end='50'>
+    <Comments>
+    </Comments>
+    <Statements>
+        <FunctionDeclaration start='6' end='48' isReference='false'>
+            <Identifier start='15' end='16' name='f'/>
+            <FormalParameters>
+                <FormalParameter start='18' end='26' isMandatory='true' isVariadic='false'>
+                    <ParametrType>
+                    </ParametrType>
+                    <ParametrName>
+                        <Variable start='18' end='26' isDollared='true'>
+                            <Identifier start='19' end='26' name='request'/>
+                        </Variable>
+                    </ParametrName>
+                    <DefaultValue>
+                    </DefaultValue>
+                </FormalParameter>
+            </FormalParameters>
+            <Block start='27' end='48' isCurly='true'>
+                <ASTError start='33' end='45'/>
+            </Block>
+        </FunctionDeclaration>
+        <EmptyStatement start='48' end='50'/>
+    </Statements>
+</Program>

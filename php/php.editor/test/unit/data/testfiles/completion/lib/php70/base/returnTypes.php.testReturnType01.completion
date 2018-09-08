@@ -1,0 +1,58 @@
+Code completion result for source line:
+function current(): |Comment;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    A                               [PUBLIC]   null
+PACKAGE    B                               [PUBLIC]   null
+PACKAGE    GroupUse1                       [PUBLIC]   null
+PACKAGE    GroupUse2                       [PUBLIC]   null
+PACKAGE    My                              [PUBLIC]   null
+PACKAGE    Run                             [PUBLIC]   null
+CLASS      Comment                         [PUBLIC]   My\Firm
+CLASS      CommentsIterator                [PUBLIC]   My\Firm
+------------------------------------
+PACKAGE    B                               [PUBLIC]   A
+PACKAGE    C                               [PUBLIC]   A\B
+PACKAGE    Firm                            [PUBLIC]   My
+CLASS      BoolClass                       [PUBLIC]   scalarTypeHints.php
+CLASS      C1                              [PUBLIC]   GroupUse1
+CLASS      C2                              [PUBLIC]   GroupUse1
+CLASS      Cls                             [PUBLIC]   uniformVariableSyntax01.php
+CLASS      Cls                             [PUBLIC]   uniformVariableSyntax02.php
+CLASS      ClsA                            [PUBLIC]   A
+CLASS      ClsA                            [PUBLIC]   A
+CLASS      ClsAB                           [PUBLIC]   A
+CLASS      ClsAB                           [PUBLIC]   A\B
+CLASS      ClsAB                           [PUBLIC]   A\B
+CLASS      ClsABC                          [PUBLIC]   A\B\C
+CLASS      ClsABC                          [PUBLIC]   A\B\C
+CLASS      ClsABC2                         [PUBLIC]   A\B\C
+CLASS      ClsUnused                       [PUBLIC]   A
+CLASS      Comment                         [PUBLIC]   returnTypesTyping05.php
+CLASS      Comment                         [PUBLIC]   returnTypesTyping06.php
+CLASS      Comment                         [PUBLIC]   returnTypesTyping07.php
+CLASS      Comment                         [PUBLIC]   returnTypesTyping08.php
+CLASS      Comment                         [PUBLIC]   returnTypesTyping09.php
+CLASS      Comment                         [PUBLIC]   returnTypesTyping10.php
+CLASS      Comment                         [PUBLIC]   returnTypesTyping11.php
+CLASS      Comment                         [PUBLIC]   returnTypesTyping12.php
+CLASS      FloatClass                      [PUBLIC]   scalarTypeHints.php
+CLASS      IntClass                        [PUBLIC]   scalarTypeHints.php
+CLASS      MyA                             [PUBLIC]   A
+CLASS      MyAA                            [PUBLIC]   A
+CLASS      MyCls                           [PUBLIC]   A
+CLASS      Numbers                         [PUBLIC]   uniformVariableSyntax01.php
+CLASS      Numbers                         [PUBLIC]   uniformVariableSyntax02.php
+CLASS      Outer                           [PUBLIC]   My
+CLASS      StringClass                     [PUBLIC]   scalarTypeHints.php
+CLASS      UVS1                            [PUBLIC]   uniformVariableSyntax03.php
+CLASS      UVS2                            [PUBLIC]   uniformVariableSyntax03.php
+CLASS      UVS3                            [PUBLIC]   uniformVariableSyntax03.php
+KEYWORD    array                                      null
+KEYWORD    bool                                       null
+KEYWORD    callable                                   null
+KEYWORD    float                                      null
+KEYWORD    int                                        null
+KEYWORD    iterable                                   null
+KEYWORD    object                                     null
+KEYWORD    string                                     null
+KEYWORD    void                                       null

@@ -1,0 +1,2 @@
+    const |>MARK_OCCURRENCES:MAX<| = 99;
+UVS3::myStatic3()::myStatic2()::myStatic1()::|>MARK_OCCURRENCES:MA^X<|;

@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.i18n.form/2
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/i18n/form/Bundle.properties
+

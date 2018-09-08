@@ -1,0 +1,12 @@
+function |>METHOD:A<|()                        
+{
+    this.|>FIELD:x<| = 1;
+    this.|>FIELD:x<| = 1;
+
+}
+
+A.prototype.|>METHOD:inc<| = function()        
+{
+    this.|>FIELD:x<| += 1;
+}
+

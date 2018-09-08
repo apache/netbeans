@@ -1,0 +1,4 @@
+var |>MARK_OCCURRENCES:pe234390<| = new Person234390("John"); 
+with (|>MARK_OCCURRENCES:pe234390<|) {
+    |>MARK_OCCURRENCES:pe2343^90<|.hello();     
+    |>MARK_OCCURRENCES:pe234390<|.realname = "Doe";

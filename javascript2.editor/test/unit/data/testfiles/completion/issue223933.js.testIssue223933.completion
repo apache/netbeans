@@ -1,0 +1,5 @@
+Code completion result for source line:
+test22393|3()
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     test223933(a: Number, b: Numbe  [PUBLIC,   issue223933.js

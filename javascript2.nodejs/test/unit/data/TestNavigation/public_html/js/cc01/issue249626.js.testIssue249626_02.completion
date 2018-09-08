@@ -1,0 +1,8 @@
+Code completion result for source line:
+require("./complexModule").literalRef.|propX.iprop;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      fooX                            [PUBLIC]   complexModule.js
+CLASS      propX                           [PUBLIC]   complexModule.js
+FIELD      denX: Date                      [PUBLIC]   complexModule.js
+FIELD      obX: Runner1                    [PUBLIC]   complexModule.js

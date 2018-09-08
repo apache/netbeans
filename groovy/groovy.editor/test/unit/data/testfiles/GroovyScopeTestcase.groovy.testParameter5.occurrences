@@ -1,0 +1,2 @@
+    def method1 (int |>MARK_OCCURRENCES:param1<|){
+        def localvar3 = membervar1 + |>MARK_OCCURRENCES:par^am1<| + localvar1 + localvar2

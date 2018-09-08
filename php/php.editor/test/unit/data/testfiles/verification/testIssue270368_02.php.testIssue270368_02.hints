@@ -1,0 +1,4 @@
+    function __construct(?\Foo\Bar $^test) {
+                         ---------------
+HINT:Initialize Field: $test
+FIX:Initialize Field: $test

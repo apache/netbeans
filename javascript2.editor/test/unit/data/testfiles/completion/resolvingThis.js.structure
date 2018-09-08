@@ -1,0 +1,5 @@
+org:CLASS:[PUBLIC]:ESCAPED{org}:
+  groupname:CLASS:[PUBLIC]:ESCAPED{groupname}:
+    MyClass:CLASS:[PUBLIC]:ESCAPED{MyClass}:
+      fnc1:METHOD:[PUBLIC]:ESCAPED{fnc1}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+      fnc2:METHOD:[PUBLIC]:ESCAPED{fnc2}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:

@@ -1,0 +1,83 @@
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+<#if package?? && package != "">
+package ${package};
+</#if>
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.actions.LookupDispatchAction;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionForward;
+import java.util.*;
+
+/**
+ *
+ * @author ${user}
+ */
+public class ${name} extends LookupDispatchAction {
+    
+    /* forward name="success" path="" */
+    private final static String SUCCESS = "success";
+    
+    /** Provides the mapping from resource key to method name.
+     * @return Resource key / method name map.
+     */
+    protected Map getKeyMethodMap() {
+      Map map = new HashMap();
+      map.put("button.add", "add");
+      map.put("button.edit", "edit");
+      map.put("button.delete", "delete");
+      return map;
+    }
+    
+    /** Action called on Add button click
+     */
+    public ActionForward add(ActionMapping mapping,
+          ActionForm form,
+          HttpServletRequest request,
+          HttpServletResponse response) throws java.lang.Exception {
+      // TODO: implement add method
+      return mapping.findForward(SUCCESS);
+    }
+    
+    /** Action called on Edit button click
+     */
+    public ActionForward edit(ActionMapping mapping,
+          ActionForm form,
+          HttpServletRequest request,
+          HttpServletResponse response) {
+      // TODO: implement edit method
+      return mapping.findForward(SUCCESS);
+    }
+    
+    /** Action called on Delete button click
+     */
+    public ActionForward delete(ActionMapping mapping,
+          ActionForm form,
+          HttpServletRequest request,
+          HttpServletResponse response) throws java.lang.Exception {
+      // TODO:implement delete method
+      return mapping.findForward(SUCCESS);
+    }
+    
+    /* And your JSP would have the following format for submit buttons:
+
+        <html:form action="/test">
+            <html:submit property="method">
+              <bean:message key="button.add"/>
+            </html:submit>
+            <html:submit property="method">
+              <bean:message key="button.edit"/>
+            </html:submit>
+            <html:submit property="method">
+              <bean:message key="button.delete"/>
+            </html:submit>
+        </html:form>
+    */
+}

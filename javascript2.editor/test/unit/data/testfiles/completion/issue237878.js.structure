@@ -1,0 +1,6 @@
+Synergy:CLASS:[PUBLIC]:ESCAPED{Synergy}:
+  model:CLASS:[PUBLIC]:ESCAPED{model}:
+    TestCase:CONSTRUCTOR:[PUBLIC]:ESCAPED{TestCase}ESCAPED{(}ESCAPED{title}ESCAPED{)}<font color="#999999">ESCAPED{ : }Synergy.model.TestCase</font>:
+      print:METHOD:[PROTECTED]:ESCAPED{print}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+      title:FIELD:[PUBLIC]:ESCAPED{title}:
+a:VARIABLE:[PUBLIC]:ESCAPED{a}<font color="#999999">ESCAPED{ : }Synergy.model.TestCase</font>:

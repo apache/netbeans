@@ -1,0 +1,4 @@
+class mycls implements |>MARK_OCCURRENCES:my^face<| {
+interface |>MARK_OCCURRENCES:myface<| {
+|>MARK_OCCURRENCES:myface<|::RECOVER_ORIG;
+function function_face(|>MARK_OCCURRENCES:myface<| $a) {

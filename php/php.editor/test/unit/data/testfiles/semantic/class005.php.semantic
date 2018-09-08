@@ -1,0 +1,35 @@
+<?php
+class |>CLASS:person<| {                                // class name
+    private $|>FIELD:name<|;                            // class field declaration
+    public $|>FIELD:me<| = "mydefaultname";             // class field declaration
+    private $|>FIELD,UNUSED:you<|;                             // unused private class field
+    static private $|>FIELD,STATIC:count<| = 0;                // static private class field
+    static private $|>FIELD,STATIC,UNUSED:test<| = 1;                 // unused static private filed
+
+    public function |>METHOD:__construct<|($name) {      // method name
+        $this->|>FIELD:name<| = $name;                  // usage of class field
+        echo $this->$name."\n";               // $name is on class field
+        echo $this->|>FIELD:name<|."\n";                // usage of class field
+        person::$|>FIELD,STATIC:count<| = person::$|>FIELD,STATIC:count<| + 1;
+    }
+
+    private function |>METHOD,UNUSED:yourName<|() {             // unused method
+        return "yourName";
+    }
+
+    public function |>METHOD:name<|() {                  // method name
+        return $this->|>FIELD:name<|;                   // usage of class field
+    }
+
+    public static function |>METHOD,STATIC:getCount<|() {       // static method name
+        return person::$|>FIELD,STATIC:count<|;                 // usage of static field
+    }
+
+    private static function |>METHOD,STATIC,UNUSED:getCount2<|() {     // unused static method name
+        // TODO addd the content
+    }
+}
+
+$p = new person("me");
+echo "persons: ".person::|>CUSTOM1,STATIC:getCount<|();          // usage of static method
+?>

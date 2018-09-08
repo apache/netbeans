@@ -1,0 +1,2 @@
+class |>MARK_OCCURRENCES:ClsAB^C2<| {
+    B\C\|>MARK_OCCURRENCES:ClsABC2<| AS MyCls

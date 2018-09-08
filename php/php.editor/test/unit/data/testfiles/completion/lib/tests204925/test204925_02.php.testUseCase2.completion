@@ -1,0 +1,4 @@
+Code completion result for source line:
+$test->bar()->|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     bar()                           [PUBLIC]   \Test204925_02_C\Test204925_02_A

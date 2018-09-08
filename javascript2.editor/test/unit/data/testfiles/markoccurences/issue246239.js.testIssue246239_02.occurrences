@@ -1,0 +1,2 @@
+		|>MARK_OCCURRENCES:ctl<| = document.getElementById('reuseControlVariable');
+	|>MARK_OCCURRENCES:c^tl<|.value = type;

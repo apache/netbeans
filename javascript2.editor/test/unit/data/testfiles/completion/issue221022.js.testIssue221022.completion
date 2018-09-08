@@ -1,0 +1,11 @@
+Code completion result for source line:
+$scope.|     //here
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      currentAction: String           [PUBLIC]   issue221022.js
+FIELD      currentActionId: Number         [PUBLIC]   issue221022.js
+FIELD      loads: Number                   [PUBLIC]   issue221022.js
+FIELD      orderProp: String               [PUBLIC]   issue221022.js
+FIELD      rights: Number                  [PUBLIC]   issue221022.js
+FIELD      specs: Array                    [PUBLIC]   issue221022.js
+FIELD      version: String                 [PUBLIC]   issue221022.js

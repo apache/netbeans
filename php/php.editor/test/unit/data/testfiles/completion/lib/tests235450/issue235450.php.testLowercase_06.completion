@@ -1,0 +1,4 @@
+Code completion result for source line:
+ConstantClass::FAL|SE;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   FALSE false                     [PUBLIC]   ConstantClass

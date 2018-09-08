@@ -1,0 +1,13 @@
+Code completion result for source line:
+class D extends java.util.A| {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      AbstractCollection                         null
+CLASS      AbstractList                               null
+CLASS      AbstractMap                                null
+CLASS      AbstractQueue                              null
+CLASS      AbstractSequentialList                     null
+CLASS      AbstractSet                                null
+CLASS      ArrayDeque                                 null
+CLASS      ArrayList                                  null
+CLASS      Arrays                                     null

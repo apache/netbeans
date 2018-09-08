@@ -1,0 +1,4 @@
+<?php
+while (true):^
+endwhile;
+?>

@@ -1,0 +1,5 @@
+Code completion result for source line:
+sa|;// cc here
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+VARIABLE   sanitizer: Module sanitizer     [PRIVATE]  issue251643.js

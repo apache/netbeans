@@ -1,0 +1,5 @@
+Code completion result for source line:
+if ($obj instanceof I|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      InstanceOfBar                   [PUBLIC]   issue204958.php
+CLASS      InstanceOfFoo                   [PUBLIC]   issue204958.php

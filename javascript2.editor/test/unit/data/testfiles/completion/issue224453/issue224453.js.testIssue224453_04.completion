@@ -1,0 +1,5 @@
+Code completion result for source line:
+issue224453A.getTy|pe();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     getType(): String               [PUBLIC]   issue224453.js

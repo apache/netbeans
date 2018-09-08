@@ -1,0 +1,2 @@
+    public function log(string $|>MARK_OCCURRENCES:m^sg2<|) {
+        echo $|>MARK_OCCURRENCES:msg2<|;

@@ -1,0 +1,2 @@
+    window.|>MARK_OCCURRENCES:someprom<| = "helpik";
+    var myhelp = window['|>MARK_OCCURRENCES:somep^rom<|'];

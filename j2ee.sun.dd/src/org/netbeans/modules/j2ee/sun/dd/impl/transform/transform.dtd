@@ -1,0 +1,20 @@
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT transform (xmltype)*>
+
+<!--- xmltype : target version of the server xml -->
+<!ELEMENT xmltype (name, mod-element*)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT name (#PCDATA)>
+
+<!--- mod-element : element that contains sub-elements and attributes that need to be removed 
+      ie. sub-elements and attributes that were added in a later version of server xml -->
+<!ELEMENT mod-element (name, mod-attribute*, sub-element*)>
+
+<!--- sub-element : sub-elements that need to be removed -->
+<!ELEMENT sub-element (name)>
+
+<!--- new-attribute : attribute that need to be removed -->
+<!ELEMENT mod-attribute (name)>
+

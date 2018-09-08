@@ -1,0 +1,149 @@
+<testresult testFile='nowdoc_010.php'>
+    <scanner>
+        <token id='T_INLINE_HTML' start='0' end='83'>
+            <text>--TEST--\nTorture the T_END_NOWDOC rules with variable expansions (nowdoc)\n--FILE--\n</text>
+        </token>
+        <token id='T_REQUIRE_ONCE' start='90' end='102'>
+            <text>require_once</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='103' end='115'>
+            <text>&apos;nowdoc.inc&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='115' end='116'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='117' end='127'>
+            <text>$fooledYou</text>
+        </token>
+        <token id='T_EQUAL' start='128' end='129'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='130' end='132'>
+            <text>&apos;&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='132' end='133'>
+            <text>;</text>
+        </token>
+        <token id='T_PRINT' start='135' end='140'>
+            <text>print</text>
+        </token>
+        <token id='T_START_NOWDOC' start='141' end='158'>
+            <text>&lt;&lt;&lt;&apos;ENDOFNOWDOC&apos;\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='158' end='253'>
+            <text>{$fooledYou}ENDOFNOWDOC{$fooledYou}\nENDOFNOWDOC{$fooledYou}\n{$fooledYou}ENDOFNOWDOC\n\nENDOFNOWDO</text>
+        </token>
+        <token id='T_END_NOWDOC' start='253' end='254'>
+            <text>C</text>
+        </token>
+        <token id='T_SEMICOLON' start='254' end='255'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='257' end='259'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='260' end='261'>
+            <text>=</text>
+        </token>
+        <token id='T_START_NOWDOC' start='262' end='279'>
+            <text>&lt;&lt;&lt;&apos;ENDOFNOWDOC&apos;\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='279' end='374'>
+            <text>{$fooledYou}ENDOFNOWDOC{$fooledYou}\nENDOFNOWDOC{$fooledYou}\n{$fooledYou}ENDOFNOWDOC\n\nENDOFNOWDO</text>
+        </token>
+        <token id='T_END_NOWDOC' start='374' end='375'>
+            <text>C</text>
+        </token>
+        <token id='T_SEMICOLON' start='375' end='376'>
+            <text>;</text>
+        </token>
+        <token id='T_PRINT' start='378' end='383'>
+            <text>print</text>
+        </token>
+        <token id='T_QUATE' start='384' end='385'>
+            <text>"</text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='385' end='386'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='386' end='388'>
+            <text>$x</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='388' end='389'>
+            <text>}</text>
+        </token>
+        <token id='T_QUATE' start='389' end='390'>
+            <text>"</text>
+        </token>
+        <token id='T_SEMICOLON' start='390' end='391'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='393' end='396'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='T_INLINE_HTML' start='396' end='576'>
+            <text>--EXPECT--\n{$fooledYou}ENDOFNOWDOC{$fooledYou}\nENDOFNOWDOC{$fooledYou}\n{$fooledYou}ENDOFNOWDOC\n{$fooledYou}ENDOFNOWDOC{$fooledYou}\nENDOFNOWDOC{$fooledYou}\n{$fooledYou}ENDOFNOWDOC\n\n</text>
+        </token>
+        <token id='EOF' start='576' end='576'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='576'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <InLineHtml start='0' end='83'/>
+            <ExpressionStatement start='90' end='116'>
+                <Include start='90' end='115' type='REQUIRE_ONCE'>
+                    <Scalar start='103' end='115' type='STRING' value='&apos;nowdoc.inc&apos;'/>
+                </Include>
+            </ExpressionStatement>
+            <ExpressionStatement start='117' end='133'>
+                <Assignment start='117' end='132' operator='EQUAL'>
+                    <Variable start='117' end='127' isDollared='true'>
+                        <Identifier start='118' end='127' name='fooledYou'/>
+                    </Variable>
+                    <Scalar start='130' end='132' type='STRING' value='&apos;&apos;'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='135' end='255'>
+                <FunctionInvocation start='135' end='254'>
+                    <FucntionName start='135' end='140'>
+                        <Identifier start='135' end='140' name='print'/>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='141' end='254' type='STRING' value='{$fooledYou}ENDOFNOWDOC{$fooledYou}\nENDOFNOWDOC{$fooledYou}\n{$fooledYou}ENDOFNOWDOC\n\n'/>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='257' end='376'>
+                <Assignment start='257' end='375' operator='EQUAL'>
+                    <Variable start='257' end='259' isDollared='true'>
+                        <Identifier start='258' end='259' name='x'/>
+                    </Variable>
+                    <Scalar start='262' end='375' type='STRING' value='{$fooledYou}ENDOFNOWDOC{$fooledYou}\nENDOFNOWDOC{$fooledYou}\n{$fooledYou}ENDOFNOWDOC\n\n'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='378' end='391'>
+                <FunctionInvocation start='378' end='390'>
+                    <FucntionName start='378' end='383'>
+                        <Identifier start='378' end='383' name='print'/>
+                    </FucntionName>
+                    <Parameters>
+                        <Quote start='384' end='390' type='QUOTE'>
+                            <Expressions>
+                                <ReflectionVariable start='385' end='389'>
+                                    <Variable start='386' end='388' isDollared='true'>
+                                        <Identifier start='387' end='388' name='x'/>
+                                    </Variable>
+                                </ReflectionVariable>
+                            </Expressions>
+                        </Quote>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <EmptyStatement start='393' end='396'/>
+            <InLineHtml start='396' end='576'/>
+        </Statements>
+    </Program>
+</testresult>

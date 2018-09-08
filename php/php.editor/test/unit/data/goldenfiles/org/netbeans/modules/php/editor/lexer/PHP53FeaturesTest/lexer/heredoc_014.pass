@@ -1,0 +1,22 @@
+token #0 T_INLINE_HTML --TEST--\nHeredoc with double quotes syntax but missing second quote\n--FILE--\n
+token #1 PHP_OPENTAG <?php
+token #2 WHITESPACE \n
+token #3 PHP_VARIABLE $test
+token #4 WHITESPACE  
+token #5 PHP_OPERATOR =
+token #6 WHITESPACE  
+token #7 PHP_CONSTANT_ENCAPSED_STRING "foo"
+token #8 PHP_SEMICOLON ;
+token #9 WHITESPACE \n
+token #10 PHP_VARIABLE $var
+token #11 WHITESPACE  
+token #12 PHP_OPERATOR =
+token #13 WHITESPACE  
+token #14 PHP_OPERATOR <<
+token #15 PHP_OPERATOR <
+token #16 PHP_CONSTANT_ENCAPSED_STRING "
+token #17 PHP_ENCAPSED_AND_WHITESPACE MYLABEL\ntest: 
+token #18 PHP_VARIABLE $test
+token #19 PHP_ENCAPSED_AND_WHITESPACE \nMYLABEL;\necho 
+token #20 PHP_VARIABLE $var
+token #21 PHP_ENCAPSED_AND_WHITESPACE ;\n?>\n--EXPECTF--\nParse error: syntax error, unexpected T_SL in %sheredoc_014.php on line %d\n

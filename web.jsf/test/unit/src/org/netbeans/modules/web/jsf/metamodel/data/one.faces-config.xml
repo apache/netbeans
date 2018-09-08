@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!-- =========== FULL CONFIGURATION FILE ================================== -->
+
+<faces-config version="2.0" 
+              xmlns="http://java.sun.com/xml/ns/javaee" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+              
+     <component>
+     	<component-type>oneComponentType</component-type>
+     	<component-class>oneComponentClass</component-class>
+     	<display-name>oneComponent</display-name>
+     </component>
+     <converter>
+     	<converter-class>oneConverterClass</converter-class>
+     	<converter-for-class>oneConverterForClass</converter-for-class>
+     	<converter-id>oneConvertedId</converter-id>
+     </converter>
+     <lifecycle>
+     	<phase-listener/>
+     </lifecycle>
+     <managed-bean>
+     	<managed-bean-name>oneManagedBean</managed-bean-name>
+     	<managed-bean-class>oneManagedBeanClass</managed-bean-class>
+     	<managed-bean-scope>none</managed-bean-scope>
+     </managed-bean>
+     <render-kit>
+     	<renderer>
+     		<renderer-class>oneRendererClass</renderer-class>
+     		<renderer-type>oneRendererType</renderer-type>
+     		<description>oneComponentFamily</description>
+     	</renderer>
+     </render-kit>
+     <behavior>
+     	<behavior-id>oneBehaviorId</behavior-id>
+     	<behavior-class>oneBehaviorClass</behavior-class>
+     </behavior>
+     <validator>
+     	<validator-id>oneValidatorId</validator-id>
+     	<validator-class>oneValidatorClass</validator-class>
+     </validator>
+              
+</faces-config>

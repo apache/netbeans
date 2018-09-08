@@ -1,0 +1,3 @@
+        #{cc.attrs.muj.fakemethod(5)}
+                       -------------
+HINT:Unknown method "fakemethod"

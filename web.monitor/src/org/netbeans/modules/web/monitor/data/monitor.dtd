@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!ELEMENT MonitorData (ClientData, SessionData?, CookiesData?, RequestData, ServletData?, ContextData?,EngineData?, Dispatches?)>
+<!ATTLIST MonitorData
+    resource CDATA #REQUIRED
+    timestamp CDATA #REQUIRED
+    method CDATA #REQUIRED
+    id CDATA #REQUIRED>
+
+<!ELEMENT ClientData >
+<!ATTLIST ClientData
+    protocol CDATA #REQUIRED
+    remoteAddress CDATA #REQUIRED
+    software CDATA #IMPLIED
+    locale CDATA #IMPLIED
+    formatsAccepted CDATA #IMPLIED
+    encodingsAccepted  CDATA #IMPLIED
+    charsetsAccepted CDATA #IMPLIED>
+
+<!ELEMENT CookiesData (CookieIn*, CookieOut*)>
+
+<!ELEMENT CookieIn >
+<!ATTLIST CookieIn
+    name CDATA #REQUIRED
+    value CDATA #IMPLIED>
+    
+
+<!ELEMENT CookieOut >
+<!ATTLIST CookieOut
+    name CDATA #REQUIRED
+    value CDATA #REQUIRED
+    path CDATA #IMPLIED
+    domain CDATA #IMPLIED
+    maxAge NMTOKEN #IMPLIED
+    comment CDATA #IMPLIED
+    version NMTOKEN #IMPLIED
+    secure (false | true) "false">
+    
+
+<!ELEMENT SessionData (SessionIn, SessionOut)>
+<!ATTLIST SessionData
+    before (false | true) "false"
+    after  (false | true) "false"
+    id CDATA #IMPLIED
+    created CDATA #IMPLIED >
+    
+
+<!ELEMENT SessionIn (Param*)>
+<!ATTLIST SessionIn
+    lastAccessed CDATA #IMPLIED
+    inactiveInterval NMTOKEN #IMPLIED> 
+
+
+<!ELEMENT SessionOut (Param*)>
+<!ATTLIST SessionOut
+    lastAccessed CDATA #IMPLIED
+    inactiveInterval NMTOKEN #IMPLIED> 
+
+
+<!ELEMENT Param>
+<!ATTLIST Param
+    name CDATA #REQUIRED
+    value CDATA #IMPLIED>
+
+<!ELEMENT Value (#PCDATA)>
+
+<!ELEMENT Headers (Param*)>
+
+<!ELEMENT ServletData (Param*)>
+<!ATTLIST ServletData
+    name CDATA #IMPLIED 
+    className CDATA #IMPLIED
+    packageName CDATA #IMPLIED
+    servletInfo CDATA #IMPLIED
+    relPath CDATA #IMPLIED
+    transPath CDATA #IMPLIED
+    contextName CDATA #IMPLIED
+    absPath  CDATA #IMPLIED
+    jre  CDATA #IMPLIED
+    platform  CDATA #IMPLIED
+    serverPort NMTOKEN #IMPLIED
+    serverName CDATA #IMPLIED
+    collected CDATA #IMPLIED>
+
+<!ELEMENT EngineData>
+<!ATTLIST EngineData
+    jre  CDATA #IMPLIED
+    platform  CDATA #IMPLIED
+    serverPort NMTOKEN #IMPLIED
+    serverName CDATA #IMPLIED>
+
+<!ELEMENT ContextData (Param*, ContextAttributes?)>
+<!ATTLIST ContextData
+    contextName CDATA #IMPLIED 
+    absPath  CDATA #IMPLIED>
+
+<!ELEMENT RequestData (Headers, Param*, RequestAttributesIn?, RequestAttributesOut?)>
+<!ATTLIST RequestData
+    uri CDATA #REQUIRED
+    method CDATA #REQUIRED
+    queryString CDATA #IMPLIED
+    replace CDATA #IMPLIED
+    protocol CDATA #IMPLIED
+    ipaddress CDATA #IMPLIED
+    scheme CDATA #IMPLIED
+    status CDATA #IMPIED>
+
+<!ELEMENT RequestAttributesIn (Param*)>
+
+<!ELEMENT RequestAttributesOut (Param*)>
+
+<!ELEMENT ContextAttributes (Param*)>
+
+<!ELEMENT Dispatches (DispatchData*)>
+
+<!ELEMENT DispatchData (ClientData, SessionData?, CookiesData?, RequestData, ServletData?, ContextData?,EngineData?, Dispatches?)>
+<!ATTLIST MonitorData
+    resource CDATA #REQUIRED>
+

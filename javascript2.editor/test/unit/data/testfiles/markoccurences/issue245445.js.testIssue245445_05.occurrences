@@ -1,0 +1,1 @@
+    this.myMethod = function |>MARK_OCCURRENCES:MyLib_myMet^hod<|(array) {

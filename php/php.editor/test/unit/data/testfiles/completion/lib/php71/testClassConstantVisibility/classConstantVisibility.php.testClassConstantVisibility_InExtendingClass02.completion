@@ -1,0 +1,11 @@
+Code completion result for source line:
+self::|IMPLICIT_PUBLIC_CHILD_CONST; // CC in ex
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   IMPLICIT_PUBLIC_CHILD_CONST 0   [PUBLIC]   ChildClass
+CONSTANT   IMPLICIT_PUBLIC_PARENT_CONST 0  [PUBLIC]   ParentClass
+CONSTANT   PRIVATE_CHILD_CONST 0           [PRIVATE]  ChildClass
+CONSTANT   PROTECTED_CHILD_CONST 0         [PROTECTE  ChildClass
+CONSTANT   PROTECTED_PARENT_CONST 0        [PROTECTE  ParentClass
+CONSTANT   PUBLIC_CHILD_CONST 0            [PUBLIC]   ChildClass
+CONSTANT   PUBLIC_PARENT_CONST 0           [PUBLIC]   ParentClass
+CONSTANT   class \ChildClass               [PUBLIC]   Magic Constant

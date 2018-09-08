@@ -1,0 +1,2 @@
+    public static function |>MARK_OCCURRENCES:new<|($new) {
+ChildClass::|>MARK_OCCURRENCES:ne^w<|("test");

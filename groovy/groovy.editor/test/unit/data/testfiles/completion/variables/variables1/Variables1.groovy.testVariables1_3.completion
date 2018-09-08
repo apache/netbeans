@@ -1,0 +1,32 @@
+Code completion result for source line:
+a|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      AbstractCollection                         null
+CLASS      AbstractFactory                            null
+CLASS      AbstractList                               null
+CLASS      AbstractMap                                null
+CLASS      AbstractMethodError                        null
+CLASS      AbstractQueue                              null
+CLASS      AbstractSequentialList                     null
+CLASS      AbstractSet                                null
+CLASS      AdaptingMetaClass                          null
+CLASS      AllTestSuite                               null
+CLASS      AntBuilder                                 null
+CLASS      Appendable                                 null
+CLASS      ArithmeticException                        null
+CLASS      ArrayDeque                                 null
+CLASS      ArrayIndexOutOfBoundsException             null
+CLASS      ArrayList                                  null
+CLASS      ArrayStoreException                        null
+CLASS      Arrays                                     null
+CLASS      AssertionError                             null
+CLASS      Authenticator                              null
+CLASS      AutoCloseable                              null
+METHOD     addShutdownHook(Closure)                   void
+METHOD     any()                                      boolean
+METHOD     any(Closure)                               boolean
+METHOD     asBoolean()                                boolean
+METHOD     asType(Class)                              Object
+VARIABLE   ab                                         String
+KEYWORD    assert                                     null

@@ -1,0 +1,11 @@
+Code completion result for source line:
+#{(java.lang.Boolean).|}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     getBoolean                                 Boolean
+METHOD     parseBoolean                               Boolean
+METHOD     toString                                   Boolean
+METHOD     valueOf                                    Boolean
+CONSTANT   FALSE                                      Boolean
+CONSTANT   TRUE                                       Boolean
+CONSTANT   TYPE                                       Boolean

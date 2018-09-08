@@ -1,0 +1,5 @@
+Code completion result for source line:
+echo \test\ns\constants\ctx\CONSTANT_XY|Z;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CONSTANT   CONSTANT_XYZ 'Hello World'      [PUBLIC]   test\ns\constants\ctx

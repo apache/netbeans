@@ -1,0 +1,108 @@
+<testresult testFile='nowdoc_012.php'>
+    <scanner>
+        <token id='T_INLINE_HTML' start='0' end='36'>
+            <text>--TEST--\nTest false labels\n--FILE--\n</text>
+        </token>
+        <token id='T_REQUIRE_ONCE' start='43' end='55'>
+            <text>require_once</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='56' end='68'>
+            <text>&apos;nowdoc.inc&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='68' end='69'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='71' end='73'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='74' end='75'>
+            <text>=</text>
+        </token>
+        <token id='T_START_NOWDOC' start='76' end='93'>
+            <text>&lt;&lt;&lt;&apos;ENDOFNOWDOC&apos;\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='178' end='209'>
+            <text>\nNow let&apos;s finish it\nENDOFNOWDO</text>
+        </token>
+        <token id='T_END_NOWDOC' start='209' end='210'>
+            <text>C</text>
+        </token>
+        <token id='T_SEMICOLON' start='210' end='211'>
+            <text>;</text>
+        </token>
+        <token id='T_PRINT' start='212' end='217'>
+            <text>print</text>
+        </token>
+        <token id='T_QUATE' start='218' end='219'>
+            <text>"</text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='219' end='220'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='220' end='222'>
+            <text>$x</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='222' end='223'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='223' end='225'>
+            <text>\n</text>
+        </token>
+        <token id='T_QUATE' start='225' end='226'>
+            <text>"</text>
+        </token>
+        <token id='T_SEMICOLON' start='226' end='227'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='229' end='232'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='T_INLINE_HTML' start='232' end='349'>
+            <text>--EXPECT--\nThis is a nowdoc test.\nNOTREALLYEND;\nAnother line\nNOTENDEITHER;\nENDOFNOWDOCWILLBESOON\nNow let&apos;s finish it\n</text>
+        </token>
+        <token id='EOF' start='349' end='349'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='349'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <InLineHtml start='0' end='36'/>
+            <ExpressionStatement start='43' end='69'>
+                <Include start='43' end='68' type='REQUIRE_ONCE'>
+                    <Scalar start='56' end='68' type='STRING' value='&apos;nowdoc.inc&apos;'/>
+                </Include>
+            </ExpressionStatement>
+            <ExpressionStatement start='71' end='211'>
+                <Assignment start='71' end='210' operator='EQUAL'>
+                    <Variable start='71' end='73' isDollared='true'>
+                        <Identifier start='72' end='73' name='x'/>
+                    </Variable>
+                    <Scalar start='76' end='210' type='STRING' value='\nNow let&apos;s finish it\n'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='212' end='227'>
+                <FunctionInvocation start='212' end='226'>
+                    <FucntionName start='212' end='217'>
+                        <Identifier start='212' end='217' name='print'/>
+                    </FucntionName>
+                    <Parameters>
+                        <Quote start='218' end='226' type='QUOTE'>
+                            <Expressions>
+                                <ReflectionVariable start='219' end='223'>
+                                    <Variable start='220' end='222' isDollared='true'>
+                                        <Identifier start='221' end='222' name='x'/>
+                                    </Variable>
+                                </ReflectionVariable>
+                                <Scalar start='223' end='225' type='STRING' value='\n'/>
+                            </Expressions>
+                        </Quote>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <EmptyStatement start='229' end='232'/>
+            <InLineHtml start='232' end='349'/>
+        </Statements>
+    </Program>
+</testresult>

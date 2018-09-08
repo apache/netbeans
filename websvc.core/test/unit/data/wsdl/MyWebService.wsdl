@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="urn:MyWebService/wsdl" xmlns:ns2="urn:MyWebService/types" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="MyWebService" targetNamespace="urn:MyWebService/wsdl">
+  <types>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:MyWebService/types" xmlns:soap11-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" targetNamespace="urn:MyWebService/types">
+      <complexType name="createPerson">
+        <sequence>
+          <element name="String_1" type="string" nillable="true"/>
+          <element name="String_2" type="string" nillable="true"/></sequence></complexType>
+      <complexType name="createPersonResponse">
+        <sequence>
+          <element name="result" type="tns:Person" nillable="true"/></sequence></complexType>
+      <complexType name="Person">
+        <sequence>
+          <element name="address" type="tns:Address" nillable="true"/>
+          <element name="age" type="int"/>
+          <element name="name" type="string" nillable="true"/>
+          <element name="surname" type="string" nillable="true"/></sequence></complexType>
+      <complexType name="Address">
+        <sequence>
+          <element name="city" type="string" nillable="true"/>
+          <element name="number" type="int"/>
+          <element name="state" type="string" nillable="true"/>
+          <element name="street" type="string" nillable="true"/></sequence></complexType>
+      <complexType name="getAddress">
+        <sequence>
+          <element name="Person_1" type="tns:Person" nillable="true"/></sequence></complexType>
+      <complexType name="getAddressResponse">
+        <sequence>
+          <element name="result" type="tns:Address" nillable="true"/></sequence></complexType>
+      <element name="createPerson" type="tns:createPerson"/>
+      <element name="createPersonResponse" type="tns:createPersonResponse"/>
+      <element name="getAddress" type="tns:getAddress"/>
+      <element name="getAddressResponse" type="tns:getAddressResponse"/></schema></types>
+  <message name="MyWebServiceSEI_createPerson">
+    <part name="parameters" element="ns2:createPerson"/></message>
+  <message name="MyWebServiceSEI_createPersonResponse">
+    <part name="result" element="ns2:createPersonResponse"/></message>
+  <message name="MyWebServiceSEI_getAddress">
+    <part name="parameters" element="ns2:getAddress"/></message>
+  <message name="MyWebServiceSEI_getAddressResponse">
+    <part name="result" element="ns2:getAddressResponse"/></message>
+  <portType name="MyWebServiceSEI">
+    <operation name="createPerson">
+      <input message="tns:MyWebServiceSEI_createPerson"/>
+      <output message="tns:MyWebServiceSEI_createPersonResponse"/></operation>
+    <operation name="getAddress">
+      <input message="tns:MyWebServiceSEI_getAddress"/>
+      <output message="tns:MyWebServiceSEI_getAddressResponse"/></operation></portType>
+  <binding name="MyWebServiceSEIBinding" type="tns:MyWebServiceSEI">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+    <operation name="createPerson">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/></input>
+      <output>
+        <soap:body use="literal"/></output></operation>
+    <operation name="getAddress">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/></input>
+      <output>
+        <soap:body use="literal"/></output></operation></binding>
+  <service name="MyWebService">
+    <port name="MyWebServiceSEIPort" binding="tns:MyWebServiceSEIBinding">
+      <soap:address location="http://jungi.czech.sun.com:8129/WebApplication1/MyWebService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"/></port></service></definitions>

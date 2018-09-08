@@ -1,0 +1,3 @@
+Utils:CLASS:[PUBLIC]:ESCAPED{Utils}:
+  name:FIELD:[PUBLIC]:ESCAPED{name}<font color="#999999">ESCAPED{ : }String</font>:
+  values:METHOD:[PUBLIC]:ESCAPED{values}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Generator</font>:

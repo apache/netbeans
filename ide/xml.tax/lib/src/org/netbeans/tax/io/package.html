@@ -1,0 +1,71 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<HTML>
+  <HEAD>
+    <TITLE>io package</TITLE>
+  </HEAD>
+
+<BODY>
+
+<h3>Overview</h3>
+The package contains classes used for building and writing
+down the tree structure (load/save).
+
+<h3>Class Structure</h3>
+
+<pre>
+
+  TreeInputSource             TreeOutputResult
+       |                           |
+  TreeBuilder                 TreeWriter
+       |                           |
+       *---------> Tree -----------+
+
+</pre>
+
+<dl>
+<dt>TreeInputSource <dd>interface representing a source providing a builder
+available to build a tree instance from the source.
+<dt>TreeStreamSource <dd>TreeInputSource implemenation
+reading data from SAX's InputSource.
+
+<dt>TreeBuilder <DD>interface with buildDocument() returning a tree instance
+It returns XML or DTD tree depending on the source that provided it.
+<dt>TreeStreamBuilderXercesImpl <dd>TreeBuilder implementation
+provided by TreeStreamSource
+
+<dt>TreeOutputResult <dd>provides getWriter() returning writer writing to
+some output representation
+<dt>TreeStreamResult <dd>implementation of TreeOutputResult
+
+</dl>
+<h4>SAX EntityResolver Replacement</h4>
+
+<dl>
+<dt>TreeEntityResolver <dd>an interface
+<dt>TreeEntityManager  <dd>the void implementation
+</dl>
+
+</BODY>
+</HTML>

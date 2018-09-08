@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>New JSF Pages from Entity Class Wizard: Generate JSF Pages and Classes</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="framework_jsf_fromentity_setup" name="framework_jsf_fromentity_setup"></a></p>
+<div id="NBCSH4173"><!-- infolevel="all" infotype="General" --><a id="sthref556" name="sthref556"></a>
+<h1>New JSF Pages from Entity Class Wizard: Generate JSF Pages and Classes</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to generate JSP pages with JSF components based on entity classes in your web application. The generated JSP pages provide a web interface for the entity classes. For each entity class, the IDE creates four JSP pages enabling you to view, edit, create, and destroy entries in the data source. The IDE also creates controller and facade classes for each entity class and JSF utility classes. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1173">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>To use JSF components in your web application, you must make sure that your project supports the JSF Framework.</p>
+<p>In this page of the wizard you set the following:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t8">Element</th>
+<th align="left" valign="bottom" id="r1c2-t8">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t8" headers="r1c1-t8">
+<p>Project</p>
+</td>
+<td align="left" headers="r2c1-t8 r1c2-t8">Specifies the project in which the JSF pages and classes will be located.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t8" headers="r1c1-t8">
+<p>Location</p>
+</td>
+<td align="left" headers="r3c1-t8 r1c2-t8">Select the folder for source packages.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t8" headers="r1c1-t8">
+<p>Session Bean Package</p>
+</td>
+<td align="left" headers="r4c1-t8 r1c2-t8">Select an existing package from the Package dropdown list or type the name of a new package for the facade classes.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t8" headers="r1c1-t8">
+<p>JSF Classes Package</p>
+</td>
+<td align="left" headers="r5c1-t8 r1c2-t8">Select an existing package from the Package dropdown list or type the name of a new package for the JSF controller classes.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t8" headers="r1c1-t8">
+<p>JSF Pages Folder</p>
+</td>
+<td align="left" headers="r6c1-t8 r1c2-t8">Specify the location of the JSF Pages folder. If no folder is specified the JSF pages are saved in a folder in the default Web Pages folder.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t8" headers="r1c1-t8">
+<p>Localization Bundle Name</p>
+</td>
+<td align="left" headers="r7c1-t8 r1c2-t8">Type the name of the bundle properties file. The default name is <code dir="ltr">Bundle</code>.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t8" headers="r1c1-t8">
+<p>Override Existing Files</p>
+</td>
+<td align="left" headers="r8c1-t8 r1c2-t8">When selected, the generated bundle properties file will replace the existing bundle properties file with the same name. If you want more than one bundle properties file you need to ensure that the name of each file is unique. An entry for the bundle properties file is automatically added to <code dir="ltr">faces-config.xml</code>.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t8" headers="r1c1-t8">
+<p>Choose Templates</p>
+</td>
+<td align="left" headers="r9c1-t8 r1c2-t8">Select either JavaServer Faces or PrimeFaces in the drop-down list.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t8" headers="r1c1-t8">
+<p>Customize Template</p>
+</td>
+<td align="left" headers="r10c1-t8 r1c2-t8">Enables you to modify the file templates that are used for generating the pages and bundle properties file. Right-click to view a list of the templates and select a template to open the template in the editor.
+<p>To edit the template in the editor you need to close the wizard. The modified template will be used the next time you use the wizard.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p><b>Notes:</b></p>
+<ul>
+<li>You can also modify file templates by choosing <b>Tools</b> &gt; <b>Templates</b> from the main menu and then selecting the template you want to edit from the list in the Template Manager.</li>
+<li>Be aware that templates are not project-specific and the IDE will also use the modified template for generating files in other projects.</li>
+</ul>
+<a id="NBCSH4183" name="NBCSH4183"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1140">
+<param name="text" value="<html><u>&quot;About Using Web Application Frameworks&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1141">
+<param name="text" value="<html><u>&quot;Working with the JavaServer Faces Framework&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG217">
+<param name="text" value="<html><u>&quot;Working with Source Files in the IDE&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

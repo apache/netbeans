@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<webservices xmlns='http://java.sun.com/xml/ns/j2ee' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://java.sun.com/xml/ns/j2ee http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd' version='1.1'>
+	<webservice-description>
+		<webservice-description-name>SampleWebService</webservice-description-name>
+		<wsdl-file>WEB-INF/wsdl/SampleWebService.wsdl</wsdl-file>
+		<jaxrpc-mapping-file>WEB-INF/SampleWebService-mapping.xml</jaxrpc-mapping-file>
+		<port-component xmlns:wsdl-port_ns='urn:SampleWebService/wsdl'>
+			<port-component-name>SampleWebService</port-component-name>
+			<wsdl-port>wsdl-port_ns:SampleWebServiceSEIPort</wsdl-port>
+			<service-endpoint-interface>sample.SampleWebServiceSEI</service-endpoint-interface>
+			<service-impl-bean>
+				<servlet-link>WSServlet_SampleWebService</servlet-link>
+			</service-impl-bean>
+		</port-component>
+	</webservice-description>
+</webservices>

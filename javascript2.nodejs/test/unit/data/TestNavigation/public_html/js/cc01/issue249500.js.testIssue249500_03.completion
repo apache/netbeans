@@ -1,0 +1,6 @@
+Code completion result for source line:
+trip|; // test 1
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+VARIABLE   trip                            [PUBLIC]   issue249500.js
+VARIABLE   tripCtrl: Module tripCtrl       [PRIVATE]  issue249500.js

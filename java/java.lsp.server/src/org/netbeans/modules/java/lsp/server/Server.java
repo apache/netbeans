@@ -75,6 +75,7 @@ public class Server {
         File userdir = new File("/tmp/scratch-user");
         File cachedir = new File("/tmp/scratch-cache");
         System.setProperty("netbeans.user", userdir.getAbsolutePath());
+        System.setProperty("jdk.home", System.getProperty("java.home")); //for j2seplatform
         Class<?> main = Class.forName("org.netbeans.core.startup.Main");
         main.getDeclaredMethod("initializeURLFactory").invoke(null);
         new File(cachedir, "index").mkdirs();

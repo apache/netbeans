@@ -28,6 +28,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+import org.eclipse.lsp4j.CodeAction;
+import org.eclipse.lsp4j.CodeActionContext;
+import org.eclipse.lsp4j.CodeActionParams;
+import org.eclipse.lsp4j.Command;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
@@ -45,6 +49,7 @@ import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentItem;
+import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
@@ -130,9 +135,27 @@ public class ServerTest extends NbTestCase {
         completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(src.toURI().toString()), new Position(0, hashCodeStart + 2))).get();
         actualItems = completion.getRight().getItems().stream().map(ci -> ci.getKind() + ":" + ci.getLabel()).collect(Collectors.toList());
         assertEquals(Arrays.asList("Method:equals", "Method:equalsIgnoreCase"), actualItems);
+        server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, hashCodeStart), new Position(0, hashCodeStart + "equ".length())), "equ".length(), "hashCode"))));
+        int closingBrace = code.indexOf("}");
+        server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, closingBrace), new Position(0, closingBrace)), 0, "private String c(Object o) {\nreturn o;\n}"))));
+        List<Diagnostic> diagnostics = assertDiags(diags, "Error:1:0-1:9");
+        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(1, 0), new Position(1, 9)), new CodeActionContext(Arrays.asList(diagnostics.get(0))))).get();
+        String log = codeActions.toString();
+        assertEquals(log, 2, codeActions.size());
+        assertTrue(log, codeActions.get(0).isRight());
+        CodeAction action = codeActions.get(0).getRight();
+        assertEquals("Cast ...o to String", action.getTitle());
+        assertEquals(1, action.getEdit().getDocumentChanges().size());
+        assertEquals(1, action.getEdit().getDocumentChanges().get(0).getEdits().size());
+        TextEdit edit = action.getEdit().getDocumentChanges().get(0).getEdits().get(0);
+        assertEquals(1, edit.getRange().getStart().getLine());
+        assertEquals(7, edit.getRange().getStart().getCharacter());
+        assertEquals(1, edit.getRange().getEnd().getLine());
+        assertEquals(7, edit.getRange().getEnd().getCharacter());
+        assertEquals("(String) ", edit.getNewText());
     }
 
-    private void assertDiags(List<Diagnostic>[] diags, String... expected) {
+    private List<Diagnostic> assertDiags(List<Diagnostic>[] diags, String... expected) {
         synchronized (diags) {
             while (diags[0] == null) {
                 try {
@@ -142,12 +165,23 @@ public class ServerTest extends NbTestCase {
                 }
             }
             List<String> actualDiags = diags[0].stream()
-                                               .map(d -> d.getSeverity() + ":" + 
+                                               .map(d -> d.getSeverity() + ":" +
                                                          d.getRange().getStart().getLine() + ":" + d.getRange().getStart().getCharacter() + "-" +
                                                          d.getRange().getEnd().getLine() + ":" + d.getRange().getEnd().getCharacter())
                                                .collect(Collectors.toList());
-            assertEquals(Arrays.asList(expected), actualDiags);
+            String diagsMessage = diags[0].stream()
+                                          .map(d -> d.getSeverity() + ":" +
+                                                    d.getRange().getStart().getLine() + ":" + d.getRange().getStart().getCharacter() + "-" +
+                                                    d.getRange().getEnd().getLine() + ":" + d.getRange().getEnd().getCharacter() + ": " +
+                                                    d.getMessage())
+                                               .collect(Collectors.joining("\n"));
+            assertEquals(diagsMessage, Arrays.asList(expected), actualDiags);
+
+            List<Diagnostic> result = diags[0];
+
             diags[0] = null;
+
+            return result;
         }
     }
 }

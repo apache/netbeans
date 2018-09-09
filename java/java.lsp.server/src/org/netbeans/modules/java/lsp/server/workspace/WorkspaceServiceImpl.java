@@ -39,12 +39,12 @@ public class WorkspaceServiceImpl implements WorkspaceService {
 
     @Override
     public void didChangeConfiguration(DidChangeConfigurationParams arg0) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //TODO: no real configuration right now
     }
 
     @Override
     public void didChangeWatchedFiles(DidChangeWatchedFilesParams arg0) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //TODO: not watching files for now
     }
     
 }

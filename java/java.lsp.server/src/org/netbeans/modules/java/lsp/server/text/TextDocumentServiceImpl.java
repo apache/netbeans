@@ -20,17 +20,15 @@ package org.netbeans.modules.java.lsp.server.text;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -46,6 +44,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.CodeAction;
+import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.CodeLens;
 import org.eclipse.lsp4j.CodeLensParams;
@@ -68,6 +67,8 @@ import org.eclipse.lsp4j.DocumentSymbol;
 import org.eclipse.lsp4j.DocumentSymbolParams;
 import org.eclipse.lsp4j.Hover;
 import org.eclipse.lsp4j.Location;
+import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.Range;
@@ -76,8 +77,10 @@ import org.eclipse.lsp4j.RenameParams;
 import org.eclipse.lsp4j.SignatureHelp;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
+import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.TextEdit;
+import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.services.LanguageClient;
@@ -88,21 +91,24 @@ import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
-import org.netbeans.api.java.source.JavaParserResultTask;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.support.ReferencesCount;
 import org.netbeans.modules.editor.java.Utilities;
 import org.netbeans.modules.java.completion.JavaCompletionTask;
 import org.netbeans.modules.java.completion.JavaCompletionTask.Options;
+import org.netbeans.modules.java.hints.infrastructure.CreatorBasedLazyFixList;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsProvider;
+import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
-import org.netbeans.modules.parsing.spi.Scheduler;
-import org.netbeans.modules.parsing.spi.SchedulerEvent;
 import org.netbeans.spi.editor.hints.ErrorDescription;
+import org.netbeans.spi.editor.hints.Fix;
+import org.netbeans.spi.editor.hints.LazyFixList;
+import org.netbeans.spi.java.hints.JavaFix;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
@@ -329,7 +335,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
         }
     }
-    
+
     @Override
     public CompletableFuture<CompletionItem> resolveCompletionItem(CompletionItem arg0) {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -366,11 +372,76 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     @Override
-    public CompletableFuture<List<Either<Command, CodeAction>>> codeAction(CodeActionParams arg0) {
-        System.err.println("codeAction document: " + arg0.getTextDocument().getUri());
-        System.err.println("codeAction range: " + arg0.getRange());
-        System.err.println("codeAction diagnostics: " + arg0.getContext().getDiagnostics());
-        throw new UnsupportedOperationException("Not supported yet.");
+    public CompletableFuture<List<Either<Command, CodeAction>>> codeAction(CodeActionParams params) {
+        Document doc = openedDocuments.get(params.getTextDocument().getUri());
+        if (doc == null) {
+            return CompletableFuture.completedFuture(Collections.emptyList());
+        }
+        Map<String, ErrorDescription> id2Errors = (Map<String, ErrorDescription>) doc.getProperty("lsp-errors");
+        if (id2Errors == null) {
+            return CompletableFuture.completedFuture(Collections.emptyList());
+        }
+        JavaSource js = JavaSource.forDocument(doc);
+        List<Either<Command, CodeAction>> result = new ArrayList<>();
+        for (Diagnostic diag : params.getContext().getDiagnostics()) {
+            ErrorDescription err = id2Errors.get(diag.getCode());
+
+            if (err == null) {
+                client.logMessage(new MessageParams(MessageType.Log, "Cannot resolve error, code: " + diag.getCode()));
+                continue;
+            }
+
+            LazyFixList lfl = err.getFixes();
+
+            if (lfl instanceof CreatorBasedLazyFixList) {
+                try {
+                    js.runUserActionTask(cc -> {
+                        cc.toPhase(JavaSource.Phase.RESOLVED);
+                        ((CreatorBasedLazyFixList) lfl).compute(cc, new AtomicBoolean());
+                    }, true);
+                } catch (IOException ex) {
+                    //TODO: include stack trace:
+                    client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                }
+            }
+            List<Fix> fixes = lfl.getFixes();
+
+            //TODO: ordering
+
+            for (Fix f : fixes) {
+                if (f instanceof JavaFixImpl) {
+                    try {
+                        ModificationResult changes = js.runModificationTask(wc -> {
+                            wc.toPhase(JavaSource.Phase.RESOLVED);
+                            Map<FileObject, byte[]> resourceContentChanges = new HashMap<FileObject, byte[]>();
+                            JavaFix jf = ((JavaFixImpl) f).jf;
+                            JavaFixImpl.Accessor.INSTANCE.process(jf, wc, true, resourceContentChanges, /*Ignored in editor:*/new ArrayList<>());
+                        });
+                        //TODO: full, correct and safe edit production:
+                        List<? extends ModificationResult.Difference> diffs = changes.getDifferences(changes.getModifiedFileObjects().iterator().next());
+                        List<TextEdit> edits = new ArrayList<>();
+                        for (ModificationResult.Difference diff : diffs) {
+                            edits.add(new TextEdit(new Range(createPosition(doc, diff.getStartPosition().getOffset()),
+                                                             createPosition(doc, diff.getEndPosition().getOffset())),
+                                                   diff.getNewText()));
+                        }
+                        TextDocumentEdit te = new TextDocumentEdit(new VersionedTextDocumentIdentifier(params.getTextDocument().getUri(),
+                                                                                                       -1),
+                                                                   edits);
+                        CodeAction action = new CodeAction(f.getText());
+                        action.setDiagnostics(Collections.singletonList(diag));
+                        action.setKind(CodeActionKind.QuickFix);
+                        action.setEdit(new WorkspaceEdit(Collections.singletonList(te)));
+                        result.add(Either.forRight(action));
+                    } catch (IOException | BadLocationException ex) {
+                        //TODO: include stack trace:
+                        client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                    }
+                }
+            }
+        }
+
+        return CompletableFuture.completedFuture(result);
     }
 
     @Override
@@ -456,26 +527,25 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                             CompilationController cc = CompilationController.get(it.getParserResult());
                             cc.toPhase(JavaSource.Phase.RESOLVED);
                             ErrorHintsProvider ehp = new ErrorHintsProvider();
-                            Function<ErrorDescription, Diagnostic> error2Shim = err -> {
-                                try {
-                                    Diagnostic diag = new Diagnostic(new Range(createPosition(doc, err.getRange().getBegin().getOffset()),
-                                                                    createPosition(doc, err.getRange().getEnd().getOffset())),
-                                                          err.getDescription());
-                                    switch (err.getSeverity()) {
-                                        case ERROR: diag.setSeverity(DiagnosticSeverity.Error); break;
-                                        case WARNING: diag.setSeverity(DiagnosticSeverity.Warning); break;
-                                        case HINT: diag.setSeverity(DiagnosticSeverity.Hint); break;
-                                        default: diag.setSeverity(DiagnosticSeverity.Information); break;
-                                    }
-                                    return diag;
-                                } catch (BadLocationException ex) {
-                                    throw new IllegalStateException(ex);
+                            Map<String, ErrorDescription> id2Errors = new HashMap<>();
+                            List<Diagnostic> diags = new ArrayList<>();
+                            int idx = 0;
+                            for (ErrorDescription err : ehp.computeErrors(cc, doc, "text/x-java")) { //TODO: mimetype?
+                                Diagnostic diag = new Diagnostic(new Range(createPosition(doc, err.getRange().getBegin().getOffset()),
+                                                                           createPosition(doc, err.getRange().getEnd().getOffset())),
+                                                                 err.getDescription());
+                                switch (err.getSeverity()) {
+                                    case ERROR: diag.setSeverity(DiagnosticSeverity.Error); break;
+                                    case WARNING: diag.setSeverity(DiagnosticSeverity.Warning); break;
+                                    case HINT: diag.setSeverity(DiagnosticSeverity.Hint); break;
+                                    default: diag.setSeverity(DiagnosticSeverity.Information); break;
                                 }
-                            };
-                            List<Diagnostic> diags = ehp.computeErrors(cc, doc, "text/x-java") //TODO: mimetype?
-                                                        .stream()
-                                                        .map(error2Shim)
-                                                        .collect(Collectors.toList());
+                                String id = idx + "-" + err.getId();
+                                diag.setCode(id);
+                                id2Errors.put(id, err);
+                                diags.add(diag);
+                            }
+                            doc.putProperty("lsp-errors", id2Errors);
                             client.publishDiagnostics(new PublishDiagnosticsParams(u, diags));
                         }
                     });

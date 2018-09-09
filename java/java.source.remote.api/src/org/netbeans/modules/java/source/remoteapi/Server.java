@@ -44,11 +44,13 @@ import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.modules.java.source.remote.api.RemoteParserTask;
 import org.netbeans.modules.parsing.impl.indexing.DefaultCacheFolderProvider;
 import org.netbeans.modules.parsing.impl.indexing.implspi.CacheFolderProvider;
+import org.netbeans.spi.project.ProjectFactory;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.Places;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -62,7 +64,13 @@ public class Server {
         main.getDeclaredMethod("initializeURLFactory").invoke(null);
         DefaultCacheFolderProvider.getInstance().setCacheFolder(FileUtil.toFileObject(new File(args[2], "index")));
         CacheFolderProvider.getCacheFolderForRoot(Places.getUserDirectory().toURI().toURL(), EnumSet.noneOf(CacheFolderProvider.Kind.class), CacheFolderProvider.Mode.EXISTENT);
-        startImpl(Integer.parseInt(args[0]));
+        Lookups.executeWith(Lookups.exclude(Lookup.getDefault(), ProjectFactory.class), () -> {
+            try {
+                startImpl(Integer.parseInt(args[0]));
+            } catch (IOException ex) {
+               ex.printStackTrace();
+            }
+        });
     }
 
     public static void start(int reportPort) {
@@ -90,7 +98,9 @@ public class Server {
                 switch (command) {
                     case "run-remote": {
                         long id = dis.readLong();
-                        String config = dis.readUTF();
+                        byte[] confBytes = new byte[dis.readInt()];
+                        dis.readFully(confBytes);
+                        String config = new String(confBytes, "UTF-8");
                         String task = dis.readUTF();
                         String additionalParams = dis.readUTF();
                         WORKER.post(() -> {

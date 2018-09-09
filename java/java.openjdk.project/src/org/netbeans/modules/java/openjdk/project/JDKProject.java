@@ -63,6 +63,7 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Pair;
 import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -220,6 +221,7 @@ public class JDKProject implements Project {
                                     new Settings(this),
                                     new BinaryForSourceQueryImpl(this, cpp.getSourceCP()),
                                     this);
+        base = new ProxyLookup(base, RemotePlatformImpl.createProvider(jdkRoot, this));
         this.lookup = LookupProviderSupport.createCompositeLookup(base, "Projects/" + PROJECT_KEY + "/Lookup");
         } catch (Throwable t) {
             t.printStackTrace();

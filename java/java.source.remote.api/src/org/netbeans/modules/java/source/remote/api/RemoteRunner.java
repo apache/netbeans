@@ -120,7 +120,10 @@ public class RemoteRunner {
         });
         out.writeUTF("run-remote");
         out.writeLong(thisRequestId);
-        out.writeUTF(gson.toJson(conf));
+        String confSer = gson.toJson(conf);
+        byte[] confBytes = confSer.getBytes("UTF-8");
+        out.writeInt(confBytes.length);
+        out.write(confBytes);
         out.writeUTF(remoteTask.getName());
         out.writeUTF(gson.toJson(additionalParam));
         out.flush();

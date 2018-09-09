@@ -21,6 +21,7 @@ package org.netbeans;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,6 +37,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import java.nio.channels.ClosedByInterruptException;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.security.CodeSource;
@@ -850,20 +852,41 @@ public class JarClassLoader extends ProxyClassLoader {
             super(BaseUtilities.toURI(file).toURL());
             dir = file;
         }
-        
+
+        private Manifest getManifestHelper(boolean useNIO) throws IOException {
+          File maniF = new File(new File(dir, "META-INF"), "MANIFEST.MF");
+          Manifest mf = new Manifest();
+          if (maniF.canRead()) {
+              try (InputStream istm = useNIO
+                      ? Files.newInputStream(maniF.toPath())
+                      : new FileInputStream(maniF))
+              {
+                  mf.read(istm);
+              }
+          }
+          return mf;
+        }
+
         public Manifest getManifest() {
             Manifest mf = manifest;
             if (mf != null) {
                 return mf;
             }
-            File maniF = new File(new File(dir, "META-INF"), "MANIFEST.MF");
-            mf = new Manifest();
-            if (maniF.canRead()) {
-                try (InputStream istm = Files.newInputStream(maniF.toPath())) {
-                    mf.read(istm);
-                } catch (IOException | InvalidPathException ex) {
-                    Exceptions.printStackTrace(ex);
+            try {
+                try {
+                    mf = getManifestHelper(true);
+                } catch (ClosedByInterruptException ex) {
+                    // See comments in readClass().
+                    LOGGER.log(Level.INFO,
+                        "getManifest was interrupted; redoing operation with a regular FileInputStream");
+                    try {
+                      mf = getManifestHelper(false);
+                    } finally {
+                      Thread.currentThread().interrupt();
+                    }
                 }
+            } catch (IOException | InvalidPathException ex) {
+                Exceptions.printStackTrace(ex);
             }
             return manifest = mf;
         }
@@ -876,14 +899,17 @@ public class JarClassLoader extends ProxyClassLoader {
             File resFile = new File(dir, name);
             return resFile.exists() ? BaseUtilities.toURI(resFile).toURL() : null;
         }
-        
-        protected byte[] readClass(String path) throws IOException {
+
+        private byte[] readClassHelper(String path, boolean usingNIO) throws IOException {
             File clsFile = new File(dir, path.replace('/', File.separatorChar));
             if (!clsFile.exists()) return null;
-            
+
             int len = (int)clsFile.length();
             byte[] data = new byte[len];
-            try (InputStream is = Files.newInputStream(clsFile.toPath())) {
+            try (InputStream is = usingNIO
+                  ? Files.newInputStream(clsFile.toPath())
+                  : new FileInputStream(clsFile))
+            {
                 int count = 0;
                 while (count < len) {
                     count += is.read(data, count, len - count);
@@ -891,6 +917,30 @@ public class JarClassLoader extends ProxyClassLoader {
                 return data;
             } catch (InvalidPathException ex) {
                 throw new IOException(ex);
+            }
+        }
+
+        protected byte[] readClass(String path) throws IOException {
+            /* "FileOutputStream and FileInputStream complicate GC because they both override
+            'finalize()'. Switching to NIO API creates Stream without finalizers and thus relieving
+            GC." However, using NIO means IO operations can fail with a ClosedByInterruptException,
+            for instance if client code starts a new thread which needs to load some new classes,
+            and then interrupts the thread before class loading has finished. See NETBEANS-1197.
+            Note that the old java.io.InterruptedIOException, which could in theory be called even
+            from FileOutputStream/FileInputStream, was seldom seen in practice; see JDK-4385444. */
+            try {
+                return readClassHelper(path, true);
+            } catch (ClosedByInterruptException ex) {
+                LOGGER.log(Level.INFO,
+                    "readClass was interrupted; redoing operation with a regular FileInputStream");
+                try {
+                  return readClassHelper(path, false);
+                } finally {
+                  /* The wording in ClosedByInterruptException's Javadoc is a little ambiguous as to
+                  whether the thread's interrupt status will remain set _after_ the
+                  ClosedByInterruptException exception is thrown, so set it here just to be safe. */
+                  Thread.currentThread().interrupt();
+                }
             }
         }
         

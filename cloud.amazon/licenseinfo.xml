@@ -19,17 +19,14 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="cloud.amazon">
-    <description>Builds, tests, and runs the project org.netbeans.modules.cloud.amazon</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
-    <property name="resourcesdir" value="./src/org/netbeans/modules/cloud/amazon/resources/"/>
-
-    <war destfile = "${resourcesdir}/empty.war" webxml = "${resourcesdir}/web.xml">
-        <fileset dir="${resourcesdir}/">
-            <include name="welcome.jsp"/>
-        </fileset>
-        <classes dir="${resourcesdir}/">
-            <exclude name="**/*"/>
-        </classes>
-    </war>
-</project>
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/cloud/amazon/ui/resources/amazon.png</file>
+        <file>src/org/netbeans/modules/cloud/amazon/ui/resources/running.png</file>
+        <file>src/org/netbeans/modules/cloud/amazon/ui/resources/terminated.png</file>
+        <file>src/org/netbeans/modules/cloud/amazon/ui/resources/tomcat.png</file>
+        <file>src/org/netbeans/modules/cloud/amazon/ui/resources/waiting.png</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

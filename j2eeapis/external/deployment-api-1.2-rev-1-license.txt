@@ -1,9 +1,8 @@
-Name: JSR 88
+Name: Java EE Deployment API
 License: CDDL-1.0
-OSR: 136590
-Description: J2EE Deployment APIs 1.1
-Version: 88
-Origin: Oracle (http://jcp.org/aboutJava/communityprocess/mrel/jsr088/index.html)
+Description: Java EE Deployment API
+Version: 1.2-rev-1
+Origin: http://jcp.org/en/jsr/detail?id=88
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
 

@@ -158,7 +158,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
         @Override
         public CompletionItem createKeywordItem(String kwd, String postfix, int substitutionOffset, boolean smartType) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            CompletionItem item = new CompletionItem(kwd);
+            item.setKind(CompletionItemKind.Keyword);
+            return item;
         }
 
         @Override

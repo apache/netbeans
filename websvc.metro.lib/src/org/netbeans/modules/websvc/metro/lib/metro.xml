@@ -36,13 +36,22 @@
     </volume>
     <volume>
         <type>javadoc</type>
-        <resource>jar:nbinst://org.netbeans.modules.websvc.metro.lib/docs/metro-1.4-doc.zip!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.metro.lib/docs/webservices-api-javadoc.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.metro.lib/docs/webservices-extra-javadoc.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.metro.lib/docs/webservices-extra-api-javadoc.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.metro.lib/docs/webservices-rt-javadoc.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.metro.lib/docs/webservices-tools-javadoc.jar!/</resource>
     </volume>
     <properties>
-        <!-- please check with mkleint@netbeans.org before/after updating this or "classpath" section -->
         <property>
             <name>maven-dependencies</name>
-            <value>org.glassfish.metro:webservices-rt:2.3:jar</value>
+            <value>
+                org.glassfish.metro:webservices-api:2.3.1:jar 
+                org.glassfish.metro:webservices-extra:2.3.1:jar
+                org.glassfish.metro:webservices-extra-api:2.3.1:jar 
+                org.glassfish.metro:webservices-rt:2.3.1:jar 
+                org.glassfish.metro:webservices-tools:2.3.1:jar
+            </value>
         </property>
     </properties>    
 </library>

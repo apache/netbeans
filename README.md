@@ -43,14 +43,24 @@ Apache NetBeans is an open source development environment, tooling platform, and
 
 ### Building NetBeans
 
-Build the full project:
+Build the basic project (mainly, JavaSE features):
 ```
 $ ant
+```
+or
+```
+$ ant -Dcluster.config=basic
+```
+Build the full project (including Groovy, PHP, JavaEE/JakartaEE, and JavaScript features):
+```
+$ ant -Dcluster.confg=full
 ```
 Build the NetBeans Platform:
 ```
 $ ant -Dcluster.config=platform
 ```
+
+**Note:** You can also use `php`, `enterprise`, e.t.c. See the [cluster.properties](https://github.com/apache/incubator-netbeans/blob/master/nbbuild/cluster.properties) file.
 
 ### Running NetBeans
 

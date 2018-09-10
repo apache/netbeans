@@ -1,0 +1,137 @@
+<testresult testFile='heredoc_002.php'>
+    <scanner>
+        <token id='T_INLINE_HTML' start='0' end='46'>
+            <text>--TEST--\nbasic binary heredoc syntax\n--FILE--\n</text>
+        </token>
+        <token id='T_REQUIRE_ONCE' start='53' end='65'>
+            <text>require_once</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='66' end='78'>
+            <text>&apos;nowdoc.inc&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='78' end='79'>
+            <text>;</text>
+        </token>
+        <token id='T_PRINT' start='81' end='86'>
+            <text>print</text>
+        </token>
+        <token id='T_START_HEREDOC' start='87' end='104'>
+            <text>b&lt;&lt;&lt;ENDOFHEREDOC\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='104' end='129'>
+            <text>This is a heredoc test.\n\n</text>
+        </token>
+        <token id='T_END_HEREDOC' start='129' end='141'>
+            <text>ENDOFHEREDOC</text>
+        </token>
+        <token id='T_SEMICOLON' start='141' end='142'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='144' end='146'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='147' end='148'>
+            <text>=</text>
+        </token>
+        <token id='T_START_HEREDOC' start='149' end='166'>
+            <text>b&lt;&lt;&lt;ENDOFHEREDOC\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='166' end='197'>
+            <text>This is another heredoc test.\n\n</text>
+        </token>
+        <token id='T_END_HEREDOC' start='197' end='209'>
+            <text>ENDOFHEREDOC</text>
+        </token>
+        <token id='T_SEMICOLON' start='209' end='210'>
+            <text>;</text>
+        </token>
+        <token id='T_PRINT' start='212' end='217'>
+            <text>print</text>
+        </token>
+        <token id='T_QUATE' start='218' end='219'>
+            <text>"</text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='219' end='220'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='220' end='222'>
+            <text>$x</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='222' end='223'>
+            <text>}</text>
+        </token>
+        <token id='T_QUATE' start='223' end='224'>
+            <text>"</text>
+        </token>
+        <token id='T_SEMICOLON' start='224' end='225'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='227' end='230'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='T_INLINE_HTML' start='230' end='295'>
+            <text>--EXPECT--\nThis is a heredoc test.\nThis is another heredoc test.\n</text>
+        </token>
+        <token id='EOF' start='295' end='295'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='295'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <InLineHtml start='0' end='46'/>
+            <ExpressionStatement start='53' end='79'>
+                <Include start='53' end='78' type='REQUIRE_ONCE'>
+                    <Scalar start='66' end='78' type='STRING' value='&apos;nowdoc.inc&apos;'/>
+                </Include>
+            </ExpressionStatement>
+            <ExpressionStatement start='81' end='142'>
+                <FunctionInvocation start='81' end='141'>
+                    <FucntionName start='81' end='86'>
+                        <Identifier start='81' end='86' name='print'/>
+                    </FucntionName>
+                    <Parameters>
+                        <Quote start='87' end='141' type='HEREDOC'>
+                            <Expressions>
+                                <Scalar start='104' end='129' type='STRING' value='This is a heredoc test.\n\n'/>
+                            </Expressions>
+                        </Quote>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='144' end='210'>
+                <Assignment start='144' end='209' operator='EQUAL'>
+                    <Variable start='144' end='146' isDollared='true'>
+                        <Identifier start='145' end='146' name='x'/>
+                    </Variable>
+                    <Quote start='149' end='209' type='HEREDOC'>
+                        <Expressions>
+                            <Scalar start='166' end='197' type='STRING' value='This is another heredoc test.\n\n'/>
+                        </Expressions>
+                    </Quote>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='212' end='225'>
+                <FunctionInvocation start='212' end='224'>
+                    <FucntionName start='212' end='217'>
+                        <Identifier start='212' end='217' name='print'/>
+                    </FucntionName>
+                    <Parameters>
+                        <Quote start='218' end='224' type='QUOTE'>
+                            <Expressions>
+                                <ReflectionVariable start='219' end='223'>
+                                    <Variable start='220' end='222' isDollared='true'>
+                                        <Identifier start='221' end='222' name='x'/>
+                                    </Variable>
+                                </ReflectionVariable>
+                            </Expressions>
+                        </Quote>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <EmptyStatement start='227' end='230'/>
+            <InLineHtml start='230' end='295'/>
+        </Statements>
+    </Program>
+</testresult>

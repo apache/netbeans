@@ -26,10 +26,6 @@
     <localizing-bundle>org/netbeans/modules/web/jsf12/Bundle</localizing-bundle>
     <volume>
         <type>classpath</type>
-	<resource>jar:nbinst://org.netbeans.modules.web.jsf12ri/modules/ext/jsf-1_2/commons-beanutils.jar!/</resource>
-	<resource>jar:nbinst://org.netbeans.modules.web.jsf12ri/modules/ext/jsf-1_2/commons-collections.jar!/</resource>
-	<resource>jar:nbinst://org.netbeans.modules.web.jsf12ri/modules/ext/jsf-1_2/commons-digester.jar!/</resource>
-	<resource>jar:nbinst://org.netbeans.modules.web.jsf12ri/modules/ext/jsf-1_2/commons-logging.jar!/</resource>
 	<resource>jar:nbinst://org.netbeans.modules.web.jsf12/modules/ext/jsf-1_2/jsf-api.jar!/</resource>
 	<resource>jar:nbinst://org.netbeans.modules.web.jsf12ri/modules/ext/jsf-1_2/jsf-impl.jar!/</resource>
     </volume>
@@ -38,13 +34,11 @@
         <resource>jar:nbinst://org.netbeans.modules.j2ee.platform/docs/javaee-doc-api.jar!/</resource>
     </volume>
     <properties>
-        <!-- please check with mkleint@netbeans.org before/after updating this or "classpath" section -->
         <property>
             <name>maven-dependencies</name>
             <value>
-                javax.faces:jsf-api:1.2_04-p01:jar
-                javax.faces:jsf-impl:1.2_04-p01:jar
-                commons-digester:commons-digester:1.5:jar
+                javax.faces:jsf-api:1.2_05:jar
+                javax.faces:jsf-impl:1.2_05:jar
             </value>
         </property>
     </properties>    

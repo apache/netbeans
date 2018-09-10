@@ -21,10 +21,4 @@
 -->
 <project basedir="." default="netbeans" name="websvc.core">
     <import file="../nbbuild/templates/projectized.xml"/>
-    <property name="resources.dir" value="./src/org/netbeans/modules/websvc/core/resources/"/>
-
-    <target name="build-init" depends="projectized.build-init">
-        <unzip src="external/websvc.core-external-resources.zip" dest="${resources.dir}"/>
-    </target>
-
 </project>

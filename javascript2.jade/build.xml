@@ -25,12 +25,9 @@
 
     <!-- JFlex 1.4.3 handling (download and taskdef) -->
     <target name="-prepare-jflex" depends="build-init">
-        <mkdir dir="${build.dir}/tools"/>
-        <get src="http://repo1.maven.org/maven2/de/jflex/jflex/1.4.3/jflex-1.4.3.jar"
-             dest="${build.dir}/tools/jflex.jar" verbose="true"/>
         <taskdef name="jflex"
                  classname="JFlex.anttask.JFlexTask"
-                 classpath="${build.dir}/tools/jflex.jar" onerror="fail"/>
+                 classpath="${basedir}/external/jflex-1.4.3.jar" onerror="fail"/>
     </target>
 
     <!-- Generating Jade coloring lexer -->

@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+  <!-- First, a list of API names you may use: -->
+  <apidefs>
+    <!-- Probably should not be used much: -->
+    <apidef name="properties">Properties API</apidef>
+  </apidefs>
+
+<!-- ACTUAL CHANGES BEGIN HERE: -->
+
+  <changes>
+       <change id="BundleEditPanel">
+        <api name="properties"/>
+        <summary>Changed to work with <code>BundleStructure</code> instead of single <code>DataObject</code></summary>
+        <version major="1" minor="27"/>
+        <date day="13" month="1" year="2009"/>
+        <author login="alexeybutenko"/>
+        <compatibility addition="yes" deprecation="yes" modification="yes"/>
+        <description>
+            <p>
+              Added <code>@Deprecated</code> to following methods: constructor <code>
+		BundleEditPanel(final PropertiesDataObject obj, PropertiesTableModel propTableModel)</code>,
+		Added public constructor <code>BundleEditPanel(final BundleStructure structure, PropertiesTableModel propTableModel)</code>
+            </p>
+        </description>
+        <class package="org.netbeans.modules.properties" name="BundleEditPanel"/>
+    </change>
+
+      <change id="MultiBundleStructure">
+        <api name="properties"/>
+        <summary>Added class <code>MultiBundleStructure</code></summary>
+        <version major="1" minor="27"/>
+        <date day="13" month="1" year="2009"/>
+        <author login="alexeybutenko"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Added package private class <code>MultiBundleStructure</code> extends
+                <code>BundleStructure</code> which can handle several <code>DataObject</code>
+                with the same base name
+            </p>
+        </description>
+        <class package="org.netbeans.modules.properties" name="MultiBundleStructure"/>
+        <issue number="134558"/>
+    </change>
+ 
+     <change id="PropertiesDataLoader">
+        <api name="properties"/>
+        <summary>
+          Method <code>findPrimaryFile</code> changed to return each <code>FileObject</code> as 
+		primary entry for <code>DataObject</code>
+        </summary>
+        <version major="3" minor="13"/>
+        <date day="10" month="1" year="2009"/>
+        <author login="alexeybutenko"/>
+        <compatibility modification="yes"/>
+        <description>
+            <p>
+              Separate <code>DataObject</code> for each <code>FileObject</code> is created after this modification
+            </p>
+        </description>
+        <class package="org.netbeans.modules.properties" name="PropertiesDataLoader"/>
+    </change>
+  
+     <change id="PropertiesDataObject">
+        <api name="properties"/>
+        <summary>
+          Methods <code>getOpenSupport</code>, and <code>getBundleStructure</code> modified 
+        </summary>
+        <version major="1" minor="27"/>
+        <date day="14" month="1" year="2009"/>
+        <author login="alexeybutenko"/>
+        <compatibility modification="yes" deletion="yes"/>
+        <description>
+            <p>
+              <code>getBundleStructure</code> method chaged to return the same 
+              <code>MultiBundleStructure</code> instance for every DataObject belonging 
+		to one set of locales, wich is defined by the base name, and locale suffix.
+            </p>
+            <p>
+              <code>getOpenSupport</code> changed to return <code>OpenSupport</code> instance from 
+              <code>BundleStructure</code>, thus it will the same for the set of locales with the the same 
+              base name
+            </p>
+        </description>
+        <class package="org.netbeans.modules.properties" name="PropertiesDataObject"/>
+    </change>
+     <change id="PropertiesOpen">
+        <api name="properties"/>
+        <summary>
+           Added ability to work with several <code>DataObject</code>s with the same base name via
+           their common <code>BundleStructure</code>
+        </summary>
+        <version major="1" minor="27"/>
+        <date day="14" month="1" year="2009"/>
+        <author login="alexeybutenko"/>
+        <compatibility modification="yes" deprecation="yes" addition="yes"/>
+        <description>
+            <p>
+              <code>PropertiesOpen(PropertiesDataObject propDataObject)</code> deprecated,
+              <code>PropertiesOpen.Environment(PropertiesDataObject dataObject)</code> deprecated,
+              <code>PropertiesOpen.Environment.isValid()</code> deprecated,
+              <code>PropertiesOpen.Environment.markModified()</code> deprecated,
+              <code> PropertiesOpen.Environment.unmarkModified()</code> deprecated,
+              added <code>PropertiesOpen(BundleStructure structure)</code>,
+              added <code>PropertiesOpen.Environment(BundleStructure structure)</code>,
+              added <code>PropertiesOpen.Environment.isValid(PropertiesDataObject dataObject)</code>, 
+              added <code>PropertiesOpen.Environment.markModified(PropertiesDataObject dataObject)</code>,
+              added <code>PropertiesOpen.Environment.unmarkModified(PropertiesDataObject dataObject)</code>,
+              method <code>PropertiesOpen.Environment.propertyChange(PropertyChangeEvent evt)</code> 
+              modified to find <code>DataObject</code> which caused this event
+            </p>
+        </description>
+        <class package="org.netbeans.modules.properties" name="PropertiesOpen"/>
+    </change>
+     <change id="Util">
+        <api name="properties"/>
+        <summary>
+           Added several methods.
+        </summary>
+        <version major="1" minor="27"/>
+        <date day="14" month="1" year="2009"/>
+        <author login="alexeybutenko"/>
+        <compatibility modification="yes" addition="yes"/>
+        <description>
+            <p>
+                <code>getLocaleSuffix(MultiDataObject.Entry fe)</code> modified,
+                added protected method<code>findPrimaryDataObject</code> return <code>DataObject</code>
+                which represent the default locale.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.properties" name="Util"/>
+    </change>
+
+  </changes>
+
+  <!-- Now the surrounding HTML text and document structure: -->
+
+  <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <======================
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE openidex/api/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the Search API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>
+    This document lists changes made to the <code>Search API</code>.
+</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+
+    <hr/>
+
+    <standard-changelists module-code-name="org.netbeans.modules.properties/3"/>
+
+    <hr/>
+
+    <p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

@@ -22,9 +22,22 @@
 <project basedir="." default="netbeans" name="websvc.metro.model">
     <import file="../nbbuild/templates/projectized.xml"/>
     <property name="source.dir" value="./src/"/>
-
+    <property name="metro.xsd" value="${source.dir}/org/netbeans/modules/websvc/metro/model/catalog/resources/metro.xsd"/>
+    <property name="metro-gen-source" value="${source.dir}/com/sun/xml/ws/runtime/config"/>
     <target name="build-init" depends="projectized.build-init">
-        <unzip src="external/websvc.metro.model-external-resources.zip" dest="${source.dir}"/>
+        <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+            <classpath>
+                <fileset dir="${netbeans.dest.dir}/${nb.cluster.ide.dir}/modules/ext/jaxb/api" includes="*.jar"/>
+                <fileset dir="${netbeans.dest.dir}/${nb.cluster.ide.dir}/modules/ext/jaxb" includes="*.jar"/>            
+            </classpath>
+        </taskdef>
+        <xjc
+            schema="${metro.xsd}"
+            destdir="${source.dir}"
+            package="com.sun.xml.ws.runtime.config">
+            <depends file="${metro.xsd}"/>
+            <produces dir="${metro-gen-source}"/>
+        </xjc>   
     </target>
     <target name="regenerate-model">
         

@@ -562,7 +562,16 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         try {
             FileObject file = URLMapper.findFileObject(URI.create(params.getTextDocument().getUri()).toURL());
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
-            openedDocuments.put(params.getTextDocument().getUri(), ec.openDocument());
+            Document doc = ec.openDocument();
+            openedDocuments.put(params.getTextDocument().getUri(), doc);
+            String text = params.getTextDocument().getText();
+            try {
+                doc.remove(0, doc.getLength());
+                doc.insertString(0, text, null);
+            } catch (BadLocationException ex) {
+                //TODO: include stack trace:
+                client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+            }
             runDiagnoticTasks(params.getTextDocument().getUri());
         } catch (IOException ex) {
             throw new IllegalStateException(ex);

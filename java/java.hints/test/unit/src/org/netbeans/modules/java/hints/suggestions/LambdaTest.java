@@ -552,7 +552,6 @@ public class LambdaTest {
                                       "}\n");
     }
 
-    //Todo: Verification is pending on nb-javac of JDK11
     @Test
     public void testImplicitVarParameterTypes1() throws Exception {
         HintTest.create()
@@ -560,7 +559,7 @@ public class LambdaTest {
                 .input("package test;\n" +
                        "import java.util.function.IntBinaryOperator;\n" +
                        "public class Test {\n" +
-                       "    public void main(String list) {\n" +
+                       "    public void main(String[] args) {\n" +
                        "        IntBinaryOperator calc3 = (int x, int y)^ ->  x + y;\n" +
                        "    }\n" +
                        "}\n")
@@ -572,13 +571,12 @@ public class LambdaTest {
                 .assertVerbatimOutput("package test;\n" +
                                       "import java.util.function.IntBinaryOperator;\n" +
                                       "public class Test {\n" +
-                                      "    public void main(List<String> list) {\n" +
+                                      "    public void main(String[] args) {\n" +
                                       "        IntBinaryOperator calc3 = (var x, var y) ->  x + y;\n" +
                                       "    }\n" +
                                       "}\n");
     }
 
-    //Todo: Verification is pending on nb-javac of JDK11
     @Test
     public void testImplicitVarParameterTypes2() throws Exception {
         HintTest.create()
@@ -586,24 +584,40 @@ public class LambdaTest {
                 .input("package test;\n" +
                        "import java.util.function.IntBinaryOperator;\n" +
                        "public class Test {\n" +
-                       "    public void main(String list) {\n" +
+                       "    public void main(String[] args) {\n" +
                        "        IntBinaryOperator calc3 = (x, y)^ ->  x + y;\n" +
                        "    }\n" +
                        "}\n")
                 .sourceLevel("1.11")
                 .run(Lambda.class)
-                .findWarning("4:48-4:48:verifier:ERR_ConvertVarLambdaParameters")
+                .findWarning("4:40-4:40:verifier:ERR_ConvertVarLambdaParameters")
                 .applyFix()
                 .assertCompilable()
                 .assertVerbatimOutput("package test;\n" +
                                       "import java.util.function.IntBinaryOperator;\n" +
                                       "public class Test {\n" +
-                                      "    public void main(List<String> list) {\n" +
+                                      "    public void main(String[] args) {\n" +
                                       "        IntBinaryOperator calc3 = (var x, var y) ->  x + y;\n" +
                                       "    }\n" +
                                       "}\n");
     }
     
+    @Test
+    public void testImplicitVarParameterTypes3() throws Exception {
+        HintTest.create()
+                .setCaretMarker('^')
+                .input("package test;\n" +
+                       "import java.util.function.IntBinaryOperator;\n" +
+                       "public class Test {\n" +
+                       "    public void main(String[] args) {\n" +
+                       "        IntBinaryOperator calc3 = (var x, var y)^ ->  x + y;\n" +
+                       "    }\n" +
+                       "}\n")
+                .sourceLevel("1.11")
+                .run(Lambda.class)
+                .assertNotContainsWarnings("ERR_ConvertVarLambdaParameters");
+    }
+
     @Test
     public void testConvertVarToExplicitParameterTypes() throws Exception {
         HintTest.create()

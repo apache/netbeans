@@ -292,7 +292,10 @@ public class AnnotateAction extends ContextAction {
         
         List<AnnotateLine> lines = new ArrayList<AnnotateLine>();
         int i = 0;
-        Pattern p = Pattern.compile("^\\s*(\\S+\\b)\\s+(\\d+)\\s+(\\b\\S*):\\s*(\\d+):\\s(.*)$"); //NOI18N
+        //using "(\S.*?)" instead of "(\b\S*)" since files can contain spaces
+        //and start with dots. "\S" will match the first character and
+        //will lazily match the rest of the file.
+        Pattern p = Pattern.compile("^\\s*(\\S+\\b)\\s+(\\d+)\\s+(\\S.*?):\\s*(\\d+):\\s(.*)$"); //NOI18N
         for (String line : annotations) {
             i++;
             Matcher m = p.matcher(line);

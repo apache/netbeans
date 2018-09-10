@@ -30,7 +30,7 @@
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/jsr88javax.jar</runtime-relative-path>
-                <binary-origin>external/jsr88javax.jar</binary-origin>
+                <binary-origin>external/deployment-api-1.2-rev-1.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

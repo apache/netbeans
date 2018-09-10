@@ -99,7 +99,7 @@
             <public-packages/>
             <extra-compilation-unit>
                 <package-root>antsrc</package-root>
-                <classpath>${module.classpath}:${ant.jar}:${tools.jar}:../j2eeapis/external/jsr88javax.jar</classpath>
+                <classpath>${module.classpath}:${ant.jar}:${tools.jar}:../j2eeapis/external/deployment-api-1.2-rev-1.jar</classpath>
                 <built-to>build/antclasses</built-to>
                 <built-to>${cluster}/ant/nblib/org-netbeans-modules-j2ee-ant.jar</built-to>
             </extra-compilation-unit>

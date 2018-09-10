@@ -38,6 +38,8 @@ import org.eclipse.lsp4j.CompletionParams;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
 import org.eclipse.lsp4j.DidOpenTextDocumentParams;
+import org.eclipse.lsp4j.DocumentSymbol;
+import org.eclipse.lsp4j.DocumentSymbolParams;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.MessageActionItem;
@@ -46,6 +48,7 @@ import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
+import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentItem;
@@ -58,6 +61,7 @@ import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageServer;
 import org.junit.Test;
 import org.netbeans.junit.NbTestCase;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 
 /**
@@ -65,28 +69,35 @@ import org.openide.util.Exceptions;
  * @author lahvac
  */
 public class ServerTest extends NbTestCase {
-    
+
     public ServerTest(String name) {
         super(name);
     }
-    
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        clearWorkDir();
+    }
+
     @Test
     public void testMain() throws Exception {
-        File src = new File(getDataDir(), "Test.java");
+        File src = new File(getWorkDir(), "Test.java");
         src.getParentFile().mkdirs();
         String code = "public class Test { int i = \"\".hashCode(); }";
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
         ServerSocket srv = new ServerSocket(0);
-        new Thread(() -> {
+        Thread serverThread = new Thread(() -> {
             try {
                 Socket server = srv.accept();
                 Server.run(server.getInputStream(), server.getOutputStream());
             } catch (Exception ex) {
                 throw new IllegalStateException(ex);
             }
-        }).start();
+        });
+        serverThread.start();
         Socket client = new Socket(InetAddress.getLocalHost(), srv.getLocalPort());
         List<Diagnostic>[] diags = new List[1];
         Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
@@ -156,6 +167,7 @@ public class ServerTest extends NbTestCase {
         assertEquals(1, edit.getRange().getEnd().getLine());
         assertEquals(7, edit.getRange().getEnd().getCharacter());
         assertEquals("(String) ", edit.getNewText());
+        serverThread.stop();
     }
 
     private List<Diagnostic> assertDiags(List<Diagnostic>[] diags, String... expected) {
@@ -186,5 +198,129 @@ public class ServerTest extends NbTestCase {
 
             return result;
         }
+    }
+
+    @Test
+    public void testNavigator() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "public class Test {\n" +
+                      "    private int field;\n" +
+                      "    public void method() {\n" +
+                      "    }\n" +
+                      "    class Inner {\n" +
+                      "        public void innerMethod() {\n" +
+                      "        }\n" +
+                      "    }\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        FileUtil.refreshFor(getWorkDir());
+        ServerSocket srv = new ServerSocket(0);
+        new Thread(() -> {
+            try {
+                Socket server = srv.accept();
+                Server.run(server.getInputStream(), server.getOutputStream());
+            } catch (Exception ex) {
+                throw new IllegalStateException(ex);
+            }
+        }).start();
+        Socket client = new Socket(InetAddress.getLocalHost(), srv.getLocalPort());
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+            }
+
+            @Override
+            public void showMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeResult result = server.initialize(new InitializeParams()).get();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(src.toURI().toString(), "java", 0, code)));
+        List<Either<SymbolInformation, DocumentSymbol>> symbols = server.getTextDocumentService().documentSymbol(new DocumentSymbolParams(new TextDocumentIdentifier(src.toURI().toString()))).get();
+        String textualSymbols = "";
+        String sep = "";
+        for (Either<SymbolInformation, DocumentSymbol> sym : symbols) {
+            assertTrue(sym.isRight());
+            textualSymbols += sep;
+            textualSymbols += toString(sym.getRight());
+            sep = ", ";
+        }
+        String expected = "Class:Test:Range [\n" +
+                          "  start = Position [\n" +
+                          "    line = 0\n" +
+                          "    character = 0\n" +
+                          "  ]\n" +
+                          "  end = Position [\n" +
+                          "    line = 8\n" +
+                          "    character = 1\n" +
+                          "  ]\n" +
+                          "]:(Class:Inner:Range [\n" +
+                          "  start = Position [\n" +
+                          "    line = 4\n" +
+                          "    character = 4\n" +
+                          "  ]\n" +
+                          "  end = Position [\n" +
+                          "    line = 7\n" +
+                          "    character = 5\n" +
+                          "  ]\n" +
+                          "]:(Method:innerMethod:Range [\n" +
+                          "  start = Position [\n" +
+                          "    line = 5\n" +
+                          "    character = 8\n" +
+                          "  ]\n" +
+                          "  end = Position [\n" +
+                          "    line = 6\n" +
+                          "    character = 9\n" +
+                          "  ]\n" +
+                          "]:()), Field:field:Range [\n" +
+                          "  start = Position [\n" +
+                          "    line = 1\n" +
+                          "    character = 4\n" +
+                          "  ]\n" +
+                          "  end = Position [\n" +
+                          "    line = 1\n" +
+                          "    character = 22\n" +
+                          "  ]\n" +
+                          "]:(), Method:method:Range [\n" +
+                          "  start = Position [\n" +
+                          "    line = 2\n" +
+                          "    character = 4\n" +
+                          "  ]\n" +
+                          "  end = Position [\n" +
+                          "    line = 3\n" +
+                          "    character = 5\n" +
+                          "  ]\n" +
+                          "]:())";
+        assertEquals(expected, textualSymbols);
+    }
+
+    private String toString(DocumentSymbol sym) {
+        return sym.getKind().toString() + ":" +
+               sym.getName() + ":" +
+               sym.getRange() + ":" +
+               sym.getChildren()
+                  .stream()
+                  .map(this::toString)
+                  .collect(Collectors.joining(", ", "(", ")"));
     }
 }

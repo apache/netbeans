@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.lsp.server.text;
 
+import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -76,6 +77,7 @@ import org.eclipse.lsp4j.ReferenceParams;
 import org.eclipse.lsp4j.RenameParams;
 import org.eclipse.lsp4j.SignatureHelp;
 import org.eclipse.lsp4j.SymbolInformation;
+import org.eclipse.lsp4j.SymbolKind;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextDocumentPositionParams;
@@ -369,8 +371,87 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     @Override
-    public CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> documentSymbol(DocumentSymbolParams arg0) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> documentSymbol(DocumentSymbolParams params) {
+        Document doc = openedDocuments.get(params.getTextDocument().getUri());
+        if (doc == null) {
+            return CompletableFuture.completedFuture(Collections.emptyList());
+        }
+        JavaSource js = JavaSource.forDocument(doc);
+        List<Either<SymbolInformation, DocumentSymbol>> result = new ArrayList<>();
+        try {
+            js.runUserActionTask(cc -> {
+                cc.toPhase(JavaSource.Phase.RESOLVED);
+                for (Element tel : cc.getTopLevelElements()) {
+                    DocumentSymbol ds = element2DocumentSymbol(doc, cc, tel);
+                    if (ds != null)
+                        result.add(Either.forRight(ds));
+                }
+            }, true);
+        } catch (IOException ex) {
+            //TODO: include stack trace:
+            client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+        }
+
+        return CompletableFuture.completedFuture(result);
+    }
+
+    private DocumentSymbol element2DocumentSymbol(Document doc, CompilationInfo info, Element el) throws BadLocationException {
+        TreePath path = info.getTrees().getPath(el);
+        if (path == null)
+            return null;
+        long start = info.getTrees().getSourcePositions().getStartPosition(path.getCompilationUnit(), path.getLeaf());
+        long end   = info.getTrees().getSourcePositions().getEndPosition(path.getCompilationUnit(), path.getLeaf());
+        if (end == (-1))
+            return null;
+        Range range = new Range(createPosition(doc, (int) start), createPosition(doc, (int) end));
+        List<DocumentSymbol> children = new ArrayList<>();
+        for (Element c : el.getEnclosedElements()) {
+            DocumentSymbol ds = element2DocumentSymbol(doc, info, c);
+            if (ds != null) {
+                children.add(ds);
+            }
+        }
+        return new DocumentSymbol(el.getSimpleName().toString(), elementKind2SymbolKind(el.getKind()), range, range, null, children);
+    }
+
+    private static SymbolKind elementKind2SymbolKind(ElementKind kind) {
+        switch (kind) {
+            case PACKAGE:
+                return SymbolKind.Package;
+            case ENUM:
+                return SymbolKind.Enum;
+            case CLASS:
+                return SymbolKind.Class;
+            case ANNOTATION_TYPE:
+                return SymbolKind.Interface;
+            case INTERFACE:
+                return SymbolKind.Interface;
+            case ENUM_CONSTANT:
+                return SymbolKind.EnumMember;
+            case FIELD:
+                return SymbolKind.Field; //TODO: constant
+            case PARAMETER:
+                return SymbolKind.Variable;
+            case LOCAL_VARIABLE:
+                return SymbolKind.Variable;
+            case EXCEPTION_PARAMETER:
+                return SymbolKind.Variable;
+            case METHOD:
+                return SymbolKind.Method;
+            case CONSTRUCTOR:
+                return SymbolKind.Constructor;
+            case TYPE_PARAMETER:
+                return SymbolKind.TypeParameter;
+            case RESOURCE_VARIABLE:
+                return SymbolKind.Variable;
+            case MODULE:
+                return SymbolKind.Module;
+            case STATIC_INIT:
+            case INSTANCE_INIT:
+            case OTHER:
+            default:
+                return SymbolKind.File; //XXX: what here?
+        }
     }
 
     @Override

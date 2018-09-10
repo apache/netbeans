@@ -85,7 +85,7 @@ public class Server {
         Launcher<LanguageClient> serverLauncher = LSPLauncher.createServerLauncher(server, in, out);
         ((LanguageClientAware) server).connect(serverLauncher.getRemoteProxy());
         serverLauncher.startListening();
-        
+
         while (true) {
             try {
                 Thread.sleep(100000);
@@ -106,6 +106,7 @@ public class Server {
             capabilities.setTextDocumentSync(TextDocumentSyncKind.Incremental);
             capabilities.setCompletionProvider(new CompletionOptions());
             capabilities.setCodeActionProvider(true);
+            capabilities.setDocumentSymbolProvider(true);
             return CompletableFuture.completedFuture(new InitializeResult(capabilities));
         }
 

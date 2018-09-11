@@ -22,7 +22,7 @@
 <project name="web.core.syntax" default="netbeans" basedir=".">
 
     <import file="../j2ee.kit/register_server.xml"/>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
     <!-- Hook into harness "-process.release.files" task -->
     <target name="-process.release.files" depends="prepare-doc"/>

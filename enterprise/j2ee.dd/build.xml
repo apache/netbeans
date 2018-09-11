@@ -22,7 +22,7 @@
 
 <project name="j2ee.dd" default="netbeans" basedir=".">
 
-  <import file="../nbbuild/templates/projectized.xml"/>
+  <import file="../../nbbuild/templates/projectized.xml"/>
 
   <property name="s2b_root_web_2_4" location="src/org/netbeans/modules/j2ee/dd/impl/web/model_2_4"/>
   <property name="s2b_root_web_2_5" location="src/org/netbeans/modules/j2ee/dd/impl/web/model_2_5"/>

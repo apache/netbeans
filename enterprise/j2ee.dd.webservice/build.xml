@@ -20,7 +20,7 @@
 
 -->
 <project name="j2ee.dd.webservice" default="netbeans" basedir=".">
-  <import file="../nbbuild/templates/projectized.xml"/>
+  <import file="../../nbbuild/templates/projectized.xml"/>
 
     <property name="resourcesdir" value="./src/org/netbeans/modules/j2ee/dd/impl/resources"/>
     <target name="build-init" depends="projectized.build-init">

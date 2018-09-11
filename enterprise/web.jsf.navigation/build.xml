@@ -28,5 +28,5 @@
         <import file="nbproject/build-impl.xml"/>
         <import file="${suite.dir}/templates/common.xml"/>
     -->
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

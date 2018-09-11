@@ -21,6 +21,6 @@
 -->
 <project basedir="." default="netbeans" name="web.freeform">
 
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
 </project>

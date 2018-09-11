@@ -21,6 +21,6 @@
 -->
 <project basedir="." default="netbeans" name="j2ee.genericserver">
 
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
 </project>

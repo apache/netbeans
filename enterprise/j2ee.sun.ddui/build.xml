@@ -21,7 +21,7 @@
 -->
 
 <project name="j2ee.sun.ddui" default="netbeans" basedir=".">
-  <import file="../nbbuild/templates/projectized.xml"/>
+  <import file="../../nbbuild/templates/projectized.xml"/>
 
 </project>
 

@@ -20,7 +20,7 @@
 
 -->
 <project name="j2ee.ddloaders" default="netbeans" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
     <property name="catalog.resources.dir" value="./src/org/netbeans/modules/j2ee/ddloaders/catalog/resources/"/>
 

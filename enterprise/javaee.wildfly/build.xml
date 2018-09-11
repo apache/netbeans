@@ -20,7 +20,7 @@
 
 -->
 <project name="javaee.wildfly" default="netbeans" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
     <property name="resources.dir" value="./src/org/netbeans/modules/javaee/wildfly/resources/"/>
     <target name="build-init" depends="projectized.build-init">

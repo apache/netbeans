@@ -20,5 +20,5 @@
 
 -->
 <project basedir="." default="netbeans" name="websvc.utilities">
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

@@ -20,7 +20,7 @@
 
 -->
 <project name="j2ee.jboss4" default="netbeans" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
     <property name="j2ee.jboss4.resources.dir" value="./src/org/netbeans/modules/j2ee/jboss4/resources/"/>
     <target name="build-init" depends="projectized.build-init">

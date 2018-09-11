@@ -20,5 +20,5 @@
 
 -->
 <project basedir="." default="netbeans" name="websvc.wsstackapi">
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

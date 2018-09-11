@@ -20,7 +20,7 @@
 
 -->
 <project name="j2ee.weblogic9" default="netbeans" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
     <target name="build-init" depends="projectized.build-init">
 	 <unzip src="external/j2ee.weblogic9-generated-schema-classes.zip" dest="./"/>

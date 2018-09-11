@@ -20,5 +20,5 @@
 
 -->
 <project name="libs.elimpl" default="netbeans" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

@@ -21,6 +21,6 @@
 -->
 <project name="libs.commons_fileupload" default="netbeans" basedir=".">
 
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
 </project>

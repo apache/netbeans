@@ -21,7 +21,7 @@
 -->
 
 <project name="j2eeserver" default="netbeans" basedir=".">
-  <import file="../nbbuild/templates/projectized.xml"/>
+  <import file="../../nbbuild/templates/projectized.xml"/>
 
   <target name="javadocdtds" depends="init">
       <copy file="src/org/netbeans/modules/j2ee/deployment/plugins/api/netbeans-deployment.dtd"

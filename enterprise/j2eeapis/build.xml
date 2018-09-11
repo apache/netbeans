@@ -20,5 +20,5 @@
 
 -->
 <project name="j2eeapis" basedir="." default="netbeans">
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

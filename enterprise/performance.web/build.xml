@@ -40,5 +40,5 @@
             -Dtomcat.installRoot=&quot;${tomcat.webserver.path}&quot;
             -Dglassfish.home=&quot;${glassfish.home}&quot;"/>
 
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

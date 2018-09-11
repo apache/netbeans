@@ -21,7 +21,7 @@
 -->
 <project name="web.jspparser" default="netbeans" basedir=".">
 
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
     <target name="ext-compile">
         <mkdir dir="build/extclasses"/>

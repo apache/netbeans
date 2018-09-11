@@ -23,7 +23,7 @@
 
 <project name="web.monitor" default="netbeans" basedir=".">
 
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
     <target name="compile-server" depends="init,compile">
         <mkdir dir="build/server-classes"/>

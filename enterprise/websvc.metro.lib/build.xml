@@ -20,5 +20,5 @@
 
 -->
 <project name="websvc.metro.lib" default="netbeans" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

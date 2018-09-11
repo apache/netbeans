@@ -1563,6 +1563,7 @@ public class SourceUtils {
         return Hacks.getDiagnosticParam(d, index);
     }
 
+    //XXX: should be in the API? Impl dep would be OK?
     public static Map<String, Object> serializeClasspathInfo(ClasspathInfo cpInfo) {
         return ClasspathInfoAccessor.getINSTANCE().serialize(cpInfo);
     }

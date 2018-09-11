@@ -67,6 +67,7 @@ import org.netbeans.spi.java.classpath.ClassPathImplementation;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.filesystems.URLMapper;
 import org.openide.util.BaseUtilities;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Parameters;
@@ -290,7 +291,14 @@ public final class ClasspathInfo {
         if (cp == null) return null;
         List<String> result = new ArrayList<>();
         for (ClassPath.Entry e : cp.entries()) {
-            result.add(e.getURL().toExternalForm());
+            URL entryURL = e.getURL();
+            FileObject entryFO = URLMapper.findFileObject(entryURL);
+            if (entryFO != null) {
+                URL external = URLMapper.findURL(entryFO, URLMapper.EXTERNAL);
+                if (external != null)
+                    entryURL = external;
+            }
+            result.add(entryURL.toExternalForm());
         }
         return result.toArray(new String[0]);
     }

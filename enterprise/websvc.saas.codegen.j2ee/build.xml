@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="websvc.saas.codegen.j2ee">
+<project basedir="." default="build" name="enterprise/websvc.saas.codegen.j2ee">
     <description>Builds, tests, and runs the project org.netbeans.modules.websvc.saas.codegen.j2ee</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

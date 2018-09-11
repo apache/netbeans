@@ -20,7 +20,7 @@
 
 -->
 
-<project basedir="." default="netbeans" name="maven.j2ee">
+<project basedir="." default="build" name="enterprise/maven.j2ee">
     <description>Builds, tests, and runs the project org.netbeans.modules.maven.j2ee</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

@@ -21,7 +21,7 @@
 -->
 
 
-<project name="web.monitor" default="netbeans" basedir=".">
+<project basedir="." default="build" name="enterprise/web.monitor">
 
     <import file="../../nbbuild/templates/projectized.xml"/>
 

@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="web.project">
+<project basedir="." default="build" name="enterprise/web.project">
 
     <import file="../../nbbuild/templates/projectized.xml"/>
 

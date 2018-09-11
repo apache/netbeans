@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="libs.elimpl" default="netbeans" basedir=".">
+<project basedir="." default="build" name="enterprise/libs.elimpl">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

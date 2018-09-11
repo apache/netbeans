@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="j2ee.ddloaders" default="netbeans" basedir=".">
+<project basedir="." default="build" name="enterprise/j2ee.ddloaders">
     <import file="../../nbbuild/templates/projectized.xml"/>
 
     <property name="catalog.resources.dir" value="./src/org/netbeans/modules/j2ee/ddloaders/catalog/resources/"/>

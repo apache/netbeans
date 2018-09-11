@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="web.refactoring">
+<project basedir="." default="build" name="enterprise/web.refactoring">
     <description>Builds, tests, and runs the project org.netbeans.modules.web.refactoring</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

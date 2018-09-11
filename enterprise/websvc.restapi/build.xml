@@ -21,7 +21,7 @@
 
 -->
 
-<project basedir="." default="netbeans" name="websvc.restapi">
+<project basedir="." default="build" name="enterprise/websvc.restapi">
     <description>Builds, tests, and runs the project org.netbeans.modules.websvc.restapi</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

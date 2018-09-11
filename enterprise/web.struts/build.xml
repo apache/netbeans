@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="web.struts" default="netbeans" basedir=".">
+<project basedir="." default="build" name="enterprise/web.struts">
 
     <import file="../../nbbuild/templates/projectized.xml"/>
 

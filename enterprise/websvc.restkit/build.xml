@@ -21,7 +21,7 @@
 
 -->
 
-<project basedir="." default="netbeans" name="websvc.restkit">
+<project basedir="." default="build" name="enterprise/websvc.restkit">
     <description>Builds, tests, and runs the project org.netbeans.modules.websvc.restkit</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 

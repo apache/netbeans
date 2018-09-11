@@ -20,7 +20,7 @@
 
 -->
 
-<project name="j2ee.sun.ddui" default="netbeans" basedir=".">
+<project basedir="." default="build" name="enterprise/j2ee.sun.ddui">
   <import file="../../nbbuild/templates/projectized.xml"/>
 
 </project>

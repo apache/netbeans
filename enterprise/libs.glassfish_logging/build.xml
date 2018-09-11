@@ -20,7 +20,7 @@
 
 -->
 
-<project name="libs.glassfish_logging" default="netbeans" basedir=".">
+<project basedir="." default="build" name="enterprise/libs.glassfish_logging">
 
     <import file="../../nbbuild/templates/projectized.xml"/>
 

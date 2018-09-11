@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="websvc.restlib" default="netbeans" basedir=".">
+<project basedir="." default="build" name="enterprise/websvc.restlib">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

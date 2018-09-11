@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="web.jspparser" default="netbeans" basedir=".">
+<project basedir="." default="build" name="enterprise/web.jspparser">
 
     <import file="../../nbbuild/templates/projectized.xml"/>
 

@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="web.jsf.icefaces">
+<project basedir="." default="build" name="enterprise/web.jsf.icefaces">
     <description>Builds, tests, and runs the project org.netbeans.modules.web.jsf.icefaces</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

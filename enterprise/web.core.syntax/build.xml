@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="web.core.syntax" default="netbeans" basedir=".">
+<project basedir="." default="build" name="enterprise/web.core.syntax">
 
     <import file="../j2ee.kit/register_server.xml"/>
     <import file="../../nbbuild/templates/projectized.xml"/>

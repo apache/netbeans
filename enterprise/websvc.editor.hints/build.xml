@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="websvc.editor.hints">
+<project basedir="." default="build" name="enterprise/websvc.editor.hints">
     <description>Builds, tests, and runs the project org.netbeans.modules.websvc.editor.hints</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

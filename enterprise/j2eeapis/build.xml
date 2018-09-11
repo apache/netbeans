@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="j2eeapis" basedir="." default="netbeans">
+<project basedir="." default="build" name="enterprise/j2eeapis">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

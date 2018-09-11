@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="j2ee.sun.dd" default="netbeans" basedir=".">
+<project basedir="." default="build" name="enterprise/j2ee.sun.dd">
   <import file="../../nbbuild/templates/projectized.xml"/>
 
   <property name="j2ee.sun.dd.resources.dir" value="./src/org/netbeans/modules/j2ee/sun/dd/impl/"/>

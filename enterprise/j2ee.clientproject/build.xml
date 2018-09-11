@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="j2ee.clientproject">
+<project basedir="." default="build" name="enterprise/j2ee.clientproject">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

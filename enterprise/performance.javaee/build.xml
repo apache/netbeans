@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="performance.javaee" default="netbeans" basedir=".">
+<project basedir="." default="build" name="enterprise/performance.javaee">
     <description>Builds and runs performance java EE tests</description>
 
     <property name="test.timeout" value="3600000"/>

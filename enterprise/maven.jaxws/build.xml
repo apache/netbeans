@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="maven.jaxws">
+<project basedir="." default="build" name="enterprise/maven.jaxws">
     <description>Builds, tests, and runs the project org.netbeans.modules.maven.jaxws</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

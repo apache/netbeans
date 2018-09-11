@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="servletjspapi" default="netbeans" basedir=".">
+<project basedir="." default="build" name="enterprise/servletjspapi">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

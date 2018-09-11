@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="glassfish.tooling">
+<project basedir="." default="build" name="enterprise/glassfish.tooling">
     <description>Builds, tests, and runs the project org.netbeans.modules.glassfish.tooling</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

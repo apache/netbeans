@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="websvc.metro.model">
+<project basedir="." default="build" name="enterprise/websvc.metro.model">
     <import file="../../nbbuild/templates/projectized.xml"/>
     <property name="source.dir" value="./src/"/>
     <property name="metro.xsd" value="${source.dir}/org/netbeans/modules/websvc/metro/model/catalog/resources/metro.xsd"/>

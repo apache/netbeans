@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="j2ee.dd.webservice" default="netbeans" basedir=".">
+<project basedir="." default="build" name="enterprise/j2ee.dd.webservice">
   <import file="../../nbbuild/templates/projectized.xml"/>
 
     <property name="resourcesdir" value="./src/org/netbeans/modules/j2ee/dd/impl/resources"/>

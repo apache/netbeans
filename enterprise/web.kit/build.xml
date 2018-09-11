@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="web.kit">
+<project basedir="." default="build" name="enterprise/web.kit">
     <description>Builds, tests, and runs the project org.netbeans.modules.web.kit</description>
     <import file="../j2ee.kit/register_server.xml"/>
     <import file="../../nbbuild/templates/projectized.xml"/>

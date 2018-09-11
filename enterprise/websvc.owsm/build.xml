@@ -20,7 +20,7 @@
 
 -->
 
-<project basedir="." default="netbeans" name="websvc.owsm">
+<project basedir="." default="build" name="enterprise/websvc.owsm">
     <description>Builds, tests, and runs the project org.netbeans.modules.websvc.owsm</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

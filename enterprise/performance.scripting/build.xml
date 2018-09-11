@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="performance.scripting" default="netbeans" basedir=".">
+<project basedir="." default="build" name="enterprise/performance.scripting">
     <description>Builds and runs performance scripting tests</description>
 
     <property name="test.timeout" value="3600000"/>

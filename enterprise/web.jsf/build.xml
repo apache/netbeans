@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="web.jsf" default="netbeans" basedir=".">
+<project basedir="." default="build" name="enterprise/web.jsf">
 
     <import file="../../nbbuild/templates/projectized.xml"/>
 

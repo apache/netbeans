@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="libs.amazon" default="netbeans" basedir=".">
+<project basedir="." default="build" name="enterprise/libs.amazon">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

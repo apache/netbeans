@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="websvc.design">
+<project basedir="." default="build" name="enterprise/websvc.design">
     <description>Builds, tests, and runs the project org.netbeans.modules.websvc.design</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="websvc.utilities">
+<project basedir="." default="build" name="enterprise/websvc.utilities">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

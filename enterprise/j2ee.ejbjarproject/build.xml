@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="j2ee.ejbjarproject">
+<project basedir="." default="build" name="enterprise/j2ee.ejbjarproject">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

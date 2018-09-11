@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="libs.commons_fileupload" default="netbeans" basedir=".">
+<project basedir="." default="build" name="enterprise/libs.commons_fileupload">
 
     <import file="../../nbbuild/templates/projectized.xml"/>
 

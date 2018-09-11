@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="websvc.clientapi">
+<project basedir="." default="build" name="enterprise/websvc.clientapi">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="libs.jstl" default="netbeans" basedir=".">
+<project basedir="." default="build" name="enterprise/libs.jstl">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

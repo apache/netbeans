@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="j2ee.ejbverification">
+<project basedir="." default="build" name="enterprise/j2ee.ejbverification">
     <description>Builds, tests, and runs the project org.netbeans.modules.j2ee.ejbverification</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

@@ -20,7 +20,7 @@
 
 -->
 
-<project name="el.lexer" default="netbeans" basedir=".">
+<project basedir="." default="build" name="enterprise/el.lexer">
 
     <import file="../../nbbuild/templates/projectized.xml"/>
 

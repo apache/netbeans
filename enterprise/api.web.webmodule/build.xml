@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="api.web.webmodule">
+<project basedir="." default="build" name="enterprise/api.web.webmodule">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

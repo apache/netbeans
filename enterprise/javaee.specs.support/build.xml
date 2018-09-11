@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="javaee.specs.support">
+<project basedir="." default="build" name="enterprise/javaee.specs.support">
     <description>Builds, tests, and runs the project org.netbeans.modules.javaee.specs.support</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

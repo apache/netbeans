@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="profiler.j2ee">
+<project basedir="." default="build" name="enterprise/profiler.j2ee">
     <description>Builds, tests, and runs the project org.netbeans.modules.profiler.j2ee</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

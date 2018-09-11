@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="j2ee.sun.appsrv" default="netbeans" basedir=".">
+<project basedir="." default="build" name="enterprise/j2ee.sun.appsrv">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

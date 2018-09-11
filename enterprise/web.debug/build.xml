@@ -20,7 +20,7 @@
 
 -->
 
-<project name="web.debug" default="netbeans" basedir=".">
+<project basedir="." default="build" name="enterprise/web.debug">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>
 

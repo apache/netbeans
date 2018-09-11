@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="j2ee.genericserver">
+<project basedir="." default="build" name="enterprise/j2ee.genericserver">
 
     <import file="../../nbbuild/templates/projectized.xml"/>
 

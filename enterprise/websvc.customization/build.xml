@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="websvc.customization">
+<project basedir="." default="build" name="enterprise/websvc.customization">
     <description>Builds, tests, and runs the project org.netbeans.modules.websvc.customization</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

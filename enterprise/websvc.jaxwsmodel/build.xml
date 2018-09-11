@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="websvc.jaxwsmodel">
+<project basedir="." default="build" name="enterprise/websvc.jaxwsmodel">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

@@ -20,7 +20,7 @@
 
 -->
 
-<project basedir="." default="netbeans" name="glassfish.javaee">
+<project basedir="." default="build" name="enterprise/glassfish.javaee">
     <description>Builds, tests, and runs the project org.netbeans.modules.glassfish.javaee</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

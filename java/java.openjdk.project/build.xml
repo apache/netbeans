@@ -22,11 +22,13 @@
     <import file="../../nbbuild/templates/projectized.xml"/>
     <target name="compile" depends="projectized-common.compile">
         <mkdir dir="${build.dir}/fakeJdkClasses/java/lang" />
+        <mkdir dir="${build.dir}/fakeJdkClasses/java/lang/invoke" />
         <mkdir dir="${build.dir}/fakeJdkClasses/java/util/stream" />
         <mkdir dir="${build.dir}/fakeJdkClasses/java/util/zip" />
         <touch file="${build.dir}/fakeJdkClasses/java/lang/AssertionError.class" />
         <touch file="${build.dir}/fakeJdkClasses/java/lang/StringBuilder.class" />
         <touch file="${build.dir}/fakeJdkClasses/java/lang/AutoCloseable.class" />
+        <touch file="${build.dir}/fakeJdkClasses/java/lang/invoke/LambdaMetafactory.class" />
         <touch file="${build.dir}/fakeJdkClasses/java/util/stream/Streams.class" />
         <touch file="${build.dir}/fakeJdkClasses/java/util/zip/CRC32C.class" />
 

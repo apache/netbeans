@@ -792,6 +792,8 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
                                         Future<FixShim[]> fixFuture = remote.readAndDecode(info, GetFixes.class, FixShim[].class, callbackId);
                                         cancel.setFuture(fixFuture);
                                         fixShims = fixFuture.get();
+                                    } catch (CancellationException ex) {
+                                        return fixes;
                                     } catch (InterruptedException | ExecutionException ex) {
                                         Exceptions.printStackTrace(ex);
                                         return fixes;

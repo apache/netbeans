@@ -149,7 +149,7 @@ public final class CloseButtonFactory{
         }
         if( null == closeTabImage ) {
             if( isWindows8LaF() || isWindows10LaF() ) {
-                closeTabImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/win8_bigclose_enabled.png", true); // NOI18N
+                closeTabImage = Windows8VectorCloseButton.DEFAULT;
             } else if( isWindowsVistaLaF() ) {
                 closeTabImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/vista_close_enabled.png", true); // NOI18N
             } else if( isWindowsXPLaF() ) {
@@ -176,7 +176,7 @@ public final class CloseButtonFactory{
         }
         if( null == closeTabPressedImage ) {
             if( isWindows8LaF() || isWindows10LaF() ) {
-                closeTabPressedImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/win8_bigclose_pressed.png", true); // NOI18N
+                closeTabPressedImage = Windows8VectorCloseButton.PRESSED;
             } else if( isWindowsVistaLaF() ) {
                 closeTabPressedImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/vista_close_pressed.png", true); // NOI18N
             } else if( isWindowsXPLaF() ) {
@@ -203,7 +203,7 @@ public final class CloseButtonFactory{
         }
         if( null == closeTabMouseOverImage ) {
             if( isWindows8LaF() || isWindows10LaF() ) {
-                closeTabMouseOverImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/win8_bigclose_rollover.png", true); // NOI18N
+                closeTabMouseOverImage = Windows8VectorCloseButton.PRESSED;
             } else if( isWindowsVistaLaF() ) {
                 closeTabMouseOverImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/vista_close_rollover.png", true); // NOI18N
             } else if( isWindowsXPLaF() ) {
@@ -231,7 +231,7 @@ public final class CloseButtonFactory{
         }
         if( null == bigCloseTabImage ) {
             if( isWindows8LaF() || isWindows10LaF() ) {
-                bigCloseTabImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/win8_bigclose_enabled.png", true); // NOI18N
+                bigCloseTabImage = Windows8VectorCloseButton.DEFAULT;
             } else if( isWindowsVistaLaF() ) {
                 bigCloseTabImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/vista_bigclose_enabled.png", true); // NOI18N
             } else if( isWindowsXPLaF() ) {
@@ -258,7 +258,7 @@ public final class CloseButtonFactory{
         }
         if( null == bigCloseTabPressedImage ) {
             if( isWindows8LaF() || isWindows10LaF() ) {
-                bigCloseTabPressedImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/win8_bigclose_pressed.png", true); // NOI18N
+                bigCloseTabPressedImage = Windows8VectorCloseButton.PRESSED;
             } else if( isWindowsVistaLaF() ) {
                 bigCloseTabPressedImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/vista_bigclose_pressed.png", true); // NOI18N
             } else if( isWindowsXPLaF() ) {
@@ -285,7 +285,7 @@ public final class CloseButtonFactory{
         }
         if( null == bigCloseTabMouseOverImage ) {
             if( isWindows8LaF() || isWindows10LaF() ) {
-                bigCloseTabMouseOverImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/win8_bigclose_rollover.png", true); // NOI18N
+                bigCloseTabMouseOverImage = Windows8VectorCloseButton.PRESSED;
             } else if( isWindowsVistaLaF() ) {
                 bigCloseTabMouseOverImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/vista_bigclose_rollover.png", true); // NOI18N
             } else if( isWindowsXPLaF() ) {

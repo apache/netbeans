@@ -49,6 +49,7 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.lsp.client.bindings.LanguageClientImpl;
 import org.netbeans.modules.lsp.client.spi.LanguageServerProvider;
+import org.netbeans.modules.lsp.client.spi.LanguageServerProvider.LanguageServerDescription;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -90,12 +91,17 @@ public class LSPBindings {
         LSPBindings bindings =
                 project2MimeType2Server.computeIfAbsent(prj, p -> new HashMap<>())
                                        .computeIfAbsent(mimeType, mt -> {
-                                           LanguageClientImpl lci = new LanguageClientImpl();
                                            for (LanguageServerProvider provider : MimeLookup.getLookup(mimeType).lookupAll(LanguageServerProvider.class)) {
-                                               LanguageServer server = provider.startServer(prj, lci);
+                                               LanguageServerDescription desc = provider.startServer(prj);
 
-                                               if (server != null) {
+                                               if (desc != null) {
                                                    try {
+                                                       LanguageClientImpl lci = new LanguageClientImpl();
+                                                       InputStream in = LanguageServerProviderAccessor.getINSTANCE().getInputStream(desc);
+                                                       OutputStream out = LanguageServerProviderAccessor.getINSTANCE().getOutputStream(desc);
+                                                       Launcher<LanguageServer> launcher = LSPLauncher.createClientLauncher(lci, in, out);
+                                                       launcher.startListening();
+                                                       LanguageServer server = launcher.getRemoteProxy();
                                                        InitializeParams initParams = new InitializeParams();
                                                        initParams.setRootUri(prj.getProjectDirectory().toURI().toString()); //XXX: what if a different root is expected????
                                                        initParams.setRootPath(FileUtil.toFile(prj.getProjectDirectory()).getAbsolutePath()); //some servers still expect root path

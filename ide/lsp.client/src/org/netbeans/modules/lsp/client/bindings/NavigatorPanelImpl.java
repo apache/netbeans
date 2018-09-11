@@ -19,6 +19,8 @@
 package org.netbeans.modules.lsp.client.bindings;
 
 import java.awt.BorderLayout;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -34,6 +36,7 @@ import org.netbeans.spi.navigator.NavigatorPanel;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.view.BeanTreeView;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.URLMapper;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
@@ -160,8 +163,18 @@ public class NavigatorPanelImpl extends Children.Keys<SymbolInformation> impleme
     public static final class DynamicRegistrationImpl implements DynamicRegistration {
 
         @Override
-        public Collection<? extends NavigatorPanel> panelsFor(FileObject file) {
-            return LSPBindings.getBindings(file) != null ? Collections.singletonList(INSTANCE) : Collections.emptyList();
+        public Collection<? extends NavigatorPanel> panelsFor(URI uri) {
+            try {
+                FileObject file = URLMapper.findFileObject(uri.toURL());
+                if (file != null) {
+                    return LSPBindings.getBindings(file) != null ? Collections.singletonList(INSTANCE) : Collections.emptyList();
+                } else {
+                    return Collections.emptyList();
+                }
+            } catch (MalformedURLException ex) {
+                //ignore
+                return Collections.emptyList();
+            }
         }
 
     }

@@ -18,14 +18,48 @@
  */
 package org.netbeans.modules.lsp.client.spi;
 
-import org.eclipse.lsp4j.services.LanguageClient;
-import org.eclipse.lsp4j.services.LanguageServer;
+import java.io.InputStream;
+import java.io.OutputStream;
+import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.lsp.client.LanguageServerProviderAccessor;
 
 /**
  *
  * @author lahvac
  */
 public interface LanguageServerProvider {
-    public LanguageServer startServer(Project prj, LanguageClient lc);
+    public @CheckForNull LanguageServerDescription startServer(@NonNull Project prj);
+    public static final class LanguageServerDescription {
+        private final InputStream in;
+        private final OutputStream out;
+        private final Process process;
+
+        public LanguageServerDescription(InputStream in, OutputStream out, Process process) {
+            this.in = in;
+            this.out = out;
+            this.process = process;
+        }
+
+        static {
+            LanguageServerProviderAccessor.setINSTANCE(new LanguageServerProviderAccessor() {
+                @Override
+                public InputStream getInputStream(LanguageServerDescription desc) {
+                    return desc.in;
+                }
+
+                @Override
+                public OutputStream getOutputStream(LanguageServerDescription desc) {
+                    return desc.out;
+                }
+
+                @Override
+                public Process getProcess(LanguageServerDescription desc) {
+                    return desc.process;
+                }
+            });
+        }
+
+    }
 }

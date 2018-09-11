@@ -60,10 +60,6 @@
                 <binary-origin>external/org.eclipse.xtend.lib.macro-2.14.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/gson-2.7.jar</runtime-relative-path>
-                <binary-origin>external/gson-2.7.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
                 <runtime-relative-path>ext/org.eclipse.lsp4j.generator-0.4.1.jar</runtime-relative-path>
                 <binary-origin>external/org.eclipse.lsp4j.generator-0.4.1.jar</binary-origin>
             </class-path-extension>

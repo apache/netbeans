@@ -79,7 +79,9 @@ $ ant tryme
 
 ### Download
 
-Developer builds can be downloaded from https://builds.apache.org/job/incubator-netbeans-release/
+Developer builds can be downloaded: https://builds.apache.org/job/incubator-netbeans-linux.
+
+Convenience binary of released source artifacts: https://netbeans.apache.org/download/index.html.
 
 ### Reporting Bugs
 

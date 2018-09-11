@@ -44,6 +44,7 @@ public class ResolveList extends Task {
     private File dir;
     private String path;
     private Set<String> modules;
+    private boolean ignoreMissing;
 
     /** Comma-separated list of properties to expand */
     public void setList (String s) {
@@ -58,6 +59,10 @@ public class ResolveList extends Task {
         modules = new HashSet<>();
         while (tok.hasMoreTokens ())
             modules.add(tok.nextToken ());
+    }
+    
+    public void setIgnoreMissing(boolean m) {
+        this.ignoreMissing = m;
     }
 
     /** New property name */
@@ -133,7 +138,16 @@ public class ResolveList extends Task {
             File cluster = fileUtils.resolveFile(dir, clusterDir);
 
             for (String p : props) {
-                String[] pValues = getProject().getProperty(p).split(",");
+                String pval = getProject().getProperty(p);
+                if (pval == null) {
+                    if (ignoreMissing) {
+                        continue;
+                    } else {
+                        throw new BuildException("Missing definition for " + p);
+                    }
+                    
+                }
+                String[] pValues = pval.split(",");
 
                 for (String oneValue : pValues) {
                     if (modules != null && !modules.contains(oneValue)) {

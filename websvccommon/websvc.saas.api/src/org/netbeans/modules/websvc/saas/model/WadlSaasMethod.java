@@ -21,11 +21,8 @@ package org.netbeans.modules.websvc.saas.model;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-
-import javax.xml.ws.Response;
 
 import org.netbeans.modules.websvc.saas.model.jaxb.Method;
 import org.netbeans.modules.websvc.saas.model.wadl.Application;

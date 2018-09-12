@@ -18,8 +18,11 @@
  */
 package org.netbeans.modules.java.lsp.server.text;
 
+import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.LineMap;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -115,7 +118,6 @@ import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.text.NbDocument;
-import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -142,7 +144,14 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             int caret = getOffset(doc, params.getPosition());
             JavaCompletionTask<CompletionItem> task = JavaCompletionTask.create(caret, new ItemFactoryImpl(), EnumSet.noneOf(Options.class), () -> false);
             ParserManager.parse(Collections.singletonList(Source.create(doc)), task);
-            return CompletableFuture.completedFuture(Either.<List<CompletionItem>, CompletionList>forRight(new CompletionList(task.getResults())));
+            List<CompletionItem> result = task.getResults();
+            for (Iterator<CompletionItem> it = result.iterator(); it.hasNext();) {
+                CompletionItem item = it.next();
+                if (item == null) {
+                    it.remove();
+                }
+            }
+            return CompletableFuture.completedFuture(Either.<List<CompletionItem>, CompletionList>forRight(new CompletionList(result)));
         } catch (IOException | ParseException ex) {
             throw new IllegalStateException(ex);
         }
@@ -167,7 +176,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
         @Override
         public CompletionItem createPackageItem(String pkgFQN, int substitutionOffset, boolean inPackageStatement) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            return null; //TODO: fill
         }
 
         @Override
@@ -179,12 +188,12 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
         @Override
         public CompletionItem createTypeItem(ElementHandle<TypeElement> handle, EnumSet<ElementKind> kinds, int substitutionOffset, ReferencesCount referencesCount, Source source, boolean insideNew, boolean addTypeVars, boolean afterExtends) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            return null; //TODO: fill
         }
 
         @Override
         public CompletionItem createArrayItem(CompilationInfo info, ArrayType type, int substitutionOffset, ReferencesCount referencesCount, Elements elements) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            return null; //TODO: fill
         }
 
         @Override
@@ -251,52 +260,52 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
         @Override
         public CompletionItem createGetterSetterMethodItem(CompilationInfo info, VariableElement elem, TypeMirror type, int substitutionOffset, String name, boolean setter) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            return null; //TODO: fill
         }
 
         @Override
         public CompletionItem createDefaultConstructorItem(TypeElement elem, int substitutionOffset, boolean smartType) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            return null; //TODO: fill
         }
 
         @Override
         public CompletionItem createParametersItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, int activeParamIndex, String name) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            return null; //TODO: fill
         }
 
         @Override
         public CompletionItem createAnnotationItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            return null; //TODO: fill
         }
 
         @Override
         public CompletionItem createAttributeItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            return null; //TODO: fill
         }
 
         @Override
         public CompletionItem createAttributeValueItem(CompilationInfo info, String value, String documentation, TypeElement element, int substitutionOffset, ReferencesCount referencesCount) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            return null; //TODO: fill
         }
 
         @Override
         public CompletionItem createStaticMemberItem(CompilationInfo info, DeclaredType type, Element memberElem, TypeMirror memberType, boolean multipleVersions, int substitutionOffset, boolean isDeprecated, boolean addSemicolon) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            return null; //TODO: fill
         }
 
         @Override
         public CompletionItem createStaticMemberItem(ElementHandle<TypeElement> handle, String name, int substitutionOffset, boolean addSemicolon, ReferencesCount referencesCount, Source source) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            return null; //TODO: fill
         }
 
         @Override
         public CompletionItem createChainedMembersItem(CompilationInfo info, List<? extends Element> chainedElems, List<? extends TypeMirror> chainedTypes, int substitutionOffset, boolean isDeprecated, boolean addSemicolon) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            return null; //TODO: fill
         }
 
         @Override
         public CompletionItem createInitializeAllConstructorItem(CompilationInfo info, boolean isDefault, Iterable<? extends VariableElement> fields, ExecutableElement superConstructor, TypeElement parent, int substitutionOffset) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            return null; //TODO: fill
         }
 
         private static CompletionItemKind elementKind2CompletionItemKind(ElementKind kind) {
@@ -372,17 +381,13 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> documentSymbol(DocumentSymbolParams params) {
-        Document doc = openedDocuments.get(params.getTextDocument().getUri());
-        if (doc == null) {
-            return CompletableFuture.completedFuture(Collections.emptyList());
-        }
-        JavaSource js = JavaSource.forDocument(doc);
+        JavaSource js = getSource(params.getTextDocument().getUri());
         List<Either<SymbolInformation, DocumentSymbol>> result = new ArrayList<>();
         try {
             js.runUserActionTask(cc -> {
                 cc.toPhase(JavaSource.Phase.RESOLVED);
                 for (Element tel : cc.getTopLevelElements()) {
-                    DocumentSymbol ds = element2DocumentSymbol(doc, cc, tel);
+                    DocumentSymbol ds = element2DocumentSymbol(cc, tel);
                     if (ds != null)
                         result.add(Either.forRight(ds));
                 }
@@ -395,7 +400,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         return CompletableFuture.completedFuture(result);
     }
 
-    private DocumentSymbol element2DocumentSymbol(Document doc, CompilationInfo info, Element el) throws BadLocationException {
+    private DocumentSymbol element2DocumentSymbol(CompilationInfo info, Element el) throws BadLocationException {
         TreePath path = info.getTrees().getPath(el);
         if (path == null)
             return null;
@@ -403,10 +408,11 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         long end   = info.getTrees().getSourcePositions().getEndPosition(path.getCompilationUnit(), path.getLeaf());
         if (end == (-1))
             return null;
-        Range range = new Range(createPosition(doc, (int) start), createPosition(doc, (int) end));
+        Range range = new Range(createPosition(info.getCompilationUnit(), (int) start),
+                                createPosition(info.getCompilationUnit(), (int) end));
         List<DocumentSymbol> children = new ArrayList<>();
         for (Element c : el.getEnclosedElements()) {
-            DocumentSymbol ds = element2DocumentSymbol(doc, info, c);
+            DocumentSymbol ds = element2DocumentSymbol(info, c);
             if (ds != null) {
                 children.add(ds);
             }
@@ -494,18 +500,20 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             for (Fix f : fixes) {
                 if (f instanceof JavaFixImpl) {
                     try {
+                        LineMap[] lm = new LineMap[1];
                         ModificationResult changes = js.runModificationTask(wc -> {
                             wc.toPhase(JavaSource.Phase.RESOLVED);
                             Map<FileObject, byte[]> resourceContentChanges = new HashMap<FileObject, byte[]>();
                             JavaFix jf = ((JavaFixImpl) f).jf;
                             JavaFixImpl.Accessor.INSTANCE.process(jf, wc, true, resourceContentChanges, /*Ignored in editor:*/new ArrayList<>());
+                            lm[0] = wc.getCompilationUnit().getLineMap();
                         });
                         //TODO: full, correct and safe edit production:
                         List<? extends ModificationResult.Difference> diffs = changes.getDifferences(changes.getModifiedFileObjects().iterator().next());
                         List<TextEdit> edits = new ArrayList<>();
                         for (ModificationResult.Difference diff : diffs) {
-                            edits.add(new TextEdit(new Range(createPosition(doc, diff.getStartPosition().getOffset()),
-                                                             createPosition(doc, diff.getEndPosition().getOffset())),
+                            edits.add(new TextEdit(new Range(createPosition(lm[0], diff.getStartPosition().getOffset()),
+                                                             createPosition(lm[0], diff.getEndPosition().getOffset())),
                                                    diff.getNewText()));
                         }
                         TextDocumentEdit te = new TextDocumentEdit(new VersionedTextDocumentIdentifier(params.getTextDocument().getUri(),
@@ -516,7 +524,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         action.setKind(CodeActionKind.QuickFix);
                         action.setEdit(new WorkspaceEdit(Collections.singletonList(te)));
                         result.add(Either.forRight(action));
-                    } catch (IOException | BadLocationException ex) {
+                    } catch (IOException ex) {
                         //TODO: include stack trace:
                         client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
                     }
@@ -597,13 +605,13 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     @Override
-    public void didClose(DidCloseTextDocumentParams arg0) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void didClose(DidCloseTextDocumentParams params) {
+        openedDocuments.remove(params.getTextDocument().getUri());
     }
 
     @Override
     public void didSave(DidSaveTextDocumentParams arg0) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //TODO: nothing for now?
     }
 
     private void runDiagnoticTasks(String uri) {
@@ -623,8 +631,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                             List<Diagnostic> diags = new ArrayList<>();
                             int idx = 0;
                             for (ErrorDescription err : ehp.computeErrors(cc, doc, "text/x-java")) { //TODO: mimetype?
-                                Diagnostic diag = new Diagnostic(new Range(createPosition(doc, err.getRange().getBegin().getOffset()),
-                                                                           createPosition(doc, err.getRange().getEnd().getOffset())),
+                                Diagnostic diag = new Diagnostic(new Range(createPosition(cc.getCompilationUnit(), err.getRange().getBegin().getOffset()),
+                                                                           createPosition(cc.getCompilationUnit(), err.getRange().getEnd().getOffset())),
                                                                  err.getDescription());
                                 switch (err.getSeverity()) {
                                     case ERROR: diag.setSeverity(DiagnosticSeverity.Error); break;
@@ -650,10 +658,27 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     private static final int DELAY = 500;
 
-    //copied from lsp.client//Utils:
-    public static Position createPosition(Document doc, int offset) throws BadLocationException {
-         return new Position(LineDocumentUtils.getLineIndex((LineDocument) doc, offset),
-                             offset - LineDocumentUtils.getLineStart((LineDocument) doc, offset));
+    private JavaSource getSource(String fileUri) {
+        Document doc = openedDocuments.get(fileUri);
+        if (doc == null) {
+            try {
+                FileObject file = URLMapper.findFileObject(URI.create(fileUri).toURL());
+                return JavaSource.forFileObject(file);
+            } catch (MalformedURLException ex) {
+                return null;
+            }
+        } else {
+            return JavaSource.forDocument(doc);
+        }
+    }
+
+    public static Position createPosition(CompilationUnitTree cut, int offset) {
+        return createPosition(cut.getLineMap(), offset);
+    }
+
+    public static Position createPosition(LineMap lm, int offset) {
+        return new Position((int) lm.getLineNumber(offset) - 1,
+                            (int) lm.getColumnNumber(offset) - 1);
     }
 
     public static int getOffset(Document doc, Position pos) {

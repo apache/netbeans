@@ -22,21 +22,48 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.api.project.Project;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.lsp.client.LanguageServerProviderAccessor;
+import org.openide.util.Lookup;
 
 /**
+ * Possibly start a language server. Should be installed in the Mime Lookup for the
+ * given mime type that is handled by the given server.
  *
  * @author lahvac
  */
 public interface LanguageServerProvider {
-    public @CheckForNull LanguageServerDescription startServer(@NonNull Project prj);
+    /**Possibly start a language server. {@code lookup} contains additional
+     * information. May return null, meaning no server was started.
+     *
+     * @param lookup additional information
+     * @return a description of the running language server handling requests for
+     *         the given mime type, or null if not handled.
+     */
+    public @CheckForNull LanguageServerDescription startServer(@NonNull Lookup lookup);
+
+    /**
+     * A description of a running language server.
+     */
     public static final class LanguageServerDescription {
+
+        /**
+         * Create the description of a running language server.
+         *
+         * @param in the InputStream that should be used to communicate with the server
+         * @param out the OutputStream that should be used to communicate with the server
+         * @param process the process of the running language server, or null if none.
+         * @return an instance of LanguageServerDescription
+         */
+        public static @NonNull LanguageServerDescription create(@NonNull InputStream in, @NonNull OutputStream out, @NullAllowed Process process) {
+            return new LanguageServerDescription(in, out, process);
+        }
+
         private final InputStream in;
         private final OutputStream out;
         private final Process process;
 
-        public LanguageServerDescription(InputStream in, OutputStream out, Process process) {
+        private LanguageServerDescription(InputStream in, OutputStream out, Process process) {
             this.in = in;
             this.out = out;
             this.process = process;

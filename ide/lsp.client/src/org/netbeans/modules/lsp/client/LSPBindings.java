@@ -55,6 +55,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -92,7 +93,7 @@ public class LSPBindings {
                 project2MimeType2Server.computeIfAbsent(prj, p -> new HashMap<>())
                                        .computeIfAbsent(mimeType, mt -> {
                                            for (LanguageServerProvider provider : MimeLookup.getLookup(mimeType).lookupAll(LanguageServerProvider.class)) {
-                                               LanguageServerDescription desc = provider.startServer(prj);
+                                               LanguageServerDescription desc = provider.startServer(Lookups.singleton(prj));
 
                                                if (desc != null) {
                                                    try {

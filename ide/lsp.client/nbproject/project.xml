@@ -220,10 +220,9 @@
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-            <friend-packages>
-                <friend>org.netbeans.modules.kotlin.support</friend>
+            <public-packages>
                 <package>org.netbeans.modules.lsp.client.spi</package>
-            </friend-packages>
+            </public-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/org.eclipse.lsp4j-0.4.1.jar</runtime-relative-path>
                 <binary-origin>external/org.eclipse.lsp4j-0.4.1.jar</binary-origin>

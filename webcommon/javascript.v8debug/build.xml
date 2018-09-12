@@ -20,7 +20,7 @@
 
 -->
 
-<project name="javascript.v8debug" default="netbeans" basedir=".">
+<project basedir="." default="build" name="webcommon/javascript.v8debug">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>
 

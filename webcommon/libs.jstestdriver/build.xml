@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="libs.jstestdriver">
+<project basedir="." default="build" name="webcommon/libs.jstestdriver">
     <description>Builds, tests, and runs the project libs.jstestdriver</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 

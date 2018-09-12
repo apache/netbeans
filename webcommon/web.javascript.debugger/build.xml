@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="web.javascript.debugger">
+<project basedir="." default="build" name="webcommon/web.javascript.debugger">
     <description>Builds, tests, and runs the project web.javascript.debugger</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

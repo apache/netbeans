@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="lib.v8debug">
+<project basedir="." default="build" name="webcommon/lib.v8debug">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

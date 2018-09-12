@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="libs.plist">
+<project basedir="." default="build" name="webcommon/libs.plist">
     <description>Builds, tests, and runs the project libs.plist</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

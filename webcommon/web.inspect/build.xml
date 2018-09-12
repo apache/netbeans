@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="web.inspect">
+<project basedir="." default="build" name="webcommon/web.inspect">
     <import file="../../nbbuild/templates/projectized.xml"/>    
 </project>

@@ -1891,7 +1891,7 @@ public final class TreeUtilities {
     public boolean isVarType(@NonNull TreePath path) {
         TokenSequence<JavaTokenId> tokenSequence = tokensFor(path.getLeaf());
         tokenSequence.moveStart();
-        while(tokenSequence.moveNext() && tokenSequence.token().id() != JavaTokenId.EQ){
+        while(tokenSequence.moveNext() && tokenSequence.token().id() != JavaTokenId.EQ && tokenSequence.token().id() != JavaTokenId.COLON && tokenSequence.token().id() != JavaTokenId.RPAREN && tokenSequence.token().id() != JavaTokenId.SEMICOLON){
             if(tokenSequence.token().id() == JavaTokenId.VAR){
                 return true;
             }

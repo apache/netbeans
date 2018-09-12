@@ -96,7 +96,7 @@ public class ExpandEnhancedForLoop {
         
     }
 
-    private static ExecutableElement findIterable(CompilationInfo info) {
+    public static ExecutableElement findIterable(CompilationInfo info) {
         TypeElement iterable = info.getElements().getTypeElement("java.lang.Iterable");
 
         if (iterable == null) {

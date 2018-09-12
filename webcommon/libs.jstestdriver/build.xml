@@ -23,7 +23,7 @@
     <description>Builds, tests, and runs the project libs.jstestdriver</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 
-    <target name="ext-compile">
+    <target name="ext-compile" depends="build-init">
         <mkdir dir="build/extclasses"/>
         <javac srcdir="extsrc" destdir="build/extclasses" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}" source="1.6">
             <classpath>
@@ -46,5 +46,6 @@
 
     <target name="build-wrapper" depends="netbeans,ext-jar"/>
 
+    <target name="-process.release.files" depends="projectized.-process.release.files,ext-jar"/>
 
 </project>

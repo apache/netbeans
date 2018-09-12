@@ -41,6 +41,16 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.modules.java.hints.errors.Utilities;
+import com.sun.source.tree.EnhancedForLoopTree;
+import com.sun.source.tree.StatementTree;
+import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Type.ArrayType;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
+import org.netbeans.modules.java.hints.suggestions.ExpandEnhancedForLoop;
+import org.netbeans.spi.java.hints.TriggerPatterns;
 
 /**
  * Hint will convert explicit type of local variable to 'var'. Supported: JDK 10
@@ -57,8 +67,10 @@ public class ConvertToVarHint {
         "compiler.err.generic.array.creation" //NOI18N
     };
 
-    @TriggerPattern("$mods$ $type $var = $init") //NOI18N
-
+    @TriggerPatterns({
+        @TriggerPattern("$mods$ $type $var = $init"), //NOI18N
+        @TriggerPattern("for ($type $var : $expression) { $stmts$; }") //NOI18N
+    })
     public static ErrorDescription computeExplicitToVarType(HintContext ctx) {
         if (!preConditionChecker(ctx)) {
             return null;
@@ -121,6 +133,22 @@ public class ConvertToVarHint {
                         initializerTree
                 );
                 wc.rewrite(oldVariableTree, newVariableTree);
+            } else if (statementPath.getLeaf().getKind() == Tree.Kind.ENHANCED_FOR_LOOP) {
+                EnhancedForLoopTree elfTree = (EnhancedForLoopTree) statementPath.getLeaf();
+                ExpressionTree expTree = elfTree.getExpression();
+                VariableTree vtt = elfTree.getVariable();
+                if (expTree == null || vtt == null) {
+                    return;
+                }
+                VariableTree newVariableTree = make.Variable(
+                        vtt.getModifiers(),
+                        vtt.getName(),
+                        make.Type("var"),
+                        null
+                );
+                StatementTree statement = ((EnhancedForLoopTree) statementPath.getLeaf()).getStatement();
+                EnhancedForLoopTree newElfTree = make.EnhancedForLoop(newVariableTree, expTree, statement);
+                wc.rewrite(elfTree, newElfTree);
             }
         }
     }
@@ -134,15 +162,9 @@ public class ConvertToVarHint {
 
         CompilationInfo info = ctx.getInfo();
 
-        // hint will be enable only for JDK-10 or above.
-        if (info.getSourceVersion().compareTo(SourceVersion.RELEASE_9) < 1) {
-            return false;
-        }
-
         TreePath treePath = ctx.getPath();
 
-        // variable should have local scope
-        if (info.getTrees().getElement(treePath).getKind() != ElementKind.LOCAL_VARIABLE) {
+        if (!ConvertVarToExplicitType.isVariableValidForVarHint(ctx)) {
             return false;
         }
 
@@ -161,7 +183,8 @@ public class ConvertToVarHint {
     private static boolean isValidVarType(HintContext ctx) {
         TreePath treePath = ctx.getPath();
         TreePath initTreePath = ctx.getVariables().get("$init");  //NOI18N
-        
+        TreePath expressionTreePath = ctx.getVariables().get("$expression"); //NOI18N
+        TreePath typeTreePath = ctx.getVariables().get("$type"); //NOI18N
         if (initTreePath != null) {
             Tree.Kind kind = initTreePath.getLeaf().getKind();
             switch (kind) {
@@ -184,17 +207,35 @@ public class ConvertToVarHint {
                 default:
                     break;
             }
+            // variable initializer type should be same as variable type.
+            TypeMirror initTypeMirror = ctx.getInfo().getTrees().getTypeMirror(initTreePath);
+            TypeMirror variableTypeMirror = ctx.getInfo().getTrees().getElement(treePath).asType();
+            if ((!Utilities.isValidType(initTypeMirror)) || (!ctx.getInfo().getTypes().isSameType(variableTypeMirror, Utilities.resolveCapturedType(ctx.getInfo(), initTypeMirror)))) {
+                return false;
+            }
+            return true;
+        } else if (expressionTreePath != null) {
+            ExecutableElement iterator = ExpandEnhancedForLoop.findIterable(ctx.getInfo());
+            TypeMirror expTypeMirror = ctx.getInfo().getTrees().getTypeMirror(expressionTreePath);
+            TypeMirror typeTypeMirror = ctx.getInfo().getTrees().getTypeMirror(typeTreePath);
+            if (expTypeMirror.getKind() == TypeKind.DECLARED) {
+                DeclaredType dt = (DeclaredType) expTypeMirror;
+                if (dt.getTypeArguments().size() > 0) {
+                    TypeMirror paramType = dt.getTypeArguments().get(0);
+                    if ((!Utilities.isValidType(typeTypeMirror)) || (!ctx.getInfo().getTypes().isSameType(typeTypeMirror, paramType))) {
+                        return false;
+                    }
+                }
+            } else {
+                ArrayType arrayTypeExp = (ArrayType) Utilities.resolveCapturedType(ctx.getInfo(), expTypeMirror);
+                Type arrayTypeExpType = arrayTypeExp.getComponentType();
+                if ((!Utilities.isValidType(typeTypeMirror)) || (!ctx.getInfo().getTypes().isSameType(typeTypeMirror, arrayTypeExpType))) {
+                    return false;
+                }
+            }
+            return (iterator != null);
         } else {
             return false;
         }
-        // variable initializer type should be same as variable type.
-        TypeMirror initTypeMirror = ctx.getInfo().getTrees().getTypeMirror(initTreePath);
-        TypeMirror variableTypeMirror = ctx.getInfo().getTrees().getElement(treePath).asType();
-
-        if ((!Utilities.isValidType(initTypeMirror)) || (!ctx.getInfo().getTypes().isSameType(variableTypeMirror, Utilities.resolveCapturedType(ctx.getInfo(), initTypeMirror)))) {
-            return false;
-        }
-                
-        return true;
     }
 }

@@ -21,6 +21,6 @@
 -->
 
 <project name="javascript.v8debug" default="netbeans" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>
 

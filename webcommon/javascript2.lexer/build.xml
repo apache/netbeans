@@ -21,7 +21,7 @@
 -->
 <project basedir="." default="netbeans" name="javascript2.lexer">
     <description>Builds, tests, and runs the project org.netbeans.modules.javascript2.lexer</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
     <!-- JFlex 1.4.3 handling (download and taskdef) -->
     <target name="-prepare-jflex" depends="build-init">

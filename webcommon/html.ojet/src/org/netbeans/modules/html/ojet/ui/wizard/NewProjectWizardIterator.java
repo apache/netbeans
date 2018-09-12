@@ -80,53 +80,53 @@ public final class NewProjectWizardIterator implements WizardDescriptor.Progress
         baseWizard = CreateProjectUtils.createBaseWizardPanel(projectDirName);
     }
 
-    @TemplateRegistration(
-            folder = "Project/ClientSide",
-            displayName = "#NewProjectWizardIterator.newOracleJETBaseDistribution.displayName",
-            description = "../resources/NewOracleJETBaseDistributionDescription.html",
-            iconBase = OJETUtils.OJET_ICON_PATH,
-            position = 250)
-    @NbBundle.Messages("NewProjectWizardIterator.newOracleJETBaseDistribution.displayName=Oracle JET Base Distribution")
-    public static NewProjectWizardIterator newOracleJETBaseDistribution() {
-        return new NewProjectWizardIterator(
-                Bundle.NewProjectWizardIterator_newOracleJETBaseDistribution_displayName(),
-                "OracleJETApplication", // NOI18N
-                "http://www.oracle.com/webfolder/technetwork/jet/code/oraclejet.zip", // NOI18N
-                new File(System.getProperty("java.io.tmpdir"), "oraclejet.zip") // NOI18N
-        );
-    }
+    // @TemplateRegistration(
+    //        folder = "Project/ClientSide",
+    //        displayName = "#NewProjectWizardIterator.newOracleJETBaseDistribution.displayName",
+    //        description = "../resources/NewOracleJETBaseDistributionDescription.html",
+    //        iconBase = OJETUtils.OJET_ICON_PATH,
+    //        position = 250)
+    // @NbBundle.Messages("NewProjectWizardIterator.newOracleJETBaseDistribution.displayName=Oracle JET Base Distribution")
+    // public static NewProjectWizardIterator newOracleJETBaseDistribution() {
+    //    return new NewProjectWizardIterator(
+    //            Bundle.NewProjectWizardIterator_newOracleJETBaseDistribution_displayName(),
+    //            "OracleJETApplication", // NOI18N
+    //            "http://www.oracle.com/webfolder/technetwork/jet/code/oraclejet.zip", // NOI18N
+    //            new File(System.getProperty("java.io.tmpdir"), "oraclejet.zip") // NOI18N
+    //    );
+    // }
 
-    @TemplateRegistration(
-            folder = "Project/Samples/HTML5",
-            displayName = "#NewProjectWizardIterator.newOracleJETQuickStartBasic.displayName",
-            description = "../resources/NewOracleJETQuickStartBasicDescription.html",
-            iconBase = OJETUtils.OJET_ICON_PATH,
-            position = 2990)
-    @NbBundle.Messages("NewProjectWizardIterator.newOracleJETQuickStartBasic.displayName=Oracle JET QuickStart Basic")
-    public static NewProjectWizardIterator newOracleJETQuickStartBasic() {
-        return new NewProjectWizardIterator(
-                Bundle.NewProjectWizardIterator_newOracleJETQuickStartBasic_displayName(),
-                "OracleJETQuickStartBasic", // NOI18N
-                "http://www.oracle.com/webfolder/technetwork/jet/public_samples/OracleJET_QuickStartBasic.zip", // NOI18N
-                new File(System.getProperty("java.io.tmpdir"), "OracleJET_QuickStartBasic.zip") // NOI18N
-        );
-    }
+    // @TemplateRegistration(
+    //        folder = "Project/Samples/HTML5",
+    //        displayName = "#NewProjectWizardIterator.newOracleJETQuickStartBasic.displayName",
+    //        description = "../resources/NewOracleJETQuickStartBasicDescription.html",
+    //        iconBase = OJETUtils.OJET_ICON_PATH,
+    //        position = 2990)
+    // @NbBundle.Messages("NewProjectWizardIterator.newOracleJETQuickStartBasic.displayName=Oracle JET QuickStart Basic")
+    // public static NewProjectWizardIterator newOracleJETQuickStartBasic() {
+    //    return new NewProjectWizardIterator(
+    //            Bundle.NewProjectWizardIterator_newOracleJETQuickStartBasic_displayName(),
+    //            "OracleJETQuickStartBasic", // NOI18N
+    //            "http://www.oracle.com/webfolder/technetwork/jet/public_samples/OracleJET_QuickStartBasic.zip", // NOI18N
+    //            new File(System.getProperty("java.io.tmpdir"), "OracleJET_QuickStartBasic.zip") // NOI18N
+    //    );
+    // }
 
-    @TemplateRegistration(
-            folder = "Project/Samples/HTML5",
-            displayName = "#NewProjectWizardIterator.newComponentInteractionSample.displayName",
-            description = "../resources/NewComponentInteractionSampleDescription.html",
-            iconBase = OJETUtils.OJET_ICON_PATH,
-            position = 3000)
-    @NbBundle.Messages("NewProjectWizardIterator.newComponentInteractionSample.displayName=Oracle JET Component Interaction Sample")
-    public static NewProjectWizardIterator newComponentInteractionSample() {
-        return new NewProjectWizardIterator(
-                Bundle.NewProjectWizardIterator_newComponentInteractionSample_displayName(),
-                "OracleJETComponentInteraction", // NOI18N
-                "http://www.oracle.com/webfolder/technetwork/jet/public_samples/JET-ComponentInteraction.zip", // NOI18N
-                new File(System.getProperty("java.io.tmpdir"), "JET-ComponentInteraction.zip") // NOI18N
-        );
-    }
+    // @TemplateRegistration(
+    //        folder = "Project/Samples/HTML5",
+    //        displayName = "#NewProjectWizardIterator.newComponentInteractionSample.displayName",
+    //        description = "../resources/NewComponentInteractionSampleDescription.html",
+    //        iconBase = OJETUtils.OJET_ICON_PATH,
+    //        position = 3000)
+    // @NbBundle.Messages("NewProjectWizardIterator.newComponentInteractionSample.displayName=Oracle JET Component Interaction Sample")
+    // public static NewProjectWizardIterator newComponentInteractionSample() {
+    //    return new NewProjectWizardIterator(
+    //            Bundle.NewProjectWizardIterator_newComponentInteractionSample_displayName(),
+    //            "OracleJETComponentInteraction", // NOI18N
+    //            "http://www.oracle.com/webfolder/technetwork/jet/public_samples/JET-ComponentInteraction.zip", // NOI18N
+    //            new File(System.getProperty("java.io.tmpdir"), "JET-ComponentInteraction.zip") // NOI18N
+    //    );
+    // }
 
     @NbBundle.Messages("NewProjectWizardIterator.progress.creating=Creating project...")
     @Override

@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.xml.wsdl.validator;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,7 +46,7 @@ public class WSDLSchemaValidator extends XsdBasedValidator {
      * Uses the WSDL Basic Profile 1.1 schema from 
      * http://www.ws-i.org/Profiles/BasicProfile-1.1.html#WSDLDOCSTRUCT
      */
-    static final String wsdlXSDUrl = "/org/netbeans/modules/xml/wsdl/validator/resources/wsdl-2004-08-24.xsd";
+    static final String wsdlXSDUrl = "/org/netbeans/modules/xml/wsdl/validator/resources/external/wsdl-2004-08-24.xsd";
     
     public String getName() {
         return "WSDLSchemaValidator"; //NO I18N

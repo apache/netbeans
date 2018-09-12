@@ -29,6 +29,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.security.AllPermission;
 import java.security.CodeSource;
@@ -50,11 +52,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
+import java.util.WeakHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.openide.modules.Dependency;
 import org.openide.modules.ModuleInfo;
 import org.openide.modules.Modules;
@@ -91,6 +93,12 @@ public final class ModuleManager extends Modules {
     private final Set<Module> modules = new HashSet<Module>(100);
     // the same, indexed by code name base
     private final Map<String,Module> modulesByName = new HashMap<String,Module>(100);
+    
+    /**
+     * Registers classloaders and module objects for bootstrap modules.
+     */
+    // @GuardedBy(this)
+    private final Map<ClassLoader, Collection<Reference<Module>>> bootstrapModules = new WeakHashMap<>();
 
     /**
      * Modules whose contents is injected into 
@@ -543,6 +551,13 @@ public final class ModuleManager extends Modules {
         return mdc.getCnb(jar.getPath());
     }
 
+    final String fragmentFor(File jar) {
+        if (jar == null) {
+            return null;
+        }
+        return mdc.getFragment(jar.getPath());
+    }
+
     private Map<String, Set<Module>> getProvidersOf() {
         return providersOf.getProvidersOf();
     }
@@ -848,6 +863,23 @@ public final class ModuleManager extends Modules {
         Module m = moduleFactory.createFixed(mani, history, loader, autoload, eager, this, ev);
         ev.log(Events.FINISH_CREATE_BOOT_MODULE, history);
         subCreate(m);
+        synchronized (this) {
+            Collection<Reference<Module>> oldMods = bootstrapModules.get(loader);
+            Collection<Reference<Module>> mods;
+            if (oldMods == null) {
+                mods = new ArrayList<>();
+            } else {
+                mods = new ArrayList<>(oldMods);
+                for (Iterator<Reference<Module>> rit = mods.iterator(); rit.hasNext(); ) {
+                    Reference<Module> r = rit.next();
+                    if (r.get() == null) {
+                        rit.remove();
+                    }
+                }
+            }
+            mods.add(new WeakReference<>(m));
+            bootstrapModules.put(loader, mods);
+        }
         return m;
     }
 
@@ -877,7 +909,7 @@ public final class ModuleManager extends Modules {
             throw new IllegalStateException("Missing hosting module " + fragmentHost + " for fragment " + m.getCodeName());
         }
         if (!theHost.isEnabled()) {
-            return null;
+            throw new IllegalStateException("Host module for " + m.getCodeName() + " should have been enabled: " + theHost);
         }
         return theHost.getClassLoader();
     }
@@ -906,11 +938,71 @@ public final class ModuleManager extends Modules {
             path.addAll(allJars);
         }
     }
-    
-    /** Use by OneModuleClassLoader to communicate with the ModuleInstaller re. masking. */
+
+    /** Use by OneModuleClassLoader to communicate with the ModuleInstaller re. masking. 
+     * @deprecated Use {@link #shouldDelegateResource(org.netbeans.Module, org.netbeans.Module, java.lang.String, java.lang.ClassLoader)}.
+     */
+    @Deprecated
     public boolean shouldDelegateResource(Module m, Module parent, String pkg) {
+        return shouldDelegateResource(m, parent, pkg, null);
+    }
+    
+    /**
+     * Determines if module `m' should delegate loading resources from package `p' to the
+     * `parent'. The parent is identified either by module specification (parent) or by a classloader
+     * which should load the package. For system or bootstrap classes, `parent' may be {@code null}, since
+     * boostrap classloaders load more modules together.
+     * <p/>
+     * If <b>both</b> `parent' and `ldr' are {@code null}, access to system/application classpath will be checked.
+     * 
+     * @param m module that attempts to load resources.
+     * @param parent parent classloader which may eventually load the resource, could be {@code null} to indicate bootstrap or system class
+     * @param pkg package (folder) with the resource
+     * @param ldr the classloader which should load the resource; may be {@code null}
+     * @return true, if the loading should be delegated to the classloader
+     * @since 2.80
+     */
+    public boolean shouldDelegateResource(Module m, Module parent, String pkg, ClassLoader ldr) {
         // Cf. #19621:
-        Module.PackageExport[] exports = (parent == null) ? null : parent.getPublicPackages();
+        Module.PackageExport[] exports;
+        if (parent != null) {
+            exports = parent.getPublicPackages();
+        } else if (ldr != null) {
+            Collection<Module> loaderMods = null;
+            synchronized (this) {
+                // create exports from modules for that classloader
+                Collection<Reference<Module>> refMods = bootstrapModules.get(ldr);
+                if (refMods != null) {
+                    loaderMods = new HashSet<>();
+                    for (Iterator<Reference<Module>> rmit = refMods.iterator(); rmit.hasNext(); ) {
+                        Reference<Module> refMod = rmit.next();
+                        Module mm = refMod.get();
+                        if (mm == null) {
+                            rmit.remove();
+                        } else {
+                            loaderMods.add(mm);
+                        }
+                    }
+                }
+            }
+            Set<String> cbn = new HashSet<>();
+            for (Dependency d : m.getDependenciesArray()) {
+                if (d.getType() == Dependency.TYPE_MODULE) {
+                    cbn.add(d.getName());
+                }
+            }
+            if (loaderMods != null) {
+                for (Module lm : loaderMods) {
+                    if (cbn.remove(lm.getCodeName()) && shouldDelegateResource(m, lm, pkg, ldr)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            exports = null;
+        } else {
+            exports = null;
+        }
         if (exports != null) {
             //Util.err.fine("exports=" + Arrays.asList(exports));
             // Packages from parent are restricted: #19621.
@@ -981,6 +1073,8 @@ public final class ModuleManager extends Modules {
         modules.add(m);
         modulesByName.put(m.getCodeNameBase(), m);
         providersOf.possibleProviderAdded(m);
+        // must register module fragments early, to be enabled along with their hosts.
+        registerModuleFragment(m);
         
         lookup.add(m);
         firer.created(m);
@@ -1000,15 +1094,26 @@ public final class ModuleManager extends Modules {
      * 
      * @param m module to attach if it is a fragment
      */
-    private void attachModuleFragment(Module m) {
+    private Module attachModuleFragment(Module m) {
         String codeNameBase = m.getFragmentHostCodeName();
         if (codeNameBase == null) {
-            return;
+            return null;
+        }
+        Module host = modulesByName.get(codeNameBase);
+        if (host != null && host.isEnabled() && host.getClassLoader() != null) {
+            throw new IllegalStateException("Host module " + host + " was enabled before, will not accept fragment " + m);
+        }
+        return host;
+    }
+    
+    private boolean registerModuleFragment(Module m) {
+        String codeNameBase = m.getFragmentHostCodeName();
+        if (codeNameBase == null) {
+            return true;
         }
         Module host = modulesByName.get(codeNameBase);
         if (host != null && host.isEnabled()) {
-            Util.err.info("Module " + host.getCodeName() + " is already enabled");
-            return;
+            return false;
         }
         Collection<Module> frags = fragmentModules.get(codeNameBase);
         if (frags == null) {
@@ -1016,6 +1121,7 @@ public final class ModuleManager extends Modules {
             fragmentModules.put(codeNameBase, frags);
         }
         frags.add(m);
+        return true;
     }
     
     /**
@@ -1033,7 +1139,7 @@ public final class ModuleManager extends Modules {
             return;
         }
         Module hostMod = modulesByName.get(fragHost);
-        if (hostMod != null && hostMod.isEnabled()) {
+        if (hostMod != null && hostMod.isEnabled() && m.isEnabled()) {
             throw new IllegalStateException("Host module " + m.getCodeName() + " was loaded, cannot remove fragment");
         }
         Collection<Module> frags = fragmentModules.get(fragHost);
@@ -1585,7 +1691,10 @@ public final class ModuleManager extends Modules {
         }
         // need to register fragments eagerly, so they are available during
         // dependency sort
-        attachModuleFragment(m);
+        Module host = attachModuleFragment(m);
+        if (host != null && !host.isEnabled()) {
+            maybeAddToEnableList(willEnable, mightEnable, host, okToFail);
+        }
         // Also add anything it depends on, if not already there,
         // or already enabled.
         for (Dependency dep : m.getDependenciesArray()) {
@@ -2184,6 +2293,7 @@ public final class ModuleManager extends Modules {
         private final Map<String,byte[]> path2Data;
         private final Map<String,Boolean> path2OSGi;
         private final Map<String,String> path2Cnb;
+        private final Map<String,String> path2Fragment;
         private final int moduleCount;
         private Set<String> toEnable;
         private List<String> willEnable;
@@ -2193,6 +2303,7 @@ public final class ModuleManager extends Modules {
             Map<String,byte[]> map = null;
             Map<String,Boolean> osgi = null;
             Map<String,String> cnbs = null;
+            Map<String,String> frags = null;
             Set<String> toEn = null;
             List<String> toWi = null;
             int cnt = -1;
@@ -2213,6 +2324,7 @@ public final class ModuleManager extends Modules {
                 map = new HashMap<String, byte[]>();
                 osgi = new HashMap<String, Boolean>();
                 cnbs = new HashMap<String, String>();
+                frags = new HashMap<String, String>();
                 cnt = dis.readInt();
                 for (;;) {
                     String path = Stamps.readRelativePath(dis).replace(otherChar, File.separatorChar);
@@ -2226,6 +2338,11 @@ public final class ModuleManager extends Modules {
                     byte[] data = new byte[len];
                     dis.readFully(data);
                     map.put(path, data);
+                    String fhost = dis.readUTF();
+                    if (fhost != null) {
+                        // retain empty Strings, as they count as "known data".
+                        frags.put(path, fhost);
+                    }
                 }
                 toEn = readCnbs(dis, new HashSet<String>());
                 toWi = readCnbs(dis, new ArrayList<String>());
@@ -2237,10 +2354,12 @@ public final class ModuleManager extends Modules {
                 cnbs = null;
                 toEn = null;
                 toWi = null;
+                frags = null;
             }
             path2Data = map;
             path2OSGi = osgi;
             path2Cnb = cnbs;
+            path2Fragment = frags;
             toEnable = toEn;
             willEnable = toWi;
             moduleCount = cnt;
@@ -2270,6 +2389,10 @@ public final class ModuleManager extends Modules {
             return path2Cnb == null ? null : path2Cnb.get(path);
         }
         
+        final String getFragment(String path) {
+            return path2Fragment == null ? null : path2Fragment.get(path);
+        }
+        
         @Override
         public void flushCaches(DataOutputStream os) throws IOException {
             os.writeUTF(Locale.getDefault().toString());
@@ -2295,6 +2418,9 @@ public final class ModuleManager extends Modules {
                 byte[] arr = data.toByteArray();
                 os.writeInt(arr.length);
                 os.write(arr);
+                
+                String s = m.getFragmentHostCodeName();
+                os.writeUTF(s == null ? "" : s);  // NOI18N
             }
             Stamps.writeRelativePath("", os);
             synchronized (this) {

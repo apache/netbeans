@@ -29,7 +29,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.swing.Icon;
-import javax.xml.ws.Holder;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.api.db.explorer.DatabaseException;
@@ -393,12 +392,12 @@ public class RegisterDerby implements DatabaseRuntime {
 
     private boolean waitStart(final ExecSupport execSupport, int waitTime) {
         boolean started = false;
-        final Holder<Boolean> forceExit = new Holder<>(false);
+        final boolean[] forceExit = new boolean[1];
         String waitMessage = NbBundle.getMessage(RegisterDerby.class, "MSG_StartingDerby");
         ProgressHandle progress = ProgressHandleFactory.createHandle(waitMessage, new Cancellable() {
             @Override
             public boolean cancel() {
-                forceExit.value = true;
+                forceExit[0] = true;
                 return execSupport.interruptWaiting();
             }
         });
@@ -407,7 +406,7 @@ public class RegisterDerby implements DatabaseRuntime {
             while (!started) {
                 started = execSupport.waitForMessage(waitTime * 1000);
                 if (!started) {
-                    if (waitTime > 0 && (!forceExit.value)) {
+                    if (waitTime > 0 && (!forceExit[0])) {
                         String title = NbBundle.getMessage(RegisterDerby.class, "LBL_DerbyDatabase");
                         String message = NbBundle.getMessage(RegisterDerby.class, "MSG_WaitStart", waitTime);
                         NotifyDescriptor waitConfirmation = new NotifyDescriptor.Confirmation(message, title, NotifyDescriptor.YES_NO_OPTION);

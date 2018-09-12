@@ -20,7 +20,7 @@
 package org.netbeans.modules.maven.api.execute;
 
 /**
- * check wheather the given runConfig has a chance to be sucessful or needs corrective measure.
+ * check wheather the given runConfig has a chance to be successful or needs corrective measure.
  * Usecase would be the netbeans-run-plugin which requires a netbeans-public profile with a
  * jar and assembly configurations..
  * Similar to LateBoundPrerequisitesChecker but this one is called only once per action invokation.

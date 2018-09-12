@@ -795,7 +795,7 @@ public class FormUtils
 
     /**
      * Special object added to JComponent's client properties to track whether
-     * the client properties were sucessfully serialized (or at least started).
+     * the client properties were successfully serialized (or at least started).
      */
     private static class SerializationMarker implements Serializable {
         private static final Object KEY = new Object();

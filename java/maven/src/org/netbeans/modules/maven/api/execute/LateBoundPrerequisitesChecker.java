@@ -20,7 +20,7 @@
 package org.netbeans.modules.maven.api.execute;
 
 /**
- * check wheather the given runConfig has a chance to be sucessful or needs corrective measure.
+ * check wheather the given runConfig has a chance to be successful or needs corrective measure.
  * Alternatively can be used for post processing of the RunConfig before it gets
  * executed.
  * Similar to PrerequisitesChecker but this one is called late in the game and

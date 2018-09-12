@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="EjbJarAPI">J2EE Module and Application API</apidef>
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+
+    <changes>
+        <change id="addCarModule">
+            <api name="EjbJarAPI"/>
+            <summary>Added API method to add application client (car) module into the Ear</summary>
+            <version major="1" minor="2"/>
+            <date day="14" month="4" year="2006"/>
+            <author login="jungi"/>
+            <compatibility binary="incompatible" source="incompatible" semantic="incompatible" addition="yes"/>
+            <description>
+                <p>
+                    The <code>void Ear.addCarModule(Car carModule)</code> method allows to add
+                    application client (car) module to Ear module.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.api.ejbjar" name="Ear"/>
+            <class package="org.netbeans.modules.j2ee.spi.ejbjar" name="EarImplementation"/>
+        </change>
+        
+        <change id="appClientsSupport">
+            <api name="EjbJarAPI"/>
+            <summary>Added API to support application client (Car) modules</summary>
+            <version major="1" minor="2"/>
+            <date day="14" month="4" year="2006"/>
+            <author login="jungi"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    The API part provides access to Application client (car) module properties and defines
+                    constants for use Application client (car) module projects (such as action commands,
+                    artifact types, or source types)
+                    The SPI part can be implemented by modules that provide Application client (car)
+                    "project" support. It can be implemented with buildsystem APIs but other
+                    implementations are also possible.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.api.ejbjar" name="Car"/>
+            <class package="org.netbeans.modules.j2ee.spi.ejbjar" name="CarFactory"/>
+            <class package="org.netbeans.modules.j2ee.spi.ejbjar" name="CarImplementation"/>
+            <class package="org.netbeans.modules.j2ee.spi.ejbjar" name="CarProvider"/>
+            <class package="org.netbeans.modules.j2ee.spi.ejbjar" name="CarsInProject"/>
+        </change>
+        
+        <change id="ejbReferenceInJavaEE5">
+            <api name="EjbJarAPI"/>
+            <summary>Changed interface for creating EJB references to enable also Java EE 5 style</summary>
+            <version major="1" minor="2"/>
+            <date day="13" month="4" year="2006"/>
+            <author login="madamek"/>
+            <compatibility binary="incompatible" source="incompatible" semantic="incompatible" modification="yes"/>
+            <description>
+                <p>
+                    In Java EE 5 there is possibility to have reference to EJB in code as annotated field or
+                    combination of field and annotated setter. This was not possible with previous <code>EjbReference</code>
+                    interface, which was allowing only to create one single method to access reference to EJB. Also
+                    references to service locators are now part of API. Old <code>EjbReference</code> interface is now deprecated
+                    because it doesn't fully support features of Java EE 5.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.api.ejbjar" name="EjbReference"/>
+        </change>
+
+        <change id="getEjbJarsInProject">
+            <api name="EjbJarAPI"/>
+            <summary>Added API method to get all ejb modules per project and corresponding SPI interface</summary>
+            <version major="1" minor="2"/>
+            <date day="22" month="8" year="2005"/>
+            <author login="pbuzek"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    The <code>EjbJar [] EjbJar.getEjbJarsInProject(Project project)</code> method allows to get
+                    all ejb module form a project. Previously clients of this API needed a file in ejb module
+                    to get the EjbJar. <code>spi.ejbjar.EjbJarsInProject</code> was added to be implemented by EJB
+                    module project types.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.api.ejbjar" name="EjbJar"/>
+            <class package="org.netbeans.modules.j2ee.spi.ejbjar" name="EjbJarsInProject"/>
+        </change>
+
+        <change id="ProjectView">
+            <api name="EjbJarAPI"/>
+            <summary>Added support class for creating project view nodes for J2EE modules and a corresponding SPI class.</summary>
+            <version major="1" minor="2"/>
+            <date day="22" month="8" year="2005"/>
+            <author login="pbuzek"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    The <code>J2eeProjectView</code> allows j2ee modules to create project view nodes (Enterprise Beans
+                    node, Server Resources node and Config Files node). The <code>EjbNodesFactory</code> defines
+                    an API for modules that create nodes for individual EJBs. <code>EjbNodesFactory</code> is used
+                    by the <code>J2eeProjectView</code> but can also be used by other modules to create EJB nodes.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.spi.ejbjar.support" name="J2eeProjectView"/>
+            <class package="org.netbeans.modules.j2ee.spi.ejbjar" name="EjbNodesFactory"/>
+        </change>
+        <change id="EjbEnterpriseReferenceContainerSupport">
+            <api name="EjbJarAPI"/>
+            <summary>Added default implementation of EjbEnterpriseReferenceContainer.</summary>
+            <version major="1" minor="2"/>
+            <date day="22" month="8" year="2005"/>
+            <author login="pbuzek"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    The <code>EjbEnterpriseReferenceContainerSupport</code> provides default implementation of
+                    EjbEnterpriseReferenceContainer.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.j2ee.spi.ejbjar.support" name="EjbEnterpriseReferenceContainerSupport"/>
+        </change>
+    </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <==============
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE j2eeserver/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the EjbJar API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the EjbJar API.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+      <hr/>
+      <standard-changelists module-code-name="org.netbeans.modules.j2ee.api.ejbmodule"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

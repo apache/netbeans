@@ -18,11 +18,11 @@
         <token id='T_START_NOWDOC' start='101' end='118'>
             <text>&lt;&lt;&lt;&apos;ENDOFNOWDOC&apos;\n</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='118' end='156'>
-            <text>This is nowdoc test #{$a}.\n\nENDOFNOWDO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='118' end='146'>
+            <text>This is nowdoc test #{$a}.\n\n</text>
         </token>
-        <token id='T_END_NOWDOC' start='156' end='157'>
-            <text>C</text>
+        <token id='T_END_NOWDOC' start='146' end='157'>
+            <text>ENDOFNOWDOC</text>
         </token>
         <token id='T_SEMICOLON' start='157' end='158'>
             <text>;</text>
@@ -36,11 +36,11 @@
         <token id='T_START_NOWDOC' start='165' end='182'>
             <text>&lt;&lt;&lt;&apos;ENDOFNOWDOC&apos;\n</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='182' end='220'>
-            <text>This is nowdoc test #{$b}.\n\nENDOFNOWDO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='182' end='210'>
+            <text>This is nowdoc test #{$b}.\n\n</text>
         </token>
-        <token id='T_END_NOWDOC' start='220' end='221'>
-            <text>C</text>
+        <token id='T_END_NOWDOC' start='210' end='221'>
+            <text>ENDOFNOWDOC</text>
         </token>
         <token id='T_SEMICOLON' start='221' end='222'>
             <text>;</text>

@@ -33,11 +33,11 @@
         <token id='T_VARIABLE' start='115' end='120'>
             <text>$test</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='120' end='127'>
-            <text>\nMYLABE</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='120' end='121'>
+            <text>\n</text>
         </token>
-        <token id='T_END_HEREDOC' start='127' end='128'>
-            <text>L</text>
+        <token id='T_END_HEREDOC' start='121' end='128'>
+            <text>MYLABEL</text>
         </token>
         <token id='T_SEMICOLON' start='128' end='129'>
             <text>;</text>
@@ -82,7 +82,7 @@
                         <Variable start='115' end='120' isDollared='true'>
                             <Identifier start='116' end='120' name='test'/>
                         </Variable>
-                        <Scalar start='120' end='127' type='STRING' value='\n'/>
+                        <Scalar start='120' end='121' type='STRING' value='\n'/>
                     </Expressions>
                 </Quote>
             </ExpressionStatement>

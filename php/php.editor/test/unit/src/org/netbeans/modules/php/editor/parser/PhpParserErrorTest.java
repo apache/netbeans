@@ -779,4 +779,25 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/groupUseTrailingCommas_04.php");
     }
 
+    // PHP 7.3
+    public void testFunctionCallTrailingCommas_01() throws Exception {
+        checkErrors("testfiles/parser/functionCallTrailingCommas_01.php");
+    }
+
+    public void testFunctionCallTrailingCommas_02() throws Exception {
+        checkErrors("testfiles/parser/functionCallTrailingCommas_02.php");
+    }
+
+    public void testFunctionCallTrailingCommas_03() throws Exception {
+        checkErrors("testfiles/parser/functionCallTrailingCommas_03.php");
+    }
+
+    public void testFunctionCallTrailingCommas_04() throws Exception {
+        checkErrors("testfiles/parser/functionCallTrailingCommas_04.php");
+    }
+
+    public void testListReferenceAssignment_01() throws Exception {
+        checkErrors("testfiles/parser/listReferenceAssignment_01.php");
+    }
+
 }

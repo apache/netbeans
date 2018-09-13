@@ -89,6 +89,10 @@ public class LSPBindings {
 
         String mimeType = FileUtil.getMIMEType(file);
 
+        if (mimeType == null) {
+            return null;
+        }
+
         LSPBindings bindings =
                 project2MimeType2Server.computeIfAbsent(prj, p -> new HashMap<>())
                                        .computeIfAbsent(mimeType, mt -> {

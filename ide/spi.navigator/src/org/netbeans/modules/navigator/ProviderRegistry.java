@@ -19,10 +19,19 @@
 
 package org.netbeans.modules.navigator;
 
+import java.lang.ref.Reference;
+import java.lang.ref.SoftReference;
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
+import java.util.stream.Collectors;
 import org.netbeans.spi.navigator.NavigatorPanel;
+import org.netbeans.spi.navigator.NavigatorPanel.DynamicRegistration;
+import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 
@@ -49,6 +58,7 @@ class ProviderRegistry {
      * no providers. This ensures no useless repetitive searches. 
      */
     private Map<String, Collection<? extends NavigatorPanel>> contentTypes2Providers;
+    private Map<FileObject, Reference<Collection<? extends NavigatorPanel>>> file2Providers;
 
 
     /** Singleton, no external instantiation */
@@ -71,7 +81,7 @@ class ProviderRegistry {
      * @return Collection of providers, which implements NavigatorPanel interface.
      * Never return null, only empty List if no provider exists for given content type.
      */
-    public Collection<? extends NavigatorPanel> getProviders (String contentType) {
+    public Collection<? extends NavigatorPanel> getProviders (String contentType, FileObject file) {
         if (contentTypes2Providers == null) {
             contentTypes2Providers = new HashMap<String, Collection<? extends NavigatorPanel>>(15);
         }
@@ -81,8 +91,24 @@ class ProviderRegistry {
             result = loadProviders(contentType);
             contentTypes2Providers.put(contentType, result);
         }
-            
-        return result;
+        if (file != null) {
+            if (file2Providers == null) {
+                file2Providers = new WeakHashMap<>();
+            }
+            URI uri = file.toURI();
+            Reference<Collection<? extends NavigatorPanel>> fileResultRef = file2Providers.computeIfAbsent(file, f ->
+                    new SoftReference<>(Lookup.getDefault().lookupAll(DynamicRegistration.class).stream().flatMap(reg -> reg.panelsFor(uri).stream()).collect(Collectors.toList()))
+            );
+            Collection<? extends NavigatorPanel> fileResult = fileResultRef != null ? fileResultRef.get() : null;
+            if (result == null) return fileResult;
+            if (fileResult == null) return result;
+            List<NavigatorPanel> panels = new ArrayList<>();
+            panels.addAll(result);
+            panels.addAll(fileResult);
+            return panels;
+        } else {
+            return result;
+        }
     }
     
     /******* private stuff ***********/

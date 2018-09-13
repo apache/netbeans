@@ -14,14 +14,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
-is.autoload=true
-
-javac.compilerargs=-Xlint:unchecked
-javac.source=1.8
-javadoc.arch=${basedir}/arch.xml
-javadoc.apichanges=${basedir}/apichanges.xml
-
-test.config.stableBTD.includes=**/*Test.class
-test.config.stableBTD.excludes=\
-    **/NavigatorTCTest.class
+751F548C85FA49F330CECBB1875893F971B33C4E com.google.code.gson:gson:2.7

@@ -69,8 +69,22 @@ public final class Windows8LFCustoms extends LFCustoms {
             "TextArea.font", new GuaranteedValue ("Label.font", new Font("Dialog", Font.PLAIN, fontsize)),
 
             EDITOR_ERRORSTRIPE_SCROLLBAR_INSETS, new Insets(17, 0, 17, 0),
+
+            /* NETBEANS-1249: Remove excessive spacing between menu items, which appeared going from
+                              Java 8 to Java 9. See screeshots in the JIRA ticket. The spacing
+                              appeared during the fix for JDK-8067346; it should be safe to set
+                              top/bottom margins to zero, however, like they were before. See
+                              http://hg.openjdk.java.net/jdk10/master/annotate/be620a591379/src/java.desktop/share/classes/com/sun/java/swing/plaf/windows/WindowsLookAndFeel.java .
+                              Current Swing defaults are [2,2,2,2] for all of these (set in
+                              javax.swing.plaf.basic.BasicLookAndFeel). */
+            "Menu.margin", new Insets(0, 2, 0, 2),
+            "MenuItem.margin", new Insets(0, 2, 0, 2),
+            "CheckBoxMenuItem.margin", new Insets(0, 2, 0, 2),
+            "RadioButtonMenuItem.margin", new Insets(0, 2, 0, 2),
+            /* Note that menu separators are still 3 pixels too tall on Windows compared to native
+            apps. Fixing that would be a bigger job, though (replacing WindowsPopupMenuSeparatorUI
+            to override getPreferredSize). */
         };
-        
         return result;
     }
 

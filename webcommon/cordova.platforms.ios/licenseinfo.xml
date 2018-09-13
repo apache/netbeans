@@ -22,11 +22,11 @@
 <licenseinfo>
     <fileset>
         <!-- Test data, should not contain comments -->
-        <file>cordova.platforms.ios/test/unit/src/org/netbeans/modules/cordova/platforms/ios/disconnected.xml</file>
-        <file>cordova.platforms.ios/test/unit/src/org/netbeans/modules/cordova/platforms/ios/jsoncommand.xml</file>
-        <file>cordova.platforms.ios/test/unit/src/org/netbeans/modules/cordova/platforms/ios/listing.xml</file>
-        <file>cordova.platforms.ios/test/unit/src/org/netbeans/modules/cordova/platforms/ios/toback.xml</file>
-        <file>cordova.platforms.ios/test/unit/src/org/netbeans/modules/cordova/platforms/ios/tofront.xml</file>
+        <file>test/unit/src/org/netbeans/modules/cordova/platforms/ios/disconnected.xml</file>
+        <file>test/unit/src/org/netbeans/modules/cordova/platforms/ios/jsoncommand.xml</file>
+        <file>test/unit/src/org/netbeans/modules/cordova/platforms/ios/listing.xml</file>
+        <file>test/unit/src/org/netbeans/modules/cordova/platforms/ios/toback.xml</file>
+        <file>test/unit/src/org/netbeans/modules/cordova/platforms/ios/tofront.xml</file>
         
         <file>iDeviceNativeBinding/nbproject/Makefile-Debug.mk</file>
         <file>iDeviceNativeBinding/nbproject/Makefile-Release.mk</file>

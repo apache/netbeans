@@ -335,18 +335,18 @@
     <loadproperties srcFile="${clusters.list.file}" />
 
     <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
-        <manifest dir="${nb_all}" includes="ide.etc/external/binaries-list"/>
+        <manifest dir="${nb_all}" includes="nb/ide.launcher/external/binaries-list"/>
     </downloadbinaries>
 
     <mkdir dir="${netbeans.dest.dir}/bin" />
-    <copy file="../ide.etc/launcher/unix/netbeans" todir="${netbeans.dest.dir}/bin" />
+    <copy file="../nb/ide.launcher/unix/netbeans" todir="${netbeans.dest.dir}/bin" />
     <chmod file="${netbeans.dest.dir}/bin/netbeans" perm="ugo+rx"/>
-    <unzip src="../ide.etc/external/launchers-9.0.zip" dest="${netbeans.dest.dir}/bin" />
+    <unzip src="../nb/ide.launcher/external/launchers-9.0.zip" dest="${netbeans.dest.dir}/bin" />
     <!-- if anybody knows better place for icons, let me know: jtulach@netbeans.org -->
 
     <mkdir dir="${netbeans.dest.dir}/etc" />
-    <copy file="../ide.etc/launcher/netbeans.conf" todir="${netbeans.dest.dir}/etc" overwrite="true"/>
-    <copy file="../ide.etc/launcher/netbeans.clusters" todir="${netbeans.dest.dir}/etc" overwrite="true"/>
+    <copy file="../nb/ide.launcher/netbeans.conf" todir="${netbeans.dest.dir}/etc" overwrite="true"/>
+    <copy file="../nb/ide.launcher/netbeans.clusters" todir="${netbeans.dest.dir}/etc" overwrite="true"/>
 
     <mkdir dir="${nb.build.dir}/license-temp" />
     <concat destfile="${nb.build.dir}/license-temp/LICENSE.txt">
@@ -1577,7 +1577,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     <resolve name="harness-modules" value="nb.cluster.harness"/>
     
     <mkdir dir="${nb.build.dir}"/>
-    <condition property="build.source.config.add.ide" else="" value=",ide.etc">
+    <condition property="build.source.config.add.ide" else="" value=",nb/ide.launcher">
         <isset property="has.nb.cluster" />
     </condition>
     <dirset id="source.dirset" dir="${nb_all}"

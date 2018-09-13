@@ -23,8 +23,8 @@
 <filesystem>
     <folder name="org-netbeans-api-project-libraries">
         <folder name="Libraries">
-            <file name="groovy-all.xml" url="groovy-all.xml">
-                <attr name="displayName" bundlevalue="org/netbeans/modules/libs/groovy/Bundle#groovy-all"/>
+            <file name="groovy.xml" url="groovy.xml">
+                <attr name="displayName" bundlevalue="org/netbeans/modules/libs/groovy/Bundle#groovy"/>
             </file>
         </folder>
     </folder>

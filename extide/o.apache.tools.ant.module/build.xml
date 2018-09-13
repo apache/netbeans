@@ -19,9 +19,9 @@
     under the License.
 
 -->
-<project name="o.apache.tools.ant.module" default="build" basedir=".">
+<project name="extide/o.apache.tools.ant.module" default="build" basedir=".">
 
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
     <target name="build-init" depends="projectized.build-init">
         <ant dir="external" target="unzip"/>

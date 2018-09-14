@@ -1,5 +1,5 @@
 Name: Java API for Servlets, Java API for JavaServer Pages
-Version: servlet3.1-jsp2.3.0 (servlet: 3.1-b09-SNAPSHOT, jsp: 2.3.0, el: 3.0-b08-SNAPSHOT)
+Version: 2.3.3
 License: CDDL-1.0
 Description: Java API for Servlets, Java API for JavaServer Pages, Java API for Expression Language
 Origin: Oracle (https://glassfish.dev.java.net/)
@@ -385,3 +385,4 @@ and You agree to work with Initial Developer and Contributors to
 distribute such responsibility on an equitable basis. Nothing
 herein is intended or shall be deemed to constitute any admission
 of liability.
+

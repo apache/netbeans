@@ -92,7 +92,7 @@
         <delete dir="glassfishjspparser" />
 
         <!-- servlet3.0-jsp2.2-api.jar -->
-        <echo message="Creating servlet3.1-jsp2.3-api.jar"/>
+        <echo message="Creating javax.servlet.jsp-api-2.3.3.jar"/>
         <mkdir dir="servletjspapi" />
         <unzip src="${glassfish_location}/glassfish/modules/gf-client-module.jar" dest="./servletjspapi/"/>
         <unzip src="${glassfish_location}/glassfish/modules/javax.servlet-api.jar" dest="./servletjspapi/"/>
@@ -148,8 +148,8 @@
                 <include name="beans_1_1.xsd"/>
             </fileset>
         </copy>
-        <delete file="servlet3.1-jsp2.3-api.jar"/>
-        <zip basedir="servletjspapi" includes="javax/servlet/**, javax/el/**, resources/**" zipfile="../servletjspapi/external/servlet3.1-jsp2.3-api.jar" />
+        <delete file="javax.servlet.jsp-api-2.3.3.jar"/>
+        <zip basedir="servletjspapi" includes="javax/servlet/**, javax/el/**, resources/**" zipfile="../servletjspapi/external/javax.servlet.jsp-api-2.3.3.jar" />
         <delete dir="servletjspapi" />
     </target>
 </project>

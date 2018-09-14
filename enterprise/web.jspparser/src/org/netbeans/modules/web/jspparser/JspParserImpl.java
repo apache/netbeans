@@ -78,7 +78,7 @@ public class JspParserImpl implements JspParserAPI {
         "modules/ext/jsp-parser-ext.jar", //NOI18N
         "modules/ext/jstl-api.jar", //NOI18N
         "modules/ext/jstl-impl.jar", //NOI18N
-        "modules/ext/servlet3.1-jsp2.3-api.jar", //NOI18N
+        "modules/ext/javax.servlet.jsp-api-2.3.3.jar", //NOI18N
         "ant/lib/ant-launcher.jar" //Glassfish V2 //NOI18N
     };
 

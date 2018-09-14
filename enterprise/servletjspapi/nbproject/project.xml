@@ -36,8 +36,8 @@
                 <package>javax.servlet.jsp.tagext</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/servlet3.1-jsp2.3-api.jar</runtime-relative-path>
-                <binary-origin>external/servlet3.1-jsp2.3-api.jar</binary-origin>
+                <runtime-relative-path>ext/javax.servlet.jsp-api-2.3.3.jar</runtime-relative-path>
+                <binary-origin>external/javax.servlet.jsp-api-2.3.3.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

@@ -157,7 +157,7 @@ public final class CloseButtonFactory{
             } else if( isWindowsLaF() ) {
                 closeTabImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/win_close_enabled.png", true); // NOI18N
             } else if( isAquaLaF() ) {
-                closeTabImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/mac_close_enabled.png", true); // NOI18N
+                closeTabImage = AquaVectorCloseButton.DEFAULT;
             } else if( isGTKLaF() ) {
                 closeTabImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/gtk_close_enabled.png", true); // NOI18N
             } else {
@@ -184,7 +184,7 @@ public final class CloseButtonFactory{
             } else if( isWindowsLaF() ) {
                 closeTabPressedImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/win_close_pressed.png", true); // NOI18N
             } else if( isAquaLaF() ) {
-                closeTabPressedImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/mac_close_pressed.png", true); // NOI18N
+                closeTabPressedImage = AquaVectorCloseButton.PRESSED;
             } else if( isGTKLaF() ) {
                 closeTabPressedImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/gtk_close_pressed.png", true); // NOI18N
             } else {
@@ -211,7 +211,7 @@ public final class CloseButtonFactory{
             } else if( isWindowsLaF() ) {
                 closeTabMouseOverImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/win_close_rollover.png", true); // NOI18N
             } else if( isAquaLaF() ) {
-                closeTabMouseOverImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/mac_close_rollover.png", true); // NOI18N
+                closeTabMouseOverImage = AquaVectorCloseButton.ROLLOVER;
             } else if( isGTKLaF() ) {
                 closeTabMouseOverImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/gtk_close_rollover.png", true); // NOI18N
             } else {
@@ -239,7 +239,7 @@ public final class CloseButtonFactory{
             } else if( isWindowsLaF() ) {
                 bigCloseTabImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/win_bigclose_enabled.png", true); // NOI18N
             } else if( isAquaLaF() ) {
-                bigCloseTabImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/mac_bigclose_enabled.png", true); // NOI18N
+                bigCloseTabImage = AquaVectorCloseButton.DEFAULT;
             } else if( isGTKLaF() ) {
                 bigCloseTabImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/gtk_bigclose_enabled.png", true); // NOI18N
             } else {
@@ -266,7 +266,7 @@ public final class CloseButtonFactory{
             } else if( isWindowsLaF() ) {
                 bigCloseTabPressedImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/win_bigclose_pressed.png", true); // NOI18N
             } else if( isAquaLaF() ) {
-                bigCloseTabPressedImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/mac_bigclose_pressed.png", true); // NOI18N
+                bigCloseTabPressedImage = AquaVectorCloseButton.PRESSED;
             } else if( isGTKLaF() ) {
                 bigCloseTabPressedImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/gtk_bigclose_pressed.png", true); // NOI18N
             } else {
@@ -293,7 +293,7 @@ public final class CloseButtonFactory{
             } else if( isWindowsLaF() ) {
                 bigCloseTabMouseOverImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/win_bigclose_rollover.png", true); // NOI18N
             } else if( isAquaLaF() ) {
-                bigCloseTabMouseOverImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/mac_bigclose_rollover.png", true); // NOI18N
+                bigCloseTabMouseOverImage = AquaVectorCloseButton.ROLLOVER;
             } else if( isGTKLaF() ) {
                 bigCloseTabMouseOverImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/gtk_bigclose_rollover.png", true); // NOI18N
             } else {

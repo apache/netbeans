@@ -78,6 +78,8 @@ import org.openide.util.ImageUtilities;
  * @author Eirik Bakke
  */
 public class VectorIconTester extends javax.swing.JFrame {
+    private static final boolean TEST_AQUA = true;
+    private static final boolean TEST_WIN8 = true;
     private final JScrollPane scrollPane;
     private final IconPreviewPane iconPreviewPane;
 
@@ -122,13 +124,20 @@ public class VectorIconTester extends javax.swing.JFrame {
 
     private static Map<String, Icon> getIcons() {
         Map<String, Icon> ret = new LinkedHashMap<String, Icon>();
-        addTabDisplayerIcons(ret, "win8", (TabDisplayerUI) Windows8ViewTabDisplayerUI.createUI(new TabDisplayer()));
-        addTabDisplayerIcons(ret, "win8", (TabDisplayerUI) Windows8EditorTabDisplayerUI.createUI(new TabDisplayer()));
-        addTabDisplayerIcons(ret, "win8vec", (TabDisplayerUI) Windows8VectorViewTabDisplayerUI.createUI(new TabDisplayer()));
-        addTabDisplayerIcons(ret, "win8vec", (TabDisplayerUI) Windows8VectorEditorTabDisplayerUI.createUI(new TabDisplayer()));
-        if (false) {
+        if (TEST_AQUA) {
             addTabDisplayerIcons(ret, "mac", (TabDisplayerUI) AquaViewTabDisplayerUI.createUI(new TabDisplayer()));
             addTabDisplayerIcons(ret, "mac", (TabDisplayerUI) AquaEditorTabDisplayerUI.createUI(new TabDisplayer()));
+            addTabDisplayerIcons(ret, "macvec", (TabDisplayerUI) AquaVectorViewTabDisplayerUI.createUI(new TabDisplayer()));
+            addTabDisplayerIcons(ret, "macvec", (TabDisplayerUI) AquaVectorEditorTabDisplayerUI.createUI(new TabDisplayer()));
+        }
+        if (TEST_WIN8) {
+            addTabDisplayerIcons(ret, "win8", (TabDisplayerUI) Windows8ViewTabDisplayerUI.createUI(new TabDisplayer()));
+            addTabDisplayerIcons(ret, "win8", (TabDisplayerUI) Windows8EditorTabDisplayerUI.createUI(new TabDisplayer()));
+            addTabDisplayerIcons(ret, "win8vec", (TabDisplayerUI) Windows8VectorViewTabDisplayerUI.createUI(new TabDisplayer()));
+            addTabDisplayerIcons(ret, "win8vec", (TabDisplayerUI) Windows8VectorEditorTabDisplayerUI.createUI(new TabDisplayer()));
+        }
+
+        if (false) {
             addTabDisplayerIcons(ret, "gtk", (TabDisplayerUI) GtkViewTabDisplayerUI.createUI(new TabDisplayer()));
             addTabDisplayerIcons(ret, "gtk", (TabDisplayerUI) GtkEditorTabDisplayerUI.createUI(new TabDisplayer()));
             addTabDisplayerIcons(ret, "nimbus", (TabDisplayerUI) NimbusViewTabDisplayerUI.createUI(new TabDisplayer()));
@@ -136,18 +145,20 @@ public class VectorIconTester extends javax.swing.JFrame {
             addTabDisplayerIcons(ret, "metal", (TabDisplayerUI) MetalViewTabDisplayerUI.createUI(new TabDisplayer()));
             addTabDisplayerIcons(ret, "metal", (TabDisplayerUI) MetalEditorTabDisplayerUI.createUI(new TabDisplayer()));
         }
-        // These are not really win8-specific, just use the win8 prefix to have it show up in the same column.
-        ret.put("win8_arrow", ImageUtilities.loadImageIcon("org/openide/awt/resources/arrow.png", false));
-        ret.put("win8_busy_icon", ImageUtilities.loadImageIcon("org/netbeans/swing/tabcontrol/resources/busy_icon.png", false));
-        ret.put("win8_toolbar_arrow_horizontal", ImageUtilities.loadImageIcon("org/openide/awt/resources/toolbar_arrow_horizontal.png", false));
-        ret.put("win8_toolbar_arrow_vertical", ImageUtilities.loadImageIcon("org/openide/awt/resources/toolbar_arrow_vertical.png", false));
-        /* These are actually private classes in the openide.awt module. They must be copied in here if
-        they are to be shown with the utility. */
-        /*
-        ret.put("win8vec_arrow", ArrowIcon.INSTANCE_DEFAULT);
-        ret.put("win8vec_toolbar_arrow_horizontal", ToolbarArrowIcon.INSTANCE_HORIZONTAL);
-        ret.put("win8vec_toolbar_arrow_vertical", ToolbarArrowIcon.INSTANCE_VERTICAL);
-         */
+        if (false) {
+            // Icons that are not specialized by LAF.
+            ret.put("gen_arrow", ImageUtilities.loadImageIcon("org/openide/awt/resources/arrow.png", false));
+            ret.put("gen_busy_icon", ImageUtilities.loadImageIcon("org/netbeans/swing/tabcontrol/resources/busy_icon.png", false));
+            ret.put("gen_toolbar_arrow_horizontal", ImageUtilities.loadImageIcon("org/openide/awt/resources/toolbar_arrow_horizontal.png", false));
+            ret.put("gen_toolbar_arrow_vertical", ImageUtilities.loadImageIcon("org/openide/awt/resources/toolbar_arrow_vertical.png", false));
+            /* These are actually private classes in the openide.awt module. They must be copied in here if
+            they are to be shown with the utility. */
+            /*
+            ret.put("genvec_arrow", ArrowIcon.INSTANCE_DEFAULT);
+            ret.put("genvec_toolbar_arrow_horizontal", ToolbarArrowIcon.INSTANCE_HORIZONTAL);
+            ret.put("genvec_toolbar_arrow_vertical", ToolbarArrowIcon.INSTANCE_VERTICAL);
+             */
+        }
         return Collections.unmodifiableMap(ret);
     }
 
@@ -219,7 +230,7 @@ public class VectorIconTester extends javax.swing.JFrame {
 
     private static final class IconPreviewPane extends JPanel implements Scrollable {
         private static final boolean INCLUDE_HUGE_ICON = true;
-        private static final int ICON_BASE_SIZE_X = 16;
+        private static final int ICON_BASE_SIZE_X = TEST_AQUA ? 26 : 16;
         private static final int ICON_BASE_SIZE_Y = 16;
         private static final int ICON_ROW_HEIGHT
                 = Math.max(ICON_BASE_SIZE_Y * 3 + 8, (INCLUDE_HUGE_ICON ? 16 * 8 + 16 : 0));

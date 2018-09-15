@@ -19,9 +19,9 @@
     under the License.
 
 -->
-<?xml-stylesheet href="../nbbuild/javadoctools/apichanges.xsl" type="text/xsl" ?>
+<?xml-stylesheet href="../../nbbuild/javadoctools/apichanges.xsl" type="text/xsl" ?>
 <!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN"
-                     "../nbbuild/javadoctools/apichanges.dtd">
+                     "../../nbbuild/javadoctools/apichanges.dtd">
 
 <!--
 

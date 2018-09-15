@@ -32,4 +32,10 @@
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>
+    <fileset>
+        <file>src/org/apache/tools/ant/module/resources/CustomTask_java</file>
+        <file>src/org/apache/tools/ant/module/resources/Project.xml_</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="TEMPLATE_MINIMAL_IP" />
+    </fileset>
 </licenseinfo>

@@ -18,6 +18,7 @@
  */
 package org.netbeans.swing.tabcontrol.plaf;
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -155,7 +156,8 @@ public class VectorIconTester extends javax.swing.JFrame {
      * other modules.
      */
     private static void addTabDisplayerIcons(
-            Map<String, Icon> toMap, String prefix, TabDisplayerUI tabDisplayerUI) {
+            Map<String, Icon> toMap, String prefix, TabDisplayerUI tabDisplayerUI)
+    {
         Map<String, Integer> buttonIDs = new LinkedHashMap<String, Integer>();
         // ViewTabDisplayerUI
         buttonIDs.put("close", TabControlButton.ID_CLOSE_BUTTON);
@@ -217,9 +219,10 @@ public class VectorIconTester extends javax.swing.JFrame {
 
     private static final class IconPreviewPane extends JPanel implements Scrollable {
         private static final boolean INCLUDE_HUGE_ICON = true;
-        private static final int ICON_BASE_SIZE = 16;
+        private static final int ICON_BASE_SIZE_X = 16;
+        private static final int ICON_BASE_SIZE_Y = 16;
         private static final int ICON_ROW_HEIGHT
-                = Math.max(ICON_BASE_SIZE * 3 + 8, (INCLUDE_HUGE_ICON ? 16 * 8 + 16 : 0));
+                = Math.max(ICON_BASE_SIZE_Y * 3 + 8, (INCLUDE_HUGE_ICON ? 16 * 8 + 16 : 0));
         private final Map<String, Map<String, Icon>> iconsByLAF;
         private final Set<String> namesAfterLAF;
         private int preferredWidth = 300;
@@ -284,10 +287,10 @@ public class VectorIconTester extends javax.swing.JFrame {
                 // Some of the mac icons are actually 26 pixels wide.
                 if (false) {
                     Icon icon = iconEntry.getValue();
-                    if (icon.getIconHeight() > ICON_BASE_SIZE) {
+                    if (icon.getIconWidth() > ICON_BASE_SIZE_X) {
                         throw new RuntimeException();
                     }
-                    if (icon.getIconWidth() > ICON_BASE_SIZE) {
+                    if (icon.getIconHeight() > ICON_BASE_SIZE_Y) {
                         throw new RuntimeException();
                     }
                 }
@@ -419,7 +422,9 @@ public class VectorIconTester extends javax.swing.JFrame {
         private int paintIconRow(Graphics2D g, Graphics2D originalGraphics, Icon icon, int x, int y) {
             // Show one column of icons in a different background, to test transparency.
             g.setColor(Color.GREEN);
-            g.fillRect(x - 5, y - 5, ICON_BASE_SIZE + 10, ICON_ROW_HEIGHT + 10);
+            // Darker gray, for testing against darker LAF backgrounds.
+            //g.setColor(new Color(150, 150, 150, 255));
+            g.fillRect(x - 5, y - 5, ICON_BASE_SIZE_X + 10, ICON_ROW_HEIGHT + 10);
             double useX = x;
             int ret = 0;
             for (int i = 0; i < 2; i++) {
@@ -427,10 +432,10 @@ public class VectorIconTester extends javax.swing.JFrame {
                     break; // Not enough space for a row simulating misalignment.
                 }
                 useX = x;
-                double useY = y + (i == 0 ? 0 : (ICON_BASE_SIZE * 4));
+                double useY = y + (i == 0 ? 0 : (16 * 4));
                 if (i == 1) {
                     /* Simulate misalignment. Note that there won't really be misalignment at 100% scaling,
-            since it's typically an artifact of non-integral HiDPI scaling. */
+                    since it's typically an artifact of non-integral HiDPI scaling. */
                     useX += 0.49;
                     useY += 0.49;
                 }
@@ -481,13 +486,21 @@ public class VectorIconTester extends javax.swing.JFrame {
             originalGraphics.translate(x, y);
             originalGraphics.scale(scaling, scaling);
             if (icon != null) {
-                icon.paintIcon(this, originalGraphics, 0, 0);
+                // Make it evident if the icon forgets to set the color or shape.
+                originalGraphics.setColor(Color.PINK);
+                originalGraphics.setStroke(new BasicStroke((int) (10 * scaling)));
+                /* Paint the icon with a non-zero x/y offset, to make sure its implementation
+                handles this correctly. */
+                originalGraphics.translate(-10, -15);
+                icon.paintIcon(this, originalGraphics, 10, 15);
+                originalGraphics.translate(10, 15);
             }
             originalGraphics.setTransform(oldTransform);
             if (icon != null && scaling > 4 && ((int) scaling) == scaling) {
                 int s = (int) scaling;
                 // Display a pixel grid on top
                 originalGraphics.setColor(new Color(0, 0, 0, 60));
+                originalGraphics.setStroke(new BasicStroke(1));
                 int w = icon.getIconWidth();
                 int h = icon.getIconHeight();
                 // Vertical lines.
@@ -501,7 +514,7 @@ public class VectorIconTester extends javax.swing.JFrame {
                             (int) x, (int) y + gridY * s, (int) x + w * s, (int) y + gridY * s);
                 }
             }
-            return ICON_BASE_SIZE + (int) Math.ceil(scaling * ICON_BASE_SIZE);
+            return ICON_BASE_SIZE_X + (int) Math.ceil(scaling * ICON_BASE_SIZE_X);
         }
 
         @Override

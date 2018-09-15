@@ -25,9 +25,6 @@ import javax.swing.Icon;
  * See {@link Windows8VectorTabControlIcon}. The icons should otherwise look the same.
  */
 final class Windows8VectorEditorTabCellRenderer extends Windows8EditorTabCellRenderer {
-    public Windows8VectorEditorTabCellRenderer() {
-    }
-
     @Override
     Icon findIcon() {
         if( inCloseButton() && isPressed() ) {

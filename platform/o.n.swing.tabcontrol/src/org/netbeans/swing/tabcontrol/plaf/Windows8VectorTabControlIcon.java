@@ -37,7 +37,8 @@ import javax.swing.Icon;
 /**
  * Scalable vector icons for the Windows tab control L&\amp;F, for use with HiDPI screens. These
  * icons look good at all of the standard scaling factors available on Windows (see superclass
- * Javadoc). At 100% scale, they are nearly identical to the icons of the Windows 8 LAF.
+ * Javadoc). At 100% scale, they look nearly identical to bitmap icons that were used previously for
+ * the Windows 8 LAF.
  *
  * @author Eirik Bakke
  */

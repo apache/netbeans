@@ -113,9 +113,11 @@ public abstract class VectorIcon implements Icon, Serializable {
     }
 
     @Override
-    public final void paintIcon(Component c, Graphics g, int x, int y) {
-        final Graphics2D g2 = createGraphicsWithRenderingHintsConfigured(g);
+    public final void paintIcon(Component c, Graphics g0, int x, int y) {
+        final Graphics2D g2 = createGraphicsWithRenderingHintsConfigured(g0);
         try {
+            // Make sure the subclass can't paint outside its stated dimensions.
+            g2.clipRect(x, y, getIconWidth(), getIconHeight());
             g2.translate(x, y);
             /**
              * On HiDPI monitors, the Graphics object will have a default transform that maps
@@ -134,8 +136,9 @@ public abstract class VectorIcon implements Icon, Serializable {
             {
                 scaling = tx.getScaleX();
             } else {
-                // Unrecognized transform type.
-                scaling = 1.0;
+                // Unrecognized transform type. Don't do any custom scaling handling.
+                paintIcon(c, g2, getIconWidth(), getIconHeight(), 1.0);
+                return;
             }
             /* When using a non-integral scaling factor, such as 175%, preceding Swing components
             often end up being a non-integral number of device pixels tall or wide. This will cause

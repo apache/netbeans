@@ -22,7 +22,9 @@ import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Scope;
 import com.sun.source.tree.StatementTree;
@@ -642,5 +644,25 @@ public class TreeUtilitiesTest extends NbTestCase {
         VariableTree var3 = (VariableTree) info.getTreeUtilities().pathFor(71).getLeaf();
         assertFalse(info.getTreeUtilities().isPartOfCompoundVariableDeclaration(var3));
 
+    }
+
+    public void testForEachLoop() throws Exception {
+        prepareTest("Test", "package test; public class Test { public Test(java.util.List<String> ll) { for (String s : ll.subList(0, ll.size())  ) { } } }");
+
+        TreePath tp1 = info.getTreeUtilities().pathFor(122 - 30);
+        assertEquals(Kind.IDENTIFIER, tp1.getLeaf().getKind());
+        assertEquals("ll", ((IdentifierTree) tp1.getLeaf()).getName().toString());
+
+        TreePath tp2 = info.getTreeUtilities().pathFor(127 - 30);
+        assertEquals(Kind.MEMBER_SELECT, tp2.getLeaf().getKind());
+        assertEquals("subList", ((MemberSelectTree) tp2.getLeaf()).getIdentifier().toString());
+
+        TreePath tp3 = info.getTreeUtilities().pathFor(140 - 30);
+        assertEquals(Kind.MEMBER_SELECT, tp3.getLeaf().getKind());
+        assertEquals("size", ((MemberSelectTree) tp3.getLeaf()).getIdentifier().toString());
+
+        TreePath tp4 = info.getTreeUtilities().pathFor(146 - 30);
+        assertEquals(Kind.METHOD_INVOCATION, tp4.getLeaf().getKind());
+        assertEquals("subList", ((MemberSelectTree) ((MethodInvocationTree) tp4.getLeaf()).getMethodSelect()).getIdentifier().toString());
     }
 }

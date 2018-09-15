@@ -20,7 +20,7 @@
 
 -->
 
-<project name="hibernateweb" default="netbeans" basedir=".">
+<project name="enterprise/hibernateweb" default="build" basedir=".">
     <description>Builds, tests, and runs the project hibernateweb.</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

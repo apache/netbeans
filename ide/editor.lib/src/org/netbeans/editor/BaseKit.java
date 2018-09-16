@@ -3388,6 +3388,10 @@ public class BaseKit extends DefaultEditorKit {
                                                     int textStartPos = Utilities.getRowFirstNonWhite(doc, lineStartPos);
                                                     if (textStartPos < 0) { // no text on the line
                                                         textStartPos = Utilities.getRowEnd(target, lineStartPos);
+                                                    } else if (textStartPos < lineStartPos) {
+                                                        /* NETBEANS-980: On a wrap line oher than the first; go only as
+                                                        far as to the first character on the wrap line. */
+                                                        textStartPos = lineStartPos;
                                                     }
                                                     if (dot == lineStartPos) { // go to the text start pos
                                                         dot = textStartPos;
@@ -3455,6 +3459,9 @@ public class BaseKit extends DefaultEditorKit {
                                 int textStartPos = Utilities.getRowFirstNonWhite(((BaseDocument)doc), lineStartPos);
                                 if (textStartPos < 0) { // no text on the line
                                     textStartPos = Utilities.getRowEnd(target, lineStartPos);
+                                } else if (textStartPos < lineStartPos) {
+                                   // Wrap line case (see above).
+                                   textStartPos = lineStartPos;
                                 }
                                 if (dot == lineStartPos) { // go to the text start pos
                                     dot = textStartPos;

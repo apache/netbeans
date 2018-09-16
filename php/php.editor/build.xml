@@ -44,6 +44,42 @@
         <jflex file="tools/Php5ColoringScanner.flex"
         destdir="src"
         skel="tools/skeleton.netbeans"/>
+        <replace file="src/org/netbeans/modules/php/editor/lexer/PHP5ColoringLexer.java">
+            <replacetoken>      yychar+= zzMarkedPosL-zzStartRead;&#xA;&#xA;</replacetoken>
+            <replacevalue></replacevalue>
+        </replace>
+        <replace file="src/org/netbeans/modules/php/editor/lexer/PHP5ColoringLexer.java">
+            <replacetoken><![CDATA[
+          if (zzCurrentPosL < zzEndReadL)
+            zzInput = zzBufferL[zzCurrentPosL++];
+          else if (zzAtEOF) {
+            zzInput = YYEOF;
+            break zzForAction;
+          }
+          else {
+            // store back cached positions
+            zzCurrentPos  = zzCurrentPosL;
+            zzMarkedPos   = zzMarkedPosL;
+            boolean eof = zzRefill();
+            // get translated positions and possibly new buffer
+            zzCurrentPosL  = zzCurrentPos;
+            zzMarkedPosL   = zzMarkedPos;
+            zzBufferL      = zzBuffer;
+            zzEndReadL     = zzEndRead;
+            if (eof) {
+              zzInput = YYEOF;
+              break zzForAction;
+            }
+            else {
+              zzInput = zzBufferL[zzCurrentPosL++];
+            }
+          }]]></replacetoken>
+            <replacevalue></replacevalue>
+        </replace>
+        <replaceregexp file="src/org/netbeans/modules/php/editor/lexer/PHP5ColoringLexer.java"
+                       match="[ ]+$"
+                       replace=""
+                       byline="true" />
     </target-->
 
     <!-- for ast scanner, jflex 1.4 must be used! -->
@@ -51,6 +87,14 @@
         <jflex file="tools/ASTPHP5Scanner.flex"
         destdir="src"
         skel="tools/skeletonParser.netbeans"/>
+        <replace file="src/org/netbeans/modules/php/editor/parser/ASTPHP5Scanner.java">
+            <replacetoken>if (!zzEOFDone) {&#xA;      zzEOFDone = true;&#xA;      yyclose();&#xA;    }</replacetoken>
+            <replacevalue>/*if (!zzEOFDone) {&#xA;      zzEOFDone = true;&#xA;      yyclose();&#xA;    }*/</replacevalue>
+        </replace>
+        <replaceregexp file="src/org/netbeans/modules/php/editor/parser/ASTPHP5Scanner.java"
+                       match="[ ]+$"
+                       replace=""
+                       byline="true" />
     </target-->
 
     <!--target name="gen-docscanner">

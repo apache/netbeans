@@ -381,14 +381,16 @@ public final class TreeUtilities {
             @Override
             public Void visitEnhancedForLoop(EnhancedForLoopTree node, Void p) {
                 int exprEndPos = (int) sourcePositions.getEndPosition(getCurrentPath().getCompilationUnit(), node.getExpression());
-                TokenSequence<JavaTokenId> ts = info.getTokenHierarchy().tokenSequence(JavaTokenId.language()).subSequence(exprEndPos, pos);
-                boolean hasNonWhiteSpace;
-                while (hasNonWhiteSpace = ts.moveNext()) {
-                    if (!IGNORE_TOKENS.contains(ts.token().id()))
-                        break;
-                }
-                if (!hasNonWhiteSpace) {
-                    pos = exprEndPos;
+                if (exprEndPos < pos) {
+                    TokenSequence<JavaTokenId> ts = info.getTokenHierarchy().tokenSequence(JavaTokenId.language()).subSequence(exprEndPos, pos);
+                    boolean hasNonWhiteSpace;
+                    while (hasNonWhiteSpace = ts.moveNext()) {
+                        if (!IGNORE_TOKENS.contains(ts.token().id()))
+                            break;
+                    }
+                    if (!hasNonWhiteSpace) {
+                        pos = exprEndPos;
+                    }
                 }
                 return super.visitEnhancedForLoop(node, p);
             }
@@ -1891,7 +1893,7 @@ public final class TreeUtilities {
     public boolean isVarType(@NonNull TreePath path) {
         TokenSequence<JavaTokenId> tokenSequence = tokensFor(path.getLeaf());
         tokenSequence.moveStart();
-        while(tokenSequence.moveNext() && tokenSequence.token().id() != JavaTokenId.EQ){
+        while(tokenSequence.moveNext() && tokenSequence.token().id() != JavaTokenId.EQ && tokenSequence.token().id() != JavaTokenId.COLON && tokenSequence.token().id() != JavaTokenId.RPAREN && tokenSequence.token().id() != JavaTokenId.SEMICOLON){
             if(tokenSequence.token().id() == JavaTokenId.VAR){
                 return true;
             }

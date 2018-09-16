@@ -551,6 +551,13 @@ public final class ModuleManager extends Modules {
         return mdc.getCnb(jar.getPath());
     }
 
+    final String fragmentFor(File jar) {
+        if (jar == null) {
+            return null;
+        }
+        return mdc.getFragment(jar.getPath());
+    }
+
     private Map<String, Set<Module>> getProvidersOf() {
         return providersOf.getProvidersOf();
     }
@@ -902,7 +909,7 @@ public final class ModuleManager extends Modules {
             throw new IllegalStateException("Missing hosting module " + fragmentHost + " for fragment " + m.getCodeName());
         }
         if (!theHost.isEnabled()) {
-            return null;
+            throw new IllegalStateException("Host module for " + m.getCodeName() + " should have been enabled: " + theHost);
         }
         return theHost.getClassLoader();
     }
@@ -1066,6 +1073,8 @@ public final class ModuleManager extends Modules {
         modules.add(m);
         modulesByName.put(m.getCodeNameBase(), m);
         providersOf.possibleProviderAdded(m);
+        // must register module fragments early, to be enabled along with their hosts.
+        registerModuleFragment(m);
         
         lookup.add(m);
         firer.created(m);
@@ -1085,15 +1094,26 @@ public final class ModuleManager extends Modules {
      * 
      * @param m module to attach if it is a fragment
      */
-    private void attachModuleFragment(Module m) {
+    private Module attachModuleFragment(Module m) {
         String codeNameBase = m.getFragmentHostCodeName();
         if (codeNameBase == null) {
-            return;
+            return null;
+        }
+        Module host = modulesByName.get(codeNameBase);
+        if (host != null && host.isEnabled() && host.getClassLoader() != null) {
+            throw new IllegalStateException("Host module " + host + " was enabled before, will not accept fragment " + m);
+        }
+        return host;
+    }
+    
+    private boolean registerModuleFragment(Module m) {
+        String codeNameBase = m.getFragmentHostCodeName();
+        if (codeNameBase == null) {
+            return true;
         }
         Module host = modulesByName.get(codeNameBase);
         if (host != null && host.isEnabled()) {
-            Util.err.info("Module " + host.getCodeName() + " is already enabled");
-            return;
+            return false;
         }
         Collection<Module> frags = fragmentModules.get(codeNameBase);
         if (frags == null) {
@@ -1101,6 +1121,7 @@ public final class ModuleManager extends Modules {
             fragmentModules.put(codeNameBase, frags);
         }
         frags.add(m);
+        return true;
     }
     
     /**
@@ -1118,7 +1139,7 @@ public final class ModuleManager extends Modules {
             return;
         }
         Module hostMod = modulesByName.get(fragHost);
-        if (hostMod != null && hostMod.isEnabled()) {
+        if (hostMod != null && hostMod.isEnabled() && m.isEnabled()) {
             throw new IllegalStateException("Host module " + m.getCodeName() + " was loaded, cannot remove fragment");
         }
         Collection<Module> frags = fragmentModules.get(fragHost);
@@ -1670,7 +1691,10 @@ public final class ModuleManager extends Modules {
         }
         // need to register fragments eagerly, so they are available during
         // dependency sort
-        attachModuleFragment(m);
+        Module host = attachModuleFragment(m);
+        if (host != null && !host.isEnabled()) {
+            maybeAddToEnableList(willEnable, mightEnable, host, okToFail);
+        }
         // Also add anything it depends on, if not already there,
         // or already enabled.
         for (Dependency dep : m.getDependenciesArray()) {
@@ -2269,6 +2293,7 @@ public final class ModuleManager extends Modules {
         private final Map<String,byte[]> path2Data;
         private final Map<String,Boolean> path2OSGi;
         private final Map<String,String> path2Cnb;
+        private final Map<String,String> path2Fragment;
         private final int moduleCount;
         private Set<String> toEnable;
         private List<String> willEnable;
@@ -2278,6 +2303,7 @@ public final class ModuleManager extends Modules {
             Map<String,byte[]> map = null;
             Map<String,Boolean> osgi = null;
             Map<String,String> cnbs = null;
+            Map<String,String> frags = null;
             Set<String> toEn = null;
             List<String> toWi = null;
             int cnt = -1;
@@ -2298,6 +2324,7 @@ public final class ModuleManager extends Modules {
                 map = new HashMap<String, byte[]>();
                 osgi = new HashMap<String, Boolean>();
                 cnbs = new HashMap<String, String>();
+                frags = new HashMap<String, String>();
                 cnt = dis.readInt();
                 for (;;) {
                     String path = Stamps.readRelativePath(dis).replace(otherChar, File.separatorChar);
@@ -2311,6 +2338,11 @@ public final class ModuleManager extends Modules {
                     byte[] data = new byte[len];
                     dis.readFully(data);
                     map.put(path, data);
+                    String fhost = dis.readUTF();
+                    if (fhost != null) {
+                        // retain empty Strings, as they count as "known data".
+                        frags.put(path, fhost);
+                    }
                 }
                 toEn = readCnbs(dis, new HashSet<String>());
                 toWi = readCnbs(dis, new ArrayList<String>());
@@ -2322,10 +2354,12 @@ public final class ModuleManager extends Modules {
                 cnbs = null;
                 toEn = null;
                 toWi = null;
+                frags = null;
             }
             path2Data = map;
             path2OSGi = osgi;
             path2Cnb = cnbs;
+            path2Fragment = frags;
             toEnable = toEn;
             willEnable = toWi;
             moduleCount = cnt;
@@ -2355,6 +2389,10 @@ public final class ModuleManager extends Modules {
             return path2Cnb == null ? null : path2Cnb.get(path);
         }
         
+        final String getFragment(String path) {
+            return path2Fragment == null ? null : path2Fragment.get(path);
+        }
+        
         @Override
         public void flushCaches(DataOutputStream os) throws IOException {
             os.writeUTF(Locale.getDefault().toString());
@@ -2380,6 +2418,9 @@ public final class ModuleManager extends Modules {
                 byte[] arr = data.toByteArray();
                 os.writeInt(arr.length);
                 os.write(arr);
+                
+                String s = m.getFragmentHostCodeName();
+                os.writeUTF(s == null ? "" : s);  // NOI18N
             }
             Stamps.writeRelativePath("", os);
             synchronized (this) {

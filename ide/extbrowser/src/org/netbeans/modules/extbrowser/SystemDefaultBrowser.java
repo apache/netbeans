@@ -58,7 +58,11 @@ public class SystemDefaultBrowser extends ExtWebBrowser {
                 ACTIVE = Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE);
             }
         } else {
-            ACTIVE = false;
+            if (Utilities.isWindows()) {
+                ACTIVE = Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE);
+            } else {
+                ACTIVE = false;
+            }
         }
     }
 

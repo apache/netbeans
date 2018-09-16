@@ -222,6 +222,18 @@ public final class FeatureInfo {
         return s;
     }
 
+    public final String getExtraModulesRecommendedMinJDK() {
+        return properties.getProperty("extra.modules.recommended.min.jdk"); // NOI18N
+    }
+
+    public final String getExtraModulesRequiredText() {
+        return properties.getProperty("LBL_Ergonomics_Extra_Required"); // NOI18N
+    }
+
+    public final String getExtraModulesRecommendedText() {
+        return properties.getProperty("LBL_Ergonomics_Extra_Recommended"); // NOI18N
+    }
+
     public boolean isPresent() {
         Boolean p = cachePresent;
         if (p != null) {

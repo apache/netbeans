@@ -33,6 +33,7 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.Task;
+import org.netbeans.modules.java.source.usages.ClasspathInfoAccessor;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -70,7 +71,7 @@ public class Parser {
                 w.append(config.fileContent);
             }
 
-            ClasspathInfo cpInfo = SourceUtils.deserializeClasspathInfo(config.cpInfo);
+            ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().deserialize(config.cpInfo);
 
             lastConfig = config.id;
             Parser.source = source = JavaSource.create(cpInfo, file);
@@ -138,7 +139,7 @@ public class Parser {
             this.id = id;
             this.fileName = fileName;
             this.fileContent = fileContent;
-            this.cpInfo = SourceUtils.serializeClasspathInfo(cpInfo);
+            this.cpInfo = ClasspathInfoAccessor.getINSTANCE().serialize(cpInfo);
             this.sourceLevel = sourceLevel;
         }
 

@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.java.editor.base.semantic;
 
-import com.google.gson.Gson;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.ArrayTypeTree;

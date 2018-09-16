@@ -21,8 +21,6 @@ package org.netbeans.modules.java.openjdk.project;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.lang.reflect.Proxy;
-import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +29,7 @@ import javax.swing.event.ChangeListener;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.java.openjdk.project.JDKProject.Root;
 import org.netbeans.modules.java.openjdk.project.JDKProject.RootKind;
+import org.netbeans.modules.java.source.remote.spi.RemotePlatform;
 import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.util.ChangeSupport;
@@ -41,30 +40,12 @@ import org.openide.util.lookup.Lookups;
  *
  * @author lahvac
  */
-public class RemotePlatformImpl {//implements RemotePlatform {
+public class RemotePlatformImpl implements RemotePlatform {
 
-    private static final Map<FileObject, Object/*should be: RemotePlatformImpl*/> jdkRoot2Platform = new HashMap<>();
+    private static final Map<FileObject, RemotePlatformImpl> jdkRoot2Platform = new HashMap<>();
 
-    public static @NonNull Object/*should be: RemotePlatformImpl*/ getProvider(FileObject jdkRoot, ConfigurationImpl.ProviderImpl configurations) {
-        return jdkRoot2Platform.computeIfAbsent(jdkRoot, r -> {
-            ClassLoader cl = Lookup.getDefault().lookup(ClassLoader.class);
-            if (cl == null)
-                return null;
-            try {
-                Class<?> remotePlatform = cl.loadClass("org.netbeans.modules.java.source.remote.spi.RemotePlatform");
-                RemotePlatformImpl delegate = new RemotePlatformImpl(configurations);
-                return Proxy.newProxyInstance(cl,
-                                       new Class<?>[] {remotePlatform},
-                                       (inst, meth, params) -> {
-                    return delegate.getClass()
-                                   .getMethod(meth.getName(), meth.getParameterTypes())
-                                   .invoke(delegate, params);
-                });
-            } catch (ClassNotFoundException ex) {
-                //OK:
-                return null;
-            }
-        });
+    public static @NonNull RemotePlatformImpl getProvider(FileObject jdkRoot, ConfigurationImpl.ProviderImpl configurations) {
+        return jdkRoot2Platform.computeIfAbsent(jdkRoot, r -> new RemotePlatformImpl(configurations));
     }
 
     private final ChangeSupport cs = new ChangeSupport(this);
@@ -82,65 +63,54 @@ public class RemotePlatformImpl {//implements RemotePlatform {
         });
     }
 
-//    @Override
+    @Override
     public String getJavaCommand() {
         return new File(configurations.getActiveConfiguration().getLocation(),
                         "images/jdk/bin/java".replace("/", System.getProperty("file.separator")))
                .getAbsolutePath();
     }
 
-//    @Override
+    @Override
     public List<String> getJavaArguments() {
         return Collections.emptyList();
     }
 
-//    @Override
+    @Override
     public void addChangeListener(ChangeListener l) {
         cs.addChangeListener(l);
     }
 
-//    @Override
+    @Override
     public void removeChangeListener(ChangeListener l) {
         cs.removeChangeListener(l);
     }
 
-    public static Lookup/*should be: RemotePlatform.Provider*/ createProvider(FileObject jdkRoot, JDKProject project) {
-        Object/*should be: RemotePlatformImpl*/ platform = RemotePlatformImpl.getProvider(jdkRoot, project.configurations);
-        ClassLoader cl = Lookup.getDefault().lookup(ClassLoader.class);
-        if (cl == null)
-            return Lookup.EMPTY;
-        try {
-            Class<?> remotePlatformProvider = cl.loadClass("org.netbeans.modules.java.source.remote.spi.RemotePlatform$Provider");
-            return Lookups.singleton(Proxy.newProxyInstance(cl,
-                                   new Class<?>[] {remotePlatformProvider},
-                                   (inst, meth, params) -> {
-                switch (meth.getName()) {
-                    case "findPlatform":
-                        switch (project.getLookup().lookup(Settings.class).getUseRemotePlatform()) {
-                            case TEST:
-                                FileObject file = (FileObject) params[0];
-                                String fileURL = file.toURL().toString();
-                                //TODO: more reliable tests detection?
-                                boolean tests = false;
-                                for (Root root : project.getRoots()) {
-                                    if (root.kind != RootKind.TEST_SOURCES)
-                                        continue;
-                                    tests |= fileURL.startsWith(root.getLocation().toString());
-                                }
-                                if (!tests) {
-                                    return null;
-                                }
-                            case ALWAYS:
-                                return platform;
-                            case NEVER: return null;
+    public static Lookup createProvider(FileObject jdkRoot, JDKProject project) {
+        Provider provider = new Provider() {
+            @Override
+            public RemotePlatform findPlatform(FileObject file) {
+                switch (project.getLookup().lookup(Settings.class).getUseRemotePlatform()) {
+                    case TEST:
+                        String fileURL = file.toURL().toString();
+                        //TODO: more reliable tests detection?
+                        boolean tests = false;
+                        for (Root root : project.getRoots()) {
+                            if (root.kind != RootKind.TEST_SOURCES)
+                                continue;
+                            tests |= fileURL.startsWith(root.getLocation().toString());
                         }
+                        if (!tests) {
+                            return null;
+                        }
+                    case ALWAYS:
+                        return RemotePlatformImpl.getProvider(jdkRoot, project.configurations);
                     default:
-                        return null;
+                    case NEVER: return null;
                 }
-            }));
-        } catch (ClassNotFoundException ex) {
-            return Lookup.EMPTY;
-        }
+            }
+        };
+
+        return Lookups.singleton(provider);
     }
 
 }

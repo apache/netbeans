@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.editor.java;
 
-import com.google.gson.Gson;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;

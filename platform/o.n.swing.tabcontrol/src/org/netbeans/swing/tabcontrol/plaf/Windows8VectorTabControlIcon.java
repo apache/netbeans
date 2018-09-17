@@ -35,7 +35,7 @@ import java.util.Map.Entry;
 import javax.swing.Icon;
 
 /**
- * Scalable vector icons for the Windows tab control L&\amp;F, for use with HiDPI screens. These
+ * Scalable vector icons for the Windows tab control L&amp;F, for use with HiDPI screens. These
  * icons look good at all of the standard scaling factors available on Windows (see superclass
  * Javadoc). At 100% scale, they look nearly identical to bitmap icons that were used previously for
  * the Windows 8 LAF.
@@ -111,15 +111,16 @@ final class Windows8VectorTabControlIcon extends VectorIcon {
                     // A nice red.
                     ? new Color(199, 79, 80, 255) : null;
             if (buttonState == TabControlButton.STATE_DISABLED) {
-                // Light grey.
-                fgColor = new Color(201, 201, 201, 255);
+                // Light grey (via transparent black to work well on any background).
+                fgColor = new Color(0, 0, 0, 45);
             } else if (buttonState == TabControlButton.STATE_PRESSED) {
                 // A nice blue.
                 bgColor = closeColor != null ? closeColor : new Color(57, 100, 178, 255);
                 fgColor = Color.WHITE;
             } else if (buttonState == TabControlButton.STATE_ROLLOVER) {
-                // Grey.
-                bgColor = closeColor != null ? closeColor : new Color(173, 173, 173, 255);
+                bgColor = closeColor != null ? closeColor
+                        // Grey (via transparent black to work well on any background).
+                        : new Color(0, 0, 0, 70);
                 fgColor = Color.WHITE;
             }
         }
@@ -183,7 +184,7 @@ final class Windows8VectorTabControlIcon extends VectorIcon {
             int barY = round(8 * scaling);
             int barWidth = width - marginX * 2;
             // Use the same thickness as the title bar in getWindowSymbol.
-            int barThickness = round(1.6 * scaling);
+            int barThickness = round(1.8 * scaling);
             g.fill(new Rectangle2D.Double(barX, barY, barWidth, barThickness));
         } else if (buttonId == TabControlButton.ID_DROP_DOWN_BUTTON ||
                    buttonId == TabControlButton.ID_SCROLL_LEFT_BUTTON ||
@@ -225,18 +226,16 @@ final class Windows8VectorTabControlIcon extends VectorIcon {
     private static Area getWindowSymbol(
             double scaling, int x, int y, int width, int height)
     {
-        int borderThickness = round(0.7 * scaling);
-        int titleBarHeight = Math.max(round(1.6 * scaling), borderThickness + 1);
-        int windowX = round(x);
-        int windowY = round(y);
-        int windowWidth = round(width);
-        int windowHeight = round(height);
-        Area ret = new Area(new Rectangle2D.Double(
-                windowX, windowY, windowWidth, windowHeight));
+        /* Pick a thickness that will make the window symbol border 2 physical pixels wide at 200%
+        scaling, to look consistent with the rest of the UI, including those that do not have any
+        special HiDPI support. Lower scaling levels will yield a 1 physical pixel wide border */
+        int borderThickness = round(0.8 * scaling);
+        int titleBarHeight = Math.max(round(1.8 * scaling), borderThickness + 1);
+        Area ret = new Area(new Rectangle2D.Double(x, y, width, height));
         ret.subtract(new Area(new Rectangle2D.Double(
-                windowX + borderThickness, windowY + titleBarHeight,
-                windowWidth - borderThickness * 2,
-                windowHeight - borderThickness - titleBarHeight)));
+                x + borderThickness, y + titleBarHeight,
+                width - borderThickness * 2,
+                height - borderThickness - titleBarHeight)));
         return ret;
     }
 }

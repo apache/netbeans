@@ -120,7 +120,7 @@ public final class InstallSupport {
      * @see #doValidate
      */
     public Restarter doInstall(Installer installer ,ProgressHandle progress/*or null*/) throws OperationException {
-        Boolean restart = impl.doInstall (installer, progress, true);
+        Boolean restart = impl.doInstall (installer, progress, false);
         if (restart == null /*was problem*/ || ! restart.booleanValue ()) {
             return null;
         } else {

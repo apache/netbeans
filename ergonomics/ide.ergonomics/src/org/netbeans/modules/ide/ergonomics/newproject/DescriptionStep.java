@@ -156,8 +156,7 @@ public class DescriptionStep implements WizardDescriptor.Panel<WizardDescriptor>
             if (elems != null && !elems.isEmpty ()) {
                 Collection<UpdateElement> visible = f.getVisibleUpdateElements (elems);
                 final String name = ModulesInstaller.presentUpdateElements (visible);
-                configPanel.setInfo(info, toInstall);
-                configPanel.setPanelName(name);
+                configPanel.setInfo(info, name, toInstall);
                 panel.replaceComponents(configPanel);
                 forEnable = elems;
                 fireChange ();

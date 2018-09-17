@@ -44,9 +44,12 @@
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="errorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="downloadButton" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="activateButton" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <Component id="downloadLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="downloadButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="activateButton" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="infoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -61,14 +64,15 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="errorLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="downloadLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="downloadButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
               <Component id="infoLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="activateButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="downloadLabel" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="activateButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="downloadButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
               <Component id="progressPanel" pref="91" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>

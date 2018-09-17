@@ -45,6 +45,7 @@ import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.autoupdate.ui.api.PluginManager;
 import org.openide.awt.Mnemonics;
+import org.openide.modules.SpecificationVersion;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor.Task;
@@ -67,8 +68,7 @@ public class ConfigurationPanel extends JPanel implements Runnable {
 
     public ConfigurationPanel(String displayName, final Callable<JComponent> callable, FeatureInfo info) {
         this(callable);
-        setInfo(info, Collections.<UpdateElement>emptyList());
-        setPanelName(displayName);
+        setInfo(info, displayName, Collections.<UpdateElement>emptyList());
     }
     
     public ConfigurationPanel(final Callable<JComponent> callable) {
@@ -80,7 +80,7 @@ public class ConfigurationPanel extends JPanel implements Runnable {
         setError(" "); // NOI18N
     }
 
-    public void setInfo(FeatureInfo info, Collection<UpdateElement> toInstall) {
+    public void setInfo(FeatureInfo info, String displayName, Collection<UpdateElement> toInstall) {
         this.featureInfo = info;
         this.featureInstall = toInstall;
         boolean activateNow = toInstall.isEmpty();
@@ -91,23 +91,28 @@ public class ConfigurationPanel extends JPanel implements Runnable {
             downloadButton.setVisible(false);
             activateButtonActionPerformed(null);
         } else {
+            FeatureManager.logUI("ERGO_QUESTION", featureInfo.clusterName, displayName);
             infoLabel.setVisible(true);
             downloadLabel.setVisible(true);
             activateButton.setVisible(true);
             downloadButton.setVisible(true);
+            SpecificationVersion jdk = new SpecificationVersion(System.getProperty("java.specification.version"));
+            String lblDownloadMsg;
+            if (jdk.compareTo(new SpecificationVersion(info.getExtraModulesRecommendedMinJDK())) < 0) {
+                lblDownloadMsg = info.getExtraModulesRequiredText();
+                activateButton.setEnabled(false);
+            } else {
+                lblDownloadMsg = info.getExtraModulesRecommendedText();
+                activateButton.setEnabled(true);
+            }
+            String lblActivateMsg = NbBundle.getMessage(ConfigurationPanel.class, "LBL_EnableInfo", displayName);
+            String btnActivateMsg = NbBundle.getMessage(ConfigurationPanel.class, "LBL_Enable");
+            String btnDownloadMsg = NbBundle.getMessage(ConfigurationPanel.class, "LBL_Download");
+            org.openide.awt.Mnemonics.setLocalizedText(infoLabel, lblActivateMsg);
+            org.openide.awt.Mnemonics.setLocalizedText(activateButton, btnActivateMsg);
+            org.openide.awt.Mnemonics.setLocalizedText(downloadLabel, lblDownloadMsg);
+            org.openide.awt.Mnemonics.setLocalizedText(downloadButton, btnDownloadMsg);
         }
-    }
-    
-    public void setPanelName(String displayName) {
-        FeatureManager.logUI("ERGO_QUESTION", featureInfo.clusterName, displayName);
-        String lblActivateMsg = NbBundle.getMessage(ConfigurationPanel.class, "LBL_EnableInfo", displayName);
-        String btnActivateMsg = NbBundle.getMessage(ConfigurationPanel.class, "LBL_Enable");
-        String lblDownloadMsg = NbBundle.getMessage(ConfigurationPanel.class, "LBL_DownloadInfo", displayName);
-        String btnDownloadMsg = NbBundle.getMessage(ConfigurationPanel.class, "LBL_Download");
-        org.openide.awt.Mnemonics.setLocalizedText(infoLabel, lblActivateMsg);
-        org.openide.awt.Mnemonics.setLocalizedText(activateButton, btnActivateMsg);
-        org.openide.awt.Mnemonics.setLocalizedText(downloadLabel, lblDownloadMsg);
-        org.openide.awt.Mnemonics.setLocalizedText(downloadButton, btnDownloadMsg);
     }
     
     @Override
@@ -167,9 +172,11 @@ public class ConfigurationPanel extends JPanel implements Runnable {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(Alignment.LEADING)
                             .addComponent(errorLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(downloadButton)
+                                .addPreferredGap(ComponentPlacement.RELATED)
+                                .addComponent(activateButton))
                             .addComponent(downloadLabel)
-                            .addComponent(downloadButton)
-                            .addComponent(activateButton)
                             .addComponent(infoLabel))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -178,14 +185,14 @@ public class ConfigurationPanel extends JPanel implements Runnable {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(errorLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(ComponentPlacement.RELATED)
-                .addComponent(downloadLabel)
-                .addPreferredGap(ComponentPlacement.RELATED)
-                .addComponent(downloadButton)
-                .addPreferredGap(ComponentPlacement.RELATED)
                 .addComponent(infoLabel)
-                .addPreferredGap(ComponentPlacement.RELATED)
-                .addComponent(activateButton)
-                .addPreferredGap(ComponentPlacement.RELATED)
+                .addPreferredGap(ComponentPlacement.UNRELATED)
+                .addComponent(downloadLabel)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(Alignment.BASELINE)
+                    .addComponent(activateButton)
+                    .addComponent(downloadButton))
+                .addGap(19, 19, 19)
                 .addComponent(progressPanel, GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
                 .addContainerGap())
         );

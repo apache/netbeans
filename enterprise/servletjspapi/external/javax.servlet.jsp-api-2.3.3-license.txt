@@ -3,7 +3,6 @@ Version: 2.3.3
 License: CDDL-GPL-2-CP
 Description: Java API for Servlets, Java API for JavaServer Pages, Java API for Expression Language
 Origin: Oracle (https://glassfish.dev.java.net/)
-OSR: 5563
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
 

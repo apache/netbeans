@@ -128,7 +128,7 @@ websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/oauth/*.templa
 **/*.nib
 **/*.oql
 **/*.ser
-ide.etc/launcher/macosx/NetBeansLauncher/ReadMe.rtf
+nb/ide.launcher/macosx/NetBeansLauncher/ReadMe.rtf
 harness/jellytools.platform/src/org/netbeans/jellytools/version_info
 
 ######  generated test files 
@@ -189,8 +189,6 @@ java/junit.ui/src/org/netbeans/modules/junit/ui/resources/*.template
 ide/languages.diff/src/org/netbeans/modules/languages/diff/DiffExample.diff
 ide/languages.yaml/src/org/netbeans/modules/languages/yaml/*.yaml
 ide/languages.yaml/src/org/netbeans/modules/languages/yaml/*.yml
-o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/CustomTask_java
-o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/Project.xml_
 java/spring.beans/src/org/netbeans/modules/spring/beans/resources/templates/*.template
 ide/xml.text/src/org/netbeans/modules/xml/text/resources/DTDExample
 ide/xml.text/src/org/netbeans/modules/xml/text/resources/XMLExample

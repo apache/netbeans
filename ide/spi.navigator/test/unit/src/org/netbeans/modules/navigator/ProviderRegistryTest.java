@@ -19,11 +19,18 @@
 
 package org.netbeans.modules.navigator;
 
+import java.net.URI;
 import java.util.Collection;
+import java.util.Collections;
 import javax.swing.JComponent;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.spi.navigator.NavigatorPanel;
+import org.netbeans.spi.navigator.NavigatorPanel.DynamicRegistration;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
+import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 
 
 /**
@@ -46,13 +53,13 @@ public class ProviderRegistryTest extends NbTestCase {
         ProviderRegistry providerReg = ProviderRegistry.getInstance();
         
         System.out.println("Asking for non-existent type...");
-        assertEquals(0, providerReg.getProviders("image/non_existent_type").size());
+        assertEquals(0, providerReg.getProviders("image/non_existent_type", null).size());
         
         System.out.println("Asking for non-existent class...");
-        assertEquals(0, providerReg.getProviders("text/plain").size());
+        assertEquals(0, providerReg.getProviders("text/plain", null).size());
         
         System.out.println("Asking for valid type and provider...");
-        Collection<? extends NavigatorPanel> result = providerReg.getProviders(MARVELOUS_DATA_TYPE);
+        Collection<? extends NavigatorPanel> result = providerReg.getProviders(MARVELOUS_DATA_TYPE, null);
         assertEquals(1, result.size());
         NavigatorPanel np = result.iterator().next();
         assertTrue(np instanceof MarvelousDataTypeProvider);
@@ -60,6 +67,33 @@ public class ProviderRegistryTest extends NbTestCase {
         assertEquals(MARVELOUS_DATA_TYPE_NAME, provider.getDisplayName());
     }
     
+    public void testDynamicGetProviders () throws Exception {
+        UnitTestUtils.prepareTest(new String [] { "/org/netbeans/modules/navigator/resources/testGetProvidersLayer.xml" });
+        FileObject root = FileUtil.createMemoryFileSystem().getRoot();
+        FileObject file1 = root.createData("1");
+        FileObject file2 = root.createData("2");
+        Lookup checkingProvider = Lookups.singleton(new DynamicRegistration() {
+            @Override
+            public Collection<? extends NavigatorPanel> panelsFor(URI file) {
+                return file1.toURI().equals(file) ? Collections.singletonList(new MarvelousDataTypeProvider())
+                                                  : Collections.emptyList();
+            }
+        });
+        Lookups.executeWith(new ProxyLookup(Lookup.getDefault(), checkingProvider), () -> {
+            ProviderRegistry providerReg = ProviderRegistry.getInstance();
+
+            System.out.println("Asking for masked out file...");
+            assertEquals(0, providerReg.getProviders("image/non_existent_type", file2).size());
+
+            System.out.println("Asking for valid file...");
+            Collection<? extends NavigatorPanel> result = providerReg.getProviders("image/non_existent_type", file1);
+            assertEquals(1, result.size());
+            NavigatorPanel np = result.iterator().next();
+            assertTrue(np instanceof MarvelousDataTypeProvider);
+            MarvelousDataTypeProvider provider = (MarvelousDataTypeProvider)np;
+            assertEquals(MARVELOUS_DATA_TYPE_NAME, provider.getDisplayName());
+        });
+    }
 
     /** Dummy navigator panel provider, just to test right loading and instantiating
      * for certain data type

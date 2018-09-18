@@ -83,6 +83,21 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
   <changes>
+    <change id="NavigatorPanelDynamicRegistration">
+        <api name="navigator_api"/>
+        <summary>Added SPI interface <code>NavigatorPanel.DynamicRegistration</code></summary>
+        <version major="1" minor="41"/>
+        <date year="2018" month="8" day="14"/>
+        <author login="jlahoda"/>
+        <compatibility binary="compatible" source="compatible" deprecation="no" deletion="no" addition="yes"/>
+        <description>
+            <p>
+                Added SPI interface <code>NavigatorPanel.DynamicRegistration</code> to
+                allow dynamic registration of NavigatorPanels.
+            </p>
+        </description>
+        <class package="org.netbeans.spi.navigator" name="NavigatorPanel"/>
+    </change>
     <change id="NavigatorPanelWithToolbar">
         <api name="navigator_api"/>
         <summary>Added SPI interface <code>NavigatorPanelWithToolbar</code></summary>

@@ -865,11 +865,11 @@ public class ASTPHP5ParserTest extends ParserTestBase {
 
     // PHP 7.3
     public void testFunctionCallTrailingCommas_01() throws Exception {
-        performTest("parser/functionCallTrailingCommas_01");
+        performTest("parser/php73/functionCallTrailingCommas_01");
     }
 
     public void testListReferenceAssignment_01() throws Exception {
-        performTest("parser/listReferenceAssignment_01");
+        performTest("parser/php73/listReferenceAssignment_01");
     }
 
     public void testFlexibleHeredocIndentSpaces_01() throws Exception {

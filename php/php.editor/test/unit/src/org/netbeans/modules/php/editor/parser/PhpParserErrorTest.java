@@ -781,23 +781,23 @@ public class PhpParserErrorTest extends PHPTestBase {
 
     // PHP 7.3
     public void testFunctionCallTrailingCommas_01() throws Exception {
-        checkErrors("testfiles/parser/functionCallTrailingCommas_01.php");
+        checkErrors("testfiles/parser/php73/functionCallTrailingCommas_01.php");
     }
 
     public void testFunctionCallTrailingCommas_02() throws Exception {
-        checkErrors("testfiles/parser/functionCallTrailingCommas_02.php");
+        checkErrors("testfiles/parser/php73/functionCallTrailingCommas_02.php");
     }
 
     public void testFunctionCallTrailingCommas_03() throws Exception {
-        checkErrors("testfiles/parser/functionCallTrailingCommas_03.php");
+        checkErrors("testfiles/parser/php73/functionCallTrailingCommas_03.php");
     }
 
     public void testFunctionCallTrailingCommas_04() throws Exception {
-        checkErrors("testfiles/parser/functionCallTrailingCommas_04.php");
+        checkErrors("testfiles/parser/php73/functionCallTrailingCommas_04.php");
     }
 
     public void testListReferenceAssignment_01() throws Exception {
-        checkErrors("testfiles/parser/listReferenceAssignment_01.php");
+        checkErrors("testfiles/parser/php73/listReferenceAssignment_01.php");
     }
 
     public void testFlexibleHeredocIndentSpaces_01() throws Exception {

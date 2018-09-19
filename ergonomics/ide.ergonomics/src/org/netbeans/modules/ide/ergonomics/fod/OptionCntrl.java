@@ -79,7 +79,7 @@ implements Callable<JComponent>, Runnable {
             FeatureInfo info = FoDLayersProvider.getInstance().whichProvides(fo);
             assert info != null;
             master = masterLookup;
-            panel = new ConfigurationPanel(info.clusterName, this, info, false);
+            panel = new ConfigurationPanel(info.clusterName, this, info);
         }
         return panel;
     }

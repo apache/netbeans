@@ -74,10 +74,8 @@ public class DescriptionStep implements WizardDescriptor.Panel<WizardDescriptor>
     private FeatureInfo info;
     private WizardDescriptor wd;
     private ConfigurationPanel configPanel;
-    private final boolean autoEnable;
 
-    public DescriptionStep(boolean autoEnable) {
-        this.autoEnable = autoEnable;
+    public DescriptionStep() {
     }
 
     @Override
@@ -90,7 +88,7 @@ public class DescriptionStep implements WizardDescriptor.Panel<WizardDescriptor>
                     waitForDelegateWizard(true);
                     return new JLabel(" ");
                 }
-            }, autoEnable);
+            });
             panel = new ContentPanel (getBundle ("DescriptionPanel_Name"));
             panel.addPropertyChangeListener (findModules);
         }
@@ -153,12 +151,12 @@ public class DescriptionStep implements WizardDescriptor.Panel<WizardDescriptor>
                 panel.replaceComponents ();
                 handle = null;
             }
+            final  Collection<UpdateElement> toInstall = f.getModulesForInstall();
             final  Collection<UpdateElement> elems = f.getModulesForEnable ();
             if (elems != null && !elems.isEmpty ()) {
                 Collection<UpdateElement> visible = f.getVisibleUpdateElements (elems);
                 final String name = ModulesInstaller.presentUpdateElements (visible);
-                configPanel.setInfo(info);
-                configPanel.setPanelName(name);
+                configPanel.setInfo(info, name, toInstall);
                 panel.replaceComponents(configPanel);
                 forEnable = elems;
                 fireChange ();

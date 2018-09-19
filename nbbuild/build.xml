@@ -1464,10 +1464,10 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     <mkdir dir="${build.test.results.dir}"/>
 
     <taskdef name="resolvelist" classname="org.netbeans.nbbuild.ResolveList" classpath="${nbantext.jar}"/>
-    <resolvelist list="${nb.clusters.list}" name="nb.clusters.validation.list">
+    <resolvelist list="${nb.clusters.list}" name="nb.clusters.validation.list" path="modules.fullpath" dir="${nb_all}" ignoremissing="true">
        <mapper type="regexp" from="(.*)" to="validation.\1"/>
     </resolvelist>
-    
+    <echo message="Run commit validation on: ${nb.clusters.validation.list}"/>
     <subant target="${test.type}" >
         <property name="test.config" value="commit"/>
         <property name="continue.after.failing.tests" value="true"/>

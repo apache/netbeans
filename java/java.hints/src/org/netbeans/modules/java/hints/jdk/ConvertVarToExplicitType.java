@@ -40,6 +40,13 @@ import org.netbeans.spi.java.hints.JavaFix;
 import org.netbeans.spi.java.hints.JavaFix.TransformationContext;
 import org.netbeans.spi.java.hints.TriggerPattern;
 import org.openide.util.NbBundle.Messages;
+import com.sun.source.tree.EnhancedForLoopTree;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.StatementTree;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import org.netbeans.modules.java.hints.suggestions.ExpandEnhancedForLoop;
+import org.netbeans.spi.java.hints.TriggerPatterns;
 
 /**
  * Hint to convert type in local variable declaration from 'var' to explicit
@@ -51,7 +58,10 @@ import org.openide.util.NbBundle.Messages;
 @Messages("MSG_ConvertibleToExplicitType=Convert var to explicit type")
 public class ConvertVarToExplicitType {
 
-    @TriggerPattern("$mods$ $type $var = $init") //NOI18N
+    @TriggerPatterns({
+        @TriggerPattern("$mods$ $type $var = $init"), //NOI18N
+        @TriggerPattern("for ($type $var : $expression) { $stmts$; }") //NOI18N
+    })
     public static ErrorDescription convertVarToExplicitType(HintContext ctx) {
 
         if (!isLocalVarType(ctx)) {
@@ -104,6 +114,24 @@ public class ConvertVarToExplicitType {
                         oldVariableTree.getInitializer()
                 );
                 wc.rewrite(oldVariableTree, newVariableTree);
+            } else if (statementPath.getLeaf().getKind() == Tree.Kind.ENHANCED_FOR_LOOP) {
+                EnhancedForLoopTree elfTree = (EnhancedForLoopTree) statementPath.getLeaf();
+                ExpressionTree expTree = elfTree.getExpression();
+                VariableTree vtt = elfTree.getVariable();
+                String elfTreeVariable = elfTree.getVariable().getType().toString();
+                if (expTree == null) {
+                    return;
+                }
+                //VariableTree with null ExpressionTree as no initialization required
+                VariableTree newVariableTree = make.Variable(
+                        vtt.getModifiers(),
+                        vtt.getName(),
+                        make.Type(elfTreeVariable),
+                        null
+                );
+                StatementTree statement = ((EnhancedForLoopTree) statementPath.getLeaf()).getStatement();
+                EnhancedForLoopTree newElfTree = make.EnhancedForLoop(newVariableTree, expTree, statement);
+                wc.rewrite(elfTree, newElfTree);
             }
         }
 
@@ -118,42 +146,68 @@ public class ConvertVarToExplicitType {
 
         CompilationInfo info = ctx.getInfo();
         
-        if (info.getSourceVersion().compareTo(SourceVersion.RELEASE_9) < 1) {
-            return false;
-        }        
-
         TreePath treePath = ctx.getPath();
 
-        // should be local variable
-        if (info.getTrees().getElement(treePath).getKind() != ElementKind.LOCAL_VARIABLE) {
+        if (!isVariableValidForVarHint(ctx)) { 
             return false;
         }
 
         // variable declaration of type 'var'
         return info.getTreeUtilities().isVarType(treePath);
     }
+    
+    protected static boolean isVariableValidForVarHint(HintContext ctx) {
+        CompilationInfo info = ctx.getInfo();
+        TreePath treePath = ctx.getPath();
+        // hint will be enable only for JDK-10 or above.
+        if (info.getSourceVersion().compareTo(SourceVersion.RELEASE_9) < 1) {
+            return false;
+        }
+         if (treePath.getLeaf().getKind() == Tree.Kind.ENHANCED_FOR_LOOP) {
+            EnhancedForLoopTree efl = (EnhancedForLoopTree) treePath.getLeaf();
+            TypeMirror expressionType = ctx.getInfo().getTrees().getTypeMirror(new TreePath(treePath, efl.getExpression()));
+            if (!Utilities.isValidType(expressionType)) {
+                return false;
+            }
+        } else {
+            Element treePathELement = info.getTrees().getElement(treePath);
+            // should be local variable
+            if (treePathELement != null && (treePathELement.getKind() != ElementKind.LOCAL_VARIABLE && treePathELement.getKind() != ElementKind.RESOURCE_VARIABLE)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     //filter anonymous class and intersection types
     private static boolean isValidType(HintContext ctx) {
         TreePath treePath = ctx.getPath();
-        TypeMirror variableTypeMirror = ctx.getInfo().getTrees().getElement(treePath).asType();
-
-        if (Utilities.isAnonymousType(variableTypeMirror)) {
-            return false;
-        } else if (variableTypeMirror.getKind() == TypeKind.DECLARED) {
-            DeclaredType dt = (DeclaredType) variableTypeMirror;
-            if (dt.getTypeArguments().size() > 0) {
-                for (TypeMirror paramType : dt.getTypeArguments()) {
-                    if (Utilities.isAnonymousType(paramType)) {
-                        return false;
+        TreePath initTreePath = ctx.getVariables().get("$init");  //NOI18N
+        TreePath expressionTreePath = ctx.getVariables().get("$expression"); //NOI18N
+        if (initTreePath != null) {
+            TypeMirror variableTypeMirror = ctx.getInfo().getTrees().getElement(treePath).asType();
+            if (Utilities.isAnonymousType(variableTypeMirror)) {
+                return false;
+            } else if (variableTypeMirror.getKind() == TypeKind.DECLARED) {
+                DeclaredType dt = (DeclaredType) variableTypeMirror;
+                if (dt.getTypeArguments().size() > 0) {
+                    for (TypeMirror paramType : dt.getTypeArguments()) {
+                        if (Utilities.isAnonymousType(paramType)) {
+                            return false;
+                        }
                     }
                 }
             }
-        }
 
-        if (!Utilities.isValidType(variableTypeMirror) ||(variableTypeMirror.getKind() == TypeKind.INTERSECTION)) {
+            if (!Utilities.isValidType(variableTypeMirror) || (variableTypeMirror.getKind() == TypeKind.INTERSECTION)) {
+                return false;
+            }
+            return true;
+        } else if (expressionTreePath != null) {
+            ExecutableElement iterator = ExpandEnhancedForLoop.findIterable(ctx.getInfo());
+            return (iterator != null);
+        } else {
             return false;
         }
-        return true;
     }
 }

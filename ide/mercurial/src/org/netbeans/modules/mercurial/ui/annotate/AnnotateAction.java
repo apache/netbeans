@@ -282,7 +282,7 @@ public class AnnotateAction extends ContextAction {
         }
     }
 
-    private static AnnotateLine [] toAnnotateLines(List<String> annotations)
+    static AnnotateLine [] toAnnotateLines(List<String> annotations)
     {
         final int GROUP_AUTHOR = 1;
         final int GROUP_REVISION = 2;
@@ -292,7 +292,37 @@ public class AnnotateAction extends ContextAction {
         
         List<AnnotateLine> lines = new ArrayList<AnnotateLine>();
         int i = 0;
-        Pattern p = Pattern.compile("^\\s*(\\S+\\b)\\s+(\\d+)\\s+(\\b\\S*):\\s*(\\d+):\\s(.*)$"); //NOI18N
+        /*
+        The output pattern of the mercurial blame command seems to be pretty
+        stable. In the test 3.1.2 and 4.5.3 were compared and found to yield
+        identical outputs.
+
+        Alternatives are currently not viable - while the JSON output sounds
+        better, it is not stable as it significantly changed from 4.0 to 4.5.3.
+
+        Oberservations:
+        - the output contains 5 elements:
+          - username
+          - revision number
+          - filename
+          - line number
+          - line content
+        - the username does not contains spaces
+        - there can be whitespace before the username (the column is right
+          aligned with the longest username
+        - the revision number is purely nummeric
+        - the revision number is right aligned and is padded with spaces
+          on the left side
+        - after the revision number exactly one space is placed
+        - the filename has no limit
+        - between the filename and the linenumber is a colon placed directly
+          behind the filename
+        - between the colon and the linenumber an unlimited number of spaces can
+          be present
+        - directly behind the linenumber a colon and a space is placed
+        - the rest of the line is the line content
+        */
+        Pattern p = Pattern.compile("^\\s*(\\S+)\\s+(\\d+) (.*?):\\s*(\\d+): (.*)$"); //NOI18N
         for (String line : annotations) {
             i++;
             Matcher m = p.matcher(line);

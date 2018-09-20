@@ -29,6 +29,7 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import java.util.Set;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.TypeElement;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -47,19 +48,29 @@ public class ElementUtils {
         Set<? extends ModuleElement> allModules = task.getElements().getAllModuleElements();
         Context ctx = ((JavacTaskImpl) task).getContext();
         Symtab syms = Symtab.instance(ctx);
+        
         if (allModules.isEmpty()) {
             return getTypeElementByBinaryName(task, syms.noModule, name);
         }
         
         TypeElement result = null;
+        boolean foundInUnamedModule = false;
         
         for (ModuleElement me : allModules) {
             TypeElement found = getTypeElementByBinaryName(task, me, name);
-            
+
             if (found != null) {
+                if ((ModuleSymbol) me == syms.unnamedModule) {
+                    foundInUnamedModule = true;
+                }
                 if (result != null) {
-                    if ((ModuleSymbol) me == syms.unnamedModule) {
-                        continue;
+                    if (foundInUnamedModule == true) {
+                        for (TypeElement elem : new TypeElement[]{result, found}) {
+                            if ((elem.getKind() == ElementKind.CLASS || elem.getKind() == ElementKind.INTERFACE)
+                                    && (((ClassSymbol) elem).packge().modle != syms.unnamedModule)) {
+                                return elem;
+                            }
+                        }
                     } else {
                         return null;
                     }

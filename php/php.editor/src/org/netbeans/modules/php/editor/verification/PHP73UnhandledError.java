@@ -95,6 +95,7 @@ public class PHP73UnhandledError extends UnhandledErrorRule {
 
         public Collection<VerificationError> getErrors() {
             checkFunctionCallTrailingCommas();
+            checkFlexibleHeredocAndNowdoc();
             return Collections.unmodifiableCollection(errors);
         }
 
@@ -207,6 +208,56 @@ public class PHP73UnhandledError extends UnhandledErrorRule {
                     createError(value);
                 }
             });
+        }
+
+        private void checkFlexibleHeredocAndNowdoc() {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+
+            BaseDocument document = GsfUtilities.getDocument(fileObject, true);
+            if (document == null) {
+                return;
+            }
+            document.readLock();
+            try {
+                TokenSequence<PHPTokenId> ts = LexUtilities.getPHPTokenSequence(document, document.getLength());
+                if (ts == null) {
+                    return;
+                }
+                ts.move(document.getLength());
+                checkHeredocNowdocIndentationAndNewline(ts);
+            } finally {
+                document.readUnlock();
+            }
+        }
+
+        private void checkHeredocNowdocIndentationAndNewline(TokenSequence<PHPTokenId> ts) {
+            Token<? extends PHPTokenId> endTag;
+            List<PHPTokenId> lookforEndTokens = Arrays.asList(PHPTokenId.PHP_HEREDOC_TAG_END, PHPTokenId.PHP_NOWDOC_TAG_END);
+            while (ts.movePrevious()
+                    && (endTag = LexUtilities.findPreviousToken(ts, lookforEndTokens)) != null) {
+                String endId = endTag.text().toString();
+                // indentation of closing marker
+                int offset = ts.offset();
+                if (endId.contains(" ") || endId.contains("\t")) { // NOI18N
+                    createError(offset, offset + endId.length());
+                }
+                // new line of closing marker
+                if (ts.moveNext()) {
+                    Token<PHPTokenId> newLine = ts.token();
+                    if (newLine != null) {
+                        if (TokenUtilities.startsWith(newLine.text(), "\r") // NOI18N
+                                || (TokenUtilities.startsWith(newLine.text(), "\n") // NOI18N
+                                || TokenUtilities.textEquals(newLine.text(), ";"))) { // NOI18N
+                            // noop
+                        } else {
+                            createError(ts.offset(), ts.offset() + newLine.length());
+                        }
+                    }
+                }
+                ts.move(offset);
+            }
         }
 
         private void createError(ASTNode node) {

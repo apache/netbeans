@@ -1,0 +1,16 @@
+[[867,870]-Syntax error
+ unexpected:	identifier 'ING'
+ after:	END_NOWDOC
+ expected:	instanceof, as, =>, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ], ), :, ??] 867-870:Syntax error
+ unexpected:	identifier 'ING'
+ after:	END_NOWDOC
+ expected:	instanceof, as, =>, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ], ), :, ??
+[[871,874]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	identifier 'END'] 871-874:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	identifier 'END'
+[[874,875]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	','] 874-875:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	','
+[[881,882]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	]] 881-882:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	]

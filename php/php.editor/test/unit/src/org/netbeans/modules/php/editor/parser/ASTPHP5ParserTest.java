@@ -161,13 +161,9 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/nowdoc_008");
     }
 
-    public void testNowdoc_12() throws Exception {
-        performTest("parser/nowdoc_009");
-    }
-
-    public void testNowdoc_13() throws Exception {
-        performTest("parser/nowdoc_010");
-    }
+    // 12(nowdoc_009), 13(nowdoc_010): old syntax tests
+    // we don't provide support for them any longer
+    // we can use the new syntax since PHP 7.3
 
     public void testNowdoc_14() throws Exception {
         performTest("parser/nowdoc_011");
@@ -229,13 +225,9 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/heredoc_008");
     }
 
-    public void testHereDoc_11() throws Exception {
-        performTest("parser/heredoc_009");
-    }
-
-    public void testHereDoc_12() throws Exception {
-        performTest("parser/heredoc_010");
-    }
+    // 11(heredoc_009), 12(heredoc_010): old syntax tests
+    // we don't provide support for them any longer
+    // we can use the new syntax since PHP 7.3
 
     public void testHereDoc_13() throws Exception {
         performTest("parser/heredoc_011");
@@ -873,11 +865,127 @@ public class ASTPHP5ParserTest extends ParserTestBase {
 
     // PHP 7.3
     public void testFunctionCallTrailingCommas_01() throws Exception {
-        performTest("parser/functionCallTrailingCommas_01");
+        performTest("parser/php73/functionCallTrailingCommas_01");
     }
 
     public void testListReferenceAssignment_01() throws Exception {
-        performTest("parser/listReferenceAssignment_01");
+        performTest("parser/php73/listReferenceAssignment_01");
+    }
+
+    public void testFlexibleHeredocIndentSpaces_01() throws Exception {
+        performTest("parser/php73/heredoc_indent_spaces_01");
+    }
+
+    public void testFlexibleHeredocIndentSpaces_02() throws Exception {
+        performTest("parser/php73/heredoc_indent_spaces_02");
+    }
+
+    public void testFlexibleHeredocIndentSpaces_03() throws Exception {
+        performTest("parser/php73/heredoc_indent_spaces_03");
+    }
+
+    public void testFlexibleHeredocIndentSpaces_04() throws Exception {
+        // no new line at EOF
+        performTest("parser/php73/heredoc_indent_spaces_04");
+    }
+
+    public void testFlexibleHeredocIndentTabs_01() throws Exception {
+        performTest("parser/php73/heredoc_indent_tabs_01");
+    }
+
+    public void testFlexibleHeredocIndentTabs_02() throws Exception {
+        performTest("parser/php73/heredoc_indent_tabs_02");
+    }
+
+    public void testFlexibleHeredocIndentTabs_03() throws Exception {
+        performTest("parser/php73/heredoc_indent_tabs_03");
+    }
+
+    public void testFlexibleHeredocNewLine_01() throws Exception {
+        performTest("parser/php73/heredoc_new_line_01");
+    }
+
+    public void testFlexibleHeredocNewLine_02() throws Exception {
+        performTest("parser/php73/heredoc_new_line_02");
+    }
+
+    public void testFlexibleHeredocNewLine_03() throws Exception {
+        performTest("parser/php73/heredoc_new_line_03");
+    }
+
+    public void testFlexibleHeredocNewLine_04() throws Exception {
+        performTest("parser/php73/heredoc_new_line_04");
+    }
+
+    public void testFlexibleHeredocMixed_01() throws Exception {
+        performTest("parser/php73/heredoc_mixed_01");
+    }
+
+    public void testFlexibleHeredocMixed_02() throws Exception {
+        performTest("parser/php73/heredoc_mixed_02");
+    }
+
+    public void testFlexibleHeredocMixed_03() throws Exception {
+        // no new line at EOF
+        performTest("parser/php73/heredoc_mixed_03");
+    }
+
+    public void testFlexibleNowdocIndentSpaces_01() throws Exception {
+        performTest("parser/php73/nowdoc_indent_spaces_01");
+    }
+
+    public void testFlexibleNowdocIndentSpaces_02() throws Exception {
+        performTest("parser/php73/nowdoc_indent_spaces_02");
+    }
+
+    public void testFlexibleNowdocIndentSpaces_03() throws Exception {
+        performTest("parser/php73/nowdoc_indent_spaces_03");
+    }
+
+    public void testFlexibleNowdocIndentSpaces_04() throws Exception {
+        // no new line at EOF
+        performTest("parser/php73/nowdoc_indent_spaces_04");
+    }
+
+    public void testFlexibleNowdocIndentTabs_01() throws Exception {
+        performTest("parser/php73/nowdoc_indent_tabs_01");
+    }
+
+    public void testFlexibleNowdocIndentTabs_02() throws Exception {
+        performTest("parser/php73/nowdoc_indent_tabs_02");
+    }
+
+    public void testFlexibleNowdocIndentTabs_03() throws Exception {
+        performTest("parser/php73/nowdoc_indent_tabs_03");
+    }
+
+    public void testFlexibleNowdocNewLine_01() throws Exception {
+        performTest("parser/php73/nowdoc_new_line_01");
+    }
+
+    public void testFlexibleNowdocNewLine_02() throws Exception {
+        performTest("parser/php73/nowdoc_new_line_02");
+    }
+
+    public void testFlexibleNowdocNewLine_03() throws Exception {
+        performTest("parser/php73/nowdoc_new_line_03");
+    }
+
+    public void testFlexibleNowdocNewLine_04() throws Exception {
+        performTest("parser/php73/nowdoc_new_line_04");
+    }
+
+    public void testFlexibleNowdocMixed_01() throws Exception {
+        performTest("parser/php73/nowdoc_mixed_01");
+    }
+
+    public void testFlexibleNowdocMixed_02() throws Exception {
+        performTest("parser/php73/nowdoc_mixed_02");
+    }
+
+    public void testFlexibleNowdocMixed_03() throws Exception {
+        // no new line at EOF
+        performTest("parser/php73/nowdoc_mixed_03");
     }
 
     @Override

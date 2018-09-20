@@ -58,6 +58,10 @@ public abstract class UpdateItemImpl {
     public abstract void setNeedsRestart(Boolean needsRestart);
     
     public boolean isFragment(){
-        return false;
+        return getFragmentHost() != null;
+    }
+    
+    public String getFragmentHost() {
+        return null;
     }
 }

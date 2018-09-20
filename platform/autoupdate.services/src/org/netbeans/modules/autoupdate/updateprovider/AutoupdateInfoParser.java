@@ -145,6 +145,7 @@ public class AutoupdateInfoParser extends DefaultHandler {
     private static final String MODULE_ATTR_LICENSE = "license";
     
     private static final String MANIFEST_ATTR_SPECIFICATION_VERSION = "OpenIDE-Module-Specification-Version";
+    private static final String MANIFEST_ATTR_FRAGMENT_HOST = "OpenIDE-Module-Fragment-Host";
     
     private static final String L10N_ATTR_LOCALE = "langcode";
     private static final String L10N_ATTR_BRANDING = "brandingcode";
@@ -296,6 +297,7 @@ public class AutoupdateInfoParser extends DefaultHandler {
         private String author;
         private String publishDate;
         private String notification;
+        private String fragmentHost;
 
         private Boolean needsRestart;
         private Boolean isGlobal;
@@ -342,6 +344,7 @@ public class AutoupdateInfoParser extends DefaultHandler {
         
         public void appendManifest (Attributes manifest) {
             specVersion = manifest.getValue (MANIFEST_ATTR_SPECIFICATION_VERSION);
+            fragmentHost = manifest.getValue(MANIFEST_ATTR_FRAGMENT_HOST);
             mf = getManifest (manifest);
         }
         
@@ -381,6 +384,7 @@ public class AutoupdateInfoParser extends DefaultHandler {
             // read module notification
             UpdateItemImpl impl = Trampoline.SPI.impl(res);
             ((ModuleItem) impl).setModuleNotification (notification);
+            ((ModuleItem) impl).setFragmentHost(fragmentHost);
             
             return res;
         }

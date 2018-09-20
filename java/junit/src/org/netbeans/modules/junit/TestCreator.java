@@ -31,6 +31,7 @@ import java.util.concurrent.Future;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.swing.JComponent;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
@@ -39,8 +40,12 @@ import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.Task;
 //import org.netbeans.modules.junit.plugin.JUnitPlugin.CreateTestParam;
 import org.netbeans.modules.gsf.testrunner.plugin.CommonPlugin.CreateTestParam;
+import org.netbeans.modules.java.testrunner.GuiUtils;
+import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
+import org.openide.util.Mutex;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -90,6 +95,9 @@ public final class TestCreator implements TestabilityJudge {
             case JUNIT4:
                 testGenerator = new JUnit4TestGenerator(setup);
                 break;
+            case JUNIT5:
+                testGenerator = new JUnit5TestGenerator(setup);
+                break;
             default:
                 throw new IllegalStateException("junit version not set");//NOI18N
         }
@@ -115,6 +123,13 @@ public final class TestCreator implements TestabilityJudge {
                 break;
             case JUNIT4:
                 testGenerator = new JUnit4TestGenerator(
+                                          setup,
+                                          Collections.singletonList(topClassToTest),
+                                          null,
+                                          isNewTestClass);
+                break;
+            case JUNIT5:
+                testGenerator = new JUnit5TestGenerator(
                                           setup,
                                           Collections.singletonList(topClassToTest),
                                           null,
@@ -148,6 +163,16 @@ public final class TestCreator implements TestabilityJudge {
                                           suiteMembers,
                                           isNewTestClass);
                 break;
+            case JUNIT5:
+                testGenerator = new JUnit5TestGenerator(
+                                          setup,
+                                          null,
+                                          suiteMembers,
+                                          isNewTestClass);
+                String message = NbBundle.getMessage(getClass(), "MSG_using_junit5_for_test_suites");
+                JUnitTestUtil.notifyUser(message,  NotifyDescriptor.INFORMATION_MESSAGE);
+                break;
+
             default:
                 throw new IllegalStateException("junit version not set");//NOI18N
         }
@@ -180,5 +205,5 @@ public final class TestCreator implements TestabilityJudge {
     public boolean isMethodTestable(ExecutableElement method) {
         return setup.isMethodTestable(method);
     }
-
+   
 }

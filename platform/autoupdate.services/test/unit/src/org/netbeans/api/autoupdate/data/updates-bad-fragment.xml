@@ -64,7 +64,7 @@
     </module>
 
     <module codenamebase="org.yourorghere.fragment" distribution="nbresloc:/org/netbeans/api/autoupdate/data/org-yourorghere-fragment.nbm" downloadsize="0" homepage="" license="AD9FBBC9" moduleauthor="Steffen Dietz" needsrestart="false" releasedate="2018/10/01">
-        <manifest AutoUpdate-Show-In-Client="true" OpenIDE-Module="org.yourorghere.fragment" OpenIDE-Module-Implementation-Version="171117" OpenIDE-Module-Java-Dependencies="Java &gt; 1.7" OpenIDE-Module-Fragment-Host="org.yourorghere.engine" OpenIDE-Module-Name="fragment" OpenIDE-Module-Requires="org.openide.modules.ModuleFormat1" OpenIDE-Module-Specification-Version="1.0"/>
+        <manifest AutoUpdate-Show-In-Client="true" OpenIDE-Module="org.yourorghere.fragment" OpenIDE-Module-Implementation-Version="171117" OpenIDE-Module-Java-Dependencies="Java &gt; 1.7" OpenIDE-Module-Name="fragment" OpenIDE-Module-Requires="org.openide.modules.ModuleFormat1" OpenIDE-Module-Specification-Version="1.0"/>
     </module>
 
 <license name="AD9FBBC9">[NO LICENSE SPECIFIED]

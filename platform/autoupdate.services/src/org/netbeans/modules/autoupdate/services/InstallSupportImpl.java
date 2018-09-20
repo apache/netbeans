@@ -34,6 +34,7 @@ import java.security.cert.Certificate;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -46,8 +47,12 @@ import org.netbeans.api.autoupdate.InstallSupport.Validator;
 import org.netbeans.api.autoupdate.OperationContainer.OperationInfo;
 import org.netbeans.api.autoupdate.OperationSupport.Restarter;
 import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.modules.autoupdate.updateprovider.AutoupdateInfoParser;
+import org.netbeans.modules.autoupdate.updateprovider.ModuleItem;
 import org.netbeans.modules.autoupdate.updateprovider.NetworkAccess;
 import org.netbeans.modules.autoupdate.updateprovider.NetworkAccess.Task;
+import org.netbeans.modules.autoupdate.updateprovider.UpdateItemImpl;
+import org.netbeans.spi.autoupdate.UpdateItem;
 import org.netbeans.updater.ModuleDeactivator;
 import org.netbeans.updater.ModuleUpdater;
 import org.netbeans.updater.UpdateTracking;
@@ -59,6 +64,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbCollections;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -1083,6 +1089,8 @@ public class InstallSupportImpl {
                         break;
                 }
             }
+            updateFragmentStatus(impl, nbmFile);
+            
         } catch (IOException ioe) {
             LOG.log (Level.INFO, ioe.getMessage (), ioe);
             res = "BAD_DOWNLOAD";
@@ -1097,6 +1105,45 @@ public class InstallSupportImpl {
         
         LOG.log (Level.FINE, "NBM " + nbmFile + " was verified as " + res);
         return el.getDownloadSize ();
+    }
+    
+    private void updateFragmentStatus(UpdateElementImpl el, File nbmFile) throws IOException {
+        UpdateItemImpl impl = el.getInstallInfo().getUpdateItemImpl();
+        if (!(impl instanceof ModuleItem)) {
+            return;
+        }
+        ModuleItem mod = (ModuleItem)impl;
+        if (mod.isFragment()) {
+            String fhost = mod.getFragmentHost();
+            Module m = Utilities.toModule(fhost);
+            if (m != null && m.isEnabled()) {
+                impl.setNeedsRestart(Boolean.TRUE);
+            }
+        }
+
+        Map<String, UpdateItem> items;
+        try {
+            items = AutoupdateInfoParser.getUpdateItems(nbmFile);
+        } catch (SAXException ex) {
+            throw new IOException(ex);
+        }
+        for (UpdateItem realItem : items.values()) {
+            UpdateItemImpl realImpl = Trampoline.SPI.impl(realItem);
+            if (realImpl instanceof ModuleItem) {
+                ModuleItem realMod = (ModuleItem)realImpl;
+                if (!realMod.getCodeName().equals(el.getCodeName())) {
+                    continue;
+                }
+                String fhost = realMod.getFragmentHost();
+                if (fhost != null && !impl.isFragment()) {
+                    mod.setFragmentHost(fhost);
+                    Module m = Utilities.toModule(fhost);
+                    if (m != null && m.isEnabled()) {
+                        impl.setNeedsRestart(Boolean.TRUE);
+                    }
+                }
+            }
+        }
     }
     
     private boolean needsRestart (boolean isUpdate, UpdateElementImpl toUpdateImpl, File dest) {

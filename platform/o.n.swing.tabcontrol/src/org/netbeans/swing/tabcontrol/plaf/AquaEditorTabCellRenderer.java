@@ -205,8 +205,9 @@ final class AquaEditorTabCellRenderer extends AbstractTabCellRenderer {
             //just a plain rectangle
             p.addPoint(x, y + ins.top);
             p.addPoint(x + width, y + ins.top);
-            p.addPoint(x + width, y + height - 1);
-            p.addPoint(x, y + height - 1);
+            // NETBEANS-1261: Don't subtract 1 from the Y coordinates here.
+            p.addPoint(x + width, y + height);
+            p.addPoint(x, y + height);
             return p;
         }
 
@@ -309,8 +310,9 @@ final class AquaEditorTabCellRenderer extends AbstractTabCellRenderer {
             //just a plain rectangle
             p.addPoint(x, y + ins.top);
             p.addPoint(x + width, y + ins.top);
-            p.addPoint(x + width, y + height - 1);
-            p.addPoint(x, y + height - 1);
+            // NETBEANS-1261: Don't subtract 1 from the Y coordinates here.
+            p.addPoint(x + width, y + height);
+            p.addPoint(x, y + height);
             return p;
         }
 
@@ -396,8 +398,9 @@ final class AquaEditorTabCellRenderer extends AbstractTabCellRenderer {
             //just a plain rectangle
             p.addPoint(x, y + ins.top);
             p.addPoint(x + width, y + ins.top);
-            p.addPoint(x + width, y + height - 1);
-            p.addPoint(x, y + height - 1);
+            // NETBEANS-1261: Don't subtract 1 from the Y coordinates here.
+            p.addPoint(x + width, y + height);
+            p.addPoint(x, y + height);
             return p;
         }
 

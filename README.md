@@ -43,7 +43,7 @@ Apache NetBeans is an open source development environment, tooling platform, and
 
 ### Building NetBeans
 
-Bulid with the default config (See the [cluster.config](https://github.com/apache/incubator-netbeans/blob/ab66c7fdfdcbf0bde67b96ddb075c83451cdd1a6/nbbuild/cluster.properties#L19) property.)
+Build with the default config (See the [cluster.config](https://github.com/apache/incubator-netbeans/blob/ab66c7fdfdcbf0bde67b96ddb075c83451cdd1a6/nbbuild/cluster.properties#L19) property.)
 ```
 $ ant
 ```

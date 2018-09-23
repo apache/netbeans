@@ -25,6 +25,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.netbeans.api.java.lexer.JavaTokenId;
+import org.netbeans.api.lexer.TokenHierarchy;
+import org.netbeans.api.lexer.TokenSequence;
 
 import org.netbeans.spi.java.queries.SourceLevelQueryImplementation;
 import org.openide.filesystems.FileObject;
@@ -36,32 +39,43 @@ import org.openide.filesystems.FileObject;
 public class SourceLevelQueryImpl implements SourceLevelQueryImplementation  {
 
     private static final Logger LOG = Logger.getLogger(SourceLevelQueryImpl.class.getName());
-    private static final String DEFAULT_SOURCE_LEVEL = "1.9";
+    private static final int DEFAULT_SOURCE_LEVEL = 11;
     private static final Pattern JDK_PATTERN = Pattern.compile("jdk([0-9]+)");
 
     private final String sourceLevel;
 
     public SourceLevelQueryImpl(FileObject jdkRoot) {
-        FileObject jcheckConf = jdkRoot.getFileObject(".jcheck/conf");
-        String sl = DEFAULT_SOURCE_LEVEL;
+        FileObject sourceVersion = jdkRoot.getFileObject("src/java.compiler/share/classes/javax/lang/model/SourceVersion.java");
+        int sl = DEFAULT_SOURCE_LEVEL;
 
-        if (jcheckConf != null) {
-            Properties props = new Properties();
+        if (sourceVersion == null) {
+            sourceVersion = jdkRoot.getFileObject("langtools/src/java.compiler/share/classes/javax/lang/model/SourceVersion.java");
+        }
+        if (sourceVersion != null) {
+            try {
+                TokenHierarchy<String> th =
+                        TokenHierarchy.create(sourceVersion.asText(), JavaTokenId.language());
+                TokenSequence<?> seq = th.tokenSequence();
 
-            try (InputStream in = jcheckConf.getInputStream()) {
-                props.load(in);
-                String project = props.getProperty("project", "jdk9");
-                Matcher m = JDK_PATTERN.matcher(project);
+                while (seq.moveNext()) {
+                    if (seq.token().id() == JavaTokenId.IDENTIFIER) {
+                        String ident = seq.token().text().toString();
 
-                if (m.find()) {
-                    sl = m.group(1);
+                        if (ident.startsWith("RELEASE_")) {
+                            try {
+                                sl = Math.max(sl, Integer.parseInt(ident.substring("RELEASE_".length())));
+                            } catch (NumberFormatException ex) {
+                                //ignore
+                            }
+                        }
+                    }
                 }
             } catch (IOException ex) {
                 LOG.log(Level.FINE, null, ex);
             }
         }
 
-        this.sourceLevel = sl;
+        this.sourceLevel = "" + sl;
     }
 
 

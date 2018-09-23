@@ -212,10 +212,10 @@ Origin: http://groovy-lang.org/
 ANTLR 2 License
 
 Antlr2 is released in the public domain.
-See licenses/antlr2-license.txt for details.
+See licenses/ANTLR-2 for details.
 
 ------------------------------------------------------------------------
 
 ASM 4 License
 
-ASM 4 uses a 3-clause BSD license. For details, see licenses/asm-license.txt.
+ASM 4 uses a 3-clause BSD license. For details, see licenses/ASM.

@@ -774,10 +774,11 @@ public class ActionProviderImpl implements ActionProvider {
         @Override
         public void run() {
             try {
+                char[] buf = new char[1024];
                 int read;
-                
-                while ((read = in.read()) != (-1)) {
-                    out.write(read);
+
+                while ((read = in.read(buf)) != (-1)) {
+                    out.write(buf, 0, read);
                 }
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);

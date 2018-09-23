@@ -73,22 +73,6 @@ public class NBAttr extends Attr {
         super.visitBlock(tree);
     }
 
-    @Override
-    public void visitNewClass(JCNewClass tree) {
-        super.visitNewClass(tree);
-        if (tree.def != null && tree.def.sym == null) {
-            try {
-                Field envField = Attr.class.getDeclaredField("env");
-                envField.setAccessible(true);
-                Env<AttrContext> env = (Env<AttrContext>) envField.get(this);
-                env = env.dup(tree);
-                attribStat(tree.def, env);
-            } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
-                Logger.getLogger(NBAttr.class.getName()).log(Level.FINE, null, ex);
-            }
-        }
-    }
-
     private boolean fullyAttribute;
     private Env<AttrContext> fullyAttributeResult;
 

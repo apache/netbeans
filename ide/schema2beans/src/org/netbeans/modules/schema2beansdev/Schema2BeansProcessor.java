@@ -23,10 +23,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -42,7 +45,6 @@ import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
-import org.apache.tools.ant.util.FileUtils;
 import org.netbeans.modules.schema2beans.Schema2Beans;
 import org.netbeans.modules.schema2beans.Schema2Beans.Multiple;
 import org.netbeans.modules.schema2beansdev.GenBeans.Config;
@@ -182,6 +184,22 @@ public class Schema2BeansProcessor extends AbstractProcessor {
         String abspath;
         if (path.startsWith("/")) {
             abspath = path.substring(1);
+        } else if (path.startsWith("http")) {
+            URI uri = new URI(path);
+            abspath = uri.getPath();
+            if(abspath.startsWith("/")) {
+                abspath = abspath.substring(1);
+            }
+            FileObject f = processingEnv.getFiler().getResource(StandardLocation.SOURCE_OUTPUT, "", abspath);
+            File target = new File(f.toUri());
+            if (!target.exists()) {
+                try (InputStream in = uri.toURL().openStream()) {
+                    Files.createDirectories(target.toPath().getParent());
+                    Files.copy(in, target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    processingEnv.getMessager().printMessage(Kind.WARNING, "The schema was copied at " + target.toPath());
+                }
+            }
+            return f;
         } else {
             abspath = new URI(null, pkg.replace('.', '/') + "/", null).resolve(new URI(null, path, null)).getPath();
         }

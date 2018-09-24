@@ -27,8 +27,8 @@
             <module-dependencies/>
             <friend-packages>
                 <friend>org.netbeans.modules.groovy.editor</friend>
-                <friend>org.netbeans.modules.groovy.support</friend>
                 <friend>org.netbeans.modules.groovy.refactoring</friend>
+                <friend>org.netbeans.modules.groovy.support</friend>
                 <package>groovy.lang</package>
                 <package>groovyjarjarantlr</package>
                 <package>groovyjarjarasm.asm</package>
@@ -37,6 +37,7 @@
                 <package>org.codehaus.groovy.ast</package>
                 <package>org.codehaus.groovy.ast.expr</package>
                 <package>org.codehaus.groovy.ast.stmt</package>
+                <package>org.codehaus.groovy.ast.tools</package>
                 <package>org.codehaus.groovy.classgen</package>
                 <package>org.codehaus.groovy.control</package>
                 <package>org.codehaus.groovy.control.messages</package>

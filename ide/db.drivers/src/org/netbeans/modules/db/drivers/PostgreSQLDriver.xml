@@ -39,7 +39,7 @@
         <!-- please check with mkleint@netbeans.org before/after updating this or "classpath" section -->
         <property>
             <name>maven-dependencies</name>
-            <value>org.postgresql:postgresql-42.2.5.jar:jar</value>
+            <value>org.postgresql:postgresql-42.2.5:jar</value>
         </property>
     </properties>
 </library>

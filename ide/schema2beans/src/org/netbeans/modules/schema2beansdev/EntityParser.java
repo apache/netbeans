@@ -20,6 +20,8 @@
 package org.netbeans.modules.schema2beansdev;
 
 import java.io.*;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -98,11 +100,78 @@ public class EntityParser {
         }
     }
 
+    private boolean containsBlank(String s) {
+        for (int i=0;i<s.length();i++) {
+            if (' '==s.charAt(i)) return true;
+        }
+        return false;
+    }
+
     /** Creates a StringReader that removes all ENTITY declarations
      *  and replaces entity references with corresponding values
      */
     public Reader getReader() throws IOException {
-        return new StringReader(remainingText);
+        StringBuilder buf = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new StringReader(remainingText))) {
+            String line;
+            while ((line=br.readLine())!=null) {
+                // removing line(s) with entity declaration
+                if (line.contains("<!ENTITY ")) line = removeEntityDeclaration(line,br);
+                // searches for entity reference and replace it with value
+                int pos = line.indexOf("%");
+                if (pos>=0) {
+                    StringTokenizer tok = new StringTokenizer(line.substring(pos),";%");
+                    while (tok.hasMoreTokens()) {
+                        String key = tok.nextToken();
+                        if (key.length()>0 && !containsBlank(key)) {
+                            String value = (String)entityMap.get(key);
+                            if(value.startsWith("http")) {
+                                BufferedInputStream in = null;
+                                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                                try {
+                                    in = new BufferedInputStream(new URL(value).openStream());
+                                    byte[] buffer = new byte[8];
+                                    int rc;
+                                    while ((rc = in.read(buffer)) != -1) out.write(buffer, 0, rc);
+                                    out.flush();
+                                    value = new String(out.toByteArray(), StandardCharsets.UTF_8);
+                                    value = value.replace("<?xml version='1.0' encoding='UTF-8'?>", "");
+                                } finally {
+                                    if(in != null) {
+                                        in.close();
+                                    }
+                                    out.close();
+                                }
+                            }
+                            if (value!=null) line = line.replace("%"+key+";",value);
+                        }
+                    }
+                }
+                if (line.length()>0) buf.append(line);
+            }
+        }
+        return new StringReader(buf.toString());
+    }
+    
+    /** Removing line(s) containing ENTITY declaration
+     */ 
+    private String removeEntityDeclaration(String line,BufferedReader br) throws IOException {
+        int start = line.indexOf("<!ENTITY ");
+        StringBuilder buf = new StringBuilder();
+        if (start>0) buf.append(line.substring(0, start));
+        int endPos = line.indexOf(">", start);
+        if (endPos>0) {
+            buf.append(line.substring(endPos+1));
+            return buf.toString();
+        }
+        String ln=null;
+        while (endPos<0 && (ln=br.readLine())!=null) {
+            endPos = ln.indexOf(">");
+            if (endPos>=0) {
+                buf.append(ln.substring(endPos+1));
+            }
+        }
+        return buf.toString();
     }
 
 }

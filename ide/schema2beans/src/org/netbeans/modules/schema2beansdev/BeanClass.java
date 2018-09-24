@@ -859,7 +859,13 @@ public class BeanClass extends AbstractCodeGeneratorClass implements CodeGenerat
                 AttrProp attrProp = a.getAttrProp();
                 jw.comment("If our element does not exist, then the attribute does not exist.");
                 jw.beginIf("size("+attributeOwner.constName+") == 0");
-                jw.writeEol("return null");
+                if ("boolean".equals(attrProp.getJavaType()) || "int".equals(attrProp.getJavaType()) || "double".equals(attrProp.getJavaType())
+                        || "byte".equals(attrProp.getJavaType()) || "char".equals(attrProp.getJavaType()) || "short".equals(attrProp.getJavaType())
+                        || "long".equals(attrProp.getJavaType()) || "float".equals(attrProp.getJavaType())) {
+                    jw.writeEol("return " + attrProp.getDefaultValue());
+                } else {
+                    jw.writeEol("return null");
+                }
                 jw.endElseBegin();
                 jw.write("return ");
                 jw.writeEol(JavaUtil.genParseText(a.getType(), "getAttributeValue("+attributeOwner.constName+ ((attributeOwner.isIndexed()) ? ", index" : "") +", \""+attrProp.getName()+"\")", config.isForME()));

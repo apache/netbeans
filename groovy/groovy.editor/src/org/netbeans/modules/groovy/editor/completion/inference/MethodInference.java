@@ -19,15 +19,27 @@
 
 package org.netbeans.modules.groovy.editor.completion.inference;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.codehaus.groovy.ast.ASTNode;
+import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.MethodNode;
-import org.codehaus.groovy.ast.Variable;
+import org.codehaus.groovy.ast.ModuleNode;
+import org.codehaus.groovy.ast.expr.ArgumentListExpression;
+import org.codehaus.groovy.ast.expr.BinaryExpression;
+import org.codehaus.groovy.ast.expr.ClassExpression;
+import org.codehaus.groovy.ast.expr.ConstantExpression;
 import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.ast.expr.MethodCallExpression;
+import org.codehaus.groovy.ast.expr.StaticMethodCallExpression;
 import org.codehaus.groovy.ast.expr.VariableExpression;
+import org.codehaus.groovy.ast.tools.GenericsUtils;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.editor.BaseDocument;
+import org.netbeans.modules.groovy.editor.api.ASTUtils;
+import org.netbeans.modules.groovy.editor.api.AstPath;
 
 /**
  *
@@ -50,24 +62,38 @@ public final class MethodInference {
      * @return class type of the caller if found, {@code null} otherwise
      */
     @CheckForNull
-    public static ClassNode findCallerType(@NonNull ASTNode expression) {
+    public static ClassNode findCallerType(@NonNull ASTNode expression, @NonNull AstPath path, BaseDocument baseDocument, int offset) {
         // In case if the method call is chained with another method call
         // For example: someInteger.toString().^
         if (expression instanceof MethodCallExpression) {
             MethodCallExpression methodCall = (MethodCallExpression) expression;
-            
-            ClassNode callerType = findCallerType(methodCall.getObjectExpression());
+
+            ClassNode callerType = findCallerType(methodCall.getObjectExpression(), path, baseDocument, offset);
             if (callerType != null) {
-                return findReturnTypeFor(callerType, methodCall.getMethodAsString(), methodCall.getArguments());
+                return findReturnTypeFor(callerType, methodCall.getMethodAsString(), methodCall.getArguments(), path, false, baseDocument, offset);
             }
         }
 
         // In case if the method call is directly on a variable
         if (expression instanceof VariableExpression) {
-            Variable variable = ((VariableExpression) expression).getAccessedVariable();
-            if (variable != null) {
-                return variable.getType();
+            int newOffset = ASTUtils.getOffset(baseDocument, expression.getLineNumber(), expression.getColumnNumber());
+            AstPath newPath = new AstPath(path.root(), newOffset, baseDocument);
+            TypeInferenceVisitor tiv = new TypeInferenceVisitor(((ModuleNode)path.root()).getContext(), newPath, baseDocument, newOffset);
+            tiv.collect();
+            return tiv.getGuessedType();
+
             }
+        if (expression instanceof ConstantExpression) {
+            return ((ConstantExpression) expression).getType();
+        }
+        if (expression instanceof ClassExpression) {
+            return ClassHelper.make(((ClassExpression) expression).getType().getName());
+        }
+
+        if (expression instanceof StaticMethodCallExpression) {
+            StaticMethodCallExpression staticMethodCall = (StaticMethodCallExpression) expression;
+
+            return findReturnTypeFor(staticMethodCall.getOwnerType(), staticMethodCall.getMethod(), staticMethodCall.getArguments(), path, true, baseDocument, offset);
         }
         return null;
     }
@@ -76,12 +102,100 @@ public final class MethodInference {
     private static ClassNode findReturnTypeFor(
             @NonNull ClassNode callerType, 
             @NonNull String methodName,
-            @NonNull Expression arguments) {
-        
-        MethodNode possibleMethod = callerType.tryFindPossibleMethod(methodName, arguments);
+            @NonNull Expression arguments,
+            @NonNull AstPath path,
+            @NonNull boolean isStatic,
+            @NonNull BaseDocument baseDocument,
+            @NonNull int offset
+            ) {
+
+        List<ClassNode> paramTypes = new ArrayList<>();
+        if (arguments instanceof ArgumentListExpression) {
+            ArgumentListExpression argExpression = (ArgumentListExpression) arguments;
+            for (Expression e : argExpression.getExpressions()) {
+                if (e instanceof VariableExpression) {
+                    ModuleNode moduleNode = (ModuleNode) path.root();
+                    int newOffset = ASTUtils.getOffset(baseDocument, e.getLineNumber(), e.getColumnNumber());
+                    AstPath newPath = new AstPath(moduleNode, newOffset, baseDocument);
+                    TypeInferenceVisitor tiv = new TypeInferenceVisitor(moduleNode.getContext(), newPath, baseDocument, newOffset);
+                    tiv.collect();
+                    ClassNode guessedType = tiv.getGuessedType();
+                    if (null == guessedType) {
+                        System.out.println("Bad guessed type");
+                    } else {
+                        paramTypes.add(tiv.getGuessedType());
+                    }
+                } else if(e instanceof ConstantExpression) {
+                    paramTypes.add(((ConstantExpression)e).getType());
+                } else if (e instanceof MethodCallExpression) {
+                    paramTypes.add(findCallerType(e, path, baseDocument, offset));
+                } else if (e instanceof BinaryExpression) {
+                    BinaryExpression binExpression = (BinaryExpression) e;
+                    paramTypes.add(binExpression.getType());
+                } else if (e instanceof ClassExpression) {
+                    ClassExpression classExpression = (ClassExpression) e;
+                    // This should be Class<classExpression.getType()>
+                    paramTypes.add(GenericsUtils.makeClassSafeWithGenerics(Class.class, classExpression.getType()));
+                } else {
+                    System.out.println(e.getClass());
+                }
+            }
+        }
+
+        MethodNode possibleMethod = tryFindPossibleMethod(callerType, methodName, paramTypes, isStatic);
         if (possibleMethod != null) {
             return possibleMethod.getReturnType();
         }
         return null;
+    }
+
+    private static MethodNode tryFindPossibleMethod(ClassNode callerType, String methodName, List<ClassNode> paramTypes, boolean isStatic) {
+        int count = paramTypes.size();
+
+        MethodNode res = null;
+        ClassNode node = callerType;
+        do {
+            for (MethodNode method : node.getMethods(methodName)) {
+                if (isStatic && !method.isStatic()) {
+                    continue;
+                }
+                if (method.getParameters().length == count) {
+                    boolean match = true;
+                    for (int i = 0; i != count; ++i) {
+                        if (!paramTypes.get(i).isDerivedFrom(method.getParameters()[i].getType())) {
+                            match = false;
+                            break;
+                        }
+                    }
+
+                    if (match) {
+                        if (res == null) {
+                            res = method;
+                        } else {
+                            if (res.getParameters().length != count) {
+                                return null;
+                            }
+                            if (node.equals(callerType)) {
+                                return null;
+                            }
+
+                            match = true;
+                            for (int i = 0; i != count; ++i) {
+                                if (!res.getParameters()[i].getType().equals(method.getParameters()[i].getType())) {
+                                    match = false;
+                                    break;
+                                }
+                            }
+                            if (!match) {
+                                return null;
+                            }
+                        }
+                    }
+                }
+            }
+            node = node.getSuperClass();
+        } while (node != null);
+
+        return res;
     }
 }

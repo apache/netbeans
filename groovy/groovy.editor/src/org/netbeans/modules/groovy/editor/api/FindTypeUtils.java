@@ -397,10 +397,12 @@ public final class FindTypeUtils {
     }
 
     private static OffsetRange getAnnotationRange(AnnotationNode annotation, BaseDocument doc, int cursorOffset) {
-        final int offset = ASTUtils.getOffset(doc, annotation.getLineNumber(), annotation.getColumnNumber());
-        final OffsetRange range = ASTUtils.getNextIdentifierByName(doc, annotation.getClassNode().getNameWithoutPackage(), offset);
-        if (range.containsInclusive(cursorOffset)) {
-            return range;
+        if (annotation.getLineNumber() != -1) {
+            final int offset = ASTUtils.getOffset(doc, annotation.getLineNumber(), annotation.getColumnNumber());
+            final OffsetRange range = ASTUtils.getNextIdentifierByName(doc, annotation.getClassNode().getNameWithoutPackage(), offset);
+            if (range.containsInclusive(cursorOffset)) {
+                return range;
+            }
         }
         return OffsetRange.NONE;
     }

@@ -16,26 +16,30 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.analysis.ui.options;
+package org.netbeans.modules.php.analysis;
 
-import javax.swing.JPanel;
-import javax.swing.event.ChangeListener;
-import org.netbeans.modules.php.api.validation.ValidationResult;
+import org.openide.filesystems.FileObject;
 
-public abstract class AnalysisCategoryPanel extends JPanel {
+public final class PHPStanParams {
 
-    public abstract String getCategoryName();
+    private String level;
+    private FileObject configuration;
 
-    public abstract void addChangeListener(ChangeListener listener);
+    public String getLevel() {
+        return level;
+    }
 
-    public abstract void removeChangeListener(ChangeListener listener);
+    public FileObject getConfiguration() {
+        return configuration;
+    }
 
-    public abstract void update();
+    public PHPStanParams setLevel(String level) {
+        this.level = level;
+        return this;
+    }
 
-    public abstract void applyChanges();
-
-    public abstract boolean isChanged();
-
-    public abstract ValidationResult getValidationResult();
-
+    public PHPStanParams setConfiguration(FileObject configuration) {
+        this.configuration = configuration;
+        return this;
+    }
 }

@@ -40,7 +40,8 @@ public final class AnalysisCategoryPanels {
         return Arrays.asList(
                 new CodeSnifferOptionsPanel(),
                 new MessDetectorOptionsPanel(),
-                new CodingStandardsFixerOptionsPanel());
+                new CodingStandardsFixerOptionsPanel(),
+                new PHPStanOptionsPanel());
     }
 
 }

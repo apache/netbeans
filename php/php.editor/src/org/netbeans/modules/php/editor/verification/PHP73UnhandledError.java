@@ -237,6 +237,11 @@ public class PHP73UnhandledError extends UnhandledErrorRule {
             List<PHPTokenId> lookforEndTokens = Arrays.asList(PHPTokenId.PHP_HEREDOC_TAG_END, PHPTokenId.PHP_NOWDOC_TAG_END);
             while (ts.movePrevious()
                     && (endTag = LexUtilities.findPreviousToken(ts, lookforEndTokens)) != null) {
+                if (endTag.id() != PHPTokenId.PHP_HEREDOC_TAG_END
+                        && endTag.id() != PHPTokenId.PHP_NOWDOC_TAG_END) {
+                    // NETBEANS-1285 the last token may be returned
+                    continue;
+                }
                 String endId = endTag.text().toString();
                 // indentation of closing marker
                 int offset = ts.offset();

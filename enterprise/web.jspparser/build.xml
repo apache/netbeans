@@ -91,13 +91,33 @@
 
         <delete dir="glassfishjspparser" />
 
-        <!-- servlet3.0-jsp2.2-api.jar -->
-        <echo message="Creating javax.servlet.jsp-api-2.3.3.jar"/>
         <mkdir dir="servletjspapi" />
-        <unzip src="${glassfish_location}/glassfish/modules/gf-client-module.jar" dest="./servletjspapi/"/>
-        <unzip src="${glassfish_location}/glassfish/modules/javax.servlet-api.jar" dest="./servletjspapi/"/>
+        
+        <!-- javax.servlet.jsp-api-2.3.3.jar -->
+        <echo message="Creating javax.servlet.jsp-api-2.3.3.jar"/>
         <unzip src="${glassfish_location}/glassfish/modules/javax.servlet.jsp-api.jar" dest="./servletjspapi/"/>
         <unzip src="${glassfish_location}/glassfish/modules/javax.el-api.jar" dest="./servletjspapi/"/>
+        
+        <delete file="javax.servlet.jsp-api-2.3.3.jar"/>
+        <zip basedir="servletjspapi" includes="javax/servlet/jsp/**" zipfile="../servletjspapi/external/javax.servlet.jsp-api-2.3.3.jar" />
+        
+        <!-- el-api-2.2.jar -->
+        <echo message="Creating el-api-2.2.jar"/>
+        <unzip src="${glassfish_location}/glassfish/modules/javax.el-api.jar" dest="./servletjspapi/"/>
+        
+        <delete file="el-api-2.2.jar"/>
+        <zip basedir="servletjspapi" includes="javax/el/**" zipfile="../servletjspapi/external/el-api-2.2.jar" />
+        
+        <!-- javax.servlet-api-4.0.1.jar -->
+        <echo message="Creating javax.servlet-api-4.0.1.jar"/>
+        <unzip src="${glassfish_location}/glassfish/modules/javax.servlet-api.jar" dest="./servletjspapi/"/>
+
+        <delete file="javax.servlet-api-4.0.1.jar"/>
+        <zip basedir="servletjspapi" includes="javax/servlet/**" zipfile="../servletjspapi/external/javax.servlet-api-4.0.1.jar" />
+        
+        <!-- gf-client-module-5.0.jar -->
+        <echo message="Creating gf-client-module-5.0.jar"/>
+        <unzip src="${glassfish_location}/glassfish/modules/gf-client-module.jar" dest="./servletjspapi/"/>
 
         <mkdir dir="servletjspapi/resources/dtds" />
         <copy todir="servletjspapi/resources/dtds">
@@ -148,8 +168,8 @@
                 <include name="beans_1_1.xsd"/>
             </fileset>
         </copy>
-        <delete file="javax.servlet.jsp-api-2.3.3.jar"/>
-        <zip basedir="servletjspapi" includes="javax/servlet/**, javax/el/**, resources/**" zipfile="../servletjspapi/external/javax.servlet.jsp-api-2.3.3.jar" />
+        <delete file="gf-client-module-5.0.jar"/>
+        <zip basedir="servletjspapi" includes="dtds/**, schemas/**" zipfile="../servletjspapi/external/gf-client-module-5.0.jar" />
         <delete dir="servletjspapi" />
     </target>
 </project>

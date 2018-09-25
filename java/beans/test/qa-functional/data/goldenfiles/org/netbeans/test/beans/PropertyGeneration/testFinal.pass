@@ -1,0 +1,18 @@
+package beans;
+
+public class Beans {
+
+    private final String string = "def";
+
+    /**
+     * Get the value of string
+     *
+     * @return the value of string
+     */
+    public String getString() {
+        return string;
+    }
+    
+   
+}
+

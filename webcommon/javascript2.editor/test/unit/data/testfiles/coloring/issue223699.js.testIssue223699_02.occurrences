@@ -1,0 +1,6 @@
+        var |>MARK_OCCURRENCES:a<|;   
+        this[|>MARK_OCCURRENCES:a<|].metho();                    
+        this[2] = this[|>MARK_OCCURRENCES:a<|]; // left this shows as Global
+        this[|>MARK_OCCURRENCES:a<|].init = (this['bug']()?0:1); // right shows as Global
+        this[|>MARK_OCCURRENCES:a<|].init( |>MARK_OCCURRENCES:a<|, bug, this );  // this is blue, but bug variable shouldbe Global, its not defined                    
+        this[bug].init( |>MARK_OCCURRENCES:a^<|, bug, this );

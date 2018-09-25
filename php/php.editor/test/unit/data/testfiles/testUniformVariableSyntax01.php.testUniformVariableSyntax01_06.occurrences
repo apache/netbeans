@@ -1,0 +1,2 @@
+    const |>MARK_OCCURRENCES:AVG<| = 50;
+UVS3::myStatic3()::myStatic2()::myStatic1()::|>MARK_OCCURRENCES:AV^G<|;

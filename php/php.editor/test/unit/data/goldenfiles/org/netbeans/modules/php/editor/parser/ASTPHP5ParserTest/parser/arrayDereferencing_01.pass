@@ -1,0 +1,72 @@
+<testresult testFile='arrayDereferencing_01.php'>
+    <scanner>
+        <token id='T_ECHO' start='7' end='11'>
+            <text>echo</text>
+        </token>
+        <token id='T_VARIABLE' start='12' end='20'>
+            <text>$myClass</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='20' end='22'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='22' end='33'>
+            <text>giveMeArray</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='33' end='34'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='34' end='35'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_RECT' start='35' end='36'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='36' end='42'>
+            <text>&apos;test&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='42' end='43'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='43' end='44'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='46' end='49'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='49' end='49'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='48'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <EchoStatement start='7' end='44'>
+                <DereferencedArrayAccess start='12' end='43'>
+                    <ArrayDimension start='35' end='43'>
+                        <Index>
+                            <Scalar start='36' end='42' type='STRING' value='&apos;test&apos;'/>
+                        </Index>
+                    </ArrayDimension>
+                    <MethodInvocation start='12' end='35'>
+                        <Variable start='12' end='20' isDollared='true'>
+                            <Identifier start='13' end='20' name='myClass'/>
+                        </Variable>
+                        <Method>
+                            <FunctionInvocation start='22' end='35'>
+                                <FucntionName start='22' end='33'>
+                                    <Variable start='22' end='33' isDollared='false'>
+                                        <Identifier start='22' end='33' name='giveMeArray'/>
+                                    </Variable>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Method>
+                    </MethodInvocation>
+                </DereferencedArrayAccess>
+            </EchoStatement>
+            <EmptyStatement start='46' end='48'/>
+        </Statements>
+    </Program>
+</testresult>

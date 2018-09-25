@@ -172,7 +172,7 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         <property name="locmakenbm.brands" value="${brandings}"/>
         <!-- When requires.nb.javac property is true, prepend javac-api and javac-impl on bootclasspath to allow override the default annotation
              processing API located in rt.jar. -->
-        <property name="bootclasspath.prepend.nb" value="${nb_all}/libs.javacapi/external/nb-javac-9-api.jar${path.separator}${nb_all}/libs.javacimpl/external/nb-javac-9-impl.jar" />
+        <property name="bootclasspath.prepend.nb" value="${nb_all}/java/libs.javacapi/external/nb-javac-9-api.jar${path.separator}${nb_all}/java/libs.javacimpl/external/nb-javac-9-impl.jar" />
         <property name="bootclasspath.prepend.vanilla" value="${nb_all}/nbbuild/external/vanilla-javac-api.jar${path.separator}${nb_all}/nbbuild/external/vanilla-javac-impl.jar" />
         <condition property="bootclasspath.prepend" value="${bootclasspath.prepend.nb}">
             <istrue value="${requires.nb.javac.impl}"/>
@@ -231,6 +231,10 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         <taskdef name="downloadbinaries" classname="org.netbeans.nbbuild.extlibs.DownloadBinaries" classpath="${nbantext.jar}"/>
     </target>
     
+    <target name="-define-FileCRC32Calculator">
+        <taskdef name="FileCRC32Calculator" classname="org.netbeans.nbbuild.FileCRC32Calculator" classpath="${nbantext.jar}"/>
+    </target>
+    
     <target name="-process.release.files"/>
     
     <target name="-download.release.files" depends="-define-downloadbinaries-task">
@@ -262,7 +266,7 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         </condition>
     </target>
     <target name="-build-libs.junit4" depends="-check-for-libs.junit4" if="build.libs.junit4">
-        <ant dir="${nb_all}/libs.junit4" inheritall="false"/>
+        <ant dir="${nb_all}/platform/libs.junit4" inheritall="false"/>
     </target>
     <target name="test-lib-init" depends="init,-build-libs.junit4">
         <path id="test.unit.lib.cp"/>
@@ -409,11 +413,42 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
     </target>
 
     <target name="-create-license.file" depends="init">
-        <mkdir dir="${build.dir}"/>
-        <property name="license.file.override" location="${build.dir}/license"/>
+        <mkdir dir="${build.dir}/nbm-extras/META-INF"/>
+        <taskdef name="createlicensesummary" classname="org.netbeans.nbbuild.extlibs.CreateLicenseSummary" classpath="${nbantext.jar}"/>
+        <property name="module.name.temp" location="." />
+        <basename property="module.name" file="${module.name.temp}" />
+        <createlicensesummary licenseStub="${nb_all}/LICENSE"
+                              noticeStub="${nb_all}/nbbuild/notice-stub.txt"
+                              nball="${nb_all}"
+                              license="${build.dir}/nbm-extras/META-INF/LICENSE"
+                              notice="${build.dir}/notice-temp"
+                              binary="true"
+                              modules="${module.name}"
+        >
+            <moduleFiles dir="${cluster}">
+                <patternset refid="module.files"/>
+            </moduleFiles>
+        </createlicensesummary>
+
+        <concat destfile="${build.dir}/nbm-extras/META-INF/NOTICE">
+          <fileset file="${build.dir}/notice-temp" />
+          <fileset dir="."
+                   includes="notice.txt" />
+          <filterchain>
+              <tokenfilter>
+                  <filetokenizer />
+                  <replaceregex pattern="(\r?\n)(\r?\n)+"
+                                replace="\1\1"
+                                flags="g" />
+             </tokenfilter>
+          </filterchain>
+        </concat>
+
+        <copy file="${nb_all}/DISCLAIMER" todir="${build.dir}/nbm-extras/META-INF/" />
+        <property name="license.file.override" location="${build.dir}/nbm-extras/META-INF/LICENSE"/>
         <property name="extra.license.files" value=""/>
-        <taskdef name="releasefileslicense" classname="org.netbeans.nbbuild.extlibs.ReleaseFilesLicense" classpath="${nbantext.jar}"/>
-        <releasefileslicense license="${license.file.override}" standardlicense="${nb_all}/nbbuild/standard-nbm-license.txt" extralicensefiles="${extra.license.files}"/>
+        <zipfileset id="extra.nbm.files" dir="${build.dir}/nbm-extras/" />
+        <property name="extra.nbm.files.provided" value=""/>
     </target>
 
     <target name="nbm" depends="-create-dest-dir-nbm,-create-license.file,projectized-common.nbm"/>
@@ -457,7 +492,7 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
             <classpath>
                 <pathelement location="${nbantext.jar}"/>
                 <fileset dir="${nb_all}">
-                    <include name="javahelp/external/jhall*.jar"/>
+                    <include name="platform/javahelp/external/jhall*.jar"/>
                 </fileset>
                 <fileset dir="${netbeans.dest.dir}">
                     <include name="platform/modules/ext/jhall*.jar"/>
@@ -665,7 +700,7 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         <property name="sigtest.public.packages" value="${public.packages}"/>
         <property name="sigtest.fail.on.error" value="true"/>
         <taskdef name="sigtest" classname="org.netbeans.nbbuild.Sigtest" classpath="${nbantext.jar}"/>
-        <property name="sigtest.jar" location="${nb_all}/nbbuild/external/apitest.jar"/> 
+        <property name="sigtest.jar" location="${nb_all}/nbbuild/external/apitest-70.jar"/> 
         <loadproperties srcFile="${manifest.mf}" prefix="mf.">
             <filterchain>
                 <replaceregex pattern="[\n\r]+ ([^ ][^\n\r]*)"

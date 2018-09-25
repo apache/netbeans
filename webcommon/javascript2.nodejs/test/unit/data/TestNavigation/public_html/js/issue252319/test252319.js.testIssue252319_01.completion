@@ -1,0 +1,8 @@
+Code completion result for source line:
+ctrl.getD|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     getDEditorsId(id)               [PUBLIC]   main252319.js
+METHOD     getDUserEdit(tripId: String, u  [PUBLIC]   main252319.js
+METHOD     getDYear(): undefined           [PUBLIC]   main252319.js
+METHOD     getDay(): undefined             [PUBLIC]   main252319.js

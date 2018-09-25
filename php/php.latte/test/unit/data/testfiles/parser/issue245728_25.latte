@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ul n:syntax="python">
+{%foreach $people as $person%}
+	<li>{{ $person |upper }}</li>
+{%/foreach%}
+{* comment latte *}
+{{* comment python *}}
+</ul>
+
+<p>Default: {$person}</p>
+
+<ul n:syntax="asp">
+<%foreach $people as $person %>
+	<li><% $person |upper %></li>
+<%/foreach%>
+</ul>
+
+<p>Default: {$person}</p>
+
+<ul n:syntax="double">
+{{foreach $people as $person}}
+	<li>{{$person |upper}}</li>
+{{/foreach}}
+</ul>
+
+<p n:syntax="">Default: {$person}</p>
+
+<p n:syntax="latte">Default: {$person}</p>
+
+<p n:syntax="off">Default: {$person}</p>
+
+{syntax off}

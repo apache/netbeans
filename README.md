@@ -43,14 +43,24 @@ Apache NetBeans is an open source development environment, tooling platform, and
 
 ### Building NetBeans
 
-Build the full project:
+Build with the default config (See the [cluster.config](https://github.com/apache/incubator-netbeans/blob/ab66c7fdfdcbf0bde67b96ddb075c83451cdd1a6/nbbuild/cluster.properties#L19) property.)
 ```
 $ ant
+```
+Build the basic project (mainly, JavaSE features):
+```
+$ ant -Dcluster.config=basic
+```
+Build the full project (including Groovy, PHP, JavaEE/JakartaEE, and JavaScript features):
+```
+$ ant -Dcluster.confg=full
 ```
 Build the NetBeans Platform:
 ```
 $ ant -Dcluster.config=platform
 ```
+
+**Note:** You can also use `php`, `enterprise`, e.t.c. See the [cluster.properties](https://github.com/apache/incubator-netbeans/blob/master/nbbuild/cluster.properties) file.
 
 ### Running NetBeans
 
@@ -69,7 +79,9 @@ $ ant tryme
 
 ### Download
 
-Developer builds can be downloaded from https://builds.apache.org/job/incubator-netbeans-release/
+Developer builds can be downloaded: https://builds.apache.org/job/incubator-netbeans-linux.
+
+Convenience binary of released source artifacts: https://netbeans.apache.org/download/index.html.
 
 ### Reporting Bugs
 
@@ -94,7 +106,8 @@ change of the file headers to Apache. But then the magic comes:
 ```bash
 $ git remote add emilian https://github.com/emilianbold/netbeans-releases.git
 $ git fetch emilian # this takes a while, the history is huge!
-$ git replace 6daa72c98 32042637
+$ git replace 6daa72c98 32042637 # the 1st donation
+$ git replace 6035076ee 32042637 # the 2nd donation
 ```
 
 When you search the log, or use the blame tool, the full history is available:

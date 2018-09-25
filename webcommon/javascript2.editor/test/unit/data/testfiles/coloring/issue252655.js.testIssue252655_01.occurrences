@@ -1,0 +1,1 @@
+    (|>MARK_OCCURRENCES:wi^ndow<|[varName].q = |>MARK_OCCURRENCES:window<|[varName].q || []);

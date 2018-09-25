@@ -1,0 +1,7 @@
+Code completion result for source line:
+instRef.rprops.|b;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      b                               [PUBLIC]   instanceRef.js
+FIELD      a3: Number                      [PUBLIC]   instanceRef.js
+FIELD      a: Number                       [PUBLIC]   instanceRef.js

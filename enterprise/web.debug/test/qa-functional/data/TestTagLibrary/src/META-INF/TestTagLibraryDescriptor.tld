@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib version="2.0" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee web-jsptaglibrary_2_0.xsd">
+  <tlib-version>1.0</tlib-version>
+  <short-name>ttl</short-name>
+  <uri>http://test.netbeans.org/tags/testlibrary</uri>
+  <!-- A validator verifies that the tags are used correctly at JSP
+         translation time. Validator entries look like this: 
+      <validator>
+          <validator-class>com.mycompany.TagLibValidator</validator-class>
+          <init-param>
+             <param-name>parameter</param-name>
+             <param-value>value</param-value>
+	  </init-param>
+      </validator>
+   -->
+  <!-- A tag library can register Servlet Context event listeners in
+        case it needs to react to such events. Listener entries look
+        like this: 
+     <listener>
+         <listener-class>com.mycompany.TagLibListener</listener-class> 
+     </listener>
+   -->
+  <tag>
+    <name>hello</name>
+    <tag-class>org.netbeans.test.taglibrary.handlers.HelloSimpleTagHandler</tag-class>
+    <body-content>scriptless</body-content>
+    <attribute>
+      <name>name</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+  </tag>
+  <tag>
+    <name>sum</name>
+    <tag-class>org.netbeans.test.taglibrary.handlers.SumBodyTagHandler</tag-class>
+    <body-content>JSP</body-content>
+    <attribute>
+      <name>x</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>int</type>
+    </attribute>
+    <attribute>
+      <name>y</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>int</type>
+    </attribute>
+  </tag>
+</taglib>

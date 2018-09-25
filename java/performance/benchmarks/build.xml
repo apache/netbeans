@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<project name="performance/benchmarks" default="jars" basedir=".">
+
+    <import file="../../../nbbuild/templates/projectized.xml"/>
+
+    <target name="compile" depends="grammar">
+        <javac srcdir="src:build/classes-generated" destdir="build/classes" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}">
+            <classpath>
+                <fileset dir="../../../platform/libs.junit4/external" includes="junit-*.jar"/>
+            </classpath>
+        </javac>
+    </target>
+    
+    <target name="jar" />
+    <target name="release"/>
+    <target name="netbeans" />    
+
+    <target name="jars" depends="compile">
+        <mkdir dir="lib"/>
+        <jar jarfile="lib/performance-benchmarks.jar"
+        basedir="build/classes"
+        excludes="**/*.java,**/*.jjt,**/*.jj"
+        compress="false"/>
+    </target>
+
+    <target name="clean">
+        <delete>
+            <fileset dir="src">
+                <include name="**/*.class"/>
+            </fileset>
+        </delete>
+        <delete dir="build"/>
+        <delete dir="lib"/>
+    </target>
+  
+    <target name="perf" depends="jars">
+        <ant dir="test/perf" antfile="build.xml" />
+    </target>
+	  
+    <target name="grammar" >
+        <mkdir dir="src/org/netbeans/performance/benchmarks/bde/generated"/>
+        <mkdir dir="build"/>
+        <mkdir dir="build/classes"/>
+        <mkdir dir="build/classes-generated"/>
+        <mkdir dir="build/classes-generated/org/netbeans/performance/benchmarks/bde/generated"/>
+        <copy file="../external/javacc-3.2.jar" tofile="build/javacc.jar"/>
+
+        <jjtree 
+        javacchome="build"
+        target="src/org/netbeans/performance/benchmarks/bde/BDEGrammar.jjt"
+        outputdirectory="build/classes-generated/org/netbeans/performance/benchmarks/bde/generated"
+        />
+
+        <javacc 
+        javacchome="build" 
+        target="build/classes-generated/org/netbeans/performance/benchmarks/bde/generated/BDEGrammar.jj" 
+        outputdirectory="build/classes-generated/org/netbeans/performance/benchmarks/bde/generated"
+        />
+
+        <copy file="src/org/netbeans/performance/benchmarks/bde/override/SimpleNode.xjava" tofile="build/classes-generated/org/netbeans/performance/benchmarks/bde/generated/SimpleNode.java" overwrite="true" />
+    </target>
+
+</project>

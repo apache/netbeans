@@ -1,0 +1,98 @@
+<testresult testFile='heredoc_013.php'>
+    <scanner>
+        <token id='T_INLINE_HTML' start='0' end='62'>
+            <text>--TEST--\nHeredoc with double quotes and wrong prefix\n--FILE--\n</text>
+        </token>
+        <token id='T_VARIABLE' start='68' end='73'>
+            <text>$test</text>
+        </token>
+        <token id='T_EQUAL' start='74' end='75'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='76' end='81'>
+            <text>"foo"</text>
+        </token>
+        <token id='T_SEMICOLON' start='81' end='82'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='83' end='87'>
+            <text>$var</text>
+        </token>
+        <token id='T_EQUAL' start='88' end='89'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='90' end='96'>
+            <text>prefix</text>
+        </token>
+        <token id='T_START_HEREDOC' start='96' end='109'>
+            <text>&lt;&lt;&lt;"MYLABEL"\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='109' end='115'>
+            <text>test: </text>
+        </token>
+        <token id='T_VARIABLE' start='115' end='120'>
+            <text>$test</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='120' end='121'>
+            <text>\n</text>
+        </token>
+        <token id='T_END_HEREDOC' start='121' end='128'>
+            <text>MYLABEL</text>
+        </token>
+        <token id='T_SEMICOLON' start='128' end='129'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='130' end='134'>
+            <text>echo</text>
+        </token>
+        <token id='T_VARIABLE' start='135' end='139'>
+            <text>$var</text>
+        </token>
+        <token id='T_SEMICOLON' start='139' end='140'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='141' end='144'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='T_INLINE_HTML' start='144' end='242'>
+            <text>--EXPECTF--\nParse error: syntax error, unexpected T_START_HEREDOC in %sheredoc_013.php on line %d\n</text>
+        </token>
+        <token id='EOF' start='242' end='242'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='242'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <InLineHtml start='0' end='62'/>
+            <ExpressionStatement start='68' end='82'>
+                <Assignment start='68' end='81' operator='EQUAL'>
+                    <Variable start='68' end='73' isDollared='true'>
+                        <Identifier start='69' end='73' name='test'/>
+                    </Variable>
+                    <Scalar start='76' end='81' type='STRING' value='"foo"'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ASTError start='83' end='96'/>
+            <ExpressionStatement start='96' end='129'>
+                <Quote start='96' end='128' type='HEREDOC'>
+                    <Expressions>
+                        <Scalar start='109' end='115' type='STRING' value='test: '/>
+                        <Variable start='115' end='120' isDollared='true'>
+                            <Identifier start='116' end='120' name='test'/>
+                        </Variable>
+                        <Scalar start='120' end='121' type='STRING' value='\n'/>
+                    </Expressions>
+                </Quote>
+            </ExpressionStatement>
+            <EchoStatement start='130' end='140'>
+                <Variable start='135' end='139' isDollared='true'>
+                    <Identifier start='136' end='139' name='var'/>
+                </Variable>
+            </EchoStatement>
+            <EmptyStatement start='141' end='144'/>
+            <InLineHtml start='144' end='242'/>
+        </Statements>
+    </Program>
+</testresult>

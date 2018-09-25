@@ -1,0 +1,69 @@
+<testresult testFile='uniformVariableSyntax_20.php'>
+    <scanner>
+        <token id='T_NEW' start='7' end='10'>
+            <text>new</text>
+        </token>
+        <token id='T_VARIABLE' start='11' end='15'>
+            <text>$foo</text>
+        </token>
+        <token id='T_OPEN_RECT' start='15' end='16'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='16' end='21'>
+            <text>&apos;bar&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='21' end='22'>
+            <text>]</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='22' end='24'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='24' end='28'>
+            <text>$baz</text>
+        </token>
+        <token id='T_SEMICOLON' start='28' end='29'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='30' end='30'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='30'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='29'>
+                <ClassInstanceCreation start='7' end='28' anonymous='false'>
+                    <ClassName start='11' end='28'>
+                        <StaticFieldAccess start='11' end='28'>
+                            <ArrayAccess start='11' end='22' type='VARIABLE_ARRAY' isDollared='false'>
+                                <ArrayDimension start='15' end='22'>
+                                    <Index>
+                                        <Scalar start='16' end='21' type='STRING' value='&apos;bar&apos;'/>
+                                    </Index>
+                                </ArrayDimension>
+                                <Name>
+                                    <Variable start='11' end='15' isDollared='true'>
+                                        <Identifier start='12' end='15' name='foo'/>
+                                    </Variable>
+                                </Name>
+                            </ArrayAccess>
+                            <Field>
+                                <Variable start='24' end='28' isDollared='true'>
+                                    <Identifier start='25' end='28' name='baz'/>
+                                </Variable>
+                            </Field>
+                            <Member>
+                                <Variable start='24' end='28' isDollared='true'>
+                                    <Identifier start='25' end='28' name='baz'/>
+                                </Variable>
+                            </Member>
+                        </StaticFieldAccess>
+                    </ClassName>
+                    <Parameters>
+                    </Parameters>
+                </ClassInstanceCreation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

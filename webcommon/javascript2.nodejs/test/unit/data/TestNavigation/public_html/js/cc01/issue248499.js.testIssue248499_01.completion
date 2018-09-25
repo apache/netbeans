@@ -1,0 +1,6 @@
+Code completion result for source line:
+modul.instRef.dateOfSpell().getD|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     getDate(): Number               [PUBLIC]   JS Platform
+METHOD     getDay(): Number                [PUBLIC]   JS Platform

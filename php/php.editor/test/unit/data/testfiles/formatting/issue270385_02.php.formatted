@@ -1,0 +1,9 @@
+<?php
+
+class Test2 {
+
+    private function testMethod2(): ?array
+    {
+        
+    }
+}

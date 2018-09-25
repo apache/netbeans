@@ -1,0 +1,3 @@
+    public function |>MARK_OCCURRENCES:getArray<|() {
+$myClass->field[0]->|>MARK_OCCURRENCES:getA^rray<|()[][]->foo();
+$myClass->|>MARK_OCCURRENCES:getArray<|()[0][]->foo();

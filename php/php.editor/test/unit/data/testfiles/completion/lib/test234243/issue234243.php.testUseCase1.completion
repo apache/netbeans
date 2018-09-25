@@ -1,0 +1,5 @@
+Code completion result for source line:
+$cur_c->|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     c()                             [PUBLIC]   \d\D
+METHOD     d()                             [PUBLIC]   \d\D

@@ -1,0 +1,2 @@
+MyLib.|>MARK_OCCURRENCES:objB<| = function () {
+var b1 = MyLib.|>MARK_OCCURRENCES:obj^B<|();    // <- place cursor into objB identifier

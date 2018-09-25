@@ -1,0 +1,5 @@
+Test:CONSTRUCTOR:[PUBLIC]:ESCAPED{Test}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Test</font>:
+  modules:CLASS:[PUBLIC]:ESCAPED{modules}:
+    moduleA:CLASS:[PUBLIC]:ESCAPED{moduleA}:
+      name:FIELD:[PUBLIC]:ESCAPED{name}<font color="#999999">ESCAPED{ : }String</font>:
+      note:FIELD:[PUBLIC]:ESCAPED{note}<font color="#999999">ESCAPED{ : }String</font>:

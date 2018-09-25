@@ -1,0 +1,35 @@
+<?php
+trait |>CLASS:BaseTrait<|
+{
+    private $|>FIELD:usedField<|;
+    private $|>FIELD:unusedField<|;
+    private static $|>FIELD,STATIC:usedStaticField<|;
+    private static $|>FIELD,STATIC:unusedStaticField<|;
+
+    private function |>METHOD:usedMethod1<|() {
+    }
+
+    private function |>METHOD:unusedMethod<|() {
+    }
+
+    private static function |>METHOD,STATIC:usedStaticMethod<|() {
+    }
+
+    private static function |>METHOD,STATIC:unusedStaticMethod<|() {
+    }
+
+    protected function |>METHOD:protectedMethod<|() {
+    }
+
+    public function |>METHOD:testMethod<|() {
+        $this->|>CUSTOM1:usedMethod1<|();
+        $this->|>CUSTOM1:usedMethod2<|();
+        BaseTrait::|>CUSTOM1,STATIC:usedStaticMethod<|();
+        $this->|>FIELD:usedField<| = "used";
+        self::$|>FIELD,STATIC:usedStaticField<| = "used static";
+    }
+
+    private function |>METHOD:usedMethod2<|() {
+    }
+
+}

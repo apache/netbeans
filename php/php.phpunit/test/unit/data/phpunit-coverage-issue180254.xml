@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1265274750" phpunit="3.4.6">
+  <project name="" timestamp="1265274750">
+    <file name="/usr/local/zend/apache2/htdocs/mysgc/plugins/mcJobqueuePlugin/lib/jobhandler/McJobqueueTestjobHandler.php">
+      <class name="McJobqueueTestjobHandler" namespace="global">
+        <metrics methods="1" coveredmethods="1" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+      </class>
+      <line num="10" type="stmt" count="1"/>
+      <line num="11" type="method" name="run" count="2"/>
+      <line num="12" type="stmt" count="2"/>
+      <line num="13" type="stmt" count="2"/>
+      <line num="14" type="stmt" count="1"/>
+      <metrics loc="13" ncloc="7" classes="1" methods="1" coveredmethods="1" statements="4" coveredstatements="4" elements="5" coveredelements="5"/>
+    </file>
+    <file name="/usr/local/zend/apache2/htdocs/mysgc/plugins/mcJobqueuePlugin/lib/McJobqueueHandler.php">
+      <line num="9" type="stmt" count="1"/>
+      <line num="11" type="stmt" count="1"/>
+      <metrics loc="10" ncloc="4" classes="0" methods="0" coveredmethods="0" statements="2" coveredstatements="2" elements="2" coveredelements="2"/>
+    </file>
+    <file name="/usr/local/zend/apache2/htdocs/mysgc/plugins/mcJobqueuePlugin/lib/model/McJobqueuePeer.php">
+      <class name="McJobqueuePeer" namespace="global">
+        <metrics methods="1" coveredmethods="1" statements="10" coveredstatements="10" elements="11" coveredelements="11"/>
+      </class>
+      <line num="10" type="stmt" count="1"/>
+      <line num="11" type="method" name="retrieveByName" count="3"/>
+      <line num="12" type="stmt" count="3"/>
+      <line num="13" type="stmt" count="3"/>
+      <line num="14" type="stmt" count="3"/>
+      <line num="17" type="stmt" count="3"/>
+      <line num="18" type="stmt" count="1"/>
+      <line num="19" type="stmt" count="1"/>
+      <line num="20" type="stmt" count="1"/>
+      <line num="21" type="stmt" count="1"/>
+      <line num="22" type="stmt" count="1"/>
+      <line num="25" type="stmt" count="3"/>
+      <line num="28" type="stmt" count="1"/>
+      <metrics loc="27" ncloc="19" classes="1" methods="1" coveredmethods="1" statements="12" coveredstatements="12" elements="13" coveredelements="13"/>
+    </file>
+    <file name="/usr/local/zend/apache2/htdocs/mysgc/plugins/mcJobqueuePlugin/lib/model/McJobqueueJob.php">
+      <class name="McJobqueueJob" namespace="global" fullPackage="plugins.mcJobqueuePlugin.lib.model" package="plugins.mcJobqueuePlugin.lib.model">
+        <metrics methods="5" coveredmethods="5" statements="23" coveredstatements="23" elements="28" coveredelements="28"/>
+      </class>
+      <line num="12" type="method" name="getParams" count="5"/>
+      <line num="13" type="stmt" count="5"/>
+      <line num="16" type="method" name="setParams" count="2"/>
+      <line num="17" type="stmt" count="2"/>
+      <line num="18" type="stmt" count="2"/>
+      <line num="20" type="method" name="run" count="3"/>
+      <line num="22" type="stmt" count="3"/>
+      <line num="23" type="stmt" count="3"/>
+      <line num="24" type="stmt" count="2"/>
+      <line num="25" type="stmt" count="3"/>
+      <line num="26" type="stmt" count="2"/>
+      <line num="27" type="stmt" count="2"/>
+      <line num="28" type="stmt" count="2"/>
+      <line num="31" type="stmt" count="2"/>
+      <line num="32" type="stmt" count="2"/>
+      <line num="33" type="stmt" count="2"/>
+      <line num="34" type="stmt" count="2"/>
+      <line num="36" type="method" name="loadHandler" count="3"/>
+      <line num="37" type="stmt" count="3"/>
+      <line num="38" type="stmt" count="3"/>
+      <line num="39" type="stmt" count="2"/>
+      <line num="40" type="stmt" count="2"/>
+      <line num="41" type="stmt" count="2"/>
+      <line num="43" type="stmt" count="2"/>
+      <line num="46" type="method" name="getAddressClass" count="3"/>
+      <line num="47" type="stmt" count="3"/>
+      <line num="48" type="stmt" count="3"/>
+      <line num="49" type="stmt" count="3"/>
+      <metrics loc="51" ncloc="44" classes="1" methods="5" coveredmethods="5" statements="23" coveredstatements="23" elements="28" coveredelements="28"/>
+    </file>
+    <file name="/usr/local/zend/apache2/htdocs/mysgc/plugins/mcJobqueuePlugin/lib/model/McJobqueueJobPeer.php">
+      <class name="McJobqueueJobPeer" namespace="global">
+        <metrics methods="0" coveredmethods="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </class>
+      <line num="10" type="stmt" count="1"/>
+      <line num="16" type="stmt" count="1"/>
+      <metrics loc="15" ncloc="9" classes="1" methods="0" coveredmethods="0" statements="2" coveredstatements="2" elements="2" coveredelements="2"/>
+    </file>
+    <file name="/usr/local/zend/apache2/htdocs/mysgc/test/phpunit/plugins/mcJobqueuePlugin/jobqueue.yml">
+      <line num="15" type="stmt" count="6"/>
+      <metrics loc="14" ncloc="14" classes="0" methods="0" coveredmethods="0" statements="1" coveredstatements="1" elements="1" coveredelements="1"/>
+    </file>
+    <file name="/Applications/NetBeans/NetBeans 6.8.app/Contents/Resources/NetBeans/php1/NetBeansSuite.php">
+      <class name="NetBeansSuite" namespace="global" fullPackage="NetBeans" package="NetBeans">
+        <metrics methods="3" coveredmethods="0" statements="25" coveredstatements="0" elements="28" coveredelements="0"/>
+      </class>
+      <line num="79" type="method" name="suite" count="0"/>
+      <line num="80" type="stmt" count="0"/>
+      <line num="81" type="stmt" count="0"/>
+      <line num="82" type="stmt" count="0"/>
+      <line num="83" type="stmt" count="0"/>
+      <line num="84" type="stmt" count="0"/>
+      <line num="97" type="method" name="toRun" count="0"/>
+      <line num="98" type="stmt" count="0"/>
+      <line num="99" type="stmt" count="0"/>
+      <line num="100" type="stmt" count="0"/>
+      <line num="101" type="stmt" count="0"/>
+      <line num="102" type="stmt" count="0"/>
+      <line num="103" type="stmt" count="0"/>
+      <line num="105" type="stmt" count="0"/>
+      <line num="106" type="stmt" count="0"/>
+      <line num="107" type="stmt" count="0"/>
+      <line num="109" type="stmt" count="0"/>
+      <line num="110" type="stmt" count="0"/>
+      <line num="111" type="stmt" count="0"/>
+      <line num="112" type="stmt" count="0"/>
+      <line num="114" type="stmt" count="0"/>
+      <line num="131" type="method" name="rglob" count="0"/>
+      <line num="132" type="stmt" count="0"/>
+      <line num="133" type="stmt" count="0"/>
+      <line num="134" type="stmt" count="0"/>
+      <line num="135" type="stmt" count="0"/>
+      <line num="136" type="stmt" count="0"/>
+      <line num="137" type="stmt" count="0"/>
+      <metrics loc="141" ncloc="45" classes="1" methods="3" coveredmethods="0" statements="25" coveredstatements="0" elements="28" coveredelements="0"/>
+    </file>
+    <file name="/usr/local/zend/apache2/htdocs/mysgc/lib/model/UserProfileType.php">
+      <class name="UserProfileType" namespace="global">
+        <metrics methods="1" coveredmethods="1" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
+      </class>
+      <line num="10" type="method" name="__toString" count="1"/>
+      <line num="11" type="stmt" count="1"/>
+      <metrics loc="13" ncloc="7" classes="1" methods="1" coveredmethods="1" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
+    </file>
+    <file name="/usr/local/zend/apache2/htdocs/mysgc/plugins/mcMailsystemPlugin/lib/model/MailCategory.php">
+      <class name="MailCategory" namespace="global" fullPackage="plugins.mcMailsystemPlugin.lib.model" package="plugins.mcMailsystemPlugin.lib.model">
+        <metrics methods="2" coveredmethods="1" statements="4" coveredstatements="2" elements="6" coveredelements="3"/>
+      </class>
+      <line num="12" type="method" name="hydrate" count="0"/>
+      <line num="13" type="stmt" count="0"/>
+      <line num="14" type="stmt" count="0"/>
+      <line num="17" type="method" name="__toString" count="1"/>
+      <line num="18" type="stmt" count="1"/>
+      <line num="19" type="stmt" count="1"/>
+      <metrics loc="22" ncloc="15" classes="1" methods="2" coveredmethods="1" statements="4" coveredstatements="2" elements="6" coveredelements="3"/>
+    </file>
+    <file name="/usr/local/zend/apache2/htdocs/mysgc/plugins/mcMailsystemPlugin/lib/model/MailTemplate.php">
+      <class name="MailTemplate" namespace="global" fullPackage="plugins.mcMailsystemPlugin.lib.model" package="plugins.mcMailsystemPlugin.lib.model">
+        <metrics methods="4" coveredmethods="4" statements="14" coveredstatements="14" elements="18" coveredelements="18"/>
+      </class>
+      <line num="13" type="method" name="hydrate" count="1"/>
+      <line num="14" type="stmt" count="1"/>
+      <line num="15" type="stmt" count="1"/>
+      <line num="25" type="method" name="getUploads" count="1"/>
+      <line num="26" type="stmt" count="1"/>
+      <line num="34" type="method" name="getAvailableLanguages" count="1"/>
+      <line num="35" type="stmt" count="1"/>
+      <line num="36" type="stmt" count="1"/>
+      <line num="37" type="stmt" count="1"/>
+      <line num="38" type="stmt" count="1"/>
+      <line num="39" type="stmt" count="1"/>
+      <line num="40" type="stmt" count="1"/>
+      <line num="42" type="stmt" count="1"/>
+      <line num="43" type="stmt" count="1"/>
+      <line num="44" type="stmt" count="1"/>
+      <line num="46" type="stmt" count="1"/>
+      <line num="49" type="method" name="getAttachments" count="1"/>
+      <line num="50" type="stmt" count="1"/>
+      <metrics loc="54" ncloc="35" classes="1" methods="4" coveredmethods="4" statements="14" coveredstatements="14" elements="18" coveredelements="18"/>
+    </file>
+    <file name="/usr/local/zend/apache2/htdocs/mysgc/plugins/mcMailsystemPlugin/lib/model/MailCategoryPeer.php">
+      <class name="MailCategoryPeer" namespace="global" fullPackage="plugins.mcMailsystemPlugin.lib.model" package="plugins.mcMailsystemPlugin.lib.model">
+        <metrics methods="3" coveredmethods="3" statements="16" coveredstatements="14" elements="19" coveredelements="17"/>
+      </class>
+      <line num="14" type="method" name="retrieveMailCategories" count="2"/>
+      <line num="15" type="stmt" count="2"/>
+      <line num="16" type="stmt" count="2"/>
+      <line num="18" type="stmt" count="2"/>
+      <line num="19" type="stmt" count="2"/>
+      <line num="20" type="stmt" count="2"/>
+      <line num="22" type="stmt" count="2"/>
+      <line num="25" type="method" name="retrieveMailCategory" count="1"/>
+      <line num="26" type="stmt" count="1"/>
+      <line num="27" type="stmt" count="1"/>
+      <line num="30" type="method" name="getMyCategories" count="2"/>
+      <line num="31" type="stmt" count="2"/>
+      <line num="33" type="stmt" count="2"/>
+      <line num="34" type="stmt" count="2"/>
+      <line num="37" type="stmt" count="2"/>
+      <line num="38" type="stmt" count="2"/>
+      <line num="39" type="stmt" count="0"/>
+      <line num="40" type="stmt" count="0"/>
+      <line num="43" type="stmt" count="2"/>
+      <metrics loc="45" ncloc="38" classes="1" methods="3" coveredmethods="3" statements="16" coveredstatements="14" elements="19" coveredelements="17"/>
+    </file>
+    <file name="/usr/local/zend/apache2/htdocs/mysgc/plugins/mcJobqueuePlugin/lib/model/McJobqueue.php">
+      <class name="McJobqueue" namespace="global" fullPackage="plugins.mcJobqueuePlugin.lib.model" package="plugins.mcJobqueuePlugin.lib.model">
+        <metrics methods="4" coveredmethods="4" statements="23" coveredstatements="23" elements="27" coveredelements="27"/>
+      </class>
+      <line num="14" type="method" name="addJob" count="1"/>
+      <line num="15" type="stmt" count="1"/>
+      <line num="16" type="stmt" count="1"/>
+      <line num="17" type="stmt" count="1"/>
+      <line num="19" type="stmt" count="1"/>
+      <line num="20" type="stmt" count="1"/>
+      <line num="22" type="stmt" count="1"/>
+      <line num="25" type="method" name="run" count="1"/>
+      <line num="26" type="stmt" count="1"/>
+      <line num="27" type="stmt" count="1"/>
+      <line num="28" type="stmt" count="1"/>
+      <line num="30" type="stmt" count="1"/>
+      <line num="31" type="stmt" count="1"/>
+      <line num="32" type="stmt" count="1"/>
+      <line num="33" type="stmt" count="1"/>
+      <line num="34" type="stmt" count="1"/>
+      <line num="35" type="stmt" count="1"/>
+      <line num="36" type="stmt" count="1"/>
+      <line num="37" type="stmt" count="1"/>
+      <line num="39" type="stmt" count="1"/>
+      <line num="40" type="stmt" count="1"/>
+      <line num="41" type="stmt" count="1"/>
+      <line num="43" type="method" name="getLog" count="1"/>
+      <line num="44" type="stmt" count="1"/>
+      <line num="47" type="method" name="addLog" count="1"/>
+      <line num="48" type="stmt" count="1"/>
+      <line num="49" type="stmt" count="1"/>
+      <metrics loc="50" ncloc="43" classes="1" methods="4" coveredmethods="4" statements="23" coveredstatements="23" elements="27" coveredelements="27"/>
+    </file>
+    <file name="/usr/local/zend/apache2/htdocs/mysgc/lib/model/UserProfilePeer.php">
+      <class name="UserProfilePeer" namespace="global">
+        <metrics methods="1" coveredmethods="1" statements="9" coveredstatements="8" elements="10" coveredelements="9"/>
+      </class>
+      <line num="10" type="method" name="generatePassword" count="3"/>
+      <line num="11" type="stmt" count="3"/>
+      <line num="12" type="stmt" count="3"/>
+      <line num="14" type="stmt" count="3"/>
+      <line num="15" type="stmt" count="3"/>
+      <line num="16" type="stmt" count="3"/>
+      <line num="17" type="stmt" count="3"/>
+      <line num="20" type="stmt" count="3"/>
+      <line num="21" type="stmt" count="0"/>
+      <line num="25" type="stmt" count="3"/>
+      <metrics loc="27" ncloc="17" classes="1" methods="1" coveredmethods="1" statements="9" coveredstatements="8" elements="10" coveredelements="9"/>
+    </file>
+    <file name="/usr/local/zend/apache2/htdocs/mysgc/lib/model/UserProfile.php">
+      <class name="UserProfile" namespace="global">
+        <metrics methods="3" coveredmethods="3" statements="25" coveredstatements="25" elements="28" coveredelements="28"/>
+      </class>
+      <line num="11" type="method" name="getEmail" count="4"/>
+      <line num="12" type="stmt" count="4"/>
+      <line num="13" type="stmt" count="4"/>
+      <line num="14" type="stmt" count="2"/>
+      <line num="15" type="stmt" count="2"/>
+      <line num="16" type="stmt" count="2"/>
+      <line num="17" type="stmt" count="1"/>
+      <line num="18" type="stmt" count="1"/>
+      <line num="19" type="stmt" count="1"/>
+      <line num="20" type="stmt" count="1"/>
+      <line num="22" type="stmt" count="3"/>
+      <line num="24" type="stmt" count="3"/>
+      <line num="27" type="method" name="save" count="4"/>
+      <line num="28" type="stmt" count="4"/>
+      <line num="29" type="stmt" count="4"/>
+      <line num="31" type="stmt" count="4"/>
+      <line num="33" type="stmt" count="3"/>
+      <line num="34" type="stmt" count="1"/>
+      <line num="37" type="stmt" count="2"/>
+      <line num="38" type="stmt" count="2"/>
+      <line num="39" type="stmt" count="2"/>
+      <line num="40" type="stmt" count="2"/>
+      <line num="42" type="stmt" count="2"/>
+      <line num="43" type="stmt" count="2"/>
+      <line num="45" type="method" name="delete" count="1"/>
+      <line num="46" type="stmt" count="1"/>
+      <line num="47" type="stmt" count="1"/>
+      <line num="48" type="stmt" count="1"/>
+      <metrics loc="49" ncloc="43" classes="1" methods="3" coveredmethods="3" statements="25" coveredstatements="25" elements="28" coveredelements="28"/>
+    </file>
+    <file name="/usr/local/zend/apache2/htdocs/mysgc/plugins/mcMailsystemPlugin/lib/model/MailUpload.php">
+      <class name="MailUpload" namespace="global" fullPackage="plugins.mcMailsystemPlugin.lib.model" package="plugins.mcMailsystemPlugin.lib.model">
+        <metrics methods="1" coveredmethods="1" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
+      </class>
+      <line num="11" type="method" name="getFilepath" count="1"/>
+      <line num="12" type="stmt" count="1"/>
+      <metrics loc="16" ncloc="9" classes="1" methods="1" coveredmethods="1" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
+    </file>
+    <file name="/usr/local/zend/apache2/htdocs/mysgc/lib/symfony/config/config/autoload.yml">
+      <line num="25" type="stmt" count="1"/>
+      <metrics loc="24" ncloc="24" classes="0" methods="0" coveredmethods="0" statements="1" coveredstatements="1" elements="1" coveredelements="1"/>
+    </file>
+    <file name="/usr/local/zend/apache2/htdocs/mysgc/lib/symfony/plugins/sfPropelPlugin/config/autoload.yml">
+      <line num="4" type="stmt" count="1"/>
+      <line num="7" type="stmt" count="1"/>
+      <metrics loc="6" ncloc="6" classes="0" methods="0" coveredmethods="0" statements="2" coveredstatements="2" elements="2" coveredelements="2"/>
+    </file>
+    <file name="/usr/local/zend/apache2/htdocs/mysgc/plugins/mcMailsystemPlugin/lib/model/MailTemplateI18nPeer.php">
+      <class name="MailTemplateI18nPeer" namespace="global" fullPackage="plugins.mcMailsystemPlugin.lib.model" package="plugins.mcMailsystemPlugin.lib.model">
+        <metrics methods="0" coveredmethods="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </class>
+      <line num="11" type="stmt" count="1"/>
+      <line num="13" type="stmt" count="1"/>
+      <metrics loc="12" ncloc="5" classes="1" methods="0" coveredmethods="0" statements="2" coveredstatements="2" elements="2" coveredelements="2"/>
+    </file>
+    <file name="/usr/local/zend/apache2/htdocs/mysgc/plugins/mcMailsystemPlugin/lib/model/MailTemplatePeer.php">
+      <class name="MailTemplatePeer" namespace="global" fullPackage="plugins.mcMailsystemPlugin.lib.model" package="plugins.mcMailsystemPlugin.lib.model">
+        <metrics methods="0" coveredmethods="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </class>
+      <line num="11" type="stmt" count="1"/>
+      <line num="13" type="stmt" count="1"/>
+      <metrics loc="12" ncloc="5" classes="1" methods="0" coveredmethods="0" statements="2" coveredstatements="2" elements="2" coveredelements="2"/>
+    </file>
+    <file name="/usr/local/zend/apache2/htdocs/mysgc/lib/model/UserProfileTypeI18nPeer.php">
+      <class name="UserProfileTypeI18nPeer" namespace="global">
+        <metrics methods="0" coveredmethods="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </class>
+      <line num="4" type="stmt" count="1"/>
+      <line num="6" type="stmt" count="1"/>
+      <metrics loc="5" ncloc="5" classes="1" methods="0" coveredmethods="0" statements="2" coveredstatements="2" elements="2" coveredelements="2"/>
+    </file>
+    <metrics files="20" loc="606" ncloc="394" classes="16" methods="29" coveredmethods="25" statements="171" coveredstatements="141" elements="200" coveredelements="166"/>
+  </project>
+</coverage>

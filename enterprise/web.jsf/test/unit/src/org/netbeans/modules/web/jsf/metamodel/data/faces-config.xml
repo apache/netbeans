@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!-- =========== FULL CONFIGURATION FILE ================================== -->
+
+<faces-config version="2.0" 
+              xmlns="http://java.sun.com/xml/ns/javaee" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+              
+     <application>
+     </application>
+     <component>
+     	<component-type>mainComponentType</component-type>
+     	<component-class>mainComponentClass</component-class>
+     	<display-name>mainComponent</display-name>
+     </component>
+     <converter>
+     	<converter-class>mainConverterClass</converter-class>
+     	<converter-for-class>mainConverterForClass</converter-for-class>
+     	<converter-id>mainConvertedId</converter-id>
+     </converter>
+     <factory>
+     	<render-kit-factory/>
+     </factory>
+     <lifecycle>
+     	<phase-listener/>
+     </lifecycle>
+     <managed-bean>
+     	<managed-bean-name>mainManagedBean</managed-bean-name>
+     	<managed-bean-class>mainManagedBeanClass</managed-bean-class>
+     	<managed-bean-scope>session</managed-bean-scope>
+     </managed-bean>
+     <navigation-rule>
+     	<navigation-case/>
+     </navigation-rule>
+     <referenced-bean>
+     	<display-name>mainReferencedBean</display-name>
+     </referenced-bean>
+     <render-kit>
+     	<render-kit-id>kitId</render-kit-id>
+     	<renderer>
+     		<renderer-class>mainRendererClass</renderer-class>
+     		<renderer-type>mainRendererType</renderer-type>
+     		<component-family>mainComponentFamily</component-family>
+     	</renderer>
+     </render-kit>
+     <behavior>
+     	<behavior-id>mainBehaviorId</behavior-id>
+     	<behavior-class>mainBehaviorClass</behavior-class>
+     </behavior>
+     <validator>
+     	<validator-id>mainValidatorId</validator-id>
+     	<validator-class>mainValidatorClass</validator-class>
+     </validator>
+              
+</faces-config>

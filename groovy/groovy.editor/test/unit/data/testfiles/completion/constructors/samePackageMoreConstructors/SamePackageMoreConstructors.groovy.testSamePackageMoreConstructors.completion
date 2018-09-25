@@ -1,0 +1,6 @@
+Code completion result for source line:
+Bar bar = new Bar|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTRUCTO Bar()                                      null
+CONSTRUCTO Bar(String)                                null
+CONSTRUCTO Bar(int)                                   null

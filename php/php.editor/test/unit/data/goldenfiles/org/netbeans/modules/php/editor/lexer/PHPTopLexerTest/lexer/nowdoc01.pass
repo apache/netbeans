@@ -1,0 +1,5 @@
+token #0 T_HTML <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">\n<html>\n    <head>\n        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n        <title></title>\n    </head>\n    <body>\n        
+token #1 T_PHP_OPEN_DELIMITER <?php
+token #2 T_PHP \n            echo <<< 'NOWDOC'\nnowdoc text $text\nNOWDOC;\n            \n            $x = "ahoj";\n        
+token #3 T_PHP_CLOSE_DELIMITER ?>
+token #4 T_HTML \n    </body>\n</html>\n

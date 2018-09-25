@@ -1,0 +1,11 @@
+[UNBUFFERED_COMMENT_DELIMITER(3)://-][UNBUFFERED_COMMENT(12): index.jade
+][DOCTYPE(7):doctype][WHITESPACE(1): ][DOCTYPE_TEMPLATE(4):html][EOL(1):\n]
+[TAG(4):html][EOL(1):\n]
+[WHITESPACE(2):  ][TAG(4):head][EOL(1):\n]
+[WHITESPACE(4):    ][TAG(5):style][EOL(1):\n]
+[WHITESPACE(6):      ][KEYWORD_INCLUDE(7):include][FILE_PATH(10): style.css][EOL(1):\n]
+[WHITESPACE(2):  ][TAG(4):body][EOL(1):\n]
+[WHITESPACE(4):    ][TAG(2):h1][WHITESPACE(1): ][TEXT(7):My Site][EOL(1):\n]
+[WHITESPACE(4):    ][TAG(1):p][WHITESPACE(1): ][TEXT(30):Welcome to my super lame site.][EOL(1):\n]
+[WHITESPACE(4):    ][TAG(6):script][EOL(1):\n]
+[WHITESPACE(6):      ][KEYWORD_INCLUDE(7):include][UNKNOWN(10): script.js]

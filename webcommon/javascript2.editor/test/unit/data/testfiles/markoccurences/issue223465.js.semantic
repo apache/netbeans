@@ -1,0 +1,5 @@
+var |>GLOBAL:some<| = {
+    |>METHOD:a<| :function () {
+        var |>LOCAL_VARIABLE_DECLARATION,UNUSED:that<| = this;
+    }
+};

@@ -1,4 +1,0 @@
-Java Web
-    Web Application
-    Web Application with Existing Sources
-    Web Free-Form Application

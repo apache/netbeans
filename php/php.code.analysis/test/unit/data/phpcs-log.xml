@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<phpcs version="1.4.4">
+ <file name="/home/gapon/NetBeansProjects/_important/TodoList/config/Config.php" errors="6" warnings="0">
+  <error line="48" column="7" source="PSR1.Classes.ClassDeclaration.MissingNamespace" severity="5">Each class must be in a namespace of at least one level (a top-level vendor name)</error>
+  <error line="48" column="20" source="PSR2.Classes.ClassDeclaration.OpenBraceNewLine" severity="5">Opening brace of a class must be on the line after the definition</error>
+  <error line="61" column="55" source="Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine" severity="5">Opening brace should be on a new line</error>
+  <error line="75" column="39" source="Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine" severity="5">Opening brace should be on a new line</error>
+  <error line="83" column="1" source="PSR2.Classes.ClassDeclaration.CloseBraceAfterBody" severity="5">The closing brace for the class must go on the next line after the body</error>
+  <error line="86" column="1" source="Zend.Files.ClosingTag.NotAllowed" severity="5">A closing tag is not permitted at the end of a PHP file</error>
+ </file>
+ <file name="/home/gapon/NetBeansProjects/_important/TodoList/exception/MyPresenter.php" errors="2" warnings="1">
+  <warning line="1" column="1" source="PSR1.Files.SideEffects.FoundWithSymbols" severity="5">A file should declare new symbols (classes, functions, constants, etc.) and cause no other side effects, or it should execute logic with side effects, but should not do both. The first symbol is defined on line 15 and the first side effect is on line 19.</warning>
+  <error line="15" column="19" source="PSR2.Classes.ClassDeclaration.OpenBraceNewLine" severity="5">Opening brace of a class must be on the line after the definition</error>
+  <error line="21" column="1" source="Zend.Files.ClosingTag.NotAllowed" severity="5">A closing tag is not permitted at the end of a PHP file</error>
+ </file>
+</phpcs>

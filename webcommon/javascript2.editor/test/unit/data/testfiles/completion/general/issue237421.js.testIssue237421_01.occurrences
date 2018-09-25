@@ -1,0 +1,3 @@
+test.prototype.|>MARK_OCCURRENCES:getTest<| = function() {
+    var foo2 = this.|>MARK_OCCURRENCES:getT^est<|().m;
+    var foo3 = this.|>MARK_OCCURRENCES:getTest<|().property1.a;

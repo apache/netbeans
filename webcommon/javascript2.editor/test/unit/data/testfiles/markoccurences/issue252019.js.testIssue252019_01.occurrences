@@ -1,0 +1,2 @@
+var |>MARK_OCCURRENCES:f^n<| = function FnName(){       // <-- put cursor at fn word. 
+|>MARK_OCCURRENCES:fn<|();

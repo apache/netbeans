@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.baf/1
+OpenIDE-Module-Name: Depends on needs_foo test module
+OpenIDE-Module-Module-Dependencies: needs_foo
+

@@ -1,0 +1,26 @@
+{
+    "name": "pkgname",
+    "version": "1.1.18",
+    "description": "Styleguide",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+    },
+    "devDependencies": {
+        "grunt": "^0.4.5",
+        "grunt-contrib-rename": "0.0.3",
+        "grunt-exec": "^0.4.6",
+        "grunt-sass": "^1.2.0",
+        "grunt-svg-sprite": "^1.3.3",
+        "grunt-webfont": "~1.3.0",
+        "load-grunt-tasks": "~0.6.0",
+        "harp": "^0.20.1",
+        "highlight.js": "^9.1.0",
+        "marked": "^0.3.5"
+    }
+}

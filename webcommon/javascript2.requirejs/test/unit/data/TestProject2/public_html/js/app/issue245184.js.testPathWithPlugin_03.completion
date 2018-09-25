@@ -1,0 +1,9 @@
+Code completion result for source line:
+'order!lib/|proto/localization',
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FILE       moduleLib1.js                              
+FILE       moduleLib2.js                              
+FILE       oj                                         
+FILE       proto                                      
+FILE       require.js                                 

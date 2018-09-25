@@ -1,0 +1,9 @@
+  function |>METHOD:a<|() {
+               
+               var |>LOCAL_VARIABLE_DECLARATION:x<| = {|>FIELD:a<|:1}.a;
+               
+               if (|>LOCAL_VARIABLE:x<|)
+                  return; //
+               
+               
+            }

@@ -1,0 +1,5 @@
+    for (a in b)
+;
+
+for (i = 1; i < q; i++)
+       ;

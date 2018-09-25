@@ -1,0 +1,10 @@
+Code completion result for source line:
+$this->|baseTraitField;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     basePrivate()                   [PRIVATE]  BaseTrait
+METHOD     baseProtected()                 [PROTECTE  BaseTrait
+METHOD     baseTraitMethod()               [PUBLIC]   BaseTrait
+METHOD     functionName()                  [PUBLIC]   BaseClass
+VARIABLE   ? baseTraitField                [PUBLIC]   BaseTrait
+VARIABLE   ? privateBaseField              [PRIVATE]  BaseTrait
+VARIABLE   ? protectedBaseField            [PROTECTE  BaseTrait

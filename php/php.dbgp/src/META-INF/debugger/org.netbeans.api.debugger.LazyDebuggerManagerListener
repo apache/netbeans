@@ -1,0 +1,6 @@
+org.netbeans.modules.php.dbgp.breakpoints.BreakpointAnnotationListener
+org.netbeans.modules.php.dbgp.breakpoints.PersistenceManager
+org.netbeans.modules.php.dbgp.breakpoints.BreakpointRuntimeSetter
+org.netbeans.modules.php.dbgp.SessionListener
+org.netbeans.modules.php.dbgp.breakpoints.BreakpointClearService
+

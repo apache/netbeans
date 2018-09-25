@@ -1,0 +1,40 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n\n
+token #2 PHP_FUNCTION function
+token #3 WHITESPACE  
+token #4 PHP_STRING gg
+token #5 PHP_TOKEN (
+token #6 PHP_TOKEN )
+token #7 WHITESPACE  
+token #8 PHP_CURLY_OPEN {
+token #9 WHITESPACE \n  
+token #10 PHP_YIELD yield
+token #11 WHITESPACE  
+token #12 PHP_NUMBER 1
+token #13 PHP_SEMICOLON ;
+token #14 WHITESPACE \n  
+token #15 PHP_YIELD_FROM yield from
+token #16 WHITESPACE  
+token #17 PHP_NEW new
+token #18 WHITESPACE  
+token #19 PHP_STRING ArrayIterator
+token #20 PHP_TOKEN (
+token #21 PHP_TOKEN [
+token #22 PHP_NUMBER 2
+token #23 PHP_TOKEN ,
+token #24 WHITESPACE  
+token #25 PHP_NUMBER 3
+token #26 PHP_TOKEN ,
+token #27 WHITESPACE  
+token #28 PHP_NUMBER 4
+token #29 PHP_TOKEN ]
+token #30 PHP_TOKEN )
+token #31 PHP_SEMICOLON ;
+token #32 WHITESPACE \n  
+token #33 PHP_YIELD yield
+token #34 WHITESPACE  
+token #35 PHP_NUMBER 5
+token #36 PHP_SEMICOLON ;
+token #37 WHITESPACE \n
+token #38 PHP_CURLY_CLOSE }
+token #39 WHITESPACE \n

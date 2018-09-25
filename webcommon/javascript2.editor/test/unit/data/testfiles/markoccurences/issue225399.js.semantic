@@ -1,0 +1,7 @@
+function |>METHOD:AdminRunsCtrl<|($http) {
+    this.|>METHOD:get<| = function($scope, version, onSuccess, onFail) {
+        version = (version.length > 0) ? {"|>FIELD:version<|": version} : {|>FIELD:petr<| : 10};
+        $http.get($scope.SYNERGY.server.buildURL("specifications", version)).success(onSuccess).error(onFail);
+        version.|>FIELD:version<| = 10;
+    };   
+} 

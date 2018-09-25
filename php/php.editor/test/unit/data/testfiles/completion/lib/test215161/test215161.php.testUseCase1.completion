@@ -1,0 +1,5 @@
+Code completion result for source line:
+$c = new \Foo\My|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTRUCTO MyNewClass123($foo)             [PUBLIC]   Foo
+CONSTRUCTO MyNewClass123($foo, $bar = 1)   [PUBLIC]   Foo

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sun-application PUBLIC "-//Sun Microsystems, Inc.//DTD Application Server 8.0 J2EE Application 1.4//EN" "http://www.sun.com/software/appserver/dtds/sun-application_1_4-0.dtd">
+<sun-application>
+  <web>
+    <web-uri>TestApplication-war.war</web-uri>
+    <context-root>/TestApplication-war</context-root>
+  </web>
+</sun-application>

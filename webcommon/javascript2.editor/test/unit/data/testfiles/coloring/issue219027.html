@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Angry Bids - HTML5</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="author" content="Martin Fousek">
+        <link rel="stylesheet" media="screen,projection,tv" href="css/layout.css" type="text/css"/>
+
+        <script type="text/javascript" src="js/lib/jquery-1.8.1.js"></script>
+        <script type="text/javascript" src="js/lib/jquery.flot.js"></script>
+        <script type="text/javascript" src="js/lib/jquery.flot.stack.js"></script>
+        <script type="text/javascript" src="js/common.js"></script>
+        <script type="text/javascript" src="js/constants.js"></script>
+        <script type="text/javascript" src="js/productList.js"></script>
+        <script type="text/javascript">
+            // when the page is ready
+            $(document).ready(function() {
+
+                // draw graph
+                drawChart('#chart_placeholder');
+
+                // get all JSONs data and fill up the content
+                $.getJSON(JsonLocation.auctions, function(data) {
+                    // generate list
+                    productList = generateProductList();
+
+                    // generate all products into it
+                    $.each(data, function(index, element) {
+                        product = generateProduct(element);
+                        productList.append(product);
+                    });
+
+                    // append clearer to the content (to get correct borders)
+                    productList.append(generateClearer());
+
+                    // append everything to the page
+                    $('#products').append(productList);
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div id="header" class="container">
+            <img src="img/app-logo.png" title="LiveDemo"  alt="LiveDemo" id="logo" />
+        </div>
+        <div id="content">
+            <div id="products" class="container">
+                <h3>All Products:</h3>
+            </div>
+            <div id="chart" class="container">
+                <h3>Most Popular Products:</h3>
+                <div id="chart_placeholder"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </body>
+</html>

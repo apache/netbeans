@@ -1,0 +1,3 @@
+var a, |>MARK_OCCURRENCES:b<|, c;
+[a,|>MARK_OCCURRENCES:b^<|, c, d] = [1, 2, "testik", d+d];
+console.log(|>MARK_OCCURRENCES:b<|); // 2

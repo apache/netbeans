@@ -1,0 +1,91 @@
+token #0 T_INLINE_HTML --TEST--\njump 04: goto from loop (backward)\n--FILE--\n
+token #1 PHP_OPENTAG <?php
+token #2 WHITESPACE \n
+token #3 PHP_VARIABLE $s
+token #4 WHITESPACE  
+token #5 PHP_OPERATOR =
+token #6 WHITESPACE  
+token #7 PHP_CONSTANT_ENCAPSED_STRING "X"
+token #8 PHP_SEMICOLON ;
+token #9 WHITESPACE \n
+token #10 PHP_ECHO echo
+token #11 WHITESPACE  
+token #12 PHP_CONSTANT_ENCAPSED_STRING "1: ok\n"
+token #13 PHP_SEMICOLON ;
+token #14 WHITESPACE \t\n
+token #15 PHP_STRING L1
+token #16 PHP_TOKEN :
+token #17 WHITESPACE  
+token #18 PHP_IF if
+token #19 WHITESPACE  
+token #20 PHP_TOKEN (
+token #21 PHP_VARIABLE $s
+token #22 WHITESPACE  
+token #23 PHP_OPERATOR !=
+token #24 WHITESPACE  
+token #25 PHP_CONSTANT_ENCAPSED_STRING "X"
+token #26 PHP_TOKEN )
+token #27 WHITESPACE  
+token #28 PHP_CURLY_OPEN {
+token #29 WHITESPACE \n\t
+token #30 PHP_ECHO echo
+token #31 WHITESPACE  
+token #32 PHP_CONSTANT_ENCAPSED_STRING "4: ok\n"
+token #33 PHP_SEMICOLON ;
+token #34 WHITESPACE \t\n
+token #35 PHP_CURLY_CLOSE }
+token #36 WHITESPACE  
+token #37 PHP_ELSE else
+token #38 WHITESPACE  
+token #39 PHP_CURLY_OPEN {
+token #40 WHITESPACE \t\n\t
+token #41 PHP_ECHO echo
+token #42 WHITESPACE  
+token #43 PHP_CONSTANT_ENCAPSED_STRING "2: ok\n"
+token #44 PHP_SEMICOLON ;
+token #45 WHITESPACE \t\n\t
+token #46 PHP_WHILE while
+token #47 WHITESPACE  
+token #48 PHP_TOKEN (
+token #49 PHP_VARIABLE $s
+token #50 WHITESPACE  
+token #51 PHP_OPERATOR !=
+token #52 WHITESPACE  
+token #53 PHP_CONSTANT_ENCAPSED_STRING "XXX"
+token #54 PHP_TOKEN )
+token #55 WHITESPACE  
+token #56 PHP_CURLY_OPEN {
+token #57 WHITESPACE \n\t\t
+token #58 PHP_ECHO echo
+token #59 WHITESPACE  
+token #60 PHP_CONSTANT_ENCAPSED_STRING "3: ok\n"
+token #61 PHP_SEMICOLON ;
+token #62 WHITESPACE \t\n\t\t
+token #63 PHP_VARIABLE $s
+token #64 WHITESPACE  
+token #65 PHP_OPERATOR .=
+token #66 WHITESPACE  
+token #67 PHP_CONSTANT_ENCAPSED_STRING "X"
+token #68 PHP_SEMICOLON ;
+token #69 WHITESPACE \n\t\t
+token #70 PHP_GOTO goto
+token #71 WHITESPACE  
+token #72 PHP_STRING L1
+token #73 PHP_SEMICOLON ;
+token #74 WHITESPACE \n\t\t
+token #75 PHP_ECHO echo
+token #76 WHITESPACE  
+token #77 PHP_CONSTANT_ENCAPSED_STRING "bug\n"
+token #78 PHP_SEMICOLON ;
+token #79 WHITESPACE \t\n\t
+token #80 PHP_CURLY_CLOSE }
+token #81 WHITESPACE \n\t
+token #82 PHP_ECHO echo
+token #83 WHITESPACE  
+token #84 PHP_CONSTANT_ENCAPSED_STRING "bug\n"
+token #85 PHP_SEMICOLON ;
+token #86 WHITESPACE \t\n
+token #87 PHP_CURLY_CLOSE }
+token #88 WHITESPACE \n
+token #89 PHP_CLOSETAG ?>
+token #90 T_INLINE_HTML \n--EXPECT--\n1: ok\n2: ok\n3: ok\n4: ok\n

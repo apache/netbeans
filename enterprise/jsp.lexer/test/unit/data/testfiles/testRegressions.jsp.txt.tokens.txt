@@ -1,0 +1,16 @@
+.t.e.s.t. jsp end tag with a dot - issue #150183
+SYMBOL          "<"
+TAG             "jsp:directive.include"
+WHITESPACE      " "
+ATTRIBUTE       "file"
+SYMBOL          "="
+ATTR_VALUE      ""../../test.css""
+SYMBOL          ">"
+SYMBOL          "</"
+ENDTAG          "jsp:directive.include"
+SYMBOL          ">"
+----- EOF -----
+
+<Unnamed test>
+----- EOF -----
+

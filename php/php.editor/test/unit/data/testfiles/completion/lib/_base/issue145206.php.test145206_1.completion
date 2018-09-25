@@ -1,0 +1,5 @@
+Code completion result for source line:
+echo TestIssue145206 :: |createStatic()->create() ->create() -> create();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     createStatic()                  [STATIC]   TestIssue145206
+CONSTANT   class \TestIssue145206          [PUBLIC]   Magic Constant

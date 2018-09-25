@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project basedir="." default="build" name="webcommon/javascript2.lexer">
+    <description>Builds, tests, and runs the project org.netbeans.modules.javascript2.lexer</description>
+    <import file="../../nbbuild/templates/projectized.xml"/>
+
+    <!-- JFlex 1.4.3 handling (download and taskdef) -->
+    <target name="-prepare-jflex" depends="build-init">
+        <taskdef name="jflex"
+                 classname="JFlex.anttask.JFlexTask"
+                 classpath="${basedir}/external/jflex-1.4.3.jar" onerror="fail"/>
+    </target>
+
+    <!-- JavaScript section - generating JavaScript lexer -->
+    <target name="-gen-js-lexer" depends="-prepare-jflex">
+        <jflex file="tools/JsColoringScanner.flex" destdir="src" nobak="true"/>
+    </target>
+    <target name="-patch-js-lexer">
+        <patch patchfile="tools/lexer-js.patch"
+               dir="src/org/netbeans/modules/javascript2/lexer"/>
+    </target>
+    <target name="gen-js-lexer" depends="-gen-js-lexer,-patch-js-lexer"/>
+
+    <!-- JSON section - generating JSON lexer -->
+    <target name="-gen-json-lexer" depends="-prepare-jflex">
+        <jflex file="tools/JsonColoringScanner.flex" destdir="src" nobak="true"/>
+    </target>
+    <target name="-patch-json-lexer">
+        <patch patchfile="tools/lexer-json.patch"
+               dir="src/org/netbeans/modules/javascript2/lexer"/>
+    </target>
+    <target name="gen-json-lexer" depends="-gen-json-lexer,-patch-json-lexer"/>
+
+    <!-- Javascript Documentation section - generating JsDocumentation lexer -->
+    <target name="-gen-jsdocumentation-lexer" depends="-prepare-jflex">
+        <jflex file="tools/JsDocumentationColoringScanner.flex" destdir="src" nobak="true"/>
+    </target>
+    <target name="-patch-jsdocumentation-lexer">
+        <patch patchfile="tools/lexer-jsdocumentation.patch"
+               dir="src/org/netbeans/modules/javascript2/lexer"/>
+    </target>
+    <target name="gen-jsdocumentation-lexer" depends="-gen-jsdocumentation-lexer,-patch-jsdocumentation-lexer"/>
+
+</project>

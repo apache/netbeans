@@ -1,0 +1,2 @@
+[CODE_DELIMITER(1):-][WHITESPACE(1): ][JAVASCRIPT(32):var msg = "not my inside voice";][EOL(1):\n]
+[TAG(1):p][WHITESPACE(1): ][TEXT(8):This is ][EXPRESSION_DELIMITER_OPEN(2):#{][JAVASCRIPT(17):msg.toUpperCase()][EXPRESSION_DELIMITER_CLOSE(1):}]

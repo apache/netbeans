@@ -19,15 +19,8 @@
     under the License.
 
 -->
-<licenseinfo>
-    <fileset>
-        <file>src/org/netbeans/modules/junit/ui/resources/JUnitLogo.png</file>
-        <license ref="Apache-2.0-ASF" />
-        <comment type="COMMENT_UNSUPPORTED" />
-    </fileset>
-    <fileset>
-        <file>src/org/netbeans/modules/junit/ui/resources/junit5-logo.png</file>
-        <license ref="EPL-v20" />
-        <comment type="COMMENT_UNSUPPORTED" />
-    </fileset>
-</licenseinfo>
+<project name="platform/libs.junit5" default="build" basedir=".">
+    <property name="license.file" location="../../nbbuild/licenses/CPL-1.0"/>
+    <target name="-create-license.file"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
+</project>

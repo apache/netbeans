@@ -1045,7 +1045,8 @@ public class NPECheck {
                 switch (ownerFQN) {
                     case "org.testng.Assert": argument = node.getArguments().get(0); break;
                     case "junit.framework.Assert":
-                    case "org.junit.Assert": argument = node.getArguments().get(node.getArguments().size() - 1); break;
+                    case "org.junit.Assert": 
+                    case "org.junit.jupiter.api.Assertions": argument = node.getArguments().get(node.getArguments().size() - 1); break;
                 }
 
                 Element param = argument != null && targetState != null ? info.getTrees().getElement(new TreePath(getCurrentPath(), argument)) : null;

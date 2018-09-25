@@ -123,6 +123,9 @@ public final class DefaultPlugin extends JUnitPlugin {
     /** full name of a file specific for the JUnit 4.x library */
     private static final String JUNIT4_SPECIFIC
                                 = "org/junit/Test.class";               //NOI18N
+    /** full name of a file specific for the JUnit 5.x library */
+    private static final String JUNIT5_SPECIFIC
+                                = "org/junit/platform/commons/annotation/Testable.class";               //NOI18N
     
     /** */
     private static JUnitVersion junitVer;
@@ -163,7 +166,9 @@ public final class DefaultPlugin extends JUnitPlugin {
             Project project = FileOwnerQuery.getOwner(projectURI);
             final ClassPath classPath = getTestClassPath(project);
             if (classPath != null) {
-                if (classPath.findResource(JUNIT4_SPECIFIC) != null) {
+                if (classPath.findResource(JUNIT5_SPECIFIC) != null) {
+                    version = JUnitVersion.JUNIT5.toString();
+                } else if (classPath.findResource(JUNIT4_SPECIFIC) != null) {
                     version = JUnitVersion.JUNIT4.toString();
                 } else if (classPath.findResource(JUNIT3_SPECIFIC) != null) {
                     version = JUnitVersion.JUNIT3.toString();
@@ -858,6 +863,10 @@ public final class DefaultPlugin extends JUnitPlugin {
                                       ? "PROP_junit4_testSuiteTemplate" //NOI18N
                                       : null;
                     break;
+                case JUNIT5:
+                    templateId = "PROP_junit5_testClassTemplate";       //NOI18N
+                    suiteTemplateId = null;
+                    break;
                 default:
                     assert false;
                     templateId = null;
@@ -1110,6 +1119,18 @@ public final class DefaultPlugin extends JUnitPlugin {
                         return true;
                     }
                     return false;
+                case JUNIT5:
+                {
+                    sourceLevel = JUnitTestUtil.getSourceLevel(selectedFiles[0]);
+                    if (sourceLevel == null) {    //could not get source level
+                        return true;
+                    }
+
+                    if (sourceLevel.compareTo("1.8") >= 0) {            //NOI18N
+                        return true;
+                    } 
+                    return false;
+                }
                 default:
                     assert false;
                     return false;
@@ -1148,6 +1169,18 @@ public final class DefaultPlugin extends JUnitPlugin {
                         return true;
                     }
                     return false;
+                case JUNIT5:
+                {
+                    sourceLevel = JUnitTestUtil.getSourceLevel(selectedFiles[0]);
+                    if ((sourceLevel != null)
+                            && (sourceLevel.compareTo("1.8")) >= 0) {   //NOI18N
+                        if (storeSettings) {
+                            return storeProjectSettingsJUnitVer(project);
+                        }
+                        return true;
+                    } 
+                    return false;
+                }
                 default:
                     assert false;
                     return false;
@@ -1156,6 +1189,7 @@ public final class DefaultPlugin extends JUnitPlugin {
 
         String msgKey;
         boolean offerJUnit4;
+        boolean defaultToJUnit5 = false;
         boolean showSourceLevelReqs;
         String sourceLevel = JUnitTestUtil.getSourceLevel(selectedFiles[0]);
         if (sourceLevel == null) {
@@ -1164,14 +1198,21 @@ public final class DefaultPlugin extends JUnitPlugin {
             showSourceLevelReqs = true;
         } else {
             msgKey = "MSG_select_junit_version";                        //NOI18N
+            defaultToJUnit5 = (sourceLevel.compareTo("1.8") >= 0);      //NOI18N
             offerJUnit4 = (sourceLevel.compareTo("1.5") >= 0);          //NOI18N
             showSourceLevelReqs = !offerJUnit4;
         }
         loadJUnitToUseFromPropertiesFile(project);
         if(junitVer == null) {
-            // probably new project after 8.1, since determining junitVer failed
-            // sofar, so as last resort default to 4.x
-            junitVer = JUnitVersion.JUNIT4;
+            
+            if (defaultToJUnit5) {
+                // Java 8 and above should default to JUnit 5
+                junitVer = JUnitVersion.JUNIT5;
+            } else {
+                // probably new project after 8.1, since determining junitVer failed
+                // sofar, so as last resort default to 4.x
+                junitVer = JUnitVersion.JUNIT4;
+            }
         }
         if ((junitVer != null) && storeSettings) {
             return storeProjectSettingsJUnitVer(project);
@@ -1205,7 +1246,7 @@ public final class DefaultPlugin extends JUnitPlugin {
 
         return answer == selectOption;
     }
-
+    
     /**
      */
     private boolean informUserOnlyJUnit3Applicable(String sourceLevel) {
@@ -1259,7 +1300,7 @@ public final class DefaultPlugin extends JUnitPlugin {
                 try {
                     Properties props = getProjectProperties(projectDir);
                     String property = props.getProperty(PROP_JUNIT_SELECTED_VERSION);
-                    junitVer = property == null ? null : (property.equals("3") ? JUnitVersion.JUNIT3 : JUnitVersion.JUNIT4);
+                    junitVer = property == null ? null : (property.equals("3") ? JUnitVersion.JUNIT3 : property.equals("4") ? JUnitVersion.JUNIT4 : JUnitVersion.JUNIT5);
                 } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -1267,80 +1308,80 @@ public final class DefaultPlugin extends JUnitPlugin {
         });
     }
     
-    /**
-     */
-    private JUnitVersion askUserWhichJUnitToUse(String msgKey,
-                                                boolean offerJUnit4,
-                                                boolean showSourceLevelCondition) {
-        // assert EventQueue.isDispatchThread(); #170707
-
-        JRadioButton rbtnJUnit3 = new JRadioButton();
-        Mnemonics.setLocalizedText(rbtnJUnit3, bundle.getString("LBL_JUnit3_generator"));
-        rbtnJUnit3.getAccessibleContext().setAccessibleDescription(bundle.getString("AD_JUnit3_generator"));
-        
-        JRadioButton rbtnJUnit4 = new JRadioButton();
-        Mnemonics.setLocalizedText(
-                rbtnJUnit4,
-                showSourceLevelCondition
-                       ? bundle.getString("LBL_JUnit4_generator_reqs")  //NOI18N
-                       : bundle.getString("LBL_JUnit4_generator"));     //NOI18N
-        rbtnJUnit4.getAccessibleContext().setAccessibleDescription(bundle.getString("AD_JUnit4_generator"));
-
-        ButtonGroup group = new ButtonGroup();
-        group.add(rbtnJUnit3);
-        group.add(rbtnJUnit4);
-
-        if (offerJUnit4) {
-            rbtnJUnit4.setSelected(true);
-        } else {
-            rbtnJUnit3.setSelected(true);
-            rbtnJUnit4.setEnabled(false);
-        }
-
-        JComponent msg
-                = createMessageComponent(msgKey);
-        
-        JPanel choicePanel = new JPanel(new GridLayout(0, 1, 0, 3));
-        choicePanel.add(rbtnJUnit3);
-        choicePanel.add(rbtnJUnit4);
-
-        JPanel panel = new JPanel(new BorderLayout(0, 12));
-        panel.add(msg, BorderLayout.NORTH);
-        panel.add(choicePanel, BorderLayout.CENTER);
-
-        JButton button = new JButton(); 
-        Mnemonics.setLocalizedText(button, bundle.getString("LBL_Select"));
-        button.getAccessibleContext().setAccessibleName("AN_Select");
-        button.getAccessibleContext().setAccessibleDescription("AD_Select");
-        
-//        Object selectOption = bundle.getString("LBL_Select");        //NOI18N
-        Object answer = DialogDisplayer.getDefault().notify(
-                new DialogDescriptor(
-                        wrapDialogContent(panel),
-                        bundle.getString("LBL_title_select_generator"),//NOI18N
-                        true,
-                        new Object[] {button, CANCEL_OPTION},
-                        button,
-                        DialogDescriptor.DEFAULT_ALIGN,
-                        new HelpCtx(
-                                "org.netbeans.modules.junit.select_junit_version"),//NOI18N
-                        (ActionListener) null));
-
-        if (answer == button) {
-            JUnitVersion ver;
-            if (rbtnJUnit3.isSelected()) {
-                ver = JUnitVersion.JUNIT3;
-            } else if (rbtnJUnit4.isSelected()) {
-                ver = JUnitVersion.JUNIT4;
-            } else {
-                assert false;
-                ver = null;
-            }
-            return ver;
-        } else {
-            return null;
-        }
-    }
+//    /**
+//     */
+//    private JUnitVersion askUserWhichJUnitToUse(String msgKey,
+//                                                boolean offerJUnit4,
+//                                                boolean showSourceLevelCondition) {
+//        // assert EventQueue.isDispatchThread(); #170707
+//
+//        JRadioButton rbtnJUnit3 = new JRadioButton();
+//        Mnemonics.setLocalizedText(rbtnJUnit3, bundle.getString("LBL_JUnit3_generator"));
+//        rbtnJUnit3.getAccessibleContext().setAccessibleDescription(bundle.getString("AD_JUnit3_generator"));
+//        
+//        JRadioButton rbtnJUnit4 = new JRadioButton();
+//        Mnemonics.setLocalizedText(
+//                rbtnJUnit4,
+//                showSourceLevelCondition
+//                       ? bundle.getString("LBL_JUnit4_generator_reqs")  //NOI18N
+//                       : bundle.getString("LBL_JUnit4_generator"));     //NOI18N
+//        rbtnJUnit4.getAccessibleContext().setAccessibleDescription(bundle.getString("AD_JUnit4_generator"));
+//
+//        ButtonGroup group = new ButtonGroup();
+//        group.add(rbtnJUnit3);
+//        group.add(rbtnJUnit4);
+//
+//        if (offerJUnit4) {
+//            rbtnJUnit4.setSelected(true);
+//        } else {
+//            rbtnJUnit3.setSelected(true);
+//            rbtnJUnit4.setEnabled(false);
+//        }
+//
+//        JComponent msg
+//                = createMessageComponent(msgKey);
+//        
+//        JPanel choicePanel = new JPanel(new GridLayout(0, 1, 0, 3));
+//        choicePanel.add(rbtnJUnit3);
+//        choicePanel.add(rbtnJUnit4);
+//
+//        JPanel panel = new JPanel(new BorderLayout(0, 12));
+//        panel.add(msg, BorderLayout.NORTH);
+//        panel.add(choicePanel, BorderLayout.CENTER);
+//
+//        JButton button = new JButton(); 
+//        Mnemonics.setLocalizedText(button, bundle.getString("LBL_Select"));
+//        button.getAccessibleContext().setAccessibleName("AN_Select");
+//        button.getAccessibleContext().setAccessibleDescription("AD_Select");
+//        
+////        Object selectOption = bundle.getString("LBL_Select");        //NOI18N
+//        Object answer = DialogDisplayer.getDefault().notify(
+//                new DialogDescriptor(
+//                        wrapDialogContent(panel),
+//                        bundle.getString("LBL_title_select_generator"),//NOI18N
+//                        true,
+//                        new Object[] {button, CANCEL_OPTION},
+//                        button,
+//                        DialogDescriptor.DEFAULT_ALIGN,
+//                        new HelpCtx(
+//                                "org.netbeans.modules.junit.select_junit_version"),//NOI18N
+//                        (ActionListener) null));
+//
+//        if (answer == button) {
+//            JUnitVersion ver;
+//            if (rbtnJUnit3.isSelected()) {
+//                ver = JUnitVersion.JUNIT3;
+//            } else if (rbtnJUnit4.isSelected()) {
+//                ver = JUnitVersion.JUNIT4;
+//            } else {
+//                assert false;
+//                ver = null;
+//            }
+//            return ver;
+//        } else {
+//            return null;
+//        }
+//    }
 
     /**
      */
@@ -1400,6 +1441,7 @@ public final class DefaultPlugin extends JUnitPlugin {
 
         final boolean hasJUnit3;
         final boolean hasJUnit4;
+        final boolean hasJUnit5;
         final ClassPath classPath = getTestClassPath(project); //may throw ISE
         
         loadJUnitToUseFromPropertiesFile(project);
@@ -1407,14 +1449,16 @@ public final class DefaultPlugin extends JUnitPlugin {
             if (classPath != null) {
                 hasJUnit3 = (classPath.findResource(JUNIT3_SPECIFIC) != null);
                 hasJUnit4 = (classPath.findResource(JUNIT4_SPECIFIC) != null);
+                hasJUnit5 = (classPath.findResource(JUNIT5_SPECIFIC) != null);
             } else {
                 hasJUnit3 = false;
                 hasJUnit4 = false;
+                hasJUnit5 = false;
             }
 
-            if (hasJUnit3 != hasJUnit4) {
+            if (hasJUnit3 || hasJUnit4 || hasJUnit5) {
                 junitVer = hasJUnit3 ? JUnitVersion.JUNIT3
-                        : JUnitVersion.JUNIT4;
+                        : hasJUnit4 ? JUnitVersion.JUNIT4 : JUnitVersion.JUNIT5;
                 if (LOG_JUNIT_VER.isLoggable(FINEST)) {
                     LOG_JUNIT_VER.finest(" - detected version " + junitVer);//NOI18N
                 }
@@ -1491,17 +1535,20 @@ public final class DefaultPlugin extends JUnitPlugin {
 
         final boolean hasJUnit3;
         final boolean hasJUnit4;
+        final boolean hasJUnit5;
         final ClassPath classPath = getTestClassPath(project);
         if (classPath != null) {
             hasJUnit3 = (classPath.findResource(JUNIT3_SPECIFIC) != null);
             hasJUnit4 = (classPath.findResource(JUNIT4_SPECIFIC) != null);
+            hasJUnit5 = (classPath.findResource(JUNIT5_SPECIFIC) != null);
         } else {
             hasJUnit3 = false;
             hasJUnit4 = false;
+            hasJUnit5 = false;
         }
 
         final Pattern pattern = Pattern.compile(
-                                "^junit(?:_|\\W)+([34])(?:\\b|_).*");   //NOI18N
+                                "^junit(?:_|\\W)+([345])(?:\\b|_).*");   //NOI18N
 
         JUnitLibraryComparator libraryComparator = null;
 
@@ -1533,6 +1580,8 @@ public final class DefaultPlugin extends JUnitPlugin {
                 verNumToAdd = "3";                                      //NOI18N
             } else if ((junitVer == JUnitVersion.JUNIT4) && !hasJUnit4) {
                 verNumToAdd = "4";                                      //NOI18N
+            } else if ((junitVer == JUnitVersion.JUNIT5) && !hasJUnit5) {
+                verNumToAdd = "5";                                      //NOI18N
             } else {
                 verNumToAdd = null;
             }
@@ -1591,11 +1640,16 @@ public final class DefaultPlugin extends JUnitPlugin {
 
         final Library[] libsToAdd, libsToRemove;
         if (libraryToAdd != null) {
-            // junit-3.8.2 binaries were removed from standard build. User can 
-            // open legacy project with or create new testcases using junit 3.x
-            // style. junit-4.x and hamcrest binaries are added as test 
-            // dependencies for the project in those cases as well.
-            libsToAdd = new Library[] {libraryToAdd, libraryHamcrest};
+            if (junitVer == JUnitVersion.JUNIT5){
+                // junit 5 doesn't require hamcrest
+                libsToAdd = new Library[] {libraryToAdd};
+            } else {
+                // junit-3.8.2 binaries were removed from standard build. User can 
+                // open legacy project with or create new testcases using junit 3.x
+                // style. junit-4.x and hamcrest binaries are added as test 
+                // dependencies for the project in those cases as well.
+                libsToAdd = new Library[] {libraryToAdd, libraryHamcrest};
+            }
         } else{
             libsToAdd = null;
         }
@@ -2080,6 +2134,10 @@ public final class DefaultPlugin extends JUnitPlugin {
             case JUNIT4:
                 templateId = "PROP_junit4_testSuiteTemplate";           //NOI18N
                 break;
+            case JUNIT5:
+                // JUnit5 doesnt support Suites except via their Vintage engine
+                templateId = "PROP_junit5_testSuiteTemplate";           //NOI18N
+                break;
             default:
                 assert false;
                 templateId = null;
@@ -2177,6 +2235,9 @@ public final class DefaultPlugin extends JUnitPlugin {
                 supported = JUnitTestUtil.areAnnotationsSupported(testFolder);
                 break;
             case JUNIT4:
+                supported = true;
+                break;
+            case JUNIT5:
                 supported = true;
                 break;
             default:

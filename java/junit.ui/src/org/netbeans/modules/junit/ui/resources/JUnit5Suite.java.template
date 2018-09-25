@@ -1,0 +1,24 @@
+<#-- FreeMarker template (see http://freemarker.org/) -->
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+<#if package?? && package != "">
+package ${package};
+
+</#if>
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
+
+/**
+ *
+ * @author ${user}
+ */
+<#-- classNames:  "FooA,FooB" -->
+<#-- classes:     "FooA.class,FooB.class" -->
+@RunWith(JUnitPlatform.class)
+@SelectClasses({${classes}})
+public class ${name} {
+
+}

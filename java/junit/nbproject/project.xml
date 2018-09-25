@@ -155,7 +155,7 @@
                 <dependency>
                     <code-name-base>org.netbeans.modules.junitlib</code-name-base>
                     <run-dependency>
-                        <specification-version>1.2</specification-version>
+                        <specification-version>1.8</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -346,6 +346,10 @@
                     <name>unit</name>
                     <test-dependency>
                         <code-name-base>org.netbeans.libs.junit4</code-name-base>
+                        <compile-dependency/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.libs.junit5</code-name-base>
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>

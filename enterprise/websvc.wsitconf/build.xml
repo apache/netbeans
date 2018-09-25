@@ -70,8 +70,4 @@
     <target name="expand61src" unless="61srcexpanded">
         <unzip src="nb61src.zip" dest="61src"/>
     </target>
-
-    <target name="build-init" depends="projectized.build-init">
-        <unzip src="external/websvc.wsitconf-external-resources.zip" dest="${resources.dir}"/>
-    </target>
 </project>

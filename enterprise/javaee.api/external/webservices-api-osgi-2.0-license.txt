@@ -1,10 +1,9 @@
-Name: JavaEE Web API 6.0
-Version: 6.0
+Name: Metro Web Services API OSGi Bundle 2.0
+Version: 2.0
 License: CDDL-1.1
-Description: JavaEE Web API 6.0
 OSR: GlassFish Community
-Origin: https://mvnrepository.com/artifact/javax/javaee-web-api/6.0
-
+Description: Metro Web Services API OSGi Bundle
+Origin: https://mvnrepository.com/artifact/javax.xml/webservices-api-osgi/2.0
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

@@ -27,9 +27,9 @@
     <localizing-bundle>org/netbeans/modules/javaee/api/Bundle</localizing-bundle>
     <volume>
         <type>classpath</type>
-        <resource>jar:nbinst://org.netbeans.modules.javaee.api/modules/ext/javaee6-endorsed/javax.annotation.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.modules.javaee.api/modules/ext/javaee6-endorsed/jaxb-api-osgi.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.modules.javaee.api/modules/ext/javaee6-endorsed/webservices-api-osgi.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.javaee.api/modules/ext/javaee6-endorsed/javax.annotation-api-1.2.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.javaee.api/modules/ext/javaee6-endorsed/jaxb-api-osgi-2.2.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.javaee.api/modules/ext/javaee6-endorsed/webservices-api-osgi-2.0.jar!/</resource>
     </volume>
     <volume>
         <type>javadoc</type>

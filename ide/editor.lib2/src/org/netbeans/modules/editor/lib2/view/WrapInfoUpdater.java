@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.View;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 
@@ -101,14 +102,16 @@ final class WrapInfoUpdater {
         wrapTypeWords = (docView.op.getLineWrapType() == LineWrapType.WORD_BOUND);
         float visibleWidth = docView.op.getVisibleRect().width;
         TextLayout lineContinuationTextLayout = docView.op.getLineContinuationCharTextLayout();
+        final float lineContTextLayoutAdvance =
+            lineContinuationTextLayout == null ? 0f : lineContinuationTextLayout.getAdvance();
         // Make reasonable minimum width so that the number of visual lines does not double suddenly
         // when user would minimize the width too much. Also have enough space for line continuation mark
-        availableWidth = Math.max(visibleWidth - lineContinuationTextLayout.getAdvance(),
+        availableWidth = Math.max(visibleWidth - lineContTextLayoutAdvance,
                 docView.op.getDefaultCharWidth() * 4);
         logMsgBuilder = LOG.isLoggable(Level.FINE) ? new StringBuilder(100) : null;
         if (logMsgBuilder != null) {
             logMsgBuilder.append("Building wrapLines: availWidth=").append(availableWidth); // NOI18N
-            logMsgBuilder.append(", lineContCharWidth=").append(lineContinuationTextLayout.getAdvance()); // NOI18N
+            logMsgBuilder.append(", lineContCharWidth=").append(lineContTextLayoutAdvance); // NOI18N
             logMsgBuilder.append("\n"); // NOI18N
         }
         try {
@@ -131,7 +134,7 @@ final class WrapInfoUpdater {
                         WordInfo wordInfo = getWordInfo(viewOrPartStartOffset, wrapLineStartOffset);
                         if (wordInfo != null) {
                             // Attempt to break the view (at word boundary) so that it fits.
-                            ViewSplit split = breakView(viewOrPart, false);
+                            ViewSplit split = breakView(viewOrPart, true);
                             if (split != null) {
                                 addPart(split.startPart);
                                 finishWrapLine();
@@ -176,18 +179,49 @@ final class WrapInfoUpdater {
                     }
                     
                     if (regularBreak) {
-                        ViewSplit split = breakView(viewOrPart, false);
+                        /* Use allowWider=true here, so that long words are allowed to extend beyond
+                        the preferred wrap width. Turning it off would just give up on breaking
+                        entirely for the rest of the paragraph, yielding an even longer physical
+                        line. */
+                        ViewSplit split = breakView(viewOrPart, true);
                         if (split != null) {
                             addPart(split.startPart);
                             viewOrPart = split.endPart;
-                            finishWrapLine();
                         } else { // break failed
                             if (!wrapLineNonEmpty) {
                                 addViewOrPart(viewOrPart);
                                 viewOrPart = fetchNextView();
                             }
-                            finishWrapLine();
                         }
+                        /* Keep the NewlineView that follows each paragraph together with the
+                        paragraph's last wrap line. Otherwise, the NewlineView might wrap to the
+                        next physical line if the last wrap line of the paragraph happens to be
+                        exactly as long as the availableWidth. This would make the text caret, if
+                        positioned at the end of a paragraph, end up being visually positioned on
+                        the beginning of the next line instead of at the end of the current one. */
+                        if (viewOrPart != null && viewOrPart.view instanceof NewlineView) {
+                            /* One exception: If the wrap line ends with a space, it's actually
+                            better to allow the NewlineView, and thus the text caret, to wrap to the
+                            next physical line, since this is where the user's next typed character
+                            will end up. This also avoids the need to position the caret outside the
+                            viewport in a few cases (due to the text wrapping policy of allowing
+                            whitespace characters at the end of each wrap line to extend beyond the
+                            preferred wrap width). */
+                            boolean wrapLineEndsWithSpace = false;
+                            try {
+                                int newlineOffset = viewOrPart.view.getStartOffset();
+                                wrapLineEndsWithSpace = newlineOffset > 0 &&
+                                    Character.isWhitespace(viewOrPart.view.getDocument()
+                                    .getText(newlineOffset - 1, 1).charAt(0));
+                            } catch (BadLocationException e) {
+                                // Ignore.
+                            }
+                            if (!wrapLineEndsWithSpace) {
+                                addViewOrPart(viewOrPart);
+                                viewOrPart = fetchNextView();
+                            }
+                        }
+                        finishWrapLine();
                     }
                 }
             } while (childIndex < pView.getViewCount());
@@ -601,6 +635,10 @@ final class WrapInfoUpdater {
             return wordStartOffset;
         }
 
+        @Override
+        public String toString() {
+            return "WordInfo(" + wordStartOffset() + ", " + wordEndOffset() + ")";
+        }
     }
 
 

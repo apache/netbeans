@@ -21,9 +21,15 @@ package org.netbeans.modules.java.lsp.server.text;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
 import com.sun.source.util.TreePath;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -31,6 +37,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Element;
@@ -99,12 +106,19 @@ import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.support.ReferencesCount;
+import org.netbeans.api.java.source.ui.ElementOpen;
+import org.netbeans.api.lexer.TokenHierarchy;
+import org.netbeans.modules.editor.NbEditorUtilities;
+import org.netbeans.modules.editor.java.GoToSupport;
+import org.netbeans.modules.editor.java.GoToSupport.Context;
+import org.netbeans.modules.editor.java.GoToSupport.GoToTarget;
 import org.netbeans.modules.editor.java.Utilities;
 import org.netbeans.modules.java.completion.JavaCompletionTask;
 import org.netbeans.modules.java.completion.JavaCompletionTask.Options;
 import org.netbeans.modules.java.hints.infrastructure.CreatorBasedLazyFixList;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsProvider;
 import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
+import org.netbeans.modules.java.source.ui.ElementOpenAccessor;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
@@ -114,10 +128,17 @@ import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.editor.hints.LazyFixList;
 import org.netbeans.spi.java.hints.JavaFix;
+import org.netbeans.spi.lexer.MutableTextInput;
 import org.openide.cookies.EditorCookie;
+import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
+import org.openide.modules.Places;
+import org.openide.text.Line;
 import org.openide.text.NbDocument;
+import org.openide.text.PositionRef;
+import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -138,7 +159,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     @Override
     public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams params) {
         try {
-            FileObject file = URLMapper.findFileObject(URI.create(params.getTextDocument().getUri()).toURL());
+            FileObject file = fromUri(params.getTextDocument().getUri());
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
             int caret = getOffset(doc, params.getPosition());
@@ -365,8 +386,47 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     @Override
-    public CompletableFuture<List<? extends Location>> definition(TextDocumentPositionParams arg0) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public CompletableFuture<List<? extends Location>> definition(TextDocumentPositionParams params) {
+        JavaSource js = getSource(params.getTextDocument().getUri());
+        GoToTarget[] target = new GoToTarget[1];
+        LineMap[] lm = new LineMap[1];
+        try {
+            js.runUserActionTask(cc -> {
+                cc.toPhase(JavaSource.Phase.RESOLVED);
+                Document doc = cc.getSnapshot().getSource().getDocument(true);
+                int offset = getOffset(doc, params.getPosition());
+                Context context = GoToSupport.resolveContext(cc, doc, offset, false, false);
+                if (context == null) {
+                    return ;
+                }
+                target[0] = GoToSupport.computeGoToTarget(cc, context, offset);
+                lm[0] = cc.getCompilationUnit().getLineMap();
+            }, true);
+        } catch (IOException ex) {
+            //TODO: include stack trace:
+            client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+        }
+
+        List<Location> result = new ArrayList<>();
+
+        if (target[0] != null && target[0].success) {
+            if (target[0].offsetToOpen < 0) {
+                Object[] openInfo = ElementOpenAccessor.getInstance().getOpenInfo(target[0].cpInfo, target[0].elementToOpen, new AtomicBoolean());
+                if (openInfo != null) {
+                    FileObject file = (FileObject) openInfo[0];
+                    int start = (int) openInfo[1];
+                    int end = (int) openInfo[2];
+                    result.add(new Location(toUri(file),
+                                            new Range(createPosition(lm[0], start),
+                                                      createPosition(lm[0], end))));
+                }
+            } else {
+                Position pos = createPosition(js.getFileObjects().iterator().next(), target[0].offsetToOpen);
+                result.add(new Location(params.getTextDocument().getUri(),
+                                        new Range(pos, pos)));
+            }
+        }
+        return CompletableFuture.completedFuture(result);
     }
 
     @Override
@@ -568,7 +628,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     @Override
     public void didOpen(DidOpenTextDocumentParams params) {
         try {
-            FileObject file = URLMapper.findFileObject(URI.create(params.getTextDocument().getUri()).toURL());
+            FileObject file = fromUri(params.getTextDocument().getUri());
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
             openedDocuments.put(params.getTextDocument().getUri(), doc);
@@ -618,7 +678,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         diagnosticTasks.computeIfAbsent(uri, u -> {
             return BACKGROUND_TASKS.create(() -> {
                 try {
-                    FileObject file = URLMapper.findFileObject(URI.create(u).toURL());
+                    FileObject file = fromUri(u);
                     EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
                     Document doc = ec.openDocument();
                     ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
@@ -662,7 +722,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         Document doc = openedDocuments.get(fileUri);
         if (doc == null) {
             try {
-                FileObject file = URLMapper.findFileObject(URI.create(fileUri).toURL());
+                FileObject file = fromUri(fileUri);
                 return JavaSource.forFileObject(file);
             } catch (MalformedURLException ex) {
                 return null;
@@ -681,8 +741,94 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                             (int) lm.getColumnNumber(offset) - 1);
     }
 
+    public static Position createPosition(FileObject file, int offset) {
+        try {
+            EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+            StyledDocument doc = ec.openDocument();
+            int line = NbDocument.findLineNumber(doc, offset);
+            int column = NbDocument.findLineColumn(doc, offset);
+
+            return new Position(line, column);
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
     public static int getOffset(Document doc, Position pos) {
         return LineDocumentUtils.getLineStartFromIndex((LineDocument) doc, pos.getLine()) + pos.getCharacter();
+    }
+
+    private static String toUri(FileObject file) {
+        if (FileUtil.isArchiveArtifact(file)) {
+            //VS code cannot open jar:file: URLs, workaround:
+            File cacheDir = Places.getCacheSubfile("java-server");
+            File segments = new File(cacheDir, "segments");
+            Properties props = new Properties();
+
+            try (InputStream in = new FileInputStream(segments)) {
+                props.load(in);
+            } catch (IOException ex) {
+                //OK, may not exist yet
+            }
+            FileObject archive = FileUtil.getArchiveFile(file);
+            String archiveString = archive.toURL().toString();
+            File foundSegment = null;
+            for (String segment : props.stringPropertyNames()) {
+                if (archiveString.equals(props.getProperty(segment))) {
+                    foundSegment = new File(cacheDir, segment);
+                    break;
+                }
+            }
+            if (foundSegment == null) {
+                int i = 0;
+                while (props.getProperty("s" + i) != null)
+                    i++;
+                foundSegment = new File(cacheDir, "s" + i);
+                props.put("s" + i, archiveString);
+                try (OutputStream in = new FileOutputStream(segments)) {
+                    props.store(in, "");
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+            File cache = new File(foundSegment, FileUtil.getRelativePath(FileUtil.getArchiveRoot(archive), file));
+            cache.getParentFile().mkdirs();
+            try (OutputStream out = new FileOutputStream(cache)) {
+                out.write(file.asBytes());
+                return cache.toURI().toString();
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+        return file.toURI().toString();
+    }
+
+    private static FileObject fromUri(String uri) throws MalformedURLException {
+        File cacheDir = Places.getCacheSubfile("java-server");
+        URI uriUri = URI.create(uri);
+        URI relative = cacheDir.toURI().relativize(uriUri);
+        if (relative != null && new File(cacheDir, relative.toString()).canRead()) {
+            String segmentAndPath = relative.toString();
+            int slash = segmentAndPath.indexOf('/');
+            String segment = segmentAndPath.substring(0, slash);
+            String path = segmentAndPath.substring(slash + 1);
+            File segments = new File(cacheDir, "segments");
+            Properties props = new Properties();
+
+            try (InputStream in = new FileInputStream(segments)) {
+                props.load(in);
+                String archiveUri = props.getProperty(segment);
+                FileObject archive = URLMapper.findFileObject(URI.create(archiveUri).toURL());
+                archive = archive != null ? FileUtil.getArchiveRoot(archive) : null;
+                FileObject file = archive != null ? archive.getFileObject(path) : null;
+                if (file != null) {
+                    return file;
+                }
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+        return URLMapper.findFileObject(URI.create(uri).toURL());
     }
 
 }

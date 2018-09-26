@@ -107,6 +107,7 @@ public class Server {
             capabilities.setCompletionProvider(new CompletionOptions());
             capabilities.setCodeActionProvider(true);
             capabilities.setDocumentSymbolProvider(true);
+            capabilities.setDefinitionProvider(true);
             return CompletableFuture.completedFuture(new InitializeResult(capabilities));
         }
 

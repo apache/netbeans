@@ -44,6 +44,7 @@ import org.netbeans.modules.java.BinaryElementOpen;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
 import org.netbeans.modules.java.source.parsing.ClassParser;
 import org.netbeans.modules.java.source.parsing.FileObjects;
+import org.netbeans.modules.java.source.ui.ElementOpenAccessor;
 import org.openide.awt.StatusDisplayer;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
@@ -448,5 +449,14 @@ public final class ElementOpen {
         }
     
     }
-    
+
+    static {
+        ElementOpenAccessor.setInstance(new ElementOpenAccessor() {
+            @Override
+            public Object[] getOpenInfo(ClasspathInfo cpInfo, ElementHandle<? extends Element> el, AtomicBoolean cancel) {
+                return ElementOpen.getOpenInfo(cpInfo, el, cancel);
+            }
+        });
+    }
+
 }

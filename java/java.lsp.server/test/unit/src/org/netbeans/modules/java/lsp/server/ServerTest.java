@@ -42,6 +42,7 @@ import org.eclipse.lsp4j.DocumentSymbol;
 import org.eclipse.lsp4j.DocumentSymbolParams;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
+import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.Position;
@@ -52,6 +53,7 @@ import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentItem;
+import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
@@ -322,5 +324,74 @@ public class ServerTest extends NbTestCase {
                   .stream()
                   .map(this::toString)
                   .collect(Collectors.joining(", ", "(", ")"));
+    }
+
+    @Test
+    public void testGoToDefinition() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "public class Test {\n" +
+                      "    private int field;\n" +
+                      "    public void method(int ppp) {\n" +
+                      "        System.err.println(field);\n" +
+                      "        System.err.println(ppp);\n" +
+                      "    }\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        FileUtil.refreshFor(getWorkDir());
+        ServerSocket srv = new ServerSocket(0);
+        new Thread(() -> {
+            try {
+                Socket server = srv.accept();
+                Server.run(server.getInputStream(), server.getOutputStream());
+            } catch (Exception ex) {
+                throw new IllegalStateException(ex);
+            }
+        }).start();
+        Socket client = new Socket(InetAddress.getLocalHost(), srv.getLocalPort());
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+            }
+
+            @Override
+            public void showMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeResult result = server.initialize(new InitializeParams()).get();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(src.toURI().toString(), "java", 0, code)));
+        Position pos = new Position(3, 30);
+        List<? extends Location> definition = server.getTextDocumentService().definition(new TextDocumentPositionParams(new TextDocumentIdentifier(src.toURI().toString()), pos)).get();
+        assertEquals(1, definition.size());
+        assertEquals(src.toURI().toString(), definition.get(0).getUri());
+        assertEquals(1, definition.get(0).getRange().getStart().getLine());
+        assertEquals(4, definition.get(0).getRange().getStart().getCharacter());
+        pos = new Position(4, 30);
+        definition = server.getTextDocumentService().definition(new TextDocumentPositionParams(new TextDocumentIdentifier(src.toURI().toString()), pos)).get();
+        assertEquals(1, definition.size());
+        assertEquals(src.toURI().toString(), definition.get(0).getUri());
+        assertEquals(2, definition.get(0).getRange().getStart().getLine());
+        assertEquals(23, definition.get(0).getRange().getStart().getCharacter());
+        //XXX: test jump to another file!
     }
 }

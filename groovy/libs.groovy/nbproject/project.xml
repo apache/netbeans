@@ -45,6 +45,7 @@
                 <package>org.codehaus.groovy.control.messages</package>
                 <package>org.codehaus.groovy.reflection</package>
                 <package>org.codehaus.groovy.syntax</package>
+                <package>org.codehaus.groovy.transform</package>
                 <package>org.codehaus.groovy.transform.stc</package>
             </friend-packages>
             <class-path-extension>

@@ -24,15 +24,15 @@
      YOUR CHANGES WILL BE LOST
 -->
 <project default="default" basedir="..">
-        
+
     <target name="default">
         <echo message="Default target is not set."/>
     </target>
-    
+
     <target name="-init-extend-archive" depends="init">
         <available file="${resource.dir}" property="has.resources"/>
     </target>
-    
+
     <!-- Main target -->
     <target name="-extend-archive" depends="-init-extend-archive" if="has.resources">
         <!-- nothing like consistent naming standards -->
@@ -50,5 +50,5 @@
             <fileset  dir="${resource.dir}" includes="sun-resources.xml"/>
         </copy>
     </target>
-    
+
 </project>

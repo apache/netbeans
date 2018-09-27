@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema targetNamespace="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:tns="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsa04="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" blockDefault="#all">
+
+  <!-- Get Metadata request -->
+  <xs:element name="GetMetadata">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:Dialect" minOccurs="0"/>
+        <xs:element ref="tns:Identifier" minOccurs="0"/>
+      </xs:sequence>
+      <xs:anyAttribute namespace="##other" processContents="lax"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Dialect" type="xs:anyURI"/>
+  <xs:element name="Identifier" type="xs:anyURI"/>
+
+  <!-- Get Metadata response -->
+  <xs:element name="Metadata">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:MetadataSection" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:anyAttribute namespace="##other" processContents="lax"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="MetadataSection">
+    <xs:complexType>
+      <xs:choice>
+        <xs:any namespace="##other" processContents="lax"/>
+        <xs:element ref="tns:MetadataReference"/>
+        <xs:element ref="tns:Location"/>
+      </xs:choice>
+      <xs:attribute name="Dialect" type="xs:anyURI" use="required"/>
+      <xs:attribute name="Identifier" type="xs:anyURI"/>
+      <xs:anyAttribute namespace="##other" processContents="lax"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <!-- 
+       Ideally, the type of the MetadataReference would have been
+       the union of wsa04:EndpointReferenceType and
+       wsa10:EndpointReferenceType but unfortunately xs:union only
+       works for simple types. As a result, we have to define
+       the mex:MetadataReference using xs:any.
+  -->
+
+  <xs:element name="MetadataReference">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:any minOccurs="1" maxOccurs="unbounded" processContents="lax" namespace="##other"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Location" type="xs:anyURI"/>
+</xs:schema>

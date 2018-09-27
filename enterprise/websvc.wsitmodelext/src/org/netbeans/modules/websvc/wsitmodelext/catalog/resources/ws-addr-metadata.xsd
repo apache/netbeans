@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xs:schema PUBLIC "-//W3C//DTD XMLSCHEMA 200102//EN" "http://www.w3.org/2001/XMLSchema.dtd">
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsp="http://www.w3.org/2006/07/ws-policy" targetNamespace="http://www.w3.org/2007/05/addressing/metadata" blockDefault="#all" elementFormDefault="qualified">
+    
+    <xs:element name="ServiceName" type="tns:ServiceNameType"/>
+    <xs:complexType name="ServiceNameType">
+        <xs:simpleContent>
+            <xs:extension base="xs:QName">
+                <xs:attribute name="EndpointName" type="xs:NCName" use="optional"/>
+                <xs:anyAttribute namespace="##other" processContents="lax"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+ 
+    <xs:element name="InterfaceName" type="tns:AttributedQNameType"/>
+    <xs:complexType name="AttributedQNameType">
+        <xs:simpleContent>
+            <xs:extension base="xs:QName">
+                <xs:anyAttribute namespace="##other" processContents="lax"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    
+    <xs:attribute name="Action" type="xs:anyURI"/>
+
+    <!-- WS-Policy assertions -->
+    
+    <xs:element name="Addressing">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="wsp:Policy"/>
+	    </xs:sequence>
+            <xs:anyAttribute namespace="##other" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="AnonymousResponses">
+        <xs:complexType>
+            <xs:anyAttribute namespace="##other" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="NonAnonymousResponses">
+        <xs:complexType>
+            <xs:anyAttribute namespace="##other" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+    
+</xs:schema>

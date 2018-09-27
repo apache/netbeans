@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+    Copyright (c) 1997-2017 Oracle and/or its affiliates. All rights reserved.
+    The contents of this file are subject to the terms of either the GNU
+    General Public License Version 2 only ("GPL") or the Common Development
+    and Distribution License("CDDL") (collectively, the "License").  You
+    may not use this file except in compliance with the License.  You can
+    obtain a copy of the License at
+    https://oss.oracle.com/licenses/CDDL+GPL-1.1
+    or LICENSE.txt.  See the License for the specific
+    language governing permissions and limitations under the License.
+    When distributing the software, include this License Header Notice in each
+    file and include the License file at LICENSE.txt.
+    GPL Classpath Exception:
+    Oracle designates this particular file as subject to the "Classpath"
+    exception as provided by Oracle in the GPL Version 2 section of the License
+    file that accompanied this code.
+    Modifications:
+    If applicable, add the following below the License Header, with the fields
+    enclosed by brackets [] replaced by your own identifying information:
+    "Portions Copyright [year] [name of copyright owner]"
+    Contributor(s):
+    If you wish your version of this file to be governed by only the CDDL or
+    only the GPL Version 2, indicate your decision by adding "[Contributor]
+    elects to include this software in this distribution under the [CDDL or GPL
+    Version 2] license."  If you don't indicate a single choice of license, a
+    recipient has the option to distribute your version of this file under
+    either the CDDL, the GPL Version 2 or to extend the choice of license to
+    its licensees as provided above.  However, if you add GPL Version 2 code
+    and therefore, elected the GPL Version 2 license, then the option applies
+    only if the new code is made subject to such option by the copyright
+    holder.
+-->
+
+<!-- 
+(c) 2001-2005 Arjuna Technologies Ltd., BEA Systems, Hitachi Ltd., International Business Machines Corporation, IONA Technologies, Microsoft Corporation, Inc. All rights reserved.
+Permission to copy and display the "Web Services Atomic Transaction" Specification (the "Specification", which includes WSDL and schema documents), in any medium without fee or royalty is hereby granted, provided that you include the following on ALL copies of the "Web Services Atomic Transaction" Specification that you make:
+1.  A link or URL to the "Web Services Atomic Transaction" Specification at one of the Authors' websites
+2. The copyright notice as shown in the "Web Services Atomic Transaction" Specification.
+Arjuna, BEA, Hitachi, IBM, IONA and Microsoft (collectively, the "Authors") each agree to grant you a license, under royalty-free and otherwise reasonable, non-discriminatory terms and conditions, to their respective essential patent claims that they deem necessary to implement the "Web Services Atomic Transaction" Specification.
+THE "Web Services Atomic Transaction" SPECIFICATION IS PROVIDED "AS IS," AND THE AUTHORS MAKE NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, OR TITLE; THAT THE CONTENTS OF THE "Web Services Atomic Transaction" SPECIFICATION ARE SUITABLE FOR ANY PURPOSE; NOR THAT THE IMPLEMENTATION OF SUCH CONTENTS WILL NOT INFRINGE ANY THIRD PARTY PATENTS, COPYRIGHTS, TRADEMARKS OR OTHER RIGHTS.
+THE AUTHORS WILL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF OR RELATING TO ANY USE OR DISTRIBUTION OF THE "Web Services Atomic Transaction" SPECIFICATION.
+The name and trademarks of the Authors may NOT be used in any manner, including advertising or publicity pertaining to the "Web Services Atomic Transaction" Specification or its contents without specific, written prior permission. Title to copyright in the "Web Services Atomic Transaction" Specification will at all times remain with the Authors.
+No other rights are granted by implication, estoppel or otherwise.
+-->
+<xsd:schema targetNamespace="http://schemas.xmlsoap.org/ws/2004/10/wsat" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsat="http://schemas.xmlsoap.org/ws/2004/10/wsat" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+	<xsd:complexType name="Notification">
+		<xsd:sequence>
+			<xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:anyAttribute namespace="##other" processContents="lax"/>
+	</xsd:complexType>
+	<xsd:element name="Prepare" type="wsat:Notification"/>
+	<xsd:element name="Prepared" type="wsat:Notification"/>
+	<xsd:element name="Aborted" type="wsat:Notification"/>
+	<xsd:element name="ReadOnly" type="wsat:Notification"/>
+	<xsd:element name="Commit" type="wsat:Notification"/>
+	<xsd:element name="Rollback" type="wsat:Notification"/>
+	<xsd:element name="Committed" type="wsat:Notification"/>
+	<xsd:element name="Replay" type="wsat:Notification"/>
+	<xsd:simpleType name="Vote">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="VoteCommit"/>
+			<xsd:enumeration value="VoteRollback"/>
+			<xsd:enumeration value="VoteReadOnly"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:element name="PrepareResponse">
+		<xsd:complexType>
+			<xsd:attribute name="vote" type="wsat:Vote"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:simpleType name="Outcome">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Commit"/>
+			<xsd:enumeration value="Rollback"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:element name="ReplayResponse">
+		<xsd:complexType>
+			<xsd:attribute name="outcome" type="wsat:Outcome"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:simpleType name="ErrorCodes">
+		<xsd:restriction base="xsd:QName">
+			<xsd:enumeration value="wsat:InconsistentInternalState"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+    
+    <!-- Policy assertions -->
+    <xsd:element name="ATAssertion">
+		<xsd:complexType>
+			<xsd:sequence>
+                   <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+               </xsd:sequence>
+               <xsd:anyAttribute namespace="##other" processContents="lax"/>
+		</xsd:complexType>
+    </xsd:element>
+    <xsd:element name="ATAlwaysCapability">
+        <xsd:complexType>
+            <xsd:anyAttribute namespace="##other" processContents="lax"/>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

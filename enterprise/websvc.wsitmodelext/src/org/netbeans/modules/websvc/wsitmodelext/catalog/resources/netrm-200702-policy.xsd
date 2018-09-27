@@ -1,0 +1,37 @@
+
+<!--
+    This XML schema document describes format of the Metro configuration file
+    (metro.xml).
+
+    Naming conventiotns:
+    - Simple XSD types are suffixed with "SType"
+    - Complex XSD types are suffixed with "CType"
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://schemas.microsoft.com/ws-rx/wsrmp/200702"
+    xmlns:tns="http://schemas.microsoft.com/ws-rx/wsrmp/200702"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified">
+
+    <xs:element name="InactivityTimeout">
+        <xs:annotation>
+            <xs:documentation>
+                A parameter that specifies a period of inactivity for a Sequence.
+                If omitted, there is no implied value.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+            </xs:sequence>
+            <xs:attribute name="Milliseconds" type="xs:unsignedLong" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        The inactivity timeout duration, specified in milliseconds.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:anyAttribute namespace="##any" processContents="lax" />
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

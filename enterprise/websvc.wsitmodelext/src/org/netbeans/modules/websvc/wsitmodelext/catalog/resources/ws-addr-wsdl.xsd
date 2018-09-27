@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xs:schema PUBLIC "-//W3C//DTD XMLSCHEMA 200102//EN" "http://www.w3.org/2001/XMLSchema.dtd">
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.w3.org/2006/05/addressing/wsdl" targetNamespace="http://www.w3.org/2006/05/addressing/wsdl" blockDefault="#all" elementFormDefault="qualified">
+    
+    <xs:element name="ServiceName" type="tns:ServiceNameType"/>
+    <xs:complexType name="ServiceNameType">
+        <xs:simpleContent>
+            <xs:extension base="xs:QName">
+                <xs:attribute name="EndpointName" type="xs:NCName" use="optional"/>
+                <xs:anyAttribute namespace="##other" processContents="lax"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+ 
+    <xs:element name="InterfaceName" type="tns:AttributedQNameType"/>
+    <xs:complexType name="AttributedQNameType">
+        <xs:simpleContent>
+            <xs:extension base="xs:QName">
+                <xs:anyAttribute namespace="##other" processContents="lax"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    
+    <xs:attribute name="Action" type="xs:anyURI"/>
+    
+    <xs:element name="UsingAddressing">
+        <xs:complexType>
+            <xs:anyAttribute namespace="##other" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:simpleType name="AnonymousType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="optional"/>
+            <xs:enumeration value="required"/>
+            <xs:enumeration value="prohibited"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="Anonymous">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="tns:AnonymousType">
+                    <xs:anyAttribute namespace="##other" processContents="lax"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

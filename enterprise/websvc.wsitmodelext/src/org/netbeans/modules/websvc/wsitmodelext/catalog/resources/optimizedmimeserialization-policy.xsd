@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema targetNamespace="http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization" xmlns:tns="http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+  <xs:import namespace="http://schemas.xmlsoap.org/ws/2004/09/policy" schemaLocation="http://schemas.xmlsoap.org/ws/2004/09/policy/ws-policy.xsd"/>
+
+  <xs:element name="OptimizedMimeSerialization" type="tns:OptimizedMimeSerializationType"/>
+
+  <xs:complexType name="OptimizedMimeSerializationType">
+    <xs:attribute ref="wsp:Optional"/>
+    <xs:anyAttribute namespace="##any" processContents="lax"/>
+  </xs:complexType>
+
+</xs:schema>

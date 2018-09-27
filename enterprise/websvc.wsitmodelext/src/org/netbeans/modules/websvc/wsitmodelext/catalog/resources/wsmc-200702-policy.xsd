@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!--
+    This XML schema document describes format of the WS-MC v1.0 and v1.1 policy
+    assertion.
+
+    Naming conventiotns:
+    - Simple XSD types are suffixed with "SType"
+    - Complex XSD types are suffixed with "CType"
+-->
+<xs:schema
+xmlns:xs="http://www.w3.org/2001/XMLSchema"
+xmlns:wsmc="http://docs.oasis-open.org/ws-rx/wsmc/200702"
+targetNamespace="http://docs.oasis-open.org/ws-rx/wsmc/200702"
+elementFormDefault="qualified"
+attributeFormDefault="unqualified">
+    <!-- Policy Element -->
+    <xs:element name="MCSupported">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:anyAttribute namespace="##other" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

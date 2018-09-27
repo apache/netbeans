@@ -21,10 +21,25 @@
 -->
 <project basedir="." default="build" name="enterprise/websvc.wsitmodelext">
     <import file="../../nbbuild/templates/projectized.xml"/>
-    <property name="resources.dir" value="./src/org/netbeans/modules/websvc/wsitmodelext/catalog/resources/"/>
     <target name="build-init" depends="projectized.build-init">
-        <unzip src="external/websvc.wsitmodelext-glassfish-resources.zip" dest="${resources.dir}"/>
-        <unzip src="external/websvc.wsitmodelext-w3c-resources.zip" dest="${resources.dir}"/>
-        <unzip src="external/websvc.wsitmodelext-oasis-resources.zip" dest="${resources.dir}"/>
-   </target>
+    <!-- servlet3.0-jsp2.2-api.jar -->
+        <echo message="Creating cxf-rt-ws-policy-3.2.6.jar"/>
+        <mkdir dir="./external/cxf-rt-ws-policy-3.2.6" />
+        <unzip src="./external/cxf-rt-ws-policy-3.2.6.jar" dest="./external/cxf-rt-ws-policy-3.2.6/"/>
+        <mkdir dir="./external/cxf-rt-ws-rm-3.2.6" />
+        <unzip src="./external/cxf-rt-ws-rm-3.2.6.jar" dest="./external/cxf-rt-ws-rm-3.2.6/"/>
+
+        <copy todir="src/org/netbeans/modules/websvc/wsitmodelext/catalog/resources">
+            <fileset dir="./external/cxf-rt-ws-policy-3.2.6/schemas">
+                <include name="oasis-200401-wss-wssecurity-utility-1.0.xsd"/>
+                <include name="ws-securitypolicy-1.2.xsd"/>
+            </fileset>
+            <fileset dir="./external/cxf-rt-ws-rm-3.2.6/schemas/configuration">
+                <include name="wsrmp-1.1-schema-200702.xsd"/>
+                <include name="wsrm-policy.xsd"/>
+            </fileset>
+        </copy>
+        <delete dir="external/cxf-rt-ws-policy-3.2.6" />
+        <delete dir="external/cxf-rt-ws-rm-3.2.6" />
+    </target>
 </project>

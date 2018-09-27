@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema targetNamespace="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:tns="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" elementFormDefault="qualified" blockDefault="#all">
+
+  <xs:import namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" schemaLocation="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"/>
+
+  <xs:import namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" schemaLocation="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"/>
+
+  <!-- ////////// WS-Policy ////////// -->
+
+  <xs:element name="Policy">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tns:OperatorContentType">
+          <xs:attribute name="Name" type="xs:anyURI"/>
+          <xs:attribute ref="wsu:Id"/>
+          <xs:anyAttribute namespace="##any" processContents="lax"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="All" type="tns:OperatorContentType"/>
+  <xs:element name="ExactlyOne" type="tns:OperatorContentType"/>
+
+  <xs:complexType name="OperatorContentType">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="tns:Policy"/>
+        <xs:element ref="tns:All"/>
+        <xs:element ref="tns:ExactlyOne"/>
+        <xs:element ref="tns:PolicyReference"/>
+        <xs:any namespace="##other" processContents="lax"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="PolicyReference">
+    <xs:complexType>
+      <xs:attribute name="URI" type="xs:anyURI" use="required"/>
+      <xs:attribute name="Digest" type="xs:base64Binary"/>
+      <xs:attribute name="DigestAlgorithm" type="xs:anyURI" default="http://schemas.xmlsoap.org/ws/2004/09/policy/Sha1Exc"/>
+      <xs:anyAttribute namespace="##any" processContents="lax"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:attribute name="Optional" type="xs:boolean" default="false"/>
+
+  <!-- ////////// WS-PolicyAttachment ////////// -->
+
+  <xs:attribute name="PolicyURIs">
+    <xs:simpleType>
+      <xs:list itemType="xs:anyURI"/>
+    </xs:simpleType>
+  </xs:attribute>
+
+  <xs:element name="PolicyAttachment">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:AppliesTo"/>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element ref="tns:Policy"/>
+          <xs:element ref="tns:PolicyReference"/>
+        </xs:choice>
+        <!-- omitted only because it causes the content model to be non-determistic
+        <xs:element ref="wsse:Security" minOccurs="0" />
+-->
+        <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:anyAttribute namespace="##any" processContents="lax"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="AppliesTo">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:any namespace="##any" processContents="lax" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:anyAttribute namespace="##any" processContents="lax"/>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

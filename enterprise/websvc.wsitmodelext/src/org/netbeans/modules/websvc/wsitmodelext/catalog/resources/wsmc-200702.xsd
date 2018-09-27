@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    This XML schema document describes format of the Metro configuration file
+    (metro.xml).
+
+    Naming conventiotns:
+    - Simple XSD types are suffixed with "SType"
+    - Complex XSD types are suffixed with "CType"
+-->
+
+
+<xsd:schema
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    xmlns:wsmc="http://docs.oasis-open.org/ws-rx/wsmc/200702"
+
+    targetNamespace="http://docs.oasis-open.org/ws-rx/wsmc/200702"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified"
+    jaxb:version="2.1">
+
+    <xsd:annotation>
+        <xsd:documentation>
+            This XML schema document describes format of the WS-MakeConnection protocol
+            elements.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <jaxb:schemaBindings>
+                <jaxb:package name="com.sun.xml.ws.rm.protocol.wsmc200702" />
+            </jaxb:schemaBindings>
+        </xsd:appinfo>
+    </xsd:annotation>
+    <xsd:complexType name="MessagePendingCType">
+        <xsd:annotation>
+            <xsd:documentation>
+                When MakeConnection is used, and a message is returned on the
+                transport-specific back-channel, the MessagePending header
+                SHOULD be included on the returned message as an indicator
+                whether there are additional messages waiting to be retrieved
+                using the same selection criteria that was specified in the
+                MakeConnection element.
+            </xsd:documentation>
+            <xsd:appinfo>
+                <jaxb:class name="MessagePending" />
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="pending" type="xsd:boolean"/>
+        <xsd:anyAttribute namespace="##other" processContents="lax"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="ExtensibleUriCType">
+        <xsd:annotation>
+            <xsd:documentation>
+                This type is used for MakeConnection child elements that require extensible
+                anyURI type (the element of this type may contain arbitrary attributes).
+            </xsd:documentation>
+            <xsd:appinfo>
+                <jaxb:class name="ExtensibleUri" />
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:anyURI">
+                <xsd:anyAttribute namespace="##other" processContents="lax"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="MakeConnectionCType">
+        <xsd:annotation>
+            <xsd:documentation>
+                The MakeConnection element is sent in the body of a one-way message that
+                establishes a contextualized back-channel for the transmission of messages
+                according to matching criteria (defined below). In the non-faulting case,
+                if no matching message is available then no SOAP envelope will be returned
+                on the back-channel. A common usage will be a client sending MakeConnection to
+                a server for the purpose of receiving asynchronous response messages.
+            </xsd:documentation>
+            <xsd:appinfo>
+                <jaxb:class name="MakeConnection" />
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="Address" type="wsmc:ExtensibleUriCType" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        This element specifies the URI (wsa:Address) of the initiating Endpoint.
+                        Endpoints MUST NOT return messages on the transport-specific back-channel unless
+                        they have been addressed to this URI. This Address property and a message’s
+                        WS-Addressing destination property are considered identical when they are exactly
+                        the same character-for-character. Note that URIs which are not identical in
+                        this sense may in fact be functionally equivalent. Examples include URI references
+                        which differ only in case, or which are in external entities which have different
+                        effective base URIs.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:anyAttribute namespace="##other" processContents="lax"/>
+    </xsd:complexType>
+
+    <xsd:simpleType name="UnsupportedSelectionSType">
+        <xsd:annotation>
+            <xsd:documentation>
+                The QName of the unsupported element(s) are included in the detail.
+            </xsd:documentation>
+            <xsd:appinfo>
+                <jaxb:class name="UnsupportedSelection" />
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:QName"/>
+    </xsd:simpleType>
+</xsd:schema>

@@ -1,0 +1,19 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://schemas.microsoft.com/net/2005/02/rm/policy"
+    xmlns:tns="http://schemas.microsoft.com/net/2005/02/rm/policy"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified">
+
+    <xs:complexType name="RmFlowControlCType">
+        <xs:sequence >
+            <xs:element name="MaxReceiveBufferSize" type="xs:unsignedLong" />
+            <xs:any namespace="##other"
+                processContents="lax"
+                minOccurs="0"
+                maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:anyAttribute namespace="##any" processContents="lax" />
+    </xs:complexType>
+
+    <xs:element name="RmFlowControl" type="tns:RmFlowControlCType" />
+</xs:schema>

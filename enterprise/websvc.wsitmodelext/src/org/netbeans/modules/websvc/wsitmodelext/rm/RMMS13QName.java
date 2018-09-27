@@ -38,7 +38,7 @@ public enum RMMS13QName {
 
     static final String RM_NS_URI = "http://schemas.xmlsoap.org/ws/2005/02/rm/policy";    //NOI18N
     static final String RM_NS_URI_EXT = "http://schemas.xmlsoap.org/ws/2005/02/rm/wsrm-policy.xsd";    //NOI18N
-    static final String RM_NS_URI_LOCAL = "nbres:/org/netbeans/modules/websvc/wsitmodelext/catalog/resources/wsrm-policy-200502.xsd";    //NOI18N
+    static final String RM_NS_URI_LOCAL = "nbres:/org/netbeans/modules/websvc/wsitmodelext/catalog/resources/wsrm-policy.xsd";    //NOI18N
 
     static final String RM_12_NS_PREFIX = "netrmp";                                            //NOI18N
 

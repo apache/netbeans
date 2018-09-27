@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    This XML schema document describes format of the Metro configuration file
+    (metro.xml).
+
+    Naming conventiotns:
+    - Simple XSD types are suffixed with "SType"
+    - Complex XSD types are suffixed with "CType"
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://sun.com/2006/03/rm/client"
+    xmlns:tns="http://sun.com/2006/03/rm/client"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified">
+
+    <xs:complexType name="IntervalCType">
+        <xs:sequence />
+        <xs:attribute name="Milliseconds" type="xs:unsignedLong" use="required"/>
+    </xs:complexType>
+
+    <xs:element name="AckRequestInterval" type="tns:IntervalCType" />
+
+    <xs:element name="CloseTimeout" type="tns:IntervalCType" />
+
+    <xs:element name="ResendInterval" type="tns:IntervalCType" />
+
+</xs:schema>

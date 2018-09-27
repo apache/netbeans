@@ -21,8 +21,4 @@
 -->
 <project basedir="." default="build" name="enterprise/j2ee.weblogic9">
     <import file="../../nbbuild/templates/projectized.xml"/>
-
-    <target name="build-init" depends="projectized.build-init">
-	 <unzip src="external/j2ee.weblogic9-generated-schema-classes.zip" dest="./"/>
-    </target>
 </project>

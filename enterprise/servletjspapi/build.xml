@@ -21,4 +21,26 @@
 -->
 <project basedir="." default="build" name="enterprise/servletjspapi">
     <import file="../../nbbuild/templates/projectized.xml"/>
+    <target name="build-init" depends="projectized.build-init">
+        <property name="jars_location" location="./external"/>
+            <fail message="Set jars_location">
+                <condition>
+                    <not>
+                        <available  file="${jars_location}" type="dir"/>
+                    </not>
+                </condition>
+            </fail>
+
+            <echo message="Creating mymain.jar"/>
+            <mkdir dir="servletjspapi_api_location"/>
+            <unzip src="${jars_location}/gf-client-module-5.0.jar" dest="servletjspapi_api_location/"/>
+            <unzip src="${jars_location}/javax.servlet.jsp-api-2.3.3.jar" dest="servletjspapi_api_location/"/>
+            <unzip src="${jars_location}/javax.servlet-api-3.1.0.jar" dest="servletjspapi_api_location/"/>
+            <unzip src="${jars_location}/el-api-2.2.jar" dest="servletjspapi_api_location/"/>
+            <delete file="./external/servlet3.1-jsp2.3-api.jar" />
+            <zip  basedir="servletjspapi_api_location"
+                    includes="javax/servlet/jsp/**, javax/servlet/**, schemas/**, dtds/**, javax/el/**"
+                                zipfile="./external/servlet3.1-jsp2.3-api.jar" />
+            <delete dir="servletjspapi_api_location" />
+    </target>
 </project>

@@ -1,7 +1,8 @@
-Name: GlassFish JSP Parser
+Name: Common Utilities
+Version: 5.0
 License: CDDL-1.1
-Description: GlassFish Unified JSP Parser
-Version: 4.0
+Description: Common Utilities
+Origin: Oracle 
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

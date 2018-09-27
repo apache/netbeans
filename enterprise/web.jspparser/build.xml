@@ -22,6 +22,30 @@
 <project basedir="." default="build" name="enterprise/web.jspparser">
 
     <import file="../../nbbuild/templates/projectized.xml"/>
+    
+    <target name="build-init" depends="projectized.build-init">
+        <property name="jars_location" location="./external"/>
+        <fail message="Set jars_location">
+            <condition>
+                <not>
+                    <available  file="${jars_location}" type="dir"/>
+                </not>
+            </condition>
+        </fail>
+        <!-- glassfish-jspparser.jar -->
+        <echo message="Creating glassfish-jspparser.jar"/>
+        <mkdir dir="glassfishjspparser"/>
+        <unzip src="${jars_location}/javax.servlet.jsp-2.3.2.jar" dest="glassfishjspparser/"/>
+        <unzip src="${jars_location}/javax.el-2.2.6.jar" dest="glassfishjspparser/"/>
+        <unzip src="${jars_location}/glassfish-ee-api-4.1.jar" dest="glassfishjspparser/"/>
+        <unzip src="${jars_location}/common-util-5.0.jar" dest="glassfishjspparser/"/>
+        <delete file="./external/glassfish-jspparser-4.0.jar" />
+        <zip  basedir="glassfishjspparser"
+        includes="org/apache/jasper/**, com/sun/el/**, com/sun/appserv/ClassLoaderUtil.class, com/sun/appserv/server/util/PreprocessorUtil.class, org/glassfish/jsp/api/**"
+            zipfile="./external/glassfish-jspparser-4.0.jar" />
+
+        <delete dir="glassfishjspparser" />
+    </target>
 
     <target name="ext-compile">
         <mkdir dir="build/extclasses"/>
@@ -91,33 +115,13 @@
 
         <delete dir="glassfishjspparser" />
 
+        <!-- servlet3.0-jsp2.2-api.jar -->
+        <echo message="Creating servlet3.1-jsp2.3-api.jar"/>
         <mkdir dir="servletjspapi" />
-        
-        <!-- javax.servlet.jsp-api-2.3.3.jar -->
-        <echo message="Creating javax.servlet.jsp-api-2.3.3.jar"/>
+        <unzip src="${glassfish_location}/glassfish/modules/gf-client-module.jar" dest="./servletjspapi/"/>
+        <unzip src="${glassfish_location}/glassfish/modules/javax.servlet-api.jar" dest="./servletjspapi/"/>
         <unzip src="${glassfish_location}/glassfish/modules/javax.servlet.jsp-api.jar" dest="./servletjspapi/"/>
         <unzip src="${glassfish_location}/glassfish/modules/javax.el-api.jar" dest="./servletjspapi/"/>
-        
-        <delete file="javax.servlet.jsp-api-2.3.3.jar"/>
-        <zip basedir="servletjspapi" includes="javax/servlet/jsp/**" zipfile="../servletjspapi/external/javax.servlet.jsp-api-2.3.3.jar" />
-        
-        <!-- el-api-2.2.jar -->
-        <echo message="Creating el-api-2.2.jar"/>
-        <unzip src="${glassfish_location}/glassfish/modules/javax.el-api.jar" dest="./servletjspapi/"/>
-        
-        <delete file="el-api-2.2.jar"/>
-        <zip basedir="servletjspapi" includes="javax/el/**" zipfile="../servletjspapi/external/el-api-2.2.jar" />
-        
-        <!-- javax.servlet-api-4.0.1.jar -->
-        <echo message="Creating javax.servlet-api-4.0.1.jar"/>
-        <unzip src="${glassfish_location}/glassfish/modules/javax.servlet-api.jar" dest="./servletjspapi/"/>
-
-        <delete file="javax.servlet-api-4.0.1.jar"/>
-        <zip basedir="servletjspapi" includes="javax/servlet/**" zipfile="../servletjspapi/external/javax.servlet-api-4.0.1.jar" />
-        
-        <!-- gf-client-module-5.0.jar -->
-        <echo message="Creating gf-client-module-5.0.jar"/>
-        <unzip src="${glassfish_location}/glassfish/modules/gf-client-module.jar" dest="./servletjspapi/"/>
 
         <mkdir dir="servletjspapi/resources/dtds" />
         <copy todir="servletjspapi/resources/dtds">
@@ -168,8 +172,8 @@
                 <include name="beans_1_1.xsd"/>
             </fileset>
         </copy>
-        <delete file="gf-client-module-5.0.jar"/>
-        <zip basedir="servletjspapi" includes="dtds/**, schemas/**" zipfile="../servletjspapi/external/gf-client-module-5.0.jar" />
+        <delete file="servlet3.1-jsp2.3-api.jar"/>
+        <zip basedir="servletjspapi" includes="javax/servlet/**, javax/el/**, resources/**" zipfile="../servletjspapi/external/servlet3.1-jsp2.3-api.jar" />
         <delete dir="servletjspapi" />
     </target>
 </project>

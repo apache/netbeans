@@ -1,7 +1,8 @@
-Name: GlassFish JSP Parser
+Name: JSP implementation
+Version: 2.0.2
 License: CDDL-1.1
-Description: GlassFish Unified JSP Parser
-Version: 4.0
+Description: JSP implementation
+Origin: Oracle 
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

@@ -44,5 +44,5 @@ matrix:
         - env: SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_TESTS_JDK8=false RUN_TESTS_JDK9PLUS=true TEST_JDK_VERSION="--feature 11 --license GPL" TEST_RUN_OPTIONS='-Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument -Dtest.use.jdk.javac=true' TEST_MODULES="java/java.completion"
           jdk: oraclejdk8
 
-        - env: SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_TESTS_JDK8=false RUN_TESTS_JDK9PLUS=true TEST_JDK_VERSION="--feature 12 --license GPL" TEST_RUN_OPTIONS='-Dtest.run.args=--add-exports=jdk.javadoc/com.sun.tools.javadoc.main=ALL-UNNAMED -Dtest.use.jdk.javac=true' TEST_MODULES="java/java.completion"
+        - env: SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_TESTS_JDK8=false RUN_TESTS_JDK9PLUS=true TEST_JDK_VERSION="--url https://download.java.net/java/early_access/jdk12/13/GPL/openjdk-12-ea+13_linux-x64_bin.tar.gz" TEST_RUN_OPTIONS='-Dtest.run.args=--add-exports=jdk.javadoc/com.sun.tools.javadoc.main=ALL-UNNAMED -Dtest.use.jdk.javac=true' TEST_MODULES="java/java.completion"
           jdk: oraclejdk8

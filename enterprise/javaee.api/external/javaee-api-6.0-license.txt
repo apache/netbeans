@@ -2,8 +2,7 @@ Name: JavaEE API 6.0
 Version: 6.0
 License: CDDL-1.1
 Description: JavaEE API 6.0
-OSR: GlassFish Community
-Origin: https://mvnrepository.com/artifact/javax/javaee-api/6.0
+Origin: GlassFish Community (https://mvnrepository.com/artifact/javax/javaee-api/6.0)
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

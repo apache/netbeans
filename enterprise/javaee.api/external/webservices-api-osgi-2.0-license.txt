@@ -1,9 +1,8 @@
 Name: Metro Web Services API OSGi Bundle 2.0
 Version: 2.0
 License: CDDL-1.1
-OSR: GlassFish Community
 Description: Metro Web Services API OSGi Bundle
-Origin: https://mvnrepository.com/artifact/javax.xml/webservices-api-osgi/2.0
+Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.xml/webservices-api-osgi/2.0)
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

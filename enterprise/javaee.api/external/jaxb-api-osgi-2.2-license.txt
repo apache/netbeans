@@ -2,8 +2,7 @@ Name: Java Architecture for XML Binding
 Version: 2.2
 License: CDDL-1.1
 Description: JAXB (JSR 222) API bundled for OSGi distribution
-OSR: Oracle
-Origin: https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api-osgi/2.2
+Origin: Oracle (https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api-osgi/2.2)
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

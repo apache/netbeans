@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -15,8 +17,8 @@
 # specific language governing permissions and limitations
 # under the License.
 
-javac.source=1.8
-javac.compilerargs=-Xlint -Xlint:-serial
-spec.version.base=1.0
-requires.nb.javac=true
-lsp.build.dir=vscode/nb-java-lsp-server
+LIB_DIR=`dirname $0`/../lib
+LIB_DIR=`realpath $LIB_DIR`
+CLASSPATH=`find $LIB_DIR -name "*.jar" | tr '\n' ':'`
+
+java --add-exports jdk.javadoc/com.sun.tools.javadoc.main=ALL-UNNAMED -classpath "$CLASSPATH" org.netbeans.modules.java.lsp.server.Server

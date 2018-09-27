@@ -9,11 +9,11 @@
         <token id='T_START_NOWDOC' start='236' end='249'>
             <text>&lt;&lt;&lt; &apos;NOWDOC&apos;\n</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='249' end='272'>
-            <text>nowdoc text $text\nNOWDO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='249' end='267'>
+            <text>nowdoc text $text\n</text>
         </token>
-        <token id='T_END_NOWDOC' start='272' end='273'>
-            <text>C</text>
+        <token id='T_END_NOWDOC' start='267' end='273'>
+            <text>NOWDOC</text>
         </token>
         <token id='T_SEMICOLON' start='273' end='274'>
             <text>;</text>

@@ -35,4 +35,4 @@ ide/o.apache.commons.lang/external/commons-lang-2.6.jar java/maven.embedder/exte
 nbbuild/external/langtools-9.zip nbbuild/external/langtools-9.zip
 
 # JFlex is used by multiple modules.
-javascript2.jade/external/jflex-1.4.3.jar javascript2.lexer/external/jflex-1.4.3.jar
+webcommon/javascript2.jade/external/jflex-1.4.3.jar webcommon/javascript2.lexer/external/jflex-1.4.3.jar

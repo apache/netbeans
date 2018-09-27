@@ -211,6 +211,47 @@ import org.netbeans.modules.web.common.api.ByteStack;
         yybegin(state);
     }
 
+    private boolean isLabelChar(char c) {
+        return c == '_'
+                || (c >= 'a' && c <= 'z')
+                || (c >= 'A' && c <= 'Z')
+                || (c >= 0x7f && c <= 0xff);
+    }
+
+    private boolean isEndNowdoc() {
+        String yytext = yytext().trim();
+        int lastIndexOfNewline = yytext.lastIndexOf('\n');
+        if (lastIndexOfNewline == -1) {
+            lastIndexOfNewline = yytext.lastIndexOf('\r');
+        }
+        if (lastIndexOfNewline != -1) {
+            yytext = yytext.substring(lastIndexOfNewline);
+        }
+        return isEndHereOrNowdoc(yytext);
+    }
+
+    private boolean isEndHeredoc() {
+        return isEndHereOrNowdoc(yytext());
+    }
+
+    private boolean isEndHereOrNowdoc(String text) {
+        // check whether ID exists
+        String trimedText = text.trim();
+        boolean isEnd = false;
+        if (trimedText.startsWith(heredoc)) {
+            if (trimedText.length() == heredoc.length()) {
+                isEnd = true;
+            } else if (trimedText.length() > heredoc.length()
+                    && !isLabelChar(trimedText.charAt(heredoc.length()))) {
+                // e.g.
+                // $test = <<< END
+                // ENDING
+                // END
+                isEnd = true;
+            }
+        }
+        return isEnd;
+    }
 
  // End user code
 
@@ -1095,49 +1136,55 @@ PHP_TYPE_OBJECT=[o][b][j][e][c][t]
     yybegin(ST_PHP_NOWDOC);
 }
 
-<ST_PHP_START_NOWDOC>{LABEL}";"?[\r\n] {
-    int label_len = yylength() - 1;
-
-    if (yytext().charAt(label_len-1)==';') {
-        label_len--;
-    }
-
-    if (label_len==hereocLength && yytext().substring(0,label_len).equals(heredoc)) {
+<ST_PHP_START_NOWDOC>{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\r\n]? {
+    /* <ST_START_NOWDOC>{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\r\n]? */
+    // there is no [\r\n] if it is the last line
+    // i.e. not [\r\n] but EOF, so check not [\r\n] but [\r\n]?
+    if (isEndNowdoc()) {
+        int indexOfNowdocId = yytext().indexOf(heredoc);
+        int back = yylength() - indexOfNowdocId - heredoc.length();
+        yypushback(back);
         heredoc=null;
         hereocLength=0;
         yybegin(ST_PHP_IN_SCRIPTING);
         return PHPTokenId.PHP_NOWDOC_TAG_END;
     } else {
-        return PHPTokenId.PHP_CONSTANT_ENCAPSED_STRING;
-    }
-}
-
-
-<ST_PHP_NOWDOC>{NOWDOC_CHARS}*{NEWLINE}+{LABEL}";"?[\n\r] {
-    int label_len = yylength() - 1;
-    int back = 1;
-
-    if (yytext().charAt(label_len-1)==';') {
-       label_len--;
-           back++;
-    }
-    if (label_len > hereocLength && yytext().substring(label_len - hereocLength,label_len).equals(heredoc)) {
-        back = back + hereocLength;
-        yypushback(back);
-        yybegin(ST_PHP_END_NOWDOC);
-    }
-    else {
         yypushback(1);
+        yybegin(ST_PHP_NOWDOC);
     }
-    return PHPTokenId.PHP_CONSTANT_ENCAPSED_STRING;
 }
 
-<ST_PHP_END_NOWDOC>{LABEL}";"?[\n\r] {
+<ST_PHP_NOWDOC> {
+    {NEWLINE}{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\r\n]? {
+        /* <ST_PHP_NOWDOC>{NEWLINE}{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\r\n]? */
+        if (isEndNowdoc()) {
+            String yytext = yytext();
+            int trailingNewlineOffset = (yytext.endsWith("\n") || yytext.endsWith("\r")) ? 2 : 0;
+            int lastIndexOfNewline = yytext.lastIndexOf('\n', yylength() - trailingNewlineOffset);
+            if (lastIndexOfNewline == -1) {
+                lastIndexOfNewline = yytext.lastIndexOf('\r', yylength() - trailingNewlineOffset);
+            }
+            int back = yylength() - lastIndexOfNewline - 1; // -1 [\r\n] length
+            yypushback(back);
+            yybegin(ST_PHP_END_NOWDOC);
+            return PHPTokenId.PHP_CONSTANT_ENCAPSED_STRING;
+        } else {
+            yypushback(1); // [\r\n] length
+        }
+    }
+
+    {NOWDOC_CHARS}|{NEWLINE} {
+        /* <ST_PHP_NOWDOC>{NOWDOC_CHARS}|{NEWLINE} */
+        // retrun PHPTokenId when the closing marker is found
+    }
+}
+
+<ST_PHP_END_NOWDOC>{NEWLINE}*{TABS_AND_SPACES}{LABEL}";"? {
     heredoc=null; hereocLength=0;
     yybegin(ST_PHP_IN_SCRIPTING);
-    int back = 1;
+    int back = 0;
     // mark just the label
-    if (yytext().charAt(yylength() - 2)==';') {
+    if (yytext().charAt(yylength() - 1)==';') {
         back++;
     }
     yypushback(back);
@@ -1163,17 +1210,19 @@ PHP_TYPE_OBJECT=[o][b][j][e][c][t]
 }
 
 <ST_PHP_START_HEREDOC> {
-    {LABEL}";"?[\n\r] {
+    {TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\n\r]? {
         int trailingNewLineLength = 1;
         int label_len = yylength() - trailingNewLineLength;
         int back = trailingNewLineLength;
 
-        if (yytext().charAt(label_len-1)==';') {
+        if (yytext().charAt(label_len - 1)==';') {
            label_len--;
            back++;
         }
-        if (label_len == hereocLength && yytext().substring(label_len - hereocLength,label_len).equals(heredoc)) {
-            back = back + hereocLength;
+
+        if (isEndHeredoc()) {
+            int indexOfHeredocId = yytext().indexOf(heredoc);
+            back += label_len - indexOfHeredocId;
             yypushback(back);
             yybegin(ST_PHP_END_HEREDOC);
         } else {
@@ -1188,23 +1237,32 @@ PHP_TYPE_OBJECT=[o][b][j][e][c][t]
 }
 
 <ST_PHP_HEREDOC> {
-    {NEWLINE}{LABEL}";"?[\n\r] {
+    {NEWLINE}{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\n\r]? {
+        /* {NEWLINE}{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\n\r]? */
         int trailingNewLineLength = 1;
-        int label_len = yylength() - trailingNewLineLength;
-        int back = trailingNewLineLength;
-
-        if (yytext().charAt(label_len-1)==';') {
-           label_len--;
-           back++;
-        }
-        if (label_len > hereocLength && yytext().substring(label_len - hereocLength,label_len).equals(heredoc)) {
-            back = back + hereocLength;
+        if (isEndHeredoc()) {
+            String yytext = yytext();
+            int newlineLength = yytext.startsWith("\r\n") ? 2 : 1;
+            int back = yylength() - newlineLength;
             yypushback(back);
             yybegin(ST_PHP_END_HEREDOC);
         } else {
-            yypushback(trailingNewLineLength);
-            return PHPTokenId.PHP_CONSTANT_ENCAPSED_STRING;
+            int indexOfVariable1 = yytext().indexOf("$");
+            int indexOfVariable2 = yytext().indexOf("{$");
+            if (indexOfVariable1 > 0 && indexOfVariable2 == -1) {
+                yypushback(yylength() - indexOfVariable1);
+                return PHPTokenId.PHP_ENCAPSED_AND_WHITESPACE;
+            } else if (indexOfVariable2 > 0 && indexOfVariable1 == -1) {
+                yypushback(yylength() - indexOfVariable2);
+                return PHPTokenId.PHP_ENCAPSED_AND_WHITESPACE;
+            } else if (indexOfVariable1 > 0 && indexOfVariable2 > 0) {
+                yypushback(yylength() - Math.min(indexOfVariable1, indexOfVariable2));
+                return PHPTokenId.PHP_ENCAPSED_AND_WHITESPACE;
+            } else {
+                yypushback(trailingNewLineLength);
+            }
         }
+        return PHPTokenId.PHP_CONSTANT_ENCAPSED_STRING;
     }
 
     {HEREDOC_CHARS} {
@@ -1233,13 +1291,13 @@ PHP_TYPE_OBJECT=[o][b][j][e][c][t]
     return PHPTokenId.PHP_CONSTANT_ENCAPSED_STRING;
 }
 
-<ST_PHP_END_HEREDOC>{LABEL}";"?[\n\r] {
+<ST_PHP_END_HEREDOC>{TABS_AND_SPACES}{LABEL}";"? {
     heredoc=null;
     hereocLength=0;
     yybegin(ST_PHP_IN_SCRIPTING);
-    int back = 1;
+    int back = 0;
     // mark just the label
-    if (yytext().charAt(yylength() - 2)==';') {
+    if (yytext().charAt(yylength() - 1)==';') {
         back++;
     }
     yypushback(back);

@@ -1,0 +1,21 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+7C4A82593A85524A3541E55A4A9C906B773ABAD6 ios-sim
+0929AC5F40B5A8667021408748D64F30F77B3165 libiDeviceNativeBinding.dylib
+480C9E376169E21EA3BDA5D5841425BD7CC054D7 libplist.1.dylib
+C1BB9FF4232248B0054E5A26A33474A251EA19CB libusbmuxd.2.dylib
+2A38DA3DB5D36DBBDC0B03990B46810F72430D5E libimobiledevice.4.dylib

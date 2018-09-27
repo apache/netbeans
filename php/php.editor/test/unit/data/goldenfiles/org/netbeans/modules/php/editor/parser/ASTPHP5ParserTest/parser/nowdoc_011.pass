@@ -33,11 +33,11 @@
         <token id='T_START_NOWDOC' start='121' end='143'>
             <text>&lt;&lt;&lt;&apos;THISMUSTNOTERROR&apos;\n</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='143' end='200'>
-            <text>If you DON&apos;T see this, something&apos;s wrong.\nTHISMUSTNOTERRO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='143' end='185'>
+            <text>If you DON&apos;T see this, something&apos;s wrong.\n</text>
         </token>
-        <token id='T_END_NOWDOC' start='200' end='201'>
-            <text>R</text>
+        <token id='T_END_NOWDOC' start='185' end='201'>
+            <text>THISMUSTNOTERROR</text>
         </token>
         <token id='T_SEMICOLON' start='201' end='202'>
             <text>;</text>

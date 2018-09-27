@@ -271,7 +271,7 @@ class SQLExecutionHelper {
      * @param table
      * @param insertSQLs
      * @param insertedRows
-     * @return count of sucessfully inserted rows
+     * @return count of successfully inserted rows
      */
     int executeInsertRow(final DataViewPageContext pageContext,
             final DBTable table,
@@ -417,7 +417,7 @@ class SQLExecutionHelper {
             }
 
             @Override
-            protected void executeOnSucess() {
+            protected void executeOnSuccess() {
                 SQLExecutionHelper.this.executeQuery();
             }
         };
@@ -510,7 +510,7 @@ class SQLExecutionHelper {
             }
 
             @Override
-            protected void executeOnSucess() {
+            protected void executeOnSuccess() {
                 dataView.getSQLExecutionHelper().executeQuery();
                 Mutex.EVENT.writeAccess(new Runnable() {
                     @Override
@@ -560,7 +560,7 @@ class SQLExecutionHelper {
             }
 
             @Override
-            protected void executeOnSucess() {
+            protected void executeOnSuccess() {
                 pageContext.first();
                 SQLExecutionHelper.this.executeQuery();
             }

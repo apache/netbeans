@@ -687,7 +687,7 @@ class StandardModule extends Module {
             } else {
                 other = null;
             }
-            return getManager().shouldDelegateResource(StandardModule.this, other, pkg);
+            return getManager().shouldDelegateResource(StandardModule.this, other, pkg, parent);
         }
         
         public @Override String toString() {

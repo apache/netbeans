@@ -31,7 +31,6 @@ import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 import org.openide.awt.DynamicMenuContent;
 import org.openide.awt.Mnemonics;
-import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.actions.Presenter;
 import org.openide.windows.TopComponent;
@@ -81,7 +80,7 @@ public class SplitAction extends AbstractAction implements Presenter.Menu, Prese
     public JMenuItem getPopupPresenter() {
 	return getSplitMenuItem();
     }
-    
+
     private JMenuItem getSplitMenuItem() {
 	if(!isSplitingEnabled()) {
 	    return null;
@@ -112,13 +111,17 @@ public class SplitAction extends AbstractAction implements Presenter.Menu, Prese
 	    if (tc != null) {
 		setEnabled(true);
 		if (tc instanceof Splitable && ((Splitable)tc).canSplit()) {
+
 		    JMenuItem item = new JMenuItem(new SplitDocumentAction(tc, JSplitPane.VERTICAL_SPLIT));
 		    Mnemonics.setLocalizedText(item, item.getText());
 		    add(item);
+
 		    item = new JMenuItem(new SplitDocumentAction(tc, JSplitPane.HORIZONTAL_SPLIT));
 		    Mnemonics.setLocalizedText(item, item.getText());
 		    add(item);
+
 		    item = new JMenuItem(new ClearSplitAction(tc));
+
 		    Mnemonics.setLocalizedText(item, item.getText());
 		    add(item);
 		} else { // tc is not splitable
@@ -136,10 +139,6 @@ public class SplitAction extends AbstractAction implements Presenter.Menu, Prese
 	}
     }
 
-    @NbBundle.Messages({"LBL_SplitDocumentActionVertical=&Vertically",
-	"LBL_SplitDocumentActionHorizontal=&Horizontally",
-	"LBL_ValueSplitVertical=splitVertically",
-	"LBL_ValueSplitHorizontal=splitHorizontally"})
     private static class SplitDocumentAction extends AbstractAction {
 
 	private final Reference<TopComponent> tcRef;
@@ -169,8 +168,6 @@ public class SplitAction extends AbstractAction implements Presenter.Menu, Prese
 	}
     }
 
-    @NbBundle.Messages({"LBL_ClearSplitAction=&Clear",
-	"LBL_ValueClearSplit=clearSplit"})
     private static class ClearSplitAction extends AbstractAction {
 
 	private final Reference<TopComponent> tcRef;

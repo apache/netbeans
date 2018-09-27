@@ -128,9 +128,11 @@ public class ModuleDescription {
         if (projectDirectory.getFileObject("../../src/java.base/share/classes/module-info.java") != null &&
             projectDirectory.getFileObject("../../src/java.compiler/share/classes/module-info.java") != null)
             return Pair.of(projectDirectory.getFileObject("../.."), Pair.of(true, false));
-        if (projectDirectory.getFileObject("../../../modules.xml") != null || projectDirectory.getFileObject("../../../jdk/src/java.base/share/classes/module-info.java") != null)
+        if (projectDirectory.getFileObject("../../../modules.xml") != null ||
+            (projectDirectory.getFileObject("../../../jdk/src/java.base/share/classes/module-info.java") != null && projectDirectory.getFileObject("../../../langtools/src/java.compiler/share/classes/module-info.java") != null))
             return Pair.of(projectDirectory.getFileObject("../../.."), Pair.of(false, false));
-        if (projectDirectory.getFileObject("../../../../modules.xml") != null || projectDirectory.getFileObject("../../../../jdk/src/java.base/share/classes/module-info.java") != null)
+        if (projectDirectory.getFileObject("../../../../modules.xml") != null ||
+            (projectDirectory.getFileObject("../../../../jdk/src/java.base/share/classes/module-info.java") != null && projectDirectory.getFileObject("../../../langtools/src/java.compiler/share/classes/module-info.java") != null))
             return Pair.of(projectDirectory.getFileObject("../../../.."), Pair.of(false, false));
 
         return null;
@@ -232,6 +234,10 @@ public class ModuleDescription {
             }
 
             if (current.getNameExt().equals("test") && current.getFileObject("TEST.ROOT") != null) {
+                continue; //do not look inside test folders
+            }
+
+            if (current.getParent().getNameExt().equals("test") && current.getFileObject("TEST.ROOT") != null) {
                 continue; //do not look inside test folders
             }
 

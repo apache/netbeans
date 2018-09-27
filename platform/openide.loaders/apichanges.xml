@@ -85,6 +85,22 @@ is the proper place.
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
   <changes>
+      <change id="org.openide.awt.Toolbar.toggle">
+          <api name="awt"/>
+          <summary>Separate template handling</summary>
+          <version major="7" minor="70"/>
+          <date day="27" month="9" year="2018"/>
+          <author login="mentlicher"/>
+          <compatibility addition="yes" deletion="no" binary="compatible" 
+                         source="compatible" deprecation="no"/>
+          <description>
+              Now it's possible to register actions with
+              <a href="@org-openide-awt@/org/openide/awt/Actions.html#ACTION_VALUE_TOGGLE">
+              toggle property</a> into Toolbar to get a toggle button.
+          </description>
+          <class package="org.openide.awt" name="Toolbar"/>
+          <issue number=""/>
+      </change>
       <change id="org.openide.loaders.DataFolder.SortMode.NATURAL">
           <api name="loaders"/>
           <summary>Introduces SortMode for natural sorting.</summary>

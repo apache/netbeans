@@ -21,6 +21,7 @@ package org.netbeans.modules.navigator;
 
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -94,8 +95,9 @@ class ProviderRegistry {
             if (file2Providers == null) {
                 file2Providers = new WeakHashMap<>();
             }
+            URI uri = file.toURI();
             Reference<Collection<? extends NavigatorPanel>> fileResultRef = file2Providers.computeIfAbsent(file, f ->
-                    new SoftReference<>(Lookup.getDefault().lookupAll(DynamicRegistration.class).stream().flatMap(reg -> reg.panelsFor(file).stream()).collect(Collectors.toList()))
+                    new SoftReference<>(Lookup.getDefault().lookupAll(DynamicRegistration.class).stream().flatMap(reg -> reg.panelsFor(uri).stream()).collect(Collectors.toList()))
             );
             Collection<? extends NavigatorPanel> fileResult = fileResultRef != null ? fileResultRef.get() : null;
             if (result == null) return fileResult;

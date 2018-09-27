@@ -72,8 +72,14 @@ import org.netbeans.modules.web.common.api.ByteStack;
 %{
     private final List commentList = new ArrayList();
     private String heredoc = null;
+    private int heredocBodyStart = -1;
+    private int heredocBodyLength = 0;
+    private final StringBuilder heredocBody = new StringBuilder();
     private String nowdoc = null;
     private int nowdoc_len  = 0;
+    private int nowdocBodyStart = -1;
+    private int nowdocBodyLength = 0;
+    private final StringBuilder nowdocBody = new StringBuilder();
     private String comment = null;
     private boolean asp_tags = false;
     private boolean short_tags_allowed = true;
@@ -223,6 +229,67 @@ import org.netbeans.modules.web.common.api.ByteStack;
         return symbol;
     }
 
+    private void updateNowdocBodyInfo() {
+        if (nowdocBodyStart == -1) {
+            nowdocBodyStart = getTokenStartPosition();
+        }
+        nowdocBody.append(yytext());
+        nowdocBodyLength += getTokenLength();
+    }
+
+    private Symbol createFullNowdocBodySymbol() {
+        Symbol symbol = new Symbol(ASTPHP5Symbols.T_ENCAPSED_AND_WHITESPACE, nowdocBodyStart, nowdocBodyStart + nowdocBodyLength);
+        symbol.value = nowdocBody.toString();
+        return symbol;
+    }
+
+    private void updateHeredocBodyInfo() {
+        if (heredocBodyStart == -1) {
+            heredocBodyStart = getTokenStartPosition();
+        }
+        heredocBody.append(yytext());
+        heredocBodyLength += getTokenLength();
+    }
+
+    private void resetHeredocBodyInfo() {
+        heredocBodyStart = -1;
+        heredocBodyLength = 0;
+        heredocBody.delete(0, heredocBody.length());
+    }
+
+    private Symbol createFullHeredocBodySymbol() {
+        Symbol symbol = new Symbol(ASTPHP5Symbols.T_ENCAPSED_AND_WHITESPACE, heredocBodyStart, heredocBodyStart + heredocBodyLength);
+        symbol.value = heredocBody.toString();
+        resetHeredocBodyInfo();
+        return symbol;
+    }
+
+    private boolean isLabelChar(char c) {
+        return c == '_'
+                || (c >= 'a' && c <= 'z')
+                || (c >= 'A' && c <= 'Z')
+                || (c >= 0x7f && c <= 0xff);
+    }
+
+    private boolean isEndHereOrNowdoc(String hereOrNowdoc) {
+        // check whether ID exists
+        String trimedText = yytext().trim();
+        boolean isEnd = false;
+        if (trimedText.startsWith(hereOrNowdoc)) {
+            if (trimedText.length() == hereOrNowdoc.length()) {
+                isEnd = true;
+            } else if (trimedText.length() > hereOrNowdoc.length()
+                    && !isLabelChar(trimedText.charAt(hereOrNowdoc.length()))) {
+                // e.g.
+                // $test = <<< END
+                // ENDING
+                // END
+                isEnd = true;
+            }
+        }
+        return isEnd;
+    }
+
     public int[] getParamenters(){
     	return new int[]{zzMarkedPos, zzPushbackPos, zzCurrentPos, zzStartRead, zzEndRead, yyline};
     }
@@ -279,13 +346,12 @@ NEWLINE=("\r"|"\n"|"\r\n")
 DOUBLE_QUOTES_LITERAL_DOLLAR=("$"+([^a-zA-Z_\x7f-\xff$\"\\{]|("\\"{ANY_CHAR})))
 BACKQUOTE_LITERAL_DOLLAR=("$"+([^a-zA-Z_\x7f-\xff$`\\{]|("\\"{ANY_CHAR})))
 HEREDOC_LITERAL_DOLLAR=("$"+([^a-zA-Z_\x7f-\xff$\n\r\\{]|("\\"[^\n\r])))
-HEREDOC_NEWLINE=((({LABEL}";"?((("{"+|"$"+)"\\"?)|"\\"))|(("{"*|"$"*)"\\"?)){NEWLINE})
 HEREDOC_CURLY_OR_ESCAPE_OR_DOLLAR=(("{"+[^$\n\r\\{])|("{"*"\\"[^\n\r])|{HEREDOC_LITERAL_DOLLAR})
 HEREDOC_NON_LABEL=([^a-zA-Z_\x7f-\xff$\n\r\\{]|{HEREDOC_CURLY_OR_ESCAPE_OR_DOLLAR})
 HEREDOC_LABEL_NO_NEWLINE=({LABEL}([^a-zA-Z0-9_\x7f-\xff;$\n\r\\{]|(";"[^$\n\r\\{])|(";"?{HEREDOC_CURLY_OR_ESCAPE_OR_DOLLAR})))
 DOUBLE_QUOTES_CHARS=("{"*([^$\"\\{]|("\\"{ANY_CHAR}))|{DOUBLE_QUOTES_LITERAL_DOLLAR})
 BACKQUOTE_CHARS=("{"*([^$`\\{]|("\\"{ANY_CHAR}))|{BACKQUOTE_LITERAL_DOLLAR})
-HEREDOC_CHARS=("{"*([^$\n\r\\{]|("\\"[^\n\r]))|{HEREDOC_LITERAL_DOLLAR}|({HEREDOC_NEWLINE}+({HEREDOC_NON_LABEL}|{HEREDOC_LABEL_NO_NEWLINE})))
+HEREDOC_CHARS=([^$\\{]|("\\"{ANY_CHAR}))({HEREDOC_LABEL_NO_NEWLINE} | {HEREDOC_NON_LABEL} | {LABEL})*
 NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\x7f-\xff;\n\r][^\n\r]*)|({LABEL}[;][^\n\r]+)))
 
 %%
@@ -1127,54 +1193,67 @@ yybegin(ST_DOCBLOCK);
 	yybegin(ST_NOWDOC);
 }
 
-<ST_START_NOWDOC>{LABEL}";"?[\r\n] {
-    String text = yytext();
-    int length = text.length() - 1;
-    text = text.trim();
-
-    yypushback(1);
-
-    if (text.endsWith(";")) {
-        text = text.substring(0, text.length() - 1);
-        yypushback(1);
-    }
-    if (text.equals(nowdoc)) {
+<ST_START_NOWDOC>{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\r\n]? {
+    /* <ST_START_NOWDOC>{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\r\n]? */
+    // there is no [\r\n] if it is the last line
+    // i.e. not [\r\n] but EOF, so check not [\r\n] but [\r\n]?
+    if (isEndHereOrNowdoc(nowdoc)) {
+        int indexOfNowdocId = yytext().indexOf(nowdoc);
+        int back = yylength() - indexOfNowdocId - nowdoc.length();
+        yypushback(back);
         nowdoc = null;
+        nowdoc_len = 0;
+        nowdocBody.delete(0, nowdocBody.length());
+        nowdocBodyStart = -1;
+        nowdocBodyLength = 0;
         yybegin(ST_IN_SCRIPTING);
         return createSymbol(ASTPHP5Symbols.T_END_NOWDOC);
     } else {
+        yypushback(1); // [\r\n] length
         yybegin(ST_NOWDOC);
+        updateNowdocBodyInfo();
     }
 }
 
 
-<ST_NOWDOC>{NOWDOC_CHARS}*{NEWLINE}+{LABEL}";"?[\n\r] {
-    String text = yytext();
-
-    if (text.charAt(text.length() - 2)== ';') {
-        text = text.substring(0, text.length() - 2);
-        yypushback(1);
-    } else {
-        text = text.substring(0, text.length() - 1);
+<ST_NOWDOC> {
+    {NEWLINE}{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\r\n]? {
+        /* <ST_NOWDOC>{NEWLINE}{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\r\n]? */
+        if (isEndHereOrNowdoc(nowdoc)) {
+            String yytext = yytext();
+            int newlineLength = yytext.startsWith("\r\n") ? 2 : 1;
+            int back = yylength() - newlineLength;
+            yypushback(back);
+            updateNowdocBodyInfo();
+            yybegin(ST_END_NOWDOC);
+            if (nowdocBodyLength > 0) {
+                return createFullNowdocBodySymbol();
+            }
+        } else {
+            yypushback(1);
+            updateNowdocBodyInfo();
+        }
     }
 
-    int textLength = text.length();
-    int nowdocLength = nowdoc.length();
-    if (textLength > nowdocLength && text.substring(textLength - nowdocLength, textLength).equals(nowdoc)) {
-        yypushback(2);
-        yybegin(ST_END_NOWDOC);
-        Symbol sym = createFullSymbol(ASTPHP5Symbols.T_ENCAPSED_AND_WHITESPACE);
-        String value = (String)sym.value;
-        sym.value = value.substring(0, value.length() - nowdocLength + 1);
-        return sym;
+    {NOWDOC_CHARS}|{NEWLINE} {
+        /* <ST_NOWDOC>{NOWDOC_CHARS}|{NEWLINE} */
+        updateNowdocBodyInfo();
     }
-    yypushback(1);
 }
 
-<ST_END_NOWDOC>{ANY_CHAR} {
+<ST_END_NOWDOC>{TABS_AND_SPACES}{LABEL}";"? {
+    /* <ST_END_NOWDOC>{LABEL}";"?[\n\r] */
     nowdoc=null;
     nowdoc_len=0;
+    nowdocBody.delete(0, nowdocBody.length());
+    nowdocBodyStart = -1;
+    nowdocBodyLength = 0;
     yybegin(ST_IN_SCRIPTING);
+    int back = 0;
+    if (yytext().charAt(yylength() - 1)==';') {
+        back++;
+    }
+    yypushback(back);
     return createSymbol(ASTPHP5Symbols.T_END_NOWDOC);
 }
 
@@ -1198,56 +1277,110 @@ yybegin(ST_DOCBLOCK);
 	yybegin(ST_HEREDOC);
 }
 
-<ST_START_HEREDOC>{LABEL}";"?[\n\r] {
-    String text = yytext();
-    int length = text.length() - 1;
-    text = text.trim();
+<ST_START_HEREDOC>{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\n\r]? {
+    /* <ST_START_HEREDOC>{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\n\r]? */
+    int trailingNewLineLength = 1;
+    int labelLength = yylength() - trailingNewLineLength;
+    int back = trailingNewLineLength;
+    String yytext = yytext();
 
-    yypushback(1);
-
-    if (text.endsWith(";")) {
-        text = text.substring(0, text.length() - 1);
-        yypushback(1);
+    if (yytext.charAt(labelLength - 1) == ';') {
+        labelLength--;
+        back++;
     }
-    if (text.equals(heredoc)) {
-        heredoc = null;
-        yybegin(ST_IN_SCRIPTING);
-        return createSymbol(ASTPHP5Symbols.T_END_HEREDOC);
+
+    if (isEndHereOrNowdoc(heredoc)) {
+        int indexOfHeredocId = yytext().indexOf(heredoc);
+        back += labelLength - indexOfHeredocId;
+        yypushback(back);
+        yybegin(ST_END_HEREDOC);
     } else {
-    	   yybegin(ST_HEREDOC);
+        yypushback(yylength());
+        yybegin(ST_HEREDOC);
     }
 }
 
-<ST_HEREDOC>{HEREDOC_CHARS}*{HEREDOC_NEWLINE}+{LABEL}";"?[\n\r] {
-    	String text = yytext();
+<ST_HEREDOC> {
+    {NEWLINE}{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\n\r]? {
+        /* {NEWLINE}{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\n\r]? */
+        int trailingNewLineLength = 1;
+        int labelLength = yylength() - trailingNewLineLength;
+        int back = trailingNewLineLength;
 
-    if (text.charAt(text.length() - 2)== ';') {
-		text = text.substring(0, text.length() - 2);
-        	yypushback(1);
-    } else {
-		text = text.substring(0, text.length() - 1);
+        if (yytext().charAt(labelLength-1) == ';') {
+           labelLength--;
+           back++;
+        }
+
+        if (isEndHereOrNowdoc(heredoc)) {
+            int indexOfHeredocId = yytext().indexOf(heredoc);
+            back += labelLength - indexOfHeredocId;
+            yypushback(back);
+            yybegin(ST_END_HEREDOC);
+        } else {
+            int indexOfVariable1 = yytext().indexOf("$");
+            int indexOfVariable2 = yytext().indexOf("{$");
+            if (indexOfVariable1 > 0 && indexOfVariable2 == -1) {
+                yypushback(yylength() - indexOfVariable1);
+                updateHeredocBodyInfo();
+                return createFullHeredocBodySymbol();
+            } else if (indexOfVariable2 > 0 && indexOfVariable1 == -1) {
+                yypushback(yylength() - indexOfVariable2);
+                updateHeredocBodyInfo();
+                return createFullHeredocBodySymbol();
+            } else if (indexOfVariable1 > 0 && indexOfVariable2 > 0) {
+                yypushback(yylength() - Math.min(indexOfVariable1, indexOfVariable2));
+                updateHeredocBodyInfo();
+                return createFullHeredocBodySymbol();
+            } else {
+                yypushback(trailingNewLineLength);
+            }
+        }
+        updateHeredocBodyInfo();
+        if (yystate() == ST_END_HEREDOC) {
+            return createFullHeredocBodySymbol();
+        }
     }
 
-	int textLength = text.length();
-	int heredocLength = heredoc.length();
-	if (textLength > heredocLength && text.substring(textLength - heredocLength, textLength).equals(heredoc)) {
-		yypushback(2);
-        	yybegin(ST_END_HEREDOC);
-        	// we need to remove the closing label from the symbol value.
-                /*<ST_HEREDOC>{HEREDOC_CHARS}*{HEREDOC_NEWLINE}+{LABEL}";"?[\n\r]*/
-        	Symbol sym = createFullSymbol(ASTPHP5Symbols.T_ENCAPSED_AND_WHITESPACE);
-        	String value = (String)sym.value;
-        	sym.value = value.substring(0, value.length() - heredocLength + 1);
-	   	return sym;
-	}
-	yypushback(1);
+    {HEREDOC_CHARS} {
+        /* <ST_HEREDOC> {HEREDOC_CHARS} */
+        updateHeredocBodyInfo();
+    }
 
+    {HEREDOC_CHARS}("{$" | "${") {
+        /* <ST_HEREDOC> {HEREDOC_CHARS}("{$" | "${") */
+        yypushback(2);
+        updateHeredocBodyInfo();
+        return createFullHeredocBodySymbol();
+    }
+
+    {HEREDOC_CHARS}"$"{LABEL}"["? {
+        /* <ST_HEREDOC> {HEREDOC_CHARS}"$"{LABEL}"["? */
+        String text = yytext();
+        int lastIndexOfDollar = text.lastIndexOf('$');
+        yypushback(text.length() - lastIndexOfDollar);
+        updateHeredocBodyInfo();
+        return createFullHeredocBodySymbol();
+    }
+
+    "$" | "{" {
+        /* <ST_HEREDOC> "$" | "{" */
+        updateHeredocBodyInfo();
+    }
 }
 
-<ST_END_HEREDOC>{ANY_CHAR} {
-     heredoc = null;
-	yybegin(ST_IN_SCRIPTING);
-	return createSymbol(ASTPHP5Symbols.T_END_HEREDOC);
+<ST_END_HEREDOC>{TABS_AND_SPACES}{LABEL}";"? {
+    /* <ST_END_HEREDOC>{TABS_AND_SPACES}{LABEL}";"? */
+    heredoc=null;
+    resetHeredocBodyInfo();
+    yybegin(ST_IN_SCRIPTING);
+    int back = 0;
+    // mark just the label
+    if (yytext().charAt(yylength() - 1)==';') {
+        back++;
+    }
+    yypushback(back);
+    return createSymbol(ASTPHP5Symbols.T_END_HEREDOC);
 }
 
 <ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC>"{$" {
@@ -1285,21 +1418,6 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
 	yypushback(1);
         /*<ST_BACKQUOTE>{BACKQUOTE_CHARS}*("{""{"+|"$""$"+|(("{"+|"$"+)[`]))*/
 	return createFullSymbol(ASTPHP5Symbols.T_ENCAPSED_AND_WHITESPACE);
-}
-
-<ST_HEREDOC>{HEREDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)? {
-        /*<ST_HEREDOC>{HEREDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)?*/
-	return createFullSymbol(ASTPHP5Symbols.T_ENCAPSED_AND_WHITESPACE);
-}
-
-/*
-The original parsing rule was {HEREDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)?("{"{2,}|"$"{2,})
-but jflex doesn't support a{n,} so we changed a{2,} to aa+
-*/
-<ST_HEREDOC>{HEREDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)?("{""{"+|"$""$"+) {
-    yypushback(1);
-    /*<ST_HEREDOC>{HEREDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)?("{""{"+|"$""$"+)*/
-    return createFullSymbol(ASTPHP5Symbols.T_ENCAPSED_AND_WHITESPACE);
 }
 
 <ST_DOUBLE_QUOTES>[\"] {

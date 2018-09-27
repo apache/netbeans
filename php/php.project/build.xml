@@ -21,11 +21,11 @@
 -->
 <project basedir="." default="build" name="php/php.project">
     <import file="../../nbbuild/templates/projectized.xml"/>
-    
+
     <target name="netbeans-extra" depends="init">
         <!-- unziping signature files -->
-        <unzip dest="${cluster}" src="external/phpsigfiles.zip"/>
+        <unzip dest="${cluster}" src="external/phpsigfiles-1.0.zip"/>
         <!--unzip dest="${cluster}" src="external/preindexed-php.zip"/-->
     </target>
-    
+
 </project>

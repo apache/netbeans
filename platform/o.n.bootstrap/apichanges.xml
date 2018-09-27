@@ -29,6 +29,25 @@
   </apidefs>
 
   <changes>
+    <change id="bootstrap.filter">
+        <api name="launcher"/>
+        <summary>Can use classloader to check access to bootstrap classes</summary>
+        <version major="2" minor="80"/>
+        <date day="5" month="9" year="2018"/>
+        <author login="sdedic"/>
+        <compatibility addition="yes" binary="compatible" semantic="incompatible" deprecation="yes"/>
+        <description>
+            <p>
+                Bootstrap classloaders are not paired with a single module, yet they should obey visibility restrictions. The added method
+                allows to check also accesses to resources served by bootstrap classloaders.
+            </p>
+            <p>
+                This change <b>will hide classes</b> (namely <code>org.objectweb.asm</code>, but also some core impl classes) that were visible
+                in Apache NetBeans 9.0 release from NetBeans platform applications.
+            </p>
+        </description>
+        <class package="org.netbeans" name="ModuleManager"/>
+    </change>
     <change id="module.fragments">
          <api name="launcher"/>
          <summary>Ability to join other module</summary>

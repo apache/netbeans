@@ -30,14 +30,11 @@
         <token id='T_START_HEREDOC' start='31' end='42'>
             <text>&lt;&lt;&lt;HEREDOC\n</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='42' end='49'>
-            <text>Name: \n</text>
-        </token>
         <token id='EOF' start='49' end='49'>
             <text></text>
         </token>
     </scanner>
-    <Program start='0' end='48'>
+    <Program start='0' end='42'>
         <Comments>
         </Comments>
         <Statements>
@@ -57,7 +54,7 @@
                     <Scalar start='22' end='24' type='INT' value='10'/>
                 </Assignment>
             </ExpressionStatement>
-            <ASTError start='26' end='48'/>
+            <ASTError start='26' end='42'/>
         </Statements>
     </Program>
 </testresult>

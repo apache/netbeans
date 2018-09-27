@@ -29,6 +29,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.SwingConstants;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import javax.swing.text.Position.Bias;
 import javax.swing.text.TabableView;
 import javax.swing.text.View;
@@ -513,7 +515,7 @@ final class ParagraphViewChildren extends ViewChildren<EditorView> {
     public int viewToModelChecked(ParagraphView pView, double x, double y, Shape pAlloc, Bias[] biasReturn) {
         IndexAndAlloc indexAndAlloc = findIndexAndAlloc(pView, x, y, pAlloc);
         int offset = (indexAndAlloc != null)
-                ? indexAndAlloc.viewOrPart.viewToModelChecked(x, y, indexAndAlloc.alloc, biasReturn)
+                ? viewToModelWithAmbiguousWrapLineCaretAdustment(x, y, indexAndAlloc, biasReturn)
                 : pView.getStartOffset();
         return offset;
     }
@@ -613,7 +615,53 @@ final class ParagraphViewChildren extends ViewChildren<EditorView> {
         Shape wrapLineAlloc = wrapLineAlloc(alloc, wrapLineIndex);
         IndexAndAlloc indexAndAlloc = findIndexAndAlloc(pView, x, wrapLineAlloc, wrapLine);
         double y = ViewUtils.shapeAsRect(indexAndAlloc.alloc).getY();
-        return indexAndAlloc.viewOrPart.viewToModelChecked(x, y, indexAndAlloc.alloc, biasRet);
+        return viewToModelWithAmbiguousWrapLineCaretAdustment(x, y, indexAndAlloc, biasRet);
+    }
+
+    private int viewToModelWithAmbiguousWrapLineCaretAdustment(
+            double x, double y, IndexAndAlloc indexAndAlloc, Bias[] biasRet)
+    {
+        final EditorView view = indexAndAlloc.viewOrPart;
+        int ret = view.viewToModelChecked(x, y, indexAndAlloc.alloc, biasRet);
+        /* NETBEANS-980: On wrap lines, the caret offset that corresponds to "right after the last
+        character on the current wrap line" is ambiguous, because it can equivalently be interpreted
+        as "right before the first character on the following wrap line" (because there is no explicit
+        newline character to increment the offset around). The NetBeans EditorKit uses the latter
+        interpretation when painting the caret and calculating visual positions via modelToView. Here,
+        in viewToModel, we need to ensure that the returned offset always corresponds to a caret on
+        the wrap line with the given Y position. Otherwise, keyboard actions such as UpAction,
+        DownAction, and EndLineAction (in o.n.editor.BaseKit), or clicking the mouse in the area to
+        the right of the end of the wrap line, will not work correctly.
+
+        The approach here is to map the end of the wrap line to a caret position right _before_ the
+        last character on the wrap line. Under word wrapping, said character will usually be a space
+        (or a hyphen; see NETBEANS-977). This is the same approach as is taken in JTextArea with word
+        wrapping enabled. The latter can be confirmed by entering a very long word in a word-wrapping
+        JTextArea so that the last character on the wrap line is a letter rather than a space, and
+        pressing the "End" key (Command+Right Arrow on Mac); the caret will end up right before the
+        last character on the wrap line. Other approaches are possible, such as relying on the caret
+        bias to differentiate the ambigous offsets, but the approach here seemed like the simplest
+        one to implement. */
+        if (isWrapped() && view.getLength() > 0 && ret >= view.getEndOffset()) {
+            /* As a small improvement, avoid applying the adjustment on the very last wrap line of a
+            paragraph, where it is not needed, and where the last character is likely to be something
+            other than a space. This adjustment ensures that the caret ends up in the expected place
+            if the user clicks on the right-hand half of the last character on the wrap line. (If the
+            user clicks _beyond_ the last character of the last wrap line, hit testing would encounter
+            a NewlineView instead of a HighlightsViewPart, which would yield the correct caret
+            position in any case.) */
+            boolean isLastWrapLineInParagraph = false;
+            try {
+                final Document doc = view.getDocument();
+                if (ret < doc.getLength())
+                    isLastWrapLineInParagraph = view.getDocument().getText(ret, 1).equals("\n");
+            } catch (BadLocationException e) {
+                // Ignore.
+            }
+            if (!isLastWrapLineInParagraph)
+                ret = view.getEndOffset() - 1;
+        }
+        return ret;
     }
     
     private int findWrapLineIndex(Rectangle2D pAllocRect, double y) {

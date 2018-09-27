@@ -20,16 +20,17 @@ package org.netbeans.modules.php.editor.parser.astnodes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Represents complex qoute(i.e. qoute that includes string and variables).
  * Also represents heredoc
- * <pre>e.g.<pre>
+ * <pre>e.g.
  * "this is $a quote",
  * "'single ${$complex->quote()}'"
  * >>>Heredoc\n  This is here documents \nHeredoc;\n
- *
+ * </pre>
  * Note: "This is".$not." a quote node",
  *       'This is $not a quote too'
  */
@@ -58,7 +59,7 @@ public class Quote extends Expression {
      * @return expression list of the echo statement
      */
     public List<Expression> getExpressions() {
-        return this.expressions;
+        return Collections.unmodifiableList(this.expressions);
     }
 
     /**
@@ -80,7 +81,7 @@ public class Quote extends Expression {
         for (Expression expression : getExpressions()) {
             sb.append(expression).append(","); //NOI18N
         }
-        return getQuoteType() + " " + sb.toString();
+        return getQuoteType() + " " + sb.toString(); //NOI18N
     }
 
 }

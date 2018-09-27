@@ -25,7 +25,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.CountDownLatch;
 import javax.swing.SwingUtilities;
-import javax.xml.ws.Holder;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import org.netbeans.api.db.explorer.*;
@@ -56,7 +55,7 @@ public class AddConnectionWizardTest extends DBTestBase {
                 driver.getClassName(),
                 "database", "schema", "user", "password", true);
         
-        final Holder<DatabaseConnection> result = new Holder<>();
+        final DatabaseConnection[] result = new DatabaseConnection[1];
         
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -70,7 +69,7 @@ public class AddConnectionWizardTest extends DBTestBase {
                     WizardDescriptor wd = reflectiveFieldGet(AddConnectionWizard.class, wiz, "wd");
                     wd.doCancelClick();
                     
-                    result.value = reflectiveCall(AddConnectionWizard.class, wiz, "getResult", new Class[0], new Object[0]);
+                    result[0] = reflectiveCall(AddConnectionWizard.class, wiz, "getResult", new Class[0], new Object[0]);
 
                     finalLock.countDown();
             }
@@ -79,7 +78,7 @@ public class AddConnectionWizardTest extends DBTestBase {
         finalLock.await();
         
         assertThat(ConnectionManager.getDefault().getConnections().length, is(0));
-        assertNull(result.value);
+        assertNull(result[0]);
     }
 
     
@@ -95,7 +94,7 @@ public class AddConnectionWizardTest extends DBTestBase {
                 driver.getClassName(),
                 "database", "schema", "user", "password", true);
         
-        final Holder<DatabaseConnection> result = new Holder<>();
+        final DatabaseConnection[] result = new DatabaseConnection[1];
         
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -109,7 +108,7 @@ public class AddConnectionWizardTest extends DBTestBase {
                     WizardDescriptor wd = reflectiveFieldGet(AddConnectionWizard.class, wiz, "wd");
                     wd.doFinishClick();
                     
-                    result.value = reflectiveCall(AddConnectionWizard.class, wiz, "getResult", new Class[0], new Object[0]);
+                    result[0] = reflectiveCall(AddConnectionWizard.class, wiz, "getResult", new Class[0], new Object[0]);
 
                     finalLock.countDown();
             }
@@ -118,7 +117,7 @@ public class AddConnectionWizardTest extends DBTestBase {
         finalLock.await();
         
         assertThat(ConnectionManager.getDefault().getConnections().length, is(1));
-        assertNotNull(result.value);
+        assertNotNull(result[0]);
     }
     
     private <T> T reflectiveConstruct(Class<T> clazz, Class[] signature, Object[] params) {

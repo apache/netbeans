@@ -34,8 +34,10 @@ import java.util.List;
  * list($a,$b) = array (1,2),
  * list($a, list($b, $c)),
  * list("id" => $id, "name" => $name) = $data[0]; // PHP7.1,
+ * list($a, &$b) = $array; // PHP 7.3
  * [$a, $b, $c] = [1, 2, 3]; // PHP7.1,
  * ["a" => $a, "b" => $b, "c" => $c] = ["a" => 1, "b" => 2, "c" => 3]; // PHP7.1
+ * [$a, &$b] = $array; // PHP 7.3
  * </pre>
  */
 public class ListVariable extends VariableBase {

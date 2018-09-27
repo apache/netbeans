@@ -58,6 +58,7 @@ public final class MainWindow {
    static final long serialVersionUID = -1160791973145645501L;
 
    private final JFrame frame;
+   private final AutoHidingMenuBar autoHidingMenuBar;
 
    private static JMenuBar mainMenuBar;
 
@@ -89,6 +90,7 @@ public final class MainWindow {
    /** Constructs main window. */
    private MainWindow(JFrame frame) {
        this.frame = frame;
+       this.autoHidingMenuBar = new AutoHidingMenuBar(frame);
    }
 
    public static MainWindow install( JFrame frame ) {
@@ -766,6 +768,8 @@ public final class MainWindow {
            WindowManagerImpl.getInstance().setVisible(false);
 
        frame.dispose();
+
+       autoHidingMenuBar.setAutoHideEnabled(isFullScreenMode);
 
        frame.setUndecorated( isFullScreenMode || isUndecorated );
        // Added to support Custom Look and Feel with Decorations

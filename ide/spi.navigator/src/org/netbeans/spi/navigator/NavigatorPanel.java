@@ -23,6 +23,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.net.URI;
 import java.util.Collection;
 import javax.swing.JComponent;
 import org.netbeans.api.annotations.common.CheckForNull;
@@ -144,7 +145,7 @@ public interface NavigatorPanel {
     }
 
     /**
-     * Dynamically create panels for files.
+     * Dynamically create panels for files. Register in the global lookup.
      *
      * @since 1.41
      */
@@ -157,7 +158,7 @@ public interface NavigatorPanel {
          * @return a collection of {@code NavigatorPanel}s for the given file
          *         null is allowed
          */
-        public @CheckForNull Collection<? extends NavigatorPanel> panelsFor(@NonNull FileObject file);
+        public @CheckForNull Collection<? extends NavigatorPanel> panelsFor(@NonNull URI file);
     }
 
 }

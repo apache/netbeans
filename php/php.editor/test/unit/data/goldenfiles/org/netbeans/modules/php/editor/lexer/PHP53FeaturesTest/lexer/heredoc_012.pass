@@ -15,13 +15,14 @@ token #13 WHITESPACE
 token #14 PHP_HEREDOC_TAG_START <<<"MYLABEL"\n
 token #15 PHP_ENCAPSED_AND_WHITESPACE test: 
 token #16 PHP_VARIABLE $test
-token #17 PHP_HEREDOC_TAG_END \nMYLABEL
-token #18 PHP_SEMICOLON ;
-token #19 WHITESPACE \n
-token #20 PHP_ECHO echo
-token #21 WHITESPACE  
-token #22 PHP_VARIABLE $var
-token #23 PHP_SEMICOLON ;
-token #24 WHITESPACE \n
-token #25 PHP_CLOSETAG ?>
-token #26 T_INLINE_HTML \n--EXPECT--\ntest: foo\n
+token #17 PHP_CONSTANT_ENCAPSED_STRING \n
+token #18 PHP_HEREDOC_TAG_END MYLABEL
+token #19 PHP_SEMICOLON ;
+token #20 WHITESPACE \n
+token #21 PHP_ECHO echo
+token #22 WHITESPACE  
+token #23 PHP_VARIABLE $var
+token #24 PHP_SEMICOLON ;
+token #25 WHITESPACE \n
+token #26 PHP_CLOSETAG ?>
+token #27 T_INLINE_HTML \n--EXPECT--\ntest: foo\n

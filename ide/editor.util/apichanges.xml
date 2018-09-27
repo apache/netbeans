@@ -83,6 +83,24 @@ is the proper place.
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
   <changes>
+      <change id="DocumentUtilities.addWeakPropertyChangeListener">
+          <summary>Added support for adding weak property change listeners to documents</summary>
+          <version major="1" minor="68"/>
+          <date day="6" month="9" year="2018"/>
+          <author login="matthiasblaesing"/>
+          <compatibility addition="yes" binary="compatible" semantic="compatible" />
+          <description>
+              <p>
+                  Added support for adding weak property change listeners to documents
+                  by providing
+                  <code>DocumentUtilities.addWeakPropertyChangeListener(doc, listenerImplementation)</code>.
+                  The supplied <code>listenerImplementation</code> is not held via
+                  a strong reference, but a weak reference and so can be GCed
+                  independendly of the referencing document.
+              </p>
+          </description>
+          <issue number="NETBEANS-406"/>
+      </change>
       <change id="GapListAddAll">
           <summary>Added methods to append elements to a GapList</summary>
           <version major="1" minor="64"/>

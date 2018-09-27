@@ -19,7 +19,7 @@
 
 
 /*
- * Source files have been generated once and uploaded as an external zip to be included at buildtime
+ * Source files have been generated once and added to the src directory.
  * Hence schema genration is commented out.
  */
 

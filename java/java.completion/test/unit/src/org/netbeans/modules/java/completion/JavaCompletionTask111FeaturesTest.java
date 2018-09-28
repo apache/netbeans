@@ -55,6 +55,7 @@ public class JavaCompletionTask111FeaturesTest extends CompletionTestBase {
     public void testEmptyFileAfterTypingTypeOfLambdaParam() throws Exception {
         performTest("SimpleLambdaExpression2Start", 1131, "t.test((String ", "stringVarName.pass", SOURCE_LEVEL);
     }
+
     public void testFirstLambdaParam() throws Exception {
         performTest("SimpleLambdaExpression2Start", 1131, "Foo obj = (final ", "lambdaParameterTypesIncludingVar1.pass", SOURCE_LEVEL);
     }
@@ -95,8 +96,6 @@ public class JavaCompletionTask111FeaturesTest extends CompletionTestBase {
         performTest("SimpleLambdaExpression2Start", 1131, "t.test((@TestAnnotation var x, var y,", "var.pass", SOURCE_LEVEL);
     }
 
-/* Below Test Cases are commented out and will we added back once bug:NETBEANS-1224 is fixed.
-    
     public void testSecondLambdaParam4() throws Exception {
         performTest("SimpleLambdaExpression2Start", 1131, "t.test((var s,", "var.pass", SOURCE_LEVEL);
     }
@@ -108,7 +107,7 @@ public class JavaCompletionTask111FeaturesTest extends CompletionTestBase {
     public void testSecondLambdaParamWithAnnotation() throws Exception {
         performTest("SimpleLambdaExpression2Start", 1131, "t.test((@TestAnnotation var x, ", "var.pass", SOURCE_LEVEL);
     }
-*/
+
     public void noop() {
     }
 

@@ -1,9 +1,8 @@
-Name: JavaEE API 7.0
-Version: 7.0
+Name: JSR 181 Maintenance Release 1
+Version: 1.0-MR1
 License: CDDL-1.1
-Description: JavaEE API 7.0
-Origin: GlassFish Community (https://mvnrepository.com/artifact/javax/javaee-api/7.0)
-
+Description: Web Services Metadata for Java
+Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.jws/jsr181-api/1.0-MR1)
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

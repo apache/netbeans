@@ -1,9 +1,8 @@
-Name: JavaEE API 7.0
-Version: 7.0
+Name: JAXB API bundled for OSGi distribution
+Version: 2.2.7
 License: CDDL-1.1
-Description: JavaEE API 7.0
-Origin: GlassFish Community (https://mvnrepository.com/artifact/javax/javaee-api/7.0)
-
+Description: JAXB API bundled for OSGi distribution 2.2.7
+Origin: Oracle (https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api-osgi/2.2.7)
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

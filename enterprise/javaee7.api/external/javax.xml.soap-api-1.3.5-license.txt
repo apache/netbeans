@@ -1,9 +1,8 @@
-Name: JavaEE API 7.0
-Version: 7.0
+Name: Javax XML SOAP Api
+Version: 1.3.5
 License: CDDL-1.1
-Description: JavaEE API 7.0
-Origin: GlassFish Community (https://mvnrepository.com/artifact/javax/javaee-api/7.0)
-
+Description: Javax XML SOAP Api
+Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.xml.soap/javax.xml.soap-api/1.3.5)
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

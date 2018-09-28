@@ -1,9 +1,8 @@
-Name: JavaEE API 7.0
-Version: 7.0
+Name: Javax Annotation API
+Version: 1.2
 License: CDDL-1.1
-Description: JavaEE API 7.0
-Origin: GlassFish Community (https://mvnrepository.com/artifact/javax/javaee-api/7.0)
-
+Description: Javax Annotation API 1.2
+Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api/1.2)
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

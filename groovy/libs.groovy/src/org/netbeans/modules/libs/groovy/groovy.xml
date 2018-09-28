@@ -22,7 +22,7 @@
 -->
 
 <library version="3.0" xmlns="http://www.netbeans.org/ns/library-declaration/3">
-    <name>groovy</name>
+    <name>groovy-all</name>
     <type>j2se</type>
     <localizing-bundle>org/netbeans/modules/libs/groovy/Bundle</localizing-bundle>
     <volume>

@@ -1680,9 +1680,8 @@ public final class ModuleManager extends Modules {
     }
     
     private void maybeAddToEnableList(Set<Module> willEnable, Set<Module> mightEnable, Module m, boolean okToFail) {
-        if (! missingDependencies(m).isEmpty()) {
-            assert okToFail : "Module " + m + " had unexpected problems: " + missingDependencies(m) + " (willEnable: " + willEnable + " mightEnable: " + mightEnable + ")";
-            // Cannot satisfy its dependencies, exclude it.
+        if (!missingDependencies(m).isEmpty()) {
+            Util.err.log(Level.FINE, "Cannot satisfy dependencies of {0}, excluding it: {1} (willEnable: {2} mightEnable: {3})", new Object[]{m, missingDependencies(m), willEnable, mightEnable});
             return;
         }
         if (!willEnable.add(m)) {

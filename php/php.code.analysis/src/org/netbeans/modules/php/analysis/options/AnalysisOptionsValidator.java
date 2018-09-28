@@ -22,6 +22,8 @@ import java.util.List;
 import org.netbeans.modules.php.analysis.commands.CodeSniffer;
 import org.netbeans.modules.php.analysis.commands.CodingStandardsFixer;
 import org.netbeans.modules.php.analysis.commands.MessDetector;
+import org.netbeans.modules.php.analysis.commands.PHPStan;
+import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.api.validation.ValidationResult;
 import org.openide.util.NbBundle;
@@ -29,7 +31,6 @@ import org.openide.util.NbBundle;
 public final class AnalysisOptionsValidator {
 
     private final ValidationResult result = new ValidationResult();
-
 
     public AnalysisOptionsValidator validateCodeSniffer(String codeSnifferPath, String codeSnifferStandard) {
         validateCodeSnifferPath(codeSnifferPath);
@@ -45,6 +46,12 @@ public final class AnalysisOptionsValidator {
 
     public AnalysisOptionsValidator validateCodingStandardsFixer(String codingStandardsFixerPath) {
         validateCodingStandardsFixerPath(codingStandardsFixerPath);
+        return this;
+    }
+
+    public AnalysisOptionsValidator validatePHPStan(String phpStanPath, String configuration) {
+        validatePHPStanPath(phpStanPath);
+        validatePHPStanConfiguration(configuration);
         return this;
     }
 
@@ -88,6 +95,24 @@ public final class AnalysisOptionsValidator {
         String warning = CodingStandardsFixer.validate(codingStandardsFixerPath);
         if (warning != null) {
             result.addWarning(new ValidationResult.Message("codingStandardsFixer.path", warning)); // NOI18N
+        }
+        return this;
+    }
+
+    private AnalysisOptionsValidator validatePHPStanPath(String phpStanPath) {
+        String warning = PHPStan.validate(phpStanPath);
+        if (warning != null) {
+            result.addWarning(new ValidationResult.Message("phpStan.path", warning)); // NOI18N
+        }
+        return this;
+    }
+
+    private AnalysisOptionsValidator validatePHPStanConfiguration(String configuration) {
+        if (!StringUtils.isEmpty(configuration)) {
+            String warning = FileUtils.validateFile("Configuration file", configuration, false); // NOI18N
+            if (warning != null) {
+                result.addWarning(new ValidationResult.Message("phpStan.configuration", warning)); // NOI18N
+            }
         }
         return this;
     }

@@ -64,31 +64,63 @@ public class SourceLevelQueryImplTest extends NbTestCase {
         assertEquals("1.8", SourceLevelQuery.getSourceLevel(jlObject));
     }
     
-    public void testModuleInfoProject() throws IOException {
+    public void testModuleInfoOldLayout() throws IOException {
         FileObject javaBase = FileUtil.createFolder(root, "jdk/src/java.base");
         FileObject jlObject = FileUtil.createData(javaBase, "share/classes/java/lang/Object.java");
         copyString2File(jlObject, "");
         copyString2File(FileUtil.createData(javaBase, "share/classes/module-info.java"), "module java.base {}");
-        copyString2File(FileUtil.createData(root, ".jcheck/conf"), "project=jdk3\n");
+        copyString2File(FileUtil.createData(root, "langtools/src/java.compiler/share/classes/module-info.java"), "module java.compiler {}");
+        copyString2File(FileUtil.createData(root, "langtools/src/java.compiler/share/classes/javax/lang/model/SourceVersion.java"), "RELEASE_3 RELEASE_12");
 
         Project javaBaseProject = FileOwnerQuery.getOwner(javaBase);
 
         assertNotNull(javaBaseProject);
 
-        assertEquals("1.3", SourceLevelQuery.getSourceLevel(jlObject));
+        assertEquals("12", SourceLevelQuery.getSourceLevel(jlObject));
     }
 
-    public void testNoJCheck() throws IOException {
-        FileObject javaBase = FileUtil.createFolder(root, "jdk/src/java.base");
+    public void testModuleInfoNewLayout() throws IOException {
+        FileObject javaBase = FileUtil.createFolder(root, "src/java.base");
         FileObject jlObject = FileUtil.createData(javaBase, "share/classes/java/lang/Object.java");
         copyString2File(jlObject, "");
         copyString2File(FileUtil.createData(javaBase, "share/classes/module-info.java"), "module java.base {}");
+        copyString2File(FileUtil.createData(root, "src/java.compiler/share/classes/module-info.java"), "module java.compiler {}");
+        copyString2File(FileUtil.createData(root, "src/java.compiler/share/classes/javax/lang/model/SourceVersion.java"), "RELEASE_3 RELEASE_12");
 
         Project javaBaseProject = FileOwnerQuery.getOwner(javaBase);
 
         assertNotNull(javaBaseProject);
 
-        assertEquals("9", SourceLevelQuery.getSourceLevel(jlObject));
+        assertEquals("12", SourceLevelQuery.getSourceLevel(jlObject));
+    }
+
+    public void testNoSourceVersion() throws IOException {
+        FileObject javaBase = FileUtil.createFolder(root, "src/java.base");
+        FileObject jlObject = FileUtil.createData(javaBase, "share/classes/java/lang/Object.java");
+        copyString2File(jlObject, "");
+        copyString2File(FileUtil.createData(javaBase, "share/classes/module-info.java"), "module java.base {}");
+        copyString2File(FileUtil.createData(root, "src/java.compiler/share/classes/module-info.java"), "module java.compiler {}");
+
+        Project javaBaseProject = FileOwnerQuery.getOwner(javaBase);
+
+        assertNotNull(javaBaseProject);
+
+        assertEquals("11", SourceLevelQuery.getSourceLevel(jlObject));
+    }
+
+    public void testOldSourceVersion() throws IOException {
+        FileObject javaBase = FileUtil.createFolder(root, "src/java.base");
+        FileObject jlObject = FileUtil.createData(javaBase, "share/classes/java/lang/Object.java");
+        copyString2File(jlObject, "");
+        copyString2File(FileUtil.createData(javaBase, "share/classes/module-info.java"), "module java.base {}");
+        copyString2File(FileUtil.createData(root, "src/java.compiler/share/classes/module-info.java"), "module java.compiler {}");
+        copyString2File(FileUtil.createData(root, "src/java.compiler/share/classes/javax/lang/model/SourceVersion.java"), "RELEASE_3");
+
+        Project javaBaseProject = FileOwnerQuery.getOwner(javaBase);
+
+        assertNotNull(javaBaseProject);
+
+        assertEquals("11", SourceLevelQuery.getSourceLevel(jlObject));
     }
 
     private void copyString2File(FileObject file, String content) throws IOException {

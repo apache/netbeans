@@ -38,6 +38,7 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JSeparator;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import javax.swing.plaf.metal.MetalLookAndFeel;
@@ -436,7 +437,12 @@ public class Toolbar extends ToolbarWithOverflow /*implemented by patchsuperclas
                     }
                     if (obj instanceof Action) {
                         Action a = (Action) obj;
-                        JButton b = new DefaultIconButton();
+                        AbstractButton b;
+                        if (a.getValue(Actions.ACTION_VALUE_TOGGLE) != null) {
+                            b = new DefaultIconToggleButton();
+                        } else {
+                            b = new DefaultIconButton();
+                        }
 
                         if (ToolbarPool.getDefault().getPreferredIconSize() == 24) {
                             b.putClientProperty("PreferredIconSize", new Integer(24));
@@ -602,6 +608,25 @@ public class Toolbar extends ToolbarWithOverflow /*implemented by patchsuperclas
      * A button that provides a default icon when no text and no custom icon have been set.
      */
     private static class DefaultIconButton extends JButton {
+        private Icon unknownIcon;
+
+        @Override
+        public Icon getIcon() {
+            Icon retValue = super.getIcon();
+            if( null == retValue && (null == getText() || getText().length() == 0 ) ) {
+                if (unknownIcon == null) {
+                    unknownIcon = ImageUtilities.loadImageIcon("org/openide/loaders/unknown.gif", false); //NOI18N
+                }
+                retValue = unknownIcon;
+            }
+            return retValue;
+        }
+    }
+
+    /**
+     * A button that provides a default icon when no text and no custom icon have been set.
+     */
+    private static class DefaultIconToggleButton extends JToggleButton {
         private Icon unknownIcon;
 
         @Override

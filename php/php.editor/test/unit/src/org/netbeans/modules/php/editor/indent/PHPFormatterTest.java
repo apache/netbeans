@@ -780,4 +780,15 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/issue271062.php", options);
     }
 
+    // PHP 7.3
+    public void testFlexibleHeredoc_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/flexibleHeredoc_01.php", options);
+    }
+
+    public void testFlexibleNowdoc_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/flexibleNowdoc_01.php", options);
+    }
+
 }

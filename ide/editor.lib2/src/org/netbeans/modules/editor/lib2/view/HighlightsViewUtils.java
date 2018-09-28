@@ -28,8 +28,9 @@ import java.awt.Shape;
 import java.awt.font.TextHitInfo;
 import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
+import java.text.BreakIterator;
+import java.util.Locale;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.Caret;
 import javax.swing.text.JTextComponent;
@@ -714,52 +715,30 @@ public class HighlightsViewUtils {
                     }
                 }
 
-                // Now perform corrections if wrapping at word boundaries is required
-                // Currently a simple impl that checks adjacent char(s) in backward direction
-                // is used. Consider BreakIterator etc. if requested.
-                // If break is inside a word then check for word boundary in backward direction.
-                // If none is found then go forward to find a word break if possible.
                 int breakPartEndOffset = partStartOffset + hitInfo.getCharIndex();
                 if (breakPartEndOffset > breakPartStartOffset) {
+                    // Now perform corrections if wrapping at word boundaries is required
                     if (docView.op.getLineWrapType() == LineWrapType.WORD_BOUND) {
-                        CharSequence docText = DocumentUtilities.getText(docView.getDocument());
-                        if (breakPartEndOffset > breakPartStartOffset) {
-                            boolean searchNonLetterForward = false;
-                            char ch = docText.charAt(breakPartEndOffset - 1);
-                            // [TODO] Check surrogates
-                            if (Character.isLetterOrDigit(ch)) {
-                                if (breakPartEndOffset < docText.length() &&
-                                        Character.isLetterOrDigit(docText.charAt(breakPartEndOffset)))
-                                {
-                                    // Inside word
-                                    // Attempt to go back and search non-letter
-                                    int offset = breakPartEndOffset - 1;
-                                    while (offset >= breakPartStartOffset && Character.isLetterOrDigit(docText.charAt(offset))) {
-                                        offset--;
-                                    }
-                                    offset++;
-                                    if (offset == breakPartStartOffset) {
-                                        searchNonLetterForward = true;
-                                    } else { // move the break offset back
-                                        breakPartEndOffset = offset;
-                                    }
-                                }
-                            }
-                            if (searchNonLetterForward) {
-                                breakPartEndOffset++; // char at breakPartEndOffset already checked
-                                while (breakPartEndOffset < partStartOffset + partLength &&
-                                        Character.isLetterOrDigit(docText.charAt(breakPartEndOffset)))
-                                {
-                                    breakPartEndOffset++;
-                                }
-                            }
-                        }
+                        CharSequence paragraph = DocumentUtilities.getText(docView.getDocument())
+                                .subSequence(breakPartStartOffset, partStartOffset + partLength);
+                        /* Don't enable allowWhitespaceBeyondEnd if we are printing the line
+                        continuation character
+                        (see DocumentViewOp.getLineContinuationCharTextLayout), since the latter
+                        would usually then end up beyond the edge of the editor viewport. */
+                        boolean allowWhitespaceBeyondEnd =
+                                !docView.op.isNonPrintableCharactersVisible();
+                        breakPartEndOffset = adjustBreakOffsetToWord(paragraph,
+                                breakPartEndOffset - breakPartStartOffset,
+                                allowWhitespaceBeyondEnd) + breakPartStartOffset;
                     }
                 }
 
                 // Length must be > 0; BTW TextLayout can't be constructed with empty string.
-                boolean breakFailed = (breakPartEndOffset - breakPartStartOffset == 0) ||
-                        (breakPartEndOffset - breakPartStartOffset >= partLength);
+                boolean doNotBreak =
+                    // No need to split the line in two if the first part would be empty.
+                    (breakPartEndOffset - breakPartStartOffset == 0) ||
+                    // No need to split the line in two if the second part would be empty.
+                    (breakPartEndOffset - breakPartStartOffset >= partLength);
 //                if (ViewHierarchyImpl.BUILD_LOG.isLoggable(Level.FINE)) {
 //                    ViewHierarchyImpl.BUILD_LOG.fine("HV.breakView(): <"  + partStartOffset + // NOI18N
 //                            "," + (partStartOffset+partLength) + // NOI18N
@@ -767,7 +746,7 @@ public class HighlightsViewUtils {
 //                        ">, x=" + x + ", len=" + len + // NOI18N
 //                        ", charIndexX=" + breakCharIndexX + "\n"); // NOI18N
 //                }
-                if (breakFailed) {
+                if (doNotBreak) {
                     return null;
                 }
                 return new HighlightsViewPart(fullView, breakPartStartOffset - fullViewStartOffset,
@@ -777,4 +756,90 @@ public class HighlightsViewUtils {
         return null;
     }
 
+    // Package-private for testing.
+    /**
+     * Calculate the position at which to break a line in a paragraph. A break offset of X means
+     * that the character with index (X-1) in {@code paragraph} will be the last one on the physical
+     * line.
+     *
+     * <p>The current implementation avoids creating lines with leading whitespace (when words are
+     * separated by at most one whitespace character), allows lines to be broken after hyphens, and,
+     * if {@code allowWhitespaceBeyondEnd} is true, allows one whitespace character to extend beyond
+     * the preferred break width to make use of all available horizontal space. Very long
+     * unbreakable words may extend beyond the preferred break offset regardless of the setting of
+     * {@code allowWhitespaceBeyondEnd}.
+     *
+     * <p>It was previously considered to allow an arbitrary number of whitespace characters to
+     * trail off the end of each wrap line, rather than just one. In the end, it turned out to be
+     * better to limit this to just one character, as this conveniently avoids the need to ever
+     * position the visual text caret outside the word-wrapped editor viewport (except in cases of
+     * very long unbreakable words).
+     *
+     * @param paragraph a long line of text to be broken, i.e. a paragraph, or the remainder of a
+     *        paragraph if some of its initial lines of wrapped text have already been laid out
+     * @param preferredMaximumBreakOffset the preferred maximum break offset
+     * @param allowWhitespaceBeyondEnd if true, allow one whitespace character to extend beyond
+     *        {@code preferredMaximumBreakOffset} even when this could be avoided by choosing a
+     *        smaller break offset
+     */
+    static int adjustBreakOffsetToWord(CharSequence paragraph,
+            final int preferredMaximumBreakOffset, boolean allowWhitespaceBeyondEnd)
+    {
+        if (preferredMaximumBreakOffset < 0) {
+            throw new IllegalArgumentException();
+        }
+        if (preferredMaximumBreakOffset > paragraph.length()) {
+            throw new IllegalArgumentException();
+        }
+        /* BreakIterator.getLineInstance already seems to have a cache; creating a new instance here
+        is just the cost of BreakIterator.clone(). So don't bother trying to cache the BreakIterator
+        here. */
+        BreakIterator bi = BreakIterator.getLineInstance(Locale.US);
+        /* Use CharSequenceCharacterIterator to avoid copying the entire paragraph string every
+        time. */
+        bi.setText(new CharSequenceCharacterIterator(paragraph));
+
+        int ret;
+        if (preferredMaximumBreakOffset == 0) {
+            // Skip forward to next boundary.
+            ret = 0;
+        } else if (
+            allowWhitespaceBeyondEnd && preferredMaximumBreakOffset < paragraph.length() &&
+            Character.isWhitespace(paragraph.charAt(preferredMaximumBreakOffset)))
+        {
+            // Allow one whitespace character to extend beyond the preferred break offset.
+            return preferredMaximumBreakOffset + 1;
+        } else {
+            // Skip backwards to previous boundary.
+            ret = bi.isBoundary(preferredMaximumBreakOffset)
+                ? preferredMaximumBreakOffset
+                : bi.preceding(preferredMaximumBreakOffset);
+            if (ret == BreakIterator.DONE) {
+                return preferredMaximumBreakOffset;
+            }
+        }
+        if (ret == 0) {
+            // Skip forward to next boundary (for words longer than the preferred break offset).
+            ret = preferredMaximumBreakOffset > 0 && bi.isBoundary(preferredMaximumBreakOffset)
+                ? preferredMaximumBreakOffset
+                : bi.following(preferredMaximumBreakOffset);
+            if (ret == BreakIterator.DONE) {
+                ret = preferredMaximumBreakOffset;
+            }
+            /* The line-based break iterator will include whitespace trailing a word as well. Strip
+            this off so we can apply our own policy here. */
+            int retBeforeTrim = ret;
+            while (ret > preferredMaximumBreakOffset &&
+                Character.isWhitespace(paragraph.charAt(ret - 1)))
+            {
+                ret--;
+            }
+            /* If allowWhitespaceBeyondEnd is true, allow at most one whitespace character to trail
+            the word at the end. */
+            if ((allowWhitespaceBeyondEnd || ret == 0) && retBeforeTrim > ret) {
+                ret++;
+            }
+        }
+        return ret;
+    }
 }

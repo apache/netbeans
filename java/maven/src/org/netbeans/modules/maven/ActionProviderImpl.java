@@ -171,6 +171,11 @@ public class ActionProviderImpl implements ActionProvider {
         String v = PluginPropertyUtils.getPluginVersion(proj.getLookup().lookup(NbMavenProject.class).getMavenProject(), Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_SUREFIRE);
         return v != null && new ComparableVersion(v).compareTo(new ComparableVersion("2.8")) >= 0;
     }
+    
+    private boolean usingSurefire2_22() {
+        String v = PluginPropertyUtils.getPluginVersion(proj.getLookup().lookup(NbMavenProject.class).getMavenProject(), Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_SUREFIRE);
+        return v != null && new ComparableVersion(v).compareTo(new ComparableVersion("2.22.0")) >= 0;
+    }
 
     private boolean usingJUnit4() { // SUREFIRE-724
         for (Artifact a : proj.getLookup().lookup(NbMavenProject.class).getMavenProject().getArtifacts()) {
@@ -183,6 +188,12 @@ public class ActionProviderImpl implements ActionProvider {
         }
         return false;
     }
+    
+    private boolean usingJUnit5() {
+        return proj.getLookup().lookup(NbMavenProject.class).getMavenProject().getArtifacts()
+                .stream()
+                .anyMatch((a) -> ("org.junit.jupiter".equals(a.getGroupId()) && "junit-jupiter-engine".equals(a.getArtifactId())));
+    }
 
     private boolean usingTestNG() {
         for (Artifact a : proj.getLookup().lookup(NbMavenProject.class).getMavenProject().getArtifacts()) {
@@ -194,7 +205,7 @@ public class ActionProviderImpl implements ActionProvider {
     }
 
     boolean runSingleMethodEnabled() {
-        return usingSurefire28() && (usingJUnit4() || usingTestNG());
+        return (usingSurefire28() && (usingJUnit4() || usingTestNG())) || (usingSurefire2_22() && usingJUnit5());
     }
     
     //TODO these effectively need updating once in a while

@@ -20,22 +20,23 @@ token #18 PHP_OPERATOR =
 token #19 WHITESPACE  
 token #20 PHP_HEREDOC_TAG_START <<<THISMUSTNOTERROR\n
 token #21 PHP_CONSTANT_ENCAPSED_STRING If you see this, everything is ok.
-token #22 PHP_HEREDOC_TAG_END \nTHISMUSTNOTERROR
-token #23 PHP_SEMICOLON ;
-token #24 WHITESPACE \n\n
-token #25 PHP_CURLY_CLOSE }
-token #26 PHP_SEMICOLON ;
-token #27 WHITESPACE \n\n
-token #28 PHP_PRINT print
-token #29 WHITESPACE  
-token #30 PHP_STRING e
-token #31 PHP_PAAMAYIM_NEKUDOTAYIM ::
-token #32 PHP_STRING E
-token #33 WHITESPACE  
-token #34 PHP_TOKEN .
-token #35 WHITESPACE  
-token #36 PHP_CONSTANT_ENCAPSED_STRING "\n"
-token #37 PHP_SEMICOLON ;
-token #38 WHITESPACE \n\n
-token #39 PHP_CLOSETAG ?>
-token #40 T_INLINE_HTML \n--EXPECT--\nIf you see this, everything is ok.\n
+token #22 PHP_CONSTANT_ENCAPSED_STRING \n
+token #23 PHP_HEREDOC_TAG_END THISMUSTNOTERROR
+token #24 PHP_SEMICOLON ;
+token #25 WHITESPACE \n\n
+token #26 PHP_CURLY_CLOSE }
+token #27 PHP_SEMICOLON ;
+token #28 WHITESPACE \n\n
+token #29 PHP_PRINT print
+token #30 WHITESPACE  
+token #31 PHP_STRING e
+token #32 PHP_PAAMAYIM_NEKUDOTAYIM ::
+token #33 PHP_STRING E
+token #34 WHITESPACE  
+token #35 PHP_TOKEN .
+token #36 WHITESPACE  
+token #37 PHP_CONSTANT_ENCAPSED_STRING "\n"
+token #38 PHP_SEMICOLON ;
+token #39 WHITESPACE \n\n
+token #40 PHP_CLOSETAG ?>
+token #41 T_INLINE_HTML \n--EXPECT--\nIf you see this, everything is ok.\n

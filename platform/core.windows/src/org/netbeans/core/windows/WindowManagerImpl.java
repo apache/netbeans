@@ -28,6 +28,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
+import org.netbeans.core.IDESettings;
 import org.netbeans.core.windows.actions.ActionUtils;
 import org.netbeans.core.windows.options.WinSysPrefs;
 import org.netbeans.core.windows.persistence.PersistenceManager;
@@ -1527,8 +1528,12 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
 
         @Override
         public void run() {
-            if (!WindowManagerImpl.getInstance().isVisible()) {
-                return;
+            if (IDESettings.isGui()) {
+                // running in GUI mode, but
+                if (!WindowManagerImpl.getInstance().isVisible()) {
+                    // window manager isn't yet visible => exit for now
+                    return;
+                }
             }
             
             synchronized (this) {

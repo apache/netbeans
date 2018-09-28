@@ -34,6 +34,7 @@
         <property>
             <name>maven-dependencies</name>
             <value>org.codehaus.groovy:groovy:2.5.2:jar</value>
+            <value>org.codehaus.groovy:groovy-ant:2.5.2:jar</value>
         </property>
     </properties>
 </library>

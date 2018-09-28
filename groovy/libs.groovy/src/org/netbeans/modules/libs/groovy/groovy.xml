@@ -28,6 +28,7 @@
     <volume>
         <type>classpath</type>
         <resource>jar:nbinst://org.netbeans.modules.libs.groovy/modules/ext/groovy.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.libs.groovy/modules/ext/groovy-ant.jar!/</resource>
     </volume>
     <properties>
         <property>

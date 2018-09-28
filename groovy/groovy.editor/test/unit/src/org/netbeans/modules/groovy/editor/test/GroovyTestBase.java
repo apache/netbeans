@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.groovy.editor.test;
 
-import groovy.lang.GroovyClassLoader;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -162,7 +161,7 @@ public class GroovyTestBase extends CslTestBase {
     }
 
     private static ClassPath createCompilePath() {
-        URL url = GroovyClassLoader.class.getProtectionDomain().getCodeSource().getLocation();
+        URL url = org.codehaus.groovy.ant.Groovyc.class.getProtectionDomain().getCodeSource().getLocation();
         return ClassPathSupport.createClassPath(FileUtil.getArchiveRoot(url));
     }
 

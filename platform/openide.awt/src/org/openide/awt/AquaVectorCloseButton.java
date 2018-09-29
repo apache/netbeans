@@ -28,6 +28,7 @@ import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import javax.swing.Icon;
+import org.openide.util.VectorIcon;
 
 /* For use by CloseButtonFactory only. The "mac_close_(enabled|pressed|rollover).png" files were
 confirmed to be identical to the mac_bigclose_(enabled|pressed|rollover).png ones, so the same

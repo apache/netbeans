@@ -25,6 +25,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import javax.swing.Icon;
+import org.openide.util.VectorIcon;
 
 // For use by CloseButtonFactory only.
 final class Windows8VectorCloseButton extends VectorIcon {

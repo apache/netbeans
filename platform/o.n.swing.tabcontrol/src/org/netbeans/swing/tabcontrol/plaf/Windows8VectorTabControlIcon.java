@@ -18,7 +18,7 @@
  */
 package org.netbeans.swing.tabcontrol.plaf;
 
-import org.openide.awt.VectorIcon;
+import org.openide.util.VectorIcon;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;

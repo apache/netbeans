@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.openide.awt;
+package org.openide.util;
 
 import java.awt.Component;
 import java.awt.Graphics;

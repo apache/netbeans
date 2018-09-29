@@ -41,6 +41,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import org.openide.util.Mutex;
+import org.openide.util.VectorIcon;
 
 /**
  * ToolbarWithOverflow provides a component which is useful for displaying commonly used

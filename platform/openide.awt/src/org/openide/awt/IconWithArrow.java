@@ -27,6 +27,7 @@ import java.awt.geom.Path2D;
 import javax.swing.Icon;
 import javax.swing.UIManager;
 import org.openide.util.Parameters;
+import org.openide.util.VectorIcon;
 
 /**
  * An icon that paints a small arrow to the right of the provided icon.

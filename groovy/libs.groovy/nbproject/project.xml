@@ -27,25 +27,35 @@
             <module-dependencies/>
             <friend-packages>
                 <friend>org.netbeans.modules.groovy.editor</friend>
-                <friend>org.netbeans.modules.groovy.support</friend>
                 <friend>org.netbeans.modules.groovy.refactoring</friend>
+                <friend>org.netbeans.modules.groovy.support</friend>
                 <package>groovy.lang</package>
                 <package>groovyjarjarantlr</package>
                 <package>groovyjarjarasm.asm</package>
                 <package>org.codehaus.groovy</package>
+                <package>org.codehaus.groovy.ant</package>
                 <package>org.codehaus.groovy.antlr.parser</package>
                 <package>org.codehaus.groovy.ast</package>
                 <package>org.codehaus.groovy.ast.expr</package>
                 <package>org.codehaus.groovy.ast.stmt</package>
+                <package>org.codehaus.groovy.ast.tools</package>
                 <package>org.codehaus.groovy.classgen</package>
                 <package>org.codehaus.groovy.control</package>
+                <package>org.codehaus.groovy.control.customizers</package>
+                <package>org.codehaus.groovy.control.customizers.builder</package>
                 <package>org.codehaus.groovy.control.messages</package>
                 <package>org.codehaus.groovy.reflection</package>
                 <package>org.codehaus.groovy.syntax</package>
+                <package>org.codehaus.groovy.transform</package>
+                <package>org.codehaus.groovy.transform.stc</package>
             </friend-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/groovy-all.jar</runtime-relative-path>
-                <binary-origin>external/groovy-all-2.4.5.jar</binary-origin>
+                <runtime-relative-path>ext/groovy.jar</runtime-relative-path>
+                <binary-origin>external/groovy-2.5.2.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/groovy-ant.jar</runtime-relative-path>
+                <binary-origin>external/groovy-ant-2.5.2.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

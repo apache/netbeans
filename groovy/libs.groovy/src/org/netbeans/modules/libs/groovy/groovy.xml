@@ -27,12 +27,14 @@
     <localizing-bundle>org/netbeans/modules/libs/groovy/Bundle</localizing-bundle>
     <volume>
         <type>classpath</type>
-        <resource>jar:nbinst://org.netbeans.modules.libs.groovy/modules/ext/groovy-all.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.libs.groovy/modules/ext/groovy.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.libs.groovy/modules/ext/groovy-ant.jar!/</resource>
     </volume>
     <properties>
         <property>
             <name>maven-dependencies</name>
-            <value>org.codehaus.groovy:groovy-all:2.4.5:jar</value>
+            <value>org.codehaus.groovy:groovy:2.5.2:jar</value>
+            <value>org.codehaus.groovy:groovy-ant:2.5.2:jar</value>
         </property>
     </properties>
 </library>

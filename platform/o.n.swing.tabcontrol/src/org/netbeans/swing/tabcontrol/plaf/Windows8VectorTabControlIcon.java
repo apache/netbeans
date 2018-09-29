@@ -227,8 +227,9 @@ final class Windows8VectorTabControlIcon extends VectorIcon {
             double scaling, int x, int y, int width, int height)
     {
         /* Pick a thickness that will make the window symbol border 2 physical pixels wide at 200%
-        scaling, to look consistent with the rest of the UI, including those that do not have any
-        special HiDPI support. Lower scaling levels will yield a 1 physical pixel wide border */
+        scaling, to look consistent with the rest of the UI, including existing icons that do not
+        have any special HiDPI support. Lower scaling levels will yield a 1 physical pixel wide
+        border. */
         int borderThickness = round(0.8 * scaling);
         int titleBarHeight = Math.max(round(1.8 * scaling), borderThickness + 1);
         Area ret = new Area(new Rectangle2D.Double(x, y, width, height));

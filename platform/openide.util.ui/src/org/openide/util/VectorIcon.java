@@ -51,6 +51,7 @@ import javax.swing.Icon;
  * {@code o.n.swing.tabcontrol/test/unit/src/org/netbeans/swing/tabcontrol/plaf/VectorIconTester.java}
  * to preview and compare icons at different resolutions.
  *
+ * @since 9.12
  * @author Eirik Bakke
  */
 public abstract class VectorIcon implements Icon, Serializable {    
@@ -99,6 +100,9 @@ public abstract class VectorIcon implements Icon, Serializable {
      * Selectively enable or disable antialiasing during painting. Certain shapes may look slightly
      * better without antialiasing, e.g. entirely regular diagonal lines in very small icons when
      * there is no HiDPI scaling. Text antialiasing is unaffected by this setting.
+     *
+     * @param g the graphics to set antialiasing setting for
+     * @param enabled whether antialiasing should be enabled or disabled
      */
     protected static final void setAntiAliasing(Graphics2D g, boolean enabled) {
         Map<Object, Object> hints = new LinkedHashMap<Object, Object>();

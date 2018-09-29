@@ -1,3 +1,0 @@
-# serverplugins/sun/appsrv
-read global
-${l10n-module}/src/org/netbeans/modules/j2ee/sun/ide/sunresources/wizards/*.html 

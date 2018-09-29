@@ -240,7 +240,10 @@ public abstract class Module extends ModuleInfo {
     }
     
     String getFragmentHostCodeName() {
-        String fragmentHostCodeName;
+        String fragmentHostCodeName = mgr.fragmentFor(getJarFile());
+        if (fragmentHostCodeName != null) {
+            return fragmentHostCodeName.isEmpty() ? null : fragmentHostCodeName;
+        }
         try {
             fragmentHostCodeName = data().getFragmentHostCodeName();
         } catch (IllegalStateException ex) {

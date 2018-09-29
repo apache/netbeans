@@ -21,7 +21,9 @@ package org.netbeans.nbbuild;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
@@ -41,6 +43,8 @@ public class ResolveList extends Task {
     private Mapper mapper;
     private File dir;
     private String path;
+    private Set<String> modules;
+    private boolean ignoreMissing;
 
     /** Comma-separated list of properties to expand */
     public void setList (String s) {
@@ -48,6 +52,17 @@ public class ResolveList extends Task {
         properties = new ArrayList<>();
         while (tok.hasMoreTokens ())
             properties.add(tok.nextToken ());
+    }
+
+    public void setModules (String s) {
+        StringTokenizer tok = new StringTokenizer (s, ", ");
+        modules = new HashSet<>();
+        while (tok.hasMoreTokens ())
+            modules.add(tok.nextToken ());
+    }
+    
+    public void setIgnoreMissing(boolean m) {
+        this.ignoreMissing = m;
     }
 
     /** New property name */
@@ -117,12 +132,27 @@ public class ResolveList extends Task {
             final FileUtils fileUtils = FileUtils.getFileUtils();
 
             String clusterDir = getProject().getProperty(property + ".dir");
+            if (clusterDir == null) {
+                throw new BuildException(property + ".dir is not defined");
+            }
             File cluster = fileUtils.resolveFile(dir, clusterDir);
 
             for (String p : props) {
-                String[] pValues = getProject().getProperty(p).split(",");
+                String pval = getProject().getProperty(p);
+                if (pval == null) {
+                    if (ignoreMissing) {
+                        continue;
+                    } else {
+                        throw new BuildException("Missing definition for " + p);
+                    }
+                    
+                }
+                String[] pValues = pval.split(",");
 
                 for (String oneValue : pValues) {
+                    if (modules != null && !modules.contains(oneValue)) {
+                        continue;
+                    }
                     File oneFile = fileUtils.resolveFile(dir, oneValue);
                     if (!nbProjectExists(oneFile)) {
                         File sndFile = fileUtils.resolveFile(cluster, oneValue);

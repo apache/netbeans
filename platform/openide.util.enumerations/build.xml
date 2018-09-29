@@ -21,7 +21,20 @@
 -->
 
 <project name="platform/openide.util.enumerations" default="build" basedir=".">
-
+    <available property="is.jdk9" classname="java.lang.Module"/>
     <import file="../../nbbuild/templates/projectized.xml"/>
 
+    <target name="compile" depends="-copy" unless="is.jdk9">
+        <antcall target="projectized-common.compile"/>
+    </target>
+
+    <target name="-copy" depends="init,up-to-date">
+        <copy todir="${build.classes.dir}">
+            <fileset dir="${src.dir}" excludes="${jar-excludes}"/>
+        </copy>
+    </target>
+
+    <target name="do-unit-test-build" unless="is.jdk9">
+        <antcall target="projectized-common.do-unit-test-build"/>
+    </target>
 </project>

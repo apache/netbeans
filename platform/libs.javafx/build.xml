@@ -28,24 +28,13 @@
          </condition>
     </target>
     <target name="-build-openjfx" depends="-check-openjfx" unless="openjfx.zip.exists">
-        <mkdir dir="${build.dir}/openjfx-src" />
-        <unzip src="external/openjfx-master-rt-8.zip" dest="${build.dir}/openjfx-src" />
-        <mkdir dir="${build.dir}/openjfx-classes" />
-        <javac destdir="${build.dir}/openjfx-classes" srcdir="${build.dir}/openjfx-src/rt-f89b7dc932af"
-               source="1.8" target="1.8" includeantruntime="no" >
-            <include name="buildSrc/src/main/java/com/sun/javafx/**" />
-            <include name="modules/base/src/main/java/**" />
-            <include name="modules/base/src/main/version-info/VersionInfo.java" />
-            <include name="modules/controls/src/main/java/**" />
-            <include name="modules/fxml/src/main/java/**" />
-            <include name="modules/graphics/src/main/java/**" />
-            <exclude name="modules/graphics/src/main/java/com/sun/glass/ui/swt/**" />
-            <include name="modules/media/src/main/java/**" />
-            <include name="modules/swing/src/main/java/**" />
-            <include name="modules/web/src/main/java/**" />
-            <compilerarg value="-XDignore.symbol.file"/>
-        </javac>
-        <zip destfile="${build.dir}/openjfx.zip" basedir="${build.dir}/openjfx-classes" />
+        <unzip src="external/lib-javafx-13.03-beta.nbm" dest="${build.dir}">
+            <mapper type="flatten"/>
+            <patternset>
+                <include name="**/javafx-2.2.4.jar"/>
+            </patternset>
+        </unzip>
+        <move file="${build.dir}/javafx-2.2.4.jar" tofile="${build.dir}/openjfx.zip"/>
     </target>
     <target name="build-init" depends="projectized.build-init,-build-openjfx">
     </target>

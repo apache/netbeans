@@ -378,7 +378,7 @@ public abstract class CloneableOpenSupport extends Object {
                     CloneableOpenSupport os = support();
 
                     if ((os != null) && !os.canClose()) {
-                        // is modified and has not been sucessfully closed
+                        // is modified and has not been successfully closed
                         throw new PropertyVetoException(
                         // [PENDING] this is not a very good detail message!
                         "", ev // NOI18N

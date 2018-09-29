@@ -30,12 +30,14 @@ import java.io.Writer;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.CountDownLatch;
@@ -57,6 +59,8 @@ import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ui.CustomizerProvider2;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.cookies.LineCookie;
 import org.openide.cookies.OpenCookie;
 import org.openide.execution.ExecutionEngine;
@@ -131,13 +135,8 @@ public class ActionProviderImpl implements ActionProvider {
         final File jtregReport = new File(jtregOutput, "report");
         final ActionProgress progress = ActionProgress.start(context);
         ProfileSupport profiler = COMMAND_PROFILE_TEST_SINGLE.equals(command) ? Lookup.getDefault().lookup(ProfileSupport.Factory.class).create() : null;
-        Project prj = FileOwnerQuery.getOwner(file);
-        String jtregLocation = prj.getLookup().lookup(Settings.class).getJTregLocation();
-        File jtregHome = jtregLocation != null ? new File(jtregLocation) : null;
-        File jtregJar = jtregHome != null ? new File(new File(jtregHome, "lib"), "jtreg.jar") : null;
-        if (jtregJar == null || !jtregJar.canRead()) {
-            CustomizerProvider2 p = prj.getLookup().lookup(CustomizerProvider2.class);
-            p.showCustomizer("test", null);
+        File jtregJar = findJTReg(file);
+        if (jtregJar == null) {
             return null;
         }
         return ExecutionEngine.getDefault().execute(ioName, new Runnable() {
@@ -594,6 +593,52 @@ public class ActionProviderImpl implements ActionProvider {
             this.expectedFileName = expectedFileName;
             this.lineNumber = lineNumber;
         }
+    }
+
+    @Messages({
+        "LBL_NoJTReg=No JTReg found, please specify JTReg location either when " +
+                    "configuring JDK build, or in the Project Properties.\n" +
+                    "Open Project Properties?\n",
+        "TITLE_NoJTReg=No JTReg found",
+    })
+    private static File findJTReg(FileObject file) {
+        File buildDir = BuildUtils.getBuildTargetDir(file);
+        File spec = new File(buildDir, "spec.gmk");
+        if (spec.canRead()) {
+            try {
+                String jtHome = Files.lines(spec.toPath())
+                                     .filter(l -> l.startsWith(JT_HOME_KEY))
+                                     .findAny()
+                                     .orElse(JT_HOME_KEY)
+                                     .substring(JT_HOME_KEY.length());
+                File jtregJar = findJTRegJar(jtHome);
+                if (jtregJar != null) {
+                    return jtregJar;
+                }
+            } catch (IOException ex) {
+                LOG.log(Level.FINE, null, ex);
+            }
+        }
+        Project prj = FileOwnerQuery.getOwner(file);
+        String jtregLocation = prj.getLookup().lookup(Settings.class).getJTregLocation();
+        File jtregHome = jtregLocation != null ? new File(jtregLocation) : null;
+        File jtregJar = jtregHome != null ? new File(new File(jtregHome, "lib"), "jtreg.jar") : null;
+        if (jtregJar == null || !jtregJar.canRead()) {
+            NotifyDescriptor.Confirmation nd = new NotifyDescriptor.Confirmation(Bundle.LBL_NoJTReg(), Bundle.TITLE_NoJTReg(), NotifyDescriptor.OK_CANCEL_OPTION);
+            if (DialogDisplayer.getDefault().notify(nd) == NotifyDescriptor.OK_OPTION) {
+                CustomizerProvider2 p = prj.getLookup().lookup(CustomizerProvider2.class);
+                p.showCustomizer("test", null);
+            }
+            return null;
+        }
+        return jtregJar;
+    }
+        private static final String JT_HOME_KEY = "JT_HOME:=";
+
+    private static File findJTRegJar(String installDir) {
+        File jtregHome = installDir != null ? new File(installDir) : null;
+        File jtregJar = jtregHome != null ? new File(new File(jtregHome, "lib"), "jtreg.jar") : null;
+        return jtregJar == null || !jtregJar.canRead() ? null : jtregJar;
     }
 
     @Override

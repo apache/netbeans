@@ -43,6 +43,7 @@ FunctionalInterface
 IllegalAccessError
 IllegalAccessException
 IllegalArgumentException
+IllegalCallerException
 IllegalMonitorStateException
 IllegalStateException
 IllegalThreadStateException
@@ -55,9 +56,12 @@ Integer
 InternalError
 InterruptedException
 Iterable
+LayerInstantiationException
 LinkageError
 Long
 Math
+Module
+ModuleLayer
 NegativeArraySizeException
 NoClassDefFoundError
 NoSuchFieldError
@@ -73,6 +77,7 @@ Override
 Package
 Process
 ProcessBuilder
+ProcessHandle
 Readable
 ReflectiveOperationException
 Runnable
@@ -85,6 +90,7 @@ SecurityManager
 Short
 StackOverflowError
 StackTraceElement
+StackWalker
 StrictMath
 String
 StringBuffer
@@ -107,4 +113,8 @@ UnsupportedOperationException
 VerifyError
 VirtualMachineError
 Void
+com
 java
+javax
+org
+sun

@@ -19,9 +19,7 @@
 
 package org.netbeans.modules.groovy.support.wizard.impl;
 
-import java.util.Arrays;
 import java.util.List;
-import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.templates.TemplateRegistration;
 import org.netbeans.api.templates.TemplateRegistrations;
@@ -34,7 +32,8 @@ import org.openide.util.NbBundle;
  */
 @NbBundle.Messages(value = {
     "LBL_DisplayName_GroovyClass=Groovy Class",
-    "LBL_DisplayName_GroovyScript=Groovy Script"
+    "LBL_DisplayName_GroovyScript=Groovy Script",
+    "LBL_DisplayName_GroovyTrait=Groovy Trait"
 })
 @TemplateRegistrations(value = {
     @TemplateRegistration(
@@ -59,6 +58,19 @@ import org.openide.util.NbBundle;
         displayName = "#LBL_DisplayName_GroovyScript",
         iconBase = "org/netbeans/modules/groovy/support/resources/GroovyFile16x16.png",
         description = "/org/netbeans/modules/groovy/support/resources/GroovyScript.html",
+        category = {
+            "groovy",
+            "java-main-class"
+        }
+    ),
+    @TemplateRegistration(
+        folder = "Groovy",
+        position = 120,
+        content = "/org/netbeans/modules/groovy/support/resources/GroovyTrait.groovy",
+        scriptEngine = "freemarker",
+        displayName = "#LBL_DisplayName_GroovyTrait",
+        iconBase = "org/netbeans/modules/groovy/support/resources/GroovyFile16x16.png",
+        description = "/org/netbeans/modules/groovy/support/resources/GroovyTrait.html",
         category = {
             "groovy",
             "java-main-class"

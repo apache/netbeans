@@ -52,6 +52,7 @@ public enum GroovyKeyword {
     KEYWORD_this         ("this"         , false, false, false, true , true , KeywordCategory.KEYWORD),
     KEYWORD_throw        ("throw"        , false, false, false, false, true , KeywordCategory.KEYWORD),
     KEYWORD_throws       ("throws"       , false, false, false, false, false, KeywordCategory.KEYWORD),
+    KEYWORD_trait        ("trait"        , false ,true , true , true , false, KeywordCategory.KEYWORD),
     KEYWORD_try          ("try"          , false, false, false, false, true , KeywordCategory.KEYWORD),
     KEYWORD_while        ("while"        , false, false, false, false, true , KeywordCategory.KEYWORD),
     // Uniq Groovy keywords:

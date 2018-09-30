@@ -371,7 +371,7 @@ public final class CompilationInfoImpl {
     public synchronized JavacTaskImpl getJavacTask() {
         if (javacTask == null) {
             diagnosticListener = new DiagnosticListenerImpl(this.root, this.jfo, this.cpInfo);
-            javacTask = JavacParser.createJavacTask(this.file, this.root, this.cpInfo,
+            javacTask = JavacParser.createJavacTask(this.file, this.jfo, this.root, this.cpInfo,
                     this.parser, diagnosticListener, isDetached);
         }
 	return javacTask;

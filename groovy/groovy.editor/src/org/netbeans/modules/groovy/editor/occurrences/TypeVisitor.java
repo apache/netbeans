@@ -23,6 +23,7 @@ import java.util.Iterator;
 import org.codehaus.groovy.ast.*;
 import org.codehaus.groovy.ast.expr.ClosureExpression;
 import org.codehaus.groovy.ast.expr.ClosureListExpression;
+import org.codehaus.groovy.ast.expr.VariableExpression;
 import org.codehaus.groovy.ast.stmt.BlockStatement;
 import org.codehaus.groovy.ast.stmt.ForStatement;
 import org.codehaus.groovy.control.SourceUnit;
@@ -138,6 +139,9 @@ public class TypeVisitor extends ClassCodeVisitorSupport {
                         visitClosureListExpression((ClosureListExpression) scope);
                         return;
                     }
+                }
+                else if (scope instanceof VariableExpression) {
+                    visitVariableExpression((VariableExpression)scope);
                 }
             }
         }

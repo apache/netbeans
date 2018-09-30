@@ -20,6 +20,8 @@
 package org.netbeans.modules.java.source;
 
 import java.awt.Dialog;
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.prefs.Preferences;
@@ -69,6 +71,11 @@ public class JBrowseModule extends ModuleInstall {
     public void restored() {
         WindowManager.getDefault().invokeWhenUIReady(() -> {
             WindowManager.getDefault().invokeWhenUIReady(() -> {
+                if (GraphicsEnvironment.isHeadless()) {
+                    //no UI, ignore (let's assume whoever run in this mode know
+                    //what they are doing)
+                    return;
+                }
                 Preferences prefs = NbPreferences.forModule(NoJavacHelper.class);
                 if (!NoJavacHelper.hasWorkingJavac() && !prefs.getBoolean(KEY_WARNING_SHOWN, false)) {
                     String install = Bundle.BN_Install();

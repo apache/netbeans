@@ -72,7 +72,7 @@ public class CheckoutTest extends AbstractGitTestCase {
         super(testName);
         if (Boolean.getBoolean("skip.git.integration.tests")) {
             Filter filter = new Filter();
-            filter.setExcludes(new Filter.IncludeExclude[]{
+            filter.setExcludes(new Filter.IncludeExclude[] {
                 new Filter.IncludeExclude("testLargeFile", ""),
             });
             setFilter(filter);

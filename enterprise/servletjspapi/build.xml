@@ -47,9 +47,9 @@
             <unzip src="${jars_location}/javax.servlet-api-3.1.0.jar" dest="servletjspapi_api_location/"/>
             <unzip src="${jars_location}/el-api-2.2.jar" dest="servletjspapi_api_location/"/>
         
-            <mkdir dir="servletjspapi/resources/dtds" />
-            <copy todir="servletjspapi/resources/dtds">
-                <fileset dir="./servletjspapi/dtds">
+            <mkdir dir="servletjspapi_api_location/resources/dtds" />
+            <copy todir="servletjspapi_api_location/resources/dtds">
+                <fileset dir="./servletjspapi_api_location/dtds">
                     <include name="web-app_2_2.dtd"/>
                     <include name="web-app_2_3.dtd"/>
                     <include name="web-jsptaglibrary_1_1.dtd"/>
@@ -57,9 +57,9 @@
                 </fileset>
             </copy>
         
-            <mkdir dir="servletjspapi/resources/schemas" />
-            <copy todir="servletjspapi/resources/schemas">
-                <fileset dir="servletjspapi/schemas">
+            <mkdir dir="servletjspapi_api_location/resources/schemas" />
+            <copy todir="servletjspapi_api_location/resources/schemas">
+                <fileset dir="servletjspapi_api_location/schemas">
                     <include name="XMLSchema.dtd"/>
                     <include name="datatypes.dtd"/>
                     <include name="j2ee_1_4.xsd"/>

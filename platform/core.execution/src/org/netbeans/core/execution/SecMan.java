@@ -96,7 +96,9 @@ public class SecMan extends SecurityManager {
         if ("showWindowWithoutWarningBanner".equals(perm.getName())) { // NOI18N
             checkTopLevelWindow(context);
         }
-        super.checkPermission(perm, context);
+        if (context instanceof AccessControlContext) {
+            super.checkPermission(perm, context);
+        }
     }
 
     public boolean checkTopLevelWindow(Object window) {

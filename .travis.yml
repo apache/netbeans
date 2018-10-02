@@ -16,7 +16,7 @@
 # under the License.
 language: java
 script:
-  - if [ "x$RAT" == "xtrue" ]; then (ant -quiet build-source-config && mkdir scratch && cd scratch && unzip -qq ../nbbuild/build/basic-src* && ant -quiet rat -Drat-report.haltonfailure=true && cd .. && rm -rf scratch); fi
+  - if [ "x$RAT" == "xtrue" ]; then (ant -quiet build-source-config && mkdir scratch && cd scratch && unzip -qq ../nbbuild/build/release-src* && ant -quiet rat -Drat-report.haltonfailure=true && cd .. && rm -rf scratch); fi
   - if [ "x$OPTS" == "x" ]; then OPTS="-quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"; fi
   - ant $OPTS
   - if [ "x$COMPILETEST" == "xtrue" ]; then ant -quiet test -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest.includes=NoTestsJustBuild; fi

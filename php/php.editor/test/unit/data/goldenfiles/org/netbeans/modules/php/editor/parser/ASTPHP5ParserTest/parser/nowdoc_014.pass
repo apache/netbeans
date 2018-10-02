@@ -12,11 +12,11 @@
         <token id='T_START_NOWDOC' start='232' end='241'>
             <text>&lt;&lt;&lt;&apos;EOF&apos;\n</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='266' end='282'>
-            <text>\n  $y = 2;\n?&gt;\nEO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='241' end='280'>
+            <text>&lt;?php\n  $x = &lt;&lt;&lt;&apos;EOT&apos;\nEOT\n  $y = 2;\n?&gt;\n</text>
         </token>
-        <token id='T_END_NOWDOC' start='282' end='283'>
-            <text>F</text>
+        <token id='T_END_NOWDOC' start='280' end='283'>
+            <text>EOF</text>
         </token>
         <token id='T_SEMICOLON' start='283' end='284'>
             <text>;</text>
@@ -116,7 +116,7 @@
                     <Variable start='224' end='229' isDollared='true'>
                         <Identifier start='225' end='229' name='code'/>
                     </Variable>
-                    <Scalar start='232' end='283' type='STRING' value='\n  $y = 2;\n?&gt;\n'/>
+                    <Scalar start='232' end='283' type='STRING' value='&lt;?php\n  $x = &lt;&lt;&lt;&apos;EOT&apos;\nEOT\n  $y = 2;\n?&gt;\n'/>
                 </Assignment>
             </ExpressionStatement>
             <ExpressionStatement start='285' end='309'>

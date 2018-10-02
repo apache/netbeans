@@ -136,6 +136,122 @@ public class ConvertToVarHintTest {
                 .assertNotContainsWarnings(VAR_CONV_DESC);
 
     }
+    
+    @Test
+    public void testConvertIntToVarTypeInEnhancedForLoop() throws Exception {
+        HintTest.create().setCaretMarker('^')
+                .input("package test;\n"
+                        + "public class Test {\n"
+                        + "    void m1() {\n"
+                        + "        int[] offInt = {1, 2, 3};\n"
+                        + "        for (int x : offInt)^ {\n"
+                        + "            \n"
+                        + "        }\n"
+                        + "    }\n"
+                        + "}\n")
+                .sourceLevel("1.10")
+                .run(ConvertToVarHint.class)
+                .findWarning("4:8-4:30:" + VAR_CONV_WARNING)
+                .applyFix()
+                .assertCompilable()
+                .assertVerbatimOutput("package test;\n"
+                        + "public class Test {\n"
+                        + "    void m1() {\n"
+                        + "        int[] offInt = {1, 2, 3};\n"
+                        + "        for (var x : offInt) {\n"
+                        + "            \n"
+                        + "        }\n"
+                        + "    }\n"
+                        + "}\n");
+    }
+     @Test
+    public void testConvertStringtoVarTypeInEnhancedForLoop() throws Exception {
+        HintTest.create().setCaretMarker('^')
+                .input("package test;\n"
+                        + "import java.util.List;\n"
+                        + "import java.util.ArrayList;\n"
+                        + "public class Test {\n"
+                        + "    void m1() {\n"
+                        + "        List<String> offStr = new ArrayList<>();\n"
+                        + "        offStr.add(\"a\");\n"
+                        + "        for (String x : offStr)^ {\n"
+                        + "            \n"
+                        + "        }\n"
+                        + "    }\n"
+                        + "}\n")
+                .sourceLevel("1.10")
+                .run(ConvertToVarHint.class)
+                .findWarning("7:8-7:33:" + VAR_CONV_WARNING)
+                .applyFix()
+                .assertCompilable()
+                .assertVerbatimOutput("package test;\n"
+                        + "import java.util.List;\n"
+                        + "import java.util.ArrayList;\n"
+                        + "public class Test {\n"
+                        + "    void m1() {\n"
+                        + "        List<String> offStr = new ArrayList<>();\n"
+                        + "        offStr.add(\"a\");\n"
+                        + "        for (var x : offStr) {\n"
+                        + "            \n"
+                        + "        }\n"
+                        + "    }\n"
+                        + "}\n");
+    }
+    
+    @Test
+    public void testWrongMatchForVarEnhancedForLoop() throws Exception {
+        HintTest.create()
+                .setCaretMarker('^')
+                .input("package test;\n"
+                        + "import java.util.List;\n"
+                        + "import java.util.ArrayList;\n"
+                        + "public class Test {\n"
+                        + "    void m1() {\n"
+                        + "        List<String> offStr = new ArrayList<>();\n"
+                        + "        offStr.add(\"a\");\n"
+                        + "        for (Object x : offStr)^ {\n"
+                        + "            \n"
+                        + "        }\n"
+                        + "    }\n"
+                        + "}\n")
+                .sourceLevel("1.10")
+                .run(ConvertToVarHint.class)
+                .assertNotContainsWarnings(VAR_CONV_DESC);
+    }
+    
+    @Test
+    public void testConvertStringtoVarTypeInEnhancedForLoopWithVarDeclaration() throws Exception {
+        HintTest.create().setCaretMarker('^')
+                .input("package test;\n"
+                        + "import java.util.List;\n"
+                        + "import java.util.ArrayList;\n"
+                        + "public class Test {\n"
+                        + "    void m1() {\n"
+                        + "        List<String> offStr = new ArrayList<>();\n"
+                        + "        offStr.add(\"a\");\n"
+                        + "        for (String x : offStr)^ {\n"
+                        + "            var y = 10;\n"
+                        + "        }\n"
+                        + "    }\n"
+                        + "}\n")
+                .sourceLevel("1.10")
+                .run(ConvertToVarHint.class)
+                .findWarning("7:8-7:33:" + VAR_CONV_WARNING)
+                .applyFix()
+                .assertCompilable()
+                .assertVerbatimOutput("package test;\n"
+                        + "import java.util.List;\n"
+                        + "import java.util.ArrayList;\n"
+                        + "public class Test {\n"
+                        + "    void m1() {\n"
+                        + "        List<String> offStr = new ArrayList<>();\n"
+                        + "        offStr.add(\"a\");\n"
+                        + "        for (var x : offStr) {\n"
+                        + "            var y = 10;\n"
+                        + "        }\n"
+                        + "    }\n"
+                        + "}\n");
+    }
 
     @Test
     public void testAnonymusObjRefToVar() throws Exception {

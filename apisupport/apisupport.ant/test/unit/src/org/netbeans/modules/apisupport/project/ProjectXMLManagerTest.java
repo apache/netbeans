@@ -497,7 +497,7 @@ public class ProjectXMLManagerTest extends TestBase {
                 "</public-packages>\n" +
                 "<class-path-extension>\n" +
                 "<runtime-relative-path>ext/jsr88javax.jar</runtime-relative-path>\n" +
-                "<binary-origin>../external/jsr88javax.jar</binary-origin>\n" +
+                "<binary-origin>../external/deployment-api-1.2-rev-1.jar</binary-origin>\n" +
                 "</class-path-extension>\n" +
                 "</data>\n" +
                 "</configuration>\n" +
@@ -743,7 +743,7 @@ public class ProjectXMLManagerTest extends TestBase {
                 "</friend-packages>\n" +
                 "<class-path-extension>\n" +
                 "<runtime-relative-path>ext/jsr88javax.jar</runtime-relative-path>\n" +
-                "<binary-origin>../external/jsr88javax.jar</binary-origin>\n" +
+                "<binary-origin>../external/deployment-api-1.2-rev-1.jar</binary-origin>\n" +
                 "</class-path-extension>\n" +
                 "</data>\n" +
                 "</configuration>\n" +

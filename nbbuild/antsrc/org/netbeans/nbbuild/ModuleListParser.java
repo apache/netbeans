@@ -208,7 +208,8 @@ final class ModuleListParser {
                     }
                     List<String> subDirs = new ArrayList<>();
                     subDirs.addAll(Arrays.asList(FOREST));
-                    StringTokenizer tok = new StringTokenizer(clusterList, ", ");
+                    String allClusters = (String) properties.get("clusters.config.full.list");
+                    StringTokenizer tok = new StringTokenizer(allClusters, ", ");
                     while (tok.hasMoreTokens()) {
                         String clusterName = tok.nextToken();
                         String clusterDir = project.getProperty(clusterName + ".dir");

@@ -538,6 +538,8 @@ public final class GroovyLexer implements Lexer<GroovyTokenId> {
                     return GroovyTokenId.LITERAL_throw;
             case GroovyTokenTypes.LITERAL_throws:
                     return GroovyTokenId.LITERAL_throws;
+            case GroovyTokenTypes.LITERAL_trait:
+                    return GroovyTokenId.LITERAL_trait;
             case GroovyTokenTypes.LITERAL_transient:
                     return GroovyTokenId.LITERAL_transient;
             case GroovyTokenTypes.LITERAL_true:
@@ -700,6 +702,8 @@ public final class GroovyLexer implements Lexer<GroovyTokenId> {
                     return GroovyTokenId.SUPER_CTOR_CALL;
             case GroovyTokenTypes.TRIPLE_DOT:
                     return GroovyTokenId.TRIPLE_DOT;
+            case GroovyTokenTypes.TRAIT_DEF:
+                    return GroovyTokenId.TRAIT_DEF;
             case GroovyTokenTypes.TYPE_ARGUMENT:
                     return GroovyTokenId.TYPE_ARGUMENT;
             case GroovyTokenTypes.TYPE_ARGUMENTS:

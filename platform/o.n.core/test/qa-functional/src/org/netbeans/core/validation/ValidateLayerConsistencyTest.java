@@ -998,7 +998,8 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
             }
             String path = f.getPath();
             if (path.equals("Templates/Other/file") ||
-                path.equals("Templates/Other/group.group")) {
+                path.equals("Templates/Other/group.group") ||
+                path.equals("Templates/Classes/Package")) {
                 
                 // If there're more files like this, consider adding an API
                 // to mark them as intentionally non-editable

@@ -33,11 +33,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
+import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.CompileUnit;
 import org.codehaus.groovy.ast.ModuleNode;
+import org.codehaus.groovy.classgen.GeneratorContext;
+import org.codehaus.groovy.control.CompilationFailedException;
+import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.ErrorCollector;
 import org.codehaus.groovy.control.Phases;
+import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.control.messages.Message;
 import org.codehaus.groovy.control.messages.SimpleMessage;
 import org.codehaus.groovy.control.messages.SyntaxErrorMessage;
@@ -418,12 +423,13 @@ public class GroovyParser extends Parser {
         ClassPath bootPath = fo == null ? ClassPath.EMPTY : ClassPath.getClassPath(fo, ClassPath.BOOT);
         ClassPath compilePath = fo == null ? ClassPath.EMPTY : ClassPath.getClassPath(fo, ClassPath.COMPILE);
         ClassPath sourcePath = fo == null ? ClassPath.EMPTY : ClassPath.getClassPath(fo, ClassPath.SOURCE);
-        ClassPath cp = ClassPathSupport.createProxyClassPath(bootPath, compilePath, sourcePath);
+        ClassPath transformPath = ClassPathSupport.createProxyClassPath(bootPath, compilePath);
+        ClassPath cp = ClassPathSupport.createProxyClassPath(transformPath, sourcePath);
 
         CompilerConfiguration configuration = new CompilerConfiguration();
         final ClassNodeCache classNodeCache = ClassNodeCache.get();
         final GroovyClassLoader classLoader = classNodeCache.createResolveLoader(cp, configuration);
-        final GroovyClassLoader transformationLoader = classNodeCache.createTransformationLoader(cp,configuration);        
+        final GroovyClassLoader transformationLoader = classNodeCache.createTransformationLoader(transformPath, configuration);
         ClasspathInfo cpInfo = ClasspathInfo.create(
                 // we should try to load everything by javac instead of classloader,
                 // but for now it is faster to use javac only for sources - not true
@@ -475,13 +481,15 @@ public class GroovyParser extends Parser {
 
                     int line = se.getStartLine();
 
-                    if(line < 1 )
+                    if (line < 1) {
                         line = 1;
+                    }
 
                     int col = se.getStartColumn();
 
-                    if(col < 1 )
+                    if (col < 1) {
                         col = 1;
+                    }
 
                     // display Exception information
 //                    LOG.log(Level.FINEST, "-----------------------------------------------");
@@ -633,9 +641,9 @@ public class GroovyParser extends Parser {
             displayName = description;
         }
 
-        Error error =
-            new GroovyError(key, displayName, description, context.snapshot.getSource().getFileObject(),
-                startOffset, endOffset, severity, CompilerErrorResolver.getId(description));
+        Error error
+                = new GroovyError(key, displayName, description, context.snapshot.getSource().getFileObject(),
+                        startOffset, endOffset, severity, CompilerErrorResolver.getId(description));
 
         context.errorHandler.error(error);
 

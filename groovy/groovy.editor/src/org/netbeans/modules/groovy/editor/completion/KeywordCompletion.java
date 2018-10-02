@@ -153,6 +153,9 @@ class KeywordCompletion extends BaseCompletion {
             keywords.clear();
             addIfPrefixed(GroovyKeyword.KEYWORD_extends);
             addIfPrefixed(GroovyKeyword.KEYWORD_implements);
+        } else if (ctx.beforeLiteral.id() == GroovyTokenId.LITERAL_trait) {
+            keywords.clear();
+            addIfPrefixed(GroovyKeyword.KEYWORD_implements);
         }
     }
 

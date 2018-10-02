@@ -961,4 +961,29 @@ public class PHPFormatterWrappingTest extends PHPFormatterTestBase {
         options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_NEVER);
         reformatFileContents("testfiles/formatting/wrapping/issue243203.php", options);
     }
+
+    // PHP 7.3
+    public void testFunctionCallTrailingCommas_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        reformatFileContents("testfiles/formatting/wrapping/functionCallTrailingCommas01.php", options);
+    }
+
+    public void testFunctionCallTrailingCommas_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        reformatFileContents("testfiles/formatting/wrapping/functionCallTrailingCommas02.php", options);
+    }
+
+    public void testFunctionCallTrailingCommas_03() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_NEVER);
+        reformatFileContents("testfiles/formatting/wrapping/functionCallTrailingCommas03.php", options);
+    }
+
+    public void testFunctionCallTrailingCommas_04() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_NEVER);
+        reformatFileContents("testfiles/formatting/wrapping/functionCallTrailingCommas04.php", options);
+    }
 }

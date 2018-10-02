@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.ide.ergonomics.fod;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -26,6 +27,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.prefs.Preferences;
@@ -35,6 +37,9 @@ import org.netbeans.api.autoupdate.OperationSupport;
 import org.netbeans.api.autoupdate.UpdateElement;
 import org.netbeans.api.autoupdate.UpdateManager;
 import org.netbeans.api.autoupdate.UpdateUnit;
+import org.netbeans.api.autoupdate.UpdateUnitProvider;
+import org.netbeans.api.autoupdate.UpdateUnitProviderFactory;
+import org.openide.util.Exceptions;
 import org.openide.util.NbPreferences;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Task;
@@ -175,10 +180,24 @@ public final class FindComponentModules extends Task {
 
     private void findComponentModules () {
         long start = System.currentTimeMillis();
-        Collection<UpdateUnit> units = UpdateManager.getDefault ().getUpdateUnits (UpdateManager.TYPE.MODULE);
-
-        // install missing modules
-        Collection<UpdateElement> elementsForInstall = getMissingModules (units);
+        Collection<UpdateUnit> units = null;
+        Collection<UpdateElement> elementsForInstall = null;
+        for (int[] refresh = { 2 }; refresh[0] > 0; ) {
+            if (units != null) {
+                List<UpdateUnitProvider> providers = UpdateUnitProviderFactory.getDefault().getUpdateUnitProviders(true);
+                for (UpdateUnitProvider p : providers) {
+                    try {
+                        p.refresh(null, true);
+                    } catch (IOException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+                
+            }
+            units = UpdateManager.getDefault ().getUpdateUnits (UpdateManager.TYPE.MODULE);
+            // install missing modules
+            elementsForInstall = getMissingModules(units, refresh);
+        }
         forInstall = getAllForInstall (elementsForInstall);
 
         // install disabled modules
@@ -186,13 +205,33 @@ public final class FindComponentModules extends Task {
         forEnable = getAllForEnable (elementsForEnable, units);
     }
     
-    private Collection<UpdateElement> getMissingModules (Collection<UpdateUnit> allUnits) {
+    private Collection<UpdateElement> getMissingModules(Collection<UpdateUnit> allUnits, int[] refresh) {
         Set<UpdateElement> res = new HashSet<UpdateElement> ();
         for (UpdateUnit unit : allUnits) {
-            if (unit.getInstalled () == null && codeNames.contains(unit.getCodeName ())) {
+            if (unit.getInstalled () == null && (
+                codeNames.contains(unit.getCodeName ())
+            )) {
                 res.add (unit.getAvailableUpdates ().get (0));
             }
         }
+        for (FeatureInfo fi : this.infos) {
+            Set<String> extraModules = fi.getExtraModules();
+            FOUND: for (String cnb : extraModules) {
+                for (UpdateUnit unit : allUnits) {
+                    if (cnb.equals(unit.getCodeName())) {
+                        if (unit.getInstalled() != null) {
+                            continue FOUND;
+                        } else {
+                            res.add(unit.getAvailableUpdates().get(0));
+                            continue FOUND;
+                        }
+                    }
+                }
+                refresh[0]--;
+                return res;
+            }
+        }
+        refresh[0] = 0;
         return res;
     }
     

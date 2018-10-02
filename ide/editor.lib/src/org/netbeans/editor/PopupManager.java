@@ -55,6 +55,16 @@ import org.openide.util.Parameters;
 public class PopupManager {
 
     private static final Logger LOG = Logger.getLogger(PopupManager.class.getName());
+    /**
+     * Key for a boolean client property that can be set on the popup component to suppress the
+     * forwarding of keyboard events into it. Note that popup keyboard actions will still work if
+     * the popup receives explicit focus. See NETBEANS-403 and the associated
+     * <a href="https://github.com/apache/incubator-netbeans/pull/507">pull request</a> (click
+     * "show outdated" to see the original pull request discussion). Make this property private for
+     * now to avoid committing to an official API.
+     */
+    private static final String SUPPRESS_POPUP_KEYBOARD_FORWARDING_CLIENT_PROPERTY_KEY =
+        "suppress-popup-keyboard-forwarding";
     
     private JComponent popup = null;
     private final JTextComponent textComponent;
@@ -466,6 +476,18 @@ public class PopupManager {
                 consumeIfKeyPressInActionMap(e);
             }
         }
+
+        private boolean shouldPopupReceiveForwardedKeyboardAction(Object actionKey) {
+          /* In NetBeans 8.2, the behavior was to forward all action events except those whose key
+          was "tooltip-no-action" (which, reading through ToolTipSupport, I think applies only to
+          the default action). To avoid breaking anything, keep this behavior except when
+          SUPPRESS_POPUP_KEYBOARD_FORWARDING_CLIENT_PROPERTY_KEY property has been explicitly
+          set. The latter is used to fix NETBEANS-403. */
+          if (actionKey == null || actionKey.equals("tooltip-no-action"))
+            return false;
+          return popup == null || !Boolean.TRUE.equals(
+              popup.getClientProperty(SUPPRESS_POPUP_KEYBOARD_FORWARDING_CLIENT_PROPERTY_KEY));
+        }
         
         public @Override void keyPressed(KeyEvent e){
             if (e != null && popup != null && popup.isShowing()) {
@@ -478,17 +500,18 @@ public class PopupManager {
                 KeyStroke ks = KeyStroke.getKeyStrokeForEvent(e);
                 Object obj = im.get(ks);
                 LOG.log(Level.FINE, "Keystroke for event {0}: {1}; action-map-key={2}", new Object [] { e, ks, obj }); //NOI18N
-                if (obj != null && !obj.equals("tooltip-no-action") //NOI18N ignore ToolTipSupport installed actions
-                ) {
+                if (shouldPopupReceiveForwardedKeyboardAction(obj)) {
                     // if yes, gets the popup's action for this keystroke, perform it 
                     // and consume key event
                     Action action = am.get(obj);
                     LOG.log(Level.FINE, "Popup component''s action: {0}, {1}", new Object [] { action, action != null ? action.getValue(Action.NAME) : null }); //NOI18N
 
-                    if (action != null && action.isEnabled()) {
-                        action.actionPerformed(null);
-                        e.consume();
-                        return;
+                    /* Make sure to use the popup as the source of the action, since the popup is
+                    also providing the event. Not doing this, and instead invoking actionPerformed
+                    with a null ActionEvent, was one part of the problem seen in NETBEANS-403. */
+                    if (SwingUtilities.notifyAction(action, ks, e, popup, e.getModifiers())) {
+                      e.consume();
+                      return;
                     }
                 }
 
@@ -521,8 +544,7 @@ public class PopupManager {
                                  e.getKeyLocation())
             );
             Object obj = im.get(ks);
-            if (obj != null && !obj.equals("tooltip-no-action") //NOI18N ignore ToolTipSupport installed actions
-            ) {
+            if (shouldPopupReceiveForwardedKeyboardAction(obj)) {
                 // if yes, if there is a popup's action, consume key event
                 Action action = am.get(obj);
                 if (action != null && action.isEnabled()) {

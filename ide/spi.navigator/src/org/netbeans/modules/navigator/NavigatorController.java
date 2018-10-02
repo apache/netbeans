@@ -555,7 +555,7 @@ public final class NavigatorController implements LookupListener, PropertyChange
 
         // search in global lookup first, they had preference
         for (NavigatorLookupHint curHint : lkpHints) {
-            Collection<? extends NavigatorPanel> providers = ProviderRegistry.getInstance().getProviders(curHint.getContentType());
+            Collection<? extends NavigatorPanel> providers = ProviderRegistry.getInstance().getProviders(curHint.getContentType(), null);
             if (providers != null && !providers.isEmpty()) {
                 if (result == null) {
                         result = new ArrayList<NavigatorPanel>(providers.size() * lkpHints.size());
@@ -590,7 +590,7 @@ public final class NavigatorController implements LookupListener, PropertyChange
             }
 
             String contentType = fo.getMIMEType();
-            Collection<? extends NavigatorPanel> providers = ProviderRegistry.getInstance().getProviders(contentType);
+            Collection<? extends NavigatorPanel> providers = ProviderRegistry.getInstance().getProviders(contentType, fo);
             if (providers == null || providers.isEmpty()) {
                 fileResult = null;
                 break;

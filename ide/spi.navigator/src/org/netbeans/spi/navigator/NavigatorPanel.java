@@ -23,7 +23,13 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.net.URI;
+import java.util.Collection;
 import javax.swing.JComponent;
+import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.annotations.common.NullAllowed;
+import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
 
 /** Navigation related view description.
@@ -136,6 +142,23 @@ public interface NavigatorPanel {
     @Retention(RetentionPolicy.SOURCE)
     @interface Registrations {
         Registration[] value();
+    }
+
+    /**
+     * Dynamically create panels for files. Register in the global lookup.
+     *
+     * @since 1.41
+     */
+    interface DynamicRegistration {
+
+        /**
+         * Dynamically create {@code NavigatorPanel}s for the given file.
+         *
+         * @param file for which the panels should be created
+         * @return a collection of {@code NavigatorPanel}s for the given file
+         *         null is allowed
+         */
+        public @CheckForNull Collection<? extends NavigatorPanel> panelsFor(@NonNull URI file);
     }
 
 }

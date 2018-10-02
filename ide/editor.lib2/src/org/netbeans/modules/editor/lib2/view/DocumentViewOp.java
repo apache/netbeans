@@ -909,7 +909,7 @@ public final class DocumentViewOp
             Document doc = docView.getDocument();
             updateTextLimitLine(doc);
             clearStatusBits(AVAILABLE_WIDTH_VALID);
-            DocumentUtilities.addPropertyChangeListener(doc, WeakListeners.propertyChange(this, doc));
+            DocumentUtilities.addWeakPropertyChangeListener(doc, this);
         }
     }
     
@@ -1227,10 +1227,12 @@ public final class DocumentViewOp
             setStatusBits(AVAILABLE_WIDTH_VALID);
             availableWidth = Integer.MAX_VALUE;
             renderWrapWidth = availableWidth;
-            TextLayout lineContTextLayout = getLineContinuationCharTextLayout();
-            if (lineContTextLayout != null && (getLineWrapType() != LineWrapType.NONE)) {
-                availableWidth = Math.max(getVisibleRect().width, 4 * getDefaultCharWidth() + lineContTextLayout.getAdvance());
-                renderWrapWidth = availableWidth - lineContTextLayout.getAdvance();
+            if (getLineWrapType() != LineWrapType.NONE) {
+                final TextLayout lineContTextLayout = getLineContinuationCharTextLayout();
+                final float lineContTextLayoutAdvance =
+                    lineContTextLayout == null ? 0f : lineContTextLayout.getAdvance();
+                availableWidth = Math.max(getVisibleRect().width, 4 * getDefaultCharWidth() + lineContTextLayoutAdvance);
+                renderWrapWidth = availableWidth - lineContTextLayoutAdvance;
             }
         }
         return availableWidth;
@@ -1343,7 +1345,17 @@ public final class DocumentViewOp
         return ret;
     }
 
+    /**
+     * @return will be null if the line continuation character should not be shown
+     */
     TextLayout getLineContinuationCharTextLayout() {
+        /* The line continuation character is used to show that a line is automatically being
+        broken into multiple wrap lines via the line wrap feature. This causes a lot of visual
+        clutter, and always takes up an extra character of horizontal space, so don't show it by
+        default. The same information is communicated by the line numbers in the left-hand side of
+        the editor anyway. */
+        if (!docView.op.isNonPrintableCharactersVisible())
+            return null;
         if (lineContinuationTextLayout == null) {
             char lineContinuationChar = LINE_CONTINUATION;
             if (!defaultFont.canDisplay(lineContinuationChar)) {

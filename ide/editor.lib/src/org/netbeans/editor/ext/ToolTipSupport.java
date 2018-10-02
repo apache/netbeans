@@ -88,6 +88,10 @@ import org.openide.modules.PatchedPublic;
  * @since 2.4
  */
 public class ToolTipSupport {
+    /* From PopupManager.SUPPRESS_POPUP_KEYBOARD_FORWARDING_CLIENT_PROPERTY_KEY. (For private use in
+    this module only. */
+    private static final String SUPPRESS_POPUP_KEYBOARD_FORWARDING_CLIENT_PROPERTY_KEY =
+        "suppress-popup-keyboard-forwarding";
 
     // -J-Dorg.netbeans.editor.ext.ToolTipSupport.level=FINE
     private static final Logger LOG = Logger.getLogger(ToolTipSupport.class.getName());
@@ -384,6 +388,9 @@ public class ToolTipSupport {
         }
 
         JEditorPane tt = new HtmlTextToolTip();
+        /* See NETBEANS-403. It still appears possible to use Escape to close the popup when the
+        focus is in the editor. */
+        tt.putClientProperty(SUPPRESS_POPUP_KEYBOARD_FORWARDING_CLIENT_PROPERTY_KEY, true);
 
         // setup tooltip keybindings
         filterBindings(tt.getActionMap());
@@ -469,6 +476,9 @@ public class ToolTipSupport {
         }
 
         JTextArea tt = new TextToolTip();
+        /* See NETBEANS-403. It still appears possible to use Escape to close the popup when the
+        focus is in the editor. */
+        tt.putClientProperty(SUPPRESS_POPUP_KEYBOARD_FORWARDING_CLIENT_PROPERTY_KEY, true);
 
         // set up tooltip keybindings
         filterBindings(tt.getActionMap());

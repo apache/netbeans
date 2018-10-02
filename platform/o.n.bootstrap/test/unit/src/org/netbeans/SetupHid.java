@@ -233,6 +233,9 @@ public abstract class SetupHid extends NbTestCase {
         createTestJAR("medium-manifest", null);
         createTestJAR("big-manifest", null);
         createTestJAR("patchable", null);
+        
+        createTestJAR("fragment-module", null);
+        createTestJAR("host-module", null);
         { // Make the patch JAR specially:
             File src = new File(data, "patch");
             String srcS = src.getAbsolutePath();
@@ -318,7 +321,7 @@ public abstract class SetupHid extends NbTestCase {
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         StandardJavaFileManager mgr = compiler.getStandardFileManager(null, null, null);
         List<String> fullOptions = new ArrayList<String>(options);
-        fullOptions.addAll(Arrays.asList("-source", "1.5", "-target", "1.5"));
+        fullOptions.addAll(Arrays.asList("-source", "6", "-target", "6"));
         if (!compiler.getTask(null, mgr, null, fullOptions, null, mgr.getJavaFileObjectsFromFiles(files)).call()) {
             throw new IOException("compilation failed");
         }

@@ -233,17 +233,24 @@ public final class JavaCompletionTask<T> extends BaseTask {
     };
 
     private static final SourceVersion SOURCE_VERSION_RELEASE_10;
+    private static final SourceVersion SOURCE_VERSION_RELEASE_11;
 
     static {
-        SourceVersion r10;
+        SourceVersion r10, r11;
 
         try {
             r10 = SourceVersion.valueOf("RELEASE_10");
         } catch (IllegalArgumentException ex) {
             r10 = null;
         }
+        try {
+            r11 = SourceVersion.valueOf("RELEASE_11");
+        } catch (IllegalArgumentException ex) {
+            r11 = null;
+        }
 
         SOURCE_VERSION_RELEASE_10 = r10;
+        SOURCE_VERSION_RELEASE_11 = r11;
     }
 
     private final ItemFactory<T> itemFactory;
@@ -886,6 +893,16 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     addTypes(env, EnumSet.of(CLASS, INTERFACE, TYPE_PARAMETER), controller.getTypes().getDeclaredType(te));
                 }
             } else {
+                if (path.getParentPath().getLeaf().getKind() == Tree.Kind.LAMBDA_EXPRESSION) {
+                    LambdaExpressionTree let = (LambdaExpressionTree) path.getParentPath().getLeaf();
+
+                    if (let.getParameters().size() == 1) {
+                        addVarTypeForLambdaParam(env);
+                    } else if (isLambdaVarType(env, let)) {
+                        addVarTypeForLambdaParam(env);
+                        return;
+                    }
+                }
                 boolean isLocal = !TreeUtilities.CLASS_TREE_KINDS.contains(parent.getKind());
                 addMemberModifiers(env, var.getModifiers().getFlags(), isLocal);
                 addTypes(env, EnumSet.of(CLASS, INTERFACE, ENUM, ANNOTATION_TYPE, TYPE_PARAMETER), null);
@@ -1904,6 +1921,13 @@ public final class JavaCompletionTask<T> extends BaseTask {
                         addPrimitiveTypeKeywords(env);
                         addKeyword(env, FINAL_KEYWORD, SPACE, false);
                     }
+                    else {
+                        boolean isFirstParamVarType = isLambdaVarType(env, let);
+
+                        if (isFirstParamVarType) {
+                            addVarTypeForLambdaParam(env);
+                        }
+                    }
                     break;
             }
         }
@@ -2349,6 +2373,12 @@ public final class JavaCompletionTask<T> extends BaseTask {
                                         results.add(itemFactory.createTypeItem(env.getController(), elem, subtype, anchorOffset, env.getReferencesCount(), elements.isDeprecated(elem), false, false, false, true, false));
                                     }
                                     env.addToExcludes(elem);
+                                }
+                                DeclaredType type = (DeclaredType) smart;
+                                TypeElement element = (TypeElement) type.asElement();
+
+                                if (elements.isFunctionalInterface(element)) {
+                                    addVarTypeForLambdaParam(env);
                                 }
                             } else if (smart.getKind() == TypeKind.ARRAY) {
                                 try {
@@ -5868,5 +5898,44 @@ public final class JavaCompletionTask<T> extends BaseTask {
             }
         }
         return true;
+    }
+
+    private void addVarTypeForLambdaParam(final Env env) throws IOException {
+        if (SOURCE_VERSION_RELEASE_11 == null || env.getController().getSourceVersion().compareTo(SOURCE_VERSION_RELEASE_11) < 0) {
+            return;
+        }
+        results.add(itemFactory.createKeywordItem(VAR_KEYWORD, SPACE, anchorOffset, false));
+    }
+
+    /**
+     *
+     * @param env : env
+     * @param tree : Lambda expression tree
+     * @return true if first param of lambda expr is of 'var' type
+     */
+    private boolean isLambdaVarType(Env env, Tree tree) {
+
+        if (tree.getKind() != Tree.Kind.LAMBDA_EXPRESSION) {
+            return false;
+        }
+        LambdaExpressionTree let = (LambdaExpressionTree) tree;
+        if (let.getParameters().isEmpty()) {
+            return false;
+        }
+
+        boolean isFirstParamVarType = false;
+
+        VariableTree firstParamTree = let.getParameters().get(0);
+        int firstParamStartPos = (int) env.getSourcePositions().getStartPosition(env.getRoot(), firstParamTree);
+        TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(env, let, env.getOffset());
+        ts.move(firstParamStartPos);
+        ts.movePrevious();
+
+        //TreeUtilities.isVarType() API can't be used as FirstParamTree might not be complete.
+        while (ts.token().id() != JavaTokenId.COMMA && !isFirstParamVarType && ts.moveNext()) {
+            isFirstParamVarType = ts.token().id() == JavaTokenId.VAR;
+        }
+        return isFirstParamVarType;
+
     }
 }

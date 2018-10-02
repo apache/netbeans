@@ -40,7 +40,8 @@ final class TestClassInfoTask implements CancellableTask<CompilationController> 
     private String className;
     private String methodName;
     
-    private static String ANNOTATION = "org.junit.Test"; //NOI18N
+    private static String JUNIT4_ANNOTATION = "org.junit.Test"; //NOI18N
+    private static String JUNIT5_ANNOTATION = "org.junit.platform.commons.annotation.Testable"; //NOI18N
     private static String TESTCASE = "junit.framework.TestCase"; //NOI18N
 
     TestClassInfoTask(int caretPosition) {
@@ -80,8 +81,9 @@ final class TestClassInfoTask implements CancellableTask<CompilationController> 
 		    for (Iterator<? extends AnnotationMirror> it = allAnnotationMirrors.iterator(); it.hasNext();) {
 			AnnotationMirror annotationMirror = it.next();
 			typeElement = (TypeElement) annotationMirror.getAnnotationType().asElement();
-			if (typeElement.getQualifiedName().contentEquals(ANNOTATION)) {
-			    methodName = mn;
+			if (typeElement.getQualifiedName().contentEquals(JUNIT4_ANNOTATION)
+                                || isJunit5Testable(typeElement)) { 
+                            methodName = mn;
 			    break;
 			}
 		    }
@@ -100,5 +102,15 @@ final class TestClassInfoTask implements CancellableTask<CompilationController> 
 
     String getMethodName() {
         return methodName;
+    }
+    
+    private boolean isJunit5Testable(TypeElement typeElement) {
+        for (AnnotationMirror annotationMirror : typeElement.getAnnotationMirrors()) {
+            TypeElement parentTypeElement = (TypeElement) annotationMirror.getAnnotationType().asElement();
+            if (parentTypeElement.getQualifiedName().contentEquals(JUNIT5_ANNOTATION)){
+                return true;
+            }
+        }
+        return false;
     }
 }

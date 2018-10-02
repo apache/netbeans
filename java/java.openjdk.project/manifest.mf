@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.modules.java.openjdk.project/1
+OpenIDE-Module-Layer: org/netbeans/modules/java/openjdk/project/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/java/openjdk/project/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

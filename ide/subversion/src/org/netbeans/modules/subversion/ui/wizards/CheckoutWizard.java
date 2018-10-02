@@ -75,7 +75,7 @@ public final class CheckoutWizard implements ChangeListener {
         return finnished;
     }
     
-    /** Called on sucessfull finish. */
+    /** Called on successful finish. */
     private void onFinished() {
         String checkout = checkoutStep.getWorkdir().getPath();
         SvnModuleConfig.getDefault().getPreferences().put(CheckoutStep.CHECKOUT_DIRECTORY, checkout);

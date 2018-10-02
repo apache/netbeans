@@ -252,7 +252,7 @@ public final class CompletionContext {
 
         while (ts.isValid() && ts.movePrevious() && ts.offset() >= 0) {
             Token<GroovyTokenId> t = ts.token();
-            if (t.id() == GroovyTokenId.LITERAL_class || t.id() == GroovyTokenId.LITERAL_interface) {
+            if (t.id() == GroovyTokenId.LITERAL_class || t.id() == GroovyTokenId.LITERAL_interface || t.id() == GroovyTokenId.LITERAL_trait) {
                 classDefBeforePosition = true;
                 break;
             }
@@ -265,7 +265,7 @@ public final class CompletionContext {
 
         while (ts.isValid() && ts.moveNext() && ts.offset() < doc.getLength()) {
             Token<GroovyTokenId> t = ts.token();
-            if (t.id() == GroovyTokenId.LITERAL_class || t.id() == GroovyTokenId.LITERAL_interface) {
+            if (t.id() == GroovyTokenId.LITERAL_class || t.id() == GroovyTokenId.LITERAL_interface || t.id() == GroovyTokenId.LITERAL_trait) {
                 classDefAfterPosition = true;
                 break;
             }

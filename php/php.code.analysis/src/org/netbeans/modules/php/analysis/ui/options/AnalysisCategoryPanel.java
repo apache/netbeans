@@ -28,6 +28,8 @@ public abstract class AnalysisCategoryPanel extends JPanel {
 
     public abstract void addChangeListener(ChangeListener listener);
 
+    public abstract void removeChangeListener(ChangeListener listener);
+
     public abstract void update();
 
     public abstract void applyChanges();

@@ -53,7 +53,7 @@ $ ant -Dcluster.config=basic
 ```
 Build the full project (including Groovy, PHP, JavaEE/JakartaEE, and JavaScript features):
 ```
-$ ant -Dcluster.confg=full
+$ ant -Dcluster.config=full
 ```
 Build the NetBeans Platform:
 ```

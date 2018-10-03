@@ -23,6 +23,7 @@ import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.ContinueTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -95,17 +96,22 @@ public class ConvertSwitchToRuleSwitch {
         return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_ConverSwitchToRuleSwitch(), new FixImpl(ctx.getInfo(), ctx.getPath()).toEditorFix());
     }
     private static boolean completesNormally(CompilationInfo info, TreePath tp) {
-        class Scanner extends TreeScanner<Void, Void> {
+        class Scanner extends TreePathScanner<Void, Void> {
             private boolean completesNormally = true;
+            private Set<Tree> seenTrees = new HashSet<>();
             @Override
             public Void visitReturn(ReturnTree node, Void p) {
-                //XXX: verify target!!!
                 completesNormally = false;
                 return null;
             }
             @Override
             public Void visitBreak(BreakTree node, Void p) {
-                completesNormally = false;
+                completesNormally &= seenTrees.contains(info.getTreeUtilities().getBreakContinueTarget(getCurrentPath()));
+                return null;
+            }
+            @Override
+            public Void visitContinue(ContinueTree node, Void p) {
+                completesNormally &= seenTrees.contains(info.getTreeUtilities().getBreakContinueTarget(getCurrentPath()));
                 return null;
             }
             @Override
@@ -127,12 +133,18 @@ public class ConvertSwitchToRuleSwitch {
             public Void visitSwitch(SwitchTree node, Void p) {
                 //exhaustiveness: (TODO)
                 boolean hasDefault = node.getCases().stream().anyMatch(c -> c.getExpression() == null);
-                if (node.getCases().size() > 0)
+                if (node.getCases().size() > 0) {
                     scan(node.getCases().get(node.getCases().size() - 1), p);
+                }
                 completesNormally |= !hasDefault;
                 return null;
             }
             //TODO: loops
+            @Override
+            public Void scan(Tree tree, Void p) {
+                seenTrees.add(tree);
+                return super.scan(tree, p);
+            }
             @Override
             public Void visitLambdaExpression(LambdaExpressionTree node, Void p) {
                 return null;
@@ -145,7 +157,7 @@ public class ConvertSwitchToRuleSwitch {
 
         Scanner scanner = new Scanner();
 
-        scanner.scan(tp.getLeaf(), null);
+        scanner.scan(tp, null);
         return scanner.completesNormally;
     }
 
@@ -177,8 +189,9 @@ public class ConvertSwitchToRuleSwitch {
                 patterns.addAll(TreeShims.getExpressions(ct));
                 List<StatementTree> statements = new ArrayList<>(ct.getStatements());
                 if (statements.isEmpty()) {
-                    if (it.hasNext())
+                    if (it.hasNext()) {
                         continue;
+                    }
                     //last case, no break
                 } else if (statements.get(statements.size() - 1).getKind() == Kind.BREAK &&
                     ctx.getWorkingCopy().getTreeUtilities().getBreakContinueTarget(new TreePath(new TreePath(tp, ct), statements.get(statements.size() - 1))) == st) {

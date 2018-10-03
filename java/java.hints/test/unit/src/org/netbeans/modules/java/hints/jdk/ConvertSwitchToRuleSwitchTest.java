@@ -343,6 +343,118 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                 .assertWarnings();
     }
 
+    public void testBreakInside1() throws Exception {
+        HintTest.create()
+                .input("package test;" +
+                       "public class Test {\n" +
+                       "     private void test(int p) {\n" +
+                       "         String result;\n" +
+                       "         switch (p) {\n" +
+                       "             case 0: while (true) break;\n" +
+                       "             case 1: INNER: while (true) break INNER;\n" +
+                       "         }\n" +
+                       "     }\n" +
+                       "}\n")
+                .sourceLevel(SourceVersion.latest().name())
+                .options("--enable-preview")
+                .run(ConvertSwitchToRuleSwitch.class)
+                .assertWarnings();
+    }
+
+    public void testBreakInside2() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "     private void test(int p) {\n" +
+                       "         String result;\n" +
+                       "         switch (p) {\n" +
+                       "             case 0: while (true) break;\n" +
+                       "                     break;\n" +
+                       "             case 1: INNER: while (true) break INNER;\n" +
+                       "                     break;\n" +
+                       "         }\n" +
+                       "     }\n" +
+                       "}\n")
+                .sourceLevel(SourceVersion.latest().name())
+                .options("--enable-preview")
+                .run(ConvertSwitchToRuleSwitch.class)
+                .findWarning("4:9-4:15:verifier:Convert switch to rule switch")
+                .applyFix()
+                .assertCompilable()
+                .assertOutput("package test;\n" +
+                              "public class Test {\n" +
+                              "     private void test(int p) {\n" +
+                              "         String result;\n" +
+                              "         switch (p) {\n" +
+                              "             case 0 -> {\n" +
+                              "                 while (true) break;\n" +
+                              "             }\n" +
+                              "             case 1 -> {\n" +
+                              "                 INNER: while (true) break INNER;\n" +
+                              "             }\n" +
+                              "         }\n" +
+                              "     }\n" +
+                              "}");
+    }
+
+    public void testContinueInside1() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "     private void test(int p) {\n" +
+                       "         String result;\n" +
+                       "         switch (p) {\n" +
+                       "             case 0: while (p++ < 12) continue;\n" +
+                       "             case 1: INNER: while (p++ < 12) continue INNER;\n" +
+                       "         }\n" +
+                       "     }\n" +
+                       "}\n")
+                .sourceLevel(SourceVersion.latest().name())
+                .options("--enable-preview")
+                .run(ConvertSwitchToRuleSwitch.class)
+                .assertWarnings();
+    }
+
+    public void testContinueInside2() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "     private void test(int p) {\n" +
+                       "         String result;\n" +
+                       "         OUTER: while (p-- > 0) {\n" +
+                       "             switch (p) {\n" +
+                       "                 case 0: while (p++ < 12) continue OUTER;\n" +
+                       "                         break;\n" +
+                       "                 case 1: INNER: while (p++ < 12) continue OUTER;\n" +
+                       "                         break;\n" +
+                       "             }\n" +
+                       "         }\n" +
+                       "     }\n" +
+                       "}\n")
+                .sourceLevel(SourceVersion.latest().name())
+                .options("--enable-preview")
+                .run(ConvertSwitchToRuleSwitch.class)
+                .findWarning("5:13-5:19:verifier:Convert switch to rule switch")
+                .applyFix()
+                .assertCompilable()
+                .assertOutput("package test;\n" +
+                              "public class Test {\n" +
+                              "     private void test(int p) {\n" +
+                              "         String result;\n" +
+                              "         OUTER: while (p-- > 0) {\n" +
+                              "             switch (p) {\n" +
+                              "                 case 0 -> {\n" +
+                              "                     while (p++ < 12) continue OUTER;\n" +
+                              "                 }\n" +
+                              "                 case 1 -> {\n" +
+                              "                     INNER: while (p++ < 12) continue OUTER;\n" +
+                              "                 }\n" +
+                              "             }\n" +
+                              "         }\n" +
+                              "     }\n" +
+                              "}");
+    }
+
     public static Test suite() {
         TestSuite suite = new TestSuite();
         try {

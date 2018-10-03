@@ -56,9 +56,9 @@ public class AnnotationsTest extends CommonTestCase  {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        /*URL url = FileUtil.getArchiveRoot(javax.faces.component.FacesComponent.class.getProtectionDomain().
+        URL url = FileUtil.getArchiveRoot(javax.faces.component.FacesComponent.class.getProtectionDomain().
                 getCodeSource().getLocation());
-        addCompileRoots( Collections.singletonList( url ));*/
+        addCompileRoots( Collections.singletonList( url ));
     }
 
     public void testModel() throws IOException, InterruptedException {

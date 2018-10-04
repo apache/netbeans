@@ -1,5 +1,7 @@
 Name: Java API for Servlets, Java API for JavaServer Pages
 License: CDDL-1.0+1.1
+Version: 2.3
+Type: generated
 Description: Java API for Servlets, Java API for JavaServer Pages, Java API for Expression Language
 Origin: Oracle (https://glassfish.dev.java.net/)
 

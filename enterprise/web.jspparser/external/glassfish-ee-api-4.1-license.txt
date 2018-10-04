@@ -2,7 +2,7 @@ Name: Java EE dependent public APIs of Glassfish
 Version: 4.1
 License: CDDL-1.1
 Description: Java EE dependent public APIs of Glassfish
-Origin: Oracle 
+Origin: Oracle
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

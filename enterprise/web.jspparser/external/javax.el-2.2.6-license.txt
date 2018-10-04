@@ -2,7 +2,7 @@ Name: Expression Language
 Version: 2.2.6
 License: CDDL-1.1
 Description: Expression Language 2.2.6 Implementation
-Origin: Oracle 
+Origin: Oracle
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

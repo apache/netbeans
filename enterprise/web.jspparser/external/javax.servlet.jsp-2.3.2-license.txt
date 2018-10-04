@@ -2,7 +2,7 @@ Name: JSP implementation
 Version: 2.3.2
 License: CDDL-1.1
 Description: JSP implementation
-Origin: Oracle 
+Origin: Oracle
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

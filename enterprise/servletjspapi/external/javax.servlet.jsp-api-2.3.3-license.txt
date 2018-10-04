@@ -2,7 +2,7 @@ Name: Java API for JavaServer Pages
 Version: 2.3.3
 License: CDDL-1.1
 Description: Java API for JavaServer Pages
-Origin: Oracle 
+Origin: Oracle
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

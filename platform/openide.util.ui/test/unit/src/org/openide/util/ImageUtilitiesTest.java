@@ -279,4 +279,16 @@ public class ImageUtilitiesTest extends TestCase {
         icon = ImageUtilities.loadImageIcon("org/openide/util/darkicon.png", true);
         assertEquals("The default icon is 16x16 pixels", 16, icon.getIconWidth());
     }
+    
+    /**
+     * Checks that .gif request falls back on .png image, if the requested
+     * format is not present
+     */
+    public void testLoadPngImageInsteadOfMissingGif() {
+        Image img = ImageUtilities.loadImage("org/openide/util/gifimage.gif");
+        assertEquals(17, img.getWidth(null));
+        
+        img = ImageUtilities.loadImage("org/openide/util/gifimage2.gif");
+        assertEquals(16, img.getWidth(null));
+    }
 }

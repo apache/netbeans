@@ -19,7 +19,6 @@
 
 package org.openide.util;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.HeadlessException;
@@ -32,7 +31,6 @@ import java.awt.image.ColorModel;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
-import java.awt.image.IndexColorModel;
 import java.awt.image.RGBImageFilter;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
@@ -64,7 +62,7 @@ import javax.swing.UIManager;
 public final class ImageUtilities {
 
     private static final Logger LOGGER = Logger.getLogger(ImageUtilities.class.getName());
-
+    
     /** separator for individual parts of tool tip text */
     static final String TOOLTIP_SEPAR = "<br>"; // NOI18N
     /** a value that indicates that the icon does not exists */
@@ -528,16 +526,24 @@ public final class ImageUtilities {
                 warn = false;
                 n = name;
             }
+            
+            String tryName = n;
+            if (n.endsWith(".gif") && n.length() > 4) { // NOI8N
+                tryName = n.substring(0, n.length() - 4) + ".png"; // NOI18N
+            }
 
             // we have to load it
-            java.net.URL url = (loader != null) ? loader.getResource(n)
-                                                : ImageUtilities.class.getClassLoader().getResource(n);
-
-//            img = (url == null) ? null : Toolkit.getDefaultToolkit().createImage(url);
+            java.net.URL url = (loader != null) ? loader.getResource(tryName)
+                                                : ImageUtilities.class.getClassLoader().getResource(tryName);
+            if (url == null && n != tryName) { 
+                tryName = n;
+                url = (loader != null) ? loader.getResource(tryName)
+                                                : ImageUtilities.class.getClassLoader().getResource(tryName);
+            }
             Image result = null;
             try {
                 if (url != null) {
-                    if (name.endsWith(".png")) {
+                    if (tryName.endsWith(".png")) {
                         ImageInputStream stream = ImageIO.createImageInputStream(url.openStream());
                         ImageReadParam param = PNG_READER.getDefaultReadParam();
                         try {
@@ -545,7 +551,7 @@ public final class ImageUtilities {
                             result = PNG_READER.read(0, param);
                         }
                         catch (IOException ioe1) {
-                            ERR.log(Level.INFO, "Image "+name+" is not PNG", ioe1);
+                            ERR.log(Level.INFO, "Image " + tryName + " is not PNG", ioe1);
                         }
                         stream.close();
                     } 

@@ -129,6 +129,7 @@ METHOD     sprintf(String, Object)                    String
 METHOD     step(Number, Number, Closure)              void
 METHOD     stringSize(int)                 [STATIC]   int
 METHOD     sum(int, int)                   [STATIC,   int
+METHOD     tap(Closure)                               Object
 METHOD     times(Closure)                             void
 METHOD     toBigDecimal()                             BigDecimal
 METHOD     toBigInteger()                             BigInteger
@@ -158,6 +159,7 @@ METHOD     wait()                          [PUBLIC]   void
 METHOD     wait(long)                      [PUBLIC]   void
 METHOD     wait(long, int)                 [PUBLIC]   void
 METHOD     with(Closure)                              Object
+METHOD     with(boolean, Closure)                     Object
 METHOD     withTraits(Class[])                        Object
 METHOD     xor(Number)                                Number
 FIELD      class                           [PUBLIC]   Class

@@ -26,36 +26,63 @@
     <property name="resources.dir" value="./src/org/netbeans/modules/web/struts/resources/"/>
 
     <target name="build-init" depends="projectized.build-init">
-        <unzip src="external/web.struts-external-resources.zip" dest="${resources.dir}"/>
+        <mkdir dir="webstruts_javadoc_location"/>
+        <mkdir dir="webstruts_core_javadoc_location"/>
+        <unzip src="external/struts-core-1.3.10-javadoc.jar" dest="webstruts_core_javadoc_location/"/>
+        <unzip src="external/struts-faces-1.3.10-javadoc.jar" dest="webstruts_javadoc_location/"/>
+        <unzip src="external/struts-scripting-1.3.10-javadoc.jar" dest="webstruts_javadoc_location/"/>
+        <unzip src="external/struts-taglib-1.3.10-javadoc.jar" dest="webstruts_javadoc_location/"/>
+        <unzip src="external/struts-tiles-1.3.10-javadoc.jar" dest="webstruts_javadoc_location/"/>
+        <unzip src="external/struts-extras-1.3.10.jar" dest="webstruts_javadoc_location/"/>
+        <delete file="external/struts-1.3.10-javadoc.zip"/>
+        <zip destfile="external/generated-struts-1.3.10-javadoc.zip">
+            <zipfileset dir="webstruts_core_javadoc_location" includes="*"/>
+            <zipfileset dir="webstruts_javadoc_location" includes="org/apache/struts/faces/**"/>
+            <zipfileset dir="webstruts_javadoc_location" includes="org/apache/struts/scripting/**"/>
+            <zipfileset dir="webstruts_javadoc_location" includes="org/apache/struts/taglib/**"/>
+            <zipfileset dir="webstruts_javadoc_location" includes="org/apache/struts/tiles/**"/>
+            <zipfileset dir="webstruts_javadoc_location" includes="org/apache/struts/extras/actions/**"/>
+        </zip>
+        <delete dir="webstruts_javadoc_location" />
+        <delete dir="webstruts_core_javadoc_location" />
+        <mkdir dir="webstruts_resources_location"/>
+        <unzip src="external/struts-tiles-1.3.10.jar" dest="webstruts_resources_location/"/>
+        <unzip src="external/struts-core-1.3.10.jar" dest="webstruts_resources_location/"/>
+        <unzip src="external/struts-taglib-1.3.10.jar" dest="webstruts_resources_location/"/>
+        <unzip src="external/commons-validator-1.3.1.jar" dest="webstruts_resources_location/"/>
+        <copy todir="${resources.dir}">
+            <fileset dir="webstruts_resources_location/org/apache/struts/resources/**"/>
+            <fileset dir="webstruts_resources_location/META-INF/tld/**"/>
+            <fileset dir="webstruts_resources_location/org/apache/commons/validator/resources/**"/>
+            <fileset dir="webstruts_resources_location/org/apache/struts/validator/validator-rules.xml"/>
+        </copy>
+        <delete dir="webstruts_resources_location"/>
     </target>
 
     <target name="release" depends="projectized.release">
         <mkdir dir="${cluster}/modules/ext/struts"/>
-        <unzip src="external/struts-1.3.10-lib.zip" dest="${cluster}/modules/ext/struts">
-            <patternset>
-                <include name="struts-1.3.10-lib/antlr-2.7.2.jar"/>
-                <include name="struts-1.3.10-lib/bsf-2.3.0.jar"/>
-                <include name="struts-1.3.10-lib/commons-beanutils-1.8.0.jar"/>
-                <include name="struts-1.3.10-lib/commons-chain-1.2.jar"/>
-                <include name="struts-1.3.10-lib/commons-digester-1.8.jar"/>
-                <include name="struts-1.3.10-lib/commons-fileupload-1.1.1.jar"/>
-                <include name="struts-1.3.10-lib/commons-io-1.1.jar"/>
-                <include name="struts-1.3.10-lib/commons-logging-1.0.4.jar"/>
-                <include name="struts-1.3.10-lib/commons-validator-1.3.1.jar"/>
-                <include name="struts-1.3.10-lib/jstl-1.0.2.jar"/>
-                <include name="struts-1.3.10-lib/oro-2.0.8.jar"/>
-                <include name="struts-1.3.10-lib/standard-1.0.6.jar"/>
-                <include name="struts-1.3.10-lib/struts-core-1.3.10.jar"/>
-                <include name="struts-1.3.10-lib/struts-el-1.3.10.jar"/>
-                <include name="struts-1.3.10-lib/struts-extras-1.3.10.jar"/>
-                <include name="struts-1.3.10-lib/struts-faces-1.3.10.jar"/>
-                <include name="struts-1.3.10-lib/struts-mailreader-dao-1.3.10.jar"/>
-                <include name="struts-1.3.10-lib/struts-scripting-1.3.10.jar"/>
-                <include name="struts-1.3.10-lib/struts-taglib-1.3.10.jar"/>
-                <include name="struts-1.3.10-lib/struts-tiles-1.3.10.jar"/>
-            </patternset>
-            <mapper type="flatten"/>
-        </unzip>
+        <copy todir="${cluster}/modules/ext/struts" flatten="true">
+            <fileset dir="antlr-2.7.2.jar"/>
+            <fileset dir="bsf-2.3.0.jar"/>
+            <fileset dir="commons-beanutils-1.8.0.jar"/>
+            <fileset dir="commons-chain-1.2.jar"/>
+            <fileset dir="commons-digester-1.8.jar"/>
+            <fileset dir="commons-fileupload-1.1.1.jar"/>
+            <fileset dir="commons-io-1.1.jar"/>
+            <fileset dir="commons-logging-1.0.4.jar"/>
+            <fileset dir="commons-validator-1.3.1.jar"/>
+            <fileset dir="jstl-1.0.2.jar"/>
+            <fileset dir="oro-2.0.8.jar"/>
+            <fileset dir="standard-1.0.6.jar"/>
+            <fileset dir="struts-core-1.3.10.jar"/>
+            <fileset dir="struts-el-1.3.10.jar"/>
+            <fileset dir="struts-extras-1.3.10.jar"/>
+            <fileset dir="struts-faces-1.3.10.jar"/>
+            <fileset dir="struts-mailreader-dao-1.3.10.jar"/>
+            <fileset dir="struts-scripting-1.3.10.jar"/>
+            <fileset dir="struts-taglib-1.3.10.jar"/>
+            <fileset dir="struts-tiles-1.3.10.jar"/>
+        </copy>
     </target>
  
 </project>

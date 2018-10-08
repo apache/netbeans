@@ -27,7 +27,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
@@ -65,7 +65,9 @@ public class ClassPathProviderImpl implements ClassPathProvider {
                 testProperties =  search.getFileObject("TEST.properties");
             }
 
-            if (search.getFileObject("TEST.ROOT") != null) {
+            FileObject testRoot = search.getFileObject("TEST.ROOT");
+
+            if (testRoot != null) {
                 boolean javac = (Utilities.isLangtoolsRepository(search.getParent()) || search.getNameExt().equals("langtools")) &&
                                 ShortcutUtils.getDefault().shouldUseCustomTest("langtools", FileUtil.getRelativePath(search.getParent(), file));
                 //XXX: hack to make things work for langtools:
@@ -110,7 +112,7 @@ public class ClassPathProviderImpl implements ClassPathProvider {
                         return null;
                 }
 
-                Set<FileObject> roots = new HashSet<>();
+                Set<FileObject> roots = new LinkedHashSet<>();
 
                 if (testProperties != null) {
                     roots.add(testProperties.getParent());
@@ -141,12 +143,30 @@ public class ClassPathProviderImpl implements ClassPathProvider {
                         Matcher m = library.matcher(content.toString());
 
                         if (m.find()) {
+                            List<FileObject> libDirs = new ArrayList<>();
+                            try (InputStream in = testRoot.getInputStream()) {
+                                Properties p = new Properties();
+                                p.load(in);
+                                String externalLibRoots = p.getProperty("external.lib.roots");
+                                if (externalLibRoots != null) {
+                                    for (String extLib : externalLibRoots.split("\\s+")) {
+                                        FileObject libDir = search.getFileObject(extLib);
+
+                                        if (libDir != null) {
+                                            libDirs.add(libDir);
+                                        }
+                                    }
+                                }
+                            }
+                            libDirs.add(search);
                             String libraryPaths = m.group(1).trim();
                             for (String libraryPath : libraryPaths.split(" ")) {
-                                FileObject libFO = resolve(file, search, libraryPath);
+                                for (FileObject libDir : libDirs) {
+                                    FileObject libFO = resolve(file, libDir, libraryPath);
 
-                                if (libFO != null) {
-                                    roots.add(libFO);
+                                    if (libFO != null) {
+                                        roots.add(libFO);
+                                    }
                                 }
                             }
                         }

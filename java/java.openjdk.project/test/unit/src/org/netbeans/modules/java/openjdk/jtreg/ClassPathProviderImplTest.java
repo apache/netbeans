@@ -105,6 +105,22 @@ public class ClassPathProviderImplTest extends NbTestCase {
         Assert.assertTrue(compileCP.entries().isEmpty());
     }
 
+    public void testExternalLibRoots() throws Exception {
+        File workDir = getWorkDir();
+
+        FileUtil.createFolder(new File(workDir, "src/share/classes"));
+        FileObject testRoot = createData("test/TEST.ROOT", "external.lib.roots=../lib1 ../lib2\t../lib3");
+        FileObject testUse = createData("test/use/Use.java", "/**@test\n@library /lib0/0 /1 /2 /3\n*/");
+        FileObject testLib0 = FileUtil.createData(new File(workDir, "test/lib0/0/Lib.java"));
+        FileObject testLib1 = FileUtil.createData(new File(workDir, "lib1/1/Lib.java"));
+        FileObject testLib2 = FileUtil.createData(new File(workDir, "lib2/2/Lib.java"));
+        FileObject testLib3 = FileUtil.createData(new File(workDir, "lib3/3/Lib.java"));
+        ClassPath sourceCP = new ClassPathProviderImpl().findClassPath(testUse, ClassPath.SOURCE);
+
+        Assert.assertEquals(new HashSet<>(Arrays.asList(testUse.getParent(), testLib0.getParent(), testLib1.getParent(), testLib2.getParent(), testLib3.getParent())),
+                            new HashSet<>(Arrays.asList(sourceCP.getRoots())));
+    }
+
     private FileObject createData(String relPath, String content) throws IOException {
         File workDir = getWorkDir();
         FileObject file = FileUtil.createData(new File(workDir, relPath));

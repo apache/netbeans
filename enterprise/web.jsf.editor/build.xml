@@ -22,4 +22,36 @@
 <project basedir="." default="build" name="enterprise/web.jsf.editor">
     <description>Builds, tests, and runs the project org.netbeans.modules.web.jsf.editor</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
+    <target name="-check-prepared-zip">
+        <condition property="web.jsf.editor.generated-zip-created" value="present">
+            <and>
+                <available file="external/generated-jsf-api-docs-2.0.zip" />
+            </and>
+        </condition>
+    </target>
+    <target name="build-init" depends="-check-prepared-zip,projectized.build-init" unless="web.jsf.editor.generated-zip-created">
+        <property name="jars_location" location="./external"/>
+        <fail message="Set jars_location">
+            <condition>
+                <not>
+                    <available  file="${jars_location}" type="dir"/>
+                </not>
+            </condition>
+        </fail>
+        
+        <echo message="Creating generated-jsf-api-docs-2.0.zip"/>
+        <mkdir dir="jsf_editor_api_location"/>
+        <mkdir dir="jsf_editor_api_target_location"/>
+        <unzip src="${jars_location}/javax.faces-api-2.0-javadoc.jar" dest="jsf_editor_api_location/"/>
+        <copy todir="jsf_editor_api_target_location">
+            <fileset dir="./jsf_editor_api_location/javadocs/">
+                <exclude name="**/*.png"/>
+                <exclude name="**/*.cur"/>
+            </fileset>
+        </copy>
+        <zip  basedir="jsf_editor_api_target_location"
+              zipfile="./external/generated-jsf-api-docs-2.0.zip" />
+        <delete dir="jsf_editor_api_location" />
+        <delete dir="jsf_editor_api_target_location" />
+    </target>
 </project>

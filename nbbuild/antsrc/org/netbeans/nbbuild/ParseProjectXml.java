@@ -854,7 +854,9 @@ public final class ParseProjectXml extends Task {
             }
             File jar = entry.getJar();
             if (!jar.isFile()) {
-                log("Cannot translate according to " + moduleAutoDeps + " because could not find " + jar, Project.MSG_WARN);
+                if (!Boolean.valueOf(getProject().getProperty("nbbuild.nowarn.missing.autodeps"))) {
+                    log("Cannot translate according to " + moduleAutoDeps + " because could not find " + jar, Project.MSG_WARN);
+                }
                 return;
             }
             loader.addPathComponent(jar);

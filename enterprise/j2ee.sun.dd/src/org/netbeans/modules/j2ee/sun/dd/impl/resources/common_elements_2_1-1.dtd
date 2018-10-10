@@ -23,20 +23,151 @@
 <!ELEMENT dummy #PCDATA>
 
 <!--
-For mapping security roles.  class-name attribute is new in AS 9.0
+This is the root element which binds an ejb reference to a jndi name.
 -->
-<!ELEMENT security-role-mapping (role-name, (principal-name | group-name)+)>
-<!ELEMENT role-name (#PCDATA)>
+<!ELEMENT ejb-ref (ejb-ref-name, jndi-name)>
 
-<!ELEMENT principal-name (#PCDATA)>
-<!ATTLIST principal-name class-name CDATA #IMPLIED>
-<!ELEMENT group-name (#PCDATA)>
+<!--
+This node holds all the runtime bindings of a resource env reference.
+-->
+<!ELEMENT resource-env-ref ( resource-env-ref-name, jndi-name )>
+
+<!--
+This node holds all the runtime bindings of a resource reference.
+-->
+<!ELEMENT resource-ref  (res-ref-name, jndi-name, default-resource-principal?)>
+
+<!ELEMENT default-resource-principal (name, password)>
+
+<!ELEMENT security-role-mapping (role-name, (principal-name | group-name)+)>
 
 <!--
 Information about a web service endpoint.
 -->
 <!ELEMENT webservice-endpoint ( port-component-name, endpoint-address-uri?, (login-config | message-security-binding)?, 
-        transport-guarantee?, service-qname?, tie-class?, servlet-impl-class?, debugging-enabled?)>
+        transport-guarantee?, service-qname?, tie-class?, servlet-impl-class? )>
+
+<!--
+Optional authentication configuration for an EJB web service endpoint.
+Not needed for servet web service endpoints.  Their security configuration
+is contained in the standard web application descriptor.
+-->
+<!ELEMENT login-config ( auth-method )>
+
+<!--
+The service-qname element declares the specific WSDL service
+element that is being refered to.  It is not set by the deployer.
+It is derived during deployment.
+-->
+<!ELEMENT service-qname (namespaceURI, localpart)>
+
+<!--
+Runtime information about a web service.
+wsdl-publish-location is optionally used to specify
+where the final wsdl and any dependent files should be stored.  This location
+resides on the file system from which deployment is initiated.
+-->
+<!ELEMENT webservice-description ( webservice-description-name, wsdl-publish-location? )>
+
+<!--
+Runtime settings for a web service reference.  In the simplest case,
+there is no runtime information required for a service ref.  Runtime info
+is only needed in the following cases :
+ * to define the port that should be used to resolve a container-managed port
+ * to define default Stub/Call property settings for Stub objects
+ * to define the URL of a final WSDL document to be used instead of
+the one packaged with a service-ref
+-->
+<!ELEMENT service-ref ( service-ref-name, port-info*, call-property*, wsdl-override?, service-impl-class?, service-qname? )>
+
+<!--
+Information for a port within a service-reference.
+
+Either service-endpoint-interface or wsdl-port or both
+(service-endpoint-interface and wsdl-port) should be specified.
+
+If both are specified, wsdl-port represents the
+port the container should choose for container-managed port selection.
+
+The same wsdl-port value must not appear in
+more than one port-info entry within the same service-ref.
+
+If a particular service-endpoint-interface is using container-managed port
+selection, it must not appear in more than one port-info entry
+within the same service-ref.
+
+The optional message-security-binding element is used to customize the
+port to provider binding; either by binding the port to a specific provider
+or by providing a definition of the message security requirements to be
+enforced by the provider.
+
+-->
+<!ELEMENT port-info ( service-endpoint-interface?, wsdl-port?, stub-property*, call-property*, message-security-binding? )>
+
+<!--
+Port used in port-info.
+-->
+<!ELEMENT wsdl-port ( namespaceURI, localpart )>
+
+<!--
+JAXRPC property values that should be set on a stub before it's returned to
+to the web service client.  The property names can be any properties supported
+by the JAXRPC Stub implementation. See javadoc for javax.xml.rpc.Stub
+-->
+<!ELEMENT stub-property ( name, value )>
+
+<!--
+JAXRPC property values that should be set on a Call object before it's
+returned to the web service client.  The property names can be any
+properties supported by the JAXRPC Call implementation.  See javadoc
+for javax.xml.rpc.Call
+-->
+<!ELEMENT call-property ( name, value )>
+
+<!--
+This info is used only by studio plug-in;it is NOT the part of the orgianl DTD.
+Used by plugin to store parameters needed to execute an Application client.
+-->
+<!ELEMENT plugin-data ( auto-generate-sql?, client-jar-path?, client-args? )>
+<!ELEMENT auto-generate-sql (#PCDATA)>
+<!ELEMENT client-jar-path (#PCDATA)>
+<!ELEMENT client-args (#PCDATA)>
+
+<!--
+The ejb ref name locates the name of the ejb reference in the application.
+-->
+<!ELEMENT ejb-ref-name (#PCDATA)>
+
+<!--
+The text in this node is a jndi name.
+-->
+<!ELEMENT  jndi-name (#PCDATA)>
+
+<!--
+The name of a resource env reference.
+-->
+<!ELEMENT resource-env-ref-name (#PCDATA)>
+
+<!--
+The name of a resource reference.
+-->
+<!ELEMENT res-ref-name (#PCDATA)>
+
+<!--
+This text nodes holds a name string.
+-->
+<!ELEMENT name (#PCDATA)>
+
+<!--
+This element holds password text.
+-->
+<!ELEMENT password (#PCDATA)>
+
+<!ELEMENT role-name (#PCDATA)>
+
+<!ELEMENT principal-name (#PCDATA)>
+
+<!ELEMENT group-name (#PCDATA)>
 
 <!--
 Unique name of a port component within a module
@@ -49,23 +180,15 @@ endpoint address for a web service endpoint.  For servlet endpoints, this
 value is relative to the servlet's web application context root.  In
 all cases, this value must be a fixed pattern(i.e. no "*" allowed).
 If the web service endpoint is a servlet that only implements a single
-endpoint has only one url-pattern, it is not necessary to set 
+endpoint has only one url-pattern, it is not necessary to set
 this value since the container can derive it from web.xml.
 -->
 <!ELEMENT endpoint-address-uri ( #PCDATA )>
 
 <!--
-The name of tie implementation class for a port-component.  This is
-not specified by the deployer.  It is derived during deployment.
+The namespaceURI element indicates a URI.
 -->
-<!ELEMENT tie-class (#PCDATA)>
-
-<!-- 
-The service-qname element declares the specific WSDL service
-element that is being refered to.  It is not set by the deployer.
-It is derived during deployment.
--->
-<!ELEMENT service-qname (namespaceURI, localpart)>
+<!ELEMENT namespaceURI (#PCDATA)>
 
 <!--
 The localpart element indicates the local part of a QNAME.
@@ -73,22 +196,30 @@ The localpart element indicates the local part of a QNAME.
 <!ELEMENT localpart (#PCDATA)>
 
 <!--
-The namespaceURI element indicates a URI.
+auth-method element describes the authentication method. The only supported value
+is USERNAME_PASSWORD
 -->
-<!ELEMENT namespaceURI (#PCDATA)>
-
-<!-- 
-Optional authentication configuration for an EJB web service endpoint.
-Not needed for servet web service endpoints.  Their security configuration
-is contained in the standard web application descriptor.
--->
-<!ELEMENT login-config ( auth-method, realm? )>
+<!ELEMENT auth-method ( #PCDATA )>
 
 <!--
-realm element describes the realm in which the user is authenticated. Must be 
-a valid realm that is registered in server configuration.
--->  
-<!ELEMENT realm ( #PCDATA )> 
+Specifies that the communication between client and server should
+be NONE, INTEGRAL, or CONFIDENTIAL. NONE means that the application
+does not require any transport guarantees. A value of INTEGRAL means
+that the application requires that the data sent between the client
+and server be sent in such a way that it can't be changed in transit.
+CONFIDENTIAL means that the application requires that the data be
+transmitted in a fashion that prevents other entities from observing
+the contents of the transmission. In most cases, the presence of the
+INTEGRAL or CONFIDENTIAL flag will indicate that the use of SSL is
+required.
+-->
+<!ELEMENT transport-guarantee ( #PCDATA )>
+
+<!--
+The name of tie implementation class for a port-component.  This is
+not specified by the deployer.  It is derived during deployment.
+-->
+<!ELEMENT tie-class (#PCDATA)>
 
 <!--
 Name of application-written servlet impl class contained in deployed war.
@@ -98,34 +229,74 @@ during deployment.
 <!ELEMENT servlet-impl-class (#PCDATA)>
 
 <!--
-Specify whether or not the debugging servlet should be enabled for this 
-Web Service endpoint. 
-
-Supported values : "true" to debug the endpoint
+Unique name of a webservice within a module
 -->
-<!ELEMENT debugging-enabled (#PCDATA)>
+<!ELEMENT webservice-description-name ( #PCDATA )>
 
 <!--
-Specifies that the communication between client and server should 
-be NONE, INTEGRAL, or CONFIDENTIAL. NONE means that the application 
-does not require any transport guarantees. A value of INTEGRAL means 
-that the application requires that the data sent between the client 
-and server be sent in such a way that it can't be changed in transit. 
-CONFIDENTIAL means that the application requires that the data be 
-transmitted in a fashion that prevents other entities from observing 
-the contents of the transmission. In most cases, the presence of the 
-INTEGRAL or CONFIDENTIAL flag will indicate that the use of SSL is 
-required.
+file: URL of a directory to which a web-service-description's wsdl should be
+published during deployment.  Any required files will be published to this
+directory, preserving their location relative to the module-specific
+wsdl directory(META-INF/wsdl or WEB-INF/wsdl).
+
+Example :
+
+  For an ejb.jar whose webservices.xml wsdl-file element contains
+    META-INF/wsdl/a/Foo.wsdl
+
+  <wsdl-publish-location>file:/home/user1/publish
+  </wsdl-publish-location>
+
+  The final wsdl will be stored in /home/user1/publish/a/Foo.wsdl
 -->
-<!ELEMENT transport-guarantee ( #PCDATA )>
+<!ELEMENT wsdl-publish-location ( #PCDATA )>
 
 <!--
-The message-layer entity is used to define the value of the
-auth-layer attribute of message-security-config elements.
-
-Used in: message-security-config
+Coded name (relative to java:comp/env) for a service-reference
 -->
-<!--!ENTITY % message-layer    "(SOAP)"-->
+<!ELEMENT service-ref-name ( #PCDATA )>
+
+<!--
+Fully qualified name of service endpoint interface
+-->
+<!ELEMENT service-endpoint-interface ( #PCDATA )>
+
+<!--
+This text nodes holds a value string.
+-->
+<!ELEMENT value (#PCDATA)>
+
+<!--
+This is a valid URL pointing to a final WSDL document. It is optional.
+If specified, the WSDL document at this URL will be used during
+deployment instead of the WSDL document associated with the
+service-ref in the standard deployment descriptor.
+
+Examples :
+
+  // available via HTTP
+  <wsdl-override>http://localhost:8000/myservice/myport?WSDL</wsdl-override>
+
+  // in a file
+  <wsdl-override>file:/home/user1/myfinalwsdl.wsdl</wsdl-override>
+-->
+<!ELEMENT wsdl-override ( #PCDATA )>
+
+<!--
+Name of generated service implementation class. This is not set by the
+deployer. It is derived during deployment.
+-->
+<!ELEMENT service-impl-class ( #PCDATA )>
+
+<!--
+This node holds information about a logical message destination
+-->
+<!ELEMENT message-destination (message-destination-name, jndi-name)>
+
+<!--
+This node holds the name of a logical message destination
+-->
+<!ELEMENT message-destination-name (#PCDATA)>
 
 <!--
 The message-security-binding element is used to customize the
@@ -162,7 +333,7 @@ Used in: webservice-endpoint, port-info
 -->
 <!ELEMENT message-security-binding ( message-security* )>
 <!ATTLIST message-security-binding
-          auth-layer  CDATA          #REQUIRED
+          auth-layer  CDATA #REQUIRED
           provider-id CDATA           #IMPLIED >
 
 <!--
@@ -329,15 +500,4 @@ Used in: message-security
           auth-source (sender | content) #IMPLIED
 	  auth-recipient (before-content | after-content) #IMPLIED>
 
-<!--
-message-destination-ref is used to directly bind a message destination reference
-to the jndi-name of a Queue,Topic, or some other physical destination. It should
-only be used when the corresponding message destination reference does not
-specify a message-destination-link to a logical message-destination.
--->
-<!ELEMENT message-destination-ref (message-destination-ref-name, jndi-name)>
-
-<!--
-name of a message-destination reference.
--->
-<!ELEMENT message-destination-ref-name (#PCDATA)>
+<!ELEMENT method-params (method-param*)>

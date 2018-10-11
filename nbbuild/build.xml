@@ -1127,7 +1127,11 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <selection excludes="build_info"/>
         </ducf>
     </target>
-
+    
+    <target name="-init-clean">
+        <property name="nbbuild.warn.missing.autodeps" value="verbose"/>
+    </target>
+    
   <target name="-cleanall" depends="init-module-list,init-tasks">
     <taskdef name="cleanall" classname="org.netbeans.nbbuild.CleanAll" classpath="${nbantext.jar}"/>
     <cleanall topdir=".." 
@@ -1138,7 +1142,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
               failonerror="${stop.when.clean.error}" />
   </target>
 
-  <target name="clean" depends="bootstrap" description="Clean everything possible.">
+  <target name="clean" depends="-init-clean,bootstrap" description="Clean everything possible.">
       <taskdef name="try-else" classname="org.netbeans.nbbuild.TryElse" classpath="${nbantext.jar}"/>
       <try-else first="-hg-clean" second="-real-clean"/>
   </target>

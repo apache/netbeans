@@ -60,7 +60,7 @@ Build the NetBeans Platform:
 $ ant -Dcluster.config=platform
 ```
 
-**Note:** You can also use `php`, `enterprise`, e.t.c. See the [cluster.properties](https://github.com/apache/incubator-netbeans/blob/master/nbbuild/cluster.properties) file.
+**Note:** You can also use `php`, `enterprise`, etc. See the [cluster.properties](https://github.com/apache/incubator-netbeans/blob/master/nbbuild/cluster.properties) file.
 
 ### Running NetBeans
 

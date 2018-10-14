@@ -26,8 +26,8 @@ nbexec64.res: nbexec.rc
 nbexec64.dll: include/jni.h include/jni_types.h jvmlauncher.cpp nbexec.cpp platformlauncher.cpp utilsfuncs.cpp nbexec64.res
 	x86_64-w64-mingw32-gcc -s -shared -m64 -o nbexec64.dll -I include jvmlauncher.cpp nbexec.cpp platformlauncher.cpp utilsfuncs.cpp nbexec64.res -Wl,--no-insert-timestamp -static -lstdc++ -static-libstdc++ -static-libgcc
 
-nbexec_exe64.res: nbexec_exe.rc
-	x86_64-w64-mingw32-windres -onbexec_exe64.res -Ocoff nbexec_exe.rc
+nbexec_exe64.res: nbexec_exe.rc nbexec.exe.manifest
+	x86_64-w64-mingw32-windres -onbexec_exe64.res -Ocoff -DMANIFEST_FILE=nbexec.exe.manifest nbexec_exe.rc
 
 nbexec64.exe: nbexecexe.cpp utilsfuncs.cpp nbexec_exe64.res
 	x86_64-w64-mingw32-gcc -s -DNBEXEC_DLL='"nbexec64.dll"' -DARCHITECTURE=64 -Wl,--nxcompat -Wl,--dynamicbase -Wl,--no-seh -Wl,--no-insert-timestamp nbexecexe.cpp utilsfuncs.cpp nbexec_exe64.res -onbexec64.exe -static -lstdc++ -static-libstdc++ -static-libgcc
@@ -38,8 +38,8 @@ nbexec.res: nbexec.rc
 nbexec.dll: include/jni.h include/jni_types.h jvmlauncher.cpp nbexec.cpp platformlauncher.cpp utilsfuncs.cpp nbexec.res
 	i686-w64-mingw32-gcc -s -shared -o nbexec.dll -I include jvmlauncher.cpp nbexec.cpp platformlauncher.cpp utilsfuncs.cpp nbexec.res -static -Wl,--no-insert-timestamp -lstdc++ -static-libstdc++ -static-libgcc
 
-nbexec_exe.res: nbexec_exe.rc
-	i686-w64-mingw32-windres -onbexec_exe.res -Ocoff nbexec_exe.rc
+nbexec_exe.res: nbexec_exe.rc nbexec.exe.manifest
+	i686-w64-mingw32-windres -onbexec_exe.res -Ocoff -DMANIFEST_FILE=nbexec.exe.manifest nbexec_exe.rc
 
 nbexec.exe: nbexecexe.cpp utilsfuncs.cpp nbexec_exe.res
 	i686-w64-mingw32-gcc -s -DNBEXEC_DLL='"nbexec.dll"' -DARCHITECTURE=32 -Wl,--nxcompat -Wl,--dynamicbase -Wl,--no-seh -Wl,--no-insert-timestamp nbexecexe.cpp utilsfuncs.cpp nbexec_exe.res -onbexec.exe -static -lstdc++ -static-libstdc++ -static-libgcc

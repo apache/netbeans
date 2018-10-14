@@ -24,6 +24,6 @@
 
 #include "version.rc"
 
-
-CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "nbexec.exe.manifest"
+// Value MANIFEST_FILE id taken from windres parameter -DMANIFEST_FILE
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST MANIFEST_FILE
 

@@ -21,10 +21,4 @@
 -->
 <project basedir="." default="build" name="enterprise/j2ee.dd.webservice">
   <import file="../../nbbuild/templates/projectized.xml"/>
-
-    <property name="resourcesdir" value="./src/org/netbeans/modules/j2ee/dd/impl/resources"/>
-    <target name="build-init" depends="projectized.build-init">
-        <unzip src="external/j2ee.dd.webservice-glassfish-resources.zip" dest="${resourcesdir}"/>
-        <unzip src="external/j2ee.dd.webservice-w3c-resources.zip" dest="${resourcesdir}"/>
-    </target>
 </project>

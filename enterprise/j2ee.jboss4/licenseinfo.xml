@@ -19,6 +19,15 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="enterprise/j2ee.jboss4">
-    <import file="../../nbbuild/templates/projectized.xml"/>
-</project>
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/j2ee/jboss4/resources/jboss-app_4_0.dtd</file>
+        <file>src/org/netbeans/modules/j2ee/jboss4/resources/jboss-client_4_0.dtd</file>
+        <file>src/org/netbeans/modules/j2ee/jboss4/resources/jboss-ds_1_5.dtd</file>
+        <file>src/org/netbeans/modules/j2ee/jboss4/resources/jboss-service_4_0.dtd</file>
+        <file>src/org/netbeans/modules/j2ee/jboss4/resources/jboss-web_4_0.dtd</file>
+        <file>src/org/netbeans/modules/j2ee/jboss4/resources/jboss_4_0.dtd</file>
+        <license ref="LGPL-2.1" />
+        <comment> The JBoss source code is licensed under the LGPL. </comment>
+    </fileset>
+</licenseinfo>

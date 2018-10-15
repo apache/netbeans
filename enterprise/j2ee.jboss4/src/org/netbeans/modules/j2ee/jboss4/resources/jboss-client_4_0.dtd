@@ -1,0 +1,199 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!-- The JBoss specific elements used to deploy an application client.
+This version applies to the JBoss 4.x releases and the
+j2ee-1.4 application-client_1_4.xsd.
+
+$Id$
+
+   <!DOCTYPE jboss-client PUBLIC
+       "-//JBoss//DTD Application Client 4.0//EN"
+       "http://www.jboss.org/j2ee/dtd/jboss-client_4_0.dtd">
+-->
+
+<!-- The jboss-client element is the root element.
+-->
+<!ELEMENT jboss-client (jndi-name, ejb-ref*, service-ref*, resource-ref*,
+ resource-env-ref*)>
+
+<!-- The required jndi-name element specifies the JNDI name of a deployed
+object. It is used in two different contexts:
+
+1. In jboss-client to specify the location in JNDI on the server side which
+contains the ObjectFactory which handles the java:comp/env enterprise naming
+context (ENC) on the client. The application client code maps its ENC to the
+approriate client jar deployment jboss-client/jndi-name value by specifying this
+location via the j2ee.clientName IntialContext environment property, or as a
+system property. The prototype code for creating the client side InitialContext
+is:
+
+      Properties env = new Properties();
+      env.setProperty(Context.INITIAL_CONTEXT_FACTORY,
+         "org.jnp.interfaces.NamingContextFactory");
+      env.setProperty(Context.URL_PKG_PREFIXES, "org.jboss.naming.client");
+      env.setProperty(Context.PROVIDER_URL, "jnp://somehost:1099");
+      env.setProperty("j2ee.clientName", "test-client");
+      InitialContext ctx = new InitialContext(env);
+      Context enc = (Context) ctx.lookup("java:comp/env");
+
+2. In resource-ref, resource-env-ref, ejb-ref to specify the the actual server
+side binding location of the target the client ENC binding will link to via a
+JNDI LinkRef.
+
+Used in: jboss-client, resource-ref, resource-env-ref, ejb-ref
+-->
+<!ELEMENT jndi-name (#PCDATA)>
+
+<!-- The ejb-ref element maps from the servlet ENC relative name
+of the ejb reference to the deployment environment JNDI name of
+the bean.
+Example:
+    <ejb-ref>
+        <ejb-ref-name>ejb/Bean0</ejb-ref-name>
+        <jndi-name>deployed/ejbs/Bean0</jndi-name>
+    </ejb-ref>
+-->
+<!ELEMENT ejb-ref (ejb-ref-name , jndi-name)>
+
+<!-- The ejb-ref-name element gives the ENC relative name used
+in the client code.
+
+Used in: ejb-ref
+-->
+<!ELEMENT ejb-ref-name (#PCDATA)>
+
+<!--The resource-ref element maps from the client ENC relative name
+of the resource-ref to the deployment environment JNDI name of
+the resource manager connection factory.
+Example:
+    <resource-ref>
+        <res-ref-name>jdbc/TheDataSource</res-ref-name>
+        <jndi-name>java:/DefaultDS</jndi-name>
+    </resource-ref>
+
+    <resource-ref>
+        <res-ref-name>url/XYZHome</res-ref-name>
+        <res-url>http://x.y.z</res-url>
+    </resource-ref>
+-->
+<!ELEMENT resource-ref (res-ref-name , (jndi-name | res-url))>
+
+<!-- The res-ref-name specifies the name of the application-client.xml
+res-ref-name element to which this mapping applies.
+-->
+<!ELEMENT res-ref-name (#PCDATA)>
+
+<!--The resource-env-ref element maps from the servlet ENC relative name
+of the resource-env-ref to the deployment environment JNDI name of
+the administered object resource.
+Example:
+    <resource-env-ref>
+        <resource-env-ref-name>jms/NewsTopic</resource-env-ref-name>
+        <jndi-name>topic/NewsTopic</jndi-name>
+    </resource-env-ref>
+-->
+<!ELEMENT resource-env-ref (resource-env-ref-name , jndi-name)>
+
+<!-- The resource-env-ref-name specifies the name of the application-client.xml
+resource-env-ref-name element to which this mapping applies.
+-->
+<!ELEMENT resource-env-ref-name (#PCDATA)>
+
+<!-- The res-url element value is a URL string for a resource-ref of
+res-type = java.net.URL. Using a res-url creates a binding of the URL
+instance under the java:comp/env. If you want to link to another binding
+of a URL, you can use the jndi-name to do so.
+
+// Binds the URL(http://x.y.z) under java:comp/env/jdbc/XYZHome
+<resource-ref>
+    <res-ref-name>jdbc/XYZHome</res-ref-name>
+    <res-url>http://x.y.z</res-url>
+</resource-ref>
+// Binds a link to urls/XYZHomePage under java:comp/env/jdbc/XYZHome
+<resource-ref>
+    <res-ref-name>jdbc/XYZHome</res-ref-name>
+    <res-url>urls/XYZHomePage</res-url>
+</resource-ref>
+
+   Used in: resource-ref
+-->
+<!ELEMENT res-url (#PCDATA)>
+
+<!-- The service-ref element provides jboss specific deployment values to
+the web service reference in application-client.xml.
+Example:
+    <service-ref>
+        <service-ref-name>OrganizationService</service-ref-name>
+        <wsdl-override>file:/wsdlRepository/organization-service.wsdl</wsdl-override>
+    </service-ref>
+
+    <service-ref>
+        <service-ref-name>OrganizationService</service-ref-name>
+        <config-name>Secure Client Config</config-name>
+        <config-file>META-INF/jbossws-client-config.xml</config-file>
+        <port-component-ref>
+          <service-endpoint-interface>com.dot.SEI</service-endpoint-interface>
+          <call-property>
+            <prop-name>X</prop-name>
+            <prop-value>Y</prop-value>
+          </call-property>
+        </port-component-ref>
+    </service-ref>
+-->
+<!ELEMENT service-ref (service-ref-name, config-name?, config-file?, port-component-ref*, wsdl-override?, call-property*)>
+
+<!-- The service-ref-name element gives the ENC relative name used
+in the ejb-jar.xml service-ref-name element.
+
+Used in: service-ref
+-->
+<!ELEMENT service-ref-name (#PCDATA)>
+
+<!-- The optional config-name element gives the client configuration name that must be present in
+the configuration given by element config-file. 
+	
+The default is: Standard Client
+
+Used in: service-ref
+-->
+<!ELEMENT config-name (#PCDATA)>
+
+<!-- The optional config-file element gives the to a URL or resource name for the client configuration.
+The default is: META-INF/standard-jbossws-client-config.xml
+
+Used in: service-ref
+-->
+<!ELEMENT config-file (#PCDATA)>
+
+<!-- The port-component-ref element provides additional information about
+the standard j2ee service-reference/port-component-ref. Currently this includes
+properties that should be associated with the call/stub for the port.
+
+Used in: service-ref
+-->
+<!ELEMENT port-component-ref (service-endpoint-interface?, call-property*)>
+
+<!-- The wsdl-override element the actual wsdl docuement the web service client
+uses to connect to the remote service. It overrides the value of wsdl-file in ejb-jar.xml.
+
+Used in: service-ref
+-->
+<!ELEMENT wsdl-override (#PCDATA)>
+
+<!-- Fully qualified name of service endpoint interface
+-->
+<!ELEMENT service-endpoint-interface ( #PCDATA )>
+
+<!-- Arbitrary jaxrpc property values that should be set on a Call object
+before it's returned to the web service client. The valid properties can be any
+properties supported by the jaxrpc Call implementation.
+-->
+<!ELEMENT call-property ( prop-name, prop-value )>
+
+<!-- The string value of a property name
+-->
+<!ELEMENT prop-name (#PCDATA)>
+
+<!-- The string value of a property value
+-->
+<!ELEMENT prop-value (#PCDATA)>

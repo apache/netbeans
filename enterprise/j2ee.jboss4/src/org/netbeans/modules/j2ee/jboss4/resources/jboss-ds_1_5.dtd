@@ -1,0 +1,427 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!--dtd for jboss 4.0/jca 1.5 datasource configurations (*-ds.xml), transformed
+by ConnectionFactoryTemplate.xsl
+
+DOCTYPE datasources
+    PUBLIC "-//JBoss//DTD JBOSS JCA Config 1.5//EN"
+    "http://www.jboss.org/j2ee/dtd/jboss-ds_1_5.dtd"
+
+DOCTYPE connection-factories
+    PUBLIC "-//JBoss//DTD JBOSS JCA Config 1.5//EN"
+    "http://www.jboss.org/j2ee/dtd/jboss-ds_1_5.dtd"
+
+$Id$
+-->
+
+<!--
+The datasources element is the root of the jdbc datasource configuration
+-->
+<!ELEMENT datasources (mbean | local-tx-datasource | xa-datasource | no-tx-datasource |
+ ha-local-tx-datasource | ha-xa-datasource)*>
+
+<!-- Specify a jca-jdbc non-XADatasource (local) wrapper, using no transactions
+-->
+<!ELEMENT no-tx-datasource (jndi-name , use-java-context?, connection-url , driver-class ,
+connection-property* , user-name? , password? ,
+(application-managed-security | security-domain | security-domain-and-application)? ,
+min-pool-size? , max-pool-size? , blocking-timeout-millis? , idle-timeout-minutes? ,
+new-connection-sql?, check-valid-connection-sql?, valid-connection-checker-class-name?,
+exception-sorter-class-name?, track-statements?, 
+prepared-statement-cache-size?, share-prepared-statements? , set-tx-query-timeout?, query-timeout?,
+metadata?, type-mapping?, depends*)>
+
+<!-- Specify a jca-jdbc non-XADatasource (local) wrapper, using local
+transactions
+-->
+<!ELEMENT local-tx-datasource (jndi-name , use-java-context?, connection-url , driver-class ,
+transaction-isolation? , connection-property* , user-name? , password? ,
+(application-managed-security | security-domain | security-domain-and-application)? ,
+min-pool-size? , max-pool-size? , blocking-timeout-millis? , idle-timeout-minutes? ,
+no-tx-separate-pools? , new-connection-sql? , check-valid-connection-sql? ,
+valid-connection-checker-class-name? , exception-sorter-class-name? , track-statements? ,
+prepared-statement-cache-size?, share-prepared-statements? , set-tx-query-timeout?, query-timeout?,
+metadata?, type-mapping?, depends*)>
+
+<!-- Specify a jca-jdbc XADatasource wrapper
+-->
+<!ELEMENT xa-datasource (jndi-name , use-java-context?, track-connection-by-tx , xa-datasource-class ,
+xa-datasource-property* , isSameRM-override-value? , transaction-isolation? , user-name? , password? ,
+(application-managed-security | security-domain | security-domain-and-application)? ,
+min-pool-size? , max-pool-size? , blocking-timeout-millis? , idle-timeout-minutes? ,
+no-tx-separate-pools? , xa-resource-timeout?, new-connection-sql? , check-valid-connection-sql? ,
+valid-connection-checker-class-name? , exception-sorter-class-name? , track-statements? ,
+prepared-statement-cache-size?, share-prepared-statements? , set-tx-query-timeout?, query-timeout?,
+metadata?, type-mapping?, depends*)>
+
+<!-- The JNDI name under which the DataSource wrapper will be bound. Note that
+this name is relative to the "java:/" prefix unless use-java-context is false.
+Ex:
+<jndi-name>DefaultDS</jndi-name>
+-->
+<!ELEMENT jndi-name (#PCDATA)>
+
+<!-- Setting this to false will bind the DataSource into global jndi
+Ex:
+<use-java-context>false</use-java-context>
+-->
+<!ELEMENT use-java-context (#PCDATA)>
+
+<!-- The JDBC driver connection URL string
+Ex:
+<connection-url>jdbc:hsqldb:hsql://localhost:1701</connection-url>
+-->
+<!ELEMENT connection-url (#PCDATA)>
+
+<!-- The fully qualifed name of the JDBC driver class
+   Ex:
+   <driver-class>org.hsqldb.jdbcDriver</driver-class>
+-->
+<!ELEMENT driver-class (#PCDATA)>
+
+<!-- Set java.sql.Connection transaction isolation level to use.
+The constants defined in the interface Connection are the possible transaction
+isolation levels and include:
+   TRANSACTION_READ_UNCOMMITTED
+   TRANSACTION_READ_COMMITTED
+   TRANSACTION_REPEATABLE_READ
+   TRANSACTION_SERIALIZABLE
+   TRANSACTION_NONE
+
+   Ex:
+   <transaction-isolation>TRANSACTION_SERIALIZABLE</transaction-isoation>
+-->
+<!ELEMENT transaction-isolation (#PCDATA)>
+
+<!-- Specify the default username used when creating a new connection.
+   Ex:
+   <user-name>sa</user-name>
+-->
+<!ELEMENT user-name (#PCDATA)>
+
+<!-- Specify the default password used when creating a new connection.
+   Ex:
+   <password>sa-pass</password>
+-->
+<!ELEMENT password (#PCDATA)>
+
+<!-- Indicates that app supplied parameters (such as from getConnection(user, pw))
+are used to distinguish connections in the pool.
+   Ex:
+   <application-managed-security/>
+-->
+<!ELEMENT application-managed-security EMPTY>
+
+<!-- Indicates Subject (from security domain) are used to distinguish connections in the pool. 
+The content of the security-domain is the name of the JAAS security manager that will handle
+authentication. This name correlates to the JAAS login-config.xml descriptor
+application-policy/name attribute.
+
+   Ex:
+   <security-domain>HsqlDbRealm</security-domain>
+-->
+<!ELEMENT security-domain (#PCDATA)>
+
+<!-- Indicates that either app supplied parameters (such as from
+getConnection(user, pw)) or Subject (from security domain) are used to
+distinguish connections in the pool. The content of the
+security-domain is the name of the JAAS security manager that will handle
+authentication. This name correlates to the JAAS login-config.xml descriptor
+application-policy/name attribute.
+
+   Ex:
+   <security-domain-and-application>HsqlDbRealm</security-domain-and-application>
+-->
+<!ELEMENT security-domain-and-application (#PCDATA)>
+
+<!-- Whether to use separete pools for connection retrieved in a transaction
+     and those retieved outside a transaction
+e.g.
+     <no-tx-separate-pools/>
+-->
+<!ELEMENT no-tx-separate-pools EMPTY>
+
+<!-- The min-pool-size element indicates the minimum number of connections a
+pool should hold. These are not created until a Subject is known from a
+request for a connection. This default to 0.
+
+   Ex:
+   <min-pool-size>1</min-pool-size>
+-->
+<!ELEMENT min-pool-size (#PCDATA)>
+
+<!-- The max-pool-size element indicates the maximum number of connections for a
+pool. No more than MaxSize connections will be created in each sub-pool. This
+defaults to 20.
+-->
+<!ELEMENT max-pool-size (#PCDATA)>
+
+<!-- The blocking-timeout-millis element indicates the maximum time in
+milliseconds to block while waiting for a connection before throwing an
+exception. Note that this blocks only while waiting for a permit for a
+connection, and will never throw an exception if creating a new connection
+takes an inordinately long time. The default is 30000 (30 seconds).
+-->
+<!ELEMENT blocking-timeout-millis (#PCDATA)>
+
+<!-- The idle-timeout-minutes elements indicates the maximum time in
+minutes a connection may be idle before being closed.  The actual maximum time
+depends also on the IdleRemover scan time, which is 1/2 the smallest
+idle-timeout-minutes of any pool.
+-->
+<!ELEMENT idle-timeout-minutes (#PCDATA)>
+
+<!-- An element to specify that all intermediate end(suspend) and
+start(resume) calls.  Also, all work on one tx will go through one
+connection.
+A side effect of this (currently at least) is that a connection will only
+be usable by one tx until the tx commits.
+   Ex:
+   <track-connection-by-tx/>
+-->
+<!ELEMENT track-connection-by-tx EMPTY>
+
+<!-- The fully qualifed name of the javax.sql.XADataSource implementation class.
+   Ex:
+   <xa-datasource-class>com.informix.jdbcx.IfxXADataSource</xa-datasource-class>
+-->
+<!ELEMENT xa-datasource-class (#PCDATA)>
+
+<!-- Specify a property to assign to the XADataSource implementation class.
+Each property is identified by the name attribute and the property value is
+given by the xa-datasource-property element content. The property is mapped
+onto the XADataSource implementation by looking for a JavaBeans style
+getter method for the property name. If found, the value of the property is
+set using the JavaBeans setter with the element text translated to the true
+property type using the java.beans.PropertyEditor for the type.
+
+   Ex:
+    <xa-datasource-property name="IfxWAITTIME">10</xa-datasource-property>
+    <xa-datasource-property name="IfxIFXHOST">myhost.mydomain.com</xa-datasource-property>
+    <xa-datasource-property name="PortNumber">1557</xa-datasource-property>
+    <xa-datasource-property name="DatabaseName">mydb</xa-datasource-property>
+    <xa-datasource-property name="ServerName">myserver</xa-datasource-property>
+-->
+<!ELEMENT xa-datasource-property (#PCDATA)>
+
+<!-- The xa-datasource-property name attribute specifies the name of the
+XADataSource attribute the xa-datasource-property element content provides
+the value of.
+-->
+<!ATTLIST xa-datasource-property name CDATA  #REQUIRED>
+
+<!-- The isSameRM-override-value element allows one to unconditionally set
+whether the javax.transaction.xa.XAResource.isSameRM(XAResource) returns
+true or false.
+
+Ex:
+<isSameRM-override-value>true</isSameRM-override-value>
+-->
+<!ELEMENT isSameRM-override-value (#PCDATA)>
+
+<!-- The connection-property element allows you to pass in arbitrary connection
+properties to the Driver.connect(url, props) method. Each connection-property
+specifies a string name/value pair with the property name coming from the
+name attribute and the value coming from the element content.
+
+   Ex:
+   <connection-property name="char.encoding">UTF-8</connection-property>
+-->
+<!ELEMENT connection-property (#PCDATA)>
+
+<!-- The connection-property name attribute gives the name of the connection
+property.
+-->
+<!ATTLIST connection-property name CDATA  #REQUIRED>
+
+<!-- Specify an SQL statement to execute whenever a connection is added to
+the connection pool.
+-->
+<!ELEMENT new-connection-sql (#PCDATA)>
+
+<!-- Specify an SQL statement to check validity of a pool connection. This
+may be called when managed connection is taken from pool for use.
+-->
+<!ELEMENT check-valid-connection-sql (#PCDATA)>
+
+<!-- An org.jboss.resource.adapter.jdbc.ValidConnectionChecker that provides
+a SQLException isValidConnection(Connection e) method to validate is a connection
+is valid. An exception means the connection is destroyed.
+This overrides the check-valid-connection-sql when present.
+
+Ex:
+<exception-sorter-class-name>
+   org.jboss.resource.adapter.jdbc.vendor.OracleValidConnectionChecker
+</exception-sorter-class-name>
+-->
+<!ELEMENT valid-connection-checker-class-name (#PCDATA)>
+
+<!-- An org.jboss.resource.adapter.jdbc.ExceptionSorter that provides
+a boolean isExceptionFatal(SQLException e) method to validate is an exception
+should be broadcast to all javax.resource.spi.ConnectionEventListener as
+a connectionErrorOccurred message.
+
+Ex:
+<exception-sorter-class-name>
+   org.jboss.resource.adapter.jdbc.vendor.OracleExceptionSorter
+</exception-sorter-class-name>
+<exception-sorter-class-name>
+   org.jboss.resource.adapter.jdbc.vendor.SybaseExceptionSorter
+</exception-sorter-class-name>
+-->
+<!ELEMENT exception-sorter-class-name (#PCDATA)>
+
+<!-- Whether to check for unclosed statements when a
+     connection is returned to the pool and result sets are
+     closed when a statement is closed/return to the prepared
+     statement cache.
+     valid values are:
+     false - do not track statements and results
+     true - track statements and result sets and warn when they are not closed
+     nowarn - track statements but do no warn about them being unclosed (the default)
+     e.g.
+     <track-statements>nowarn</track-statements>
+-->
+<!ELEMENT track-statements EMPTY>
+
+<!-- The number of prepared statements per connection in an LRU cache
+-->
+<!ELEMENT prepared-statement-cache-size (#PCDATA)>
+
+<!-- whether to share prepare statements, i.e. whether asking for same
+     statement twice without closing uses the same underlying prepared statement.
+
+     The default is false.
+     e.g.
+     <share-prepared-statements/>
+-->
+<!ELEMENT share-prepared-statements EMPTY>
+
+<!-- whether to set the query timeout based on the time remaining until transaction timeout,
+     any configured query timeout will be used if there is no transaction.
+
+     The default is false.
+     e.g.
+     <set-tx-query-timeout/>
+-->
+<!ELEMENT set-tx-query-timeout EMPTY>
+
+<!-- Any configured query timeout in seconds
+
+     The default is no timeout
+     e.g. 5 minutes
+     <query-timeout>300</query-timeout>
+-->
+<!ELEMENT query-timeout (#PCDATA)>
+
+<!-- The depends element specifies the JMX ObjectName string of a service
+that the connection manager services depend on.
+
+   Ex:
+   <depends>jboss:service=Hypersonic</depends>
+-->
+<!ELEMENT depends (#PCDATA)>
+
+<!-- The connection-factories element is the root of the generic jca adaptor section
+-->
+<!ELEMENT connection-factories (mbean | tx-connection-factory | no-tx-connection-factory)*>
+
+<!ELEMENT mbean ANY>
+
+<!-- The tx-connection-factory element is used to configure generic resource
+adapters supporting transactions
+-->
+<!ELEMENT tx-connection-factory (jndi-name , (local-transaction | xa-transaction) ,
+track-connection-by-tx? , rar-name?, connection-definition?, config-property* ,
+(application-managed-security | security-domain | security-domain-and-application)? ,
+min-pool-size? , max-pool-size? , blocking-timeout-millis? , idle-timeout-minutes? ,
+no-tx-separate-pools?, xa-resource-timeout?,
+metadata?, type-mapping?, depends*)>
+
+<!-- The no-tx-connection-factory element is used to configure generic resource
+adapters that do not support transactions
+-->
+<!ELEMENT no-tx-connection-factory (jndi-name , rar-name?, connection-definition? , config-property* ,
+(application-managed-security | security-domain | security-domain-and-application)? ,
+min-pool-size? , max-pool-size? , blocking-timeout-millis? , idle-timeout-minutes? ,
+metadata?, type-mapping?, depends*)>
+
+<!-- The rar deployment to associate with the connection manager mbean.
+e.g. jms-ra.rar or myapplication.ear#my.rar for nested rars
+-->
+<!ELEMENT rar-name (#PCDATA)>
+
+<!-- The connection definition inside the rar deployment uniquely identified by the
+connection factory interface, e.g. javax.sql.DataSource
+-->
+<!ELEMENT connection-definition (#PCDATA)>
+
+<!-- Passed to XAResource.setTransactionTimeout()
+
+     Default is zero which does not invoke the setter
+     e.g. 5 minutes
+     <xa-resource-timeout>300</xa-resource-timeout>
+-->
+<!ELEMENT xa-resource-timeout (#PCDATA)>
+
+<!-- The xa-transaction element is used to mark that the tx-connection-factory
+supports XA transactions.
+-->
+<!ELEMENT xa-transaction EMPTY>
+
+<!-- The local-transaction element is used to mark that the tx-connection-factory
+supports local transactions.
+-->
+<!ELEMENT local-transaction EMPTY>
+
+<!-- The config-property specifies a mannaged connection factory property.
+-->
+<!ELEMENT config-property (#PCDATA)>
+
+<!-- The config-property name attribute gives the name of the connection
+factory property.
+-->
+<!ATTLIST config-property name CDATA  #REQUIRED>
+
+<!-- The config-property type attribute gives the name of the connection
+factory property.
+-->
+<!ATTLIST config-property type CDATA  #REQUIRED>
+
+<!-- The type mapping from conf/standardjboss.xml -->
+<!ELEMENT type-mapping (#PCDATA)>
+
+<!-- For backwards compatibility use type-mapping -->
+<!ELEMENT metadata (type-mapping)>
+
+<!-- EXPERIMENTAL: this is a copy of local-tx-datasource + url-delimeter
+-->
+<!ELEMENT ha-local-tx-datasource (jndi-name, use-java-context?, connection-url, url-delimeter,
+driver-class, transaction-isolation? , connection-property* , user-name? , password?,
+(application-managed-security | security-domain | security-domain-and-application)? ,
+min-pool-size? , max-pool-size? , blocking-timeout-millis? , idle-timeout-minutes? ,
+no-tx-separate-pools? , new-connection-sql? , check-valid-connection-sql? ,
+valid-connection-checker-class-name? , exception-sorter-class-name? , track-statements? ,
+prepared-statement-cache-size?, share-prepared-statements? , set-tx-query-timeout?, query-timeout?,
+metadata?, type-mapping?, depends*)>
+
+<!-- Specify a jca-jdbc XADatasource wrapper
+-->
+<!ELEMENT ha-xa-datasource (jndi-name , use-java-context?, track-connection-by-tx , xa-datasource-class ,
+xa-datasource-property* , url-property, url-delimeter, isSameRM-override-value? , transaction-isolation? ,
+user-name? , password? ,
+(application-managed-security | security-domain | security-domain-and-application)? ,
+min-pool-size? , max-pool-size? , blocking-timeout-millis? , idle-timeout-minutes? ,
+no-tx-separate-pools? , xa-resource-timeout? ,
+new-connection-sql? , check-valid-connection-sql? ,
+valid-connection-checker-class-name? , exception-sorter-class-name? , track-statements? ,
+prepared-statement-cache-size?, share-prepared-statements? , set-tx-query-timeout?, query-timeout?,
+type-mapping?, depends*)>
+
+<!-- Specifies the delimeter for URLs in connection-url for ha datasources
+-->
+<!ELEMENT url-delimeter (#PCDATA)>
+
+<!-- For HA XA datasource specifies the name of an xa-datasource-property that contains a list of URLs
+-->
+<!ELEMENT url-property (#PCDATA)>

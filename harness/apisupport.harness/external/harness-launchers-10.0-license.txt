@@ -1,8 +1,9 @@
-Name: NetBeans Application Launchers
-Version: 9.0
+Name: NetBeans Platform Applications Launchers
+Description: Windows Launchers for the NetBeans Platform Applications
+Version: 10.0
 License: Apache-2.0
+Source: https://netbeans.org/
 Origin: NetBeans
-Comment: Windows Launchers for the NetBeans Applications
 
                                  Apache License
                            Version 2.0, January 2004

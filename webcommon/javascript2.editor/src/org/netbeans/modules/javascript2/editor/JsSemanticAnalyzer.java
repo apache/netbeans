@@ -20,9 +20,11 @@ package org.netbeans.modules.javascript2.editor;
 
 import com.oracle.js.parser.TokenType;
 import com.oracle.js.parser.ir.ClassNode;
+import com.oracle.js.parser.ir.ExportNode;
 import com.oracle.js.parser.ir.ExportSpecifierNode;
 import com.oracle.js.parser.ir.FromNode;
 import com.oracle.js.parser.ir.FunctionNode;
+import com.oracle.js.parser.ir.ImportNode;
 import com.oracle.js.parser.ir.ImportSpecifierNode;
 import com.oracle.js.parser.ir.LexicalContext;
 import com.oracle.js.parser.ir.NameSpaceImportNode;
@@ -294,8 +296,7 @@ public class JsSemanticAnalyzer extends SemanticAnalyzer<JsParserResult> {
             @Override
             public boolean enterFunctionNode(FunctionNode functionNode) {
                 if (functionNode.isModule()) {
-                    functionNode.visitImports(this);
-                    functionNode.visitExports(this);
+                    Utils.visitImportsExports(functionNode, this, true);
                 }
 
                 if (functionNode.isAsync() && !functionNode.isMethod()) {

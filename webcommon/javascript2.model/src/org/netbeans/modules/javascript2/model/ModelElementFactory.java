@@ -25,6 +25,7 @@ import com.oracle.js.parser.ir.LiteralNode;
 import com.oracle.js.parser.ir.ObjectNode;
 import com.oracle.js.parser.ir.PropertyNode;
 import com.oracle.js.parser.Token;
+import com.oracle.js.parser.ir.Expression;
 import java.util.ArrayList;
 import java.util.List;
 import org.netbeans.api.annotations.common.CheckForNull;
@@ -135,6 +136,14 @@ class ModelElementFactory {
             virtual.addOccurrence(name.getOffsetRange());
         }
         return virtual;
+    }
+
+    @CheckForNull
+    static Identifier create(ParserResult parserResult, Expression node) {
+        if (node instanceof IdentNode) {
+            return create(parserResult, (IdentNode)node);
+        }
+        return null;
     }
 
     @CheckForNull

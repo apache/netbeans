@@ -18,6 +18,10 @@
  */
 package org.netbeans.modules.javascript2.editor;
 
+import com.oracle.js.parser.ir.ExportNode;
+import com.oracle.js.parser.ir.FunctionNode;
+import com.oracle.js.parser.ir.ImportNode;
+import com.oracle.js.parser.ir.visitor.NodeVisitor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -201,5 +205,21 @@ public class Utils {
             assert root != null;
             return new Request(root);
         }
+    }
+    
+    public static boolean visitImportsExports(FunctionNode functionNode, NodeVisitor visitor, boolean processImports) {
+        if (functionNode == null || !functionNode.isModule()) {
+            return false;
+        }
+        // visit all imports and exports
+        List<ImportNode> imports = functionNode.getModule().getImports();
+        for (ImportNode moduleImport : imports) {
+            moduleImport.accept(visitor);
+        }
+        List<ExportNode> exports = functionNode.getModule().getExports();
+        for (ExportNode moduleExport : exports) {
+            moduleExport.accept(visitor);
+        }
+        return true;
     }
 }

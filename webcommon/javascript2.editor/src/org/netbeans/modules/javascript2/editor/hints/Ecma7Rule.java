@@ -26,6 +26,7 @@ import com.oracle.js.parser.ir.ExportNode;
 import com.oracle.js.parser.ir.Expression;
 import com.oracle.js.parser.ir.FunctionNode;
 import com.oracle.js.parser.ir.IdentNode;
+import com.oracle.js.parser.ir.Node;
 import com.oracle.js.parser.ir.PropertyNode;
 import com.oracle.js.parser.ir.UnaryNode;
 import com.oracle.js.parser.ir.VarNode;
@@ -42,6 +43,7 @@ import org.netbeans.modules.csl.api.HintsProvider;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.javascript2.editor.JsPreferences;
 import org.netbeans.modules.javascript2.editor.JsVersion;
+import org.netbeans.modules.javascript2.editor.Utils;
 import org.netbeans.modules.javascript2.lexer.api.JsTokenId;
 import org.netbeans.modules.javascript2.lexer.api.LexUtilities;
 import org.netbeans.modules.javascript2.model.api.ModelUtils;
@@ -114,9 +116,7 @@ public class Ecma7Rule extends EcmaLevelRule {
 
         @Override
         public boolean enterFunctionNode(FunctionNode functionNode) {
-            if (functionNode.isModule()) {
-                functionNode.visitExports(this);
-            }
+            Utils.visitImportsExports(functionNode, this, false);
             if (functionNode.isAsync()) {
                 addHint(context, hints, new OffsetRange(Token.descPosition(functionNode.getFirstToken()), functionNode.getStart()));
             }
@@ -145,20 +145,27 @@ public class Ecma7Rule extends EcmaLevelRule {
             }
             return super.enterVarNode(varNode);
         }
-
-        @Override
-        public boolean enterClassNode(ClassNode classNode) {
+        
+        private void addDecoratorHints(Node decoratedNode) {
+            /*
             for (Expression decorator : classNode.getDecorators()) {
                 addHint(context, hints, new OffsetRange(decorator.getStart(), decorator.getFinish()));
             }
+            for (Expression decorator : propertyNode.getDecorators()) {
+                addHint(context, hints, new OffsetRange(decorator.getStart(), decorator.getFinish()));
+            }
+            */
+        }
+
+        @Override
+        public boolean enterClassNode(ClassNode classNode) {
+            addDecoratorHints(classNode);
             return super.enterClassNode(classNode);
         }
 
         @Override
         public boolean enterPropertyNode(PropertyNode propertyNode) {
-            for (Expression decorator : propertyNode.getDecorators()) {
-                addHint(context, hints, new OffsetRange(decorator.getStart(), decorator.getFinish()));
-            }
+            addDecoratorHints(propertyNode);
             Expression key = propertyNode.getKey();
             if (key.isTokenType(TokenType.SPREAD_OBJECT)) {
                 long token = key.getToken();

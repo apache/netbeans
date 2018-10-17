@@ -44,6 +44,7 @@ import static com.oracle.js.parser.TokenType.NEW;
 import static com.oracle.js.parser.TokenType.NOT;
 import static com.oracle.js.parser.TokenType.SUB;
 import com.oracle.js.parser.ir.JoinPredecessorExpression;
+import com.oracle.js.parser.ir.LiteralNode.PrimitiveLiteralNode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -319,8 +320,8 @@ public class SemiTypeResolverVisitor extends PathNodeVisitor {
             exp.add(ST_ARR);
         } else {
             boolean propertyAccess = false;
-            if (indexNode.getIndex() instanceof LiteralNode) {
-                LiteralNode lNode = (LiteralNode)indexNode.getIndex();
+            if (indexNode.getIndex() instanceof LiteralNode.PrimitiveLiteralNode) {
+                PrimitiveLiteralNode lNode = (PrimitiveLiteralNode)indexNode.getIndex();
                 if (lNode.isString()) {
                     exp.add(ST_PRO);
                     exp.add(lNode.getPropertyName());

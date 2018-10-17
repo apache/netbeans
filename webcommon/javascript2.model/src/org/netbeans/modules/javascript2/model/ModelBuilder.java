@@ -19,7 +19,10 @@
 package org.netbeans.modules.javascript2.model;
 
 import com.oracle.js.parser.ir.FunctionNode;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
+import java.util.function.Function;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.javascript2.model.api.JsObject;
 import org.netbeans.modules.javascript2.model.api.JsWith;
@@ -37,14 +40,17 @@ public final class ModelBuilder {
     private int anonymObjectCount;
     private int withObjectCount;
     private JsWith currentWith;
+    private final Function<FunctionNode, String>  anonFunctionNameGenerator;
+    private final Map<FunctionNode, String> functionScopePrefixes = new HashMap<>();
     
     public static final String WITH_OBJECT_NAME_START = "With$"; //NOI18N
     public static final String ANONYMOUS_OBJECT_NAME_START = "Anonym$"; //NOI18N
     
-    ModelBuilder(JsFunctionImpl globalObject) {
+    ModelBuilder(JsFunctionImpl globalObject, Function<FunctionNode, String> anonFunctionNameGenerator) {
         this.globalObject = globalObject;
         this.stack = new Stack<JsObjectImpl>();
         this.functionStack = new Stack<DeclarationScopeImpl>();
+        this.anonFunctionNameGenerator = anonFunctionNameGenerator;
         anonymObjectCount = 0;
         withObjectCount = 0;
         setCurrentObject(globalObject);
@@ -127,14 +133,50 @@ public final class ModelBuilder {
         return currentWith;
     }
     
+    public void bindFunctionOuterScope(FunctionNode fn, String prefix) {
+        functionScopePrefixes.put(fn, prefix);
+    }
+    
     public String getFunctionName(FunctionNode node) {
-        if (node.isAnonymous() ) {
-            return globalObject.getName() + node.getName().replace(':', '#');
-        } else {
-            if (node.isNamedFunctionExpression()) {
-                return node.getName();
+        return getFunctionName2(node, true);
+    }
+        
+    /**
+     * Returns a proper name for the function. May optionally prepend global object
+     * prefix and transform name to an unique string. Global object is only prepended
+     * for anonymous functions. Globalized names also use '#' in place of ':' characters
+     * in the function name.
+     * 
+     * Named functions and named function expressions have structured names; names
+     * of enclosing functions are prepended.
+     * 
+     * @param node the function node.
+     * @param global if true, prepends global object name for anonymous
+     * @return 
+     */
+    public String getFunctionName2(FunctionNode node, boolean global) {
+        String fn = node.getName();
+        
+        if (node.isAnonymous()) {
+            if (fn.startsWith(":") && anonFunctionNameGenerator != null) {
+                fn = anonFunctionNameGenerator.apply(node);
             }
-            return node.getIdent().getName();
+        } else {
+            if (!node.isNamedFunctionExpression()) {
+                // in this combination do not return any hierarchical id, but just the name.
+                return node.getIdent().getName();
+            }
         }
+        
+        String prefix = functionScopePrefixes.get(node);
+        
+        if (prefix != null) {
+            fn = prefix + '#' + fn;
+        }
+        
+        if (node.isAnonymous() && global) {
+            return globalObject.getName() + fn.replace(':', '#');
+        }
+        return fn;
     }
 }

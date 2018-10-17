@@ -76,7 +76,7 @@ public final class JsonModelResolver extends JsonBaseVisitor<Boolean> implements
         this.modelBuilder = new ModelBuilder(JsFunctionImpl.createGlobal(
                 fileObject,
                 Integer.MAX_VALUE,
-                parserResult.getSnapshot().getMimeType()));
+                parserResult.getSnapshot().getMimeType()), null);
     }
 
     @Override

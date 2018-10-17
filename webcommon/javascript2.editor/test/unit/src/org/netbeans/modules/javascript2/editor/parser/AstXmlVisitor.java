@@ -39,13 +39,17 @@ import com.oracle.js.parser.ir.visitor.NodeVisitor;
 import com.oracle.js.parser.Token;
 import com.oracle.js.parser.ir.JsxAttributeNode;
 import com.oracle.js.parser.ir.JsxElementNode;
+import com.oracle.js.parser.ir.visitor.JsxNodeVisitor;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.netbeans.modules.javascript2.editor.Utils;
 
 /**
  *
  * @author Petr Pisl
  */
-public class AstXmlVisitor extends NodeVisitor {
+public class AstXmlVisitor extends NodeVisitor implements JsxNodeVisitor {
 
     private StringBuilder sb;
     private int indent;
@@ -271,6 +275,13 @@ public class AstXmlVisitor extends NodeVisitor {
         return false;
     }
     
+    private void processDecoratorsWithComments(Node decoratedNode, String label) {
+        /*
+        processWithComment(node.getDecorators(), "ClassNode Decorators");
+        processWithComment(node.getDecorators(), "PropertyNode Decorators");
+        */
+    }
+    
     @Override
     public boolean enterClassNode(ClassNode node) {
         createOpenTag(node, 
@@ -280,7 +291,7 @@ public class AstXmlVisitor extends NodeVisitor {
         processWithComment(node.getClassHeritage(), "ClassNode Heritage");
         processWithComment(node.getConstructor(), "ClassNode Constructor");
         processWithComment(node.getClassElements(), "ClassNode Elements");
-        processWithComment(node.getDecorators(), "ClassNode Decorators");
+        processDecoratorsWithComments(node, "ClassNode Decorators");
         createCloseTag(node);
         return false;
     }
@@ -300,7 +311,7 @@ public class AstXmlVisitor extends NodeVisitor {
         return false;
     }
     
-    
+    private FunctionNode functionForParams;
 
     @Override
     public boolean enterFunctionNode(FunctionNode node) {
@@ -308,10 +319,10 @@ public class AstXmlVisitor extends NodeVisitor {
                 createTagAttribute("name", node.getName()),
                 createTagAttribute("kind", node.getKind().name()));
         
-        processAttribute(node.hasDeclaredFunctions(), "hasDeclaredFunctions");
+        processAttribute(node.getFlag(FunctionNode.HAS_FUNCTION_DECLARATIONS), "hasDeclaredFunctions");
 //        processAttribute(node.hasScopeBlock(), "hasScopeBlock");
 //        processAttribute(node.inDynamicContext(), "isDynamicContext");
-        processAttribute(node.isAnonymous(), "isAnonymous");
+        processAttribute(!node.isProgram() && node.isAnonymous(), "isAnonymous");
         processAttribute(node.isClassConstructor(), "isClassConstructor");
         processAttribute(node.isDeclared(), "isDeclared");
         processAttribute(node.isMethod(), "isMethod");
@@ -322,14 +333,25 @@ public class AstXmlVisitor extends NodeVisitor {
         processAttribute(node.isAsync(), "isAsync");
         processAttribute(node);
 
-        if (node.isModule()) {
-            node.visitImports(this);
-            node.visitExports(this);
-        }
+        Utils.visitImportsExports(node, this, true);
+        functionForParams = node;
         processWithComment(node.getParameters(), "FunctionNode Parameters");
+        functionForParams = null;
         processWithComment(node.getBody(), "FunctionNode Body");
         createCloseTag(node);
         return false;
+    }
+
+    private final Map<String, String> canonicalNames = new HashMap<>();
+    
+//    private List<IdentNode> getParameters(FunctionNode node) {
+//        IdentNode ident = createIdentNode(paramToken, pattern.getFinish(), String.format("arguments[%d]", parameters.size())).setIsDestructuredParameter();        
+//    }
+
+    protected IdentNode createIdentNode(final long identToken, final int identFinish, final String name) {
+        final String existingName = canonicalNames.putIfAbsent(name, name);
+        final String canonicalName = existingName != null ? existingName : name;
+        return new IdentNode(identToken, identFinish, canonicalName);
     }
 
     @Override
@@ -341,15 +363,16 @@ public class AstXmlVisitor extends NodeVisitor {
         }
 
         processAttribute(node.isDeclaredHere(), "isDeclaredHere");
-        processAttribute(node.isDefaultParameter(), "isDefaultParameter");
-        processAttribute(node.isDestructuredParameter(), "isDestructuredParameter");
+//        processAttribute(node.isDefaultParameter(), "isDefaultParameter");
+//        processAttribute(node.isDestructuredParameter(), "isDestructuredParameter");
         processAttribute(node.isDirectSuper(), "isDirectSuppert");
         processAttribute(node.isFunction(), "isFunction");
         processAttribute(node.isFutureStrictName(), "isFutureStrictName");
         processAttribute(node.isInitializedHere(), "isInitializedHere");
         processAttribute(node.isInternal(), "isInternal");
         processAttribute(node.isPropertyName(), "isPropertyName");
-        processAttribute(node.isProtoPropertyName(), "isProtoPropertyName");
+        // proto property is a flag on property
+//        processAttribute(node.isProtoPropertyName(), "isProtoPropertyName");
         processAttribute(node.isRestParameter(), "isRestParameter");
         processAttribute(node);
         createCloseTag(node);
@@ -368,7 +391,7 @@ public class AstXmlVisitor extends NodeVisitor {
         return false;
     }
 
-    @Override
+    @Override 
     public boolean enterJsxElementNode(JsxElementNode node) {
         createOpenTag(node, createTagAttribute("name", node.getName()));
         
@@ -378,7 +401,7 @@ public class AstXmlVisitor extends NodeVisitor {
         return false;
     }
 
-    @Override
+    @Override 
     public boolean enterJsxAttributeNode(JsxAttributeNode node) {
         createOpenTag(node, createTagAttribute("name", node.getName()));
         
@@ -421,7 +444,7 @@ public class AstXmlVisitor extends NodeVisitor {
         processWithComment(node.getValue(), "PropertyNode Value");
         processWithComment(node.getGetter(), "PropertyNode Getter");
         processWithComment(node.getSetter(), "PropertyNode Setter");
-        processWithComment(node.getDecorators(), "PropertyNode Decorators");
+        processDecoratorsWithComments(node, "PropertyNode Decorators");
         createCloseTag(node);
         return false;
     }

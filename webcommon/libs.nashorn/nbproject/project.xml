@@ -33,7 +33,7 @@
 -->
             <class-path-extension>
                 <runtime-relative-path>ext/com.oracle.js.parser.jar</runtime-relative-path>
-                <binary-origin>external/com.oracle.js.parser-ba7a8bc42268.jar</binary-origin>
+                <binary-origin>external/com.oracle.js.parser-63fd0972cb.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

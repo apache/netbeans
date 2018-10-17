@@ -52,6 +52,7 @@ import com.oracle.js.parser.ir.ExpressionStatement;
 import com.oracle.js.parser.ir.ImportNode;
 import com.oracle.js.parser.ir.JsxAttributeNode;
 import com.oracle.js.parser.ir.JsxElementNode;
+import com.oracle.js.parser.ir.visitor.JsxNodeVisitor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -65,7 +66,7 @@ import org.netbeans.modules.javascript2.lexer.api.JsTokenId;
  *
  * @author Petr Hejl
  */
-public class JsFormatVisitor extends NodeVisitor {
+public class JsFormatVisitor extends NodeVisitor implements JsxNodeVisitor {
 
     private static final Set<TokenType> UNARY_TYPES = EnumSet.noneOf(TokenType.class);
 
@@ -185,7 +186,7 @@ public class JsFormatVisitor extends NodeVisitor {
                 }
             }
         }
-        return super.enterJsxElementNode(jsxElementNode);
+        return JsxNodeVisitor.super.enterJsxElementNode(jsxElementNode);
     }
 
     @Override
@@ -208,7 +209,7 @@ public class JsFormatVisitor extends NodeVisitor {
                 }
             }
         }
-        return super.enterJsxAttributeNode(jsxAttributeNode);
+        return JsxNodeVisitor.super.enterJsxAttributeNode(jsxAttributeNode);
     }
 
     @Override
@@ -385,10 +386,7 @@ public class JsFormatVisitor extends NodeVisitor {
 
     @Override
     public boolean enterFunctionNode(FunctionNode functionNode) {
-        if (functionNode.isModule()) {
-            functionNode.visitImports(this);
-            functionNode.visitExports(this);
-        }
+        org.netbeans.modules.javascript2.editor.Utils.visitImportsExports(functionNode, this, true);
 
 //        if (functionNode.isClassConstructor() && !"constructor".equals(functionNode.getIdent().getName())) { // NOI18N
 //            // generated constructor
@@ -626,7 +624,7 @@ public class JsFormatVisitor extends NodeVisitor {
 
     @Override
     public boolean enterClassNode(ClassNode classNode) {
-        handleDecorators(classNode.getDecorators());
+        handleDecorators(classNode);
         
         Expression heritage = classNode.getClassHeritage();
         if (heritage != null) {
@@ -659,13 +657,13 @@ public class JsFormatVisitor extends NodeVisitor {
             // generated default constructor has range equal to class
             if (constructor.getStart() != classNode.getStart()
                     || constructor.getFinish() != classNode.getFinish()) {
-                handleDecorators(constructor.getDecorators());
+                handleDecorators(constructor);
                 handleClassElement(constructor, getStart(constructor));
             }
         }
         for (Node property : classNode.getClassElements()) {
             PropertyNode propertyNode = (PropertyNode) property;
-            handleDecorators(propertyNode.getDecorators());
+            handleDecorators(propertyNode);
             handleClassElement(propertyNode, getStart(propertyNode));
         }
 
@@ -1236,6 +1234,14 @@ public class JsFormatVisitor extends NodeVisitor {
         // mark property end
         markClassElementFinish(getStart(property), getFinish(property), start,
                 true, propertyNode.getValue());
+    }
+    
+    private void handleDecorators(Node decoratedNode) {
+        /*
+        handleDecorators(classNode.getDecorators());
+        handleDecorators(constructor.getDecorators());
+        handleDecorators(propertyNode.getDecorators());
+        */
     }
     
     private void handleDecorators(List<Expression> decorators) {

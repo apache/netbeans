@@ -20,13 +20,22 @@ package org.netbeans.modules.javascript2.editor.hints;
 
 import com.oracle.js.parser.Token;
 import com.oracle.js.parser.TokenType;
+import com.oracle.js.parser.ir.BinaryNode;
+import com.oracle.js.parser.ir.Block;
 import com.oracle.js.parser.ir.ClassNode;
+import com.oracle.js.parser.ir.Expression;
+import com.oracle.js.parser.ir.ExpressionStatement;
 import com.oracle.js.parser.ir.FunctionNode;
 import com.oracle.js.parser.ir.IdentNode;
+import com.oracle.js.parser.ir.JoinPredecessorExpression;
 import com.oracle.js.parser.ir.LiteralNode;
+import com.oracle.js.parser.ir.ParameterNode;
 import com.oracle.js.parser.ir.PropertyNode;
+import com.oracle.js.parser.ir.Statement;
+import com.oracle.js.parser.ir.TernaryNode;
 import com.oracle.js.parser.ir.UnaryNode;
 import com.oracle.js.parser.ir.VarNode;
+import com.sun.javafx.fxml.expression.BinaryExpression;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -131,6 +140,52 @@ public class Ecma6Rule extends EcmaLevelRule {
                 context.getJsParserResult().getRoot().accept(this);
             }
         }
+        
+        private boolean isDefaultParameter(FunctionNode functionNode, IdentNode param) {
+            Block body = functionNode.getBody();
+            if (body == null) {
+                return false;
+            }
+            for (Statement st : body.getStatements()) {
+                if (st instanceof ExpressionStatement) {
+                    continue;
+                }
+                if (!(st instanceof VarNode)) {
+                    return false;
+                }
+                VarNode vn = (VarNode)st;
+                if (vn.getName() != param) {
+                    continue;
+                }
+                
+                
+                // structural check, see Parser.addDefaultParameter
+                if (!(vn.getInit() instanceof TernaryNode)) {
+                    return false;
+                }
+                TernaryNode tn = (TernaryNode)vn.getInit();
+                if (!(tn.getTest() instanceof BinaryNode)) {
+                    return false;
+                }
+                BinaryNode bn = (BinaryNode)tn.getTest();
+                if (!(
+                    (bn.lhs() instanceof ParameterNode) && 
+                    (bn.rhs() instanceof UnaryNode) &&
+                    (bn.tokenType() == TokenType.EQ_STRICT) &&
+                    (bn.rhs().tokenType() == TokenType.VOID))) {
+                    return false;
+                }
+                if (!((tn.getTrueExpression() instanceof JoinPredecessorExpression) && (tn.getFalseExpression() instanceof JoinPredecessorExpression))) {
+                    return false;
+                }
+                Expression e = ((JoinPredecessorExpression)tn.getFalseExpression()).getExpression();
+                if (e != bn.lhs()) {
+                    return false;
+                }
+                return true;
+            }
+            return false;
+        }
 
         @Override
         public boolean enterFunctionNode(FunctionNode functionNode) {
@@ -139,7 +194,7 @@ public class Ecma6Rule extends EcmaLevelRule {
             }
             if (functionNode.getKind() == FunctionNode.Kind.NORMAL) {
                 for (IdentNode param : functionNode.getParameters()) {
-                    if (param.isDefaultParameter() || param.isRestParameter()) {
+                    if (isDefaultParameter(functionNode, param) || param.isRestParameter()) {
                         addHint(context, hints, new OffsetRange(param.getStart(), param.getFinish()));
                     }
                 }

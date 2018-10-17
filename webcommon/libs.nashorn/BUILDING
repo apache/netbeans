@@ -1,0 +1,34 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+The library is a subset of GraalJS Project (https://github.com/graalvm/graaljs/). 
+Since the original code contains small number of GraalVM substitutes for 
+standard Collection classes, this wrapper library contains stubs of those types
+implemented using JDK standard Collection classes. The original Java source code 
+is unmodified. The original project delivers Graal Javascript parser and the 
+runtime in one JAR; the build instructions are to be patched to produce
+a separate JAR file just for the parser (see below).
+
+When NetBeans application happens to run on GraalVM runtime, the real optimized
+implementation will be picked up from the bootclasspath. On standard JDK, the 
+wrapper's stub will be used.
+
+To build the library, clone the original source (https://github.com/graalvm/graaljs.git), 
+and patch it using file(s) in "patches" subdirectory. Currently only patch to
+"mx" build metadata is required.
+
+Run "mx build"; the library will be produced as file "mxbuild/dists/graal-js-parser.jar".

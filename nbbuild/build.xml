@@ -40,7 +40,7 @@
           depends="-jdk-init,-load-build-properties">
     <fail message="You need to run on JDK 8+ to build NetBeans; java.home=${java.home}">
         <condition>
-            <matches pattern="1\.[01234567].*" string="${java.version}"/>
+            <matches pattern="^1\.[01234567].*" string="${java.version}"/>
         </condition>
     </fail>
     <fail message="You need JDK 8+ to build NetBeans; nbjdk.home=${nbjdk.home} java.home=${java.home}">

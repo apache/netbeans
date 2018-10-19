@@ -29,6 +29,7 @@ import javax.swing.event.DocumentListener;
 import org.netbeans.modules.php.analysis.commands.PHPStan;
 import org.netbeans.modules.php.analysis.options.AnalysisOptions;
 import org.netbeans.modules.php.analysis.options.AnalysisOptionsValidator;
+import org.netbeans.modules.php.analysis.ui.PHPStanLevelListCellRenderer;
 import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.api.util.UiUtils;
 import org.netbeans.modules.php.api.validation.ValidationResult;
@@ -61,6 +62,7 @@ public class PHPStanOptionsPanel extends AnalysisCategoryPanel {
         "PHPStanOptionsPanel.hint=Full path of PHPStan script (typically {0} or {1}).",})
     private void init() {
         phpStanHintLabel.setText(Bundle.PHPStanOptionsPanel_hint(PHPStan.NAME, PHPStan.LONG_NAME));
+        phpStanLevelComboBox.setRenderer(new PHPStanLevelListCellRenderer(phpStanLevelComboBox.getRenderer()));
         // add listener
         DefaultDocumentListener defaultDocumentListener = new DefaultDocumentListener();
         phpStanTextField.getDocument().addDocumentListener(defaultDocumentListener);

@@ -23,13 +23,13 @@
     <type>org.netbeans.modules.apisupport.project</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
-            <code-name-base>org.netbeans.libs.nashorn</code-name-base>
+            <code-name-base>org.netbeans.libs.oracle.jsparser</code-name-base>
             <module-dependencies/>
             <public-packages>
                 <subpackages>com.oracle.js.parser</subpackages>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path></runtime-relative-path>
+                <runtime-relative-path>ext/com.oracle.js.parser.jar</runtime-relative-path>
                 <binary-origin>external/com.oracle.js.parser-ba7a8bc42268.jar</binary-origin>
             </class-path-extension>
         </data>

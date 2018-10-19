@@ -25,11 +25,14 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
 import java.util.prefs.Preferences;
 import org.netbeans.api.autoupdate.InstallSupport;
 import org.netbeans.api.autoupdate.OperationContainer;
@@ -59,6 +62,15 @@ public final class FindComponentModules extends Task {
     private final RequestProcessor.Task findingTask;
     private Collection<UpdateElement> forInstall;
     private Collection<UpdateElement> forEnable;
+    /**
+     * Features, whose 'extra' modules were not found.
+     */
+    private Map<FeatureInfo, List<String>>   incompleteFeatures = new HashMap<>();
+    
+    /**
+     * Errors encountered during updating component descriptions
+     */
+    private List<IOException> updateErrors = new ArrayList<>();
     
     public FindComponentModules(FeatureInfo info, FeatureInfo... additional) {
         ArrayList<FeatureInfo> l = new ArrayList<FeatureInfo>();
@@ -84,6 +96,24 @@ public final class FindComponentModules extends Task {
     public Collection<UpdateElement> getModulesForEnable () {
         findingTask.waitFinished();
         return forEnable;
+    }
+    
+    public Collection<FeatureInfo> getIncompleteFeatures() {
+        findingTask.waitFinished();
+        return incompleteFeatures.keySet();
+    }
+    
+    void markIncompleteFeature(FeatureInfo fi, String cnb) {
+        incompleteFeatures.computeIfAbsent(fi, (f) -> new ArrayList<>())
+                .add(cnb);
+    }
+    
+    public Collection<String> getMissingModules(FeatureInfo info) {
+        return incompleteFeatures.getOrDefault(info, Collections.<String>emptyList());
+    }
+    
+    public Collection<IOException> getUpdateErrors() {
+        return updateErrors;
     }
     
     /** Associates a listener with currently running computation.
@@ -189,7 +219,8 @@ public final class FindComponentModules extends Task {
                     try {
                         p.refresh(null, true);
                     } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
+                        updateErrors.add(ex);
+                        Exceptions.attachSeverity(ex, Level.INFO).printStackTrace();
                     }
                 }
                 
@@ -214,6 +245,7 @@ public final class FindComponentModules extends Task {
                 res.add (unit.getAvailableUpdates ().get (0));
             }
         }
+        boolean decr = true;
         for (FeatureInfo fi : this.infos) {
             Set<String> extraModules = fi.getExtraModules();
             FOUND: for (String cnb : extraModules) {
@@ -227,8 +259,18 @@ public final class FindComponentModules extends Task {
                         }
                     }
                 }
-                refresh[0]--;
-                return res;
+                
+                // not found
+                if (decr) {
+                    if (--refresh[0] > 0) {
+                        // try to refresh
+                        return res;
+                    }
+                    // decrement just once
+                    decr = false;
+                }
+                // extra module(s) for the feature weren't found
+                markIncompleteFeature(fi, cnb);
             }
         }
         refresh[0] = 0;

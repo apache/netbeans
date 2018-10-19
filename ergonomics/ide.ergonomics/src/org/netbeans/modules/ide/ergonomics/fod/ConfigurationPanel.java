@@ -24,8 +24,10 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.Callable;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -68,7 +70,7 @@ public class ConfigurationPanel extends JPanel implements Runnable {
 
     public ConfigurationPanel(String displayName, final Callable<JComponent> callable, FeatureInfo info) {
         this(callable);
-        setInfo(info, displayName, Collections.<UpdateElement>emptyList());
+        setInfo(info, displayName, Collections.<UpdateElement>emptyList(), Collections.<String>emptyList());
     }
     
     public ConfigurationPanel(final Callable<JComponent> callable) {
@@ -80,10 +82,11 @@ public class ConfigurationPanel extends JPanel implements Runnable {
         setError(" "); // NOI18N
     }
 
-    public void setInfo(FeatureInfo info, String displayName, Collection<UpdateElement> toInstall) {
+    public void setInfo(FeatureInfo info, String displayName, Collection<UpdateElement> toInstall, 
+            Collection<String> missingModules) {
         this.featureInfo = info;
         this.featureInstall = toInstall;
-        boolean activateNow = toInstall.isEmpty();
+        boolean activateNow = toInstall.isEmpty() && missingModules.isEmpty();
         if (activateNow) {
             infoLabel.setVisible(false);
             downloadLabel.setVisible(false);
@@ -98,13 +101,45 @@ public class ConfigurationPanel extends JPanel implements Runnable {
             downloadButton.setVisible(true);
             SpecificationVersion jdk = new SpecificationVersion(System.getProperty("java.specification.version"));
             String lblDownloadMsg;
-            if (jdk.compareTo(new SpecificationVersion(info.getExtraModulesRecommendedMinJDK())) < 0) {
+            
+            boolean required = false;
+            
+            if (info.getExtraModulesRecommendedMinJDK() != null && 
+                jdk.compareTo(new SpecificationVersion(info.getExtraModulesRecommendedMinJDK())) < 0) {
+                required = true;
+            }
+            if (info.getExtraModulesRequiredText() != null && info.getExtraModulesRecommendedText() == null) {
+                required = true;
+            }
+            if (required) {
                 lblDownloadMsg = info.getExtraModulesRequiredText();
                 activateButton.setEnabled(false);
             } else {
                 lblDownloadMsg = info.getExtraModulesRecommendedText();
                 activateButton.setEnabled(true);
             }
+
+            String list = "";
+            if (!missingModules.isEmpty()) {
+                StringBuilder sb = new StringBuilder();
+                for (String s : missingModules) {
+                    if (sb.length() > 0) {
+                        sb.append(", "); // NOI18N
+                    }
+                    sb.append(s);
+                }
+                list = sb.toString();
+                if (required) {
+                    lblDownloadMsg = NbBundle.getMessage(ConfigurationPanel.class, "MSG_MissingRequiredModules", displayName, list);
+                    activateButton.setEnabled(false);
+                } else {
+                    lblDownloadMsg = NbBundle.getMessage(ConfigurationPanel.class, "MSG_MissingRecommendedModules", displayName, list);
+                }
+                downloadButton.setEnabled(false);
+            } else {
+                downloadButton.setEnabled(true);
+            }
+            
             String lblActivateMsg = NbBundle.getMessage(ConfigurationPanel.class, "LBL_EnableInfo", displayName);
             String btnActivateMsg = NbBundle.getMessage(ConfigurationPanel.class, "LBL_Enable");
             String btnDownloadMsg = NbBundle.getMessage(ConfigurationPanel.class, "LBL_Download");
@@ -119,6 +154,28 @@ public class ConfigurationPanel extends JPanel implements Runnable {
     public void removeNotify() {
         super.removeNotify();
         FeatureManager.logUI("ERGO_CLOSE");
+    }
+    
+    public void setUpdateErrors(Collection<IOException> errors) {
+        if (errors.isEmpty()) {
+            return;
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("<html>"); // NOI18N
+        for (IOException ex : errors) {
+            sb.append("<br/>"); // NOI18N
+            sb.append(ex.getLocalizedMessage());
+        }
+        sb.append("</html>"); // NOI18N
+        String updateError = NbBundle.getMessage(ConfigurationPanel.class, "ERR_UpdateComponents", sb.toString());
+        SwingUtilities.invokeLater(() -> {
+            remove(errorLabel);
+            progressPanel.removeAll();
+            progressPanel.add(errorLabel);
+            setError(updateError);
+            progressPanel.revalidate();
+            progressPanel.repaint();
+        });
     }
 
     void setError(String msg) {
@@ -183,7 +240,7 @@ public class ConfigurationPanel extends JPanel implements Runnable {
         );
         layout.setVerticalGroup(layout.createParallelGroup(Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(errorLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addComponent(errorLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(ComponentPlacement.RELATED)
                 .addComponent(infoLabel)
                 .addPreferredGap(ComponentPlacement.UNRELATED)

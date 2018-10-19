@@ -4,7 +4,7 @@ Description: An ECMAScript 6 (ECMAScript 2015) compliant parser for JavaScript s
 License: GPL-2-CP
 Origin: http://hg.openjdk.java.net/graal/graal-js-parser
 Type: compile-time
-Comment: Compile-time only library, JAR will not be copied to the distribution.
+Comment: This library is not intended for Apache distribution, is not part of any cluster and will not compile into the target NetBeans folder.
 
 The GNU General Public License (GPL)
 Version 2, June 1991

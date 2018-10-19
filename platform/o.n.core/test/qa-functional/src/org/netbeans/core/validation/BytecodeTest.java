@@ -252,7 +252,7 @@ public class BytecodeTest extends NbTestCase {
                 continue;
             
             if (f.getName().endsWith("servlet-2.2.jar") 
-                    || f.getName().endsWith("servlet3.1-jsp2.3-api.jar")
+                    || f.getName().endsWith("generated-servlet-jsp-api-3.1_2.3.jar")
                     || f.getName().endsWith("javaee.jar")
                     || f.getName().endsWith("javac-impl-nb-7.0-b07.jar")
                     || f.getName().endsWith("jaxb-impl.jar")

@@ -48,6 +48,7 @@ public class ConstantPool {
     private static final byte TAG_NAMETYPE = 12;
     private static final byte TAG_METHODHANDLE = 15;
     private static final byte TAG_METHODTYPE = 16;
+    private static final byte TAG_CONSTANTDYNAMIC = 17;
     private static final byte TAG_INVOKEDYNAMIC = 18;
     private static final byte TAG_MODULE = 19;
     private static final byte TAG_PACKAGE = 20;
@@ -144,6 +145,9 @@ public class ConstantPool {
                         break;
                     case TAG_METHODTYPE:
                         entry = new EntryMethodType(in);
+                        break;
+                    case TAG_CONSTANTDYNAMIC:
+                        entry = new EntryConstantDynamic(in);
                         break;
                     case TAG_INVOKEDYNAMIC:
                         entry = new EntryInvokeDynamic(in);
@@ -394,4 +398,11 @@ public class ConstantPool {
         }
     }
     
+    public static class EntryConstantDynamic extends BytesEntry {
+
+        public EntryConstantDynamic(DataInputStream in) throws IOException {
+            super(TAG_CONSTANTDYNAMIC, in, 4);
+        }
+    }
+ 
 }

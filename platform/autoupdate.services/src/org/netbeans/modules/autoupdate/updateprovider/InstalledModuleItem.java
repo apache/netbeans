@@ -129,7 +129,8 @@ public class InstalledModuleItem extends ModuleItem {
     } 
    
     @Override
-    public boolean isFragment() {
-        return info.getAttribute("OpenIDE-Module-Fragment-Host") != null; // NOI18N
+    public String getFragmentHost() {
+        Object o = info.getAttribute("OpenIDE-Module-Fragment-Host"); // NOI18N
+        return o instanceof String ? (String)o : null;
     }
 }

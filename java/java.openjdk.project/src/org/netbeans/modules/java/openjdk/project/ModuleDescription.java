@@ -233,11 +233,7 @@ public class ModuleDescription {
                 }
             }
 
-            if (current.getNameExt().equals("test") && current.getFileObject("TEST.ROOT") != null) {
-                continue; //do not look inside test folders
-            }
-
-            if (current.getParent().getNameExt().equals("test") && current.getFileObject("TEST.ROOT") != null) {
+            if (current.getFileObject("TEST.ROOT") != null) {
                 continue; //do not look inside test folders
             }
 

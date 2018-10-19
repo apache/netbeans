@@ -98,7 +98,8 @@ public class SymfonyPhpModuleExtender extends PhpModuleExtender {
             // use installer
             final InstallerExecutable installer = InstallerExecutable.getDefault(phpModule, false);
             assert installer != null;
-            Future<Integer> task = installer.run(getPanel().isUseLts());
+            // [NETBEANS-1443] always use LTS
+            Future<Integer> task = installer.run(true);
             try {
                 task.get(30, TimeUnit.MINUTES);
             } catch (InterruptedException ex) {

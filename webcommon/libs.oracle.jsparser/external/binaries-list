@@ -14,7 +14,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
-javac.source=1.8
-javac.compilerargs=-Xlint -Xlint:-serial
-is.autoload=true
+7CA13589F586F659BB0E1561719A91CA47BF1897 com.oracle.js.parser-ba7a8bc42268.jar

@@ -24,6 +24,7 @@ public final class PHPStanParams {
 
     private String level;
     private FileObject configuration;
+    private String memoryLimit;
 
     public String getLevel() {
         return level;
@@ -40,6 +41,15 @@ public final class PHPStanParams {
 
     public PHPStanParams setConfiguration(FileObject configuration) {
         this.configuration = configuration;
+        return this;
+    }
+
+    public String getMemoryLimit() {
+        return memoryLimit;
+    }
+
+    public PHPStanParams setMemoryLimit(String memoryLimit) {
+        this.memoryLimit = memoryLimit;
         return this;
     }
 }

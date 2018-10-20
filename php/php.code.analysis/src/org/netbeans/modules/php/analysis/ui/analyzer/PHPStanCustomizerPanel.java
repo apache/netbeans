@@ -28,7 +28,10 @@ import javax.swing.event.DocumentListener;
 import org.netbeans.modules.analysis.spi.Analyzer;
 import org.netbeans.modules.php.analysis.options.AnalysisOptions;
 import org.netbeans.modules.php.analysis.ui.PHPStanLevelListCellRenderer;
+import org.netbeans.modules.php.analysis.options.AnalysisOptionsValidator;
+import org.netbeans.modules.php.analysis.options.ValidatorPHPStanParameter;
 import org.netbeans.modules.php.analysis.ui.options.PHPStanOptionsPanel;
+import org.netbeans.modules.php.api.validation.ValidationResult;
 import org.openide.filesystems.FileChooserBuilder;
 import org.openide.util.NbBundle;
 
@@ -37,6 +40,7 @@ public class PHPStanCustomizerPanel extends JPanel {
     public static final String ENABLED = "phpStan.enabled"; // NOI18N
     public static final String LEVEL = "phpStan.level"; // NOI18N
     public static final String CONFIGURATION = "phpStan.configuration"; // NOI18N
+    public static final String MEMORY_LIMIT = "phpStan.memory.limit"; // NOI18N
     private static final String PHPSTAN_CONFIGURATION_LAST_FOLDER_SUFFIX = ".phpstan.config"; // NOI18N
     private static final long serialVersionUID = 2318201027384364349L;
 
@@ -57,6 +61,7 @@ public class PHPStanCustomizerPanel extends JPanel {
         setEnabledCheckBox();
         setLevelComboBox();
         setConfigurationTextField();
+        setMemoryLimitTextField();
     }
 
     private void setEnabledCheckBox() {
@@ -102,16 +107,78 @@ public class PHPStanCustomizerPanel extends JPanel {
         });
     }
 
+    private void setMemoryLimitTextField() {
+        assert EventQueue.isDispatchThread();
+        phpStanMemoryLimitTextField.setText(settings.get(MEMORY_LIMIT, AnalysisOptions.getInstance().getPHPStanMemoryLimit()));
+        phpStanMemoryLimitTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                processUpdate();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                processUpdate();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                processUpdate();
+            }
+
+            private void processUpdate() {
+                setMemoryLimit();
+            }
+        });
+    }
+
+    public String getLevel() {
+        return (String) phpStanLevelComboBox.getSelectedItem();
+    }
+
+    public String getConfiguration() {
+        return phpStanConfigurationTextField.getText().trim();
+    }
+
+    public String getMemoryLimit() {
+        return phpStanMemoryLimitTextField.getText().trim();
+    }
+
     private void setPHPStanEnabled() {
         settings.putBoolean(ENABLED, phpStanEnabledCheckBox.isSelected());
     }
 
     private void setLevel() {
-        settings.put(LEVEL, (String) phpStanLevelComboBox.getSelectedItem());
+        settings.put(LEVEL, getLevel());
     }
 
     private void setConfiguration() {
-        settings.put(CONFIGURATION, phpStanConfigurationTextField.getText().trim());
+        if (validateData()) {
+            settings.put(CONFIGURATION, getConfiguration());
+        }
+    }
+
+    private void setMemoryLimit() {
+        if (validateData()) {
+            settings.put(MEMORY_LIMIT, getMemoryLimit());
+        }
+    }
+
+    private boolean validateData() {
+        ValidatorPHPStanParameter param = ValidatorPHPStanParameter.create(this);
+        ValidationResult result = new AnalysisOptionsValidator()
+                .validatePHPStan(param)
+                .getResult();
+        if (result.hasErrors()) {
+            context.setError(result.getErrors().get(0).getMessage());
+            return false;
+        }
+        if (result.hasWarnings()) {
+            context.setError(result.getWarnings().get(0).getMessage());
+            return false;
+        }
+        context.setError(null);
+        return true;
     }
 
     private void setAllComponetsEnabled(boolean isEnabled) {
@@ -138,12 +205,13 @@ public class PHPStanCustomizerPanel extends JPanel {
         phpStanConfigurationBrowseButton = new javax.swing.JButton();
         phpStanLevelLabel = new javax.swing.JLabel();
         phpStanLevelComboBox = new javax.swing.JComboBox<>();
+        phpStanMemoryLimitLabel = new javax.swing.JLabel();
+        phpStanMemoryLimitTextField = new javax.swing.JTextField();
 
         org.openide.awt.Mnemonics.setLocalizedText(phpStanEnabledCheckBox, org.openide.util.NbBundle.getMessage(PHPStanCustomizerPanel.class, "PHPStanCustomizerPanel.phpStanEnabledCheckBox.text")); // NOI18N
 
+        phpStanConfigurationLabel.setLabelFor(phpStanConfigurationTextField);
         org.openide.awt.Mnemonics.setLocalizedText(phpStanConfigurationLabel, org.openide.util.NbBundle.getMessage(PHPStanCustomizerPanel.class, "PHPStanCustomizerPanel.phpStanConfigurationLabel.text")); // NOI18N
-
-        phpStanConfigurationTextField.setText(org.openide.util.NbBundle.getMessage(PHPStanCustomizerPanel.class, "PHPStanCustomizerPanel.phpStanConfigurationTextField.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(phpStanConfigurationBrowseButton, org.openide.util.NbBundle.getMessage(PHPStanCustomizerPanel.class, "PHPStanCustomizerPanel.phpStanConfigurationBrowseButton.text")); // NOI18N
         phpStanConfigurationBrowseButton.addActionListener(new java.awt.event.ActionListener() {
@@ -152,9 +220,13 @@ public class PHPStanCustomizerPanel extends JPanel {
             }
         });
 
+        phpStanLevelLabel.setLabelFor(phpStanLevelComboBox);
         org.openide.awt.Mnemonics.setLocalizedText(phpStanLevelLabel, org.openide.util.NbBundle.getMessage(PHPStanCustomizerPanel.class, "PHPStanCustomizerPanel.phpStanLevelLabel.text")); // NOI18N
 
         phpStanLevelComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0", "1", "2", "3", "4", "5", "6", "7" }));
+
+        phpStanMemoryLimitLabel.setLabelFor(phpStanMemoryLimitTextField);
+        org.openide.awt.Mnemonics.setLocalizedText(phpStanMemoryLimitLabel, org.openide.util.NbBundle.getMessage(PHPStanCustomizerPanel.class, "PHPStanCustomizerPanel.phpStanMemoryLimitLabel.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -166,7 +238,8 @@ public class PHPStanCustomizerPanel extends JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(phpStanConfigurationLabel)
-                    .addComponent(phpStanLevelLabel))
+                    .addComponent(phpStanLevelLabel)
+                    .addComponent(phpStanMemoryLimitLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -174,7 +247,9 @@ public class PHPStanCustomizerPanel extends JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(phpStanConfigurationBrowseButton))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(phpStanLevelComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(phpStanLevelComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(phpStanMemoryLimitTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -189,7 +264,11 @@ public class PHPStanCustomizerPanel extends JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(phpStanLevelLabel)
-                    .addComponent(phpStanLevelComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(phpStanLevelComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(phpStanMemoryLimitLabel)
+                    .addComponent(phpStanMemoryLimitTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -212,5 +291,7 @@ public class PHPStanCustomizerPanel extends JPanel {
     private javax.swing.JCheckBox phpStanEnabledCheckBox;
     private javax.swing.JComboBox<String> phpStanLevelComboBox;
     private javax.swing.JLabel phpStanLevelLabel;
+    private javax.swing.JLabel phpStanMemoryLimitLabel;
+    private javax.swing.JTextField phpStanMemoryLimitTextField;
     // End of variables declaration//GEN-END:variables
 }

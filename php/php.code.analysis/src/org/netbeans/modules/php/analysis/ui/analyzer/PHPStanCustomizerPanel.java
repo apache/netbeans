@@ -27,6 +27,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.netbeans.modules.analysis.spi.Analyzer;
 import org.netbeans.modules.php.analysis.options.AnalysisOptions;
+import org.netbeans.modules.php.analysis.ui.PHPStanLevelListCellRenderer;
 import org.netbeans.modules.php.analysis.ui.options.PHPStanOptionsPanel;
 import org.openide.filesystems.FileChooserBuilder;
 import org.openide.util.NbBundle;
@@ -71,6 +72,7 @@ public class PHPStanCustomizerPanel extends JPanel {
 
     private void setLevelComboBox() {
         assert EventQueue.isDispatchThread();
+        phpStanLevelComboBox.setRenderer(new PHPStanLevelListCellRenderer(phpStanLevelComboBox.getRenderer()));
         phpStanLevelComboBox.setSelectedItem(settings.get(LEVEL, String.valueOf(AnalysisOptions.getInstance().getPHPStanLevel())));
         phpStanLevelComboBox.addItemListener(e -> setLevel());
     }

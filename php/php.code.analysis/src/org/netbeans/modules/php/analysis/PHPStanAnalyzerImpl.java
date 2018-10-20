@@ -75,11 +75,10 @@ public class PHPStanAnalyzerImpl implements Analyzer {
             return Collections.emptyList();
         }
 
-        String level = getValidPHPStanLevel();
-        FileObject config = getValidPHPStanConfiguration();
         PHPStanParams phpStanParams = new PHPStanParams()
-                .setLevel(level)
-                .setConfiguration(config);
+                .setLevel(getValidPHPStanLevel())
+                .setConfiguration(getValidPHPStanConfiguration())
+                .setMemoryLimit(getValidPHPStanMemoryLimit());
         Scope scope = context.getScope();
 
         Map<FileObject, Integer> fileCount = AnalysisUtils.countPhpFiles(scope);
@@ -201,6 +200,18 @@ public class PHPStanAnalyzerImpl implements Analyzer {
             return null;
         }
         return FileUtil.toFileObject(new File(phpStanConfiguration));
+    }
+
+    private String getValidPHPStanMemoryLimit() {
+        String memoryLimit;
+        Preferences settings = context.getSettings();
+        if (settings != null) {
+            memoryLimit = settings.get(PHPStanCustomizerPanel.MEMORY_LIMIT, ""); // NOI18N
+        } else {
+            memoryLimit = String.valueOf(AnalysisOptions.getInstance().getPHPStanMemoryLimit());
+        }
+        assert memoryLimit != null;
+        return memoryLimit;
     }
 
     //~ Inner class

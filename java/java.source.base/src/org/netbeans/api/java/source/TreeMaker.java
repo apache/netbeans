@@ -247,7 +247,7 @@ public final class TreeMaker {
      * @param patterns the labels for this case statement.
      * @param statements the list of statements.
      * @see com.sun.source.tree.CaseTree
-     * @since 2.38
+     * @since 2.39
      */
     public CaseTree CaseMultipleLabels(List<? extends ExpressionTree> patterns, List<? extends StatementTree> statements) {
         return delegate.Case(patterns, statements);
@@ -259,7 +259,7 @@ public final class TreeMaker {
      * @param patterns the labels for this case statement.
      * @param body the case's body
      * @see com.sun.source.tree.CaseTree
-     * @since 2.38
+     * @since 2.39
      */
     public CaseTree Case(List<? extends ExpressionTree> patterns, Tree body) {
         return delegate.Case(patterns, body);

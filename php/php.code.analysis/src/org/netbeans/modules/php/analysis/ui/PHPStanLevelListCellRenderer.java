@@ -16,40 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.analysis;
+package org.netbeans.modules.php.analysis.ui;
 
-import org.openide.filesystems.FileObject;
+import java.awt.Component;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
 
-public final class PHPStanParams {
+public class PHPStanLevelListCellRenderer implements ListCellRenderer<String> {
 
-    private String level;
-    private FileObject configuration;
-    private String memoryLimit;
+    private final ListCellRenderer<? super String> defaultRenderer;
 
-    public String getLevel() {
-        return level;
+    public PHPStanLevelListCellRenderer(ListCellRenderer<? super String> defaultRenderer) {
+        this.defaultRenderer = defaultRenderer;
     }
 
-    public FileObject getConfiguration() {
-        return configuration;
+    @Override
+    public Component getListCellRendererComponent(JList<? extends String> list, String value, int index, boolean isSelected, boolean cellHasFocus) {
+        String level = value;
+        if ("7".equals(level)) { // NOI18N
+            level += " (max)"; // NOI18N
+        }
+        return defaultRenderer.getListCellRendererComponent(list, level, index, isSelected, cellHasFocus);
     }
 
-    public PHPStanParams setLevel(String level) {
-        this.level = level;
-        return this;
-    }
-
-    public PHPStanParams setConfiguration(FileObject configuration) {
-        this.configuration = configuration;
-        return this;
-    }
-
-    public String getMemoryLimit() {
-        return memoryLimit;
-    }
-
-    public PHPStanParams setMemoryLimit(String memoryLimit) {
-        this.memoryLimit = memoryLimit;
-        return this;
-    }
 }

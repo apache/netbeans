@@ -1,0 +1,11 @@
+initscript {
+    dependencies {
+        classpath files(System.getProperty('NETBEANS_TOOLING_JAR'))
+    }
+}
+
+allprojects {
+    apply plugin: org.netbeans.modules.gradle.tooling.NetBeansToolingPlugin
+    apply plugin: org.netbeans.modules.gradle.tooling.NetBeansRunSinglePlugin
+    apply plugin: org.netbeans.modules.gradle.tooling.NetBeansExplodedWarPlugin
+}

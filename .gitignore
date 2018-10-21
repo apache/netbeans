@@ -81,3 +81,5 @@
 ######################
 *~
 *.orig
+
+/java/gradle/netbeans-gradle-tooling/.gradle/

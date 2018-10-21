@@ -1,0 +1,4 @@
+include 'shared'
+include 'app'
+
+rootProject.name = 'calculator'

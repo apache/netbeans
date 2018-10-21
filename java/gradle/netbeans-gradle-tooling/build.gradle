@@ -1,0 +1,31 @@
+apply plugin: 'groovy'
+apply plugin: 'application'
+
+mainClassName = 'org.netbeans.modules.gradle.DebugTooling'
+def toolingApiVersion = gradle.gradleVersion
+
+sourceCompatibility = '1.7'
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+repositories {
+    jcenter()
+
+}
+
+dependencies {
+    compile gradleApi()
+    compile localGroovy()
+}
+
+testClasses.dependsOn('jar')
+
+test {
+    systemProperty 'project.dir', projectDir
+    if (project.hasProperty('debugDaemon')) {
+        systemProperty 'debugDaemon', 'true'
+    }
+}
+
+run {
+    args = ["$projectDir/src/test/data/simple-with-tests", "-PdownloadSourcesAndJavadoc=ALL"]
+}

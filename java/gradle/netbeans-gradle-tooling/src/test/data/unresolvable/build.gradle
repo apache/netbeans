@@ -1,0 +1,9 @@
+apply plugin: 'java'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    testCompile 'junit:junit:8.0'
+}

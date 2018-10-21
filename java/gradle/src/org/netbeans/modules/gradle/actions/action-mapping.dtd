@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT actions (action*,apply-for*)>
+<!ELEMENT apply-for (action+)>
+<!ELEMENT action (args?, reload?)>
+<!ELEMENT reload (args?)>
+<!ELEMENT args (#PCDATA)>
+
+<!ATTLIST apply-for plugins CDATA #REQUIRED>
+<!ATTLIST reload rule (NEVER|DEFAULT|ALWAYS|ALWAYS_ONLINE) "DEFAULT">
+<!ATTLIST action name CDATA #REQUIRED>
+<!ATTLIST action displayName CDATA #IMPLIED>
+<!ATTLIST action repeatable (false|true) "true">
+<!ATTLIST action priority CDATA #IMPLIED>

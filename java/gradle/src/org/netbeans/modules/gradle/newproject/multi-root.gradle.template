@@ -1,0 +1,21 @@
+<#if description != "">
+description = '${description}'
+</#if>
+allprojects {
+
+<#if group != "">
+    group = '${group}'
+
+</#if>
+    repositories {
+        jcenter()
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    dependencies {
+        testCompile group: 'junit', name: 'junit', version:'4.12'
+    }
+}

@@ -326,7 +326,7 @@ public abstract class SetupHid extends NbTestCase {
             throw new IOException("compilation failed");
         }
     }
-    private File createTestJAR(String name, String srcdir, File... classpath) throws IOException {
+    protected File createTestJAR(String name, String srcdir, File... classpath) throws IOException {
         return createTestJAR(data, jars, name, srcdir, classpath);
     }
     public static File createTestJAR(File data, File jars, String name, String srcdir, File... classpath) throws IOException {

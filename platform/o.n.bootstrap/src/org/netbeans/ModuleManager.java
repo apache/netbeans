@@ -1678,10 +1678,12 @@ public final class ModuleManager extends Modules {
         }
         return false;
     }
-    
+
     private void maybeAddToEnableList(Set<Module> willEnable, Set<Module> mightEnable, Module m, boolean okToFail) {
-        if (! missingDependencies(m).isEmpty()) {
-            assert okToFail : "Module " + m + " had unexpected problems: " + missingDependencies(m) + " (willEnable: " + willEnable + " mightEnable: " + mightEnable + ")";
+        if (!missingDependencies(m).isEmpty()) {
+            if (!okToFail) {
+                Util.err.info("Module " + m + " had unexpected problems: " + missingDependencies(m) + " (willEnable: " + willEnable + " mightEnable: " + mightEnable + ")");
+            }
             // Cannot satisfy its dependencies, exclude it.
             return;
         }
@@ -1746,8 +1748,8 @@ public final class ModuleManager extends Modules {
         }
         Collection<Module> frags = getAttachedFragments(m);
         for (Module fragMod : frags) {
-            if (! fragMod.isEnabled()) {
-                maybeAddToEnableList(willEnable, mightEnable, fragMod, false);
+            if (!fragMod.isEnabled() && !fragMod.isAutoload()) {
+                maybeAddToEnableList(willEnable, mightEnable, fragMod, fragMod.isEager());
             }
         }
     }

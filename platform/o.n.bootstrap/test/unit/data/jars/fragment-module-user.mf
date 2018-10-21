@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.foo.fragment.user
+OpenIDE-Module-Name: Depends on a module fragment
+OpenIDE-Module-Module-Dependencies: org.foo.fragment
+

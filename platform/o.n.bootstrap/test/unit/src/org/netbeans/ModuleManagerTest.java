@@ -2760,6 +2760,189 @@ public class ModuleManagerTest extends SetupHid {
         Module client = mgr.create(jar, null, false, false, false);
         assertEquals(1, client.getProblems().size());
     }
+
+    public void testEnableHostWithDefautFragment() throws Exception {
+        MockModuleInstaller installer = new MockModuleInstaller();
+        MockEvents ev = new MockEvents();
+        ModuleManager mgr = new ModuleManager(installer, ev);
+        mgr.mutexPrivileged().enterWriteAccess();
+
+        Module host = mgr.create(new File(jars, "host-module.jar"), null, false, false, false);
+        Module fragment = mgr.create(new File(jars, "fragment-module.jar"), null, false, false, false);
+
+        assertTrue("Host is known", mgr.getModules().contains(host));
+        assertTrue("Fragment is known", mgr.getModules().contains(fragment));
+
+        mgr.enable(new HashSet<>(Arrays.asList(host, fragment)));
+
+        assertTrue("Host must be enabled", mgr.getEnabledModules().contains(host));
+        assertTrue("Fragment must be enabled", mgr.getEnabledModules().contains(fragment));
+    }
+
+    public void testEnableHostWithDefautFragmentUnsatisfied() throws Exception {
+        MockModuleInstaller installer = new MockModuleInstaller();
+        MockEvents ev = new MockEvents();
+        ModuleManager mgr = new ModuleManager(installer, ev);
+        mgr.mutexPrivileged().enterWriteAccess();
+
+        createTestJAR("fragment-module-missing-token", null);
+
+        Module host = mgr.create(new File(jars, "host-module.jar"), null, false, false, false);
+        Module fragment = mgr.create(new File(jars, "fragment-module-missing-token.jar"), null, false, false, false);
+
+        assertTrue("Host is known", mgr.getModules().contains(host));
+        assertTrue("Fragment is known", mgr.getModules().contains(fragment));
+
+        boolean expectedExceptionCatched = false;
+        try {
+            mgr.enable(fragment);
+        } catch (IllegalArgumentException e) {
+            expectedExceptionCatched = e.getMessage().startsWith("Not all requested modules can be enabled:");
+            if (!expectedExceptionCatched) {
+                throw e;
+            }
+        }
+        assertTrue(expectedExceptionCatched);
+
+        mgr.enable(host);
+
+        assertTrue("Host must be enabled", mgr.getEnabledModules().contains(host));
+        assertTrue("Fragment must not be enabled", !mgr.getEnabledModules().contains(fragment));
+    }
+
+    public void testEnableHostWithEagerFragment() throws Exception {
+        MockModuleInstaller installer = new MockModuleInstaller();
+        MockEvents ev = new MockEvents();
+        ModuleManager mgr = new ModuleManager(installer, ev);
+        mgr.mutexPrivileged().enterWriteAccess();
+
+        Module host = mgr.create(new File(jars, "host-module.jar"), null, false, false, false);
+        Module fragment = mgr.create(new File(jars, "fragment-module.jar"), null, false, false, true);
+
+        assertTrue("Host is known", mgr.getModules().contains(host));
+        assertTrue("Fragment is known", mgr.getModules().contains(fragment));
+
+        mgr.enable(host);
+
+        assertTrue("Host must be enabled", mgr.getEnabledModules().contains(host));
+        assertTrue("Fragment must be enabled", mgr.getEnabledModules().contains(fragment));
+    }
+
+    public void testEnableHostWithEagerFragmentUnsatisfied() throws Exception {
+        MockModuleInstaller installer = new MockModuleInstaller();
+        MockEvents ev = new MockEvents();
+        ModuleManager mgr = new ModuleManager(installer, ev);
+        mgr.mutexPrivileged().enterWriteAccess();
+
+        createTestJAR("fragment-module-missing-token", null);
+
+        Module host = mgr.create(new File(jars, "host-module.jar"), null, false, false, false);
+        Module fragment = mgr.create(new File(jars, "fragment-module-missing-token.jar"), null, false, false, true);
+
+        assertTrue("Host is known", mgr.getModules().contains(host));
+        assertTrue("Fragment is known", mgr.getModules().contains(fragment));
+
+        mgr.enable(host);
+
+        assertTrue("Host must be enabled", mgr.getEnabledModules().contains(host));
+        assertTrue("Fragment must not be enabled", !mgr.getEnabledModules().contains(fragment));
+    }
+
+    public void testEnableHostWithAutoloadFragment() throws Exception {
+        MockModuleInstaller installer = new MockModuleInstaller();
+        MockEvents ev = new MockEvents();
+        ModuleManager mgr = new ModuleManager(installer, ev);
+        mgr.mutexPrivileged().enterWriteAccess();
+
+        Module host = mgr.create(new File(jars, "host-module.jar"), null, false, false, false);
+        Module fragment = mgr.create(new File(jars, "fragment-module.jar"), null, false, true, false);
+
+        assertTrue("Host is known", mgr.getModules().contains(host));
+        assertTrue("Fragment is known", mgr.getModules().contains(fragment));
+
+        mgr.enable(host);
+
+        assertTrue("Host must be enabled", mgr.getEnabledModules().contains(host));
+        assertTrue("Fragment must not be enabled", !mgr.getEnabledModules().contains(fragment));
+    }
+
+    public void testEnableHostWithAutoloadFragmentUnsatisfied() throws Exception {
+        MockModuleInstaller installer = new MockModuleInstaller();
+        MockEvents ev = new MockEvents();
+        ModuleManager mgr = new ModuleManager(installer, ev);
+        mgr.mutexPrivileged().enterWriteAccess();
+
+        createTestJAR("fragment-module-missing-token", null);
+
+        Module host = mgr.create(new File(jars, "host-module.jar"), null, false, false, false);
+        Module fragment = mgr.create(new File(jars, "fragment-module-missing-token.jar"), null, false, true, false);
+
+        assertTrue("Host is known", mgr.getModules().contains(host));
+        assertTrue("Fragment is known", mgr.getModules().contains(fragment));
+
+        mgr.enable(host);
+
+        assertTrue("Host must be enabled", mgr.getEnabledModules().contains(host));
+        assertTrue("Fragment must not be enabled", !mgr.getEnabledModules().contains(fragment));
+    }
+
+    public void testEnableHostWithAutoloadFragmentAndFragmentDependency() throws Exception {
+        MockModuleInstaller installer = new MockModuleInstaller();
+        MockEvents ev = new MockEvents();
+        ModuleManager mgr = new ModuleManager(installer, ev);
+        mgr.mutexPrivileged().enterWriteAccess();
+
+        createTestJAR("fragment-module-user", null);
+
+        Module host = mgr.create(new File(jars, "host-module.jar"), null, false, false, false);
+        Module fragment = mgr.create(new File(jars, "fragment-module.jar"), null, false, true, false);
+        Module fragmentUser = mgr.create(new File(jars, "fragment-module-user.jar"), null, false, false, false);
+
+        assertTrue("Host is known", mgr.getModules().contains(host));
+        assertTrue("Fragment is known", mgr.getModules().contains(fragment));
+        assertTrue("User of fragment is known", mgr.getModules().contains(fragmentUser));
+
+        mgr.enable(new HashSet<>(Arrays.asList(host, fragmentUser)));
+
+        assertTrue("Host must be enabled", mgr.getEnabledModules().contains(host));
+        assertTrue("Fragment must be enabled", mgr.getEnabledModules().contains(fragmentUser));
+        assertTrue("User of fragment must be enabled", mgr.getEnabledModules().contains(fragmentUser));
+    }
+
+    public void testEnableHostWithAutoloadFragmentAndFragmentDependencyUnsatisfied() throws Exception {
+        MockModuleInstaller installer = new MockModuleInstaller();
+        MockEvents ev = new MockEvents();
+        ModuleManager mgr = new ModuleManager(installer, ev);
+        mgr.mutexPrivileged().enterWriteAccess();
+
+        createTestJAR("fragment-module-user", null);
+        createTestJAR("fragment-module-missing-token", null);
+
+        Module host = mgr.create(new File(jars, "host-module.jar"), null, false, false, false);
+        Module fragment = mgr.create(new File(jars, "fragment-module-missing-token.jar"), null, false, true, false);
+        Module fragmentUser = mgr.create(new File(jars, "fragment-module-user.jar"), null, false, false, false);
+
+        assertTrue("Host is known", mgr.getModules().contains(host));
+        assertTrue("Fragment is known", mgr.getModules().contains(fragment));
+        assertTrue("User of fragment is known", mgr.getModules().contains(fragmentUser));
+
+        boolean expectedExceptionCatched = false;
+        try {
+            mgr.enable(fragmentUser);
+        } catch (IllegalArgumentException e) {
+            expectedExceptionCatched = e.getMessage().startsWith("Not all requested modules can be enabled:");
+            if (!expectedExceptionCatched) {
+                throw e;
+            }
+        }
+        assertTrue(expectedExceptionCatched);
+
+        mgr.enable(host);
+
+        assertTrue("Host must be enabled", mgr.getEnabledModules().contains(host));
+        assertTrue("Fragment must not be enabled", !mgr.getEnabledModules().contains(fragmentUser));
+        assertTrue("User of fragment must not be enabled", !mgr.getEnabledModules().contains(fragmentUser));
+    }
     
     public void testEnableFragmentBeforeItsHost() throws Exception {
         MockModuleInstaller installer = new MockModuleInstaller();
@@ -2771,7 +2954,7 @@ public class ModuleManagerTest extends SetupHid {
         Module m1 = mgr.create(new File(jars, "host-module.jar"), null, false, false, false);
         Module m2 = mgr.create(new File(jars, "fragment-module.jar"), null, false, false, false);
         List toEnable = mgr.simulateEnable(Collections.singleton(m2));
-        
+
         assertTrue("Host will be enabled", toEnable.contains(m1));
         assertTrue("Known fragment must be merged in", toEnable.contains(m2));
         mgr.enable(new HashSet<>(toEnable));

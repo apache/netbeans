@@ -4,5 +4,6 @@ OpenIDE-Module: org.netbeans.modules.gradle/0
 OpenIDE-Module-Install: org/netbeans/modules/gradle/Installer.class
 OpenIDE-Module-Layer: org/netbeans/modules/gradle/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/gradle/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
 OpenIDE-Module-Requires: 
   cnb.org.netbeans.modules.groovy.kit

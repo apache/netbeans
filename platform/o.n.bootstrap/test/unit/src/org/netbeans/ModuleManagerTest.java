@@ -2785,7 +2785,7 @@ public class ModuleManagerTest extends SetupHid {
         ModuleManager mgr = new ModuleManager(installer, ev);
         mgr.mutexPrivileged().enterWriteAccess();
 
-        createTestJAR("fragment-module-missing-token", null);
+        createTestJAR(data, jars, "fragment-module-missing-token", null);
 
         Module host = mgr.create(new File(jars, "host-module.jar"), null, false, false, false);
         Module fragment = mgr.create(new File(jars, "fragment-module-missing-token.jar"), null, false, false, false);
@@ -2834,7 +2834,7 @@ public class ModuleManagerTest extends SetupHid {
         ModuleManager mgr = new ModuleManager(installer, ev);
         mgr.mutexPrivileged().enterWriteAccess();
 
-        createTestJAR("fragment-module-missing-token", null);
+        createTestJAR(data, jars, "fragment-module-missing-token", null);
 
         Module host = mgr.create(new File(jars, "host-module.jar"), null, false, false, false);
         Module fragment = mgr.create(new File(jars, "fragment-module-missing-token.jar"), null, false, false, true);
@@ -2872,7 +2872,7 @@ public class ModuleManagerTest extends SetupHid {
         ModuleManager mgr = new ModuleManager(installer, ev);
         mgr.mutexPrivileged().enterWriteAccess();
 
-        createTestJAR("fragment-module-missing-token", null);
+        createTestJAR(data, jars, "fragment-module-missing-token", null);
 
         Module host = mgr.create(new File(jars, "host-module.jar"), null, false, false, false);
         Module fragment = mgr.create(new File(jars, "fragment-module-missing-token.jar"), null, false, true, false);
@@ -2892,7 +2892,7 @@ public class ModuleManagerTest extends SetupHid {
         ModuleManager mgr = new ModuleManager(installer, ev);
         mgr.mutexPrivileged().enterWriteAccess();
 
-        createTestJAR("fragment-module-user", null);
+        createTestJAR(data, jars, "fragment-module-user", null);
 
         Module host = mgr.create(new File(jars, "host-module.jar"), null, false, false, false);
         Module fragment = mgr.create(new File(jars, "fragment-module.jar"), null, false, true, false);
@@ -2915,8 +2915,8 @@ public class ModuleManagerTest extends SetupHid {
         ModuleManager mgr = new ModuleManager(installer, ev);
         mgr.mutexPrivileged().enterWriteAccess();
 
-        createTestJAR("fragment-module-user", null);
-        createTestJAR("fragment-module-missing-token", null);
+        createTestJAR(data, jars, "fragment-module-user", null);
+        createTestJAR(data, jars, "fragment-module-missing-token", null);
 
         Module host = mgr.create(new File(jars, "host-module.jar"), null, false, false, false);
         Module fragment = mgr.create(new File(jars, "fragment-module-missing-token.jar"), null, false, true, false);

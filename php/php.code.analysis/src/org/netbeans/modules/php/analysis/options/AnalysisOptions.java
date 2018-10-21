@@ -53,6 +53,7 @@ public final class AnalysisOptions {
     private static final String PHPSTAN_PATH = "phpstan.path"; // NOI18N
     private static final String PHPSTAN_LEVEL = "phpstan.level"; // NOI18N
     private static final String PHPSTAN_CONFIGURATION = "phpstan.configuration"; // NOI18N
+    private static final String PHPSTAN_MEMORY_LIMIT = "phpstan.memory.limit"; // NOI18N
 
     private volatile boolean codeSnifferSearched = false;
     private volatile boolean messDetectorSearched = false;
@@ -231,6 +232,14 @@ public final class AnalysisOptions {
 
     public void setPHPStanConfigurationPath(String configuration) {
         getPreferences().put(PHPSTAN_CONFIGURATION, configuration);
+    }
+
+    public String getPHPStanMemoryLimit() {
+        return getPreferences().get(PHPSTAN_MEMORY_LIMIT, ""); // NOI18N
+    }
+
+    public void setPHPStanMemoryLimit(String memoryLimit) {
+        getPreferences().put(PHPSTAN_MEMORY_LIMIT, memoryLimit);
     }
 
     private Preferences getPreferences() {

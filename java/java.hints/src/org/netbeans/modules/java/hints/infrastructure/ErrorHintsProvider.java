@@ -800,6 +800,7 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
                                     } finally {
                                         cancel.setFuture(null);
                                     }
+                                    FileObject file = info.getFileObject();
                                     for (FixShim shim : fixShims) {
                                         fixes.add(new Fix() {
                                             @Override
@@ -809,7 +810,7 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
                                             @Override
                                             public ChangeInfo implement() throws Exception {
                                                 try {
-                                                    EditShim[] edits = remote.readAndDecode(info.getFileObject(), ApplyFix.class, EditShim[].class, shim.callbackId).get();
+                                                    EditShim[] edits = remote.readAndDecode(file, ApplyFix.class, EditShim[].class, shim.callbackId).get();
 
                                                     NbDocument.runAtomic((StyledDocument) doc, () -> {
                                                         try {

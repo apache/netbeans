@@ -43,6 +43,7 @@ import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.editor.hints.LazyFixList;
 import org.openide.cookies.EditorCookie;
+import org.openide.cookies.SaveCookie;
 import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -51,6 +52,9 @@ import org.openide.util.lookup.ServiceProvider;
  * @author lahvac
  */
 public class ErrorHintsRemoteParserTask {
+
+    public static final String KEY_ERRORS = "ErrorDescription[]";
+    public static final String KEY_FIXES = "Fix[]";
 
     @ServiceProvider(service=RemoteParserTask.class)
     public static class Errors implements RemoteParserTask<ErrorShim[], CompilationInfo, Void> {
@@ -66,7 +70,7 @@ public class ErrorHintsRemoteParserTask {
                     id2Error.put(shim.callbackId, err);
                     return shim;
                 };
-                info.putCachedValue(ErrorDescription[].class, id2Error, CompilationInfo.CacheClearPolicy.ON_CHANGE);
+                info.getFileObject().setAttribute(KEY_ERRORS, id2Error);
                 return ehp.computeErrors(info, doc, "text/x-java") //TODO: mimetype?
                           .stream()
                           .map(error2Shim)
@@ -81,7 +85,7 @@ public class ErrorHintsRemoteParserTask {
         public Future<FixShim[]> computeResult(CompilationInfo info, Integer id) throws IOException {
             AtomicBoolean cancel = new AtomicBoolean();
             return new SynchronousFuture<>(() -> {
-                Map<Integer, ErrorDescription> id2Error = (Map<Integer, ErrorDescription>) info.getCachedValue(ErrorDescription[].class);
+                Map<Integer, ErrorDescription> id2Error = (Map<Integer, ErrorDescription>) info.getFileObject().getAttribute(KEY_ERRORS);
                 ErrorDescription err = id2Error != null ? id2Error.get(id) : null;
                 List<Fix> fixes;
                 if (err != null) {
@@ -100,7 +104,7 @@ public class ErrorHintsRemoteParserTask {
                     id2Fix.put(shim.callbackId, fix);
                     return shim;
                 };
-                info.putCachedValue(Fix[].class, id2Fix, CompilationInfo.CacheClearPolicy.ON_CHANGE);
+                info.getFileObject().setAttribute(KEY_FIXES, id2Fix);
                 return fixes.stream()
                             .map(fix2Shim)
                             .toArray(v -> new FixShim[v]);
@@ -116,7 +120,7 @@ public class ErrorHintsRemoteParserTask {
             CompletableFuture<EditShim[]> result = new CompletableFuture<>();
             try {
                 cc.toPhase(JavaSource.Phase.RESOLVED);
-                Map<Integer, Fix> id2Fix = (Map<Integer, Fix>) cc.getCachedValue(Fix[].class);
+                Map<Integer, Fix> id2Fix = (Map<Integer, Fix>) cc.getFileObject().getAttribute(KEY_FIXES);
                 Document doc = cc.getSnapshot().getSource().getDocument(true);
                 List<EditShim> edits = new ArrayList<>();
                 DocumentListener l = new DocumentListener() {
@@ -141,7 +145,10 @@ public class ErrorHintsRemoteParserTask {
                     doc.removeDocumentListener(l);
                 }
 
-                result.complete(new EditShim[0]);
+                SaveCookie sc = cc.getFileObject().getLookup().lookup(SaveCookie.class);
+                sc.save();
+
+                result.complete(edits.toArray(new EditShim[0]));
             } catch (Throwable ex) {
                 result.completeExceptionally(ex);
             }

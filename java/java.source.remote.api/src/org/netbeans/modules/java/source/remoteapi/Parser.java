@@ -22,6 +22,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.lang.ref.Reference;
+import java.lang.ref.SoftReference;
+import java.util.HashMap;
 import java.util.Map;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -44,9 +47,7 @@ import org.openide.filesystems.FileUtil;
  */
 public class Parser {
 
-    private static int lastConfig;
-    private static JavaSource source;
-    private static Document lastDoc;
+    private static Map<String, Reference<FileObject>> location2FileObject = new HashMap<>();
 
     public static <T> T runTask(Config config, ParserTask<T, CompilationInfo> task) throws IOException {
         return runControllerTask(config, cc -> {
@@ -56,26 +57,28 @@ public class Parser {
     }
 
     public static <T> T runControllerTask(Config config, ParserTask<T, CompilationController> task) throws IOException {
-        JavaSource source;
-        
-        if (lastConfig == config.id && Parser.source != null) {
-            source = Parser.source;
-        } else {
+        Reference<FileObject> foRef = location2FileObject.get(config.fileUri);
+        FileObject file = foRef != null ? foRef.get() : null;
+
+        if (file == null) {
             FileObject root = FileUtil.createMemoryFileSystem().getRoot();
-            FileObject file = FileUtil.createData(root, config.fileName);
+            file = FileUtil.createData(root, config.fileName);
 
-            file.setAttribute(SourceLevelQueryImpl.KEY_SOURCE_LEVEL, config.sourceLevel);
+            location2FileObject.put(config.fileUri, new SoftReference<>(file));
+        }
 
+        file.setAttribute(SourceLevelQueryImpl.KEY_SOURCE_LEVEL, config.sourceLevel);
+
+        if (!file.asText().equals(config.fileContent)) {
             try (OutputStream out = file.getOutputStream();
                  Writer w = new OutputStreamWriter(out)) {
                 w.append(config.fileContent);
             }
-
-            ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().deserialize(config.cpInfo);
-
-            lastConfig = config.id;
-            Parser.source = source = JavaSource.create(cpInfo, file);
         }
+
+        ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().deserialize(config.cpInfo);
+
+        JavaSource source = JavaSource.create(cpInfo, file);
 
         Object[] result = new Object[1];
         source.runUserActionTask(new Task<CompilationController>() {
@@ -98,7 +101,7 @@ public class Parser {
         public static Config create(CompilationInfo info) {
             Object conf = info.getCachedValue(Config.class);
             if (conf == null) {
-                conf = new Config(nextId++, info.getFileObject().getNameExt(), info.getText(), info.getClasspathInfo(), SourceLevelQuery.getSourceLevel(info.getFileObject()));
+                conf = new Config(nextId++, info.getFileObject().getNameExt(), info.getFileObject().toURI().toString(), info.getText(), info.getClasspathInfo(), SourceLevelQuery.getSourceLevel(info.getFileObject()));
                 info.putCachedValue(Config.class, conf, CompilationInfo.CacheClearPolicy.ON_CHANGE);
             }
             return (Config) conf;
@@ -122,7 +125,7 @@ public class Parser {
                 } else {
                     text[0] = file.asText();
                 }
-                return new Config(nextId++, file.getNameExt(), text[0], ClasspathInfo.create(file), SourceLevelQuery.getSourceLevel(file));
+                return new Config(nextId++, file.getNameExt(), file.toURI().toString(), text[0], ClasspathInfo.create(file), SourceLevelQuery.getSourceLevel(file));
             } catch (IOException ex) {
                 throw new IllegalStateException(ex); //XXX: error handling
             }
@@ -130,14 +133,16 @@ public class Parser {
 
         private int id;
         private String fileName;
+        private String fileUri;
         private String fileContent;
         private Map<String, Object> cpInfo;
         private String sourceLevel;
 
-        public Config(int id, String fileName, String fileContent,
+        public Config(int id, String fileName, String fileUri, String fileContent,
                       ClasspathInfo cpInfo, String sourceLevel) {
             this.id = id;
             this.fileName = fileName;
+            this.fileUri = fileUri;
             this.fileContent = fileContent;
             this.cpInfo = ClasspathInfoAccessor.getINSTANCE().serialize(cpInfo);
             this.sourceLevel = sourceLevel;

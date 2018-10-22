@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.gradle.tooling;
 
-import org.netbeans.modules.gradle.tooling.NbProjectInfoBuilder;
 import org.netbeans.modules.gradle.api.NbProjectInfo;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

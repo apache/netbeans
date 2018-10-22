@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.gradle.java.api;
 
-import org.netbeans.modules.gradle.java.api.Bundle;
 import org.netbeans.modules.gradle.spi.Utils;
 import java.io.File;
 import java.io.Serializable;
@@ -30,6 +29,7 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -74,7 +74,7 @@ public class GradleJavaSourceSet implements Serializable {
     String sourcesCompatibility;
     String targetCompatibility;
     boolean testSourceSet;
-    File outputClasses;
+    Set<File> outputClassDirs;
     File outputResources;
     //Add silent support for webapp docroot.
     File webApp;
@@ -219,11 +219,18 @@ public class GradleJavaSourceSet implements Serializable {
     }
 
     public boolean outputContains(File f) {
-        return parentOrSame(f, outputClasses) || parentOrSame(f, outputResources);
+        List<File> checkList = new LinkedList<>(getOutputClassDirs());
+        checkList.add(outputResources);
+        for (File check : checkList) {
+            if (parentOrSame(f, check)) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public File getOutputClasses() {
-        return outputClasses;
+    public Set<File> getOutputClassDirs() {
+        return outputClassDirs != null ? outputClassDirs : Collections.<File>emptySet();
     }
 
     public File getOutputResources() {
@@ -286,7 +293,7 @@ public class GradleJavaSourceSet implements Serializable {
     public File findResource(String name, boolean includeOutputs, SourceType... types) {
         List<File> roots = new ArrayList<>();
         if (includeOutputs) {
-            roots.add(outputClasses);
+            roots.addAll(outputClassDirs);
             roots.add(outputResources);
         }
         SourceType[] checkedRoots = types.length > 0 ? types : SourceType.values();
@@ -308,7 +315,9 @@ public class GradleJavaSourceSet implements Serializable {
         for (File dir : getAllDirs()) {
             roots.add(dir.toPath());
         }
-        roots.add(outputClasses.toPath());
+        for (File dir : getOutputClassDirs()) {
+            roots.add(dir.toPath());
+        }
         roots.add(outputResources.toPath());
         Path path = f.toPath();
         for (Path root : roots) {
@@ -347,7 +356,7 @@ public class GradleJavaSourceSet implements Serializable {
         if (!Objects.equals(this.sources, other.sources)) {
             return false;
         }
-        if (!Objects.equals(this.outputClasses, other.outputClasses)) {
+        if (!Objects.equals(this.outputClassDirs, other.outputClassDirs)) {
             return false;
         }
         if (!Objects.equals(this.outputResources, other.outputResources)) {

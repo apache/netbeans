@@ -203,19 +203,19 @@ public class GradleCoverageProvider implements CoverageProvider {
         GradleJavaProject javaProject = GradleJavaProject.get(project);
         Set<File> testClassesRoots = javaProject.getTestClassesRoots();
         for (GradleJavaSourceSet sourceSet : javaProject.getSourceSets().values()) {
-            File outputClasses = sourceSet.getOutputClasses();
-
-            if (!testClassesRoots.contains(outputClasses) && outputClasses.isDirectory()) {
-                try {
-                    analyzer.analyzeAll(outputClasses);
-                } catch (IOException ex) {
-                    //TODO: Report
+            for (File dir : sourceSet.getOutputClassDirs()) {
+                if (!testClassesRoots.contains(dir) && dir.isDirectory()) {
+                    try {
+                        // Run the analysis on existing non test output dirs.
+                        analyzer.analyzeAll(dir);
+                    } catch (IOException ex) {
+                        //TODO: Report
+                    }
                 }
             }
         }
         Collection<ISourceFileCoverage> sourceFiles = builder.getSourceFiles();
-        ClassPath sourceClassPath = ClassPathSupport.createProxyClassPath(project.getLookup().lookup(ProjectSourcesClassPathProvider.class).getProjectClassPath(ClassPath.SOURCE)
-        );
+        ClassPath sourceClassPath = ClassPathSupport.createProxyClassPath(project.getLookup().lookup(ProjectSourcesClassPathProvider.class).getProjectClassPath(ClassPath.SOURCE));
         for (ISourceFileCoverage sourceFile : sourceFiles) {
             String fname = sourceFile.getPackageName() + "/" + sourceFile.getName();
             FileObject fo = sourceClassPath.findResource(fname);

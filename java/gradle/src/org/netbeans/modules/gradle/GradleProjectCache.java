@@ -66,6 +66,7 @@ import static org.netbeans.modules.gradle.GradleDaemon.*;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import java.util.WeakHashMap;
+import java.util.logging.Level;
 import javax.swing.JLabel;
 import org.openide.awt.Notification;
 import org.openide.awt.NotificationDisplayer;
@@ -91,7 +92,7 @@ public final class GradleProjectCache {
     private static AtomicInteger loadedProjects = new AtomicInteger();
 
     // Increase this number if new info is gathered from the projects.
-    private static final int COMPATIBLE_CACHE_VERSION = 8;
+    private static final int COMPATIBLE_CACHE_VERSION = 10;
 
 
     /**
@@ -193,7 +194,6 @@ public final class GradleProjectCache {
                 if (!info.getProblems().isEmpty()) {
                     // If we do not have exception, but seen some problems the we mark the quality as SIMPLE
                     quality = Quality.SIMPLE;
-                    StringBuilder details = new StringBuilder();
                     openNotification(base.getProjectDir(),
                             Bundle.TIT_LOAD_ISSUES(base.getProjectDir().getName()),
                             Bundle.TIT_LOAD_ISSUES(base.getProjectDir().getName()),
@@ -281,7 +281,7 @@ public final class GradleProjectCache {
             BuildActionExecuter<NbProjectInfo> action = createInfoAction(pconn, offline, token, pl);
             try {
                 ret = action.run();
-                if (goOnline == GoOnline.NEVER || (!ret.hasException() && ret.getProblems().isEmpty())) {
+                if (goOnline == GoOnline.NEVER || !ret.hasException()) {
                     return ret;
                 }
             } catch (GradleConnectionException | IllegalStateException ex) {
@@ -331,6 +331,9 @@ public final class GradleProjectCache {
             handle.start();
             try {
                 return loadGradleProject(ctx, tokenSource.token(), pl);
+            } catch (Throwable ex) {
+                LOG.log(Level.WARNING, ex.getMessage(), ex);
+                throw ex;
             } finally {
                 handle.finish();
             }

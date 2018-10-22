@@ -73,11 +73,16 @@ final class GradleJavaProjectBuilder implements ProjectInfoExtractor.Result {
                 sourceSet.runtimeClassPath = (Set<File>) info.get("sourceset_" + name + "_classpath_runtime");
                 sourceSet.compileConfigurationName = (String) info.get("sourceset_" + name + "_configuration_compile");
                 sourceSet.runtimeConfigurationName = (String) info.get("sourceset_" + name + "_configuration_runtime");
-                sourceSet.outputClasses = (File) info.get("sourceset_" + name + "_output_classes");
+                sourceSet.outputClassDirs = (Set<File>) info.get("sourceset_" + name + "_output_classes");
                 sourceSet.outputResources = (File) info.get("sourceset_" + name + "_output_resources");
                 sourceSet.sourcesCompatibility = (String) info.get("sourceset_" + name + "_source_compatibility");
                 sourceSet.targetCompatibility = (String) info.get("sourceset_" + name + "_target_compatibility");
-                sourceSet.testSourceSet = prj.testClassesRoots.contains(sourceSet.outputClasses);
+                for (File out : sourceSet.getOutputClassDirs()) {
+                    if (prj.getTestClassesRoots().contains(out)) {
+                        sourceSet.testSourceSet = true;
+                        break;
+                    }
+                }
 
                 if ("main".equals(name)) {
                     sourceSet.webApp = (File) info.get("webapp_dir"); //NOI18N
@@ -94,10 +99,10 @@ final class GradleJavaProjectBuilder implements ProjectInfoExtractor.Result {
 
     void processTests() {
         prj.testClassesRoots = (Set<File>) info.get("test_classes_dirs"); //NOI18N
-        prj.testClassesRoots = prj.testClassesRoots != null ? prj.testClassesRoots : Collections.<File>emptySet();
+        prj.testClassesRoots = prj.testClassesRoots != null ? Collections.unmodifiableSet(prj.testClassesRoots) : Collections.<File>emptySet();
 
         prj.coverageData = (Set<File>) info.get("jacoco_coverage_files"); //NOI18N
-        prj.coverageData = prj.coverageData != null ? prj.coverageData : Collections.<File>emptySet();
+        prj.coverageData = prj.coverageData != null ? Collections.unmodifiableSet(prj.coverageData) : Collections.<File>emptySet();
     }
 
     @Override

@@ -37,9 +37,37 @@ import org.openide.util.lookup.InstanceContent;
  */
 public final class GradleProject implements Serializable, Lookup.Provider {
 
+    /**
+     * As loading a Gradle project information into the memory could be a time
+     * consuming task each the Gradle Plugin uses heuristics and offline 
+     * evaluation of a project in order to provide optimal responsiveness.
+     * E.g. If we just need to know if the project is a Gradle project, there 
+     * is no need to go and fetch all the dependencies.
+     * <p/>
+     * Gradle project is associated with the quality of the
+     * information available at the time. The quality of data can be improved,
+     * by reloading the project.
+     */
     public static enum Quality {
 
-        FALLBACK, EVALUATED, SIMPLE, FULL, FULL_ONLINE;
+        /** The data of this project is unreliable, based on heuristics. */
+        FALLBACK,
+        
+        /** The data of this project is unreliable. This usually means that the 
+         * project was once in a better quality, but some recent change made the
+         * the project un-loadable. E.g. syntax error in the recently edited 
+         * buils.gradle file. The IDE cannot reload it but tries to work with 
+         * the previously retrieved information. */
+        EVALUATED,
+
+        /** The data of this project is reliable, dependency information can be partial though. */
+        SIMPLE,
+
+        /** The data of this project is reliable, full dependency information is available offline. */
+        FULL,
+
+        /** The data of this project is reliable. with full dependency information. */
+        FULL_ONLINE;
 
         public boolean betterThan(Quality q) {
             return this.ordinal() > q.ordinal();
@@ -59,7 +87,7 @@ public final class GradleProject implements Serializable, Lookup.Provider {
 
     }
 
-    public static final String PRIVATE_TASK_GROUP = "<private>";
+    public static final String PRIVATE_TASK_GROUP = "<private>"; //NOI18N
 
     final Set<String> problems;
     final Quality quality;

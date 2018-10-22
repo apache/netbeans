@@ -65,8 +65,15 @@ public class SourceSetPanel extends javax.swing.JPanel {
         } else {
             tfSourceLevel.setText(sourceSet.getSourcesCompatibility() + " / " + sourceSet.getTargetCompatibility());
         }
-        if (sourceSet.getOutputClasses() != null) {
-            tfOutputClasses.setText(relativeRoot.relativize(sourceSet.getOutputClasses().toPath()).toString());
+        if (!sourceSet.getOutputClassDirs().isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            String separator = "";
+            for (File dir : sourceSet.getOutputClassDirs()) {
+                sb.append(separator);
+                sb.append(relativeRoot.relativize(dir.toPath()));
+                separator = ", ";
+            }
+            tfOutputClasses.setText(sb.toString());
         }
         if (sourceSet.getOutputResources() != null) {
             tfOutputResources.setText(relativeRoot.relativize(sourceSet.getOutputResources().toPath()).toString());

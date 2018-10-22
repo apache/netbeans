@@ -152,8 +152,14 @@ class NbProjectInfoBuilder {
 
     private void detectTests(NbProjectInfoModel model) {
         Set<File> testClassesRoots = new HashSet<>()
-        project.tasks.withType(Test) { task ->
-            testClassesRoots.add(task.testClassesDir)
+        if (gradleVersion.compareTo(VersionNumber.parse('4.0')) >= 0) {
+            project.tasks.withType(Test) { task ->
+                task.testClassesDirs.each() { it -> testClassesRoots.add(it) }
+            }
+        } else {
+            project.tasks.withType(Test) { task ->
+                testClassesRoots.add(task.testClassesDir)
+            }
         }
         model.info["test_classes_dirs"] = storeSet(testClassesRoots)
 
@@ -202,7 +208,16 @@ class NbProjectInfoBuilder {
                         model.info["sourceset_${sourceSet.name}_GROOVY"] = storeSet(sourceSet.groovy.srcDirs);
                     if (hasScala)
                         model.info["sourceset_${sourceSet.name}_SCALA"] = storeSet(sourceSet.scala.srcDirs);
-                    model.info["sourceset_${sourceSet.name}_output_classes"] = sourceSet.output.classesDir;
+                    if (gradleVersion.compareTo(VersionNumber.parse('4.0')) >= 0) {
+                        def dirs = new LinkedHashSet<File>();
+                        // classesDirs is just an iteratable
+                        for (def dir in sourceSet.output.classesDirs) {
+                            dirs.add(dir);
+                        }
+                        model.info["sourceset_${sourceSet.name}_output_classes"] = storeSet(dirs);
+                    } else {
+                        model.info["sourceset_${sourceSet.name}_output_classes"] = Collections.singleton(sourceSet.output.classesDir);
+                    }
                     model.info["sourceset_${sourceSet.name}_output_resources"] = sourceSet.output.resourcesDir;
                     try {
                         model.info["sourceset_${sourceSet.name}_classpath_compile"] = storeSet(sourceSet.compileClasspath.files);

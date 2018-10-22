@@ -26,19 +26,14 @@ package org.netbeans.modules.gradle.java.customizer;
 
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
-import org.netbeans.modules.gradle.java.customizer.Bundle;
 import org.netbeans.modules.gradle.java.api.GradleJavaProject;
 import org.netbeans.modules.gradle.java.api.GradleJavaSourceSet;
 import org.netbeans.modules.gradle.spi.Utils;
 import org.netbeans.modules.gradle.spi.customizer.support.FilterPanelProvider;
-import java.awt.Image;
 import java.io.File;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer;
-import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
@@ -47,17 +42,12 @@ import org.openide.util.NbBundle;
  * @author Laszlo Kishalmi
  */
 public class SourcesPanel extends javax.swing.JPanel {
-    private static final String GRADLE_ICON = "org.netbeans.modules/gradle/resources/gradle.png"; //NOI18N
-    private static final String SOURCES_BADGE = "org.netbeans.modules/gradle/resources/sources-badge.png"; //NOI18N
 
     /**
      * Creates new form SourcesPanel
      */
     public SourcesPanel(Project project) {
         initComponents();
-        Image gradle = ImageUtilities.loadImage(GRADLE_ICON);
-        Image badge = ImageUtilities.loadImage(SOURCES_BADGE);
-        Icon sourceSetIcon = new ImageIcon(ImageUtilities.mergeImages(gradle, badge, 8, 8));
         GradleJavaProject gjp = GradleJavaProject.get(project);
         if (gjp != null) {
             for (GradleJavaSourceSet sourceSet : gjp.getSourceSets().values()) {

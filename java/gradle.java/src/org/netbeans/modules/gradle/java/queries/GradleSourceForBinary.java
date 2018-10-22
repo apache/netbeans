@@ -72,8 +72,11 @@ public class GradleSourceForBinary implements SourceForBinaryQueryImplementation
                         case "file": {  //NOI18N
                             File root = FileUtil.normalizeFile(Utilities.toFile(binaryRoot.toURI()));
                             for (GradleJavaSourceSet ss : prj.getSourceSets().values()) {
-                                if (root.equals(ss.getOutputClasses())) {
-                                    ret = new Res(watcher, ss.getName(), EnumSet.of(JAVA, GROOVY, SCALA));
+                                for (File dir : ss.getOutputClassDirs()) {
+                                    if (root.equals(dir)) {
+                                        ret = new Res(watcher, ss.getName(), EnumSet.of(JAVA, GROOVY, SCALA));
+                                        break;
+                                    }
                                 }
                                 if (root.equals(ss.getOutputResources())) {
                                     ret = new Res(watcher, ss.getName(), EnumSet.of(RESOURCES));

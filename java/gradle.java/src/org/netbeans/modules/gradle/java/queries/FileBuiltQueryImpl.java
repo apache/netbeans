@@ -118,10 +118,9 @@ public class FileBuiltQueryImpl extends ProjectOpenedHook implements FileBuiltQu
             GradleJavaSourceSet sourceSet = gjp.containingSourceSet(f);
             if (sourceSet != null) {
                 String relFile = sourceSet.relativePath(f);
-                String relClass = relFile.substring(0, relFile.lastIndexOf('.')) + ".class";
-                File target = new File(sourceSet.getOutputClasses(), relClass);
+                String relClass = relFile.substring(0, relFile.lastIndexOf('.')) + ".class"; //NOI18N
                 try {
-                    ret = new StatusImpl(file, FileUtil.normalizeFile(target));
+                    ret = new StatusImpl(file, sourceSet.getOutputClassDirs(), relClass);
                 } catch (DataObjectNotFoundException ex) {}
             }
 
@@ -146,7 +145,8 @@ public class FileBuiltQueryImpl extends ProjectOpenedHook implements FileBuiltQu
 
         private final ChangeSupport cs = new ChangeSupport(this);
         private final DataObject source;
-        private final File target;
+        private final Set<File> roots;
+        private final String relClass;
         private final PropertyChangeListener pcl  = new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
@@ -180,11 +180,14 @@ public class FileBuiltQueryImpl extends ProjectOpenedHook implements FileBuiltQu
         };
         boolean status;
 
-        public StatusImpl(FileObject source, File target) throws DataObjectNotFoundException {
-            this.target = target;
+        public StatusImpl(FileObject source, Set<File> roots, String relClass) throws DataObjectNotFoundException {
+            this.roots = roots;
+            this.relClass = relClass;
             this.source = DataObject.find(source);
             this.source.addPropertyChangeListener(WeakListeners.propertyChange(pcl, this.source));
-            FileUtil.addFileChangeListener(listener, target);
+            for (File root : roots) {
+                FileUtil.addFileChangeListener(listener, FileUtil.normalizeFile(new File(root, relClass)));
+            }
             checkBuilt();
         }
 
@@ -206,10 +209,16 @@ public class FileBuiltQueryImpl extends ProjectOpenedHook implements FileBuiltQu
         private void checkBuilt() {
             FileObject fo = source.getPrimaryFile();
             boolean built = false;
-            if (fo != null && target.exists()) {
-                long sourceTime = fo.lastModified().getTime();
-                long targetTime = target.lastModified();
-                built = !source.isModified() && targetTime > sourceTime;
+            if (fo != null) {
+                for (File root : roots) {
+                    File target = FileUtil.normalizeFile(new File(root, relClass));
+                    if (target.exists()) {
+                        long sourceTime = fo.lastModified().getTime();
+                        long targetTime = target.lastModified();
+                        built = !source.isModified() && targetTime > sourceTime;
+                        if (built) break;
+                    }
+                }
             }
             if (built != status) {
                 status = built;

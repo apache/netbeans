@@ -98,11 +98,19 @@ public class GradleBinaryForSource implements BinaryForSourceQueryImplementation
                 return new URL[0];
             }
             List<URL> urls = new ArrayList<>(2);
-            File target = resource ? ss.getOutputResources() : ss.getOutputClasses();
-            if ((target != null) && target.exists()) {
-                urls.add(FileUtil.urlForArchiveOrDir(target));
+            List<File> targets = new ArrayList<>(2);
+            if (resource) {
+                if (ss.getOutputResources() != null) {
+                    targets.add(ss.getOutputResources());
+                }
+            } else {
+                targets.addAll(ss.getOutputClassDirs());
             }
-
+            for (File target : targets) {
+                if (target.exists()) {
+                    urls.add(FileUtil.urlForArchiveOrDir(target));
+                }
+            }
             return urls.toArray(new URL[urls.size()]);
         }
 

@@ -301,6 +301,156 @@ public class CreateMethodTest extends ErrorHintsTestBase {
                         "}\n").replaceAll("[ \n\t\r]+", " "));
     }
 
+    public void testMethodRefInstanceRefToInstance() throws Exception {
+        sourceLevel = "1.8";
+        performFixTest("test/Test.java",
+                       "package test;\n" +
+                       "public class Test {\n" +
+                       "    public void test(Runnable r) {\n" +
+                       "        test(this::undef);\n" +
+                       "    }\n" +
+                       "}\n",
+                       -1,
+                       "CreateMethodFix:undef()void:test.Test",
+                       ("package test;\n" +
+                        "public class Test {\n" +
+                        "    public void test(Runnable r) {\n" +
+                        "        test(this::undef);\n" +
+                        "    }\n" +
+                        "    private void undef() {\n" +
+                        "         throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates. \n" +
+                        "    }\n" +
+                        "}\n").replaceAll("[ \n\t\r]+", " "));
+    }
+
+    public void testMethodRefStaticRefToStatic() throws Exception {
+        sourceLevel = "1.8";
+        performFixTest("test/Test.java",
+                       "package test;\n" +
+                       "public class Test {\n" +
+                       "    public void test(Runnable r) {\n" +
+                       "        test(Test::undef);\n" +
+                       "    }\n" +
+                       "}\n",
+                       -1,
+                       "CreateMethodFix:undef()void:test.Test",
+                       ("package test;\n" +
+                        "public class Test {\n" +
+                        "    private static void undef() {\n" +
+                        "         throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates. \n" +
+                        "    }\n" +
+                        "    public void test(Runnable r) {\n" +
+                        "        test(Test::undef);\n" +
+                        "    }\n" +
+                        "}\n").replaceAll("[ \n\t\r]+", " "));
+    }
+
+    public void testMethodRefStaticRefToInstance() throws Exception {
+        sourceLevel = "1.8";
+        performFixTest("test/Test.java",
+                       "package test;\n" +
+                       "public class Test {\n" +
+                       "    public void test(I<Test> r) {\n" +
+                       "        test(Test::undef);\n" +
+                       "    }\n" +
+                       "    public interface I<T> {\n" +
+                       "        public void run(T t);\n" +
+                       "        public default void run2() {}\n" +
+                       "    }\n" +
+                       "}\n",
+                       -1,
+                       "CreateMethodFix:undef()void:test.Test",
+                       ("package test;\n" +
+                        "public class Test {\n" +
+                        "    public void test(I<Test> r) {\n" +
+                        "        test(Test::undef);\n" +
+                        "    }\n" +
+                        "    private void undef() {\n" +
+                        "         throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates. \n" +
+                        "    }\n" +
+                        "    public interface I<T> {\n" +
+                        "        public void run(T t);\n" +
+                        "        public default void run2() {}\n" +
+                        "    }\n" +
+                        "}\n").replaceAll("[ \n\t\r]+", " "));
+    }
+
+    public void testMethodRefStaticRefToStatic2() throws Exception {
+        sourceLevel = "1.8";
+        performFixTest("test/Test.java",
+                       "package test;\n" +
+                       "public class Test {\n" +
+                       "    public void test(I<Test> r) {\n" +
+                       "        test(Test::undef);\n" +
+                       "    }\n" +
+                       "    public interface I<T> {\n" +
+                       "        public void run(T t);\n" +
+                       "        public default void run2() {}\n" +
+                       "    }\n" +
+                       "}\n",
+                       -1,
+                       "CreateMethodFix:undef(test.Test t)void:test.Test",
+                       ("package test;\n" +
+                        "public class Test {\n" +
+                        "    private static void undef(Test t) {\n" +
+                        "         throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates. \n" +
+                        "    }\n" +
+                        "    public void test(I<Test> r) {\n" +
+                        "        test(Test::undef);\n" +
+                        "    }\n" +
+                        "    public interface I<T> {\n" +
+                        "        public void run(T t);\n" +
+                        "        public default void run2() {}\n" +
+                        "    }\n" +
+                        "}\n").replaceAll("[ \n\t\r]+", " "));
+    }
+
+    public void testMethodRefInstanceRefToInstance2() throws Exception {
+        sourceLevel = "1.8";
+        performFixTest("test/Test.java",
+                       "package test;\n" +
+                       "public class Test {\n" +
+                       "    public void test(I<Test> r) {\n" +
+                       "        test(this::undef);\n" +
+                       "    }\n" +
+                       "    public interface I<T> {\n" +
+                       "        public void run(T t);\n" +
+                       "        public default void run2() {}\n" +
+                       "    }\n" +
+                       "}\n",
+                       -1,
+                       "CreateMethodFix:undef(test.Test t)void:test.Test",
+                       ("package test;\n" +
+                        "public class Test {\n" +
+                        "    public void test(I<Test> r) {\n" +
+                        "        test(this::undef);\n" +
+                        "    }\n" +
+                        "    private void undef(Test t) {\n" +
+                        "         throw new UnsupportedOperationException(\"Not supported yet.\"); //To change body of generated methods, choose Tools | Templates. \n" +
+                        "    }\n" +
+                        "    public interface I<T> {\n" +
+                        "        public void run(T t);\n" +
+                        "        public default void run2() {}\n" +
+                        "    }\n" +
+                        "}\n").replaceAll("[ \n\t\r]+", " "));
+    }
+
+    public void testErroneousMethodRef() throws Exception {
+        sourceLevel = "1.8";
+        performAnalysisTest("test/Test.java",
+                            "package test;\n" +
+                            "public class Test {\n" +
+                            "    public void test(I<Test> r) {\n" +
+                            "        test(undef::undef);\n" +
+                            "    }\n" +
+                            "    public interface I<T> {\n" +
+                            "        public void run(T t);\n" +
+                            "        public default void run2() {}\n" +
+                            "    }\n" +
+                            "}\n",
+                            -1);
+    }
+
     @Override
     protected List<Fix> computeFixes(CompilationInfo info, String diagnosticCode, int pos, TreePath path) throws Exception {
         List<Fix> fixes = new CreateElement().analyze(info, diagnosticCode, pos);

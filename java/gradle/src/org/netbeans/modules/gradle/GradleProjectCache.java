@@ -39,6 +39,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -86,7 +88,7 @@ public final class GradleProjectCache {
     private static final Logger LOG = Logger.getLogger(GradleProjectCache.class.getName());
     private static final String INFO_CACHE_FILE_NAME = "project-info.ser"; //NOI18N
 
-    private static final Map<File, Notification> NOTIFICATIONS = new WeakHashMap<>();
+    private static final Map<File, List<Notification>> NOTIFICATIONS = new WeakHashMap<>();
 
     private static AtomicLong timeInLoad = new AtomicLong();
     private static AtomicInteger loadedProjects = new AtomicInteger();
@@ -186,9 +188,12 @@ public final class GradleProjectCache {
         try {
             info = retrieveProjectInfo(goOnline, pconn, cmd, token, pl);
 
-            Notification notification = NOTIFICATIONS.get(base.getProjectDir());
-            if (notification != null) {
-                notification.clear();
+            List<Notification> nlist = NOTIFICATIONS.get(base.getProjectDir());
+            if (nlist != null) {
+                NOTIFICATIONS.remove(base.getProjectDir());
+                for (Notification notification : nlist) {
+                    notification.clear();                
+                }
             }
             if (!info.hasException()) {
                 if (!info.getProblems().isEmpty()) {
@@ -361,7 +366,12 @@ public final class GradleProjectCache {
                 new JLabel(problem),
                 new JLabel(sb.toString()),
                 Priority.LOW, Category.WARNING);
-        NOTIFICATIONS.put(projectDir, notify);
+        List<Notification> nlist = NOTIFICATIONS.get(projectDir);
+        if (nlist == null) {
+            nlist = new LinkedList<>();
+            NOTIFICATIONS.put(projectDir, nlist);
+        }
+        nlist.add(notify);
     }
 
     private static String bulletedList(Collection<? extends Object> elements) {

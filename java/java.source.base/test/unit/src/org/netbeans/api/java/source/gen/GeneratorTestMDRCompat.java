@@ -37,6 +37,7 @@ import org.netbeans.api.java.source.*;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.modules.java.source.transform.Transformer;
 import org.netbeans.modules.java.JavaDataLoader;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.ClassIndexTestCase;
 import org.netbeans.modules.java.source.TestUtil;
 import org.netbeans.modules.java.source.save.Reindenter;
@@ -71,7 +72,7 @@ public abstract class GeneratorTestMDRCompat extends ClassIndexTestCase {
                     if (type == ClassPath.COMPILE)
                         return ClassPathSupport.createClassPath(new FileObject[0]);
                     if (type == ClassPath.BOOT)
-                        return createClassPath(System.getProperty("sun.boot.class.path"));
+                        return BootClassPathUtil.getBootClassPath();
                     return null;
             }
         };

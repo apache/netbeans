@@ -25,6 +25,19 @@
     <apidef name="javasource_base">Java Source API</apidef>
 </apidefs>
 <changes>
+    <change id="TreeMaker.Case">
+        <api name="javasource_base"/>
+        <summary>Adding case-related overload to TreeMaker</summary>
+        <version major="1" minor="2.39"/>
+        <date day="6" month="9" year="2018"/>
+        <author login="jlahoda"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"/>
+        <description>
+            Added TreeMaker.CaseMultipleLabels(List&lt;? extends ExpressionTree&gt; patterns, List&lt;? extends StatementTree&gt; statements) and
+            TreeMaker.Case(List&lt;? extends ExpressionTree&gt; patterns, Tree body) overloads.
+        </description>
+        <class name="TreeUtilities" package="org.netbeans.api.java.source"/>
+    </change>
     <change id="BuildArtifactMapper.isCompileOnSaveSupported">
         <api name="javasource_base"/>
         <summary>Check the var type variable in given tree path.</summary>

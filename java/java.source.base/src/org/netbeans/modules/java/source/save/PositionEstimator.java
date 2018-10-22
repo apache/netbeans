@@ -174,6 +174,21 @@ public abstract class PositionEstimator {
         }
     }
     
+    static class CasePatternEstimator extends BaseEstimator {
+        CasePatternEstimator(List<? extends ExpressionTree> oldL, 
+                             List<? extends ExpressionTree> newL,
+                             DiffContext diffContext)
+        {
+            super(CASE, oldL, newL, diffContext);
+        }
+
+        @Override
+        public String head() {
+            return precToken.fixedText() + " ";
+        }
+        
+    }
+    
     static class ExportsOpensToEstimator extends BaseEstimator {
         
         ExportsOpensToEstimator(List<? extends ExpressionTree> oldL,

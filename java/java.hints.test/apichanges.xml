@@ -83,6 +83,18 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="HintTest-options">
+            <api name="JavaHintsTest"/>
+            <summary>Added HintTest.options method</summary>
+            <version major="1" minor="23"/>
+            <date day="6" month="9" year="2018"/>
+            <author login="jlahoda"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                A method <code>HintTestoptions</code> was added that allows to specify additional compiler options.
+            </description>
+            <class name="HintTest" package="org.netbeans.modules.java.hints.test.api"/>
+        </change>
         <change id="HintTest-fixNotPresent">
             <api name="JavaHintsTest"/>
             <summary>Assertion for missing fixes</summary>

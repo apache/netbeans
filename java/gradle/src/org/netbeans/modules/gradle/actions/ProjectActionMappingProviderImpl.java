@@ -78,7 +78,7 @@ public class ProjectActionMappingProviderImpl implements ProjectActionMappingPro
                         cleanCache();
                         break;
                     case PROP_RESOURCES:
-                        if (projectMappingFile.equals(evt.getNewValue())) {
+                        if (projectMappingFile.toURI().equals(evt.getNewValue())) {
                             loadProjectCustomMappings();
                         }
                 }

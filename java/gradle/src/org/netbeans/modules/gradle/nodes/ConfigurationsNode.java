@@ -23,7 +23,7 @@ import org.netbeans.modules.gradle.ActionProviderImpl;
 import org.netbeans.modules.gradle.GradleArtifactStore;
 import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.api.GradleDependency;
-import org.netbeans.modules.gradle.api.GradleProject;
+import org.netbeans.modules.gradle.GradleProject;
 import org.netbeans.modules.gradle.api.GradleConfiguration;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
@@ -48,6 +48,7 @@ import javax.swing.event.ChangeListener;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
+import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.openide.awt.HtmlBrowser;
 import org.openide.filesystems.FileObject;
@@ -107,7 +108,7 @@ public class ConfigurationsNode extends AbstractNode {
     public Image getIcon(int type) {
         GradleProject gp = project.getGradleProject();
         Image ret = ImageUtilities.loadImage(LIBRARIES_ICON);
-        if (gp.getQuality().worseThan(GradleProject.Quality.FULL) || !gp.getBaseProject().isResolved()) {
+        if (gp.getQuality().worseThan(Quality.FULL) || !gp.getBaseProject().isResolved()) {
             Image warn = ImageUtilities.loadImage(WARNING_BADGE);
             ret = ImageUtilities.mergeImages(ret, warn, 8, 0);
         }

@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.gradle.queries;
 
-import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.spi.GradleSettings;
@@ -72,7 +71,7 @@ public final class Info implements ProjectInformation, PropertyChangeListener {
 
     @Override
     public String getName() {
-        GradleBaseProject prj = project.getLookup().lookup(NbGradleProject.class).getGradleProject().getBaseProject();
+        GradleBaseProject prj = GradleBaseProject.get(project);
 
         String ret = prj.getParentName() != null ? prj.getParentName() + ":" : "";  //NOI18N
         ret += prj.getName();        //NOI18N
@@ -83,17 +82,10 @@ public final class Info implements ProjectInformation, PropertyChangeListener {
     public String getDisplayName() {
         final NbGradleProject nb = project.getLookup().lookup(NbGradleProject.class);
         if (SwingUtilities.isEventDispatchThread() && !nb.isGradleProjectLoaded()) {
-            RP.post(new Runnable() {
-                @Override
-                public void run() {
-                    //assuming this takes long and hangs in sync.
-                    nb.getGradleProject();
-                }
-            });
             return project.getProjectDirectory().getNameExt();
         }
 
-        GradleBaseProject prj = nb.getGradleProject().getBaseProject();
+        GradleBaseProject prj = GradleBaseProject.get(project);
         String ret;
         if (GradleSettings.getDefault().isDisplayDesctiption()
                 && (prj.getDescription() != null)

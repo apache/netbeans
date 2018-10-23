@@ -20,7 +20,7 @@
 package org.netbeans.modules.gradle.execute.navigator;
 
 import org.netbeans.modules.gradle.ActionProviderImpl;
-import org.netbeans.modules.gradle.api.GradleProject;
+import org.netbeans.modules.gradle.GradleProject;
 import org.netbeans.modules.gradle.api.GradleTask;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.ActionMapping;
@@ -40,6 +40,7 @@ import javax.swing.tree.TreeSelectionModel;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
+import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.view.BeanTreeView;
 import org.openide.filesystems.FileObject;
@@ -146,12 +147,12 @@ public class TasksPanel extends javax.swing.JPanel implements ExplorerManager.Pr
     public void run() {
         if (currentP != null) {
 
-            GradleProject prj = GradleProject.get(currentP);
+            GradleBaseProject prj = GradleBaseProject.get(currentP);
             if (prj != null) {
                 final Children ch = new Children.Array();
                 ArrayList<String> glist = new ArrayList<>();
-                for (String group : prj.getBaseProject().getTaskGroups()) {
-                    if (!GradleProject.PRIVATE_TASK_GROUP.equals(group)) {
+                for (String group : prj.getTaskGroups()) {
+                    if (!GradleBaseProject.PRIVATE_TASK_GROUP.equals(group)) {
                         glist.add(group);
                     }
                 }
@@ -160,7 +161,7 @@ public class TasksPanel extends javax.swing.JPanel implements ExplorerManager.Pr
                 for (String group : glist) {
                     ch.add(new Node[]{new TaskGroupNode(group, prj)});
                 }
-                ch.add(new Node[]{new TaskGroupNode(GradleProject.PRIVATE_TASK_GROUP, prj)});
+                ch.add(new Node[]{new TaskGroupNode(GradleBaseProject.PRIVATE_TASK_GROUP, prj)});
 
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
@@ -235,10 +236,10 @@ public class TasksPanel extends javax.swing.JPanel implements ExplorerManager.Pr
             "LBL_PrivateTasks=Other Tasks"
         })
         @SuppressWarnings("OverridableMethodCallInConstructor")
-        public TaskGroupNode(String group, GradleProject project) {
+        public TaskGroupNode(String group, GradleBaseProject project) {
             super(Children.create(new TaskGroupChildren(group, project), true), Lookup.EMPTY);
             setName(group);
-            String displayName = GradleProject.PRIVATE_TASK_GROUP.equals(group)
+            String displayName = GradleBaseProject.PRIVATE_TASK_GROUP.equals(group)
                     ? LBL_PrivateTasks()
                     : Utils.capitalize(group);
             setDisplayName(displayName);
@@ -303,16 +304,16 @@ public class TasksPanel extends javax.swing.JPanel implements ExplorerManager.Pr
     private class TaskGroupChildren extends ChildFactory<GradleTask> {
 
         private final String group;
-        private final GradleProject project;
+        private final GradleBaseProject project;
 
-        public TaskGroupChildren(String group, GradleProject project) {
+        public TaskGroupChildren(String group, GradleBaseProject project) {
             this.group = group;
             this.project = project;
         }
 
         @Override
         protected boolean createKeys(List<GradleTask> list) {
-            ArrayList<GradleTask> ret = new ArrayList<>(project.getBaseProject().getTasks(group));
+            ArrayList<GradleTask> ret = new ArrayList<>(project.getTasks(group));
             Collections.sort(ret, new Comparator<GradleTask>() {
 
                 @Override

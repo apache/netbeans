@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.gradle.api;
+package org.netbeans.modules.gradle;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -27,6 +27,9 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.gradle.api.GradleBaseProject;
+import org.netbeans.modules.gradle.api.NbGradleProject;
+import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
@@ -36,58 +39,6 @@ import org.openide.util.lookup.InstanceContent;
  * @author Laszlo Kishalmi
  */
 public final class GradleProject implements Serializable, Lookup.Provider {
-
-    /**
-     * As loading a Gradle project information into the memory could be a time
-     * consuming task each the Gradle Plugin uses heuristics and offline 
-     * evaluation of a project in order to provide optimal responsiveness.
-     * E.g. If we just need to know if the project is a Gradle project, there 
-     * is no need to go and fetch all the dependencies.
-     * <p/>
-     * Gradle project is associated with the quality of the
-     * information available at the time. The quality of data can be improved,
-     * by reloading the project.
-     */
-    public static enum Quality {
-
-        /** The data of this project is unreliable, based on heuristics. */
-        FALLBACK,
-        
-        /** The data of this project is unreliable. This usually means that the 
-         * project was once in a better quality, but some recent change made the
-         * the project un-loadable. E.g. syntax error in the recently edited 
-         * buils.gradle file. The IDE cannot reload it but tries to work with 
-         * the previously retrieved information. */
-        EVALUATED,
-
-        /** The data of this project is reliable, dependency information can be partial though. */
-        SIMPLE,
-
-        /** The data of this project is reliable, full dependency information is available offline. */
-        FULL,
-
-        /** The data of this project is reliable. with full dependency information. */
-        FULL_ONLINE;
-
-        public boolean betterThan(Quality q) {
-            return this.ordinal() > q.ordinal();
-        }
-
-        public boolean atLeast(Quality q) {
-            return this.ordinal() >= q.ordinal();
-        }
-
-        public boolean worseThan(Quality q) {
-            return this.ordinal() < q.ordinal();
-        }
-
-        public boolean notBetterThan(Quality q) {
-            return this.ordinal() <= q.ordinal();
-        }
-
-    }
-
-    public static final String PRIVATE_TASK_GROUP = "<private>"; //NOI18N
 
     final Set<String> problems;
     final Quality quality;
@@ -155,11 +106,5 @@ public final class GradleProject implements Serializable, Lookup.Provider {
         Set<String> p = new LinkedHashSet<>(Arrays.asList(reasons));
         return new GradleProject(Quality.EVALUATED, p, this);
     }
-
-    public static GradleProject get(Project project) {
-        NbGradleProject prj = NbGradleProject.get(project);
-        return prj != null ? prj.getGradleProject() : null;
-    }
-
 
 }

@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.gradle.java.queries;
 
-import org.netbeans.modules.gradle.api.GradleProject;
 import org.netbeans.modules.gradle.java.api.GradleJavaSourceSet;
 import org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType;
 import static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType.*;
@@ -66,7 +65,7 @@ public class GradleSourceForBinary implements SourceForBinaryQueryImplementation
         if (ret == null) {
             try {
                 NbGradleProject watcher = NbGradleProject.get(project);
-                if (watcher.getGradleProject().getQuality().atLeast(GradleProject.Quality.FULL)) {
+                if (watcher.getQuality().atLeast(NbGradleProject.Quality.FULL)) {
                     GradleJavaProject prj = GradleJavaProject.get(watcher);
                     switch (binaryRoot.getProtocol()) {
                         case "file": {  //NOI18N

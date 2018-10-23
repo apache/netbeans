@@ -21,8 +21,8 @@ package org.netbeans.modules.gradle;
 
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.GradleFiles;
-import org.netbeans.modules.gradle.api.GradleProject;
-import org.netbeans.modules.gradle.api.GradleProject.Quality;
+import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
+import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.*;
 import org.netbeans.modules.gradle.api.NbProjectInfo;
 import org.netbeans.modules.gradle.options.GradleDistributionManager;
 import org.netbeans.modules.gradle.spi.GradleSettings;
@@ -68,7 +68,6 @@ import static org.netbeans.modules.gradle.GradleDaemon.*;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import java.util.WeakHashMap;
-import java.util.logging.Level;
 import javax.swing.JLabel;
 import org.openide.awt.Notification;
 import org.openide.awt.NotificationDisplayer;
@@ -109,7 +108,7 @@ public final class GradleProjectCache {
     public static GradleProject loadProject(final NbGradleProjectImpl project, Quality aim, boolean ignoreCache, String... args) {
         final GradleFiles files = project.getGradleFiles();
 
-        if (aim == Quality.FALLBACK) {
+        if (aim == FALLBACK) {
             return fallbackProject(files);
         }
         GradleProject prev = project.project;
@@ -117,7 +116,7 @@ public final class GradleProjectCache {
         ignoreCache |= GradleSettings.getDefault().isCacheDisabled();
 
         // Try to turn to the cache
-        if (!ignoreCache && (prev.getQuality() == Quality.FALLBACK))  {
+        if (!ignoreCache && (prev.getQuality() == FALLBACK))  {
             ProjectCacheEntry cacheEntry = loadCachedProject(files);
             if (cacheEntry != null) {
                 if (cacheEntry.isCompatible()) {
@@ -154,7 +153,7 @@ public final class GradleProjectCache {
     private static GradleProject loadGradleProject(ReloadContext ctx, CancellationToken token, ProgressListener pl) {
         long start = System.currentTimeMillis();
         NbProjectInfo info = null;
-        GradleProject.Quality quality = ctx.aim;
+        Quality quality = ctx.aim;
         GradleBaseProject base = ctx.previous.getBaseProject();
         GradleConnector gconn = GradleConnector.newConnector();
         gconn.useInstallation(GradleDistributionManager.evaluateGradleWrapperDistribution(base.getRootDir()));
@@ -171,7 +170,7 @@ public final class GradleProjectCache {
         GoOnline goOnline;
         if (GradleSettings.getDefault().isOffline()) {
             goOnline = GoOnline.NEVER;
-        } else if (ctx.aim == Quality.FULL_ONLINE) {
+        } else if (ctx.aim == FULL_ONLINE) {
             goOnline = GoOnline.ALWAYS;
         } else {
             switch (GradleSettings.getDefault().getDownloadLibs()) {
@@ -198,7 +197,7 @@ public final class GradleProjectCache {
             if (!info.hasException()) {
                 if (!info.getProblems().isEmpty()) {
                     // If we do not have exception, but seen some problems the we mark the quality as SIMPLE
-                    quality = Quality.SIMPLE;
+                    quality = SIMPLE;
                     openNotification(base.getProjectDir(),
                             Bundle.TIT_LOAD_ISSUES(base.getProjectDir().getName()),
                             Bundle.TIT_LOAD_ISSUES(base.getProjectDir().getName()),
@@ -337,7 +336,7 @@ public final class GradleProjectCache {
             try {
                 return loadGradleProject(ctx, tokenSource.token(), pl);
             } catch (Throwable ex) {
-                LOG.log(Level.WARNING, ex.getMessage(), ex);
+                LOG.log(WARNING, ex.getMessage(), ex);
                 throw ex;
             } finally {
                 handle.finish();
@@ -431,7 +430,7 @@ public final class GradleProjectCache {
     }
 
     private static void saveCachedProjectInfo(NbProjectInfo data, GradleProject gp) {
-        assert gp.getQuality().betterThan(Quality.FALLBACK) : "Never attempt to cache FALLBACK projects.";
+        assert gp.getQuality().betterThan(FALLBACK) : "Never attempt to cache FALLBACK projects."; //NOi18N
         //TODO: Make it possible to handle external file set as cache.
         GradleFiles gf = new GradleFiles(gp.getBaseProject().getProjectDir());
 
@@ -448,11 +447,11 @@ public final class GradleProjectCache {
     }
 
     private static GradleProject fallbackProject(GradleFiles files) {
-        return createFallbackProject(Quality.FALLBACK, files, Collections.<String>emptyList());
+        return createFallbackProject(FALLBACK, files, Collections.<String>emptyList());
     }
 
     private static GradleProject evaluatedProject(GradleFiles files, Collection<String> probs) {
-        return createFallbackProject(Quality.EVALUATED, files, probs);
+        return createFallbackProject(EVALUATED, files, probs);
     }
 
     private static GradleProject createFallbackProject(Quality quality, GradleFiles files, Collection<String> probs) {
@@ -489,7 +488,7 @@ public final class GradleProjectCache {
 
     static final class ReloadContext {
         final GradleProject previous;
-        final GradleProject.Quality aim;
+        final Quality aim;
         String[] args = new String[0];
 
         public ReloadContext(GradleProject previous, Quality aim) {
@@ -512,7 +511,7 @@ public final class GradleProjectCache {
 
         long timestamp;
         Set<File> sourceFiles;
-        GradleProject.Quality quality;
+        Quality quality;
         NbProjectInfo data;
 
         protected ProjectCacheEntry() {
@@ -530,7 +529,7 @@ public final class GradleProjectCache {
             return version == COMPATIBLE_CACHE_VERSION;
         }
 
-        public boolean isValid(GradleProject.Quality aim) {
+        public boolean isValid(Quality aim) {
             boolean ret = isCompatible();
             if (ret && (sourceFiles != null)) {
                 for (File f : sourceFiles) {

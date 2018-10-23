@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.gradle.api;
 
+import org.netbeans.modules.gradle.GradleProject;
 import org.netbeans.modules.gradle.spi.WatchedResourceProvider;
 import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import java.awt.Image;
@@ -40,6 +41,7 @@ import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.ImageUtilities;
+import org.openide.util.Lookup;
 import org.openide.util.Utilities;
 
 /**
@@ -47,6 +49,61 @@ import org.openide.util.Utilities;
  * @author Laszlo Kishalmi
  */
 public final class NbGradleProject {
+
+    /**
+     * As loading a Gradle project information into the memory could be a time
+     * consuming task each the Gradle Plugin uses heuristics and offline 
+     * evaluation of a project in order to provide optimal responsiveness.
+     * E.g. If we just need to know if the project is a Gradle project, there 
+     * is no need to go and fetch all the dependencies.
+     * <p/>
+     * Gradle project is associated with the quality of the
+     * information available at the time. The quality of data can be improved,
+     * by reloading the project.
+     */
+    public static enum Quality {
+
+        /** 
+         * The data of this project is unreliable, based on heuristics. This is
+         * the quickest way to retrieve some information as it the code do not 
+         * even turns to Gradle for it. Tries to apply some common usage
+         * patterns. 
+         */
+        FALLBACK,
+        
+        /** The data of this project is unreliable. This usually means that the 
+         * project was once in a better quality, but some recent change made the
+         * the project un-loadable. E.g. syntax error in the recently edited 
+         * build.gradle file. The IDE cannot reload it but tries to work with 
+         * the previously retrieved information. */
+        EVALUATED,
+
+        /** The data of this project is reliable, dependency information can be partial though. */
+        SIMPLE,
+
+        /** The data of this project is reliable, full dependency information is available offline. */
+        FULL,
+
+        /** The data of this project is reliable. with full dependency information. */
+        FULL_ONLINE;
+
+        public boolean betterThan(Quality q) {
+            return this.ordinal() > q.ordinal();
+        }
+
+        public boolean atLeast(Quality q) {
+            return this.ordinal() >= q.ordinal();
+        }
+
+        public boolean worseThan(Quality q) {
+            return this.ordinal() < q.ordinal();
+        }
+
+        public boolean notBetterThan(Quality q) {
+            return this.ordinal() <= q.ordinal();
+        }
+
+    }
 
     public static final String GRADLE_PROJECT_TYPE = "org-netbeans-modules-gradle";
     public static final String GRADLE_PLUGIN_TYPE = GRADLE_PROJECT_TYPE + "/Plugins";
@@ -111,16 +168,29 @@ public final class NbGradleProject {
         support = new PropertyChangeSupport(project);
     }
 
-    public GradleProject getGradleProject() {
-        return project.getGradleProject();
+    public <T> T projectLookup(Class<T> clazz) {
+        return project.getGradleProject().getLookup().lookup(clazz);
     }
-
-    public GradleProject.Quality getAimedQuality() {
+    
+    /**
+     * Return the actual Quality information on the currently loaded Project.
+     * 
+     * @return the information Quality of the project data;
+     */
+    public Quality getQuality() {
+        return project.getGradleProject().getQuality();
+    }
+    
+    /**
+     * The requested information on this project. Mostly FALLBACK or FULL.
+     * @return the information Quality requested.
+     */
+    public Quality getAimedQuality() {
         return project.getAimedQuality();
     }
 
     public boolean isUnloadable() {
-        return getGradleProject().getQuality().worseThan(GradleProject.Quality.SIMPLE);
+        return getQuality().worseThan(Quality.SIMPLE);
     }
 
     public Preferences getPreferences(boolean shared) {
@@ -149,8 +219,8 @@ public final class NbGradleProject {
     }
 
     private void attachResourceWatchers() {
-        //Never listen on resource changes when only FALLBAC quality is needed
-        if (project.getAimedQuality() == GradleProject.Quality.FALLBACK) return;
+        //Never listen on resource changes when only FALLBACK quality is needed
+        if (project.getAimedQuality() == Quality.FALLBACK) return;
 
         Collection<? extends WatchedResourceProvider> all
                 = project.getLookup().lookupAll(WatchedResourceProvider.class);

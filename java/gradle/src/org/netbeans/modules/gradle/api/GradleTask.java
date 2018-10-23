@@ -53,7 +53,7 @@ public final class GradleTask implements Serializable {
     }
 
     public String getGroup() {
-        return group != null ? group : GradleProject.PRIVATE_TASK_GROUP;
+        return group != null ? group : GradleBaseProject.PRIVATE_TASK_GROUP;
     }
 
     public String getName() {

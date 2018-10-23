@@ -19,8 +19,7 @@
 
 package org.netbeans.modules.gradle;
 
-import org.netbeans.modules.gradle.api.GradleProject;
-import org.netbeans.modules.gradle.api.GradleProject.Quality;
+import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -35,7 +34,7 @@ import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.ui.ProjectProblemResolver;
 import org.netbeans.spi.project.ui.ProjectProblemsProvider;
 
-import static org.netbeans.modules.gradle.api.GradleProject.Quality.*;
+import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.*;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -83,7 +82,7 @@ public class GradleProjectProblemProvider implements ProjectProblemsProvider {
                 NbGradleProject.addPropertyChangeListener(project, listener);
             }
         }
-        GradleProject gp = GradleProject.get(project);
+        GradleProject gp = project.getLookup().lookup(NbGradleProjectImpl.class).getGradleProject();
         for (String problem : gp.getProblems()) {
             String[] lines = problem.split("\\n");
             ret.add(ProjectProblem.createWarning(lines[0], problem.replaceAll("\\n", "<br/>"), resolver));
@@ -102,7 +101,7 @@ public class GradleProjectProblemProvider implements ProjectProblemsProvider {
         @Override
         public Result call() throws Exception {
             NbGradleProjectImpl impl = project.getLookup().lookup(NbGradleProjectImpl.class);
-            GradleProject gradleProject = GradleProjectCache.loadProject(impl, GradleProject.Quality.FULL_ONLINE, true);
+            GradleProject gradleProject = GradleProjectCache.loadProject(impl, FULL_ONLINE, true);
             impl.fireProjectReload(false);
             Quality q = gradleProject.getQuality();
             Status st = q.worseThan(SIMPLE) ? Status.UNRESOLVED :

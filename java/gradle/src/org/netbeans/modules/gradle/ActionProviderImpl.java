@@ -19,8 +19,9 @@
 
 package org.netbeans.modules.gradle;
 
-import org.netbeans.modules.gradle.api.GradleProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
+import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
+import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.*;
 import org.netbeans.modules.gradle.api.execute.RunConfig;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.netbeans.modules.gradle.actions.ActionToTaskUtils;
@@ -213,10 +214,9 @@ public class ActionProviderImpl implements ActionProvider {
 
         boolean reloadOnly = !showUI && (args.length == 0);
         final boolean needReload;
-        final GradleProject.Quality maxQualily = (cfg.getCommandLine().hasFlag(GradleCommandLine.Flag.OFFLINE))
+        final Quality maxQualily = (cfg.getCommandLine().hasFlag(GradleCommandLine.Flag.OFFLINE))
                 && (mapping.getReloadRule() != ActionMapping.ReloadRule.ALWAYS_ONLINE)
-                ? GradleProject.Quality.FULL
-                : GradleProject.Quality.FULL_ONLINE;
+                ? FULL : FULL_ONLINE;
         switch (mapping.getReloadRule()) {
             case ALWAYS_ONLINE:
             case ALWAYS:

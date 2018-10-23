@@ -22,7 +22,7 @@ package org.netbeans.modules.gradle.queries;
 import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.GradleDependency;
-import org.netbeans.modules.gradle.api.GradleProject;
+import org.netbeans.modules.gradle.GradleProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -69,7 +69,7 @@ public class SubprojectProviderImpl implements SubprojectProvider {
 
     @Override
     public Set<? extends Project> getSubprojects() {
-        GradleBaseProject gp = project.getLookup().lookup(NbGradleProjectImpl.class).getGradleProject().getBaseProject();
+        GradleBaseProject gp = GradleBaseProject.get(project);
         Set<Project> projects = new HashSet<>();
         Collection<File> paths;
         if (gp.isRoot()) {

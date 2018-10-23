@@ -22,7 +22,7 @@ package org.netbeans.modules.gradle.spi.newproject;
 import org.netbeans.modules.gradle.GradleProjectCache;
 import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.api.GradleFiles;
-import org.netbeans.modules.gradle.api.GradleProject;
+import org.netbeans.modules.gradle.GradleProject;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -54,6 +54,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
+import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 
@@ -263,7 +264,7 @@ public final class TemplateOperation implements Runnable {
                         NbGradleProjectImpl nbProject = project.getLookup().lookup(NbGradleProjectImpl.class);
                         if (nbProject != null) {
                             //Just load the project into the cache.
-                            GradleProjectCache.loadProject(nbProject, GradleProject.Quality.FULL_ONLINE, true);
+                            GradleProjectCache.loadProject(nbProject, Quality.FULL_ONLINE, true);
                         }
                         return Collections.singleton(projectDir);
                     }

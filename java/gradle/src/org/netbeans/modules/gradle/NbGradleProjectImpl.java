@@ -20,9 +20,8 @@
 package org.netbeans.modules.gradle;
 
 import org.netbeans.modules.gradle.api.GradleFiles;
-import org.netbeans.modules.gradle.api.GradleProject;
-import org.netbeans.modules.gradle.api.GradleProject.Quality;
 import org.netbeans.modules.gradle.api.NbGradleProject;
+import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -47,10 +46,14 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.*;
 import org.openide.util.lookup.Lookups;
 
+import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.*;
+
 import static java.util.logging.Level.*;
+
 import java.util.logging.Logger;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.SuppressWarnings;
+import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.spi.project.CacheDirectoryProvider;
 import org.netbeans.spi.project.support.LookupProviderSupport;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
@@ -80,7 +83,7 @@ public final class NbGradleProjectImpl implements Project {
     private final Lookup basicLookup;
     private final Lookup completeLookup;
     private Updater openedProjectUpdater;
-    private GradleProject.Quality aimedQuality = GradleProject.Quality.FALLBACK;
+    private Quality aimedQuality = FALLBACK;
     private final @NonNull
     NbGradleProject watcher;
     @SuppressWarnings("MS_SHOULD_BE_FINAL")
@@ -218,7 +221,7 @@ public final class NbGradleProjectImpl implements Project {
         project = null;
     }
 
-    public GradleProject.Quality getAimedQuality() {
+    public Quality getAimedQuality() {
         return aimedQuality;
     }
 
@@ -228,10 +231,10 @@ public final class NbGradleProjectImpl implements Project {
 
     public void setAimedQuality(Quality aim) {
         //TODO: Shall we do some locking here?
-        if ((aimedQuality == Quality.FALLBACK) && aim.betterThan(Quality.FALLBACK)) {
+        if ((aimedQuality == FALLBACK) && aim.betterThan(FALLBACK)) {
             ACCESSOR.activate(watcher);
         }
-        if ((aim == Quality.FALLBACK) && aimedQuality.betterThan(Quality.FALLBACK)) {
+        if ((aim == FALLBACK) && aimedQuality.betterThan(FALLBACK)) {
             ACCESSOR.passivate(watcher);
         }
         this.aimedQuality = aim;
@@ -293,7 +296,7 @@ public final class NbGradleProjectImpl implements Project {
             Runnable open = new Runnable() {
                 @Override
                 public void run() {
-                    setAimedQuality(GradleProject.Quality.FULL);
+                    setAimedQuality(FULL);
                     attachAllUpdater();
                 }
             };
@@ -306,7 +309,7 @@ public final class NbGradleProjectImpl implements Project {
 
         @Override
         protected void projectClosed() {
-            setAimedQuality(GradleProject.Quality.FALLBACK);
+            setAimedQuality(Quality.FALLBACK);
             detachAllUpdater();
             dumpProject();
         }
@@ -346,9 +349,9 @@ public final class NbGradleProjectImpl implements Project {
             NbGradleProject watcher = watcherRef.get();
             if (watcher != null) {
                 lookupsChanged = !watcher.isGradleProjectLoaded();
-                GradleProject prj = watcher.getGradleProject();
-                Set<String> currentPlugins = new HashSet<>(prj.getBaseProject().getPlugins());
-                if (prj.getBaseProject().isRoot()) {
+                GradleBaseProject prj = GradleBaseProject.get(watcher);
+                Set<String> currentPlugins = new HashSet<>(prj.getPlugins());
+                if (prj.isRoot()) {
                     currentPlugins.add(NB_ROOT_PLUGIN);
                 }
                 for (String cp : currentPlugins) {

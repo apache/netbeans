@@ -36,6 +36,7 @@ import org.netbeans.api.project.Project;
  * @author Laszlo Kishalmi
  */
 public final class GradleBaseProject implements Serializable, ModuleSearchSupport {
+    public static final String PRIVATE_TASK_GROUP = "<private>"; //NOI18N
 
     String name;
     String group = "";
@@ -241,12 +242,12 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
     }
 
     public static GradleBaseProject get(Project project) {
-        GradleProject gp = GradleProject.get(project);
-        return gp != null ? gp.getBaseProject() : null;
+        NbGradleProject gp = NbGradleProject.get(project);
+        return gp != null ? get(gp) : null;
     }
 
     public static GradleBaseProject get(NbGradleProject project) {
-        return project.getGradleProject().getBaseProject();
+        return project.projectLookup(GradleBaseProject.class);
     }
 
     public static GradleBaseProject getFallback(GradleFiles files) {

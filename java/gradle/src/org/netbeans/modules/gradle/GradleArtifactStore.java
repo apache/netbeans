@@ -21,7 +21,7 @@ package org.netbeans.modules.gradle;
 
 import org.netbeans.modules.gradle.api.GradleConfiguration;
 import org.netbeans.modules.gradle.api.GradleDependency;
-import org.netbeans.modules.gradle.api.GradleProject;
+import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -110,7 +110,7 @@ public class GradleArtifactStore {
     }
 
     void processProject(GradleProject gp) {
-        if (gp.getQuality().worseThan(GradleProject.Quality.FULL)) {
+        if (gp.getQuality().worseThan(Quality.FULL)) {
             return;
         }
         boolean changed = false;

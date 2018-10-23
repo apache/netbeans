@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.gradle.java.api;
 
-import org.netbeans.modules.gradle.api.GradleProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import java.io.File;
 import java.io.Serializable;
@@ -122,12 +121,16 @@ public final class GradleJavaProject implements Serializable {
     }
 
     public static GradleJavaProject get(Project project) {
-        GradleProject prj = NbGradleProject.get(project).getGradleProject();
-        return prj.getLookup().lookup(GradleJavaProject.class);
+        GradleJavaProject ret = null;
+        NbGradleProject gprj = NbGradleProject.get(project);
+        if (gprj != null) {
+            ret = get(gprj);
+        }
+        return ret;
     }
 
     public static GradleJavaProject get(NbGradleProject project) {
-        return project.getGradleProject().getLookup().lookup(GradleJavaProject.class);
+        return project.projectLookup(GradleJavaProject.class);
     }
 
     static boolean parentOrSame(File f, File supposedParent) {

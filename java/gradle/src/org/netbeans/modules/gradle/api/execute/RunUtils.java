@@ -262,20 +262,15 @@ public final class RunUtils {
     }
 
     public static JavaPlatform getActivePlatform(Project project) {
-        GradleBaseProject gbp = GradleBaseProject.get(project);
-        if (gbp != null) {
-            String platformId = gbp.getNetBeansProperty(PROP_JDK_PLATFORM);
-            if (platformId == null) {
-                Preferences prefs = NbGradleProject.getPreferences(project, false);
-                platformId = prefs.get(PROP_JDK_PLATFORM, "");
-            }
-            JavaPlatform ret = getActivePlatform(platformId);
-            if (ret != null) {
-                return ret;
-            }
+        Preferences prefs = NbGradleProject.getPreferences(project, false);
+        String platformId = prefs.get(PROP_JDK_PLATFORM, null);
+        if (platformId == null) {
+            GradleBaseProject gbp = GradleBaseProject.get(project);
+            platformId = gbp != null ? gbp.getNetBeansProperty(PROP_JDK_PLATFORM) : null;
         }
-        return JavaPlatformManager.getDefault().getDefaultPlatform();
+        return getActivePlatform(platformId);
     }
+    
     private static String stringsInCurly(List<String> l) {
         StringBuilder sb = new StringBuilder("(");
         Iterator<String> it = l.iterator();

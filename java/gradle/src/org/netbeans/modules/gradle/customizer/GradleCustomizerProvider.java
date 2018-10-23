@@ -21,7 +21,6 @@ package org.netbeans.modules.gradle.customizer;
 
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.api.project.Project;
-import org.netbeans.api.project.ui.ProjectProblems;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer;
 import org.netbeans.spi.project.ui.CustomizerProvider;
@@ -63,18 +62,17 @@ public class GradleCustomizerProvider implements CustomizerProvider2 {
     @NbBundle.Messages({
         "# {0} - project display name",
         "TIT_Project_Properties=Project Properties - {0}",
-        "TXT_Unloadable=Project is unloadable, you have to fix the problems before accessing the project properties dialog. Show Problem Resolution dialog?",
-        "TIT_Unloadable=Project unlodable"
+        "TXT_Unloadable=Project is unloadable, the project information is unreliable. Show Project Rroperties dialog?",
+        "TIT_Unloadable=Project Unlodable"
     })
     @Override
     public void showCustomizer(final String preselectedCategory, final String preselectedSubCategory) {
         if (NbGradleProject.get(project).isUnloadable()) {
             NotifyDescriptor.Confirmation nd = new NotifyDescriptor.Confirmation(TXT_Unloadable(), TIT_Unloadable());
             nd.setOptionType(NotifyDescriptor.YES_NO_OPTION);
-            if (DialogDisplayer.getDefault().notify(nd) == NotifyDescriptor.YES_OPTION) {
-                ProjectProblems.showCustomizer(project);
+            if (DialogDisplayer.getDefault().notify(nd) == NotifyDescriptor.NO_OPTION) {
+                return;
             }
-            return;
         }
 //        try {
         Mutex.EVENT.readAccess(new Runnable() {

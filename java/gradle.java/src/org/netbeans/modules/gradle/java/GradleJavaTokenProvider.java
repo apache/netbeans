@@ -29,6 +29,8 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.Trees;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -54,10 +56,21 @@ import org.openide.util.Lookup;
 @ProjectServiceProvider(service = ReplaceTokenProvider.class, projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
 public class GradleJavaTokenProvider implements ReplaceTokenProvider {
 
+    private static final Set<String> SUPPORTED = Collections.unmodifiableSet(new HashSet(Arrays.asList(
+            "selectedClass",
+            "selectedMethod",
+            "affectedBuildTasks"
+    )));
+    
     final Project project;
 
     public GradleJavaTokenProvider(Project project) {
         this.project = project;
+    }
+
+    @Override
+    public Set<String> getSupportedTokens() {
+        return SUPPORTED;
     }
 
     @Override

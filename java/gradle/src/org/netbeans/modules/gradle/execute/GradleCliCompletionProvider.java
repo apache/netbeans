@@ -26,7 +26,11 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
+import java.awt.font.TextAttribute;
 import java.net.URL;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.Action;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -35,6 +39,8 @@ import javax.swing.text.JTextComponent;
 import javax.swing.text.StyledDocument;
 import org.netbeans.api.editor.completion.Completion;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import org.netbeans.api.project.Project;
+import org.netbeans.modules.gradle.spi.actions.ReplaceTokenProvider;
 import org.netbeans.spi.editor.completion.CompletionDocumentation;
 import org.netbeans.spi.editor.completion.CompletionItem;
 import org.netbeans.spi.editor.completion.CompletionProvider;
@@ -51,7 +57,7 @@ import org.openide.util.Exceptions;
  */
 @MimeRegistration(mimeType = GradleCliEditorKit.MIME_TYPE, service = CompletionProvider.class)
 public class GradleCliCompletionProvider implements CompletionProvider {
-
+    private static final Pattern PROP_INPUT = Pattern.compile("\\$\\{([\\w.]*)$"); //NOI18N
     @Override
     public CompletionTask createTask(int queryType, JTextComponent component) {
         if (queryType != CompletionProvider.COMPLETION_QUERY_TYPE) {
@@ -78,23 +84,54 @@ public class GradleCliCompletionProvider implements CompletionProvider {
                 } catch (BadLocationException ex) {
                     Exceptions.printStackTrace(ex);
                 }
+
+                Project project = null;
+                Object prop = doc.getProperty(Document.StreamDescriptionProperty);
+                if (prop != null && prop instanceof Project) {
+                    project = (Project) prop;
+                }
+                Matcher tokenMatcher = PROP_INPUT.matcher(filter);
+                boolean tokenInFilter = tokenMatcher.find();
                 try {
-                    Object prop = doc.getProperty(Document.StreamDescriptionProperty);
                     GradleCommandLine cli = new GradleCommandLine(doc.getText(0, doc.getLength()));
-                    if (prop != null && prop instanceof GradleBaseProject) {
-                        GradleBaseProject gbp = (GradleBaseProject) prop;
-                        for (GradleTask task : gbp.getTasks()) {
-                            if (!task.isPrivate() 
-                                    && !cli.getTasks().contains(task.getName())
-                                    && !cli.getExcludedTasks().contains(task.getName())
-                                    && (task.getName().startsWith(filter) || task.matches(filter))) {
-                                resultSet.addItem(new GradleCliCompletionItem(task, startOffset, caretOffset));
+                    if (!filter.startsWith("-") && !tokenInFilter) {
+                        if (project != null) {
+                            GradleBaseProject gbp = GradleBaseProject.get(project);
+                            for (GradleTask task : gbp.getTasks()) {
+                                if (!task.isPrivate() 
+                                        && !cli.getTasks().contains(task.getName())
+                                        && !cli.getExcludedTasks().contains(task.getName())
+                                        && (task.getName().startsWith(filter) || task.matches(filter))) {
+                                    resultSet.addItem(new GradleTaskCompletionItem(task, startOffset, caretOffset));
+                                }
+                            }
+                        }
+                    }
+                    if (filter.isEmpty() || filter.startsWith("-")) {
+                        for (GradleCommandLine.Flag flag : GradleCommandLine.Flag.values()) {
+                            if (cli.canAdd(flag)) {
+                                for (String f : flag.getFlags()) {
+                                    if (f.startsWith(filter)) {
+                                        resultSet.addItem(new GradleFlagCompletionItem(flag, f, startOffset, caretOffset));
+                                    }
+                                }
                             }
                         }
                     }
                 } catch (BadLocationException ex) {
                     // Nothing to do.
                 }
+                if (tokenInFilter && (project != null)) {
+                    String propFilter = tokenMatcher.group(1);
+                    ReplaceTokenProvider tokenProvider = project.getLookup().lookup(ReplaceTokenProvider.class);
+                    for (String token : tokenProvider.getSupportedTokens()) {
+                        if (token.startsWith(propFilter)) {
+                            resultSet.addItem(new TokenCompletionItem(token, startOffset + tokenMatcher.start(1), caretOffset));
+                        }
+                    }
+
+                }
+                    
                 resultSet.finish();
             }
         }, component);
@@ -135,24 +172,22 @@ public class GradleCliCompletionProvider implements CompletionProvider {
         return -1;
     }
 
-    private static class GradleCliCompletionItem implements CompletionItem {
-
-        private final GradleTask task;
+    private static abstract class AbstractGradleCompletionItem implements CompletionItem {
         private final int startOffset;
         private final int caretOffset;
 
-        public GradleCliCompletionItem(GradleTask task, int startOffset, int caretOffset) {
-            this.task = task;
+        public AbstractGradleCompletionItem(int startOffset, int caretOffset) {
             this.startOffset = startOffset;
             this.caretOffset = caretOffset;
         }
-
+        
+        protected abstract String getValue();
         @Override
         public void defaultAction(JTextComponent jtc) {
             try {
                 Document doc = jtc.getDocument();
                 doc.remove(startOffset, caretOffset - startOffset);
-                doc.insertString(startOffset, task.getName(), null);
+                doc.insertString(startOffset, getValue(), null);
                 //This statement will close the code completion box:
                 Completion.get().hideAll();
             } catch (BadLocationException ex) {
@@ -166,12 +201,62 @@ public class GradleCliCompletionProvider implements CompletionProvider {
 
         @Override
         public int getPreferredWidth(Graphics g, Font font) {
-            return CompletionUtilities.getPreferredWidth(task.getName(), null, g, font);
+            return CompletionUtilities.getPreferredWidth(getValue(), null, g, font);
         }
 
         @Override
         public void render(Graphics g, Font defaultFont, Color defaultColor, Color backgroundColor, int width, int height, boolean selected) {
-            CompletionUtilities.renderHtml(null, task.getName(), null, g, defaultFont, (selected ? Color.white : Color.BLACK), width, height, selected);
+            CompletionUtilities.renderHtml(null, getValue(), null, g, defaultFont, (selected ? Color.white : Color.BLACK), width, height, selected);
+        }
+
+        @Override
+        public CompletionTask createDocumentationTask() {
+            return null;
+        }
+
+        @Override
+        public CompletionTask createToolTipTask() {
+            return null;
+        }
+
+        @Override
+        public boolean instantSubstitution(JTextComponent component) {
+            return false;
+        }
+        
+        @Override
+        public int getSortPriority() {
+            return Integer.MAX_VALUE;
+        }
+        
+        @Override
+        public CharSequence getSortText() {
+            return getValue();
+        }
+
+        @Override
+        public CharSequence getInsertPrefix() {
+            return getValue();
+        }
+    }
+    
+    private static class GradleTaskCompletionItem extends AbstractGradleCompletionItem {
+
+        private final GradleTask task;
+
+        public GradleTaskCompletionItem(GradleTask task, int startOffset, int caretOffset) {
+            super(startOffset, caretOffset);
+            this.task = task;
+        }
+
+        @Override
+        public int getSortPriority() {
+            switch (task.getGroup()) {
+                case "application": return 0;
+                case "build": return 1;
+                case "distribution": return 2;
+                default: return 3;
+            }
         }
 
         @Override
@@ -186,32 +271,7 @@ public class GradleCliCompletionProvider implements CompletionProvider {
         }
 
         @Override
-        public CompletionTask createToolTipTask() {
-            return null;
-        }
-
-        @Override
-        public boolean instantSubstitution(JTextComponent component) {
-            return false;
-        }
-
-        @Override
-        public int getSortPriority() {
-            switch (task.getGroup()) {
-                case "application": return 0;
-                case "build": return 1;
-                case "distribution": return 2;
-                default: return 3;
-            }
-        }
-
-        @Override
-        public CharSequence getSortText() {
-            return task.getName();
-        }
-
-        @Override
-        public CharSequence getInsertPrefix() {
+        protected String getValue() {
             return task.getName();
         }
 
@@ -245,5 +305,96 @@ public class GradleCliCompletionProvider implements CompletionProvider {
 
         }
     }
+    
+    private static class GradleFlagCompletionItem extends AbstractGradleCompletionItem {
+        private final GradleCommandLine.Flag flag;
+        private final String value;
 
+        public GradleFlagCompletionItem(GradleCommandLine.Flag flag, String value, int startOffset, int caretOffset) {
+            super(startOffset, caretOffset);
+            this.flag = flag;
+            this.value = value;
+        }
+
+        @Override
+        public int getSortPriority() {
+            return value.startsWith("--") ? 5 : 4;
+        }
+
+        
+        
+        @Override
+        protected String getValue() {
+            return value;
+        }
+        
+        @Override
+        public void render(Graphics g, Font defaultFont, Color defaultColor, Color backgroundColor, int width, int height, boolean selected) {
+            Map attributes = defaultFont.getAttributes();
+            if (!flag.isSupported()) {
+                attributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);
+            }
+            Font font = new Font(attributes);
+            CompletionUtilities.renderHtml(null, getValue(), null, g, font, (selected ? Color.white : Color.BLACK), width, height, selected);
+        }
+        
+        @Override
+        public CompletionTask createDocumentationTask() {
+            return new AsyncCompletionTask(new AsyncCompletionQuery() {
+                @Override
+                protected void query(CompletionResultSet resultSet, Document doc, int caretOffset) {
+                    resultSet.setDocumentation(new GradleFlagCompletionDocumentation());
+                    resultSet.finish();
+                }
+            });
+        }
+        
+        private class GradleFlagCompletionDocumentation implements CompletionDocumentation {
+
+            @Override
+            public String getText() {
+                StringBuilder sb = new StringBuilder();
+                sb.append("<html>");
+                if (!flag.isSupported()) {
+                    sb.append("<b>Unsupported:</b> This argument will be ignored<p>");
+                }
+                sb.append(flag.getDescription());
+                return sb.toString();
+            }
+
+            @Override
+            public URL getURL() {
+                return null;
+            }
+
+            @Override
+            public CompletionDocumentation resolveLink(String link) {
+                return null;
+            }
+
+            @Override
+            public Action getGotoSourceAction() {
+                return null;
+            }
+
+        }
+        
+        
+    }
+
+    private static class TokenCompletionItem extends AbstractGradleCompletionItem {
+
+        final String token;
+
+        public TokenCompletionItem(String token, int startOffset, int caretOffset) {
+            super(startOffset, caretOffset);
+            this.token = token;
+        }
+        
+        @Override
+        protected String getValue() {
+            return token;
+        }
+        
+    }
 }

@@ -33,6 +33,7 @@ import javax.swing.text.JTextComponent;
 import static org.netbeans.modules.gradle.api.execute.GradleCommandLine.Flag.*;
 import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
+import org.netbeans.api.project.Project;
 import org.openide.text.CloneableEditorSupport;
 
 /**
@@ -48,12 +49,12 @@ public class GradleExecutorOptionsPanel extends javax.swing.JPanel {
     /**
      * Creates new form GradleExecutorOptionsPanel
      */
-    public GradleExecutorOptionsPanel(GradleBaseProject gbp) {
+    public GradleExecutorOptionsPanel(Project project) {
         initComponents();
         EditorKit kit = CloneableEditorSupport.getEditorKit(GradleCliEditorKit.MIME_TYPE);
         tfTasks.setEditorKit(kit);
-        if (gbp != null) {
-            tfTasks.getDocument().putProperty(Document.StreamDescriptionProperty, gbp);
+        if (project != null) {
+            tfTasks.getDocument().putProperty(Document.StreamDescriptionProperty, project);
         }
     }
 

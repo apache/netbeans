@@ -33,6 +33,7 @@ import org.netbeans.modules.gradle.spi.execute.GradleLauncherConfigurator;
 import java.util.ArrayList;
 import org.gradle.tooling.ConfigurableLauncher;
 import org.openide.util.NbBundle;
+import static org.netbeans.modules.gradle.api.execute.GradleCommandLine.Argument.Kind.*;
 
 /**
  *
@@ -40,45 +41,89 @@ import org.openide.util.NbBundle;
  */
 public final class GradleCommandLine implements GradleLauncherConfigurator {
 
-    public enum LogLevel {DEBUG, INFO, NORMAL, QUIET}
+    public enum LogLevel {DEBUG, INFO, WARN, QUIET}
     public enum StackTrace {NONE, SHORT, FULL}
 
     public enum Flag {
-        NO_REBUILD(Argument.Kind.PARAM, "-a", "--no-rebuild"),
-        CONFIGURE_ON_DEMAND(Argument.Kind.PARAM, "--configure-on-demand"),
-        CONTINUE(Argument.Kind.PARAM, "--continue"),
-        DRY_RUN(Argument.Kind.PARAM, "-m", "--dry-run"),
-        OFFLINE(Argument.Kind.PARAM, "--offline"),
-        PARALLEL(Argument.Kind.PARAM, "--parallel"),
-        RECOMPILE_SCRIPTS(Argument.Kind.PARAM, "--recompile-scripts"),
-        REFRESH_DEPENDENCIES(Argument.Kind.PARAM, "--refresh-dependencies"),
-        RERUN_TASKS(Argument.Kind.PARAM, "--rerun-tasks"),
+        NO_REBUILD(PARAM, "-a", "--no-rebuild"),
+        BUILD_CACHE(PARAM, "--build-cache"),
+        CONFIGURE_ON_DEMAND(PARAM, "--configure-on-demand"),
+        CONTINUE(PARAM, "--continue"),
+        DRY_RUN(PARAM, "-m", "--dry-run"),
+        OFFLINE(PARAM, "--offline"),
+        PARALLEL(PARAM, "--parallel"),
+        REFRESH_DEPENDENCIES(PARAM, "--refresh-dependencies"),
+        RERUN_TASKS(PARAM, "--rerun-tasks"),
 
-        LOG_DEBUG(Argument.Kind.PARAM, "-d", "--debug"),
-        LOG_INFO(Argument.Kind.PARAM, "-i", "--info"),
-        LOG_QUIET(Argument.Kind.PARAM, "-q", "--quiet"),
+        LOG_DEBUG(PARAM, "-d", "--debug"),
+        LOG_INFO(PARAM, "-i", "--info"),
+        LOG_WARN(PARAM, "-w", "--warn"),
+        LOG_QUIET(PARAM, "-q", "--quiet"),
 
-        STACKTRACE(Argument.Kind.PARAM, "-s", "--stacktrace"),
-        STACKTRACE_FULL(Argument.Kind.PARAM, "-S", "--full-stacktrace"),
+        STACKTRACE(PARAM, "-s", "--stacktrace"),
+        STACKTRACE_FULL(PARAM, "-S", "--full-stacktrace"),
+        
+        PROFILE(PARAM, "--profile"),
+        NO_BUILD_CACHE(PARAM, "--no-build-cache"),
+        NO_CONFIGURE_ON_DEMAND(PARAM, "--no-configure-on-demand"),
+        NO_PARALLEL(PARAM, "--no-parallel"),
+        SCAN(PARAM, "--scan"),
+        NO_SCAN(PARAM, "--no-scan"),
 
-        DAEMON(Argument.Kind.UNSUPPORTED, "--no-daemon"),
-        NO_DAEMON(Argument.Kind.UNSUPPORTED, "--daemon"),
-        HELP(Argument.Kind.UNSUPPORTED, "--help", "-h", "-?"),
-        FOREGROUND(Argument.Kind.UNSUPPORTED, "--foreground"),
-        GUI(Argument.Kind.UNSUPPORTED, "--gui"),
-        PROFILE(Argument.Kind.UNSUPPORTED, "--profile"),
-        STATUS(Argument.Kind.UNSUPPORTED, "--status"),
-        STOP(Argument.Kind.UNSUPPORTED, "--stop"),
-        CONTINUOUS(Argument.Kind.UNSUPPORTED, "--continuous", "-t"),
-        NO_SEARCH_UPWARD(Argument.Kind.UNSUPPORTED, "--no-search-upward", "-u"),
-        VERSION(Argument.Kind.UNSUPPORTED, "--version", "-v");
+        DAEMON(UNSUPPORTED, "--no-daemon"),
+        NO_DAEMON(UNSUPPORTED, "--daemon"),
+        HELP(UNSUPPORTED, "--help", "-h", "-?"),
+        FOREGROUND(UNSUPPORTED, "--foreground"),
+        GUI(UNSUPPORTED, "--gui"),
+        STATUS(UNSUPPORTED, "--status"),
+        STOP(UNSUPPORTED, "--stop"),
+        CONTINUOUS(UNSUPPORTED, "--continuous", "-t"),
+        NO_SEARCH_UPWARD(UNSUPPORTED, "--no-search-upward", "-u"),
+        RECOMPILE_SCRIPTS(UNSUPPORTED, "--recompile-scripts"),
+        VERSION(UNSUPPORTED, "--version", "-v");
 
+        private Set<Flag> incompatible;
         private final Argument.Kind kind;
         private final List<String> flags;
-
+        static {
+            DAEMON.incompatibleWith(NO_DAEMON);
+            NO_DAEMON.incompatibleWith(DAEMON);
+            
+            LOG_DEBUG.incompatibleWith(LOG_INFO, LOG_QUIET, LOG_WARN);
+            LOG_INFO.incompatibleWith(LOG_DEBUG, LOG_QUIET, LOG_WARN);
+            LOG_WARN.incompatibleWith(LOG_DEBUG, LOG_INFO, LOG_QUIET);
+            LOG_QUIET.incompatibleWith(LOG_DEBUG, LOG_INFO, LOG_WARN);
+            
+            STACKTRACE.incompatibleWith(STACKTRACE_FULL);
+            STACKTRACE_FULL.incompatibleWith(STACKTRACE);
+            
+            SCAN.incompatibleWith(NO_SCAN);
+            NO_SCAN.incompatibleWith(SCAN);
+            
+            CONFIGURE_ON_DEMAND.incompatibleWith(NO_CONFIGURE_ON_DEMAND);
+            NO_CONFIGURE_ON_DEMAND.incompatibleWith(CONFIGURE_ON_DEMAND);
+            
+            BUILD_CACHE.incompatibleWith(NO_BUILD_CACHE);
+            NO_BUILD_CACHE.incompatibleWith(BUILD_CACHE);
+            
+            PARALLEL.incompatibleWith(NO_PARALLEL);
+            NO_PARALLEL.incompatibleWith(PARALLEL);
+        }
         private Flag(Argument.Kind kind, String... flags) {
             this.kind = kind;
             this.flags = Arrays.asList(flags);
+        }
+
+        private void incompatibleWith(Flag first, Flag... rest) {
+            incompatible = Collections.unmodifiableSet(EnumSet.of(first, rest));
+        }
+        
+        public boolean isSupported() {
+            return kind != UNSUPPORTED;
+        }
+
+        public List<String> getFlags() {
+            return flags;
         }
         
         public final String getDescription() {
@@ -87,7 +132,7 @@ public final class GradleCommandLine implements GradleLauncherConfigurator {
     }
 
     public enum Property {
-        PROJECT(Argument.Kind.PARAM, "-P", "--project-prop"),
+        PROJECT(PARAM, "-P", "--project-prop"),
         SYSTEM(Argument.Kind.SYSTEM, "-D", "--system-prop");
 
         private final Argument.Kind kind;
@@ -104,15 +149,15 @@ public final class GradleCommandLine implements GradleLauncherConfigurator {
 
     public enum Parameter {
 
-        SETTINGS_FILE(Argument.Kind.UNSUPPORTED, "-c", "--settings-file"),
-        CONSOLE(Argument.Kind.UNSUPPORTED, "--console"),
-        GRADLE_USER_HOME(Argument.Kind.UNSUPPORTED, "-g", "--gradle-user-home"),
-        INIT_SCRIPT(Argument.Kind.PARAM, "-I", "--init-script"),
-        MAX_WORKER(Argument.Kind.PARAM, "--max-worker"),
-        PROJECT_DIR(Argument.Kind.PARAM, "-p", "--project-dir"),
-        PROJECT_CACHE_DIR(Argument.Kind.UNSUPPORTED, "--project-cache-dir"),
-        EXCLUDE_TASK(Argument.Kind.PARAM, "-x", "--exclude-task"),
-        IMPORT_BUILD(Argument.Kind.PARAM, "--import-build");
+        SETTINGS_FILE(UNSUPPORTED, "-c", "--settings-file"),
+        CONSOLE(UNSUPPORTED, "--console"),
+        GRADLE_USER_HOME(UNSUPPORTED, "-g", "--gradle-user-home"),
+        INIT_SCRIPT(PARAM, "-I", "--init-script"),
+        MAX_WORKER(PARAM, "--max-worker"),
+        PROJECT_DIR(PARAM, "-p", "--project-dir"),
+        PROJECT_CACHE_DIR(UNSUPPORTED, "--project-cache-dir"),
+        EXCLUDE_TASK(PARAM, "-x", "--exclude-task"),
+        IMPORT_BUILD(PARAM, "--import-build");
 
         final Argument.Kind kind;
         final List<String> flags;
@@ -391,7 +436,7 @@ public final class GradleCommandLine implements GradleLauncherConfigurator {
     }
 
     public List<String> getSupportedCommandLine() {
-        List<String> ret = getArgs(EnumSet.of(Argument.Kind.PARAM, Argument.Kind.SYSTEM));
+        List<String> ret = getArgs(EnumSet.of(PARAM, SYSTEM));
         ret.addAll(tasks);
         return ret;
     }
@@ -431,6 +476,20 @@ public final class GradleCommandLine implements GradleLauncherConfigurator {
         arguments.add(new FlagArgument(flag));
     }
 
+    public boolean canAdd(Flag f) {
+        EnumSet<Flag> reserved = EnumSet.noneOf(Flag.class);
+        Iterator<Argument> it = arguments.iterator();
+        while (it.hasNext()) {
+            Argument arg = it.next();
+            if (arg instanceof FlagArgument) {
+                FlagArgument farg = (FlagArgument) arg;
+                reserved.add(farg.flag);
+                reserved.addAll(farg.flag.incompatible);
+            }
+        }
+        return !reserved.contains(f);
+    }
+    
     public void removeFlag(Flag flag) {
         Iterator<Argument> it = arguments.iterator();
         while (it.hasNext()) {
@@ -532,7 +591,7 @@ public final class GradleCommandLine implements GradleLauncherConfigurator {
     }
 
     public LogLevel getLoglevel() {
-        LogLevel ret = LogLevel.NORMAL;
+        LogLevel ret = LogLevel.WARN;
         for (Argument arg : arguments) {
             if (arg instanceof FlagArgument) {
                 FlagArgument farg = (FlagArgument) arg;
@@ -612,8 +671,8 @@ public final class GradleCommandLine implements GradleLauncherConfigurator {
 
     @Override
     public void configure(ConfigurableLauncher launcher) {
-        launcher.setJvmArguments(getArgs(EnumSet.of(Argument.Kind.SYSTEM)));
-        List<String> args = new LinkedList<>(getArgs(EnumSet.of(Argument.Kind.PARAM)));
+        launcher.setJvmArguments(getArgs(EnumSet.of(SYSTEM)));
+        List<String> args = new LinkedList<>(getArgs(EnumSet.of(PARAM)));
         args.addAll(tasks);
         launcher.withArguments(args);
     }

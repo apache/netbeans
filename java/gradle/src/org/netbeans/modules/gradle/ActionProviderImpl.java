@@ -200,7 +200,7 @@ public class ActionProviderImpl implements ActionProvider {
         RunUtils.applyGlobalConfig(cfg);
 
         if (showUI) {
-            GradleExecutorOptionsPanel pnl = new GradleExecutorOptionsPanel(GradleBaseProject.get(project));
+            GradleExecutorOptionsPanel pnl = new GradleExecutorOptionsPanel(project);
             DialogDescriptor dd = new DialogDescriptor(pnl, TIT_Run_Gradle());
             pnl.setCommandLine(cfg.getCommandLine());
             Object retValue = DialogDisplayer.getDefault().notify(dd);
@@ -503,7 +503,6 @@ public class ActionProviderImpl implements ActionProvider {
 
     private static String replaceTokens(Project project, String argLine, String action, Lookup context) {
         ReplaceTokenProvider tokenProvider = project.getLookup().lookup(ReplaceTokenProvider.class);
-
         return replaceTokens(argLine, tokenProvider.createReplacements(action, context));
     }
 }

@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
  */
 public final class GradleTask implements Serializable {
 
-    private static final Pattern CAMLE_CASE_SPLITTER = Pattern.compile("[A-Z]?[0-9a-z]*");
+    private static final Pattern CAMLE_CASE_SPLITTER = Pattern.compile("[A-Z][0-9a-z]*");
 
     final String path;
     final String group;

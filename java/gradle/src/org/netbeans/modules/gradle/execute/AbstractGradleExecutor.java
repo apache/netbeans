@@ -189,7 +189,7 @@ public abstract class AbstractGradleExecutor extends OutputTabMaintainer<Abstrac
         @Override
         public void actionPerformed(ActionEvent e) {
             if (debug) {
-                GradleExecutorOptionsPanel pnl = new GradleExecutorOptionsPanel(GradleBaseProject.get(config.getProject()));
+                GradleExecutorOptionsPanel pnl = new GradleExecutorOptionsPanel(config.getProject());
                 DialogDescriptor dd = new DialogDescriptor(pnl, TIT_Run_Gradle());
                 pnl.setCommandLine(config.getCommandLine());
                 Object retValue = DialogDisplayer.getDefault().notify(dd);

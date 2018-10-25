@@ -107,10 +107,7 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
         tfLabel.getDocument().addDocumentListener(applyListener);
         EditorKit kit = CloneableEditorSupport.getEditorKit(GradleCliEditorKit.MIME_TYPE);
         taArgs.setEditorKit(kit);
-        GradleBaseProject gbp = GradleBaseProject.get(project);
-        if (gbp != null) {
-            taArgs.getDocument().putProperty(Document.StreamDescriptionProperty, gbp);
-        }
+        taArgs.getDocument().putProperty(Document.StreamDescriptionProperty, project);
         taArgs.getDocument().addDocumentListener(applyListener);
         initDefaultModels();
         comboReady = true;
@@ -166,6 +163,7 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
         cbRepeatable = new javax.swing.JCheckBox();
         jScrollPane3 = new javax.swing.JScrollPane();
         taArgs = new javax.swing.JEditorPane();
+        lbReloadHints = new javax.swing.JLabel();
         cbAdd = new javax.swing.JComboBox<>();
         lbTitle = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
@@ -217,6 +215,7 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
         });
 
         org.openide.awt.Mnemonics.setLocalizedText(cbRepeatable, org.openide.util.NbBundle.getMessage(BuildActionsCustomizer.class, "BuildActionsCustomizer.cbRepeatable.text")); // NOI18N
+        cbRepeatable.setToolTipText(org.openide.util.NbBundle.getMessage(BuildActionsCustomizer.class, "BuildActionsCustomizer.cbRepeatable.toolTipText")); // NOI18N
         cbRepeatable.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 cbRepeatableStateChanged(evt);
@@ -226,19 +225,25 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
         taArgs.setContentType("text/x-gradle-cli"); // NOI18N
         jScrollPane3.setViewportView(taArgs);
 
+        lbReloadHints.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        lbReloadHints.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        org.openide.awt.Mnemonics.setLocalizedText(lbReloadHints, org.openide.util.NbBundle.getMessage(BuildActionsCustomizer.class, "BuildActionsCustomizer.lbReloadHints.text")); // NOI18N
+        lbReloadHints.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        lbReloadHints.setEnabled(false);
+
         javax.swing.GroupLayout pnDetailsLayout = new javax.swing.GroupLayout(pnDetails);
         pnDetails.setLayout(pnDetailsLayout);
         pnDetailsLayout.setHorizontalGroup(
             pnDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnDetailsLayout.createSequentialGroup()
-                .addGroup(pnDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(pnDetailsLayout.createSequentialGroup()
+            .addGroup(pnDetailsLayout.createSequentialGroup()
+                .addGroup(pnDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnDetailsLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btRemove))
                     .addGroup(pnDetailsLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(pnDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnDetailsLayout.createSequentialGroup()
+                        .addGroup(pnDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnDetailsLayout.createSequentialGroup()
                                 .addGroup(pnDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lbName)
                                     .addComponent(lbLabel))
@@ -246,18 +251,19 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
                                 .addGroup(pnDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(tfLabel)
                                     .addComponent(tfName)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnDetailsLayout.createSequentialGroup()
-                                .addComponent(lbArgs)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnDetailsLayout.createSequentialGroup()
+                            .addGroup(pnDetailsLayout.createSequentialGroup()
                                 .addComponent(lbReloadRule)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(cbReloadRule, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(cbRepeatable, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE))
-                            .addGroup(pnDetailsLayout.createSequentialGroup()
+                                .addComponent(cbRepeatable, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnDetailsLayout.createSequentialGroup()
                                 .addGap(6, 6, 6)
-                                .addComponent(jScrollPane3)))))
+                                .addComponent(jScrollPane3))
+                            .addGroup(pnDetailsLayout.createSequentialGroup()
+                                .addComponent(lbArgs)
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addComponent(lbReloadHints, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
         pnDetailsLayout.setVerticalGroup(
@@ -280,7 +286,9 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
                     .addComponent(lbReloadRule)
                     .addComponent(cbReloadRule, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cbRepeatable))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 120, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbReloadHints)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btRemove)
                 .addContainerGap())
         );
@@ -498,6 +506,7 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
     private javax.swing.JLabel lbLabel;
     private javax.swing.JLabel lbName;
     private javax.swing.JLabel lbNoAction;
+    private javax.swing.JLabel lbReloadHints;
     private javax.swing.JLabel lbReloadRule;
     private javax.swing.JLabel lbTitle;
     private javax.swing.JList<CustomActionMapping> lsActions;

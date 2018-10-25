@@ -47,6 +47,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.prefs.Preferences;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
@@ -180,6 +181,11 @@ public final class RunUtils {
 
     public static ReplaceTokenProvider simpleReplaceTokenProvider(final String token, final String value) {
         return new ReplaceTokenProvider() {
+            @Override
+            public Set<String> getSupportedTokens() {
+                return Collections.singleton(token);
+            }
+            
             @Override
             public Map<String, String> createReplacements(String action, Lookup context) {
                 return Collections.singletonMap(token, value);

@@ -20,6 +20,7 @@
 package org.netbeans.modules.gradle.spi.actions;
 
 import java.util.Map;
+import java.util.Set;
 import org.openide.util.Lookup;
 
 /**
@@ -28,6 +29,7 @@ import org.openide.util.Lookup;
  */
 public interface ReplaceTokenProvider {
 
+    Set<String> getSupportedTokens();
     Map<String, String> createReplacements(String action, Lookup context);
     
 }

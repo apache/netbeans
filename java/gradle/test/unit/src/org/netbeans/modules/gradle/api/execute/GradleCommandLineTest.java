@@ -20,10 +20,8 @@
 package org.netbeans.modules.gradle.api.execute;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import org.gradle.tooling.ConfigurableLauncher;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -202,7 +200,7 @@ public class GradleCommandLineTest {
     @Test
     public void testGetLoglevel() {
         System.out.println("getLoglevel");
-        assertEquals(GradleCommandLine.LogLevel.NORMAL, new GradleCommandLine().getLoglevel());
+        assertEquals(GradleCommandLine.LogLevel.WARN, new GradleCommandLine().getLoglevel());
         assertEquals(GradleCommandLine.LogLevel.INFO, new GradleCommandLine("--info").getLoglevel());
         assertEquals(GradleCommandLine.LogLevel.DEBUG, new GradleCommandLine("-d").getLoglevel());
         assertEquals(GradleCommandLine.LogLevel.QUIET, new GradleCommandLine("-q").getLoglevel());

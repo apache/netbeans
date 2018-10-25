@@ -22,7 +22,9 @@ package org.netbeans.modules.gradle.actions;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.spi.actions.ReplaceTokenProvider;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import org.netbeans.spi.project.LookupMerger;
 import org.openide.util.Lookup;
 
@@ -51,6 +53,15 @@ public class ReplaceTokenProviderMerger implements ReplaceTokenProvider {
             return new ReplaceTokenProviderMerger(lookup);
         }
 
+    }
+
+    @Override
+    public Set<String> getSupportedTokens() {
+        Set<String> ret = new HashSet<>();
+        for (ReplaceTokenProvider pvd : lookup.lookupAll(ReplaceTokenProvider.class)) {
+            ret.addAll(pvd.getSupportedTokens());
+        }
+        return ret;
     }
 
     @Override

@@ -67,6 +67,11 @@ import org.openide.util.NbBundle;
             content = "/org/netbeans/modules/junit/ui/resources/JUnit4Suite.java.template",
             displayName = "org.netbeans.modules.junit.ui.Bundle#Templates/UnitTests/JUnit4Suite.java",
             iconBase = "org/netbeans/modules/junit/ui/resources/JUnitLogo.png",
+            description = "/org/netbeans/modules/junit/ui/resources/TestSuite.html", category = "invisible"),
+    @TemplateRegistration(folder = "UnitTests", position = 1000, scriptEngine = "freemarker",
+            content = "/org/netbeans/modules/junit/ui/resources/JUnit5Suite.java.template",
+            displayName = "org.netbeans.modules.junit.ui.Bundle#Templates/UnitTests/JUnit5Suite.java",
+            iconBase = "org/netbeans/modules/junit/ui/resources/junit5-logo.png",
             description = "/org/netbeans/modules/junit/ui/resources/TestSuite.html", category = "invisible")
 })
 public class TestSuiteWizardIterator implements TemplateWizard.InstantiatingIterator<WizardDescriptor> {

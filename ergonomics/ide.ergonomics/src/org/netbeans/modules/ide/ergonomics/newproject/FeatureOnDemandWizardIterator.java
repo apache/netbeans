@@ -99,7 +99,7 @@ implements WizardDescriptor.ProgressInstantiatingIterator<WizardDescriptor>, Cha
         assert EventQueue.isDispatchThread();
         if (panels == null) {
             panels = new ArrayList<WizardDescriptor.Panel<WizardDescriptor>> ();
-            panels.add (new DescriptionStep (autoEnable));
+            panels.add (new DescriptionStep ());
             names = new String [] {
                 NbBundle.getMessage (FeatureOnDemandWizardIterator.class, "DescriptionStep_Name"),
             
@@ -129,7 +129,7 @@ implements WizardDescriptor.ProgressInstantiatingIterator<WizardDescriptor>, Cha
     private void createPanelsForEnable () {
         if (getPanels() == null) {
             panels = new ArrayList<WizardDescriptor.Panel<WizardDescriptor>> ();
-            getPanels().add (new DescriptionStep (autoEnable));
+            getPanels().add (new DescriptionStep ());
             getPanels().add (new EnableStep ());
             names = new String [] {
                 NbBundle.getMessage (FeatureOnDemandWizardIterator.class, "DescriptionStep_Name"),

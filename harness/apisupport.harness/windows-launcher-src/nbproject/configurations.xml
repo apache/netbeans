@@ -25,8 +25,8 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>applauncher.h</itemPath>
-      <itemPath>../../ide/launcher/windows/nblauncher.h</itemPath>
-      <itemPath>../../o.n.bootstrap/launcher/windows/utilsfuncs.h</itemPath>
+      <itemPath>../../../nb/ide.launcher/windows/nblauncher.h</itemPath>
+      <itemPath>../../../platform/o.n.bootstrap/launcher/windows/utilsfuncs.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -37,8 +37,8 @@
                    projectFiles="true">
       <itemPath>app.cpp</itemPath>
       <itemPath>applauncher.cpp</itemPath>
-      <itemPath>../../ide/launcher/windows/nblauncher.cpp</itemPath>
-      <itemPath>../../o.n.bootstrap/launcher/windows/utilsfuncs.cpp</itemPath>
+      <itemPath>../../../nb/ide.launcher/windows/nblauncher.cpp</itemPath>
+      <itemPath>../../../platform/o.n.bootstrap/launcher/windows/utilsfuncs.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

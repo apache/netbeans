@@ -43,24 +43,24 @@ Apache NetBeans is an open source development environment, tooling platform, and
 
 ### Building NetBeans
 
-Build the basic project (mainly, JavaSE features):
+Build with the default config (See the [cluster.config](https://github.com/apache/incubator-netbeans/blob/ab66c7fdfdcbf0bde67b96ddb075c83451cdd1a6/nbbuild/cluster.properties#L19) property.)
 ```
 $ ant
 ```
-or
+Build the basic project (mainly, JavaSE features):
 ```
 $ ant -Dcluster.config=basic
 ```
 Build the full project (including Groovy, PHP, JavaEE/JakartaEE, and JavaScript features):
 ```
-$ ant -Dcluster.confg=full
+$ ant -Dcluster.config=full
 ```
 Build the NetBeans Platform:
 ```
 $ ant -Dcluster.config=platform
 ```
 
-**Note:** You can also use `php`, `enterprise`, e.t.c. See the [cluster.properties](https://github.com/apache/incubator-netbeans/blob/master/nbbuild/cluster.properties) file.
+**Note:** You can also use `php`, `enterprise`, etc. See the [cluster.properties](https://github.com/apache/incubator-netbeans/blob/master/nbbuild/cluster.properties) file.
 
 ### Running NetBeans
 
@@ -75,7 +75,7 @@ $ ant tryme
 
 [Subscribe](mailto:users-subscribe@netbeans.incubator.apache.org) or [mail](mailto:users@netbeans.incubator.apache.org) the [users@netbeans.incubator.apache.org](mailto:users@netbeans.incubator.apache.org) list - Ask questions, find answers, and also help other users.
 
-[Subscribe](mailto:dev-subscribe@netbeans.incubator.apache.org) or [mail](mailto:dev@netbeans.incubator.apache.org) the [dev@netbeans.incubator.apache.org](mailto:dev@netbeans.incubator.apache.org) list - Join developement discussions, propose new ideas and connect with contributors.
+[Subscribe](mailto:dev-subscribe@netbeans.incubator.apache.org) or [mail](mailto:dev@netbeans.incubator.apache.org) the [dev@netbeans.incubator.apache.org](mailto:dev@netbeans.incubator.apache.org) list - Join development discussions, propose new ideas and connect with contributors.
 
 ### Download
 

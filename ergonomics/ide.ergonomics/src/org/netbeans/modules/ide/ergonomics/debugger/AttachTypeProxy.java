@@ -78,7 +78,7 @@ public class AttachTypeProxy extends AttachType implements Controller, Callable<
     @Override
     public JComponent getCustomizer() {
         if (delegate == null) {
-            return new ConfigurationPanel(attachTypeName, this, featureInfo, false);
+            return new ConfigurationPanel(attachTypeName, this, featureInfo);
         } else {
             return delegate.getCustomizer();
         }

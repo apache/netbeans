@@ -27,4 +27,9 @@
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/php/analysis/ui/resources/phpstan.png</file>
+        <license ref="MIT-phpstan" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
 </licenseinfo>

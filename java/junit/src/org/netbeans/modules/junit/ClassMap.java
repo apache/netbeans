@@ -53,7 +53,8 @@ final class ClassMap {
     private static final int BEFORE_CLASS_POS_INDEX = 7;
     private static final int AFTER_CLASS_POS_INDEX = 8;
     
-    private static final String JUNIT4_PKG_PREFIX = "org.junit.";       //NOI18N
+    private static final String JUNIT4_PKG_PREFIX = "org.junit.";                   //NOI18N
+    private static final String JUNIT5_PKG_PREFIX = "org.junit.jupiter.api.";       //NOI18N
 
     private static final int[] EMPTY_INT_ARRAY = new int[0];
     
@@ -156,7 +157,25 @@ final class ClassMap {
                             for (AnnotationMirror annMirror : methodElement.getAnnotationMirrors()) {
                                 Element annElem = annMirror.getAnnotationType().asElement();
                                 String fullName = ((TypeElement) annElem).getQualifiedName().toString();
-                                if (fullName.startsWith(JUNIT4_PKG_PREFIX)) {
+                                if (fullName.startsWith(JUNIT5_PKG_PREFIX)) {
+                                    String shortName = fullName.substring(JUNIT5_PKG_PREFIX.length());
+                                    int posIndex;
+                                    if (shortName.equals("BeforeEach")) {               //NOI18N
+                                        posIndex = BEFORE_POS_INDEX;
+                                    } else if (shortName.equals("AfterEach")) {         //NOI18N
+                                        posIndex = AFTER_POS_INDEX;
+                                    } else if (shortName.equals("BeforeAll")) {   //NOI18N
+                                        posIndex = BEFORE_CLASS_POS_INDEX;
+                                    } else if (shortName.equals("AfterAll")) {    //NOI18N
+                                        posIndex = AFTER_CLASS_POS_INDEX;
+                                    } else {
+                                        continue;       //next annotation
+                                    }
+
+                                    if (map.positions[posIndex] == -1) {
+                                        map.positions[posIndex] = index;
+                                    }
+                                } else if (fullName.startsWith(JUNIT4_PKG_PREFIX)) {
                                     String shortName = fullName.substring(JUNIT4_PKG_PREFIX.length());
                                     int posIndex;
                                     if (shortName.equals("Before")) {               //NOI18N

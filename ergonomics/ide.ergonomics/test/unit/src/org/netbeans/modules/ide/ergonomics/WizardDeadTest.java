@@ -56,7 +56,7 @@ public class WizardDeadTest extends NbTestCase {
         assertNotNull("Template found", fob);
         wd.putProperty(FeatureOnDemandWizardIterator.CHOSEN_TEMPLATE, fob);
 
-        DescriptionStep step = new DescriptionStep(true);
+        DescriptionStep step = new DescriptionStep();
         step.readSettings(wd);
         JComponent panel = (JComponent) step.getComponent();
         assertFalse("Module not yet found", isModuleEnabled());

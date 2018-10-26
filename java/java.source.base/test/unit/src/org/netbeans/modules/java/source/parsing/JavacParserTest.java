@@ -28,8 +28,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -37,10 +39,13 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.lang.model.element.TypeElement;
+import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
 import javax.tools.Diagnostic;
-import static junit.framework.Assert.assertEquals;
-import org.netbeans.api.java.classpath.ClassPath;
+import javax.tools.JavaFileObject.Kind;
+import static junit.framework.TestCase.assertEquals;
+import org.netbeans.api.editor.mimelookup.MimePath;
+import org.netbeans.api.editor.mimelookup.test.MockMimeLookup;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
@@ -63,6 +68,18 @@ import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 import org.netbeans.modules.java.source.base.SourceLevelUtils;
+import org.netbeans.modules.parsing.api.Embedding;
+import org.netbeans.modules.parsing.api.ParserManager;
+import org.netbeans.modules.parsing.api.ResultIterator;
+import org.netbeans.modules.parsing.api.Snapshot;
+import org.netbeans.modules.parsing.api.UserTask;
+import org.netbeans.modules.parsing.spi.EmbeddingProvider;
+import org.netbeans.modules.parsing.spi.ParseException;
+import org.netbeans.modules.parsing.spi.Parser;
+import org.netbeans.modules.parsing.spi.ParserFactory;
+import org.netbeans.modules.parsing.spi.SchedulerTask;
+import org.netbeans.modules.parsing.spi.SourceModificationEvent;
+import org.netbeans.modules.parsing.spi.TaskFactory;
 
 /**
  *
@@ -394,6 +411,99 @@ public class JavacParserTest extends NbTestCase {
         );
         
         return JavacParser.validateSourceLevel("1.7", info, false);
+    }
+    
+    public void testEmbeddedJava() throws Exception {
+        Lookups.executeWith(Lookups.exclude(Lookup.getDefault(), JavacParser.SequentialParsing.class), () -> {
+            try {
+                //set-up taken from EmbeddingTest:
+                MockMimeLookup.setInstances (
+                    MimePath.get ("text/jsh"),
+                    new ParserFactory () {
+                        public Parser createParser (Collection<Snapshot> snapshots2) {
+                            return new Parser () {
+                                private Snapshot last;
+
+                                public void parse (Snapshot snapshot, org.netbeans.modules.parsing.api.Task task, SourceModificationEvent event) throws ParseException {
+                                    last = snapshot;
+                                }
+
+                                public Parser.Result getResult (org.netbeans.modules.parsing.api.Task task) throws ParseException {
+                                    return new Parser.Result(last) {
+                                        public void invalidate () {
+                                        }
+                                    };
+                                }
+
+                                public void cancel () {
+                                }
+
+                                public void addChangeListener (ChangeListener changeListener) {
+                                }
+
+                                public void removeChangeListener (ChangeListener changeListener) {
+                                }
+
+                                @Override
+                                public String toString () {
+                                    return "TestParser";
+                                }
+                            };
+                        }
+                    },
+                    new TaskFactory () {
+                        public Collection<SchedulerTask> create (Snapshot snapshot) {
+                            return Arrays.asList (new SchedulerTask[] {
+                                new EmbeddingProvider() {
+                                    public List<Embedding> getEmbeddings (Snapshot snapshot) {
+                                        Embedding embedding = snapshot.create("JAVA".length(), snapshot.getText().length() - "JAVA".length(), "text/x-java");
+                                        return Arrays.asList (new Embedding[] {
+                                            embedding
+                                        });
+                                    }
+
+                                    public int getPriority () {
+                                        return 10;
+                                    }
+
+                                    public void cancel () {
+                                    }
+
+                                    @Override
+                                    public String toString () {
+                                        return "TestEmbeddingProvider " + getPriority ();
+                                    }
+                                },
+                            });
+                        }
+                    }
+
+                );
+
+                clearWorkDir ();
+                FileObject workDir = FileUtil.toFileObject (getWorkDir ());
+                FileObject testFile = FileUtil.createData (workDir, "bla.jsh");
+                FileUtil.setMIMEType ("jsh", "text/jsh");
+                try (OutputStreamWriter writer = new OutputStreamWriter (testFile.getOutputStream ())) {
+                    writer.append ("JAVAclass T {}");
+                }
+                assertEquals(Kind.SOURCE, FileObjects.sourceFileObject(testFile, workDir).getKind());
+                org.netbeans.modules.parsing.api.Source source = org.netbeans.modules.parsing.api.Source.create(testFile);
+                ParserManager.parse(Collections.singletonList(source), new UserTask() {
+                    @Override
+                    public void run(ResultIterator ri) throws Exception {
+                        Embedding emb = ri.getEmbeddings().iterator().next();
+                        assertEquals("text/x-java", emb.getMimeType());
+                        CompilationController cc = CompilationController.get(ri.getResultIterator(emb).getParserResult());
+                        cc.toPhase(Phase.RESOLVED);
+                        assertEquals(Collections.emptyList(), cc.getDiagnostics());
+                        assertEquals("T", cc.getTopLevelElements().get(0).getQualifiedName().toString());
+                    }
+                });
+            } catch (Exception ex) {
+                throw new IllegalStateException(ex);
+            }
+        });
     }
 
     public void testValidateCompilerOptions() {

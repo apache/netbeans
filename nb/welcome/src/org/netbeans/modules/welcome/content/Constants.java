@@ -54,7 +54,7 @@ public interface Constants {
     static final Font CONTENT_HEADER_FONT = new Font( FONT_NAME, Font.BOLD, FONT_SIZE+13 ) ; //NOI18N
 
     static final String APACHE_LOGO_IMAGE = "org/netbeans/modules/welcome/resources/apache_feather.png"; // NOI18N
-    static final String JAVA_LOGO_IMAGE = "org/netbeans/modules/welcome/resources/java_logo.png"; // NOI18N
+    static final String INCUBATOR_LOGO_IMAGE = "org/netbeans/modules/welcome/resources/incubator_logo.png"; // NOI18N
     static final String NETBEANS_LOGO_IMAGE = "org/netbeans/modules/welcome/resources/nb_logo.png"; // NOI18N
 
     static final String IMAGE_CONTENT_BANNER = "org/netbeans/modules/welcome/resources/content_banner.png"; // NOI18N

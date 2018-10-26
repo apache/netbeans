@@ -33,12 +33,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.prefs.Preferences;
+import org.netbeans.api.java.platform.JavaPlatform;
+import org.netbeans.api.java.platform.JavaPlatformManager;
 
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.java.openjdk.common.BuildUtils;
+import org.netbeans.spi.java.platform.JavaPlatformFactory;
 import org.netbeans.spi.project.ProjectConfiguration;
 import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.openide.filesystems.FileAttributeEvent;
@@ -48,6 +51,8 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
+import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -86,6 +91,7 @@ public class ConfigurationImpl implements ProjectConfiguration {
 
     public static final class ProviderImpl implements ProjectConfigurationProvider<ConfigurationImpl>, FileChangeListener {
 
+        private static final RequestProcessor WORKER = new RequestProcessor(ProviderImpl.class.getName(), 1, false, false);
         private final FileObject jdkRoot;
         private final File buildDir;
         private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
@@ -205,6 +211,7 @@ public class ConfigurationImpl implements ProjectConfiguration {
             Preferences prefs = prefs();
             if (prefs != null)
                 prefs.put(PROP_ACTIVE_CONFIGURATION, configuration.getLocation().getAbsolutePath());
+            WORKER.post(() -> checkAndRegisterPlatform());
         }
 
         private Preferences prefs() {
@@ -217,6 +224,36 @@ public class ConfigurationImpl implements ProjectConfiguration {
                 return ProjectUtils.getPreferences(javaBaseProject, ConfigurationImpl.class, false);
             } else {
                 return null;
+            }
+        }
+
+        private void checkAndRegisterPlatform() {
+            if (active.missing)
+                return ;
+            String name = jdkRoot.getNameExt() + " - " + active.getDisplayName();
+            FileObject target = FileUtil.toFileObject(new File(active.getLocation(), "jdk"));
+            if (target == null || target.getFileObject("bin/java") == null) {
+                return ;
+            }
+            for (JavaPlatform platform : JavaPlatformManager.getDefault().getInstalledPlatforms()) {
+                if (platform.getInstallFolders().stream().anyMatch(folder -> folder.equals(target))) {
+                    //found, skip:
+                    return ;
+                }
+                if (name.equals(platform.getDisplayName())) {
+                    //platform with the same name exists, skip:
+                    return ;
+                }
+            }
+            for (JavaPlatformFactory.Provider provider : Lookup.getDefault().lookupAll(JavaPlatformFactory.Provider.class)) {
+                JavaPlatformFactory factory = provider.forType("j2se");
+                if (factory != null) {
+                    try {
+                        factory.create(target, name, true);
+                    } catch (IOException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
             }
         }
 

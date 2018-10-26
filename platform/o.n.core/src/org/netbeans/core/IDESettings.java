@@ -22,6 +22,7 @@ package org.netbeans.core;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import org.netbeans.core.startup.CLIOptions;
 import org.openide.awt.HtmlBrowser;
 import org.openide.cookies.InstanceCookie;
 import org.openide.filesystems.FileObject;
@@ -92,6 +93,14 @@ public class IDESettings  {
      */
     public static void setExternalWWWBrowser (HtmlBrowser.Factory brow) {
         setBrowser( PROP_EXTERNAL_WWWBROWSER, brow );
+    }
+
+    /** Are we running in GUI or headless mode?
+     * 
+     * @return true if the GUI mode is on
+     */
+    public static boolean isGui() {
+        return CLIOptions.isGui();
     }
 
     private static void setBrowser (String prefId, HtmlBrowser.Factory brow) {

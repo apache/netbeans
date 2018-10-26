@@ -35,8 +35,6 @@ import java.util.logging.Level;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import javax.xml.xpath.XPathExpression;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.w3c.dom.Document;
 import org.openide.modules.ModuleInfo;
 import org.openide.util.Lookup;
@@ -213,6 +211,27 @@ public final class FeatureInfo {
 
     public final Set<String> getCodeNames() {
         return Collections.unmodifiableSet(cnbs);
+    }
+    
+    public final Set<String> getExtraModules() {
+        String cnbs = properties.getProperty("extra.modules"); // NOI18N
+        TreeSet<String> s = new TreeSet<String>();
+        if (cnbs != null) {
+            s.addAll(Arrays.asList(cnbs.split(",")));
+        }
+        return s;
+    }
+
+    public final String getExtraModulesRecommendedMinJDK() {
+        return properties.getProperty("extra.modules.recommended.min.jdk"); // NOI18N
+    }
+
+    public final String getExtraModulesRequiredText() {
+        return properties.getProperty("LBL_Ergonomics_Extra_Required"); // NOI18N
+    }
+
+    public final String getExtraModulesRecommendedText() {
+        return properties.getProperty("LBL_Ergonomics_Extra_Recommended"); // NOI18N
     }
 
     public boolean isPresent() {

@@ -23,8 +23,4 @@
     <description>Builds, tests, and runs the project org.netbeans.modules.javaee.beanvalidation</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 
-    <property name="resources.dir" value="./src/org/netbeans/modules/javaee/beanvalidation/resources/"/>
-    <target name="build-init" depends="projectized.build-init">
-        <unzip src="external/javaee.beanvalidation-resources.zip" dest="${resources.dir}"/>
-    </target>
 </project>

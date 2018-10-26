@@ -24,6 +24,7 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.modules.php.analysis.commands.CodeSniffer;
 import org.netbeans.modules.php.analysis.commands.CodingStandardsFixer;
 import org.netbeans.modules.php.analysis.commands.MessDetector;
+import org.netbeans.modules.php.analysis.commands.PHPStan;
 import org.netbeans.modules.php.analysis.util.AnalysisUtils;
 import org.netbeans.modules.php.api.util.FileUtils;
 import org.openide.util.NbPreferences;
@@ -48,11 +49,16 @@ public final class AnalysisOptions {
     private static final String CODING_STANDARDS_FIXER_LEVEL = "codingStandardsFixer.level"; // NOI18N
     private static final String CODING_STANDARDS_FIXER_CONFIG = "codingStandardsFixer.config"; // NOI18N
     private static final String CODING_STANDARDS_FIXER_OPTIONS = "codingStandardsFixer.options"; // NOI18N
+    // PHPStan - PHP Static Analysis Tool
+    private static final String PHPSTAN_PATH = "phpstan.path"; // NOI18N
+    private static final String PHPSTAN_LEVEL = "phpstan.level"; // NOI18N
+    private static final String PHPSTAN_CONFIGURATION = "phpstan.configuration"; // NOI18N
+    private static final String PHPSTAN_MEMORY_LIMIT = "phpstan.memory.limit"; // NOI18N
 
     private volatile boolean codeSnifferSearched = false;
     private volatile boolean messDetectorSearched = false;
     private volatile boolean codingStandardsFixerSearched = false;
-
+    private volatile boolean phpstanSearched = false;
 
     private AnalysisOptions() {
     }
@@ -61,6 +67,7 @@ public final class AnalysisOptions {
         return INSTANCE;
     }
 
+    // code sniffer
     @CheckForNull
     public String getCodeSnifferPath() {
         String codeSnifferPath = getPreferences().get(CODE_SNIFFER_PATH, null);
@@ -92,6 +99,7 @@ public final class AnalysisOptions {
         getPreferences().put(CODE_SNIFFER_STANDARD, standard);
     }
 
+    // mess detector
     @CheckForNull
     public String getMessDetectorPath() {
         String messDetectorPath = getPreferences().get(MESS_DETECTOR_PATH, null);
@@ -122,6 +130,7 @@ public final class AnalysisOptions {
         getPreferences().put(MESS_DETECTOR_RULE_SETS, AnalysisUtils.serialize(ruleSets));
     }
 
+    // coding standards fixer
     @CheckForNull
     public String getCodingStandardsFixerVersion() {
         return getPreferences().get(CODING_STANDARDS_FIXER_VERSION, CodingStandardsFixer.VERSIONS.get(CodingStandardsFixer.VERSIONS.size() - 1));
@@ -179,6 +188,58 @@ public final class AnalysisOptions {
 
     public void setCodingStandardsFixerOptions(String options) {
         getPreferences().put(CODING_STANDARDS_FIXER_OPTIONS, options);
+    }
+
+    // phpstan
+    @CheckForNull
+    public String getPHPStanPath() {
+        String phpstanPath = getPreferences().get(PHPSTAN_PATH, null);
+        if (phpstanPath == null && !phpstanSearched) {
+            phpstanSearched = true;
+            List<String> scripts = FileUtils.findFileOnUsersPath(PHPStan.NAME, PHPStan.LONG_NAME);
+            if (!scripts.isEmpty()) {
+                phpstanPath = scripts.get(0);
+                setMessDetectorPath(phpstanPath);
+            }
+        }
+        return phpstanPath;
+    }
+
+    public void setPHPStanPath(String path) {
+        getPreferences().put(PHPSTAN_PATH, path);
+    }
+
+    public int getPHPStanLevel() {
+        int level = getPreferences().getInt(PHPSTAN_LEVEL, 0);
+        if (level < 0 || 7 < level) {
+            level = 0;
+        }
+        return level;
+    }
+
+    public void setPHPStanLevel(int level) {
+        int l = level;
+        if (level < 0 || 7 < level) {
+            l = 0;
+        }
+        getPreferences().putInt(PHPSTAN_LEVEL, l);
+    }
+
+    @CheckForNull
+    public String getPHPStanConfigurationPath() {
+        return getPreferences().get(PHPSTAN_CONFIGURATION, null);
+    }
+
+    public void setPHPStanConfigurationPath(String configuration) {
+        getPreferences().put(PHPSTAN_CONFIGURATION, configuration);
+    }
+
+    public String getPHPStanMemoryLimit() {
+        return getPreferences().get(PHPSTAN_MEMORY_LIMIT, ""); // NOI18N
+    }
+
+    public void setPHPStanMemoryLimit(String memoryLimit) {
+        getPreferences().put(PHPSTAN_MEMORY_LIMIT, memoryLimit);
     }
 
     private Preferences getPreferences() {

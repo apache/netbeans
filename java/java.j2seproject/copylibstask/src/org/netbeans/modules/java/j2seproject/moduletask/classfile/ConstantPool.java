@@ -46,6 +46,7 @@ public final class ConstantPool {
         CONSTANT_Utf8(1),
         CONSTANT_MethodHandle(15),
         CONSTANT_MethodType(16),
+        CONSTANT_ConstantDynamic(17),
         CONSTANT_InvokeDynamic(18),
         CONSTANT_Module(19),
         CONSTANT_Package(20);
@@ -166,6 +167,8 @@ public final class ConstantPool {
                 return new CPMethodHandle(this, in);
             case CONSTANT_MethodType:
                 return new CPMethodType(this, in);
+            case CONSTANT_ConstantDynamic:
+                return new CPConstantDynamic(this, in);
             case CONSTANT_InvokeDynamic:
                 return new CPInvokeDynamic(this, in);
             case CONSTANT_Module:
@@ -775,6 +778,46 @@ public final class ConstantPool {
         public String toString() {
             return String.format(
                     "%s bootstrapMethod: %d, nameAndType: %d",    //NOI18N
+                    super.toString(),
+                    bootstrapMethodAttrIndex,
+                    nameAndTypeIndex);
+        }
+    }
+
+    public static class CPConstantDynamic extends CPInfo {
+
+        private final int bootstrapMethodAttrIndex;
+        private final int nameAndTypeIndex;
+
+        CPConstantDynamic(
+                final ConstantPool owner,
+                final Reader in) throws IOException {
+            super(owner, ConstantKind.CONSTANT_ConstantDynamic);
+            this.bootstrapMethodAttrIndex = in.readUnsignedShort();
+            this.nameAndTypeIndex = in.readUnsignedShort();
+        }
+
+        @Override
+        void write(Writer out) throws IOException {
+            super.write(out);
+            out.writeUnsignedShort(bootstrapMethodAttrIndex);
+            out.writeUnsignedShort(nameAndTypeIndex);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!super.equals(obj) || !(obj instanceof CPConstantDynamic)) {
+                return false;
+            }
+            final CPConstantDynamic i = (CPConstantDynamic)obj;
+            return bootstrapMethodAttrIndex == i.bootstrapMethodAttrIndex
+                    && nameAndTypeIndex == i.nameAndTypeIndex;
+        }
+
+        @Override
+        public String toString() {
+            return String.format(
+                    "%s bootstrapMethod: %d, nameAndType: %d", //NOI18N
                     super.toString(),
                     bootstrapMethodAttrIndex,
                     nameAndTypeIndex);

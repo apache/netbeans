@@ -37,7 +37,7 @@
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/servlet3.1-jsp2.3-api.jar</runtime-relative-path>
-                <binary-origin>external/servlet3.1-jsp2.3-api.jar</binary-origin>
+                <binary-origin>external/generated-servlet-jsp-api-3.1_2.3.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

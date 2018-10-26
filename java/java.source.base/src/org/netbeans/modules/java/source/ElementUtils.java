@@ -21,7 +21,6 @@ package org.netbeans.modules.java.source;
 import com.sun.source.util.JavacTask;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Kinds.Kind;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.code.Symbol.ModuleSymbol;
@@ -30,6 +29,7 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import java.util.Set;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.TypeElement;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -46,21 +46,35 @@ public class ElementUtils {
 
     public static TypeElement getTypeElementByBinaryName(JavacTask task, String name) {
         Set<? extends ModuleElement> allModules = task.getElements().getAllModuleElements();
+        Context ctx = ((JavacTaskImpl) task).getContext();
+        Symtab syms = Symtab.instance(ctx);
         
         if (allModules.isEmpty()) {
-            Context ctx = ((JavacTaskImpl) task).getContext();
-            Symtab syms = Symtab.instance(ctx);
-            
             return getTypeElementByBinaryName(task, syms.noModule, name);
         }
         
         TypeElement result = null;
+        boolean foundInUnamedModule = false;
         
         for (ModuleElement me : allModules) {
             TypeElement found = getTypeElementByBinaryName(task, me, name);
-            
+
             if (found != null) {
-                if (result != null) return null;
+                if ((ModuleSymbol) me == syms.unnamedModule) {
+                    foundInUnamedModule = true;
+                }
+                if (result != null) {
+                    if (foundInUnamedModule == true) {
+                        for (TypeElement elem : new TypeElement[]{result, found}) {
+                            if ((elem.getKind() == ElementKind.CLASS || elem.getKind() == ElementKind.INTERFACE)
+                                    && (((ClassSymbol) elem).packge().modle != syms.unnamedModule)) {
+                                return elem;
+                            }
+                        }
+                    } else {
+                        return null;
+                    }
+                }
                 result = found;
             }
         }

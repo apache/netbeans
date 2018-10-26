@@ -26,7 +26,7 @@
                    projectFiles="true">
       <itemPath>cmdargs.h</itemPath>
       <itemPath>nblauncher.h</itemPath>
-      <itemPath>../../../o.n.bootstrap/launcher/windows/utilsfuncs.h</itemPath>
+      <itemPath>../../../platform/o.n.bootstrap/launcher/windows/utilsfuncs.h</itemPath>
       <itemPath>version.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -42,7 +42,7 @@
                    projectFiles="true">
       <itemPath>nblauncher.cpp</itemPath>
       <itemPath>netbeans.cpp</itemPath>
-      <itemPath>../../../o.n.bootstrap/launcher/windows/utilsfuncs.cpp</itemPath>
+      <itemPath>../../../platform/o.n.bootstrap/launcher/windows/utilsfuncs.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -77,12 +77,12 @@
           <commandLine>-mwindows -Wl,--nxcompat -Wl,--dynamicbase -Wl,--no-seh</commandLine>
         </linkerTool>
       </compileType>
-      <item path="../../../o.n.bootstrap/launcher/windows/utilsfuncs.cpp"
+      <item path="../../../platform/o.n.bootstrap/launcher/windows/utilsfuncs.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../o.n.bootstrap/launcher/windows/utilsfuncs.h"
+      <item path="../../../platform/o.n.bootstrap/launcher/windows/utilsfuncs.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -131,12 +131,12 @@
           <commandLine>-mwindows -Wl,--nxcompat -Wl,--dynamicbase</commandLine>
         </linkerTool>
       </compileType>
-      <item path="../../../o.n.bootstrap/launcher/windows/utilsfuncs.cpp"
+      <item path="../../../platform/o.n.bootstrap/launcher/windows/utilsfuncs.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../o.n.bootstrap/launcher/windows/utilsfuncs.h"
+      <item path="../../../platform/o.n.bootstrap/launcher/windows/utilsfuncs.h"
             ex="false"
             tool="3"
             flavor2="0">

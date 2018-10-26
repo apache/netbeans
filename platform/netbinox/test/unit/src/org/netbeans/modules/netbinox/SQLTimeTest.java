@@ -35,10 +35,6 @@ import org.netbeans.modules.netbinox.ContextClassLoaderTest.Compile;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.launch.Framework;
 
-/**
- *
- * @author Jaroslav Tulach <jtulach@netbeans.org>
- */
 public class SQLTimeTest extends NbTestCase {
     static {
         System.setProperty("java.awt.headless", "true");

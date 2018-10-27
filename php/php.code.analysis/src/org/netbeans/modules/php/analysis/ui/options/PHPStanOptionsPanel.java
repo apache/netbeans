@@ -63,6 +63,11 @@ public class PHPStanOptionsPanel extends AnalysisCategoryPanel {
         "PHPStanOptionsPanel.hint=Full path of PHPStan script (typically {0} or {1}).",})
     private void init() {
         phpStanHintLabel.setText(Bundle.PHPStanOptionsPanel_hint(PHPStan.NAME, PHPStan.LONG_NAME));
+        phpStanLevelComboBox.removeAllItems();
+        for (int i = AnalysisOptions.PHPSTAN_MIN_LEVEL; i <= AnalysisOptions.PHPSTAN_MAX_LEVEL; i++) {
+            phpStanLevelComboBox.addItem(String.valueOf(i));
+        }
+        phpStanLevelComboBox.addItem(PHPStan.MAX_LEVEL);
         phpStanLevelComboBox.setRenderer(new PHPStanLevelListCellRenderer(phpStanLevelComboBox.getRenderer()));
         // add listener
         DefaultDocumentListener defaultDocumentListener = new DefaultDocumentListener();
@@ -365,9 +370,9 @@ public class PHPStanOptionsPanel extends AnalysisCategoryPanel {
         if (saved == null ? !current.isEmpty() : !saved.equals(current)) {
             return true;
         }
-        int savedInt = AnalysisOptions.getInstance().getPHPStanLevel();
-        int currentInt = getPHPStanLevel();
-        return savedInt != currentInt;
+        String savedString = AnalysisOptions.getInstance().getPHPStanLevel();
+        String currentString = getPHPStanLevel();
+        return !savedString.equals(currentString);
     }
 
     @Override
@@ -397,12 +402,12 @@ public class PHPStanOptionsPanel extends AnalysisCategoryPanel {
         phpStanConfigurationTextField.setText(path);
     }
 
-    public int getPHPStanLevel() {
-        return Integer.parseInt((String) phpStanLevelComboBox.getSelectedItem());
+    public String getPHPStanLevel() {
+        return (String) phpStanLevelComboBox.getSelectedItem();
     }
 
-    private void setPHPStanLevel(int level) {
-        phpStanLevelComboBox.setSelectedItem(String.valueOf(level));
+    private void setPHPStanLevel(String level) {
+        phpStanLevelComboBox.setSelectedItem(level);
     }
 
     public String getPHPStanMemoryLimit() {

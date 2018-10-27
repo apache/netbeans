@@ -168,6 +168,9 @@ public class ErrorHintsRemoteParserTask {
 
         private static int nextError; //XXX: synchronization
 
+        public ErrorShim() {
+        }
+
         public ErrorShim(ErrorDescription err) {
             start = err.getRange().getBegin().getOffset();
             end = err.getRange().getEnd().getOffset();
@@ -183,6 +186,9 @@ public class ErrorHintsRemoteParserTask {
         public int callbackId;
         private static int nextFix;
 
+        public FixShim() {
+        }
+
         public FixShim(Fix fix) {
             this.text = fix.getText();
             this.callbackId = nextFix++;
@@ -193,6 +199,9 @@ public class ErrorHintsRemoteParserTask {
         public int replaceStart;
         public int replaceEnd;
         public String replaceText;
+
+        public EditShim() {
+        }
 
         public EditShim(int replaceStart, int replaceEnd, String replaceText) {
             this.replaceStart = replaceStart;

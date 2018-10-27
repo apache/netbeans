@@ -106,6 +106,10 @@ public class SemanticHighlighterRemoteParserTask implements RemoteParserTask<Hig
     public static final class HighlightData {
         List<String> categories;
         List<Long> spans;
+
+        public HighlightData() {
+        }
+
         public HighlightData(List<String> cats, List<Long> spans) {
             this.categories = cats;
             this.spans = spans;

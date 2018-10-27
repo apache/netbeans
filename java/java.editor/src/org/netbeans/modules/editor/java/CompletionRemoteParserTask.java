@@ -58,6 +58,9 @@ public class CompletionRemoteParserTask {
         public CompletionItemShim[] completions;
         //TODO: other attributes...
 
+        public CompletionShim() {
+        }
+
         public CompletionShim(JavaCompletionTask<JavaCompletionItem> task) {
             this.completions = task.getResults().stream().map(CompletionItemShim::new).toArray(v -> new CompletionItemShim[v]);
         }
@@ -66,6 +69,9 @@ public class CompletionRemoteParserTask {
 
     public static final class CompletionItemShim {
         public Map<Object, Object> content = new HashMap<>();
+
+        public CompletionItemShim() {
+        }
 
         public CompletionItemShim(JavaCompletionItem ci) {
             ci.serialize(content);

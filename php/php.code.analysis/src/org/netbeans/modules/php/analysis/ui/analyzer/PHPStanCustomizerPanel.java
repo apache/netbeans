@@ -26,6 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.netbeans.modules.analysis.spi.Analyzer;
+import org.netbeans.modules.php.analysis.commands.PHPStan;
 import org.netbeans.modules.php.analysis.options.AnalysisOptions;
 import org.netbeans.modules.php.analysis.ui.PHPStanLevelListCellRenderer;
 import org.netbeans.modules.php.analysis.options.AnalysisOptionsValidator;
@@ -77,9 +78,19 @@ public class PHPStanCustomizerPanel extends JPanel {
 
     private void setLevelComboBox() {
         assert EventQueue.isDispatchThread();
+        phpStanLevelComboBox.removeAllItems();
+        for (int i = AnalysisOptions.PHPSTAN_MIN_LEVEL; i <= AnalysisOptions.PHPSTAN_MAX_LEVEL; i++) {
+            phpStanLevelComboBox.addItem(String.valueOf(i));
+        }
+        phpStanLevelComboBox.addItem(PHPStan.MAX_LEVEL);
         phpStanLevelComboBox.setRenderer(new PHPStanLevelListCellRenderer(phpStanLevelComboBox.getRenderer()));
-        phpStanLevelComboBox.setSelectedItem(settings.get(LEVEL, String.valueOf(AnalysisOptions.getInstance().getPHPStanLevel())));
+        phpStanLevelComboBox.setSelectedItem(getValidLevel());
         phpStanLevelComboBox.addItemListener(e -> setLevel());
+    }
+
+    private String getValidLevel() {
+        String level = settings.get(LEVEL, AnalysisOptions.getInstance().getPHPStanLevel());
+        return AnalysisOptions.getValidPHPStanLevel(level);
     }
 
     private void setConfigurationTextField() {

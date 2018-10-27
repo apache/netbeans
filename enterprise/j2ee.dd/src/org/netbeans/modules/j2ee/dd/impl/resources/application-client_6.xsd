@@ -99,7 +99,7 @@ Other names may be trademarks of their respective owners.
 
       The following conventions apply to all Java EE
       deployment descriptor elements unless indicated otherwise.
-
+      
       - In elements that specify a pathname to a file within the
       same JAR file, relative filenames (i.e., those not
       starting with "/") are considered relative to the root of
@@ -108,7 +108,7 @@ Other names may be trademarks of their respective owners.
       JAR file's namespace.  In general, relative names are
       preferred.  The exception is .war files where absolute
       names are preferred for consistency with the Servlet API.
-
+      
     </xsd:documentation>
   </xsd:annotation>
 
@@ -127,7 +127,7 @@ Other names may be trademarks of their respective owners.
         client deployment descriptor describes the EJB components
         and external resources referenced by the application
         client.
-
+        
       </xsd:documentation>
     </xsd:annotation>
     <xsd:unique name="env-entry-name-uniqueness">
@@ -138,7 +138,7 @@ Other names may be trademarks of their respective owners.
           application client's environment entry.  The name is a JNDI
           name relative to the java:comp/env context.  The name must
           be unique within an application client.
-
+          
         </xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="javaee:env-entry"/>
@@ -153,9 +153,9 @@ Other names may be trademarks of their respective owners.
           client's environment and is relative to the
           java:comp/env context. The name must be unique within the
           application client.
-
+          
           It is recommended that name is prefixed with "ejb/".
-
+          
         </xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="javaee:ejb-ref"/>
@@ -169,7 +169,7 @@ Other names may be trademarks of their respective owners.
           resource manager connection factory reference.The name
           is a JNDI name relative to the java:comp/env context.
           The name must be unique within an application client.
-
+          
         </xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="javaee:resource-ref"/>
@@ -185,7 +185,7 @@ Other names may be trademarks of their respective owners.
           code. The name is a JNDI name relative to the
           java:comp/env context and must be unique within an
           application client.
-
+          
         </xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="javaee:resource-env-ref"/>
@@ -201,7 +201,7 @@ Other names may be trademarks of their respective owners.
           application client code. The name is a JNDI name
           relative to the java:comp/env context and must be unique
           within an application client.
-
+          
         </xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="javaee:message-destination-ref"/>
@@ -264,7 +264,7 @@ Other names may be trademarks of their respective owners.
             interface.  The class will be instantiated by the
             application client container and used by the container
             to collect authentication information from the user.
-
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -285,7 +285,7 @@ Other names may be trademarks of their respective owners.
         <xsd:documentation>
 
           The required value for the version is 6.
-
+          
         </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
@@ -301,17 +301,17 @@ Other names may be trademarks of their respective owners.
           files available to this module and packaged with
           this application should be examined for annotations
           that specify deployment information.
-
+          
           If metadata-complete is set to "true", the deployment
           tool must ignore any annotations that specify deployment
           information, which might be present in the class files
           of the application.
-
+          
           If metadata-complete is not specified or is set to
           "false", the deployment tool must examine the class
           files of the application for annotations, as
           specified by the specifications.
-
+          
         </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>

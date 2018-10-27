@@ -107,7 +107,7 @@ Other names may be trademarks of their respective owners.
       JAR file's namespace.  In general, relative names are
       preferred.  The exception is .war files where absolute
       names are preferred for consistency with the Servlet API.
-
+      
     </xsd:documentation>
   </xsd:annotation>
 
@@ -123,7 +123,7 @@ Other names may be trademarks of their respective owners.
 
         The application element is the root element of a Java EE
         application deployment descriptor.
-
+        
       </xsd:documentation>
     </xsd:annotation>
     <xsd:unique name="context-root-uniqueness">
@@ -131,8 +131,8 @@ Other names may be trademarks of their respective owners.
         <xsd:documentation>
 
           The context-root element content must be unique
-          in the ear.
-
+          in the ear. 
+          
         </xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="javaee:module/javaee:web"/>
@@ -143,8 +143,8 @@ Other names may be trademarks of their respective owners.
         <xsd:documentation>
 
           The security-role-name element content
-          must be unique in the ear.
-
+          must be unique in the ear.  
+          
         </xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="javaee:security-role"/>
@@ -160,8 +160,8 @@ Other names may be trademarks of their respective owners.
       <xsd:documentation>
 
         The applicationType defines the structure of the
-        application.
-
+        application. 
+        
       </xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
@@ -182,7 +182,7 @@ Other names may be trademarks of their respective owners.
             be initialized in any order.
             If initialize-in-order is not set or set to false, the order
             of initialization is unspecified and may be product-dependent.
-
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -194,9 +194,9 @@ Other names may be trademarks of their respective owners.
 
             The application deployment descriptor must have one
             module element for each Java EE module in the
-            application package. A module element is defined
-            by moduleType definition.
-
+            application package. A module element is defined 
+            by moduleType definition. 
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -219,7 +219,7 @@ Other names may be trademarks of their respective owners.
             application package.  If this element isn't specified,
             the directory named "lib" is searched.  An empty element
             may be used to disable searching.
-
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -273,7 +273,7 @@ Other names may be trademarks of their respective owners.
         <xsd:documentation>
 
           The required value for the version is 6.
-
+          
         </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
@@ -293,7 +293,7 @@ Other names may be trademarks of their respective owners.
         module type and contains a path to the module file, and an
         optional alt-dd element, which specifies an optional URI to
         the post-assembly version of the deployment descriptor.
-
+        
       </xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
@@ -306,7 +306,7 @@ Other names may be trademarks of their respective owners.
               The connector element specifies the URI of a
               resource adapter archive file, relative to the
               top level of the application package.
-
+              
             </xsd:documentation>
           </xsd:annotation>
         </xsd:element>
@@ -318,7 +318,7 @@ Other names may be trademarks of their respective owners.
               The ejb element specifies the URI of an ejb-jar,
               relative to the top level of the application
               package.
-
+              
             </xsd:documentation>
           </xsd:annotation>
         </xsd:element>
@@ -330,7 +330,7 @@ Other names may be trademarks of their respective owners.
               The java element specifies the URI of a java
               application client module, relative to the top
               level of the application package.
-
+              
             </xsd:documentation>
           </xsd:annotation>
         </xsd:element>
@@ -352,7 +352,7 @@ Other names may be trademarks of their respective owners.
             must read the deployment descriptor from the default
             location and file name required by the respective
             component specification.
-
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -370,7 +370,7 @@ Other names may be trademarks of their respective owners.
 
         The webType defines the web-uri and context-root of
         a web application module.
-
+        
       </xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
@@ -382,7 +382,7 @@ Other names may be trademarks of their respective owners.
             The web-uri element specifies the URI of a web
             application file, relative to the top level of the
             application package.
-
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -393,7 +393,7 @@ Other names may be trademarks of their respective owners.
 
             The context-root element specifies the context root
             of a web application.
-
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>

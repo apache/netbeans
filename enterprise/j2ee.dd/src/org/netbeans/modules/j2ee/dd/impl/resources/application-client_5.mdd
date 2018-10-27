@@ -1,20 +1,43 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!--
-     Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
-       http://www.apache.org/licenses/LICENSE-2.0
-     Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-    KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
- -->
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright (c) 2006, 2016 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+-->
 <metaDD>
 	<meta-element>
 		<dtd-name>application-client</dtd-name>
@@ -48,7 +71,7 @@
             <namespace>http://java.sun.com/xml/ns/javaee</namespace>
             <bean-name>EjbRef</bean-name>
             <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
-            <implements>
+            <implements> 
                 org.netbeans.modules.j2ee.dd.api.common.EjbRef, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
             </implements>
             <user-code>
@@ -60,7 +83,7 @@
             <namespace>http://java.sun.com/xml/ns/javaee</namespace>
             <bean-name>ResourceRef</bean-name>
             <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
-            <implements>
+            <implements> 
                 org.netbeans.modules.j2ee.dd.api.common.ResourceRef, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
             </implements>
             <user-code>
@@ -72,7 +95,7 @@
             <namespace>http://java.sun.com/xml/ns/javaee</namespace>
             <bean-name>ResourceEnvRef</bean-name>
             <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
-            <implements>
+            <implements> 
                 org.netbeans.modules.j2ee.dd.api.common.ResourceEnvRef, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
             </implements>
             <user-code>
@@ -84,7 +107,7 @@
             <namespace>http://java.sun.com/xml/ns/javaee</namespace>
             <bean-name>MessageDestinationRef</bean-name>
             <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
-            <implements>
+            <implements> 
                 org.netbeans.modules.j2ee.dd.api.common.MessageDestinationRef, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
             </implements>
             <user-code>
@@ -117,7 +140,7 @@
             <namespace>http://java.sun.com/xml/ns/javaee</namespace>
             <bean-name>MessageDestination</bean-name>
             <extends>org.netbeans.modules.j2ee.dd.impl.common.ComponentBeanMultiple</extends>
-            <implements>
+            <implements> 
                 org.netbeans.modules.j2ee.dd.api.common.MessageDestination, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
             </implements>
             <user-code>
@@ -152,8 +175,8 @@
             <dtd-name>iconType</dtd-name>
             <namespace>http://java.sun.com/xml/ns/javaee</namespace>
             <bean-name>Icon</bean-name>
-            <extends>org.netbeans.modules.j2ee.dd.impl.common.EnclosingBean</extends>
-            <implements>
+            <extends>org.netbeans.modules.j2ee.dd.impl.common.EnclosingBean</extends> 
+            <implements> 
                 org.netbeans.modules.j2ee.dd.api.common.Icon
             </implements>
         </meta-element>
@@ -180,7 +203,7 @@
             <namespace>http://java.sun.com/xml/ns/javaee</namespace>
             <bean-name>InjectionTarget</bean-name>
             <implements>org.netbeans.modules.j2ee.dd.api.common.InjectionTarget</implements>
-            <extends>org.netbeans.modules.j2ee.dd.impl.common.EnclosingBean</extends>
+            <extends>org.netbeans.modules.j2ee.dd.impl.common.EnclosingBean</extends> 
         </meta-element>
 	<meta-element>
 		<dtd-name>persistence-context-typeType</dtd-name>
@@ -224,7 +247,7 @@
             <bean-name>ServiceRef</bean-name>
             <comparator-class>org.netbeans.modules.j2ee.dd.impl.common.Comparator</comparator-class>
             <extends>org.netbeans.modules.j2ee.dd.impl.common.ComponentBeanMultiple</extends>
-            <implements>
+            <implements> 
                 org.netbeans.modules.j2ee.dd.api.common.ServiceRef, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
             </implements>
             <user-code>
@@ -247,8 +270,8 @@
             <dtd-name>port-component-refType</dtd-name>
             <namespace>http://java.sun.com/xml/ns/javaee</namespace>
             <bean-name>PortComponentRef</bean-name>
-            <extends>org.netbeans.modules.j2ee.dd.impl.common.EnclosingBean</extends>
-            <implements>
+            <extends>org.netbeans.modules.j2ee.dd.impl.common.EnclosingBean</extends> 
+            <implements> 
                 org.netbeans.modules.j2ee.dd.api.common.PortComponentRef
             </implements>
         </meta-element>
@@ -258,24 +281,24 @@
             <bean-name>ServiceRefHandler</bean-name>
             <comparator-class>org.netbeans.modules.j2ee.dd.impl.common.Comparator</comparator-class>
             <extends>org.netbeans.modules.j2ee.dd.impl.common.ComponentBeanMultiple</extends>
-            <implements>
+            <implements> 
                 org.netbeans.modules.j2ee.dd.api.common.ServiceRefHandler, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
             </implements>
             <user-code>
                 public String getKeyProperty() { return "HandlerName"; }
             </user-code>
         </meta-element>
-        <meta-element>
-               <dtd-name>service-ref_handler-chainsType</dtd-name>
-               <namespace>http://java.sun.com/xml/ns/javaee</namespace>
-               <bean-name>ServiceRefHandlerChains</bean-name>
-               <implements>org.netbeans.modules.j2ee.dd.api.common.ServiceRefHandlerChains</implements>
-        </meta-element>
+        <meta-element> 
+               <dtd-name>service-ref_handler-chainsType</dtd-name> 
+               <namespace>http://java.sun.com/xml/ns/javaee</namespace> 
+               <bean-name>ServiceRefHandlerChains</bean-name> 
+               <implements>org.netbeans.modules.j2ee.dd.api.common.ServiceRefHandlerChains</implements> 
+        </meta-element> 
         <meta-element>
             <dtd-name>service-ref_handler-chainType</dtd-name>
             <namespace>http://java.sun.com/xml/ns/javaee</namespace>
             <bean-name>ServiceRefHandlerChainType</bean-name>
-            <implements>org.netbeans.modules.j2ee.dd.api.common.ServiceRefHandlerChain</implements>
+            <implements>org.netbeans.modules.j2ee.dd.api.common.ServiceRefHandlerChain</implements> 
         </meta-element>
         <meta-element>
             <dtd-name>service-ref_qname-pattern</dtd-name>
@@ -294,7 +317,7 @@
             <namespace>http://java.sun.com/xml/ns/javaee</namespace>
                 <bean-name>InitParam</bean-name>
                 <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
-                <implements>
+                <implements> 
                     org.netbeans.modules.j2ee.dd.api.common.InitParam, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
                 </implements>
                 <user-code>

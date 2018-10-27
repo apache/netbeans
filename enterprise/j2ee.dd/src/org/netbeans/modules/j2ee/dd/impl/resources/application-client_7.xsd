@@ -10,9 +10,9 @@
     <xsd:documentation>
 
       DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
-
+      
       Copyright (c) 2009-2013 Oracle and/or its affiliates. All rights reserved.
-
+      
       The contents of this file are subject to the terms of either the GNU
       General Public License Version 2 only ("GPL") or the Common Development
       and Distribution License("CDDL") (collectively, the "License").  You
@@ -21,20 +21,20 @@
       https://glassfish.dev.java.net/public/CDDL+GPL_1_1.html
       or packager/legal/LICENSE.txt.  See the License for the specific
       language governing permissions and limitations under the License.
-
+      
       When distributing the software, include this License Header Notice in each
       file and include the License file at packager/legal/LICENSE.txt.
-
+      
       GPL Classpath Exception:
       Oracle designates this particular file as subject to the "Classpath"
       exception as provided by Oracle in the GPL Version 2 section of the License
       file that accompanied this code.
-
+      
       Modifications:
       If applicable, add the following below the License Header, with the fields
       enclosed by brackets [] replaced by your own identifying information:
       "Portions Copyright [year] [name of copyright owner]"
-
+      
       Contributor(s):
       If you wish your version of this file to be governed by only the CDDL or
       only the GPL Version 2, indicate your decision by adding "[Contributor]
@@ -46,7 +46,7 @@
       and therefore, elected the GPL Version 2 license, then the option applies
       only if the new code is made subject to such option by the copyright
       holder.
-
+      
     </xsd:documentation>
   </xsd:annotation>
 
@@ -59,26 +59,26 @@
       application client's jar file.  All application client
       deployment descriptors must indicate the application
       client schema by using the Java EE namespace:
-
+      
       http://xmlns.jcp.org/xml/ns/javaee
-
+      
       and indicate the version of the schema by
       using the version element as shown below:
-
+      
       <application-client xmlns="http://xmlns.jcp.org/xml/ns/javaee"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+      xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
       	http://xmlns.jcp.org/xml/ns/javaee/application-client_7.xsd"
       version="7">
       ...
       </application-client>
-
+      
       The instance documents may indicate the published version of
       the schema using the xsi:schemaLocation attribute for Java EE
       namespace with the following location:
-
+      
       http://xmlns.jcp.org/xml/ns/javaee/application-client_7.xsd
-
+      
       ]]>
     </xsd:documentation>
   </xsd:annotation>
@@ -88,7 +88,7 @@
 
       The following conventions apply to all Java EE
       deployment descriptor elements unless indicated otherwise.
-
+      
       - In elements that specify a pathname to a file within the
       same JAR file, relative filenames (i.e., those not
       starting with "/") are considered relative to the root of
@@ -97,7 +97,7 @@
       JAR file's namespace.  In general, relative names are
       preferred.  The exception is .war files where absolute
       names are preferred for consistency with the Servlet API.
-
+      
     </xsd:documentation>
   </xsd:annotation>
 
@@ -116,7 +116,7 @@
         client deployment descriptor describes the EJB components
         and external resources referenced by the application
         client.
-
+        
       </xsd:documentation>
     </xsd:annotation>
     <xsd:unique name="env-entry-name-uniqueness">
@@ -127,7 +127,7 @@
           application client's environment entry.  The name is a JNDI
           name relative to the java:comp/env context.  The name must
           be unique within an application client.
-
+          
         </xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="javaee:env-entry"/>
@@ -142,9 +142,9 @@
           client's environment and is relative to the
           java:comp/env context. The name must be unique within the
           application client.
-
+          
           It is recommended that name is prefixed with "ejb/".
-
+          
         </xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="javaee:ejb-ref"/>
@@ -158,7 +158,7 @@
           resource manager connection factory reference.The name
           is a JNDI name relative to the java:comp/env context.
           The name must be unique within an application client.
-
+          
         </xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="javaee:resource-ref"/>
@@ -174,7 +174,7 @@
           code. The name is a JNDI name relative to the
           java:comp/env context and must be unique within an
           application client.
-
+          
         </xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="javaee:resource-env-ref"/>
@@ -190,7 +190,7 @@
           application client code. The name is a JNDI name
           relative to the java:comp/env context and must be unique
           within an application client.
-
+          
         </xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="javaee:message-destination-ref"/>
@@ -253,7 +253,7 @@
             interface.  The class will be instantiated by the
             application client container and used by the container
             to collect authentication information from the user.
-
+            
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -294,7 +294,7 @@
         <xsd:documentation>
 
           The required value for the version is 7.
-
+          
         </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
@@ -310,17 +310,17 @@
           files available to this module and packaged with
           this application should be examined for annotations
           that specify deployment information.
-
+          
           If metadata-complete is set to "true", the deployment
           tool must ignore any annotations that specify deployment
           information, which might be present in the class files
           of the application.
-
+          
           If metadata-complete is not specified or is set to
           "false", the deployment tool must examine the class
           files of the application for annotations, as
           specified by the specifications.
-
+          
         </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>

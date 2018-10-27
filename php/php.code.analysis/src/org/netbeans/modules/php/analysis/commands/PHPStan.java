@@ -50,6 +50,7 @@ public final class PHPStan {
 
     public static final String NAME = "phpstan"; // NOI18N
     public static final String LONG_NAME = NAME + ".phar"; // NOI18N
+    public static final String MAX_LEVEL = "max"; // NOI18N
     static final File XML_LOG = new File(System.getProperty("java.io.tmpdir"), "nb-php-phpstan-log.xml"); // NOI18N
     private static final Logger LOGGER = Logger.getLogger(PHPStan.class.getName());
 

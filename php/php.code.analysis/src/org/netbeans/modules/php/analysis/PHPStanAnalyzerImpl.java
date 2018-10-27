@@ -171,7 +171,6 @@ public class PHPStanAnalyzerImpl implements Analyzer {
         return null;
     }
 
-    @CheckForNull
     private String getValidPHPStanLevel() {
         String phpStanLevel = null;
         Preferences settings = context.getSettings();
@@ -179,11 +178,10 @@ public class PHPStanAnalyzerImpl implements Analyzer {
             phpStanLevel = settings.get(PHPStanCustomizerPanel.LEVEL, null);
         }
         if (phpStanLevel == null) {
-            phpStanLevel = String.valueOf(AnalysisOptions.getInstance().getPHPStanLevel());
+            phpStanLevel = AnalysisOptions.getInstance().getPHPStanLevel();
         }
         assert phpStanLevel != null;
-        return phpStanLevel;
-
+        return AnalysisOptions.getValidPHPStanLevel(phpStanLevel);
     }
 
     @CheckForNull

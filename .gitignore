@@ -77,3 +77,7 @@
 /nbbuild/packaging/stage/
 *.snap
 
+# Backup files
+######################
+*~
+*.orig

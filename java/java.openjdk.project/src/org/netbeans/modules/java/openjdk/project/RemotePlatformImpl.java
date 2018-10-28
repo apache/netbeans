@@ -31,7 +31,11 @@ import org.netbeans.modules.java.openjdk.project.JDKProject.Root;
 import org.netbeans.modules.java.openjdk.project.JDKProject.RootKind;
 import org.netbeans.modules.java.source.remote.spi.RemotePlatform;
 import org.netbeans.spi.project.ProjectConfigurationProvider;
+import org.openide.filesystems.FileChangeAdapter;
+import org.openide.filesystems.FileChangeListener;
+import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
@@ -50,6 +54,13 @@ public class RemotePlatformImpl implements RemotePlatform {
 
     private final ChangeSupport cs = new ChangeSupport(this);
     private final ConfigurationImpl.ProviderImpl configurations;
+    private File modules;
+    private FileChangeListener modulesListener = new FileChangeAdapter() {
+        @Override
+        public void fileChanged(FileEvent fe) {
+            cs.fireChange();
+        }
+    };
 
     public RemotePlatformImpl(ConfigurationImpl.ProviderImpl configurations) {
         this.configurations = configurations;
@@ -57,10 +68,21 @@ public class RemotePlatformImpl implements RemotePlatform {
             @Override public void propertyChange(PropertyChangeEvent evt) {
                 if (ProjectConfigurationProvider.PROP_CONFIGURATION_ACTIVE.equals(evt.getPropertyName()) ||
                     evt.getPropertyName() == null) {
+                    listenOnModules();
                     cs.fireChange();
                 }
             }
         });
+        listenOnModules();
+    }
+
+    private synchronized void listenOnModules() {
+        if (modules != null) {
+            FileUtil.removeFileChangeListener(modulesListener, modules);
+        }
+        modules = FileUtil.normalizeFile(new File(configurations.getActiveConfiguration().getLocation(),
+                                         "images/jdk/lib/modules".replace("/", System.getProperty("file.separator"))));
+        FileUtil.addFileChangeListener(modulesListener, modules);
     }
 
     @Override

@@ -22,6 +22,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URISyntaxException;
@@ -32,22 +33,33 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.JTextComponent;
+import org.netbeans.api.editor.EditorRegistry;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.modules.java.source.remote.api.RemoteRunner;
 
+import org.netbeans.api.java.source.CompilationController;
+import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.modules.editor.NbEditorUtilities;
+import org.netbeans.modules.java.source.remote.api.RemoteParserTask;
 import org.netbeans.modules.java.source.remoteapi.Server;
 import org.netbeans.modules.java.source.remote.spi.RemotePlatform;
+import org.netbeans.modules.parsing.api.Source;
 import org.openide.filesystems.FileObject;
 import org.openide.modules.InstalledFileLocator;
 import org.openide.modules.OnStop;
 import org.openide.modules.Places;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -55,6 +67,7 @@ import org.openide.util.NbBundle;
  */
 public class RemoteProvider {
 
+    private static final Logger LOG = Logger.getLogger(RemoteProvider.class.getName());
     private static final Map<RemotePlatform, RemoteProcessDescription> platform2Remote = new IdentityHashMap<>();
 
     @NbBundle.Messages({
@@ -121,6 +134,13 @@ public class RemoteProvider {
             desc = new RemoteProcessDescription(process, p, createRunner.apply(input, output));
             
             platform2Remote.put(p, desc);
+
+            try {
+                desc.runner.readAndDecode(source, InitTask.class, String.class, null).get();
+            } catch (Throwable t) {
+                LOG.log(Level.FINE, null, t);
+            }
+
             return desc.runner;
         } catch (NoSuchAlgorithmException | IOException | URISyntaxException ex) {
             throw new IllegalStateException(ex);
@@ -167,6 +187,22 @@ public class RemoteProvider {
             } catch (InterruptedException ex) {
                 //ignored
             }
+            //refresh focused editor:
+            JTextComponent comp = EditorRegistry.focusedComponent();
+            if (comp != null) {
+                FileObject file = NbEditorUtilities.getFileObject(comp.getDocument());
+                
+                if (file != null) {
+                    Source source = Source.create(file);
+                    try {
+                        Class<?> utilities = Class.forName("org.netbeans.modules.parsing.impl.Utilities", false, Source.class.getClassLoader());
+                        Method m = utilities.getMethod("revalidate", Source.class);
+                        m.invoke(null, source);
+                    } catch (Throwable ex) {
+                        LOG.log(Level.FINE, null, ex);
+                    }
+                }
+            }
         }
 
         private void stop() throws InterruptedException {
@@ -197,6 +233,18 @@ public class RemoteProvider {
         
     }
     
+    @ServiceProvider(service=RemoteParserTask.class)
+    public static class InitTask implements RemoteParserTask<String, CompilationController, Void> {
+
+        @Override
+        public Future<String> computeResult(CompilationController cc, Void p) throws IOException {
+            cc.toPhase(JavaSource.Phase.RESOLVED);
+            cc.getTokenHierarchy().tokenSequence().moveNext();
+            return new SynchronousFuture<String>(() -> "initialized", () -> {});
+        }
+        
+    }
+
     //for tests:
     public static File extraClassPathElements;
 }

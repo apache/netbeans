@@ -4287,6 +4287,20 @@ base_variable_with_function_calls:var T_OBJECT_OPERATOR object_property:memberPr
 {:
 	RESULT = parser.createDispatch(true, var, memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, propertyList, aa);
 :}
+
+| parenthesis_expr:pe T_OBJECT_OPERATOR object_property:memberProperty method_or_not:paramsList array_access_or_not:aa variable_properties:propertyList
+{:
+	// e.g. ($uvs = new UVS())->method();
+	DereferencableVariable var = new DereferencableVariable(peleft, peright, pe.getExpression());
+	RESULT = parser.createDispatch(false, var, memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, propertyList, aa);
+:}
+
+| parenthesis_expr:pe T_PAAMAYIM_NEKUDOTAYIM static_property:memberProperty method_or_not:paramsList array_access_or_not:aa variable_properties:propertyList
+{:
+	// e.g. ($uvs = new UVS())::staticMethod();
+	DereferencableVariable var = new DereferencableVariable(peleft, peright, pe.getExpression());
+	RESULT = parser.createDispatch(true, var, memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, propertyList, aa);
+:}
 ;
 
 variable ::=
@@ -4560,7 +4574,7 @@ T_OPEN_PARENTHESE:start variable:var T_CLOSE_PARENTHESE:end
 | parenthesis_expr:pe array_dimension:ad
 {:
     // e.g. ((string) $variable->something)[0];
-    DereferencableVariable dereferencableVariable = new DereferencableVariable(peleft, peright, pe.getExpression());;
+    DereferencableVariable dereferencableVariable = new DereferencableVariable(peleft, peright, pe.getExpression());
     RESULT = new DereferencedArrayAccess(peleft, adright, dereferencableVariable, ad);
 :}
 

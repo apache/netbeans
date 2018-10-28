@@ -755,6 +755,12 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/uniformVariableSyntax_37");
     }
 
+    // NETBEANS-1552
+    public void testUniformVariableSyntax_38() throws Exception {
+        // ($test = new UVS())->isTest('test');
+        performTest("parser/uniformVariableSyntax_38");
+    }
+
     public void testCloneExpression_01() throws Exception {
         performTest("parser/cloneExpression_01");
     }

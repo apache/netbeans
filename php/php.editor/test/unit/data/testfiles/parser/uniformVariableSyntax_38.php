@@ -1,3 +1,5 @@
+<?php
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,39 +18,30 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.editor.parser.astnodes;
 
-/**
- * Holds a dereferencable variable.
- *
- * <pre>e.g.
- * ($a),
- * (MyClass::CONSTANT),
- * ($variable->getObject()),
- * ($uvs = new UVS())->method();
- * </pre>
- */
-public class DereferencableVariable extends VariableBase {
+class UVS {
 
-    private final Expression expression;
-
-    public DereferencableVariable(int start, int end, Expression expression) {
-        super(start, end);
-        this.expression = expression;
+    public function isTest($param): bool {
+        return true;
     }
 
-    public Expression getExpression() {
-        return expression;
+    public function test(): void {
+        echo "test" . PHP_EOL;
     }
 
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
-
-    @Override
-    public String toString() {
-        return "(" + getExpression() + ")"; // NOI18N
+    public static function staticTest(): void {
+        echo "test" . PHP_EOL;
     }
 
 }
+
+function getUVS(): UVS {
+    return new UVS();
+}
+
+(new UVS())->isTest("test");
+($uvs1 = new UVS()); // no error
+($uvs2 = getUVS())->test();
+($uvs3 = getUVS())::staticTest();
+($uvs4 = new UVS())::staticTest();
+$isTest = ($uvs5 = new UVS())->isTest('test');

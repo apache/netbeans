@@ -666,6 +666,12 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/uniformVariableSyntax_37.php");
     }
 
+    // NETBEANS-1552
+    public void testUniformVariableSyntax_38() throws Exception {
+        // ($test = new UVS())->isTest('test');
+        checkErrors("testfiles/parser/uniformVariableSyntax_38.php");
+    }
+
     public void testCloneExpression_01() throws Exception {
         checkErrors("testfiles/parser/cloneExpression_01.php");
     }

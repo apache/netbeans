@@ -1,0 +1,702 @@
+<testresult testFile='uniformVariableSyntax_38.php'>
+    <scanner>
+        <token id='T_CLASS' start='816' end='821'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='822' end='825'>
+            <text>UVS</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='826' end='827'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='833' end='839'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='840' end='848'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='849' end='855'>
+            <text>isTest</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='855' end='856'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='856' end='862'>
+            <text>$param</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='862' end='863'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='863' end='864'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='865' end='869'>
+            <text>bool</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='870' end='871'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='880' end='886'>
+            <text>return</text>
+        </token>
+        <token id='T_STRING' start='887' end='891'>
+            <text>true</text>
+        </token>
+        <token id='T_SEMICOLON' start='891' end='892'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='897' end='898'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='904' end='910'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='911' end='919'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='920' end='924'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='924' end='925'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='925' end='926'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='926' end='927'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='928' end='932'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='933' end='934'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='943' end='947'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='948' end='954'>
+            <text>"test"</text>
+        </token>
+        <token id='T_NEKUDA' start='955' end='956'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='957' end='964'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='964' end='965'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='970' end='971'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='977' end='983'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='984' end='990'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='991' end='999'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1000' end='1010'>
+            <text>staticTest</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1010' end='1011'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1011' end='1012'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1012' end='1013'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1014' end='1018'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1019' end='1020'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='1029' end='1033'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1034' end='1040'>
+            <text>"test"</text>
+        </token>
+        <token id='T_NEKUDA' start='1041' end='1042'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='1043' end='1050'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='1050' end='1051'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1056' end='1057'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1059' end='1060'>
+            <text>}</text>
+        </token>
+        <token id='T_FUNCTION' start='1062' end='1070'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1071' end='1077'>
+            <text>getUVS</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1077' end='1078'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1078' end='1079'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1079' end='1080'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1081' end='1084'>
+            <text>UVS</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1085' end='1086'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1091' end='1097'>
+            <text>return</text>
+        </token>
+        <token id='T_NEW' start='1098' end='1101'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='1102' end='1105'>
+            <text>UVS</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1105' end='1106'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1106' end='1107'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1107' end='1108'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1109' end='1110'>
+            <text>}</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1112' end='1113'>
+            <text>(</text>
+        </token>
+        <token id='T_NEW' start='1113' end='1116'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='1117' end='1120'>
+            <text>UVS</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1120' end='1121'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1121' end='1122'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1122' end='1123'>
+            <text>)</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1123' end='1125'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1125' end='1131'>
+            <text>isTest</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1131' end='1132'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1132' end='1138'>
+            <text>"test"</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1138' end='1139'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1139' end='1140'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1141' end='1142'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1142' end='1147'>
+            <text>$uvs1</text>
+        </token>
+        <token id='T_EQUAL' start='1148' end='1149'>
+            <text>=</text>
+        </token>
+        <token id='T_NEW' start='1150' end='1153'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='1154' end='1157'>
+            <text>UVS</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1157' end='1158'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1158' end='1159'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1159' end='1160'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1160' end='1161'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1174' end='1175'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1175' end='1180'>
+            <text>$uvs2</text>
+        </token>
+        <token id='T_EQUAL' start='1181' end='1182'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1183' end='1189'>
+            <text>getUVS</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1189' end='1190'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1190' end='1191'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1191' end='1192'>
+            <text>)</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1192' end='1194'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1194' end='1198'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1198' end='1199'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1199' end='1200'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1200' end='1201'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1202' end='1203'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1203' end='1208'>
+            <text>$uvs3</text>
+        </token>
+        <token id='T_EQUAL' start='1209' end='1210'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1211' end='1217'>
+            <text>getUVS</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1217' end='1218'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1218' end='1219'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1219' end='1220'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1220' end='1222'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1222' end='1232'>
+            <text>staticTest</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1232' end='1233'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1233' end='1234'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1234' end='1235'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1236' end='1237'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1237' end='1242'>
+            <text>$uvs4</text>
+        </token>
+        <token id='T_EQUAL' start='1243' end='1244'>
+            <text>=</text>
+        </token>
+        <token id='T_NEW' start='1245' end='1248'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='1249' end='1252'>
+            <text>UVS</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1252' end='1253'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1253' end='1254'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1254' end='1255'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1255' end='1257'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1257' end='1267'>
+            <text>staticTest</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1267' end='1268'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1268' end='1269'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1269' end='1270'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1271' end='1278'>
+            <text>$isTest</text>
+        </token>
+        <token id='T_EQUAL' start='1279' end='1280'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1281' end='1282'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1282' end='1287'>
+            <text>$uvs5</text>
+        </token>
+        <token id='T_EQUAL' start='1288' end='1289'>
+            <text>=</text>
+        </token>
+        <token id='T_NEW' start='1290' end='1293'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='1294' end='1297'>
+            <text>UVS</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1297' end='1298'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1298' end='1299'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1299' end='1300'>
+            <text>)</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1300' end='1302'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1302' end='1308'>
+            <text>isTest</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1308' end='1309'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1309' end='1315'>
+            <text>&apos;test&apos;</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1315' end='1316'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1316' end='1317'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='1318' end='1318'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1318'>
+        <Comments>
+            <Comment start='7' end='814' commentType='multiLine'/>
+            <Comment start='1162' end='1174' commentType='singleLine'/>
+            <Comment start='7' end='814' commentType='multiLine'/>
+            <Comment start='1162' end='1174' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='816' end='1060' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='822' end='825' name='UVS'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='826' end='1060' isCurly='true'>
+                    <MethodDeclaration start='833' end='898' modifiers='public'>
+                        <FunctionDeclaration start='840' end='898' isReference='false'>
+                            <Identifier start='849' end='855' name='isTest'/>
+                            <FormalParameters>
+                                <FormalParameter start='856' end='862' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='856' end='862' isDollared='true'>
+                                            <Identifier start='857' end='862' name='param'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='865' end='869' isCurrent='false' isGlobal='false'>
+                                <Identifier start='865' end='869' name='bool'/>
+                            </NamespaceName>
+                            <Block start='870' end='898' isCurly='true'>
+                                <ReturnStatement start='880' end='892'>
+                                    <Scalar start='887' end='891' type='STRING' value='true'/>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='904' end='971' modifiers='public'>
+                        <FunctionDeclaration start='911' end='971' isReference='false'>
+                            <Identifier start='920' end='924' name='test'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <NamespaceName start='928' end='932' isCurrent='false' isGlobal='false'>
+                                <Identifier start='928' end='932' name='void'/>
+                            </NamespaceName>
+                            <Block start='933' end='971' isCurly='true'>
+                                <EchoStatement start='943' end='965'>
+                                    <InfixExpression start='948' end='964' operator='CONCAT'>
+                                        <Scalar start='948' end='954' type='STRING' value='"test"'/>
+                                        <NamespaceName start='957' end='964' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='957' end='964' name='PHP_EOL'/>
+                                        </NamespaceName>
+                                    </InfixExpression>
+                                </EchoStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='977' end='1057' modifiers='public static'>
+                        <FunctionDeclaration start='991' end='1057' isReference='false'>
+                            <Identifier start='1000' end='1010' name='staticTest'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <NamespaceName start='1014' end='1018' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1014' end='1018' name='void'/>
+                            </NamespaceName>
+                            <Block start='1019' end='1057' isCurly='true'>
+                                <EchoStatement start='1029' end='1051'>
+                                    <InfixExpression start='1034' end='1050' operator='CONCAT'>
+                                        <Scalar start='1034' end='1040' type='STRING' value='"test"'/>
+                                        <NamespaceName start='1043' end='1050' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1043' end='1050' name='PHP_EOL'/>
+                                        </NamespaceName>
+                                    </InfixExpression>
+                                </EchoStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <FunctionDeclaration start='1062' end='1110' isReference='false'>
+                <Identifier start='1071' end='1077' name='getUVS'/>
+                <FormalParameters>
+                </FormalParameters>
+                <NamespaceName start='1081' end='1084' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1081' end='1084' name='UVS'/>
+                </NamespaceName>
+                <Block start='1085' end='1110' isCurly='true'>
+                    <ReturnStatement start='1091' end='1108'>
+                        <ClassInstanceCreation start='1098' end='1107' anonymous='false'>
+                            <ClassName start='1102' end='1105'>
+                                <NamespaceName start='1102' end='1105' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1102' end='1105' name='UVS'/>
+                                </NamespaceName>
+                            </ClassName>
+                            <Parameters>
+                            </Parameters>
+                        </ClassInstanceCreation>
+                    </ReturnStatement>
+                </Block>
+            </FunctionDeclaration>
+            <ExpressionStatement start='1112' end='1140'>
+                <MethodInvocation start='1112' end='1139'>
+                    <AnonymousObjectVariable start='1112' end='1123'>
+                        <ClassInstanceCreation start='1113' end='1122' anonymous='false'>
+                            <ClassName start='1117' end='1120'>
+                                <NamespaceName start='1117' end='1120' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1117' end='1120' name='UVS'/>
+                                </NamespaceName>
+                            </ClassName>
+                            <Parameters>
+                            </Parameters>
+                        </ClassInstanceCreation>
+                    </AnonymousObjectVariable>
+                    <Method>
+                        <FunctionInvocation start='1125' end='1139'>
+                            <FucntionName start='1125' end='1131'>
+                                <Variable start='1125' end='1131' isDollared='false'>
+                                    <Identifier start='1125' end='1131' name='isTest'/>
+                                </Variable>
+                            </FucntionName>
+                            <Parameters>
+                                <Scalar start='1132' end='1138' type='STRING' value='"test"'/>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Method>
+                </MethodInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='1141' end='1161'>
+                <ParenthesisExpression start='1141' end='1160'>
+                    <Assignment start='1142' end='1159' operator='EQUAL'>
+                        <Variable start='1142' end='1147' isDollared='true'>
+                            <Identifier start='1143' end='1147' name='uvs1'/>
+                        </Variable>
+                        <ClassInstanceCreation start='1150' end='1159' anonymous='false'>
+                            <ClassName start='1154' end='1157'>
+                                <NamespaceName start='1154' end='1157' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1154' end='1157' name='UVS'/>
+                                </NamespaceName>
+                            </ClassName>
+                            <Parameters>
+                            </Parameters>
+                        </ClassInstanceCreation>
+                    </Assignment>
+                </ParenthesisExpression>
+            </ExpressionStatement>
+            <ExpressionStatement start='1174' end='1201'>
+                <MethodInvocation start='1174' end='1200'>
+                    <DereferencableVariable start='1174' end='1192'>
+                        <Assignment start='1175' end='1191' operator='EQUAL'>
+                            <Variable start='1175' end='1180' isDollared='true'>
+                                <Identifier start='1176' end='1180' name='uvs2'/>
+                            </Variable>
+                            <FunctionInvocation start='1183' end='1191'>
+                                <FucntionName start='1183' end='1189'>
+                                    <NamespaceName start='1183' end='1189' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1183' end='1189' name='getUVS'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Assignment>
+                    </DereferencableVariable>
+                    <Method>
+                        <FunctionInvocation start='1194' end='1200'>
+                            <FucntionName start='1194' end='1198'>
+                                <Variable start='1194' end='1198' isDollared='false'>
+                                    <Identifier start='1194' end='1198' name='test'/>
+                                </Variable>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Method>
+                </MethodInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='1202' end='1235'>
+                <StaticMethodInvocation start='1202' end='1234'>
+                    <DereferencableVariable start='1202' end='1220'>
+                        <Assignment start='1203' end='1219' operator='EQUAL'>
+                            <Variable start='1203' end='1208' isDollared='true'>
+                                <Identifier start='1204' end='1208' name='uvs3'/>
+                            </Variable>
+                            <FunctionInvocation start='1211' end='1219'>
+                                <FucntionName start='1211' end='1217'>
+                                    <NamespaceName start='1211' end='1217' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1211' end='1217' name='getUVS'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Assignment>
+                    </DereferencableVariable>
+                    <Member>
+                        <FunctionInvocation start='1222' end='1234'>
+                            <FucntionName start='1222' end='1232'>
+                                <Identifier start='1222' end='1232' name='staticTest'/>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Member>
+                    <FunctionInvocation start='1222' end='1234'>
+                        <FucntionName start='1222' end='1232'>
+                            <Identifier start='1222' end='1232' name='staticTest'/>
+                        </FucntionName>
+                        <Parameters>
+                        </Parameters>
+                    </FunctionInvocation>
+                </StaticMethodInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='1236' end='1270'>
+                <StaticMethodInvocation start='1236' end='1269'>
+                    <DereferencableVariable start='1236' end='1255'>
+                        <Assignment start='1237' end='1254' operator='EQUAL'>
+                            <Variable start='1237' end='1242' isDollared='true'>
+                                <Identifier start='1238' end='1242' name='uvs4'/>
+                            </Variable>
+                            <ClassInstanceCreation start='1245' end='1254' anonymous='false'>
+                                <ClassName start='1249' end='1252'>
+                                    <NamespaceName start='1249' end='1252' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1249' end='1252' name='UVS'/>
+                                    </NamespaceName>
+                                </ClassName>
+                                <Parameters>
+                                </Parameters>
+                            </ClassInstanceCreation>
+                        </Assignment>
+                    </DereferencableVariable>
+                    <Member>
+                        <FunctionInvocation start='1257' end='1269'>
+                            <FucntionName start='1257' end='1267'>
+                                <Identifier start='1257' end='1267' name='staticTest'/>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Member>
+                    <FunctionInvocation start='1257' end='1269'>
+                        <FucntionName start='1257' end='1267'>
+                            <Identifier start='1257' end='1267' name='staticTest'/>
+                        </FucntionName>
+                        <Parameters>
+                        </Parameters>
+                    </FunctionInvocation>
+                </StaticMethodInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='1271' end='1317'>
+                <Assignment start='1271' end='1316' operator='EQUAL'>
+                    <Variable start='1271' end='1278' isDollared='true'>
+                        <Identifier start='1272' end='1278' name='isTest'/>
+                    </Variable>
+                    <MethodInvocation start='1281' end='1316'>
+                        <DereferencableVariable start='1281' end='1300'>
+                            <Assignment start='1282' end='1299' operator='EQUAL'>
+                                <Variable start='1282' end='1287' isDollared='true'>
+                                    <Identifier start='1283' end='1287' name='uvs5'/>
+                                </Variable>
+                                <ClassInstanceCreation start='1290' end='1299' anonymous='false'>
+                                    <ClassName start='1294' end='1297'>
+                                        <NamespaceName start='1294' end='1297' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1294' end='1297' name='UVS'/>
+                                        </NamespaceName>
+                                    </ClassName>
+                                    <Parameters>
+                                    </Parameters>
+                                </ClassInstanceCreation>
+                            </Assignment>
+                        </DereferencableVariable>
+                        <Method>
+                            <FunctionInvocation start='1302' end='1316'>
+                                <FucntionName start='1302' end='1308'>
+                                    <Variable start='1302' end='1308' isDollared='false'>
+                                        <Identifier start='1302' end='1308' name='isTest'/>
+                                    </Variable>
+                                </FucntionName>
+                                <Parameters>
+                                    <Scalar start='1309' end='1315' type='STRING' value='&apos;test&apos;'/>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Method>
+                    </MethodInvocation>
+                </Assignment>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

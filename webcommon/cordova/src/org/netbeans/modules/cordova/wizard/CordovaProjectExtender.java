@@ -22,6 +22,7 @@ import org.netbeans.modules.cordova.platforms.api.PlatformManager;
 import org.netbeans.modules.cordova.platforms.spi.Device;
 import java.io.File;
 import java.io.IOException;
+import org.netbeans.modules.cordova.platforms.spi.MobilePlatform;
 import org.netbeans.modules.cordova.project.ConfigUtils;
 import org.netbeans.modules.web.clientproject.api.ClientSideModule;
 import org.netbeans.modules.web.clientproject.spi.ClientProjectExtender;
@@ -67,7 +68,8 @@ public class CordovaProjectExtender implements ClientProjectExtender {
             ios.put(ConfigUtils.DISPLAY_NAME_PROP, Bundle.LBL_iPhoneSimulator());
             ios.put(Device.TYPE_PROP, PlatformManager.IOS_TYPE);
             ios.put(Device.DEVICE_PROP, Device.EMULATOR);
-            ios.put("ios.build.sdk", PlatformManager.getPlatform(PlatformManager.IOS_TYPE).getPrefferedTarget().getIdentifier()); // NOI18N
+            MobilePlatform iosPlatform = PlatformManager.getPlatform(PlatformManager.IOS_TYPE);
+            ios.put("ios.build.sdk", iosPlatform == null ? "" : iosPlatform.getPrefferedTarget().getIdentifier()); // NOI18N
             ios.put("ios.build.arch", "i386"); // NOI18N
 
             ConfigUtils.createConfigFile(projectRoot, PlatformManager.IOS_TYPE, ios);//NOI18N
@@ -82,7 +84,8 @@ public class CordovaProjectExtender implements ClientProjectExtender {
             iosdev.put(ConfigUtils.DISPLAY_NAME_PROP, Bundle.LBL_iPhoneDevice());
             iosdev.put(Device.TYPE_PROP, PlatformManager.IOS_TYPE);
             iosdev.put(Device.DEVICE_PROP, Device.DEVICE);
-            String sim = PlatformManager.getPlatform(PlatformManager.IOS_TYPE).getPrefferedTarget().getIdentifier();
+            MobilePlatform iosPlatform = PlatformManager.getPlatform(PlatformManager.IOS_TYPE);
+            String sim = iosPlatform == null ? "" : iosPlatform.getPrefferedTarget().getIdentifier();
             iosdev.put("ios.build.sdk", sim.replace("iphonesimulator", "iphoneos")); // NOI18N
             iosdev.put("ios.build.arch", sim.startsWith("iphonesimulator6")?"armv6 armv7":"armv7 armv7s"); // NOI18N
 

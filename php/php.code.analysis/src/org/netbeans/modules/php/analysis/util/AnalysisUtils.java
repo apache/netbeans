@@ -167,4 +167,8 @@ public final class AnalysisUtils {
         return count;
     }
 
+    public static int getValidInt(int min, int max, int target) {
+        return Math.min(Math.max(min, target), max);
+    }
+
 }

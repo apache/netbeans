@@ -294,6 +294,23 @@ public class PHPLexerTest extends PHPLexerTestBase {
         performTest("lexer/heredoc_04");
     }
 
+    // HEREDOC
+    public void testNetBeans1563_01() throws Exception {
+        performTest("lexer/netbeans1563_01");
+    }
+
+    public void testNetBeans1563_02() throws Exception {
+        performTest("lexer/netbeans1563_02");
+    }
+
+    public void testNetBeans1563_03() throws Exception {
+        performTest("lexer/netbeans1563_03");
+    }
+
+    public void testNetBeans1563_04() throws Exception {
+        performTest("lexer/netbeans1563_04");
+    }
+
     public void testIssue222092_01() throws Exception {
         performTest("lexer/issue222092_01");
     }

@@ -25,10 +25,12 @@ import java.io.Writer;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
+import org.netbeans.api.java.queries.CompilerOptionsQuery;
 import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
@@ -68,6 +70,7 @@ public class Parser {
         }
 
         file.setAttribute(SourceLevelQueryImpl.KEY_SOURCE_LEVEL, config.sourceLevel);
+        file.setAttribute(CompilerOptionsQueryImpl.KEY_COMPILER_OPTIONS, config.compilerOptions);
 
         if (!file.asText().equals(config.fileContent)) {
             try (OutputStream out = file.getOutputStream();
@@ -101,7 +104,7 @@ public class Parser {
         public static Config create(CompilationInfo info) {
             Object conf = info.getCachedValue(Config.class);
             if (conf == null) {
-                conf = new Config(nextId++, info.getFileObject().getNameExt(), info.getFileObject().toURI().toString(), info.getText(), info.getClasspathInfo(), SourceLevelQuery.getSourceLevel(info.getFileObject()));
+                conf = new Config(nextId++, info.getFileObject().getNameExt(), info.getFileObject().toURI().toString(), info.getText(), info.getClasspathInfo(), SourceLevelQuery.getSourceLevel(info.getFileObject()), CompilerOptionsQuery.getOptions(info.getFileObject()).getArguments());
                 info.putCachedValue(Config.class, conf, CompilationInfo.CacheClearPolicy.ON_CHANGE);
             }
             return (Config) conf;
@@ -125,7 +128,7 @@ public class Parser {
                 } else {
                     text[0] = file.asText();
                 }
-                return new Config(nextId++, file.getNameExt(), file.toURI().toString(), text[0], ClasspathInfo.create(file), SourceLevelQuery.getSourceLevel(file));
+                return new Config(nextId++, file.getNameExt(), file.toURI().toString(), text[0], ClasspathInfo.create(file), SourceLevelQuery.getSourceLevel(file), CompilerOptionsQuery.getOptions(file).getArguments());
             } catch (IOException ex) {
                 throw new IllegalStateException(ex); //XXX: error handling
             }
@@ -137,15 +140,17 @@ public class Parser {
         private String fileContent;
         private Map<String, Object> cpInfo;
         private String sourceLevel;
+        private List<? extends String> compilerOptions;
 
         public Config(int id, String fileName, String fileUri, String fileContent,
-                      ClasspathInfo cpInfo, String sourceLevel) {
+                      ClasspathInfo cpInfo, String sourceLevel, List<? extends String> compilerOptions) {
             this.id = id;
             this.fileName = fileName;
             this.fileUri = fileUri;
             this.fileContent = fileContent;
             this.cpInfo = ClasspathInfoAccessor.getINSTANCE().serialize(cpInfo);
             this.sourceLevel = sourceLevel;
+            this.compilerOptions = compilerOptions;
         }
 
     }

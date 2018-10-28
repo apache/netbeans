@@ -61,6 +61,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.annotation.processing.Processor;
+import javax.lang.model.SourceVersion;
 import javax.swing.event.ChangeEvent;
 import  javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
@@ -1044,7 +1045,10 @@ public class JavacParser extends Parser {
                 xmoduleSeen = true;
             } else if (option.equals("-parameters") || option.startsWith("-Xlint")) {     //NOI18N
                 res.add(option);
-            } else if (option.equals("--enable-preview")) {     //NOI18N
+            } else if (option.equals("--enable-preview") &&
+                       sourceLevel == com.sun.tools.javac.code.Source.DEFAULT &&
+                       RELEASE_11 != null) {     //NOI18N
+                //only set --enable-preview is the javac can handle it.
                 res.add(option);
             } else if ((
                     option.startsWith("--add-modules") ||   //NOI18N
@@ -1064,6 +1068,15 @@ public class JavacParser extends Parser {
             }
         }
         return res;
+    }
+
+    private static SourceVersion RELEASE_11;
+    static {
+        try {
+            RELEASE_11 = SourceVersion.valueOf("RELEASE_11");
+        } catch (IllegalArgumentException ex) {
+            RELEASE_11 = null;
+        }
     }
 
     private static boolean hasResource(

@@ -19,9 +19,13 @@
 package org.netbeans.modules.java.openjdk.jtreg;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.queries.FileEncodingQuery;
 import org.netbeans.modules.java.openjdk.common.BuildUtils;
 import org.netbeans.modules.java.openjdk.common.ShortcutUtils;
 import org.openide.filesystems.FileObject;
@@ -88,4 +92,16 @@ public class Utilities {
         return new File(buildDir, "nb-jtreg").toPath().normalize().toFile();
     }
 
+    public static String fileContent(FileObject file) throws IOException {
+        try (Reader r = new InputStreamReader(file.getInputStream(), FileEncodingQuery.getEncoding(file))) {
+            StringBuilder content = new StringBuilder();
+            int read;
+
+            while ((read = r.read()) != (-1)) {
+                content.append((char) read);
+            }
+
+            return content.toString();
+        }
+    }
 }

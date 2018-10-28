@@ -131,13 +131,8 @@ public class ClassPathProviderImpl implements ClassPathProvider {
                     if (file.isFolder()) return null;
                     
                     roots.add(file.getParent());
-                    try (Reader r = new InputStreamReader(file.getInputStream(), FileEncodingQuery.getEncoding(file))) {
-                        StringBuilder content = new StringBuilder();
-                        int read;
-                        
-                        while ((read = r.read()) != (-1)) {
-                            content.append((char) read);
-                        }
+                    try {
+                        String content = Utilities.fileContent(file);
                         
                         Pattern library = Pattern.compile("@library (.*)\n");
                         Matcher m = library.matcher(content.toString());

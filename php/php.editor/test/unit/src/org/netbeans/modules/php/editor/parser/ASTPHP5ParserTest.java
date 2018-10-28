@@ -249,6 +249,23 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/heredoc_015");
     }
 
+    // HEREDOC
+    public void testNetBeans1563_01() throws Exception {
+        performTest("parser/netbeans1563_01");
+    }
+
+    public void testNetBeans1563_02() throws Exception {
+        performTest("parser/netbeans1563_02");
+    }
+
+    public void testNetBeans1563_03() throws Exception {
+        performTest("parser/netbeans1563_03");
+    }
+
+    public void testNetBeans1563_04() throws Exception {
+        performTest("parser/netbeans1563_04");
+    }
+
     public void testVarCommentSimple01() throws Exception {
         performTest("parser/simple01");
     }

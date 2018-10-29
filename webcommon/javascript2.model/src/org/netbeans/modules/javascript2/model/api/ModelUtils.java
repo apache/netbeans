@@ -1164,6 +1164,7 @@ public class ModelUtils {
         }
     }
 
+    private static int deepCRT = 0;
     /**
      * Resolve assignments to return a resolved typeUsage
      *
@@ -1172,6 +1173,7 @@ public class ModelUtils {
      * @return
      */
     public static TypeUsage createResolvedType(JsObject parent, TypeUsage typeHere) {
+        deepCRT = 0;
         String fqn = getFQNFromType(typeHere);
         return resolveTypes(parent, fqn, typeHere.getOffset());
     }
@@ -1180,6 +1182,7 @@ public class ModelUtils {
      */
     private static TypeUsage resolveTypes(JsObject parent, String fqn, int offset) {
 
+        deepCRT++;
         String name = fqn;
         StringBuilder props = new StringBuilder();
         int indx = fqn.indexOf(".");
@@ -1204,7 +1207,7 @@ public class ModelUtils {
                             object = ModelUtils.searchJsObjectByName(parent, newObjectName);
                             for (JsObject prop : object.getProperties().values()) {
                                 if ((prop.getName().equals(tokens[i])) && (prop.isDeclared())) {
-                                    if (prop.getAssignmentCount() > 0) {
+                                    if ((prop.getAssignmentCount() > 0) && (deepCRT < MAX_RECURSION_DEEP_RESOLVING_ASSIGNMENTS)) {
                                         for (TypeUsage type1 : prop.getAssignments()) {
                                             return resolveTypes(object, String.join(".", Arrays.copyOfRange(tokens, i, tokens.length)), offset);
                                         }
@@ -1230,8 +1233,10 @@ public class ModelUtils {
         return new TypeUsage(fqn, offset, false);
     }
 
+    private static int deepR1 = 0;
     private static void resolveAssignments(JsObject jsObject, String fqn, int offset, List<TypeUsage> resolved, StringBuilder nestedProperties) {
 
+        deepR1 = 0;
         Set<String> alreadyProcessed = new HashSet<String>();
         for (TypeUsage type : resolved) {
             alreadyProcessed.add(type.getType());
@@ -1252,6 +1257,7 @@ public class ModelUtils {
      */
     private static void resolveAssignments(JsObject parent, String fqn, int offset, List<TypeUsage> resolved, Set<String> alreadyProcessed, StringBuilder nestedProperties) {
         if (!alreadyProcessed.contains(fqn)) {
+            deepR1++;
             alreadyProcessed.add(fqn);
             String fqnCorrected = ModelUtils.getFQNFromType(new TypeUsage(fqn, offset, false));
             //resolve the parent object in fqn
@@ -1276,7 +1282,7 @@ public class ModelUtils {
                         }
                     }
                     for (TypeUsage type : toProcess) {
-                        if (!alreadyProcessed.contains(type.getType())) {
+                        if ((!alreadyProcessed.contains(type.getType())) && (deepR1 < MAX_RECURSION_DEEP_RESOLVING_ASSIGNMENTS)) {
                             resolveAssignments(parent, type.getType(), type.getOffset(), resolved, alreadyProcessed, nestedProperties);
                         }
                     }

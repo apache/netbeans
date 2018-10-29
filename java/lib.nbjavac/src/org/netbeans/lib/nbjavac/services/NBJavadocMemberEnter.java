@@ -94,7 +94,9 @@ public class NBJavadocMemberEnter extends JavadocMemberEnter {
             //reinstall init:
             tree.init = init;
             if (init != null) {
-                tree.sym.flags_field |= Flags.HASINIT; //XXX: hack
+                if (tree.sym != null) {
+                    tree.sym.flags_field |= Flags.HASINIT; //XXX: hack
+                }
             }
         }
     }

@@ -511,7 +511,14 @@ public class ToolbarWithOverflow extends JToolBar {
             // Draw two chevrons pointing downwards. Make strokes a little thicker at low scalings.
             double strokeWidth = 0.8 * scaling + 0.3;
             g.setStroke(new BasicStroke((float) strokeWidth));
-            g.setColor(new Color(50, 50, 50, 255));
+            final Color color;
+            if (UIManager.getBoolean("nb.dark.theme")) {
+              // Foreground brightness level taken from the combobox dropdown on Darcula.
+              color = new Color(187, 187, 187, 255);
+            } else {
+              color = new Color(50, 50, 50, 255);
+            }
+            g.setColor(color);
             for (int i = 0; i < 2; i++) {
                 final int y = round((1.4 + 4.1 * i) * scaling);
                 final double arrowWidth = round(5.0 * scaling);

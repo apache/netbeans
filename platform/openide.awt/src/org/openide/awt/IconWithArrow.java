@@ -26,6 +26,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
 import javax.swing.Icon;
 import javax.swing.UIManager;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Parameters;
 import org.openide.util.VectorIcon;
 
@@ -101,7 +102,14 @@ class IconWithArrow implements Icon {
 
         @Override
         protected void paintIcon(Component c, Graphics2D g, int width, int height, double scaling) {
-            g.setColor(disabled ? new Color(201, 201, 201, 255) : new Color(86, 86, 86, 255));
+            final Color color;
+            if (UIManager.getBoolean("nb.dark.theme")) {
+              // Foreground brightness level taken from the combobox dropdown on Darcula.
+              color = disabled ? new Color(90, 90, 90, 255) : new Color(187, 187, 187, 255);
+            } else {
+              color = disabled ? new Color(201, 201, 201, 255) : new Color(86, 86, 86, 255);
+            }
+            g.setColor(color);
             final double overshoot = 2.0 / scaling;
             final double arrowWidth = width + overshoot * scaling;
             final double arrowHeight = height - 0.2 * scaling;

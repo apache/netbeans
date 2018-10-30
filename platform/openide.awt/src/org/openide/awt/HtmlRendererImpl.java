@@ -75,7 +75,7 @@ class HtmlRendererImpl extends JLabel implements HtmlRenderer.Renderer {
 
     /** Restore the renderer to a pristine state */
     public void reset() {
-        assert SwingUtilities.isEventDispatchThread();
+        assertEDTAccess();
         parentFocused = false;
         setCentered(false);
         html = null;
@@ -748,6 +748,23 @@ class HtmlRendererImpl extends JLabel implements HtmlRenderer.Renderer {
     public @Override void addPropertyChangeListener(PropertyChangeListener l) {
         if (swingRendering) {
             super.addPropertyChangeListener(l);
+        }
+    }
+    
+    private void assertEDTAccess() {
+        boolean check = false;
+        assert check = true;
+        if (check && !SwingUtilities.isEventDispatchThread() && System.getProperty("nbjunit.workdir") == null) {
+            StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+            boolean whitespaced = false;
+            for (int i = 0; i < stackTrace.length; ++i) {
+                StackTraceElement elem = stackTrace[i];
+                if ("org.openide.explorer.view.TreeView".equals(elem.getClassName()) && "<init>".equals(elem.getMethodName())) {
+                    whitespaced = true;
+                    break;
+                }
+            }
+            assert whitespaced || SwingUtilities.isEventDispatchThread() : "Should be called in EDT only!";
         }
     }
 }

@@ -97,7 +97,7 @@
                         <attr name="dataObjectClass" stringvalue="org.netbeans.modules.maven.grammar.POMDataObject"/>
                         <attr name="instanceCreate" methodvalue="org.openide.loaders.DataLoaderPool.factory"/>
                         <attr name="mimeType" stringvalue="text/x-maven-pom+xml"/>
-                        <attr name="iconBase" stringvalue="org/netbeans/modules/xml/resources/xmlObject.gif"/>
+                        <attr name="iconBase" stringvalue="org/netbeans/modules/maven/grammar/Maven2Icon.gif"/>
                     </file>
                 </folder>
             </folder>

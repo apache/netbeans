@@ -37,4 +37,9 @@
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/php/twig/resources/twig-icon.png</file>
+        <license ref="CDDL-1.0" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
 </licenseinfo>

@@ -22,10 +22,12 @@ package org.openide.awt;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.Path2D;
 import javax.swing.Icon;
 import javax.swing.UIManager;
-import org.openide.util.ImageUtilities;
 import org.openide.util.Parameters;
+import org.openide.util.VectorIcon;
 
 /**
  * An icon that paints a small arrow to the right of the provided icon.
@@ -34,20 +36,18 @@ import org.openide.util.Parameters;
  * @since 6.11
  */
 class IconWithArrow implements Icon {
-    
-    private static final String ARROW_IMAGE_NAME = "org/openide/awt/resources/arrow.png"; //NOI18N
-    
     private Icon orig;
-    private Icon arrow = ImageUtilities.loadImageIcon(ARROW_IMAGE_NAME, false);
+    private Icon arrow;
     private boolean paintRollOver;
     
     private static final int GAP = 6;
     
     /** Creates a new instance of IconWithArrow */
-    public IconWithArrow(  Icon orig, boolean paintRollOver ) {
+    public IconWithArrow(  Icon orig, boolean paintRollOver, boolean disabledArrow ) {
         Parameters.notNull("original icon", orig); //NOI18N
         this.orig = orig;
         this.paintRollOver = paintRollOver;
+        this.arrow = disabledArrow ? ArrowIcon.INSTANCE_DISABLED : ArrowIcon.INSTANCE_DEFAULT;
     }
 
     @Override
@@ -87,5 +87,32 @@ class IconWithArrow implements Icon {
 
     public static int getArrowAreaWidth() {
         return GAP/2 + 5;
+    }
+
+    private static class ArrowIcon extends VectorIcon {
+        public static final Icon INSTANCE_DEFAULT = new ArrowIcon(false);
+        public static final Icon INSTANCE_DISABLED = new ArrowIcon(true);
+        private final boolean disabled;
+
+        private ArrowIcon(boolean disabled) {
+          super(5, 4);
+          this.disabled = disabled;
+        }
+
+        @Override
+        protected void paintIcon(Component c, Graphics2D g, int width, int height, double scaling) {
+            g.setColor(disabled ? new Color(201, 201, 201, 255) : new Color(86, 86, 86, 255));
+            final double overshoot = 2.0 / scaling;
+            final double arrowWidth = width + overshoot * scaling;
+            final double arrowHeight = height - 0.2 * scaling;
+            final double arrowMidX = arrowWidth / 2.0 - (overshoot / 2.0) * scaling;
+            g.clipRect(0, 0, width, height);
+            Path2D.Double arrowPath = new Path2D.Double();
+            arrowPath.moveTo(arrowMidX - arrowWidth / 2.0, 0);
+            arrowPath.lineTo(arrowMidX, arrowHeight);
+            arrowPath.lineTo(arrowMidX + arrowWidth / 2.0, 0);
+            arrowPath.closePath();
+            g.fill(arrowPath);
+        }
     }
 }

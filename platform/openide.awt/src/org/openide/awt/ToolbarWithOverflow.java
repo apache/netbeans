@@ -19,9 +19,11 @@
 package org.openide.awt;
 
 import java.awt.AWTEvent;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
@@ -30,14 +32,16 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Path2D;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
-import org.openide.util.ImageUtilities;
 import org.openide.util.Mutex;
+import org.openide.util.VectorIcon;
 
 /**
  * ToolbarWithOverflow provides a component which is useful for displaying commonly used
@@ -53,8 +57,6 @@ public class ToolbarWithOverflow extends JToolBar {
     private JPopupMenu popup;
     private JToolBar overflowToolbar;
     private boolean displayOverflowOnHover = true;
-    private final String toolbarArrowHorizontal = "org/openide/awt/resources/toolbar_arrow_horizontal.png"; //NOI18N
-    private final String toolbarArrowVertical = "org/openide/awt/resources/toolbar_arrow_vertical.png"; //NOI18N
     private final String PROP_PREF_ICON_SIZE = "PreferredIconSize"; //NOI18N
     private final String PROP_DRAGGER = "_toolbar_dragger_"; //NOI18N
     private final String PROP_JDEV_DISABLE_OVERFLOW = "nb.toolbar.overflow.disable"; //NOI18N
@@ -279,7 +281,9 @@ public class ToolbarWithOverflow extends JToolBar {
     }
     
     private void setupOverflowButton() {
-        overflowButton = new JButton(ImageUtilities.loadImageIcon(getOrientation() == HORIZONTAL ? toolbarArrowVertical : toolbarArrowHorizontal, false)) {
+        overflowButton = new JButton(getOrientation() == HORIZONTAL
+                ? ToolbarArrowIcon.INSTANCE_VERTICAL : ToolbarArrowIcon.INSTANCE_HORIZONTAL)
+        {
             @Override
             public void updateUI() {
                 Mutex.EVENT.readAccess(new Runnable() {
@@ -481,6 +485,47 @@ public class ToolbarWithOverflow extends JToolBar {
 
         final void superUpdateUI() {
             super.updateUI();
+        }
+    }
+
+    /**
+     * Vectorized version of {@code toolbar_arrow_horizontal.png} and
+     * {@code toolbar_arrow_vertical.png}.
+     */
+    private static final class ToolbarArrowIcon extends VectorIcon {
+        public static final Icon INSTANCE_HORIZONTAL = new ToolbarArrowIcon(true);
+        public static final Icon INSTANCE_VERTICAL = new ToolbarArrowIcon(false);
+        private final boolean horizontal;
+
+        private ToolbarArrowIcon(boolean horizontal) {
+            super(11, 11);
+            this.horizontal = horizontal;
+        }
+
+        @Override
+        protected void paintIcon(Component c, Graphics2D g, int width, int height, double scaling) {
+            if (horizontal) {
+                // Rotate 90 degrees counterclockwise.
+                g.rotate(-Math.PI / 2.0, width / 2.0, height / 2.0);
+            }
+            // Draw two chevrons pointing downwards. Make strokes a little thicker at low scalings.
+            double strokeWidth = 0.8 * scaling + 0.3;
+            g.setStroke(new BasicStroke((float) strokeWidth));
+            g.setColor(new Color(50, 50, 50, 255));
+            for (int i = 0; i < 2; i++) {
+                final int y = round((1.4 + 4.1 * i) * scaling);
+                final double arrowWidth = round(5.0 * scaling);
+                final double arrowHeight = round(3.0 * scaling);
+                final double marginX = (width - arrowWidth) / 2.0;
+                final double arrowMidX = marginX + arrowWidth / 2.0;
+                // Clip the top of the chevrons.
+                g.clipRect(0, y, width, height);
+                Path2D.Double arrowPath = new Path2D.Double();
+                arrowPath.moveTo(arrowMidX - arrowWidth / 2.0, y);
+                arrowPath.lineTo(arrowMidX, y + arrowHeight);
+                arrowPath.lineTo(arrowMidX + arrowWidth / 2.0, y);
+                g.draw(arrowPath);
+            }
         }
     }
 }

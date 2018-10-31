@@ -39,6 +39,7 @@ import org.openide.util.WeakListeners;
 
 import static org.netbeans.modules.gradle.api.NbGradleProject.PROP_PROJECT_INFO;
 import static org.netbeans.modules.gradle.api.NbGradleProject.PROP_RESOURCES;
+import static org.netbeans.spi.project.ActionProvider.*;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,6 +57,10 @@ import org.xml.sax.SAXException;
 public class ProjectActionMappingProviderImpl implements ProjectActionMappingProvider, WatchedResourceProvider {
 
     private static final Logger LOG = Logger.getLogger(ProjectActionMappingProviderImpl.class.getName());
+    private static final ActionMapping DEFAULT_RUN = new DefaultActionMapping("run", "run");
+    private static final ActionMapping DEFAULT_TEST = new DefaultActionMapping("test", "--rerun-tasks test");
+    private static final ActionMapping DEFAULT_DEBUG = new DefaultActionMapping("debug", "debug");
+    private static final ActionMapping DEFAULT_DEBUG2 = new DefaultActionMapping("debug", "run --debug-jvm");
     
     private static final String NB_ACTIONS = "nb-actions.xml";
     
@@ -103,8 +108,11 @@ public class ProjectActionMappingProviderImpl implements ProjectActionMappingPro
         if ((result != null) || noMappingCache.contains(action)) {
             return result;
         }
-        // for last we turn to the defaults
+        // we turn to the defaults
         result = MappingContainer.getDefault().findMapping(action, getPlugins());
+        if (result == null) {
+            result = heuristicMappings(action);
+        }
         synchronized (this) {
             if (result != null) {
                 mappingCache.put(action, result);
@@ -115,6 +123,35 @@ public class ProjectActionMappingProviderImpl implements ProjectActionMappingPro
         return result;
     }
 
+    private ActionMapping heuristicMappings(String action) {
+        GradleBaseProject gbp = GradleBaseProject.get(project);
+        ActionMapping ret = null;
+        if (gbp != null) {
+            switch (action) {
+                case COMMAND_RUN:
+                    if (gbp.getTaskByName(COMMAND_RUN) != null) {
+                        ret = DEFAULT_RUN;
+                    }
+                    break;
+                case COMMAND_TEST:
+                    if (gbp.getTaskByName(COMMAND_TEST) != null) {
+                        ret = DEFAULT_TEST;
+                    }
+                    break;
+                case COMMAND_DEBUG:
+                    if (gbp.getTaskByName(COMMAND_DEBUG) != null) {
+                        ret = DEFAULT_DEBUG;
+                        break;
+                    }
+                    if (gbp.getTaskByName(COMMAND_RUN) != null) {
+                        ret = DEFAULT_DEBUG2;
+                    }
+                    break;
+            }
+        }
+        return ret;
+    }
+    
     private synchronized Set<String> getPlugins() {
         if (plugins == null) {
             GradleBaseProject gbp = GradleBaseProject.get(project);

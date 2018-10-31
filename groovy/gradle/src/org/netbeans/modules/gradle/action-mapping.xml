@@ -33,10 +33,6 @@
         <args>clean build</args>
     </action>
 
-    <action name="test">
-        <args>--rerun-tasks test</args>
-    </action>
-
     <action name="download.javadoc">
         <reload rule="ALWAYS_ONLINE">
             <args>-PdownloadJavadoc=${requestedComponent}</args>

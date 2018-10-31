@@ -45,10 +45,15 @@ public class DefaultActionMapping implements ActionMapping {
     protected DefaultActionMapping() {
     }
 
-    public DefaultActionMapping(String name) {
+    protected DefaultActionMapping(String name) {
         this.name = name;
     }
-            
+
+    protected DefaultActionMapping(String name, String args) {
+        this.name = name;
+        this.args = args;
+    }
+    
     @Override
     public String getName() {
         return name;

@@ -68,7 +68,7 @@ public class POMDataObject extends MultiDataObject {
 
     public static final String SETTINGS_MIME_TYPE = "text/x-maven-settings+xml";
 
-    static final @StaticResource String POM_ICON = "org/netbeans/modules/maven/grammar/xmlObject.gif";
+    static final @StaticResource String POM_ICON = "org/netbeans/modules/maven/grammar/Maven2Icon.gif";
 
     private static final Logger LOG = Logger.getLogger(POMDataObject.class.getName());
 

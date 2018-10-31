@@ -1876,20 +1876,61 @@ public class CasualDiff {
 
     protected int diffCase(JCCase oldT, JCCase newT, int[] bounds) {
         int localPointer = bounds[0];
-        if (oldT.pat != null) {
-            int[] patBounds = getBounds(oldT.pat);
-            copyTo(localPointer, patBounds[0]);
-            localPointer = diffTree(oldT.pat, newT.pat, patBounds);
-            tokenSequence.move(patBounds[1]);
-            do { } while (tokenSequence.moveNext() && JavaTokenId.COLON != tokenSequence.token().id());
+        List<JCExpression> oldPatterns = getCasePatterns(oldT);
+        List<JCExpression> newPatterns = getCasePatterns(newT);
+        PositionEstimator patternEst = EstimatorFactory.casePatterns(
+                oldPatterns,
+                newPatterns,
+                diffContext
+        );
+        int posHint;
+        int endpos;
+        int copyTo;
+        if (oldPatterns.isEmpty()) {
+            moveFwdToOneOfTokens(tokenSequence, bounds[0], EnumSet.of(JavaTokenId.DEFAULT));
+            tokenSequence.moveNext();
+            copyTo = endpos = posHint = tokenSequence.offset();
+
+            if (!newPatterns.isEmpty()) {
+                copyTo = getOldPos(oldT);
+            }
+        } else {
+            copyTo = posHint = oldPatterns.iterator().next().getStartPosition();
+            endpos = endPos(oldPatterns.get(oldPatterns.size() - 1));
+
+            if (newPatterns.isEmpty()) {
+                localPointer = copyTo = posHint = endpos;
+                printer.print("default");
+            }
+        }
+        copyTo(localPointer, copyTo);
+        localPointer = diffList2(oldPatterns, newPatterns, posHint, patternEst);
+        tokenSequence.move(endpos);
+        do { } while (tokenSequence.moveNext() && JavaTokenId.COLON != tokenSequence.token().id() && JavaTokenId.ARROW != tokenSequence.token().id());
+        boolean reindentStatements = false;
+        if (Objects.equals(getCaseKind(oldT), getCaseKind(newT))) {
             tokenSequence.moveNext();
             copyTo(localPointer, localPointer = tokenSequence.offset());
-        }
-        // todo (#pf): hot-fix of #113313, think about correct matching later
-        if (oldT.pat == null && newT.pat != null) {
-            printer.print(newT);
-            printer.newline();
-            return bounds[1];
+        } else {
+            if (JavaTokenId.COLON == tokenSequence.token().id()) {
+                //: => ->
+                printer.out.needSpace();
+                printer.print("-> ");
+                moveToDifferentThan(tokenSequence, Direction.FORWARD, EnumSet.of(JavaTokenId.WHITESPACE));
+                localPointer = tokenSequence.offset();
+            } else if (JavaTokenId.ARROW == tokenSequence.token().id()) {
+                //-> => :
+                printer.print(":");
+                if (newT.stats.size() > 1) {
+                    printer.newline();
+                } else {
+                    printer.out.needSpace();
+                }
+                tokenSequence.moveNext();
+                moveToDifferentThan(tokenSequence, Direction.FORWARD, EnumSet.of(JavaTokenId.WHITESPACE));
+                localPointer = tokenSequence.offset();
+                reindentStatements = true;
+            }
         }
         PositionEstimator est = EstimatorFactory.statements(
                 filterHidden(oldT.stats),
@@ -1897,6 +1938,13 @@ public class CasualDiff {
                 diffContext
         );
         int old = printer.indent();
+        SortedSet<int[]> oldReindentRegions = printer.reindentRegions;
+        printer.reindentRegions = new TreeSet<>(new Comparator<int[]>() { //XXX: copied from the initializer!!
+            @Override public int compare(int[] o1, int[] o2) {
+                return o1[0] - o2[0];
+            }
+        });
+        int reindentStart = localPointer;
         localPointer = diffInnerComments(oldT, newT, localPointer);
         JCClassDecl oldEnclosing = printer.enclClass;
         printer.enclClass = null;
@@ -1905,8 +1953,32 @@ public class CasualDiff {
         if (localPointer < endPos(oldT)) {
             copyTo(localPointer, localPointer = endPos(oldT));
         }
+        if (reindentStatements) {
+            printer.reindentRegions = oldReindentRegions;
+            printer.reindentRegions.add(new int[] {reindentStart, localPointer});
+        } else {
+            oldReindentRegions.addAll(printer.reindentRegions);
+            printer.reindentRegions = oldReindentRegions;
+        }
         printer.undent(old);
         return localPointer;
+    }
+
+    public static List<JCExpression> getCasePatterns(JCCase cs) {
+        try {
+            return (List<JCExpression>) CaseTree.class.getDeclaredMethod("getExpressions").invoke(cs);
+        } catch (Throwable t) {
+            JCExpression pat = cs.getExpression();
+            return pat != null ? Collections.singletonList(pat) : Collections.emptyList();
+        }
+    }
+
+    public static Object getCaseKind(JCCase cs) {
+        try {
+            return CaseTree.class.getDeclaredMethod("getCaseKind").invoke(cs);
+        } catch (Throwable t) {
+            return null;
+        }
     }
 
     protected int diffSynchronized(JCSynchronized oldT, JCSynchronized newT, int[] bounds) {

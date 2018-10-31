@@ -432,6 +432,45 @@ public class ModuleNamesTest extends NbTestCase {
         }
     }
 
+    public void testVersionedModuleInfo() throws IOException {
+        final TraceHandler th = TraceHandler.register();
+        try {
+            FileObject mod = FileUtil.getArchiveRoot(jar(
+                    wd,
+                    "dist.jar", //NOI18N
+                    () -> Collections.singleton(Pair.of(
+                            "META-INF/versions/9/module-info.class",    //NOI18N
+                            moduleInfoClz(moduleInfoJava("org.me.app", Collections.emptyList())).get()))        //NOI18N
+                    ).get());
+            String moduleName = names.getModuleName(mod.toURL(), false);
+            assertEquals("org.me.app", moduleName);    //NOI18N
+            assertTrue(th.isCalculated());
+            th.reset();
+            mod = FileUtil.getArchiveRoot(jar(
+                    wd,
+                    "dist2.jar", //NOI18N
+                    () -> Arrays.asList(Pair.of(
+                            "META-INF/versions/9/module-info.class",    //NOI18N
+                            moduleInfoClz(moduleInfoJava("org.me.app", Collections.emptyList())).get()),        //NOI18N
+                            Pair.of(
+                            "META-INF/versions/12/module-info.class",    //NOI18N
+                            moduleInfoClz(moduleInfoJava("org.me.app2", Collections.emptyList())).get()),        //NOI18N
+                            Pair.of(
+                            "META-INF/versions/broken/module-info.class",    //NOI18N
+                            moduleInfoClz(moduleInfoJava("broken", Collections.emptyList())).get()),        //NOI18N
+                            Pair.of(
+                            "module-info.class",    //NOI18N
+                            moduleInfoClz(moduleInfoJava("old", Collections.emptyList())).get()))        //NOI18N
+                    ).get());
+            moduleName = names.getModuleName(mod.toURL(), false);
+            assertEquals("org.me.app2", moduleName);    //NOI18N
+            assertTrue(th.isCalculated());
+            th.reset();
+        } finally {
+            th.unregister();
+        }
+    }
+
     public void testPlatform() throws Exception {
         final TraceHandler th = TraceHandler.register();
         final URL JAVA_BASE = new URL("nbjrt:file:/Library/Java/JavaVirtualMachines/jdk-9.jdk/Contents/Home/!/modules/java.base/");   //NOI18N

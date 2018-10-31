@@ -77,10 +77,6 @@ public class NewProjectConfigurationPanel extends JPanel implements ChangeListen
         changeSupport.removeChangeListener(listener);
     }
 
-    public boolean isUseLts() {
-        return ltsCheckBox.isSelected();
-    }
-
     public String getErrorMessage() {
         // treat all as errors here
         ValidationResult result = new SymfonyOptionsValidator()
@@ -127,7 +123,6 @@ public class NewProjectConfigurationPanel extends JPanel implements ChangeListen
             showOther = false;
         }
         infoLabel.setText(info);
-        ltsCheckBox.setVisible(showOther);
         noteLabel.setVisible(showOther);
     }
 
@@ -149,7 +144,6 @@ public class NewProjectConfigurationPanel extends JPanel implements ChangeListen
 
         infoLabel = new JLabel();
         optionsLabel = new JLabel();
-        ltsCheckBox = new JCheckBox();
         noteLabel = new JLabel();
 
         Mnemonics.setLocalizedText(infoLabel, "INFO"); // NOI18N
@@ -164,8 +158,6 @@ public class NewProjectConfigurationPanel extends JPanel implements ChangeListen
             }
         });
 
-        Mnemonics.setLocalizedText(ltsCheckBox, NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.ltsCheckBox.text")); // NOI18N
-
         Mnemonics.setLocalizedText(noteLabel, NbBundle.getMessage(NewProjectConfigurationPanel.class, "NewProjectConfigurationPanel.noteLabel.text")); // NOI18N
 
         GroupLayout layout = new GroupLayout(this);
@@ -176,10 +168,6 @@ public class NewProjectConfigurationPanel extends JPanel implements ChangeListen
                 .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(optionsLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(ltsCheckBox)
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addComponent(noteLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
@@ -188,9 +176,7 @@ public class NewProjectConfigurationPanel extends JPanel implements ChangeListen
                 .addGroup(layout.createParallelGroup(Alignment.BASELINE)
                     .addComponent(optionsLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(infoLabel))
-                .addPreferredGap(ComponentPlacement.RELATED)
-                .addComponent(ltsCheckBox)
-                .addGap(18, 18, 18)
+                .addPreferredGap(ComponentPlacement.UNRELATED)
                 .addComponent(noteLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -206,7 +192,6 @@ public class NewProjectConfigurationPanel extends JPanel implements ChangeListen
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JLabel infoLabel;
-    private JCheckBox ltsCheckBox;
     private JLabel noteLabel;
     private JLabel optionsLabel;
     // End of variables declaration//GEN-END:variables

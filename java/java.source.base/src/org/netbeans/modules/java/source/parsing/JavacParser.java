@@ -1044,6 +1044,8 @@ public class JavacParser extends Parser {
                 xmoduleSeen = true;
             } else if (option.equals("-parameters") || option.startsWith("-Xlint")) {     //NOI18N
                 res.add(option);
+            } else if (option.equals("--enable-preview")) {     //NOI18N
+                res.add(option);
             } else if ((
                     option.startsWith("--add-modules") ||   //NOI18N
                     option.startsWith("--limit-modules") || //NOI18N

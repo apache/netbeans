@@ -23,9 +23,7 @@ import java.beans.PropertyVetoException;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,6 +38,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import org.openide.util.NbBundle;
 import org.openide.util.BaseUtilities;
+import org.openide.util.io.FilesNI;
 
 /** Local filesystem. Provides access to files on local disk.
 * <p>For historical reasons many AbstractFileSystem.* methods are implemented
@@ -403,7 +402,7 @@ public class LocalFileSystem extends AbstractFileSystem {
 
         try {
             file = getFile(name);
-            fis = new BufferedInputStream(Files.newInputStream(file.toPath()));
+            fis = new BufferedInputStream(FilesNI.newInputStream(file));
         } catch (IOException | InvalidPathException exc) {
             FileNotFoundException fnfException = new FileNotFoundException(exc.getMessage());
             if ((file == null) || !file.exists()) {
@@ -423,7 +422,7 @@ public class LocalFileSystem extends AbstractFileSystem {
             f.getParentFile().mkdirs();
         }
         try {
-            OutputStream retVal = new BufferedOutputStream(Files.newOutputStream(f.toPath()));
+            OutputStream retVal = new BufferedOutputStream(FilesNI.newOutputStream(f));
 
             // workaround for #42624
             if (BaseUtilities.isMac()) {

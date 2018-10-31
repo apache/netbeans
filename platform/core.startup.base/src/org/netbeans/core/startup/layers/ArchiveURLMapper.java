@@ -29,7 +29,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -48,6 +47,7 @@ import org.openide.filesystems.JarFileSystem;
 import org.openide.filesystems.Repository;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.BaseUtilities;
+import org.openide.util.io.FilesNI;
 import org.openide.util.lookup.ServiceProvider;
 
 @ServiceProvider(service=URLMapper.class)
@@ -242,7 +242,9 @@ public class ArchiveURLMapper extends URLMapper {
                     copy = copy.getCanonicalFile();
                     copy.deleteOnExit();
                 }
-                try (InputStream is = fo.getInputStream(); OutputStream os = Files.newOutputStream(copy.toPath())) {
+                try (InputStream is = fo.getInputStream();
+                        OutputStream os = FilesNI.newOutputStream(copy))
+                {
                     FileUtil.copy(is, os);
                 } catch (InvalidPathException ex) {
                     throw new IOException(ex);

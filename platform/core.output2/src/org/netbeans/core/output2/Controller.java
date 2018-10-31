@@ -26,7 +26,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
-import java.nio.file.Files;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,6 +40,7 @@ import javax.swing.UIManager;
 import javax.swing.text.Document;
 import org.netbeans.core.output2.options.OutputOptions;
 import org.openide.util.Exceptions;
+import org.openide.util.io.FilesNI;
 import org.openide.windows.IOColors;
 import org.openide.windows.IOContainer;
 import org.openide.windows.IOSelect;
@@ -525,7 +525,7 @@ public class Controller {
                         f.delete();
                     }
                     f.createNewFile();
-                    logStream = Files.newOutputStream(f.toPath());
+                    logStream = FilesNI.newOutputStream(f);
                 } catch (Exception e) {
                     e.printStackTrace();
                     logStream = System.err;

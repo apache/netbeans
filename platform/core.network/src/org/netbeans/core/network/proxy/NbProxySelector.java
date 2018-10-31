@@ -24,8 +24,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,6 +33,7 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import org.netbeans.core.ProxySettings;
 import org.openide.util.RequestProcessor;
+import org.openide.util.io.FilesNI;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -422,7 +421,7 @@ public final class NbProxySelector extends ProxySelector {
                 }
 
                 fname = netProperties.getCanonicalPath();
-                try (InputStream bin = new BufferedInputStream(Files.newInputStream(Paths.get(fname)))) {
+                try (InputStream bin = new BufferedInputStream(FilesNI.newInputStream(new File(fname)))) {
                     props.load(bin);
                 }
 

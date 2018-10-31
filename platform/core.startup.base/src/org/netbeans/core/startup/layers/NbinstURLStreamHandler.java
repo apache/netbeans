@@ -28,12 +28,12 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.net.UnknownServiceException;
-import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.URLStreamHandlerRegistration;
+import org.openide.util.io.FilesNI;
 
 /**
  * URLStreamHandler for nbinst protocol
@@ -142,7 +142,7 @@ public class NbinstURLStreamHandler extends URLStreamHandler {
             this.connect();
             if (iStream == null) {
                 try {
-                    iStream = Files.newInputStream(f.toPath());
+                    iStream = FilesNI.newInputStream(f);
                 } catch (InvalidPathException ex) {
                     throw new IOException(ex);
                 }

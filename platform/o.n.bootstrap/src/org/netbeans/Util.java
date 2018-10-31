@@ -20,7 +20,6 @@
 package org.netbeans;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.util.*;
 import java.util.ArrayList;
@@ -28,6 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openide.util.*;
 import org.openide.modules.*;
+import org.openide.util.io.FilesNI;
 
 /** Static utility methods for use within this package.
  * @author Jesse Glick
@@ -61,8 +61,8 @@ public final class Util {
         String suffix = "-test.jar"; // NOI18N
         File physicalModuleFile = File.createTempFile(prefix, suffix);
         physicalModuleFile.deleteOnExit();
-        try (InputStream is = Files.newInputStream(moduleFile.toPath());
-                OutputStream os = Files.newOutputStream(physicalModuleFile.toPath())) {
+        try (InputStream is = FilesNI.newInputStream(moduleFile);
+                OutputStream os = FilesNI.newOutputStream(physicalModuleFile)) {
             byte[] buf = new byte[4096];
             int i;
             while ((i = is.read(buf)) != -1) {

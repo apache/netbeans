@@ -25,7 +25,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,6 +35,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbCollections;
 import org.openide.util.Utilities;
+import org.openide.util.io.FilesNI;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
@@ -124,7 +124,7 @@ class OSGiInstalledFileLocator extends InstalledFileLocator {
                             throw new IOException("Could not make " + dir);
                         }
                         try (InputStream is = resource.openStream();
-                                OutputStream os = Files.newOutputStream(f2.toPath())) {
+                                OutputStream os = FilesNI.newOutputStream(f2)) {
                             byte[] buf = new byte[4096];
                             int read;
                             while ((read = is.read(buf)) != -1) {

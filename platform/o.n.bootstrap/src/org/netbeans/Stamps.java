@@ -33,7 +33,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
-import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.StandardOpenOption;
@@ -57,6 +56,7 @@ import java.util.zip.ZipInputStream;
 import org.openide.modules.Places;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import org.openide.util.io.FilesNI;
 
 /**
  * Support for optimal checking of time stamps of certain files in
@@ -430,7 +430,7 @@ public final class Stamps {
             boolean areCachesOK;
             boolean writeFile;
             long lastMod;
-            try (InputStream is = Files.newInputStream(file.toPath())) {
+            try (InputStream is = FilesNI.newInputStream(file)) {
                 int len = is.read(read);
                 areCachesOK = len == read.length && is.available() == 0 && Arrays.equals(expected, read);
                 writeFile = !areCachesOK;
@@ -443,7 +443,7 @@ public final class Stamps {
             }
             if (writeFile) {
                 file.getParentFile().mkdirs();
-                try (OutputStream os = Files.newOutputStream(file.toPath())) {
+                try (OutputStream os = FilesNI.newOutputStream(file)) {
                     os.write(expected);
                 }
                 if (areCachesOK) {
@@ -558,7 +558,7 @@ public final class Stamps {
                 }
                 File f = new File(cache, en.getName().replace('/', File.separatorChar));
                 f.getParentFile().mkdirs();
-                try (OutputStream os = Files.newOutputStream(f.toPath())) {
+                try (OutputStream os = FilesNI.newOutputStream(f)) {
                     for (;;) {
                         int len = zip.read(arr);
                         if (len == -1) {
@@ -582,7 +582,7 @@ public final class Stamps {
         final String clustersCache = "all-clusters.dat"; // NOI18N
         File f = fileImpl(clustersCache, null, -1); // no timestamp check
         if (f != null) {
-            try (DataInputStream dis = new DataInputStream(Files.newInputStream(f.toPath()))) {
+            try (DataInputStream dis = new DataInputStream(FilesNI.newInputStream(f))) {
                 if (Clusters.compareDirs(dis)) {
                     return false;
                 }
@@ -682,7 +682,7 @@ public final class Stamps {
 
                 LOG.log(Level.FINE, "Storing cache {0}", cacheFile);
                 //append new entries only
-                os = Files.newOutputStream(cacheFile.toPath(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+                os = FilesNI.newOutputStream(cacheFile, true);
                 DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(this, 1024 * 1024));
                 
                 this.delay = delay;

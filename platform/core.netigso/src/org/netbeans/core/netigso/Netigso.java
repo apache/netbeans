@@ -25,7 +25,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.security.ProtectionDomain;
 import java.util.Arrays;
@@ -56,6 +55,7 @@ import org.openide.modules.ModuleInfo;
 import org.openide.modules.Places;
 import org.openide.util.*;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.io.FilesNI;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.util.lookup.ServiceProviders;
 import org.osgi.framework.Bundle;
@@ -468,7 +468,7 @@ implements Cloneable, Stamps.Updater {
             } else if (symbolicName != null) { // NOI18N
                 if (original != null) {
                     LOG.log(Level.FINE, "Updating bundle {0}", original.getLocation());
-                    try (InputStream is = Files.newInputStream(m.getJarFile().toPath())) {
+                    try (InputStream is = FilesNI.newInputStream(m.getJarFile())) {
                         original.update(is);
                     } catch (InvalidPathException ex) {
                         throw new IOException(ex);

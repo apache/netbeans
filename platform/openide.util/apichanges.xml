@@ -26,6 +26,23 @@
         <apidef name="xml_base">XML API</apidef>
     </apidefs>
     <changes>
+    <change id="UninterruptibleNIO">
+      <api name="util_base"/>
+      <summary>Added the FilesNI utility class, relating to ClosedByInterruptException bugs</summary>
+      <version major="9" minor="12"/>
+      <date year="2018" month="10" day="31"/>
+      <author login="ebakke"/>
+      <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible"/>
+      <description>
+        <p>The utility class FilesNI (Non-Interruptible File streams) was added as a central place
+          to create file input/output streams, for cases where it may be necessary to guard against
+          a ClosedByInterruptException. The Javadoc for the class discusses and documents the issues
+          around NETBEANS-583.
+        </p>
+      </description>
+      <class package="org.openide.util.io" name="FilesNI"/>
+      <issue number="NETBEANS-583"/>
+    </change>
     <change id="weak-listen-on-specific-property">
         <api name="util_base"/>
         <summary>Weak property and vetoable listeners for a specific property name.</summary>

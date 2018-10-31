@@ -33,7 +33,6 @@ import java.lang.management.ManagementFactory;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
-import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.util.Collection;
 import java.util.Collections;
@@ -51,11 +50,11 @@ import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipException;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.RequestProcessor.Task;
 import org.openide.util.BaseUtilities;
+import org.openide.util.io.FilesNI;
 
 /** A virtual filesystem based on a JAR archive.
 * <p>For historical reasons many AbstractFileSystem.* methods are implemented
@@ -503,7 +502,8 @@ public class JarFileSystem extends AbstractFileSystem {
         if (createContent || forceRecreate) {
             // JDK 1.3 contains bug #4336753
             //is = j.getInputStream (je);
-            try (InputStream is = getInputStream4336753(jf, je); OutputStream os = Files.newOutputStream(f.toPath())) {
+            try (InputStream is = getInputStream4336753(jf, je);
+                    OutputStream os = FilesNI.newOutputStream(f)) {
                 FileUtil.copy(is, os);
             } catch (InvalidPathException ex) {
                 throw new IOException(ex);
@@ -512,7 +512,7 @@ public class JarFileSystem extends AbstractFileSystem {
 
         f.deleteOnExit();
 
-        return Files.newInputStream(f.toPath());
+        return FilesNI.newInputStream(f);
     }
 
     private static String temporaryName(String filePath, String entryPath) {

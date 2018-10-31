@@ -20,9 +20,7 @@ package org.netbeans.core.network.proxy.kde;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.core.network.proxy.NetworkProxyResolver;
 import org.netbeans.core.network.proxy.NetworkProxySettings;
+import org.openide.util.io.FilesNI;
 
 /**
  *
@@ -132,7 +131,7 @@ public class KdeNetworkProxy implements NetworkProxyResolver {
         Map<String, String> map = new HashMap<String, String>();
 
         if (kioslavercFile.exists()) {
-            try (BufferedReader br = Files.newBufferedReader(kioslavercFile.toPath())) {
+            try (BufferedReader br = FilesNI.newBufferedReader(kioslavercFile)) {
                 String line;
                 boolean inGroup = false;
                 while ((line = br.readLine()) != null) {

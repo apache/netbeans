@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="java/gradle.persistence" default="build" basedir=".">
+<project name="groovy/gradle.persistence" default="build" basedir=".">
     <description>Builds, tests, and runs the project org.netbeans.modules.gradle.persistence.</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

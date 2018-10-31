@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="java/gradle.test" default="build" basedir=".">
-    <description>Builds, tests, and runs the project org.netbeans.modules.gradle.test.</description>
+<project name="groovy/gradle.spring" default="build" basedir=".">
+    <description>Builds, tests, and runs the project org.netbeans.modules.gradle.spring.</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

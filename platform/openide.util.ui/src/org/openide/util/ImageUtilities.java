@@ -22,17 +22,18 @@ package org.openide.util;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Toolkit;
 import java.awt.Transparency;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
-import java.awt.image.IndexColorModel;
 import java.awt.image.RGBImageFilter;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
@@ -342,7 +343,7 @@ public final class ImageUtilities {
      */
     public static Icon createDisabledIcon(Icon icon)  {
         Parameters.notNull("icon", icon);
-        return new LazyDisabledIcon(icon2Image(icon));
+        return new DisabledIcon(icon);
     }
 
     /**
@@ -353,7 +354,7 @@ public final class ImageUtilities {
      */
     public static Image createDisabledImage(Image image)  {
         Parameters.notNull("image", image);
-        return LazyDisabledIcon.createDisabledImage(image);
+        return DisabledButtonFilter.createDisabledImage(image);
     }
 
     /**
@@ -880,44 +881,103 @@ public final class ImageUtilities {
         }
     }
 
-    private static class LazyDisabledIcon implements Icon {
+    /* This method was tested with both a VectorIcon and an ImageIcon, including with the latter
+    delegating to a MultiResolutionImage, on OpenJDK 10.0.2 on Windows 10 with a HiDPI/non-HiDPI
+    dual monitor setup. Also tested the VectorIcon case on MacOS with Retina and non-Retina
+    configurations. */
+    /**
+     * A disabled variation of a provided delegate icon. Any kind of delegate implementation can be
+     * used. In particular, this class preserves the full fidelity of HiDPI icons, such as instances
+     * of {@link VectorIcon}, or {@link ImageIcon} instances delegating to a
+     * {@code java.awt.image.MultiResolutionImage} (available since Java 9 and above).
+     */
+    private static final class DisabledIcon implements Icon {
+        private final Icon delegate;
 
-        /** Shared instance of filter for disabled icons */
-        private static final RGBImageFilter DISABLED_BUTTON_FILTER = new DisabledButtonFilter();
-        private Image img;
-        private Icon disabledIcon;
-
-        public LazyDisabledIcon(Image img) {
-            assert null != img;
-            this.img = img;
+        private DisabledIcon(Icon delegate) {
+            Parameters.notNull("delegate", delegate);
+            this.delegate = delegate;
         }
 
-        public void paintIcon(Component c, Graphics g, int x, int y) {
-            getDisabledIcon().paintIcon(c, g, x, y);
-        }
-
+        @Override
         public int getIconWidth() {
-            return getDisabledIcon().getIconWidth();
+            return delegate.getIconWidth();
         }
 
+        @Override
         public int getIconHeight() {
-            return getDisabledIcon().getIconHeight();
+            return delegate.getIconHeight();
         }
 
-        private synchronized Icon getDisabledIcon() {
-            if (null == disabledIcon) {
-                disabledIcon = new ImageIcon(createDisabledImage(img));
+        @Override
+        public void paintIcon(Component c, Graphics g0, int x, int y) {
+            final Graphics2D g = (Graphics2D) g0;
+            final AffineTransform oldTransform = g.getTransform();
+            g.translate(x, y);
+            final AffineTransform tx = g.getTransform();
+
+            /* Paint the icon to a BufferedImage, then run it through an ImageFilter. Don't bother trying
+            to cache the BufferedImage, since the required resolution may be different from one call to
+            paintIcon to the next (e.g. if a window is moved from a HiDPI to a non-HiDPI monitor or vice
+            versa). */
+
+            /* If the graphics has a scaling transform on it, it might be for HiDPI rendering purposes. In
+            this case we should create a correspondingly larger BufferedImage to preserve the full device
+            resolution. */
+            double scaling;
+            boolean simpleTransform;
+            int txType = tx.getType();
+            if (txType == AffineTransform.TYPE_UNIFORM_SCALE ||
+                txType == (AffineTransform.TYPE_UNIFORM_SCALE | AffineTransform.TYPE_TRANSLATION))
+            {
+                scaling = tx.getScaleX();
+                simpleTransform = true;
+            } else {
+                // Unsupported transform type; don't apply HiDPI scaling.
+                scaling = 1.0;
+                simpleTransform = false;
             }
-            return disabledIcon;
-        }
+            BufferedImage img = g.getDeviceConfiguration().createCompatibleImage(
+                    (int) Math.ceil(getIconWidth() * scaling),
+                    (int) Math.ceil(getIconHeight() * scaling), Transparency.TRANSLUCENT);
+            Graphics2D imgG = (Graphics2D) img.getGraphics();
+            try {
+                if (simpleTransform) {
+                    /* Apply the scaling. Also preserve any device pixel misalignment that exists in the
+                    original Graphics2D's transform, in case the delegate Icon knows how to handle it. See
+                    the VectorIcon class for an example of such handling. */
+                    double misalignX = tx.getTranslateX() - (int) tx.getTranslateX();
+                    double misalignY = tx.getTranslateY() - (int) tx.getTranslateY();
+                    imgG.setTransform(new AffineTransform(scaling, 0, 0, scaling, misalignX, misalignY));
+                }
+                delegate.paintIcon(c, imgG, 0, 0);
+            } finally {
+                imgG.dispose();
+            }
+            Image filteredImage = DisabledButtonFilter.createDisabledImage(img);
 
-        static Image createDisabledImage(Image img) {
-            ImageProducer prod = new FilteredImageSource(img.getSource(), DISABLED_BUTTON_FILTER);
-            return Toolkit.getDefaultToolkit().createImage(prod);
+            if (scaling != 1.0) {
+                // Scale the image down to its logical dimensions, and draw it at the device pixel boundary.
+                AffineTransform tx2 = g.getTransform();
+                g.setTransform(new AffineTransform(1, 0, 0, 1,
+                    (int) tx2.getTranslateX(),
+                    (int) tx2.getTranslateY()));
+            }
+            g.drawImage(filteredImage, 0, 0, null);
+
+            g.setTransform(oldTransform);
+
+            if (false) {
+                // Draw a red line diagonally over the icon, for debugging purposes.
+                g.setColor(Color.RED);
+                g.drawLine(x, y, x + getIconWidth(), y + getIconHeight());
+            }
         }
     }
 
     private static class DisabledButtonFilter extends RGBImageFilter {
+        /** Shared instance of filter for disabled icons */
+        private static final RGBImageFilter INSTANCE = new DisabledButtonFilter();
 
         DisabledButtonFilter() {
             canFilterIndexColorModel = true;
@@ -934,6 +994,11 @@ public final class ImageUtilities {
         public void setProperties(Hashtable props) {
             props = (Hashtable) props.clone();
             consumer.setProperties(props);
+        }
+
+        static Image createDisabledImage(Image img) {
+            ImageProducer prod = new FilteredImageSource(img.getSource(), INSTANCE);
+            return Toolkit.getDefaultToolkit().createImage(prod);
         }
     }
 }

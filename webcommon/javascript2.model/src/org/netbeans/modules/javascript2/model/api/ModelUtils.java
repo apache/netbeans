@@ -1221,9 +1221,7 @@ public class ModelUtils {
                                                         new Object[]{object.getFullyQualifiedName(),
                                                             object.getFileObject()});
                                             }
-                                            for (TypeUsage type1 : prop.getAssignments()) {
-                                                return resolveTypes(object, String.join(".", Arrays.copyOfRange(tokens, i, tokens.length)), offset, alreadyResolved, invokeCount);
-                                            }
+                                            return resolveTypes(object, String.join(".", Arrays.copyOfRange(tokens, i, tokens.length)), offset, alreadyResolved, invokeCount);
                                         } else {
                                             object = prop;
                                             newObjectName = newObjectName + "." + prop.getName();

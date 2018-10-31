@@ -57,7 +57,6 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
         SUPPORTED_PATHS.add(ClassPath.COMPILE);
         SUPPORTED_PATHS.add(ClassPath.EXECUTE);
         SUPPORTED_PATHS.add(JavaClassPathConstants.PROCESSOR_PATH);
-        SUPPORTED_PATHS.add(JavaClassPathConstants.MODULE_COMPILE_PATH);
     }
 
     private final Map<String, SourceSetCP> groups = new HashMap<>();
@@ -150,7 +149,6 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
             switch (type) {
                 case ClassPath.BOOT: return boot;
                 case ClassPath.SOURCE: return source;
-                case JavaClassPathConstants.MODULE_COMPILE_PATH:
                 case ClassPath.COMPILE: return compile;
                 case ClassPath.EXECUTE: return runtime;
                 case JavaClassPathConstants.PROCESSOR_PATH: return compile;

@@ -66,6 +66,7 @@
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/jsp_2_2.xsd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/jsp_2_3.xsd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/permissions_7.xsd</file>
+        <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-app_2_2.dtd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-app_2_3.dtd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-app_2_4.mdd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-app_2_4.xsd</file>
@@ -85,7 +86,6 @@
         <comment type="CATEGORY_B" />
     </fileset>
     <fileset>
-        <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-app_2_2.dtd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/datatypes.dtd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/XMLSchema.dtd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/xml.xsd</file>

@@ -1,78 +1,48 @@
 <!--
-Copyright (c) 2000 Sun Microsystems, Inc.,
-901 San Antonio Road,
-Palo Alto, California 94303, U.S.A.
-All rights reserved.
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
 
-Sun Microsystems, Inc. has intellectual property rights relating to
-technology embodied in the product that is described in this document.
-In particular, and without limitation, these intellectual property
-rights may include one or more of the U.S. patents listed at
-http://www.sun.com/patents and one or more additional patents or
-pending patent applications in the U.S. and in other countries.
+Copyright 2000-2007 Sun Microsystems, Inc. All rights reserved.
 
-This document and the product to which it pertains are distributed
-under licenses restricting their use, copying, distribution, and
-decompilation.  This document may be reproduced and distributed but may
-not be changed without prior written authorization of Sun and its
-licensors, if any.
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common Development
+and Distribution License("CDDL") (collectively, the "License").  You
+may not use this file except in compliance with the License. You can obtain
+a copy of the License at https://glassfish.dev.java.net/public/CDDL+GPL.html
+or glassfish/bootstrap/legal/LICENSE.txt.  See the License for the specific
+language governing permissions and limitations under the License.
 
-Third-party software, including font technology, is copyrighted and
-licensed from Sun suppliers.
+When distributing the software, include this License Header Notice in each
+file and include the License file at glassfish/bootstrap/legal/LICENSE.txt.
+Sun designates this particular file as subject to the "Classpath" exception
+as provided by Sun in the GPL Version 2 section of the License file that
+accompanied this code.  If applicable, add the following below the License
+Header, with the fields enclosed by brackets [] replaced by your own
+identifying information: "Portions Copyrighted [year]
+[name of copyright owner]"
 
-Sun,  Sun Microsystems,  the Sun logo,  Java,  JavaServer Pages,  Java
-Naming and Directory Interface,  JDBC,  JDK,  JavaMail and  and
-Enterprise JavaBeans are trademarks or registered trademarks of Sun
-Microsystems, Inc. in the U.S. and other countries.
+Contributor(s):
 
-Federal Acquisitions: Commercial Software - Government Users Subject to
-Standard License Terms and Conditions.
+If you wish your version of this file to be governed by only the CDDL or
+only the GPL Version 2, indicate your decision by adding "[Contributor]
+elects to include this software in this distribution under the [CDDL or GPL
+Version 2] license."  If you don't indicate a single choice of license, a
+recipient has the option to distribute your version of this file under
+either the CDDL, the GPL Version 2 or to extend the choice of license to
+its licensees as provided above.  However, if you add GPL Version 2 code
+and therefore, elected the GPL Version 2 license, then the option applies
+only if the new code is made subject to such option by the copyright
+holder.
+-->
 
-DOCUMENTATION IS PROVIDED "AS IS" AND ALL EXPRESS OR IMPLIED
-CONDITIONS, REPRESENTATIONS AND WARRANTIES, INCLUDING ANY IMPLIED
-WARRANTY OF MERCHANTABILITY, FITNESS FOR FOR A PARTICULAR PURPOSE OR
-NON-INFRINGEMENT, ARE DISCLAIMED, EXCEPT TO THE EXTENT THAT SUCH
-DISCLAIMERS ARE HELD TO BE LEGALLY INVALID.
+<!--
+This is the XML DTD for the Servlet 2.3 deployment descriptor.
+All Servlet 2.3 deployment descriptors must include a DOCTYPE
+of the following form:
 
+  <!DOCTYPE web-app PUBLIC
+	"-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+	"http://java.sun.com/dtd/web-app_2_3.dtd">
 
-_________________________________________________________________________
-
-Copyright (c) 2000 Sun Microsystems, Inc.,
-901 San Antonio Road,
-Palo Alto, California 94303, E'tats-Unis.
-Tous droits re'serve's.
-
-Sun Microsystems, Inc. a les droits de proprie'te' intellectuels
-relatants a` la technologie incorpore'e dans le produit qui est de'crit
-dans ce document. En particulier, et sans la limitation, ces droits de
-proprie'te' intellectuels peuvent inclure un ou plus des brevets
-ame'ricains e'nume're's a` http://www.sun.com/patents et un ou les
-brevets plus supple'mentaires ou les applications de brevet en attente
-dans les E'tats-Unis et dans les autres pays.
-
-Ce produit ou document est prote'ge' par un copyright et distribue'
-avec des licences qui en restreignent l'utilisation, la copie, la
-distribution, et la de'compilation.  Ce documention associe n peut
-e^tre reproduite et distribuer, par quelque moyen que ce soit, sans
-l'autorisation pre'alable et e'crite de Sun et de ses bailleurs de
-licence, le cas e'che'ant.
-
-Le logiciel de'tenu par des tiers, et qui comprend la technologie
-relative aux polices de caracte`res, est prote'ge' par un copyright et
-licencie' par des fournisseurs de Sun.
-
-Sun,  Sun Microsystems,  le logo Sun,  Java,  JavaServer Pages,  Java
-Naming and Directory Interface,  JDBC,  JDK,  JavaMail et  and
-Enterprise JavaBeans sont des marques de fabrique ou des marques
-de'pose'es de Sun Microsystems, Inc. aux E'tats-Unis et dans d'autres
-pays.
-
-LA DOCUMENTATION EST FOURNIE "EN L'E'TAT" ET TOUTES AUTRES CONDITIONS,
-DECLARATIONS ET GARANTIES EXPRESSES OU TACITES SONT FORMELLEMENT
-EXCLUES, DANS LA MESURE AUTORISEE PAR LA LOI APPLICABLE, Y COMPRIS
-NOTAMMENT TOUTE GARANTIE IMPLICITE RELATIVE A LA QUALITE MARCHANDE, A
-L'APTITUDE A UNE UTILISATION PARTICULIERE OU A L'ABSENCE DE
-CONTREFAC,ON.
 -->
 
 <!--

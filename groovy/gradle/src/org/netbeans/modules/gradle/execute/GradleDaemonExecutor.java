@@ -141,8 +141,10 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             }
             cmd.configure(buildLauncher);
             JavaPlatform activePlatform = RunUtils.getActivePlatform(config.getProject());
-            File javaHome = FileUtil.toFile(activePlatform.getInstallFolders().iterator().next());
-            buildLauncher.setJavaHome(javaHome);
+            if (!activePlatform.getInstallFolders().isEmpty()) {
+                File javaHome = FileUtil.toFile(activePlatform.getInstallFolders().iterator().next());
+                buildLauncher.setJavaHome(javaHome);
+            }
             buildLauncher.setColorOutput(useRichOutput);
             if (useRichOutput) {
                 outStream = new EscapeProcessingOutputStream(new GradleColorEscapeProcessor(io, handle, config));
@@ -210,6 +212,11 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
     private void printCommandLine() {
         StringBuilder commandLine = new StringBuilder(1024);
 
+        JavaPlatform activePlatform = RunUtils.getActivePlatform(config.getProject());
+        if (!activePlatform.getInstallFolders().isEmpty()) {
+            File javaHome = FileUtil.toFile(activePlatform.getInstallFolders().iterator().next());
+            commandLine.append("JAVA_HOME=\"").append(javaHome.getAbsolutePath()).append("\"\n"); //NOI18N
+        }
         File dir = FileUtil.toFile(config.getProject().getProjectDirectory());
         if (dir != null) {
             commandLine.append("cd ").append(dir.getAbsolutePath()).append("; "); //NOI18N

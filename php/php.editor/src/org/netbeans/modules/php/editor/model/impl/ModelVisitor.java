@@ -894,14 +894,47 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
                     }
                 } else {
                     ASTNode conditionalNode = findConditionalStatement(getPath());
-                    VarAssignmentImpl varAssignment = varN.createAssignment(
-                            scope,
-                            conditionalNode != null,
-                            getBlockRange(conditionalNode, scope),
-                            new OffsetRange(var.getStartOffset(), var.getEndOffset()),
-                            node,
-                            allAssignments);
-                    varN.addElement(varAssignment);
+                    boolean vardocAdded = false;
+                    // DO NOT check varN.findVarAssignment(varN.getOffset())
+                    // because there is a performance problem if VariableName has many assignments
+                    // (some unit tests fail because of a timeout)
+                    if (varN.getElements().isEmpty()) {
+                        // NETBEANS-1576
+                        // add vardoc info instead of current assignment info
+                        List<PhpDocTypeTagInfo> vardocComments = varTypeComments.get(varN.getName());
+                        if (vardocComments != null) {
+                            for (PhpDocTypeTagInfo vardocComment : vardocComments) {
+                                if (vardocComment.getRange().getEnd() > varN.getOffset()
+                                        || !scope.equals(getVariableScope(vardocComment.getRange().getStart()))) {
+                                    continue;
+                                }
+                                VarAssignmentImpl varAssignment = varN.createAssignment(
+                                        scope,
+                                        conditionalNode != null,
+                                        getBlockRange(conditionalNode, scope),
+                                        new OffsetRange(var.getStartOffset(), var.getEndOffset()),
+                                        vardocComment.getTypeName());
+                                varN.addElement(varAssignment);
+                                vardocAdded = true;
+                            }
+                        }
+                    }
+                    if (!vardocAdded) {
+                        VarAssignmentImpl varAssignment = varN.createAssignment(
+                                scope,
+                                conditionalNode != null,
+                                getBlockRange(conditionalNode, scope),
+                                new OffsetRange(var.getStartOffset(), var.getEndOffset()),
+                                node,
+                                allAssignments);
+                        varN.addElement(varAssignment);
+                        if (varN.getElements().isEmpty()) {
+                            // e.g.
+                            // $variable = ...
+                            // /* @var $variable TypeName */
+                            processVarComment(varN.getName(), scope);
+                        }
+                    }
                 }
 
                 // #269672 also check the scope if the variable is added

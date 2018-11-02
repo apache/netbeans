@@ -24,7 +24,6 @@ package org.netbeans.modules.php.editor.parser;
 import java.util.ArrayList;
 import java.util.List;
 import java_cup.runtime.*;
-import org.netbeans.modules.php.editor.*;
 import org.netbeans.modules.php.editor.parser.astnodes.*;
 import org.netbeans.modules.web.common.api.ByteStack;
 

@@ -29,6 +29,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
@@ -81,6 +84,8 @@ public class ModelUtils {
     private static final int MAX_RECURSION_DEEP_RESOLVING_ASSIGNMENTS = 10;
     
     private static String GLOBAL_DIRECTIVE = "global"; //NOI18N
+    
+    private static final Logger LOG = Logger.getLogger(ModelUtils.class.getName());
     
     public static JsObjectImpl getJsObject (ModelBuilder builder, List<Identifier> fqName, boolean isLHS) {
         if (fqName == null || fqName.isEmpty()) {
@@ -1172,14 +1177,17 @@ public class ModelUtils {
      * @return
      */
     public static TypeUsage createResolvedType(JsObject parent, TypeUsage typeHere) {
+        int invokeCount = 0;
         String fqn = getFQNFromType(typeHere);
-        return resolveTypes(parent, fqn, typeHere.getOffset());
+        List<TypeUsage> alreadyResolved = new ArrayList<>(); 
+        return resolveTypes(parent, fqn, typeHere.getOffset(), alreadyResolved, invokeCount);
     }
 
     /* @return TypeUsage with generated typename string 
      */
-    private static TypeUsage resolveTypes(JsObject parent, String fqn, int offset) {
+    private static TypeUsage resolveTypes(JsObject parent, String fqn, int offset, List<TypeUsage> alreadyResolved, int invokeCount) {
 
+        invokeCount++;
         String name = fqn;
         StringBuilder props = new StringBuilder();
         int indx = fqn.indexOf(".");
@@ -1187,42 +1195,49 @@ public class ModelUtils {
             name = fqn.substring(0, indx);
             props.append(fqn.substring(indx + 1));
         }
-        List<TypeUsage> localResolved = new ArrayList<TypeUsage>();
+        List<TypeUsage> localResolved = new ArrayList<>();
 
         resolveAssignments(parent, name, offset, localResolved, props);
 
-        boolean typeResolved = false;
-        for (TypeUsage type : localResolved) {
-            if (type.isResolved()) {
-                String newObjectName = type.getType();
-                JsObject object = ModelUtils.searchJsObjectByName(parent, newObjectName);
-                if ((object != null) && (object != parent)) {
-                    String partfqn = props.toString();
-                    if (!partfqn.trim().equals("")) {
-                        String[] tokens = partfqn.split("\\.");
-                        for (int i = 0; i < tokens.length; i++) {
-                            object = ModelUtils.searchJsObjectByName(parent, newObjectName);
-                            for (JsObject prop : object.getProperties().values()) {
-                                if ((prop.getName().equals(tokens[i])) && (prop.isDeclared())) {
-                                    if (prop.getAssignmentCount() > 0) {
-                                        for (TypeUsage type1 : prop.getAssignments()) {
-                                            return resolveTypes(object, String.join(".", Arrays.copyOfRange(tokens, i, tokens.length)), offset);
+        List<TypeUsage> diff = localResolved.stream().filter(type -> !alreadyResolved.contains(type)).collect(Collectors.toList());
+        if (diff.size() > 0) {
+            alreadyResolved.addAll(diff);
+            boolean typeResolved = false;
+            for (TypeUsage type : localResolved) {
+                if (type.isResolved()) {
+                    String newObjectName = type.getType();
+                    JsObject object = ModelUtils.searchJsObjectByName(parent, newObjectName);
+                    if ((object != null) && (object != parent)) {
+                        String partfqn = props.toString();
+                        if (!partfqn.trim().equals("")) {
+                            String[] tokens = partfqn.split("\\.");
+                            for (int i = 0; i < tokens.length; i++) {
+                                object = ModelUtils.searchJsObjectByName(parent, newObjectName);
+                                for (JsObject prop : object.getProperties().values()) {
+                                    if ((prop.getName().equals(tokens[i])) && (prop.isDeclared())) {
+                                        if (prop.getAssignmentCount() > 0) {
+                                            if (invokeCount == MAX_RECURSION_DEEP_RESOLVING_ASSIGNMENTS) {
+                                                LOG.log(Level.WARNING, "StackOverFlowError : {0} : {1}",
+                                                        new Object[]{object.getFullyQualifiedName(),
+                                                            object.getFileObject()});
+                                            }
+                                            return resolveTypes(object, String.join(".", Arrays.copyOfRange(tokens, i, tokens.length)), offset, alreadyResolved, invokeCount);
+                                        } else {
+                                            object = prop;
+                                            newObjectName = newObjectName + "." + prop.getName();
+                                            if (i == tokens.length - 1) {
+                                                typeResolved = true;
+                                            }
+                                            break;
                                         }
-                                    } else {
-                                        object = prop;
-                                        newObjectName = newObjectName + "." + prop.getName();
-                                        if (i == tokens.length - 1) {
-                                            typeResolved = true;
-                                        }
-                                        break;
                                     }
                                 }
                             }
-                        }
-                        if (typeResolved) {
-                            return new TypeUsage(newObjectName, type.getOffset(), true);
-                        }
+                            if (typeResolved) {
+                                return new TypeUsage(newObjectName, type.getOffset(), true);
+                            }
 
+                        }
                     }
                 }
             }
@@ -1232,11 +1247,12 @@ public class ModelUtils {
 
     private static void resolveAssignments(JsObject jsObject, String fqn, int offset, List<TypeUsage> resolved, StringBuilder nestedProperties) {
 
+        int invokeCount = 0;
         Set<String> alreadyProcessed = new HashSet<String>();
         for (TypeUsage type : resolved) {
             alreadyProcessed.add(type.getType());
         }
-        resolveAssignments(jsObject, fqn, offset, resolved, alreadyProcessed, nestedProperties);
+        resolveAssignments(jsObject, fqn, offset, resolved, alreadyProcessed, nestedProperties, invokeCount);
     }
 
     /**
@@ -1250,8 +1266,9 @@ public class ModelUtils {
      * @param nestedProperties "." separated nested property names string part
      * of FQN
      */
-    private static void resolveAssignments(JsObject parent, String fqn, int offset, List<TypeUsage> resolved, Set<String> alreadyProcessed, StringBuilder nestedProperties) {
+    private static void resolveAssignments(JsObject parent, String fqn, int offset, List<TypeUsage> resolved, Set<String> alreadyProcessed, StringBuilder nestedProperties, int invokeCount) {
         if (!alreadyProcessed.contains(fqn)) {
+            invokeCount++;
             alreadyProcessed.add(fqn);
             String fqnCorrected = ModelUtils.getFQNFromType(new TypeUsage(fqn, offset, false));
             //resolve the parent object in fqn
@@ -1277,7 +1294,12 @@ public class ModelUtils {
                     }
                     for (TypeUsage type : toProcess) {
                         if (!alreadyProcessed.contains(type.getType())) {
-                            resolveAssignments(parent, type.getType(), type.getOffset(), resolved, alreadyProcessed, nestedProperties);
+                            if (invokeCount == MAX_RECURSION_DEEP_RESOLVING_ASSIGNMENTS) {
+                                LOG.log(Level.WARNING, "StackOverFlowError : {0} : {1}",
+                                        new Object[]{object.getFullyQualifiedName(),
+                                                     object.getFileObject()});
+                            }
+                            resolveAssignments(parent, type.getType(), type.getOffset(), resolved, alreadyProcessed, nestedProperties, invokeCount);
                         }
                     }
                 } else {

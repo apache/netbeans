@@ -15,12 +15,6 @@
 # specific language governing permissions and limitations
 # under the License.
 
-file.reference.netbeans-gradle-tooling.jar=release/modules/gradle/netbeans-gradle-tooling.jar
-javac.source=1.8
-javac.compilerargs=-Xlint -Xlint:-serial
-nbm.module.author=Laszlo Kishalmi
-source.reference.netbeans-gradle-tooling.jar=netbeans-gradle-tooling/src/main/groovy
-
-release.external/slf4j-jdk14-1.7.25.jar=modules/gradle/slf4j-jdk14.jar
-release.external/slf4j-api-1.7.25.jar=modules/gradle/slf4j-api.jar
-release.external/gradle-tooling-api-4.10.2.jar=modules/gradle/gradle-tooling-api.jar
+70A74F970B22AC1226F6A2983E38A77FA90E3BE9 gradle-tooling-api-4.10.2.jar
+0816257C1701D10D4011EB018CD8E612F556E9F9 slf4j-api-1.7.25.jar
+3AB6BA54B981BE5A5FC42835AD6B28EF77C009BD slf4j-jdk14-1.7.25.jar

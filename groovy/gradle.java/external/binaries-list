@@ -14,9 +14,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
-javac.source=1.8
-javac.compilerargs=-Xlint -Xlint:-serial
-nbm.module.author=Laszlo Kishalmi
-
-release.external/org.jacoco.core-0.8.2.jar=modules/gradle/org.jacoco.core.jar
+977B33AFE2344A9EE801FD3317C54D8E1F9D7A79 org.jacoco:org.jacoco.core:0.8.2

@@ -303,7 +303,7 @@
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>gradle/org.jacoco.core.jar</runtime-relative-path>
-                <binary-origin>release/modules/gradle/org.jacoco.core.jar</binary-origin>
+                <binary-origin>external/org.jacoco.core-0.8.2.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

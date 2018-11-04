@@ -898,7 +898,8 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
                     // DO NOT check varN.findVarAssignment(varN.getOffset())
                     // because there is a performance problem if VariableName has many assignments
                     // (some unit tests fail because of a timeout)
-                    if (varN.getElements().isEmpty()) {
+                    boolean isEmptyElements = varN.getElements().isEmpty();
+                    if (isEmptyElements) {
                         // NETBEANS-1576
                         // add vardoc info instead of current assignment info
                         List<PhpDocTypeTagInfo> vardocComments = varTypeComments.get(varN.getName());
@@ -928,7 +929,7 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
                                 node,
                                 allAssignments);
                         varN.addElement(varAssignment);
-                        if (varN.getElements().isEmpty()) {
+                        if (isEmptyElements) {
                             // e.g.
                             // $variable = ...
                             // /* @var $variable TypeName */

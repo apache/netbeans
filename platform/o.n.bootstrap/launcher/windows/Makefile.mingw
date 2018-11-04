@@ -30,7 +30,7 @@ nbexec_exe64.res: nbexec_exe.rc nbexec.exe.manifest
 	x86_64-w64-mingw32-windres -onbexec_exe64.res -Ocoff -DMANIFEST_FILE=nbexec.exe.manifest nbexec_exe.rc
 
 nbexec64.exe: nbexecexe.cpp utilsfuncs.cpp nbexec_exe64.res
-	x86_64-w64-mingw32-gcc -s -DNBEXEC_DLL='"nbexec64.dll"' -DARCHITECTURE=64 -Wl,--nxcompat -Wl,--dynamicbase -Wl,--no-seh -Wl,--no-insert-timestamp nbexecexe.cpp utilsfuncs.cpp nbexec_exe64.res -onbexec64.exe -static -lstdc++ -static-libstdc++ -static-libgcc
+	x86_64-w64-mingw32-gcc -s -DNBEXEC_DLL='"nbexec64.dll"' -DARCHITECTURE=64 -Wl,--nxcompat -Wl,--dynamicbase -Wl,--no-seh -Wl,--no-insert-timestamp -mwindows nbexecexe.cpp utilsfuncs.cpp nbexec_exe64.res -onbexec64.exe -static -lstdc++ -static-libstdc++ -static-libgcc
 
 nbexec.res: nbexec.rc
 	i686-w64-mingw32-windres -onbexec.res -Ocoff nbexec.rc
@@ -42,4 +42,4 @@ nbexec_exe.res: nbexec_exe.rc nbexec.exe.manifest
 	i686-w64-mingw32-windres -onbexec_exe.res -Ocoff -DMANIFEST_FILE=nbexec.exe.manifest nbexec_exe.rc
 
 nbexec.exe: nbexecexe.cpp utilsfuncs.cpp nbexec_exe.res
-	i686-w64-mingw32-gcc -s -DNBEXEC_DLL='"nbexec.dll"' -DARCHITECTURE=32 -Wl,--nxcompat -Wl,--dynamicbase -Wl,--no-seh -Wl,--no-insert-timestamp nbexecexe.cpp utilsfuncs.cpp nbexec_exe.res -onbexec.exe -static -lstdc++ -static-libstdc++ -static-libgcc
+	i686-w64-mingw32-gcc -s -DNBEXEC_DLL='"nbexec.dll"' -DARCHITECTURE=32 -Wl,--nxcompat -Wl,--dynamicbase -Wl,--no-seh -Wl,--no-insert-timestamp -mwindows nbexecexe.cpp utilsfuncs.cpp nbexec_exe.res -onbexec.exe -static -lstdc++ -static-libstdc++ -static-libgcc

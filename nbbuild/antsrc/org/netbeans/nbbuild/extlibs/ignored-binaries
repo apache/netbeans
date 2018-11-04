@@ -57,4 +57,4 @@ mobility.databindingme/lib/*
 lib.terminalemulator/examples/lib.richexecution/process_start-*.zip
 
 # ide.launcher is a special semi-module, does not have nbproject/project.xml, so is not recognized:
-nb/ide.launcher/external/launchers-9.0.zip
+nb/ide.launcher/external/launchers-10.0.zip

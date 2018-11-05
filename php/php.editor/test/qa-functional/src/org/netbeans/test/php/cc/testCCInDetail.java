@@ -19,12 +19,9 @@
 package org.netbeans.test.php.cc;
 
 import java.awt.event.InputEvent;
-import java.util.Iterator;
-import java.util.List;
 import org.netbeans.jellytools.EditorOperator;
 import org.netbeans.junit.NbModuleSuite;
 import junit.framework.Test;
-import org.openide.util.Exceptions;
 
 /**
  *

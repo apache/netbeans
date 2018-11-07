@@ -1,59 +1,57 @@
 <!--
-
-    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
-
-    Copyright (c) 2010 Oracle and/or its affiliates. All rights reserved.
-
-    The contents of this file are subject to the terms of either the GNU
-    General Public License Version 2 only ("GPL") or the Common Development
-    and Distribution License("CDDL") (collectively, the "License").  You
-    may not use this file except in compliance with the License.  You can
-    obtain a copy of the License at
-    https://glassfish.dev.java.net/public/CDDL+GPL_1_1.html
-    or packager/legal/LICENSE.txt.  See the License for the specific
-    language governing permissions and limitations under the License.
-
-    When distributing the software, include this License Header Notice in each
-    file and include the License file at packager/legal/LICENSE.txt.
-
-    GPL Classpath Exception:
-    Oracle designates this particular file as subject to the "Classpath"
-    exception as provided by Oracle in the GPL Version 2 section of the License
-    file that accompanied this code.
-
-    Modifications:
-    If applicable, add the following below the License Header, with the fields
-    enclosed by brackets [] replaced by your own identifying information:
-    "Portions Copyright [year] [name of copyright owner]"
-
-    Contributor(s):
-    If you wish your version of this file to be governed by only the CDDL or
-    only the GPL Version 2, indicate your decision by adding "[Contributor]
-    elects to include this software in this distribution under the [CDDL or GPL
-    Version 2] license."  If you don't indicate a single choice of license, a
-    recipient has the option to distribute your version of this file under
-    either the CDDL, the GPL Version 2 or to extend the choice of license to
-    its licensees as provided above.  However, if you add GPL Version 2 code
-    and therefore, elected the GPL Version 2 license, then the option applies
-    only if the new code is made subject to such option by the copyright
-    holder.
-
--->
+  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ 
+  Copyright (c) 2009-2011 Oracle and/or its affiliates. All rights reserved.
+ 
+  The contents of this file are subject to the terms of either the GNU
+  General Public License Version 2 only ("GPL") or the Common Development
+  and Distribution License("CDDL") (collectively, the "License").  You
+  may not use this file except in compliance with the License.  You can
+  obtain a copy of the License at
+  https://glassfish.dev.java.net/public/CDDL+GPL_1_1.html
+  or packager/legal/LICENSE.txt.  See the License for the specific
+  language governing permissions and limitations under the License.
+ 
+  When distributing the software, include this License Header Notice in each
+  file and include the License file at packager/legal/LICENSE.txt.
+ 
+  GPL Classpath Exception:
+  Oracle designates this particular file as subject to the "Classpath"
+  exception as provided by Oracle in the GPL Version 2 section of the License
+  file that accompanied this code.
+ 
+  Modifications:
+  If applicable, add the following below the License Header, with the fields
+  enclosed by brackets [] replaced by your own identifying information:
+  "Portions Copyright [year] [name of copyright owner]"
+ 
+  Contributor(s):
+  If you wish your version of this file to be governed by only the CDDL or
+  only the GPL Version 2, indicate your decision by adding "[Contributor]
+  elects to include this software in this distribution under the [CDDL or GPL
+  Version 2] license."  If you don't indicate a single choice of license, a
+  recipient has the option to distribute your version of this file under
+  either the CDDL, the GPL Version 2 or to extend the choice of license to
+  its licensees as provided above.  However, if you add GPL Version 2 code
+  and therefore, elected the GPL Version 2 license, then the option applies
+  only if the new code is made subject to such option by the copyright
+  holder.
+--> 
 
 <!--
-  XML DTD for Glassfish Application Server specific Java EE Application
+  XML DTD for Sun Application Server specific Java EE Application
   deployment descriptor. This is a companion DTD to application_6.xsd
 
   It must include a DOCTYPE of the following form:
 
-  <!DOCTYPE glassfish-application PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Java EE Application 6.0//EN" "http://glassfish.org/dtds/glassfish-application_6_0-1.dtd">
+  <!DOCTYPE sun-application PUBLIC "-//Sun Microsystems, Inc.//DTD GlassFish Application Server 3.0 Java EE Application 6.0//EN" "http://www.sun.com/software/appserver/dtds/sun-application_6_0-0.dtd">
 
 -->
 
 <!--
 This is the root element of the runtime descriptor document.
 -->
-<!ELEMENT glassfish-application (web*, pass-by-reference?, unique-id?, security-role-mapping*, realm?, ejb-ref*, resource-ref*, resource-env-ref*, service-ref*, message-destination-ref*, message-destination*, archive-name?, compatibility?, keep-state?, version-identifier?) >
+<!ELEMENT sun-application (web*, pass-by-reference?, unique-id?, security-role-mapping*, realm?, ejb-ref*, resource-ref*, resource-env-ref*, service-ref*, message-destination-ref*, message-destination*, archive-name?, compatibility?) >
 
 <!ELEMENT web (web-uri, context-root)>
 <!ELEMENT web-uri (#PCDATA)>
@@ -63,7 +61,7 @@ This is the root element of the runtime descriptor document.
      which will be the default mode of operation. This can be set 
      to true for non-compliant and possibly higher performance. 
      For a stand-alone, this can be set at this level. By setting 
-     a similarly named element at glassfish-application, it can apply to 
+     a similarly named element at sun-application, it can apply to 
      all the enclosed ejb modules. Allowed values are true and 
      false. Default will be false.
  -->
@@ -530,15 +528,3 @@ visible to various modules within an EAR file. Setting this element to v2
 removes these Java EE 6 restrictions.
 -->
 <!ELEMENT compatibility (#PCDATA)>
-
-<!--
-The keep-state element indicates whether the state information should be
-preserved across redeployment.
--->
-<!ELEMENT keep-state (#PCDATA)>
-
-<!--
-The version-identifier element contains the version information. The value is
- retrieved at deployment.
--->
-<!ELEMENT version-identifier (#PCDATA)>

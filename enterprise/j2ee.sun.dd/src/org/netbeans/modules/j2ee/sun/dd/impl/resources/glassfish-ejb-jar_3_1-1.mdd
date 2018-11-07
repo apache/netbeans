@@ -56,7 +56,7 @@
 		<dtd-name>enterprise-beans</dtd-name>
 		<bean-name>EnterpriseBeans</bean-name>
 		<implements>org.netbeans.modules.j2ee.sun.dd.api.ejb.EnterpriseBeans</implements>
-                <user-code>
+                <!--<user-code>
                     public void setPropertyElement(int index, org.netbeans.modules.j2ee.sun.dd.api.ejb.PropertyElement value) throws VersionNotSupportedException {
                         throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(GlassFishEjbJar.VERSION_3_1_1);
                     }
@@ -81,7 +81,7 @@
                     public org.netbeans.modules.j2ee.sun.dd.api.ejb.PropertyElement newPropertyElement() throws VersionNotSupportedException {
                         throw new org.netbeans.modules.j2ee.sun.dd.api.VersionNotSupportedException(GlassFishEjbJar.VERSION_3_1_1);
                     }
-                </user-code>
+                </user-code>-->
 	</meta-element>
 	<meta-element>
 		<dtd-name>name</dtd-name>

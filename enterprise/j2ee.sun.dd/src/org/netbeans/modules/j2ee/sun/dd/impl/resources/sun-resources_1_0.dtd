@@ -1,0 +1,650 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ The contents of this file are subject to the terms 
+ of the Common Development and Distribution License 
+ (the "License").  You may not use this file except 
+ in compliance with the License.
+ 
+ You can obtain a copy of the license at 
+ glassfish/bootstrap/legal/CDDLv1.0.txt or 
+ https://glassfish.dev.java.net/public/CDDLv1.0.html. 
+ See the License for the specific language governing 
+ permissions and limitations under the License.
+ 
+ When distributing Covered Code, include this CDDL 
+ HEADER in each file and include the License file at 
+ glassfish/bootstrap/legal/CDDLv1.0.txt.  If applicable, 
+ add the following below this CDDL HEADER, with the 
+ fields enclosed by brackets "[]" replaced with your 
+ own identifying information: Portions Copyright [yyyy] 
+ [name of copyright owner]
+-->
+<!-- ENTITIES -->
+<!-- boolean
+
+  Used in:
+    admin-object-resource, connector-connection-pool,                 
+    connector-resource, custom-resource, external-jndi-resource,      
+    jdbc-connection-pool, jdbc-resource, mail-resource,               
+    persistence-manager-factory-resource                              
+-->
+<!ENTITY % boolean "(yes | no | on | off | 1 | 0 | true | false)">
+
+<!-- isolation
+
+  Used in:
+    jdbc-connection-pool                                              
+-->
+<!ENTITY % isolation
+    "(read-uncommitted | read-committed | repeatable-read | serializable)">    
+
+
+<!-- validation-level
+-->
+<!ENTITY % validation-level "(full | parsing | none)">
+
+<!-- object-type
+    defines the type of the resource. It can be:                      
+    system-all                                                                 
+        These are system resources for all instances and DAS          
+    system-admin                                                               
+        These are system resources only in DAS                        
+    system-instance                                                            
+        These are system resources only in instances (and not DAS)    
+    user                                                                       
+        User resources (This is the default for all elements)         
+
+  Used in:
+    admin-object-resource, connector-resource, custom-resource,       
+    external-jndi-resource, jdbc-resource, mail-resource,             
+    persistence-manager-factory-resource, resource-adapter-config     
+-->
+<!ENTITY % object-type "(system-all | system-admin | system-instance | user)">
+
+<!-- rjmx-protocol
+    SE/EE related ENTITIES: This will define the available JSR 160    
+    connector transport protocols.                                    
+-->
+<!ENTITY % rjmx-protocol "(rmi_jrmp | rmi_iiop | jmxmp)">
+
+<!-- monitoring-level
+    monitoring-level controls the amount of monitoring data collected 
+    and exposed to clients                                            
+    OFF                                                                        
+        no monitoring/statistical data is exposed to the clients.     
+    LOW                                                                        
+        SE/EE only                                                    
+    HIGH                                                                       
+        maximum data is gathered and released.                        
+-->
+<!ENTITY % monitoring-level "(OFF | LOW | HIGH)">
+
+<!-- persistence-type
+    SE/EE related ENTITIES                                            
+-->
+<!ENTITY % persistence-type "(memory | file | ha)">
+
+<!-- session-save-frequency
+-->
+<!ENTITY % session-save-frequency "(web-method | time-based | on-demand)">
+
+<!-- session-save-scope
+-->
+<!ENTITY % session-save-scope
+    "(session | modified-session | modified-attribute)">                       
+
+
+<!-- sfsb-persistence-type
+-->
+<!ENTITY % sfsb-persistence-type "(file | ha)">
+
+<!-- apply-to-type
+-->
+<!ENTITY % apply-to-type "(request | response | both)">
+
+<!-- lb-policy-type
+-->
+<!ENTITY % lb-policy-type
+    "(round-robin | weighted-round-robin | user-defined)">                     
+
+
+<!-- event-type
+-->
+<!ENTITY % event-type
+    "(log | timer | trace | monitor | cluster | lifecycle | notification)">    
+
+
+<!-- message-layer
+-->
+<!ENTITY % message-layer "(SOAP | HttpServlet)">
+
+<!-- ELEMENTS -->
+
+<!-- resources
+    J2EE Applications look up resources registered with the           
+    Application server, using portable JNDI names.                    
+-->
+<!ELEMENT resources
+    ((custom-resource | external-jndi-resource | jdbc-resource | mail-resource 
+    | persistence-manager-factory-resource | admin-object-resource |           
+    connector-resource | resource-adapter-config | jdbc-connection-pool |      
+    connector-connection-pool)*)>                                              
+
+
+
+<!-- description
+    Textual description of a configured entity                        
+
+  Used in:
+    admin-object-resource, connector-connection-pool,                 
+    connector-resource, custom-resource, external-jndi-resource,      
+    jdbc-connection-pool, jdbc-resource, mail-resource,               
+    persistence-manager-factory-resource, property                    
+-->
+<!ELEMENT description (#PCDATA)>
+
+
+<!-- custom-resource
+    custom (or generic) resource managed by a user-written factory    
+    class.                                                            
+
+  attributes
+    jndi-name                                                                  
+        JNDI name for generic resource, the fully qualified type of   
+        the resource and whether it is enabled at runtime             
+
+  Used in:
+    resources                                                         
+-->
+<!ELEMENT custom-resource (description?, property*)>
+
+<!ATTLIST custom-resource
+    jndi-name CDATA #REQUIRED
+    res-type CDATA #REQUIRED
+    factory-class CDATA #REQUIRED
+    object-type %object-type; "user"
+    enabled %boolean; "true">
+
+
+<!-- external-jndi-resource
+    resource residing in an external JNDI repository                  
+
+  Used in:
+    resources                                                         
+-->
+<!ELEMENT external-jndi-resource (description?, property*)>
+
+<!ATTLIST external-jndi-resource
+    jndi-name CDATA #REQUIRED
+    jndi-lookup-name CDATA #REQUIRED
+    res-type CDATA #REQUIRED
+    factory-class CDATA #REQUIRED
+    object-type %object-type; "user"
+    enabled %boolean; "true">
+
+
+<!-- jdbc-resource
+    JDBC javax.sql.(XA)DataSource resource definition                 
+
+  Used in:
+    resources                                                         
+-->
+<!ELEMENT jdbc-resource (description?, property*)>
+
+<!ATTLIST jdbc-resource
+    jndi-name CDATA #REQUIRED
+    pool-name CDATA #REQUIRED
+    object-type %object-type; "user"
+    enabled %boolean; "true">
+
+
+<!-- mail-resource
+    The mail-resource element describes a javax.mail.Session resource 
+
+  attributes
+    host                                                                       
+        ip V6 or V4 address or hostname.                              
+
+  Used in:
+    resources                                                         
+-->
+<!ELEMENT mail-resource (description?, property*)>
+
+<!ATTLIST mail-resource
+    jndi-name CDATA #REQUIRED
+    store-protocol CDATA "imap"
+    store-protocol-class CDATA "com.sun.mail.imap.IMAPStore"
+    transport-protocol CDATA "smtp"
+    transport-protocol-class CDATA "com.sun.mail.smtp.SMTPTransport"
+    host CDATA #REQUIRED
+    user CDATA #REQUIRED
+    from CDATA #REQUIRED
+    debug %boolean; "false"
+    object-type %object-type; "user"
+    enabled %boolean; "true">
+
+
+<!-- persistence-manager-factory-resource
+    Persistence Manager runtime configuration.                        
+
+  attributes
+    factory-class                                                              
+        Class that creates persistence manager instance.              
+    jdbc-resource-jndi-name                                                    
+        jdbc resource with which database connections are obtained.   
+    jndi-name                                                                  
+        JNDI name for this resource                                   
+
+  Used in:
+    resources                                                         
+-->
+<!ELEMENT persistence-manager-factory-resource (description?, property*)>
+
+<!ATTLIST persistence-manager-factory-resource
+    jndi-name CDATA #REQUIRED
+    factory-class CDATA "com.sun.jdo.spi.persistence.support.sqlstore.impl.PersistenceManagerFactoryImpl"
+    jdbc-resource-jndi-name CDATA #IMPLIED
+    object-type %object-type; "user"
+    enabled %boolean; "true">
+
+
+<!-- admin-object-resource
+    The admin-object-resource element describes a administered object 
+    for a inbound resource adapter.                                   
+
+  attributes
+    jndi-name                                                                  
+        JNDI name for this resource                                   
+    res-adapter                                                                
+        Name of the inbound resource adapter.                         
+    res-type                                                                   
+        Interface definition for the administered object              
+
+  Used in:
+    resources                                                         
+-->
+<!ELEMENT admin-object-resource (description?, property*)>
+
+<!ATTLIST admin-object-resource
+    jndi-name CDATA #REQUIRED
+    res-type CDATA #REQUIRED
+    res-adapter CDATA #REQUIRED
+    object-type %object-type; "user"
+    enabled %boolean; "true">
+
+
+<!-- connector-resource
+
+  Used in:
+    resources                                                         
+-->
+<!ELEMENT connector-resource (description?, property*)>
+
+<!ATTLIST connector-resource
+    jndi-name CDATA #REQUIRED
+    pool-name CDATA #REQUIRED
+    object-type %object-type; "user"
+    enabled %boolean; "true">
+
+
+<!-- resource-adapter-config
+    This element is for configuring the resource adapter. These       
+    values (properties) over-rides the default values present in      
+    ra.xml. The name attribute has to be unique . It is optional for  
+    PE. It is used mainly for EE.                                     
+
+  Used in:
+    resources                                                         
+-->
+<!ELEMENT resource-adapter-config (property*)>
+
+<!ATTLIST resource-adapter-config
+    name CDATA #IMPLIED
+    thread-pool-ids CDATA #IMPLIED
+    object-type %object-type; "user"
+    resource-adapter-name CDATA #REQUIRED>
+
+
+<!-- jdbc-connection-pool
+    jdbc-connection-pool defines configuration used to create and     
+    manage a pool physical database connections. Pool definition is   
+    named, and can be referred to by multiple jdbc-resource elements  
+    (See <jdbc-resource>).                                            
+
+    Each named pool definition results in a pool instantiated at server        
+    start-up. Pool is populated when accessed for the first time. If two or    
+    more jdbc-resource elements point to the same jdbc-connection-pool         
+    element, they are using the same pool of connections, at run time.         
+
+
+  children
+    property                                                                   
+        Most JDBC 2.0 drivers permit use of standard property lists,  
+        to specify User, Password and other resource configuration.   
+        While these are optional properties, according to the         
+        specification, several of these properties may be necessary   
+        for most databases. See Section 5.3 of JDBC 2.0 Standard      
+        Extension API.                                                
+
+        The following are the names and corresponding values for these         
+        properties                                                             
+
+        databaseName                                                           
+            Name of the Database                                      
+        serverName                                                             
+            Database Server name.                                     
+        port                                                                   
+            Port where a Database server is listening for requests.   
+        networkProtocol                                                        
+            Communication Protocol used.                              
+        user                                                                   
+            default name of the database user with which connections  
+            will be stablished. Programmatic database authentication  
+            or default-resource-principal specified in vendor         
+            specific web and ejb deployment descriptors will take     
+            precedence, over this default. The details and caveats    
+            are described in detail in the Administrator's guide.     
+        password                                                               
+            password for default database user                        
+        roleName                                                               
+            The initial SQL role name.                                
+        datasourceName                                                         
+            used to name an underlying XADataSource, or               
+            ConnectionPoolDataSource when pooling of connections is   
+            done                                                      
+        description                                                            
+            Textual Description                                       
+
+        When one or more of these properties are specified, they are passed as 
+        is using set<Name>(<Value>) methods to the vendors Datasource class    
+        (specified in datasource-classname). User and Password properties are  
+        used as default principal, if Container Managed authentication is      
+        specified and a default-resource-principal is not found in application 
+        deployment descriptors.                                                
+
+
+  attributes
+    allow-non-component-callers                                                
+        A pool with this property set to true, can be used by         
+        non-J2EE components (i.e components other than EJBs or        
+        Servlets). The returned connection is enlisted automatically  
+        with the transaction context obtained from the transaction    
+        manager. This property is to enable the pool to be used by    
+        non-component callers such as ServletFilters, Lifecycle       
+        modules, and 3rd party persistence managers. Standard J2EE    
+        components can continue to use such pools. Connections        
+        obtained by non-component callers are not automatically       
+        cleaned at the end of a transaction by the container. They    
+        need to be explicitly closed by the the caller.               
+    connection-validation-method                                               
+        specifies the type of validation to be performed when         
+        is-connection-validation-required is true. The following      
+        types of validation are supported:                            
+        auto-commit                                                            
+            using connection.autoCommit()                             
+        meta-data                                                              
+            using connection.getMetaData()                            
+        table                                                                  
+            performing a query on a user specified table (see         
+            validation-table-name).                                   
+    datasource-classname                                                       
+        Name of the vendor supplied JDBC datasource resource manager. 
+        An XA or global transactions capable datasource class will    
+        implement javax.sql.XADatasource interface. Non XA or Local   
+        transactions only datasources will implement                  
+        javax.sql.Datasource interface.                               
+    fail-all-connections                                                       
+        indicates if all connections in the pool must be closed       
+        should a single validation check fail. The default is false.  
+        One attempt will be made to re-establish failed connections.  
+    idle-timeout-in-seconds                                                    
+        maximum time in seconds, that a connection can remain idle in 
+        the pool. After this time, the pool implementation can close  
+        this connection. Note that this does not control connection   
+        timeouts enforced at the database server side. Adminsitrators 
+        are advised to keep this timeout shorter than the database    
+        server side timeout (if such timeouts are configured on the   
+        specific vendor's database), to prevent accumulation of       
+        unusable connection in Application Server.                    
+    is-connection-validation-required                                          
+        if true, connections are validated (checked to find out if    
+        they are usable) before giving out to the application. The    
+        default is false.                                             
+    is-isolation-level-guaranteed                                              
+        Applicable only when a particular isolation level is          
+        specified for transaction-isolation-level. The default value  
+        is true. This assures that every time a connection is         
+        obtained from the pool, it is guaranteed to have the          
+        isolation set to the desired value. This could have some      
+        performance impact on some JDBC drivers. Can be set to false  
+        by that administrator when they are certain that the          
+        application does not change the isolation level before        
+        returning the connection.                                     
+    max-pool-size                                                              
+        maximum number of conections that can be created              
+    max-wait-time-in-millis                                                    
+        amount of time the caller will wait before getting a          
+        connection timeout. The default is 60 seconds. A value of 0   
+        will force caller to wait indefinitely.                       
+    name                                                                       
+        unique name of the pool definition.                           
+    non-transactional-connections                                              
+        A pool with this property set to true returns                 
+        non-transactional connections. This connection does not get   
+        automatically enlisted with the transaction manager.          
+    pool-resize-quantity                                                       
+        number of connections to be removed when                      
+        idle-timeout-in-seconds timer expires. Connections that have  
+        idled for longer than the timeout are candidates for removal. 
+        When the pool size reaches steady-pool-size, the connection   
+        removal stops.                                                
+    res-type                                                                   
+        DataSource implementation class could implement one of of     
+        javax.sql.DataSource, javax.sql.XADataSource or               
+        javax.sql.ConnectionPoolDataSource interfaces. This optional  
+        attribute must be specified to disambiguate when a Datasource 
+        class implements two or more of these interfaces. An error is 
+        produced when this attribute has a legal value and the        
+        indicated interface is not implemented by the datasource      
+        class. This attribute has no default value.                   
+    steady-pool-size                                                           
+        minimum and initial number of connections maintained in the   
+        pool.                                                         
+    transaction-isolation-level                                                
+        Specifies the Transaction Isolation Level on the pooled       
+        database connections. Optional. Has no default. If left       
+        unspecified the pool operates with default isolation level    
+        provided by the JDBC Driver. A desired isolation level can be 
+        set using one of the standard transaction isolation levels,   
+        which see.                                                    
+
+        Applications that change the Isolation level on a pooled connection    
+        programmatically, risk polluting the pool and this could lead to       
+        program errors. Also see: is-isolation-level-guaranteed                
+
+    validation-table-name                                                      
+        specifies the table name to be used to perform a query to     
+        validate a connection. This parameter is mandatory, if        
+        connection-validation-type set to table. Verification by      
+        accessing a user specified table may become necessary for     
+        connection validation, particularly if database driver caches 
+        calls to setAutoCommit() and getMetaData().                   
+
+  Used in:
+    resources                                                         
+-->
+<!ELEMENT jdbc-connection-pool (description?, property*)>
+
+<!ATTLIST jdbc-connection-pool
+    name CDATA #REQUIRED
+    datasource-classname CDATA #REQUIRED
+    res-type (javax.sql.DataSource | javax.sql.XADataSource | javax.sql.ConnectionPoolDataSource) #IMPLIED
+    steady-pool-size CDATA "8"
+    max-pool-size CDATA "32"
+    max-wait-time-in-millis CDATA "60000"
+    pool-resize-quantity CDATA "2"
+    idle-timeout-in-seconds CDATA "300"
+    transaction-isolation-level %isolation; #IMPLIED
+    is-isolation-level-guaranteed %boolean; "true"
+    is-connection-validation-required %boolean; "false"
+    connection-validation-method (auto-commit | meta-data | table) "auto-commit"
+    validation-table-name CDATA #IMPLIED
+    fail-all-connections %boolean; "false"
+    non-transactional-connections %boolean; "false"
+    allow-non-component-callers %boolean; "false">
+
+
+<!-- connector-connection-pool
+    connector-connection-pool defines configuration used to create    
+    and manage a pool of connections to a EIS. Pool definition is     
+    named, and can be referred to by multiple connector-resource      
+    elements (See connector-resource).                                
+
+    Each named pool definition results in a pool instantiated at server        
+    start-up. Pool is populated when accessed for the first time. If two or    
+    more connector-resource elements point to the same                         
+    connector-connection-pool element, they are using the same pool of         
+    connections, at run time.                                                  
+
+    There can be more than one pool for one connection-definition in one       
+    resource-adapter.                                                          
+
+
+  children
+    property                                                                   
+        Properties are used to override the ManagedConnectionFactory  
+        javabean configuration settings.                              
+
+        When one or more of these properties are specified, they are passed as 
+        is using set<Name>(<Value>) methods to the Resource Adapter's          
+        ManagedConnectionfactory class (specified in ra.xml).                  
+
+
+  attributes
+    connection-definition-name                                                 
+        unique name, identifying one connection-definition in a       
+        Resource Adapter. Currently this is ConnectionFactory type.   
+    fail-all-connections                                                       
+        indicates if all connections in the pool must be closed       
+        should a single connection fail validation. The default is    
+        false. One attempt will be made to re-establish failed        
+        connections.                                                  
+    idle-timeout-in-seconds                                                    
+        maximum time in seconds, that a connection can remain idle in 
+        the pool. After this time, the pool implementation can close  
+        this connection. Note that this does not control connection   
+        timeouts enforced at the database server side. Adminsitrators 
+        are advised to keep this timeout shorter than the EIS         
+        connection timeout (if such timeouts are configured on the    
+        specific EIS), to prevent accumulation of unusable connection 
+        in Application Server.                                        
+    is-connection-validation-required                                          
+        This attribute specifies if the connection that is about to   
+        be returned is to be validated by the container,              
+    max-pool-size                                                              
+        maximum number of conections that can be created              
+    max-wait-time-in-millis                                                    
+        amount of time the caller will wait before getting a          
+        connection timeout. The default is 60 seconds. A value of 0   
+        will force caller to wait indefinitely.                       
+    name                                                                       
+        unique name of the pool definition.                           
+    pool-resize-quantity                                                       
+        number of connections to be removed when                      
+        idle-timeout-in-seconds timer expires. Connections that have  
+        idled for longer than the timeout are candidates for removal. 
+        When the pool size reaches steady-pool-size, the connection   
+        removal stops.                                                
+    resource-adapter-name                                                      
+        This is the name of resource adapter. Name of .rar file is    
+        taken as the unique name for the resource adapter.            
+    steady-pool-size                                                           
+        minimum and initial number of connections maintained in the   
+        pool.                                                         
+    transaction-support                                                        
+        Indicates the level of transaction support that this pool     
+        will have. Possible values are "XATransaction",               
+        "LocalTransaction" and "NoTransaction". This attribute will   
+        override that transaction support attribute in the Resource   
+        Adapter in a downward compatible way, i.e it can support a    
+        lower/equal transaction level than specified in the RA, but   
+        not a higher level.                                           
+
+  Used in:
+    resources                                                         
+-->
+<!ELEMENT connector-connection-pool (description?, security-map*, property*)>
+
+<!ATTLIST connector-connection-pool
+    name CDATA #REQUIRED
+    resource-adapter-name CDATA #REQUIRED
+    connection-definition-name CDATA #REQUIRED
+    steady-pool-size CDATA "8"
+    max-pool-size CDATA "32"
+    max-wait-time-in-millis CDATA "60000"
+    pool-resize-quantity CDATA "2"
+    idle-timeout-in-seconds CDATA "300"
+    fail-all-connections %boolean; "false"
+    transaction-support (XATransaction | LocalTransaction | NoTransaction) #IMPLIED
+    is-connection-validation-required %boolean; "false">
+
+
+<!-- property
+    Syntax for supplying properties as name value pairs               
+
+  Used in:
+    admin-object-resource, connector-connection-pool,                 
+    connector-resource, custom-resource, external-jndi-resource,      
+    jdbc-connection-pool, jdbc-resource, mail-resource,               
+    persistence-manager-factory-resource, resource-adapter-config     
+-->
+<!ELEMENT property (description?)>
+
+<!ATTLIST property
+    name CDATA #REQUIRED
+    value CDATA #REQUIRED>
+
+
+<!-- security-map
+    Perform mapping from principal received during Servlet/EJB        
+    authentication, to credentials accepted by the EIS. This mapping  
+    is optional.It is possible to map multiple (server) principal to  
+    the same backend principal.                                       
+
+  Used in:
+    connector-connection-pool                                         
+-->
+<!ELEMENT security-map ((principal | user-group)+, backend-principal)>
+
+<!ATTLIST security-map
+    name CDATA #REQUIRED>
+
+
+<!-- principal
+    Principal of the Servlet and EJB client                           
+
+  Used in:
+    security-map                                                      
+-->
+<!ELEMENT principal (#PCDATA)>
+
+
+<!-- user-group
+
+  Used in:
+    security-map                                                      
+-->
+<!ELEMENT user-group (#PCDATA)>
+
+
+<!-- backend-principal
+
+  Used in:
+    security-map                                                      
+-->
+<!ELEMENT backend-principal EMPTY>
+
+<!ATTLIST backend-principal
+    user-name CDATA #REQUIRED
+    password CDATA #IMPLIED>
+

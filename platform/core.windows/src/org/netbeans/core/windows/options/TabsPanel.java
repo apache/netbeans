@@ -31,14 +31,21 @@ import org.openide.util.NbPreferences;
 public class TabsPanel extends javax.swing.JPanel {
 
     protected final TabsOptionsPanelController controller;
-    
+
     private final Preferences prefs = NbPreferences.forModule(TabsPanel.class);
-    
+
     private final boolean isAquaLaF = "Aqua".equals(UIManager.getLookAndFeel().getID()); //NOI18N
 
     private boolean defMultiRow;
     private int defTabPlacement;
-    
+
+    public enum SortType {
+        None,
+        FileName,
+        FileNameWithParent,
+        FullFilePath,
+    }
+
     protected TabsPanel(final TabsOptionsPanelController controller) {
         this.controller = controller;
         initComponents();
@@ -55,9 +62,15 @@ public class TabsPanel extends javax.swing.JPanel {
         java.awt.GridBagConstraints gridBagConstraints;
 
         buttonGroup1 = new javax.swing.ButtonGroup();
+        sortButtonGroup = new javax.swing.ButtonGroup();
         panelDocTabs = new javax.swing.JPanel();
         isCloseActivatesMostRecentDocument = new javax.swing.JCheckBox();
         isNewDocumentOpensNextToActiveTab = new javax.swing.JCheckBox();
+        sortTabsLabel = new javax.swing.JLabel();
+        radioSortNothing = new javax.swing.JRadioButton();
+        radioSortFileName = new javax.swing.JRadioButton();
+        radioSortFileNameWithParent = new javax.swing.JRadioButton();
+        radioSortFullFilePath = new javax.swing.JRadioButton();
         panelTabs = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         radioTop = new javax.swing.JRadioButton();
@@ -84,8 +97,6 @@ public class TabsPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 6, 0);
         panelDocTabs.add(isCloseActivatesMostRecentDocument, gridBagConstraints);
         isCloseActivatesMostRecentDocument.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(TabsPanel.class, "TabsPanel.isCloseActivatesMostRecentDocument.AccessibleContext.accessibleDescription")); // NOI18N
 
@@ -101,6 +112,70 @@ public class TabsPanel extends javax.swing.JPanel {
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         panelDocTabs.add(isNewDocumentOpensNextToActiveTab, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(sortTabsLabel, org.openide.util.NbBundle.getMessage(TabsPanel.class, "TabsPanel.sortTabsLabel.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(6, 0, 0, 0);
+        panelDocTabs.add(sortTabsLabel, gridBagConstraints);
+
+        sortButtonGroup.add(radioSortNothing);
+        radioSortNothing.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(radioSortNothing, org.openide.util.NbBundle.getMessage(TabsPanel.class, "TabsPanel.radioSortNothing.text")); // NOI18N
+        radioSortNothing.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioSortNothingActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        panelDocTabs.add(radioSortNothing, gridBagConstraints);
+
+        sortButtonGroup.add(radioSortFileName);
+        org.openide.awt.Mnemonics.setLocalizedText(radioSortFileName, org.openide.util.NbBundle.getMessage(TabsPanel.class, "TabsPanel.radioSortFileName.text")); // NOI18N
+        radioSortFileName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioSortFileNameActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
+        panelDocTabs.add(radioSortFileName, gridBagConstraints);
+
+        sortButtonGroup.add(radioSortFileNameWithParent);
+        org.openide.awt.Mnemonics.setLocalizedText(radioSortFileNameWithParent, org.openide.util.NbBundle.getMessage(TabsPanel.class, "TabsPanel.radioSortFileNameWithParent.text")); // NOI18N
+        radioSortFileNameWithParent.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioSortFileNameWithParentActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        panelDocTabs.add(radioSortFileNameWithParent, gridBagConstraints);
+
+        sortButtonGroup.add(radioSortFullFilePath);
+        org.openide.awt.Mnemonics.setLocalizedText(radioSortFullFilePath, org.openide.util.NbBundle.getMessage(TabsPanel.class, "TabsPanel.radioSortFullFilePath.text")); // NOI18N
+        radioSortFullFilePath.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioSortFullFilePathActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 6, 0);
+        panelDocTabs.add(radioSortFullFilePath, gridBagConstraints);
 
         panelTabs.setLayout(new java.awt.GridBagLayout());
 
@@ -159,7 +234,7 @@ public class TabsPanel extends javax.swing.JPanel {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         panelDocTabs.add(panelTabs, gridBagConstraints);
@@ -186,18 +261,50 @@ public class TabsPanel extends javax.swing.JPanel {
         fireChanged();
     }//GEN-LAST:event_isCloseActivatesMostRecentDocumentActionPerformed
 
+    private void radioSortNothingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioSortNothingActionPerformed
+        fireChanged();
+    }//GEN-LAST:event_radioSortNothingActionPerformed
+
+    private void radioSortFileNameWithParentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioSortFileNameWithParentActionPerformed
+        fireChanged();
+    }//GEN-LAST:event_radioSortFileNameWithParentActionPerformed
+
+    private void radioSortFullFilePathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioSortFullFilePathActionPerformed
+        fireChanged();
+    }//GEN-LAST:event_radioSortFullFilePathActionPerformed
+
+    private void radioSortFileNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioSortFileNameActionPerformed
+        fireChanged();
+    }//GEN-LAST:event_radioSortFileNameActionPerformed
+
     private void fireChanged() {
         boolean isChanged = false;
         if(isCloseActivatesMostRecentDocument.isSelected() != prefs.getBoolean(WinSysPrefs.EDITOR_CLOSE_ACTIVATES_RECENT, true)
-                || isNewDocumentOpensNextToActiveTab.isSelected() != prefs.getBoolean(WinSysPrefs.OPEN_DOCUMENTS_NEXT_TO_ACTIVE_TAB, false)) {
+                || isNewDocumentOpensNextToActiveTab.isSelected() != prefs.getBoolean(WinSysPrefs.OPEN_DOCUMENTS_NEXT_TO_ACTIVE_TAB, false)
+                || getSelectedSortType() != SortType.valueOf(prefs.get(WinSysPrefs.SORT_TABS, SortType.None.name()))) {
             isChanged = true;
         }
         controller.changed(isChanged, null);
     }
-    
+
     protected void load() {
         isCloseActivatesMostRecentDocument.setSelected(prefs.getBoolean(WinSysPrefs.EDITOR_CLOSE_ACTIVATES_RECENT, true));
         isNewDocumentOpensNextToActiveTab.setSelected(prefs.getBoolean(WinSysPrefs.OPEN_DOCUMENTS_NEXT_TO_ACTIVE_TAB, false));
+        SortType sortType = SortType.valueOf(prefs.get(WinSysPrefs.SORT_TABS, SortType.None.name()));
+        switch (sortType) {
+            case FullFilePath:
+                radioSortFullFilePath.setSelected(true);
+                break;
+            case FileName:
+                radioSortFileName.setSelected(true);
+                break;
+            case FileNameWithParent:
+                radioSortFileNameWithParent.setSelected(true);
+                break;
+            default:
+                radioSortNothing.setSelected(true);
+                break;
+        }
 
         defMultiRow = prefs.getBoolean( WinSysPrefs.DOCUMENT_TABS_MULTIROW, false );
         checkMultiRow.setSelected( defMultiRow );
@@ -215,7 +322,7 @@ public class TabsPanel extends javax.swing.JPanel {
             default:
                 radioTop.setSelected( true );
         }
-        
+
         if( isAquaLaF ) {
             checkMultiRow.setSelected(false);
             checkMultiRow.setEnabled(false);
@@ -230,7 +337,8 @@ public class TabsPanel extends javax.swing.JPanel {
     protected boolean store() {
         prefs.putBoolean(WinSysPrefs.EDITOR_CLOSE_ACTIVATES_RECENT, isCloseActivatesMostRecentDocument.isSelected());
         prefs.putBoolean(WinSysPrefs.OPEN_DOCUMENTS_NEXT_TO_ACTIVE_TAB, isNewDocumentOpensNextToActiveTab.isSelected());
-        
+        prefs.put(WinSysPrefs.SORT_TABS, getSelectedSortType().name());
+
         boolean needsWinsysRefresh = false;
         needsWinsysRefresh = checkMultiRow.isSelected() != defMultiRow;
         prefs.putBoolean(WinSysPrefs.DOCUMENT_TABS_MULTIROW, checkMultiRow.isSelected());
@@ -248,6 +356,18 @@ public class TabsPanel extends javax.swing.JPanel {
         return needsWinsysRefresh;
     }
 
+    private SortType getSelectedSortType() {
+        SortType sortType = SortType.None;
+        if (radioSortFullFilePath.isSelected()) {
+            sortType = SortType.FullFilePath;
+        } else if (radioSortFileName.isSelected()) {
+            sortType = SortType.FileName;
+        } else if (radioSortFileNameWithParent.isSelected()) {
+            sortType = SortType.FileNameWithParent;
+        }
+        return sortType;
+    }
+
     boolean valid() {
         // TODO check whether form is consistent and complete
         return true;
@@ -256,7 +376,7 @@ public class TabsPanel extends javax.swing.JPanel {
     protected void initTabsPanel( JPanel panel ) {
 
     }
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
@@ -270,7 +390,13 @@ public class TabsPanel extends javax.swing.JPanel {
     private javax.swing.JRadioButton radioBottom;
     private javax.swing.JRadioButton radioLeft;
     private javax.swing.JRadioButton radioRight;
+    private javax.swing.JRadioButton radioSortFileName;
+    private javax.swing.JRadioButton radioSortFileNameWithParent;
+    private javax.swing.JRadioButton radioSortFullFilePath;
+    private javax.swing.JRadioButton radioSortNothing;
     private javax.swing.JRadioButton radioTop;
+    private javax.swing.ButtonGroup sortButtonGroup;
+    private javax.swing.JLabel sortTabsLabel;
     // End of variables declaration//GEN-END:variables
 
 }

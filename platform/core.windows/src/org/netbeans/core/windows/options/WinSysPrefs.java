@@ -82,5 +82,9 @@ public interface WinSysPrefs {
      * @since 2.54
      */
     public static String MAXIMIZE_NATIVE_LAF = "laf.maximize.native"; //NOI18N
-    
+
+    /**
+     * @since 2.87
+     */
+    public static String SORT_TABS = "sort.tabs"; //NOI18N
 }

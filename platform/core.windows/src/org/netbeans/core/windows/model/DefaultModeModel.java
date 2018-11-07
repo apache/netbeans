@@ -37,6 +37,10 @@ import org.netbeans.core.windows.ModeImpl;
 import org.netbeans.core.windows.SplitConstraint;
 import org.netbeans.core.windows.Switches;
 import org.netbeans.core.windows.WindowManagerImpl;
+import org.netbeans.core.windows.options.TabsPanel.SortType;
+import org.netbeans.core.windows.options.WinSysPrefs;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.windows.TopComponent;
 
 
@@ -140,47 +144,118 @@ final class DefaultModeModel implements ModeModel {
             sortOpenedTopComponents();
         }
     }
-    
+
     private void sortOpenedTopComponents() {
-        if( getKind() != Constants.MODE_KIND_SLIDING )
-            return;
-        if( !Switches.isModeSlidingEnabled() )
-            return;
-        WindowManagerImpl wm = WindowManagerImpl.getInstance();
-        List<TopComponent> opened = topComponentSubModel.getOpenedTopComponents();
-        final List<String> prevModes = new ArrayList<String>( opened.size() );
-        final Map<TopComponent, String> tc2modeName = new HashMap<TopComponent, String>( opened.size() );
-        for( TopComponent tc : opened ) {
-            String tcId = wm.findTopComponentID( tc );
-            if( null == tcId )
-                continue;
-            ModeImpl prevMode = getTopComponentPreviousMode( tcId );
-            if( null == prevMode )
-                continue;
-            if( !prevModes.contains( prevMode.getName() ) )
-                prevModes.add( prevMode.getName() );
-            tc2modeName.put( tc, prevMode.getName() );
-        }
-        
-        if( prevModes.isEmpty() )
-            return; //nothing to sort by (shouldn't really happen)
-        
-        Collections.sort( opened, new Comparator<TopComponent>() {
-            @Override
-            public int compare( TopComponent o1, TopComponent o2 ) {
-                String mode1 = tc2modeName.get( o1 );
-                String mode2 = tc2modeName.get( o2 );
-                if( null == mode1 && null != mode2 ) {
-                    return 1;
-                } else if( null != mode1 && null == mode2 ) {
-                    return -1;
+        if (getKind() == Constants.MODE_KIND_EDITOR) {
+            sortByFile(getSortType());
+        } else if( getKind() == Constants.MODE_KIND_SLIDING && Switches.isModeSlidingEnabled()) {
+            WindowManagerImpl wm = WindowManagerImpl.getInstance();
+            List<TopComponent> opened = topComponentSubModel.getOpenedTopComponents();
+            final List<String> prevModes = new ArrayList<>(opened.size());
+            final Map<TopComponent, String> tc2modeName = new HashMap<>(opened.size());
+            for (TopComponent tc : opened) {
+                String tcId = wm.findTopComponentID(tc);
+                if (null == tcId) {
+                    continue;
                 }
-                return prevModes.indexOf( mode1 ) - prevModes.indexOf( mode2 );
+                ModeImpl prevMode = getTopComponentPreviousMode(tcId);
+                if (null == prevMode) {
+                    continue;
+                }
+                if (!prevModes.contains(prevMode.getName())) {
+                    prevModes.add(prevMode.getName());
+                }
+                tc2modeName.put(tc, prevMode.getName());
+            }
+
+            if (prevModes.isEmpty()) {
+                return; //nothing to sort by (shouldn't really happen)
+            }
+            Collections.sort(opened, new Comparator<TopComponent>() {
+                @Override
+                public int compare(TopComponent o1, TopComponent o2) {
+                    String mode1 = tc2modeName.get(o1);
+                    String mode2 = tc2modeName.get(o2);
+                    if (null == mode1 && null != mode2) {
+                        return 1;
+                    } else if (null != mode1 && null == mode2) {
+                        return -1;
+                    }
+                    return prevModes.indexOf(mode1) - prevModes.indexOf(mode2);
+                }
+            });
+            topComponentSubModel.setOpenedTopComponents(opened);
+        }
+    }
+
+    private SortType getSortType() {
+        SortType sortType = SortType.None;
+        try {
+            sortType = SortType.valueOf(WinSysPrefs.HANDLER.get(WinSysPrefs.SORT_TABS, SortType.None.name()));
+        } catch (IllegalArgumentException ex) {
+            // no-op
+        }
+        return sortType;
+    }
+
+    private void sortByFile(final SortType sortType) {
+        if (sortType == SortType.None) {
+            return;
+        }
+        List<TopComponent> openedComponents = topComponentSubModel.getOpenedTopComponents();
+        Collections.sort(openedComponents, new Comparator<TopComponent>() {
+            @Override
+            public int compare(TopComponent tc1, TopComponent tc2) {
+                FileObject f1 = tc1.getLookup().lookup(FileObject.class);
+                FileObject f2 = tc2.getLookup().lookup(FileObject.class);
+                if (f1 == null && f2 == null) {
+                    return 0;
+                } else if (f1 != null && f2 == null) {
+                    return 1;
+                } else if (f1 == null && f2 != null) {
+                    return -1;
+                } else {
+                    switch (sortType) {
+                        case FullFilePath:
+                            return compareFullFilePath(f1, f2);
+                        case FileName:
+                            return compareFileName(f1, f2);
+                        case FileNameWithParent:
+                            return compareFileNameWithParent(f1, f2);
+                        default:
+                            throw new AssertionError();
+                    }
+                }
             }
         });
-        topComponentSubModel.setOpenedTopComponents( opened );
+        topComponentSubModel.setOpenedTopComponents(openedComponents);
     }
-    
+
+    private int compareFullFilePath(FileObject f1, FileObject f2) {
+        return FileUtil.toFile(f1).compareTo(FileUtil.toFile(f2));
+    }
+
+    private int compareFileName(FileObject f1, FileObject f2) {
+        return f1.getName().compareToIgnoreCase(f2.getName());
+    }
+
+    private int compareFileNameWithParent(FileObject f1, FileObject f2) {
+        FileObject p1 = f1.getParent();
+        FileObject p2 = f2.getParent();
+        if (p1 == null && p2 == null) {
+            return 0;
+        } else if (p1 != null && p2 == null) {
+            return 1;
+        } else if (p1 == null && p2 != null) {
+            return -1;
+        } else {
+            if (p1.getName().equals(p2.getName())) {
+                return f1.getName().compareToIgnoreCase(f2.getName());
+            }
+            return p1.getName().compareToIgnoreCase(p2.getName());
+        }
+    }
+
     @Override
     public void addClosedTopComponent(TopComponent tc) {
         synchronized(LOCK_TOPCOMPONENTS) {

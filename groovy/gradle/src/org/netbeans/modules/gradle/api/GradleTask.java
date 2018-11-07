@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
  */
 public final class GradleTask implements Serializable {
 
-    private static final Pattern CAMLE_CASE_SPLITTER = Pattern.compile("[A-Z][0-9a-z]*");
+    private static final Pattern CAMLE_CASE_SPLITTER = Pattern.compile("(?<!^)(?=[A-Z0-9])");
 
     final String path;
     final String group;
@@ -61,7 +61,7 @@ public final class GradleTask implements Serializable {
     }
 
     public String getDescription() {
-        return description;
+        return description != null ? description : "";
     }
 
     public boolean isPrivate() {
@@ -79,10 +79,14 @@ public final class GradleTask implements Serializable {
         if (abbrev.length() > name.length()) {
             return false;
         }
-        Matcher abbrevMatcher = CAMLE_CASE_SPLITTER.matcher(abbrev);
-        Matcher nameMatcher = CAMLE_CASE_SPLITTER.matcher(name);
-        while (abbrevMatcher.find()) {
-            if (!nameMatcher.find() || !nameMatcher.group().startsWith(abbrevMatcher.group())) {
+        String[] abbrevParts = CAMLE_CASE_SPLITTER.split(abbrev);
+        String[] nameParts = CAMLE_CASE_SPLITTER.split(name);
+        if (abbrevParts.length > nameParts.length) {
+            return false;
+        }
+        for (int i = 0; i < abbrevParts.length; i++) {
+            String part = abbrevParts[i];
+            if (!nameParts[i].startsWith(part)) {
                 return false;
             }
         }

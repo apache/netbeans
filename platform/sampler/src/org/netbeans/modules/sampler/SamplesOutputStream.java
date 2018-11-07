@@ -24,8 +24,6 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.lang.management.ThreadInfo;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -35,7 +33,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.zip.GZIPOutputStream;
-import javax.management.openmbean.CompositeData;
+
+import javax.management.StandardMBean;
+
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -43,33 +44,12 @@ import javax.management.openmbean.CompositeData;
  */
 class SamplesOutputStream {
 
-    private static final String[][] methods = new String[][]{
-        {"sun.management.ThreadInfoCompositeData", "toCompositeData"}, // NOI18N Sun JVM
-        {"com.ibm.lang.management.ManagementUtils", "toThreadInfoCompositeData"} // NOI18N IBM J9
-    };
     static final String ID = "NPSS"; // NetBeans Profiler samples stream
     public static final String FILE_EXT = ".npss"; // NOI18N
     static final int RESET_THRESHOLD = 5000;
     static final int STEPS = 1000;
     static byte version = 2;
-    private static Method toCompositeDataMethod;
 
-    static {
-        for (String[] method : methods) {
-            String className = method[0];
-            String methodName = method[1];
-            try {
-                Class clazz = Class.forName(className);
-                toCompositeDataMethod = clazz.getMethod(methodName, ThreadInfo.class);
-                if (toCompositeDataMethod != null) {
-                    break;
-                }
-            } catch (ClassNotFoundException ex) {
-            } catch (NoSuchMethodException ex) {
-            } catch (SecurityException ex) {
-            }
-        }
-    }
     OutputStream outStream;
     Map<Long, ThreadInfo> lastThreadInfos;
     Map<StackTraceElement, WeakReference<StackTraceElement>> steCache;
@@ -79,7 +59,7 @@ class SamplesOutputStream {
     int offset;
 
     public static boolean isSupported() {
-        return toCompositeDataMethod != null;
+        return true;
     }
 
     SamplesOutputStream(OutputStream os, Sampler progress, int max) throws IOException {
@@ -170,18 +150,6 @@ class SamplesOutputStream {
                 newThreads.add(ti);
                 sameThreads.remove(tid);
             }
-        }
-    }
-
-    private static CompositeData toCompositeData(ThreadInfo tinfo) {
-        try {
-            return (CompositeData) toCompositeDataMethod.invoke(null, tinfo);
-        } catch (IllegalAccessException ex) {
-            throw new RuntimeException(ex);
-        } catch (IllegalArgumentException ex) {
-            throw new RuntimeException(ex);
-        } catch (InvocationTargetException ex) {
-            throw new RuntimeException(ex);
         }
     }
 
@@ -281,9 +249,26 @@ class SamplesOutputStream {
                 out.writeLong(tid.longValue());
             }
             out.writeInt(newThreads.size());
-            for (ThreadInfo tic : newThreads) {
-                out.writeObject(toCompositeData(tic));
+            CompositeDataGetter getter = new CompositeDataGetter() {
+                @Override
+                public ThreadInfo[] getThreads() {
+                    return newThreads.toArray(new ThreadInfo[0]);
+                }
+            };
+            try {
+                StandardMBean getterBean = new StandardMBean(getter,
+                                                             CompositeDataGetter.class,
+                                                             true);
+                for (Object t : (Object[]) getterBean.getAttribute("Threads")) {
+                    out.writeObject(t);
+                }
+            } catch (Exception ex) {
+                Exceptions.printStackTrace(ex);
             }
+        }
+
+        public interface CompositeDataGetter {
+            public ThreadInfo[] getThreads();
         }
     }
 }

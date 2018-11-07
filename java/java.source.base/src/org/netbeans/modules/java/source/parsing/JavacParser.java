@@ -59,6 +59,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import javax.annotation.processing.Processor;
 import javax.swing.event.ChangeEvent;
@@ -871,6 +872,11 @@ public class JavacParser extends Parser {
             options.add("--add-modules");       //NOI18N
             options.add(additionalModules.stream().collect(Collectors.joining(",")));   //NOI18N
         }
+
+        //filter out classfiles:
+        files = StreamSupport.stream(files.spliterator(), false)
+                             .filter(file -> file.getKind() == Kind.SOURCE)
+                             .collect(Collectors.toList());
 
         Context context = new Context();
         //need to preregister the Messages here, because the getTask below requires Log instance:

@@ -220,7 +220,9 @@ public class GradleJavaSourceSet implements Serializable {
 
     public boolean outputContains(File f) {
         List<File> checkList = new LinkedList<>(getOutputClassDirs());
-        checkList.add(outputResources);
+        if (outputResources != null) {
+            checkList.add(outputResources);
+        }
         for (File check : checkList) {
             if (parentOrSame(f, check)) {
                 return true;
@@ -233,6 +235,11 @@ public class GradleJavaSourceSet implements Serializable {
         return outputClassDirs != null ? outputClassDirs : Collections.<File>emptySet();
     }
 
+    /**
+     * Return the directory of resources output.
+     * 
+     * @return return the directory of output resources, it might be <code>null</code>.
+     */
     public File getOutputResources() {
         return outputResources;
     }
@@ -294,7 +301,9 @@ public class GradleJavaSourceSet implements Serializable {
         List<File> roots = new ArrayList<>();
         if (includeOutputs) {
             roots.addAll(outputClassDirs);
-            roots.add(outputResources);
+            if (outputResources != null) {
+                roots.add(outputResources);
+            }
         }
         SourceType[] checkedRoots = types.length > 0 ? types : SourceType.values();
         for (SourceType checkedRoot : checkedRoots) {
@@ -318,7 +327,9 @@ public class GradleJavaSourceSet implements Serializable {
         for (File dir : getOutputClassDirs()) {
             roots.add(dir.toPath());
         }
-        roots.add(outputResources.toPath());
+        if (outputResources != null) {
+            roots.add(outputResources.toPath());
+        }
         Path path = f.toPath();
         for (Path root : roots) {
             if (path.startsWith(root)) {

@@ -394,7 +394,6 @@ public class FindUsagesVisitor extends ErrorAwareTreePathScanner<Tree, Element> 
         ClassTree classTree = ((NewClassTree) node).getClassBody();
         if (classTree != null && p.getKind() == ElementKind.CONSTRUCTOR) {
             Element anonClass = workingCopy.getTrees().getElement(TreePath.getPath(workingCopy.getCompilationUnit(), classTree));
-
             if (anonClass == null) {
                 Logger.getLogger("org.netbeans.modules.refactoring.java").log(Level.SEVERE, "FindUsages cannot resolve {0}", classTree); // NOI18N
             } else {

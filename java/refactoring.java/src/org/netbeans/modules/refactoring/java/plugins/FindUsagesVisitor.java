@@ -394,15 +394,20 @@ public class FindUsagesVisitor extends ErrorAwareTreePathScanner<Tree, Element> 
         ClassTree classTree = ((NewClassTree) node).getClassBody();
         if (classTree != null && p.getKind() == ElementKind.CONSTRUCTOR) {
             Element anonClass = workingCopy.getTrees().getElement(TreePath.getPath(workingCopy.getCompilationUnit(), classTree));
+
             if (anonClass == null) {
                 Logger.getLogger("org.netbeans.modules.refactoring.java").log(Level.SEVERE, "FindUsages cannot resolve {0}", classTree); // NOI18N
             } else {
                 for (ExecutableElement c : ElementFilter.constructorsIn(anonClass.getEnclosedElements())) {
                     MethodTree t = workingCopy.getTrees().getTree(c);
-                    TreePath superCall = trees.getPath(workingCopy.getCompilationUnit(), ((ExpressionStatementTree) t.getBody().getStatements().get(0)).getExpression());
-                    Element superCallElement = trees.getElement(superCall);
-                    if (superCallElement != null && superCallElement.equals(p) && !workingCopy.getTreeUtilities().isSynthetic(superCall)) {
-                        addUsage(superCall);
+                    if (t == null) {
+                        Logger.getLogger("org.netbeans.modules.refactoring.java").log(Level.SEVERE, "FindUsages cannot resolve {0} {1}", new Object[] {classTree, c}); // NOI18N
+                    } else {
+                        TreePath superCall = trees.getPath(workingCopy.getCompilationUnit(), ((ExpressionStatementTree) t.getBody().getStatements().get(0)).getExpression());
+                        Element superCallElement = trees.getElement(superCall);
+                        if (superCallElement != null && superCallElement.equals(p) && !workingCopy.getTreeUtilities().isSynthetic(superCall)) {
+                            addUsage(superCall);
+                        }
                     }
                 }
             }

@@ -71,8 +71,8 @@ public class GradleJavaSourceSet implements Serializable {
     String name;
     String runtimeConfigurationName;
     String compileConfigurationName;
-    String sourcesCompatibility;
-    String targetCompatibility;
+    String sourcesCompatibility = "1.5"; //NOI18N
+    String targetCompatibility = sourcesCompatibility;
     boolean testSourceSet;
     Set<File> outputClassDirs;
     File outputResources;

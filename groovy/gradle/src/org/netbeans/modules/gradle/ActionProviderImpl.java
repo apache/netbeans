@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.gradle;
 
 import org.netbeans.modules.gradle.api.NbGradleProject;
@@ -46,7 +45,6 @@ import org.openide.util.TaskListener;
 
 import static org.netbeans.modules.gradle.Bundle.*;
 import org.netbeans.modules.gradle.actions.KeyValueTableModel;
-import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.execute.ActionMapping;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import org.netbeans.modules.gradle.api.execute.ProjectActionMappingProvider;
@@ -76,8 +74,10 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.modules.gradle.api.GradleFiles;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.awt.DynamicMenuContent;
 import org.openide.execution.ExecutorTask;
@@ -133,6 +133,7 @@ public class ActionProviderImpl implements ActionProvider {
     public boolean isActionEnabled(String command, Lookup context) throws IllegalArgumentException {
         return ActionToTaskUtils.isActionEnabled(command, project, context);
     }
+
     @NbBundle.Messages({
         "# {0} - artifactId", "TXT_Run=Run ({0})",
         "# {0} - artifactId", "TXT_Debug=Debug ({0})",
@@ -187,7 +188,9 @@ public class ActionProviderImpl implements ActionProvider {
     private static void invokeProjectAction(final Project project, final ActionMapping mapping, Lookup context, boolean showUI) {
         final String action = mapping.getName();
         String argLine = askInputArgs(mapping.getDisplayName(), mapping.getArgs());
-        if (argLine == null) return;
+        if (argLine == null) {
+            return;
+        }
 
         final StringWriter writer = new StringWriter();
 
@@ -239,7 +242,7 @@ public class ActionProviderImpl implements ActionProvider {
             }
         } else {
             final ExecutorTask task = RunUtils.executeGradle(cfg, writer.toString());
-            final Lookup outerCtx  = ctx;
+            final Lookup outerCtx = ctx;
             task.addTaskListener(new TaskListener() {
 
                 @Override
@@ -303,7 +306,7 @@ public class ActionProviderImpl implements ActionProvider {
     }
 
     // Copied from the Maven Plugin with minimal changes applied.
-        private static abstract class ConditionallyShownAction extends AbstractAction implements ContextAwareAction {
+    private static abstract class ConditionallyShownAction extends AbstractAction implements ContextAwareAction {
 
         protected boolean triggeredOnFile = false;
         protected boolean triggeredOnGradle = false;
@@ -321,29 +324,42 @@ public class ActionProviderImpl implements ActionProvider {
 
         protected abstract Action forProject(@NonNull Project p, @NullAllowed FileObject file);
 
-        public final @Override
-        Action createContextAwareInstance(Lookup actionContext) {
+        @Override
+        public final Action createContextAwareInstance(Lookup actionContext) {
             triggeredOnFile = false;
             triggeredOnGradle = false;
             Collection<? extends Project> projects = actionContext.lookupAll(Project.class);
             if (projects.size() != 1) {
                 Collection<? extends FileObject> fobs = actionContext.lookupAll(FileObject.class);
                 if (fobs.size() == 1) {
-                    if ("build.gradle".equals(fobs.iterator().next().getNameExt())) {  //NOI18N
-                        Project p = FileOwnerQuery.getOwner(fobs.iterator().next());
+                    FileObject fo = fobs.iterator().next();
+                    if (GradleFiles.BUILD_FILE_NAME.equals(fo.getNameExt())) {
+                        Project p = null;
+                        FileObject parent = fo.getParent();
+                        for (Project prj : projects) {
+                            if(prj.getProjectDirectory().equals(parent)) {
+                                p = prj;
+                                break;
+                            }
+                        }
+                        if(p == null) {
+                            p = FileOwnerQuery.getOwner(fo);
+                        }
                         if (p != null) {
-                            triggeredOnFile = true;
-                            triggeredOnGradle = true;
-                            Action a = forProject(p, null);
-                            return a != null ? a : this;
+                             triggeredOnFile = true;
+                             triggeredOnGradle = true;
+                             Action a = forProject(p, null);
+                             return a != null ? a : this;
                         }
                     } else {
-                        FileObject fob = fobs.iterator().next();
-                        Project p = FileOwnerQuery.getOwner(fob);
+                        Project p = findOwner(projects, fo);
+                        if(p == null) {
+                            p = FileOwnerQuery.getOwner(fo);                            
+                        }                        
                         if (p != null) {
-                            triggeredOnFile = true;
-                            Action a = forProject(p, fob);
-                            return a != null ? a : this;
+                             triggeredOnFile = true;
+                             Action a = forProject(p, fo);
+                             return a != null ? a : this;
                         }
                     }
                 }
@@ -353,12 +369,31 @@ public class ActionProviderImpl implements ActionProvider {
             return a != null ? a : this;
         }
 
+        private Project findOwner(Collection<? extends Project> projects, FileObject fo) {
+            FileObject parent = fo.getParent();
+            if(parent == null) {
+                return null;
+            }
+            for (Project prj : projects) {
+                if(prj.getProjectDirectory().equals(fo.getParent())) {
+                    return prj;
+                }
+            }
+            return null;
+        }
     }
 
     @ActionID(id = "org.netbeans.modules.gradle.customPopup", category = "Project")
     @ActionRegistration(displayName = "#LBL_Custom_Run", lazy = false)
-    @ActionReference(position = 1400, path = "Projects/" + NbGradleProject.GRADLE_PROJECT_TYPE + "/Actions")
-    @NbBundle.Messages({"LBL_Custom_Run=Custom", "LBL_Custom_Run_File=Run Gradle"})
+    @ActionReferences({
+        @ActionReference(position = 1400, path = "Projects/" + NbGradleProject.GRADLE_PROJECT_TYPE + "/Actions"),
+        @ActionReference(position = 250, path = "Loaders/text/x-gradle+x-groovy/Actions"),
+        @ActionReference(position = 1296, path = "Loaders/text/x-java/Actions"),
+        @ActionReference(position = 1821, path = "Editors/text/x-java/Popup"),
+        @ActionReference(position = 1296, path = "Loaders/text/x-groovy/Actions"),
+        @ActionReference(position = 1821, path = "Editors/text/x-groovy/Popup")
+    })
+    @NbBundle.Messages({"LBL_Custom_Run=Run Gradle", "LBL_Custom_Run_File=Run Gradle"})
     public static ContextAwareAction customPopupActions() {
         return new ConditionallyShownAction() {
 
@@ -371,7 +406,6 @@ public class ActionProviderImpl implements ActionProvider {
     }
 
     private final class CustomPopupActions extends AbstractAction implements Presenter.Popup {
-
 
         private final boolean onFile;
         private final boolean onGradle;
@@ -439,7 +473,6 @@ public class ActionProviderImpl implements ActionProvider {
         }
     }
 
-
     @Messages({
         "# {0} - Command Display Name",
         "TIT_BuildParameters={0} Parameters"
@@ -469,7 +502,8 @@ public class ActionProviderImpl implements ActionProvider {
                 //This code might not work on every Look and Feel
                 DefaultCellEditor defaultEditor = (DefaultCellEditor) table.getDefaultEditor(String.class);
                 defaultEditor.setClickCountToStart(1);
-            } catch (ClassCastException ex) {}
+            } catch (ClassCastException ex) {
+            }
 
             DialogDescriptor dlg = new DialogDescriptor(panel, TIT_BuildParameters(command));
             if (DialogDescriptor.OK_OPTION == DialogDisplayer.getDefault().notify(dlg)) {
@@ -485,7 +519,7 @@ public class ActionProviderImpl implements ActionProvider {
     private static String replaceTokens(String argLine, Map<String, String> replaceMap) {
         StringBuilder sb = new StringBuilder(argLine);
         int start = sb.indexOf("${");
-        while (start  >=0) {
+        while (start >= 0) {
             int end = sb.indexOf("}", start);
             int comma = sb.indexOf(",", start);
             int keyEnd = comma > start && comma < end ? comma : end;

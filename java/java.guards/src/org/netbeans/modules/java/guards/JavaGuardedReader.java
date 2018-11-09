@@ -173,8 +173,8 @@ final class JavaGuardedReader {
                     charBuffPtr -= MAGICLEN;
                     i += match.length();
                     int toNl = toNewLine(i, readBuff);
-                    int sectionSize = MAGICLEN+match.length()+toNl;
-                    
+                    int sectionSize = KEEP_GUARD_COMMENTS ? MAGICLEN + match.length() + toNl : 0;
+
 //                    if (!justFilter) {
 //                        System.out.println("## MATCH: '" + match.substring(0, match.length() - 1) + "'");
                         SectionDescriptor desc = new SectionDescriptor(
@@ -194,8 +194,9 @@ final class JavaGuardedReader {
                         charBuffPtr += MAGICLEN;
                     } else {
                         i += toNl;
-                        Arrays.fill(charBuff,charBuffPtr,charBuffPtr+sectionSize,' ');
-                        charBuffPtr+=sectionSize;
+                        char[] tmpCharBuff = new char[charBuff.length];
+                        System.arraycopy(charBuff, 0, tmpCharBuff, 0, charBuffPtr);
+                        charBuff = tmpCharBuff;
                     }
                 }
             }

@@ -87,7 +87,7 @@ public class JavaGuardedReaderTest extends TestCase {
         
         String readStr = "\nclass A {//" + "GEN-LINE:hu\n}\n";
         editor.setStringContent(readStr);
-        String expStr =  "\nclass A {  " + "           \n}\n";
+        String expStr =  "\nclass A {\n}\n";
         char[] readBuff = readStr.toCharArray();
         
         char[] result = instance.translateToCharBuff(readBuff);
@@ -132,7 +132,7 @@ public class JavaGuardedReaderTest extends TestCase {
         
         String readStr = "\nclass A {//" + "GEN-BEGIN:hu\n\n}//" + "GEN-END:hu\n";
         editor.setStringContent(readStr);
-        String expStr =  "\nclass A {  " + "            \n\n}  " + "          \n";
+        String expStr =  "\nclass A {\n\n}\n";
         char[] readBuff = readStr.toCharArray();
         
         JavaGuardedReader.setKeepGuardCommentsForTest(false);
@@ -155,7 +155,7 @@ public class JavaGuardedReaderTest extends TestCase {
         
         String readStr = "\nclass A {//" + "GEN-FIRST:hu\n  statement;\n}//" + "GEN-LAST:hu\n";
         editor.setStringContent(readStr);
-        String expStr =  "\nclass A {  " + "            \n  statement;\n}  " + "           \n";
+        String expStr =  "\nclass A {\n  statement;\n}\n";
         char[] readBuff = readStr.toCharArray();
         
         char[] result = instance.translateToCharBuff(readBuff);
@@ -180,7 +180,7 @@ public class JavaGuardedReaderTest extends TestCase {
         
         String readStr = "\nclass A //" + "GEN-FIRST:hu\n{//" + "GEN-HEADEREND:hu\n  statement;\n}//" + "GEN-LAST:hu\n";
         editor.setStringContent(readStr);
-        String expStr =  "\nclass A   " + "            \n{  " + "                \n  statement;\n}  " + "           \n";
+        String expStr =  "\nclass A \n{\n  statement;\n}\n";
         char[] readBuff = readStr.toCharArray();
         
         char[] result = instance.translateToCharBuff(readBuff);

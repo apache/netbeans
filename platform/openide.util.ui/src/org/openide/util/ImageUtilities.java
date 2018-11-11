@@ -19,10 +19,10 @@
 
 package org.openide.util;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.MediaTracker;
@@ -893,6 +893,13 @@ public final class ImageUtilities {
      */
     private static final class DisabledIcon implements Icon {
         private final Icon delegate;
+        /* Since previous versions of ImageUtilities.createDisabledImage always cached the
+        generated image, we do so here as well. If the associated transform changes, for instance
+        if the user moves the window to a different monitor with a different HiDPI scaling level,
+        the icon is regenerated. Don't bother trying to keep multiple versions of the same icon
+        around; this could lead to memory leaks if GraphicsConfiguration/AffineTransform equals()
+        checks fail for some reason. */
+        private volatile CachedFilteredImage cachedFilteredImage;
 
         private DisabledIcon(Icon delegate) {
             Parameters.notNull("delegate", delegate);
@@ -916,46 +923,28 @@ public final class ImageUtilities {
             g.translate(x, y);
             final AffineTransform tx = g.getTransform();
 
-            /* Paint the icon to a BufferedImage, then run it through an ImageFilter. Don't bother trying
-            to cache the BufferedImage, since the required resolution may be different from one call to
-            paintIcon to the next (e.g. if a window is moved from a HiDPI to a non-HiDPI monitor or vice
-            versa). */
-
-            /* If the graphics has a scaling transform on it, it might be for HiDPI rendering purposes. In
-            this case we should create a correspondingly larger BufferedImage to preserve the full device
-            resolution. */
-            double scaling;
-            boolean simpleTransform;
-            int txType = tx.getType();
+            /* Paint the icon to a BufferedImage, then run it through the ImageFilter. If the Graphics
+            object has a scaling transform on it, it might be for HiDPI rendering purposes. In this case we
+            should create a correspondingly larger BufferedImage to preserve the full device resolution. */
+            final double scaling;
+            final int txType = tx.getType();
+            AffineTransform useImageTransform;
             if (txType == AffineTransform.TYPE_UNIFORM_SCALE ||
                 txType == (AffineTransform.TYPE_UNIFORM_SCALE | AffineTransform.TYPE_TRANSLATION))
             {
                 scaling = tx.getScaleX();
-                simpleTransform = true;
+                /* Apply the scaling. Also preserve any device pixel misalignment that exists in the
+                original Graphics2D's transform, in case the delegate Icon knows how to handle it. See
+                the VectorIcon class for an example of such handling. */
+                double misalignX = tx.getTranslateX() - (int) tx.getTranslateX();
+                double misalignY = tx.getTranslateY() - (int) tx.getTranslateY();
+                useImageTransform = new AffineTransform(scaling, 0, 0, scaling, misalignX, misalignY);
             } else {
                 // Unsupported transform type; don't apply HiDPI scaling.
                 scaling = 1.0;
-                simpleTransform = false;
+                useImageTransform = AffineTransform.getScaleInstance(1.0, 1.0);
             }
-            BufferedImage img = g.getDeviceConfiguration().createCompatibleImage(
-                    (int) Math.ceil(getIconWidth() * scaling),
-                    (int) Math.ceil(getIconHeight() * scaling), Transparency.TRANSLUCENT);
-            Graphics2D imgG = (Graphics2D) img.getGraphics();
-            try {
-                if (simpleTransform) {
-                    /* Apply the scaling. Also preserve any device pixel misalignment that exists in the
-                    original Graphics2D's transform, in case the delegate Icon knows how to handle it. See
-                    the VectorIcon class for an example of such handling. */
-                    double misalignX = tx.getTranslateX() - (int) tx.getTranslateX();
-                    double misalignY = tx.getTranslateY() - (int) tx.getTranslateY();
-                    imgG.setTransform(new AffineTransform(scaling, 0, 0, scaling, misalignX, misalignY));
-                }
-                delegate.paintIcon(c, imgG, 0, 0);
-            } finally {
-                imgG.dispose();
-            }
-            Image filteredImage = DisabledButtonFilter.createDisabledImage(img);
-
+            Image filteredImage = getFilteredImage(c, g.getDeviceConfiguration(), useImageTransform);
             if (scaling != 1.0) {
                 // Scale the image down to its logical dimensions, and draw it at the device pixel boundary.
                 AffineTransform tx2 = g.getTransform();
@@ -964,13 +953,50 @@ public final class ImageUtilities {
                     (int) tx2.getTranslateY()));
             }
             g.drawImage(filteredImage, 0, 0, null);
-
             g.setTransform(oldTransform);
+        }
 
-            if (false) {
-                // Draw a red line diagonally over the icon, for debugging purposes.
-                g.setColor(Color.RED);
-                g.drawLine(x, y, x + getIconWidth(), y + getIconHeight());
+        /**
+         * @param tx transform that incorporates HiDPI scaling and any HiDPI misalignment adjustment
+         */
+        private Image getFilteredImage(Component c, GraphicsConfiguration gc, AffineTransform tx) {
+            CachedFilteredImage ret = this.cachedFilteredImage;
+            /* Technically, the "Component c" parameter may also contain state that the delegate
+            might use during painting here. But we don't know what that state might be, so we
+            have no way to compare it for the sake of determining if the cache is still valid or
+            not. Allow the image to be cached anyway, retaining the behavior of the previous version
+            of ImageUtilities.createDisabledImage. */
+            if (ret != null && ret.gc.equals(gc) && ret.tx.equals(tx)) {
+                return ret.img;
+            }
+            final BufferedImage img = gc.createCompatibleImage(
+                    (int) Math.ceil(getIconWidth() * tx.getScaleX()),
+                    (int) Math.ceil(getIconHeight() * tx.getScaleY()), Transparency.TRANSLUCENT);
+            final Graphics2D imgG = (Graphics2D) img.getGraphics();
+            try {
+                imgG.setTransform(tx);
+                delegate.paintIcon(c, imgG, 0, 0);
+            } finally {
+                imgG.dispose();
+            }
+            ret = new CachedFilteredImage(DisabledButtonFilter.createDisabledImage(img), gc, tx);
+            this.cachedFilteredImage = ret;
+            return ret.img;
+        }
+
+        // Immutable.
+        private static final class CachedFilteredImage {
+            final Image img;
+            final GraphicsConfiguration gc;
+            final AffineTransform tx;
+
+            public CachedFilteredImage(Image img, GraphicsConfiguration gc, AffineTransform tx) {
+                Parameters.notNull("img", img);
+                Parameters.notNull("gc", gc);
+                Parameters.notNull("tx", tx);
+                this.img = img;
+                this.gc = gc;
+                this.tx = tx;
             }
         }
     }

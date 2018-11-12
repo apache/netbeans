@@ -25,6 +25,13 @@ import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer;
 import org.openide.util.Lookup;
 
+/**
+ * Use this <code>CompositeCategoryProvider</code> to register plugin aware
+ * project customizer panels. The custom panel will be created if the given
+ * plugin is present in the Gradle project.
+ *
+ * @author lkishalmi
+ */
 public final class FilterPanelProvider implements ProjectCustomizer.CompositeCategoryProvider {
 
     final ProjectCustomizer.CompositeCategoryProvider original;

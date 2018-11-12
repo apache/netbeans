@@ -131,10 +131,25 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
         return projectDir.equals(rootDir);
     }
 
+    /**
+     * Return the value of the property defined {@code netbeans.<key>} as
+     * in this Gradle project or inherited from the root project. 
+     * 
+     * @param key the property name after the {@code netbeans.} prefix.
+     * @return the property value or {@code null} if it is not defined.
+     */
     public String getNetBeansProperty(String key) {
         return netBeansProperties.get(key);
     }
 
+    /**
+     * Returns the license identifier used in this Gradle project. It is
+     * determined by the {@code netbeans.license} property of the project,
+     * if that's not found {@code license} property is used. If even that
+     * would be undefined the license {@code "default"} is used.
+     * @return the project defined license or {@code default} if no license has
+     *         been specified.
+     */
     public String getLicense() {
         return license != null ? license : "default"; //NOI18N
     }

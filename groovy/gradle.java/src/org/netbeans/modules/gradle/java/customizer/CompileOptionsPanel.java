@@ -22,8 +22,6 @@ package org.netbeans.modules.gradle.java.customizer;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
-import org.netbeans.modules.gradle.java.customizer.Bundle;
-import org.netbeans.modules.gradle.java.classpath.BootClassPathImpl;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,6 +38,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
+import javax.swing.UIManager;
 import javax.swing.plaf.UIResource;
 import org.netbeans.api.java.platform.*;
 import org.netbeans.api.project.Project;
@@ -58,6 +57,7 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
 
     private static final Logger LOG = Logger.getLogger(CompileOptionsPanel.class.getName());
     public static final String HINT_JDK_PLATFORM = "netbeans.hint.jdkPlatform"; //NOI18N
+    private static final String PROP_PLATFORM_ID = "platform.ant.name"; //NOI18N
 
     final Project project;
     private final ActionListener storeListener = new ActionListener() {
@@ -103,8 +103,6 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
     }
 
     private void setupPlatform() {
-        cbPlatform.setModel(new PlatformsModel());
-        cbPlatform.setRenderer(new PlatformsRenderer());
 
         GradleBaseProject gbp = project != null ? GradleBaseProject.get(project) : null;
         if (gbp != null) {
@@ -118,7 +116,13 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
                Preferences prefs = NbGradleProject.getPreferences(project, false);
                platformId = prefs.get(RunUtils.PROP_JDK_PLATFORM, null);
             }
-            cbPlatform.setSelectedItem(RunUtils.getActivePlatform(platformId));
+
+            JavaPlatform sel = RunUtils.getActivePlatform(platformId).second();
+
+            PlatformsModel model = new PlatformsModel();
+            model.setSelectedItem(sel != null ? sel : platformId);
+            cbPlatform.setModel(model);
+            cbPlatform.setRenderer(new PlatformsRenderer());
         } 
     }
     
@@ -134,8 +138,11 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
         GradleBaseProject gbp = project != null ? GradleBaseProject.get(project) : null;
         if ((gbp != null) && (gbp.getNetBeansProperty(RunUtils.PROP_JDK_PLATFORM) == null)) {
             Preferences prefs = NbGradleProject.getPreferences(project, false);
-            String platformId = cbPlatform.getItemAt(cbPlatform.getSelectedIndex()).getProperties().get("platform.ant.name");
-            prefs.put(RunUtils.PROP_JDK_PLATFORM, platformId);
+            Object sel = cbPlatform.getModel().getSelectedItem();
+            if (sel != null) {
+                String platformId = sel instanceof JavaPlatform ? ((JavaPlatform)sel).getProperties().get(PROP_PLATFORM_ID) : sel.toString();
+                prefs.put(RunUtils.PROP_JDK_PLATFORM, platformId);
+            }
         }
         
     }
@@ -236,7 +243,7 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
     private JavaPlatform getSelPlatform () {
         String platformId = project.getLookup().lookup(AuxiliaryProperties.class).
                 get(HINT_JDK_PLATFORM, true);
-        return RunUtils.getActivePlatform(platformId);
+        return RunUtils.getActivePlatform(platformId).second();
     }
     
     
@@ -287,7 +294,6 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
             JavaPlatformManager jpm = JavaPlatformManager.getDefault();
             getPlatforms(jpm);
             jpm.addPropertyChangeListener(WeakListeners.propertyChange(this, jpm));
-            sel = jpm.getDefaultPlatform();
         }
 
         @Override
@@ -313,9 +319,18 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
+            String current = sel instanceof JavaPlatform ? ((JavaPlatform)sel).getProperties().get(PROP_PLATFORM_ID):sel.toString();
             JavaPlatformManager jpm = JavaPlatformManager.getDefault();
             getPlatforms(jpm);
-            fireContentsChanged(this, 0, data.length);
+            JavaPlatform found = null;
+            for (int i = 0; i < data.length; i++) {
+                JavaPlatform pf = data[i];
+                if (current.equals(pf.getProperties().get(PROP_PLATFORM_ID))) {
+                    found = pf;
+                    break;
+                }
+            }
+            setSelectedItem(found != null ? found : current);
         }
 
         private void getPlatforms(JavaPlatformManager jpm) {
@@ -337,27 +352,30 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
         }
 
         @Override
+        @NbBundle.Messages({"# {0} - platformId", "LBL_MissingPlatform=Missing platform: {0}"})
         public Component getListCellRendererComponent(JList list, Object value,
                 int index, boolean isSelected,
                 boolean cellHasFocus) {
             // #89393: GTK needs name to render cell renderer "natively"
             setName("ComboBox.listRenderer"); // NOI18N
-            JavaPlatform jp = (JavaPlatform)value;
-            //#171354 weird null value coming on mac..
-            if (jp != null) {
+            if (value instanceof JavaPlatform) {
+                JavaPlatform jp = (JavaPlatform)value;
                 setText(jp.getDisplayName());
+                if ( isSelected ) {
+                    setBackground(list.getSelectionBackground());
+                    setForeground(list.getSelectionForeground());
+                } else {
+                    setBackground(list.getBackground());
+                    setForeground(list.getForeground());
+                }
             } else {
-                setText("");
+                if (value == null) {
+                    setText("");
+                } else {
+                    setText(Bundle.LBL_MissingPlatform(value));
+                    setForeground(UIManager.getColor("nb.errorForeground")); //NOI18N
+                }
             }
-
-            if ( isSelected ) {
-                setBackground(list.getSelectionBackground());
-                setForeground(list.getSelectionForeground());
-            } else {
-                setBackground(list.getBackground());
-                setForeground(list.getForeground());
-            }
-
             return this;
         }
 

@@ -55,6 +55,7 @@ import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.Pair;
 import org.openide.windows.IOColorPrint;
 import org.openide.windows.IOColors;
 import org.openide.windows.InputOutput;
@@ -86,7 +87,9 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
         "# {0} - Project name",
         "BUILD_SUCCESS=Building {0} was success.",
         "# {0} - Project name",
-        "BUILD_FAILED=Building {0} failed."
+        "BUILD_FAILED=Building {0} failed.",
+        "# {0} - Platform Key",
+        "NO_PLATFORM=No valid Java Platform found for key: ''{0}''"
     })
     @Override
     public void run() {
@@ -140,11 +143,19 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
                 cmd.addSystemProperty(GradleDaemon.PROP_TOOLING_JAR, GradleDaemon.TOOLING_JAR);
             }
             cmd.configure(buildLauncher);
-            JavaPlatform activePlatform = RunUtils.getActivePlatform(config.getProject());
-            if (!activePlatform.getInstallFolders().isEmpty()) {
-                File javaHome = FileUtil.toFile(activePlatform.getInstallFolders().iterator().next());
+
+            printCommandLine();
+
+            Pair<String, JavaPlatform> activePlatform = RunUtils.getActivePlatform(config.getProject());
+            if (activePlatform.second() == null || !activePlatform.second().isValid()) {
+                io.getErr().println(Bundle.NO_PLATFORM(activePlatform.first()));
+                return;
+            }
+            if (!activePlatform.second().getInstallFolders().isEmpty()) {
+                File javaHome = FileUtil.toFile(activePlatform.second().getInstallFolders().iterator().next());
                 buildLauncher.setJavaHome(javaHome);
             }
+
             buildLauncher.setColorOutput(useRichOutput);
             if (useRichOutput) {
                 outStream = new EscapeProcessingOutputStream(new GradleColorEscapeProcessor(io, handle, config));
@@ -168,7 +179,6 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
                     buildLauncher.addProgressListener(provider.getProgressListener(), provider.getSupportedOperationTypes());
                 }
             }
-            printCommandLine();
             buildLauncher.run();
             StatusDisplayer.getDefault().setStatusText(Bundle.BUILD_SUCCESS(getProjectName()));
         } catch (BuildCancelledException ex) {
@@ -212,8 +222,8 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
     private void printCommandLine() {
         StringBuilder commandLine = new StringBuilder(1024);
 
-        JavaPlatform activePlatform = RunUtils.getActivePlatform(config.getProject());
-        if (!activePlatform.getInstallFolders().isEmpty()) {
+        JavaPlatform activePlatform = RunUtils.getActivePlatform(config.getProject()).second();
+        if ((activePlatform != null) && activePlatform.isValid() && !activePlatform.getInstallFolders().isEmpty()) {
             File javaHome = FileUtil.toFile(activePlatform.getInstallFolders().iterator().next());
             commandLine.append("JAVA_HOME=\"").append(javaHome.getAbsolutePath()).append("\"\n"); //NOI18N
         }

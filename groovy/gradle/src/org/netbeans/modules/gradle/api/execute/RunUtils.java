@@ -59,6 +59,7 @@ import org.netbeans.spi.project.SingleMethod;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.util.NbBundle;
+import org.openide.util.Pair;
 
 /**
  *
@@ -251,23 +252,24 @@ public final class RunUtils {
      * @return active {@link JavaPlatform} or null if the project's platform
      * is broken
      */
-    public static JavaPlatform getActivePlatform(final String activePlatformId) {
+    public static Pair<String, JavaPlatform> getActivePlatform(final String activePlatformId) {
         final JavaPlatformManager pm = JavaPlatformManager.getDefault();
         if (activePlatformId == null) {
-            return pm.getDefaultPlatform();
+            JavaPlatform p = pm.getDefaultPlatform();
+            return Pair.of(p.getProperties().get("platform.ant.name"), p);
         } else {
             JavaPlatform[] installedPlatforms = pm.getPlatforms(null, new Specification("j2se", null)); //NOI18N
             for (JavaPlatform installedPlatform : installedPlatforms) {
                 String antName = installedPlatform.getProperties().get("platform.ant.name"); //NOI18N
                 if (antName != null && antName.equals(activePlatformId)) {
-                    return installedPlatform;
+                    return Pair.of(activePlatformId, installedPlatform);
                 }
             }
-            return null;
+            return Pair.of(activePlatformId, null);
         }
     }
 
-    public static JavaPlatform getActivePlatform(Project project) {
+    public static Pair<String, JavaPlatform> getActivePlatform(Project project) {
         Preferences prefs = NbGradleProject.getPreferences(project, false);
         String platformId = prefs.get(PROP_JDK_PLATFORM, null);
         if (platformId == null) {

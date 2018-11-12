@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.gradle.api;
 
-import org.netbeans.modules.gradle.GradleProject;
 import org.netbeans.modules.gradle.spi.WatchedResourceProvider;
 import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import java.awt.Image;
@@ -41,7 +40,6 @@ import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.ImageUtilities;
-import org.openide.util.Lookup;
 import org.openide.util.Utilities;
 
 /**
@@ -124,6 +122,9 @@ public final class NbGradleProject {
     private final NbGradleProjectImpl project;
     private final PropertyChangeSupport support;
     private final Set<File> resources = new HashSet<>();
+    
+    private Preferences privatePrefs;
+    private Preferences sharedPrefs;
 
     static {
         AccessorImpl impl = new AccessorImpl();
@@ -194,7 +195,15 @@ public final class NbGradleProject {
     }
 
     public Preferences getPreferences(boolean shared) {
-        return ProjectUtils.getPreferences(project, NbGradleProject.class, shared);
+        Preferences ret = shared ? sharedPrefs : privatePrefs;
+        if (ret == null) {
+            if (shared) {
+                ret = sharedPrefs = ProjectUtils.getPreferences(project, NbGradleProject.class, true);
+            } else {
+                ret = privatePrefs = ProjectUtils.getPreferences(project, NbGradleProject.class, false);
+            }
+        }
+        return ret;
     }
 
     private void fireProjectReload() {
@@ -319,7 +328,8 @@ public final class NbGradleProject {
     }
 
     public static Preferences getPreferences(Project project, boolean shared) {
-        return ProjectUtils.getPreferences(project, NbGradleProject.class, shared);
+        NbGradleProject watcher = NbGradleProject.get(project);
+        return watcher.getPreferences(shared);
     }
 
     private void fireChange(File f) {

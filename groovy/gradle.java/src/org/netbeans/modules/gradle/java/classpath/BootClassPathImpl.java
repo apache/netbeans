@@ -64,10 +64,12 @@ public final class BootClassPathImpl extends AbstractGradleClassPathImpl impleme
 
     @Override
     protected List<URL> createPath() {
-        JavaPlatform platform = RunUtils.getActivePlatform(project);
+        JavaPlatform platform = RunUtils.getActivePlatform(project).second();
         List<URL> ret = new LinkedList<>();
-        for (ClassPath.Entry entry : platform.getBootstrapLibraries().entries()) {
-            ret.add(entry.getURL());
+        if (platform != null) {
+            for (ClassPath.Entry entry : platform.getBootstrapLibraries().entries()) {
+                ret.add(entry.getURL());
+            }
         }
         return ret;
     }

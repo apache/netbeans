@@ -35,6 +35,8 @@ import org.netbeans.spi.project.ui.ProjectProblemResolver;
 import org.netbeans.spi.project.ui.ProjectProblemsProvider;
 
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.*;
+import org.netbeans.modules.gradle.api.execute.RunUtils;
+import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -66,6 +68,7 @@ public class GradleProjectProblemProvider implements ProjectProblemsProvider {
     }
 
     @Override
+    @NbBundle.Messages("LBL_BrokenPlatform=Broken Platform.")
     public Collection<? extends ProjectProblem> getProblems() {
         List<ProjectProblem> ret = new ArrayList<>();
         synchronized (this) {
@@ -84,8 +87,11 @@ public class GradleProjectProblemProvider implements ProjectProblemsProvider {
         }
         GradleProject gp = project.getLookup().lookup(NbGradleProjectImpl.class).getGradleProject();
         for (String problem : gp.getProblems()) {
-            String[] lines = problem.split("\\n");
-            ret.add(ProjectProblem.createWarning(lines[0], problem.replaceAll("\\n", "<br/>"), resolver));
+            String[] lines = problem.split("\\n"); //NOI18N
+            ret.add(ProjectProblem.createWarning(lines[0], problem.replaceAll("\\n", "<br/>"), resolver)); //NOI18N
+        }
+        if (RunUtils.getActivePlatform(project) == null) {
+            ret.add(ProjectProblem.createWarning(Bundle.LBL_BrokenPlatform(), Bundle.LBL_BrokenPlatform()));
         }
         return ret;
     }

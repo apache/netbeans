@@ -32,8 +32,23 @@ import org.openide.filesystems.FileObject;
 public class JUnitTestcase extends Testcase{
     private FileObject classFO = null;
 
+    /**
+     * @param name The method name of this test method
+     * @param type The type of test case
+     * @param session  The session where this test is executed
+     */
     public JUnitTestcase(String name, String type, TestSession session) {
-        super(name, type, session);
+        this(name, name, type, session);
+    }
+    
+    /**
+     * @param name The method name of this test method
+     * @param displayName The display name of this test method
+     * @param type The type of test case
+     * @param session the session where this test case is executed.
+     */
+    public JUnitTestcase(String name, String displayName, String type, TestSession session) {
+        super(name, displayName, type, session);
     }
 
     @Override

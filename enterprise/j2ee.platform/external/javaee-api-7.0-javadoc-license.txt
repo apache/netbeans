@@ -1,8 +1,7 @@
 Name: Java(TM) Enterprise Edition 7 API Documentation
-Version: 7
+Version: 7.0
 Description: Java(TM) Enterprise Edition 7 API Documentation
 License: CDDL-1.0
-OSR: Sun
 Origin: Oracle (http://glassfish.dev.java.net)
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0

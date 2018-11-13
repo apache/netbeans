@@ -19,6 +19,8 @@
 
 package org.netbeans.spi.project;
 
+import java.util.Objects;
+import java.util.Optional;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -29,8 +31,9 @@ import org.openide.filesystems.FileObject;
  */
 public final class SingleMethod {
 
-    private FileObject file;
-    private String methodName;
+    private final FileObject file;
+    private final String methodName;
+    private String binaryClassName;
 
     /**
      * Creates a new instance holding the specified identification
@@ -43,7 +46,20 @@ public final class SingleMethod {
      * @since 1.19
      */
     public SingleMethod(FileObject file, String methodName) {
-        super();
+        this(file, null, methodName);
+    }
+    
+    /**
+     * Creates a new instance holding the specified identification
+     * of a method/function in a file.
+     *
+     * @param file file to be kept in the object
+     * @param binaryClassName The binary class name of the class containing the method (as returned by {@link Class#getName()})
+     * @param methodName name of a method inside the file
+     * @exception  java.lang.IllegalArgumentException
+     *             if the file or method name is {@code null}
+     */
+    public SingleMethod(FileObject file, String binaryClassName, String methodName) {
         if (file == null) {
             throw new IllegalArgumentException("file is <null>");
         }
@@ -51,6 +67,7 @@ public final class SingleMethod {
             throw new IllegalArgumentException("methodName is <null>");
         }
         this.file = file;
+        this.binaryClassName = binaryClassName;
         this.methodName = methodName;
     }
 
@@ -64,6 +81,15 @@ public final class SingleMethod {
         return file;
     }
 
+    /**
+     * Returns the binary class name of the class containing the method.
+     
+     * @return Class name held by this object
+     */
+    public Optional<String> getBinaryClassName() {
+        return Optional.ofNullable(binaryClassName);
+    }
+    
     /**
      * Returns name of a method/function within the file.
      *
@@ -94,13 +120,16 @@ public final class SingleMethod {
             return false;
         }
         SingleMethod other = (SingleMethod) obj;
-        return other.file.equals(file) && other.methodName.equals(methodName);
+        return other.file.equals(file)
+            && Objects.equals(other.binaryClassName, binaryClassName)
+            && other.methodName.equals(methodName);
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
         hash = 29 * hash + this.file.hashCode();
+        hash = 29 * hash + Objects.hashCode(binaryClassName);
         hash = 29 * hash + this.methodName.hashCode();
         return hash;
     }

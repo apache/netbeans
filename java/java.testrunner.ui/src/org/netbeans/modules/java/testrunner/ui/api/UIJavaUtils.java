@@ -326,7 +326,7 @@ public final class UIJavaUtils {
                 try {
                     EditorCookie ed = file.getLookup().lookup(EditorCookie.class);
                     if (ed != null) {
-                        if (lineNum == -1) {
+                        if (lineNum <= 0) {
                             // OK, just open it.
                             ed.open();
                         } else {

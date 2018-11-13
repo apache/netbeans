@@ -23,6 +23,7 @@ import com.sun.source.util.TreePath;
 import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
@@ -61,24 +62,24 @@ final class TestClassInfoTask implements CancellableTask<CompilationController> 
     public void run(CompilationController controller) throws Exception {
         controller.toPhase(Phase.RESOLVED);
         fileObject = controller.getFileObject();
-        TypeElement typeElement = null;
+        TypeElement outermostTypeElement = null;
         List<? extends TypeElement> topLevelElements = controller.getTopLevelElements();
         for (Iterator<? extends TypeElement> it = topLevelElements.iterator(); it.hasNext();) {
-            typeElement = it.next();
-            if (typeElement.getKind() == ElementKind.CLASS) {
-                className = typeElement.getSimpleName().toString();
+            outermostTypeElement = it.next();
+            if (outermostTypeElement.getKind() == ElementKind.CLASS) {
                 break;
             }
         }
         Elements elements = controller.getElements();
         TypeElement testcase = elements.getTypeElement(TESTCASE);
-        boolean junit3 = (testcase != null && typeElement != null) ? controller.getTypes().isSubtype(typeElement.asType(), testcase.asType()) : false;
-        TreePath tp = controller.getTreeUtilities().pathFor(caretPosition);
-        while (tp != null && tp.getLeaf().getKind() != Kind.METHOD) {
-            tp = tp.getParentPath();
+        boolean junit3 = (testcase != null && outermostTypeElement != null) ? controller.getTypes().isSubtype(outermostTypeElement.asType(), testcase.asType()) : false;
+        TreePath caretPath = controller.getTreeUtilities().pathFor(caretPosition);
+        TreePath methodPath = caretPath;
+        while (methodPath != null && methodPath.getLeaf().getKind() != Kind.METHOD) {
+            methodPath = methodPath.getParentPath();
         }
-        if (tp != null) {
-            Element element = controller.getTrees().getElement(tp);
+        if (methodPath != null) {
+            Element element = controller.getTrees().getElement(methodPath);
             if (element != null) {
                 String mn = element.getSimpleName().toString();
                 if (junit3) {
@@ -90,6 +91,23 @@ final class TestClassInfoTask implements CancellableTask<CompilationController> 
                     }
                 }
             }
+        }
+        if (methodName != null) {
+            TreePath enclosingClassForMethodPath = caretPath;
+            LinkedList<TypeElement> enclosingClassElementsOuterToInner = new LinkedList<>();
+            while (enclosingClassForMethodPath != null) {
+                if (enclosingClassForMethodPath.getLeaf().getKind() == Kind.CLASS) {
+                    enclosingClassElementsOuterToInner.addFirst((TypeElement)controller.getTrees().getElement(enclosingClassForMethodPath));
+                }
+                enclosingClassForMethodPath = enclosingClassForMethodPath.getParentPath();
+            }
+            if (enclosingClassElementsOuterToInner.isEmpty()) {
+                throw new IllegalStateException("Found test method " + methodName + " but no containing class. This should not be possible.");
+            }
+            TypeElement topLevelClassElement = enclosingClassElementsOuterToInner.remove(0);
+            StringBuilder binaryClassNameBuilder = new StringBuilder(topLevelClassElement.getQualifiedName().toString());
+            enclosingClassElementsOuterToInner.forEach(path -> binaryClassNameBuilder.append("$").append(path.getSimpleName()));
+            className = binaryClassNameBuilder.toString();
         }
     }
 

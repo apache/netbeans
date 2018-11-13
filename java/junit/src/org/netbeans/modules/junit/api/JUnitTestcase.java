@@ -60,7 +60,7 @@ public class JUnitTestcase extends Testcase{
         }
         String suiteName = currentSuite.getName();
         // if the running suite is actually a test file return just the method name
-        if(suiteName == null || suiteName.equals(className)) {
+        if(suiteName == null || suiteName.equals(className.split("\\$")[0])) {
             return super.getName();
         }
         // the running suite is actually a suite, so return method's full path

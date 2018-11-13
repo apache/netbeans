@@ -652,7 +652,11 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
                         classname = classname.substring(0, classname.length() - nameSuffix.length());
                     }
                     test.setClassName(classname);
-                    test.setLocation(test.getClassName().replace('.', '/') + ".java");
+                    String location = classname.replace('.', '/');
+                    //Anonymous classes are located in the file of the outermost class
+                    location = location.split("\\$")[0];
+                    location += ".java";
+                    test.setLocation(location);
                 }
                 session.addTestCase(test);
             }

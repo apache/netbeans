@@ -22,9 +22,13 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.Trees;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -102,6 +106,13 @@ public final class MavenJUnitNodeOpener extends NodeOpener {
             return;
         }
         final FileObject fo = ((MavenJUnitTestMethodNode) node).getTestcaseFileObject();
+        String testClassName = node.getTestcase().getClassName();
+        List<String> innerClassesEnclosingTestMethod = new ArrayList<>();
+        if (testClassName != null) {
+            innerClassesEnclosingTestMethod.addAll(Arrays.asList(testClassName.split("\\$")).stream()
+                .skip(1) //Skip the outermost class, since we open that element using the FileObject
+                .collect(Collectors.toList()));
+        }
         if (fo != null) {
             final FileObject[] fo2open = new FileObject[]{fo};
             final long[] line = new long[]{0};
@@ -118,20 +129,24 @@ public final class MavenJUnitNodeOpener extends NodeOpener {
                             for (Tree tree : typeDecls) {
                                 Element element = trees.getElement(trees.getPath(compilationUnitTree, tree));
                                 if (element != null && element.getKind() == ElementKind.CLASS && element.getSimpleName().contentEquals(fo2open[0].getName())) {
-                                    List<? extends ExecutableElement> methodElements = ElementFilter.methodsIn(element.getEnclosedElements());
-                                    for (Element child : methodElements) {
-                                        String name = node.getTestcase().getName(); // package.name.method.name
-                                        if (child.getSimpleName().contentEquals(name.substring(name.lastIndexOf(".") + 1))) {
-                                            long pos = trees.getSourcePositions().getStartPosition(compilationUnitTree, trees.getTree(child));
-                                            line[0] = compilationUnitTree.getLineMap().getLineNumber(pos);
-                                            break;
+                                    //The method may be in an inner class, try to point to that class if possible
+                                    Element innermostTypeElement = findInnermostTypeElement(element, innerClassesEnclosingTestMethod);
+                                    if (innermostTypeElement != null) {
+                                        List<? extends ExecutableElement> methodElements = ElementFilter.methodsIn(innermostTypeElement.getEnclosedElements());
+                                        for (Element child : methodElements) {
+                                            String name = node.getTestcase().getName(); // package.name.method.name
+                                            if (child.getSimpleName().contentEquals(name.substring(name.lastIndexOf(".") + 1))) {
+                                                long pos = trees.getSourcePositions().getStartPosition(compilationUnitTree, trees.getTree(child));
+                                                line[0] = compilationUnitTree.getLineMap().getLineNumber(pos);
+                                                break;
+                                            }
                                         }
+                                        // method not found in this FO, so try to find where this method belongs
+                                        if (line[0] == 0) {
+                                            UIJavaUtils.searchAllMethods(node, fo2open, line, compilationController, innermostTypeElement);
+                                        }
+                                        break;
                                     }
-                                    // method not found in this FO, so try to find where this method belongs
-                                    if (line[0] == 0) {
-                                        UIJavaUtils.searchAllMethods(node, fo2open, line, compilationController, element);
-                                    }
-                                    break;
                                 }
                             }
                         }
@@ -143,6 +158,24 @@ public final class MavenJUnitNodeOpener extends NodeOpener {
             }
             UIJavaUtils.openFile(fo2open[0], (int) line[0]);
         }
+    }
+    
+    private Element findInnermostTypeElement(Element containingTypeElement, List<? extends String> targetInnerClassNames) {
+        Element innermostClassElement = containingTypeElement;
+        while (!targetInnerClassNames.isEmpty()) {
+            List<? extends Element> enclosedElements = innermostClassElement.getEnclosedElements();
+            Optional<? extends Element> innerClassElement = enclosedElements.stream()
+                .filter(enclosedElement -> enclosedElement.getKind() == ElementKind.CLASS 
+                    && enclosedElement.getSimpleName().contentEquals(targetInnerClassNames.get(0)))
+                .findFirst();
+            if (innerClassElement.isPresent()) {
+                innermostClassElement = innerClassElement.get();
+                targetInnerClassNames.remove(0);
+            } else {
+                return null;
+            }
+        }
+        return innermostClassElement;
     }
 
     public void openCallstackFrame(Node node, @NonNull String frameInfo) {

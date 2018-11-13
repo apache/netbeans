@@ -89,7 +89,7 @@ public class MavenJUnitTestMethodNode extends JUnitTestMethodNode {
                         }
                     }
 
-                    SingleMethod methodSpec = new SingleMethod(testFO, testcase.getName());
+                    SingleMethod methodSpec = new SingleMethod(testFO, testcase.getClassName(), testcase.getName());
                     Lookup nodeContext = Lookups.singleton(methodSpec);
                     if (runSupported && actionProvider.isActionEnabled(COMMAND_RUN_SINGLE_METHOD,
                             nodeContext)) {
@@ -119,7 +119,7 @@ public class MavenJUnitTestMethodNode extends JUnitTestMethodNode {
             Logger.getLogger(MavenJUnitTestMethodNode.class.getName()).log(Level.WARNING, "no LineConvertors.FileLocator available for project {0}", getProject().getProjectDirectory());
         }
         if(testcase == null) {
-            Logger.getLogger(MavenJUnitTestMethodNode.class.getName()).log(Level.WARNING, "null tescase in MavenJUnitTestMethodNode for project {0}", getProject().getProjectDirectory());            
+            Logger.getLogger(MavenJUnitTestMethodNode.class.getName()).log(Level.WARNING, "null testcase in MavenJUnitTestMethodNode for project {0}", getProject().getProjectDirectory());            
         }
         String location = testcase != null ? testcase.getLocation() : null;
         return fileLocator != null && location != null ? fileLocator.find(location) : null;

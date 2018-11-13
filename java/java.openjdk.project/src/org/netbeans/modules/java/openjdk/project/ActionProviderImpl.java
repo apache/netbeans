@@ -112,7 +112,7 @@ public class ActionProviderImpl implements ActionProvider {
 
         genericScript = FileUtil.toFileObject(scriptFile);
 
-        if (project.moduleRepository.isConsolidatedRepo()) {
+        if (project.currentModule != null && project.moduleRepository.isConsolidatedRepo()) {
             String repoName = ShortcutUtils.getDefault().inferLegacyRepository(project);
             File fastBuild = InstalledFileLocator.getDefault().locate("scripts/build-" + repoName + "-consol.xml", "org.netbeans.modules.java.openjdk.project", false);
             if (fastBuild != null && ShortcutUtils.getDefault().shouldUseCustomBuild(repoName, FileUtil.getRelativePath(repo, project.getProjectDirectory()))) {
@@ -185,7 +185,10 @@ public class ActionProviderImpl implements ActionProvider {
             command = COMMAND_BUILD_FAST; //XXX: should only do this if genericScript supports it
         }
         Properties props = new Properties();
-        props.put("basedir", FileUtil.toFile(scriptFO == genericScript ? project.moduleRepository.getJDKRoot() : repository).getAbsolutePath());
+        FileObject basedirFO = project.currentModule != null ? scriptFO == genericScript ? project.moduleRepository.getJDKRoot()
+                                                                                         : repository
+                                                             : repository.getParent();
+        props.put("basedir", FileUtil.toFile(basedirFO).getAbsolutePath());
         props.put("CONF", project.configurations.getActiveConfiguration().getLocation().getName());
         props.put("nb.jdk.project.target.java.home", BuildUtils.findTargetJavaHome(project.getProjectDirectory()).getAbsolutePath());
         RootKind kind = getKind(context);

@@ -37,8 +37,10 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeListener;
+import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileManager.Location;
+import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -54,6 +56,7 @@ import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 
 /**
@@ -91,7 +94,7 @@ public class ModuleOraculumTest extends NbTestCase {
     public void testOraculumLibrarySourceWithRoot() throws IOException {
         final ClasspathInfo cpInfo = new ClasspathInfo.Builder(ClassPath.EMPTY).build();
         final JavacParser parser = new JavacParser(Collections.emptyList(), true);
-        final JavacTaskImpl impl = JavacParser.createJavacTask(
+        final JavacTaskImpl impl = createJavacTask(
                 javaFile1,
                 root1,
                 cpInfo,
@@ -109,7 +112,7 @@ public class ModuleOraculumTest extends NbTestCase {
                 ClassPathSupport.createClassPath(root1));
         final ClasspathInfo cpInfo = new ClasspathInfo.Builder(ClassPath.EMPTY).build();
         final JavacParser parser = new JavacParser(Collections.emptyList(), true);
-        final JavacTaskImpl impl = JavacParser.createJavacTask(
+        final JavacTaskImpl impl = createJavacTask(
                 javaFile1,
                 null,
                 cpInfo,
@@ -123,7 +126,7 @@ public class ModuleOraculumTest extends NbTestCase {
     public void testOraculumLibrarySourceWithoutRootWithoutSourcePath() throws IOException {
         final ClasspathInfo cpInfo = new ClasspathInfo.Builder(ClassPath.EMPTY).build();
         final JavacParser parser = new JavacParser(Collections.emptyList(), true);
-        final JavacTaskImpl impl = JavacParser.createJavacTask(
+        final JavacTaskImpl impl = createJavacTask(
                 javaFile1,
                 null,
                 cpInfo,
@@ -138,7 +141,7 @@ public class ModuleOraculumTest extends NbTestCase {
         moduleFile1.delete();
         final ClasspathInfo cpInfo = new ClasspathInfo.Builder(ClassPath.EMPTY).build();
         final JavacParser parser = new JavacParser(Collections.emptyList(), true);
-        final JavacTaskImpl impl = JavacParser.createJavacTask(
+        final JavacTaskImpl impl = createJavacTask(
                 javaFile1,
                 root1,
                 cpInfo,
@@ -153,7 +156,7 @@ public class ModuleOraculumTest extends NbTestCase {
         scan(root1);
         final ClasspathInfo cpInfo = new ClasspathInfo.Builder(ClassPath.EMPTY).build();
         final JavacParser parser = new JavacParser(Collections.emptyList(), true);
-        final JavacTaskImpl impl = JavacParser.createJavacTask(
+        final JavacTaskImpl impl = createJavacTask(
                 javaFile1,
                 root1,
                 cpInfo,
@@ -170,7 +173,7 @@ public class ModuleOraculumTest extends NbTestCase {
                 .apply("-XD-Xmodule:SomeModule");  //NOI18N
         final ClasspathInfo cpInfo = new ClasspathInfo.Builder(ClassPath.EMPTY).build();
         final JavacParser parser = new JavacParser(Collections.emptyList(), true);
-        final JavacTaskImpl impl = JavacParser.createJavacTask(
+        final JavacTaskImpl impl = createJavacTask(
                 javaFile1,
                 root1,
                 cpInfo,
@@ -200,7 +203,7 @@ public class ModuleOraculumTest extends NbTestCase {
         try {
             final ClasspathInfo cpInfo = new ClasspathInfo.Builder(ClassPath.EMPTY).build();
             final JavacParser parser = new JavacParser(Collections.emptyList(), true);
-            JavacTaskImpl impl = JavacParser.createJavacTask(
+            JavacTaskImpl impl = createJavacTask(
                     javaFile1,
                     null,
                     cpInfo,
@@ -212,7 +215,7 @@ public class ModuleOraculumTest extends NbTestCase {
             assertEquals(1, roots.size());
             assertEquals(root1, roots.get(0));
             h.reset();
-            impl = JavacParser.createJavacTask(
+            impl = createJavacTask(
                     javaFile1,
                     null,
                     cpInfo,
@@ -222,7 +225,7 @@ public class ModuleOraculumTest extends NbTestCase {
             assertPatchModules(impl, "Test");
             roots = h.getRoots();
             assertEquals(0, roots.size());
-            impl = JavacParser.createJavacTask(
+            impl = createJavacTask(
                     javaFile2,
                     null,
                     cpInfo,
@@ -248,7 +251,7 @@ public class ModuleOraculumTest extends NbTestCase {
         try {
             final ClasspathInfo cpInfo = new ClasspathInfo.Builder(ClassPath.EMPTY).build();
             final JavacParser parser = new JavacParser(Collections.emptyList(), true);
-            JavacTaskImpl impl = JavacParser.createJavacTask(
+            JavacTaskImpl impl = createJavacTask(
                     javaFile1,
                     root1,
                     cpInfo,
@@ -260,7 +263,7 @@ public class ModuleOraculumTest extends NbTestCase {
             assertEquals(1, names.size());
             assertEquals("Test", names.get(0)); //NOI18N
             h.reset();
-            impl = JavacParser.createJavacTask(
+            impl = createJavacTask(
                     javaFile1,
                     root1,
                     cpInfo,
@@ -270,7 +273,7 @@ public class ModuleOraculumTest extends NbTestCase {
             assertPatchModules(impl, "Test");
             names = h.getModuleNames();
             assertEquals(0, names.size());
-            impl = JavacParser.createJavacTask(
+            impl = createJavacTask(
                     javaFile2,
                     root2,
                     cpInfo,
@@ -296,7 +299,7 @@ public class ModuleOraculumTest extends NbTestCase {
         try {
             final ClasspathInfo cpInfo = new ClasspathInfo.Builder(ClassPath.EMPTY).build();
             final JavacParser parser = new JavacParser(Collections.emptyList(), true);
-            JavacTaskImpl impl = JavacParser.createJavacTask(
+            JavacTaskImpl impl = createJavacTask(
                     javaFile1,
                     root1,
                     cpInfo,
@@ -309,7 +312,7 @@ public class ModuleOraculumTest extends NbTestCase {
             assertEquals("Test", names.get(0)); //NOI18N
             h.reset();
             createModule(root1, "TestUpdated");
-            impl = JavacParser.createJavacTask(
+            impl = createJavacTask(
                     javaFile1,
                     root1,
                     cpInfo,
@@ -321,7 +324,7 @@ public class ModuleOraculumTest extends NbTestCase {
             assertEquals(1, names.size());
             assertEquals("TestUpdated", names.get(0)); //NOI18N
             h.reset();
-            impl = JavacParser.createJavacTask(
+            impl = createJavacTask(
                     javaFile1,
                     root1,
                     cpInfo,
@@ -346,7 +349,7 @@ public class ModuleOraculumTest extends NbTestCase {
         try {
             final ClasspathInfo cpInfo = new ClasspathInfo.Builder(ClassPath.EMPTY).build();
             final JavacParser parser = new JavacParser(Collections.emptyList(), true);
-            JavacTaskImpl impl = JavacParser.createJavacTask(
+            JavacTaskImpl impl = createJavacTask(
                     javaFile1,
                     root1,
                     cpInfo,
@@ -359,7 +362,7 @@ public class ModuleOraculumTest extends NbTestCase {
             assertEquals("Test", names.get(0)); //NOI18N
             h.reset();
             moduleFile1.delete();
-            impl = JavacParser.createJavacTask(
+            impl = createJavacTask(
                     javaFile1,
                     root1,
                     cpInfo,
@@ -371,7 +374,7 @@ public class ModuleOraculumTest extends NbTestCase {
             assertEquals(1, names.size());
             assertEquals(null, names.get(0));
             h.reset();
-            impl = JavacParser.createJavacTask(
+            impl = createJavacTask(
                     javaFile1,
                     root1,
                     cpInfo,
@@ -397,7 +400,7 @@ public class ModuleOraculumTest extends NbTestCase {
             moduleFile1.delete();
             final ClasspathInfo cpInfo = new ClasspathInfo.Builder(ClassPath.EMPTY).build();
             final JavacParser parser = new JavacParser(Collections.emptyList(), true);
-            JavacTaskImpl impl = JavacParser.createJavacTask(
+            JavacTaskImpl impl = createJavacTask(
                     javaFile1,
                     root1,
                     cpInfo,
@@ -410,7 +413,7 @@ public class ModuleOraculumTest extends NbTestCase {
             assertNull(names.get(0));
             h.reset();
             createModule(root1, "TestNew");
-            impl = JavacParser.createJavacTask(
+            impl = createJavacTask(
                     javaFile1,
                     root1,
                     cpInfo,
@@ -422,7 +425,7 @@ public class ModuleOraculumTest extends NbTestCase {
             assertEquals(1, names.size());
             assertEquals("TestNew", names.get(0));  //NOI18N
             h.reset();
-            impl = JavacParser.createJavacTask(
+            impl = createJavacTask(
                     javaFile1,
                     root1,
                     cpInfo,
@@ -448,6 +451,21 @@ public class ModuleOraculumTest extends NbTestCase {
             actualNames.add(fm.inferModuleName(locations.iterator().next()));
         }
         assertEquals(new HashSet<>(Arrays.asList(expectedPatches)), actualNames);
+    }
+
+    private static JavacTaskImpl createJavacTask(
+            final FileObject file,
+            final FileObject root,
+            final ClasspathInfo cpInfo,
+            final JavacParser parser,
+            final DiagnosticListener<? super JavaFileObject> diagnosticListener,
+            final boolean detached) {
+        try {
+            JavaFileObject jfo = file != null ? FileObjects.sourceFileObject(file, root, null, false) : null;
+            return JavacParser.createJavacTask(file, jfo, root, cpInfo, parser, diagnosticListener, detached);
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     private static void scan(@NonNull final FileObject root) throws IOException {

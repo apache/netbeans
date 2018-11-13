@@ -249,6 +249,23 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/heredoc_015");
     }
 
+    // HEREDOC
+    public void testNetBeans1563_01() throws Exception {
+        performTest("parser/netbeans1563_01");
+    }
+
+    public void testNetBeans1563_02() throws Exception {
+        performTest("parser/netbeans1563_02");
+    }
+
+    public void testNetBeans1563_03() throws Exception {
+        performTest("parser/netbeans1563_03");
+    }
+
+    public void testNetBeans1563_04() throws Exception {
+        performTest("parser/netbeans1563_04");
+    }
+
     public void testVarCommentSimple01() throws Exception {
         performTest("parser/simple01");
     }
@@ -736,6 +753,12 @@ public class ASTPHP5ParserTest extends ParserTestBase {
     public void testUniformVariableSyntax_37() throws Exception {
         // [$object1, $object2][0]->property;
         performTest("parser/uniformVariableSyntax_37");
+    }
+
+    // NETBEANS-1552
+    public void testUniformVariableSyntax_38() throws Exception {
+        // ($test = new UVS())->isTest('test');
+        performTest("parser/uniformVariableSyntax_38");
     }
 
     public void testCloneExpression_01() throws Exception {

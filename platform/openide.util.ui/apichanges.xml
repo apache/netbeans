@@ -27,6 +27,32 @@
     <apidef name="actions">Actions API</apidef>
 </apidefs>
 <changes>
+    <change id="VectorIcon">
+      <api name="util"/>
+      <summary>Added abstract class VectorIcon to support creation of custom-painted HiDPI icons.</summary>
+      <version major="9" minor="12"/>
+      <date year="2018" month="9" day="29"/>
+      <author login="ebakke"/>
+      <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible"/>
+      <description>
+        <p>
+            It is now increasingly common for NetBeans to run on Windows, Linux, or MacOS machines with
+            so-called "HiDPI" screens, aka. "retina" screens in the Apple world. These screens have about
+            twice the physical pixel density of traditional screens, making it necessary to scale GUI
+            graphics up by some amount, e.g. 150% or 200% (depending on OS and OS-level user settings), in
+            order to remain readable. Since Java 9, this scaling is done automatically by AWT by means of a
+            scaling default transform in each Component's Graphics2D instances. This makes text sharp on
+            HiDPI screens, but leaves bitmap icons blurry.
+        </p>
+        <p>
+            This change introduces a new abstract class VectorIcon, which can be extended to create
+            custom-painted Icon instances that will look sharp on HiDPI screens, regardless of scaling level.
+            See VectorIcon's Javadoc for a discussion of appropriate use cases.
+        </p>
+      </description>
+      <class package="org.openide.util" name="VectorIcon"/>
+      <issue number="NETBEANS-1238"/>
+    </change>
     <change id="DeprecateBooleanStateAction">
         <api name="util"/>
         <summary><code>BooleanStateAction</code> deprecated in favour of <code>Actions</code> API and <code>@ActionState</code> annotation.</summary>

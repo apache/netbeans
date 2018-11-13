@@ -670,6 +670,7 @@ public class JavacParser extends Parser {
 
     static JavacTaskImpl createJavacTask(
             final FileObject file,
+            final JavaFileObject jfo,
             final FileObject root,
             final ClasspathInfo cpInfo,
             final JavacParser parser,
@@ -727,19 +728,6 @@ public class JavacParser extends Parser {
                 compilerOptions = null;
                 sourceLevel = null;
             }
-            AbstractSourceFileObject source = null;
-            if (file != null) {
-                try {
-                    source = FileObjects.sourceFileObject(file, root, null, false);
-                    if (source.getKind() != Kind.SOURCE) {
-                        source = null;
-                    }
-                } catch (FileObjects.InvalidFileException ife) {
-                    //ignore, it will be handled again later, see #parse.
-                } catch (IOException ex) {
-                    throw new IllegalStateException(ex);
-                }
-            }
             final JavacTaskImpl javacTask = createJavacTask(cpInfo,
                     diagnosticListener,
                     sourceLevel != null ? sourceLevel.getSourceLevel() : null,
@@ -750,7 +738,7 @@ public class JavacParser extends Parser {
                     APTUtils.get(root),
                     compilerOptions,
                     additionalModules,
-                    source != null ? Arrays.asList(source) : Collections.emptyList());
+                    jfo != null ? Arrays.asList(jfo) : Collections.emptyList());
             Lookup.getDefault()
                   .lookupAll(TreeLoaderRegistry.class)
                   .stream()
@@ -1055,6 +1043,8 @@ public class JavacParser extends Parser {
                 res.add(option);  //NOI18N
                 xmoduleSeen = true;
             } else if (option.equals("-parameters") || option.startsWith("-Xlint")) {     //NOI18N
+                res.add(option);
+            } else if (option.equals("--enable-preview")) {     //NOI18N
                 res.add(option);
             } else if ((
                     option.startsWith("--add-modules") ||   //NOI18N

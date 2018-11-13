@@ -19,6 +19,7 @@
 package org.netbeans.modules.ide.ergonomics.fod;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -65,6 +66,15 @@ public class FoDUpdateUnitProvider implements UpdateProvider {
     public CATEGORY getCategory() {
         return CATEGORY.STANDARD;
     }
+    
+    /**
+     * Known extra modules present during tests. Should contain compile-time
+     * modules like Oracle JS parser and NB Javac stub
+     */
+    private static final Collection<String> EXCLUDE_EXTRA_MODULES = new HashSet<>(Arrays.asList(
+        "org.netbeans.libs.oracle.jsparser",           // NOI18N
+        "org.netbeans.modules.java.source.nbjavac.test"// NOI18N
+    ));
 
     @Override
     public Map<String, UpdateItem> getUpdateItems () throws IOException {
@@ -91,7 +101,7 @@ public class FoDUpdateUnitProvider implements UpdateProvider {
                 }
                 if (isIDECluster(mi)) {
                     baseIDE.add(mi.getCodeNameBase());
-                } else {
+                } else if (!EXCLUDE_EXTRA_MODULES.contains(mi.getCodeNameBase())) {
                     extra.add(mi.getCodeNameBase());
                 }
             }

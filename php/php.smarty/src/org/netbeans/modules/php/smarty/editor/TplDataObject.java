@@ -36,6 +36,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.html.lexer.HTMLTokenId;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
@@ -92,7 +93,8 @@ public class TplDataObject extends MultiDataObject implements CookieSet.Factory 
     /**
      * Constant where is placed standard TPL file icon.
      */
-    private static final String ICON_LOCATION = "org/netbeans/modules/php/smarty/resources/tpl-cc-icon.png"; //NOI18N
+    @StaticResource
+    private static final String ICON_LOCATION = "org/netbeans/modules/php/smarty/resources/tpl-icon.png"; //NOI18N
 
     private static final Logger LOG = Logger.getLogger(TplDataObject.class.getName());
 

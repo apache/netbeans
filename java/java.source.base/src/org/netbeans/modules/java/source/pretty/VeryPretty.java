@@ -1273,17 +1273,29 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     public void visitCase(JCCase tree) {
         int old = cs.indentCasesFromSwitch() ? indent() : out.leftMargin;
         toLeftMargin();
-	if (tree.pat == null) {
+        java.util.List<JCExpression> patterns = CasualDiff.getCasePatterns(tree);
+	if (patterns.isEmpty()) {
 	    print("default");
 	} else {
 	    print("case ");
-	    printNoParenExpr(tree.pat);
+            String sep = "";
+            for (JCExpression pat : patterns) {
+                print(sep);
+                printNoParenExpr(pat);
+                sep = ", "; //TODO: space or not should be a configuration setting
+            }
 	}
-	print(':');
-	newline();
-	indent();
-	printStats(tree.stats);
-	undent(old);
+        Object caseKind = CasualDiff.getCaseKind(tree);
+        if (caseKind == null || !String.valueOf(caseKind).equals("RULE")) {
+            print(':');
+            newline();
+            indent();
+            printStats(tree.stats);
+            undent(old);
+        } else {
+            print(" -> "); //TODO: configure spaces!
+            printStat(tree.stats.head);
+        }
     }
 
     @Override
@@ -1425,9 +1437,10 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     @Override
     public void visitBreak(JCBreak tree) {
 	print("break");
-	if (tree.label != null) {
+        //TODO: value breaks
+	if (tree.getLabel() != null) {
 	    needSpace();
-	    print(tree.label);
+	    print(tree.getLabel());
 	}
 	print(';');
     }

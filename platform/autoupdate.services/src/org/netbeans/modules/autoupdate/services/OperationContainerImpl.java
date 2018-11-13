@@ -207,6 +207,8 @@ public final class OperationContainerImpl<Support> {
             for (OperationInfo<?> i : operations) {
                 all.addAll(i.getRequiredElements());
             }
+            // TODO: fragment modules are somewhat eager: they need to enable with their hosting module. They are not handled now,
+            // so unless they are also eager, they won't be autoincluded.
             for (UpdateElement eagerEl : UpdateManagerImpl.getInstance ().getAvailableEagers ()) {
                 if(eagerEl.getUpdateUnit().isPending() || eagerEl.getUpdateUnit().getAvailableUpdates().isEmpty()) {
                     continue;

@@ -23,39 +23,26 @@
 
     <import file="../../nbbuild/templates/projectized.xml"/>
 
-    <property name="resources.dir" value="./src/org/netbeans/modules/web/struts/resources/"/>
+     <target name="-check-prepared-zip">
+         <condition property="web.struts.generated-zip-created" value="present">
+             <and>
+                 <available file="external/generated-struts-1.3.10-javadoc.zip" />
+             </and>
+         </condition>
+     </target>
 
-    <target name="build-init" depends="projectized.build-init">
-        <unzip src="external/web.struts-external-resources.zip" dest="${resources.dir}"/>
-    </target>
+    <target name="build-init" depends="-check-prepared-zip,projectized.build-init" unless="web.struts.generated-zip-created">
+        <delete file="external/generated-struts-1.3.10-javadoc.zip"/>
 
-    <target name="release" depends="projectized.release">
-        <mkdir dir="${cluster}/modules/ext/struts"/>
-        <unzip src="external/struts-1.3.10-lib.zip" dest="${cluster}/modules/ext/struts">
-            <patternset>
-                <include name="struts-1.3.10-lib/antlr-2.7.2.jar"/>
-                <include name="struts-1.3.10-lib/bsf-2.3.0.jar"/>
-                <include name="struts-1.3.10-lib/commons-beanutils-1.8.0.jar"/>
-                <include name="struts-1.3.10-lib/commons-chain-1.2.jar"/>
-                <include name="struts-1.3.10-lib/commons-digester-1.8.jar"/>
-                <include name="struts-1.3.10-lib/commons-fileupload-1.1.1.jar"/>
-                <include name="struts-1.3.10-lib/commons-io-1.1.jar"/>
-                <include name="struts-1.3.10-lib/commons-logging-1.0.4.jar"/>
-                <include name="struts-1.3.10-lib/commons-validator-1.3.1.jar"/>
-                <include name="struts-1.3.10-lib/jstl-1.0.2.jar"/>
-                <include name="struts-1.3.10-lib/oro-2.0.8.jar"/>
-                <include name="struts-1.3.10-lib/standard-1.0.6.jar"/>
-                <include name="struts-1.3.10-lib/struts-core-1.3.10.jar"/>
-                <include name="struts-1.3.10-lib/struts-el-1.3.10.jar"/>
-                <include name="struts-1.3.10-lib/struts-extras-1.3.10.jar"/>
-                <include name="struts-1.3.10-lib/struts-faces-1.3.10.jar"/>
-                <include name="struts-1.3.10-lib/struts-mailreader-dao-1.3.10.jar"/>
-                <include name="struts-1.3.10-lib/struts-scripting-1.3.10.jar"/>
-                <include name="struts-1.3.10-lib/struts-taglib-1.3.10.jar"/>
-                <include name="struts-1.3.10-lib/struts-tiles-1.3.10.jar"/>
-            </patternset>
-            <mapper type="flatten"/>
-        </unzip>
+        <zip destfile="external/generated-struts-1.3.10-javadoc.zip" duplicate="fail">
+            <zipfileset src="external/struts-core-1.3.10-javadoc.jar" includes="**" />
+            <zipfileset src="external/struts-mailreader-dao-1.3.10-javadoc.jar" includes="org/**" />
+            <zipfileset src="external/struts-faces-1.3.10-javadoc.jar" includes="org/**" />
+            <zipfileset src="external/struts-scripting-1.3.10-javadoc.jar" includes="org/**" />
+            <zipfileset src="external/struts-taglib-1.3.10-javadoc.jar" includes="org/**" />
+            <zipfileset src="external/struts-tiles-1.3.10-javadoc.jar" includes="org/**" />
+            <zipfileset src="external/struts-extras-1.3.10.jar" includes="org/**" />
+            <zipfileset src="external/struts-el-1.3.10-javadoc.jar" includes="org/**" />
+        </zip>
     </target>
- 
 </project>

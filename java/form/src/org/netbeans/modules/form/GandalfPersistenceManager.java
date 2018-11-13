@@ -47,7 +47,9 @@ import org.netbeans.modules.java.source.queries.api.QueryException;
 import org.openide.nodes.Node.Property;
 import org.openide.util.Lookup;
 import org.openide.util.TopologicalSortException;
+import org.w3c.dom.Comment;
 import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.NodeList;
 
 /**
  * XML persistence manager - responsible for saving/loading forms to/from XML.
@@ -308,6 +310,10 @@ public class GandalfPersistenceManager extends PersistenceManager {
             PersistenceException ex = new PersistenceException(
                     FormUtils.getBundleString("MSG_ERR_MissingMainElement")); // NOI18N
             throw ex;
+        }
+
+        if (document.getChildNodes().getLength() > 1 && document.getChildNodes().item(0) instanceof Comment) {
+            formModel.setLeadingComment(document.getChildNodes().item(0).getTextContent());
         }
 
         // check the form version
@@ -3102,12 +3108,27 @@ public class GandalfPersistenceManager extends PersistenceManager {
      *            prevents saving the form
      */
     @Override
-    public synchronized void saveForm(FormDataObject formObject,
+    public void saveForm(FormDataObject formObject,
                          FormModel formModel,
                          List<Throwable> nonfatalErrors)
         throws PersistenceException
     {
-        FileObject formFile = formObject.getFormEntry().getFile();
+        saveForm(formObject.getFormFile(), formModel, nonfatalErrors);
+    }
+
+    /** This method saves the form to given data object.
+     * @param formFile FileObject representing the form file
+     * @param formModel FormModel to be saved
+     * @param nonfatalErrors List to be filled with errors occurred during
+     *        saving which are not fatal (but should be reported)
+     * @exception PersistenceException if some fatal problem occurred which
+     *            prevents saving the form
+     */
+    public synchronized void saveForm(FileObject formFile,
+                         FormModel formModel,
+                         List<Throwable> nonfatalErrors)
+        throws PersistenceException
+    {
         if (!formFile.canWrite()) { // should not happen
             PersistenceException ex = new PersistenceException(
                     FormUtils.getFormattedBundleString(
@@ -3138,7 +3159,11 @@ public class GandalfPersistenceManager extends PersistenceManager {
         buf.append("<?xml version=\"1.0\" encoding=\""); // NOI18N
         buf.append(encoding);
         buf.append("\" ?>\n\n"); // NOI18N
-        
+
+        if (formModel.getLeadingComment() != null) {
+            buf.append("<!--").append(formModel.getLeadingComment()).append("-->\n\n");
+        }
+
         int formElementPosition = buf.length();
 
         // store "Other Components"

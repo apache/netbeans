@@ -189,6 +189,7 @@ public final class PatchByteCode {
             case 10: // CONSTANT_Methodref
             case 11: // CONSTANT_InterfaceMethodref
             case 12: // CONSTANT_NameAndType
+            case 17:    //CONSTANT_ConstantDynamic
             case 18:    //CONSTANT_InvokeDynamic
                 pos += 4;
                 break;

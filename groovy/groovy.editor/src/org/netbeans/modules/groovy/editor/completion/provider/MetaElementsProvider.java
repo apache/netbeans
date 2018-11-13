@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.codehaus.groovy.reflection.CachedClass;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.modules.groovy.editor.api.completion.CompletionItem.MetaMethodItem;
 import org.netbeans.modules.groovy.editor.api.completion.FieldSignature;
 import org.netbeans.modules.groovy.editor.api.completion.MethodSignature;
@@ -52,29 +53,47 @@ public final class MetaElementsProvider implements CompletionProvider {
     @Override
     public Map<MethodSignature, CompletionItem> getMethods(CompletionContext context) {
         final Map<MethodSignature, CompletionItem> result = new HashMap<MethodSignature, CompletionItem>();
-        final Class clz = loadClass(context.getTypeName());
+        final Class clz = loadClass(context);
         
         if (clz != null) {
             final MetaClass metaClz = GroovySystem.getMetaClassRegistry().getMetaClass(clz);
 
             if (metaClz != null) {
                 for (MetaMethod method : metaClz.getMetaMethods()) {
-                    populateProposal(clz, method, context.getPrefix(), context.getAnchor(), result, context.isNameOnly());
+                    if (!method.isStatic()) {
+                        populateProposal(clz, method, context.getPrefix(), context.getAnchor(), result, context.isNameOnly());
+                    }
                 }
             }
+            GroovySystem.getMetaClassRegistry().removeMetaClass(clz);
         }
         return result;
     }
 
     @Override
     public Map<MethodSignature, CompletionItem> getStaticMethods(CompletionContext context) {
-        return Collections.emptyMap();
+        final Map<MethodSignature, CompletionItem> result = new HashMap<MethodSignature, CompletionItem>();
+        final Class clz = loadClass(context);
+
+        if (clz != null) {
+            final MetaClass metaClz = GroovySystem.getMetaClassRegistry().getMetaClass(clz);
+
+            if (metaClz != null) {
+                for (MetaMethod method : metaClz.getMetaMethods()) {
+                    if (method.isStatic()) {
+                        populateProposal(clz, method, context.getPrefix(), context.getAnchor(), result, context.isNameOnly());
+                    }
+                }
+            }
+            GroovySystem.getMetaClassRegistry().removeMetaClass(clz);
+        }
+        return result;
     }
 
     @Override
     public Map<FieldSignature, CompletionItem> getFields(CompletionContext context) {
         final Map<FieldSignature, CompletionItem> result = new HashMap<FieldSignature, CompletionItem>();
-        final Class clazz = loadClass(context.getTypeName());
+        final Class clazz = loadClass(context);
         
         if (clazz != null) {
             final MetaClass metaClass = GroovySystem.getMetaClassRegistry().getMetaClass(clazz);
@@ -91,6 +110,7 @@ public final class MetaElementsProvider implements CompletionProvider {
                                 context.getAnchor()));
                     }
                 }
+                GroovySystem.getMetaClassRegistry().removeMetaClass(clazz);
             }
         }
         
@@ -102,6 +122,16 @@ public final class MetaElementsProvider implements CompletionProvider {
         return Collections.emptyMap();
     }
     
+    private Class loadClass(CompletionContext context) {
+        try {
+            return context.getSurroundingClass().getCompileUnit().getClassLoader().loadClass(context.getTypeName());
+        } catch (ClassNotFoundException cnfe) {
+            return loadClass(context.getTypeName());
+        } catch (RuntimeException exception) {
+            return null;
+        }
+    }
+
     private Class loadClass(String className) {
         try {
             // FIXME should be loaded by classpath classloader
@@ -226,6 +256,10 @@ public final class MetaElementsProvider implements CompletionProvider {
                 return false;
             }
         }
-        return false;
+        
+        //preferMethodsAccording to direct inheritance
+        
+        return currentMethod.getDeclaringClass().isAssignableFrom(methodToStore.getDeclaringClass().getTheClass());
+
     }
 }

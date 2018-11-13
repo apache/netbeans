@@ -82,8 +82,10 @@ public class DocDefParser extends GeneralParser implements SchemaParser {
         if (schemaIn == null) {
             schemaIn = new FileInputStream(filename);
         }
-        EntityParser entityParser = new EntityParser(new InputStreamReader(schemaIn));
-        entityParser.parse();
+        EntityParser entityParser = new EntityParser();
+        try (Reader r = new InputStreamReader(schemaIn)) {
+            entityParser.parse(r);
+        }
         reader = entityParser.getReader();
     }
     

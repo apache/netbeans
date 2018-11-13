@@ -15,7 +15,7 @@
 # limitations under the License.
 
 name: netbeans
-version: "9.0-dev"
+version: "Dev"
 summary: NetBeans Java IDE
 description: |
   NetBeans IDE lets you quickly and easily develop Java desktop, mobile, and 
@@ -23,7 +23,7 @@ description: |
   CSS. The IDE also provides a great set of tools for PHP and C/C++ developers.
   It is free and open source and has a large community of users and developers
   around the world. 
-icon: ../../ide.branding/release/netbeans.png
+icon: ../../platform/core.startup/src/org/netbeans/core/startup/frame512.png
 confinement: classic
 grade: devel
 architectures: [ amd64 ]
@@ -47,6 +47,7 @@ parts:
         # Make the default cache and data directory relative to Snap user directory
         sed -i 's/${HOME}\/.netbeans/${SNAP_USER_COMMON}\/data/' $SNAPCRAFT_PART_INSTALL/netbeans/bin/netbeans
         sed -i 's/${HOME}\/.cache\/netbeans/${SNAP_USER_COMMON}\/cache/' $SNAPCRAFT_PART_INSTALL/netbeans/bin/netbeans
+        sed -i 's/-J-Dapple.laf.useScreenMenuBar=true/-J-Dapple.laf.useScreenMenuBar=true -J-Dawt.useSystemAAFontSettings=on/' $SNAPCRAFT_PART_INSTALL/netbeans/etc/netbeans.conf
     stage:
         - $netbeans
 

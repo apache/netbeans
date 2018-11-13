@@ -111,6 +111,11 @@ package org.netbeans.modules.css.lib;
         return false;
     }
 
+    private boolean tokenNameStartsWith(String prefix) {
+        return input.LT(1).getText() != null
+            && input.LT(1).getText().startsWith(prefix);
+    }
+
 /**
      * Use the current stacked followset to work out the valid tokens that
      * can follow on from the current point in the parse, then recover by
@@ -364,8 +369,8 @@ mediaQueryList
 
 mediaQuery
  :
-    (mediaQueryOperator ws? )?  mediaType ( ws? key_and ws? mediaExpression )*
-    | mediaExpression ( ws? key_and ws? mediaExpression )*
+    (mediaQueryOperator ws? )?  mediaType ((ws? key_and)=> ws? key_and ws? mediaExpression )*
+    | mediaExpression ((ws? key_and)=> ws? key_and ws? mediaExpression )*
     | {isLessSource()}? cp_variable
  ;
 
@@ -379,7 +384,8 @@ mediaType
 
 mediaExpression
     :
-    LPAREN ws? mediaFeature mediaFeatureValue? ws? RPAREN
+    (LPAREN) => (LPAREN ws? mediaFeature mediaFeatureValue? ws? RPAREN)
+    | (HASH) => {isCssPreprocessorSource()}? sass_interpolation_expression_var
     ;
 
 mediaFeatureValue
@@ -585,7 +591,7 @@ sass_map_pairs
 
 sass_map_pair
     :
-        (NUMBER|STRING|((function)=>function)|property) ws? COLON ws? cp_expression (ws? prio)?
+        (NUMBER|(STRING (ws? STRING)*)|((function)=>function)|property|sass_map) ws? COLON ws? cp_expression (ws? prio)?
     ;
 
 rule
@@ -684,6 +690,7 @@ elementSubsequent
     (
         {isScssSource()}? sass_extend_only_selector
         | {isCssPreprocessorSource()}? LESS_AND (IDENT | NUMBER)*
+        | {isLessSource()}? LESS_AND less_selector_interpolation_exp
     	| cssId
     	| cssClass
         | slAttribute
@@ -707,7 +714,7 @@ cssId
     }
 
 cssClass
-    : DOT
+    : (DOT
         (
              {isScssSource()}?  sass_selector_interpolation_exp
             | {isLessSource()}? less_selector_interpolation_exp
@@ -715,6 +722,7 @@ cssClass
             | NOT
             | GEN
         )
+      ) | {tokenNameStartsWith(".")}? DIMENSION
     ;
     catch[ RecognitionException rce] {
         reportError(rce);
@@ -1062,7 +1070,7 @@ cp_mixin_declaration
 cp_mixin_call
     :
     (
-        {isLessSource()}? (DOT cp_mixin_name | HASH | AT_IDENT | LESS_AND) ((pseudo)=>pseudo | (ws? LPAREN)=>(ws? LPAREN ws? cp_mixin_call_args? RPAREN))?
+        {isLessSource()}? (DOT cp_mixin_name | HASH | AT_IDENT | LESS_AND) ((ws? combinator ws?) => ws? combinator ws? (DOT cp_mixin_name | HASH | AT_IDENT | LESS_AND))* ((pseudo)=>pseudo | (ws? LPAREN)=>(ws? LPAREN ws? cp_mixin_call_args? RPAREN))?
         |
         {isScssSource()}? SASS_INCLUDE ws cp_mixin_name (ws? LPAREN ws? cp_mixin_call_args? RPAREN)? (ws? cp_mixin_block)?
     )
@@ -1085,7 +1093,7 @@ cp_mixin_call_args
     :
     //the term separatos is supposed to be just COMMA, but in some weird old? samples
     //I found semicolon used as a delimiter between arguments
-    cp_mixin_call_arg ( (COMMA | SEMI) ws? cp_mixin_call_arg)*  (CP_DOTS ws?)?
+    cp_mixin_call_arg ( (COMMA | SEMI) ws? cp_mixin_call_arg)*  (CP_DOTS ws?)? SEMI?
     ;
 
 cp_mixin_call_arg

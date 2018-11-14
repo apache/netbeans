@@ -286,6 +286,10 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             case GROUP_USE_FUNCTION_KEYWORD:
                 searchPrefix = getPrefix(info, findBaseNamespaceEnd(info, caretOffset), true, PrefixBreaker.WITH_NS_PARTS);
                 break;
+            case EXPRESSION: // no break
+                if (prefix.startsWith("@")) { // NOI18N
+                    prefix = prefix.substring(1);
+                }
             default:
                 searchPrefix = null;
                 break;

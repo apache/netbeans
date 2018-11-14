@@ -39,7 +39,7 @@ public class TabsPanel extends javax.swing.JPanel {
     private boolean defMultiRow;
     private int defTabPlacement;
 
-    public enum SortType {
+    public enum EditorSortType {
         None,
         FileName,
         FileNameWithParent,
@@ -281,7 +281,7 @@ public class TabsPanel extends javax.swing.JPanel {
         boolean isChanged = false;
         if(isCloseActivatesMostRecentDocument.isSelected() != prefs.getBoolean(WinSysPrefs.EDITOR_CLOSE_ACTIVATES_RECENT, true)
                 || isNewDocumentOpensNextToActiveTab.isSelected() != prefs.getBoolean(WinSysPrefs.OPEN_DOCUMENTS_NEXT_TO_ACTIVE_TAB, false)
-                || getSelectedSortType() != SortType.valueOf(prefs.get(WinSysPrefs.SORT_TABS, SortType.None.name()))) {
+                || getSelectedSortType() != EditorSortType.valueOf(prefs.get(WinSysPrefs.EDITOR_SORT_TABS, EditorSortType.None.name()))) {
             isChanged = true;
         }
         controller.changed(isChanged, null);
@@ -290,7 +290,7 @@ public class TabsPanel extends javax.swing.JPanel {
     protected void load() {
         isCloseActivatesMostRecentDocument.setSelected(prefs.getBoolean(WinSysPrefs.EDITOR_CLOSE_ACTIVATES_RECENT, true));
         isNewDocumentOpensNextToActiveTab.setSelected(prefs.getBoolean(WinSysPrefs.OPEN_DOCUMENTS_NEXT_TO_ACTIVE_TAB, false));
-        SortType sortType = SortType.valueOf(prefs.get(WinSysPrefs.SORT_TABS, SortType.None.name()));
+        EditorSortType sortType = EditorSortType.valueOf(prefs.get(WinSysPrefs.EDITOR_SORT_TABS, EditorSortType.None.name()));
         switch (sortType) {
             case FullFilePath:
                 radioSortFullFilePath.setSelected(true);
@@ -337,7 +337,7 @@ public class TabsPanel extends javax.swing.JPanel {
     protected boolean store() {
         prefs.putBoolean(WinSysPrefs.EDITOR_CLOSE_ACTIVATES_RECENT, isCloseActivatesMostRecentDocument.isSelected());
         prefs.putBoolean(WinSysPrefs.OPEN_DOCUMENTS_NEXT_TO_ACTIVE_TAB, isNewDocumentOpensNextToActiveTab.isSelected());
-        prefs.put(WinSysPrefs.SORT_TABS, getSelectedSortType().name());
+        prefs.put(WinSysPrefs.EDITOR_SORT_TABS, getSelectedSortType().name());
 
         boolean needsWinsysRefresh = false;
         needsWinsysRefresh = checkMultiRow.isSelected() != defMultiRow;
@@ -356,14 +356,14 @@ public class TabsPanel extends javax.swing.JPanel {
         return needsWinsysRefresh;
     }
 
-    private SortType getSelectedSortType() {
-        SortType sortType = SortType.None;
+    private EditorSortType getSelectedSortType() {
+        EditorSortType sortType = EditorSortType.None;
         if (radioSortFullFilePath.isSelected()) {
-            sortType = SortType.FullFilePath;
+            sortType = EditorSortType.FullFilePath;
         } else if (radioSortFileName.isSelected()) {
-            sortType = SortType.FileName;
+            sortType = EditorSortType.FileName;
         } else if (radioSortFileNameWithParent.isSelected()) {
-            sortType = SortType.FileNameWithParent;
+            sortType = EditorSortType.FileNameWithParent;
         }
         return sortType;
     }

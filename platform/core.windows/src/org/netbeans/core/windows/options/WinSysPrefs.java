@@ -86,5 +86,5 @@ public interface WinSysPrefs {
     /**
      * @since 2.87
      */
-    public static String SORT_TABS = "sort.tabs"; //NOI18N
+    public static String EDITOR_SORT_TABS = "editor.sort.tabs"; //NOI18N
 }

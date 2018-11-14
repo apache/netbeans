@@ -37,7 +37,7 @@ import org.netbeans.core.windows.ModeImpl;
 import org.netbeans.core.windows.SplitConstraint;
 import org.netbeans.core.windows.Switches;
 import org.netbeans.core.windows.WindowManagerImpl;
-import org.netbeans.core.windows.options.TabsPanel.SortType;
+import org.netbeans.core.windows.options.TabsPanel.EditorSortType;
 import org.netbeans.core.windows.options.WinSysPrefs;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -147,7 +147,7 @@ final class DefaultModeModel implements ModeModel {
 
     private void sortOpenedTopComponents() {
         if (getKind() == Constants.MODE_KIND_EDITOR) {
-            sortByFile(getSortType());
+            sortByFile(getEditorSortType());
         } else if( getKind() == Constants.MODE_KIND_SLIDING && Switches.isModeSlidingEnabled()) {
             WindowManagerImpl wm = WindowManagerImpl.getInstance();
             List<TopComponent> opened = topComponentSubModel.getOpenedTopComponents();
@@ -188,18 +188,18 @@ final class DefaultModeModel implements ModeModel {
         }
     }
 
-    private SortType getSortType() {
-        SortType sortType = SortType.None;
+    private EditorSortType getEditorSortType() {
+        EditorSortType sortType = EditorSortType.None;
         try {
-            sortType = SortType.valueOf(WinSysPrefs.HANDLER.get(WinSysPrefs.SORT_TABS, SortType.None.name()));
+            sortType = EditorSortType.valueOf(WinSysPrefs.HANDLER.get(WinSysPrefs.EDITOR_SORT_TABS, EditorSortType.None.name()));
         } catch (IllegalArgumentException ex) {
             // no-op
         }
         return sortType;
     }
 
-    private void sortByFile(final SortType sortType) {
-        if (sortType == SortType.None) {
+    private void sortByFile(final EditorSortType sortType) {
+        if (sortType == EditorSortType.None) {
             return;
         }
         List<TopComponent> openedComponents = topComponentSubModel.getOpenedTopComponents();

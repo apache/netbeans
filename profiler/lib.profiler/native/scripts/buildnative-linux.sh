@@ -17,14 +17,10 @@
 # specific language governing permissions and limitations
 # under the License.
 
-BuildForJDK()
-{
-        JAVA_HOME=$1
-        JDK_ID=$2
-        echo $JAVA_HOME $JDK_ID
-	gcc32 -I$JAVA_HOME/include -I$JAVA_HOME/include/linux -DLINUX -pthread -fPIC -shared -O3 -Wall -m64  \
-	-o ../../release/lib/deployed/$JDK_ID/linux-amd64/libprofilerinterface.so \
-	../src-jdk15/class_file_cache.c \
+JDK_ID=jdk16
+CPPFLAGS="-I$JDK_HOME/include -I$JDK_HOME/include/linux -I../build -DLINUX"
+CFLAGS="$CPPFLAGS -pthread -fPIC -shared -O3 -Wall -m32"
+SOURCES="../src-jdk15/class_file_cache.c \
 	../src-jdk15/attach.c \
 	../src-jdk15/Classes.c \
 	../src-jdk15/HeapDump.c \
@@ -32,11 +28,8 @@ BuildForJDK()
 	../src-jdk15/GC.c \
 	../src-jdk15/Threads.c \
 	../src-jdk15/Stacks.c \
-	../src-jdk15/common_functions.c
-
-        rm -f *.o
-}
-
-BuildForJDK "$JAVA_HOME_15" "jdk15"
-BuildForJDK "$JAVA_HOME_16" "jdk16"
-
+	../src-jdk15/common_functions.c"
+DEST="../../release/lib/deployed/jdk16/linux/"
+cc $CPPFLAGS -o ../build/config ../src-jdk15/config.c && ../build/config > ../build/config.h
+cc $CFLAGS -o $DEST/libprofilerinterface.so \
+   $SOURCES

@@ -15,12 +15,23 @@ rem KIND, either express or implied.  See the License for the
 rem specific language governing permissions and limitations
 rem under the License.
 
+rem Edit the following line to set the JDK location (for JNI headers)
+rem or leave if you have JDK_HOME set.
+SET BUILD_JDK=%JDK_HOME%
+rem Edit the following line to affect the deployment directory.
+rem Should not need to be changed as JNI is compatible for all versions 
+rem after 1.6.
+SET JDK_DEPLOY=jdk16
+SET PLATFORM=windows
+
+rem Do not alter below this line
 SET BUILD_SRC_15=..\src-jdk15
-SET BUILD_JDK=C:\PROGRA~1\java\jdk1.6.0_22
-SET BUILD_OUTPUT=%TEMP%\dist
+SET BUILD_SRC=..\src
 SET BUILD_DEPLOY=..\..\release\lib
 
-mkdir %BUILD_OUTPUT%\deployed\jdk16\windows
+mkdir %BUILD_DEPLOY%\deployed\%JDK_DEPLOY%\%PLATFORM%
+
+rc /Fo .\version.res %BUILD_SRC_15%\windows\version.rc
 
 cl /I%BUILD_JDK%\include /I%BUILD_JDK%\include\win32 ^
 %BUILD_SRC_15%\class_file_cache.c ^
@@ -32,16 +43,10 @@ cl /I%BUILD_JDK%\include /I%BUILD_JDK%\include\win32 ^
 %BUILD_SRC_15%\Threads.c ^
 %BUILD_SRC_15%\Stacks.c ^
 %BUILD_SRC_15%\common_functions.c ^
-/D WIN32 /MD /Ox /c
+version.res ^
+/D WIN32 /D NDEBUG /LD /MD /O2 ^
+/Fe:%BUILD_DEPLOY%\deployed\%JDK_DEPLOY%\%PLATFORM%\profilerinterface.dll ^
+/Fm:%BUILD_DEPLOY%\deployed\%JDK_DEPLOY%\%PLATFORM%\profilerinterface.map ^
+/link /DYNAMICBASE
 
-rc /fo version.res %BUILD_SRC_15%\windows\version.rc
-
-link /DLL /NXCOMPAT /DYNAMICBASE /SAFESEH /NODEFAULTLIB:MSVCR80 /LIBPATH:%CRT_LIB_PATH% /MAP:%BUILD_OUTPUT%\deployed\jdk16\windows\profilerinterface.map /OUT:%BUILD_OUTPUT%\deployed\jdk16\windows\profilerinterface.dll ^
-Classes.obj HeapDump.obj Timers.obj GC.obj Threads.obj Stacks.obj common_functions.obj class_file_cache.obj attach.obj version.res
-
-del vc60.pdb
-del *.obj *.res
-del %BUILD_OUTPUT%\deployed\jdk16\windows\*.lib %BUILD_OUTPUT%\deployed\jdk16\windows\*.exp %BUILD_OUTPUT%\deployed\jdk16\windows\*.ilk %BUILD_OUTPUT%\deployed\jdk16\windows\*.pdb
-
-copy %BUILD_OUTPUT%\deployed\jdk16\windows\*.dll %BUILD_DEPLOY%\deployed\jdk16\windows
-copy %BUILD_OUTPUT%\deployed\jdk16\windows\*.map %BUILD_DEPLOY%\deployed\jdk16\windows
+del version.res

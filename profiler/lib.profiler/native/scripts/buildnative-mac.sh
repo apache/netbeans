@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
@@ -17,14 +17,11 @@
 # specific language governing permissions and limitations
 # under the License.
 
-BuildForJDK()
-{
-        JAVA_HOME=$1
-        JDK_ID=$2
-	echo $JAVA_HOME $JDK_ID
-	gcc -I$JAVA_HOME/include -I$JAVA_HOME/include/linux -DLINUX -pthread -fPIC -shared -O3 -Wall \
-	-o ../../release/lib/deployed/$JDK_ID/linux/libprofilerinterface.so \
-	../src-jdk15/class_file_cache.c \
+jdk_home="$(/usr/libexec/java_home)"
+CPPFLAGS="-I $jdk_home/include -I $jdk_home/include/darwin -I../build -DLINUX "
+CFLAGS="$CPPFLAGS -mmacosx-version-min=10.4 -fpic -shared -O2"
+      
+SOURCES="../src-jdk15/class_file_cache.c \
 	../src-jdk15/attach.c \
 	../src-jdk15/Classes.c \
 	../src-jdk15/HeapDump.c \
@@ -32,11 +29,12 @@ BuildForJDK()
 	../src-jdk15/GC.c \
 	../src-jdk15/Threads.c \
 	../src-jdk15/Stacks.c \
-	../src-jdk15/common_functions.c
+	../src-jdk15/common_functions.c"
 
-	rm -f *.o
-}
+DEST="../../release/lib/deployed/jdk16/mac/"
 
-BuildForJDK "$JAVA_HOME_15" "jdk15"
-BuildForJDK "$JAVA_HOME_16" "jdk16"
+cc $CPPFLAGS ../src-jdk15/config.c -o ../build/config && ../build/config > ../build/config.h
 
+cc $CFLAGS $SOURCES -o ../build/libprofilerinterface.x86_64.dylib
+
+lipo $DEST/libprofilerinterface.jnilib -replace x86_64 ../build/libprofilerinterface.x86_64.dylib -output $DEST/libprofilerinterface.jnilib

@@ -249,21 +249,26 @@ class SamplesOutputStream {
                 out.writeLong(tid.longValue());
             }
             out.writeInt(newThreads.size());
+            for (Object t : (Object[]) toCompositeData(newThreads)) {
+                out.writeObject(t);
+            }
+        }
+
+        private Object[] toCompositeData(final List<ThreadInfo> threadInfos) {
             CompositeDataGetter getter = new CompositeDataGetter() {
                 @Override
                 public ThreadInfo[] getThreads() {
-                    return newThreads.toArray(new ThreadInfo[0]);
+                    return threadInfos.toArray(new ThreadInfo[0]);
                 }
             };
             try {
                 StandardMBean getterBean = new StandardMBean(getter,
                                                              CompositeDataGetter.class,
                                                              true);
-                for (Object t : (Object[]) getterBean.getAttribute("Threads")) {
-                    out.writeObject(t);
-                }
+                return (Object[]) getterBean.getAttribute("Threads");
             } catch (Exception ex) {
                 Exceptions.printStackTrace(ex);
+                return new Object[0];
             }
         }
 

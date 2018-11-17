@@ -504,18 +504,13 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             }
         }
         
-        private Collection<ColoringAttributes> getMethodColoring(ExecutableElement mdecl, boolean nct) {
+        private Collection<ColoringAttributes> getMethodColoring(ExecutableElement mdecl) {
             Collection<ColoringAttributes> c = new ArrayList<ColoringAttributes>();
             
             addModifiers(mdecl, c);
             
             if (mdecl.getKind() == ElementKind.CONSTRUCTOR) {
                 c.add(ColoringAttributes.CONSTRUCTOR);
-
-                //#146820:
-                if (nct && mdecl.getEnclosingElement() != null && info.getElements().isDeprecated(mdecl.getEnclosingElement())) {
-                    c.add(ColoringAttributes.DEPRECATED);
-                }
             } else
                 c.add(ColoringAttributes.METHOD);
             
@@ -554,10 +549,10 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         private static final Set<Kind> LITERALS = EnumSet.of(Kind.BOOLEAN_LITERAL, Kind.CHAR_LITERAL, Kind.DOUBLE_LITERAL, Kind.FLOAT_LITERAL, Kind.INT_LITERAL, Kind.LONG_LITERAL, Kind.STRING_LITERAL);
 
         private void handlePossibleIdentifier(TreePath expr, boolean declaration) {
-            handlePossibleIdentifier(expr, declaration, null, false, false);
+            handlePossibleIdentifier(expr, declaration, null);
         }
         
-        private void handlePossibleIdentifier(TreePath expr, boolean declaration, Element decl, boolean providesDecl, boolean nct) {
+        private void handlePossibleIdentifier(TreePath expr, boolean declaration, Element decl) {
             if (Utilities.isKeyword(expr.getLeaf())) {
                 //ignore keywords:
                 return ;
@@ -573,42 +568,48 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                 return ;
             }
 
-            decl = !providesDecl ? info.getTrees().getElement(expr) : decl;
-            
-            Collection<ColoringAttributes> c = null;
-            
-            //causes NPE later, as decl is put into list of declarations to handle:
-//            if (decl == null) {
-//                c = Collections.singletonList(ColoringAttributes.UNDEFINED);
-//            }
+            decl = decl == null ? info.getTrees().getElement(expr) : decl;
+
+            ElementKind declKind = decl != null ? decl.getKind() : null;
+            boolean isDeclType = decl != null &&
+                                 (declKind.isClass() || declKind.isInterface());
+            TreePath currentPath = getCurrentPath();
+            TreePath parent = currentPath.getParentPath();
 
             //for new <type>(), highlight <type> as a constructor:
-            if (decl != null && (decl.getKind().isClass() || decl.getKind().isInterface()) &&
-		    getCurrentPath().getParentPath().getLeaf().getKind() == Kind.NEW_CLASS) {
-		decl = info.getTrees().getElement(getCurrentPath().getParentPath());
+            if (isDeclType &&
+                parent.getLeaf().getKind() == Kind.NEW_CLASS) {
+		decl = info.getTrees().getElement(parent);
 	    }
 
-            if (decl != null && (decl.getKind().isClass() || decl.getKind().isInterface()) &&
-		    (getCurrentPath().getParentPath().getLeaf().getKind() == Kind.PARAMETERIZED_TYPE &&
-                      ((ParameterizedTypeTree) getCurrentPath().getParentPath().getLeaf()).getType() == getCurrentPath().getLeaf() &&
-                      getCurrentPath().getParentPath().getParentPath().getLeaf().getKind() == Kind.NEW_CLASS)) {
-		decl = info.getTrees().getElement(getCurrentPath().getParentPath().getParentPath());
+            if (isDeclType &&
+                (parent.getLeaf().getKind() == Kind.PARAMETERIZED_TYPE &&
+                  ((ParameterizedTypeTree) parent.getLeaf()).getType() == currentPath.getLeaf() &&
+                  parent.getParentPath().getLeaf().getKind() == Kind.NEW_CLASS)) {
+		decl = info.getTrees().getElement(parent.getParentPath());
 	    }
 
-            if (decl != null && (decl.getKind().isField() || isLocalVariableClosure(decl))) {
+            if (decl == null) {
+                return ;
+            }
+
+            isDeclType = decl.getKind().isClass() || decl.getKind().isInterface();
+            Collection<ColoringAttributes> c = null;
+
+            if (decl.getKind().isField() || isLocalVariableClosure(decl)) {
                 c = getVariableColoring(decl);
             }
             
-            if (decl != null && decl instanceof ExecutableElement) {
-                c = getMethodColoring((ExecutableElement) decl, nct);
+            if (decl instanceof ExecutableElement) {
+                c = getMethodColoring((ExecutableElement) decl);
             }
             
-            if (decl != null && decl.getKind() == ElementKind.MODULE) {
+            if (decl.getKind() == ElementKind.MODULE) {
                 c = new ArrayList<ColoringAttributes>();
                 c.add(ColoringAttributes.MODULE);
             }
 
-            if (decl != null && (decl.getKind().isClass() || decl.getKind().isInterface())) {
+            if (isDeclType) {
                 c = new ArrayList<ColoringAttributes>();
                 
                 addModifiers(decl, c);
@@ -621,7 +622,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                 }
             }                       
             
-            if (decl != null && declaration) {
+            if (declaration) {
                 if (c == null) {
                     c = new ArrayList<ColoringAttributes>();
                 }
@@ -632,34 +633,35 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             if (c != null) {
                 Collection<UseTypes> type = EnumSet.noneOf(UseTypes.class);
 
-                if (decl.getKind().isClass() || decl.getKind().isInterface()) {
+                if (isDeclType) {
                     if (!declaration) {
                         type.add(UseTypes.CLASS_USE);
                     }
                 } else if (decl.getKind().isField() || isLocalVariableClosure(decl)) {
                     if (!declaration) {
-                        TreePath pathToCheck = getCurrentPath();
                         while (true) {
-                            if (pathToCheck.getParentPath().getLeaf().getKind() == Kind.POSTFIX_DECREMENT ||
-                                pathToCheck.getParentPath().getLeaf().getKind() == Kind.POSTFIX_INCREMENT ||
-                                pathToCheck.getParentPath().getLeaf().getKind() == Kind.PREFIX_DECREMENT ||
-                                pathToCheck.getParentPath().getLeaf().getKind() == Kind.PREFIX_INCREMENT) {
+                            if (parent.getLeaf().getKind() == Kind.POSTFIX_DECREMENT ||
+                                parent.getLeaf().getKind() == Kind.POSTFIX_INCREMENT ||
+                                parent.getLeaf().getKind() == Kind.PREFIX_DECREMENT ||
+                                parent.getLeaf().getKind() == Kind.PREFIX_INCREMENT) {
                                 type.add(UseTypes.WRITE);
-                                pathToCheck = pathToCheck.getParentPath();
+                                currentPath = parent;
+                                parent = currentPath.getParentPath();
                                 continue;
                             }
-                            if (CompoundAssignmentTree.class.isAssignableFrom(pathToCheck.getParentPath().getLeaf().getKind().asInterface()) &&
-                                ((CompoundAssignmentTree) pathToCheck.getParentPath().getLeaf()).getVariable() == pathToCheck.getLeaf()) {
+                            if (CompoundAssignmentTree.class.isAssignableFrom(parent.getLeaf().getKind().asInterface()) &&
+                                ((CompoundAssignmentTree) parent.getLeaf()).getVariable() == currentPath.getLeaf()) {
                                 type.add(UseTypes.WRITE);
-                                pathToCheck = pathToCheck.getParentPath();
+                                currentPath = parent;
+                                parent = currentPath.getParentPath();
                                 continue;
                             }
                             break;
                         }
-                        if (pathToCheck.getParentPath().getLeaf().getKind() == Kind.ASSIGNMENT &&
-                            ((AssignmentTree) pathToCheck.getParentPath().getLeaf()).getVariable() == pathToCheck.getLeaf()) {
+                        if (parent.getLeaf().getKind() == Kind.ASSIGNMENT &&
+                            ((AssignmentTree) parent.getLeaf()).getVariable() == currentPath.getLeaf()) {
                             type.add(UseTypes.WRITE);
-                        } else if (pathToCheck.getParentPath().getLeaf().getKind() != Kind.EXPRESSION_STATEMENT) {
+                        } else if (parent.getLeaf().getKind() != Kind.EXPRESSION_STATEMENT) {
                             type.add(UseTypes.READ);
                         }
                     } else if (decl.getKind() == ElementKind.PARAMETER) {
@@ -667,19 +669,19 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
 
                         type.add(UseTypes.WRITE);
 
-                        if (getCurrentPath().getParentPath().getLeaf().getKind() == Kind.LAMBDA_EXPRESSION &&
-                            ((LambdaExpressionTree) getCurrentPath().getParentPath().getLeaf()).getParameters().contains(getCurrentPath().getLeaf())) {
+                        if (parent.getLeaf().getKind() == Kind.LAMBDA_EXPRESSION &&
+                            ((LambdaExpressionTree) parent.getLeaf()).getParameters().contains(currentPath.getLeaf())) {
 //                            type.add(UseTypes.READ);
                         } else if (method.getModifiers().contains(Modifier.ABSTRACT) || method.getModifiers().contains(Modifier.NATIVE) || !method.getModifiers().contains(Modifier.PRIVATE)) {
                             type.add(UseTypes.READ);
                         }
                     } else if (decl.getKind().isField() || decl.getKind() == ElementKind.EXCEPTION_PARAMETER) {
                         type.add(UseTypes.WRITE);
-                    } else if (getCurrentPath().getParentPath().getLeaf().getKind() == Kind.ENHANCED_FOR_LOOP &&
-                               ((EnhancedForLoopTree) getCurrentPath().getParentPath().getLeaf()).getVariable() == getCurrentPath().getLeaf()) {
+                    } else if (parent.getLeaf().getKind() == Kind.ENHANCED_FOR_LOOP &&
+                               ((EnhancedForLoopTree) parent.getLeaf()).getVariable() == currentPath.getLeaf()) {
                         type.add(UseTypes.WRITE);
                     } else {
-                        VariableTree vt = (VariableTree) getCurrentPath().getLeaf();
+                        VariableTree vt = (VariableTree) currentPath.getLeaf();
 
                         if (vt.getInitializer() != null) {
                             type.add(UseTypes.WRITE);
@@ -751,7 +753,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             }
             Element e = info.getTrees().getElement(getCurrentPath());
             if (e != null && e.getKind() == ElementKind.MODULE) {
-                handlePossibleIdentifier(new TreePath(getCurrentPath(), tree.getName()), true, e, true, false);
+                handlePossibleIdentifier(new TreePath(getCurrentPath(), tree.getName()), true, e);
                 tl.moduleNameHere(tree.getName(), tree2Tokens);
             }
             scan(tree.getDirectives(), p);
@@ -848,22 +850,9 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             return super.visitUses(tree, p);
         }
                 
-        private void handleMethodTypeArguments(TreePath method, List<? extends Tree> tArgs) {
-            //the type arguments are before the last identifier in the select, so we should return there:
-            //not very efficient, though:
-            tl.moveBefore(tArgs);
-            
-//            for (Tree expr : tArgs) {
-//                if (expr instanceof IdentifierTree) {
-//                    handlePossibleIdentifier(new TreePath(method, expr), EnumSet.of(UseTypes.CLASS_USE));
-//                }
-//            }
-        }
-        
         @Override
         public Void visitMethodInvocation(MethodInvocationTree tree, Void p) {
             Tree possibleIdent = tree.getMethodSelect();
-            boolean handled = false;
             
             if (possibleIdent.getKind() == Kind.IDENTIFIER) {
                 //handle "this" and "super" constructors:
@@ -873,7 +862,6 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                     Element resolved = info.getTrees().getElement(getCurrentPath());
                     
                     addUse(resolved, EnumSet.of(UseTypes.EXECUTE), null, null);
-                    handled = true;
                 }
             }
             
@@ -892,7 +880,9 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                     scan(tree.getMethodSelect(), p);
             }
 
-            handleMethodTypeArguments(getCurrentPath(), ta);
+            //the type arguments are before the last identifier in the select, so we should return there:
+            //not very efficient, though:
+            tl.moveBefore(tree.getTypeArguments());
             
             scan(tree.getTypeArguments(), null);
             
@@ -981,14 +971,6 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         public Void visitVariable(VariableTree tree, Void p) {
             tl.moveToOffset(sourcePositions.getStartPosition(info.getCompilationUnit(), tree));
 
-            if (tree.getType() != null) {
-                TreePath type = new TreePath(getCurrentPath(), tree.getType());
-
-                if (type.getLeaf() instanceof ArrayTypeTree) {
-                    type = new TreePath(type, ((ArrayTypeTree) type.getLeaf()).getType());
-                }
-            }
-            
             handlePossibleIdentifier(getCurrentPath(), true);
             
             scan(tree.getModifiers(), null);

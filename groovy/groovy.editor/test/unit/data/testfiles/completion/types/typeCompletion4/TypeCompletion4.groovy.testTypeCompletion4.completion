@@ -9,7 +9,6 @@ CLASS      ClassFormatError                           null
 CLASS      ClassLoader                                null
 CLASS      ClassNotFoundException                     null
 CLASS      ClassValue                                 null
-CLASS      CliBuilder                                 null
 CLASS      CloneNotSupportedException                 null
 CLASS      Cloneable                                  null
 CLASS      Closeable                                  null

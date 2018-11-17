@@ -70,7 +70,7 @@ public class ConfigurationPanel extends JPanel implements Runnable {
 
     public ConfigurationPanel(String displayName, final Callable<JComponent> callable, FeatureInfo info) {
         this(callable);
-        setInfo(info, displayName, Collections.<UpdateElement>emptyList(), Collections.<String>emptyList());
+        setInfo(info, displayName, Collections.<UpdateElement>emptyList(), Collections.emptyList());
     }
     
     public ConfigurationPanel(final Callable<JComponent> callable) {
@@ -83,7 +83,7 @@ public class ConfigurationPanel extends JPanel implements Runnable {
     }
 
     public void setInfo(FeatureInfo info, String displayName, Collection<UpdateElement> toInstall, 
-            Collection<String> missingModules) {
+            Collection<FeatureInfo.ExtraModuleInfo> missingModules) {
         this.featureInfo = info;
         this.featureInstall = toInstall;
         boolean activateNow = toInstall.isEmpty() && missingModules.isEmpty();
@@ -101,12 +101,13 @@ public class ConfigurationPanel extends JPanel implements Runnable {
             downloadButton.setVisible(true);
             SpecificationVersion jdk = new SpecificationVersion(System.getProperty("java.specification.version"));
             String lblDownloadMsg;
-            
+
             boolean required = false;
-            
-            if (info.getExtraModulesRecommendedMinJDK() != null && 
-                jdk.compareTo(new SpecificationVersion(info.getExtraModulesRecommendedMinJDK())) < 0) {
-                required = true;
+
+            for (FeatureInfo.ExtraModuleInfo mi : info.getExtraModules()) {
+                if (mi.recMinJDK != null && jdk.compareTo(mi.recMinJDK) < 0) {
+                    required = true;
+                }
             }
             if (info.getExtraModulesRequiredText() != null && info.getExtraModulesRecommendedText() == null) {
                 required = true;
@@ -122,7 +123,7 @@ public class ConfigurationPanel extends JPanel implements Runnable {
             String list = "";
             if (!missingModules.isEmpty()) {
                 StringBuilder sb = new StringBuilder();
-                for (String s : missingModules) {
+                for (FeatureInfo.ExtraModuleInfo s : missingModules) {
                     if (sb.length() > 0) {
                         sb.append(", "); // NOI18N
                     }
@@ -139,7 +140,7 @@ public class ConfigurationPanel extends JPanel implements Runnable {
             } else {
                 downloadButton.setEnabled(true);
             }
-            
+
             String lblActivateMsg = NbBundle.getMessage(ConfigurationPanel.class, "LBL_EnableInfo", displayName);
             String btnActivateMsg = NbBundle.getMessage(ConfigurationPanel.class, "LBL_Enable");
             String btnDownloadMsg = NbBundle.getMessage(ConfigurationPanel.class, "LBL_Download");

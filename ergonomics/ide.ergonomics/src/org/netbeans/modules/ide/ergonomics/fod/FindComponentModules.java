@@ -249,15 +249,19 @@ public final class FindComponentModules extends Task {
         for (FeatureInfo fi : this.infos) {
             Set<FeatureInfo.ExtraModuleInfo> extraModules = fi.getExtraModules();
             FOUND: for (FeatureInfo.ExtraModuleInfo moduleInfo : extraModules) {
+                boolean found = false;
                 for (UpdateUnit unit : allUnits) {
                     if (moduleInfo.matches(unit.getCodeName())) {
                         if (unit.getInstalled() != null) {
                             continue FOUND;
                         } else {
                             res.add(unit.getAvailableUpdates().get(0));
-                            continue FOUND;
+                            found = true;
                         }
                     }
+                }
+                if (found) {
+                    continue FOUND;
                 }
                 
                 // not found

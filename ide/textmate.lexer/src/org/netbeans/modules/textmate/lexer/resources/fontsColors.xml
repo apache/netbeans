@@ -31,7 +31,7 @@
     </fontcolor>
     <fontcolor name="constant.language" default="keyword" />
     <fontcolor name="constant.other" default="identifier" /> <!--???-->
-    <fontcolor name="entity.name" default="method">
+    <fontcolor name="entity.name.function" default="method">
         <font style="bold" />
     </fontcolor>
     <fontcolor name="invalid" default="error" />

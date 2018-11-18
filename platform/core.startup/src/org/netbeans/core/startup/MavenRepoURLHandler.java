@@ -20,14 +20,24 @@ package org.netbeans.core.startup;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
-import org.openide.util.BaseUtilities;
 import org.openide.util.URLStreamHandlerRegistration;
 
 @URLStreamHandlerRegistration(position = 99999, protocol="m2")
 public final class MavenRepoURLHandler extends URLStreamHandler {
+    private static final URI CENTRAL_REPO_URI;
+    static {
+        try {
+            CENTRAL_REPO_URI = new URI("https://repo1.maven.org/maven2/");
+        } catch (URISyntaxException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
     @Override
     protected URLConnection openConnection(URL u) throws IOException {
         String path = u.getPath();
@@ -37,23 +47,29 @@ public final class MavenRepoURLHandler extends URLStreamHandler {
         String stuff = path.substring(1);
         File m2Repo = new File(new File(new File(System.getProperty("user.home")), ".m2"), "repository");
         String[] pieces = stuff.split(":");
-        File f = null;
+        URI uri = null;
         if (pieces.length >= 4) {
-            File groupId = new File(m2Repo, pieces[0].replace('.', File.separatorChar));
-            File dir = new File(new File(groupId, pieces[1]), pieces[2]);
-            String fileName = pieces[1] + '-' + pieces[2];
-            if (pieces.length == 5) {
-                fileName += "-" + pieces[4];
-            }
-            fileName += "." + pieces[3];
-            f = new File(dir, fileName);
+            uri = relativeMavenURI(m2Repo.toURI(), pieces);
         } else {
             throw new IOException(stuff);
         }
-        if (f == null && !f.isFile()) {
-            throw new IOException("failed to locate " + stuff);
+        File f = new File(uri);
+        if (uri == null || !f.isFile()) {
+            uri = relativeMavenURI(CENTRAL_REPO_URI, pieces);
         }
-        return BaseUtilities.toURI(f).toURL().openConnection();
+        return uri.toURL().openConnection();
 
+    }
+
+    private URI relativeMavenURI(URI m2Repo, String[] pieces) {
+        URI groupId = m2Repo.resolve(pieces[0].replace('.', '/') + '/');
+        URI dir = groupId.resolve(pieces[1] + '/').resolve(pieces[2] + '/');
+        String fileName = pieces[1] + '-' + pieces[2];
+        if (pieces.length == 5) {
+            fileName += "-" + pieces[4];
+        }
+        fileName += "." + pieces[3];
+        URI uri = dir.resolve(fileName);
+        return uri;
     }
 }

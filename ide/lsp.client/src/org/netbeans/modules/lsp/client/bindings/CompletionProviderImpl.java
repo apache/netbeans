@@ -22,9 +22,11 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
+import java.net.URL;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
+import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.text.BadLocationException;
@@ -44,6 +46,7 @@ import org.netbeans.editor.Utilities;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.modules.lsp.client.Utils;
+import org.netbeans.spi.editor.completion.CompletionDocumentation;
 import org.netbeans.spi.editor.completion.CompletionProvider;
 import org.netbeans.spi.editor.completion.CompletionResultSet;
 import org.netbeans.spi.editor.completion.CompletionTask;
@@ -95,6 +98,21 @@ public class CompletionProviderImpl implements CompletionProvider {
                     }
                     for (CompletionItem i : items) {
                         String insert = i.getInsertText() != null ? i.getInsertText() : i.getLabel();
+                        String leftLabel = encode(i.getLabel());
+                        String rightLabel = encode(""); //TODO: anything we could show there?
+                        String sortText = i.getSortText() != null ? i.getSortText() : i.getLabel();
+                        String header = "<html>" + "<b>" + (i.getDetail() != null ? i.getDetail() : i.getLabel()) + "</b>";
+                        String documentation;
+                        if (i.getDocumentation() != null) {
+                            header += "<br><br>";
+                            if (i.getDocumentation().isLeft()) {
+                                documentation = header + i.getDocumentation().getLeft();
+                            } else {
+                                documentation = header + i.getDocumentation().getRight().getValue(); //TODO: convert markup!
+                            }
+                        } else {
+                            documentation = header;
+                        }
                         CompletionItemKind kind = i.getKind();
                         Icon ic = Icons.getCompletionIcon(kind);
                         ImageIcon icon = new ImageIcon(ImageUtilities.icon2Image(ic));
@@ -135,17 +153,46 @@ public class CompletionProviderImpl implements CompletionProvider {
 
                             @Override
                             public int getPreferredWidth(Graphics grphcs, Font font) {
-                                return CompletionUtilities.getPreferredWidth(insert, null, grphcs, font);
+                                return CompletionUtilities.getPreferredWidth(leftLabel, rightLabel, grphcs, font);
                             }
 
                             @Override
                             public void render(Graphics grphcs, Font font, Color color, Color color1, int i, int i1, boolean bln) {
-                                CompletionUtilities.renderHtml(icon, insert, null, grphcs, font, color, i, i1, bln);
+                                CompletionUtilities.renderHtml(icon, leftLabel, rightLabel, grphcs, font, color, i, i1, bln);
                             }
 
                             @Override
                             public CompletionTask createDocumentationTask() {
-                                return null;
+                                return new CompletionTask() {
+                                    @Override
+                                    public void query(CompletionResultSet resultSet) {
+                                        resultSet.setDocumentation(new CompletionDocumentation() {
+                                            @Override
+                                            public String getText() {
+                                                return documentation;
+                                            }
+                                            @Override
+                                            public URL getURL() {
+                                                return null;
+                                            }
+                                            @Override
+                                            public CompletionDocumentation resolveLink(String link) {
+                                                return null;
+                                            }
+                                            @Override
+                                            public Action getGotoSourceAction() {
+                                                return null;
+                                            }
+                                        });
+                                        resultSet.finish();
+                                    }
+
+                                    @Override
+                                    public void refresh(CompletionResultSet resultSet) {}
+
+                                    @Override
+                                    public void cancel() {}
+                                };
                             }
 
                             @Override
@@ -165,7 +212,7 @@ public class CompletionProviderImpl implements CompletionProvider {
 
                             @Override
                             public CharSequence getSortText() {
-                                return i.getSortText();
+                                return sortText;
                             }
 
                             @Override
@@ -183,6 +230,11 @@ public class CompletionProviderImpl implements CompletionProvider {
                 }
             }
         }, component);
+    }
+    
+    private String encode(String str) {
+        return str.replace("&", "&amp;")
+                  .replace("<", "&lt;");
     }
 
     @Override

@@ -16,19 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.lsp.client.bindings;
+package org.netbeans.modules.lsp.client;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.eclipse.lsp4j.Position;
 import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
+import org.openide.filesystems.FileObject;
 
 /**
  *
  * @author lahvac
  */
 public class Utils {
+
+    public static String toURI(FileObject file) {
+        return file.toURI().toString().replace("file:/", "file:///");
+    }
 
     public static Position createPosition(Document doc, int offset) throws BadLocationException {
          return new Position(LineDocumentUtils.getLineIndex((LineDocument) doc, offset),

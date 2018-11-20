@@ -22,7 +22,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
-import java.net.URI;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
@@ -44,6 +43,7 @@ import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.lsp.client.LSPBindings;
+import org.netbeans.modules.lsp.client.Utils;
 import org.netbeans.spi.editor.completion.CompletionProvider;
 import org.netbeans.spi.editor.completion.CompletionResultSet;
 import org.netbeans.spi.editor.completion.CompletionTask;
@@ -77,9 +77,9 @@ public class CompletionProviderImpl implements CompletionProvider {
                     if (server == null) {
                         return ;
                     }
-                    URI uri = file.toURI();
+                    String uri = Utils.toURI(file);
                     CompletionParams params;
-                    params = new CompletionParams(new TextDocumentIdentifier(uri.toString()),
+                    params = new CompletionParams(new TextDocumentIdentifier(uri),
                             Utils.createPosition(doc, caretOffset));
                     CountDownLatch l = new CountDownLatch(1);
                     //TODO: Location or Location[]

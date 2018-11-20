@@ -39,6 +39,7 @@ import org.netbeans.api.editor.EditorRegistry;
 import org.netbeans.editor.BaseDocumentEvent;
 import org.netbeans.modules.editor.*;
 import org.netbeans.modules.lsp.client.LSPBindings;
+import org.netbeans.modules.lsp.client.Utils;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.OnStart;
@@ -128,7 +129,7 @@ public class TextDocumentSyncServerCapabilityHandler {
                                                                    oldText.length(),
                                                                    newText);
                         VersionedTextDocumentIdentifier di = new VersionedTextDocumentIdentifier(++version);
-                        di.setUri(file.toURI().toString());
+                        di.setUri(Utils.toURI(file));
                         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(di, Arrays.asList(event)));
                         server.scheduleBackgroundTasks(file);
                     } catch (BadLocationException ex) {

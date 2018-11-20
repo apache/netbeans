@@ -23,12 +23,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.WeakHashMap;
@@ -70,7 +68,7 @@ public class LSPBindings {
     private static final Map<FileObject, Map<String, LSPBindings>> workspace2Extension2Server = new HashMap<>();
     private final Map<FileObject, Map<BackgroundTask, RequestProcessor.Task>> backgroundTasks = new WeakHashMap<>();
 
-    public static LSPBindings getBindings(FileObject file) {
+    public static synchronized LSPBindings getBindings(FileObject file) {
         for (Entry<FileObject, Map<String, LSPBindings>> e : workspace2Extension2Server.entrySet()) {
             if (FileUtil.isParentOf(e.getKey(), file)) {
                 LSPBindings bindings = e.getValue().get(file.getExt());
@@ -108,7 +106,7 @@ public class LSPBindings {
                                                        launcher.startListening();
                                                        LanguageServer server = launcher.getRemoteProxy();
                                                        InitializeParams initParams = new InitializeParams();
-                                                       initParams.setRootUri(prj.getProjectDirectory().toURI().toString()); //XXX: what if a different root is expected????
+                                                       initParams.setRootUri(Utils.toURI(prj.getProjectDirectory())); //XXX: what if a different root is expected????
                                                        initParams.setRootPath(FileUtil.toFile(prj.getProjectDirectory()).getAbsolutePath()); //some servers still expect root path
                                                        initParams.setProcessId(0);
                                                        InitializeResult result = server.initialize(initParams).get();
@@ -147,7 +145,7 @@ public class LSPBindings {
                 LanguageServer server = launcher.getRemoteProxy();
 
                 InitializeParams initParams = new InitializeParams();
-                initParams.setRootUri(root.toURI().toString());
+                initParams.setRootUri(Utils.toURI(root));
                 initParams.setProcessId(0);
                 InitializeResult result = server.initialize(initParams).get();
                 LSPBindings bindings = new LSPBindings(server, result);

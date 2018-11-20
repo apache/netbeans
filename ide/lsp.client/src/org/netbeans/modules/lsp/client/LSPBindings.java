@@ -110,17 +110,21 @@ public class LSPBindings {
                                                        initParams.setRootPath(FileUtil.toFile(prj.getProjectDirectory()).getAbsolutePath()); //some servers still expect root path
                                                        initParams.setProcessId(0);
                                                        InitializeResult result = server.initialize(initParams).get();
-                                                       LSPBindings b = new LSPBindings(server, result);
+                                                       LSPBindings b = new LSPBindings(server, result, LanguageServerProviderAccessor.getINSTANCE().getProcess(desc));
                                                        lci.setBindings(b);
                                                        return b;
                                                    } catch (InterruptedException | ExecutionException ex) {
-                                                       LOG.log(Level.FINE, null, ex);
+                                                       LOG.log(Level.WARNING, null, ex);
                                                    }
                                                }
                                            }
-                                           return new LSPBindings(null, null);
+                                           return new LSPBindings(null, null, null);
                                        });
 
+        if (bindings.process != null && !bindings.process.isAlive()) {
+            //XXX: what now
+            return null;
+        }
         return bindings.server != null ? bindings : null;
     }
     private static final Logger LOG = Logger.getLogger(LSPBindings.class.getName());
@@ -148,7 +152,7 @@ public class LSPBindings {
                 initParams.setRootUri(Utils.toURI(root));
                 initParams.setProcessId(0);
                 InitializeResult result = server.initialize(initParams).get();
-                LSPBindings bindings = new LSPBindings(server, result);
+                LSPBindings bindings = new LSPBindings(server, result, null);
 
                 lc.setBindings(bindings);
 
@@ -161,10 +165,12 @@ public class LSPBindings {
 
     private final LanguageServer server;
     private final InitializeResult initResult;
+    private final Process process;
 
-    private LSPBindings(LanguageServer server, InitializeResult initResult) {
+    private LSPBindings(LanguageServer server, InitializeResult initResult, Process process) {
         this.server = server;
         this.initResult = initResult;
+        this.process = process;
     }
 
     public TextDocumentService getTextDocumentService() {

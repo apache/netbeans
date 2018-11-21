@@ -72,8 +72,8 @@
     <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
         <manifest dir="${nb_all}">
             <include name="nbbuild/external/binaries-list"/>
-            <include name="libs.junit4/external/binaries-list"/>
-            <include name="javahelp/external/binaries-list"/>
+            <include name="platform/libs.junit4/external/binaries-list"/>
+            <include name="platform/javahelp/external/binaries-list"/>
         </manifest>
     </downloadbinaries>
 
@@ -1622,9 +1622,16 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     </condition>
     <zip zipfile="${nb.build.dir}/${cluster.config}-src-${buildnum}.zip" duplicate="preserve">
       <zipfileset dir="${nb_all}" includes="${source.dirs}">
+          <!--exclude all build directories and external jars/zips in the top level directory:-->
           <exclude name="*/build/"/>
           <exclude name="*/external/*.jar"/>
           <exclude name="*/external/*.zip"/>
+          <!--exclude all build directories and external jars/zips in the cluster directories,
+              but keep nbi/infra/build, which is a directory with sources:-->
+          <exclude name="[^n]*/*/build/"/>
+          <exclude name="nb/*/build/"/>
+          <exclude name="*/*/external/*.jar"/>
+          <exclude name="*/*/external/*.zip"/>
           <exclude name="nbbuild/netbeans/**"/>
           <exclude name="nbbuild/cluster.properties" />
       </zipfileset>

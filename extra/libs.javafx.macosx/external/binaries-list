@@ -15,14 +15,11 @@
 # specific language governing permissions and limitations
 # under the License.
 
-project.file.pom.xml=org.netbeans.modules.maven.NbMavenProjectFactory
-project.file.../java.base/share/classes/java/lang/Object.java=org.netbeans.modules.java.openjdk.project.JDKProject$JDKProjectFactory
-projectImporter=Eclipse
+4B060DAD0AFFD866DF9D959E064FAA8A1A2F4AF0 org.openjfx:javafx-base:11:mac
+E3A24A14E8732ABC6DC173F15872DC63E2A32E16 org.openjfx:javafx-controls:11:mac
+0AF47A6D3668D3CE1C61E1FE13C44471B6F8D469 org.openjfx:javafx-graphics:11:mac
+96340B87188E18FAD90BA9673C45FBB942E8A11A org.openjfx:javafx-media:11:mac
+85122D46916C3ECBCB1202C7509C4AEC972EA10B org.openjfx:javafx-web:11:mac
+6FD6F4E3C5F59FA30CA61204877101ED978005AA org.openjfx:javafx-swing:11:mac
 
-mainModule=org.netbeans.modules.java.kit
-extra.modules=org.netbeans.modules.nbjavac
-extra.modules.recommended.min.jdk=9
-extra.modules.1=org\\.netbeans\\.libs\\.javafx\\.(linux|win|macosx)
 
-LBL_Ergonomics_Extra_Required=Additional modules are needed to run Java SE support on JDK 8.
-LBL_Ergonomics_Extra_Recommended=Additional modules are recommended to run Java SE support.

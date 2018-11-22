@@ -26,17 +26,20 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import javax.xml.xpath.XPathExpression;
 import org.w3c.dom.Document;
 import org.openide.modules.ModuleInfo;
+import org.openide.modules.SpecificationVersion;
 import org.openide.util.Lookup;
 
 /** Description of <em>Feature On Demand</em> capabilities and a 
@@ -213,17 +216,37 @@ public final class FeatureInfo {
         return Collections.unmodifiableSet(cnbs);
     }
     
-    public final Set<String> getExtraModules() {
-        String cnbs = properties.getProperty("extra.modules"); // NOI18N
-        TreeSet<String> s = new TreeSet<String>();
-        if (cnbs != null) {
-            s.addAll(Arrays.asList(cnbs.split(",")));
+    public final Set<ExtraModuleInfo> getExtraModules() {
+        Set<ExtraModuleInfo> s = new LinkedHashSet<>();
+        for (int i = 0; ; i++) {
+            String propName = i == 0 ? "extra.modules" : "extra.modules." + i; // NOI18N
+            String cnbPattern = properties.getProperty(propName);
+            if (cnbPattern == null) {
+                break;
+            }
+            String rec = properties.getProperty(propName + ".recommended.min.jdk"); // NOI18N
+            s.add(new ExtraModuleInfo(cnbPattern, rec));
         }
         return s;
     }
 
-    public final String getExtraModulesRecommendedMinJDK() {
-        return properties.getProperty("extra.modules.recommended.min.jdk"); // NOI18N
+    static final class ExtraModuleInfo {
+        private final Pattern cnb;
+        final SpecificationVersion recMinJDK;
+
+        ExtraModuleInfo(String cnbPattern, String recommended) {
+            this.cnb = Pattern.compile(cnbPattern);
+            this.recMinJDK = recommended != null ? new SpecificationVersion(recommended) : null;
+        }
+
+        boolean matches(String cnb) {
+            return this.cnb.matcher(cnb).matches();
+        }
+
+        @Override
+        public String toString() {
+            return "ExtraModuleInfo{" + "cnb=" + cnb + ", recommended=" + recMinJDK + '}';
+        }
     }
 
     public final String getExtraModulesRequiredText() {

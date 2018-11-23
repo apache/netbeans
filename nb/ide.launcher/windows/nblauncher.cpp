@@ -488,22 +488,6 @@ bool NbLauncher::parseConfigFile(const char* path) {
 
 typedef void (WINAPI *PGNSI)(LPSYSTEM_INFO);
 
-bool NbLauncher::areWeOn32bits() {
-    // find out if we are on 32-bit Windows
-    SYSTEM_INFO siSysInfo;
-    PGNSI pGNSI;
-    pGNSI = (PGNSI) GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")),
-            "GetNativeSystemInfo");
-    if (NULL != pGNSI)
-        pGNSI(&siSysInfo);
-    else
-        GetSystemInfo(&siSysInfo);
-    logMsg("NbLauncher::areWeOn32bits returns (0=false, 1=true)? %i", ((siSysInfo.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_INTEL) ||
-            (strstr(NBEXEC_FILE_PATH, "64") == NULL)));
-    return ((siSysInfo.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_INTEL) ||
-            (strstr(NBEXEC_FILE_PATH, "64") == NULL));
-}
-
 const char * NbLauncher::getAppName() {
     return "netbeans";
 }

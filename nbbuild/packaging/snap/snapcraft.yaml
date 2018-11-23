@@ -16,16 +16,17 @@
 
 name: netbeans
 version: "10.0"
-summary: NetBeans Java IDE
+summary: Apache NetBeans IDE (incubating)
 description: |
-  NetBeans IDE lets you quickly and easily develop Java desktop, mobile, and 
-  web applications, as well as HTML5 applications with HTML, JavaScript, and
-  CSS. The IDE also provides a great set of tools for PHP and C/C++ developers.
+  Apache NetBeans IDE (incubating) lets you quickly and easily develop Java 
+  desktop and web applications, as well as HTML5 applications with 
+  HTML, JavaScript, and CSS. The IDE also provides a great set of tools for PHP
+  developers.
   It is free and open source and has a large community of users and developers
   around the world. 
 icon: ../../platform/core.startup/src/org/netbeans/core/startup/frame512.png
 confinement: classic
-grade: devel
+grade: stable
 architectures: [ amd64 ]
 
 parts:

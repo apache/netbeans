@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -67,6 +68,7 @@ import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataFolder;
+import org.openide.modules.SpecificationVersion;
 import org.openide.nodes.FilterNode;
 import org.openide.util.RequestProcessor.Task;
 import org.xml.sax.SAXException;
@@ -421,7 +423,8 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
                 if (toInstall != null && ! toInstall.isEmpty ()) {
                     ModulesInstaller installer = new ModulesInstaller(toInstall, findModules, this);
                     installer.getInstallTask ().waitFinished ();
-                } else if (toEnable != null && ! toEnable.isEmpty ()) {
+                }
+                if (toEnable != null && ! toEnable.isEmpty () && error == null) {
                     ModulesActivator enabler = new ModulesActivator (toEnable, findModules, this);
                     enabler.getEnableTask ().waitFinished ();
                 }
@@ -440,7 +443,24 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
             }
 
             public void onError(String message) {
-                error = message;
+                SpecificationVersion jdk = new SpecificationVersion(System.getProperty("java.specification.version"));
+                FeatureInfo[] fi = Arrays.copyOf(additional, additional.length + 1);
+                fi[additional.length] = info;
+                boolean required = false;
+
+                for (FeatureInfo i : fi) {
+                    for (FeatureInfo.ExtraModuleInfo mi : i.getExtraModules()) {
+                        if (mi.recMinJDK != null && jdk.compareTo(mi.recMinJDK) < 0) {
+                            required = true;
+                        }
+                    }
+                    if (i.getExtraModulesRequiredText() != null && i.getExtraModulesRecommendedText() == null) {
+                        required = true;
+                    }
+                }
+                if (required) {
+                    error = message;
+                }
             }
         } // end of FeatureOpenHook
     } // end of FeatureNonProject

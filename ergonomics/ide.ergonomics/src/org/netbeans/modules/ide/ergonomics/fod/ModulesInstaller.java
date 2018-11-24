@@ -31,14 +31,10 @@ import javax.swing.JComponent;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.autoupdate.InstallSupport;
-import org.netbeans.api.autoupdate.InstallSupport.Installer;
-import org.netbeans.api.autoupdate.InstallSupport.Validator;
 import org.netbeans.api.autoupdate.OperationContainer;
 import org.netbeans.api.autoupdate.OperationException;
-import org.netbeans.api.autoupdate.OperationSupport.Restarter;
 import org.netbeans.api.autoupdate.UpdateElement;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.autoupdate.ui.api.PluginManager;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -210,7 +206,16 @@ public class ModulesInstaller {
         }
         boolean ok = PluginManager.openInstallWizard(installContainer);
         if (!ok) {
-            progressMonitor.onError("cancel"); // NOI18N
+            StringBuilder sb = new StringBuilder();
+            String sep = "";
+            for (UpdateElement el : modules4install) {
+                sb.append(sep);
+                sb.append(el.getDisplayName());
+                sep = ", ";
+            }
+            progressMonitor.onError(
+                getBundle("InstallerMissingModules_Cancelled", sb) // NOI18N
+            );
         }
     }
     

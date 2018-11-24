@@ -54,16 +54,45 @@ public class UnusedVariableHintTest extends PHPHintsTestBase {
         checkHints(new UnusedVariableHintStub(false), "testIssue246230.php");
     }
 
+    // NETBEANS-1718
+    public void testUnusedVariableInInheritedMethodParameters_01() throws Exception {
+        checkHints(new UnusedVariableHintStub(true, true), "testUnusedVariableInInheritedMethodParameters.php");
+    }
+
+    public void testUnusedVariableInInheritedMethodParameters_02() throws Exception {
+        checkHints(new UnusedVariableHintStub(true, false), "testUnusedVariableInInheritedMethodParameters.php");
+    }
+
+    public void testUnusedVariableInInheritedMethodParameters_03() throws Exception {
+        checkHints(new UnusedVariableHintStub(false, true), "testUnusedVariableInInheritedMethodParameters.php");
+    }
+
+    public void testUnusedVariableInInheritedMethodParameters_04() throws Exception {
+        checkHints(new UnusedVariableHintStub(false, false), "testUnusedVariableInInheritedMethodParameters.php");
+    }
+
     private class UnusedVariableHintStub extends UnusedVariableHint {
         private final boolean unusedFormalParameters;
+        private final boolean inheritedMethodParameters;
 
         public UnusedVariableHintStub(boolean unusedFormalParameters) {
             this.unusedFormalParameters = unusedFormalParameters;
+            this.inheritedMethodParameters = false;
+        }
+
+        public UnusedVariableHintStub(boolean unusedFormalParameters, boolean inheritedMethodParameters) {
+            this.unusedFormalParameters = unusedFormalParameters;
+            this.inheritedMethodParameters = inheritedMethodParameters;
         }
 
         @Override
         public boolean checkUnusedFormalParameters(Preferences preferences) {
             return unusedFormalParameters;
+        }
+
+        @Override
+        public boolean checkInheritedMethodParameters(Preferences preferences) {
+            return inheritedMethodParameters;
         }
 
     }

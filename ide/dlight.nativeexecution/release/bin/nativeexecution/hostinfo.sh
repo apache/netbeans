@@ -116,7 +116,7 @@ wx_fail() {
 
 USER=${USER:-`logname 2>/dev/null`}
 USER=${USER:-${USERNAME}}
-USER_D=`echo ${USER} | sed "s/\\\/_/"`
+USER_D=`echo ${USER} | sed "s/[\\/]/_/g"`
 TMPBASE=${TMPBASE:-/var/tmp}
 
 SUFFIX=0

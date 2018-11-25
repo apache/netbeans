@@ -39,54 +39,56 @@
         </folder>
 
         <folder name="Project">
-            <folder name="JavaFX">
-                <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.project.Bundle#Templates/Project/JavaFX"/>
-                <attr name="position" intvalue="195"/>
+            <folder name="AntJava">
+                <folder name="JavaFX">
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.project.Bundle#Templates/Project/JavaFX"/>
+                    <attr name="position" intvalue="195"/>
 
-                <file name="javafxApp.xml">
-                    <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.project.Bundle#Templates/Project/JavaFX/javafxApp.xml"/>
-                    <attr name="iconBase" stringvalue="org/netbeans/modules/javafx2/project/ui/resources/jfx_project.png"/>
-                    <attr name="position" intvalue="105"/>
-                    <attr name="template" boolvalue="true"/>
-                    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javafx2/project/templates/JavaFXApp.html"/>
-                    <attr name="instantiatingIterator" newvalue="org.netbeans.modules.javafx2.project.JavaFXProjectWizardIterator"/>
-                </file>
+                    <file name="javafxApp.xml">
+                        <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.project.Bundle#Templates/Project/JavaFX/javafxApp.xml"/>
+                        <attr name="iconBase" stringvalue="org/netbeans/modules/javafx2/project/ui/resources/jfx_project.png"/>
+                        <attr name="position" intvalue="105"/>
+                        <attr name="template" boolvalue="true"/>
+                        <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javafx2/project/templates/JavaFXApp.html"/>
+                        <attr name="instantiatingIterator" newvalue="org.netbeans.modules.javafx2.project.JavaFXProjectWizardIterator"/>
+                    </file>
 
-                <file name="preloaderApp.xml">
-                    <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.project.Bundle#Templates/Project/JavaFX/preloaderApp.xml"/>
-                    <attr name="iconBase" stringvalue="org/netbeans/modules/javafx2/project/ui/resources/jfx_project.png"/>
-                    <attr name="position" intvalue="205"/>
-                    <attr name="template" boolvalue="true"/>
-                    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javafx2/project/templates/JavaFXPreloaderApp.html"/>
-                    <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.javafx2.project.JavaFXProjectWizardIterator.preloader"/>
-                </file>
+                    <file name="preloaderApp.xml">
+                        <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.project.Bundle#Templates/Project/JavaFX/preloaderApp.xml"/>
+                        <attr name="iconBase" stringvalue="org/netbeans/modules/javafx2/project/ui/resources/jfx_project.png"/>
+                        <attr name="position" intvalue="205"/>
+                        <attr name="template" boolvalue="true"/>
+                        <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javafx2/project/templates/JavaFXPreloaderApp.html"/>
+                        <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.javafx2.project.JavaFXProjectWizardIterator.preloader"/>
+                    </file>
 
-                <file name="fxml.xml">
-                    <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.project.fxml.Bundle#Templates/Project/JavaFX/fxml.xml"/>
-                    <attr name="iconBase" stringvalue="org/netbeans/modules/javafx2/project/ui/resources/jfx_project.png"/>
-                    <attr name="position" intvalue="305"/>
-                    <attr name="template" boolvalue="true"/>
-                    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javafx2/project/templates/JavaFXMLApp.html"/>
-                    <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.javafx2.project.JavaFXProjectWizardIterator.fxml"/>
-                </file>
+                    <file name="fxml.xml">
+                        <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.project.fxml.Bundle#Templates/Project/JavaFX/fxml.xml"/>
+                        <attr name="iconBase" stringvalue="org/netbeans/modules/javafx2/project/ui/resources/jfx_project.png"/>
+                        <attr name="position" intvalue="305"/>
+                        <attr name="template" boolvalue="true"/>
+                        <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javafx2/project/templates/JavaFXMLApp.html"/>
+                        <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.javafx2.project.JavaFXProjectWizardIterator.fxml"/>
+                    </file>
 
-                <file name="javafxSwingApp.xml">
-                    <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.project.Bundle#Templates/Project/JavaFX/javafxSwingApp.xml"/>
-                    <attr name="iconBase" stringvalue="org/netbeans/modules/javafx2/project/ui/resources/jfx_project.png"/>
-                    <attr name="position" intvalue="405"/>
-                    <attr name="template" boolvalue="true"/>
-                    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javafx2/project/templates/JavaFXSwingApp.html"/>
-                    <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.javafx2.project.JavaFXProjectWizardIterator.swing"/>
-                </file>
+                    <file name="javafxSwingApp.xml">
+                        <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.project.Bundle#Templates/Project/JavaFX/javafxSwingApp.xml"/>
+                        <attr name="iconBase" stringvalue="org/netbeans/modules/javafx2/project/ui/resources/jfx_project.png"/>
+                        <attr name="position" intvalue="405"/>
+                        <attr name="template" boolvalue="true"/>
+                        <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javafx2/project/templates/JavaFXSwingApp.html"/>
+                        <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.javafx2.project.JavaFXProjectWizardIterator.swing"/>
+                    </file>
 
-                <file name="javafxExisting.xml">
-                    <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.project.Bundle#Templates/Project/JavaFX/javafxExisting.xml"/>
-                    <attr name="iconBase" stringvalue="org/netbeans/modules/javafx2/project/ui/resources/jfx_project.png"/>
-                    <attr name="position" intvalue="505"/>
-                    <attr name="template" boolvalue="true"/>
-                    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javafx2/project/templates/JavaFXExistingSources.html"/>
-                    <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.javafx2.project.JavaFXProjectWizardIterator.existing"/>
-                </file>
+                    <file name="javafxExisting.xml">
+                        <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.project.Bundle#Templates/Project/JavaFX/javafxExisting.xml"/>
+                        <attr name="iconBase" stringvalue="org/netbeans/modules/javafx2/project/ui/resources/jfx_project.png"/>
+                        <attr name="position" intvalue="505"/>
+                        <attr name="template" boolvalue="true"/>
+                        <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javafx2/project/templates/JavaFXExistingSources.html"/>
+                        <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.javafx2.project.JavaFXProjectWizardIterator.existing"/>
+                    </file>
+                </folder>
             </folder>
         </folder>
 

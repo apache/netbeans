@@ -169,6 +169,10 @@ public final class NbLifecycleManager extends LifecycleManager {
     
     @Override
     public void exit(int status) {
+        if (isExiting()) {
+            LOG.log(Level.FINE, "Already exiting, ignoring exit call");
+            return;
+        }
         LOG.log(Level.FINE, "Initiating exit with status {0}", status);
         if (EventQueue.isDispatchThread()) {
             if (isExitOnEventQueue) {

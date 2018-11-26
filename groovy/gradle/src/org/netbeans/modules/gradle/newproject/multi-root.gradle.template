@@ -15,7 +15,11 @@ allprojects {
 subprojects {
     apply plugin: 'java'
 
+<#if dependencies??>
     dependencies {
-        testCompile group: 'junit', name: 'junit', version:'4.12'
+<#list dependencies as dep>
+        ${dep}
+</#list>
     }
+</#if>
 }

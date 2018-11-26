@@ -43,7 +43,6 @@ import org.gradle.tooling.BuildLauncher;
 import org.gradle.tooling.CancellationTokenSource;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProgressEvent;
-import org.gradle.tooling.ProgressListener;
 import org.gradle.tooling.ProjectConnection;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.progress.ProgressHandle;
@@ -127,13 +126,6 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             File projectDir = FileUtil.toFile(config.getProject().getProjectDirectory());
             //TODO: GradleUserHome
             pconn = gconn.forProjectDirectory(projectDir).connect();
-            boolean useRichOutput = GradleSettings.getDefault().isUseRichOutput();
-
-            // Unfortunately Rich output leaks a thread on Gradle 2.13
-            String gradleVersion = GradleDistributionManager.getDistributionVersion(gradleDistribution);
-            if (gradleVersion != null && gradleVersion.startsWith("2.13")) {
-                useRichOutput = false;
-            }
 
             BuildLauncher buildLauncher = pconn.newBuild();
             GradleCommandLine cmd = config.getCommandLine();
@@ -156,22 +148,14 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
                 buildLauncher.setJavaHome(javaHome);
             }
 
-            buildLauncher.setColorOutput(useRichOutput);
-            if (useRichOutput) {
-                outStream = new EscapeProcessingOutputStream(new GradleColorEscapeProcessor(io, handle, config));
-                buildLauncher.setStandardOutput(outStream);
-            } else {
-                outStream = new EscapeProcessingOutputStream(new GradlePlainEscapeProcessor(io, config, false));
-                errStream = new EscapeProcessingOutputStream(new GradlePlainEscapeProcessor(io, config, true));
-                buildLauncher.setStandardOutput(outStream);
-                buildLauncher.setStandardError(errStream);
-                buildLauncher.addProgressListener(new ProgressListener() {
-                    @Override
-                    public void statusChanged(ProgressEvent pe) {
-                        handle.progress(pe.getDescription());
-                    }
-                });
-            }
+            outStream = new EscapeProcessingOutputStream(new GradlePlainEscapeProcessor(io, config, false));
+            errStream = new EscapeProcessingOutputStream(new GradlePlainEscapeProcessor(io, config, true));
+            buildLauncher.setStandardOutput(outStream);
+            buildLauncher.setStandardError(errStream);
+            buildLauncher.addProgressListener((ProgressEvent pe) -> {
+                handle.progress(pe.getDescription());
+            });
+
             buildLauncher.withCancellationToken(cancelTokenSource.token());
             if (config.getProject() != null) {
                 Collection<? extends GradleProgressListenerProvider> providers = config.getProject().getLookup().lookupAll(GradleProgressListenerProvider.class);

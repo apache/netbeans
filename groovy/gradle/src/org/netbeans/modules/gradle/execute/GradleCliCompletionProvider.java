@@ -58,6 +58,8 @@ import org.openide.util.Exceptions;
 @MimeRegistration(mimeType = GradleCliEditorKit.MIME_TYPE, service = CompletionProvider.class)
 public class GradleCliCompletionProvider implements CompletionProvider {
     private static final Pattern PROP_INPUT = Pattern.compile("\\$\\{([\\w.]*)$"); //NOI18N
+    private static final String INPUT_TOKEN = "input:"; //NOI18N
+    
     @Override
     public CompletionTask createTask(int queryType, JTextComponent component) {
         if (queryType != CompletionProvider.COMPLETION_QUERY_TYPE) {
@@ -129,7 +131,9 @@ public class GradleCliCompletionProvider implements CompletionProvider {
                             resultSet.addItem(new TokenCompletionItem(token, startOffset + tokenMatcher.start(1), caretOffset));
                         }
                     }
-
+                    if (INPUT_TOKEN.startsWith(propFilter)) {
+                        resultSet.addItem(new TokenCompletionItem(INPUT_TOKEN, startOffset + tokenMatcher.start(1), caretOffset));
+                    }
                 }
                     
                 resultSet.finish();

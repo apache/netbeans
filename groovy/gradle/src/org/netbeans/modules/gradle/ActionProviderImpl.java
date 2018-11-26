@@ -209,7 +209,7 @@ public class ActionProviderImpl implements ActionProvider {
             Object retValue = DialogDisplayer.getDefault().notify(dd);
 
             if (retValue == DialogDescriptor.OK_OPTION) {
-                pnl.applyChanges(cfg.getCommandLine());
+                //pnl.applyChanges(cfg.getCommandLine());
             } else {
                 return;
             }

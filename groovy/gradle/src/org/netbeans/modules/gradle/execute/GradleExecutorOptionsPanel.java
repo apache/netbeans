@@ -19,18 +19,8 @@
 
 package org.netbeans.modules.gradle.execute;
 
-import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Properties;
-import javax.swing.text.JTextComponent;
-
-import static org.netbeans.modules.gradle.api.execute.GradleCommandLine.Flag.*;
 import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
 import org.netbeans.api.project.Project;
@@ -52,76 +42,17 @@ public class GradleExecutorOptionsPanel extends javax.swing.JPanel {
     public GradleExecutorOptionsPanel(Project project) {
         initComponents();
         EditorKit kit = CloneableEditorSupport.getEditorKit(GradleCliEditorKit.MIME_TYPE);
-        tfTasks.setEditorKit(kit);
+        epCLI.setEditorKit(kit);
         if (project != null) {
-            tfTasks.getDocument().putProperty(Document.StreamDescriptionProperty, project);
+            epCLI.getDocument().putProperty(Document.StreamDescriptionProperty, project);
         }
     }
 
     public void setCommandLine(GradleCommandLine cmd) {
-        cbConfigureOnDemand.setSelected(cmd.hasFlag(CONFIGURE_ON_DEMAND));
-        cbContinueOnError.setSelected(cmd.hasFlag(CONTINUE));
-        cbDryRun.setSelected(cmd.hasFlag(DRY_RUN));
-        cbNoRebuild.setSelected(cmd.hasFlag(NO_REBUILD));
-        cbOffline.setSelected(cmd.hasFlag(OFFLINE));
-        cbParallel.setSelected(cmd.hasFlag(PARALLEL));
-        cbRecompileScripts.setSelected(cmd.hasFlag(RECOMPILE_SCRIPTS));
-        cbRefreshDependencies.setSelected(cmd.hasFlag(REFRESH_DEPENDENCIES));
-        cbRerunTasks.setSelected(cmd.hasFlag(RERUN_TASKS));
-
-        cbLogLevel.setSelectedIndex(cmd.getLoglevel().ordinal());
-        cbStackTrace.setSelectedIndex(cmd.getStackTrace().ordinal());
-
-        tfTasks.setText(join(" ", cmd.getTasks()));
-        tfExcludes.setText(join(" ", cmd.getExcludedTasks()));
-    }
-
-    public void applyChanges(GradleCommandLine cmd) {
-        cmd.setFlag(CONFIGURE_ON_DEMAND, cbConfigureOnDemand.isSelected());
-        cmd.setFlag(CONTINUE, cbContinueOnError.isSelected());
-        cmd.setFlag(DRY_RUN, cbDryRun.isSelected());
-        cmd.setFlag(NO_REBUILD, cbNoRebuild.isSelected());
-        cmd.setFlag(OFFLINE, cbOffline.isSelected());
-        cmd.setFlag(PARALLEL, cbParallel.isSelected());
-        cmd.setFlag(RECOMPILE_SCRIPTS, cbRecompileScripts.isSelected());
-        cmd.setFlag(REFRESH_DEPENDENCIES, cbRefreshDependencies.isSelected());
-        cmd.setFlag(RERUN_TASKS, cbRerunTasks.isSelected());
-
-        cmd.setTasks(textToTasks(tfTasks.getText()));
-
-        cmd.setExcludedTasks(textToTasks(tfExcludes.getText()));
-
-        int logLevel = cbLogLevel.getSelectedIndex();
-        if ((logLevel >= 0) && (logLevel < GradleCommandLine.LogLevel.values().length)) {
-            cmd.setLogLevel(GradleCommandLine.LogLevel.values()[logLevel]);
-        }
-
-        int stackTrace = cbStackTrace.getSelectedIndex();
-        if ((stackTrace >= 0) && (stackTrace < GradleCommandLine.StackTrace.values().length)) {
-            cmd.setStackTrace(GradleCommandLine.StackTrace.values()[stackTrace]);
-        }
-
-        //cfg.setSystemProperties(loadFromTextComponent(edSystemProps));
-        //cfg.setProjectProperties(loadFromTextComponent(edProjectProps));
-    }
-
-    private Properties loadFromTextComponent(JTextComponent comp) {
-        Properties props = new Properties();
-        try {
-            props.load(new StringReader((comp.getText())));
-        } catch (IOException ex) {
-        }
-        return props;
-    }
-
-    private List<String> textToTasks(String text) {
-        text = text.trim();
-        List<String> ret = Collections.emptyList();
-        if (!text.isEmpty()) {
-            String[] tasks = text.split("\\s+");
-            ret = Arrays.asList(tasks);
-        }
-        return ret;
+        GradleCommandLine text = new GradleCommandLine(cmd);
+        execOptions.setCommandLine(text);
+        text.remove(ExecutionOptionsPanel.getCLIMask());
+        epCLI.setText(join(" ", text.getFullCommandLine()));
     }
 
     private String join(String delim, Collection<String> parts) {
@@ -142,64 +73,31 @@ public class GradleExecutorOptionsPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
         lbTasks = new javax.swing.JLabel();
-        lbExcludes = new javax.swing.JLabel();
-        tfExcludes = new javax.swing.JTextField();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        spProjectProps = new javax.swing.JScrollPane();
-        edProjectProps = new javax.swing.JEditorPane();
-        spSystemProps = new javax.swing.JScrollPane();
-        edSystemProps = new javax.swing.JEditorPane();
-        pnOptionsPanel = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
-        cbOffline = new javax.swing.JCheckBox();
-        cbConfigureOnDemand = new javax.swing.JCheckBox();
-        cbNoRebuild = new javax.swing.JCheckBox();
-        cbContinueOnError = new javax.swing.JCheckBox();
-        cbParallel = new javax.swing.JCheckBox();
-        jPanel3 = new javax.swing.JPanel();
-        cbRefreshDependencies = new javax.swing.JCheckBox();
-        cbRecompileScripts = new javax.swing.JCheckBox();
-        cbRerunTasks = new javax.swing.JCheckBox();
-        cbDryRun = new javax.swing.JCheckBox();
-        lbLogLevel = new javax.swing.JLabel();
-        cbLogLevel = new javax.swing.JComboBox<>();
-        lbStackTrace = new javax.swing.JLabel();
-        cbStackTrace = new javax.swing.JComboBox<>();
-        jSeparator1 = new javax.swing.JSeparator();
-        tfTasks = new javax.swing.JEditorPane();
+        execOptions = new org.netbeans.modules.gradle.execute.ExecutionOptionsPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        epCLI = new javax.swing.JEditorPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        taPreview = new javax.swing.JTextArea();
+        tfRememberAs = new javax.swing.JTextField();
+
+        jLabel1.setLabelFor(tfRememberAs);
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GradleExecutorOptionsPanel.class, "GradleExecutorOptionsPanel.jLabel1.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(lbTasks, org.openide.util.NbBundle.getMessage(GradleExecutorOptionsPanel.class, "GradleExecutorOptionsPanel.lbTasks.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(lbExcludes, org.openide.util.NbBundle.getMessage(GradleExecutorOptionsPanel.class, "GradleExecutorOptionsPanel.lbExcludes.text")); // NOI18N
+        jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
+        jTabbedPane1.setName("Preview"); // NOI18N
+        jTabbedPane1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jTabbedPane1StateChanged(evt);
+            }
+        });
 
-        tfExcludes.setText(org.openide.util.NbBundle.getMessage(GradleExecutorOptionsPanel.class, "GradleExecutorOptionsPanel.tfExcludes.text")); // NOI18N
-
-        spProjectProps.setToolTipText(org.openide.util.NbBundle.getMessage(GradleExecutorOptionsPanel.class, "GradleExecutorOptionsPanel.spProjectProps.toolTipText")); // NOI18N
-
-        edProjectProps.setContentType("text/x-properties"); // NOI18N
-        spProjectProps.setViewportView(edProjectProps);
-
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(GradleExecutorOptionsPanel.class, "GradleExecutorOptionsPanel.spProjectProps.TabConstraints.tabTitle"), spProjectProps); // NOI18N
-
-        edSystemProps.setContentType("text/x-properties"); // NOI18N
-        edSystemProps.setToolTipText(org.openide.util.NbBundle.getMessage(GradleExecutorOptionsPanel.class, "GradleExecutorOptionsPanel.edSystemProps.toolTipText")); // NOI18N
-        edSystemProps.setEnabled(false);
-        spSystemProps.setViewportView(edSystemProps);
-
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(GradleExecutorOptionsPanel.class, "GradleExecutorOptionsPanel.spSystemProps.TabConstraints.tabTitle"), spSystemProps); // NOI18N
-
-        pnOptionsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(GradleExecutorOptionsPanel.class, "GradleExecutorOptionsPanel.pnOptionsPanel.border.title"))); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(cbOffline, org.openide.util.NbBundle.getMessage(GradleExecutorOptionsPanel.class, "GradleExecutorOptionsPanel.cbOffline.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(cbConfigureOnDemand, org.openide.util.NbBundle.getMessage(GradleExecutorOptionsPanel.class, "GradleExecutorOptionsPanel.cbConfigureOnDemand.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(cbNoRebuild, org.openide.util.NbBundle.getMessage(GradleExecutorOptionsPanel.class, "GradleExecutorOptionsPanel.cbNoRebuild.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(cbContinueOnError, org.openide.util.NbBundle.getMessage(GradleExecutorOptionsPanel.class, "GradleExecutorOptionsPanel.cbContinueOnError.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(cbParallel, org.openide.util.NbBundle.getMessage(GradleExecutorOptionsPanel.class, "GradleExecutorOptionsPanel.cbParallel.text")); // NOI18N
+        jScrollPane3.setViewportView(epCLI);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -208,181 +106,83 @@ public class GradleExecutorOptionsPanel extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbOffline, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbConfigureOnDemand, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbNoRebuild, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(cbContinueOnError, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cbParallel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(execOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 707, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane3))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(cbOffline)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbConfigureOnDemand)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbNoRebuild)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbContinueOnError)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbParallel)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        org.openide.awt.Mnemonics.setLocalizedText(cbRefreshDependencies, org.openide.util.NbBundle.getMessage(GradleExecutorOptionsPanel.class, "GradleExecutorOptionsPanel.cbRefreshDependencies.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(cbRecompileScripts, org.openide.util.NbBundle.getMessage(GradleExecutorOptionsPanel.class, "GradleExecutorOptionsPanel.cbRecompileScripts.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(cbRerunTasks, org.openide.util.NbBundle.getMessage(GradleExecutorOptionsPanel.class, "GradleExecutorOptionsPanel.cbRerunTasks.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(cbDryRun, org.openide.util.NbBundle.getMessage(GradleExecutorOptionsPanel.class, "GradleExecutorOptionsPanel.cbDryRun.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(lbLogLevel, org.openide.util.NbBundle.getMessage(GradleExecutorOptionsPanel.class, "GradleExecutorOptionsPanel.lbLogLevel.text")); // NOI18N
-
-        cbLogLevel.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Debug", "Info", "Normal", "Quiet" }));
-        cbLogLevel.setSelectedIndex(2);
-
-        org.openide.awt.Mnemonics.setLocalizedText(lbStackTrace, org.openide.util.NbBundle.getMessage(GradleExecutorOptionsPanel.class, "GradleExecutorOptionsPanel.lbStackTrace.text")); // NOI18N
-
-        cbStackTrace.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "Simple", "Full" }));
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbRefreshDependencies, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lbLogLevel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lbStackTrace, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbLogLevel, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cbStackTrace, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(cbRecompileScripts, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cbRerunTasks, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cbDryRun, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(execOptions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(cbRefreshDependencies, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbRecompileScripts)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbRerunTasks)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbDryRun)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbLogLevel)
-                    .addComponent(cbLogLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(11, 11, 11)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbStackTrace)
-                    .addComponent(cbStackTrace, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
 
-        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(GradleExecutorOptionsPanel.class, "GradleExecutorOptionsPanel.jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
 
-        javax.swing.GroupLayout pnOptionsPanelLayout = new javax.swing.GroupLayout(pnOptionsPanel);
-        pnOptionsPanel.setLayout(pnOptionsPanelLayout);
-        pnOptionsPanelLayout.setHorizontalGroup(
-            pnOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnOptionsPanelLayout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        pnOptionsPanelLayout.setVerticalGroup(
-            pnOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnOptionsPanelLayout.createSequentialGroup()
-                .addComponent(jSeparator1)
-                .addGap(100, 100, 100))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnOptionsPanelLayout.createSequentialGroup()
-                .addGroup(pnOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(87, 87, 87))
-        );
+        taPreview.setEditable(false);
+        taPreview.setColumns(20);
+        taPreview.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
+        taPreview.setLineWrap(true);
+        taPreview.setRows(5);
+        taPreview.setWrapStyleWord(true);
+        jScrollPane2.setViewportView(taPreview);
 
-        tfTasks.setContentType("text/x-gradle-cli"); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(GradleExecutorOptionsPanel.class, "GradleExecutorOptionsPanel.jScrollPane2.TabConstraints.tabTitle"), jScrollPane2); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lbExcludes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lbTasks, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbTasks, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(425, 425, 425)
+                        .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tfExcludes)
-                            .addComponent(tfTasks)))
-                    .addComponent(pnOptionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(tfRememberAs, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lbTasks)
-                    .addComponent(tfTasks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
+                .addComponent(lbTasks)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTabbedPane1)
+                .addGap(112, 112, 112)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbExcludes)
-                    .addComponent(tfExcludes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnOptionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfRememberAs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
+        if (jTabbedPane1.getSelectedIndex() > 0) {
+            GradleCommandLine cmd = GradleCommandLine.combine(execOptions.getCommandLine(), new GradleCommandLine(epCLI.getText()));
+            taPreview.setText(join(" ", cmd.getFullCommandLine()));
+        }
+    }//GEN-LAST:event_jTabbedPane1StateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox cbConfigureOnDemand;
-    private javax.swing.JCheckBox cbContinueOnError;
-    private javax.swing.JCheckBox cbDryRun;
-    private javax.swing.JComboBox<String> cbLogLevel;
-    private javax.swing.JCheckBox cbNoRebuild;
-    private javax.swing.JCheckBox cbOffline;
-    private javax.swing.JCheckBox cbParallel;
-    private javax.swing.JCheckBox cbRecompileScripts;
-    private javax.swing.JCheckBox cbRefreshDependencies;
-    private javax.swing.JCheckBox cbRerunTasks;
-    private javax.swing.JComboBox<String> cbStackTrace;
-    private javax.swing.JEditorPane edProjectProps;
-    private javax.swing.JEditorPane edSystemProps;
+    private javax.swing.JEditorPane epCLI;
+    private org.netbeans.modules.gradle.execute.ExecutionOptionsPanel execOptions;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JLabel lbExcludes;
-    private javax.swing.JLabel lbLogLevel;
-    private javax.swing.JLabel lbStackTrace;
     private javax.swing.JLabel lbTasks;
-    private javax.swing.JPanel pnOptionsPanel;
-    private javax.swing.JScrollPane spProjectProps;
-    private javax.swing.JScrollPane spSystemProps;
-    private javax.swing.JTextField tfExcludes;
-    private javax.swing.JEditorPane tfTasks;
+    private javax.swing.JTextArea taPreview;
+    private javax.swing.JTextField tfRememberAs;
     // End of variables declaration//GEN-END:variables
 }

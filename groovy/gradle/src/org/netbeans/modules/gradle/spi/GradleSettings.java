@@ -23,6 +23,9 @@ import org.netbeans.modules.gradle.options.GradleDistributionManager;
 import org.netbeans.modules.gradle.options.GradleDistributionManager.GradleVersion;
 import java.io.File;
 import java.util.prefs.Preferences;
+import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
+import org.netbeans.modules.gradle.api.execute.GradleCommandLine.LogLevel;
+import org.netbeans.modules.gradle.api.execute.GradleCommandLine.StackTrace;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.NbPreferences;
 
@@ -72,7 +75,6 @@ public final class GradleSettings {
     public static final String PROP_PREFER_WRAPPER = "preferWrapper";
     public static final String PROP_GRADLE_USER_HOME = "gradleUserHome";
     public static final String PROP_START_DAEMON_ON_START = "startDaemonOnStart";
-    public static final String PROP_STOP_DAEMON_ON_EXIT = "stopDaemonOnExit";
     public static final String PROP_REUSE_OUTPUT_TABS = "reuseOutputTabs";
     public static final String PROP_USE_CUSTOM_GRADLE = "useCustomGradle";
     public static final String PROP_GRADLE_VERSION = "gradleVersion";
@@ -84,10 +86,12 @@ public final class GradleSettings {
     public static final String PROP_SKIP_TEST = "skipTest";
     public static final String PROP_SKIP_CHECK = "skipCheck";
 
+    public static final String PROP_LOG_LEVEL = "logLevel";
+    public static final String PROP_STACKTRACE = "stacktrace";
+    
     public static final String PROP_HIDE_EMPTY_CONF = "hideEmptyConfiguration";
 
     public static final String PROP_ALWAYS_SHOW_OUTPUT = "alwaysShowOutput";
-    public static final String PROP_USE_RICH_OUTPUT = "useRichOutput";
     public static final String PROP_DISPLAY_DESCRIPTION = "displayDescription";
     public static final String PROP_REUSE_EDITOR_ON_STACKTRACE = "reuseEditorOnStackTace";
 
@@ -136,14 +140,6 @@ public final class GradleSettings {
     public File getGradleUserHome() {
         String dir = getPreferences().get(PROP_GRADLE_USER_HOME, System.getenv("GRADLE_USER_HOME")); //NOI18N
         return dir != null ? new File(dir) : new File(System.getProperty("user.home"), ".gradle"); //NOI18N
-    }
-
-    public void setStopDaemonOnExit(boolean b) {
-        getPreferences().putBoolean(PROP_STOP_DAEMON_ON_EXIT, b);
-    }
-
-    public boolean isStopDaemonOnExit() {
-        return getPreferences().getBoolean(PROP_STOP_DAEMON_ON_EXIT, false);
     }
 
     public void setReuseOutputTabs(boolean b) {
@@ -226,20 +222,30 @@ public final class GradleSettings {
         return getPreferences().getBoolean(PROP_OPT_CONFIGURE_ON_DEMAND, true);
     }
 
+    public void setDefaultLogLevel(LogLevel level) {
+        getPreferences().put(PROP_LOG_LEVEL, level.name());
+    }
+    
+    public LogLevel getDefaultLogLevel() {
+        String lvl = getPreferences().get(PROP_LOG_LEVEL, LogLevel.WARN.name());
+        return LogLevel.valueOf(lvl);
+    }
+    
+    public void setDefaultStackTrace(StackTrace st) {
+        getPreferences().put(PROP_STACKTRACE, st.name());
+    }
+    
+    public StackTrace getDefaultStackTrace() {
+        String st = getPreferences().get(PROP_STACKTRACE, StackTrace.NONE.name());
+        return StackTrace.valueOf(st);
+    }
+    
     public void setHideEmptyConfigurations(boolean b) {
         getPreferences().putBoolean(PROP_HIDE_EMPTY_CONF, b);
     }
 
     public boolean isHideEmptyConfigurations() {
         return getPreferences().getBoolean(PROP_HIDE_EMPTY_CONF, true);
-    }
-
-    public void setUseRichOutput(boolean b) {
-        getPreferences().putBoolean(PROP_USE_RICH_OUTPUT, b);
-    }
-
-    public boolean isUseRichOutput() {
-        return false;
     }
 
     public void setDisplayDescription(boolean b) {

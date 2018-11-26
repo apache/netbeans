@@ -178,13 +178,9 @@
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="cbPreferWrapper" min="-2" max="-2" attributes="0"/>
-                                      <Group type="102" attributes="0">
-                                          <Component id="cbStartDaemonOnStart" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                                          <Component id="cbStopDaemonOnExit" min="-2" max="-2" attributes="0"/>
-                                      </Group>
+                                      <Component id="cbStartDaemonOnStart" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="0" pref="17" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="107" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
                                   <Component id="rbUseStandardGradle" min="-2" max="-2" attributes="0"/>
@@ -223,10 +219,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="cbPreferWrapper" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="cbStopDaemonOnExit" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="cbStartDaemonOnStart" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="cbStartDaemonOnStart" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -319,17 +312,6 @@
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btUseCustomGradleActionPerformed"/>
                   </Events>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="cbStopDaemonOnExit">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="org/netbeans/modules/gradle/options/Bundle.properties" key="SettingsPanel.cbStopDaemonOnExit.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-                    </Property>
-                    <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="org/netbeans/modules/gradle/options/Bundle.properties" key="SettingsPanel.cbStopDaemonOnExit.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-                    </Property>
-                    <Property name="enabled" type="boolean" value="false"/>
-                  </Properties>
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="cbStartDaemonOnStart">
                   <Properties>

@@ -79,7 +79,7 @@ public class GradleDistributionManager {
 
     private static final Set<String> VERSION_BLACKLIST = new HashSet<>(Arrays.asList("2.3", "2.13")); //NOI18N
     private static final Map<URL, GradleVersion> VERSIONS = new HashMap<>();
-    private static final String LAST_KNOWN_GOOD_RELEASE = "3.4.1"; //NOI18N
+    private static final String LAST_KNOWN_GOOD_RELEASE = "4.10.2"; //NOI18N
 
     private GradleDistributionManager() {
     }

@@ -96,7 +96,6 @@ public class SettingsPanel extends javax.swing.JPanel {
         rbUseCustomGradle = new javax.swing.JRadioButton();
         tfUseCustomGradle = new javax.swing.JTextField();
         btUseCustomGradle = new javax.swing.JButton();
-        cbStopDaemonOnExit = new javax.swing.JCheckBox();
         cbStartDaemonOnStart = new javax.swing.JCheckBox();
         cbPreferWrapper = new javax.swing.JCheckBox();
         lbVersionInfo = new javax.swing.JLabel();
@@ -219,10 +218,6 @@ public class SettingsPanel extends javax.swing.JPanel {
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(cbStopDaemonOnExit, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbStopDaemonOnExit.text")); // NOI18N
-        cbStopDaemonOnExit.setToolTipText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbStopDaemonOnExit.toolTipText")); // NOI18N
-        cbStopDaemonOnExit.setEnabled(false);
-
         org.openide.awt.Mnemonics.setLocalizedText(cbStartDaemonOnStart, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbStartDaemonOnStart.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(cbPreferWrapper, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbPreferWrapper.text")); // NOI18N
@@ -255,11 +250,8 @@ public class SettingsPanel extends javax.swing.JPanel {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbPreferWrapper)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(cbStartDaemonOnStart)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbStopDaemonOnExit)))
-                        .addGap(0, 17, Short.MAX_VALUE))
+                            .addComponent(cbStartDaemonOnStart))
+                        .addGap(0, 107, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(rbUseStandardGradle)
                         .addGap(18, 18, 18)
@@ -293,9 +285,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbPreferWrapper)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbStopDaemonOnExit)
-                    .addComponent(cbStartDaemonOnStart))
+                .addComponent(cbStartDaemonOnStart)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -622,7 +612,6 @@ public class SettingsPanel extends javax.swing.JPanel {
         bgUsedDistribution.setSelected(bm, true);
 
         cbStartDaemonOnStart.setSelected(settings.isStartDaemonOnStart());
-        cbStopDaemonOnExit.setSelected(settings.isStopDaemonOnExit());
 
         cbOffline.setSelected(settings.isOffline());
         cbConfigureOnDemand.setSelected(settings.isConfigureOnDemand());
@@ -681,7 +670,6 @@ public class SettingsPanel extends javax.swing.JPanel {
         settings.setUseCustomGradle(useCustomGradle);
 
         settings.setStartDaemonOnStart(cbStartDaemonOnStart.isSelected());
-        settings.setStopDaemonOnExit(cbStopDaemonOnExit.isSelected());
 
         settings.setOffline(cbOffline.isSelected());
         settings.setConfigureOnDemand(cbConfigureOnDemand.isSelected());
@@ -722,7 +710,6 @@ public class SettingsPanel extends javax.swing.JPanel {
         isChanged |= settings.useCustomGradle() != useCustomGradle;
 
         isChanged |= settings.isStartDaemonOnStart() != cbStartDaemonOnStart.isSelected();
-        isChanged |= settings.isStopDaemonOnExit() != cbStopDaemonOnExit.isSelected();
 
         isChanged |= settings.isOffline() != cbOffline.isSelected();
         isChanged |= settings.isConfigureOnDemand() != cbConfigureOnDemand.isSelected();
@@ -802,7 +789,6 @@ public class SettingsPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox cbSkipCheck;
     private javax.swing.JCheckBox cbSkipTest;
     private javax.swing.JCheckBox cbStartDaemonOnStart;
-    private javax.swing.JCheckBox cbStopDaemonOnExit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

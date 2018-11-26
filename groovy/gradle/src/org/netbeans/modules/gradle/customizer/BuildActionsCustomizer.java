@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.gradle.customizer;
 
-import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.execute.ActionMapping;
 import org.netbeans.modules.gradle.api.execute.ProjectActionMappingProvider;
 import org.netbeans.modules.gradle.execute.GradleCliEditorKit;
@@ -27,13 +26,7 @@ import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.swing.DefaultComboBoxModel;
@@ -46,10 +39,9 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.gradle.actions.CustomActionRegistrationSupport;
 import org.netbeans.spi.project.ActionProvider;
-import org.openide.filesystems.FileObject;
 import org.openide.text.CloneableEditorSupport;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -67,14 +59,11 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
 
     final Project project;
 
-    final Set<String> customNames = new HashSet<>();
     final DefaultListModel<CustomActionMapping> customActionsModel = new DefaultListModel<>();
     final DefaultComboBoxModel<String> availableActionsModel = new DefaultComboBoxModel<>();
-    final ActionListener saveListener = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            save();
-        }
+    final CustomActionRegistrationSupport actionRegistry;
+    final ActionListener saveListener = (ActionEvent e) -> {
+        save();
     };
 
     final DocumentListener applyListener = new DocumentListener() {
@@ -103,6 +92,7 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
     public BuildActionsCustomizer(Project project) {
         this.project = project;
         initComponents();
+        actionRegistry = new CustomActionRegistrationSupport(project);
         lsActions.setCellRenderer(new MyListCellRenderer());
         tfLabel.getDocument().addDocumentListener(applyListener);
         EditorKit kit = CloneableEditorSupport.getEditorKit(GradleCliEditorKit.MIME_TYPE);
@@ -114,24 +104,18 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
     }
 
     private void initDefaultModels() {
-        ProjectActionMappingProvider mappingProvider = project.getLookup().lookup(ProjectActionMappingProvider.class);
         ActionProvider actionProvider = project.getLookup().lookup(ActionProvider.class);
 
         Set<String> allAvailableActions = new TreeSet<>(Arrays.asList(actionProvider.getSupportedActions()));
 
-        Set<String> customizedActions = mappingProvider.customizedActions();
-        for (String action : mappingProvider.customizedActions()) {
-            CustomActionMapping mapping = new CustomActionMapping(mappingProvider.findMapping(action));
+        actionRegistry.getCustomActions().forEach((CustomActionMapping mapping) -> {
             customActionsModel.addElement(mapping);
-            if (action.startsWith(ActionMapping.CUSTOM_PREFIX)) {
-                customNames.add(action);
-            }
-        }
+        });
         availableActionsModel.addElement(CUSTOM_ACTION);
 
         // Add those actions to the combo box which were not customized yet.
         for (String action : allAvailableActions) {
-            if (!customizedActions.contains(action)) {
+            if (actionRegistry.getCustomAction(action) != null) {
                 availableActionsModel.addElement(action);
             }
         }
@@ -373,13 +357,11 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
     private void btRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoveActionPerformed
         CustomActionMapping mapping = getSelectedMapping();
         customActionsModel.removeElement(mapping);
+        actionRegistry.unregisterCustomAction(mapping.getName());
         String action = mapping.getName();
         if (!action.startsWith(ActionMapping.CUSTOM_PREFIX)) {
             availableActionsModel.addElement(action);
-        } else {
-            customNames.remove(action);
         }
-
     }//GEN-LAST:event_btRemoveActionPerformed
 
     private void apply() {
@@ -391,6 +373,8 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
             mapping.setArgs(taArgs.getText());
             mapping.setReloadRule(ActionMapping.ReloadRule.valueOf(cbReloadRule.getSelectedItem().toString()));
             mapping.setRepeatable(cbRepeatable.isSelected());
+            
+            actionRegistry.registerCustomAction(mapping);
             lsActions.repaint();
         }
     }
@@ -409,12 +393,13 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
         if (action != CUSTOM_ACTION) {
             availableActionsModel.removeElement(action);
         } else {
-            action = findNewCustonActionId();
+            action = actionRegistry.findNewCustonActionId();
         }
         ProjectActionMappingProvider mappingProvider = project.getLookup().lookup(ProjectActionMappingProvider.class);
         ActionMapping defaultMapping = mappingProvider.findMapping(action);
         CustomActionMapping mapping = defaultMapping != null ? new CustomActionMapping(defaultMapping) : new CustomActionMapping(action);
         customActionsModel.addElement(mapping);
+        actionRegistry.registerCustomAction(mapping);
         lsActions.setSelectedIndex(customActionsModel.indexOf(mapping));
         cbAdd.setSelectedIndex(0);
     }//GEN-LAST:event_cbAddActionPerformed
@@ -428,52 +413,8 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
         return index >= 0 ? customActionsModel.elementAt(index) : null;
     }
 
-    private String findNewCustonActionId() {
-        int i = 1;
-        String ret;
-        do {
-            ret = ActionMapping.CUSTOM_PREFIX + i++;
-        } while (customNames.contains(ret));
-        customNames.add(ret);
-        return ret;
-    }
-
     private void save() {
-        Set<CustomActionMapping> mappings = new TreeSet<>();
-        Enumeration<CustomActionMapping> elements = customActionsModel.elements();
-        while (elements.hasMoreElements()) {
-            mappings.add(elements.nextElement());
-        }
-        try {
-            FileObject fo = project.getProjectDirectory().getFileObject(NB_ACTIONS);
-            fo = fo != null ? fo : project.getProjectDirectory().createData(NB_ACTIONS);
-            try (PrintWriter out = new PrintWriter(fo.getOutputStream(), true)) {
-                out.println("<?xml version=\"1.0\"?>");
-                out.println("<!DOCTYPE actions SYSTEM \"action-mapping.dtd\">");
-                out.println("<actions>");
-                for (CustomActionMapping mapping : mappings) {
-                    out.print("    <action name=\"" + mapping.getName() + "\"");
-                    if (mapping.getName().startsWith(ActionMapping.CUSTOM_PREFIX)) {
-                        out.print(" displayName=\"" + mapping.getDisplayName() + "\"");
-                    }
-                    if (!mapping.isRepeatable()) {
-                        out.print("repeatable=\"false\"");
-                    }
-                    out.println(">");
-
-                    out.println("        <args>" + mapping.getArgs() + "</args>");
-                    if (mapping.getReloadRule() != ActionMapping.ReloadRule.DEFAULT) {
-                        out.println("        <reload rule=\"" + mapping.getReloadRule().name() + "\"/>");
-                    }
-                    out.println("    </action>");
-                }
-                out.println("</actions>");
-            } catch (FileNotFoundException | UnsupportedEncodingException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        } catch (IOException ex) {
-
-        }
+        actionRegistry.save();
     }
 
     static class MyListCellRenderer extends DefaultListCellRenderer {

@@ -39,7 +39,7 @@ import org.openide.util.Mutex.Action;
  */
 public class GradleAuxiliaryPropertiesImpl implements AuxiliaryProperties {
     
-    private static final String PROP_PREFIX = "netbeans."; //NOI18N
+    private static final String PROP_PREFIX = "nb-config."; //NOI18N
     
     final NbGradleProjectImpl project;
 

@@ -194,7 +194,7 @@ public abstract class AbstractGradleExecutor extends OutputTabMaintainer<Abstrac
                 pnl.setCommandLine(config.getCommandLine());
                 Object retValue = DialogDisplayer.getDefault().notify(dd);
                 if (retValue == DialogDescriptor.OK_OPTION) {
-                    pnl.applyChanges(config.getCommandLine());
+                   // pnl.applyChanges(config.getCommandLine());
                     RunUtils.executeGradle(config, null);
                 }
             } else {

@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.gradle.api.execute;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -29,17 +30,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import org.netbeans.modules.gradle.spi.execute.GradleLauncherConfigurator;
 import java.util.ArrayList;
 import org.gradle.tooling.ConfigurableLauncher;
 import org.openide.util.NbBundle;
 import static org.netbeans.modules.gradle.api.execute.GradleCommandLine.Argument.Kind.*;
+import org.netbeans.modules.gradle.spi.GradleSettings;
 
 /**
  *
  * @author Laszlo Kishalmi
  */
-public final class GradleCommandLine implements GradleLauncherConfigurator {
+public final class GradleCommandLine implements Serializable {
 
     public enum LogLevel {DEBUG, INFO, WARN, QUIET}
     public enum StackTrace {NONE, SHORT, FULL}
@@ -109,6 +110,7 @@ public final class GradleCommandLine implements GradleLauncherConfigurator {
             PARALLEL.incompatibleWith(NO_PARALLEL);
             NO_PARALLEL.incompatibleWith(PARALLEL);
         }
+
         private Flag(Argument.Kind kind, String... flags) {
             this.kind = kind;
             this.flags = Arrays.asList(flags);
@@ -578,6 +580,70 @@ public final class GradleCommandLine implements GradleLauncherConfigurator {
         }
     }
 
+    public void removeParameter(Parameter param, String value) {
+        Iterator<Argument> it = arguments.iterator();
+        while (it.hasNext()) {
+            Argument arg = it.next();
+            if (arg instanceof ParametricArgument) {
+                ParametricArgument parg = (ParametricArgument) arg;
+                if (parg.param == param && parg.value.equals(value)) {
+                    it.remove();
+                }
+            }
+        }
+    }
+
+    public void removeProperty(Property prop, String key) {
+        Iterator<Argument> it = arguments.iterator();
+        while (it.hasNext()) {
+            Argument arg = it.next();
+            if (arg instanceof PropertyArgument) {
+                PropertyArgument parg = (PropertyArgument) arg;
+                if (parg.prop == prop && parg.key.equals(key)) {
+                    it.remove();
+                }
+            }
+        }
+    }
+
+    public GradleCommandLine remove(GradleCommandLine mask) {
+        GradleCommandLine ret = new GradleCommandLine();
+        for (Argument argument : mask.arguments) {
+            if (argument instanceof FlagArgument) {
+                FlagArgument farg = (FlagArgument) argument;
+                if (hasFlag(farg.flag)) {
+                    ret.setFlag(farg.flag, true);
+                    setFlag(farg.flag, false);
+                }
+            }
+            if (argument instanceof ParametricArgument) {
+                ParametricArgument parg = (ParametricArgument) argument;
+                if (hasParameter(parg.param) && getParameters(parg.param).contains(parg.value)){
+                    removeParameter(parg.param, parg.value);
+                    ret.addParameter(parg.param, parg.value);
+                }
+            }
+            if (argument instanceof PropertyArgument) {
+                PropertyArgument parg = (PropertyArgument) argument;
+                String propValue = getProperty(parg.prop, parg.key);
+                if (propValue != null) {
+                    if (parg.prop == Property.PROJECT) {
+                        removeProperty(parg.prop, parg.key);
+                        switch (parg.prop) {
+                            case PROJECT:
+                                ret.addProjectProperty(parg.key, propValue);
+                                break;
+                            case SYSTEM:
+                                ret.addSystemProperty(parg.key, propValue);
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+        return ret;
+    }
+    
     public String getProperty(Property type, String key) {
         for (Argument arg : arguments) {
             if (arg instanceof PropertyArgument) {
@@ -612,13 +678,16 @@ public final class GradleCommandLine implements GradleLauncherConfigurator {
     }
 
     public void setLogLevel(LogLevel level) {
-        arguments.removeAll(Arrays.asList(Flag.LOG_DEBUG, Flag.LOG_INFO, Flag.LOG_QUIET));
+        arguments.removeAll(Arrays.asList(Flag.LOG_DEBUG, Flag.LOG_INFO, Flag.LOG_QUIET, Flag.LOG_WARN));
         switch(level) {
             case DEBUG:
                 addFlag(Flag.LOG_DEBUG);
                 break;
             case INFO:
                 addFlag(Flag.LOG_INFO);
+                break;
+            case WARN:
+                addFlag(Flag.LOG_WARN);
                 break;
             case QUIET:
                 addFlag(Flag.LOG_QUIET);
@@ -669,7 +738,6 @@ public final class GradleCommandLine implements GradleLauncherConfigurator {
         }
     }
 
-    @Override
     public void configure(ConfigurableLauncher launcher) {
         launcher.setJvmArguments(getArgs(EnumSet.of(SYSTEM)));
         List<String> args = new LinkedList<>(getArgs(EnumSet.of(PARAM)));
@@ -687,4 +755,28 @@ public final class GradleCommandLine implements GradleLauncherConfigurator {
         }
         return sb.toString();
     }
+
+    public static GradleCommandLine combine(GradleCommandLine first, GradleCommandLine... layers) {
+        GradleCommandLine ret = new GradleCommandLine(first);
+        for (GradleCommandLine layer : layers) {
+            ret.arguments.addAll(layer.arguments);
+            ret.tasks.addAll(layer.tasks);
+        }
+        return ret;
+    }
+    
+    public static GradleCommandLine getDefaultCommandLine() {
+        GradleSettings settings = GradleSettings.getDefault();
+        GradleCommandLine ret = new GradleCommandLine();
+        
+        ret.setFlag(Flag.OFFLINE, settings.isOffline());
+        ret.setFlag(Flag.CONFIGURE_ON_DEMAND, settings.isConfigureOnDemand());
+        ret.setFlag(Flag.NO_REBUILD, settings.getNoRebuild());
+        
+        ret.setLogLevel(settings.getDefaultLogLevel());
+        ret.setStackTrace(settings.getDefaultStackTrace());
+        
+        return ret;
+    }
+    
 }

@@ -21,7 +21,6 @@ package org.netbeans.core.network.proxy.pac.impl;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URI;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,21 +29,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.script.Bindings;
-import javax.script.Invocable;
-import javax.script.ScriptContext;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineFactory;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
-import jdk.nashorn.api.scripting.ScriptObjectMirror;
+import org.mozilla.javascript.ClassShutter;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.ContextFactory;
+import org.mozilla.javascript.EvaluatorException;
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.RhinoException;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
 import org.netbeans.core.network.utils.SimpleObjCache;
 import org.netbeans.core.network.proxy.pac.PacHelperMethods;
 import org.netbeans.core.network.proxy.pac.PacJsEntryFunction;
 import org.netbeans.core.network.proxy.pac.PacValidationException;
 import org.netbeans.core.network.proxy.pac.PacParsingException;
-import org.openide.util.Exceptions;
 import org.netbeans.core.network.proxy.pac.PacScriptEvaluator;
 import org.netbeans.core.network.proxy.pac.PacUtils;
 import org.openide.util.Lookup;
@@ -180,14 +177,27 @@ import org.openide.util.Lookup;
 public class NbPacScriptEvaluator implements PacScriptEvaluator {
 
     private static final Logger LOGGER = Logger.getLogger(NbPacScriptEvaluator.class.getName());
-
+    // The execution limits are in place as a last resort. In general it is
+    // expected, that a PAC comes from a trusted source
+    private static final SandboxedContextFactory SANDBOXED_CONTEXT_FACTORY = new SandboxedContextFactory(
+            100_000,
+            5 * 1000,
+            new ClassShutter() {
+                @Override
+                public boolean visibleToScripts(String string) {
+                    return "org.netbeans.core.network.proxy.pac.impl.NbPacHelperMethods".equals(string)
+                            || "java.lang.String".equals(string);
+                }
+            }
+    );
 
     private static final String JS_HELPER_METHODS_INSTANCE_NAME = "jsPacHelpers";
     
     private final boolean canUseURLCaching;
-    private final PacScriptEngine scriptEngine;
+    private final Scriptable scriptEngine;
     private final SimpleObjCache<URI,List<Proxy>> resultCache;
-    
+    private final PacJsEntryFunction entryFunctionInfo;
+    private final Function entryFunction;
     private static final String PAC_PROXY = "PROXY";
     private static final String PAC_DIRECT = "DIRECT";
     private static final String PAC_SOCKS = "SOCKS";
@@ -195,19 +205,40 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
     private static final String PAC_SOCKS5_FFEXT = "SOCKS5"; // Mozilla Firefox extension. Not part of original Netscape spec.
     private static final String PAC_HTTP_FFEXT = "HTTP"; // Mozilla Firefox extension. Not part of original Netscape spec.
     private static final String PAC_HTTPS_FFEXT = "HTTPS"; // Mozilla Firefox extension. Not part of original Netscape spec.
-    private final boolean nashornJava8u40Available;
     private final String pacScriptSource;
 
 
     public NbPacScriptEvaluator(String pacSourceCocde) throws PacParsingException {
         this.pacScriptSource = pacSourceCocde;
-        nashornJava8u40Available = getNashornJava8u40Available();
-        scriptEngine = getScriptEngine(pacSourceCocde);
         canUseURLCaching = !usesTimeDateFunctions(pacSourceCocde);
         if (canUseURLCaching) {
             resultCache = new SimpleObjCache<>(100);
         } else {
             resultCache = null;
+        }
+        Context cx = SANDBOXED_CONTEXT_FACTORY.enterContext();
+        try {
+            String helperJSScript = getHelperJsScriptSource();
+            LOGGER.log(Level.FINER, "PAC Helper JavaScript :\n{0}", helperJSScript);
+
+            scriptEngine = cx.initSafeStandardObjects();
+
+            PacHelperMethods pacHelpers = Lookup.getDefault().lookup(PacHelperMethods.class);
+            if (pacHelpers == null) { // this should be redundant but we take no chances
+                pacHelpers = new NbPacHelperMethods();
+            }
+
+            ScriptableObject.putProperty(scriptEngine, JS_HELPER_METHODS_INSTANCE_NAME, pacHelpers);
+
+            cx.evaluateString(scriptEngine, pacSourceCocde, "PAC Source", 0, null);
+            cx.evaluateString(scriptEngine, helperJSScript, "JS Helper", 0, null);
+
+            entryFunctionInfo = testScriptEngine(scriptEngine, false);
+            entryFunction = (Function) ScriptableObject.getProperty(scriptEngine, entryFunctionInfo.getJsFunctionName());
+        } catch (RhinoException ex) {
+            throw new  PacParsingException(ex);
+        } finally {
+            Context.exit();
         }
     }
 
@@ -223,20 +254,18 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
                 return jsResultAnalyzed;
             }
         }
+
+        Context cx = SANDBOXED_CONTEXT_FACTORY.enterContext();
         try {
-            Object jsResult = scriptEngine.findProxyForURL(PacUtils.toStrippedURLStr(uri), uri.getHost()); 
+
+            Object jsResult = entryFunction.call(cx, scriptEngine, null, new Object[] {PacUtils.toStrippedURLStr(uri), uri.getHost()});
             jsResultAnalyzed = analyzeResult(uri, jsResult);
             if (canUseURLCaching && (resultCache != null)) {
                 resultCache.put(uri, jsResultAnalyzed);   // save the result in the cache
             }
             return jsResultAnalyzed;
-        } catch (NoSuchMethodException ex) {
-            // If this exception occur at this time it is really, really unexpected. 
-            // We already gave the function a test spin in the constructor.
-            Exceptions.printStackTrace(ex);
-            return Collections.singletonList(Proxy.NO_PROXY);
-        } catch (ScriptException ex) {
-            LOGGER.log(Level.WARNING, "Error when executing PAC script function " + scriptEngine.getJsMainFunction().getJsFunctionName() + " : ", ex);
+        } catch (RhinoException ex) {
+            LOGGER.log(Level.WARNING, "Error when executing PAC script function " + entryFunctionInfo.getJsFunctionName() + " : ", ex);
             return Collections.singletonList(Proxy.NO_PROXY);
         } catch (Exception ex) {  // for runtime exceptions
             if (ex.getCause() != null) {
@@ -247,8 +276,10 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
                 }
             }
             // other unforseen errors
-            LOGGER.log(Level.WARNING, "Error when executing PAC script function " + scriptEngine.getJsMainFunction().getJsFunctionName() + " : ", ex);
+            LOGGER.log(Level.WARNING, "Error when executing PAC script function " + entryFunctionInfo.getJsFunctionName() + " : ", ex);
             return Collections.singletonList(Proxy.NO_PROXY);
+        } finally {
+            Context.exit();
         }
     }
 
@@ -259,89 +290,29 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
 
     @Override
     public String getJsEntryFunction() {
-        return scriptEngine.getJsMainFunction().getJsFunctionName();
+        return entryFunctionInfo.getJsFunctionName();
     }
 
     @Override
     public String getEngineInfo() {
-        ScriptEngineFactory factory = scriptEngine.getScriptEngine().getFactory();
-        return factory.getEngineName() + " version " + factory.getEngineVersion();
+        Context cx = Context.enter();
+        try {
+            return cx.getImplementationVersion();
+        } finally {
+            Context.exit();
+        }
     }
 
     @Override
     public String getPacScriptSource() {
         return this.pacScriptSource;
     }
-    
-    
 
-    private PacScriptEngine getScriptEngine(String pacSource) throws PacParsingException {
-
-        try {
-            String helperJSScript = getHelperJsScriptSource();
-            LOGGER.log(Level.FINER, "PAC Helper JavaScript :\n{0}", helperJSScript);
-            
-            ScriptEngine engine;
-            if (nashornJava8u40Available) {
-                engine = getNashornJSScriptEngine();
-            } else {
-                engine = getGenericJSScriptEngine();
-            }
-            
-            LOGGER.log(Level.FINE, "PAC script evaluator using:  {0}", getEngineInfo(engine));
-            
-            
-            PacHelperMethods pacHelpers = Lookup.getDefault().lookup(PacHelperMethods.class);
-            if (pacHelpers == null) { // this should be redundant but we take no chances
-                pacHelpers = new NbPacHelperMethods();
-            }
-            Bindings b = engine.createBindings();
-            b.put(JS_HELPER_METHODS_INSTANCE_NAME, pacHelpers);
-            engine.setBindings(b, ScriptContext.ENGINE_SCOPE);
-            
-            engine.eval(pacSource);
-            engine.eval(helperJSScript);
-
-            // Do some minimal testing of the validity of the PAC Script.
-            final PacJsEntryFunction jsMainFunction;
-            if (nashornJava8u40Available) {
-                jsMainFunction = testScriptEngine(engine, true);
-            } else {
-                jsMainFunction = testScriptEngine(engine, false);
-            }
-            
-            return new PacScriptEngine(engine, jsMainFunction);
-        } catch (ScriptException ex) {
-            throw new  PacParsingException(ex);
-        }
-    }
-    
-    private boolean getNashornJava8u40Available() {
-        try {
-            Class<?> klass = Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory");
-        } catch (ClassNotFoundException ex) {
-            return false;
-        }
-        return true;
-    }
-    
-    private ScriptEngine getNashornJSScriptEngine() {
-        NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
-        return factory.getScriptEngine(new ClassFilterPacHelpers());
-    }
-    
-    private ScriptEngine getGenericJSScriptEngine() {
-        // The result of the statements below may be Rhino, but more likely
-        // - since Java 8 - it will be a Nashorn engine.
-        ScriptEngineManager factory = new ScriptEngineManager();
-        return factory.getEngineByName("JavaScript");
-    }
-    
     /**
      * Test if the main entry point, function FindProxyForURL()/FindProxyForURLEx(), 
      * is available.
      */
-    private PacJsEntryFunction testScriptEngine(ScriptEngine eng, boolean doDeepTest) throws PacParsingException {
+    private PacJsEntryFunction testScriptEngine(Scriptable eng, boolean doDeepTest) throws PacParsingException {
         if (isJsFunctionAvailable(eng, PacJsEntryFunction.IPV6_AWARE.getJsFunctionName(), doDeepTest)) {
             return PacJsEntryFunction.IPV6_AWARE;
         }
@@ -351,30 +322,9 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
         throw new PacParsingException("Function " + PacJsEntryFunction.STANDARD.getJsFunctionName() + " or " + PacJsEntryFunction.IPV6_AWARE.getJsFunctionName() + " not found in PAC Script.");
     }
 
-    private boolean isJsFunctionAvailable(ScriptEngine eng, String functionName, boolean doDeepTest) {
-        // We want to test if the function is there, but without actually 
-        // invoking it.        
-        Object obj = eng.get(functionName);
-        
-        if (!doDeepTest && obj != null) {  
-            // Shallow test. We've established that there's
-            // "something" in the ENGINE_SCOPE with a name like
-            // functionName, and we *hope* it is a function, but we really don't
-            // know, therefore we call it a shallow test.
-            return true;
-        }
-        
-        // For Nashorn post JDK8u40 we can do even deeper validation
-        // using the ScriptObjectMirror class. This will not work for Rhino.
-        if (doDeepTest && obj != null) {
-            if (obj instanceof ScriptObjectMirror) {
-                    ScriptObjectMirror  som = (ScriptObjectMirror) obj;
-                    if (som.isFunction()) {
-                        return true;
-                    }
-            }
-        }        
-        return false;
+    private boolean isJsFunctionAvailable(Scriptable eng, String functionName, boolean doDeepTest) {
+        Object o = ScriptableObject.getProperty(eng, functionName);
+        return o instanceof Function;
     }
     
 
@@ -397,26 +347,6 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
         Pattern pattern = Pattern.compile(".*(timeRange\\s*\\(|dateRange\\s*\\(|weekdayRange\\s*\\().*", Pattern.DOTALL);
         Matcher matcher = pattern.matcher(pacScriptSource);
         return matcher.matches();
-    }
-
-    private String getEngineInfo(ScriptEngine engine) {
-        StringBuilder sb = new StringBuilder();
-        ScriptEngineFactory f = engine.getFactory();
-        sb.append("LanguageName=");
-        sb.append("\"").append(f.getLanguageName()).append("\"");
-        sb.append(" ");
-        sb.append("LanguageVersion=");
-        sb.append("\"").append(f.getLanguageVersion()).append("\"");
-        sb.append(" ");
-        sb.append("EngineName=");
-        sb.append("\"").append(f.getEngineName()).append("\"");
-        sb.append(" ");
-        sb.append("EngineNameAliases=");
-        sb.append(Arrays.toString(f.getNames().toArray(new String[f.getNames().size()])));
-        sb.append(" ");
-        sb.append("EngineVersion=");
-        sb.append("\"").append(f.getEngineVersion()).append("\"");
-        return sb.toString();
     }
 
     /**
@@ -498,34 +428,61 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
         
         return new Proxy(proxyType, new InetSocketAddress(host, portNo));
     }
-    
-    
-    private static class PacScriptEngine  {
-        private final ScriptEngine scriptEngine;
-        private final PacJsEntryFunction jsMainFunction;
-        private final Invocable invocable;
 
-        public PacScriptEngine(ScriptEngine scriptEngine, PacJsEntryFunction jsMainFunction) {
-            this.scriptEngine = scriptEngine;
-            this.jsMainFunction = jsMainFunction;
-            this.invocable = (Invocable) scriptEngine;
-        }
+    /**
+     * SandboxedContextFactory provides an Rhino execution context, that can
+     * limit executed instructions, execution time and exposed java classes
+     */
+    private static final class SandboxedContextFactory extends ContextFactory {
+        private final long maxExecutionTimeMS;
+        private final long maxInstructionCount;
+        private final ClassShutter classShutter;
 
-        public PacJsEntryFunction getJsMainFunction() {
-            return jsMainFunction;
-        }
-
-        public ScriptEngine getScriptEngine() {
-            return scriptEngine;
+        public SandboxedContextFactory(long maxInstructionCount, long maxExecutionTimeMS, ClassShutter classShutter) {
+            this.classShutter = classShutter;
+            this.maxInstructionCount = maxInstructionCount;
+            this.maxExecutionTimeMS = maxExecutionTimeMS;
         }
 
-        public Invocable getInvocable() {
-            return invocable;
-        }
-        
-        public Object findProxyForURL(String url, String host) throws ScriptException, NoSuchMethodException {
-            return invocable.invokeFunction(jsMainFunction.getJsFunctionName(), url, host);
-        }
+	@Override
+	protected Context makeContext() {
+	    return new SandboxedContext(this, classShutter, maxInstructionCount, maxExecutionTimeMS);
+	}
+
     }
-        
+
+    private static final class SandboxedContext extends Context {
+        private final long maxInstructionCount;
+        private final long maxExecutionTimeMS;
+	private final long executionStart = System.currentTimeMillis();
+	private long instructionCounter = 0;
+
+	public SandboxedContext(SandboxedContextFactory factory, ClassShutter classShutter, long maxInstructionCount, long maxExecutionTimeMS) {
+	    super(factory);
+            this.maxExecutionTimeMS = maxExecutionTimeMS;
+            this.maxInstructionCount = maxInstructionCount;
+	    setClassShutter(classShutter);
+	    setGenerateObserverCount(true);
+	    setInstructionObserverThreshold(1);
+	}
+
+	@Override
+	protected void observeInstructionCount(int instructionCount) {
+	    instructionCounter += instructionCount;
+	    long executionTime = System.currentTimeMillis() - executionStart;
+	    if(instructionCounter > maxInstructionCount || executionTime > maxExecutionTimeMS) {
+		throw new ExecutionLimitsExceeded(executionTime, maxExecutionTimeMS, instructionCounter, maxInstructionCount);
+	    }
+	}
+    }
+
+    private static class  ExecutionLimitsExceeded extends EvaluatorException {
+
+	public ExecutionLimitsExceeded(long executionTime, long maxExecutionTime, long intructionCount, long maxInstructionCount) {
+	    super(String.format("Exceeded execution limits (Execution Time (current/max): %dms / %dms, Instruction Count (current/max): %d / %d)",
+		    executionTime, maxExecutionTime,
+		    intructionCount, maxInstructionCount));
+	}
+
+    }
 }

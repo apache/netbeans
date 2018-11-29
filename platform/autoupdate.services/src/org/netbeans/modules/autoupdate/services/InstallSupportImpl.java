@@ -1222,6 +1222,8 @@ public class InstallSupportImpl {
                     break;
                 }
             }
+            // if something was (un)installed, we need to recompute provides-requires info
+            UpdateManagerImpl.getInstance().flushComputedInfo();
         }
 
     }

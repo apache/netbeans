@@ -50,8 +50,8 @@
 
 
             <center>
-                <h1>NetBeans API Changes since Last Release</h1>
-                <h3>Version 9.0</h3>
+                <h1>Apache NetBeans API Changes since Last Release</h1>
+                <h3>Apache NetBeans 9.0</h3>
                 <xsl:if test="$date" >
                     <xsl:value-of select="$date" />
                     <p/>

@@ -34,7 +34,7 @@
         <head>
             <!-- projects.netbeans.org -->
            <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-           <title>NetBeans API List</title>
+           <title>Apache NetBeans API List</title>
             <link rel="stylesheet" href="netbeans.css" type="text/css"/>
 
           <link REL="icon" href="http://www.netbeans.org/favicon.ico" type="image/ico" />
@@ -45,8 +45,8 @@
         <body>
 
         <center>
-            <h1>NetBeans API List</h1>
-            <h3>Version 9.0</h3>
+            <h1>Apache NetBeans API List</h1>
+            <h3>Apache NetBeans 9.0</h3>
             <xsl:if test="$date" >
                 <xsl:value-of select="$date" />
                 <p/>
@@ -128,10 +128,7 @@
 
         <h4>FAQ and Mailing List</h4>
 
-        <p>Can't find what you're looking for? Try the <a
-        href="http://wiki.netbeans.org/wiki/view/NetBeansDeveloperFAQ" target="_top">FAQ</a>
-        and then <a
-        href="http://www.netbeans.org/community/lists/top.html" target="_top">dev@platform.netbeans.org</a>.</p>
+        <p>Can't find what you're looking for? Try the <a href="https://netbeans.apache.org" target="_top">Apache NetBeans website</a>.</p>
 
         <hr/>
         <xsl:call-template name="list-modules" />

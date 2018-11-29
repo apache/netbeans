@@ -31,13 +31,7 @@
     <import file="../default.xml"/>
 
     <target name="build-javadoc" depends="-jdk-init,-load-build-properties,init-tasks,set-buildnumber" description="Builds Javadoc documentation for modules; on branches pass e.g. -Djavadoc.web.root=http://bits.netbeans.org/6.7/javadoc">
-        <pathconvert property="modules.fullpath">
-            <path>
-                <dirset dir="${nb_all}" includes="${config.javadoc.all}"/>
-            </path>
-            <mapper type="identity"/>
-        </pathconvert>
-        
+        <resolvelist name="allmodules" path="modules.fullpath" dir="${nb_all}" list="${nb.clusters.list}" modules="${config.javadoc.all}"/>
         <sortsuitemodules unsortedmodules="${modules.fullpath}" sortedmodulesproperty="modules.sorted"/>
         
         <property name="export.interfaces" location="${netbeans.javadoc.dir}/../ModulesExportedInterfaces"/>

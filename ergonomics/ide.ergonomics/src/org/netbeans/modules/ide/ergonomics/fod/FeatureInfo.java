@@ -238,6 +238,24 @@ public final class FeatureInfo {
             this.cnb = Pattern.compile(cnbPattern);
             this.recMinJDK = recommended != null ? new SpecificationVersion(recommended) : null;
         }
+        
+        /**
+         * Returns the codename, if the pattern is actually a literal.
+         * Literal pattern should not contain any metacharacters, except '.' and '/'.
+         * @return codename or {@code null}
+         */
+        String explicitCodebase() {
+            String pat = cnb.pattern();
+            for (int a = pat.length() - 1; a >= 0; a--) {
+                char c = pat.charAt(a);
+                if (!(Character.isAlphabetic(c) || Character.isDigit(c))) {
+                    if (c != '.' && c != '/') {
+                        return null;
+                    }
+                }
+            }
+            return pat;
+        }
 
         boolean matches(String cnb) {
             return this.cnb.matcher(cnb).matches();

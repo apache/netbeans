@@ -1668,12 +1668,24 @@ public final class ModuleManager extends Modules {
         }
     }
     
+    /**
+     * Determines if enabling compat modules is disruptive. Compat modules are often 
+     * fragment modules augmenting regular ones. If the host module is already enabled / loaded,
+     * the compat module cannot back-patch already existing classes, and IDE restart is needed.
+     * 
+     * @param modules initial set of modules
+     * @return true, if the operation requires a restart
+     * @throws IllegalArgumentException 
+     */
     public boolean hasToEnableCompatModules(Set<Module> modules) throws IllegalArgumentException {
         List<Module> toEnable = simulateEnable(modules);
         for (Module m : toEnable) {            
             String fragmentHostCodeName = m.getFragmentHostCodeName();
             if (fragmentHostCodeName != null && !fragmentHostCodeName.isEmpty()) {
-                return true;
+                Module fragHost = get(fragmentHostCodeName);
+                if (fragHost != null && fragHost.isEnabled()) {
+                    return true;
+                }
             }
         }
         return false;

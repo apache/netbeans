@@ -51,7 +51,7 @@
 
             <center>
                 <h1>NetBeans API Changes since Last Release</h1>
-                <h3>Current Development Version</h3>
+                <h3>Version 10.0</h3>
                 <xsl:if test="$date" >
                     <xsl:value-of select="$date" />
                     <p/>
@@ -101,7 +101,9 @@
                 <a href="http://bits.netbeans.org/7.4/javadoc/apichanges.html">release 7.4</a>,
                 <a href="http://bits.netbeans.org/8.0/javadoc/apichanges.html">release 8.0</a>,
                 <a href="http://bits.netbeans.org/8.0.1/javadoc/apichanges.html">release 8.0.1</a>,
-                <a href="http://bits.netbeans.org/8.1/javadoc/apichanges.html">release 8.1</a>.
+		<a href="http://bits.netbeans.org/8.1/javadoc/apichanges.html">release 8.1</a>,
+		<a href="http://bits.netbeans.org/8.2/javadoc/apichanges.html">release 8.2</a>,
+		<a href="http://bits.netbeans.org/9.0/javadoc/apichanges.html">release 9.0</a>.
             <xsl:call-template name="do-the-table" />
             </body>
             </html>

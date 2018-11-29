@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.text.Collator;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -38,6 +39,7 @@ import org.netbeans.modules.autoupdate.ui.actions.Installer;
 import org.netbeans.modules.autoupdate.ui.actions.ShowNotifications;
 import org.openide.awt.HtmlBrowser;
 import org.openide.awt.Mnemonics;
+import org.openide.modules.Places;
 import org.openide.util.*;
 
 /**
@@ -770,6 +772,27 @@ public class Utilities {
     
     private static Preferences getPreferences () {
         return NbPreferences.forModule (Utilities.class);
+    }
+    
+    /**
+     * Hacky way how to determine if the AU catalog providers have built their
+     * caches. Checks just for the default provider cache filenames. Used for decision
+     * that user should perform check for updates to get plugin portal contents.
+     * 
+     * @return true, if caches are present.
+     */
+    public static boolean hasBuiltDefaultCaches() {
+        File cacheDir = Places.getCacheSubdirectory("catalogcache");
+        if (!cacheDir.exists()) {
+            return false;
+        }
+        try {
+            return Files.list(cacheDir.toPath()).anyMatch((p) -> 
+                    p.getName(p.getNameCount() - 1).toString().endsWith("-update-provider")
+            );
+        } catch (IOException ex) {
+            return false;
+        }
     }
 
 }

@@ -33,6 +33,20 @@
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="missing-elements">
+            <api name="general"/>
+            <summary>Report parts of a feature which is not installed yet</summary>
+            <version major="1" minor="57"/>
+            <date day="30" month="11" year="2018"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" semantic="compatible" source="compatible"/>
+            <description>
+                A distributed feature may list a module, which is only available on some update center, in NB IDE case because of
+                licensing issues. This token must be reported so the as part of the UpdateElement and Operation so the caller may
+                initiate the download operation.
+            </description>
+            <class package="org.netbeans.api.autoupdate" name="OperationContainer"/>
+        </change>
         <change id="visible-ancestor">
             <api name="general"/>
             <summary>Find a visible ancestor of UpdateUnit</summary>

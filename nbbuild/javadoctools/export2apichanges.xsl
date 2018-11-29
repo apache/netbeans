@@ -37,7 +37,7 @@
             <head>
                 <!-- projects.netbeans.org -->
                <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-               <title>NetBeans API Changes since Last Release</title>
+               <title>Apache NetBeans (incubating) API Changes since Last Release</title>
                 <link rel="stylesheet" href="netbeans.css" type="text/css"/>
 
               <link REL="icon" href="http://www.netbeans.org/favicon.ico" type="image/ico" />
@@ -50,8 +50,8 @@
 
 
             <center>
-                <h1>Apache NetBeans API Changes since Last Release</h1>
-                <h3>Apache NetBeans 10.0</h3>
+                <h1>Apache NetBeans (incubating) API Changes since Last Release</h1>
+                <h3>Apache NetBeans (incubating) 10.0</h3>
                 <xsl:if test="$date" >
                     <xsl:value-of select="$date" />
                     <p/>

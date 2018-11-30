@@ -84,7 +84,7 @@
         a list of APIs for a particular version, you may want to go to:
         </p>
         <ul>
-            <li><a href="http://bits.netbeans.org/8.1/javadoc/" target="_top">Dev</a> - Javadoc as released for developement version</li>
+            <li><a href="http://bits.netbeans.org/dev/javadoc/" target="_top">Dev</a> - Javadoc as released for developement version</li>
             <li><a href="http://bits.netbeans.org/9.0/javadoc/" target="_top">9.0</a> - Javadoc as released for Apache NetBeans (incubating) IDE 9.0</li>
             <li><a href="http://bits.netbeans.org/8.2/javadoc/" target="_top">8.2</a> - Javadoc as released for NetBeans IDE 8.2</li>
             <li><a href="http://bits.netbeans.org/8.1/javadoc/" target="_top">8.1</a> - Javadoc as released for NetBeans IDE 8.1</li>

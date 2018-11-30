@@ -39,6 +39,8 @@ import java.io.File;
 import java.util.ArrayList;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.gradle.actions.CustomActionRegistrationSupport;
+import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.filesystems.FileUtil;
@@ -194,7 +196,9 @@ public abstract class AbstractGradleExecutor extends OutputTabMaintainer<Abstrac
                 pnl.setCommandLine(config.getCommandLine());
                 Object retValue = DialogDisplayer.getDefault().notify(dd);
                 if (retValue == DialogDescriptor.OK_OPTION) {
-                   // pnl.applyChanges(config.getCommandLine());
+                    GradleCommandLine cmd = pnl.getCommandLine();
+                    pnl.rememberAs();
+                    setConfig(config.withCommandLine(cmd));
                     RunUtils.executeGradle(config, null);
                 }
             } else {

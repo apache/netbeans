@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.gradle.api.execute;
 
+import java.util.Collections;
 import java.util.Set;
 import org.netbeans.api.project.Project;
 
@@ -44,7 +45,7 @@ public final class RunConfig {
         this.project = project;
         this.action = action;
         this.displayName = displayName;
-        this.execFlags = execFlags;
+        this.execFlags = Collections.unmodifiableSet(execFlags);
         this.commandLine = commandLine;
     }
 
@@ -56,6 +57,10 @@ public final class RunConfig {
         return commandLine;
     }
 
+    public RunConfig withCommandLine(GradleCommandLine cmd) {
+        return new RunConfig(project, action, displayName, execFlags, cmd);
+    }
+    
     public Set<ExecFlag> getExecFlags() {
         return execFlags;
     }

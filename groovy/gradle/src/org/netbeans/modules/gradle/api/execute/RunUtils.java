@@ -24,7 +24,6 @@ import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.execute.GradleDaemonExecutor;
 import org.netbeans.modules.gradle.execute.GradleExecutor;
 import org.netbeans.modules.gradle.execute.ProxyNonSelectableInputOutput;
-import org.netbeans.modules.gradle.spi.GradleSettings;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
@@ -39,7 +38,6 @@ import org.openide.windows.IOColorPrint;
 import org.openide.windows.IOColors;
 import org.openide.windows.InputOutput;
 
-import static org.netbeans.modules.gradle.api.execute.GradleCommandLine.Flag.*;
 import static org.netbeans.modules.gradle.api.execute.Bundle.*;
 import org.netbeans.modules.gradle.spi.actions.ReplaceTokenProvider;
 import java.util.ArrayList;
@@ -71,6 +69,7 @@ public final class RunUtils {
     public static final String PROP_JDK_PLATFORM = "jdkPlatform"; //NOI18N
     public static final String PROP_COMPILE_ON_SAVE = "compile.on.save"; //NOI18N
     public static final String PROP_AUGMENTED_BUILD = "augmented.build"; //NOI18N
+    public static final String PROP_DEFAULT_CLI = "gradle.cli"; //NOI18N
 
     public static FileObject extractFileObjectfromLookup(Lookup lookup) {
         FileObject[] fos = extractFileObjectsfromLookup(lookup);
@@ -107,7 +106,22 @@ public final class RunUtils {
     }
 
     public static RunConfig createRunConfig(Project project, String action, String displayName, String[] args) {
-        GradleCommandLine cmd = new GradleCommandLine(args);
+        GradleBaseProject gbp = GradleBaseProject.get(project);
+        
+        GradleCommandLine syscmd = GradleCommandLine.getDefaultCommandLine();
+        GradleCommandLine prjcmd = getDefaultCommandLine(project);
+        GradleCommandLine basecmd = syscmd;
+        if (prjcmd != null) {
+            basecmd = GradleCommandLine.combine(syscmd, prjcmd);
+        }
+        
+        // Make sure we only exclude 'test' and 'check' by default if the 
+        // project allows this (has these tasks or root project with sub projects).
+        validateExclude(basecmd, gbp, GradleCommandLine.TEST_TASK);
+        validateExclude(basecmd, gbp, GradleCommandLine.CHECK_TASK); //NOI18N
+        
+        
+        GradleCommandLine cmd = GradleCommandLine.combine(basecmd, new GradleCommandLine(args));
         RunConfig ret = new RunConfig(project, action, displayName, EnumSet.of(RunConfig.ExecFlag.REPEATABLE), cmd);
         return ret;
     }
@@ -139,6 +153,11 @@ public final class RunUtils {
         return isOptionEnabled(project, PROP_AUGMENTED_BUILD, true);
     }
 
+    public static GradleCommandLine getDefaultCommandLine(Project project) {
+        String args = NbGradleProject.getPreferences(project, true).get(PROP_DEFAULT_CLI, null);
+        return args != null ? new GradleCommandLine(args) : null;
+    }
+    
     private static boolean isOptionEnabled(Project project, String option, boolean defaultValue) {
         GradleBaseProject gbp = GradleBaseProject.get(project);
         if (gbp != null) {
@@ -152,31 +171,17 @@ public final class RunUtils {
         return false;
     }
 
-    public static void applyGlobalConfig(RunConfig cfg) {
-        GradleCommandLine cmd = cfg.getCommandLine();
-        GradleSettings settings = GradleSettings.getDefault();
-        if (!cmd.hasFlag(OFFLINE)) {
-            cmd.setFlag(OFFLINE, settings.isOffline());
-        }
-        if (!cmd.hasFlag(CONFIGURE_ON_DEMAND)) {
-            cmd.setFlag(CONFIGURE_ON_DEMAND, settings.isConfigureOnDemand());
-        }
-        if (!cmd.hasFlag(NO_REBUILD)) {
-            cmd.setFlag(NO_REBUILD, settings.getNoRebuild());
-        }
-
-        GradleBaseProject gbp = GradleBaseProject.get(cfg.getProject());
-
-        globalExclude(cmd, gbp, "test", settings.skipTest()); //NOI18N
-        globalExclude(cmd, gbp, "check", settings.skipCheck()); //NOI18N
-
-    }
-
-    private static void globalExclude(GradleCommandLine cmd, GradleBaseProject gbp, String task, boolean global) {
+    /**
+     * Validate if a certain excluded task can be applied on a project.
+     * Used for skipping 'test' and 'check' tasks.
+     */
+    private static void validateExclude(GradleCommandLine cmd, GradleBaseProject gbp, String task) {
         boolean exclude = gbp.getTaskNames().contains(task) || (gbp.isRoot() && !gbp.getSubProjects().isEmpty());
-        exclude &= global && !cmd.getTasks().contains(task);
+        exclude &= cmd.getExcludedTasks().contains(task) && !cmd.getTasks().contains(task);
         if (exclude) {
             cmd.addParameter(GradleCommandLine.Parameter.EXCLUDE_TASK, task);
+        } else {
+            cmd.removeParameter(GradleCommandLine.Parameter.EXCLUDE_TASK, task);
         }
     }
 

@@ -57,12 +57,12 @@ import org.xml.sax.SAXException;
 public class ProjectActionMappingProviderImpl implements ProjectActionMappingProvider, WatchedResourceProvider {
 
     private static final Logger LOG = Logger.getLogger(ProjectActionMappingProviderImpl.class.getName());
-    private static final ActionMapping DEFAULT_RUN = new DefaultActionMapping("run", "run");
-    private static final ActionMapping DEFAULT_TEST = new DefaultActionMapping("test", "--rerun-tasks test");
-    private static final ActionMapping DEFAULT_DEBUG = new DefaultActionMapping("debug", "debug");
-    private static final ActionMapping DEFAULT_DEBUG2 = new DefaultActionMapping("debug", "run --debug-jvm");
+    private static final ActionMapping DEFAULT_RUN = new DefaultActionMapping("run", "run"); //NOI18N
+    private static final ActionMapping DEFAULT_TEST = new DefaultActionMapping("test", "--rerun-tasks test"); //NOI18N
+    private static final ActionMapping DEFAULT_DEBUG = new DefaultActionMapping("debug", "debug"); //NOI18N
+    private static final ActionMapping DEFAULT_DEBUG2 = new DefaultActionMapping("debug", "run --debug-jvm"); //NOI18N
     
-    private static final String NB_ACTIONS = "nb-actions.xml";
+    private static final String NB_ACTIONS = "nb-actions.xml"; //NOI18N
     
     final Project project;
     final PropertyChangeListener pcl;

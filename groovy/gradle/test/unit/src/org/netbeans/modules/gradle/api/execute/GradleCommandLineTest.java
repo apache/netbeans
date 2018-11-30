@@ -20,6 +20,8 @@
 package org.netbeans.modules.gradle.api.execute;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.junit.Test;
@@ -42,7 +44,7 @@ public class GradleCommandLineTest {
 
     @Test
     public void testGetFullCommandLine() {
-        System.out.println("getSupportedCommandLine");
+        System.out.println("getFullCommandLine");
         GradleCommandLine instance = new GradleCommandLine("--offline", "--no-daemon");
         List<String> expResult = Arrays.asList("--offline", "--no-daemon");
         List<String> result = instance.getFullCommandLine();
@@ -53,15 +55,15 @@ public class GradleCommandLineTest {
     public void testGetTasks() {
         System.out.println("getTasks");
         GradleCommandLine instance = new GradleCommandLine("-a", "clean", "build");
-        List<String> expResult = Arrays.asList("clean", "build");
-        List<String> result = instance.getTasks();
+        Set<String> expResult = new HashSet<>(Arrays.asList("clean", "build"));
+        Set<String> result = instance.getTasks();
         assertEquals(expResult, result);
     }
 
     @Test
     public void testSetTasks() {
         System.out.println("setTasks");
-        List<String> tasks = Arrays.asList("assemble");
+        Set<String> tasks = Collections.singleton("assemble");
         GradleCommandLine instance = new GradleCommandLine("-a", "clean", "build");
         instance.setTasks(tasks);
         assertEquals(tasks, instance.getTasks());
@@ -73,7 +75,7 @@ public class GradleCommandLineTest {
         System.out.println("removeTask");
         GradleCommandLine instance = new GradleCommandLine("-a", "clean", "build");
         instance.removeTask("clean");
-        assertEquals(Arrays.asList("build"), instance.getTasks());
+        assertEquals(Collections.singleton("build"), instance.getTasks());
     }
 
     @Test
@@ -81,7 +83,7 @@ public class GradleCommandLineTest {
         System.out.println("addTask");
         GradleCommandLine instance = new GradleCommandLine("-a", "clean");
         instance.addTask("build");
-        assertEquals(Arrays.asList("clean", "build"), instance.getTasks());
+        assertEquals(new HashSet<String>(Arrays.asList("clean", "build")), instance.getTasks());
     }
 
     @Test
@@ -248,4 +250,31 @@ public class GradleCommandLineTest {
         assertEquals(GradleCommandLine.StackTrace.NONE, instance.getStackTrace());
     }
 
+    @Test
+    public void testCombine1() {
+        GradleCommandLine first = new GradleCommandLine("-x", "test", "build");
+        GradleCommandLine second = new GradleCommandLine("test");
+        GradleCommandLine cmd = GradleCommandLine.combine(first, second);
+        assertTrue(cmd.getExcludedTasks().isEmpty());
+        assertTrue(cmd.getTasks().contains("test"));
+        assertTrue(cmd.getTasks().contains("build"));
+    }
+
+    @Test
+    public void testCombine2() {
+        GradleCommandLine first = new GradleCommandLine("-x", "test", "build");
+        GradleCommandLine second = new GradleCommandLine("test");
+        GradleCommandLine cmd = GradleCommandLine.combine(second, first);
+        assertTrue(cmd.getExcludedTasks().contains("test"));
+        assertFalse(cmd.getTasks().contains("test"));
+        assertTrue(cmd.getTasks().contains("build"));
+    }
+
+    @Test
+    public void testCombine3() {
+        GradleCommandLine first = new GradleCommandLine("-Pversion=1.0", "build");
+        GradleCommandLine second = new GradleCommandLine("-Pversion=2.0");
+        GradleCommandLine cmd = GradleCommandLine.combine(first, second);
+        assertEquals(Arrays.asList("-Pversion=2.0", "build"), cmd.getSupportedCommandLine());
+    }
 }

@@ -23,6 +23,7 @@ import javax.swing.DefaultComboBoxModel;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine.LogLevel;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine.StackTrace;
+import static org.netbeans.modules.gradle.api.execute.GradleCommandLine.*;
 import static org.netbeans.modules.gradle.api.execute.GradleCommandLine.Flag.*;
 import static org.netbeans.modules.gradle.api.execute.GradleCommandLine.Parameter.*;
 
@@ -35,8 +36,8 @@ public class ExecutionOptionsPanel extends javax.swing.JPanel {
     private static final GradleCommandLine CLI_MASK = new GradleCommandLine(
         "--no-rebuild", 
         "--offline", 
-        "-x", "test", 
-        "-x", "check",
+        "-x", TEST_TASK, 
+        "-x", CHECK_TASK,
         "--quiet",
         "--info",
         "--debug",
@@ -60,8 +61,8 @@ public class ExecutionOptionsPanel extends javax.swing.JPanel {
         cbOffline.setSelected(cli.hasFlag(OFFLINE));
         cbConfigureOnDemand.setSelected(cli.hasFlag(CONFIGURE_ON_DEMAND));
         Set<String> excluded = cli.getExcludedTasks();
-        cbSkipCheck.setSelected(excluded.contains("check")); //NOI18N
-        cbSkipTest.setSelected(excluded.contains("test")); //NOI18N
+        cbSkipCheck.setSelected(excluded.contains(CHECK_TASK));
+        cbSkipTest.setSelected(excluded.contains(TEST_TASK)); 
         cbLogLevel.setSelectedIndex(cli.getLoglevel().ordinal());
         cbStackTrace.setSelectedIndex(cli.getStackTrace().ordinal());
     }
@@ -74,10 +75,10 @@ public class ExecutionOptionsPanel extends javax.swing.JPanel {
         ret.setLogLevel((LogLevel) cbLogLevel.getSelectedItem());
         ret.setStackTrace((StackTrace) cbStackTrace.getSelectedItem());
         if (cbSkipCheck.isSelected()) {
-            ret.addParameter(EXCLUDE_TASK, "check");
+            ret.addParameter(EXCLUDE_TASK, CHECK_TASK);
         }
         if (cbSkipTest.isSelected()) {
-            ret.addParameter(EXCLUDE_TASK, "test");
+            ret.addParameter(EXCLUDE_TASK, TEST_TASK);
         }
         return ret;
     }

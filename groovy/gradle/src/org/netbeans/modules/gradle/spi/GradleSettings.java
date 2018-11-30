@@ -23,7 +23,6 @@ import org.netbeans.modules.gradle.options.GradleDistributionManager;
 import org.netbeans.modules.gradle.options.GradleDistributionManager.GradleVersion;
 import java.io.File;
 import java.util.prefs.Preferences;
-import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine.LogLevel;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine.StackTrace;
 import org.openide.util.NbBundle.Messages;
@@ -227,7 +226,7 @@ public final class GradleSettings {
     }
     
     public LogLevel getDefaultLogLevel() {
-        String lvl = getPreferences().get(PROP_LOG_LEVEL, LogLevel.WARN.name());
+        String lvl = getPreferences().get(PROP_LOG_LEVEL, LogLevel.LIFECYCLE.name());
         return LogLevel.valueOf(lvl);
     }
     

@@ -41,7 +41,6 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Task;
-import org.openide.util.TaskListener;
 
 import static org.netbeans.modules.gradle.Bundle.*;
 import org.netbeans.modules.gradle.actions.KeyValueTableModel;
@@ -199,8 +198,7 @@ public class ActionProviderImpl implements ActionProvider {
 
         final NbGradleProjectImpl prj = project.getLookup().lookup(NbGradleProjectImpl.class);
         final String[] args = evalueteArgs(project, action, argLine, ctx);
-        final RunConfig cfg = RunUtils.createRunConfig(project, action, taskName(project, action, ctx), args);
-        RunUtils.applyGlobalConfig(cfg);
+        RunConfig cfg = RunUtils.createRunConfig(project, action, taskName(project, action, ctx), args);
 
         if (showUI) {
             GradleExecutorOptionsPanel pnl = new GradleExecutorOptionsPanel(project);
@@ -209,7 +207,8 @@ public class ActionProviderImpl implements ActionProvider {
             Object retValue = DialogDisplayer.getDefault().notify(dd);
 
             if (retValue == DialogDescriptor.OK_OPTION) {
-                //pnl.applyChanges(cfg.getCommandLine());
+                pnl.rememberAs();
+                cfg = cfg.withCommandLine(pnl.getCommandLine());
             } else {
                 return;
             }
@@ -243,18 +242,14 @@ public class ActionProviderImpl implements ActionProvider {
         } else {
             final ExecutorTask task = RunUtils.executeGradle(cfg, writer.toString());
             final Lookup outerCtx = ctx;
-            task.addTaskListener(new TaskListener() {
-
-                @Override
-                public void taskFinished(Task t) {
-                    OutputWriter out = task.getInputOutput().getOut();
-                    boolean canReload = project.getLookup().lookup(BeforeReloadActionHook.class).beforeReload(action, outerCtx, task.result(), out);
-                    if (needReload && canReload) {
-                        String[] reloadArgs = evalueteArgs(project, mapping.getName(), mapping.getReloadArgs(), outerCtx);
-                        prj.reloadProject(true, maxQualily, reloadArgs);
-                    }
-                    project.getLookup().lookup(AfterBuildActionHook.class).afterAction(action, outerCtx, task.result(), out);
+            task.addTaskListener((Task t) -> {
+                OutputWriter out1 = task.getInputOutput().getOut();
+                boolean canReload = project.getLookup().lookup(BeforeReloadActionHook.class).beforeReload(action, outerCtx, task.result(), out1);
+                if (needReload && canReload) {
+                    String[] reloadArgs = evalueteArgs(project, mapping.getName(), mapping.getReloadArgs(), outerCtx);
+                    prj.reloadProject(true, maxQualily, reloadArgs);
                 }
+                project.getLookup().lookup(AfterBuildActionHook.class).afterAction(action, outerCtx, task.result(), out1);
             });
         }
     }
@@ -453,19 +448,16 @@ public class ActionProviderImpl implements ActionProvider {
                         }
                     }
                     acts.add(createCustomGradleAction(project, LBL_Custom_run_tasks(), new CustomActionMapping("name"), lookup, true));
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            boolean selected = menu.isSelected();
-                            menu.remove(loading);
-                            for (Action a : acts) {
-                                menu.add(new JMenuItem(a));
-                            }
-                            menu.getPopupMenu().pack();
-                            menu.repaint();
-                            menu.updateUI();
-                            menu.setSelected(selected);
+                    SwingUtilities.invokeLater(() -> {
+                        boolean selected = menu.isSelected();
+                        menu.remove(loading);
+                        for (Action a : acts) {
+                            menu.add(new JMenuItem(a));
                         }
+                        menu.getPopupMenu().pack();
+                        menu.repaint();
+                        menu.updateUI();
+                        menu.setSelected(selected);
                     });
                 }
             }, 100);

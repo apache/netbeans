@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import org.gradle.tooling.ConfigurableLauncher;
 import org.openide.util.NbBundle;
 import static org.netbeans.modules.gradle.api.execute.GradleCommandLine.Argument.Kind.*;
@@ -42,8 +43,11 @@ import org.netbeans.modules.gradle.spi.GradleSettings;
  */
 public final class GradleCommandLine implements Serializable {
 
-    public enum LogLevel {DEBUG, INFO, WARN, QUIET}
+    public enum LogLevel {DEBUG, INFO, LIFECYCLE, WARN, QUIET}
     public enum StackTrace {NONE, SHORT, FULL}
+
+    public static final String TEST_TASK = "test"; //NOI18N
+    public static final String CHECK_TASK = "check"; //NOI18N
 
     public enum Flag {
         NO_REBUILD(PARAM, "-a", "--no-rebuild"),
@@ -190,8 +194,18 @@ public final class GradleCommandLine implements Serializable {
     static class FlagArgument implements Argument, ArgumentParser<FlagArgument> {
 
         final Flag flag;
-
-        public FlagArgument(Flag flag) {
+        private static final EnumMap<Flag, FlagArgument> FLAG_ARGS = new EnumMap<>(Flag.class);
+        static {
+            for (Flag flag : Flag.values()) {
+                FLAG_ARGS.put(flag, new FlagArgument(flag));
+            }
+        }
+  
+        public static FlagArgument of(Flag f) {
+            return FLAG_ARGS.get(f);
+        }
+        
+        private FlagArgument(Flag flag) {
             this.flag = flag;
         }
 
@@ -256,8 +270,8 @@ public final class GradleCommandLine implements Serializable {
         @Override
         public int hashCode() {
             int hash = 5;
-            hash = 79 * hash + Objects.hashCode(this.prop);
-            hash = 79 * hash + Objects.hashCode(this.key);
+            hash = 47 * hash + Objects.hashCode(this.prop);
+            hash = 47 * hash + Objects.hashCode(this.key);
             return hash;
         }
 
@@ -278,6 +292,7 @@ public final class GradleCommandLine implements Serializable {
             }
             return this.prop == other.prop;
         }
+
 
     }
 
@@ -333,6 +348,32 @@ public final class GradleCommandLine implements Serializable {
         public List<String> getArgs() {
             return Arrays.asList(param.flags.get(0), value);
         }
+
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 79 * hash + Objects.hashCode(this.param);
+            hash = 79 * hash + Objects.hashCode(this.value);
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final ParametricArgument other = (ParametricArgument) obj;
+            if (!Objects.equals(this.value, other.value)) {
+                return false;
+            }
+            return this.param == other.param;
+        }
     }
 
     static class ParameterParser implements ArgumentParser<ParametricArgument> {
@@ -353,7 +394,7 @@ public final class GradleCommandLine implements Serializable {
     static final List<ArgumentParser<? extends Argument>> PARSERS = new LinkedList<>();
     static {
         for (Flag flag : Flag.values()) {
-            PARSERS.add(new FlagArgument(flag));
+            PARSERS.add(FlagArgument.of(flag));
         }
         for (Property prop : Property.values()) {
             PARSERS.add(new PropertyParser(prop));
@@ -449,11 +490,11 @@ public final class GradleCommandLine implements Serializable {
         return ret;
     }
 
-    public List<String> getTasks() {
-        return new LinkedList<>(tasks);
+    public Set<String> getTasks() {
+        return new LinkedHashSet<>(tasks);
     }
 
-    public void setTasks(List<String> tasks) {
+    public void setTasks(Collection<String> tasks) {
         this.tasks.clear();
         this.tasks.addAll(tasks);
     }
@@ -471,11 +512,11 @@ public final class GradleCommandLine implements Serializable {
     }
 
     public boolean hasFlag(Flag flag) {
-        return arguments.contains(new FlagArgument(flag));
+        return arguments.contains(FlagArgument.of(flag));
     }
 
     public void addFlag(Flag flag) {
-        arguments.add(new FlagArgument(flag));
+        arguments.add(FlagArgument.of(flag));
     }
 
     public boolean canAdd(Flag f) {
@@ -551,7 +592,7 @@ public final class GradleCommandLine implements Serializable {
         return new LinkedHashSet<>(getParameters(Parameter.EXCLUDE_TASK));
     }
 
-    public void setExcludedTasks(List<String> excluded) {
+    public void setExcludedTasks(Collection<String> excluded) {
         Iterator<Argument> it = arguments.iterator();
         while (it.hasNext()) {
             Argument arg = it.next();
@@ -759,8 +800,37 @@ public final class GradleCommandLine implements Serializable {
     public static GradleCommandLine combine(GradleCommandLine first, GradleCommandLine... layers) {
         GradleCommandLine ret = new GradleCommandLine(first);
         for (GradleCommandLine layer : layers) {
-            ret.arguments.addAll(layer.arguments);
-            ret.tasks.addAll(layer.tasks);
+            // Compute tasks and excludes first as argument processing can mess it up
+            Set<String> newExcludes = ret.getExcludedTasks();
+            newExcludes.removeAll(layer.tasks);
+            newExcludes.addAll(layer.getExcludedTasks());
+            
+            Set<String> newTasks = ret.getTasks();
+            newTasks.removeAll(layer.getExcludedTasks());
+            newTasks.addAll(layer.getTasks());
+            
+            layer.arguments.forEach((argument) -> {
+                if (argument instanceof PropertyArgument) {
+                    PropertyArgument parg = (PropertyArgument) argument;
+                    if (parg.prop == Property.PROJECT) {
+                        ret.addProjectProperty(parg.key, parg.value);
+                    }
+                    if (parg.prop == Property.SYSTEM) {
+                        ret.addSystemProperty(parg.key, parg.value);
+                    }
+                } else if (argument instanceof FlagArgument) {
+                    FlagArgument farg = (FlagArgument) argument;
+                    for (Flag flag : farg.flag.incompatible) {
+                        ret.removeFlag(flag);
+                    }
+                } else {
+                    ret.arguments.add(argument);
+                }
+            });
+            
+            ret.setExcludedTasks(newExcludes);
+            ret.setTasks(newTasks);
+            
         }
         return ret;
     }
@@ -776,6 +846,12 @@ public final class GradleCommandLine implements Serializable {
         ret.setLogLevel(settings.getDefaultLogLevel());
         ret.setStackTrace(settings.getDefaultStackTrace());
         
+        if (settings.skipCheck()) {
+            ret.addParameter(Parameter.EXCLUDE_TASK, CHECK_TASK);
+        }
+        if (settings.skipTest()) {
+            ret.addParameter(Parameter.EXCLUDE_TASK, TEST_TASK);
+        }
         return ret;
     }
     

@@ -82,4 +82,9 @@
 *~
 *.orig
 
-/java/gradle/netbeans-gradle-tooling/.gradle/
+# Gradle Support Generated files #
+##################################
+/groovy/gradle/netbeans-gradle-tooling/.gradle/
+/groovy/gradle/release/modules/gradle/daemon-loader/.gradle/
+/groovy/gradle/release/modules/gradle/nb-tooling.gradle
+/groovy/gradle/release/modules/gradle/netbeans-gradle-tooling.jar

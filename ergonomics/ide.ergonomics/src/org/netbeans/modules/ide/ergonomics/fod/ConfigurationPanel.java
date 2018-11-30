@@ -27,7 +27,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -47,7 +47,6 @@ import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.autoupdate.ui.api.PluginManager;
 import org.openide.awt.Mnemonics;
-import org.openide.modules.SpecificationVersion;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor.Task;
@@ -70,7 +69,7 @@ public class ConfigurationPanel extends JPanel implements Runnable {
 
     public ConfigurationPanel(String displayName, final Callable<JComponent> callable, FeatureInfo info) {
         this(callable);
-        setInfo(info, displayName, Collections.<UpdateElement>emptyList(), Collections.emptyList());
+        setInfo(info, displayName, Collections.<UpdateElement>emptyList(), Collections.emptyList(), Collections.emptyMap(), false);
     }
     
     public ConfigurationPanel(final Callable<JComponent> callable) {
@@ -83,7 +82,8 @@ public class ConfigurationPanel extends JPanel implements Runnable {
     }
 
     public void setInfo(FeatureInfo info, String displayName, Collection<UpdateElement> toInstall, 
-            Collection<FeatureInfo.ExtraModuleInfo> missingModules) {
+            Collection<FeatureInfo.ExtraModuleInfo> missingModules, 
+            Map<FeatureInfo.ExtraModuleInfo, FeatureInfo> extrasMap, boolean required) {
         this.featureInfo = info;
         this.featureInstall = toInstall;
         boolean activateNow = toInstall.isEmpty() && missingModules.isEmpty();
@@ -99,26 +99,27 @@ public class ConfigurationPanel extends JPanel implements Runnable {
             downloadLabel.setVisible(true);
             activateButton.setVisible(true);
             downloadButton.setVisible(true);
-            SpecificationVersion jdk = new SpecificationVersion(System.getProperty("java.specification.version"));
-            String lblDownloadMsg;
+            StringBuilder sbDownload = new StringBuilder();
 
-            boolean required = false;
-
-            for (FeatureInfo.ExtraModuleInfo mi : info.getExtraModules()) {
-                if (mi.recMinJDK != null && jdk.compareTo(mi.recMinJDK) < 0) {
-                    required = true;
+            // collect descriptions from features contributing installed extras
+            for (FeatureInfo fi : extrasMap.values()) {
+                String s = required ? 
+                        fi.getExtraModulesRequiredText() : 
+                        fi.getExtraModulesRecommendedText();
+                if (s != null) {
+                    if (sbDownload.length() > 0) {
+                        sbDownload.append("\n");
+                    }
+                    sbDownload.append(s);
                 }
             }
-            if (info.getExtraModulesRequiredText() != null && info.getExtraModulesRecommendedText() == null) {
-                required = true;
-            }
             if (required) {
-                lblDownloadMsg = info.getExtraModulesRequiredText();
                 activateButton.setEnabled(false);
             } else {
-                lblDownloadMsg = info.getExtraModulesRecommendedText();
                 activateButton.setEnabled(true);
             }
+            
+            String lblDownloadMsg = sbDownload.toString();
 
             String list = "";
             if (!missingModules.isEmpty()) {
@@ -127,7 +128,7 @@ public class ConfigurationPanel extends JPanel implements Runnable {
                     if (sb.length() > 0) {
                         sb.append(", "); // NOI18N
                     }
-                    sb.append(s);
+                    sb.append(s.displayName());
                 }
                 list = sb.toString();
                 if (required) {

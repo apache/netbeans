@@ -239,6 +239,10 @@ public final class FeatureInfo {
             this.recMinJDK = recommended != null ? new SpecificationVersion(recommended) : null;
         }
         
+        String displayName() {
+            return cnb.pattern();
+        }
+        
         /**
          * Returns the codename, if the pattern is actually a literal.
          * Literal pattern should not contain any metacharacters, except '.' and '/'.

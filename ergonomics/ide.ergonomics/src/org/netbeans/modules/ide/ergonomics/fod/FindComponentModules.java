@@ -20,10 +20,12 @@
 package org.netbeans.modules.ide.ergonomics.fod;
 
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,12 +38,14 @@ import java.util.logging.Level;
 import java.util.prefs.Preferences;
 import org.netbeans.api.autoupdate.InstallSupport;
 import org.netbeans.api.autoupdate.OperationContainer;
+import org.netbeans.api.autoupdate.OperationContainer.OperationInfo;
 import org.netbeans.api.autoupdate.OperationSupport;
 import org.netbeans.api.autoupdate.UpdateElement;
 import org.netbeans.api.autoupdate.UpdateManager;
 import org.netbeans.api.autoupdate.UpdateUnit;
 import org.netbeans.api.autoupdate.UpdateUnitProvider;
 import org.netbeans.api.autoupdate.UpdateUnitProviderFactory;
+import org.openide.modules.SpecificationVersion;
 import org.openide.util.Exceptions;
 import org.openide.util.NbPreferences;
 import org.openide.util.RequestProcessor;
@@ -65,12 +69,36 @@ public final class FindComponentModules extends Task {
     /**
      * Features, whose 'extra' modules were not found.
      */
-    private Map<FeatureInfo, List<FeatureInfo.ExtraModuleInfo>>   incompleteFeatures = new HashMap<>();
+    private Map<FeatureInfo, Collection<FeatureInfo.ExtraModuleInfo>>   incompleteFeatures = new HashMap<>();
+    
+    /**
+     * Maps individual codebase names to owning feature infos. Built at the start of findComponentModules
+     */
+    private Map<String, FeatureInfo> codebaseOwners = new HashMap<>();
+    
+    /**
+     * Index to search through update units; reset every time an update is attempted.
+     */
+    private Map<String, UpdateUnit> availUnits = null;
     
     /**
      * Errors encountered during updating component descriptions
      */
     private List<IOException> updateErrors = new ArrayList<>();
+    
+    /**
+     * ExtraInfos which need to be downloaded, if they are missing or not.
+     * Map to their owning FeatureInfo for descriptive labels
+     */
+    private Map<FeatureInfo.ExtraModuleInfo, FeatureInfo> extrasToDownload = new HashMap<>();
+    
+    /**
+     * Indicates that the user cannot proceed without a download.
+     * Accumulated during {@link #getMissingModules(org.netbeans.modules.ide.ergonomics.fod.FeatureInfo)}
+     */
+    private boolean downloadRequired;
+    
+    private final SpecificationVersion jdk = new SpecificationVersion(System.getProperty("java.specification.version"));
     
     public FindComponentModules(FeatureInfo info, FeatureInfo... additional) {
         ArrayList<FeatureInfo> l = new ArrayList<FeatureInfo>();
@@ -91,11 +119,11 @@ public final class FindComponentModules extends Task {
 
     public Collection<UpdateElement> getModulesForInstall () {
         findingTask.waitFinished();
-        return forInstall;
+        return forInstall == null ? Collections.emptyList() : forInstall;
     }
     public Collection<UpdateElement> getModulesForEnable () {
         findingTask.waitFinished();
-        return forEnable;
+        return forEnable == null ? Collections.emptyList() : forEnable;
     }
     
     public Collection<FeatureInfo> getIncompleteFeatures() {
@@ -104,7 +132,7 @@ public final class FindComponentModules extends Task {
     }
     
     void markIncompleteFeature(FeatureInfo fi, FeatureInfo.ExtraModuleInfo moduleInfo) {
-        incompleteFeatures.computeIfAbsent(fi, (f) -> new ArrayList<>())
+        incompleteFeatures.computeIfAbsent(fi, (f) -> new HashSet<>())
                 .add(moduleInfo);
     }
     
@@ -207,11 +235,33 @@ public final class FindComponentModules extends Task {
             findComponentModules ();
         }
     };
-
+    
+    private void buildCodebaseIndex() {
+        for (FeatureInfo fi : FeatureManager.features()) {
+            for (String cnb : fi.getCodeNames()) {
+                codebaseOwners.put(cnb, fi);
+            }
+        }
+    }
+    
+    private void buildUpdateUnitIndex() {
+        if (availUnits != null) {
+            return;
+        }
+        Collection<UpdateUnit> units = UpdateManager.getDefault ().getUpdateUnits (UpdateManager.TYPE.MODULE);
+        Map<String, UpdateUnit> uumap = new HashMap<>();
+        for (UpdateUnit u : units) {
+            uumap.put(u.getCodeName(), u);
+        }
+        availUnits = uumap;
+    }
+    
     private void findComponentModules () {
         long start = System.currentTimeMillis();
         Collection<UpdateUnit> units = null;
         Collection<UpdateElement> elementsForInstall = null;
+        buildCodebaseIndex();
+        
         for (int[] refresh = { 2 }; refresh[0] > 0; ) {
             if (units != null) {
                 List<UpdateUnitProvider> providers = UpdateUnitProviderFactory.getDefault().getUpdateUnitProviders(true);
@@ -223,8 +273,9 @@ public final class FindComponentModules extends Task {
                         Exceptions.attachSeverity(ex, Level.INFO).printStackTrace();
                     }
                 }
-                
+                availUnits = null;
             }
+            buildUpdateUnitIndex();
             units = UpdateManager.getDefault ().getUpdateUnits (UpdateManager.TYPE.MODULE);
             // install missing modules
             elementsForInstall = getMissingModules(units, refresh);
@@ -234,6 +285,27 @@ public final class FindComponentModules extends Task {
         // install disabled modules
         Collection<UpdateElement> elementsForEnable = getDisabledModules (units);
         forEnable = getAllForEnable (elementsForEnable, units);
+    }
+    
+    public Map<FeatureInfo.ExtraModuleInfo, FeatureInfo>  getExtrasToDownload() {
+        return extrasToDownload;
+    }
+    
+    private void registerExtraDownloadable(FeatureInfo fi, FeatureInfo.ExtraModuleInfo fmi) {
+        boolean required = false;
+        if (fmi.recMinJDK != null && jdk.compareTo(fmi.recMinJDK) < 0) {
+            required = true;
+        }
+        if (fi.getExtraModulesRequiredText() != null && fi.getExtraModulesRecommendedText() == null) {
+            required = true;
+        }
+        downloadRequired |= required;
+        extrasToDownload.put(fmi, fi);
+    }
+    
+    public boolean isDownloadRequired() {
+        findingTask.waitFinished();
+        return downloadRequired;
     }
     
     private Collection<UpdateElement> getMissingModules(Collection<UpdateUnit> allUnits, int[] refresh) {
@@ -246,37 +318,104 @@ public final class FindComponentModules extends Task {
             }
         }
         boolean decr = true;
-        for (FeatureInfo fi : this.infos) {
-            Set<FeatureInfo.ExtraModuleInfo> extraModules = fi.getExtraModules();
-            FOUND: for (FeatureInfo.ExtraModuleInfo moduleInfo : extraModules) {
-                boolean found = false;
-                for (UpdateUnit unit : allUnits) {
-                    if (moduleInfo.matches(unit.getCodeName())) {
-                        if (unit.getInstalled() != null) {
-                            continue FOUND;
-                        } else {
-                            res.add(unit.getAvailableUpdates().get(0));
-                            found = true;
+        Set<String> codebasesSeen = new HashSet<>();
+        OperationContainer<OperationSupport> ocForEnable = OperationContainer.createForEnable();
+        OperationContainer<InstallSupport> ocForInstall = OperationContainer.createForInstall();
+        boolean firstPass = true;
+
+        for (FeatureInfo startFi : infos) {
+            Deque<FeatureInfo> closure = new ArrayDeque<>();
+            closure.add(startFi);
+            codebasesSeen.add(startFi.getFeatureCodeNameBase());
+            
+            while (!closure.isEmpty()) {
+                FeatureInfo fi = closure.poll();
+                Set<FeatureInfo.ExtraModuleInfo> extraModules = fi.getExtraModules();
+                FOUND:
+                for (FeatureInfo.ExtraModuleInfo moduleInfo : extraModules) {
+                    boolean found = false;
+                    for (UpdateUnit unit : allUnits) {
+                        if (moduleInfo.matches(unit.getCodeName())) {
+                            if (unit.getInstalled() != null) {
+                                // PENDING: if the cnb spec is a regexp that matches MULTIPLE modules,
+                                // then the wrong one (i.e. with broken deps) can be matched.
+                                continue FOUND;
+                            } else if (!unit.getAvailableUpdates().isEmpty()) {
+                                registerExtraDownloadable(fi, moduleInfo);
+                                res.add(unit.getAvailableUpdates().get(0));
+                                found = true;
+                            }
                         }
                     }
-                }
-                if (found) {
-                    continue FOUND;
-                }
-                
-                // not found
-                if (decr) {
-                    if (--refresh[0] > 0) {
-                        // try to refresh
-                        return res;
+                    if (found) {
+                        continue FOUND;
                     }
-                    // decrement just once
-                    decr = false;
+
+                    // not found
+                    if (decr) {
+                        if (--refresh[0] > 0) {
+                            // try to refresh
+                            return res;
+                        }
+                        // decrement just once
+                        decr = false;
+                    }
+                    // extra module(s) for the feature weren't found
+                    markIncompleteFeature(fi, moduleInfo);
+                    // mark the originating feature as incomplete, too
+                    markIncompleteFeature(startFi, moduleInfo);
+                    // and compute the overall 'required' status
+                    registerExtraDownloadable(fi, moduleInfo);
                 }
-                // extra module(s) for the feature weren't found
-                markIncompleteFeature(fi, moduleInfo);
+                if (firstPass) {
+                    for (String cb : fi.getCodeNames()) {
+                        UpdateUnit cbuu = availUnits.get(cb);
+                        if (cbuu == null) {
+                            // sorry
+                            continue;
+                        }
+                        UpdateElement cbel = cbuu.getInstalled();
+                        OperationInfo thisInfo;
+
+                        if (cbel != null && ocForEnable.canBeAdded(cbuu, cbel)) {
+                            thisInfo = ocForEnable.add(cbuu, cbel);
+                        } else {
+                            if (cbuu.getAvailableUpdates().isEmpty()) {
+                                if (decr) {
+                                    if (--refresh[0] > 0) {
+                                        // try to refresh
+                                        return res;
+                                    }
+                                    // decrement just once
+                                    decr = false;
+                                }
+                                continue;
+                            }
+                            UpdateElement ie = cbuu.getAvailableUpdates().get(0);
+                            // not installed
+                            if (!ocForInstall.canBeAdded(cbuu, ie)) {
+                                continue;
+                            }
+                            thisInfo = ocForInstall.add(cbuu, ie);
+
+                        }
+                        Collection<UpdateElement> deps = thisInfo.getRequiredElements();
+                        for (UpdateElement d : deps) {
+                            UpdateUnit du = d.getUpdateUnit();
+                            if (du.getInstalled() == null) {
+                                res.add(d);
+                            }
+                            FeatureInfo depF = this.codebaseOwners.get(du.getCodeName());
+                            if (depF != null && codebasesSeen.add(depF.getFeatureCodeNameBase())) {
+                                closure.add(depF);
+                            }
+                        }
+                    }
+                    firstPass = false;
+                }
             }
         }
+
         refresh[0] = 0;
         return res;
     }
@@ -292,6 +431,8 @@ public final class FindComponentModules extends Task {
                 }
                 Set<UpdateElement> reqs = info.getRequiredElements ();
                 ocForInstall.add (reqs);
+                // PENDING: broken dependencies may mean the feature contains a platform/java-specific
+                // module, but could be used even without that one.
                 Set<String> breaks = info.getBrokenDependencies ();
                 if (breaks.isEmpty ()) {
                     all.add (el);

@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -70,6 +71,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataFolder;
 import org.openide.modules.SpecificationVersion;
 import org.openide.nodes.FilterNode;
+import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor.Task;
 import org.xml.sax.SAXException;
 
@@ -318,7 +320,7 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
         private final FeatureInfo[] additional;
         private final Lookup lookup;
         private ProjectState state;
-        private String error;
+        private volatile String error;
         private final ChangeListener weakL;
 
         public FeatureNonProject(
@@ -381,9 +383,15 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
                 }
             }
         }
-
+        
         private final class FeatureOpenHook extends ProjectOpenedHook
         implements Runnable, ProgressMonitor {
+            /**
+             * The finder instance; valid only for the duration of the task,
+             * should be cleared after that.
+             */
+            private FindComponentModules finder;
+            
             @Override
             protected void projectOpened() {
                 if (state == null) {
@@ -418,15 +426,45 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
                 FeatureManager.logUI("ERGO_PROJECT_OPEN", info.clusterName);
                 error = null;
                 FindComponentModules findModules = new FindComponentModules(info, additional);
-                Collection<UpdateElement> toInstall = findModules.getModulesForInstall ();
-                Collection<UpdateElement> toEnable = findModules.getModulesForEnable ();
-                if (toInstall != null && ! toInstall.isEmpty ()) {
-                    ModulesInstaller installer = new ModulesInstaller(toInstall, findModules, this);
-                    installer.getInstallTask ().waitFinished ();
+                synchronized (this) {
+                    this.finder = findModules;
                 }
-                if (toEnable != null && ! toEnable.isEmpty () && error == null) {
-                    ModulesActivator enabler = new ModulesActivator (toEnable, findModules, this);
-                    enabler.getEnableTask ().waitFinished ();
+                try {
+                    Collection<UpdateElement> toInstall = findModules.getModulesForInstall ();
+                    Collection<UpdateElement> toEnable = findModules.getModulesForEnable ();
+                    if (!findModules.getIncompleteFeatures().isEmpty() && findModules.isDownloadRequired()) {
+                        // ignore
+                        Collection<FeatureInfo.ExtraModuleInfo> missingModules = new LinkedHashSet<>(findModules.getMissingModules(info));
+                        for (FeatureInfo i2 : additional) {
+                            missingModules.addAll(findModules.getMissingModules(i2));
+                        }
+                        StringBuilder sb = new StringBuilder();
+                        if (!missingModules.isEmpty()) {
+                            for (FeatureInfo.ExtraModuleInfo s : missingModules) {
+                                if (sb.length() > 0) {
+                                    sb.append(", "); // NOI18N
+                                }
+                                sb.append(s.displayName());
+                            }
+                        }
+                        error = NbBundle.getMessage(FeatureProjectFactory.class, 
+                                "MSG_BrokenAction_FeatureIncomplete", 
+                                findModules.getIncompleteFeatures().iterator().next(),
+                                sb.toString());
+                        return;
+                    }
+                    if (toInstall != null && ! toInstall.isEmpty ()) {
+                        ModulesInstaller installer = new ModulesInstaller(toInstall, findModules, this);
+                        installer.getInstallTask ().waitFinished ();
+                    }
+                    if (toEnable != null && ! toEnable.isEmpty () && error == null) {
+                        ModulesActivator enabler = new ModulesActivator (toEnable, findModules, this);
+                        enabler.getEnableTask ().waitFinished ();
+                    }
+                } finally {
+                    synchronized (this) {
+                        this.finder = null;
+                    }
                 }
             }
 
@@ -443,23 +481,10 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
             }
 
             public void onError(String message) {
-                SpecificationVersion jdk = new SpecificationVersion(System.getProperty("java.specification.version"));
-                FeatureInfo[] fi = Arrays.copyOf(additional, additional.length + 1);
-                fi[additional.length] = info;
-                boolean required = false;
-
-                for (FeatureInfo i : fi) {
-                    for (FeatureInfo.ExtraModuleInfo mi : i.getExtraModules()) {
-                        if (mi.recMinJDK != null && jdk.compareTo(mi.recMinJDK) < 0) {
-                            required = true;
-                        }
+                synchronized (this) {
+                    if (finder.isDownloadRequired()) {
+                        error = message;
                     }
-                    if (i.getExtraModulesRequiredText() != null && i.getExtraModulesRecommendedText() == null) {
-                        required = true;
-                    }
-                }
-                if (required) {
-                    error = message;
                 }
             }
         } // end of FeatureOpenHook

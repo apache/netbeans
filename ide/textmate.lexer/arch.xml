@@ -117,18 +117,18 @@
   <p>
       <usecase id="register-grammar" name="Register grammar">
           To register a new TextMate grammar, add it as a file into the system filesystem,
-          under "Editors/<mime-type>/", and make sure it has an attribute "textmate-grammar",</mime-type>,
+          under "Editors/&lt;mime-type&gt;/", and make sure it has an attribute "textmate-grammar",&lt;/mime-type&gt;,
           whose value is a string representing the TextMate top-level scope. For example:
           <pre>
-    <folder name="Editors">
-        <folder name="text">
-            <folder name="x-kotlin">
-                <file name="Kotlin.tmLanguage.json" url="Kotlin.tmLanguage.json">
-                    <attr name="textmate-grammar" stringvalue="source.kotlin" />
-                </file>
-            </folder>
-        </folder>
-    </folder>
+    &lt;folder name="Editors"&gt;
+        &lt;folder name="text"&gt;
+            &lt;folder name="x-kotlin"&gt;
+                &lt;file name="Kotlin.tmLanguage.json" url="Kotlin.tmLanguage.json"&gt;
+                    &lt;attr name="textmate-grammar" stringvalue="source.kotlin" /&gt;
+                &lt;/file&gt;
+            &lt;/folder&gt;
+        &lt;/folder&gt;
+    &lt;/folder&gt;
           </pre>
       </usecase>
   </p>

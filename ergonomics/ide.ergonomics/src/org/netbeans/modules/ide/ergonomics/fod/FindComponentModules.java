@@ -65,7 +65,7 @@ public final class FindComponentModules extends Task {
     /**
      * Features, whose 'extra' modules were not found.
      */
-    private Map<FeatureInfo, List<String>>   incompleteFeatures = new HashMap<>();
+    private Map<FeatureInfo, List<FeatureInfo.ExtraModuleInfo>>   incompleteFeatures = new HashMap<>();
     
     /**
      * Errors encountered during updating component descriptions
@@ -103,13 +103,13 @@ public final class FindComponentModules extends Task {
         return incompleteFeatures.keySet();
     }
     
-    void markIncompleteFeature(FeatureInfo fi, String cnb) {
+    void markIncompleteFeature(FeatureInfo fi, FeatureInfo.ExtraModuleInfo moduleInfo) {
         incompleteFeatures.computeIfAbsent(fi, (f) -> new ArrayList<>())
-                .add(cnb);
+                .add(moduleInfo);
     }
     
-    public Collection<String> getMissingModules(FeatureInfo info) {
-        return incompleteFeatures.getOrDefault(info, Collections.<String>emptyList());
+    public Collection<FeatureInfo.ExtraModuleInfo> getMissingModules(FeatureInfo info) {
+        return incompleteFeatures.getOrDefault(info, Collections.emptyList());
     }
     
     public Collection<IOException> getUpdateErrors() {
@@ -247,10 +247,10 @@ public final class FindComponentModules extends Task {
         }
         boolean decr = true;
         for (FeatureInfo fi : this.infos) {
-            Set<String> extraModules = fi.getExtraModules();
-            FOUND: for (String cnb : extraModules) {
+            Set<FeatureInfo.ExtraModuleInfo> extraModules = fi.getExtraModules();
+            FOUND: for (FeatureInfo.ExtraModuleInfo moduleInfo : extraModules) {
                 for (UpdateUnit unit : allUnits) {
-                    if (cnb.equals(unit.getCodeName())) {
+                    if (moduleInfo.matches(unit.getCodeName())) {
                         if (unit.getInstalled() != null) {
                             continue FOUND;
                         } else {
@@ -270,7 +270,7 @@ public final class FindComponentModules extends Task {
                     decr = false;
                 }
                 // extra module(s) for the feature weren't found
-                markIncompleteFeature(fi, cnb);
+                markIncompleteFeature(fi, moduleInfo);
             }
         }
         refresh[0] = 0;

@@ -41,6 +41,7 @@ import org.netbeans.api.autoupdate.UpdateElement;
 import org.netbeans.api.autoupdate.UpdateManager;
 import org.netbeans.api.autoupdate.UpdateUnit;
 import org.netbeans.modules.autoupdate.ui.Containers;
+import org.netbeans.modules.autoupdate.ui.Utilities;
 import org.netbeans.modules.autoupdate.ui.actions.AutoupdateCheckScheduler;
 import org.netbeans.modules.autoupdate.ui.actions.Installer;
 import org.netbeans.modules.autoupdate.ui.wizards.LazyInstallUnitWizardIterator.LazyUnit;
@@ -75,15 +76,21 @@ public class OperationDescriptionStep implements WizardDescriptor.Panel<WizardDe
     private static final String DEPENDENCIES_TITLE_UNINSTALL = "UninstallDependenciesResolutionStep_Table_Title";
     private static final String DEPENDENCIES_TITLE_ACTIVATE = "OperationDescriptionStep_TableInstall_Title";
     private static final String DEPENDENCIES_TITLE_DEACTIVATE = "UninstallDependenciesResolutionStep_Table_Title";
-    private PanelBodyContainer component;
+    
+    private volatile PanelBodyContainer component;
     private OperationWizardModel model = null;
     private boolean readyToGo = false;
     private final List<ChangeListener> listeners = new ArrayList<ChangeListener> ();
     private RequestProcessor.Task lazyDependingTask = null;
+    WizardDescriptor lastWD;
     
     /** Creates a new instance of OperationDescriptionStep */
     public OperationDescriptionStep (OperationWizardModel model) {
         this.model = model;
+    }
+    
+    void reset() {
+       component = null;
     }
     
     @Override
@@ -154,7 +161,7 @@ public class OperationDescriptionStep implements WizardDescriptor.Panel<WizardDe
         }
         return component;
     }
-    
+
     private void appendDependingLazy (final String tableTitle, final String dependenciesTitle) {
         lazyDependingTask = Installer.RP.post (new Runnable () {
             @Override
@@ -200,6 +207,9 @@ public class OperationDescriptionStep implements WizardDescriptor.Panel<WizardDe
                         );
                         component.setBody (p);
                         component.setWaitingState (false);
+                        if (lastWD != null) {
+                            updateButtons(lastWD);
+                        }
                         fireChange ();
                     }
                 });
@@ -236,6 +246,10 @@ public class OperationDescriptionStep implements WizardDescriptor.Panel<WizardDe
         }
         if (moreBroken) {
             s += getBundle (OperationWizardModel.MORE_BROKEN_PLUGINS);
+        }
+        // present a note directing user to the Check for Updates action
+        if (!model.getMissingModules().isEmpty() && !Utilities.hasBuiltDefaultCaches()) {
+            s += getBundle ("OperationDescriptionStep_NoteCachesNotBuilt");
         }
         return s.trim ();
     }
@@ -495,9 +509,19 @@ public class OperationDescriptionStep implements WizardDescriptor.Panel<WizardDe
 
     @Override
     public void readSettings(WizardDescriptor wd) {
+        updateButtons(wd);
+    }
+    
+    /**
+     * Updates wizard buttons as appropriate for the phase.
+     * @param wd 
+     */
+    private void updateButtons(WizardDescriptor wd) {
+        lastWD = wd;
         boolean doOperation = ! (model instanceof InstallUnitWizardModel);
         if (doOperation) {
-            model.modifyOptionsForDoOperation (wd);
+            // will 
+            model.modifyOptionsForDoOperation (wd, 0);
         } else {
             model.modifyOptionsForStartWizard (wd);
         }

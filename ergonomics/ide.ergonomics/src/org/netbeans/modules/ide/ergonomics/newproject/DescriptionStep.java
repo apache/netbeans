@@ -163,11 +163,12 @@ public class DescriptionStep implements WizardDescriptor.Panel<WizardDescriptor>
             }
             final  Collection<UpdateElement> toInstall = f.getModulesForInstall();
             final  Collection<UpdateElement> elems = f.getModulesForEnable ();
-            if ((elems != null && !elems.isEmpty ()) || f.getIncompleteFeatures().contains(info) || !f.getUpdateErrors().isEmpty()) {
+            if (!elems.isEmpty ()|| f.getIncompleteFeatures().contains(info) || !f.getUpdateErrors().isEmpty()) {
                 Collection<UpdateElement> visible = f.getVisibleUpdateElements (elems);
                 final String name = ModulesInstaller.presentUpdateElements (visible);
                 configPanel.setUpdateErrors(f.getUpdateErrors());
-                configPanel.setInfo(info, name, toInstall, f.getMissingModules(info));
+                configPanel.setInfo(info, name, toInstall, f.getMissingModules(info), 
+                        f.getExtrasToDownload(), f.isDownloadRequired());
                 panel.replaceComponents(configPanel);
                 forEnable = elems;
                 fireChange ();

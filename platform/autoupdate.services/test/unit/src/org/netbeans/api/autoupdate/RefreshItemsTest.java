@@ -46,7 +46,7 @@ public class RefreshItemsTest extends DefaultTestCase {
         populateCatalog(TestUtils.class.getResourceAsStream("data/updates-subset.xml"));
         UpdateUnitProviderFactory.getDefault ().refreshProviders(null, true);
         assertEquals(UpdateManager.getDefault().getUpdateUnits(UpdateManager.TYPE.MODULE).toString(), 
-                updateUnitsCount - 2, UpdateManager.getDefault().getUpdateUnits(UpdateManager.TYPE.MODULE).size());
+                updateUnitsCount - 3, UpdateManager.getDefault().getUpdateUnits(UpdateManager.TYPE.MODULE).size());
         
         UpdateUnit toTestAgain = UpdateManagerImpl.getInstance ().getUpdateUnit ("org.yourorghere.refresh_providers_test");
         assertNotNull ("Unit for org.yourorghere.refresh_providers_test found.", toTestAgain);

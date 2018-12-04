@@ -165,6 +165,7 @@ public class FeatureUpdateUnitImpl extends UpdateUnitImpl {
                     installedFeatureElement.getSource (),
                     installedModules,
                     installedFeatures,
+                    ((FeatureUpdateElementImpl) Trampoline.API.impl (installedFeatureElement)).getMissingElements(),
                     featureImpl.getType ());
             installedElement = Trampoline.API.createUpdateElement (featureElementImpl);
             featureElementImpl.setUpdateUnit (installedFeatureElement.getUpdateUnit ());
@@ -186,6 +187,7 @@ public class FeatureUpdateUnitImpl extends UpdateUnitImpl {
                         featureElements.get (0).getSource (),
                         availableModules,
                         availableFeatures,
+                        null,
                         featureImpl.getType ());
                 updateElement = Trampoline.API.createUpdateElement (featureElementImpl);
                 featureElementImpl.setUpdateUnit (featureElements.get (0).getUpdateUnit ());

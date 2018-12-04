@@ -17,8 +17,8 @@
 [Desktop Entry]
 Type=Application
 Encoding=UTF-8
-Name=NetBeans 10.0
-Comment=Apache NetBeans, The Smarter Way to Code
+Name=Apache NetBeans 10.0 (incubating)
+Comment=Apache NetBeans (incubating), The Smarter Way to Code
 Exec=netbeans %F
 Categories=Application;Development;Java;PHP;JS;JavaScript;IDE
 Icon=${SNAP}/meta/gui/icon.png

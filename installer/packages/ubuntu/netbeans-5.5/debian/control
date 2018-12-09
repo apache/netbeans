@@ -1,0 +1,123 @@
+Source: netbeans5.5
+Section: devel
+Priority: optional
+Maintainer: Marek Slama <marek.slama@sun.com>
+Build-Depends: cdbs (>= 0.4.23-1.1), debhelper (>= 5), rsync, unzip
+Standards-Version: 3.7.2
+
+Package: netbeans5.5-platform
+Architecture: all
+Section: libs
+Depends: sun-java5-jre | sun-java6-jre
+Suggests: netbeans5.5-platform-ja, netbeans5.5-platform-pt, netbeans5.5-platform-zh
+Description: NetBeans Platform for building rich desktop applications in Java
+ NetBeans Platform is the framework for building rich desktop applications
+ in Java.  It is the core of the NetBeans IDE.
+ .
+ For more information see the project website: http://www.netbeans.org/.
+
+Package: netbeans5.5-platform-ja
+Architecture: all
+Section: libs
+Depends: netbeans5.5-platform
+Description: NetBeans Platform (Japanese Localization)
+ NetBeans Platform is the framework for building rich desktop applications
+ in Java.  It is the core of the NetBeans IDE.
+ .
+ This package contains the Japanese localization files.
+ .
+ For more information see the project website: http://www.netbeans.org/.
+
+Package: netbeans5.5-platform-pt
+Architecture: all
+Section: libs
+Depends: netbeans5.5-platform
+Description: NetBeans Platform (Portuguese Localization)
+ NetBeans Platform is the framework for building rich desktop applications
+ in Java.  It is the core of the NetBeans IDE.
+ .
+ This package contains the Portuguese localization files.
+ .
+ For more information see the project website: http://www.netbeans.org/.
+
+Package: netbeans5.5-platform-zh
+Architecture: all
+Section: libs
+Depends: netbeans5.5-platform
+Description: NetBeans Platform (Chinese Localization)
+ NetBeans Platform is the framework for building rich desktop applications
+ in Java.  It is the core of the NetBeans IDE.
+ .
+ This package contains the Chinese localization files.
+ .
+ For more information see the project website: http://www.netbeans.org/.
+
+Package: netbeans5.5
+Architecture: all
+Depends: sun-java5-jdk | sun-java6-jdk, netbeans5.5-platform
+Suggests: sun-java5-source, sun-java6-source, netbeans5.5-doc
+Description: NetBeans IDE for development of applications in Java
+ NetBeans is a modern IDE which supports development of applications in the
+ Java programming language.  The distinctive feature of this IDE is it tries
+ hard to support the whole Java platform stack, out of the box.  All important
+ Java standard APIs are supported out of the box.  Recently NetBeans started to
+ expand its reach beyond Java to C/C++ and other programming languages as well.
+ .
+ For more information see the project website: http://www.netbeans.org/.
+
+Package: netbeans5.5-ja
+Architecture: all
+Depends: netbeans5.5, netbeans5.5-platform-ja
+Description: NetBeans IDE (Japanese Localization)
+ NetBeans is a modern IDE which supports development of applications in the
+ Java programming language.  The distinctive feature of this IDE is it tries
+ hard to support the whole Java platform stack, out of the box.  All important
+ Java standard APIs are supported out of the box.  Recently NetBeans started to
+ expand its reach beyond Java to C/C++ and other programming languages as well.
+ .
+ This package contains the Japanese localization files.
+ .
+ For more information see the project website: http://www.netbeans.org/.
+
+Package: netbeans5.5-pt
+Architecture: all
+Depends: netbeans5.5, netbeans5.5-platform-pt
+Description: NetBeans IDE (Portuguese Localization)
+ NetBeans is a modern IDE which supports development of applications in the
+ Java programming language.  The distinctive feature of this IDE is it tries
+ hard to support the whole Java platform stack, out of the box.  All important
+ Java standard APIs are supported out of the box.  Recently NetBeans started to
+ expand its reach beyond Java to C/C++ and other programming languages as well.
+ .
+ This package contains the Portuguese localization files.
+ .
+ For more information see the project website: http://www.netbeans.org/.
+
+Package: netbeans5.5-zh
+Architecture: all
+Depends: netbeans5.5, netbeans5.5-platform-zh
+Description: NetBeans IDE (Chinese Localization)
+ NetBeans is a modern IDE which supports development of applications in the
+ Java programming language.  The distinctive feature of this IDE is it tries
+ hard to support the whole Java platform stack, out of the box.  All important
+ Java standard APIs are supported out of the box.  Recently NetBeans started to
+ expand its reach beyond Java to C/C++ and other programming languages as well.
+ .
+ This package contains the Chinese localization files.
+ .
+ For more information see the project website: http://www.netbeans.org/.
+
+Package: netbeans5.5-doc
+Architecture: all
+Suggests: netbeans5.5
+Enhances: netbeans5.5
+Description: NetBeans IDE documentation bundle
+ NetBeans is a modern IDE which supports development of applications in the
+ Java programming language.  The distinctive feature of this IDE is it tries
+ hard to support the whole Java platform stack, out of the box.  All important
+ Java standard APIs are supported out of the box.  Recently NetBeans started to
+ expand its reach beyond Java to C/C++ and other programming languages as well.
+ .
+ This package installs a local copy of the web documentation.
+ .
+ For more information see the project website: http://www.netbeans.org/.

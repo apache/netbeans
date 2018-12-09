@@ -1,0 +1,12 @@
+./buildnbrpm --help
+Usage: buildnbrpm [-h|--help] [-n nb_distibution|--nbdist nb_distibution] [-m|--mobility mobility_pack] [-t|--wtk wtk_archive_zip] [-w|--work work_dir]
+
+Builds RMP packages
+  --help     |-h                  display this help
+  --nbdist   |-n nb_distibution   ZIP file containing NetBeans distribution
+                                  (e.g. latest daily build)
+  --mobility |-m mobility_pack    ZIP file containing mobility pack
+                                  (something like mobility-latest.zip)
+  --wtk      |-w wtk_archive_zip  ZIP file containing wtk emulator archive
+                                  (something like wtk_lin-latest.zip)
+  --target   |-t work_dir         the target directory where the packages will be placed. Default is the current directory.

@@ -1,0 +1,12 @@
+[Desktop Entry]
+Exec=/usr/bin/netbeans
+Terminal=0
+Type=Application
+Icon=nb48x48.png
+Categories=Application;Development;X-Sun-Supported;
+Name=NetBeans IDE 4.1
+Name[ja]=NetBeans IDE 4.1
+Name[zh]=NetBeans IDE 4.1
+Comment=Launches NetBeans IDE 4.1
+Comment[ja]=Launches NetBeans IDE 4.1
+Comment[zh]=Launches NetBeans IDE 4.1

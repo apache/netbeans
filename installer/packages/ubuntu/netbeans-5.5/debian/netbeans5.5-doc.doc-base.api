@@ -1,0 +1,9 @@
+Document: netbeans-api
+Title: NetBeans IDE API Javadoc
+Author: NetBeans
+Abstract: This document contains NetBeans API Javadoc.
+Section: Apps/Programming
+     
+Format: HTML
+Index: /usr/share/doc/netbeans5.5-doc/api/index.html
+Files: /usr/share/doc/netbeans5.5-doc/api/*.html

@@ -1,0 +1,275 @@
+#!/usr/bin/make -f
+
+# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+#
+# Copyright (c) 2007, 2016 Oracle and/or its affiliates. All rights reserved.
+#
+# Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+# Other names may be trademarks of their respective owners.
+#
+# The contents of this file are subject to the terms of either the GNU
+# General Public License Version 2 only ("GPL") or the Common
+# Development and Distribution License("CDDL") (collectively, the
+# "License"). You may not use this file except in compliance with the
+# License. You can obtain a copy of the License at
+# http://www.netbeans.org/cddl-gplv2.html
+# or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+# specific language governing permissions and limitations under the
+# License.  When distributing the software, include this License Header
+# Notice in each file and include the License file at
+# nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+# particular file as subject to the "Classpath" exception as provided
+# by Oracle in the GPL Version 2 section of the License file that
+# accompanied this code. If applicable, add the following below the
+# License Header, with the fields enclosed by brackets [] replaced by
+# your own identifying information:
+# "Portions Copyrighted [year] [name of copyright owner]"
+#
+# If you wish your version of this file to be governed by only the CDDL
+# or only the GPL Version 2, indicate your decision by adding
+# "[Contributor] elects to include this software in this distribution
+# under the [CDDL or GPL Version 2] license." If you do not indicate a
+# single choice of license, a recipient has the option to distribute
+# your version of this file under either the CDDL, the GPL Version 2 or
+# to extend the choice of license to its licensees as provided above.
+# However, if you add GPL Version 2 code and therefore, elected the GPL
+# Version 2 license, then the option applies only if the new code is
+# made subject to such option by the copyright holder.
+#
+# Contributor(s):
+
+DEB_TAR_SRCDIR = netbeans
+DOCS_SRCDIR = build-tree/nb55-jumbodocpack
+API_DOCS_SRCDIR = build-tree/api
+
+include /usr/share/cdbs/1/rules/tarball.mk
+include /usr/share/cdbs/1/rules/simple-patchsys.mk
+include /usr/share/cdbs/1/rules/debhelper.mk
+
+VERSION			:= 5.5
+NBROOT			:= usr/share/netbeans/$(VERSION)
+p_ide			:= netbeans$(VERSION)
+p_ide_ja		:= $(p_ide)-ja
+p_ide_pt		:= $(p_ide)-pt
+p_ide_zh		:= $(p_ide)-zh
+p_doc	 		:= $(p_ide)-doc
+usd_doc			:= usr/share/doc/$(p_doc)
+p_platform 		:= $(p_ide)-platform
+p_platform_ja 		:= $(p_platform)-ja
+p_platform_pt 		:= $(p_platform)-pt
+p_platform_zh 		:= $(p_platform)-zh
+d_doc			:= debian/$(p_doc)
+d_platform		:= debian/$(p_platform)
+d_platform_ja		:= debian/$(p_platform_ja)
+d_platform_pt		:= debian/$(p_platform_pt)
+d_platform_zh		:= debian/$(p_platform_zh)
+d_ide			:= debian/$(p_ide)
+d_ide_ja		:= debian/$(p_ide_ja)
+d_ide_pt		:= debian/$(p_ide_pt)
+d_ide_zh		:= debian/$(p_ide_zh)
+r_platform		:= $(d_platform)/$(NBROOT)
+r_platform_ja		:= $(d_platform_ja)/$(NBROOT)
+r_platform_pt		:= $(d_platform_pt)/$(NBROOT)
+r_platform_zh		:= $(d_platform_zh)/$(NBROOT)
+r_ide			:= $(d_ide)/$(NBROOT)
+r_ide_ja		:= $(d_ide_ja)/$(NBROOT)
+r_ide_pt		:= $(d_ide_pt)/$(NBROOT)
+r_ide_zh		:= $(d_ide_zh)/$(NBROOT)
+
+d_lists			:= debian/lists
+list_all		:= $(d_lists)/all.txt
+list_win		:= $(d_lists)/win.txt
+list_zip		:= $(d_lists)/zip.txt
+list_lic		:= $(d_lists)/lic.txt
+list_junk		:= $(d_lists)/junk.txt
+list_platform_txt	:= $(d_lists)/platform_txt.txt
+list_platform_build	:= $(d_lists)/platform_build.txt
+list_platform_rel	:= $(d_lists)/platform_rel.txt
+list_ide_txt		:= $(d_lists)/ide_txt.txt
+list_rm			:= $(d_lists)/rm.txt
+list_golden		:= $(d_lists)/golden.txt
+list_platform		:= $(d_lists)/platform.txt
+list_ide		:= $(d_lists)/ide.txt
+list_platform_ja	:= $(d_lists)/platform_ja.txt
+list_ide_ja		:= $(d_lists)/ide_ja.txt
+list_platform_pt	:= $(d_lists)/platform_pt.txt
+list_ide_pt		:= $(d_lists)/ide_pt.txt
+list_platform_zh	:= $(d_lists)/platform_zh.txt
+list_ide_zh		:= $(d_lists)/ide_zh.txt
+list_platform_rm	:= $(d_lists)/platform_rm.txt
+list_ide_rm		:= $(d_lists)/ide_rm.txt
+list_platform_core	:= $(d_lists)/platform_core.txt
+list_ide_core		:= $(d_lists)/ide_core.txt
+list_doc_zip            := $(d_lists)/doc_zip.txt
+
+DEB_INSTALL_DIRS_$(p_platform) = usr/share/doc/$(p_platform) $(NBROOT)
+DEB_INSTALL_DIRS_$(p_platform_ja) = usr/share/doc/$(p_platform_ja) $(NBROOT)
+DEB_INSTALL_DIRS_$(p_platform_pt) = usr/share/doc/$(p_platform_pt) $(NBROOT)
+DEB_INSTALL_DIRS_$(p_platform_zh) = usr/share/doc/$(p_platform_zh) $(NBROOT)
+DEB_INSTALL_DIRS_$(p_ide) = usr/share/doc/$(p_ide) $(NBROOT) usr/bin etc/$(p_ide)
+DEB_INSTALL_DIRS_$(p_doc) = $(usd_doc)/html $(usd_doc)/api
+DEB_INSTALL_DIRS_$(p_ide_ja) = usr/share/doc/$(p_ide_ja) $(NBROOT)
+DEB_INSTALL_DIRS_$(p_ide_pt) = usr/share/doc/$(p_ide_pt) $(NBROOT)
+DEB_INSTALL_DIRS_$(p_ide_zh) = usr/share/doc/$(p_ide_zh) $(NBROOT)
+
+#DEB_INSTALL_MANPAGES_$(p_ide) = debian/netbeans.1
+
+update-copyright:
+	sh debian/copyright-files/mkcopy.sh debian/copyright debian/copyright-files/PKG_PREAMBLE debian/copyright-files/PKG_NOTICE debian/copyright-files/MIT_LICENSE debian/copyright-files/NETBEANS_NOTICE $(DEB_SRCDIR)/LICENSE.txt $(DEB_SRCDIR)/THIRDPARTYLICENSE.txt $(DEB_SRCDIR)/platform6/THIRDPARTYLICENSEREADME.txt $(DEB_SRCDIR)/enterprise3/apache-tomcat-5.5.17/LICENSE $(DEB_SRCDIR)/enterprise3/modules/ext/toplink/3RD-PARTY-LICENSE.txt
+	touch $@
+
+configure-once: update-copyright
+	mkdir -p $(d_lists)
+	# create the list of all files in both tarballs
+	(cd $(DEB_SRCDIR); find . -type f) | sort > $(list_all)
+	# generate a list of windows files to remove (except launchers)
+	egrep '\.(bat|cmd|dll|exe)$$$$' $(list_all) | egrep -v '(nbexec|app[\._])' > $(list_win)
+	# generate a list of zip files to remove
+	grep 'nbos2icons.zip$$' $(list_all) > $(list_zip)
+	# generate a list of license files (which are now in copyright)
+	echo "./LICENSE.txt" >> $(list_lic)
+	echo "./DISTRIBUTION.txt" >> $(list_lic)
+	echo "./THIRDPARTYLICENSE.txt" >> $(list_lic)
+	echo "./platform6/THIRDPARTYLICENSEREADME.txt" >> $(list_lic)
+	echo "./enterprise3/apache-tomcat-5.5.17/LICENSE" >> $(list_lic)
+	echo "./enterprise3/modules/ext/toplink/3RD-PARTY-LICENSE.txt" >> $(list_lic)
+	# these are ide files to move to FHS locations
+	# these are misc files to be deleted
+	# remove redundant licensing files
+	echo "./platform6/LICENSE.txt" >> $(list_junk)
+	# remove Python script from embedded ant
+	echo "./ide7/ant/bin/runant.py" >> $(list_junk)
+	# now combine all the files to remove
+	cat $(list_win) $(list_zip) $(list_lic) $(list_junk) | sort > $(list_rm)
+	# create list of all files worth keeping
+	comm -23 $(list_all) $(list_rm) > $(list_golden)
+	# create the list of platform files
+	egrep '(/harness/|/platform6/|nb\.cluster)' $(list_golden) > $(list_platform)
+	# create the list of ide files
+	comm -23 $(list_golden) $(list_platform) > $(list_ide)
+	# these are platform files (basic docs) to move to FHS locations
+	grep '/platform6/.*\.txt' $(list_platform) > $(list_platform_txt)
+	# these are leftover upstream build targets
+	grep '\.built' $(list_platform) > $(list_platform_build)
+	# convert to list relative to /platform6/
+	sed 's@platform6/@@g' $(list_platform_txt) > $(list_platform_rel)
+	# separate _ja
+	grep '_ja' $(list_platform) > $(list_platform_ja)
+	# separate _pt
+	grep '_pt' $(list_platform) > $(list_platform_pt)
+	# separate _zh
+	grep '_zh' $(list_platform) > $(list_platform_zh)
+	# create list of files to remove from platform core
+	cat $(list_platform_txt) $(list_platform_build) $(list_platform_ja) $(list_platform_pt) $(list_platform_zh) | sort > $(list_platform_rm)
+	# create platform core list
+	comm -23 $(list_platform) $(list_platform_rm) > $(list_platform_core)
+	# these are ide files (basic docs) to move to FHS locations
+	# but do NOT move localized files in the core list
+	egrep '^\./[^/]*\.(css|html|txt)' $(list_ide) | egrep -v '(_ja|_pt|_zh)' > $(list_ide_txt)
+	# separate _ja
+	grep '_ja' $(list_ide) > $(list_ide_ja)
+	# separate _pt
+	grep '_pt' $(list_ide) > $(list_ide_pt)
+	# separate _zh
+	grep '_zh' $(list_ide) > $(list_ide_zh)
+	# create list of files to remove from ide core
+	cat $(list_ide_txt) $(list_ide_ja) $(list_ide_pt) $(list_ide_zh)| sort > $(list_ide_rm)
+	# create ide core list
+	comm -23 $(list_ide) $(list_ide_rm) > $(list_ide_core)
+	touch $@
+
+common-build-indep:: configure-once
+
+install/$(p_platform)::
+	# copy core platform files
+	rsync --files-from=$(list_platform_core) $(DEB_SRCDIR)/ $(r_platform)/
+	# insure script is executable
+	chmod +x $(r_platform)/harness/launchers/app.sh
+	# move documentation to FHS location
+	rsync --files-from=$(list_platform_rel) $(DEB_SRCDIR)/platform6/ $(d_platform)/usr/share/doc/$(p_platform)/
+
+install/$(p_platform_ja)::
+	# copy core platform files
+	rsync --files-from=$(list_platform_ja) $(DEB_SRCDIR)/ $(r_platform_ja)/
+	# move documentation to FHS location
+	rsync --files-from=$(list_platform_rel) $(DEB_SRCDIR)/platform6/ $(d_platform_ja)/usr/share/doc/$(p_platform_ja)/
+
+install/$(p_platform_pt)::
+	# copy core platform files
+	rsync --files-from=$(list_platform_pt) $(DEB_SRCDIR)/ $(r_platform_pt)/
+	# move documentation to FHS location
+	rsync --files-from=$(list_platform_rel) $(DEB_SRCDIR)/platform6/ $(d_platform_pt)/usr/share/doc/$(p_platform_pt)/
+
+install/$(p_platform_zh)::
+	# copy core platform files
+	rsync --files-from=$(list_platform_zh) $(DEB_SRCDIR)/ $(r_platform_zh)/
+	# move documentation to FHS location
+	rsync --files-from=$(list_platform_rel) $(DEB_SRCDIR)/platform6/ $(d_platform_zh)/usr/share/doc/$(p_platform_zh)/
+
+install/$(p_ide)::
+	# copy core ide files
+	rsync --files-from=$(list_ide_core) $(DEB_SRCDIR)/ $(r_ide)/
+	# move documentation to FHS location
+	rsync --files-from=$(list_ide_txt) $(DEB_SRCDIR)/ $(d_ide)/usr/share/doc/$(p_ide)/
+	# add productid
+	cp debian/productid $(r_ide)/nb5.5/config/
+	# add desktop file
+	cp debian/netbeans.desktop $(r_ide)/nb5.5/
+	# add man page to ide
+	mkdir -p $(r_ide)/man
+	cp debian/netbeans.1 $(r_ide)/man
+	gzip $(r_ide)/man/netbeans.1
+	# Create symlink for netbeans.conf
+	cp $(r_ide)/etc/netbeans.conf $(d_ide)/etc/$(p_ide)
+	mv  $(r_ide)/etc/netbeans.conf  $(r_ide)/etc/netbeans.conf.orig
+	dh_link etc/$(p_ide)/netbeans.conf  $(NBROOT)/etc/netbeans.conf
+
+install/$(p_ide_ja)::
+	# copy core ide files
+	rsync --files-from=$(list_ide_ja) $(DEB_SRCDIR)/ $(r_ide_ja)/
+	# move documentation to FHS location
+	rsync --files-from=$(list_ide_txt) $(DEB_SRCDIR)/ $(d_ide_ja)/usr/share/doc/$(p_ide_ja)/
+
+install/$(p_ide_pt)::
+	# copy core ide files
+	rsync --files-from=$(list_ide_pt) $(DEB_SRCDIR)/ $(r_ide_pt)/
+	# move documentation to FHS location
+	rsync --files-from=$(list_ide_txt) $(DEB_SRCDIR)/ $(d_ide_pt)/usr/share/doc/$(p_ide_pt)/
+
+install/$(p_ide_zh)::
+	# copy core ide files
+	rsync --files-from=$(list_ide_zh) $(DEB_SRCDIR)/ $(r_ide_zh)/
+	# move documentation to FHS location
+	rsync --files-from=$(list_ide_txt) $(DEB_SRCDIR)/ $(d_ide_zh)/usr/share/doc/$(p_ide_zh)/
+
+install/$(p_doc)::
+	cp -r $(DOCS_SRCDIR)/* $(d_doc)/$(usd_doc)/html
+	# remove extraneous file
+	rm -f $(d_doc)/$(usd_doc)/html/index.html.bak
+	cp -r $(API_DOCS_SRCDIR)/* $(d_doc)/$(usd_doc)/api
+	mkdir -p $(d_lists)
+	# create the list of duplicate javadoc zip files
+	(cd  $(API_DOCS_SRCDIR); find . -name '*.zip' -print) | sort > $(list_doc_zip)
+	# delete duplicate javadoc zip files
+	for i in `cat $(list_doc_zip)` ; do \
+		echo $$i ; \
+		rm $(d_doc)/$(usd_doc)/api/$$i ; \
+	done;
+	# cp $(d_doc)/$(usd_doc)/api/overview-summary.html $(d_doc)/$(usd_doc)/api/overview-summary.html.orig 
+	# Remove links to deleted zip files from html document
+	# First strip leading ./ from zip file name and then delete href lines containing zip file name
+	for i in `cat $(list_doc_zip)` ; do \
+		f2=$$(echo $$i | sed 's_./__'); \
+		echo $$f2 ; \
+		sed "/$$f2/d" $(d_doc)/$(usd_doc)/api/overview-summary.html > $(d_doc)/$(usd_doc)/api/overview-summary.html.new ; \
+		mv $(d_doc)/$(usd_doc)/api/overview-summary.html.new $(d_doc)/$(usd_doc)/api/overview-summary.html ; \
+	done;
+
+clean::
+	-rm -f configure-once update-copyright
+	# NOTE: even though debian/copyright is regenerated, keep old version
+	# -rm -f debian/copyright
+	# comment the following to retain file lists per package
+	-rm -rf $(d_lists)
+	# these files are left by cdbs (a bug?)
+	-rm -f *.cdbs-config_list

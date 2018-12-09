@@ -1,0 +1,9 @@
+Document: netbeans-doc
+Title: NetBeans IDE Documentation
+Author: NetBeans
+Abstract: This manual describes NetBeans IDE usage.
+Section: Apps/Programming
+     
+Format: HTML
+Index: /usr/share/doc/netbeans5.5-doc/html/index.html
+Files: /usr/share/doc/netbeans5.5-doc/html/*.html

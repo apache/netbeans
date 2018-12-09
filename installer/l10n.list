@@ -1,0 +1,34 @@
+#Disable i18n properties for the old "packs" installers
+
+#installer/asbundle/src/org/netbeans/installer/Bundle.properties
+#installer/coreide/src/org/netbeans/installer/Bundle.properties
+#installer/jbossbundle/src/org/netbeans/installer/Bundle.properties
+#installer/jdkbundle/src/org/netbeans/installer/Bundle.properties
+#installer/mobility/src/org/netbeans/installer/cluster/Bundle.properties
+#installer/profiler/src/org/netbeans/installer/cluster/Bundle.properties
+#installer/cdc/src/org/netbeans/installer/cluster/Bundle.properties
+#installer/cdc/src/org/netbeans/installer/Bundle.properties
+#installer/cnd/src/org/netbeans/installer/cluster/Bundle.properties
+
+
+#i18n bundles for NBI installers
+installer/components/**/Bundle*.properties
+installer/engine/src/**/Bundle*.properties
+installer/engine/src/data/engine.properties
+installer/engine/branding/**/src/**/Bundle*.properties
+installer/engine/branding/**/src/data/engine.properties
+installer/engine/branding/**/src/native/launcher/**/launcher.properties
+
+installer/infra/build/web/language.properties
+installer/infra/build/web/js/*_strings.js
+installer/infra/build/web/img/download.gif
+installer/infra/build/web/img/download_x86.gif
+installer/infra/build/web/img/download_x64.gif
+installer/infra/build/web/img/download_d.gif
+installer/infra/build/web/img/download_h.gif
+installer/infra/build/web/img/download_x86_h.gif
+installer/infra/build/web/img/download_x64_h.gif
+
+#i18n files for new native mac installer
+installer/mac/newbuild/Bundle.properties
+installer/mac/newbuild/dmg/Resources/Welcome*.html

@@ -1,0 +1,94 @@
+#!/bin/sh -x
+
+#
+# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+#
+# Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+#
+# Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+# Other names may be trademarks of their respective owners.
+#
+# The contents of this file are subject to the terms of either the GNU General Public
+# License Version 2 only ("GPL") or the Common Development and Distribution
+# License("CDDL") (collectively, the "License"). You may not use this file except in
+# compliance with the License. You can obtain a copy of the License at
+# http://www.netbeans.org/cddl-gplv2.html or nbbuild/licenses/CDDL-GPL-2-CP. See the
+# License for the specific language governing permissions and limitations under the
+# License.  When distributing the software, include this License Header Notice in
+# each file and include the License file at nbbuild/licenses/CDDL-GPL-2-CP.  Oracle
+# designates this particular file as subject to the "Classpath" exception as provided
+# by Oracle in the GPL Version 2 section of the License file that accompanied this code.
+# If applicable, add the following below the License Header, with the fields enclosed
+# by brackets [] replaced by your own identifying information:
+# "Portions Copyrighted [year] [name of copyright owner]"
+# 
+# Contributor(s):
+# 
+# The Original Software is NetBeans. The Initial Developer of the Original Software
+# is Sun Microsystems, Inc. Portions Copyright 1997-2007 Sun Microsystems, Inc. All
+# Rights Reserved.
+# 
+# If you wish your version of this file to be governed by only the CDDL or only the
+# GPL Version 2, indicate your decision by adding "[Contributor] elects to include
+# this software in this distribution under the [CDDL or GPL Version 2] license." If
+# you do not indicate a single choice of license, a recipient has the option to
+# distribute your version of this file under either the CDDL, the GPL Version 2 or
+# to extend the choice of license to its licensees as provided above. However, if you
+# add GPL Version 2 code and therefore, elected the GPL Version 2 license, then the
+# option applies only if the new code is made subject to such option by the copyright
+# holder.
+# 
+
+set -e
+
+#update netbeans.conf
+script_dir=`dirname "$0"`
+
+. "$script_dir"/env.sh
+
+"$script_dir"/add_gf.sh "$2/../$NETBEANS_INSTALL_DIR" "$2"
+
+"$script_dir"/unpack200.sh "$2" "$2"
+
+cd "$2"
+
+echo Configuring GlassFish in `pwd`
+
+ant_bin=./lib/ant/bin/ant
+java_exe=/System/Library/Frameworks/JavaVM.framework/Versions/1.5/Home/bin/java
+
+getPort() {
+   basePort=$1
+   freePort=`$java_exe -jar "$script_dir"/getport.jar $basePort`
+   echo $freePort
+}
+
+if [ -f $ant_bin ]
+then
+  echo Ant found:
+  ls -l $ant_bin
+  if ! [ -x $ant_bin ]
+  then
+    echo Making ant executable: $ant_bin
+    chmod a+x $ant_bin
+  fi
+
+  admin_port=`getPort 4848`
+  instance_port=`getPort 8080`
+  orb_port=`getPort 3700`
+  imq_port=`getPort 7676`
+  https_port=`getPort 8181`
+
+  $ant_bin -f setup.xml -Dadmin.port=$admin_port -Dinstance.port=$instance_port -Dorb.port=$orb_port -Dimq.port=$imq_port -Dhttps.port=$https_port
+else
+  echo No ant found: $ant_bin
+fi
+
+"$script_dir"/perm.sh
+
+if [ -d "/Library/Receipts/glassfish-v2ur2.pkg" ] ; then
+    rm -rf "/Library/Receipts/glassfish-v2ur2.pkg"
+fi
+
+#Fix for 132115
+sed -i -e "s/never/TUE/" ./updatecenter/config/config.xml

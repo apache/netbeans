@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+ Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+ Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+ Other names may be trademarks of their respective owners.
+
+ The contents of this file are subject to the terms of either the GNU General Public
+ License Version 2 only ("GPL") or the Common Development and Distribution
+ License("CDDL") (collectively, the "License"). You may not use this file except in
+ compliance with the License. You can obtain a copy of the License at
+ http://www.netbeans.org/cddl-gplv2.html or nbbuild/licenses/CDDL-GPL-2-CP. See the
+ License for the specific language governing permissions and limitations under the
+ License.  When distributing the software, include this License Header Notice in
+ each file and include the License file at nbbuild/licenses/CDDL-GPL-2-CP.  Oracle
+ designates this particular file as subject to the "Classpath" exception as provided
+ by Oracle in the GPL Version 2 section of the License file that accompanied this code.
+ If applicable, add the following below the License Header, with the fields enclosed
+ by brackets [] replaced by your own identifying information:
+ "Portions Copyrighted [year] [name of copyright owner]"
+ 
+ Contributor(s):
+ 
+ The Original Software is NetBeans. The Initial Developer of the Original Software
+ is Sun Microsystems, Inc. Portions Copyright 1997-2007 Sun Microsystems, Inc. All
+ Rights Reserved.
+ 
+ If you wish your version of this file to be governed by only the CDDL or only the
+ GPL Version 2, indicate your decision by adding "[Contributor] elects to include
+ this software in this distribution under the [CDDL or GPL Version 2] license." If
+ you do not indicate a single choice of license, a recipient has the option to
+ distribute your version of this file under either the CDDL, the GPL Version 2 or
+ to extend the choice of license to its licensees as provided above. However, if you
+ add GPL Version 2 code and therefore, elected the GPL Version 2 license, then the
+ option applies only if the new code is made subject to such option by the copyright
+ holder.
+ 
+-->
+
+<project name="Mac App" basedir="." default="build-dmg">
+
+  <condition property="build_glassfish">
+    <isset property="glassfish_location"/>
+  </condition>
+
+  <condition property="build_tomcat">
+    <isset property="tomcat_location"/>
+  </condition>
+
+  <condition property="build_openesb">
+    <and>
+    <isset property="openesb_location"/>
+    <!--isset property="jbicore_location"/-->
+    </and>
+  </condition>
+
+  <property name="nb.dir" value="../../nbbuild/netbeans"/>
+  <property name="netbeans.appname" value="NetBeans 7.0"/>
+  <property name="appname" value="${netbeans.appname}"/>
+  <property name="appversion" value="7.0 Development Version"/>
+  <property name="version" value="7.0 Development Version"/>
+  <property name="nbClusterDir" value="nb"/>
+  
+  <property name="appdir" value="build/app/${appname}.app"/>
+  <property name="zipname" value="netbeans-6.1dev-macosx.zip"/>
+  <property name="dmgname" value="netbeans-6.1dev.dmg"/>
+  
+  <target name="build-app" description="Builds Mac OS X application bundle">
+    <echo>Creating NetBeans.app bundle using ${nb.dir} as master</echo>
+
+    <delete dir="${appdir}"/>
+    
+    <mkdir dir="${appdir}/Contents"/>
+    <mkdir dir="${appdir}/Contents/MacOS"/>
+    <mkdir dir="${appdir}/Contents/Resources"/>
+    
+    <echo message="Copying netbeans home dir to ${appdir}/Contents/Resources/NetBeans"/>
+    <exec executable="sh" failonerror="yes">
+      <arg value="-c"/>
+      <arg value="cp -p -r ${nb.dir} '${appdir}/Contents/Resources/NetBeans'"/>
+    </exec>
+
+    <echo message="Delete launchers for another platforms"/>
+    <delete file="${appdir}/Contents/Resources/NetBeans/bin/nb.exe"/>
+    <delete file="${appdir}/Contents/Resources/NetBeans/bin/netbeans.exe"/>
+ 
+    <echo message="Copying the icon into the correct place" />
+    <copy file="${appdir}/Contents/Resources/NetBeans/${nbClusterDir}/netbeans.icns" todir="${appdir}/Contents/Resources"/>
+    
+    <echo message="Generating Info.plist" />
+    <copy file="Info.plist" filtering="true" tofile="${appdir}/Contents/Info.plist">
+      <filterset>
+        <filter token="APPNAME" value="${appname}"/>
+        <filter token="APPVERSION" value="${appversion}"/>
+        <filter token="VERSION" value="${version}"/>
+        <filter token="EXENAME" value="netbeans"/>
+        <filter token="ICONFILENAME" value="netbeans.icns"/>
+      </filterset>
+    </copy>
+
+    <echo message="Creating launch script symlink ${appdir}/Contents/MacOS/netbeans"/>
+    <exec executable="sh" failonerror="yes">
+      <arg value="-c"/>
+      <arg value="ln -s ../Resources/NetBeans/bin/netbeans '${appdir}/Contents/MacOS/netbeans'"/>
+    </exec>
+  </target>
+  
+  <target name="build-app-zip" depends="build-app" description="Builds zipfile containing NetBeans.app">
+    <echo message="Creating ${zipname}"/>
+    <mkdir dir="dist"/>
+    <exec executable="sh" failonerror="yes">
+      <arg value="-c"/>
+      <arg value="cd build/app; zip -r ../../dist/${zipname} *"/>
+    </exec>
+  </target>
+
+  <target name="build-pkg" depends="build-app">
+    <echo message="NETBEANS_INSTALL_DIR=&quot;${appname}.app&quot;${line.separator}" file="pkg/scripts/env.sh"/>
+    <mkdir dir="build/pkg"/>
+    <delete dir="build/pkg/NetBeans.pkg"/>
+    <exec executable="sh" failonerror="yes">
+      <arg value="-c"/>
+      <arg value='cd "${appdir}/Contents/Resources/NetBeans"; find . -name \*.jar -exec pack200 -J-Xmx256m -g {}.pack {} \;'/>
+    </exec>
+    <exec executable="sh" failonerror="yes">
+      <arg value="-c"/>
+      <arg value='cd "${appdir}/Contents/Resources/NetBeans"; find . -name \*.jar -exec rm {} \;'/>
+    </exec>
+    <exec executable="sh" failonerror="yes">
+      <arg value="-c"/>
+      <arg value="/Developer/Tools/packagemaker -build -v -p build/pkg/NetBeans.pkg -proj pkg/installer.pmproj"/>
+    </exec>
+  </target>
+
+  <property name="glassfish.appname" value="glassfish-v2ur2"/>
+  <target name="build-glassfish-pkg" if="build_glassfish">
+    <echo message="Building ${glassfish.appname} into ${basedir}/glassfish"/>
+    <ant dir="glassfish" target="build-pkg" inheritAll="false">
+      <property name="gf_source" value="${glassfish_location}"/>
+      <property name="pkg.dest" value="${basedir}/build/pkg"/>
+      <property name="appname" value="${glassfish.appname}"/>
+    </ant>
+  </target>
+
+  <property name="tomcat.appname" value="apache-tomcat-6.0.16"/>
+  <target name="build-tomcat-pkg" if="build_tomcat">
+    <echo message="Building ${tomcat.appname} into ${basedir}/tomcat"/>
+    <ant dir="tomcat" target="build-pkg" inheritAll="false">
+      <property name="tc_source" value="${tomcat_location}"/>
+      <property name="pkg.dest" value="${basedir}/build/pkg"/>
+      <property name="appname" value="${tomcat.appname}"/>
+    </ant>
+  </target>
+
+  <property name="openesb.appname" value="openesb"/>
+  <target name="build-openesb-pkg" if="build_openesb">
+    <echo message="Building ${openesb.appname} into ${basedir}/openesb"/>
+    <ant dir="openesb" target="build-pkg" inheritAll="false">
+      <property name="os_source" value="${openesb_location}"/>
+      <property name="core_source" value="${jbicore_location}"/>
+      <property name="pkg.dest" value="${basedir}/build/pkg"/>
+      <property name="appname" value="${openesb.appname}"/>
+    </ant>
+  </target>
+
+  <target name="delete-glassfish-pkg" unless="build_glassfish">
+    <ant dir="glassfish" target="delete-pkg" inheritAll="false">
+      <property name="pkg.dest" value="${basedir}/build/pkg"/>
+    </ant>
+  </target>
+
+  <target name="delete-tomcat-pkg" unless="build_tomcat">
+    <ant dir="tomcat" target="delete-pkg" inheritAll="false">
+      <property name="pkg.dest" value="${basedir}/build/pkg"/>
+    </ant>
+  </target>
+
+  <target name="delete-openesb-pkg" unless="build_openesb">
+    <ant dir="openesb" target="delete-pkg" inheritAll="false">
+      <property name="pkg.dest" value="${basedir}/build/pkg"/>
+    </ant>
+  </target>
+
+  <target name="build-dmg" depends="build-pkg,build-glassfish-pkg,build-tomcat-pkg,build-openesb-pkg,delete-glassfish-pkg,delete-tomcat-pkg,delete-openesb-pkg,add-docs">
+    <mkdir dir="dist"/>
+    <mkdir dir="build/dmg"/>
+    <exec executable="sh" failonerror="yes">
+      <arg value="-c"/>
+      <arg value="sh dmg/createdmg.sh dist/${dmgname} build/dmg build/pkg/"/>
+    </exec>
+  </target>
+
+  <target name="add-docs">
+    <copy file="${basedir}/docs/readme.rtf" tofile="${basedir}/build/pkg/Read Before You Install.rtf"/>
+  </target>
+
+  <target name="clean">
+    <ant dir="glassfish" target="clean" inheritAll="false"/>
+    <ant dir="tomcat" target="clean" inheritAll="false"/>
+    <ant dir="openesb" target="clean" inheritAll="false"/>
+    <delete dir="build"/>
+    <delete file="pkg/scripts/env.sh"/>
+  </target>
+
+  <target name="distclean" depends="clean">
+    <delete dir="dist"/>
+  </target>
+</project>

@@ -1,0 +1,53 @@
+	
+DistributionREADME
+
+DISTRIBUTION BY DEVELOPERS.  Subject to the terms and conditions of the Software License Agreement and the obligations, restrictions, and exceptions set forth below, You may reproduce and distribute the portions of Software identified below ("each a Redistributable"), provided that You comply with the following (note that You may be entitled to reproduce and distribute other portions of the Software not defined here as a Redistributable under certain other licenses as described in the THIRDPARTYLICENSEREADME, if applicable):
+
+(a) You distribute the Redistributable complete and unmodified and only bundled as part of Your applets and applications ("Programs"), 
+
+(b) Your Programs add significant and primary functionality to the Software 
+
+(c) You distribute Redistributable for the sole purpose of running Your Programs,
+
+(d) You do not distribute additional software intended to replace any
+component(s) of the Redistributable,
+
+(e) You do not remove or alter any proprietary legends or notices contained in or on the Redistributable.
+
+(f) You only distribute the Redistributable subject to a license agreement that protects Sun's interests consistent with the terms contained in the Software License Agreement, and
+
+(g) You agree to defend and indemnify Sun and its licensors from and against any damages, costs, liabilities, settlement amounts and/or expenses  (including attorneys' fees) incurred in connection with any claim, lawsuit or action by any third party that arises or results from the use or distribution of any and all Programs and/or Redistributable.  
+
+The following files are each a Redistributable:
+
+Java Platform, Enterprise Edition 5 Tools Bundle Update 7
+
+INSTRUCTIONS FOR CLIENT:
+1. When complete remove the instruction and example text.
+
+2. List all portions of Software that may be copied and removed from Software to be distributed bundled complete and unmodified with a developer's program.  
+
+3. If there are any additional restrictions or exceptions specific to a particular Redistributable, describe the restriction or exception after the Redistributable's file name.  See example below.
+
+4. This distributionREADME may be included bundled in the Software's documentation anywhere that is convenient for the user or in the the Software's legal directory.  
+
+5. This distributionREADME should be the only place where Redistributables and the restrictions and exceptions for Redistributables are described.
+
+
+Example:
+
+(i) Netbeans 4.1, provided that if You choose to distribute the Java 2 Platform, Enterprise Edition (J2EE), Platform Specification, You bind Your licensee's to the J2EE Specification License.
+    The following files may be removed from Your distribution of Netbeans:
+    - Java 2 Platform, Enterprise Edition (J2EE), Platform Specification
+    - JAVAHELP
+    - JAVAC COMPILER
+    - J2EE DEPLOYMENT SPECIFICATION INTERFACE CLASSES 1.1
+    - JMX, VERSION 1.2
+    - J2EEeditor.jar
+    - JAVA METADATA INTERFACE ("JMI"), VERSION 1.0
+
+(ii) PLUGIN FOR SUN JAVA SYSTEM APPLICATION SERVER PLATFORM EDITION 8.1 TO NETBEANS IDE
+
+(iii) JAVAHELP
+
+(iv) JAVAC COMPILER, provided it is bundled with the Netbeans Platform

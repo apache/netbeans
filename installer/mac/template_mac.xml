@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+ Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+ Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+ Other names may be trademarks of their respective owners.
+
+ The contents of this file are subject to the terms of either the GNU General Public
+ License Version 2 only ("GPL") or the Common Development and Distribution
+ License("CDDL") (collectively, the "License"). You may not use this file except in
+ compliance with the License. You can obtain a copy of the License at
+ http://www.netbeans.org/cddl-gplv2.html or nbbuild/licenses/CDDL-GPL-2-CP. See the
+ License for the specific language governing permissions and limitations under the
+ License.  When distributing the software, include this License Header Notice in
+ each file and include the License file at nbbuild/licenses/CDDL-GPL-2-CP.  Oracle
+ designates this particular file as subject to the "Classpath" exception as provided
+ by Oracle in the GPL Version 2 section of the License file that accompanied this code.
+ If applicable, add the following below the License Header, with the fields enclosed
+ by brackets [] replaced by your own identifying information:
+ "Portions Copyrighted [year] [name of copyright owner]"
+ 
+ Contributor(s):
+ 
+ The Original Software is NetBeans. The Initial Developer of the Original Software
+ is Sun Microsystems, Inc. Portions Copyright 1997-2007 Sun Microsystems, Inc. All
+ Rights Reserved.
+ 
+ If you wish your version of this file to be governed by only the CDDL or only the
+ GPL Version 2, indicate your decision by adding "[Contributor] elects to include
+ this software in this distribution under the [CDDL or GPL Version 2] license." If
+ you do not indicate a single choice of license, a recipient has the option to
+ distribute your version of this file under either the CDDL, the GPL Version 2 or
+ to extend the choice of license to its licensees as provided above. However, if you
+ add GPL Version 2 code and therefore, elected the GPL Version 2 license, then the
+ option applies only if the new code is made subject to such option by the copyright
+ holder.
+ 
+-->
+
+<project name="mac build template" basedir="." default="build-pkg">
+
+<!--
+variables to be set
+appname - application name
+zipname - name of a temporary archive
+appversion, version, exename, icon - values for the pkg
+pmproj - project file
+appdir
+-->
+  <property name="pkg.dest" value="build/pkg"/>
+
+  <target name="clean-impl">
+    <!-- dummy - to be redefined in the using xml-->
+  </target>
+
+  <target name="clean" depends="clean-impl">
+    <delete dir="build"/>
+    <delete file="${zipname}"/>
+  </target>
+
+  <target name="distclean" depends="clean">
+    <delete dir="dist"/>
+  </target>
+
+  <target name="get-bits"> 
+    <!-- dummy - to be redefined in the using xml-->
+  </target>
+
+  <target name="unzip">
+    <!-- dummy - to be redefined in the using xml-->
+  </target>
+
+  <target name="mkdirs">
+    <!-- dummy - to be redefined in the using xml-->
+  </target>
+
+  <target name="build-app" depends="get-bits">
+    <delete dir="${appdir}"/>
+    
+    <ant target="mkdirs"/>
+    <!--mkdir dir="${appdir}/Contents"/>
+    <mkdir dir="${appdir}/Contents/MacOS"/>
+    <mkdir dir="${appdir}/Contents/Resources"/-->
+
+    <echo message="Unzipping ${appname}" />
+    <mkdir dir="${appdir}"/>
+    <ant target="unzip"/>
+
+    <!--echo message="Generating Info.plist" />
+    <copy file="Info.plist" filtering="true" tofile="${appdir}/Contents/Info.plist">
+      <filterset>
+        <filter token="APPNAME" value="${appname}"/>
+        <filter token="APPVERSION" value="${appversion}"/>
+        <filter token="VERSION" value="${version}"/>
+        <filter token="EXENAME" value="${exename}"/>
+        <filter token="ICONFILENAME" value="${icon}"/>
+      </filterset>
+    </copy-->
+
+  </target>
+  <target name="build-app-zip" depends="build-app" description="Builds zipfile containing ${appname}.app">
+    <echo message="Creating ${zipname}"/>
+    <mkdir dir="dist"/>
+    <exec executable="sh" failonerror="yes">
+      <arg value="-c"/>
+      <arg value="cd ${basedir}/build/app/${zipdir}; zip -r ${basedir}/dist/${zipname} *"/>
+    </exec>
+  </target>
+
+  <target name="pre-build-pkg">
+    <!-- dummy - to be redefined in the using xml-->
+  </target>
+
+  <target name="build-pkg" depends="build-app">
+    <echo message="Executing pack200 in ${appdir}"/>
+    <exec executable="sh" failonerror="yes">
+      <arg value="-c"/>
+      <!--arg value='cd "${appdir}"; find . -name "*.pack" -exec sh -c \'f=\`basename "{}"\` ; if [ "$f" != "jhall.jar" ] && [ "$f" != "derby.jar" ] && [ "$f" != "derbyclient.jar" ] ; then pack200 -J-Xmx256m -g {}.pack {} ; fi\' \;'/-->
+      <!--arg value='cd "${appdir}"; find . -name \*.jar -exec pack200 -J-Xmx256m -g {}.pack {} \;'/-->
+      <arg value='cd "${appdir}" ; sh ${basedir}/../pack200.sh'/>
+    </exec>
+    <!--exec executable="sh" failonerror="yes">
+      <arg value="-c"/>
+      <arg value='cd "${appdir}"; find . -name \*.jar -exec rm {} \;'/>
+    </exec-->
+    <mkdir dir="${basedir}/build/pkg"/>
+    <delete dir="${basedir}/build/pkg/${appname}.pkg"/>
+    <ant target="pre-build-pkg"/>
+    <echo message="Building ${appname} into ${pkg.dest}/${appname}.pkg"/>
+    <exec executable="sh" failonerror="yes">
+      <arg value="-c"/>
+      <arg value="cd ${basedir} ; /Developer/Tools/packagemaker -build -v -p ${pkg.dest}/${appname}.pkg -proj ${pmproj}"/>
+    </exec>
+  </target>
+  <target name="delete-pkg">
+      <delete dir="${pkg.dest}/${appname}.pkg"/>
+  </target>
+</project>
+

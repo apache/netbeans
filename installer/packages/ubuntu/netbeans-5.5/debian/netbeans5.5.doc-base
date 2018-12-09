@@ -1,0 +1,9 @@
+Document: netbeans
+Title: NetBeans IDE README
+Author: NetBeans
+Abstract: This manual describes what doc-base is and how it can be used to manage online manuals on Debian systems.
+Section: Apps/Programming
+     
+Format: HTML
+Index: /usr/share/doc/netbeans5.5/README.html
+Files: /usr/share/doc/netbeans5.5/*.html

@@ -1,0 +1,354 @@
+#!/bin/bash
+# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+#
+# Copyright 2004, 2016 Oracle and/or its affiliates. All rights reserved.
+#
+# Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+# Other names may be trademarks of their respective owners.
+#
+# The contents of this file are subject to the terms of either the GNU
+# General Public License Version 2 only ("GPL") or the Common
+# Development and Distribution License("CDDL") (collectively, the
+# "License"). You may not use this file except in compliance with the
+# License. You can obtain a copy of the License at
+# http://www.netbeans.org/cddl-gplv2.html
+# or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+# specific language governing permissions and limitations under the
+# License.  When distributing the software, include this License Header
+# Notice in each file and include the License file at
+# nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+# particular file as subject to the "Classpath" exception as provided
+# by Oracle in the GPL Version 2 section of the License file that
+# accompanied this code. If applicable, add the following below the
+# License Header, with the fields enclosed by brackets [] replaced by
+# your own identifying information:
+# "Portions Copyrighted [year] [name of copyright owner]"
+#
+# If you wish your version of this file to be governed by only the CDDL
+# or only the GPL Version 2, indicate your decision by adding
+# "[Contributor] elects to include this software in this distribution
+# under the [CDDL or GPL Version 2] license." If you do not indicate a
+# single choice of license, a recipient has the option to distribute
+# your version of this file under either the CDDL, the GPL Version 2 or
+# to extend the choice of license to its licensees as provided above.
+# However, if you add GPL Version 2 code and therefore, elected the GPL
+# Version 2 license, then the option applies only if the new code is
+# made subject to such option by the copyright holder.
+#
+# Contributor(s):
+
+##############################################################################
+#    This script creates the Cinnabar packages                               
+#    The following environment variables should be defined                   
+#              -                                                             
+#
+##############################################################################
+#
+# This build script creates following packages with following content:
+# 		pkg name			cluster		content
+# Platform	SUNWnetbeans-platform5	platform5
+# IDE		SUNWnetbeans-ide5		ide5		
+# J2EE		SUNWnetbeans-enterprise1	enterprise1
+# NetBeans4.1	SUNWnetbeans-netbeans4-1	netbeans4.1	+bin+etc
+#
+# It may be extended to build also:
+# Mobility	mobility7.1
+# Profiler	profiler1
+#
+
+TODAY=`date -u '+%Y.%m.%d.%H.%M'`
+
+DO_UNZIP_SOURCE=no
+DITRIBUTION_ZIP=NetBeans-${MILESTONE}-${BUILD_DEV_NUMBER}.zip
+SOURCE_DIR=/var/tmp
+WORKING_DIR=`dirname $0`
+GNOME_DIR=`dirname $0`
+DO_COMPRESS_PACKAGES=no
+
+FILTER=`dirname $0`/filter
+
+ALL_PACKAGES="SUNWnetbeans-platform5
+SUNWnetbeans-ide5
+SUNWnetbeans-enterprise1
+SUNWnetbeans-netbeans4-1"
+ARCH=
+
+
+USER=`id | awk '{print $1}' | awk '{print $2}' FS="(" | awk '{print $1}'  FS=")"`
+GROUP=`id | awk '{print $2}' | awk '{print $2}' FS="(" | awk '{print $1}'  FS=")"`
+
+
+usage () {
+    echo "$0 [-h|--help|-a architecture| --arch architecture| -u ditribution_zip|--unzip ditribution_zip"
+    echo "    |-d source_dir|--dir source_dir|-c|--compress|-w work_dir|--work work_dir]"
+    echo "Build NetBeans packages for the Java Desktop System Rel 3 for the Solaris Operating Environment"
+    echo "   -h, --help                   display this help"
+    echo "   --arch, -a architecture      architecture, for which the packages will be constructed"
+    echo "                                the default is both sparc and i386 architectures"
+    echo "   --unzip, -u ditribution_zip  unzip the ZIP Netbeans distribution into the source directory"
+    echo "                                the default is NetBeans-${MILESTONE}-${BUILD_DEV_NUMBER}.zip in working directory"
+    echo "                                where env. variables MILESTONE and BUILD_DEV_NUMBER should be defined"
+    echo "   --dir,-d source_dir          the NetBeans source directory, the default is /var/tmp"
+    echo "                                so the NetBeans source distribution is in /var/tmp/netbeans"
+    echo "   --gnome,-g gnome_dir         the source directory of the GNOME related resources"
+    echo "                                default is the current directory"
+    echo "   --compress, -c               tar and gzip the contructed packages"
+    echo "   --work,-w work_dir           the working directory, where the packages will be placed"
+    echo "                                default is the current directory"
+    exit 1
+}
+
+process_options () {
+    while [ $# != 0 ]; do
+        case "$1" in
+            --help | -h )
+                usage
+                ;;
+            --arch | -a )
+                shift
+                ARCH=$1
+                if [ "x$ARCH" = x ]; then
+                    echo "Option -a requires an argument"
+                    usage
+                fi
+                if [ $ARCH != sparc ]; then
+                    if [ $ARCH != i386 ]; then
+                       echo "Only sparc and i386 architectures are supported"
+                       usage
+                    fi
+                fi
+                ;;
+            --unzip | -u )
+                DO_UNZIP_SOURCE=yes
+                shift
+                DITRIBUTION_ZIP=$1
+                if [ "x$DITRIBUTION_ZIP" = x ]; then
+                    echo "Option -u requires an argument"
+                    usage
+                fi
+                ;;
+            --dir | -d )
+                shift
+                SOURCE_DIR=$1
+                if [ "x$SOURCE_DIR" = x ]; then
+                    echo "Option -d requires an argument"
+                    usage
+                fi
+                ;;
+            --gnome | -g )
+                shift
+                GNOME_DIR=$1
+                if [ "x$GNOME_DIR" = x ]; then
+                    echo "Option -g requires an argument"
+                    usage
+                fi
+                ;;
+            --compress | -c )
+                DO_COMPRESS_PACKAGES=yes
+                ;;
+            --work | -w )
+                shift
+                WORKING_DIR=$1
+                if [ "x$WORKING_DIR" = x ]; then
+                    echo "Option -w requires an argument"
+                    usage
+                fi
+                ;;
+            * )
+                echo "Error: $1: invalid argument"
+                usage
+                ;;
+        esac
+        shift
+    done
+}
+
+prepare_source () {
+  rm -Rf ${SOURCE_DIR}/netbeans
+  unzip ${DITRIBUTION_ZIP} -d ${SOURCE_DIR}
+}
+
+create_pkginfo () {
+  case ${1} in
+    SUNWnetbeans-platform5)
+        name="NetBeans Platform 5"
+        desc="NetBeans Platform version 5"
+        ;;
+    SUNWnetbeans-ide5)
+        name="NetBeans IDE Modules"
+        desc="NetBeans IDE Modules"
+        ;;
+    SUNWnetbeans-enterprise1)
+        name="NetBeans J2EE Modules"
+        desc="NetBeans J2EE Modules version 1"
+        ;;
+    SUNWnetbeans-netbeans4-1)
+        name="NetBeans IDE 4.1"
+        desc="NetBeans IDE version 4.1"
+        ;;
+  esac
+
+  cat > pkginfo << EOF
+PKG=${1}
+NAME=${name}
+DESC=${desc}
+ARCH=${ARCH}
+SUNW_PRODNAME=NetBeans
+SUNW_PRODVERS=4.1 DEV
+SUNW_PKGVERS=1.0
+CATEGORY=application
+VENDOR=Sun Microsystems, Inc.
+HOTLINE=Please contact your local service provider
+EMAIL=
+MAXINST=1000
+VERSION=4.1,REV=${TODAY}
+BASEDIR=/opt
+CLASSES=none
+EOF
+}
+
+create_depend () {
+  cat > depend << EOF
+P SUNWj5rt J2SDK 1.5 runtime environment
+P SUNWj5dev J2SDK 1.5 development tools
+EOF
+
+  case ${1} in
+    SUNWnetbeans-platform5)
+        cat >> depend << EOF
+P SUNWjhrt JavaHelp Runtime
+EOF
+        ;;
+    SUNWnetbeans-ide5)
+        cat >> depend << EOF
+P SUNWnetbeans-platform5 NetBeans Platform 5
+EOF
+        ;;
+    SUNWnetbeans-enterprise1)
+        cat >> depend << EOF
+P SUNWnetbeans-platform5 NetBeans Platform 5
+P SUNWnetbeans-ide5 NetBeans IDE Modules
+EOF
+        ;;
+    SUNWnetbeans-netbeans4-1)
+        cat >> depend << EOF
+P SUNWnetbeans-platform5 NetBeans Platform 5
+P SUNWnetbeans-ide5 NetBeans IDE Modules
+P SUNWnetbeans-enterprise1 NetBeans J2EE Modules
+EOF
+        ;;
+  esac
+}
+
+build_package () {
+  create_pkginfo $1
+  create_depend $1
+  pkgproto ${SOURCE_DIR}/netbeans/${2}=netbeans/${2} > proto
+  if [ "${1}" = "SUNWnetbeans-netbeans4-1" ]; then
+    pkgproto ${SOURCE_DIR}/netbeans/bin=netbeans/bin >> proto
+    echo 's none /usr/bin/netbeans=$BASEDIR/netbeans/bin/netbeans 0755' >> proto
+    pkgproto ${SOURCE_DIR}/netbeans/etc/netbeans.conf=/etc/netbeans.conf >> proto
+    pkgproto ${GNOME_DIR}/NetBeans-IDE.desktop=/usr/share/applications/NetBeans-IDE-4.1.desktop >> proto
+    pkgproto ${GNOME_DIR}/nb48x48.png=/usr/share/pixmaps/nb48x48.png >> proto
+    pkgproto ${GNOME_DIR}/productid=netbeans/nb4.1/config/productid >> proto
+  fi
+
+  echo "i pkginfo=pkginfo" > prototype
+  echo "i depend" >> prototype
+  echo "!default 0644 root other" >> prototype
+  echo "d none netbeans 0755" >> prototype
+  sed "s/ 06[04][04] ${USER} ${GROUP}$//" proto | sed "s/ 0711 ${USER} ${GROUP}$/ 0755/" | sed "s/ ${USER} ${GROUP}$//" | fgrep -vf "$FILTER" >> prototype
+
+  pkgmk -o -d ./ ${1}
+
+  if [ ! -d "${ARCH}" ]; then
+    mkdir ${ARCH}
+  fi
+
+  if [ "X${DO_COMPRESS_PACKAGES}" = "Xyes" ]; then
+    tar cvf ${1}.tar ${1}
+    rm ${1}.tar.gz
+    gzip ${1}.tar
+    rm -Rf ${1}
+    mv ${1}.tar.gz ${ARCH}
+  else
+    mv ${1} ${ARCH}
+  fi
+}
+
+clean_up () {
+  if [ -f pkginfo ]; then
+    rm pkginfo
+  fi
+  if [ -f depend ]; then
+    rm depend
+  fi
+  if [ -f proto ]; then
+    rm proto
+  fi
+  if [ -f "prototype" ]; then
+    rm prototype
+  fi
+  if [ "X${DO_UNZIP_SOURCE}" = "Xyes" ]; then
+    echo
+    rm -Rf ${SOURCE_DIR}/netbeans
+  fi
+}
+
+compress_packages () {
+  for package in $ALL_PACKAGES; do
+    tar cvf ${package}.tar ${package}
+    rm ${package}.tar.gz
+    gzip ${package}.tar
+    rm -Rf ${package}
+  done
+}
+
+do_build () {
+  if [ -d "${ARCH}" ]; then
+    rm -Rf ${ARCH}
+  fi
+
+  if [ "X${DO_UNZIP_SOURCE}" = "Xyes" ]; then
+    prepare_source
+  fi
+
+  for package in $ALL_PACKAGES; do
+    case ${package} in
+      SUNWnetbeans-platform5)
+        package_subdir=platform5
+        ;;
+      SUNWnetbeans-ide5)
+        package_subdir=ide5
+        ;;
+      SUNWnetbeans-enterprise1)
+        package_subdir=enterprise1
+        ;;
+      SUNWnetbeans-netbeans4-1)
+        package_subdir=nb4.1
+        ;;
+    esac
+
+    build_package $package $package_subdir
+
+  done
+}
+
+main () {
+  process_options "${@}"
+  if [ "x$ARCH" = x ]; then
+    ARCH=sparc
+    do_build || return $?
+    ARCH=i386
+    do_build || return $?
+    ARCH=
+  else
+    do_build || return $?
+  fi 
+}
+
+cd ${WORKING_DIR}
+WORKING_DIR=`pwd`
+main "${@}"
+clean_up
+

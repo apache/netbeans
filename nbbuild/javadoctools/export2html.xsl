@@ -34,7 +34,7 @@
         <head>
             <!-- projects.netbeans.org -->
            <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-           <title>NetBeans API List</title>
+           <title>Apache NetBeans (incubating) API List</title>
             <link rel="stylesheet" href="netbeans.css" type="text/css"/>
 
           <link REL="icon" href="http://www.netbeans.org/favicon.ico" type="image/ico" />
@@ -45,8 +45,8 @@
         <body>
 
         <center>
-            <h1>NetBeans API List</h1>
-            <h3>Current Development Version</h3>
+            <h1>Apache NetBeans (incubating) API List</h1>
+            <h3>Apache NetBeans (incubating) 9.0</h3>
             <xsl:if test="$date" >
                 <xsl:value-of select="$date" />
                 <p/>
@@ -80,11 +80,13 @@
         <em>NetBeans</em> one is free to choose the set of modules and their APIs 
         to satisfy one's needs.
         <p>
-        This is a list of APIs for development version, if you want to see
+        This is a list of APIs for Apache NetBeans (incubating) 9.0 version, if you want to see
         a list of APIs for a particular version, you may want to go to:
         </p>
         <ul>
-            <li><a href="http://bits.netbeans.org/8.1/javadoc/" target="_top">8.1</a> - Javadoc as released for NetBeans IDE 8.1</li>
+            <li><a href="http://bits.netbeans.org/dev/javadoc/" target="_top">Dev</a> - Javadoc as release for developement version</li>
+	    <li><a href="http://bits.netbeans.org/8.2/javadoc/" target="_top">8.2</a> - Javadoc as released for NetBeans IDE 8.2</li>
+	    <li><a href="http://bits.netbeans.org/8.1/javadoc/" target="_top">8.1</a> - Javadoc as released for NetBeans IDE 8.1</li>
             <li><a href="http://bits.netbeans.org/8.0.1/javadoc/" target="_top">8.0.1</a> - Javadoc as released for NetBeans IDE 8.0.1</li>
             <li><a href="http://bits.netbeans.org/8.0/javadoc/" target="_top">8.0</a> - Javadoc as released for NetBeans IDE 8.0</li>
             <li><a href="http://bits.netbeans.org/7.4/javadoc/" target="_top">7.4</a> - Javadoc as released for NetBeans IDE 7.4</li>
@@ -126,10 +128,7 @@
 
         <h4>FAQ and Mailing List</h4>
 
-        <p>Can't find what you're looking for? Try the <a
-        href="http://wiki.netbeans.org/wiki/view/NetBeansDeveloperFAQ" target="_top">FAQ</a>
-        and then <a
-        href="http://www.netbeans.org/community/lists/top.html" target="_top">dev@platform.netbeans.org</a>.</p>
+        <p>Can't find what you're looking for? Try the <a href="https://netbeans.apache.org" target="_top">Apache NetBeans (incubating) website</a>.</p>
 
         <hr/>
         <xsl:call-template name="list-modules" />
@@ -431,5 +430,6 @@
     </xsl:template>
     
 </xsl:stylesheet>
+
 
 

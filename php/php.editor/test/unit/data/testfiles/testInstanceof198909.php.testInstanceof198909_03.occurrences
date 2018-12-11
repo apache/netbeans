@@ -1,0 +1,3 @@
+function testException($param, $|>MARK_OCCURRENCES:mExpectedException<| = null) {
+                = empty($|>MARK_OCCURRENCES:mExpectedException<|)
+                || !($e instanceof $|>MARK_OCCURRENCES:mExpect^edException<|)

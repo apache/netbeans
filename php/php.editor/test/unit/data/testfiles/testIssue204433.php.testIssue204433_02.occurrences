@@ -1,0 +1,2 @@
+    use UserManager\EditForm as |>MARK_OCCURRENCES:EF<|;
+            $form = new |>MARK_OCCURRENCES:E^F<|();

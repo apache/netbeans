@@ -1,0 +1,269 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<metaDD>
+        <extends>org.netbeans.modules.j2ee.sun.dd.impl.common.SunBaseBean</extends>
+	<meta-element>
+<!-- IMPORTS                <import>org.netbeans.modules.j2ee.sun.dd.impl.common.model_3_0_0.SecurityRoleMapping</import> -->
+		<dtd-name>sun-cmp-mappings</dtd-name>
+		<bean-name>SunCmpMappings</bean-name>
+		<meta-property>
+			<bean-name>SunCmpMapping</bean-name>
+		</meta-property>
+                <implements>org.netbeans.modules.j2ee.sun.dd.api.cmp.SunCmpMappings</implements>
+		<user-code>
+                public void setVersion(java.math.BigDecimal value) {
+                }
+                public java.math.BigDecimal getVersion() {
+                    return new java.math.BigDecimal("1.2");
+                }
+                public org.xml.sax.SAXParseException getError() {
+                    return null;
+                }
+                public int getStatus() {
+                    return STATE_VALID;
+                }
+                public boolean isEventSource(org.netbeans.modules.j2ee.sun.dd.api.RootInterface rootDD) {
+                    return this == rootDD;
+                }
+                </user-code>
+	</meta-element>
+	<meta-element>
+		<dtd-name>sun-cmp-mapping</dtd-name>
+		<bean-name>SunCmpMapping</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.cmp.SunCmpMapping</implements>
+		<meta-property>
+			<bean-name>Schema</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>EntityMapping</bean-name>
+		</meta-property>
+	</meta-element>
+	<meta-element>
+		<dtd-name>schema</dtd-name>
+		<bean-name>Schema</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>entity-mapping</dtd-name>
+		<bean-name>EntityMapping</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.cmp.EntityMapping</implements>
+		<meta-property>
+			<bean-name>EjbName</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>TableName</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>CmpFieldMapping</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>CmrFieldMapping</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>SecondaryTable</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>Consistency</bean-name>
+		</meta-property>
+	</meta-element>
+	<meta-element>
+		<dtd-name>ejb-name</dtd-name>
+		<bean-name>EjbName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>table-name</dtd-name>
+		<bean-name>TableName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>cmp-field-mapping</dtd-name>
+		<bean-name>CmpFieldMapping</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.cmp.CmpFieldMapping</implements>
+		<meta-property>
+			<bean-name>FieldName</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>ColumnName</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>ReadOnly</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>FetchedWith</bean-name>
+		</meta-property>
+	</meta-element>
+	<meta-element>
+		<dtd-name>cmr-field-mapping</dtd-name>
+		<bean-name>CmrFieldMapping</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.cmp.CmrFieldMapping</implements>
+		<meta-property>
+			<bean-name>CmrFieldName</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>ColumnPair</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>FetchedWith</bean-name>
+		</meta-property>
+	</meta-element>
+	<meta-element>
+		<dtd-name>secondary-table</dtd-name>
+		<bean-name>SecondaryTable</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.cmp.SecondaryTable</implements>
+		<meta-property>
+			<bean-name>TableName</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>ColumnPair</bean-name>
+		</meta-property>
+	</meta-element>
+	<meta-element>
+		<dtd-name>consistency</dtd-name>
+		<bean-name>Consistency</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.cmp.Consistency</implements>
+		<meta-property>
+			<bean-name>None</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>CheckModifiedAtCommit</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>LockWhenLoaded</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>CheckAllAtCommit</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>LockWhenModified</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>CheckVersionOfAccessedInstances</bean-name>
+		</meta-property>
+	</meta-element>
+	<meta-element>
+		<dtd-name>none</dtd-name>
+		<bean-name>None</bean-name>
+		<wrapper-class>Boolean</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>check-modified-at-commit</dtd-name>
+		<bean-name>CheckModifiedAtCommit</bean-name>
+		<wrapper-class>Boolean</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>lock-when-loaded</dtd-name>
+		<bean-name>LockWhenLoaded</bean-name>
+		<wrapper-class>Boolean</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>check-all-at-commit</dtd-name>
+		<bean-name>CheckAllAtCommit</bean-name>
+		<wrapper-class>Boolean</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>check-version-of-accessed-instances</dtd-name>
+		<bean-name>CheckVersionOfAccessedInstances</bean-name>
+                <implements>org.netbeans.modules.j2ee.sun.dd.api.cmp.CheckVersionOfAccessedInstances</implements>
+		<meta-property>
+			<bean-name>ColumnName</bean-name>
+		</meta-property>
+	</meta-element>
+	<meta-element>
+		<dtd-name>column-name</dtd-name>
+		<bean-name>ColumnName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>#PCDATA</dtd-name>
+		<bean-name>Pcdata</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>lock-when-modified</dtd-name>
+		<bean-name>LockWhenModified</bean-name>
+		<wrapper-class>Boolean</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>EMPTY</dtd-name>
+		<bean-name>Empty</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>column-pair</dtd-name>
+		<bean-name>ColumnPair</bean-name>
+                <implements>org.netbeans.modules.j2ee.sun.dd.api.cmp.ColumnPair</implements>
+		<meta-property>
+			<bean-name>ColumnName</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>ColumnName2</bean-name>
+		</meta-property>
+	</meta-element>
+	<meta-element>
+		<dtd-name>cmr-field-name</dtd-name>
+		<bean-name>CmrFieldName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>fetched-with</dtd-name>
+		<bean-name>FetchedWith</bean-name>
+                <implements>org.netbeans.modules.j2ee.sun.dd.api.cmp.FetchedWith</implements>
+		<meta-property>
+			<bean-name>Default</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>Level</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>NamedGroup</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>None</bean-name>
+		</meta-property>
+	</meta-element>
+	<meta-element>
+		<dtd-name>default</dtd-name>
+		<bean-name>Default</bean-name>
+		<wrapper-class>Boolean</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>level</dtd-name>
+		<bean-name>Level</bean-name>
+		<wrapper-class>Integer</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>named-group</dtd-name>
+		<bean-name>NamedGroup</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>field-name</dtd-name>
+		<bean-name>FieldName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>read-only</dtd-name>
+		<bean-name>ReadOnly</bean-name>
+		<wrapper-class>Boolean</wrapper-class>
+	</meta-element>
+</metaDD>

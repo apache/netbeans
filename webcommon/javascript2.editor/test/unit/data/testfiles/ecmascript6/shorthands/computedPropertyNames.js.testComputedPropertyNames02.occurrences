@@ -1,0 +1,2 @@
+  |>MARK_OCCURRENCES:pr^op<| : "test"
+console.log(o.|>MARK_OCCURRENCES:prop<|); // test

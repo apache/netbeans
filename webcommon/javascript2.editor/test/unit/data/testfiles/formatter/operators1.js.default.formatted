@@ -1,0 +1,16 @@
+
+function computeColor() {
+    a = something + 5;
+    x = a * -1
+    color = 0;
+    for (var a = -1; a < 3; a++) {
+        color += Math.round(Math.random() * 2);
+    }
+
+    if (!logic) {
+        test = ~4545 + test2
+    }
+    x = test ? a : b;
+    x = 5;
+    test ? a : b
+}

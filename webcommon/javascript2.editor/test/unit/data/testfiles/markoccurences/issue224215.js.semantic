@@ -1,0 +1,4 @@
+function |>METHOD:F<|() {
+    var |>LOCAL_VARIABLE_DECLARATION:A<| = 1;
+    |>GLOBAL:window<|.|>FIELD:A<| = |>LOCAL_VARIABLE:A<|;
+}

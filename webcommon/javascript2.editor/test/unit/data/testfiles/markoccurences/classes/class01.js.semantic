@@ -1,0 +1,12 @@
+"use strict";
+
+class |>CLASS,GLOBAL:Polygon<| {
+  |>METHOD:constructor<|(height, width) {
+    this.|>FIELD:height<| = height;
+    this.|>FIELD:width<| = width;
+  }
+}                      
+
+var |>GLOBAL:p<| = new |>GLOBAL:Polygon<| (10,20);
+|>GLOBAL:console<|.log(|>GLOBAL:p<|.|>FIELD:height<|);
+|>GLOBAL:console<|.log(|>GLOBAL:p<|.|>FIELD:width<|);

@@ -1,0 +1,3 @@
+       if (this.|>MARK_OCCURRENCES:xhr<|){
+           this.|>MARK_OCCURRENCES:xhr<|.abort();
+       this.|>MARK_OCCURRENCES:x^hr<| = xhr;

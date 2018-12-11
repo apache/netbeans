@@ -1,0 +1,24 @@
+FUNCTION issue252022 [ANONYMOUS: false, DECLARED: true - issue252022, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+MyLib : OBJECT MyLib [ANONYMOUS: false, DECLARED: true - MyLib, MODIFIERS: PUBLIC, OBJECT]
+      # PROPERTIES
+      MyLib : FUNCTION MyLib [ANONYMOUS: false, DECLARED: true - MyLib, MODIFIERS: PRIVATE, CONSTRUCTOR]
+            # RETURN TYPES
+            MyLib.MyLib, RESOLVED: true
+            # PROPERTIES
+            arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+            fn1       : FUNCTION fn1 [ANONYMOUS: false, DECLARED: true - fn1, MODIFIERS: PRIVATE, METHOD]
+                      # RETURN TYPES
+                      String, RESOLVED: true
+                      # PROPERTIES
+                      arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+            fn2       : FUNCTION fn2 [ANONYMOUS: false, DECLARED: true - fn2, MODIFIERS: PRIVATE, METHOD]
+                      # RETURN TYPES
+                      String, RESOLVED: true
+                      # PROPERTIES
+                      arguments   : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                      toLowerCase : FUNCTION toLowerCase [ANONYMOUS: false, DECLARED: false - toLowerCase, MODIFIERS: PUBLIC, METHOD]
+                                  # PROPERTIES
+                                  arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

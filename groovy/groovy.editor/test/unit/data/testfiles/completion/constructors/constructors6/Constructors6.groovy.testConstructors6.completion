@@ -1,0 +1,5 @@
+Code completion result for source line:
+Foo f = new Foo|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTRUCTO Foo()                                      null
+CONSTRUCTO Foo(int)                                   null

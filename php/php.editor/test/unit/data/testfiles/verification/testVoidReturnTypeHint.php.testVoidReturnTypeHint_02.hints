@@ -1,0 +1,48 @@
+function invalidVoidReturnType1(): ?void { // invalidVoidReturnType1 func
+                                    ----
+HINT:"void" cannot be used with "?"
+function invalidVoidReturnType2(): ?void { // invalidVoidReturnType2 func
+                                    ----
+HINT:"void" cannot be used with "?"
+    return true; // voidReturnType3 func
+    ------------
+HINT:"void" cannot return anything
+    return $foo; // voidReturnType4 func
+    ------------
+HINT:"void" cannot return anything
+    return new VoidReturnTypeHint(); // voidReturnType5 func
+    --------------------------------
+HINT:"void" cannot return anything
+        return new VoidReturnTypeHint(); // voidReturnType3 class
+        --------------------------------
+HINT:"void" cannot return anything
+            return new VoidReturnTypeHint(); // voidReturnType4 class
+            --------------------------------
+HINT:"void" cannot return anything
+            return "anon"; // anon3 class
+            --------------
+HINT:"void" cannot return anything
+            return "anon"; // anon4 class
+            --------------
+HINT:"void" cannot return anything
+        return new VoidReturnTypeHint(); // anon4 class
+        --------------------------------
+HINT:"void" cannot return anything
+        return new VoidReturnTypeHint(); // voidReturnType4 trait
+        --------------------------------
+HINT:"void" cannot return anything
+            return "test"; // voidReturnType5 trait
+            --------------
+HINT:"void" cannot return anything
+        return 1; // voidReturnType5 trait
+        ---------
+HINT:"void" cannot return anything
+        $anon = function(): ?void { // anon1 trait
+                             ----
+HINT:"void" cannot be used with "?"
+        $anon = function(): ?void { // anon2 trait
+                             ----
+HINT:"void" cannot be used with "?"
+    public function voidReturnType2(): ?void; // voidReturnType2 interface
+                                        ----
+HINT:"void" cannot be used with "?"

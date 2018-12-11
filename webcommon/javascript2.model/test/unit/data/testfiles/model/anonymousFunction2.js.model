@@ -1,0 +1,32 @@
+FUNCTION anonymousFunction2 [ANONYMOUS: false, DECLARED: true - anonymousFunction2, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+anonymousFunction2L#5 : FUNCTION anonymousFunction2L#5 [ANONYMOUS: true, DECLARED: true - anonymousFunction2L#5, MODIFIERS: PUBLIC, FUNCTION]
+                      # RETURN TYPES
+                      undefined, RESOLVED: true
+                      # PROPERTIES
+                      arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+document              : OBJECT document [ANONYMOUS: false, DECLARED: false - document, MODIFIERS: PUBLIC, OBJECT]
+                      # PROPERTIES
+                      getElementById : OBJECT getElementById [ANONYMOUS: false, DECLARED: false - getElementById, MODIFIERS: PUBLIC, OBJECT]
+                                     # PROPERTIES
+                                     className : OBJECT className [ANONYMOUS: false, DECLARED: true - className, MODIFIERS: PUBLIC, PROPERTY]
+highlight             : FUNCTION highlight [ANONYMOUS: false, DECLARED: true - highlight, MODIFIERS: PUBLIC, FUNCTION]
+                      # RETURN TYPES
+                      undefined, RESOLVED: true
+                      # PROPERTIES
+                      arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+location              : OBJECT location [ANONYMOUS: false, DECLARED: false - location, MODIFIERS: PUBLIC, OBJECT]
+                      # PROPERTIES
+                      hash : OBJECT hash [ANONYMOUS: false, DECLARED: false - hash, MODIFIERS: PUBLIC, OBJECT]
+                           # PROPERTIES
+                           replace : FUNCTION replace [ANONYMOUS: false, DECLARED: false - replace, MODIFIERS: PUBLIC, METHOD]
+                                   # PARAMETERS
+                                   OBJECT param1 [ANONYMOUS: false, DECLARED: true - param1, MODIFIERS: PUBLIC, PARAMETER]
+                                   OBJECT param2 [ANONYMOUS: false, DECLARED: true - param2, MODIFIERS: PUBLIC, PARAMETER]
+                                   # PROPERTIES
+                                   arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+prettyPrint           : FUNCTION prettyPrint [ANONYMOUS: false, DECLARED: false - prettyPrint, MODIFIERS: PUBLIC, FUNCTION]
+                      # PROPERTIES
+                      arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

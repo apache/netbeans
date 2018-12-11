@@ -1,0 +1,2 @@
+ * @method Foo|Bar |>MARK_OCCURRENCES:method<|() This is my cool magic method description.
+$b->|>MARK_OCCURRENCES:met^hod<|()->fooMethod();

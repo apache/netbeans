@@ -1,0 +1,5 @@
+Code completion result for source line:
+[1:"one", 2:"two"].ent|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     entrySet()                      [PUBLIC]   Set<Entry<K, V>>

@@ -1,0 +1,14 @@
+<?php
+
+class |>CLASS:User<| {
+
+    public $|>FIELD:x<|;
+    protected $|>FIELD:y<|;
+    private $|>FIELD:p1<|;
+    private $|>FIELD,UNUSED:p2<|;
+
+    function |>METHOD:f1<| ($name) {
+        $this->|>FIELD:p1<| = $name;
+    }
+}
+?>

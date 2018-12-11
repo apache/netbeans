@@ -1,0 +1,13 @@
+function |>METHOD:drawES6Chart<|({size = 'big', cords = { |>FIELD:x<|: 0, |>FIELD:y<|: 0 , |>FIELD:z<|: 0}, radius = 25} = {}) {
+  |>GLOBAL:console<|.log(size, cords, radius);
+  |>GLOBAL:console<|.log(cords.|>FIELD:x<|, cords.|>FIELD:y<|);       
+  
+  var |>LOCAL_VARIABLE_DECLARATION,UNUSED:blbost<| = "aoj";  
+}                              
+       
+drawES6Chart({   
+  |>CLASS:cords<|: { |>FIELD:x<|: 18, |>FIELD:y<|: 30 },
+  |>FIELD:radius<|: 30 
+});
+      
+drawES6Chart({|>FIELD:size<| : "small", |>CLASS:cords<|: {|>FIELD:x<|: -5, |>FIELD:y<|: -5}, |>FIELD:radius<| : 5}); 

@@ -1,0 +1,8 @@
+star:VARIABLE:[PUBLIC]:ESCAPED{star}<font color="#999999">ESCAPED{ : }MySpace</font>:
+MySpace:CONSTRUCTOR:[PUBLIC]:ESCAPED{MySpace}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }MySpace</font>:
+  PrivateObject:CONSTRUCTOR:[PRIVATE]:ESCAPED{PrivateObject}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }MySpace.PrivateObject</font>:
+    PrivateO:CONSTRUCTOR:[PRIVATE]:ESCAPED{PrivateO}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }MySpace.PrivateObject</font>:
+    name:FIELD:[PUBLIC]:ESCAPED{name}<font color="#999999">ESCAPED{ : }String</font>:
+    sound:FIELD:[PUBLIC]:ESCAPED{sound}<font color="#999999">ESCAPED{ : }String</font>:
+  name:FIELD:[PUBLIC]:ESCAPED{name}<font color="#999999">ESCAPED{ : }String</font>:
+  prom:VARIABLE:[PRIVATE]:ESCAPED{prom}<font color="#999999">ESCAPED{ : }MySpace.PrivateObject</font>:

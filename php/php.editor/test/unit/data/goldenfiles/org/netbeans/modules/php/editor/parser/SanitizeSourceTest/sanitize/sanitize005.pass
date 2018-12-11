@@ -1,0 +1,40 @@
+<Program start='0' end='104'>
+    <Comments>
+        <PHPDocBlock start='9' end='30'>
+            <Tags>
+            </Tags>
+        </PHPDocBlock>
+    </Comments>
+    <Statements>
+        <ClassDeclaration start='36' end='102' modifier='NONE'>
+            <ClassName>
+                <Identifier start='42' end='46' name='User'/>
+            </ClassName>
+            <SuperClassName>
+            </SuperClassName>
+            <Interfaces>
+            </Interfaces>
+            <Block start='47' end='102' isCurly='true'>
+                <FieldsDeclaration start='55' end='69' modifier='private'>
+                    <VariableNames>
+                        <Variable start='63' end='68' isDollared='true'>
+                            <Identifier start='64' end='68' name='name'/>
+                        </Variable>
+                    </VariableNames>
+                    <InitialValues>
+                    </InitialValues>
+                </FieldsDeclaration>
+                <MethodDeclaration start='77' end='100' modifiers='public'>
+                    <FunctionDeclaration start='77' end='100' isReference='false'>
+                        <Identifier start='86' end='87' name='a'/>
+                        <FormalParameters>
+                        </FormalParameters>
+                        <Block start='91' end='100' isCurly='true'>
+                        </Block>
+                    </FunctionDeclaration>
+                </MethodDeclaration>
+            </Block>
+        </ClassDeclaration>
+        <EmptyStatement start='102' end='104'/>
+    </Statements>
+</Program>

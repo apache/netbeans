@@ -1,0 +1,32 @@
+function |>METHOD:Test234375<|() {
+    this.|>FIELD:den<| = new Date();
+    with (this.|>FIELD:den<|) {
+        |>GLOBAL:g<| // cc doesn't offer Date functions
+        |>GLOBAL:console<|.log(getDate());
+    }
+    
+    |>GLOBAL:console<|.log(this.|>FIELD:den<|.getDate());
+    
+    var |>LOCAL_VARIABLE_DECLARATION:car<| = new Car234375();
+    with(|>LOCAL_VARIABLE:car<|){
+        |>GLOBAL:r<| // this works
+        |>GLOBAL:console<|.log(run());
+    }
+    
+    var |>LOCAL_VARIABLE_DECLARATION:arr<| = [];
+    with(|>LOCAL_VARIABLE:arr<|){
+        push(1);
+        |>GLOBAL:p<| // cc doesn't offer e.g. pull() or push()
+    }
+    
+    |>GLOBAL:window<|.|>GLOBAL:console<|.log(|>LOCAL_VARIABLE:arr<|);
+}
+
+function |>METHOD:Car234375<|(){
+    this.|>FIELD:topSpeed<| = 200;
+    this.|>METHOD:run<| = function (){|>GLOBAL:console<|.log("vrr");};
+    this.|>FIELD:rypadlo<| = false;
+}
+
+
+new Test234375();

@@ -1,0 +1,18 @@
+function |>METHOD:MyApplication<|() {
+    var |>LOCAL_VARIABLE_DECLARATION,UNUSED:self<| = this;
+    var |>LOCAL_VARIABLE_DECLARATION:connectionLess<| = ["undefinedAction", "about", "compass", "contacts", "addresses"];
+    var |>LOCAL_VARIABLE_DECLARATION:forceConnectionCheck<| = ["search", "directions", "showAddress"];
+
+    function |>METHOD:checkOK<|(page) {
+        if (|>LOCAL_VARIABLE:forceConnectionCheck<|.indexOf(page) > 0 ) {
+            return false;
+        }
+        if ( (|>LOCAL_VARIABLE:connectionLess<|.indexOf(page) < 0)) {
+            return false;
+        }
+        return true;
+    }
+    |>GLOBAL:console<|.log(checkOK("search"));
+
+}
+MyApplication();

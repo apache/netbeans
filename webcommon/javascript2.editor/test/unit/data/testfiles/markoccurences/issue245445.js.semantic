@@ -1,0 +1,17 @@
+var |>GLOBAL:myLib<| = new MyLib();
+
+function |>METHOD:MyLib<|() {
+    /**
+     * This is dummy JsDoc
+     */
+    this.|>METHOD:myMethod<| = function |>METHOD,UNUSED:MyLib_myMethod<|(array) {
+        var |>LOCAL_VARIABLE_DECLARATION:r<| = "";
+        for( var |>LOCAL_VARIABLE_DECLARATION:i<| = 0; |>LOCAL_VARIABLE:i<| < array.length; |>LOCAL_VARIABLE:i<|++ ) {
+            |>LOCAL_VARIABLE:r<| = |>LOCAL_VARIABLE:r<| + array[|>LOCAL_VARIABLE:i<|];
+        }
+        return |>LOCAL_VARIABLE:r<|;
+    };
+}
+
+|>GLOBAL:myLib<|.myMethod([1, 2, 3, 4]);
+     

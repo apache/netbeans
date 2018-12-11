@@ -1,0 +1,5 @@
+Code completion result for source line:
+echo $tst->|parent1();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     parent1()                       [PUBLIC]   I146187Parent1
+METHOD     parent2()                       [PUBLIC]   I146187Parent2

@@ -1,0 +1,7 @@
+<?php
+
+namespace Issue262205;
+
+use A\{
+    MyClass, function 
+};

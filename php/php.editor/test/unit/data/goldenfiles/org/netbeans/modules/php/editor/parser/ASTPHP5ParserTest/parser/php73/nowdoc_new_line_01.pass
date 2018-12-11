@@ -1,0 +1,101 @@
+<testresult testFile='nowdoc_new_line_01.php'>
+    <scanner>
+        <token id='T_STRING' start='815' end='819'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='819' end='820'>
+            <text>(</text>
+        </token>
+        <token id='T_START_NOWDOC' start='820' end='833'>
+            <text>&lt;&lt;&lt; &apos;NOWDOC&apos;\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='833' end='851'>
+            <text>    foo\n  bar\nqux\n</text>
+        </token>
+        <token id='T_END_NOWDOC' start='851' end='857'>
+            <text>NOWDOC</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='857' end='858'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='858' end='859'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='861' end='867'>
+            <text>$array</text>
+        </token>
+        <token id='T_EQUAL' start='868' end='869'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='870' end='871'>
+            <text>[</text>
+        </token>
+        <token id='T_START_NOWDOC' start='871' end='881'>
+            <text>&lt;&lt;&lt; &apos;END&apos;\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='881' end='893'>
+            <text>foo\nbar\nbaz\n</text>
+        </token>
+        <token id='T_END_NOWDOC' start='893' end='896'>
+            <text>END</text>
+        </token>
+        <token id='T_COMMA' start='896' end='897'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='898' end='903'>
+            <text>&apos;qux&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='903' end='904'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='904' end='905'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='906' end='906'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='906'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='815' end='859'>
+                <FunctionInvocation start='815' end='858'>
+                    <FucntionName start='815' end='819'>
+                        <NamespaceName start='815' end='819' isCurrent='false' isGlobal='false'>
+                            <Identifier start='815' end='819' name='test'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='820' end='857' type='STRING' value='    foo\n  bar\nqux\n'/>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='861' end='905'>
+                <Assignment start='861' end='904' operator='EQUAL'>
+                    <Variable start='861' end='867' isDollared='true'>
+                        <Identifier start='862' end='867' name='array'/>
+                    </Variable>
+                    <ArrayCreation start='870' end='904' type='NEW'>
+                        <ArrayElement start='871' end='896'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='871' end='896' type='STRING' value='foo\nbar\nbaz\n'/>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='898' end='903'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='898' end='903' type='STRING' value='&apos;qux&apos;'/>
+                            </Value>
+                        </ArrayElement>
+                    </ArrayCreation>
+                </Assignment>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

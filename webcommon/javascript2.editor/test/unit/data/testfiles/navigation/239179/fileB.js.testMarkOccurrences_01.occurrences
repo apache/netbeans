@@ -1,0 +1,2 @@
+    console.log(|>MARK_OCCURRENCES:firstName<|);
+        |>MARK_OCCURRENCES:firstNa^me<|;

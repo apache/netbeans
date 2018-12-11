@@ -1,0 +1,6 @@
+Code completion result for source line:
+$myFoo->|setFoo();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     getFoo()                        [PUBLIC,   a186936
+METHOD     setFoo()                        [PUBLIC,   b186936

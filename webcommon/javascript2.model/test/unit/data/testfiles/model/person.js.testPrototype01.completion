@@ -1,0 +1,6 @@
+Code completion result for source line:
+gk.s|howLegs(); lk.showLegs();                 //Both share the common 'Person.prototype.legs' variable when looking at 'this.legs'
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     showLegs(): undefined           [PUBLIC]   person.js
+METHOD     shower(): undefined             [PUBLIC]   person.js

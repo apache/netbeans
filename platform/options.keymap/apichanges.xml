@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+<apichanges>
+    <apidefs>
+        <apidef name="keymap">Keymap Options API</apidef>
+    </apidefs>
+    <changes>
+        <change id="withrevert-mixin">
+            <api name="keymap"/>
+            <summary>Asks KeymapManager to revert an action or profile mapping to the default</summary>
+            <version major="1" minor="21"/>
+            <date day="27" month="11" year="2012"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes"/>
+            <description>
+                KeymapManagers which can revert user settings can implement
+                    <code>WithRevert</code>
+                mixin interface to better clean-up configuration area
+            </description>
+            <class package="org.netbeans.core.options.keymap.spi" name="KeymapManager"/>
+            <issue number="213591"/>
+        </change>
+        <change id="profile-remove-binding">
+            <api name="keymap"/>
+            <summary>Allows a Profile to remove (override) global keymap entry</summary>
+            <version major="1" minor="19"/>
+            <date day="22" month="5" year="2012"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    In order to remove a keymap entry, create a file in the profile's
+                    directory, with extension <code>remove</code>:
+                </p>
+                    <pre><code>
+                        &lt;file name="DS-O.remove"/>
+                    </code></pre>
+                <p>
+                    No attributes are necessary. The system will treat <code>DS-O</code>
+                    key in the appropriate keymap profile as undefined. The convention should
+                    be only used in keymap profiles, not in the base keymap.
+                </p>
+            </description>
+            <issue number="203203"/>
+        </change>
+    </changes>
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <==============
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE ant/project/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the Keymap Options API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the <a href="@org-netbeans-modules-options-keymap@/index.html">Keymap Options API</a>.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+      <hr/>
+      <standard-changelists module-code-name="org.netbeans.modules.options.keymap"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+</apichanges>

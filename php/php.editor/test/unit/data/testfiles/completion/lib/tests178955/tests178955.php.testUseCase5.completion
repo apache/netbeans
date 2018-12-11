@@ -1,0 +1,5 @@
+Code completion result for source line:
+/*use case 5*/$foo->|find();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     find()                          [STATIC]   foo
+METHOD     getBar()                        [PUBLIC]   foo

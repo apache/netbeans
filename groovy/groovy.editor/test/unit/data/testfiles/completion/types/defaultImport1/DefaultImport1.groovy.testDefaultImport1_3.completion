@@ -1,0 +1,5 @@
+Code completion result for source line:
+BigDec|        // java.math.BigDecimal
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      BigDecimal                                 null

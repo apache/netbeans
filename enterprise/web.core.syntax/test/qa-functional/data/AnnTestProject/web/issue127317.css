@@ -1,0 +1,17 @@
+h5_2 {
+    color: #444444;	
+    font-variant: small-caps;
+    margin-left:15px;
+    font-size:10pt	
+}
+
+
+.h5_2{
+    direction:rtl;
+    display: table-caption;
+}
+
+#h5_2{
+    border:black 1px;
+    visibility: hidden
+}

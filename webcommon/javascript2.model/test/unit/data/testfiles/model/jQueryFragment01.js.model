@@ -1,0 +1,59 @@
+FUNCTION jQueryFragment01 [ANONYMOUS: false, DECLARED: true - jQueryFragment01, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+formatter           : OBJECT formatter [ANONYMOUS: false, DECLARED: false - formatter, MODIFIERS: PUBLIC, OBJECT]
+                    # PROPERTIES
+                    addIndent    : FUNCTION addIndent [ANONYMOUS: false, DECLARED: false - addIndent, MODIFIERS: PUBLIC, METHOD]
+                                 # PARAMETERS
+                                 OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                                 # PROPERTIES
+                                 arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                    println      : FUNCTION println [ANONYMOUS: false, DECLARED: false - println, MODIFIERS: PUBLIC, METHOD]
+                                 # PARAMETERS
+                                 OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                                 # PROPERTIES
+                                 arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                    removeIndent : FUNCTION removeIndent [ANONYMOUS: false, DECLARED: false - removeIndent, MODIFIERS: PUBLIC, METHOD]
+                                 # PARAMETERS
+                                 OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                                 # PROPERTIES
+                                 arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+globalProperty      : OBJECT globalProperty [ANONYMOUS: false, DECLARED: true - globalProperty, MODIFIERS: PUBLIC, VARIABLE]
+jQuery              : OBJECT jQuery [ANONYMOUS: false, DECLARED: false - jQuery, MODIFIERS: PUBLIC, OBJECT]
+                    # PROPERTIES
+                    ajaxStart : FUNCTION ajaxStart [ANONYMOUS: false, DECLARED: false - ajaxStart, MODIFIERS: PUBLIC, METHOD]
+                              # PROPERTIES
+                              addClass  : FUNCTION addClass [ANONYMOUS: false, DECLARED: false - addClass, MODIFIERS: PUBLIC, METHOD]
+                                        # PROPERTIES
+                                        arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                              arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+jQueryFragment01L#2 : FUNCTION jQueryFragment01L#2 [ANONYMOUS: true, DECLARED: true - jQueryFragment01L#2, MODIFIERS: PUBLIC, FUNCTION]
+                    # RETURN TYPES
+                    undefined, RESOLVED: true
+                    # PROPERTIES
+                    arguments   : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                    functionVar : OBJECT functionVar [ANONYMOUS: false, DECLARED: true - functionVar, MODIFIERS: PRIVATE, VARIABLE]
+                    jQuery      : OBJECT jQuery [ANONYMOUS: false, DECLARED: true - jQuery, MODIFIERS: PRIVATE, OBJECT_LITERAL]
+                                # PROPERTIES
+                                event : OBJECT event [ANONYMOUS: false, DECLARED: true - event, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+                                      # PROPERTIES
+                                      customEvent : OBJECT customEvent [ANONYMOUS: false, DECLARED: true - customEvent, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+                                                  # PROPERTIES
+                                                  changeData : OBJECT changeData [ANONYMOUS: false, DECLARED: true - changeData, MODIFIERS: PUBLIC, PROPERTY]
+                                                  class      : OBJECT class [ANONYMOUS: false, DECLARED: true - class, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+                                                             # PROPERTIES
+                                                             name : OBJECT name [ANONYMOUS: false, DECLARED: true - name, MODIFIERS: PUBLIC, PROPERTY]
+                                                  getData    : OBJECT getData [ANONYMOUS: false, DECLARED: true - getData, MODIFIERS: PUBLIC, PROPERTY]
+                                                  martin     : OBJECT martin [ANONYMOUS: false, DECLARED: true - martin, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+                                                             # PROPERTIES
+                                                             address : OBJECT address [ANONYMOUS: false, DECLARED: true - address, MODIFIERS: PUBLIC, PROPERTY]
+                                                  name       : OBJECT name [ANONYMOUS: false, DECLARED: false - name, MODIFIERS: PUBLIC, PROPERTY]
+                                                  petr       : OBJECT petr [ANONYMOUS: false, DECLARED: true - petr, MODIFIERS: PUBLIC, PROPERTY]
+                                                  setData    : OBJECT setData [ANONYMOUS: false, DECLARED: true - setData, MODIFIERS: PUBLIC, PROPERTY]
+                                                  test       : FUNCTION test [ANONYMOUS: false, DECLARED: true - test, MODIFIERS: PUBLIC, METHOD]
+                                                             # RETURN TYPES
+                                                             undefined, RESOLVED: true
+                                                             # PROPERTIES
+                                                             arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                      name        : OBJECT name [ANONYMOUS: false, DECLARED: true - name, MODIFIERS: PUBLIC, PROPERTY]

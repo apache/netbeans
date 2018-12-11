@@ -1,0 +1,9 @@
+    function __construct() {
+             -----------
+HINT:Method Length is 7 Lines (5 allowed)
+    function functionName() {
+             ------------
+HINT:Method Length is 7 Lines (5 allowed)
+$fnc = function() {
+       -----------
+HINT:Method Length is 7 Lines (5 allowed)

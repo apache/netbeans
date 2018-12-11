@@ -1,0 +1,8 @@
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle>
+<file name="HelloWorld.php">
+  <error line="5" column="1" severity="error" message="Parameter $date of method HelloWorld::sayHello() has invalid typehint type DateTimeImutable." />
+  <error line="7" column="1" severity="error" message="Call to method format() on an unknown class DateTimeImutable." />
+</file>
+</checkstyle>

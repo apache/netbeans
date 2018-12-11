@@ -1,0 +1,6 @@
+Code completion result for source line:
+echo $c::staticReturnSelf()::|staticTestA() . PHP_EOL; // staticTestA (PHP7)
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     staticReturnSelf()              [STATIC]   A
+METHOD     staticReturnStatic()            [STATIC]   A
+METHOD     staticTestA()                   [STATIC]   A

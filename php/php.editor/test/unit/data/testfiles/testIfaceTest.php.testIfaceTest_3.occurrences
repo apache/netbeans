@@ -1,0 +1,3 @@
+class |>MARK_OCCURRENCES:my^cls<| implements myface {
+|>MARK_OCCURRENCES:mycls<|::RECOVER_ORIG;
+function function_cls(|>MARK_OCCURRENCES:mycls<| $a) {

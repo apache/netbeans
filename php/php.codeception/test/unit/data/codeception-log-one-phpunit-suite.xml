@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="unit" tests="1" assertions="0" failures="0" errors="0" time="0.004696">
+    <testcase name="testExec" class="App\FizzBuzzPhpUnitTest" file="/home/junichi11/NetBeansProjects/codeception/tests/unit/App/FizzBuzzPhpUnitTest.php" line="17" assertions="0" time="0.004696"/>
+  </testsuite>
+</testsuites>

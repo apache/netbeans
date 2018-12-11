@@ -1,0 +1,6 @@
+Code completion result for source line:
+static::IM|PLICIT_PUBLIC_PARENT_CONST; // CC in ex and impl
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   IMPLICIT_INTERFACE_PUBLIC_CONS  [PUBLIC]   TestInterface
+CONSTANT   IMPLICIT_PUBLIC_CHILD2_CONST 0  [PUBLIC]   ChildClass2
+CONSTANT   IMPLICIT_PUBLIC_PARENT_CONST 0  [PUBLIC]   ParentClass

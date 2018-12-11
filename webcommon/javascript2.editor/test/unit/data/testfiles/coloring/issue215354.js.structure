@@ -1,0 +1,4 @@
+A:CONSTRUCTOR:[PUBLIC]:ESCAPED{A}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }A</font>:
+  prototype:CLASS:[PUBLIC]:ESCAPED{prototype}:
+    inc:METHOD:[PUBLIC]:ESCAPED{inc}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  x:FIELD:[PUBLIC]:ESCAPED{x}<font color="#999999">ESCAPED{ : }Number</font>:

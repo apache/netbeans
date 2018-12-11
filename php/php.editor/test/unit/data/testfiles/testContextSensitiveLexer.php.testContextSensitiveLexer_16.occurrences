@@ -1,0 +1,3 @@
+    const |>MARK_OCCURRENCES:GOTO<| = [1, 2], IF = 2;
+        self::|>MARK_OCCURRENCES:GOT^O<|[0];
+$child::|>MARK_OCCURRENCES:GOTO<|[0];

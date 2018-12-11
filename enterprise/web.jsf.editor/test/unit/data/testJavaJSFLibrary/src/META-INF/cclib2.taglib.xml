@@ -1,0 +1,7 @@
+<!DOCTYPE facelet-taglib PUBLIC 
+    "-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN"
+    "http://java.sun.com/dtd/facelet-taglib_1_0.dtd">
+<facelet-taglib>
+    <namespace>http://mysite.org/cclib2</namespace> 
+    <composite-library-name>cclib2</composite-library-name> 
+</facelet-taglib>     

@@ -1,0 +1,117 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='88'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='88'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='o' start='4' end='24'>
+      <hasInit/>
+      <isAssignment/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='4' end='5'>
+        <name>o</name>
+        <isDeclaredHere/>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <ObjectNode start='8' end='24'>
+        <!-- ObjectNode Elements -->
+        <PropertyNode name='p' start='9' end='14'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='9' end='10'>
+            <name>p</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <NumberLiteralNode value='42' start='12' end='14'/>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <PropertyNode name='q' start='16' end='23'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='16' end='17'>
+            <name>q</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <BooleanLiteralNode value='true' start='19' end='23'/>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+      </ObjectNode>
+    </VarNode>
+    <VarNode name='p' start='30' end='32'>
+      <isDestructuring/>
+    </VarNode>
+    <VarNode name='q' start='30' end='35'>
+      <isDestructuring/>
+    </VarNode>
+    <ExpressionStatement start='30' end='40'>
+      <BinaryNode type='ASSIGN' start='30' end='40'>
+        <isAssignment/>
+        <!-- BinaryNode lhs -->
+        <ObjectNode start='30' end='36'>
+          <!-- ObjectNode Elements -->
+          <PropertyNode name='p' start='31' end='32'>
+            <!-- PropertyNode Key -->
+            <IdentNode start='31' end='32'>
+              <name>p</name>
+              <isPropertyName/>
+            </IdentNode>
+            <!-- PropertyNode Value -->
+            <IdentNode start='31' end='32'>
+              <name>p</name>
+            </IdentNode>
+            <!-- PropertyNode Decorators -->
+          </PropertyNode>
+          <PropertyNode name='q' start='34' end='35'>
+            <!-- PropertyNode Key -->
+            <IdentNode start='34' end='35'>
+              <name>q</name>
+              <isPropertyName/>
+            </IdentNode>
+            <!-- PropertyNode Value -->
+            <IdentNode start='34' end='35'>
+              <name>q</name>
+            </IdentNode>
+            <!-- PropertyNode Decorators -->
+          </PropertyNode>
+        </ObjectNode>
+        <!-- BinaryNode rhs -->
+        <IdentNode start='39' end='40'>
+          <name>o</name>
+        </IdentNode>
+      </BinaryNode>
+    </ExpressionStatement>
+    <ExpressionStatement start='43' end='64'>
+      <CallNode start='43' end='57'>
+        <!-- CallNode Arguments -->
+        <IdentNode start='55' end='56'>
+          <name>p</name>
+        </IdentNode>
+        <!-- CallNode Function -->
+        <AccessNode property='log' start='43' end='54'>
+          <!-- AccessNode Base -->
+          <IdentNode start='43' end='50'>
+            <name>console</name>
+          </IdentNode>
+        </AccessNode>
+      </CallNode>
+    </ExpressionStatement>
+    <ExpressionStatement start='65' end='88'>
+      <CallNode start='65' end='79'>
+        <!-- CallNode Arguments -->
+        <IdentNode start='77' end='78'>
+          <name>q</name>
+        </IdentNode>
+        <!-- CallNode Function -->
+        <AccessNode property='log' start='65' end='76'>
+          <!-- AccessNode Base -->
+          <IdentNode start='65' end='72'>
+            <name>console</name>
+          </IdentNode>
+        </AccessNode>
+      </CallNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

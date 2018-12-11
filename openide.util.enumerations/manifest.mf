@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.openide.util.enumerations
-OpenIDE-Module-Specification-Version: 6.34
-OpenIDE-Module-Localizing-Bundle: org/openide/util/enum/Bundle.properties
-OpenIDE-Module-Deprecated: true
-AutoUpdate-Essential-Module: true
-

@@ -1,0 +1,6 @@
+Code completion result for source line:
+$v->|from();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     addFrom()                       [PUBLIC]   Doctrine_Query_Abstract
+METHOD     create()                        [STATIC]   Doctrine_Query
+METHOD     from()                          [PUBLIC]   Doctrine_Query_Abstract

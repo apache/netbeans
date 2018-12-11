@@ -1,0 +1,55 @@
+<#-- FreeMarker template (see http://freemarker.org/) -->
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}"> 
+
+<#if package?? && package != "">
+package ${package};
+
+</#if>
+import java.net.URI;
+import javax.xml.bind.annotation.XmlAttribute;
+
+/**
+ * Converter class for reference.
+ *
+ * @author ${user}
+ */
+
+public class RefConverter {
+    
+    private URI uri;
+    
+    public RefConverter() {
+    }
+    
+    /**
+     * Creates a new instance of ZipInfoRefConverter.
+     *
+     * @param uri associated uri
+     */
+    
+    public RefConverter(URI uri) {
+        this.uri = uri;
+    }
+    
+    /**
+     * Returns the URI associated with this reference converter.
+     *
+     * @return the converted uri
+     */
+    @XmlAttribute
+    public URI getUri() {
+        return uri;
+    }
+    
+    /**
+     * Sets the URI for this reference converter.
+     *
+     */
+    
+    public void setUri(URI uri) {
+        this.uri = uri;
+    }
+}

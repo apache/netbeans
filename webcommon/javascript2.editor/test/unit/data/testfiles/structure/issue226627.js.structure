@@ -1,0 +1,3 @@
+Test:CONSTRUCTOR:[PUBLIC]:ESCAPED{Test}ESCAPED{(}ESCAPED{config}ESCAPED{)}<font color="#999999">ESCAPED{ : }Test</font>:
+  foo:METHOD:[PROTECTED]:ESCAPED{foo}ESCAPED{(}ESCAPED{lectureId}ESCAPED{)}:
+    name:FIELD:[PUBLIC]:ESCAPED{name}:

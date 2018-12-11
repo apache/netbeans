@@ -139,17 +139,17 @@ public class CreateLicenseSummary extends Task {
     void execute() throws BuildException {
         if (modules == null || modules.isEmpty()) {
             modules = new TreeSet<>();
-            for (String cluster : getProject().getProperty("nb.clusters.list").split("[, ]+")) {
-                modules.addAll(Arrays.asList(getProject().getProperty(cluster).split("[, ]+")));
+            if(getProject().getProperty("allmodules") != null) {
+                modules.addAll(Arrays.asList(getProject().getProperty("allmodules").split("[, ]+")));
             }
             modules.add("nbbuild");
         }
-        
+
         pseudoTests = new LinkedHashMap<>();
-        
+
         try (PrintWriter licenseWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(license), "UTF-8"));
                 PrintWriter noticeWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(notice), "UTF-8"))) {
-            
+
             try (Reader r = new InputStreamReader(new FileInputStream(licenseStub), "UTF-8")) {
                 int read;
                 while ((read = r.read()) != (-1)) {
@@ -271,14 +271,7 @@ public class CreateLicenseSummary extends Task {
                     licenseNames.add(fs.getLicenseRef());
                 }
                 
-                String notice = fs.getNotice();
-                if (notice != null) {
-                    notice = notice.trim();
-                    if (!notices.contains(notice)) {
-                        notices.add(notice);
-                        addNotice(noticeWriter, notice);
-                    }
-                }
+                addNotice(noticeWriter, fs.getNotice(), notices);
             }
         }
         
@@ -340,15 +333,7 @@ public class CreateLicenseSummary extends Task {
                 System.err.println("No license for: " + binary);
             }
             
-            String notice = headers.get("notice");
-            if (notice != null) {
-                notice = notice.trim();
-                if (!notices.contains(notice)) {
-                    notices.add(notice);
-                    addNotice(noticeWriter, notice);
-                }
-            }
-            
+            addNotice(noticeWriter, headers.get("notice"), notices);
         }
 //                String[] otherHeaders = {"Name", "Version", "Description", "Origin"};
 //                Map<Map<String,String>,Set<String>> licenseHeaders2Binaries = new LinkedHashMap<Map<String,String>,Set<String>>();
@@ -384,50 +369,45 @@ public class CreateLicenseSummary extends Task {
 
     private Map<Long, Map<String, String>> findCrc2LicenseHeaderMapping() throws IOException {
         Map<Long, Map<String, String>> crc2LicenseHeaders = new HashMap<>();
-        for (String cluster : getProject().getProperty("nb.clusters.list").split("[, ]+")) {
-            for (String module : getProject().getProperty(cluster).split("[, ]+")) {
-                File d = new File(new File(nball, module), "external");
-                Set<String> hgFiles = VerifyLibsAndLicenses.findHgControlledFiles(d);
-                Map<String, Map<String, String>> binary2License = findBinary2LicenseHeaderMapping(hgFiles, d);
-                for (String n : hgFiles) {
-                    if (!n.endsWith(".jar") && !n.endsWith(".zip") && !n.endsWith(".xml")
-                            && !n.endsWith(".js") && !n.endsWith(".dylib")) {
-                        continue;
-                    }
-                    Map<String, String> headers = binary2License.get(n);
-                    if (headers == null) {
-                        continue;
-                    }
-                    File f = new File(d, n);
-                    InputStream is = new FileInputStream(f);
-                    try {
-                        crc2LicenseHeaders.put(computeCRC32(is), headers);
-                    } finally {
-                        is.close();
-                    }
-                    if (!n.endsWith(".jar") && !n.endsWith(".zip")) {
-                        continue;
-                    }
-                    ZipFile zf = new ZipFile(f);
-                    try {
-                        Enumeration<? extends ZipEntry> entries = zf.entries();
-                        while (entries.hasMoreElements()) {
-                            ZipEntry entry = entries.nextElement();
-                            String innerName = entry.getName();
-                            if (!innerName.endsWith(".jar") && !innerName.endsWith(".zip")) {
-                                continue;
-                            }
-                            Map<String, String> nestedHeaders = binary2License.get(n + "!/" + innerName);
-                            if (nestedHeaders == null) nestedHeaders = headers;
-                            is = zf.getInputStream(entry);
-                            try {
-                                crc2LicenseHeaders.put(computeCRC32(is), nestedHeaders);
-                            } finally {
-                                is.close();
-                            }
+        for(String module: modules) {
+            File d = new File(new File(nball, module), "external");
+            Set<String> hgFiles = VerifyLibsAndLicenses.findHgControlledFiles(d);
+            Map<String, Map<String, String>> binary2License = findBinary2LicenseHeaderMapping(hgFiles, d);
+            for (String n : hgFiles) {
+                if (!n.endsWith(".jar") && !n.endsWith(".zip") && !n.endsWith(".xml")
+                        && !n.endsWith(".js") && !n.endsWith(".dylib")) {
+                    continue;
+                }
+                Map<String, String> headers = binary2License.get(n);
+                if (headers == null) {
+                    continue;
+                }
+
+                File f = new File(d, n);
+
+                try(InputStream is = new FileInputStream(f)) {
+                    crc2LicenseHeaders.put(computeCRC32(is), headers);
+                }
+                if (!n.endsWith(".jar") && !n.endsWith(".zip")) {
+                    continue;
+                }
+
+                try(ZipFile zf = new ZipFile(f)) {
+                    Enumeration<? extends ZipEntry> entries = zf.entries();
+                    while (entries.hasMoreElements()) {
+                        ZipEntry entry = entries.nextElement();
+                        String innerName = entry.getName();
+                        if (!innerName.endsWith(".jar") && !innerName.endsWith(".zip")) {
+                            continue;
                         }
-                    } finally {
-                        zf.close();
+                        Map<String, String> nestedHeaders = binary2License.get(n + "!/" + innerName);
+                        if (nestedHeaders == null) {
+                            nestedHeaders = headers;
+                        }
+
+                        try(InputStream is = zf.getInputStream(entry)) {
+                            crc2LicenseHeaders.put(computeCRC32(is), nestedHeaders);
+                        }
                     }
                 }
             }
@@ -435,27 +415,32 @@ public class CreateLicenseSummary extends Task {
         return crc2LicenseHeaders;
     }
 
-    private void addNotice(PrintWriter output, String notice) throws IOException {
-        String[] lines = notice.split("\n");
-        boolean previousLineEmpty = true;
-        int n = lines.length;
-        for (int i = 0; i < n; i++) {
-            String line = lines[i];
-            line = line.trim();
-            boolean empty = line.length() == 0;
-            if (empty && previousLineEmpty) {
-                // Skip line
-            } else {
-                previousLineEmpty = empty;
-                if (!empty && i < n - 1 && line.startsWith("This product includes software") && lines[i + 1].startsWith("The Apache Software Foundation")) {
-                    i += 2;
-                    previousLineEmpty = false;
-                    // Skip
-                } else {
-                    output.println(line);
-                }
-            }
+    private String normalizeNotice(String inputNotice) {
+        if(inputNotice == null) {
+            inputNotice = "";
         }
+        return inputNotice
+                // Remove the common part required for all ASF project, that is
+                // inserted in the header
+                .replaceAll("This product includes software.*\nThe Apache Software Foundation.*\n?", "")
+                // remove excessive whitespace (the notice entries will be separated
+                // by empty lines, while inside each block only one empty line will
+                // remain)
+                .replaceAll("\n{3,}", "\n\n")
+                // the license file is written with platform line endings, so adjust here
+                .replaceAll("\n", System.getProperty("line.separator"))
+                .trim();
+    }
+
+    private void addNotice(PrintWriter output, String notice, Set<String> alreadyWrittenNotices) throws IOException {
+        notice = normalizeNotice(notice);
+        if(notice.isEmpty() || alreadyWrittenNotices.contains(notice)) {
+            return;
+        }
+        alreadyWrittenNotices.add(notice);
+        output.println(notice);
+        output.println();
+        output.println();
     }
 
     private Entry<Map<String, String>, Long> getHeaders(Map<Long, Map<String, String>> crc2License,

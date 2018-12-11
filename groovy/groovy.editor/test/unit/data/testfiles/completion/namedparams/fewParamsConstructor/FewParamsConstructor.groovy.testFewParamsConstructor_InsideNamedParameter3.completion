@@ -1,0 +1,3 @@
+Code completion result for source line:
+Bar baar = new Bar(aaa: 0|, bbb: 1, )
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)

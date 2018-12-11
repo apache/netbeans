@@ -1,0 +1,13 @@
+<?php
+
+interface FooInterface
+{
+    /**
+     * @return string|int
+     */
+    public function someMethod(?string $string, int $int): ?Bar;
+}
+
+class Foo implements FooInterface
+{
+}

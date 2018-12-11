@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="./mode/javascript/javascript.js"></script>
+        <script>
+            var x = 1;
+            function test() {
+                x = "";
+            }
+        </script>
+    </head>
+    <body>
+        <script>
+            x = 1;
+            function test() {
+                x = "AAAAA";
+            }
+        </script>
+        <div>TODO write content</div>
+    </body>
+</html>

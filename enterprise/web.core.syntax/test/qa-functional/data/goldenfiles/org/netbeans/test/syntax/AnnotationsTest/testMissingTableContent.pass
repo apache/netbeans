@@ -1,0 +1,10 @@
+Quirky doctype. Expected "".
+From line 4, column 4; to line 5, column 63
+(Rule Category: Doctype)
+----
+(Alt-Enter shows hints)
+Required children missing from element "table".
+From line 12, column 16; to line 14, column 16
+(Rule Category: All Other)
+----
+(Alt-Enter shows hints)

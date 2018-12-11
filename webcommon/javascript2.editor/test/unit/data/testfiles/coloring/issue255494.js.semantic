@@ -1,0 +1,10 @@
+loop1:
+for (|>GLOBAL:i<| = 0; |>GLOBAL:i<| < 3; |>GLOBAL:i<|++) {      //The first for statement is labeled "loop1"
+   loop2:
+   for (|>GLOBAL:j<| = 0; |>GLOBAL:j<| < 3; |>GLOBAL:j<|++) {   //The second for statement is labeled "loop2"
+      if (|>GLOBAL:i<| == 1 && |>GLOBAL:j<| == 1) {
+         continue loop1;
+      }
+      |>GLOBAL:console<|.log("i = " + |>GLOBAL:i<| + ", j = " + |>GLOBAL:j<|);
+   }
+}   

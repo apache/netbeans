@@ -1,0 +1,5 @@
+Code completion result for source line:
+$this->trtFnc()->|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     clsFnc()                        [PUBLIC]   OmgCls

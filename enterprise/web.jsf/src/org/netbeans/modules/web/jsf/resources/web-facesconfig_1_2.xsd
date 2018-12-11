@@ -1,0 +1,2110 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<!--
+ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+ Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+ The contents of this file are subject to the terms of either the GNU
+ General Public License Version 2 only ("GPL") or the Common
+ Development and Distribution License("CDDL") (collectively, the "License").  You
+ may not use this file except in compliance with the License. You can obtain
+ a copy of the License at https://glassfish.dev.java.net/public/CDDL+GPL.html
+ or glassfish/bootstrap/legal/LICENSE.txt.  See the License for the specific
+ language governing permissions and limitations under the License.
+
+ When distributing the software, include this License Header Notice in each
+ file and include the License file at glassfish/bootstrap/legal/LICENSE.txt.
+ Sun designates this particular file as subject to the "Classpath" exception
+ as provided by Oracle in the GPL Version 2 section of the License file that
+ accompanied this code.  If applicable, add the following below the License
+ Header, with the fields enclosed by brackets [] replaced by your own
+ identifying information: "Portions Copyrighted [year]
+ [name of copyright owner]"
+ 
+ Contributor(s):
+ 
+ If you wish your version of this file to be governed by only the CDDL or
+ only the GPL Version 2, indicate your decision by adding "[Contributor]
+ elects to include this software in this distribution under the [CDDL or GPL
+ Version 2] license."  If you don't indicate a single choice of license, a
+ recipient has the option to distribute your version of this file under
+ either the CDDL, the GPL Version 2 or to extend the choice of license to
+ its licensees as provided above.  However, if you add GPL Version 2 code
+ and therefore, elected the GPL Version 2 license, then the option applies
+ only if the new code is made subject to such option by the copyright
+ holder.
+-->
+
+<xsd:schema
+     targetNamespace="http://java.sun.com/xml/ns/javaee"
+     xmlns:javaee="http://java.sun.com/xml/ns/javaee"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     elementFormDefault="qualified"
+     attributeFormDefault="unqualified"
+     version="1.2">
+
+    <xsd:annotation>
+        <xsd:documentation>
+            $Id$
+        </xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:annotation>
+        <xsd:documentation>
+
+            Copyright 2005 Sun Microsystems, Inc., 
+            901 San Antonio Road, 
+            Palo Alto, California 94303, U.S.A. 
+            All rights reserved.
+
+            Sun Microsystems, Inc. has intellectual property 
+            rights relating to technology described in this document. In
+            particular, and without limitation, these intellectual
+            property rights may include one or more of the U.S. patents
+            listed at http://www.sun.com/patents and one or more
+            additional patents or pending patent applications in the
+            U.S. and other countries.
+
+            This document and the technology which it describes are
+            distributed under licenses restricting their use, copying,
+            distribution, and decompilation. No part of this document
+            may be reproduced in any form by any means without prior
+            written authorization of Sun and its licensors, if any.
+
+            Third-party software, including font technology, is
+            copyrighted and licensed from Sun suppliers.
+
+            Sun, Sun Microsystems, the Sun logo, Solaris, Java, Java EE,
+            JavaServer Pages, Enterprise JavaBeans and the Java Coffee
+            Cup logo are trademarks or registered trademarks of Sun
+            Microsystems, Inc. in the U.S. and other countries.
+
+            Federal Acquisitions: Commercial Software - Government Users
+            Subject to Standard License Terms and Conditions.
+
+        </xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:annotation>
+        <xsd:documentation>
+
+            <![CDATA[
+
+            The XML Schema for the JavaServer Faces Application
+            Configuration File (Version 1.2).
+
+            All JavaServer Faces configuration files must indicate
+            the JavaServer Faces schema by indicating the JavaServer
+            Faces namespace:
+
+            http://java.sun.com/xml/ns/javaee
+
+            and by indicating the version of the schema by
+            using the version element as shown below:
+
+            <faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xsi:schemaLocation="..."
+                    version="1.2">
+                ...
+            </faces-config>
+
+            The instance documents may indicate the published
+            version of the schema using xsi:schemaLocation attribute
+            for javaee namespace with the following location:
+
+            http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd
+
+            ]]>
+
+        </xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:include schemaLocation="javaee_5.xsd"/>
+
+    <!-- **************************************************** -->
+
+    <xsd:element name = "faces-config" type="javaee:faces-configType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                The "faces-config" element is the root of the configuration
+                information hierarchy, and contains nested elements for all
+                of the other configuration settings.
+
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:unique name="faces-config-converter-ID-uniqueness">
+            <xsd:annotation>
+                <xsd:documentation>
+
+                    Converter IDs must be unique within a document.
+
+                </xsd:documentation>
+            </xsd:annotation>
+
+            <xsd:selector xpath="javaee:converter"/>
+            <xsd:field    xpath="javaee:converter-id"/>
+        </xsd:unique>
+
+        <xsd:unique name="faces-config-converter-for-class-uniqueness">
+            <xsd:annotation>
+                <xsd:documentation>
+
+                    'converter-for-class' element values must be unique
+                    within a document.
+
+                </xsd:documentation>
+            </xsd:annotation>
+
+            <xsd:selector xpath="javaee:converter"/>
+            <xsd:field    xpath="javaee:converter-for-class"/>
+        </xsd:unique>
+
+        <xsd:unique name="faces-config-validator-ID-uniqueness">
+            <xsd:annotation>
+                <xsd:documentation>
+
+                    Validator IDs must be unique within a document.
+
+                </xsd:documentation>
+            </xsd:annotation>
+
+            <xsd:selector xpath="javaee:validator"/>
+            <xsd:field    xpath="javaee:validator-id"/>
+        </xsd:unique>
+
+        <xsd:unique name="faces-config-managed-bean-name-uniqueness">
+            <xsd:annotation>
+                <xsd:documentation>
+
+                    Managed bean names must be unique within a document.
+
+                </xsd:documentation>
+            </xsd:annotation>
+
+            <xsd:selector xpath="javaee:managed-bean"/>
+            <xsd:field    xpath="javaee:managed-bean-name"/>
+        </xsd:unique>
+    </xsd:element>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-configType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                The "faces-config" element is the root of the configuration
+                information hierarchy, and contains nested elements for all
+                of the other configuration settings.
+
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="application"
+                         type="javaee:faces-config-applicationType"/>
+            <xsd:element name="factory"
+                         type="javaee:faces-config-factoryType"/>
+            <xsd:element name="component"
+                         type="javaee:faces-config-componentType"/>
+            <xsd:element name="converter"
+                         type="javaee:faces-config-converterType"/>
+            <xsd:element name="managed-bean"
+                         type="javaee:faces-config-managed-beanType"/>
+            <xsd:element name="navigation-rule"
+                         type="javaee:faces-config-navigation-ruleType"/>
+            <xsd:element name="referenced-bean"
+                         type="javaee:faces-config-referenced-beanType"/>
+            <xsd:element name="render-kit"
+                         type="javaee:faces-config-render-kitType"/>
+            <xsd:element name="lifecycle"
+                         type="javaee:faces-config-lifecycleType"/>
+            <xsd:element name="validator"
+                         type="javaee:faces-config-validatorType"/>
+            <xsd:element name="faces-config-extension"
+                         type="javaee:faces-config-extensionType"
+                         minOccurs="0"
+                         maxOccurs="unbounded"/>
+        </xsd:choice>
+            <xsd:attribute name = "id" type = "xsd:ID"/>
+            <xsd:attribute name="version"
+                type="javaee:faces-config-versionType"
+                use="required"/>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name = "faces-config-extensionType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                Extension element for faces-config.  It may contain
+                implementation specific content.
+
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:any namespace="##any"
+                     processContents="lax"
+                     minOccurs="0"
+                     maxOccurs="unbounded" />
+         </xsd:sequence>
+         <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-applicationType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                The "application" element provides a mechanism to define the
+                various per-application-singleton implementation artifacts for
+                a particular web application that is utilizing 
+                JavaServer Faces.  For nested elements that are not specified, 
+                the JSF implementation must provide a suitable default.
+
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="action-listener"
+                         type="javaee:fully-qualified-classType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                            
+                            The "action-listener" element contains the fully 
+                            qualified class name of the concrete 
+                            ActionListener implementation class that will be 
+                            called during the Invoke Application phase of the 
+                            request processing lifecycle.
+                            
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="default-render-kit-id"
+                         type="javaee:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                            
+                            The "default-render-kit-id" element allows the 
+                            application to define a renderkit to be used other 
+                            than the standard one. 
+                            
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="message-bundle"
+                         type="javaee:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                            
+                            The base name of a resource bundle representing 
+                            the message resources for this application.  See 
+                            the JavaDocs for the "java.util.ResourceBundle" 
+                            class for more information on the syntax of 
+                            resource bundle names.
+                            
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="navigation-handler"
+                         type="javaee:fully-qualified-classType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                            
+                            The "navigation-handler" element contains the 
+                            fully qualified class name of the concrete 
+                            NavigationHandler implementation class that will 
+                            be called during the Invoke Application phase 
+                            of the request processing lifecycle, if the 
+                            default ActionListener (provided by the JSF 
+                            implementation) is used.
+                            
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="view-handler"
+                         type="javaee:fully-qualified-classType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                            
+                            The "view-handler" element contains the fully 
+                            qualified class name of the concrete ViewHandler 
+                            implementation class that will be called during 
+                            the Restore View and Render Response phases of the 
+                            request processing lifecycle.  The faces 
+                            implementation must provide a default 
+                            implementation of this class.
+                            
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="state-manager"
+                         type="javaee:fully-qualified-classType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                            
+                            The "state-manager" element contains the fully 
+                            qualified class name of the concrete StateManager 
+                            implementation class that will be called during 
+                            the Restore View and Render Response phases of the 
+                            request processing lifecycle.  The faces 
+                            implementation must provide a default 
+                            implementation of this class.
+                            
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="el-resolver"
+                         type="javaee:fully-qualified-classType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                            
+                            The "el-resolver" element contains the fully
+                            qualified class name of the concrete
+                            javax.el.ELResolver implementation class
+                            that will be used during the processing of
+                            EL expressions.
+                            
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="property-resolver"
+                         type="javaee:fully-qualified-classType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                            
+                            The "property-resolver" element contains the fully 
+                            qualified class name of the concrete 
+                            PropertyResolver implementation class that will 
+                            be used during the processing of value binding 
+                            expressions.
+                            
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="variable-resolver"
+                         type="javaee:fully-qualified-classType">
+                <xsd:annotation>
+                    <xsd:documentation>
+
+                            The "variable-resolver" element contains the fully
+                            qualified class name of the concrete 
+                            VariableResolver implementation class that will 
+                            be used during the processing of value binding 
+                            expressions.
+
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element 
+                name="locale-config"
+                type="javaee:faces-config-locale-configType"/>
+            <xsd:element 
+                name="resource-bundle"
+                type="javaee:faces-config-application-resource-bundleType"/>
+            <xsd:element name="application-extension"
+                         type="javaee:faces-config-application-extensionType"
+                         minOccurs="0"
+                         maxOccurs="unbounded"/>
+            </xsd:choice>
+        <xsd:attribute name = "id" type = "xsd:ID"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="faces-config-application-resource-bundleType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+              The resource-bundle element inside the application element
+              references a java.util.ResourceBundle instance by name
+              using the var element.  ResourceBundles referenced in this
+              manner may be returned by a call to
+              Application.getResourceBundle() passing the current
+              FacesContext for this request and the value of the var
+              element below.
+
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:group ref="javaee:descriptionGroup"/>
+            <xsd:element name="base-name"
+                         type="javaee:fully-qualified-classType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        
+                        The fully qualified class name of the
+                        java.util.ResourceBundle instance.
+                        
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="var"
+                         type="javaee:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        
+                        The name by which this ResourceBundle instance
+                        is retrieved by a call to
+                        Application.getResourceBundle().
+                        
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name = "faces-config-application-extensionType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                Extension element for application.  It may contain
+                implementation specific content.
+
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:any namespace="##any"
+                     processContents="lax"
+                     minOccurs="0"
+                     maxOccurs="unbounded" />
+         </xsd:sequence>
+         <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name = "faces-config-factoryType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                The "factory" element provides a mechanism to define the 
+                various Factories that comprise parts of the implementation 
+                of JavaServer Faces.  For nested elements that are not 
+                specified, the JSF implementation must provide a suitable 
+                default.
+
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="application-factory"
+                         type="javaee:fully-qualified-classType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                            
+                        The "application-factory" element contains the 
+                        fully qualified class name of the concrete 
+                        ApplicationFactory implementation class that will 
+                        be called when 
+                        FactoryFinder.getFactory(APPLICATION_FACTORY) is
+                        called.
+                            
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="faces-context-factory"
+                         type="javaee:fully-qualified-classType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                            
+                        The "faces-context-factory" element contains the
+                        fully qualified class name of the concrete
+                        FacesContextFactory implementation class that will
+                        be called when 
+                        FactoryFinder.getFactory(FACES_CONTEXT_FACTORY) 
+                        is called.
+                            
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="lifecycle-factory"
+                        type="javaee:fully-qualified-classType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                            
+                        The "lifecycle-factory" element contains the fully
+                        qualified class name of the concrete LifecycleFactory
+                        implementation class that will be called when
+                        FactoryFinder.getFactory(LIFECYCLE_FACTORY) is called.
+                            
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="render-kit-factory"
+                         type="javaee:fully-qualified-classType">
+                <xsd:annotation>
+                    <xsd:documentation>
+
+                        The "render-kit-factory" element contains the fully
+                        qualified class name of the concrete RenderKitFactory
+                        implementation class that will be called when
+                        FactoryFinder.getFactory(RENDER_KIT_FACTORY) is 
+                        called.
+
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="factory-extension"
+                         type="javaee:faces-config-factory-extensionType"
+                         minOccurs="0"
+                         maxOccurs="unbounded"/>
+        </xsd:choice>
+        <xsd:attribute name = "id" type = "xsd:ID"/>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name = "faces-config-factory-extensionType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                Extension element for factory.  It may contain
+                implementation specific content.
+
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:any namespace="##any"
+                     processContents="lax"
+                     minOccurs="0"
+                     maxOccurs="unbounded" />
+         </xsd:sequence>
+         <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-attributeType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                The "attribute" element represents a named, typed, value
+                associated with the parent UIComponent via the generic
+                attributes mechanism.
+
+                Attribute names must be unique within the scope of the parent
+                (or related) component.
+
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:group ref="javaee:descriptionGroup"/>
+            <xsd:element name="attribute-name"
+                         type="javaee:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        
+                        The "attribute-name" element represents the name under 
+                        which the corresponding value will be stored, in the 
+                        generic attributes of the UIComponent we are related 
+                        to.
+                        
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="attribute-class"
+                         type="javaee:fully-qualified-classType">
+                <xsd:annotation>
+                    <xsd:documentation>
+
+                        The "attribute-class" element represents the Java type
+                        of the value associated with this attribute name.
+
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="default-value"
+                         type="javaee:faces-config-default-valueType"
+                         minOccurs="0"/>
+            <xsd:element name="suggested-value"
+                         type="javaee:faces-config-suggested-valueType"
+                         minOccurs="0"/>
+            <xsd:element name="attribute-extension"
+                         type="javaee:faces-config-attribute-extensionType"
+                         minOccurs="0"
+                         maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name = "id" type = "xsd:ID"/>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name = "faces-config-attribute-extensionType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                Extension element for attribute.  It may contain 
+                implementation specific content.
+
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:any namespace="##any"
+                     processContents="lax"
+                     minOccurs="0"
+                     maxOccurs="unbounded" />
+         </xsd:sequence>
+         <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-componentType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                The "component" element represents a concrete UIComponent
+                implementation class that should be registered under the
+                specified type identifier, along with its associated 
+                properties and attributes.  Component types must be unique 
+                within the entire web application.
+
+                Nested "attribute" elements identify generic attributes that 
+                are recognized by the implementation logic of this component.
+                Nested "property" elements identify JavaBeans properties of 
+                the component class that may be exposed for manipulation 
+                via tools.
+
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:group ref="javaee:descriptionGroup"/>
+            <xsd:element name="component-type"
+                         type="javaee:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        
+                        The "component-type" element represents the name under 
+                        which the corresponding UIComponent class should be 
+                        registered.
+                        
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="component-class"
+                         type="javaee:fully-qualified-classType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        
+                        The "component-class" element represents the fully 
+                        qualified class name of a concrete UIComponent 
+                        implementation class.
+                        
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="facet"
+                         type="javaee:faces-config-facetType"
+                         minOccurs="0"
+                         maxOccurs="unbounded"/>
+            <xsd:element name="attribute"
+                         type="javaee:faces-config-attributeType"
+                         minOccurs="0"
+                         maxOccurs="unbounded"/>
+            <xsd:element name="property"
+                         type="javaee:faces-config-propertyType"
+                         minOccurs="0"
+                         maxOccurs="unbounded"/>
+            <xsd:element name="component-extension"
+                         type="javaee:faces-config-component-extensionType"
+                         minOccurs="0"
+                         maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-component-extensionType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Extension element for component.  It may contain 
+                implementation specific content.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:any namespace="##any"
+                     processContents="lax"
+                     minOccurs="0"
+                     maxOccurs="unbounded" />
+         </xsd:sequence>
+         <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-default-localeType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                The "default-locale" element declares the default locale 
+                for this application instance.
+
+                It must be specified as :language:[_:country:[_:variant:]]
+                without the colons, for example "ja_JP_SJIS".  The
+                separators between the segments may be '-' or '_'.
+
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:extension base="javaee:faces-config-localeType">
+                <xsd:attribute name="id" type="xsd:ID"/>                
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+
+    <xsd:complexType name="faces-config-default-valueType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                The "default-value" contains the value for the property or
+                attribute in which this element resides.  This value differs
+                from the "suggested-value" in that the property or attribute
+                must take the value, whereas in "suggested-value" taking the
+                value is optional.
+
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:restriction base="javaee:string"/>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:simpleType name="faces-config-el-expressionType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                EL expressions present within a faces config file
+                must start with the character sequence of '#{' and
+                end with '}'.
+
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="#\{.*\}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-facetType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                Define the name and other design-time information for a facet
+                that is associated with a renderer or a component.
+
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:group ref="javaee:descriptionGroup"/>
+            <xsd:element name="facet-name"
+                         type="javaee:java-identifierType">
+                <xsd:annotation>
+                    <xsd:documentation>
+
+                        The "facet-name" element represents the facet name 
+                        under which a UIComponent will be added to its parent.  
+                        It must be of type "Identifier".
+
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="facet-extension"
+                         type="javaee:faces-config-facet-extensionType"
+                         minOccurs="0"
+                         maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-facet-extensionType">
+         <xsd:annotation>
+            <xsd:documentation>
+
+                Extension element for facet.  It may contain implementation
+                specific content.
+
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:any namespace="##any"
+                     processContents="lax"
+                     minOccurs="0"
+                     maxOccurs="unbounded" />
+         </xsd:sequence>
+         <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-from-view-idType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                The value of from-view-id must contain one of the following 
+                values:
+
+                  - The exact match for a view identifier that is recognized
+                    by the the ViewHandler implementation being used (such as
+                    "/index.jsp" if you are using the default ViewHandler).
+
+                  - A proper prefix of a view identifier, plus a trailing 
+                    "*" character.  This pattern indicates that all view 
+                    identifiers that match the portion of the pattern up to 
+                    the asterisk will match the surrounding rule.  When more 
+                    than one match exists, the match with the longest pattern 
+                    is selected.
+
+                  - An "*" character, which means that this pattern applies 
+                    to all view identifiers.
+
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:restriction base="javaee:string"/>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-from-actionType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                The "from-action" element contains an action reference 
+                expression that must have been executed (by the default 
+                ActionListener for handling application level events) 
+                in order to select the navigation rule.  If not specified, 
+                this rule will be relevant no matter which action reference 
+                was executed (or if no action reference was executed).
+
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:extension base="javaee:faces-config-el-expressionType">
+                <xsd:attribute name="id" type="xsd:ID"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-converterType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                The "converter" element represents a concrete Converter
+                implementation class that should be registered under the
+                specified converter identifier.  Converter identifiers must 
+                be unique within the entire web application.
+
+                Nested "attribute" elements identify generic attributes that
+                may be configured on the corresponding UIComponent in order 
+                to affect the operation of the Converter.  Nested "property"
+                elements identify JavaBeans properties of the Converter
+                implementation class that may be configured to affect the
+                operation of the Converter.  "attribute" and "property" 
+                elements are intended to allow component developers to 
+                more completely describe their components to tools and users.
+                These elements have no required runtime semantics.
+
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:group ref="javaee:descriptionGroup"/>
+            <xsd:choice>
+                <xsd:element name="converter-id"
+                             type="javaee:string">
+                    <xsd:annotation>
+                        <xsd:documentation>
+
+                            The "converter-id" element represents the 
+                            identifier under which the corresponding 
+                            Converter class should be registered.
+
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                
+                <xsd:element name="converter-for-class"
+                             type="javaee:fully-qualified-classType">
+                    <xsd:annotation>
+                        <xsd:documentation>
+
+                            The "converter-for-class" element represents the 
+                            fully qualified class name for which a Converter 
+                            class will be registered.
+
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+            </xsd:choice>
+            
+            <xsd:element name="converter-class"
+                         type="javaee:fully-qualified-classType">
+                <xsd:annotation>
+                    <xsd:documentation>
+
+                        The "converter-class" element represents the fully
+                        qualified class name of a concrete Converter 
+                        implementation class.
+
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="attribute"
+                         type="javaee:faces-config-attributeType"
+                         minOccurs="0"
+                         maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>
+
+                       Nested "attribute" elements identify generic
+                       attributes that may be configured on the
+                       corresponding UIComponent in order to affect the
+                       operation of the Converter.  This attribute is
+                       primarily for design-time tools and is not
+                       specified to have any meaning at runtime.
+
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="property"
+                         type="javaee:faces-config-propertyType"
+                         minOccurs="0"
+                         maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>
+
+                       Nested "property" elements identify JavaBeans
+                       properties of the Converter implementation class
+                       that may be configured to affect the operation of
+                       the Converter.  This attribute is primarily for
+                       design-time tools and is not specified to have
+                       any meaning at runtime.
+
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="converter-extension"
+                         type="javaee:faces-config-converter-extensionType"
+                         minOccurs="0"
+                         maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name = "faces-config-converter-extensionType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                Extension element for converter.  It may contain
+                implementation specific content.
+
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:any namespace="##any"
+                     processContents="lax"
+                     minOccurs="0"
+                     maxOccurs="unbounded" />
+         </xsd:sequence>
+         <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-lifecycleType">
+        <xsd:annotation>
+            <xsd:documentation>
+                
+                The "lifecycle" element provides a mechanism to specify
+                modifications to the behaviour of the default Lifecycle
+                implementation for this web application.
+                
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:element name="phase-listener"
+                         type="javaee:fully-qualified-classType"
+                         minOccurs="0" 
+                         maxOccurs="unbounded">
+                
+                <xsd:annotation>
+                    <xsd:documentation>
+                    
+                        The "phase-listener" element contains the fully 
+                        qualified class name of the concrete PhaseListener 
+                        implementation class that will be registered on 
+                        the Lifecycle.
+                    
+                    </xsd:documentation>
+            </xsd:annotation>                
+            </xsd:element>
+            <xsd:element name="lifecycle-extension"
+                         type="javaee:faces-config-lifecycle-extensionType"
+                         minOccurs="0"
+                         maxOccurs="unbounded"/>
+
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:ID"/>
+
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name = "faces-config-lifecycle-extensionType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                Extension element for lifecycle.  It may contain
+                implementation specific content.
+
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:any namespace="##any"
+                     processContents="lax"
+                     minOccurs="0"
+                     maxOccurs="unbounded" />
+         </xsd:sequence>
+         <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+    
+    <!-- **************************************************** -->
+    
+    <xsd:simpleType name="faces-config-localeType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                The localeType defines valid locale defined by ISO-639-1
+                and ISO-3166.
+
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[a-z]{2}(_|-)?([\p{L}\-\p{Nd}]{2})?"/>
+        </xsd:restriction>
+  </xsd:simpleType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-locale-configType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                The "locale-config" element allows the app developer to 
+                declare the supported locales for this application.
+
+            </xsd:documentation>
+        </xsd:annotation>
+        
+        <xsd:sequence>
+            <xsd:element name="default-locale"
+                         type="javaee:faces-config-default-localeType"
+                         minOccurs="0">
+            </xsd:element>
+            <xsd:element name="supported-locale"
+                         type="javaee:faces-config-supported-localeType"
+                         minOccurs="0" 
+                         maxOccurs="unbounded">                
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-managed-beanType">
+        <xsd:annotation>
+            <xsd:documentation>
+                
+                The "managed-bean" element represents a JavaBean, of a 
+                particular class, that will be dynamically instantiated 
+                at runtime (by the default VariableResolver implementation) 
+                if it is referenced as the first element of a value binding 
+                expression, and no corresponding bean can be identified in 
+                any scope.  In addition to the creation of the managed bean, 
+                and the optional storing of it into the specified scope, 
+                the nested managed-property elements can be used to 
+                initialize the contents of settable JavaBeans properties of 
+                the created instance.
+                
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:group ref="javaee:descriptionGroup"/>
+            <xsd:element name="managed-bean-name"
+                         type="javaee:java-identifierType">
+                <xsd:annotation>
+                    <xsd:documentation>
+
+                        The "managed-bean-name" element represents the 
+                        attribute name under which a managed bean will 
+                        be searched for, as well as stored (unless the 
+                        "managed-bean-scope" value is "none").
+
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="managed-bean-class"
+                         type="javaee:fully-qualified-classType">
+                <xsd:annotation>
+                    <xsd:documentation>
+
+                        The "managed-bean-class" element represents the fully
+                        qualified class name of the Java class that will be 
+                        used`to instantiate a new instance if creation of the 
+                        specified`managed bean is requested.
+
+                        The specified class must conform to standard JavaBeans
+                        conventions.  In particular, it must have a public
+                        zero-arguments constructor, and zero or more public
+                        property setters.
+
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element 
+                name="managed-bean-scope"
+                type="javaee:faces-config-managed-bean-scopeOrNoneType">
+                <xsd:annotation>
+                    <xsd:documentation>
+
+                        The "managed-bean-scope" element represents the scope 
+                        into which a newly created instance of the specified 
+                        managed bean will be stored (unless the value is 
+                        "none").
+
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:choice>
+                <xsd:element name="managed-property"
+                             type="javaee:faces-config-managed-propertyType"
+                             minOccurs="0"
+                             maxOccurs="unbounded"/>
+                <xsd:element name="map-entries"
+                             type="javaee:faces-config-map-entriesType"/>
+                <xsd:element name="list-entries"
+                             type="javaee:faces-config-list-entriesType"/>
+            </xsd:choice>
+            <xsd:element name="managed-bean-extension"
+                         type="javaee:faces-config-managed-bean-extensionType"
+                         minOccurs="0"
+                         maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name = "faces-config-managed-bean-extensionType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                Extension element for managed-bean.  It may contain
+                implementation specific content.
+
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:any namespace="##any"
+                     processContents="lax"
+                     minOccurs="0"
+                     maxOccurs="unbounded" />
+         </xsd:sequence>
+         <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+
+    <!-- **************************************************** -->
+    
+    <xsd:complexType name="faces-config-managed-bean-scopeOrNoneType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                <![CDATA[
+                Defines the legal values for the <managed-bean-scope>
+                element's body content, which includes all of the scopes
+                normally used in a web application, plus the "none" value
+                indicating that a created bean should not be stored into
+                any scope.
+                ]]>
+
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:simpleContent>
+            <xsd:restriction base="javaee:string">
+                <xsd:enumeration value="request"/>
+                <xsd:enumeration value="session"/>
+                <xsd:enumeration value="application"/>
+                <xsd:enumeration value="none"/>
+            </xsd:restriction>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-managed-propertyType">
+        <xsd:annotation>
+            <xsd:documentation>
+                
+                The "managed-property" element represents an individual 
+                property of a managed bean that will be configured to the 
+                specified value (or value set) if the corresponding 
+                managed bean is automatically created.
+                
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:group ref="javaee:descriptionGroup"/>
+            <xsd:element name="property-name"
+                         type="javaee:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        
+                        The "property-name" element represents the JavaBeans 
+                        property name under which the corresponding value may 
+                        be stored.
+                        
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="property-class"
+                         type="javaee:java-typeType"
+                         minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>
+                    
+                        The "property-class" element represents the Java type 
+                        of the value associated with this property name.  
+                        If not specified, it can be inferred from existing 
+                        classes; however, this element should be specified 
+                        if the configuration file is going to be the source 
+                        for generating the corresponding classes.
+                        
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:choice>
+                <xsd:element name="map-entries"
+                             type="javaee:faces-config-map-entriesType"/>
+                <xsd:element name="null-value"
+                             type="javaee:faces-config-null-valueType">
+                </xsd:element>
+                <xsd:element name="value"
+                             type="javaee:faces-config-valueType"/>
+                <xsd:element name="list-entries"
+                             type="javaee:faces-config-list-entriesType"/>
+            </xsd:choice>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-map-entryType">
+        <xsd:annotation>
+            <xsd:documentation>
+                
+                The "map-entry" element reprsents a single key-entry pair 
+                that will be added to the computed value of a managed 
+                property of type java.util.Map.
+                
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="key"
+                         type="javaee:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+
+                        The "key" element is the String representation of a 
+                        map key that will be stored in a managed property of 
+                        type java.util.Map.
+
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:choice>
+                <xsd:element name="null-value"
+                             type="javaee:faces-config-null-valueType"/>
+                <xsd:element name="value"
+                             type="javaee:faces-config-valueType"/>
+            </xsd:choice>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-map-entriesType">
+        <xsd:annotation>
+            <xsd:documentation>
+                
+                The "map-entries' element represents a set of key-entry pairs 
+                that will be added to the computed value of a managed property 
+                of type java.util.Map.  In addition, the Java class types 
+                of the key and entry values may be optionally declared.
+                
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:element name="key-class"
+                         type="javaee:fully-qualified-classType"
+                         minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        
+                        The "key-class" element defines the Java type to which 
+                        each "key" element in a set of "map-entry" elements 
+                        will be converted to.  If omitted, "java.lang.String" 
+                        is assumed.
+                        
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="value-class"
+                         type="javaee:faces-config-value-classType"
+                         minOccurs="0"/>                
+            <xsd:element name="map-entry"
+                         type="javaee:faces-config-map-entryType"
+                         minOccurs="0"
+                         maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-navigation-caseType">
+        <xsd:annotation>
+            <xsd:documentation>
+                
+                The "navigation-case" element describes a particular 
+                combination of conditions that must match for this case to 
+                be executed, and the view id of the component tree that 
+                should be selected next.
+                
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:group ref="javaee:descriptionGroup"/>
+            <xsd:element name="from-action"
+                         type="javaee:faces-config-from-actionType"
+                         minOccurs="0">
+            </xsd:element>
+            <xsd:element name="from-outcome"
+                         type="javaee:string" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>
+
+                        The "from-outcome" element contains a logical outcome
+                        string returned by the execution of an application
+                        action method selected via an "actionRef" property
+                        (or a literal value specified by an "action" property)
+                        of a UICommand component.  If specified, this rule 
+                        will be relevant only if the outcome value matches 
+                        this element's value.  If not specified, this rule 
+                        will be relevant no matter what the outcome value was.
+
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="to-view-id"
+                         type="javaee:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+
+                        The "to-view-id" element contains the view identifier 
+                        of the next view that should be displayed if this
+                        navigation rule is matched.
+
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element 
+                name="redirect"
+                type="javaee:faces-config-redirectType" minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-navigation-ruleType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                The "navigation-rule" element represents an individual 
+                decision rule that will be utilized by the default 
+                NavigationHandler implementation to make decisions on 
+                what view should be displayed next, based on the 
+                view id being processed.
+
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:group ref="javaee:descriptionGroup"/>
+            <xsd:element name="from-view-id"
+                         type="javaee:faces-config-from-view-idType"
+                         minOccurs="0"/>
+            <xsd:element name="navigation-case"
+                         type="javaee:faces-config-navigation-caseType"
+                         minOccurs="0"
+                         maxOccurs="unbounded"/>
+            <xsd:element 
+                name="navigation-rule-extension"
+                type="javaee:faces-config-navigation-rule-extensionType"
+                minOccurs="0"
+                maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name = "faces-config-navigation-rule-extensionType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                Extension element for navigation-rule.  It may contain
+                implementation specific content.
+
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:any namespace="##any"
+                     processContents="lax"
+                     minOccurs="0"
+                     maxOccurs="unbounded" />
+         </xsd:sequence>
+         <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-null-valueType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                The "null-value" element indicates that the managed
+                property in which we are nested will be explicitly
+                set to null if our managed bean is automatically
+                created.  This is different from omitting the managed
+                property element entirely, which will cause no
+                property setter to be called for this property.
+
+                The "null-value" element can only be used when the
+                associated "property-class" identifies a Java class,
+                not a Java primitive.
+
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+    
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-propertyType">
+        <xsd:annotation>
+            <xsd:documentation>
+                
+                The "property" element represents a JavaBean property of the 
+                Java class represented by our parent element.
+
+                Property names must be unique within the scope of the Java 
+                class that is represented by the parent element, and must 
+                correspond to property names that will be recognized when 
+                performing introspection against that class via 
+                java.beans.Introspector.
+                
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:group ref="javaee:descriptionGroup"/>
+            <xsd:element name="property-name"
+                         type="javaee:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        
+                        The "property-name" element represents the JavaBeans 
+                        property name under which the corresponding value 
+                        may be stored.
+                        
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="property-class"
+                         type="javaee:java-typeType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        
+                        The "property-class" element represents the Java type 
+                        of the value associated with this property name.  
+                        If not specified, it can be inferred from existing 
+                        classes; however, this element should be specified if 
+                        the configuration file is going to be the source for 
+                        generating the corresponding classes.
+                        
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="default-value"
+                         type="javaee:faces-config-default-valueType"
+                         minOccurs="0"/>               
+            <xsd:element name="suggested-value"
+                         type="javaee:faces-config-suggested-valueType"
+                         minOccurs="0"/>
+            <xsd:element name="property-extension"
+                         type="javaee:faces-config-property-extensionType"
+                         minOccurs="0" 
+                         maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:ID"/>
+
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-property-extensionType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                Extension element for property.  It may contain 
+                implementation specific content.
+
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:any namespace="##any"
+                     processContents="lax"
+                     minOccurs="0"
+                     maxOccurs="unbounded" />
+         </xsd:sequence>
+         <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-redirectType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                    The "redirect" element indicates that navigation to the
+                    specified "to-view-id" should be accomplished by 
+                    performing an HTTP redirect rather than the usual 
+                    ViewHandler mechanisms.
+
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-referenced-beanType">
+        <xsd:annotation>
+            <xsd:documentation>
+                
+                The "referenced-bean" element represents at design time the 
+                promise that a Java object of the specified type will exist at 
+                runtime in some scope, under the specified key.  This can be 
+                used by design time tools to construct user interface dialogs 
+                based on the properties of the specified class.  The presence 
+                or absence of a referenced bean element has no impact on the 
+                JavaServer Faces runtime environment inside a web application.
+                
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:group ref="javaee:descriptionGroup"/>
+            <xsd:element name="referenced-bean-name"
+                         type="javaee:java-identifierType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        
+                        The "referenced-bean-name" element represents the 
+                        attribute name under which the corresponding 
+                        referenced bean may be assumed to be stored, in one 
+                        of 'request', 'session', or 'application' scopes.
+                        
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="referenced-bean-class"
+                         type="javaee:fully-qualified-classType">
+                <xsd:annotation>
+                    <xsd:documentation>
+
+                        The "referenced-bean-class" element represents the 
+                        fully qualified class name of the Java class 
+                        (either abstract or concrete) or Java interface 
+                        implemented by the corresponding referenced bean. 
+
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-render-kitType">
+        <xsd:annotation>
+            <xsd:documentation>
+                
+                The "render-kit" element represents a concrete RenderKit 
+                implementation that should be registered under the specified 
+                render-kit-id.  If no render-kit-id is specified, the 
+                identifier of the default RenderKit 
+                (RenderKitFactory.DEFAULT_RENDER_KIT) is assumed.
+                
+            </xsd:documentation>
+        </xsd:annotation>
+        
+        <xsd:sequence>
+            <xsd:group ref="javaee:descriptionGroup"/>
+            <xsd:element name="render-kit-id"
+                         type="javaee:string"
+                         minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        
+                        The "render-kit-id" element represents an identifier 
+                        for the RenderKit represented by the parent 
+                        "render-kit" element.
+                        
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="render-kit-class"
+                         type="javaee:fully-qualified-classType"
+                         minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        
+                        The "render-kit-class" element represents the fully 
+                        qualified class name of a concrete RenderKit 
+                        implementation class.
+                        
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="renderer"
+                         type="javaee:faces-config-rendererType"
+                         minOccurs="0" 
+                         maxOccurs="unbounded"/>
+            <xsd:element name="render-kit-extension"
+                         type="javaee:faces-config-render-kit-extensionType"
+                         minOccurs="0"
+                         maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-rendererType">
+        <xsd:annotation>
+            <xsd:documentation>
+                
+                The "renderer" element represents a concrete Renderer 
+                implementation class that should be registered under the 
+                specified component family and renderer type identifiers, 
+                in the RenderKit associated with the parent "render-kit" 
+                element.  Combinations of component family and 
+                renderer type must be unique within the RenderKit 
+                associated with the parent "render-kit" element.
+
+                Nested "attribute" elements identify generic component 
+                attributes that are recognized by this renderer.
+                
+            </xsd:documentation>
+        </xsd:annotation>
+        
+        <xsd:sequence>
+            <xsd:group ref="javaee:descriptionGroup"/>
+            <xsd:element name="component-family"
+                         type="javaee:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        
+                        The "component-family" element represents the 
+                        component family for which the Renderer represented 
+                        by the parent "renderer" element will be used.
+                        
+                    </xsd:documentation>
+                </xsd:annotation>                    
+            </xsd:element>
+            <xsd:element name="renderer-type"
+                         type="javaee:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        
+                        The "renderer-type" element represents a renderer type 
+                        identifier for the Renderer represented by the parent 
+                        "renderer" element.
+                        
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="renderer-class"
+                         type="javaee:fully-qualified-classType">
+                <xsd:annotation>
+                    <xsd:documentation>
+
+                        The "renderer-class" element represents the fully
+                        qualified class name of a concrete Renderer
+                        implementation class.
+
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="facet"
+                         type="javaee:faces-config-facetType"
+                         minOccurs="0"
+                         maxOccurs="unbounded"/>
+            <xsd:element name="attribute"
+                         type="javaee:faces-config-attributeType"
+                         minOccurs="0"
+                         maxOccurs="unbounded"/>
+            <xsd:element name="renderer-extension"
+                         type="javaee:faces-config-renderer-extensionType"
+                         minOccurs="0"
+                         maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-renderer-extensionType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                Extension element for renderer.  It may contain implementation
+                specific content.
+
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:any namespace="##any"
+                     processContents="lax"
+                     minOccurs="0"
+                     maxOccurs="unbounded" />
+         </xsd:sequence>
+         <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-render-kit-extensionType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                Extension element for render-kit.  It may contain
+                implementation specific content.
+
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:any namespace="##any"
+                     processContents="lax"
+                     minOccurs="0"
+                     maxOccurs="unbounded" />
+         </xsd:sequence>
+         <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-suggested-valueType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                The "suggested-value" contains the value for the property or
+                attribute in which this element resides.  This value is 
+                advisory only and is intended for tools to use when 
+                populating pallettes.
+
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:restriction base="javaee:string"/>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-supported-localeType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                The "supported-locale" element allows authors to declare
+                which locales are supported in this application instance.
+
+                It must be specified as :language:[_:country:[_:variant:]]
+                without the colons, for example "ja_JP_SJIS".  The
+                separators between the segments may be '-' or '_'.
+
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:extension base="javaee:faces-config-localeType">
+                <xsd:attribute name="id" type="xsd:ID"/> 
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-validatorType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                The "validator" element represents a concrete Validator
+                implementation class that should be registered under the
+                specified validator identifier.  Validator identifiers must 
+                be unique within the entire web application.
+
+                Nested "attribute" elements identify generic attributes that 
+                may be configured on the corresponding UIComponent in order 
+                to affect the operation of the Validator.  Nested "property"
+                elements identify JavaBeans properties of the Validator
+                implementation class that may be configured to affect the
+                operation of the Validator.  "attribute" and "property" 
+                elements are intended to allow component developers to 
+                more completely describe their components to tools and users.
+                These elements have no required runtime semantics.
+
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:group ref="javaee:descriptionGroup"/>
+            <xsd:element name="validator-id"
+                         type="javaee:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        
+                        The "validator-id" element represents the identifier 
+                        under which the corresponding Validator class should 
+                        be registered.
+                        
+                    </xsd:documentation>
+                </xsd:annotation>                
+            </xsd:element>
+            <xsd:element name="validator-class"
+                         type="javaee:fully-qualified-classType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        
+                        The "validator-class" element represents the fully 
+                        qualified class name of a concrete Validator 
+                        implementation class.  
+                        
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="attribute"
+                         type="javaee:faces-config-attributeType"
+                         minOccurs="0" 
+                         maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        
+                       Nested "attribute" elements identify generic
+                       attributes that may be configured on the
+                       corresponding UIComponent in order to affect the
+                       operation of the Validator.  This attribute is
+                       primarily for design-time tools and is not
+                       specified to have any meaning at runtime.
+
+                    </xsd:documentation>
+                </xsd:annotation>
+
+            </xsd:element>
+            <xsd:element name="property"
+                         type="javaee:faces-config-propertyType"
+                         minOccurs="0" 
+                         maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>
+
+                       Nested "property" elements identify JavaBeans
+                       properties of the Validator implementation class
+                       that may be configured to affect the operation of
+                       the Validator.  This attribute is primarily for
+                       design-time tools and is not specified to have
+                       any meaning at runtime.
+
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="validator-extension"
+                         type="javaee:faces-config-validator-extensionType"
+                         minOccurs="0"
+                         maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name = "faces-config-validator-extensionType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                Extension element for validator.  It may contain
+                implementation specific content.
+
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:any namespace="##any"
+                     processContents="lax"
+                     minOccurs="0"
+                     maxOccurs="unbounded" />
+         </xsd:sequence>
+         <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:simpleType name="faces-config-valueType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                The "value" element is the String representation of
+                a literal value to which a scalar managed property
+                will be set, or a value binding expression ("#{...}")
+                that will be used to calculate the required value.
+                It will be converted as specified for the actual
+                property type.
+
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:union 
+            memberTypes="javaee:faces-config-el-expressionType xsd:string"/>
+    </xsd:simpleType>
+    
+    <!-- **************************************************** -->
+    
+    <xsd:complexType name="faces-config-value-classType">
+        <xsd:annotation>
+            <xsd:documentation>
+                
+                The "value-class" element defines the Java type to which each
+                "value" element's value will be converted to, prior to adding 
+                it to the "list-entries" list for a managed property that is 
+                a java.util.List, or a "map-entries" map for a managed 
+                property that is a java.util.Map.  
+                
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:restriction base="javaee:fully-qualified-classType"/>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="faces-config-list-entriesType">
+        <xsd:annotation>
+            <xsd:documentation>
+                
+                The "list-entries" element represents a set of initialization
+                elements for a managed property that is a java.util.List or an
+                array.  In the former case, the "value-class" element can 
+                optionally be used to declare the Java type to which each 
+                value should be converted before adding it to the Collection.
+                
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="value-class"
+                         type="javaee:faces-config-value-classType"
+                         minOccurs="0"/>
+            <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                <xsd:element name="null-value"
+                             type="javaee:faces-config-null-valueType"/>
+                <xsd:element name="value"
+                             type="javaee:faces-config-valueType"/>
+            </xsd:choice>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:ID"/>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
+
+    <xsd:simpleType name="faces-config-versionType">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                This type contains the recognized versions of
+                faces-config supported.
+
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:token">
+            <xsd:enumeration value="1.2"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <!-- **************************************************** -->
+
+</xsd:schema>

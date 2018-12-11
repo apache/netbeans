@@ -1,0 +1,32 @@
+<%@page contentType="text/html"%>
+<%@page pageEncoding="__ENCODING__"%>
+<%@taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
+<f:view>
+    <html>
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=__ENCODING__" />
+            <title>New __ENTITY_NAME__</title>
+            __LINK_TO_SS__
+        </head>
+        <body>
+        <h:panelGroup id="messagePanel" layout="block">
+            <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+        </h:panelGroup>
+        <h1>New __ENTITY_NAME__</h1>
+        <h:form>
+            <h:inputHidden id="validateCreateField" validator="#{__MANAGED_BEAN_NAME__.validateCreate}" value="value"/>
+            <h:panelGrid columns="2">
+                __FORM_BODY__
+            </h:panelGrid>
+            <br />
+            <h:commandLink action="#{__MANAGED_BEAN_NAME__.create}" value="Create"/>
+            <br />
+            <br />
+            <h:commandLink action="#{__FIELD_NAME__.listSetup}" value="Show All __ENTITY_NAME__ Items" immediate="true"/>
+            <br />
+            __LINK_TO_INDEX__
+        </h:form>
+        </body>
+    </html>
+</f:view>

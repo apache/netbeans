@@ -24,59 +24,14 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import junit.framework.Test;
-import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
 
-/**
- *
- * @author Jirka Rechtacek
- */
-public class ProxyAutoConfigTest extends NbTestCase {
-    
-    public static Test suite() {
-        return NbModuleSuite
-                .emptyConfiguration()
-                .gui(false)
-                .addTest(ProxyAutoConfigTest.class)
-                .suite();
-    }
-    
-    public ProxyAutoConfigTest(String name) {
+public class ProxyAutoConfigDirectTest extends NbTestCase {
+    public ProxyAutoConfigDirectTest(String name) {
         super(name);
     }
-    
-    public void testGetProxyAutoConfig() {
-        assertNotNull(ProxyAutoConfig.get("http://pac/pac.txt"));
-    }
-    
-    // #issue 201995
-    public void testGetProxyAutoConfigWithMultipleURL() {
-        assertNotNull(ProxyAutoConfig.get("http://pac/pac.txt http://pac/pac.txt http://pac/pac.txt"));
-    }
-    
-    public void testGetProxyAutoConfigWithNewLineURL() {
-        assertNotNull(ProxyAutoConfig.get("http://pac/pac.txt\nhttp://pac/pac.txt"));
-    }
-    
-    public void testGetProxyAutoConfigWithLineTerminatorURL() {
-        assertNotNull(ProxyAutoConfig.get("http://pac/pac.txt\rhttp://pac/pac.txt"));
-    }
-    
-    public void testGetProxyAutoConfigWithBothTerminatorsURL() {
-        assertNotNull(ProxyAutoConfig.get("http://pac/pac.txt\r\nhttp://pac/pac.txt"));
-    }
-    
-    public void testGetProxyAutoConfigWithInvalidURL() {
-        assertNotNull(ProxyAutoConfig.get("http:\\\\pac\\pac.txt"));
-    }
-    
-    public void testGetProxyAutoConfigWithRelativePath() {
-        assertNotNull(ProxyAutoConfig.get("http://pac/../pac/pac.txt"));
-    }
-    
+
     public void testGetProxyAutoConfigWithLocalPAC() throws URISyntaxException {
         List<String> pacFileLocations = new LinkedList<String>();
         for (File pacFile : new File(getDataDir(), "pacFiles").listFiles()) {
@@ -101,7 +56,7 @@ public class ProxyAutoConfigTest extends NbTestCase {
                 "Configuration " + pacFileLoc + " contains the proxy, but was: " + proxy.address(),
                 pattern.matcher(proxy.address().toString()).matches()
             );
-            
+
             proxies = pac.findProxyForURL(new URI("https://apache.org"));
             assertEquals(1, proxies.size());
             proxy = proxies.get(0);
@@ -112,25 +67,5 @@ public class ProxyAutoConfigTest extends NbTestCase {
             );
         }
     }
-    
-    public void XXXtestGetProxyAutoConfigWithLocalInvalidPAC() throws URISyntaxException {
-        List<String> pacFileLocations = new LinkedList<String>();
-        for (File pacFile : new File[] {
-            new File(getDataDir(), "pacFiles"),
-            //new File(getDataDir(), "doesNotExist")
-        }) {
-            pacFileLocations.add(pacFile.getAbsolutePath());
-            pacFileLocations.add("file://" + pacFile.getAbsolutePath());
-            pacFileLocations.add(pacFile.toURI().toString());
-        }
-        for (String pacFileLoc : pacFileLocations) {
-            ProxyAutoConfig pac = ProxyAutoConfig.get(pacFileLoc);
-            assertNotNull(pac);
-            URI uri = pac.getPacURI();
-            assertNotNull(uri);
-            List<Proxy> proxies = pac.findProxyForURL(new URI("http://netbeans.org"));
-            assertEquals(1, proxies.size());
-            assertEquals("DIRECT", proxies.get(0).toString());
-        }
-    }
+
 }

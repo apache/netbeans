@@ -260,7 +260,7 @@ public class PacUtilsDateTime {
     
     
     private static int getInteger(Object obj) throws PacDateTimeInputException {
-        if (obj instanceof Number) {
+        if (obj instanceof Integer || obj instanceof Long) {
             return ((Number) obj).intValue();
         }
         if (obj instanceof String) {
@@ -320,9 +320,8 @@ public class PacUtilsDateTime {
      * {@link PacHelperMethodsNetscape#weekdayRange(java.lang.Object...) weekdayRange()}
      * 
      * <p>
-     * Note: In Rhino, JavaScript function arguments that are not used in the
-     * call will have a type of {@code java.lang.String} and the value will be
-     * 'undefined'.
+     * Note: In Nashorn, JavaScript function arguments that are not used in the
+     * call will have a type of {@code Undefined}.
      *
      * @param objs
      * @return 
@@ -338,8 +337,7 @@ public class PacUtilsDateTime {
             }
             // Only parameters of type CharSequence (String) and 
             // Number (Integer, Long, etc) are relevant.
-            // Rhino converts javascript undefined to the string "undefined"
-            if ((obj instanceof Number) || (obj instanceof CharSequence && (! "undefined".equals(obj)))) {
+            if ((obj instanceof Number) || (obj instanceof CharSequence)) {
                 params++;
             }
         }
@@ -353,9 +351,6 @@ public class PacUtilsDateTime {
      */
     public static boolean usesGMT(Object... args) {
         int params = getNoOfParams(args);
-        if(params == 0) {
-            return false;
-        }
         if (args[params - 1] instanceof CharSequence) {
             String p = args[params - 1].toString();
             if (p.equals("GMT")) {

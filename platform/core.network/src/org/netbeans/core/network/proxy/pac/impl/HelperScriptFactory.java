@@ -63,31 +63,27 @@ class HelperScriptFactory {
     /**
      * Gets JavaScript source with PAC Helper function declarations.
      * 
-     * @param bridgeObjectName name of Java object which contains Java methods, 
-     *   named similarly to the JavaScript PAC helper functions and with 
-     *   similar arg list. This Java object acts as the bridge between the 
-     *   JavaScript world and the Java world and must be an instance 
-     *   of {@link org.netbeans.network.proxy.pac.PacHelperMethods PacHelperMethods}.
-     * 
-     * @return JavaScript source code
+     * @return JavaScript source code that returns a function that delegates
+     *   to its first argument
      */
-    public static String getPacHelperSource(String bridgeObjectName) {
+    public static String getPacHelperSource() {
         StringBuilder sb = new StringBuilder(2000);
-        addFunctionDecls(sb, JS_HELPER_FUNCTIONS_NS, bridgeObjectName);
-        addFunctionDecls(sb, JS_HELPER_FUNCTIONS_MS, bridgeObjectName);
-        addFunctionDecls(sb, JS_HELPER_FUNCTIONS_DEBUG, bridgeObjectName);
+        sb.append("(function(self) {\n");
+        addFunctionDecls(sb, JS_HELPER_FUNCTIONS_NS);
+        addFunctionDecls(sb, JS_HELPER_FUNCTIONS_MS);
+        addFunctionDecls(sb, JS_HELPER_FUNCTIONS_DEBUG);
+        sb.append("})\n");
         return sb.toString();
     }
     
     
-    private static void addFunctionDecls(StringBuilder sb, JsHelperFunction[] jsHelperFunctions, String bridgeObjectName) {
+    private static void addFunctionDecls(StringBuilder sb, JsHelperFunction[] jsHelperFunctions) {
         for (JsHelperFunction f : jsHelperFunctions) {
-            sb.append("function ");
+            sb.append("this['");
             sb.append(f.functionName);
-            sb.append('(');
+            sb.append("'] = function(");
             addArgList(sb, f.argList);
-            sb.append(") {");
-            sb.append('\n');
+            sb.append(") {\n");
             sb.append("    return ");
             boolean encloseReturnValue = false;
             if (Number.class.isAssignableFrom(f.getClass())) {
@@ -98,8 +94,7 @@ class HelperScriptFactory {
                 encloseReturnValue = true;
                 sb.append("String(");
             }
-            sb.append(bridgeObjectName);
-            sb.append('.');
+            sb.append("self.");
             sb.append(f.functionName);
             sb.append('(');
             addArgList(sb, f.argList);

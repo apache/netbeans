@@ -28,6 +28,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.TopSecurityManager;
+import org.netbeans.core.startup.CLIOptions;
 import org.netbeans.core.startup.ModuleSystem;
 import org.openide.DialogDisplayer;
 import org.openide.LifecycleManager;
@@ -35,8 +37,10 @@ import org.openide.NotifyDescriptor;
 import org.openide.awt.StatusDisplayer;
 import org.openide.cookies.SaveCookie;
 import org.openide.loaders.DataObject;
+import org.openide.util.Lookup;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
+import org.openide.util.datatransfer.ExClipboard;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -52,6 +56,23 @@ public final class NbLifecycleManager extends LifecycleManager {
     
     /** @GuardedBy("NbLifecycleManager.class") */
     private static CountDownLatch onExit;
+    private static volatile boolean policyAdvanced;
+
+    public static void advancePolicy() {
+        if (policyAdvanced) {
+            return;
+        }
+        // -----------------------------------------------------------------------------------------------------
+        // 8. Advance Policy
+        if (!Boolean.getBoolean("TopSecurityManager.disable")) {
+            // set security manager
+            TopSecurityManager.install();
+            if (CLIOptions.isGui()) {
+                TopSecurityManager.makeSwingUseSpecialClipboard(Lookup.getDefault().lookup(ExClipboard.class));
+            }
+        }
+        policyAdvanced = true;
+    }
     private volatile SecondaryLoop sndLoop;
     private volatile boolean isExitOnEventQueue;
     

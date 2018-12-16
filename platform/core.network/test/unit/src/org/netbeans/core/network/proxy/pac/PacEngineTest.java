@@ -15,7 +15,6 @@ package org.netbeans.core.network.proxy.pac;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -74,28 +73,6 @@ public class PacEngineTest extends NbTestCase {
         testPacFileMalicious("pac-test-sandbox-breakout.js", factory);
 
         testPacFile2("pac-test4.js", factory);
-    }
-
-    @Test
-    public void testEngine2() throws IOException, PacParsingException, URISyntaxException, PacValidationException {
-
-        File pacFilesDir = new File(getDataDir(), "pacFiles");
-        byte[] b = Files.readAllBytes((new File(pacFilesDir, "wpad.dat")).toPath());
-        String pacSource = new String(b, StandardCharsets.UTF_8);
-
-        PacScriptEvaluatorFactory factory = new NbPacScriptEvaluatorFactory();
-        PacScriptEvaluator evaluator = factory.createPacScriptEvaluator(pacSource);
-
-        List<Proxy> proxiesFQDN = evaluator.findProxyForURL(new URI("https://www.heise.de"));
-        assertNotNull(proxiesFQDN);
-        assertEquals(1, proxiesFQDN.size());
-        assertEquals(Proxy.Type.HTTP, proxiesFQDN.get(0).type());
-        assertEquals("www-proxy.us.oracle.com", ((InetSocketAddress) proxiesFQDN.get(0).address()).getHostString());
-        assertEquals(80, ((InetSocketAddress) proxiesFQDN.get(0).address()).getPort());
-        List<Proxy> simpleName = evaluator.findProxyForURL(new URI("https://localserver"));
-        assertNotNull(simpleName);
-        assertEquals(1, simpleName.size());
-        assertEquals(Proxy.Type.DIRECT, simpleName.get(0).type());
     }
 
     private String getPacSource(String pacFileName) throws IOException {

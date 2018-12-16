@@ -1,0 +1,11 @@
+Code completion result for source line:
+c|ontents: ss
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+PROPERTY   cache: boolean                             jQuery
+PROPERTY   complete: Function                         jQuery
+PROPERTY   contentType: String                        jQuery
+PROPERTY   contents: Object                           jQuery
+PROPERTY   context: Object                            jQuery
+PROPERTY   converters: Object                         jQuery
+PROPERTY   crossDomain: boolean                       jQuery

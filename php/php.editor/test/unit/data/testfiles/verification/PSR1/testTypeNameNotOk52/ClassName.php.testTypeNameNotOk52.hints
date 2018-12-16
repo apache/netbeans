@@ -1,0 +1,4 @@
+class class_Name {
+      ----------
+HINT:PSR-1 Violation:
+Type names SHOULD use the pseudo-namespacing convention of Vendor_ prefixes on type names.

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+
+    <folder name="Actions">
+        <folder name="Groovy">
+            <file name="org-netbeans-modules-groovy-editor-actions-FixImportsAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.groovy.editor.actions.FixImportsAction"/>
+            </file>
+        </folder>
+    </folder>
+
+    <folder name="csl-hints">
+        <folder name="text">
+            <folder name="x-groovy">
+                <folder name="hints">
+                    <folder name="import">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.groovy.editor.hints.infrastructure.Bundle"/>
+                        <file name="org-netbeans-modules-groovy-editor-hints-RemoveUnusedImportHint.instance"/>
+                    </folder>
+                </folder>
+                <folder name="selection">
+                    <file name="org-netbeans-modules-groovy-editor-hints-SurroundWithHint.instance"/>
+                </folder>
+                <folder name="errors">
+                    <file name="org-netbeans-modules-groovy-editor-hints-AddImportStatementHint.instance"/>
+                    <file name="org-netbeans-modules-groovy-editor-hints-MakeClassAbstractHint.instance"/>
+                    <file name="org-netbeans-modules-groovy-editor-hints-ImplementAllAbstractMethodsHint.instance"/>
+                </folder>    
+            </folder>
+        </folder>
+    </folder>
+
+    <folder name="Editors">
+        <folder name="text">
+            <folder name="x-groovy">
+                <folder name="Actions">
+                    <file name="org-netbeans-modules-groovy-editor-actions-FixImportsAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Groovy/org-netbeans-modules-groovy-editor-actions-FixImportsAction.instance"/>
+                    </file>
+                </folder>
+
+                <folder name="Popup">
+                    <file name="fix-groovy-imports">
+                        <attr name="position" intvalue="801"/>
+                    </file>
+                </folder>
+
+                <file name="language.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId.language"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
+                </file>
+
+                <folder name="BracesMatchers">
+                    <file name="org-netbeans-modules-groovy-editor-language-GroovyBracesMatcherFactory.instance">
+                        <attr name="position" intvalue="0"/>
+                    </file>
+                </folder>
+                
+                <folder name="CodeTemplates">
+                    <folder name="Defaults">
+                        <file name="org-netbeans-modules-editor-java-codetemplates.xml" url="DefaultAbbrevs.xml">
+                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.java.editor.resources.Bundle"/>
+                        </file>
+                    </folder>
+                </folder>
+
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.groovy.editor.resources.Bundle"/>
+                <folder name="FontsColors">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="coloring.xml" url="fontsColors.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.groovy.editor.resources.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+
+                <folder name="Keybindings">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-groovy-keybindings.xml" url="DefaultKeyBindings.xml"/>
+                            <file name="org-netbeans-modules-groovy-keybindings-mac.xml" url="DefaultKeyBindings-Mac.xml">
+                                <attr name="nbeditor-settings-targetOS" stringvalue="OS_MAC"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+
+                <file name="JavaIndexer.shadow">
+                    <attr name="originalFile" stringvalue="Editors/text/x-java/JavaIndexer.instance"/>
+                </file>
+
+            </folder>
+        </folder>
+    </folder>
+    
+    <folder name="OptionsDialog">
+        <folder name="PreviewExamples">
+            <folder name="text">
+                <file name="x-groovy" url="FontsAndColorsPreview.groovy"/>
+            </folder>
+        </folder>
+        <folder name="Editor">
+            <folder name="Hints">
+                <attr name="position" intvalue="0"/>
+                <folder name="text">
+                    <folder name="x-groovy">
+                        <file name="GroovyHints.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.spi.options.OptionsPanelController"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.groovy.editor.hints.HintsAdvancedOption.createStatic"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+
+    <folder name="Loaders">
+       <folder name="text">
+          <folder name="x-groovy">
+              <!-- icon should be keep because groovy.editor use LanguageRegistration and not DataObject Registration-->
+              <attr name="iconBase" stringvalue="org/netbeans/modules/groovy/editor/resources/GroovyFile16x16.png"/>
+          </folder>
+       </folder>
+    </folder>
+</filesystem>

@@ -1,0 +1,2 @@
+    function |>MARK_OCCURRENCES:level1_2<|(){
+    formatter.println("calling level1_2(): " + |>MARK_OCCURRENCES:lev^el1_2<|());

@@ -35,7 +35,6 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -85,7 +84,7 @@ public final class ParseProjectXml extends Task {
     static final String PROJECT_NS = "http://www.netbeans.org/ns/project/1";
     static final String NBM_NS2 = "http://www.netbeans.org/ns/nb-module-project/2";
     static final String NBM_NS3 = "http://www.netbeans.org/ns/nb-module-project/3";
-
+    
     private File moduleProject;
     /**
      * Set the NetBeans module project to work on.
@@ -836,6 +835,24 @@ public final class ParseProjectXml extends Task {
         if (moduleAutoDeps.isEmpty()) {
             return;
         }
+        // determine warning level
+        int warnLevel = Project.MSG_WARN;
+        String s = getProject().getProperty("nbbuild.warn.missing.autodeps");
+        if (null != s) {
+            if (Boolean.TRUE.toString().equalsIgnoreCase(s)) {
+                warnLevel = Project.MSG_WARN;
+            } else if (Boolean.FALSE.toString().equalsIgnoreCase(s)) {
+                warnLevel = Project.MSG_DEBUG + 100; // should be ignored even when -d is present
+            } else switch (s.toLowerCase()) {
+                case "warn":    warnLevel = Project.MSG_WARN; break;
+                case "err":     warnLevel = Project.MSG_ERR; break;
+                case "info":    warnLevel = Project.MSG_INFO; break;
+                case "verbose": warnLevel = Project.MSG_VERBOSE; break;
+                case "debug":   warnLevel = Project.MSG_DEBUG; break;
+                default:
+                    throw new BuildException("Invalid value of nbbuild.warn.missing.autodeps property (" + s + "). See Project MSG_ constants.");
+            }
+        }
         Set<String> depsS = new HashSet<>();
         String result;
         AntClassLoader loader = new AntClassLoader();
@@ -854,7 +871,7 @@ public final class ParseProjectXml extends Task {
             }
             File jar = entry.getJar();
             if (!jar.isFile()) {
-                log("Cannot translate according to " + moduleAutoDeps + " because could not find " + jar, Project.MSG_WARN);
+                log("Cannot translate according to " + moduleAutoDeps + " because could not find " + jar, warnLevel);
                 return;
             }
             loader.addPathComponent(jar);

@@ -1,0 +1,7 @@
+|-Hhh [16, 276] : ESCAPED{Hhh}
+|--\Omm\DeprType [26, 39] : DEPRECATED{ESCAPED{\Omm\DeprType}}
+|--ClassName [48, 274] : ESCAPED{ClassName}
+|---barBaz [215, 271] : ESCAPED{barBaz}ESCAPED{(}<font color="#999999">DEPRECATED{ESCAPED{\Omm\DeprType}}ESCAPED{ }</font>ESCAPED{$param}ESCAPED{)}<font color="#999999">:DEPRECATED{ESCAPED{\Omm\DeprType}}</font>
+|---$foo [116, 119] : ESCAPED{$foo}<font color="#999999">:DEPRECATED{ESCAPED{\Omm\DeprType}}</font>
+|-Omm [287, 332] : ESCAPED{Omm}
+|--DeprType [318, 330] : DEPRECATED{ESCAPED{DeprType}}

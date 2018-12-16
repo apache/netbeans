@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xalan="http://xml.apache.org/xslt" xmlns:ejbjarproject2="http://www.netbeans.org/ns/j2ee-ejbjarproject/2" xmlns:jaxws="http://www.netbeans.org/ns/jax-ws/1">
+    <!--
+                ===================
+                JAX-WS WSGEN SECTION
+                ===================
+            -->
+    <target name="wsgen-init" depends="init">
+        <mkdir dir="${build.generated.dir}/wsgen/service"/>
+        <mkdir dir="${build.generated.dir}/wsgen/binaries"/>
+        <taskdef name="wsgen" classname="com.sun.tools.ws.ant.WsGen">
+            <classpath path="${j2ee.platform.wsgen.classpath}"/>
+        </taskdef>
+    </target>
+    <target name="wsgen-compile" depends="wsgen-ReturnValueService, wsgen-IOParametrsService, wsgen-AddOperationService, wsgen-HandlersService, wsgen-ExceptionsService">
+        <ejbjarproject2:javac srcdir="${build.generated.dir}/wsgen/service" classpath="${j2ee.platform.wsgen.classpath}:${javac.classpath}" destdir="${classes.dir}"/>
+    </target>
+    <target name="wsgen-ReturnValueService" depends="wsgen-init, -do-compile">
+        <wsgen xendorsed="true" fork="true" destdir="${build.generated.dir}/wsgen/binaries" sourcedestdir="${build.generated.dir}/wsgen/service" resourcedestdir="${build.generated.dir}/wsgen/service" keep="false" genwsdl="true" sei="hints.ReturnValue">
+            <classpath path="${java.home}/../lib/tools.jar:${classes.dir}:${j2ee.platform.wsgen.classpath}:${javac.classpath}"/>
+            <jvmarg value="-Djava.endorsed.dirs=${jaxws.endorsed.dir}"/>
+        </wsgen>
+    </target>
+    <target name="wsgen-IOParametrsService" depends="wsgen-init, -do-compile">
+        <wsgen xendorsed="true" fork="true" destdir="${build.generated.dir}/wsgen/binaries" sourcedestdir="${build.generated.dir}/wsgen/service" resourcedestdir="${build.generated.dir}/wsgen/service" keep="false" genwsdl="true" sei="hints.IOParametrs">
+            <classpath path="${java.home}/../lib/tools.jar:${classes.dir}:${j2ee.platform.wsgen.classpath}:${javac.classpath}"/>
+            <jvmarg value="-Djava.endorsed.dirs=${jaxws.endorsed.dir}"/>
+        </wsgen>
+    </target>
+    <target name="wsgen-AddOperationService" depends="wsgen-init, -do-compile">
+        <wsgen xendorsed="true" fork="true" destdir="${build.generated.dir}/wsgen/binaries" sourcedestdir="${build.generated.dir}/wsgen/service" resourcedestdir="${build.generated.dir}/wsgen/service" keep="false" genwsdl="true" sei="hints.AddOperation">
+            <classpath path="${java.home}/../lib/tools.jar:${classes.dir}:${j2ee.platform.wsgen.classpath}:${javac.classpath}"/>
+            <jvmarg value="-Djava.endorsed.dirs=${jaxws.endorsed.dir}"/>
+        </wsgen>
+    </target>
+    <target name="wsgen-HandlersService" depends="wsgen-init, -do-compile">
+        <wsgen xendorsed="true" fork="true" destdir="${build.generated.dir}/wsgen/binaries" sourcedestdir="${build.generated.dir}/wsgen/service" resourcedestdir="${build.generated.dir}/wsgen/service" keep="false" genwsdl="true" sei="hints.Handlers">
+            <classpath path="${java.home}/../lib/tools.jar:${classes.dir}:${j2ee.platform.wsgen.classpath}:${javac.classpath}"/>
+            <jvmarg value="-Djava.endorsed.dirs=${jaxws.endorsed.dir}"/>
+        </wsgen>
+    </target>
+    <target name="wsgen-ExceptionsService" depends="wsgen-init, -do-compile">
+        <wsgen xendorsed="true" fork="true" destdir="${build.generated.dir}/wsgen/binaries" sourcedestdir="${build.generated.dir}/wsgen/service" resourcedestdir="${build.generated.dir}/wsgen/service" keep="false" genwsdl="true" sei="hints.Exceptions">
+            <classpath path="${java.home}/../lib/tools.jar:${classes.dir}:${j2ee.platform.wsgen.classpath}:${javac.classpath}"/>
+            <jvmarg value="-Djava.endorsed.dirs=${jaxws.endorsed.dir}"/>
+        </wsgen>
+    </target>
+    <!--
+                ===================
+                JAX-WS WSIMPORT SECTION
+                ===================
+            -->
+</project>

@@ -1,0 +1,6 @@
+Code completion result for source line:
+_self.form.e|ndGroup = function()
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     endGroup(): rawHtmlElement      [PUBLIC]   issue231293.js
+FIELD      e                               [PUBLIC]   issue231293.js

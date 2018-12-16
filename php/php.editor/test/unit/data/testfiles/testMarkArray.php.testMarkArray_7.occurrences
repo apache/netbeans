@@ -1,0 +1,6 @@
+        $|>MARK_OCCURRENCES:i^dx<| = 1;
+        $result .= self::$static_array[$|>MARK_OCCURRENCES:idx<|++];
+        $result .= $this->field_array[$|>MARK_OCCURRENCES:idx<|++];
+        $instance_array[$|>MARK_OCCURRENCES:idx<|];
+        $result .= self::$static_array[$instance_array[$|>MARK_OCCURRENCES:idx<|]];
+        $result .= $this->field_array[$instance_array[$|>MARK_OCCURRENCES:idx<|]];

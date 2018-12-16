@@ -1,0 +1,15 @@
+Code completion result for source line:
+function &my_sort9(|array $data1, Collection &$data2) {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Collection                      [PUBLIC]   byReferences.php
+CLASS      MyClass                         [PUBLIC]   byReferences.php
+CLASS      MyIface                         [PUBLIC]   byReferences.php
+------------------------------------
+KEYWORD    array                                      null
+KEYWORD    bool                                       null
+KEYWORD    callable                                   null
+KEYWORD    float                                      null
+KEYWORD    int                                        null
+KEYWORD    iterable                                   null
+KEYWORD    object                                     null
+KEYWORD    string                                     null

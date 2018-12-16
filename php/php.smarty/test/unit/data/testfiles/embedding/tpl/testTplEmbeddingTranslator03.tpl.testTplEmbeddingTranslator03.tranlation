@@ -1,0 +1,16 @@
+/*<![CDATA[*/
+    onlineplus.apo.kassenart = '__UNKNOWN__';
+    onlineplus.apo.verordnung = __UNKNOWN__;
+    __UNKNOWN__
+        onlineplus.apo.previousVoId = __UNKNOWN__;
+    __UNKNOWN__
+        onlineplus.apo.previousVoId = null;
+    __UNKNOWN__
+
+    __UNKNOWN__
+        onlineplus.apo.nextVoId = __UNKNOWN__;
+    __UNKNOWN__
+        onlineplus.apo.nextVoId = null;
+    __UNKNOWN__
+/*]]>*/
+

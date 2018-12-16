@@ -1,0 +1,229 @@
+<testresult testFile='include.php'>
+    <scanner>
+        <token id='T_REQUIRE_ONCE' start='7' end='19'>
+            <text>require_once</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='20' end='32'>
+            <text>&apos;driver.php&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='32' end='33'>
+            <text>;</text>
+        </token>
+        <token id='T_REQUIRE' start='34' end='41'>
+            <text>require</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='42' end='43'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='43' end='56'>
+            <text>&apos;manager.php&apos;</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='56' end='57'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='57' end='58'>
+            <text>;</text>
+        </token>
+        <token id='T_INCLUDE' start='60' end='67'>
+            <text>include</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='68' end='81'>
+            <text>&apos;factory.php&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='81' end='82'>
+            <text>;</text>
+        </token>
+        <token id='T_INCLUDE_ONCE' start='83' end='95'>
+            <text>include_once</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='96' end='97'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='98' end='113'>
+            <text>&apos;container.php&apos;</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='114' end='115'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='115' end='116'>
+            <text>;</text>
+        </token>
+        <token id='T_INCLUDE' start='117' end='124'>
+            <text>include</text>
+        </token>
+        <token id='T_STRING' start='125' end='132'>
+            <text>dirname</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='132' end='133'>
+            <text>(</text>
+        </token>
+        <token id='T_FILE' start='133' end='141'>
+            <text>__FILE__</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='141' end='142'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDA' start='143' end='144'>
+            <text>.</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='145' end='156'>
+            <text>&apos;/inc1.php&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='156' end='157'>
+            <text>;</text>
+        </token>
+        <token id='T_INCLUDE' start='158' end='165'>
+            <text>include</text>
+        </token>
+        <token id='unknown' start='166' end='173'>
+            <text>__DIR__</text>
+        </token>
+        <token id='T_NEKUDA' start='174' end='175'>
+            <text>.</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='176' end='187'>
+            <text>&apos;/inc2.php&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='187' end='188'>
+            <text>;</text>
+        </token>
+        <token id='T_INCLUDE' start='189' end='196'>
+            <text>include</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='197' end='198'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='198' end='205'>
+            <text>dirname</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='205' end='206'>
+            <text>(</text>
+        </token>
+        <token id='T_FILE' start='206' end='214'>
+            <text>__FILE__</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='214' end='215'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDA' start='216' end='217'>
+            <text>.</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='218' end='229'>
+            <text>&apos;/inc3.php&apos;</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='229' end='230'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='230' end='231'>
+            <text>;</text>
+        </token>
+        <token id='T_INCLUDE' start='232' end='239'>
+            <text>include</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='240' end='241'>
+            <text>(</text>
+        </token>
+        <token id='unknown' start='241' end='248'>
+            <text>__DIR__</text>
+        </token>
+        <token id='T_NEKUDA' start='249' end='250'>
+            <text>.</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='251' end='262'>
+            <text>&apos;/inc4.php&apos;</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='262' end='263'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='263' end='264'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='265' end='265'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='265'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='33'>
+                <Include start='7' end='32' type='REQUIRE_ONCE'>
+                    <Scalar start='20' end='32' type='STRING' value='&apos;driver.php&apos;'/>
+                </Include>
+            </ExpressionStatement>
+            <ExpressionStatement start='34' end='58'>
+                <Include start='34' end='57' type='REQUIRE'>
+                    <ParenthesisExpression start='42' end='57'>
+                        <Scalar start='43' end='56' type='STRING' value='&apos;manager.php&apos;'/>
+                    </ParenthesisExpression>
+                </Include>
+            </ExpressionStatement>
+            <ExpressionStatement start='60' end='82'>
+                <Include start='60' end='81' type='INCLUDE'>
+                    <Scalar start='68' end='81' type='STRING' value='&apos;factory.php&apos;'/>
+                </Include>
+            </ExpressionStatement>
+            <ExpressionStatement start='83' end='116'>
+                <Include start='83' end='115' type='INCLUDE_ONCE'>
+                    <ParenthesisExpression start='96' end='115'>
+                        <Scalar start='98' end='113' type='STRING' value='&apos;container.php&apos;'/>
+                    </ParenthesisExpression>
+                </Include>
+            </ExpressionStatement>
+            <ExpressionStatement start='117' end='157'>
+                <Include start='117' end='156' type='INCLUDE'>
+                    <InfixExpression start='125' end='156' operator='CONCAT'>
+                        <FunctionInvocation start='125' end='142'>
+                            <FucntionName start='125' end='132'>
+                                <NamespaceName start='125' end='132' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='125' end='132' name='dirname'/>
+                                </NamespaceName>
+                            </FucntionName>
+                            <Parameters>
+                                <Scalar start='133' end='141' type='SYSTEM' value='__FILE__'/>
+                            </Parameters>
+                        </FunctionInvocation>
+                        <Scalar start='145' end='156' type='STRING' value='&apos;/inc1.php&apos;'/>
+                    </InfixExpression>
+                </Include>
+            </ExpressionStatement>
+            <ExpressionStatement start='158' end='188'>
+                <Include start='158' end='187' type='INCLUDE'>
+                    <InfixExpression start='166' end='187' operator='CONCAT'>
+                        <Scalar start='166' end='173' type='SYSTEM' value='__DIR__'/>
+                        <Scalar start='176' end='187' type='STRING' value='&apos;/inc2.php&apos;'/>
+                    </InfixExpression>
+                </Include>
+            </ExpressionStatement>
+            <ExpressionStatement start='189' end='231'>
+                <Include start='189' end='230' type='INCLUDE'>
+                    <ParenthesisExpression start='197' end='230'>
+                        <InfixExpression start='198' end='229' operator='CONCAT'>
+                            <FunctionInvocation start='198' end='215'>
+                                <FucntionName start='198' end='205'>
+                                    <NamespaceName start='198' end='205' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='198' end='205' name='dirname'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                    <Scalar start='206' end='214' type='SYSTEM' value='__FILE__'/>
+                                </Parameters>
+                            </FunctionInvocation>
+                            <Scalar start='218' end='229' type='STRING' value='&apos;/inc3.php&apos;'/>
+                        </InfixExpression>
+                    </ParenthesisExpression>
+                </Include>
+            </ExpressionStatement>
+            <ExpressionStatement start='232' end='264'>
+                <Include start='232' end='263' type='INCLUDE'>
+                    <ParenthesisExpression start='240' end='263'>
+                        <InfixExpression start='241' end='262' operator='CONCAT'>
+                            <Scalar start='241' end='248' type='SYSTEM' value='__DIR__'/>
+                            <Scalar start='251' end='262' type='STRING' value='&apos;/inc4.php&apos;'/>
+                        </InfixExpression>
+                    </ParenthesisExpression>
+                </Include>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

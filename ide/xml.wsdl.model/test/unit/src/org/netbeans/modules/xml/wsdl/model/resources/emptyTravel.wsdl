@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions
+    xmlns="http://schemas.xmlsoap.org/wsdl/" 
+    xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"  
+    xmlns:ares="http://www.sun.com/javaone/05/AirlineReservationService" 
+    xmlns:hres="http://www.sun.com/javaone/05/HotelReservationService" 
+    xmlns:vres="http://www.sun.com/javaone/05/VehicleReservationService" 
+    xmlns:ota="http://www.opentravel.org/OTA/2003/05"  
+    xmlns:tres="http://www.sun.com/javaone/05/TravelReservationService"  
+>
+</definitions>

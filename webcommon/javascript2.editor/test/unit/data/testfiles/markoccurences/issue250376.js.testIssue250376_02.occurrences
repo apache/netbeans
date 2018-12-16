@@ -1,0 +1,2 @@
+ * @property  {|>MARK_OCCURRENCES:Anothe^rOne<|} [label]
+ * @typedef   |>MARK_OCCURRENCES:AnotherOne<|

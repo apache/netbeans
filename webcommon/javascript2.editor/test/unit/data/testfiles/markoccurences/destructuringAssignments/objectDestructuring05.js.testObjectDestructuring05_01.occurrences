@@ -1,0 +1,2 @@
+var o = {|>MARK_OCCURRENCES:p<|: 42, q: true};
+var {|>MARK_OCCURRENCES:p^<|: foo, q: bar} = o;    

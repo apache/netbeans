@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE module_updates PUBLIC "-//NetBeans//DTD Autoupdate Catalog 2.6//EN" "http://www.netbeans.org/dtds/autoupdate-catalog-2_6.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<module_updates timestamp="10/28/20/17/11/2017">
+
+    <module codenamebase="org.yourorghere.brokendepending" distribution="nbresloc:/org/netbeans/api/autoupdate/data/org-yourorghere-brokendepending.nbm" downloadsize="3208" homepage="" license="AD9FBBC9" moduleauthor="Steffen Dietz" needsrestart="false" releasedate="2017/11/17">
+        <manifest AutoUpdate-Show-In-Client="true" OpenIDE-Module="org.yourorghere.brokendepending" OpenIDE-Module-Implementation-Version="171117" OpenIDE-Module-Java-Dependencies="Java &gt; 1.7" OpenIDE-Module-Module-Dependencies="org.yourorghere.unreachable &gt; 1.0" OpenIDE-Module-Name="brokendepending" OpenIDE-Module-Requires="org.openide.modules.ModuleFormat1" OpenIDE-Module-Specification-Version="1.0"/>
+    
+    </module>
+
+    <module codenamebase="org.yourorghere.depending" distribution="nbresloc:/org/netbeans/api/autoupdate/data/org-yourorghere-depending.nbm" downloadsize="3186" homepage="" license="AD9FBBC9" moduleauthor="Steffen Dietz" needsrestart="false" releasedate="2017/11/17">
+        <manifest AutoUpdate-Show-In-Client="true" OpenIDE-Module="org.yourorghere.depending" OpenIDE-Module-Implementation-Version="171117" OpenIDE-Module-Java-Dependencies="Java &gt; 1.7" OpenIDE-Module-Module-Dependencies="org.yourorghere.engine &gt; 1.0, org.yourorghere.independent &gt; 1.0" OpenIDE-Module-Name="depending" OpenIDE-Module-Requires="org.openide.modules.ModuleFormat1" OpenIDE-Module-Specification-Version="1.0"/>
+    
+    </module>
+
+    <module codenamebase="org.yourorghere.depending_on_new_one_engine" distribution="nbresloc:/org/netbeans/api/autoupdate/data/org-yourorghere-depending_on_new_one_engine.nbm" downloadsize="3263" homepage="" license="AD9FBBC9" moduleauthor="Steffen Dietz" needsrestart="false" releasedate="2017/11/17">
+        <manifest AutoUpdate-Show-In-Client="true" OpenIDE-Module="org.yourorghere.depending_on_new_one_engine" OpenIDE-Module-Implementation-Version="171117" OpenIDE-Module-Java-Dependencies="Java &gt; 1.7" OpenIDE-Module-Module-Dependencies="org.yourorghere.engine &gt; 1.0" OpenIDE-Module-Name="depending_on_new_one_engine" OpenIDE-Module-Requires="org.openide.modules.ModuleFormat1" OpenIDE-Module-Specification-Version="1.0"/>
+    
+    </module>
+
+    <module codenamebase="org.yourorghere.engine" distribution="nbresloc:/org/netbeans/api/autoupdate/data/org-yourorghere-engine.nbm" downloadsize="3136" homepage="" license="AD9FBBC9" moduleauthor="Steffen Dietz" needsrestart="false" releasedate="2017/11/17">
+        <manifest AutoUpdate-Show-In-Client="true" OpenIDE-Module="org.yourorghere.engine" OpenIDE-Module-Implementation-Version="171117" OpenIDE-Module-Java-Dependencies="Java &gt; 1.7" OpenIDE-Module-Module-Dependencies="org.yourorghere.independent &gt; 1.0" OpenIDE-Module-Name="engine" OpenIDE-Module-Requires="org.openide.modules.ModuleFormat1" OpenIDE-Module-Specification-Version="1.0"/>
+
+    </module>
+
+    <module codenamebase="org.yourorghere.engine" distribution="nbresloc:/org/netbeans/api/autoupdate/data/org-yourorghere-engine-1-1.nbm" downloadsize="3136" homepage="" license="AD9FBBC9" moduleauthor="Steffen Dietz" needsrestart="false" releasedate="2017/11/17">
+        <manifest AutoUpdate-Show-In-Client="true" OpenIDE-Module="org.yourorghere.engine" OpenIDE-Module-Implementation-Version="171117" OpenIDE-Module-Java-Dependencies="Java &gt; 1.7" OpenIDE-Module-Module-Dependencies="org.yourorghere.independent &gt; 1.0" OpenIDE-Module-Name="engine" OpenIDE-Module-Requires="org.openide.modules.ModuleFormat1" OpenIDE-Module-Specification-Version="1.1"/>
+    
+    </module>
+
+    <module codenamebase="org.yourorghere.independent" distribution="nbresloc:/org/netbeans/api/autoupdate/data/org-yourorghere-independent.nbm" downloadsize="3128" homepage="" license="AD9FBBC9" moduleauthor="Steffen Dietz" needsrestart="false" releasedate="2017/11/17">
+        <manifest AutoUpdate-Show-In-Client="true" OpenIDE-Module="org.yourorghere.independent" OpenIDE-Module-Implementation-Version="171117" OpenIDE-Module-Java-Dependencies="Java &gt; 1.7" OpenIDE-Module-Name="independent" OpenIDE-Module-Requires="org.openide.modules.ModuleFormat1" OpenIDE-Module-Specification-Version="1.0"/>
+    
+    </module>
+
+    <module codenamebase="org.yourorghere.refresh_providers_test" distribution="nbresloc:/org/netbeans/api/autoupdate/data/org-yourorghere-refresh_providers_test.nbm" downloadsize="3206" homepage="" license="AD9FBBC9" moduleauthor="Steffen Dietz" needsrestart="true" releasedate="2017/11/17">
+        <manifest AutoUpdate-Show-In-Client="true" OpenIDE-Module="org.yourorghere.refresh_providers_test" OpenIDE-Module-Implementation-Version="171117" OpenIDE-Module-Java-Dependencies="Java &gt; 1.7" OpenIDE-Module-Name="refresh_providers_test" OpenIDE-Module-Requires="org.openide.modules.ModuleFormat1" OpenIDE-Module-Specification-Version="1.0"/>
+    
+    </module>
+
+    <module codenamebase="com.example.testmodule.cluster" distribution="nbresloc:/org/netbeans/api/autoupdate/data/com-example-testmodule-cluster.nbm" downloadsize="0" homepage="" license="AD9FBBC9" moduleauthor="Steffen Dietz" needsrestart="false" releasedate="2017/11/17" targetcluster="test">
+        <manifest AutoUpdate-Show-In-Client="true" OpenIDE-Module="com.example.testmodule.cluster" OpenIDE-Module-Implementation-Version="171117" OpenIDE-Module-Java-Dependencies="Java &gt; 1.7" OpenIDE-Module-Name="testmodule_cluster" OpenIDE-Module-Requires="org.openide.modules.ModuleFormat1" OpenIDE-Module-Specification-Version="1.0"/>
+
+    </module>
+
+    <module codenamebase="org.yourorghere.fragment" distribution="nbresloc:/org/netbeans/api/autoupdate/data/org-yourorghere-fragment.nbm" downloadsize="0" homepage="" license="AD9FBBC9" moduleauthor="Steffen Dietz" needsrestart="false" releasedate="2018/10/01">
+        <manifest AutoUpdate-Show-In-Client="true" OpenIDE-Module="org.yourorghere.fragment" OpenIDE-Module-Implementation-Version="171117" OpenIDE-Module-Java-Dependencies="Java &gt; 1.7" OpenIDE-Module-Name="fragment" OpenIDE-Module-Requires="org.openide.modules.ModuleFormat1" OpenIDE-Module-Specification-Version="1.0"/>
+    </module>
+
+<license name="AD9FBBC9">[NO LICENSE SPECIFIED]
+</license>
+</module_updates>
+

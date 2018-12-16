@@ -1,0 +1,8 @@
+Code completion result for source line:
+new URL("http://google.com").getP|r
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     getPath()                       [PUBLIC]   String
+METHOD     getPort()                       [PUBLIC]   int
+METHOD     getProperties()                            Map
+METHOD     getProtocol()                   [PUBLIC]   String

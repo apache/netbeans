@@ -1,0 +1,4 @@
+    |>MARK_OCCURRENCES:console<|.log(address);
+        |>MARK_OCCURRENCES:console<|.log(state);
+                |>MARK_OCCURRENCES:console<|.log(state);
+            |>MARK_OCCURRENCES:cons^ole<|.log(street);

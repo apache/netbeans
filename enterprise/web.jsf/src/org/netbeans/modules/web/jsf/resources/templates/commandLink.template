@@ -1,0 +1,3 @@
+                <h:form>
+                    <h:commandLink action="#{__MANAGED_BEAN_NAME__.listSetup}" value="Show All __ENTITY_NAME__ Items"/>
+                </h:form>

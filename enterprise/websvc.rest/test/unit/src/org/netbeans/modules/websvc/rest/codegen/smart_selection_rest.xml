@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ns2:application
+        xmlns:ns2="http://research.sun.com/wadl/2006/10">
+    <ns2:doc
+        jersey:generatedBy="Jersey: 0.9-ea 08/22/2008 04:48 PM"
+        xmlns:jersey="http://jersey.dev.java.net/"/>
+	<ns2:grammars>
+        <ns2:include href="schema1.xsd"/>
+    </ns2:grammars>
+    <ns2:resources base="http://192.168.0.104:8080/smart-selection-rest/rest">
+        <ns2:resource path="/book">
+            <ns2:doc><![CDATA[Server side adapter.]]>
+            </ns2:doc>
+            <ns2:resource path="/all">
+                <ns2:method name="GET" id="getAllBooks">
+                    <ns2:response>
+                        <ns2:representation mediaType="application/xml" status="200"/>
+                    </ns2:response>
+                </ns2:method>
+            </ns2:resource>
+            <ns2:resource path="/by-name">
+                <ns2:method name="GET" id="getBookByName">
+                <ns2:request>
+                    <ns2:param type="xs:string" style="query" name="name"
+                                xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
+                </ns2:request>
+                <ns2:response>
+                    <ns2:representation mediaType="application/xml" status="200"/>
+                </ns2:response>
+                </ns2:method>
+            </ns2:resource>
+        </ns2:resource>
+    </ns2:resources>
+</ns2:application>

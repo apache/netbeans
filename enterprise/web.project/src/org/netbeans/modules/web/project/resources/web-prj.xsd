@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://www.netbeans.org/ns/web-project/1"
+            xmlns="http://www.netbeans.org/ns/web-project/1"
+            elementFormDefault="qualified">
+    <xsd:element name="data">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="name" type="xsd:token"/>
+                <xsd:element name="minimum-ant-version" minOccurs="0">
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:NMTOKEN">
+                            <xsd:enumeration value="1.5"/>
+                            <xsd:enumeration value="1.6"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:element>
+                <xsd:element name="use-manifest" minOccurs="0"/>
+                <xsd:element name="explicit-platform" minOccurs="0"/>
+                <xsd:element name="web-module-libraries" type="webModuleLibrariesType"/>
+                <xsd:element name="web-module-additional-libraries" type="webModuleAdditionalLibrariesType"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    
+    <xsd:complexType name="webModuleLibrariesType">
+        <xsd:sequence>
+            <xsd:element name="library" type="webModuleLibraryType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="webModuleAdditionalLibrariesType">
+        <xsd:sequence>
+            <xsd:element name="library" type="webModuleAdditionalLibraryType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="webModuleLibraryType">
+        <xsd:sequence>
+            <xsd:element name="file" type="xsd:string"/>
+            <xsd:element name="path-in-war" type="xsd:string" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="webModuleAdditionalLibraryType">
+        <xsd:sequence>
+            <xsd:element name="file" type="substitutable-text"/>
+            <xsd:element name="path-in-war" type="xsd:string" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <!-- Some text that might be substituted with Ant property references. -->
+    <xsd:simpleType name="substitutable-text">
+        <xsd:restriction base="xsd:string">
+            <!-- XXX limit by regexp, perhaps -->
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+</xsd:schema>

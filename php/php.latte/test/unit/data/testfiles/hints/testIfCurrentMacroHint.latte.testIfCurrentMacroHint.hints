@@ -1,0 +1,3 @@
+{ifCurrent Presenter:action}{/ifCurrent}
+ ---------
+HINT:Deprecated Macro

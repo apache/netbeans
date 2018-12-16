@@ -1,0 +1,7 @@
+Code completion result for source line:
+$this->myException->|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     getCode()                       [PUBLIC]   Exception
+VARIABLE   ? exceptionA                    [PUBLIC]   A
+VARIABLE   ? exceptionB                    [PUBLIC]   B

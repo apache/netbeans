@@ -1,0 +1,2 @@
+    |>MARK_OCCURRENCES:debug<|: function(b, c) {
+Test.|>MARK_OCCURRENCES:debu^g<|();

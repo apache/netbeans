@@ -1,0 +1,22 @@
+"use strict";
+
+var |>CLASS,GLOBAL:Polygon<| = class |>CLASS:Polygon2<| {
+  |>METHOD:constructor<|(height, width) {
+    this.|>FIELD:height<| = height;
+    this.|>FIELD:width<| = width;
+    
+  }
+  
+  |>CUSTOM2:static<| |>METHOD:test<| () {
+        |>GLOBAL:console<|.log("test");
+        var |>LOCAL_VARIABLE_DECLARATION:p<| = new Polygon2(1,2);
+        |>GLOBAL:console<|.log(|>LOCAL_VARIABLE:p<|.width);
+  }
+  
+  
+};  
+   
+var |>GLOBAL:p<| = new |>GLOBAL:Polygon<| (10, 20);
+|>GLOBAL:console<|.log(|>GLOBAL:p<|.|>FIELD:width<|);
+|>GLOBAL:console<|.log(|>GLOBAL:p<|.|>FIELD:height<|);
+|>GLOBAL:console<|.log(|>GLOBAL:Polygon<|.test());

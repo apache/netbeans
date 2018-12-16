@@ -1,0 +1,604 @@
+[${|}, NamedWithName beruska, ${beruska}, 376]
+application
+applicationScope
+NamedWithName beruska
+cc
+javax.faces.component.UICompon
+cookie
+FlowDiscoveryCDIHelper csfFLOW
+javax.faces.context.FacesConte
+facesFlowScope
+javax.faces.context.Flash flas
+header
+headerValues
+initParam
+MyManagedBean myManagedBean
+NamedBean namedBean
+pageScope
+param
+paramValues
+request
+requestScope
+javax.faces.application.Resour
+session
+sessionScope
+ManagedBeanWithName slunicko
+javax.faces.component.UIViewRo
+viewScope
+and
+div
+empty
+eq
+false
+ge
+gt
+instanceof
+le
+lt
+mod
+ne
+not
+null
+or
+true
+java.lang.AbstractMethodError 
+java.lang.AbstractStringBuilde
+java.lang.ApplicationShutdownH
+java.lang.ArithmeticException 
+java.lang.ArrayIndexOutOfBound
+java.lang.ArrayStoreException 
+java.lang.AssertionError Asser
+java.lang.AssertionStatusDirec
+java.lang.Boolean Boolean
+java.lang.BootstrapMethodError
+java.lang.Byte Byte
+java.lang.Character Character
+java.lang.CharacterData Charac
+java.lang.CharacterData00 Char
+java.lang.CharacterData01 Char
+java.lang.CharacterData02 Char
+java.lang.CharacterData0E Char
+java.lang.CharacterDataLatin1 
+java.lang.CharacterDataPrivate
+java.lang.CharacterDataUndefin
+java.lang.CharacterName Charac
+java.lang.Class Class
+java.lang.ClassCastException C
+java.lang.ClassCircularityErro
+java.lang.ClassFormatError Cla
+java.lang.ClassLoader ClassLoa
+java.lang.ClassLoaderHelper Cl
+java.lang.ClassNotFoundExcepti
+java.lang.ClassValue ClassValu
+java.lang.CloneNotSupportedExc
+java.lang.Compiler Compiler
+java.lang.ConditionalSpecialCa
+java.lang.Double Double
+java.lang.Enum Enum
+java.lang.EnumConstantNotPrese
+java.lang.Error Error
+java.lang.Exception Exception
+java.lang.ExceptionInInitializ
+java.lang.Float Float
+java.lang.IllegalAccessError I
+java.lang.IllegalAccessExcepti
+java.lang.IllegalArgumentExcep
+java.lang.IllegalMonitorStateE
+java.lang.IllegalStateExceptio
+java.lang.IllegalThreadStateEx
+java.lang.IncompatibleClassCha
+java.lang.IndexOutOfBoundsExce
+java.lang.InheritableThreadLoc
+java.lang.InstantiationError I
+java.lang.InstantiationExcepti
+java.lang.Integer Integer
+java.lang.InternalError Intern
+java.lang.InterruptedException
+java.lang.LinkageError Linkage
+java.lang.Long Long
+java.lang.Math Math
+java.lang.NegativeArraySizeExc
+java.lang.NoClassDefFoundError
+java.lang.NoSuchFieldError NoS
+java.lang.NoSuchFieldException
+java.lang.NoSuchMethodError No
+java.lang.NoSuchMethodExceptio
+java.lang.NullPointerException
+java.lang.Number Number
+java.lang.NumberFormatExceptio
+java.lang.Object Object
+java.lang.OutOfMemoryError Out
+java.lang.Package Package
+java.lang.Process Process
+java.lang.ProcessBuilder Proce
+java.lang.ProcessEnvironment P
+java.lang.ProcessImpl ProcessI
+java.lang.ReflectiveOperationE
+java.lang.Runtime Runtime
+java.lang.RuntimeException Run
+java.lang.RuntimePermission Ru
+java.lang.SecurityException Se
+java.lang.SecurityManager Secu
+java.lang.Short Short
+java.lang.Shutdown Shutdown
+java.lang.StackOverflowError S
+java.lang.StackTraceElement St
+java.lang.StrictMath StrictMat
+java.lang.String String
+java.lang.StringBuffer StringB
+java.lang.StringBuilder String
+java.lang.StringCoding StringC
+java.lang.StringIndexOutOfBoun
+java.lang.System System
+java.lang.SystemClassLoaderAct
+java.lang.Terminator Terminato
+java.lang.Thread Thread
+java.lang.ThreadDeath ThreadDe
+java.lang.ThreadGroup ThreadGr
+java.lang.ThreadLocal ThreadLo
+java.lang.Throwable Throwable
+java.lang.TypeNotPresentExcept
+java.lang.UNIXProcess UNIXProc
+java.lang.UnknownError Unknown
+java.lang.UnsatisfiedLinkError
+java.lang.UnsupportedClassVers
+java.lang.UnsupportedOperation
+java.lang.VerifyError VerifyEr
+java.lang.VirtualMachineError 
+java.lang.Void Void
+java java
+javax javax
+End cursor position = 386
+[${|}, MyManagedBean myManagedBean, ${myManagedBean}, 439]
+application
+applicationScope
+NamedWithName beruska
+cc
+javax.faces.component.UICompon
+cookie
+FlowDiscoveryCDIHelper csfFLOW
+javax.faces.context.FacesConte
+facesFlowScope
+javax.faces.context.Flash flas
+header
+headerValues
+initParam
+MyManagedBean myManagedBean
+NamedBean namedBean
+pageScope
+param
+paramValues
+request
+requestScope
+javax.faces.application.Resour
+session
+sessionScope
+ManagedBeanWithName slunicko
+javax.faces.component.UIViewRo
+viewScope
+and
+div
+empty
+eq
+false
+ge
+gt
+instanceof
+le
+lt
+mod
+ne
+not
+null
+or
+true
+java.lang.AbstractMethodError 
+java.lang.AbstractStringBuilde
+java.lang.ApplicationShutdownH
+java.lang.ArithmeticException 
+java.lang.ArrayIndexOutOfBound
+java.lang.ArrayStoreException 
+java.lang.AssertionError Asser
+java.lang.AssertionStatusDirec
+java.lang.Boolean Boolean
+java.lang.BootstrapMethodError
+java.lang.Byte Byte
+java.lang.Character Character
+java.lang.CharacterData Charac
+java.lang.CharacterData00 Char
+java.lang.CharacterData01 Char
+java.lang.CharacterData02 Char
+java.lang.CharacterData0E Char
+java.lang.CharacterDataLatin1 
+java.lang.CharacterDataPrivate
+java.lang.CharacterDataUndefin
+java.lang.CharacterName Charac
+java.lang.Class Class
+java.lang.ClassCastException C
+java.lang.ClassCircularityErro
+java.lang.ClassFormatError Cla
+java.lang.ClassLoader ClassLoa
+java.lang.ClassLoaderHelper Cl
+java.lang.ClassNotFoundExcepti
+java.lang.ClassValue ClassValu
+java.lang.CloneNotSupportedExc
+java.lang.Compiler Compiler
+java.lang.ConditionalSpecialCa
+java.lang.Double Double
+java.lang.Enum Enum
+java.lang.EnumConstantNotPrese
+java.lang.Error Error
+java.lang.Exception Exception
+java.lang.ExceptionInInitializ
+java.lang.Float Float
+java.lang.IllegalAccessError I
+java.lang.IllegalAccessExcepti
+java.lang.IllegalArgumentExcep
+java.lang.IllegalMonitorStateE
+java.lang.IllegalStateExceptio
+java.lang.IllegalThreadStateEx
+java.lang.IncompatibleClassCha
+java.lang.IndexOutOfBoundsExce
+java.lang.InheritableThreadLoc
+java.lang.InstantiationError I
+java.lang.InstantiationExcepti
+java.lang.Integer Integer
+java.lang.InternalError Intern
+java.lang.InterruptedException
+java.lang.LinkageError Linkage
+java.lang.Long Long
+java.lang.Math Math
+java.lang.NegativeArraySizeExc
+java.lang.NoClassDefFoundError
+java.lang.NoSuchFieldError NoS
+java.lang.NoSuchFieldException
+java.lang.NoSuchMethodError No
+java.lang.NoSuchMethodExceptio
+java.lang.NullPointerException
+java.lang.Number Number
+java.lang.NumberFormatExceptio
+java.lang.Object Object
+java.lang.OutOfMemoryError Out
+java.lang.Package Package
+java.lang.Process Process
+java.lang.ProcessBuilder Proce
+java.lang.ProcessEnvironment P
+java.lang.ProcessImpl ProcessI
+java.lang.ReflectiveOperationE
+java.lang.Runtime Runtime
+java.lang.RuntimeException Run
+java.lang.RuntimePermission Ru
+java.lang.SecurityException Se
+java.lang.SecurityManager Secu
+java.lang.Short Short
+java.lang.Shutdown Shutdown
+java.lang.StackOverflowError S
+java.lang.StackTraceElement St
+java.lang.StrictMath StrictMat
+java.lang.String String
+java.lang.StringBuffer StringB
+java.lang.StringBuilder String
+java.lang.StringCoding StringC
+java.lang.StringIndexOutOfBoun
+java.lang.System System
+java.lang.SystemClassLoaderAct
+java.lang.Terminator Terminato
+java.lang.Thread Thread
+java.lang.ThreadDeath ThreadDe
+java.lang.ThreadGroup ThreadGr
+java.lang.ThreadLocal ThreadLo
+java.lang.Throwable Throwable
+java.lang.TypeNotPresentExcept
+java.lang.UNIXProcess UNIXProc
+java.lang.UnknownError Unknown
+java.lang.UnsatisfiedLinkError
+java.lang.UnsupportedClassVers
+java.lang.UnsupportedOperation
+java.lang.VerifyError VerifyEr
+java.lang.VirtualMachineError 
+java.lang.Void Void
+java java
+javax javax
+End cursor position = 455
+[${|}, NamedBean namedBean, ${namedBean}, 489]
+application
+applicationScope
+NamedWithName beruska
+cc
+javax.faces.component.UICompon
+cookie
+FlowDiscoveryCDIHelper csfFLOW
+javax.faces.context.FacesConte
+facesFlowScope
+javax.faces.context.Flash flas
+header
+headerValues
+initParam
+MyManagedBean myManagedBean
+NamedBean namedBean
+pageScope
+param
+paramValues
+request
+requestScope
+javax.faces.application.Resour
+session
+sessionScope
+ManagedBeanWithName slunicko
+javax.faces.component.UIViewRo
+viewScope
+and
+div
+empty
+eq
+false
+ge
+gt
+instanceof
+le
+lt
+mod
+ne
+not
+null
+or
+true
+java.lang.AbstractMethodError 
+java.lang.AbstractStringBuilde
+java.lang.ApplicationShutdownH
+java.lang.ArithmeticException 
+java.lang.ArrayIndexOutOfBound
+java.lang.ArrayStoreException 
+java.lang.AssertionError Asser
+java.lang.AssertionStatusDirec
+java.lang.Boolean Boolean
+java.lang.BootstrapMethodError
+java.lang.Byte Byte
+java.lang.Character Character
+java.lang.CharacterData Charac
+java.lang.CharacterData00 Char
+java.lang.CharacterData01 Char
+java.lang.CharacterData02 Char
+java.lang.CharacterData0E Char
+java.lang.CharacterDataLatin1 
+java.lang.CharacterDataPrivate
+java.lang.CharacterDataUndefin
+java.lang.CharacterName Charac
+java.lang.Class Class
+java.lang.ClassCastException C
+java.lang.ClassCircularityErro
+java.lang.ClassFormatError Cla
+java.lang.ClassLoader ClassLoa
+java.lang.ClassLoaderHelper Cl
+java.lang.ClassNotFoundExcepti
+java.lang.ClassValue ClassValu
+java.lang.CloneNotSupportedExc
+java.lang.Compiler Compiler
+java.lang.ConditionalSpecialCa
+java.lang.Double Double
+java.lang.Enum Enum
+java.lang.EnumConstantNotPrese
+java.lang.Error Error
+java.lang.Exception Exception
+java.lang.ExceptionInInitializ
+java.lang.Float Float
+java.lang.IllegalAccessError I
+java.lang.IllegalAccessExcepti
+java.lang.IllegalArgumentExcep
+java.lang.IllegalMonitorStateE
+java.lang.IllegalStateExceptio
+java.lang.IllegalThreadStateEx
+java.lang.IncompatibleClassCha
+java.lang.IndexOutOfBoundsExce
+java.lang.InheritableThreadLoc
+java.lang.InstantiationError I
+java.lang.InstantiationExcepti
+java.lang.Integer Integer
+java.lang.InternalError Intern
+java.lang.InterruptedException
+java.lang.LinkageError Linkage
+java.lang.Long Long
+java.lang.Math Math
+java.lang.NegativeArraySizeExc
+java.lang.NoClassDefFoundError
+java.lang.NoSuchFieldError NoS
+java.lang.NoSuchFieldException
+java.lang.NoSuchMethodError No
+java.lang.NoSuchMethodExceptio
+java.lang.NullPointerException
+java.lang.Number Number
+java.lang.NumberFormatExceptio
+java.lang.Object Object
+java.lang.OutOfMemoryError Out
+java.lang.Package Package
+java.lang.Process Process
+java.lang.ProcessBuilder Proce
+java.lang.ProcessEnvironment P
+java.lang.ProcessImpl ProcessI
+java.lang.ReflectiveOperationE
+java.lang.Runtime Runtime
+java.lang.RuntimeException Run
+java.lang.RuntimePermission Ru
+java.lang.SecurityException Se
+java.lang.SecurityManager Secu
+java.lang.Short Short
+java.lang.Shutdown Shutdown
+java.lang.StackOverflowError S
+java.lang.StackTraceElement St
+java.lang.StrictMath StrictMat
+java.lang.String String
+java.lang.StringBuffer StringB
+java.lang.StringBuilder String
+java.lang.StringCoding StringC
+java.lang.StringIndexOutOfBoun
+java.lang.System System
+java.lang.SystemClassLoaderAct
+java.lang.Terminator Terminato
+java.lang.Thread Thread
+java.lang.ThreadDeath ThreadDe
+java.lang.ThreadGroup ThreadGr
+java.lang.ThreadLocal ThreadLo
+java.lang.Throwable Throwable
+java.lang.TypeNotPresentExcept
+java.lang.UNIXProcess UNIXProc
+java.lang.UnknownError Unknown
+java.lang.UnsatisfiedLinkError
+java.lang.UnsupportedClassVers
+java.lang.UnsupportedOperation
+java.lang.VerifyError VerifyEr
+java.lang.VirtualMachineError 
+java.lang.Void Void
+java java
+javax javax
+End cursor position = 501
+[${|}, ManagedBeanWithName slunicko, ${slunicko}, 547]
+application
+applicationScope
+NamedWithName beruska
+cc
+javax.faces.component.UICompon
+cookie
+FlowDiscoveryCDIHelper csfFLOW
+javax.faces.context.FacesConte
+facesFlowScope
+javax.faces.context.Flash flas
+header
+headerValues
+initParam
+MyManagedBean myManagedBean
+NamedBean namedBean
+pageScope
+param
+paramValues
+request
+requestScope
+javax.faces.application.Resour
+session
+sessionScope
+ManagedBeanWithName slunicko
+javax.faces.component.UIViewRo
+viewScope
+and
+div
+empty
+eq
+false
+ge
+gt
+instanceof
+le
+lt
+mod
+ne
+not
+null
+or
+true
+java.lang.AbstractMethodError 
+java.lang.AbstractStringBuilde
+java.lang.ApplicationShutdownH
+java.lang.ArithmeticException 
+java.lang.ArrayIndexOutOfBound
+java.lang.ArrayStoreException 
+java.lang.AssertionError Asser
+java.lang.AssertionStatusDirec
+java.lang.Boolean Boolean
+java.lang.BootstrapMethodError
+java.lang.Byte Byte
+java.lang.Character Character
+java.lang.CharacterData Charac
+java.lang.CharacterData00 Char
+java.lang.CharacterData01 Char
+java.lang.CharacterData02 Char
+java.lang.CharacterData0E Char
+java.lang.CharacterDataLatin1 
+java.lang.CharacterDataPrivate
+java.lang.CharacterDataUndefin
+java.lang.CharacterName Charac
+java.lang.Class Class
+java.lang.ClassCastException C
+java.lang.ClassCircularityErro
+java.lang.ClassFormatError Cla
+java.lang.ClassLoader ClassLoa
+java.lang.ClassLoaderHelper Cl
+java.lang.ClassNotFoundExcepti
+java.lang.ClassValue ClassValu
+java.lang.CloneNotSupportedExc
+java.lang.Compiler Compiler
+java.lang.ConditionalSpecialCa
+java.lang.Double Double
+java.lang.Enum Enum
+java.lang.EnumConstantNotPrese
+java.lang.Error Error
+java.lang.Exception Exception
+java.lang.ExceptionInInitializ
+java.lang.Float Float
+java.lang.IllegalAccessError I
+java.lang.IllegalAccessExcepti
+java.lang.IllegalArgumentExcep
+java.lang.IllegalMonitorStateE
+java.lang.IllegalStateExceptio
+java.lang.IllegalThreadStateEx
+java.lang.IncompatibleClassCha
+java.lang.IndexOutOfBoundsExce
+java.lang.InheritableThreadLoc
+java.lang.InstantiationError I
+java.lang.InstantiationExcepti
+java.lang.Integer Integer
+java.lang.InternalError Intern
+java.lang.InterruptedException
+java.lang.LinkageError Linkage
+java.lang.Long Long
+java.lang.Math Math
+java.lang.NegativeArraySizeExc
+java.lang.NoClassDefFoundError
+java.lang.NoSuchFieldError NoS
+java.lang.NoSuchFieldException
+java.lang.NoSuchMethodError No
+java.lang.NoSuchMethodExceptio
+java.lang.NullPointerException
+java.lang.Number Number
+java.lang.NumberFormatExceptio
+java.lang.Object Object
+java.lang.OutOfMemoryError Out
+java.lang.Package Package
+java.lang.Process Process
+java.lang.ProcessBuilder Proce
+java.lang.ProcessEnvironment P
+java.lang.ProcessImpl ProcessI
+java.lang.ReflectiveOperationE
+java.lang.Runtime Runtime
+java.lang.RuntimeException Run
+java.lang.RuntimePermission Ru
+java.lang.SecurityException Se
+java.lang.SecurityManager Secu
+java.lang.Short Short
+java.lang.Shutdown Shutdown
+java.lang.StackOverflowError S
+java.lang.StackTraceElement St
+java.lang.StrictMath StrictMat
+java.lang.String String
+java.lang.StringBuffer StringB
+java.lang.StringBuilder String
+java.lang.StringCoding StringC
+java.lang.StringIndexOutOfBoun
+java.lang.System System
+java.lang.SystemClassLoaderAct
+java.lang.Terminator Terminato
+java.lang.Thread Thread
+java.lang.ThreadDeath ThreadDe
+java.lang.ThreadGroup ThreadGr
+java.lang.ThreadLocal ThreadLo
+java.lang.Throwable Throwable
+java.lang.TypeNotPresentExcept
+java.lang.UNIXProcess UNIXProc
+java.lang.UnknownError Unknown
+java.lang.UnsatisfiedLinkError
+java.lang.UnsupportedClassVers
+java.lang.UnsupportedOperation
+java.lang.VerifyError VerifyEr
+java.lang.VirtualMachineError 
+java.lang.Void Void
+java java
+javax javax
+End cursor position = 558

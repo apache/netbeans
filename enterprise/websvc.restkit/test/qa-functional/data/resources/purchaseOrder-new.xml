@@ -1,0 +1,10 @@
+<purchaseOrder>
+  <customerRef uri="http://localhost:8080/FromEntities/resources/customers/1/"/>
+  <freightCompany>We deliver</freightCompany>
+  <orderNum>99999999</orderNum>
+  <productRef uri="http://localhost:8080/FromEntities/resources/products/980001/"/>
+  <quantity>75</quantity>
+  <salesDate>2006-07-28T00:00:00-07:00</salesDate>
+  <shippingCost>105.00</shippingCost>
+  <shippingDate>2006-07-28T00:00:00-07:00</shippingDate>
+</purchaseOrder>

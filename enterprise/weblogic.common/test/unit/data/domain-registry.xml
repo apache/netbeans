@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-registry xmlns="http://xmlns.oracle.com/weblogic/domain-registry">
+  <domain location="/home/test/software/wls12120/user_projects/domains/mydomain"/>
+</domain-registry>

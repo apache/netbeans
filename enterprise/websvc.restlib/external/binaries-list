@@ -1,0 +1,41 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+61F0983EB190954CCDEDE31E786A9E0BD9767C4A javax.ws.rs:javax.ws.rs-api:2.0
+479C1E06DB31C432330183F5CAE684163F186146 javax.annotation:javax.annotation-api:1.2
+DCF7821B776944201D6284EBBD8BE4BC2A318A1F org.glassfish.hk2.external:asm-all-repackaged:2.2.0-b21
+C8CA25FE0B285C7ACF1A2240B2953DD054CE7DA1 org.glassfish.hk2.external:cglib:2.2.0-b21
+69E12F4C6AEAC392555F1EA86FAB82B5E5E31AD4 com.google.guava:guava:14.0.1
+AED44E9B4EFB3979564A0D383986CC8E7CD0CCBD org.glassfish.hk2:hk2-api:2.2.0-b21
+484DC6B6D5ECB977B208AD1256B25C424D5FC049 org.glassfish.hk2:hk2-locator:2.2.0-b21
+EFBAB185D37C32210303A814265B900C927A1226 org.glassfish.hk2:hk2-utils:2.2.0-b21
+D742D605BC663895B04F4116591B699D4201370C org.glassfish.hk2.external:javax.inject:2.2.0-b21
+6BF0EBB7EFD993E222FC1112377B5E92A13B38DD javax.servlet:javax.servlet-api:3.0.1
+2F51C4BB4724EA408096EE9100FF2827E07E5B7C javax.xml.bind:jaxb-api:2.2.7
+141944FE9F453199209B43E7592C0B420E3028CC org.glassfish.jersey.ext:jersey-entity-filtering:2.5.1
+A37F7B739D87424D45A8525CBE87BEA145E106EF org.glassfish.jersey.media:jersey-media-moxy:2.5.1
+66AB449FF3AA5C4ADFC82C89025CC983B422EB95 org.osgi:org.osgi.core:4.2.0
+4ED2B2D4738AED5786CFA64CBA5A332779C4C708 org.glassfish.hk2:osgi-resource-locator:1.0.1
+5725F57873E05E068803E2BF9D5A8EA3740FFEC5 javax.persistence:persistence-api:1.0
+8613AE82954779D518631E05DAA73A6A954817D5 javax.validation:validation-api:1.1.0.Final
+765D78B586F87388A0F5D06348DB7FFDB77C0AC1 org.glassfish.jersey.core:jersey-client:2.5.1
+45E026ABFEDF7099E6BA9B36E4E9D72044308B54 org.glassfish.jersey.core:jersey-common:2.5.1
+FC5F22BE9BC3AE7AD79E4A4239539988884D467F org.glassfish.jersey.containers:jersey-container-servlet-core:2.5.1
+E61C7B8F86A70611177E1551137C3BF4F341B8B1 org.glassfish.jersey.containers:jersey-container-servlet:2.5.1
+C3F29F237C9D7139A9EFFC2A60195503A6F6C3D7 org.glassfish.jersey.core:jersey-server:2.5.1
+
+

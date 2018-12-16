@@ -40,7 +40,7 @@
           depends="-jdk-init,-load-build-properties">
     <fail message="You need to run on JDK 8+ to build NetBeans; java.home=${java.home}">
         <condition>
-            <matches pattern="1\.[01234567].*" string="${java.version}"/>
+            <matches pattern="^1\.[01234567].*" string="${java.version}"/>
         </condition>
     </fail>
     <fail message="You need JDK 8+ to build NetBeans; nbjdk.home=${nbjdk.home} java.home=${java.home}">
@@ -72,8 +72,8 @@
     <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
         <manifest dir="${nb_all}">
             <include name="nbbuild/external/binaries-list"/>
-            <include name="libs.junit4/external/binaries-list"/>
-            <include name="javahelp/external/binaries-list"/>
+            <include name="platform/libs.junit4/external/binaries-list"/>
+            <include name="platform/javahelp/external/binaries-list"/>
         </manifest>
     </downloadbinaries>
 
@@ -82,7 +82,7 @@
      <pathelement location="${ant.core.lib}"/>
      <fileset dir="..">
         <!-- For JavaHelp indexing and link checking: -->
-        <include name="javahelp/external/jhall*.jar"/>
+        <include name="platform/javahelp/external/jhall*.jar"/>
       </fileset>
     </path>
     <javac srcdir="antsrc" destdir="${build.ant.classes.dir}" deprecation="true" debug="${build.compiler.debug}" source="1.8" target="1.8">
@@ -107,9 +107,7 @@
     <echo>Downloading external binaries (*/external/ directories)...</echo>
     <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
         <manifest dir="${nb_all}">
-            <include name="*/external/binaries-list"/>
-            <include name="contrib/*/external/binaries-list"/>
-            <include name="otherlicenses/*/external/binaries-list"/>
+            <include name="**/external/binaries-list"/>
         </manifest>
     </downloadbinaries>
     <property name="ext.binaries.downloaded" value="true"/>
@@ -164,13 +162,7 @@
   <target name="init-module-list" depends="bootstrap,init-tasks,prepare-vanilla-javac">
     <!-- Define modules. -->
     <checkmoduleconfigs nbroot=".."/>
-    <resolvelist name="allmodules" list="${nb.clusters.list}"/>
-    <pathconvert property="modules.fullpath" >
-        <path>
-            <dirset dir="${nb_all}" includes="${allmodules}" />
-        </path>
-        <mapper type="identity" />
-    </pathconvert>
+    <resolvelist name="allmodules" path="modules.fullpath" dir="${nb_all}" list="${nb.clusters.list}"/>
     <sortsuitemodules unsortedmodules="${modules.fullpath}" sortedmodulesproperty="modules.sorted"/>
   </target>
 
@@ -178,7 +170,7 @@
     <fail message="You need to have some modules checked out to build NetBeans. For example, try running the 'checkout' target.">
         <condition>
             <not>
-                <available file="../core.startup/"/>
+                <available file="../platform/core.startup/"/>
             </not>
         </condition>
     </fail>
@@ -334,7 +326,7 @@
   </target>
   <target name="finish-build" depends="finish-build-platform,finish-build-nb"/>
   <target name="finish-build-platform" depends="init,-check-nb-cluster" unless="has.nb.cluster">
-    <copy file="../o.n.bootstrap/readme/README-bin.txt" tofile="${netbeans.dest.dir}/README.txt" overwrite="true"/>
+    <copy file="../platform/o.n.bootstrap/readme/README-bin.txt" tofile="${netbeans.dest.dir}/README.txt" overwrite="true"/>
     <fixcrlf eol="lf" srcdir="${netbeans.dest.dir}" >
       <include name="${nb.cluster.platform.dir}/lib/nbexec" />
     </fixcrlf>
@@ -343,18 +335,18 @@
     <loadproperties srcFile="${clusters.list.file}" />
 
     <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
-        <manifest dir="${nb_all}" includes="ide/external/binaries-list"/>
+        <manifest dir="${nb_all}" includes="nb/ide.launcher/external/binaries-list"/>
     </downloadbinaries>
 
     <mkdir dir="${netbeans.dest.dir}/bin" />
-    <copy file="../ide/launcher/unix/netbeans" todir="${netbeans.dest.dir}/bin" />
+    <copy file="../nb/ide.launcher/unix/netbeans" todir="${netbeans.dest.dir}/bin" />
     <chmod file="${netbeans.dest.dir}/bin/netbeans" perm="ugo+rx"/>
-    <unzip src="../ide/external/launchers.zip" dest="${netbeans.dest.dir}/bin" />
+    <unzip src="../nb/ide.launcher/external/launchers-10.0.zip" dest="${netbeans.dest.dir}/bin" />
     <!-- if anybody knows better place for icons, let me know: jtulach@netbeans.org -->
 
     <mkdir dir="${netbeans.dest.dir}/etc" />
-    <copy file="../ide/launcher/netbeans.conf" todir="${netbeans.dest.dir}/etc" overwrite="true"/>
-    <copy file="../ide/launcher/netbeans.clusters" todir="${netbeans.dest.dir}/etc" overwrite="true"/>
+    <copy file="../nb/ide.launcher/netbeans.conf" todir="${netbeans.dest.dir}/etc" overwrite="true"/>
+    <copy file="../nb/ide.launcher/netbeans.clusters" todir="${netbeans.dest.dir}/etc" overwrite="true"/>
 
     <mkdir dir="${nb.build.dir}/license-temp" />
     <concat destfile="${nb.build.dir}/license-temp/LICENSE.txt">
@@ -1035,11 +1027,11 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
    >
     <script language="javascript">
         v = ''
-        i = new java.util.TreeMap(project.properties).entrySet().iterator()
+        i = new Packages.java.util.TreeMap(project.getProperties()).entrySet().iterator()
         while (i.hasNext()) {
             e = i.next()
-            if (e.key.startsWith('tryme.arg.')) {
-                v += ' ' + e.value
+            if (e.getKey().startsWith('tryme.arg.')) {
+                v += ' ' + e.getValue()
             }
         }
         project.setNewProperty('tryme.args', v)
@@ -1135,7 +1127,11 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <selection excludes="build_info"/>
         </ducf>
     </target>
-
+    
+    <target name="-init-clean">
+        <property name="nbbuild.warn.missing.autodeps" value="verbose"/>
+    </target>
+    
   <target name="-cleanall" depends="init-module-list,init-tasks">
     <taskdef name="cleanall" classname="org.netbeans.nbbuild.CleanAll" classpath="${nbantext.jar}"/>
     <cleanall topdir=".." 
@@ -1146,7 +1142,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
               failonerror="${stop.when.clean.error}" />
   </target>
 
-  <target name="clean" depends="bootstrap" description="Clean everything possible.">
+  <target name="clean" depends="-init-clean,bootstrap" description="Clean everything possible.">
       <taskdef name="try-else" classname="org.netbeans.nbbuild.TryElse" classpath="${nbantext.jar}"/>
       <try-else first="-hg-clean" second="-real-clean"/>
   </target>
@@ -1472,10 +1468,10 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     <mkdir dir="${build.test.results.dir}"/>
 
     <taskdef name="resolvelist" classname="org.netbeans.nbbuild.ResolveList" classpath="${nbantext.jar}"/>
-    <resolvelist list="${nb.clusters.list}" name="nb.clusters.validation.list">
+    <resolvelist list="${nb.clusters.list}" name="nb.clusters.validation.list" path="modules.fullpath" dir="${nb_all}" ignoremissing="true">
        <mapper type="regexp" from="(.*)" to="validation.\1"/>
     </resolvelist>
-    
+    <echo message="Run commit validation on: ${nb.clusters.validation.list}"/>
     <subant target="${test.type}" >
         <property name="test.config" value="commit"/>
         <property name="continue.after.failing.tests" value="true"/>
@@ -1559,8 +1555,8 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
           <filterchain>
               <tokenfilter>
                   <filetokenizer />
-                  <replaceregex pattern="(\r?\n)(\r?\n)+"
-                                replace="\1\1"
+                  <replaceregex pattern="(\r?\n)(\r?\n)(\r?\n)+"
+                                replace="\1\1\1"
                                 flags="g" />
              </tokenfilter>
           </filterchain>
@@ -1585,7 +1581,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     <resolve name="harness-modules" value="nb.cluster.harness"/>
     
     <mkdir dir="${nb.build.dir}"/>
-    <condition property="build.source.config.add.ide" else="" value=",ide">
+    <condition property="build.source.config.add.ide" else="" value=",nb/ide.launcher">
         <isset property="has.nb.cluster" />
     </condition>
     <dirset id="source.dirset" dir="${nb_all}"
@@ -1626,9 +1622,16 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     </condition>
     <zip zipfile="${nb.build.dir}/${cluster.config}-src-${buildnum}.zip" duplicate="preserve">
       <zipfileset dir="${nb_all}" includes="${source.dirs}">
+          <!--exclude all build directories and external jars/zips in the top level directory:-->
           <exclude name="*/build/"/>
           <exclude name="*/external/*.jar"/>
           <exclude name="*/external/*.zip"/>
+          <!--exclude all build directories and external jars/zips in the cluster directories,
+              but keep nbi/infra/build, which is a directory with sources:-->
+          <exclude name="[^n]*/*/build/"/>
+          <exclude name="nb/*/build/"/>
+          <exclude name="*/*/external/*.jar"/>
+          <exclude name="*/*/external/*.zip"/>
           <exclude name="nbbuild/netbeans/**"/>
           <exclude name="nbbuild/cluster.properties" />
       </zipfileset>

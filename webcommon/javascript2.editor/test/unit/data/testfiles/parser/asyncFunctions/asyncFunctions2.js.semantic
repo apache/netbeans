@@ -1,0 +1,5 @@
+const |>METHOD:fooBar<| = |>CUSTOM2:async<| () => {
+    if (|>GLOBAL:user<|) {
+      const userLogin = |>CUSTOM2:await<| test();
+    }
+}

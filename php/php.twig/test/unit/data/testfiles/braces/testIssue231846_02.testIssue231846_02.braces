@@ -1,0 +1,7 @@
+{% block %}
+    {% *bl^ock* %}
+        {% block %}
+     
+        {% endblock %}
+    {% *endblock* %}
+{% endblock %}

@@ -1,0 +1,44 @@
+
+
+Document 0
+Searchable Keys:
+  identifier_used : my;
+  identifier_used : my;
+  identifier_used : name;
+  identifier_used : name;
+  identifier_used : name;
+  identifier_used : name;
+  identifier_used : our;
+  identifier_used : our;
+  identifier_used : surname;
+  identifier_used : surname;
+  identifier_used : surname;
+  identifier_used : surname;
+  identifier_used : their;
+  identifier_used : their;
+  identifier_used : your;
+  identifier_used : your;
+
+Not Searchable Keys:
+
+
+Document 1
+Searchable Keys:
+  ns : name;name;my;0;<TESTURL>/testGetNamespaces.php;
+  ns : name;name;our;0;<TESTURL>/testGetNamespaces.php;
+  ns : name;name;their;0;<TESTURL>/testGetNamespaces.php;
+  ns : name;name;your;0;<TESTURL>/testGetNamespaces.php;
+  ns : surname;surname;my;0;<TESTURL>/testGetNamespaces.php;
+  ns : surname;surname;our;0;<TESTURL>/testGetNamespaces.php;
+  ns : surname;surname;their;0;<TESTURL>/testGetNamespaces.php;
+  ns : surname;surname;your;0;<TESTURL>/testGetNamespaces.php;
+  top : my\name
+  top : my\surname
+  top : our\name
+  top : our\surname
+  top : their\name
+  top : their\surname
+  top : your\name
+  top : your\surname
+
+Not Searchable Keys:

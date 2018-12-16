@@ -1,0 +1,3 @@
+class |>MARK_OCCURRENCES:Author<| {
+ * @property |>MARK_OCCURRENCES:Author<| $author hello this is doc
+ * @return |>MARK_OCCURRENCES:Aut^hor<|

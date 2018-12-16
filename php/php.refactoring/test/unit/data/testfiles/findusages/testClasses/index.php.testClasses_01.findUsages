@@ -1,0 +1,34 @@
+Display text: class <b>Foo</b> {
+File name: index.php
+Name: Foo
+Position: BEGIN: 27 END: 30
+
+Display text: use A\<b>Foo</b>;
+File name: index.php
+Name: Foo
+Position: BEGIN: 144 END: 147
+
+Display text: class Bar extends <b>Foo</b> {
+File name: index.php
+Name: Foo
+Position: BEGIN: 168 END: 171
+
+Display text: use A\<b>Foo</b>;
+File name: index.php
+Name: Foo
+Position: BEGIN: 198 END: 201
+
+Display text: <b>Foo</b>::stMethod();
+File name: index.php
+Name: Foo
+Position: BEGIN: 261 END: 264
+
+Display text: <b>Foo</b>::$stField;
+File name: index.php
+Name: Foo
+Position: BEGIN: 286 END: 289
+
+Display text: <b>Foo</b>::CON;
+File name: index.php
+Name: Foo
+Position: BEGIN: 309 END: 312

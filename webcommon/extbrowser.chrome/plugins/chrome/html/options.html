@@ -1,0 +1,94 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>_pluginName</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="../css/options.css">
+        <script type="text/javascript" src="../i18n/i18n.js"></script>
+        <script type="text/javascript" src="../i18n/options.js"></script>
+        <script type="text/javascript" src="../js/options.js"></script>
+    </head>
+    <body>
+        <div id="main">
+
+            <div id="presetCustomizer" class="panel">
+                <div class="title i18n">_CustomizeWindowSettings</div>
+                <div id="perex" class="perex">
+                    <span class="i18n">_ConfigureSizesInfo</span> <a href="#" id="moreHelpButton" class="i18n">_More_hellip</a>
+                    <div id="help">
+                        <ul>
+                            <li class="i18n">_Help_Step1</li>
+                            <li class="i18n">_Help_Step2</li>
+                            <li class="i18n">_Help_Step3</li>
+                            <li class="i18n">_Help_Step4</li>
+                        </ul>
+                        <p class="i18n">_Help_FinalStep</p>
+                    </div>
+                </div>
+                <div id="sizes" class="i18n">_DisplaySizes</div>
+                <div id="presetCustomizerTableWrapper">
+                    <div id="presetCustomizerTableColumn">
+                        <table id="presetCustomizerTable">
+                            <thead>
+                                <tr>
+                                    <th>_Type</th>
+                                    <th>_Name</th>
+                                    <th class="number">_Width</th>
+                                    <th class="number">_Height</th>
+                                    <th id="toolbarHeader" class="toolbar">_Toolbar</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="presetButtonsColumn">
+                    <div id="presetButtons">
+                        <button id="addPreset" title="_AddSize">_New</button>
+                        <button id="removePreset" disabled="disabled" title="_RemoveSize">_Remove</button>
+                        <button id="moveUpPreset" disabled="disabled" title="_MoveSizeUp">_MoveUp</button>
+                        <button id="moveDownPreset" disabled="disabled" title="_MoveSizeDown">_MoveDown</button>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div class="mainButtons">
+                    <button id="presetCustomizerOk" title="_SaveAndClose">_OK</button>
+                    <button id="presetCustomizerCancel" title="_CloseWithoutSaving">_Cancel</button>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <div id="resetWarningsPanel" class="panel">
+                <div class="title i18n">_Warnings</div>
+                <div class="perex i18n">_ResetAllWarningDialogs</div>
+                <div class="mainButtons">
+                    <button id="resetWarnings" title="_ResetAllWarningDialogs">_Reset</button>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+        </div>
+
+    </body>
+</html>

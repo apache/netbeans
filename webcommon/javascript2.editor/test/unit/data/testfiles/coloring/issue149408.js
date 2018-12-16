@@ -1,0 +1,5 @@
+function outer() {
+    function inner() {
+
+    }
+}

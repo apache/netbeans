@@ -1,0 +1,652 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="general">Ant Project API</apidef>
+        <!-- etc. -->
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+
+    <changes>
+        <change id="associatedRoots">
+            <api name="general"/>
+            <summary>Support for source root grouping</summary>
+            <version major="1" minor="68"/>
+            <date day="20" month="3" year="2017"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    A <code>SourceRootConfig</code> can be identifier by a structured "identifier" so when a new SourceGroup should be created as an
+                    associcate to existing sources, it is created in appropriate "sibling" location. See <code>SourceGroupModifier</code> for more details.
+                </p>
+            </description>
+        </change>
+        <change id="server.is.free">
+            <api name="general"/>
+            <summary>Desktop dependent Ant Based Project Support UI extracted</summary>
+            <version major="1" minor="61"/>
+            <date day="27" month="5" year="2014"/>
+            <author login="tstupka"/>
+            <compatibility modification="yes" addition="yes">
+                <p>
+                    Runtime compatibility remains, compile time compatibility is
+                    mostly preserved too. It is however recommended to upgrade
+                    dependencies of client modules. Try running
+                    <code>ant fix-dependencies</code> in your Ant module.
+                </p>
+            </compatibility>
+            <description>
+                <p>
+                    The following classes were moved from 
+                    <a href="@org-netbeans-modules-project-ant@/overview-summary.html">org.netbeans.modules.project.ant</a> 
+                    into the
+                    <a href="@org-netbeans-modules-project-ant-ui@/overview-summary.html">org.netbeans.modules.project.ant.ui</a> module:
+                </p>
+                <ul>
+                    <li><a href="@org-netbeans-modules-project-ant-ui@/org/netbeans/api/project/ant/FileChooser.html">FileChooser</a></li>
+                    <li><a href="@org-netbeans-modules-project-ant-ui@/org/netbeans/spi/project/support/ant/ui/CustomizerUtilities.html">CustomizerUtilities</a></li>
+                    <li><a href="@org-netbeans-modules-project-ant-ui@/org/netbeans/spi/project/support/ant/ui/StoreGroup.html">StoreGroup</a></li>
+                    <li><a href="@org-netbeans-modules-project-ant-ui@/org/netbeans/spi/project/support/ant/ui/VariablesSupport.html">VariablesSupport</a></li>
+                </ul>
+            </description>
+        </change>
+        <change id="GeneratedFilesInterceptor">
+            <api name="general"/>
+            <summary>Added <code>GeneratedFilesInterceptor</code> called by <code>GeneratedFilesHelper</code> when it generates a file</summary>
+            <version major="1" minor="1.58"/>
+            <date year="2013" month="10" day="15"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes">
+            </compatibility>
+            <description>
+                <p>
+                   Added <code>GeneratedFilesInterceptor</code> callback called by <code>GeneratedFilesHelper</code> when it
+                   generates or regenerates a file.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.ant" name="GeneratedFilesInterceptor"/>
+        </change>
+        <change id="license_header_customizer">
+            <api name="general"/>
+            <summary>Added <code>CustomizerUtilities.createLicenseHeaderCustomizerPanel</code></summary>
+            <version major="1" minor="1.53"/>
+            <date year="2013" month="3" day="14"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes">
+            </compatibility>
+            <description>
+                <p>
+                   <code>CustomizerUtilities.createLicenseHeaderCustomizerPanel()</code> was introduced
+                   to allow project modules to create license header selection and editing panel.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.support.ant.ui" name="CustomizerUtilities" link="no"/>
+            <issue number="226773"/>
+        </change>        
+        <change id="createSharabilityQuery2">
+            <api name="general"/>
+            <summary>Added <code>AntProjectHelper.createSharabilityQuery2</code></summary>
+            <version major="1" minor="47"/>
+            <date year="2012" month="1" day="20"/>
+            <author login="jglick"/>
+            <compatibility addition="yes" deprecation="yes">
+                <p>
+                    Project types using <code>AntProjectHelper.createSharabilityQuery</code> should switch to the new method.
+                </p>
+            </compatibility>
+            <description>
+                <p>
+                   <code>AntProjectHelper.createSharabilityQuery2</code> was introduced
+                   to avoid the deprecated <code>SharabilityQueryImplementation</code>.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.support.ant" name="AntProjectHelper"/>
+            <issue number="207288"/>
+        </change>
+
+        <change id="ReferenceHelper-getLibraryChooserImportHandler-url">
+            <api name="general"/>
+            <summary>Added <code>getLibraryChooserImportHandler</code> method into <code>ReferenceHelper</code> accepting <code>URL</code></summary>
+            <version major="1" minor="41"/>
+            <date day="19" month="4" year="2011"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                   A new method enables a client to specify target folder different from <code>AntProjectHelper.getLibrariesLocation</code>
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.support.ant" name="ReferenceHelper"/>
+            <issue number=""/>
+        </change>
+
+        <change id="SourcesHelper-SourceGroupModifierImplementation">
+            <api name="general"/>
+            <summary>Added <code>SourceGroupModifierImplementation</code> implementation for Ant-based projects</summary>
+            <version major="1" minor="33"/>
+            <date day="4" month="6" year="2009"/>
+            <author login="rmichalsky"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added method <code>SourcesHelper.createSourceGroupModifierImplementation</code> creating <code>SourceGroupModifierImplementation</code>
+                    implementation for Ant-based projects. Also added <code>SourcesHelper.SourceRootConfig</code> class
+                    and <code>SourcesHelper.sourceRoot(String location)</code> method for more readable configuration
+                    of source roots. These support additional parameter <code>hint()</code>, which is required
+                    for the implementation to work. Existing <code>SourcesHelper.addPrincipalSourceRoot</code>
+                    and <code>SourcesHelper.addTypedSourceRoot</code> methods are deprecated.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.support.ant" name="SourcesHelper"/>
+            <issue number="143633"/>
+        </change>
+
+        <change id="SourcesHelper-Project-constructor">
+            <api name="general"/>
+            <summary>Added <code>SourcesHelper</code> constructor accepting <code>Project</code></summary>
+            <version major="1" minor="31"/>
+            <date day="2" month="4" year="2009"/>
+            <author login="jglick"/>
+            <compatibility addition="yes" deprecation="yes"/>
+            <description>
+                <p>
+                    The new constructor enables simplified control flow.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.support.ant" name="SourcesHelper"/>
+            <issue number="146852"/>
+        </change>
+        
+        <change id="antbasedprojectregistration">
+            <api name="general"/>
+            <summary>Register Ant based projects with @annotation</summary>
+            <version major="1" minor="30"/>
+            <date day="3" month="3" year="2009"/>
+            <author login="jtulach"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                <p>
+                  Introducing <code>AntBasedProjectRegistration</code> to
+                  simplify registering Ant based projects. Just write the
+                  project class and annotate it.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.support.ant" name="AntBasedProjectRegistration"/>
+            <issue number="153655"/>
+        </change>
+        
+        <change id="SourcesHelper-minimalSubfolders">
+            <api name="general"/>
+            <summary>Added method SourcesHelper.registerExternalRoots with minimalSubfolders parameter</summary>
+            <version major="1" minor="26"/>
+            <date day="30" month="9" year="2008"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added <code>SourcesHelper.registerExternalRoots</code> with additional parameter
+                    <code>minimalSubfolders</code> controlling how the roots having an explicit include
+                    list are registered. When <code>true</code> only those subfolders which are included 
+                    (or folders directly containing included files) will be registered, otherwise the 
+                    whole source root is registered.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.support.ant" name="SourcesHelper"/>
+            <issue number="148185"/>
+        </change>
+        <change id="antartifact-enhancement">
+            <api name="general"/>
+            <summary>Enhance AntArtifact support with ability to specify build.xml location and name</summary>
+            <version major="1" minor="25"/>
+            <date day="27" month="8" year="2008"/>
+            <author login="dkonecny"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    <code>AntProjectHelper.createSimpleAntArtifact</code> enhanced
+                    with new parameter: property name holding project relative location 
+                    and name of Ant build script to use.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.support.ant" name="AntProjectHelper"/>
+            <issue number="144273"/>
+        </change>
+
+        <change id="schema-validation">
+            <api name="general"/>
+            <summary>Project XML metadata automatically validated against schemas</summary>
+            <version major="1" minor="24"/>
+            <date day="11" month="7" year="2008"/>
+            <author login="jglick"/>
+            <compatibility modification="yes">
+                <p>
+                    Code which was previously trying to store primary configuration data,
+                    or auxiliary configuration fragments,
+                    which was invalid according to some schema will now fail,
+                    whereas before the invalid content would be quietly stored.
+                    Of course, it will only be known to be invalid according to that schema
+                    if the schema is now registered, and anyway such code was already broken.
+                </p>
+                <p>
+                    XML fragments for which no associated schema exists are unaffected.
+                    (The document-scope schemas use lax validation of fragments.)
+                </p>
+            </compatibility>
+            <description>
+                <p>
+                    XML schemas may now be registered in <code>ProjectXMLCatalog/**/*.xsd</code>.
+                    Any attempts to read or write <code>project.xml</code> or <code>private.xml</code>
+                    will first try to validate against the registered schemas.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.support.ant" name="AntProjectHelper"/>
+            <issue number="42686"/>
+        </change>
+
+        <change id="libraries-for-ant">
+            <api name="general"/>
+            <summary>Support for adding/copying libraries used by build process only</summary>
+            <version major="1" minor="23"/>
+            <date day="11" month="6" year="2008"/>
+            <author login="mkubec"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added methods for adding/copying global libraries that are needed 
+                    for Ant build script. Added methods:
+                    <code>AntBuildExtender.addLibrary</code>,
+                    <code>AntBuildExtender.removeLibrary</code>
+                </p>
+            </description>
+            <class package="org.netbeans.api.project.ant" name="AntBuildExtender"/>
+            <issue number="136623"/>
+        </change>
+        
+        <change id="ide-variables">
+            <api name="general"/>
+            <summary>Support for (IDE) variables in Ant based project types</summary>
+            <version major="1" minor="22"/>
+            <date day="12" month="6" year="2008"/>
+            <author login="dkonecny"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>FileChooser enhanced with "Use Variable Path" option. Following 
+                methods were added:
+                <code>FileChooser.getSelectedPathVariables</code> and 
+                <code>FileChooser.enableVariableBasedSelection</code>.
+                For backward compatibility "Use Variable Path" option is by default
+                switched off and has to be enabled. Existing getSelectedPaths() 
+                method will keep returning either absolute 
+                or relative paths. If "Use Variable Path" option was selected it will 
+                return absolute path. Variable based paths are returned via new 
+                getSelectedPathVariables method.
+                </p>
+                <p>
+                Support class added for showing variables manager.
+                </p>
+            </description>
+            <class package="org.netbeans.api.project.ant" name="FileChooser" link="no"/>
+            <class package="org.netbeans.spi.project.support.ant.ui" name="VariablesSupport" link="no"/>
+            <issue number="136516"/>
+        </change>
+
+        <change id="AntProjectHelper-createAuxiliaryProperties">
+            <api name="general"/>
+            <summary>Added AntProjectHelper.createAuxiliaryProperties()</summary>
+            <version major="1" minor="21"/>
+            <date day="9" month="6" year="2008"/>
+            <author login="jlahoda"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    A new API method <code>AntProjectHelper.createAuxiliaryProperties</code>.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.support.ant" name="AntProjectHelper"/>
+            <issue number="134580"/>
+        </change>
+
+        <change id="ant-project-libraries">
+            <api name="general"/>
+            <summary>Support for project-specific libraries</summary>
+            <version major="1" minor="19"/>
+            <date day="22" month="1" year="2008"/>
+            <author login="jglick"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    A new XML schema
+                    (<a href="http://www.netbeans.org/ns/ant-project-libraries/1.xsd"><code>http://www.netbeans.org/ns/ant-project-libraries/1</code></a>),
+                    several new API methods
+                    (<code>AntProjectHelper.getProjectLibrariesPropertyProvider</code>,
+                    <code>AntProjectHelper.isSharableProject</code>,
+                    <code>AntProjectHelper.getLibrariesLocation</code>,
+                    <code>AntProjectHelper.setLibrariesLocation</code>,
+                    <code>ProjectGenerator.createProject(FileObject, String, String)</code>,
+                    <code>ReferenceHelper.createForeignFileReferenceAsIs</code>,
+                    <code>ReferenceHelper.createExtraForeignFileReferenceAsIs</code>,
+                    <code>ReferenceHelper.copyLibrary</code>,
+                    <code>ReferenceHelper.getLibraryChooserImportHandler</code>,
+                    <code>ReferenceHelper.createLibraryReference</code>,
+                    <code>ReferenceHelper.getProjectLibraryManager</code>,
+                    <code>ReferenceHelper.findLibrary</code>) and
+                    custom file chooser (<code><a href="@org-netbeans-modules-project-ant-ui@/org/netbeans/api/project/ant/FileChooser.html">FileChooser</a></code>)
+                    provide support for collocated library definitions
+                    referred to from Ant-based projects.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.support.ant" name="AntProjectHelper"/>
+            <class package="org.netbeans.spi.project.support.ant" name="ReferenceHelper"/>
+            <class package="org.netbeans.spi.project.support.ant" name="ProjectGenerator"/>
+            <class package="org.netbeans.api.project.ant" name="FileChooser" link="no"/>
+            <issue number="44035"/>
+        </change>
+
+        <change id="owned-files">
+            <api name="general"/>
+            <summary>Support for adding external files owned by project</summary>
+            <version major="1" minor="17"/>
+            <date day="8" month="10" year="2007"/>
+            <author login="mkubec"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                  Added a method for registering external file that is supposed to be
+                  owned by the project, typically used in freeform project to register
+                  build products that are external to project dir.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.support.ant" name="SourcesHelper"/>
+            <issue number="57656"/>
+        </change>
+        
+        <change id="build-extender">
+            <api name="general"/>
+            <summary>Support for externally extending the project's build script</summary>
+            <version major="1" minor="16"/>
+            <date day="10" month="4" year="2007"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                  Add framework for extending the project's build script with 3rd party snippets,
+                  allowing automated extensions to the build process. 
+                </p>
+            </description>
+            <class package="org.netbeans.api.project.ant" name="AntBuildExtender"/>
+            <class package="org.netbeans.spi.project.support.ant" name="GeneratedFilesHelper"/>
+            <class package="org.netbeans.spi.project.ant" name="AntBuildExtenderImplementation"/>
+            <class package="org.netbeans.spi.project.ant" name="AntBuildExtenderFactory"/>
+            <issue number="93509"/>
+        </change>
+        
+        <change id="includes-excludes.ant">
+            <api name="general"/>
+            <summary>Support for source root includes and excludes</summary>
+            <version major="1" minor="15"/>
+            <date day="1" month="3" year="2007"/>
+            <author login="jglick"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Ant-based projects can now conveniently specify include and exclude
+                    lists for source groups based on Ant's standard patternset syntax.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.support.ant" name="SourcesHelper"/>
+            <class package="org.netbeans.spi.project.support.ant" name="PathMatcher"/>
+            <issue number="49026"/>
+        </change>
+        
+        <change id="PropertyUtils.userPropertiesProvider.FilterPropertyProvider">
+            <api name="general"/>
+            <summary>Added utilities for constructing richer property evaluators</summary>
+            <version major="1" minor="14"/>
+            <date day="8" month="9" year="2006"/>
+            <author login="jglick"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added a new class and a new method to <code>PropertyUtils</code> to
+                    make it easier to write a customizer version of
+                    <code>AntProjectHelper.getStandardPropertyEvaluator()</code>,
+                    among other things.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.support.ant" name="FilterPropertyProvider"/>
+            <class package="org.netbeans.spi.project.support.ant" name="PropertyUtils"/>
+            <issue number="49636"/>
+        </change>
+        
+        <change id="ReferenceHelper.addReference-change-of-target-property-file">
+            <api name="general"/>
+            <summary>Semantic changes in the ReferenceHelper behavior</summary>
+            <version major="1" minor="10"/>
+            <date day="28" month="8" year="2005"/>
+            <author login="tzezula"/>
+            <compatibility modification="yes" semantic="incompatible"/>
+            <description>
+                The ReferenceHelper was changed to support better sharability of
+                projects. The collocated references are stored both into the project
+                properties (as relative) and private properties (as absolute)
+            </description>
+            <issue number="63401"/>
+        </change>
+
+        <change id="delete-support">
+            <api name="general"/>
+            <summary>Basic Support SPI for Project Delete/Copy/Rename/Move</summary>
+            <version major="1" minor="9"/>
+            <date day="11" month="7" year="2005"/>
+            <author login="jlahoda"/>
+            <compatibility addition="yes"/>
+            <description>
+                Added <code>AntProjectHelper.notifyDeleted()</code>. Added <code>ReferenceHelper.fixReferences</code>.
+            </description>
+            <issue number="51468"/>
+        </change>
+        
+        <change id="StoreGroup">
+            <api name="general"/>
+            <summary>Support SPI for creating/storing Swing models for simple Ant properties</summary>
+            <version major="1" minor="6"/>
+            <date day="16" month="1" year="2005"/>
+            <author login="phrebejk"/>
+            <compatibility addition="yes"/>
+            <description>
+                Introduced new class <code>StoreGroup</code> which
+                is capable of creating Swing models for simple Ant project properties and
+                storing modified values back into properties.
+            </description>
+            <class package="org.netbeans.spi.project.support.ant.ui" name="StoreGroup" link="no"/>
+            <issue number="49648"/>
+        </change>
+     
+        <change id="AntArtifact.misc">
+            <api name="general"/>
+            <summary>AntArtifact enhancements</summary>
+            <version major="1" minor="5"/>
+            <date day="13" month="1" year="2005"/>
+            <author login="dkonecny"/>
+            <compatibility addition="yes" deprecation="yes">
+                <p>
+                    New schema was defined, but upgrade from old schema to new
+                    one is realized only after some new features are used. If
+                    project's artifact does not define any properties for 
+                    artifact nor produce multiple outputs and Ant script lies
+                    under the project's directory then old schema is
+                    always used. Once project start using some of these new 
+                    features the schema will be upgraded automatically to new
+                    version. This affects any project type which is using 
+                    ant/project module.
+                </p>
+            </compatibility>
+            <description>
+                <p>
+                    Several enhancements of <code>AntArtifact</code> were implemented:
+                </p>
+                <ol>
+                    <li>execution of an artifact's target can be customized by properties</li>
+                    <li>an artifact can produce several build outputs</li>
+                    <li>an Ant script path is not persisted as a URI, but as a string possibly containing Ant properties</li>
+                </ol>
+                <p>
+                    <code>ReferenceHelper</code> was simplified as part of the implementation.
+                </p>
+            </description>
+            <class package="org.netbeans.api.project.ant" name="AntArtifact"/>
+            <issue number="47788"/>
+            <issue number="50484"/>
+            <issue number="50092"/>
+        </change>
+
+         <change id="ReferenceHelper.createForeignFileReference.relative">
+             <api name="general"/>
+             <summary>Make ReferenceHelper.createForeignFileReference produce relative links based on properties</summary>
+             <version major="1" minor="4"/>
+             <date day="11" month="1" year="2005"/>
+             <author login="dkonecny"/>
+             <compatibility addition="yes"/>
+             <description>
+               <code>ReferenceHelper</code> should reuse external project folders as base
+               directories for references it creates where appropriate. The
+               new API allows addition or removal of these base folders.
+             </description>
+             <class package="org.netbeans.spi.project.support.ant" name="ReferenceHelper"/>
+             <issue number="49550"/>
+         </change>
+
+        <change id="rel-vers-1">
+            <api name="general"/>
+            <summary>Switched to major release version 1</summary>
+            <version major="1" minor="3"/>
+            <date day="22" month="12" year="2004"/>
+            <author login="jglick"/>
+            <compatibility>
+                <p>
+                    Clients should begin requesting the new version to avoid a warning at startup.
+                </p>
+            </compatibility>
+            <description>
+                <p>
+                    To indicate that this is now considered a stable API, the major release version was
+                    incremented to 1 from 0.
+                </p>
+            </description>
+            <issue number="51468"/>
+        </change>
+
+    </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <==============
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE ant/project/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the Ant Project API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the <a href="@org-netbeans-modules-project-ant@/index.html">Ant Project API</a>.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+      <hr/>
+      <standard-changelists module-code-name="org.netbeans.modules.project.ant/1"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

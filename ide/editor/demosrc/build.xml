@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<project name="ide/standalone-editor" default="standalone" basedir=".">
+
+  <property name="target_dir" value="../netbeans/standalone" />
+
+  <target name="init">
+     <mkdir dir="${target_dir}" />
+  </target>
+
+  <target name="editor" depends="init">
+     <ant dir="../../editor.lib"/>
+  </target>
+
+  <target name="compile" depends="editor">
+     <copy todir="${target_dir}">
+        <fileset dir="../../../nbbuild/netbeans">
+            <filename name="**/ide*/modules/org-netbeans-modules-editor-lib.jar"/>
+        </fileset>
+     </copy>
+     <javac srcdir="base" destdir="base" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}">
+       <classpath>
+        <pathelement location="${target_dir}/editor-lib.jar"/>
+       </classpath>
+     </javac>
+  </target>
+
+  <target name="jars" depends="compile">
+     <jar jarfile="${target_dir}/editor.jar"
+           basedir="base"
+           manifest="manifest.mf"
+           excludes="base/run.sh,**/*.java,**/*.form"
+           compress="false">
+     <fileset dir="../release/system" />
+     </jar>
+  </target>
+
+   <target name="standalone" depends="jars">
+     <copy file="base/run.sh" tofile="${target_dir}/run.sh" />
+     <chmod file="${target_dir}/run.sh" perm="a+x"/>
+
+     <mkdir dir="${target_dir}/DTDs" />
+     <copy todir="${target_dir}/DTDs">
+        <fileset dir="../src/org/netbeans/modules/editor/resources/DTDs" />
+     </copy>
+   </target>
+
+  <target name="clean">
+    <delete>
+      <fileset dir="base">
+        <include name="**/*.class"/>
+      </fileset>
+    </delete>
+    <delete dir="${target_dir}"/>
+  </target>
+
+</project>
+

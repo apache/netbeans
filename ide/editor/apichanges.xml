@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="editor">Editor API</apidef>
+        <!-- etc. -->
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+
+    <changes>
+
+        <change id="deprecating-formatting">
+            <api name="editor"/>
+            <summary>Deprecating old formatting API</summary>
+            <version major="1" minor="53"/>
+            <date day="24" month="8" year="2010"/>
+            <author login="vstejskal"/>
+            <compatibility binary="compatible" source="incompatible" semantic="incompatible" addition="yes" deprecation="yes" modification="yes" deletion="yes"/>
+            <description>
+                <p>
+                    The old formatting API (<code>org.netbeans.editor.Formatter</code> &amp; co.)
+                    has been deprecated and moved to <code>editor.deprecated.pre65formatting</code> module.
+                </p>
+                <p>The exact API changes are listed in the sigtest report below.</p>
+<pre>
+-sigtest-init:
+     [echo] sigtest check: editor; cnb: org-netbeans-modules-editor; email: api-changes@netbeans.org; type: check
+
+check-sigtest:
+    [mkdir] Created dir: /work/netbeans/main2m/editor/build/test/sigtest/results
+  [sigtest] /work/netbeans/main2m/editor/build/test/sigtest/results/org.netbeans.modules.editor
+  [sigtest] Packages: org.netbeans.modules.editor.*, org.netbeans.modules.editor.options.*
+  [sigtest] Missing /System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/rt.jar
+  [sigtest] 
+  [sigtest] email: api-changes@netbeans.org
+  [sigtest] SignatureTest report
+  [sigtest] Base version: 1.51.0
+  [sigtest] Tested version: 1.51.0
+  [sigtest] Check mode: bin [throws removed]
+  [sigtest] Constant checking: on
+  [sigtest] 
+  [sigtest] 
+  [sigtest] Class org.netbeans.modules.editor.FormatterIndentEngine
+  [sigtest]   "E1.2 - API type removed" : CLASS public abstract org.netbeans.modules.editor.FormatterIndentEngine
+  [sigtest] 
+  [sigtest] Class org.netbeans.modules.editor.FormatterIndentEngineBeanInfo
+  [sigtest]   "E1.2 - API type removed" : CLASS public abstract org.netbeans.modules.editor.FormatterIndentEngineBeanInfo
+  [sigtest] 
+  [sigtest] Class org.netbeans.modules.editor.IndentEngineFormatter
+  [sigtest]   "E1.2 - API type removed" : CLASS public org.netbeans.modules.editor.IndentEngineFormatter
+  [sigtest] 
+  [sigtest] Class org.netbeans.modules.editor.NbEditorDocument
+  [sigtest]   "E1.2 - API type removed" : method public org.netbeans.editor.Formatter org.netbeans.editor.BaseDocument.getFormatter()
+  [sigtest]   "E1.2 - API type removed" : method public org.netbeans.editor.Formatter org.netbeans.editor.BaseDocument.getLegacyFormatter()
+  [sigtest] 
+  [sigtest] Class org.netbeans.modules.editor.NbEditorKit
+  [sigtest]   "E1.2 - API type removed" : method public org.netbeans.editor.Formatter org.netbeans.editor.BaseKit.createFormatter()
+  [sigtest] 
+  [sigtest] Class org.netbeans.modules.editor.SimpleIndentEngine
+  [sigtest]   "E1.2 - API type removed" : CLASS public org.netbeans.modules.editor.SimpleIndentEngine
+  [sigtest] 
+  [sigtest] Class org.netbeans.modules.editor.SimpleIndentEngineBeanInfo
+  [sigtest]   "E1.2 - API type removed" : CLASS public org.netbeans.modules.editor.SimpleIndentEngineBeanInfo
+  [sigtest] 
+  [sigtest] /work/netbeans/main2m/editor/build/test/sigtest/results/org-netbeans-modules-editor.xml: 1 failures in /work/netbeans/main2m/editor/nbproject/org-netbeans-modules-editor.sig
+
+BUILD FAILED
+Signature tests return code is wrong (1), check the messages above
+</pre>
+            </description>
+            <issue number="189638"/>
+        </change>
+        
+        <change id="deprecating-settings">
+            <api name="editor"/>
+            <summary>Deprecating old settings API</summary>
+            <version major="1" minor="41"/>
+            <date day="4" month="6" year="2008"/>
+            <author login="vstejskal"/>
+            <compatibility binary="compatible" source="incompatible" semantic="incompatible" addition="yes" deprecation="yes" modification="yes" deletion="yes"/>
+            <description>
+                <p>
+                    The old settings API (<code>org.netbeans.modules.editor.options.BaseOptions</code> &amp; co.)
+                    has been deprecated and moved to <code>editor.deprecated.pre61settings</code> module.
+                </p>
+                <p>The exact API changes are listed in the sigtest report below.</p>
+<pre>
+SignatureTest report
+Base version: 1.39.0
+Tested version: 1.41.0
+Check mode: src [throws normalized]
+Constant checking: on
+
+
+Missing Classes
+---------------
+
+org.netbeans.modules.editor.NbEditorSettingsInitializer
+org.netbeans.modules.editor.options.AbbrevInputPanel
+org.netbeans.modules.editor.options.AbbrevsEditor
+org.netbeans.modules.editor.options.AbbrevsEditorPanel
+org.netbeans.modules.editor.options.AbbrevsMIMEOptionFile
+org.netbeans.modules.editor.options.AbbrevsMIMEProcessor
+org.netbeans.modules.editor.options.AllOptions
+org.netbeans.modules.editor.options.AllOptionsBeanInfo
+org.netbeans.modules.editor.options.AllOptionsFolder
+org.netbeans.modules.editor.options.AllOptionsFolderBeanInfo
+org.netbeans.modules.editor.options.AllOptionsNode
+org.netbeans.modules.editor.options.BaseOptions
+org.netbeans.modules.editor.options.BaseOptionsBeanInfo
+org.netbeans.modules.editor.options.BaseOptionsBeanInfo$CaretTypeEditor
+org.netbeans.modules.editor.options.BasePrintOptions
+org.netbeans.modules.editor.options.BasePrintOptionsBeanInfo
+org.netbeans.modules.editor.options.ColoringArrayEditor
+org.netbeans.modules.editor.options.ColoringArrayEditorPanel
+org.netbeans.modules.editor.options.ColoringBean
+org.netbeans.modules.editor.options.ColoringBeanBeanInfo
+org.netbeans.modules.editor.options.ColoringEditor
+org.netbeans.modules.editor.options.ColoringEditorPanel
+org.netbeans.modules.editor.options.FontsColorsMIMEOptionFile
+org.netbeans.modules.editor.options.FontsColorsMIMEProcessor
+org.netbeans.modules.editor.options.InstalledOptionsFolder
+org.netbeans.modules.editor.options.KeyBindingsEditor
+org.netbeans.modules.editor.options.KeyBindingsEditorPanel
+org.netbeans.modules.editor.options.KeyBindingsMIMEOptionFile
+org.netbeans.modules.editor.options.KeyBindingsMIMEProcessor
+org.netbeans.modules.editor.options.MIMEOptionFile
+org.netbeans.modules.editor.options.MIMEOptionFolder
+org.netbeans.modules.editor.options.MIMEOptionNode
+org.netbeans.modules.editor.options.MIMEProcessor
+org.netbeans.modules.editor.options.MacroInputPanel
+org.netbeans.modules.editor.options.MacrosEditor
+org.netbeans.modules.editor.options.MacrosEditorPanel
+org.netbeans.modules.editor.options.MacrosMIMEOptionFile
+org.netbeans.modules.editor.options.MacrosMIMEProcessor
+org.netbeans.modules.editor.options.MultiPropertyFolder
+org.netbeans.modules.editor.options.OptionSupport
+org.netbeans.modules.editor.options.OptionUtilities
+org.netbeans.modules.editor.options.PopupMultiPropertyFolder
+org.netbeans.modules.editor.options.PropertiesMIMEOptionFile
+org.netbeans.modules.editor.options.PropertiesMIMEProcessor
+org.netbeans.modules.editor.options.ScrollInsetsCustomEditor
+org.netbeans.modules.editor.options.ScrollInsetsEditor
+
+Missing Superclasses or Superinterfaces
+---------------------------------------
+
+org.netbeans.modules.editor.IndentEngineFormatter:          interface java.util.EventListener
+org.netbeans.modules.editor.IndentEngineFormatter:          interface org.netbeans.editor.SettingsChangeListener
+org.netbeans.modules.editor.NbEditorDocument:               interface java.util.EventListener
+org.netbeans.modules.editor.NbEditorDocument:               interface org.netbeans.editor.SettingsChangeListener
+org.netbeans.modules.editor.NbEditorUI: interface org.netbeans.editor.SettingsChangeListener
+org.netbeans.modules.editor.NbEditorUI: superclass org.netbeans.editor.ext.ExtEditorUI
+
+Missing Methods
+---------------
+
+org.netbeans.modules.editor.IndentEngineFormatter:          method public void org.netbeans.editor.Formatter.settingsChange(org.netbeans.editor.SettingsChangeEvent)
+org.netbeans.modules.editor.NbEditorDocument:               method public void org.netbeans.modules.editor.NbEditorDocument.settingsChange(org.netbeans.editor.SettingsChangeEvent)
+org.netbeans.modules.editor.NbEditorKit:method public java.util.List org.netbeans.editor.BaseKit.translateActionNameList(java.util.List)
+org.netbeans.modules.editor.NbEditorKit:method public org.netbeans.editor.ext.Completion org.netbeans.editor.ext.ExtKit.createCompletion(org.netbeans.editor.ext.ExtEditorUI)
+org.netbeans.modules.editor.NbEditorKit:method public org.netbeans.editor.ext.CompletionJavaDoc org.netbeans.editor.ext.ExtKit.createCompletionJavaDoc(org.netbeans.editor.ext.ExtEditorUI)
+org.netbeans.modules.editor.NbEditorKit$GenerateFoldPopupAction:                method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.modules.editor.NbEditorKit$NbBuildPopupMenuAction:                 method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.modules.editor.NbEditorKit$NbBuildToolTipAction:                   method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.modules.editor.NbEditorKit$NbGenerateGoToPopupAction:              method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.modules.editor.NbEditorKit$NbRedoAction:       method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.modules.editor.NbEditorKit$NbStopMacroRecordingAction:             method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.modules.editor.NbEditorKit$NbToggleLineNumbersAction:              method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.modules.editor.NbEditorKit$NbUndoAction:       method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.modules.editor.NbEditorKit$ToggleToolbarAction:method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.modules.editor.NbEditorUI: method public org.netbeans.editor.ext.Completion org.netbeans.editor.ext.ExtEditorUI.getCompletion()
+org.netbeans.modules.editor.NbEditorUI: method public org.netbeans.editor.ext.CompletionJavaDoc org.netbeans.editor.ext.ExtEditorUI.getCompletionJavaDoc()
+org.netbeans.modules.editor.NbEditorUI: method public void org.netbeans.editor.EditorUI.settingsChange(org.netbeans.editor.SettingsChangeEvent)
+
+Added Superclasses or Superinterfaces
+-------------------------------------
+
+org.netbeans.modules.editor.NbEditorUI: superclass org.netbeans.editor.EditorUI
+
+Added Constructors
+------------------
+
+org.netbeans.modules.editor.NbEditorDocument:               constructor public org.netbeans.modules.editor.NbEditorDocument.NbEditorDocument(java.lang.String)
+
+Added Methods
+-------------
+
+org.netbeans.modules.editor.IndentEngineFormatter:          method public static org.netbeans.editor.Formatter org.netbeans.editor.Formatter.getFormatter(java.lang.String)
+org.netbeans.modules.editor.NbEditorKit:method public java.util.List&lt;javax.swing.Action&gt; org.netbeans.editor.BaseKit.translateActionNameList(java.util.List&lt;java.lang.String&gt;)
+</pre>
+            </description>
+            <issue number="90403"/>
+        </change>
+        
+        <change id="NbBaseDocument-kitClass-deprecations">
+            <api name="editor"/>
+            <summary>Deprecating kit class related API in NbEditorDocument</summary>
+            <version major="1" minor="40"/>
+            <date day="26" month="5" year="2008"/>
+            <author login="vstejskal"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes" deprecation="yes" modification="yes"/>
+            <description>
+                <p>
+                    The use of editor kit implementation class for identifying
+                    the type of a document has been deprecated in favor of mime
+                    types and <code>MimeLookup</code>. This change deprecates API
+                    methods and construction in <code>BaseDocument</code> that
+                    accept editor kit implementation class and adds their equivalents
+                    accepting <code>EditorKit</code>.
+                </p>
+                <p>Deprecated:
+                <code>NbEditorDocument(Class)</code>
+                </p>
+                <p>Added:
+                <code>NbEditorDocument(EditorKit)</code>
+                </p>
+            </description>
+            <issue number="114747"/>
+        </change>
+
+        <change id="editor.actions.from.folder">
+            <api name="editor"/>
+            <summary>Editor Actions can be supplied in 'Actions' folder</summary>
+            <version major="1" minor="39"/>
+            <date day="21" month="5" year="2008"/>
+            <author login="vstejskal"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes" deprecation="no" modification="no"/>
+            <description>
+                <p>
+                    The editor actions (ie. actions that are installed in <code>JEditorPane</code>s
+                    for Netbeans editors) can now be registered in XML layers under
+                    the <code>Actions</code> subfolder. For example adding an action to the java editor
+                    can be achieved by adding <code>.instance</code> file to
+                    <code>Editors/text/x-java/Actions</code> folder.
+                </p>
+            </description>
+            <issue number="85442"/>
+        </change>
+
+        <change id="SideBar.location">
+            <api name="editor"/>
+            <summary>Change of attribute name for <code>SideBar</code> instances to <code>location</code></summary>
+            <version major="1" minor="33"/>
+            <date day="16" month="6" year="2007"/>
+            <author login="jglick"/>
+            <compatibility modification="yes" semantic="compatible" deprecation="yes"/>
+            <description>
+                <p>
+                    The position of <code>SideBar</code> instances (<code>East</code> etc.)
+                    used to be given by the <code>position</code> attribute.
+                    Since that clashes with folder ordering, this attribute was deprecated
+                    in favor of <code>location</code>. The old attribute is still read as a backup.
+                </p>
+            </description>
+            <issue number="103187"/>
+        </change>
+
+        <change id="Editors-Toolbars-Default">
+            <api name="editor"/>
+            <summary>Deprecating Editors/text/base/Toolbars/Default</summary>
+            <version major="1" minor="32"/>
+            <date day="28" month="2" year="2007"/>
+            <author login="vstejskal"/>
+            <compatibility source="compatible" semantic="compatible" binary="compatible" modification="no" addition="no" deletion="no" deprecation="yes" />
+            <description>
+            <p>
+                The <code>Editors/text/base/Toolbars/Default</code> folder has
+                been deprecated in favor of <code>Editors/Toolbars/Default</code>.
+                The artificial mime type <code>text/base</code> should not be used
+                for registering toolbar actions that apply to all editors anymore,
+                instead use the root of the folders hierarchy.
+            </p>
+            </description>
+        </change>
+
+        <change id="CustomizableSideBar-CustomizableSideBarClass2LayerFolder">
+            <api name="editor"/>
+            <summary>Moving CustomizableSideBar and CustomizableSideBarClass2LayerFolder to a private package</summary>
+            <version major="1" minor="31"/>
+            <date day="26" month="2" year="2007"/>
+            <author login="vstejskal"/>
+            <compatibility source="incompatible" semantic="compatible" binary="incompatible" modification="no" addition="no" deletion="yes" deprecation="no" />
+            <description>
+            <p>
+                The <code>CustomizableSideBar</code> and <code>CustomizableSideBarClass2LayerFolder</code>
+                classes were accidentaly exposed in an API visible package. We
+                moved them to a private package, because they have no API use.
+                They implement support for editor side bars, which can be registered
+                using the <code>SideBar</code> subfolders in <code>MimeLookup</code>.
+            </p>
+            </description>
+        </change>
+
+        <change id="PopupActions-PopupInitializer">
+            <api name="editor"/>
+            <summary>Moving PopupActions and PopupInitializer to a private package</summary>
+            <version major="1" minor="30"/>
+            <date day="19" month="2" year="2007"/>
+            <author login="vstejskal"/>
+            <compatibility source="incompatible" semantic="compatible" binary="incompatible" modification="no" addition="no" deletion="yes" deprecation="no" />
+            <description>
+            <p>
+                The <code>PopupActions</code> and <code>PopupInitializer</code>
+                classes were accidentaly exposed in an API visible package. We
+                moved them to a private package, because they have no API use.
+                They implement support for editor popup menu, which can be registered
+                using the <code>Popup</code> subfolders in <code>MimeLookup</code>.
+            </p>
+            </description>
+        </change>
+        
+        <change id="NbEditorUtilities.getMimeType">
+            <api name="editor"/>
+            <summary>Adding NbEditorUtilities.getMimeType(JTextComponent)</summary>
+            <version major="1" minor="29"/>
+            <date day="16" month="2" year="2007"/>
+            <author login="vstejskal"/>
+            <compatibility source="compatible" semantic="compatible" binary="compatible" modification="no" addition="yes" deletion="no" deprecation="no" />
+            <description>
+            <p>
+                Adding <code>NbEditorUtilities.getMimeType(JTextComponent)</code>
+                as a standard way of determining a mime type of a Netbeans
+                document loaded in <code>JTextComponent</code>. It complements
+                the <code>NbEditorUtilities.getMimeType(Document)</code> method.
+            </p>
+            </description>
+        </change>
+        
+        <change id="AllOptionsFolder.loadMimeOption">
+            <api name="editor"/>
+            <summary>Deprecating AllOptionsFolder.loadMimeOption methods</summary>
+            <version major="1" minor="28"/>
+            <date day="16" month="1" year="2007"/>
+            <author login="vstejskal"/>
+            <compatibility source="compatible" semantic="compatible" binary="compatible" modification="no" addition="no" deletion="no" deprecation="yes" />
+            <description>
+            <p>
+                Deprecating <code>AllOptionsFolder.loadMimeOption(Class kitClass)</code>
+                and <code>AllOptionsFolder.loadMimeOption(Class kitClass, boolean processOldTypeOption)</code>.
+                There is no reason anybody should need to call these methods.
+                <code>MimeLookup</code> should be used for accessing editor settings
+                including <code>BaseOptions</code>.
+            </p>
+            </description>
+        </change>
+        
+        <change id="text-base">
+            <api name="editor"/>
+            <summary>Fake MIME type <code>text/base</code> was removed</summary>
+            <version major="1" minor="24"/>
+            <date day="27" month="7" year="2005"/>
+            <author login="mroskanin"/>
+            <compatibility semantic="incompatible" modification="yes">
+                <p>
+                    Modules formerly registering objects in this layer location
+                    will need to move their registrations for them to continue working.
+                </p>
+            </compatibility>
+            <description>
+        Fake MIME type folder <code>Editors/text/base/</code>
+        formerly used for global objects common for all MIME types, was removed.
+        Now all common objects can be placed into the <code>Editors/</code> folder directly.
+            </description>
+        </change>
+
+
+    </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <==============
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE editor/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the Editor API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the <a href="@org-netbeans-modules-editor@/architecture-summary.html">Editor API</a>.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+      <hr/>
+      <standard-changelists module-code-name="editor/1"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

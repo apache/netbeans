@@ -1,0 +1,38 @@
+<testresult testFile='nowdoc_000.php'>
+    <scanner>
+        <token id='T_INLINE_HTML' start='0' end='39'>
+            <text>--TEST--\nnon finished now doc\n--FILE--\n</text>
+        </token>
+        <token id='T_REQUIRE_ONCE' start='46' end='58'>
+            <text>require_once</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='59' end='71'>
+            <text>&apos;nowdoc.inc&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='71' end='72'>
+            <text>;</text>
+        </token>
+        <token id='T_PRINT' start='74' end='79'>
+            <text>print</text>
+        </token>
+        <token id='T_START_NOWDOC' start='80' end='97'>
+            <text>&lt;&lt;&lt;&apos;ENDOFNOWDOC&apos;\n</text>
+        </token>
+        <token id='EOF' start='155' end='155'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='97'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <InLineHtml start='0' end='39'/>
+            <ExpressionStatement start='46' end='72'>
+                <Include start='46' end='71' type='REQUIRE_ONCE'>
+                    <Scalar start='59' end='71' type='STRING' value='&apos;nowdoc.inc&apos;'/>
+                </Include>
+            </ExpressionStatement>
+            <ASTError start='74' end='97'/>
+        </Statements>
+    </Program>
+</testresult>

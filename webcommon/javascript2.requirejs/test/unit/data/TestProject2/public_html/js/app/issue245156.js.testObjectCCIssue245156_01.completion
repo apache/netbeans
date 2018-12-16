@@ -1,0 +1,6 @@
+Code completion result for source line:
+module2.|const1;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      const1: String                  [PUBLIC]   moduleLib1.js
+FIELD      const2: String                  [PUBLIC]   moduleLib1.js

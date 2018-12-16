@@ -1,0 +1,4 @@
+Patches     >   Export Uncommitted Changes...   U
+                Export Commit...                C
+                =============================
+                Apply Diff Patch...             Y

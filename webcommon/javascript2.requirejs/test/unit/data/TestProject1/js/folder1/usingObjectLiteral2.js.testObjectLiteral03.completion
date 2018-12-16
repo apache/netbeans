@@ -1,0 +1,8 @@
+Code completion result for source line:
+ob.ol|2color
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      ol1                             [PUBLIC]   <font color=#999999>usingObjectLiteral.js</font>
+FIELD      ol2color: String                [PUBLIC]   objectLiteral2.js
+FIELD      ol2number: Number               [PUBLIC]   objectLiteral2.js
+FIELD      ol2size: String                 [PUBLIC]   objectLiteral2.js

@@ -1,0 +1,70 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.netbeans.modules.javascript.grunt.options;
+
+import java.util.List;
+import java.util.prefs.Preferences;
+import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.modules.javascript.grunt.exec.GruntExecutable;
+import org.netbeans.modules.javascript.grunt.util.FileUtils;
+import org.openide.util.NbPreferences;
+
+public final class GruntOptions {
+
+    private static final String GRUNT_PATH = "grunt.path"; // NOI18N
+
+    // Do not change arbitrary - consult with layer's folder OptionsExport
+    // Path to Preferences node for storing these preferences
+    private static final String PREFERENCES_PATH = "grunt"; // NOI18N
+
+    private static final GruntOptions INSTANCE = new GruntOptions();
+
+    private final Preferences preferences;
+
+    private volatile boolean gruntSearched = false;
+
+
+    private GruntOptions() {
+        preferences = NbPreferences.forModule(GruntOptions.class).node(PREFERENCES_PATH);
+    }
+
+    public static GruntOptions getInstance() {
+        return INSTANCE;
+    }
+
+    @CheckForNull
+    public String getGrunt() {
+        String path = preferences.get(GRUNT_PATH, null);
+        if (path == null
+                && !gruntSearched) {
+            gruntSearched = true;
+            List<String> files = FileUtils.findFileOnUsersPath(GruntExecutable.GRUNT_NAME);
+            if (!files.isEmpty()) {
+                path = files.get(0);
+                setGrunt(path);
+            }
+        }
+        return path;
+    }
+
+    public void setGrunt(String grunt) {
+        preferences.put(GRUNT_PATH, grunt);
+    }
+
+}

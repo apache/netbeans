@@ -1,0 +1,2 @@
+        let |>MARK_OCCURRENCES:te^st<| = 20;
+        console.log(|>MARK_OCCURRENCES:test<|);

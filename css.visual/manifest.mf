@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.netbeans.modules.css.visual/3
-OpenIDE-Module-Install: org/netbeans/modules/css/visual/Installer.class
-OpenIDE-Module-Layer: org/netbeans/modules/css/visual/resources/layer.xml
-OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/css/visual/Bundle.properties
-OpenIDE-Module-Requires: org.openide.windows.IOProvider
-AutoUpdate-Show-In-Client: false
-OpenIDE-Module-Specification-Version: 3.33

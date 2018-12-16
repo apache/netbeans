@@ -1,0 +1,4 @@
+Code completion result for source line:
+$an|on->testAnon();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   {} $anon                        [PUBLIC]   anonymousClass01.php

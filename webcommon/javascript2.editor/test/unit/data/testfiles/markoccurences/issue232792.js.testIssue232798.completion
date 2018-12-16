@@ -1,0 +1,7 @@
+Code completion result for source line:
+this.|c // issue 232798
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     createBuf(): undefined          [PUBLIC]   issue232792.js
+METHOD     getName(): undefined            [PUBLIC]   issue232792.js
+FIELD      c                               [PUBLIC]   issue232792.js

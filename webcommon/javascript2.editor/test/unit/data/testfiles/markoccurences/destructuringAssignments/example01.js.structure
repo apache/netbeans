@@ -1,0 +1,5 @@
+drawES6Chart:METHOD:[PUBLIC]:ESCAPED{drawES6Chart}ESCAPED{(}<font color="#999999">ESCAPED{String}ESCAPED{ }</font>ESCAPED{size}ESCAPED{, }ESCAPED{cords}ESCAPED{, }<font color="#999999">ESCAPED{Number}ESCAPED{ }</font>ESCAPED{radius}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  cords:PARAMETER:[PRIVATE]:ESCAPED{cords}:
+    x:FIELD:[PUBLIC]:ESCAPED{x}<font color="#999999">ESCAPED{ : }Number</font>:
+    y:FIELD:[PUBLIC]:ESCAPED{y}<font color="#999999">ESCAPED{ : }Number</font>:
+    z:FIELD:[PUBLIC]:ESCAPED{z}<font color="#999999">ESCAPED{ : }Number</font>:

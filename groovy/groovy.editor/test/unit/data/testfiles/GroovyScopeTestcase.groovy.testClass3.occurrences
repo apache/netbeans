@@ -1,0 +1,2 @@
+class TestCase extends ^java.lang.|>MARK_OCCURRENCES:Object<| {
+    def test (|>MARK_OCCURRENCES:Object<| xy = 0 ) {

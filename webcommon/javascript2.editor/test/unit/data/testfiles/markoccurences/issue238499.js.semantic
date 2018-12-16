@@ -1,0 +1,6 @@
+var |>GLOBAL:SomeClass<| = new function()
+{
+	var |>LOCAL_VARIABLE_DECLARATION:new_link<| = callingSomeFucntion();
+	var |>LOCAL_VARIABLE_DECLARATION,UNUSED:content<| = |>LOCAL_VARIABLE:new_link<|+1;
+	return |>LOCAL_VARIABLE:new_link<|;
+};

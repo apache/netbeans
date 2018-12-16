@@ -1,0 +1,12 @@
+Code completion result for source line:
+#{(()->2 * |)}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      AssertionError                             java.lang.AssertionError
+CLASS      Boolean                                    java.lang.Boolean
+CLASS      Double                                     java.lang.Double
+CLASS      Enum                                       java.lang.Enum
+CLASS      StringBuilder                              java.lang.StringBuilder
+KEYWORD    instanceof                                 null
+KEYWORD    true                                       null
+OTHER      bundle                                     java/beans/Messages

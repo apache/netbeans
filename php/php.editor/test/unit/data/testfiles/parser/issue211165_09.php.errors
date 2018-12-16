@@ -1,0 +1,28 @@
+[[100,107]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	private] 100-107:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	private
+[[110,111]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	','] 110-111:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	','
+[[116,117]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}] 116-117:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}
+[[52,53]-Syntax error
+ unexpected:	{
+ after:	extends
+ expected:	identifier, namespace, \, define] 52-53:Syntax error
+ unexpected:	{
+ after:	extends
+ expected:	identifier, namespace, \, define
+[[59,65]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	public] 59-65:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	public
+[[68,69]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	','] 68-69:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	','
+[[78,87]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	protected] 78-87:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	protected
+[[90,91]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	','] 90-91:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	','

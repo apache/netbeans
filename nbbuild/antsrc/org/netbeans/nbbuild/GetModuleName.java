@@ -28,8 +28,9 @@ import org.apache.tools.ant.types.*;
  * @author Michal Zlamal
  */
 public class GetModuleName extends Task {
-    String name = null;
-    File root = null;
+    String name;
+    String id;
+    File root;
 
     // XXX this is a lousy attr name; conventional for such attrs to
     // end in 'property' so you realize they refer to a property name
@@ -37,11 +38,18 @@ public class GetModuleName extends Task {
         this.name = name;
     }
 
-    /** Root directory of the whole project - ${nb_all} */
-    public void setRoot( File root ) {
+    public void setId (String id) {
+        this.id = id;
+    }
+
+    /** Root directory of the whole project - ${nb_all}
+     * @param root the root
+     */
+    public void setRoot(File root) {
         this.root = root;
     }
      
+    @Override
     public void execute() throws BuildException {
         if (name == null) 
             throw new BuildException("You must set the property name, where to store the module name", this.getLocation());
@@ -54,7 +62,7 @@ public class GetModuleName extends Task {
                 dir = dir.getParentFile ();
             }
             String rootdir = root.getCanonicalPath();
-            StringBuffer modulename = new StringBuffer ();
+            StringBuilder modulename = new StringBuilder ();
             while (dir != null) {
                 if (dir.getCanonicalPath ().equals (rootdir)) {
                     break;
@@ -70,7 +78,12 @@ public class GetModuleName extends Task {
             if (dir == null) {
                 throw new BuildException("This module (" + this.getProject().getBaseDir() + ") is on different path than the root dir", this.getLocation());
             }
-            this.getProject().setProperty(name, modulename.toString()); // XXX should be setNewProperty, when that is possible
+            final String mName = modulename.toString();
+            this.getProject().setNewProperty(name, mName);
+            if (id != null) {
+                int last = mName.lastIndexOf('/');
+                this.getProject().setNewProperty(id, mName.substring(last + 1));
+            }
         }
         catch (IOException ex) {
             throw new BuildException("Root dir or module's base dir wasn't recognized", ex, this.getLocation());

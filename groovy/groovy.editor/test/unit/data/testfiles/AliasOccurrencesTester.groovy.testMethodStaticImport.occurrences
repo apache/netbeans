@@ -1,0 +1,2 @@
+import static java.lang.Math.|>MARK_OCCURRENCES:sin<|
+println |>MARK_OCCURRENCES:si^n<|()

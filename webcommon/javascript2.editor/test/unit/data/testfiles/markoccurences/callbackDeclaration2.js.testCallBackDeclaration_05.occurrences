@@ -1,0 +1,2 @@
+ * @param {requestCallback} |>MARK_OCCURRENCES:c^b<| - The callback that handles the response.
+Requester.prototype.send = function(|>MARK_OCCURRENCES:cb<|) {

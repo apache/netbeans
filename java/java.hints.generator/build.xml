@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="java.hints.generator">
+<project basedir="." default="netbeans" name="java/java.hints.generator">
     <description>Builds, tests, and runs the project org.netbeans.modules.java.hints.generator</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

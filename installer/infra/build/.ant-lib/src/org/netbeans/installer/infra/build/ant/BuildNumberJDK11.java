@@ -32,7 +32,6 @@ import org.netbeans.installer.infra.build.ant.utils.Utils;
  * This class is an ant task which parses a given input file and 
  * get version, update, build, etc
  * 
- * @author Jiri Rechtacek
  */
 public class BuildNumberJDK11 extends Task {
     /////////////////////////////////////////////////////////////////////////////////

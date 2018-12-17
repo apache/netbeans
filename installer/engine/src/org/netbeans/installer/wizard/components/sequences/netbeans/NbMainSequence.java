@@ -78,8 +78,6 @@ import org.netbeans.installer.wizard.components.sequences.ProductWizardSequence;
 
 /**
  *
- 
- 
  */
 public class NbMainSequence extends WizardSequence {
     /////////////////////////////////////////////////////////////////////////////////
@@ -158,7 +156,8 @@ public class NbMainSequence extends WizardSequence {
             File nbInstallLocation = nbBase.getInstallationLocation();
             LogManager.log("    nbLocation = " + nbInstallLocation);
             
-            String runIDE = new File(nbInstallLocation, "bin").getPath(); // NOI18N
+            String binDir = "netbeans" + File.separator + "bin"; //NOI18N
+            String runIDE = new File(nbInstallLocation, binDir).getPath(); // NOI18N
             if (SystemUtils.isWindows()) {
                 runIDE += File.separator + "netbeans.exe"; // NOI18N
             } else {
@@ -605,7 +604,7 @@ public class NbMainSequence extends WizardSequence {
             addChild(installAction);
             Product nbBase = null;
             for (Product p : toInstall) {
-                if ("nb-base".equals(p.getUid())) { // NOI18N
+                if ("nb-base".equals(p.getUid()) || "nb-all".equals(p.getUid())) { // NOI18N
                     nbBase = p;
                     break;
                 }

@@ -72,7 +72,7 @@
         <delete dir="${basedir}/dist" failonerror="no"/>
         <ant dir="${basedir}/glassfish" target="clean"/>
         <ant dir="${basedir}/tomcat" target="clean"/>
-        <ant dir="${basedir}/netBeans/baseide" target="clean"/>
+        <ant dir="${basedir}/netBeans/nbide" target="clean"/>
         <ant dir="${basedir}/netBeans/jre-nested" target="clean"/>
         <delete dir="${basedir}/netBeans/ruby/build" failonerror="no"/>
         <delete dir="${basedir}/netBeans/cpp/build" failonerror="no"/>
@@ -112,6 +112,7 @@
             <or>
                 <equals arg1="${build.jdk7}" arg2="1"/>
                 <equals arg1="${build.jdk8}" arg2="1"/>
+                <equals arg1="${build.jdk11}" arg2="1"/>
             </or>
         </condition>
         <condition property="do.build.jdk7">
@@ -119,6 +120,9 @@
         </condition>
         <condition property="do.build.jdk8">
 	    <equals arg1="${build.jdk8}" arg2="1"/>
+        </condition>
+        <condition property="do.build.jdk11">
+            <equals arg1="${build.jdk11}" arg2="1"/>
         </condition>
     </target>        
 
@@ -133,12 +137,12 @@
                                          extide(extide), websvccommon(extide),
                                          mobility(javame),
                                          ergonomics(ergonomics),
-                                         ide(baseide), nb-etc(baseide), harness(baseide), platform(baseide)
+                                         ide(nbide), nb-etc(nbide), harness(nbide), platform(nbide)
                                          "/>
         
         <property name="jdk-bundle.clusters" value="apisupport(javase), profiler(javase), java(javase),
                                                     extide(extide), websvccommon(extide),
-                                                    ide(baseide), nb-etc(baseide), harness(baseide), platform(baseide)
+                                                    ide(nbide), nb-etc(nbide), harness(nbide), platform(nbide)
                                          "/>
 
         <property name="fx.clusters" value="javafx(javafx), javafx-mac(javafx)"/>
@@ -154,29 +158,29 @@
     </target>
 
     <target name="unzip-nb" description="Unzip clusters to modules" depends="init-clusters">
-        <for-each list="${clusters}" separator="," property="cluster.name"  propertyArg="module.name">
+        <!--for-each list="${clusters}" separator="," property="cluster.name"  propertyArg="module.name"-->
             <ant target="unzip-cluster"/>                           
-            <exec executable="sh" failonerror="no">
+            <!--exec executable="sh" failonerror="no">
                 <arg value="-c"/>
                 <arg value="cd ${basedir}/netBeans/${module.name}/build/netbeans ; rm -rf META-INF"/>
             </exec>        
-        </for-each>
+        </for-each-->
 
 
     </target>
     
     <target name="unzip-cluster">
-        <mkdir dir="${basedir}/netBeans/${module.name}/build/netbeans"/>
+        <!--mkdir dir="${basedir}/netBeans/nbide/build/netbeans"/-->
         <exec executable="sh" failonerror="yes">
             <arg value="-c"/>
-            <arg value="unzip -o -d ${basedir}/netBeans/${module.name}/build/netbeans ${common.name}-${cluster.name}.zip"/>
+            <arg value="unzip -o -d ${basedir}/netBeans/nbide/build ${common.name}incubating-netbeans-10.0-vc3-bin.zip"/>
         </exec>    
     </target>
     
     <target name="size-pack-module" description="Count up size of the module, pack200">           
         <exec executable="sh" failonerror="no" outputproperty="size">
             <arg value="-c"/>
-            <arg value="cd ${basedir}/netBeans/${module.name}; du -sk build | sed 's/[\t]*build//'"/>
+            <arg value="cd ${basedir}/netBeans/nbide; du -sk build | sed 's/[\t]*build//'"/>
         </exec>        
         <echo message="sizeof.${module.name}=${size}${line.separator}" file="${basedir}/build/sizes.pro" append="true"/>                    
         <exec executable="sh" failonerror="yes">
@@ -205,11 +209,11 @@
 
     <target name="build-pkg" depends="unzip-nb" description="Builds NB and packs packages" >                  
         <ant target="size-pack-module">
-            <property name="module.name" value="baseide"/>
-            <property name="module.builddir" value="${basedir}/netBeans/baseide/build"/>
+            <property name="module.name" value="nbide"/>
+            <property name="module.builddir" value="${basedir}/netBeans/nbide/build"/>
         </ant>
-        <ant dir="${basedir}/netBeans/baseide"/>          
-        <ant target="build-modules"/>       
+        <ant dir="${basedir}/netBeans/nbide"/>          
+        <!--ant target="build-modules"/-->       
     </target>
 
 
@@ -258,27 +262,24 @@
             <fileset dir="${basedir}/netBeans/${module.name}/pkg/scripts"/>
         </copy>
         
-        <copy file="${basedir}/netBeans/baseide/build/scripts/env.sh" todir="${scriptsdir}"/>
-        <copy file="${basedir}/netBeans/baseide/build/scripts/addproduct_id.sh" todir="${scriptsdir}"/>
+        <copy file="${basedir}/netBeans/nbide/build/scripts/env.sh" todir="${scriptsdir}"/>
+        <copy file="${basedir}/netBeans/nbide/build/scripts/addproduct_id.sh" todir="${scriptsdir}"/>
         <copy file="${basedir}/commonfiles/get_current_jdk.sh" todir="${scriptsdir}"/>
         <copy file="${basedir}/commonfiles/unpack200.sh" todir="${scriptsdir}"/>
         <copy file="${basedir}/commonfiles/postupgrade_generic" tofile="${scriptsdir}/postupgrade" overwrite="false"/>
         <copy file="${basedir}/commonfiles/postinstall_generic" tofile="${scriptsdir}/postinstall" overwrite="false"/>
         <copy file="${basedir}/commonfiles/postinstall_generic" tofile="${scriptsdir}/postinstall_generic" overwrite="false"/>
 
-        <chmod dir="${scriptsdir}" perm="ugo+x" includes="**/*"/>
-        
-        <condition property="sign.option" value="--sign '${signing_identity}'" else="">
-            <not>
-                <equals arg1="${signing_identity}" arg2="0"/>
-            </not>
-        </condition>  
+        <chmod dir="${scriptsdir}" perm="ugo+x" includes="**/*"/> 
         
         <echo message="Building ${module.name} into ${basedir}/build/${module.name}-${nb.id}.pkg"/>
         <exec executable="sh" failonerror="yes">
             <arg value="-c"/>            
-            <arg value="pkgbuild --root '${module.builddir}/netbeans' --scripts '${scriptsdir}' --identifier org.netbeans.ide.${module.name}.${nb.id} ${sign.option} --install-location '/${app.name}/Contents/Resources/NetBeans' '${basedir}/build/${module.name}-${nb.id}.pkg'"/>
+            <arg value="pkgbuild --root '${module.builddir}/netbeans' --scripts '${scriptsdir}' --identifier org.netbeans.ide.${module.name}.${nb.id} --install-location '/${app.name}/Contents/Resources/NetBeans' '${basedir}/build/${module.name}-${nb.id}.pkg'"/>
         </exec>
+        <java jar="${mac.sign.client}" fork="true" failonerror="true" maxmemory="2048m">
+            <arg line="sign -user ${mac.sign.user} -global_uid ${mac.sign.guid} -file_to_sign '${basedir}/build/${module.name}-${nb.id}.pkg' -signed_location '${basedir}/build' -sign_method mac_pkg -server UK" />
+        </java>
     </target>          
 
 
@@ -300,8 +301,8 @@
             <fileset dir="${source.scriptsdir}"/>
         </copy>
         
-        <copy file="${basedir}/netBeans/baseide/build/scripts/env.sh" todir="${target.scriptsdir}"/>
-        <copy file="${basedir}/netBeans/baseide/pkg/scripts/addproduct_id.sh" todir="${target.scriptsdir}"/>
+        <copy file="${basedir}/netBeans/nbide/build/scripts/env.sh" todir="${target.scriptsdir}"/>
+        <copy file="${basedir}/netBeans/nbide/pkg/scripts/addproduct_id.sh" todir="${target.scriptsdir}"/>
         <copy file="${basedir}/commonfiles/get_current_jdk.sh" todir="${target.scriptsdir}"/>
         <copy file="${basedir}/commonfiles/unpack200.sh" todir="${target.scriptsdir}"/>
         <copy file="${basedir}/commonfiles/postupgrade_generic" tofile="${target.scriptsdir}/postupgrade" overwrite="false"/>
@@ -312,18 +313,18 @@
     </target>          
 
     <target name="init-bundles">
-        <property name="main.bundles" value="(./build/baseide-${nb.id}.pkg ./build/javase-${nb.id}.pkg ./build/webcommon-${nb.id}.pkg ./build/extide-${nb.id}.pkg ./build/javaee-${nb.id}.pkg ./build/javame-${nb.id}.pkg ./build/cpp-${nb.id}.pkg ./build/php-${nb.id}.pkg ./build/groovy-${nb.id}.pkg ./build/ergonomics-${nb.id}.pkg ./build/glassfish-${glassfish.id}.pkg ./build/tomcat-${tomcat.id}.pkg),
-                                              -javase(./build/baseide-${nb.id}.pkg ./build/javase-${nb.id}.pkg ./build/extide-${nb.id}.pkg),
-                                              -javaee(./build/baseide-${nb.id}.pkg ./build/javase-${nb.id}.pkg ./build/webcommon-${nb.id}.pkg ./build/extide-${nb.id}.pkg ./build/javaee-${nb.id}.pkg ./build/glassfish-${glassfish.id}.pkg ./build/tomcat-${tomcat.id}.pkg),                                              
-                                              -php(./build/baseide-${nb.id}.pkg ./build/webcommon-${nb.id}.pkg ./build/extide-${nb.id}.pkg ./build/php-${nb.id}.pkg ./build/jre-nested-${jre.version.string.long}.pkg),
-                                              -cpp(./build/baseide-${nb.id}.pkg ./build/cpp-${nb.id}.pkg ./build/jre-nested-${jre.version.string.long}.pkg)
+        <property name="main.bundles" value="(./build/nbide-${nb.id}.pkg ./build/javase-${nb.id}.pkg ./build/webcommon-${nb.id}.pkg ./build/extide-${nb.id}.pkg ./build/javaee-${nb.id}.pkg ./build/javame-${nb.id}.pkg ./build/cpp-${nb.id}.pkg ./build/php-${nb.id}.pkg ./build/groovy-${nb.id}.pkg ./build/ergonomics-${nb.id}.pkg ./build/glassfish-${glassfish.id}.pkg ./build/tomcat-${tomcat.id}.pkg),
+                                              -javase(./build/nbide-${nb.id}.pkg ./build/javase-${nb.id}.pkg ./build/extide-${nb.id}.pkg),
+                                              -javaee(./build/nbide-${nb.id}.pkg ./build/javase-${nb.id}.pkg ./build/webcommon-${nb.id}.pkg ./build/extide-${nb.id}.pkg ./build/javaee-${nb.id}.pkg ./build/glassfish-${glassfish.id}.pkg ./build/tomcat-${tomcat.id}.pkg),                                              
+                                              -php(./build/nbide-${nb.id}.pkg ./build/webcommon-${nb.id}.pkg ./build/extide-${nb.id}.pkg ./build/php-${nb.id}.pkg ./build/jre-nested-${jre.version.string.long}.pkg),
+                                              -cpp(./build/nbide-${nb.id}.pkg ./build/cpp-${nb.id}.pkg ./build/jre-nested-${jre.version.string.long}.pkg)
                                           "/>
         <property name="fx.bundles" value="    
                                                -javafx-full(./build/*pkg),
-                                               -javafx(./build/baseide-${nb.id}.pkg ./build/javase-${nb.id}.pkg ./build/javafx-${nb.id}.pkg)
+                                               -javafx(./build/nbide-${nb.id}.pkg ./build/javase-${nb.id}.pkg ./build/javafx-${nb.id}.pkg)
                                           "/>
 
-        <property name="jdk-bundle.bundles" value="-jdk(./build/baseide-${nb.id}.pkg ./build/javase-${nb.id}.pkg ./build/extide-${nb.id}.pkg ./build/jdk.pkg ./build/javaappletplugin.pkg)"/>
+        <property name="jdk-bundle.bundles" value="-jdk(./build/nbide-${nb.id}.pkg ./build/jdk.pkg)"/>
 
         <condition property="all.bundles" value="${main.bundles},${fx.bundles}" else="${main.bundles}"> 
             <equals arg1="${javafx.build}" arg2="1"/>
@@ -496,7 +497,7 @@
                 <filter token="SIZE_ERGONOMICS" value="${sizeof.ergonomics}"/>
                 <filter token="SIZE_GLASSFISH" value="${sizeof.glassfish}"/>
                 <filter token="SIZE_TOMCAT" value="${sizeof.tomcat}"/>                
-                <filter token="SIZE_BASEIDE" value="${sizeof.baseide}"/>                
+                <filter token="SIZE_BASEIDE" value="${sizeof.nbide}"/>                
                 <filter token="SIZE_PHP" value="${sizeof.php}"/>    
             </filterset>
         </copy> 
@@ -521,18 +522,12 @@
         <delete dir="dist_pkg" failonerror="false"/>
     </target>
     
-    <target name="create-postinstallscripts-package">
-        <condition property="sign.option" value="--sign '${signing_identity}'" else="">
-            <not>
-                <equals arg1="${signing_identity}" arg2="0"/>
-            </not>
-        </condition>
-        
+    <target name="create-postinstallscripts-package">        
         <property name="target.scriptsdir" value="${basedir}/build/postinstallscripts/"/>
         
         <mkdir dir="${target.scriptsdir}"/>        
         
-        <copy file="${basedir}/netBeans/baseide/build/scripts/env.sh" todir="${target.scriptsdir}"/>        
+        <copy file="${basedir}/netBeans/nbide/build/scripts/env.sh" todir="${target.scriptsdir}"/>        
         <copy file="${basedir}/commonfiles/get_current_jdk.sh" todir="${target.scriptsdir}"/>        
         <copy todir="${target.scriptsdir}" failonerror="false" verbose="true" overwrite="true">
             <fileset dir="${basedir}/commonfiles/postinstall/"/>
@@ -542,20 +537,21 @@
         
         <exec executable="sh" failonerror="yes">
             <arg value="-c"/>            
-            <arg value="pkgbuild --nopayload --scripts '${target.scriptsdir}' --identifier org.netbeans.postinstallscripts ${sign.option} '${basedir}/build/postinstallscripts.pkg'"/>
+            <arg value="pkgbuild --nopayload --scripts '${target.scriptsdir}' --identifier org.netbeans.postinstallscripts '${basedir}/build/postinstallscripts.pkg'"/>
         </exec>
+        <java jar="${mac.sign.client}" fork="true" failonerror="true" maxmemory="2048m">
+            <arg line="sign -user ${mac.sign.user} -global_uid ${mac.sign.guid} -file_to_sign '${basedir}/build/postinstallscripts.pkg' -signed_location '${basedir}/build' -sign_method mac_pkg -server UK" />
+        </java>
     </target>
 
     <target name="pack-bundle" description="Packs nested packages into the main one">
-        <condition property="sign.option" value="--sign '${signing_identity}'" else="">
-            <not>
-                <equals arg1="${signing_identity}" arg2="0"/>
-            </not>
-        </condition>
         <mkdir dir="${pkg.file}/inst_package"/>
         <exec executable="sh" failonerror="yes">
             <arg value="-cv"/>
-            <arg value="productbuild --distribution '${pkg.file}/distribution.xml' ${sign.option} --package-path '${pkg.file}/packages' --resources '${pkg.file}/resources/' '${pkg.file}/inst_package/${pkg.name}.pkg'"/>
+            <arg value="productbuild --distribution '${pkg.file}/distribution.xml' --package-path '${pkg.file}/packages' --resources '${pkg.file}/resources/' '${pkg.file}/inst_package/${pkg.name}.pkg'"/>
         </exec>
+        <java jar="${mac.sign.client}" fork="true" failonerror="true" maxmemory="2048m">
+            <arg line="sign -user ${mac.sign.user} -global_uid ${mac.sign.guid} -file_to_sign '${pkg.file}/inst_package/${pkg.name}.pkg' -signed_location '${pkg.file}/inst_package' -sign_method mac_pkg -server UK" />
+        </java>
     </target>    
 </project>

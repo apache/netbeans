@@ -2,7 +2,7 @@
 <!--
   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
 
-  Copyright 1997-2015 Oracle and/or its affiliates. All rights reserved.
+  Copyright 1997-2016 Oracle and/or its affiliates. All rights reserved.
 
   Oracle and Java are registered trademarks of Oracle and/or its affiliates.
   Other names may be trademarks of their respective owners.
@@ -45,22 +45,22 @@
     <property name="install.dir" value="/Applications/NetBeans"/>
     
     <!-- Base IDE properties   -->       
-    <property name="baseide.version" value="Dev"/>
-    <property name="baseide.id" value="Dev"/>
-    <property name="appname" value="NetBeans Dev ${buildnumber}"/> 
-    <property name="mpkg.name_nb" value="NetBeans Dev ${buildnumber}"/> 
+    <property name="nbide.version" value="10.0"/>
+    <property name="nbide.id" value="10.0"/>
+    <property name="appname" value="Apache NetBeans 10.0"/> 
+    <property name="mpkg.name_nb" value="Apache NetBeans 10.0"/> 
     <property name="app.name" value="${install.dir}/${appname}.app"/>
     <property name="nbClusterDir" value="nb"/>      
     <property name="nb.check.build.number" value="0"/>
 
     <!-- Unique ID in db/receipts for Development builds -->
-    <property name="nb.id" value="${baseide.id}-${buildnumber}"/>
+    <!--<property name="nb.id" value="${nbide.id}-${buildnumber}"/>-->
     <!-- Unique ID in db/receipts for release build -->
-    <!--<property name="nb.id" value="${baseide.id}"/>-->
+    <property name="nb.id" value="${nbide.id}"/>
 
-    <property name="appversion" value="Development Version"/>
-    <property name="nb.display.version.long"  value="Development Version ${buildnumber}"/>
-    <property name="nb.display.version.short" value="Dev"/>
+    <property name="appversion" value="8.2"/>
+    <property name="nb.display.version.long"  value="8.2"/>
+    <property name="nb.display.version.short" value="8.2"/>
 
     <!-- Tomcat properties   -->    
     <property name="tomcat.version" value="8.0.27"/>
@@ -91,10 +91,10 @@
     <property name="glassfish_location"     value="${glassfish.location.prefix}/${glassfish.build.type}/latest/archive/release/glassfish-4.1.1-a.zip"/>
     <property name="glassfish.subdir"       value="glassfish4"/>
     
-    <property name="dmg.prefix.name" value="${prefix}-${buildnumber}"/>                         
+    <property name="dmg.prefix.name" value="${prefix}"/>                         
 
     <!-- Nested JRE Properties-->        
-    <property name="jre.builds.path" value="${jdk_builds_host}/${jre_builds_path}/latest/bundles/macosx-x64"/><!-- Change latest to fcs/b{proper buildnumber} -->
+    <property name="jre.builds.path" value="${jre_builds_host}/${jre_builds_path}/latest/bundles/macosx-x64"/><!-- Change latest to fcs/b{proper buildnumber} -->
     <!-- e.g. 1.8.0 - jre-8u31-macosx-x64.tar.gz -->
     <loadresource property="jre.version.number">
           <url url="${jre.builds.path}"/>
@@ -144,19 +144,21 @@
     </condition-->       
 
     <!-- JDK Properties-->    
-    <condition property="jdk_builds_path" value="${jdk7_builds_path}" else="${jdk8_builds_path}">
+    <condition property="jdk_builds_path" value="${jdk7_builds_path}" else="${jdk11_builds_path}">
         <equals arg1="${build.jdk7}" arg2="1"/>
     </condition>
     
-    <property name="jdk.builds.path" value="${jdk_builds_host}/${jdk_builds_path}/latest/bundles/macosx-x64"/>
+    <property name="jdk.builds.path" value="${jdk_builds_host}/${jdk_builds_path}/osx-x64"/>
     <!-- e.g. 1.7.0_55 - jdk-7u55-fcs-bin-b07-macosx-x64-04_feb_2014.dmg -->
     <!-- e.g. 1.8.0 - jdk-8-fcs-bin-b129-macosx-x64-06_feb_2014.dmg -->
+
     <loadresource property="jdk.version.number">
+    <!--e.g. jdk-11.0.1_osx-x64_bin.dmg -->
           <url url="${jdk.builds.path}"/>
           <filterchain>
             <striplinebreaks/>
             <tokenfilter>
-              <replaceregex pattern="(.*)jdk-([0-9]+)([u]?)([0-9]*)(-[a-z]+)-bin-b(([0-9]+)+)-(.*)" replace="\2" flags="g"/>
+              <replaceregex pattern="(.*)jdk-([1-9][0-9]*).0.([1-9])([0-9]*)(_[a-z]+)-x64_bin(.*)" replace="\2" flags="g"/>
             </tokenfilter>
           </filterchain>
     </loadresource>
@@ -171,16 +173,17 @@
           </filterchain>
     </loadresource>
     
-    <loadresource property="jdk.update.number.opt">
+    <loadresource property="jdk.update.number">
           <url url="${jdk.builds.path}"/>
           <filterchain>
             <striplinebreaks/>
             <tokenfilter>
-              <replaceregex pattern="(.*)jdk-([0-9]+)([u]?)([0-9]*)(-[a-z]+)-bin-b(([0-9]+)+)-(.*)" replace="\4" flags="g"/>
+              <!--replaceregex pattern="(.*)jdk-([0-9]+)([u]?)([0-9]*)(-[a-z]+)-bin-b(([0-9]+)+)-(.*)" replace="\4" flags="g"/-->
+              <replaceregex pattern="(.*)jdk-([1-9][0-9]*).0.([1-9])([0-9]*)(_[a-z]+)-x64_bin(.*)" replace="\3" flags="g"/>
             </tokenfilter>
           </filterchain>
     </loadresource>
-    <condition property="jdk.update.number" value="${jdk.update.number.opt}" else="0">
+    <!--condition property="jdk.update.number" value="${jdk.update.number.opt}" else="0">
         <equals arg1="${is.update}" arg2="u"/>
     </condition>
     
@@ -206,12 +209,12 @@
               <replaceregex pattern="(.*)jdk-([0-9]+)([u]?)([0-9]*)(-[a-z]+)-bin-b(([0-9]+)+)-(.*)" replace="\6" flags="g"/>
             </tokenfilter>
           </filterchain>
-    </loadresource>
+    </loadresource-->
     
-    <echo message="JDK Metadata: Version: ${jdk.version.number} Update: ${jdk.update.number} Build: ${jdk.build.number} Build type: ${jdk.build.type}" />
+    <echo message="JDK Metadata: Version: ${jdk.version.number} Update: ${jdk.update.number}"/><!-- Build: ${jdk.build.number} Build type: ${jdk.build.type}" /-->
     
     <property name="mpkg.prefix_nb_jdk" value=" with JDK"/> 
-    <property name="jdk.bundle.files.suffix" value="nb-dev"/>
+    <property name="jdk.bundle.files.suffix" value="nb-10_0"/>
     <property name="output.jdk.dir" value="jdk/"/>
     <condition property="jdk.bundle.files.prefix" value="jdk-${jdk.version.number}" else="jdk-${jdk.version.number}u${jdk.update.number}">
         <equals arg1="${jdk.update.number}" arg2="0"/>
@@ -223,8 +226,8 @@
                                            else="/Library/Java/JavaVirtualMachines/jdk1.${jdk.version.number}.0_${jdk.update.number}.jdk/Contents/Home">
         <equals arg1="${jdk.update.number}" arg2="0"/>
     </condition>
-    <condition property="jdk_bits_location" value="${jdk_builds_host}/${jdk_builds_path}/all/b${jdk.build.number}/bundles/macosx-x64/jdk-${jdk.version.number}-${jdk.ea.text}macosx-x64.dmg"
-                                           else="${jdk_builds_host}/${jdk_builds_path}/all/b${jdk.build.number}/bundles/macosx-x64/jdk-${jdk.version.number}u${jdk.update.number}-${jdk.ea.text}macosx-x64.dmg">
+    <condition property="jdk_bits_location" value="${jdk_builds_host}/${jdk_builds_path}/osx-x64/jdk-${jdk.version.number}-${jdk.ea.text}macosx-x64.dmg"
+                                           else="${jdk_builds_host}/${jdk_builds_path}/osx-x64/jdk-${jdk.version.number}.0.${jdk.update.number}_osx-x64_bin.dmg">
         <equals arg1="${jdk.update.number}" arg2="0"/>
     </condition>
     <condition property="jdk.update.number.long" value="0${jdk.update.number}" else="${jdk.update.number}">
@@ -233,6 +236,6 @@
     <condition property="jdk.package.name" value="JDK\ ${jdk.version.number}"
                                            else="JDK\ ${jdk.version.number}\ Update\ ${jdk.update.number.long}">
         <equals arg1="${jdk.update.number}" arg2="0"/>
-    </condition>        
+    </condition>
 
 </project>

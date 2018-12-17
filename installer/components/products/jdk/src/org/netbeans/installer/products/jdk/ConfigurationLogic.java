@@ -79,7 +79,7 @@ import org.netbeans.installer.wizard.components.WizardComponent;
 
 /**
  *
- 
+ * @author Dmitry Lipin
  */
 public class ConfigurationLogic extends ProductConfigurationLogic {
     /////////////////////////////////////////////////////////////////////////////////
@@ -283,12 +283,19 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
             if (locationPath.contains(" ")) {
                 locationPath = convertPathNamesToShort(locationPath);
             }
-            if (isJDK8()) {                
-                // JDK 1.8
+            if (isJDK11()) {                
+                // JDK 11
                 commands = new String [] {
                     installer.getAbsolutePath(),
                     "/s",
-                    "/qn",
+                    logFile != null ? "/L" : EMPTY_STRING,
+                    logFile != null ? logPath : EMPTY_STRING,
+                    "INSTALLDIR=" + locationPath
+                };
+            } else if (isJDK8()) {
+                commands = new String [] {
+                    installer.getAbsolutePath(),
+                    "/s",
                     logFile != null ? "/lv" : EMPTY_STRING,
                     logFile != null ? logPath : EMPTY_STRING,
                     "INSTALLDIR=" + locationPath,
@@ -492,6 +499,10 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
     private boolean isJDK8() {
         return getProduct().getVersion().newerOrEquals(Version.getVersion("1.8.0"));
     }
+    private boolean isJDK11() {
+        return getProduct().getVersion().newerOrEquals(Version.getVersion("11.0.1"));
+    }
+
 
     private void configureJREProductWindows(ExecutionResults results) {
         LogManager.log("... configuring JRE Product");

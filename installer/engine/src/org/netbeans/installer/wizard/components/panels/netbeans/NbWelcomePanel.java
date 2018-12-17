@@ -101,7 +101,6 @@ import org.netbeans.installer.wizard.ui.WizardUi;
 
 /**
  *
- 
  */
 public class NbWelcomePanel extends ErrorMessagePanel {
     /////////////////////////////////////////////////////////////////////////////////
@@ -378,7 +377,7 @@ public class NbWelcomePanel extends ErrorMessagePanel {
         if(bundledProductToInstall != null) { // bundled product will be installed            
             boolean nbToInstall = false;
             for(Product productToInstall : toInstall) {
-                if(productToInstall.getUid().equals("nb-base")) {
+                if(productToInstall.getUid().equals("nb-base") || productToInstall.getUid().equals("nb-all")) {
                     nbToInstall = true;
                     break;
                 }

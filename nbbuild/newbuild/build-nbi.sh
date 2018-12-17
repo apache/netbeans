@@ -1,21 +1,44 @@
 #!/bin/bash
 
-# Licensed to the Apache Software Foundation (ASF) under one
-# or more contributor license agreements.  See the NOTICE file
-# distributed with this work for additional information
-# regarding copyright ownership.  The ASF licenses this file
-# to you under the Apache License, Version 2.0 (the
-# "License"); you may not use this file except in compliance
-# with the License.  You may obtain a copy of the License at
-#
-#   http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing,
-# software distributed under the License is distributed on an
-# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-# KIND, either express or implied.  See the License for the
-# specific language governing permissions and limitations
-# under the License.
+ # DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ #
+ # Copyright 2012-2013 Oracle and/or its affiliates. All rights reserved.
+ #
+ # Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+ # Other names may be trademarks of their respective owners.
+ #
+ # The contents of this file are subject to the terms of either the GNU
+ # General Public License Version 2 only ("GPL") or the Common
+ # Development and Distribution License("CDDL") (collectively, the
+ # "License"). You may not use this file except in compliance with the
+ # License. You can obtain a copy of the License at
+ # http://www.netbeans.org/cddl-gplv2.html
+ # or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+ # specific language governing permissions and limitations under the
+ # License.  When distributing the software, include this License Header
+ # Notice in each file and include the License file at
+ # nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+ # particular file as subject to the "Classpath" exception as provided
+ # by Oracle in the GPL Version 2 section of the License file that
+ # accompanied this code. If applicable, add the following below the
+ # License Header, with the fields enclosed by brackets [] replaced by
+ # your own identifying information:
+ # "Portions Copyrighted [year] [name of copyright owner]"
+ #
+ # If you wish your version of this file to be governed by only the CDDL
+ # or only the GPL Version 2, indicate your decision by adding
+ # "[Contributor] elects to include this software in this distribution
+ # under the [CDDL or GPL Version 2] license." If you do not indicate a
+ # single choice of license, a recipient has the option to distribute
+ # your version of this file under either the CDDL, the GPL Version 2 or
+ # to extend the choice of license to its licensees as provided above.
+ # However, if you add GPL Version 2 code and therefore, elected the GPL
+ # Version 2 license, then the option applies only if the new code is
+ # made subject to such option by the copyright holder.
+ #
+ # Contributor(s):
+ #
+ # Portions Copyrighted 2012 Sun Microsystems, Inc.
 
 set -x
 
@@ -30,6 +53,10 @@ fi
 
 if [ -z $BUILD_NBJDK8 ]; then
     BUILD_NBJDK8=0
+fi
+
+if [ -z $BUILD_NBJDK11 ]; then
+    BUILD_NBJDK11=0
 fi
 
 OUTPUT_DIR="$DIST/installers"
@@ -57,7 +84,7 @@ if [ ! -z $NATIVE_MAC_MACHINE ] && [ ! -z $MAC_PATH ]; then
        exit $ERROR_CODE;
    fi
    ssh $NATIVE_MAC_MACHINE mkdir -p $MAC_PATH/zip/moduleclusters
-   ls $DIST/zip/moduleclusters | grep -v "all-in-one" | xargs -I {} scp -q -v $DIST/zip/moduleclusters/{} $NATIVE_MAC_MACHINE:$MAC_PATH/zip/moduleclusters/
+   ls $DIST/zip/moduleclusters | xargs -I {} scp -q -v $DIST/zip/moduleclusters/{} $NATIVE_MAC_MACHINE:$MAC_PATH/zip/moduleclusters/
 
    ERROR_CODE=$?
    if [ $ERROR_CODE != 0 ]; then
@@ -69,13 +96,7 @@ if [ ! -z $NATIVE_MAC_MACHINE ] && [ ! -z $MAC_PATH ]; then
    sh $NB_ALL/installer/mac/newbuild/init.sh | ssh $NATIVE_MAC_MACHINE "cat > $MAC_PATH/installer/mac/newbuild/build-private.sh"
    ssh $NATIVE_MAC_MACHINE chmod a+x $MAC_PATH/installer/mac/newbuild/build.sh
 
-   if [ ! -z $SIGNING_PASSWORD ] ; then
-       UNLOCK_COMMAND="security unlock-keychain -p $SIGNING_PASSWORD ;"
-   else
-       SIGNING_IDENTITY=0
-   fi
-
-   BASE_COMMAND="$MAC_PATH/installer/mac/newbuild/build.sh $MAC_PATH $BASENAME_PREFIX $BUILDNUMBER $BUILD_NBJDK7 $BUILD_NBJDK8 '"$SIGNING_IDENTITY"' $LOCALES"
+   BASE_COMMAND="$MAC_PATH/installer/mac/newbuild/build.sh $MAC_PATH $BASENAME_PREFIX $BUILDNUMBER $BUILD_NBJDK7 $BUILD_NBJDK8 $BUILD_NBJDK11 $MAC_SIGN_CLIENT $MAC_SIGN_USER $MAC_SIGN_GUID $CODESIGNBUREAU_CREDFILE $LOCALES"
    
    ssh $NATIVE_MAC_MACHINE "$UNLOCK_COMMAND $BASE_COMMAND" > $MAC_LOG_NEW 2>&1 &
    REMOTE_MAC_PID=$!

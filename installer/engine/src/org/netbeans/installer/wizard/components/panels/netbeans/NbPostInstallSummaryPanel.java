@@ -74,7 +74,6 @@ import static org.netbeans.installer.utils.helper.DetailedStatus.FAILED_TO_UNINS
 
 /**
  *
- 
  */
 public class NbPostInstallSummaryPanel extends WizardPanel {
     /////////////////////////////////////////////////////////////////////////////////
@@ -299,7 +298,7 @@ public class NbPostInstallSummaryPanel extends WizardPanel {
             messagePaneNetBeans.setText("");
             boolean nbInstalled = false;
             for (Product product: products) {
-                if (product.getUid().equals("nb-base")) {
+                if (product.getUid().equals("nb-base") || product.getUid().equals("nb-all")) {
                     String platformSpecificSummary;
                     if (SystemUtils.isWindows()) {
                         platformSpecificSummary = DEFAULT_MESSAGE_NETBEANS_TEXT_WINDOWS;
@@ -321,7 +320,7 @@ public class NbPostInstallSummaryPanel extends WizardPanel {
             List<Product> toRegister = new LinkedList<Product>();
             for (Product product : products) {
                 final String uid = product.getUid();
-                if (uid.equals("nb-base") || uid.equals("jdk") || uid.equals("glassfish") || uid.equals("sjsas")) {
+                if (uid.equals("nb-base") || uid.equals("jdk") || uid.equals("glassfish") || uid.equals("sjsas") || uid.equals("nb-all")) {
                     toRegister.add(product);
                 }
             }
@@ -345,7 +344,7 @@ public class NbPostInstallSummaryPanel extends WizardPanel {
                 for (Product product : toRegister) {
                     final String uid = product.getUid();
                     String name = StringUtils.EMPTY_STRING;
-                    if (uid.equals("nb-base")) {
+                    if (uid.equals("nb-base") || uid.equals("nb-all")) {
                         name = DEFAULT_MESSAGE_REGISTRATION_NETBEANS;
                     } else if (uid.equals("jdk")) {
                         name = DEFAULT_MESSAGE_REGISTRATION_JDK;

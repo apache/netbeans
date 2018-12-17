@@ -57,8 +57,6 @@ import org.w3c.dom.Element;
 
 /**
  *
- 
- 
  */
 public class NetBeansUtils {
     /////////////////////////////////////////////////////////////////////////////////
@@ -509,7 +507,9 @@ public class NetBeansUtils {
      * @throws IOException if the no cluster directory exists
      */
     public static File getNbCluster(File nbLocation) throws IOException {
-        for (File child: nbLocation.listFiles()) {
+        File location = new File(nbLocation, "netbeans");//NOI18N
+        for (File child: location.listFiles()) {
+            LogManager.log("    child = " + child.getName());
             if (child.isDirectory() && child.getName().matches(NB_CLUSTER_PATTERN)) {
                 return child;
             }
@@ -862,9 +862,9 @@ public class NetBeansUtils {
     /////////////////////////////////////////////////////////////////////////////////
     // Constants
     public static final String NETBEANS_CLUSTERS =
-            "etc/netbeans.clusters"; // NOI18N
+            "netbeans/etc/netbeans.clusters"; // NOI18N
     public static final String NETBEANS_CONF =
-            "etc/netbeans.conf"; // NOI18N
+            "netbeans/etc/netbeans.conf"; // NOI18N
     public static final String PRODUCT_ID =
             "config/productid"; // NOI18N
     public static final String LICENSE_ACCEPTED =

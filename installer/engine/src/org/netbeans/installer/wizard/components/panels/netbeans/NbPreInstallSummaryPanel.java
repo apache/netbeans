@@ -93,7 +93,6 @@ import org.netbeans.installer.wizard.ui.WizardUi;
 
 /**
  *
- 
  */
 public class NbPreInstallSummaryPanel extends ErrorMessagePanel {
     private boolean removeNBInstallationLocation = false;
@@ -880,7 +879,7 @@ public class NbPreInstallSummaryPanel extends ErrorMessagePanel {
             int gridy0 = gridy;
             gridy++;
             for (Product product : Registry.getInstance().getProductsToUninstall()) {
-                if (product.getUid().equals(NB_BASE_UID)) {
+                if (product.getUid().equals(NB_BASE_UID) || product.getUid().equals(NB_ALL_UID)) {
                     try {
                         File installLocation = product.getInstallationLocation();
 
@@ -1256,8 +1255,10 @@ public class NbPreInstallSummaryPanel extends ErrorMessagePanel {
             ResourceUtils.getString(NbPreInstallSummaryPanel.class,
             "NPrISP.check.for.updates.checkbox"); // NOI18N
 
-    public static final String NB_BASE_UID = 
+    public static final String NB_BASE_UID =
             "nb-base";//NOI18N
+    public static final String NB_ALL_UID = 
+            "nb-all";//NOI18N
     public static final String NB_JAVASE_UID =
             "nb-javase";//NOI18N
     public static final String JUNIT_UID =

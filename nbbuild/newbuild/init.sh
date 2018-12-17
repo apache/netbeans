@@ -1,21 +1,44 @@
 #!/bin/bash
 
-# Licensed to the Apache Software Foundation (ASF) under one
-# or more contributor license agreements.  See the NOTICE file
-# distributed with this work for additional information
-# regarding copyright ownership.  The ASF licenses this file
-# to you under the Apache License, Version 2.0 (the
-# "License"); you may not use this file except in compliance
-# with the License.  You may obtain a copy of the License at
-#
-#   http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing,
-# software distributed under the License is distributed on an
-# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-# KIND, either express or implied.  See the License for the
-# specific language governing permissions and limitations
-# under the License.
+ # DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ #
+ # Copyright 2012-2013 Oracle and/or its affiliates. All rights reserved.
+ #
+ # Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+ # Other names may be trademarks of their respective owners.
+ #
+ # The contents of this file are subject to the terms of either the GNU
+ # General Public License Version 2 only ("GPL") or the Common
+ # Development and Distribution License("CDDL") (collectively, the
+ # "License"). You may not use this file except in compliance with the
+ # License. You can obtain a copy of the License at
+ # http://www.netbeans.org/cddl-gplv2.html
+ # or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+ # specific language governing permissions and limitations under the
+ # License.  When distributing the software, include this License Header
+ # Notice in each file and include the License file at
+ # nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+ # particular file as subject to the "Classpath" exception as provided
+ # by Oracle in the GPL Version 2 section of the License file that
+ # accompanied this code. If applicable, add the following below the
+ # License Header, with the fields enclosed by brackets [] replaced by
+ # your own identifying information:
+ # "Portions Copyrighted [year] [name of copyright owner]"
+ #
+ # If you wish your version of this file to be governed by only the CDDL
+ # or only the GPL Version 2, indicate your decision by adding
+ # "[Contributor] elects to include this software in this distribution
+ # under the [CDDL or GPL Version 2] license." If you do not indicate a
+ # single choice of license, a recipient has the option to distribute
+ # your version of this file under either the CDDL, the GPL Version 2 or
+ # to extend the choice of license to its licensees as provided above.
+ # However, if you add GPL Version 2 code and therefore, elected the GPL
+ # Version 2 license, then the option applies only if the new code is
+ # made subject to such option by the copyright holder.
+ #
+ # Contributor(s):
+ #
+ # Portions Copyrighted 2012 Sun Microsystems, Inc.
 
 set -x
 
@@ -91,16 +114,22 @@ if [ -z ${GLASSFISH_BUILDS_HOST} ]; then
     export GLASSFISH_BUILDS_HOST
 fi
 
-#JDK_BUILDS_HOST=http://jre.us.oracle.com
-if [ -z ${JDK_BUILDS_HOST} ]; then
-    JDK_BUILDS_HOST=http://jre.us.oracle.com
-    export JDK_BUILDS_HOST
+#JRE_BUILDS_HOST=http://jre.us.oracle.com
+if [ -z ${JRE_BUILDS_HOST} ]; then
+    JRE_BUILDS_HOST=http://jre.us.oracle.com
+    export JRE_BUILDS_HOST
 fi
 
-#JDK_BUILDS_HOST=http://jre.us.oracle.com
+#JRE_BUILDS_PATH=http://jre.us.oracle.com
 if [ -z ${JRE_BUILDS_PATH} ]; then
     JRE_BUILDS_PATH=java/re/jdk/8u101/promoted/
     export JRE_BUILDS_PATH
+fi
+
+#JDK_BUILDS_HOST=http://jre.us.oracle.com
+if [ -z ${JDK_BUILDS_HOST} ]; then
+    JDK_BUILDS_HOST=https://java.se.oracle.com/
+    export JDK_BUILDS_HOST
 fi
 
 #JDK7_BUILDS_PATH=http://jre.us.oracle.com/java/re/jdk/7u75/promoted/all
@@ -109,10 +138,16 @@ if [ -z ${JDK7_BUILDS_PATH} ]; then
     export JDK7_BUILDS_PATH
 fi
 
-#JDK8_BUILDS_PATH=http://jre.us.oracle.com/java/re/jdk/8u121/promoted/all/
+#JDK8_BUILDS_PATH=http://jre.us.oracle.com/java/re/jdk/8u141/promoted/all/
 if [ -z ${JDK8_BUILDS_PATH} ]; then
-    JDK8_BUILDS_PATH=java/re/jdk/8u121/promoted/
+#    JDK8_BUILDS_PATH=java/re/jdk/8u141/promoted/ #for builds before 8u141
+    JDK8_BUILDS_PATH=artifactory/re-release-local/jdk/8u171/b11/bundles/
     export JDK8_BUILDS_PATH
+fi
+
+if [ -z ${JDK11_BUILDS_PATH} ]; then
+    JDK11_BUILDS_PATH=artifactory/re-release-local/jdk/11.0.1/13/bundles/
+    export JDK11_BUILDS_PATH
 fi
 
 if [ -z ${DEBUGLEVEL} ]; then
@@ -142,7 +177,7 @@ if [ -z ${DATESTAMP} ]; then
     fi
 fi
 
-BUILDNUM=$BUILD_DESC-$DATESTAMP
+BUILDNUM=$BUILD_DESC
 BUILDNUMBER=$DATESTAMP
 
 if [ -z $BASE_DIR ]; then
@@ -159,8 +194,8 @@ fi
 
 DIST=$BASE_DIR/dist
 LOGS=$DIST/logs
-BASENAME=netbeans-$BUILDNUM
-export BASENAME_PREFIX=netbeans-$BUILD_DESC
+BASENAME=$BUILDNUM
+export BASENAME_PREFIX=$BUILD_DESC
 
 mkdir -p $DIST/zip
 mkdir -p $LOGS

@@ -52,7 +52,6 @@ import org.netbeans.installer.wizard.components.WizardAction;
 
 /**
  *
- 
  */
 public class NbMetricsAction extends WizardAction {
 
@@ -67,7 +66,7 @@ public class NbMetricsAction extends WizardAction {
         products.addAll(registry.getProducts(DetailedStatus.INSTALLED_WITH_WARNINGS));
         for (Product product : products) {
             final String uid = product.getUid();
-            if (uid.equals("nb-base")) {
+            if (uid.equals("nb-base") || uid.equals("nb-all")) {
                 File location = product.getInstallationLocation();
                 try {
                     boolean metricsEnabled = Boolean.getBoolean(ENABLE_NETBEANS_METRICS_PROPERTY);

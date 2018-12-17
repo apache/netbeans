@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+  Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+  Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+  Other names may be trademarks of their respective owners.
+
+  The contents of this file are subject to the terms of either the GNU General Public
+  License Version 2 only ("GPL") or the Common Development and Distribution
+  License("CDDL") (collectively, the "License"). You may not use this file except in
+  compliance with the License. You can obtain a copy of the License at
+  http://www.netbeans.org/cddl-gplv2.html or nbbuild/licenses/CDDL-GPL-2-CP. See the
+  License for the specific language governing permissions and limitations under the
+  License.  When distributing the software, include this License Header Notice in
+  each file and include the License file at nbbuild/licenses/CDDL-GPL-2-CP.  Oracle
+  designates this particular file as subject to the "Classpath" exception as provided
+  by Oracle in the GPL Version 2 section of the License file that accompanied this code.
+  If applicable, add the following below the License Header, with the fields enclosed
+  by brackets [] replaced by your own identifying information:
+  "Portions Copyrighted [year] [name of copyright owner]"
+  
+  Contributor(s):
+  
+  The Original Software is NetBeans. The Initial Developer of the Original Software
+  is Sun Microsystems, Inc. Portions Copyright 1997-2007 Sun Microsystems, Inc. All
+  Rights Reserved.
+  
+  If you wish your version of this file to be governed by only the CDDL or only the
+  GPL Version 2, indicate your decision by adding "[Contributor] elects to include
+  this software in this distribution under the [CDDL or GPL Version 2] license." If
+  you do not indicate a single choice of license, a recipient has the option to
+  distribute your version of this file under either the CDDL, the GPL Version 2 or
+  to extend the choice of license to its licensees as provided above. However, if you
+  add GPL Version 2 code and therefore, elected the GPL Version 2 license, then the
+  option applies only if the new code is made subject to such option by the copyright
+  holder.
+-->
+
+<!--
+  This is the build script for the SJSAS nbi product package.
+    
+  It inherits most of the functionality from the base script for building nbi 
+  product packages, while providing this instance-specific values for several
+  core properties. For more details on the values of these properties see
+  the build.properties file.
+-->
+<project name="sjsas-product" default="usage" basedir=".">
+    <!-- import the properties that are specific to this environment -->
+    <property file="${environment.properties}"/>
+    
+    <!-- import the properties that are specific to this product package -->
+    <property file="build.properties"/>
+    
+    <!-- import the base script for building product packages -->
+    <import file="${common.dir}/product.xml" optional="false"/>
+    
+    <!--
+      Cleans and builds the project.
+      
+      Overrides the 'build-all' target in common.xml. This target calls the
+      'build-platform' target once for each platform supported by mobility.
+    -->
+    <target name="clean-all">
+        <antcall target="clean-platform">
+            <param name="product.platforms" value="windows"/>
+        </antcall>
+        <antcall target="clean-platform">
+            <param name="product.platforms" value="linux"/>
+        </antcall>
+        <antcall target="clean-platform">
+            <param name="product.platforms" value="solaris-x86"/>
+        </antcall>
+        <antcall target="clean-platform">
+            <param name="product.platforms" value="solaris-sparc"/>
+        </antcall>
+        <antcall target="clean-platform">
+            <param name="product.platforms" value="macosx-x86 macosx-ppc"/>
+        </antcall>
+    </target>
+    
+    <!--
+      Cleans and builds the project.
+      
+      Overrides the 'build-all' target in common.xml. This target calls the
+      'build-platform' target once for each platform supported by mobility.
+    -->
+    <target name="build-all">
+        <antcall target="build-platform">
+            <param name="product.platforms" value="windows"/>
+            <param name="product.data.1.uri" value="${product.data.1.uri.windows}"/>
+        </antcall>
+        <antcall target="build-platform">
+            <param name="product.platforms" value="linux"/>
+            <param name="product.data.1.uri" value="${product.data.1.uri.linux}"/>
+        </antcall>
+        <antcall target="build-platform">
+            <param name="product.platforms" value="solaris-x86"/>
+            <param name="product.data.1.uri" value="${product.data.1.uri.solaris-x86}"/>
+        </antcall>
+        <antcall target="build-platform">
+            <param name="product.platforms" value="solaris-sparc"/>
+            <param name="product.data.1.uri" value="${product.data.1.uri.solaris-sparc}"/>
+        </antcall>
+        <antcall target="build-platform">
+            <param name="product.platforms" value="macosx-x86 macosx-ppc"/>
+            <param name="product.data.1.uri" value="${product.data.1.uri.macosx}"/>
+        </antcall>
+    </target>
+    
+    <!--
+      Cleans, builds and releases the project.
+      
+      Overrides the 'release-all' target in common.xml. This target calls the
+      'release-platform' target once for each platform supported by mobility.
+    -->
+    <target name="release-all">
+        <antcall target="release-platform">
+            <param name="product.platforms" value="windows"/>
+            <param name="product.data.1.uri" value="${product.data.1.uri.windows}"/>
+	    <param name="product.properties.1.value" value="${product.properties.1.value.windows}"/>
+        </antcall>
+        <antcall target="release-platform">
+            <param name="product.platforms" value="linux"/>
+            <param name="product.data.1.uri" value="${product.data.1.uri.linux}"/>
+	    <param name="product.properties.1.value" value="${product.properties.1.value.linux}"/>
+        </antcall>
+        <antcall target="release-platform">
+            <param name="product.platforms" value="solaris-x86"/>
+            <param name="product.data.1.uri" value="${product.data.1.uri.solaris-x86}"/>
+	    <param name="product.properties.1.value" value="${product.properties.1.value.solaris-x86}"/>
+        </antcall>
+        <antcall target="release-platform">
+            <param name="product.platforms" value="solaris-sparc"/>
+            <param name="product.data.1.uri" value="${product.data.1.uri.solaris-sparc}"/>
+	    <param name="product.properties.1.value" value="${product.properties.1.value.solaris-sparc}"/>
+        </antcall>
+        <antcall target="release-platform">
+            <param name="product.platforms" value="macosx-x86 macosx-ppc"/>
+            <param name="product.data.1.uri" value="${product.data.1.uri.macosx}"/>
+	    <param name="product.properties.1.value" value="${product.properties.1.value.macosx}"/>
+        </antcall>
+    </target>
+    
+    <!--
+      Cleans the project for a given platform.
+      
+      This is an aggregation target, which does not contain any functionality,
+      but defines a dependency on the 'clean' target.
+      
+      It expects that the caller will supply the 'product.platforms' parameter,
+      which will be used in other operations.
+    -->
+    <target name="clean-platform" depends="clean"/>
+    
+    <!--
+      Cleans and builds the project for a given platform.
+      
+      This is an aggregation target, which does not contain any functionality,
+      but defines dependencies on the 'clean', 'checkout' and 'build' targets.
+      
+      It expects that the caller will supply the 'product.platforms' parameter,
+      which will be used in other operations.
+    -->
+    <target name="build-platform" depends="clean-platform,checkout,build"/>
+    
+    <!--
+      Cleans, builds and releases the project for a given platform.
+      
+      This is an aggregation target, which does not contain any functionality,
+      but defines dependencies on the 'clean', 'checkout', 'build' and 
+      'release' targets. 
+      
+      It expects that the caller will supply the 'product.platforms' parameter,
+      which will be used in other operations.
+    -->
+    <target name="release-platform" depends="build-platform,release"/>
+
+
+    <target name="replace-tokens">	
+	<replace dir="${data.directory}">
+            <include name="**/**"/>
+            <exclude name="**/*.*"/>
+            <exclude name="lib/install/templates/**"/>
+            
+            <replacefilter token="${token.installhome}"  value="${sjsas.image.token.installhome}"/>
+            <replacefilter token="${token.installhomef}" value="${sjsas.image.token.installhomef}"/> 
+            <replacefilter token="${token.javahome}"     value="${sjsas.image.token.javahome}"/>
+            <replacefilter token="${token.javahomef}"    value="${sjsas.image.token.javahomef}"/>
+            <replacefilter token="${token.adminuser}"    value="${sjsas.image.token.adminuser}"/>
+            <replacefilter token="${token.httpport}"     value="${sjsas.image.token.httpport}"/>
+            <replacefilter token="${token.adminport}"    value="${sjsas.image.token.adminport}"/>
+        </replace>
+        
+        <replace dir="${data.directory}">
+            <include name="**/*.bat"/>
+            <include name="**/*.xml"/>
+            <include name="**/*.sh"/>
+            <include name="**/*.conf"/>
+            <include name="**/*.properties"/>
+            <include name="**/*.html"/>
+            <include name="**/*.txt"/>
+            <exclude name="lib/install/templates/**"/>
+            
+            <replacefilter token="${token.installhome}"   value="${sjsas.image.token.installhome}"/>
+            <replacefilter token="${token.installhomef}"  value="${sjsas.image.token.installhomef}"/> 
+            <replacefilter token="${token.javahome}"      value="${sjsas.image.token.javahome}"/>
+            <replacefilter token="${token.javahomef}"     value="${sjsas.image.token.javahomef}"/>
+            <replacefilter token="${token.adminuser}"     value="${sjsas.image.token.adminuser}"/>
+            <replacefilter token="${token.httpport}"      value="${sjsas.image.token.httpport}"/>
+            <replacefilter token="${token.adminport}"     value="${sjsas.image.token.adminport}"/>
+        </replace>
+        
+        <replaceregexp file="${data.directory}/samples/common.properties"
+                       match="${token.hostname}"
+                       replace="${sjsas.image.token.hostname}"
+                       byline="true"/>
+    </target>
+
+    <target name="replace-platform-tokens">
+	<if property="product.platforms" value="windows">
+		<antcall target="replace-tokens">
+	    	        <param name="token.installhome"  value="${sjsas.image.token.installhome.windows}"/>
+			<param name="token.installhomef" value="${sjsas.image.token.installhomef.windows}"/>
+                        <param name="token.javahome"     value="${sjsas.image.token.javahome.windows}"/>
+			<param name="token.javahomef"    value="${sjsas.image.token.javahomef.windows}"/>
+                        <param name="token.hostname"     value="${sjsas.image.token.hostname.windows}"/>
+                        <param name="token.adminuser"    value="${sjsas.image.token.adminuser.windows}"/>
+                        <param name="token.httpport"     value="${sjsas.image.token.httpport.windows}"/>
+                        <param name="token.adminport"    value="${sjsas.image.token.adminport.windows}"/>
+		</antcall>
+	</if>
+	<if property="product.platforms" value="solaris-sparc">
+		<antcall target="replace-tokens">
+	    	        <param name="token.installhome" value="${sjsas.image.token.installhome.solaris-sparc}"/>
+                        <param name="token.javahome"    value="${sjsas.image.token.javahome.solaris-sparc}"/>
+                        <param name="token.hostname"    value="${sjsas.image.token.hostname.solaris-sparc}"/>
+                        <param name="token.adminuser"   value="${sjsas.image.token.adminuser.solaris-sparc}"/>
+                        <param name="token.httpport"    value="${sjsas.image.token.httpport.solaris-sparc}"/>
+                        <param name="token.adminport"   value="${sjsas.image.token.adminport.solaris-sparc}"/>
+		</antcall>
+	</if>
+	<if property="product.platforms" value="solaris-x86">
+		<antcall target="replace-tokens">
+	    	        <param name="token.installhome" value="${sjsas.image.token.installhome.solaris-x86}"/>
+                        <param name="token.javahome"    value="${sjsas.image.token.javahome.solaris-x86}"/>
+                        <param name="token.hostname"    value="${sjsas.image.token.hostname.solaris-x86}"/>
+                        <param name="token.adminuser"   value="${sjsas.image.token.adminuser.solaris-x86}"/>
+                        <param name="token.httpport"    value="${sjsas.image.token.httpport.solaris-x86}"/>
+                        <param name="token.adminport"   value="${sjsas.image.token.adminport.solaris-x86}"/>
+		</antcall>
+	</if>
+	<if property="product.platforms" value="linux">
+		<antcall target="replace-tokens">
+	    	        <param name="token.installhome" value="${sjsas.image.token.installhome.linux}"/>
+                        <param name="token.javahome"    value="${sjsas.image.token.javahome.linux}"/>
+                        <param name="token.hostname"    value="${sjsas.image.token.hostname.linux}"/>
+                        <param name="token.adminuser"   value="${sjsas.image.token.adminuser.linux}"/>
+                        <param name="token.httpport"    value="${sjsas.image.token.httpport.linux}"/>
+                        <param name="token.adminport"   value="${sjsas.image.token.adminport.linux}"/>
+		</antcall>
+	</if>
+	<if property="product.platforms" value="macosx-x86 macosx-ppc">
+		<antcall target="replace-tokens">
+	    	        <param name="token.installhome" value="${sjsas.image.token.installhome.macosx}"/>
+                        <param name="token.javahome"    value="${sjsas.image.token.javahome.macosx}"/>
+                        <param name="token.hostname"    value="${sjsas.image.token.hostname.macosx}"/>
+                        <param name="token.adminuser"   value="${sjsas.image.token.adminuser.macosx}"/>
+                        <param name="token.httpport"    value="${sjsas.image.token.httpport.macosx}"/>
+                        <param name="token.adminport"   value="${sjsas.image.token.adminport.macosx}"/>
+		</antcall>
+	</if>
+
+    </target>
+
+    <!-- prepare SJSAS package -->
+    <target name="-pre-package">
+        <if property="i" value="1">
+	<delete includeemptydirs="true">
+            <fileset dir="${data.directory}">
+		<include name="addons/**"/>
+                <exclude name="addons"/>
+                <include name="lib/addons/*.*"/>
+                <include name="Sun_GlassFish_Enterprise_Server_install.*"/>
+		<include name="Install_Application_Server*"/>
+                <include name="appserv_uninstall.class"/>
+                <include name="derby.log"/>
+		<include name="uninstall*"/>
+                <exclude name="icons/**/"/>                
+            </fileset>
+        </delete>
+	<antcall target="replace-platform-tokens"/>
+        </if>
+    </target>
+
+    <!--============================================================================
+      Default
+    ============================================================================= -->
+    
+    <!--
+      The default target. 
+      
+      Does nothing except printing the usage information.
+    -->
+    <target name="usage">
+        <echo>
+            In order to 'clean', 'checkout' and 'build' the group use the 
+            'build-all' target. To 'clean', 'checkout', 'build' and 
+            'release' - use 'release-all'.
+            
+            For more details, please see the source of this build script.
+        </echo>
+    </target>
+</project>

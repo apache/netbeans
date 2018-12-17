@@ -102,7 +102,7 @@ function checkChoiceUpgradeAction() {
 <script>// check if this is a downgrade from current version installed, return true
 function isDowngrade() {
     try {
-        var tInstallVersion = "1.@JDK_VERSION_NUMBER@.@JDK_UPDATE_NUMBER@.@JDK_BUILD_NUMBER@";
+        var tInstallVersion = "@JDK_VERSION_NUMBER@.@JDK_UPDATE_NUMBER@";
         // get current installed JavaAppletPlugin bundle
         var bundle = system.files.bundleAtPath("/Library/Internet Plug-Ins/JavaAppletPlugin.plugin");
         if(bundle != null) {
@@ -144,10 +144,7 @@ function pm_choice1_enabled() {
     <choices-outline>
         <line choice="netbeans">
             <line choice="choice0"/>
-            <line choice="choice1"/>
-            <line choice="baseide"/>            
-            <line choice="javase"/>
-            <line choice="extide"/>            
+            <line choice="nbide"/>            
         </line>       
         <line choice="postinstallscripts"></line>
     </choices-outline>
@@ -155,45 +152,14 @@ function pm_choice1_enabled() {
     <choice id="choice0" title="JDK_VERSION">
         <pkg-ref id="com.oracle.jdk@JDK_VERSION_NUMBER@u@JDK_UPDATE_NUMBER_SHORT@"/>
     </choice>
-    <choice id="choice1" title="plugin" selected="pm_choice1_selected()" enabled="pm_choice1_enabled()">
-        <pkg-ref id="com.oracle.jre"/>
-    </choice>
-    <choice id="baseide" title="baseide-title" description="baseide-description" start_selected="true" start_enabled="true" start_visible="true">
-        <pkg-ref id="ident.pkg.baseide"></pkg-ref>
-    </choice>
-    <choice id="javase" title="javase-title" description="javase-description" start_selected="true" start_enabled="true" start_visible="true" selected="choices.javase.selected &amp;&amp; choices.baseide.selected" enabled="choices.baseide.selected">
-        <pkg-ref id="ident.pkg.javase"></pkg-ref>
-    </choice> 
-    <choice id="extide" title="extide-title" description="extide-description" start_selected="true" start_enabled="true" start_visible="false" selected="choices.extide.selected &amp;&amp; choices.baseide.selected" enabled="choices.baseide.selected">
-        <pkg-ref id="ident.pkg.extide"/>
+    <choice id="nbide" title="nbide-title" description="nbide--description" start_selected="true" start_enabled="true" start_visible="true">
+        <pkg-ref id="ident.pkg.nbide"></pkg-ref>
     </choice>
     <choice id="postinstallscripts" title="postinstallscripts-title" description="postinstallscripts-description" start_selected="true" start_enabled="true" start_visible="false" selected="true" enabled="true" visible="false">
         <pkg-ref id="ident.pkg.postinstallscripts"></pkg-ref>
     </choice>
-    <pkg-ref id="com.oracle.jdk@JDK_VERSION_NUMBER@u@JDK_UPDATE_NUMBER_SHORT@" installKBytes="336968" version="1.1" auth="Root">jdk.pkg</pkg-ref>
-    <pkg-ref id="com.oracle.jdk@JDK_VERSION_NUMBER@u@JDK_UPDATE_NUMBER_SHORT@">
-        <relocate search-id="pkmktoken6">
-            <bundle id="com.oracle.jmc"/>
-        </relocate>
-    </pkg-ref>
-    <pkg-ref id="com.oracle.jre" installKBytes="165832" version="1.1" auth="Root">javaappletplugin.pkg</pkg-ref>
-    <pkg-ref id="com.oracle.jre">
-        <relocate search-id="pkmktoken18">
-            <bundle id="org.andymatuschak.sparkle.finish-installation"/>
-        </relocate>
-        <relocate search-id="pkmktoken22">
-            <bundle id="org.andymatuschak.sparkle.finish-installation"/>
-        </relocate>
-        <relocate search-id="pkmktoken26">
-            <bundle id="org.andymatuschak.sparkle.finish-installation"/>
-        </relocate>
-        <relocate search-id="pkmktoken34">
-            <bundle id="com.oracle.java.Java-Updater"/>
-        </relocate>
-    </pkg-ref>
-    <pkg-ref id="ident.pkg.baseide" version="0.0.0.0.1" installKBytes="@SIZE_BASEIDE@" auth="Root" onConclusion="None">baseide-@NB_ID@.pkg</pkg-ref>
-    <pkg-ref id="ident.pkg.javase" version="0.0.0.0.1" installKBytes="@SIZE_JAVASE@" auth="Root" onConclusion="None">javase-@NB_ID@.pkg</pkg-ref>
-    <pkg-ref id="ident.pkg.extide" version="0.0.0.0.1" installKBytes="@SIZE_EXTIDE@" auth="Root" onConclusion="None">extide-@NB_ID@.pkg</pkg-ref>
+    <pkg-ref id="com.oracle.jdk@JDK_VERSION_NUMBER@u@JDK_UPDATE_NUMBER_SHORT@" installKBytes="285148" version="1.1" auth="Root">jdk.pkg</pkg-ref>
+    <pkg-ref id="ident.pkg.nbide" version="0.0.0.0.1" installKBytes="@SIZE_BASEIDE@" auth="Root" onConclusion="None">nbide-@NB_ID@.pkg</pkg-ref>
     <pkg-ref id="ident.pkg.postinstallscripts" version="0.0.0.0.1" auth="Root" onConclusion="None">postinstallscripts.pkg</pkg-ref>
     <locator>
         <search id="pkmktoken6-1" type="component">

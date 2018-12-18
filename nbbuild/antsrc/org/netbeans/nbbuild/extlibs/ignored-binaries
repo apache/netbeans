@@ -62,3 +62,5 @@ nb/ide.launcher/external/launchers-10.0.zip
 # webcommon/libs.oracle.jsparser builds a test-only binaries into build/webcommon. Not distributed.
 webcommon/libs.oracle.jsparser/build/webcommon/**
 
+#only used to build installers
+installer/external/*

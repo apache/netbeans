@@ -136,7 +136,7 @@ public class PatternGenerator {
                         return;
                     if (parameter.toPhase(Phase.UP_TO_DATE).compareTo(Phase.UP_TO_DATE) < 0)
                         return;
-                    file2Original.put(parameter.getFileObject(), OfflineTree.of(parameter, new TreePath(parameter.getCompilationUnit())));
+                    file2Original.put(parameter.getFileObject(), OfflineTree.of(parameter, new TreePath(parameter.getCompilationUnit()), new IdentityHashMap<>(), new IdentityHashMap<>()));
                     progress.progress(done.incrementAndGet());
                 }
             }, false);
@@ -179,7 +179,9 @@ public class PatternGenerator {
                         return;
                     patternStatistics.fileProcessingStarted(parameter.getFileObject());
                     try {
-                        diff(patterns, patternStatistics, file2Original.get(parameter.getFileObject()), parameter); //XXX: should create the "done" items
+                        Map<Tree, OfflineTree> tree2Offline = new IdentityHashMap<>();
+                        OfflineTree ot = OfflineTree.of(parameter, new TreePath(parameter.getCompilationUnit()), new IdentityHashMap<>(), tree2Offline);
+                        diff(patterns, patternStatistics, file2Original.get(parameter.getFileObject()), parameter, tree2Offline); //XXX: should create the "done" items
                     } finally {
                         patternStatistics.fileProcessingFinished();
                     }
@@ -303,7 +305,7 @@ public class PatternGenerator {
         };
     }
 
-    public static void diff(Map<String, PatternDescription> patterns, PatternStatistics patternStatistics, OfflineTree original, WorkingCopy updated) {
+    public static void diff(Map<String, PatternDescription> patterns, PatternStatistics patternStatistics, OfflineTree original, WorkingCopy updated, Map<Tree, OfflineTree> tree2OfflineTree) {
         List<Union2<OfflineTree, Collection<? extends OfflineTree>>> originalQueue = new LinkedList<>();
         List<Union2<TreePath, Collection<? extends TreePath>>> updatedQueue = new LinkedList<>();
 
@@ -317,7 +319,7 @@ public class PatternGenerator {
             assert originalU.hasFirst() == updatedU.hasFirst();
 
             if (originalU.hasFirst()) {
-                if (diffTree(patterns, patternStatistics, originalU.first(), updated, updatedU.first())) {
+                if (diffTree(patterns, patternStatistics, originalU.first(), updated, updatedU.first(), tree2OfflineTree)) {
                     originalQueue.addAll(0, children(originalU.first()));
                     updatedQueue.addAll(0, children(updatedU.first()));
                 }
@@ -331,7 +333,7 @@ public class PatternGenerator {
                     while (originalTrees.hasNext() && updatedTrees.hasNext()) {
                         OfflineTree originalTree = originalTrees.next();
                         TreePath updatedTree = updatedTrees.next();
-                        if (diffTree(patterns, patternStatistics, originalTree, updated, updatedTree)) {
+                        if (diffTree(patterns, patternStatistics, originalTree, updated, updatedTree, tree2OfflineTree)) {
                             originalQueue.addAll(0, children(originalTree));
                             updatedQueue.addAll(0, children(updatedTree));
                         }
@@ -343,9 +345,12 @@ public class PatternGenerator {
         }
     }
 
-    private static boolean diffTree(Map<String, PatternDescription> patterns, PatternStatistics patternStatistics, OfflineTree originalTree, final WorkingCopy updatedInfo, TreePath updatedPath) {
+    private static boolean diffTree(Map<String, PatternDescription> patterns, PatternStatistics patternStatistics, OfflineTree originalTree, final WorkingCopy updatedInfo, TreePath updatedPath, Map<Tree, OfflineTree> tree2OfflineTree) {
         if (originalTree == null || updatedPath == null)
             return true;
+        if (originalTree == tree2OfflineTree.get(updatedPath.getLeaf())) {
+            return false;
+        }
         Tree updated = updatedPath.getLeaf();
         if (originalTree.kind == updated.getKind()) {
             switch (originalTree.kind) {
@@ -408,7 +413,10 @@ public class PatternGenerator {
             }
             private void recordPossibleMethodInvocation(Tree node, TreePath currentPath) {
                 if (node.getKind() == Tree.Kind.METHOD_INVOCATION) {
-                    factBuilder.addMethodInvocation(updatedInfo, treeIndex, updatedInfo.getTrees().getElement(currentPath));
+                    Element el = updatedInfo.getTrees().getElement(currentPath);
+                    if (el != null) {
+                        factBuilder.addMethodInvocation(updatedInfo, treeIndex, el);
+                    }
                 }
 
                 treeIndex++;
@@ -455,7 +463,7 @@ public class PatternGenerator {
         pd.positiveFacts.add(factBuilder.build());
 
         patternStatistics.patternFactRecorded(originalPattern, updated);
-
+        
         return false;
     }
 
@@ -1071,33 +1079,13 @@ public class PatternGenerator {
             this.text = text;
         }
 
-        public static OfflineTree of(CompilationInfo info, TreePath path) {
+        public static OfflineTree of(CompilationInfo info, TreePath path, Map<Key, OfflineTree> treeCache, Map<Tree, OfflineTree> tree2Offline) {
             if (path == null)
                 return null;
 
-            Element el = info.getTrees().getElement(path);
-            Collection<Union2<OfflineTree, Collection<? extends OfflineTree>>> c = new ArrayList<>();
-            for (Union2<TreePath, Collection<? extends TreePath>> child : children(path)) {
-                if (child.hasFirst()) {
-                    c.add(Union2.createFirst(of(info, child.first())));
-                } else if (child.second() == null) { //TODO: test (type arguments?)
-                    c.add(Union2.createSecond(null));
-                } else {
-                    c.add(Union2.createSecond(StreamSupport.stream(child.second().spliterator(), false).map(p -> of(info, p)).collect(Collectors.toList())));
-                }
-            }
-            SourcePositions sp = info.getTrees().getSourcePositions();
-            long start = sp.getStartPosition(info.getCompilationUnit(), path.getLeaf());
-            long end = sp.getEndPosition(info.getCompilationUnit(), path.getLeaf());
-            return new OfflineTree(path.getLeaf().getKind(), el != null && SUPPORTED_HANDLE_KINDS.contains(el.getKind()) ? ElementHandle.create(el) : null, c, start, end, info.getText());
+            OfflineTreeProducer producer = new OfflineTreeProducer(treeCache);
+            return producer.compute(info, path, tree2Offline);
         }
-            private static final Set<ElementKind> SUPPORTED_HANDLE_KINDS =
-                    EnumSet.of(ElementKind.PACKAGE, ElementKind.CLASS,
-                               ElementKind.INTERFACE, ElementKind.ENUM,
-                               ElementKind.ANNOTATION_TYPE, ElementKind.METHOD,
-                               ElementKind.CONSTRUCTOR, ElementKind.INSTANCE_INIT,
-                               ElementKind.STATIC_INIT, ElementKind.FIELD,
-                               ElementKind.ENUM_CONSTANT);
 
         public static final class Key {
             private final byte[] hash;
@@ -1130,7 +1118,7 @@ public class PatternGenerator {
 
         }
 
-        public static final class OfflineTreeRelinker {
+        public static final class OfflineTreeProducer {
             private static final Charset UTF8;
 
             static {
@@ -1141,22 +1129,20 @@ public class PatternGenerator {
             private int currentPointer;
             private byte[] data;
 
-            int statisticsExisting;
-            int statisticsUpdated;
-            int statisticsKept;
-
-            public OfflineTreeRelinker(Map<Key, OfflineTree> treeCache) {
-                data = new byte[1];
+            public OfflineTreeProducer(Map<Key, OfflineTree> treeCache) {
                 this.treeCache = treeCache;
+                data = new byte[1];
             }
 
-            public OfflineTree relink(OfflineTree t) {
+            public OfflineTree compute(CompilationInfo info, TreePath path, Map<Tree, OfflineTree> tree2Offline) {
                 int pointer = currentPointer;
 
                 ensureCapacity(1);
-                data[currentPointer++] = (byte) (t.kind.ordinal() + 1);
-                if (t.element != null) {
-                    for (String signaturePart : SourceUtils.getJVMSignature(t.element)) {
+                data[currentPointer++] = (byte) (path.getLeaf().getKind().ordinal() + 1);
+                Element el = info.getTrees().getElement(path);
+                ElementHandle<?> eh = el != null && SUPPORTED_HANDLE_KINDS.contains(el.getKind()) ? ElementHandle.create(el) : null;
+                if (eh != null) {
+                    for (String signaturePart : SourceUtils.getJVMSignature(eh)) {
                         byte[] bytes = signaturePart.getBytes(UTF8);
                         ensureCapacity(bytes.length);
                         System.arraycopy(bytes, 0, data, currentPointer, bytes.length);
@@ -1165,47 +1151,32 @@ public class PatternGenerator {
                 }
 
                 List<Union2<OfflineTree, Collection<? extends OfflineTree>>> newChildren = new ArrayList<>();
-                boolean updated = false;
 
-                for (Union2<OfflineTree, Collection<? extends OfflineTree>> child : t.children) {
+                for (Union2<TreePath, Collection<? extends TreePath>> child : children(path)) {
                     ensureCapacity(1);
                     if (child.hasFirst()) {
                         data[currentPointer++] = 0;
                         if (child.first() == null) {
                             ensureCapacity(1);
                             data[currentPointer++] = 0;
-                            newChildren.add(child);
+                            newChildren.add(Union2.createFirst(null));
                         } else {
-                            OfflineTree c = relink(child.first());
-                            if (child.first() != c) {
-                                newChildren.add(Union2.createFirst(c));
-                                updated = true;
-                            } else {
-                                newChildren.add(child);
-                            }
+                            OfflineTree c = compute(info, child.first(), tree2Offline);
+                            newChildren.add(Union2.createFirst(c));
                         }
                     } else {
                         data[currentPointer++] = 1;
                         if (child.second() == null) {
                             addInt(-1);
-                            newChildren.add(child);
+                            newChildren.add(Union2.createSecond(null));
                         } else {
-                            Collection<OfflineTree> elements = new ArrayList<>();
-                            child.second().forEach(elements::add);
-                            addInt(elements.size());
-                            Collection<OfflineTree> newElements = new ArrayList<>();
-                            boolean elementsUpdated = false;
-                            for (OfflineTree el : elements) {
-                                OfflineTree newEl = relink(el);
-                                elementsUpdated |= newEl != el;
-                                newElements.add(newEl);
+                            addInt(child.second().size());
+                            Collection<OfflineTree> childrenOT = new ArrayList<>();
+                            for (TreePath orig : child.second()) {
+                                OfflineTree ot = compute(info, orig, tree2Offline);
+                                childrenOT.add(ot);
                             }
-                            if (elementsUpdated) {
-                                newChildren.add(Union2.createSecond(newElements));
-                                updated = true;
-                            } else {
-                                newChildren.add(child);
-                            }
+                            newChildren.add(Union2.createSecond(childrenOT));
                         }
                     }
                 }
@@ -1217,20 +1188,18 @@ public class PatternGenerator {
                     OfflineTree existing = treeCache.get(key);
 
                     if (existing != null) {
-                        statisticsExisting++;
+//                        statisticsExisting++;
+                        tree2Offline.put(path.getLeaf(), existing);
                         return existing;
                     } else {
-                        OfflineTree result;
-
-                        if (updated) {
-                            result = new OfflineTree(t.kind, t.element, newChildren, t.start, t.end, t.text);
-                            statisticsUpdated++;
-                        } else {
-                            result = t;
-                            statisticsKept++;
-                        }
+//                        statisticsNew++;
+                        SourcePositions sp = info.getTrees().getSourcePositions();
+                        long start = sp.getStartPosition(info.getCompilationUnit(), path.getLeaf());
+                        long end = sp.getEndPosition(info.getCompilationUnit(), path.getLeaf());
+                        OfflineTree result = new OfflineTree(path.getLeaf().getKind(), eh, newChildren, start, end, info.getText());
 
                         treeCache.put(key, result);
+                        tree2Offline.put(path.getLeaf(), result);
                         
                         return result;
                     }
@@ -1238,6 +1207,13 @@ public class PatternGenerator {
                     throw new IllegalStateException(ex);
                 }
             }
+            private static final Set<ElementKind> SUPPORTED_HANDLE_KINDS =
+                    EnumSet.of(ElementKind.PACKAGE, ElementKind.CLASS,
+                               ElementKind.INTERFACE, ElementKind.ENUM,
+                               ElementKind.ANNOTATION_TYPE, ElementKind.METHOD,
+                               ElementKind.CONSTRUCTOR, ElementKind.INSTANCE_INIT,
+                               ElementKind.STATIC_INIT, ElementKind.FIELD,
+                               ElementKind.ENUM_CONSTANT);
 
             private void addInt(int size) {
                 ensureCapacity(4);

@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.hints.generator;
 
+import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -30,6 +31,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -55,7 +57,6 @@ import org.netbeans.api.java.source.support.EditorAwareJavaSourceTaskFactory;
 import org.netbeans.modules.java.hints.generator.PatternGenerator.Fact;
 import org.netbeans.modules.java.hints.generator.PatternGenerator.OfflineTree;
 import org.netbeans.modules.java.hints.generator.PatternGenerator.OfflineTree.Key;
-import org.netbeans.modules.java.hints.generator.PatternGenerator.OfflineTree.OfflineTreeRelinker;
 import org.netbeans.modules.java.hints.generator.PatternGenerator.PatternDescription;
 import org.netbeans.modules.java.hints.generator.PatternGenerator.PatternStatistics;
 import org.netbeans.modules.java.hints.generator.PatternGenerator.Result;
@@ -96,7 +97,8 @@ public class RefactoringDetector {
     }
 
     public static EditorPeer editorPeer(CompilationInfo info) {
-        return forSourcePath(info.getClasspathInfo().getClassPath(PathKind.SOURCE)).new EditorPeer(OfflineTree.of(info, new TreePath(info.getCompilationUnit())));
+        Map<Key, OfflineTree> treeCache = new HashMap<>();
+        return forSourcePath(info.getClasspathInfo().getClassPath(PathKind.SOURCE)).new EditorPeer(OfflineTree.of(info, new TreePath(info.getCompilationUnit()), treeCache, new IdentityHashMap<>()), treeCache);
     }
 
     private final ClassPath forSourcePath;
@@ -159,12 +161,13 @@ public class RefactoringDetector {
 
     public final class EditorPeer {
 
-        private final Map<Key, OfflineTree> treeCache = new HashMap<>();
+        private final Map<Key, OfflineTree> treeCache;
         private final List<OfflineTree> seenTrees;
 
-        private EditorPeer(OfflineTree original) {
+        private EditorPeer(OfflineTree original, Map<Key, OfflineTree> treeCache) {
             this.seenTrees = new ArrayList<>();
             this.seenTrees.add(original);
+            this.treeCache = treeCache;
         }
 
         public Collection<PatternDescription> reparse(CompilationInfo info) {
@@ -192,21 +195,18 @@ public class RefactoringDetector {
                 throw new IllegalStateException(ex);
             }
 
+            Map<Tree, OfflineTree> tree2Offline = new IdentityHashMap<>();
+            OfflineTree currentTree = OfflineTree.of(info, new TreePath(info.getCompilationUnit()), treeCache, tree2Offline);
+
             patternStatistics.fileProcessingStarted(info.getFileObject());
             try {
                 for (OfflineTree original : seenTrees) {
-                    PatternGenerator.diff(patterns, patternStatistics, original, copy);
+                    PatternGenerator.diff(patterns, patternStatistics, original, copy, tree2Offline);
                 }
             } finally {
                 patternStatistics.fileProcessingFinished();
             }
 
-            OfflineTree currentTree = OfflineTree.of(info, new TreePath(info.getCompilationUnit()));
-
-            long s = System.currentTimeMillis();
-            OfflineTreeRelinker relinker = new OfflineTreeRelinker(treeCache);
-            currentTree = relinker.relink(currentTree);
-            System.err.println("relink: " + (System.currentTimeMillis() - s) + "; existing: " + relinker.statisticsExisting + "; updated: " + relinker.statisticsUpdated + "; kept: " + relinker.statisticsKept);
 
             //XXX: eviction policy!!!!
             seenTrees.add(currentTree);

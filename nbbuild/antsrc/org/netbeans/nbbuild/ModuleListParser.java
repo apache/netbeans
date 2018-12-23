@@ -209,10 +209,13 @@ final class ModuleListParser {
                     List<String> subDirs = new ArrayList<>();
                     subDirs.addAll(Arrays.asList(FOREST));
                     String allClusters = (String) properties.get("clusters.config.full.list");
+                    if(allClusters == null) {
+                        allClusters = "";
+                    }
                     StringTokenizer tok = new StringTokenizer(allClusters, ", ");
                     while (tok.hasMoreTokens()) {
                         String clusterName = tok.nextToken();
-                        String clusterDir = project.getProperty(clusterName + ".dir");
+                        String clusterDir = (String) properties.get(clusterName + ".dir");
                         if (subDirs.contains(clusterDir)) {
                             continue;
                         }

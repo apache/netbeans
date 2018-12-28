@@ -32,6 +32,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import org.junit.Test;
 
 /**
  * A standalone Swing app that can be used to manually test {@link AutoHidingMenuBar} without
@@ -41,7 +42,7 @@ public final class AutoHidingMenuBarManualTest {
     private final JFrame frame = new JFrame();
     private final JMenuBar mainMenuBar = new JMenuBar();
 
-    public static void main(String args[]) {
+    public static void main(String... args) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -59,6 +60,11 @@ public final class AutoHidingMenuBarManualTest {
 
     public AutoHidingMenuBarManualTest() {
         initComponents();
+    }
+
+    @Test
+    public void runMain() {
+        main();
     }
 
     public void setVisible(boolean visible) {

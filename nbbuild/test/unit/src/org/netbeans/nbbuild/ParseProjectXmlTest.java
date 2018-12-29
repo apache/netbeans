@@ -111,9 +111,9 @@ public class ParseProjectXmlTest extends TestBase {
 
         fakeproj.setProperty("cluster.path.final", filePath(nball, "nbbuild/netbeans/platform")
                 + File.pathSeparator + getWorkDir());
-        final String prj = filePath(nball, "apisupport.ant/test/unit/data/example-external-projects/suite1/action-project");
+        final String prj = filePath(nball, "apisupport/apisupport.ant/test/unit/data/example-external-projects/suite1/action-project");
         fakeproj.setProperty("basedir",prj);
-        fakeproj.setProperty("suite.dir", filePath(nball, "apisupport.ant/test/unit/data/example-external-projects/suite1"));
+        fakeproj.setProperty("suite.dir", filePath(nball, "apisupport/apisupport.ant/test/unit/data/example-external-projects/suite1"));
         long start = System.currentTimeMillis();
 
         ParseProjectXml p = new ParseProjectXml();

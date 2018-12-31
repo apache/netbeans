@@ -211,7 +211,7 @@ public class CreateLicenseSummary extends Task {
         } catch (IOException x) {
             throw new BuildException(x, getLocation());
         }
-        log(license + ": written");
+        log(license + ": written", Project.MSG_VERBOSE);
         JUnitReportWriter.writeReport(this, null, reportFile, pseudoTests);
     }
     

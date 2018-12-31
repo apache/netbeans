@@ -37,6 +37,7 @@ public class Testcase {
      */
     private String className;
     private final String name;
+    private final String displayName;
     private long timeMillis;
     private Trouble trouble;
     private Status status;
@@ -50,18 +51,25 @@ public class Testcase {
     private String location;
     private TestSession session;
 
+    public Testcase(String name, String type, TestSession session) {
+        this(name, name, type, session);
+    }
+    
     /**
      * Creates a new Testcase.
      *
      * @param name the name of this test case.
+     * @param displayName The display name of this test case.
      * @param type the type of the test case, e.g. for Ruby it might be
      * <code>"RSPEC"</code> or <code>"TEST/UNIT"</code>. May be <code>null</code>.
      * @param session the session where this test case is executed.
      */
-    public Testcase(String name, String type, TestSession session) {
+    public Testcase(String name, String displayName, String type, TestSession session) {
         Parameters.notNull("name", name);
+        Parameters.notNull("displayName", displayName);
         Parameters.notNull("session", session);
         this.name = name;
+        this.displayName = displayName;
         this.session = session;
         this.type = type;
     }
@@ -152,6 +160,13 @@ public class Testcase {
      */
     public String getName() {
         return name;
+    }
+    
+    /**
+     * @return The display name of this test case.
+     */
+    public String getDisplayName() {
+        return displayName;
     }
 
     /**

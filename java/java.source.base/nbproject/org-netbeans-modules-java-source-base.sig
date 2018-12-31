@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.35.1
+#Version 2.37.1
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
@@ -1539,6 +1539,8 @@ hcls CountingDelegate,Delegate,ElementDelegate,EmptyDelegate,TreeDelegate
 
 CLSS public final org.netbeans.api.java.source.TreeUtilities
 fld public final static java.util.Set<com.sun.source.tree.Tree$Kind> CLASS_TREE_KINDS
+meth public !varargs boolean hasError(com.sun.source.tree.Tree,java.lang.String[])
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public boolean isAccessible(com.sun.source.tree.Scope,javax.lang.model.element.Element,javax.lang.model.type.TypeMirror)
 meth public boolean isAnnotation(com.sun.source.tree.ClassTree)
  anno 0 java.lang.Deprecated()
@@ -1623,7 +1625,7 @@ meth public javax.lang.model.type.TypeMirror reattributeTree(com.sun.source.tree
 meth public org.netbeans.api.lexer.TokenSequence<org.netbeans.api.java.lexer.JavaTokenId> tokensFor(com.sun.source.tree.Tree)
 meth public org.netbeans.api.lexer.TokenSequence<org.netbeans.api.java.lexer.JavaTokenId> tokensFor(com.sun.source.tree.Tree,com.sun.source.util.SourcePositions)
 supr java.lang.Object
-hfds ESCAPE_ENCODE,ESCAPE_UNENCODE,EXOTIC_ESCAPE,handler,info
+hfds ESCAPE_ENCODE,ESCAPE_UNENCODE,EXOTIC_ESCAPE,IGNORE_TOKENS,handler,info
 hcls DummyJFO,NBScope,NoImports,ParserSourcePositions,UncaughtExceptionsVisitor,UnrelatedTypeMirrorSet
 
 CLSS public final org.netbeans.api.java.source.TypeMirrorHandle<%0 extends javax.lang.model.type.TypeMirror>

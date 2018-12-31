@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openide.filesystems.FileStatusListener;
-import org.openide.filesystems.FileSystem$Environment;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.LocalFileSystem;
@@ -119,8 +118,17 @@ class OSGiRepository extends Repository {
     private static final class SFS extends MultiFileSystem implements LookupListener {
 
         static {
-            @SuppressWarnings("deprecation") Object _1 = FileSystem$Environment.class; // FELIX-2128
-            @SuppressWarnings("deprecation") Object _2 = org.openide.filesystems.FileSystemCapability.class;
+            try {
+                // FELIX-2128
+                Object _1 = Class.forName("org.openide.filesystems.FileSystem$Environment"); // NOI18N
+            } catch (ClassNotFoundException ex) {
+                // ignore
+            }
+            try {
+                Object _2 = Class.forName("org.openide.filesystems.FileSystemCapability"); // NOI18N
+            } catch (ClassNotFoundException ex) {
+                // ignore
+            }
             Object _3 = FileStatusListener.class;
             Object _4 = LookupEvent.class; // FELIX-3477
         }

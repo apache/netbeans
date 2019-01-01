@@ -24,6 +24,7 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
+import javax.swing.JTextField;
 import org.netbeans.junit.NbTestCase;
 import org.openide.cookies.InstanceCookie;
 import org.openide.filesystems.FileObject;
@@ -47,7 +48,7 @@ public class ConfigureToolbarPanelTest extends NbTestCase {
         clearWorkDir();
         FileObject fo = FileUtil.toFileObject(getWorkDir());
         folder = DataFolder.findFolder(fo);
-        node = ConfigureToolbarPanel.createFolderActionNode(folder);
+        node = ConfigureToolbarPanel.createFolderActionNode(folder, new JTextField());
     }
 
     public void testSystemActionWithNoIconResource() throws IOException {

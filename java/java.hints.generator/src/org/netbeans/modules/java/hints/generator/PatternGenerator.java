@@ -26,6 +26,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Scope;
+import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
@@ -83,6 +84,7 @@ import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.modules.java.hints.generator.PatternGenerator.OfflineTree.Key;
 import org.netbeans.modules.java.hints.generator.PatternGenerator.Result.Item;
 import org.netbeans.modules.java.hints.generator.borrowed.JavaFixUtilities;
 import org.netbeans.modules.java.hints.generator.borrowed.matching.Matcher;
@@ -126,6 +128,7 @@ public class PatternGenerator {
         progress.progress("Recording current state...");
 
         Map<FileObject, OfflineTree> file2Original = new HashMap<>();
+        Map<Key, OfflineTree> treeCache = new HashMap<>();
         AtomicInteger done = new AtomicInteger();
 
         for (JavaSource js : javaSource) {
@@ -136,7 +139,7 @@ public class PatternGenerator {
                         return;
                     if (parameter.toPhase(Phase.UP_TO_DATE).compareTo(Phase.UP_TO_DATE) < 0)
                         return;
-                    file2Original.put(parameter.getFileObject(), OfflineTree.of(parameter, new TreePath(parameter.getCompilationUnit()), new IdentityHashMap<>(), new IdentityHashMap<>()));
+                    file2Original.put(parameter.getFileObject(), OfflineTree.of(parameter, new TreePath(parameter.getCompilationUnit()), treeCache, new IdentityHashMap<>()));
                     progress.progress(done.incrementAndGet());
                 }
             }, false);
@@ -144,14 +147,16 @@ public class PatternGenerator {
 
         progress.finish();
 
-        return new PatternGenerator(file2Original);
+        return new PatternGenerator(file2Original, treeCache);
     }
 
     private final Map<FileObject, OfflineTree> file2Original;
+    private final Map<Key, OfflineTree> treeCache;
     private final Map<String, PatternDescription> patterns = new HashMap<>();
 
-    private PatternGenerator(Map<FileObject, OfflineTree> file2Original) {
+    private PatternGenerator(Map<FileObject, OfflineTree> file2Original, Map<Key, OfflineTree> treeCache) {
         this.file2Original = file2Original;
+        this.treeCache = treeCache;
     }
 
     public Result updated(Collection<FileObject> sourceRoots, ProgressHandle progress, AtomicBoolean cancel) throws IOException {
@@ -180,7 +185,7 @@ public class PatternGenerator {
                     patternStatistics.fileProcessingStarted(parameter.getFileObject());
                     try {
                         Map<Tree, OfflineTree> tree2Offline = new IdentityHashMap<>();
-                        OfflineTree ot = OfflineTree.of(parameter, new TreePath(parameter.getCompilationUnit()), new IdentityHashMap<>(), tree2Offline);
+                        OfflineTree ot = OfflineTree.of(parameter, new TreePath(parameter.getCompilationUnit()), treeCache, tree2Offline);
                         diff(patterns, patternStatistics, file2Original.get(parameter.getFileObject()), parameter, tree2Offline); //XXX: should create the "done" items
                     } finally {
                         patternStatistics.fileProcessingFinished();
@@ -346,45 +351,52 @@ public class PatternGenerator {
     }
 
     private static boolean diffTree(Map<String, PatternDescription> patterns, PatternStatistics patternStatistics, OfflineTree originalTree, final WorkingCopy updatedInfo, TreePath updatedPath, Map<Tree, OfflineTree> tree2OfflineTree) {
-        if (originalTree == null || updatedPath == null)
+        if (originalTree == null || updatedPath == null || updatedPath.getParentPath() == null)
             return true;
         if (originalTree == tree2OfflineTree.get(updatedPath.getLeaf())) {
             return false;
         }
+        int differingChildren = numberOfDifferingChildren(originalTree, updatedPath, tree2OfflineTree);
         Tree updated = updatedPath.getLeaf();
-        if (originalTree.kind == updated.getKind()) {
-            switch (originalTree.kind) {
-                case METHOD_INVOCATION:
-                    ElementHandle<?> originalElement = originalTree.element;
-                    Element updatedElement = updatedInfo.getTrees().getElement(updatedPath);
+        if (differingChildren == 1) {
+            if (originalTree.kind == updated.getKind()) {
+                switch (originalTree.kind) {
+                    case METHOD_INVOCATION:
+                        ElementHandle<?> originalElement = originalTree.element;
+                        Element updatedElement = updatedInfo.getTrees().getElement(updatedPath);
 
-                    if (!Objects.equals(originalElement,
-                                        ElementHandle.create(updatedElement)))
-                        break;
-                    return true;
-                default:
-                    return true;
+                        if (!Objects.equals(originalElement,
+                                            ElementHandle.create(updatedElement)))
+                            break;
+                        return true;
+                    default:
+                        return true;
+                }
             }
         }
-        //XXX: we assume the original is an expression!!!
         int start = (int) originalTree.start;
         int end = (int) originalTree.end;
         String originalText = originalTree.text.substring(start, end);
-        final ExpressionTree originalReparsed = updatedInfo.getTreeUtilities().parseExpression(originalText, new SourcePositions[1]);
+        final Tree originalReparsed = isStatement(originalTree.kind) ? updatedInfo.getTreeUtilities().parseStatement(originalText, new SourcePositions[1])
+                                                                     : updatedInfo.getTreeUtilities().parseExpression(originalText, new SourcePositions[1]);
         Scope scope = constructScope(updatedInfo, updatedPath);
         updatedInfo.getTreeUtilities().attributeTree(originalReparsed, scope);
 
         final int[] replaceVars = new int[1];
 
         final Map<Tree, Tree> original2Variable = new HashMap<>();
+        final Map<Tree, String> original2Remap = new HashMap<>();
         final Map<Tree, Tree> updated2Variable = new HashMap<>();
+        Map<Tree, Set<String>> handledEquivalences = new HashMap<>();
         Fact.Builder factBuilder = Fact.Builder.create();
 
         new TreePathScanner<Void, Void>() {
             int treeIndex = 0;
             @Override
             public Void scan(Tree node, Void p) {
-                if (node != null) {
+                boolean canReplace = canReplace(getCurrentPath(), node);
+
+                if (canReplace) {
                     TreePath currentPath = new TreePath(getCurrentPath(), node);
                     Collection<? extends Occurrence> matches =
                             Matcher.create(updatedInfo)
@@ -393,12 +405,20 @@ public class PatternGenerator {
 
                     if (!matches.isEmpty()) {
                         String currentVar = "$" + ++replaceVars[0];
-                        ExpressionTree var = updatedInfo.getTreeMaker().Identifier(currentVar);
+                        ExpressionTree varExpr = updatedInfo.getTreeMaker().Identifier(currentVar);
+                        Tree var = isStatement(node.getKind()) ? updatedInfo.getTreeMaker().ExpressionStatement(varExpr) : varExpr;
                         original2Variable.put(node, var);
+                        original2Remap.put(node, currentVar);
                         for (Occurrence occ : matches) {
                             updated2Variable.put(occ.getOccurrenceRoot().getLeaf(), var);
                         }
                         factBuilder.add(updatedInfo, currentVar, currentPath);
+                        handleVariableEquivalenceGroups(factBuilder, 
+                                                        updatedInfo,
+                                                        new TreePath(updatedPath.getParentPath(), originalReparsed),
+                                                        currentPath,
+                                                        currentVar,
+                                                        handledEquivalences);
                         return null;
                     }
 
@@ -422,6 +442,18 @@ public class PatternGenerator {
                 treeIndex++;
             }
         }.scan(new TreePath(updatedPath.getParentPath(), originalReparsed), null);
+
+        for (Entry<Tree, String> e : original2Remap.entrySet()) {
+            new TreeScanner<Void, Void>() {
+                @Override
+                public Void scan(Tree tree, Void p) {
+                    if (handledEquivalences.containsKey(tree)) {
+                        handledEquivalences.get(tree).add(e.getValue());
+                    }
+                    return super.scan(tree, p);
+                }
+            }.scan(e.getKey(), null);
+        }
 
         //expand to FQNs:
         new TreePathScanner<Void, Void>() {
@@ -466,7 +498,47 @@ public class PatternGenerator {
         
         return false;
     }
+        private static int numberOfDifferingChildren(OfflineTree originalTree, TreePath updatedPath, Map<Tree, OfflineTree> tree2OfflineTree) {
+            Iterator<Union2<OfflineTree, Collection<? extends OfflineTree>>> originalIt = originalTree.children.iterator();
+            Iterator<Union2<TreePath, Collection<? extends TreePath>>> updatedIt = children(updatedPath).iterator();
+            int c = 0;
+            while (originalIt.hasNext() && updatedIt.hasNext()) {
+                Union2<OfflineTree, Collection<? extends OfflineTree>> originalC = originalIt.next();
+                Union2<TreePath, Collection<? extends TreePath>> updatedC = updatedIt.next();
 
+                Collection<? extends OfflineTree> originalList;
+                Collection<? extends TreePath> updatedList;
+                if (originalC.hasFirst()) {
+                    originalList = Collections.singletonList(originalC.first());
+                    updatedList = Collections.singletonList(updatedC.first());
+                } else {
+                    originalList = originalC.second();
+                    updatedList = updatedC.second();
+                }
+
+                if (originalList.size() != updatedList.size()) {
+                    c++;
+                    continue;
+                }
+
+                Iterator<? extends OfflineTree> originalListIt = originalList.iterator();
+                Iterator<? extends TreePath> updatedListIt = updatedList.iterator();
+
+                while (originalListIt.hasNext() && updatedListIt.hasNext()) {
+                    OfflineTree original = originalListIt.next();
+                    TreePath updated = updatedListIt.next();
+                    if ((original == null ^ updated == null) || (updated != null && original != tree2OfflineTree.get(updated.getLeaf()))) {
+                        c++;
+                    }
+                }
+            }
+
+            return c;
+        }
+
+    private static boolean isStatement(Kind k) {
+        return StatementTree.class.isAssignableFrom(k.asInterface());
+    }
     private static Collection<Union2<OfflineTree, Collection<? extends OfflineTree>>> children(OfflineTree t) {
         if (t == null)
             return Collections.emptyList();
@@ -525,16 +597,29 @@ public class PatternGenerator {
         for (Entry<String, TreePath> varEntry : occ.getVariables().entrySet()) {
             currentFactBuilder.add(info, varEntry.getKey(), varEntry.getValue());
         }
-        Set<Tree> varTrees = occ.getVariables().values().stream()
-                                                        .map(tp -> tp.getLeaf())
-                                                        .collect(Collectors.toCollection(() -> Collections.newSetFromMap(new IdentityHashMap<>())));
+
+        Map<Tree, String> varTrees = occ.getVariables().entrySet()
+                                                       .stream()
+                                                       .collect(Collectors.toMap(e -> e.getValue().getLeaf(),e -> e.getKey()));
+        Map<Tree, Set<String>> handledEquivalences = new HashMap<>();
+
         new TreePathScanner<Void, Void>() {
             int treeIndex = 0;
             @Override
             public Void scan(Tree node, Void p) {
-                if (node != null) {
-                    if (varTrees.contains(node))
+                boolean canReplace = canReplace(getCurrentPath(), node);
+
+                if (canReplace) {
+                    String varName = varTrees.get(node);
+                    if (varName != null) {
+                        handleVariableEquivalenceGroups(currentFactBuilder,
+                                                        info,
+                                                        occ.getOccurrenceRoot(),
+                                                        new TreePath(getCurrentPath(), node),
+                                                        varName,
+                                                        handledEquivalences);
                         return null;
+                    }
                     recordPossibleMethodInvocation(node, new TreePath(getCurrentPath(), node));
                 }
                 return super.scan(node, p);
@@ -552,6 +637,19 @@ public class PatternGenerator {
                 treeIndex++;
             }
         }.scan(occ.getOccurrenceRoot(), null);
+
+        for (Entry<Tree, String> e : varTrees.entrySet()) {
+            new TreeScanner<Void, Void>() {
+                @Override
+                public Void scan(Tree tree, Void p) {
+                    if (handledEquivalences.containsKey(tree)) {
+                        handledEquivalences.get(tree).add(e.getValue());
+                    }
+                    return super.scan(tree, p);
+                }
+            }.scan(e.getKey(), null);
+        }
+
         return currentFactBuilder.build();
     }
     
@@ -567,6 +665,18 @@ public class PatternGenerator {
             typeRatio.put(var, ((double) variable2PositiveDesc.get(var).types.size()) / (variable2PositiveDesc.get(var).types.size() + variable2NegativeDesc.get(var).types.size() + 1));
             treeNodeRatio.put(var, ((double) variable2PositiveDesc.get(var).treeNodes.size()) / (variable2PositiveDesc.get(var).treeNodes.size() + variable2NegativeDesc.get(var).treeNodes.size() + 1));
         }
+        //check equivalence groups:
+        Map<List<Set<String>>, Integer> allDistinctGroups = new HashMap<>();
+        for (Fact positive : pd.positiveFacts) {
+            allDistinctGroups.put(positive.variableEquivalenceGroups,
+                                  allDistinctGroups.getOrDefault(positive.variableEquivalenceGroups, 0) + 1);
+        }
+        boolean matchesVariableEquivalenceGroup = allDistinctGroups.containsKey(currentFact.variableEquivalenceGroups);
+        double downgradeProbability = 1.0;
+        if (!matchesVariableEquivalenceGroup) {
+            downgradeProbability *= allDistinctGroups.size() / (allDistinctGroups.size() + 1.0);
+            downgradeProbability *= 1.0 / allDistinctGroups.values().stream().collect(Collectors.minBy((i1, i2) -> i1 - i2)).get();
+        }
         OUTER: for (Fact positive : pd.positiveFacts) {
             if (currentFact.methodInvocation2Method.size() != positive.methodInvocation2Method.size()) {
                 //TODO: should this be a blocker?
@@ -581,7 +691,7 @@ public class PatternGenerator {
             someFactMatchesMethods = true;
             int matching = 0;
             int total = 0;
-            double probability = 1.0;
+            double probability = downgradeProbability;
             for (String variable : currentFact.variable2Type.keySet()) {
                 total += 2;
                 if (currentFact.variable2Type.get(variable).equals(positive.variable2Type.get(variable))) {
@@ -595,7 +705,7 @@ public class PatternGenerator {
                     probability *= treeNodeRatio.get(variable);
                 }
             }
-            if (matching == total) {
+            if (matching == total && matchesVariableEquivalenceGroup) {
                 return Pair.of(Result.Kind.POSITIVE, CERTAIN);
             }
             bestCertainty = Math.max(bestCertainty, (long) (CERTAIN * probability));
@@ -633,6 +743,32 @@ public class PatternGenerator {
 
         }
         return result;
+    }
+
+    private static boolean canReplace(TreePath currentPath, Tree node) {
+        boolean canReplace = node != null;
+
+        canReplace = canReplace && (isStatement(node.getKind()) || currentPath.getLeaf().getKind() != Kind.EXPRESSION_STATEMENT);
+
+        return canReplace;
+    }
+
+    private static void handleVariableEquivalenceGroups(Fact.Builder factBuilder, CompilationInfo info, TreePath root, TreePath currentPath, String currentVar, Map<Tree, Set<String>> handledEquivalences) {
+        Set<String> group = handledEquivalences.get(currentPath.getLeaf());
+        if (group == null) {
+            group = new HashSet<>();
+            factBuilder.addVariableEquivalenceGroup(group);
+
+            Collection<? extends Occurrence> eqMatches =
+                    Matcher.create(info)
+                           .setSearchRoot(root)
+                           .match(Pattern.createSimplePattern(currentPath));
+
+            for (Occurrence eqOcc : eqMatches) {
+                handledEquivalences.put(eqOcc.getOccurrenceRoot().getLeaf(), group);
+            }
+        }
+        group.add(currentVar);
     }
 
     private static final class VariableDescription {
@@ -895,11 +1031,13 @@ public class PatternGenerator {
         private final Map<String, String> variable2Type;
         private final Map<String, TreeNodeDesc> variable2TreeNode;
         public final Map<Integer, String[]> methodInvocation2Method;
+        public final List<Set<String>> variableEquivalenceGroups; //TODO: should be a set?
 
-        private Fact(Map<String, String> variable2Type, Map<String, TreeNodeDesc> variable2TreeNode, Map<Integer, String[]> methodInvocation2Method) {
+        private Fact(Map<String, String> variable2Type, Map<String, TreeNodeDesc> variable2TreeNode, Map<Integer, String[]> methodInvocation2Method, List<Set<String>> variableEquivalenceGroups) {
             this.variable2Type = variable2Type;
             this.variable2TreeNode = variable2TreeNode;
             this.methodInvocation2Method = methodInvocation2Method;
+            this.variableEquivalenceGroups = variableEquivalenceGroups;
         }
 
         @Override
@@ -908,6 +1046,7 @@ public class PatternGenerator {
             hash = 41 * hash + Objects.hashCode(this.variable2Type);
             hash = 41 * hash + Objects.hashCode(this.variable2TreeNode);
             hash = 41 * hash + Objects.hashCode(this.methodInvocation2Method);
+            hash = 41 * hash + Objects.hashCode(this.variableEquivalenceGroups);
             return hash;
         }
 
@@ -929,6 +1068,9 @@ public class PatternGenerator {
             if (!Objects.equals(this.methodInvocation2Method, other.methodInvocation2Method)) {
                 return false;
             }
+            if (!Objects.equals(this.variableEquivalenceGroups, other.variableEquivalenceGroups)) {
+                return false;
+            }
             return true;
         }
 
@@ -945,10 +1087,13 @@ public class PatternGenerator {
             private final Map<String, String> variable2Type = new HashMap<>();
             private final Map<String, TreeNodeDesc> variable2TreeNode = new HashMap<>();
             private final Map<Integer, String[]> methodInvocation2Method = new HashMap<>();
+            private final List<Set<String>> variableEquivalenceGroups = new ArrayList<>();
 
             public Builder add(CompilationInfo info, String variableName, TreePath path) {
                 TypeMirror type = info.getTrees().getTypeMirror(path);
-                variable2Type.put(variableName, type2String(info, type));
+                if (type != null) {
+                    variable2Type.put(variableName, type2String(info, type));
+                }
                 variable2TreeNode.put(variableName, new TreeNodeDesc(info, path));
 
                 return this;
@@ -960,10 +1105,17 @@ public class PatternGenerator {
                 return this;
             }
 
+            public Builder addVariableEquivalenceGroup(Set<String> group) {
+                variableEquivalenceGroups.add(Collections.unmodifiableSet(group));
+
+                return this;
+            }
+
             public Fact build() {
                 return new Fact(Collections.unmodifiableMap(variable2Type),
                                 Collections.unmodifiableMap(variable2TreeNode),
-                                Collections.unmodifiableMap(methodInvocation2Method));
+                                Collections.unmodifiableMap(methodInvocation2Method),
+                                Collections.unmodifiableList(variableEquivalenceGroups));
             }
         }
     }

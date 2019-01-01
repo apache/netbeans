@@ -1055,6 +1055,162 @@ public class PatternGeneratorTest extends TestBase {
                         .update();
     }
 
+    public void testElideCall() throws Exception {
+        //TODO: naked contains
+        new TestBuilder().addFile("test/Test.java",
+                                  "package test;\n" +
+                                  "import java.util.Set;\n" +
+                                  "public class Test {\n" +
+                                  "    private void test1(Set<String> set, String str) {\n" +
+                                  "        if (!set.contains(str)) {\n" +
+                                  "            set.add(str);\n" +
+                                  "            System.err.println(0);\n" +
+                                  "        }\n" +
+                                  "    }\n" +
+                                  "    private void test2(Set<String> set2, String str2) {\n" +
+                                  "        if (!set2.contains(str2)) {\n" +
+                                  "            set2.add(str2);\n" +
+                                  "            System.err.println(0);\n" +
+                                  "        }\n" +
+                                  "    }\n" +
+                                  "    private int test3(Set<String> set3, String str3) {\n" +
+                                  "        if (!set3.contains(str3)) {\n" +
+                                  "            set3.add(str3);\n" +
+                                  "            return 0;\n" +
+                                  "        }\n" +
+                                  "        return 1;\n" +
+                                  "    }\n" +
+                                  "    private void test4(Set<String> set, Set<String> set2, String str) {\n" +
+                                  "        if (!set.contains(str)) {\n" +
+                                  "            set2.add(str);\n" +
+                                  "            System.err.println(0);\n" +
+                                  "        }\n" +
+                                  "    }\n" +
+                                  "}\n")
+                        .record()
+                        .addFile("test/Test.java",
+                                 "package test;\n" +
+                                 "import java.util.Set;\n" +
+                                 "public class Test {\n" +
+                                 "    private void test1(Set<String> set, String str) {\n" +
+                                 "        if (set.add(str)) {\n" +
+                                 "            System.err.println(0);\n" +
+                                 "        }\n" +
+                                 "    }\n" +
+                                 "    private void test2(Set<String> set2, String str2) {\n" +
+                                 "        if (!set2.contains(str2)) {\n" +
+                                 "            set2.add(str2);\n" +
+                                 "            System.err.println(0);\n" +
+                                 "        }\n" +
+                                 "    }\n" +
+                                  "    private int test3(Set<String> set3, String str3) {\n" +
+                                  "        if (!set3.contains(str3)) {\n" +
+                                  "            set3.add(str3);\n" +
+                                  "            return 0;\n" +
+                                  "        }\n" +
+                                  "        return 1;\n" +
+                                  "    }\n" +
+                                  "    private void test4(Set<String> set, Set<String> set2, String str) {\n" +
+                                  "        if (!set.contains(str)) {\n" +
+                                  "            set2.add(str);\n" +
+                                  "            System.err.println(0);\n" +
+                                  "        }\n" +
+                                  "    }\n" +
+                                  "}\n")
+                        .update()
+                        .expect("test/Test.java",
+                                "package test;\n" +
+                                "import java.util.Set;\n" +
+                                "public class Test {\n" +
+                                "    private void test1(Set<String> set, String str) {\n" +
+                                "        if (set.add(str)) {\n" +
+                                "            System.err.println(0);\n" +
+                                "        }\n" +
+                                "    }\n" +
+                                "    private void test2(Set<String> set2, String str2) {\n" +
+                                "        if (set2.add(str2)) {\n" +
+                                "            System.err.println(0);\n" +
+                                "        }\n" +
+                                "    }\n" +
+                                "    private int test3(Set<String> set3, String str3) {\n" +
+                                "        if (!set3.contains(str3)) {\n" +
+                                "            set3.add(str3);\n" +
+                                "            return 0;\n" +
+                                "        }\n" +
+                                "        return 1;\n" +
+                                "    }\n" +
+                                "    private void test4(Set<String> set, Set<String> set2, String str) {\n" +
+                                "        if (!set.contains(str)) {\n" +
+                                "            set2.add(str);\n" +
+                                "            System.err.println(0);\n" +
+                                "        }\n" +
+                                "    }\n" +
+                                "}\n",
+                                Kind.POSITIVE,
+                                PatternGenerator.CERTAIN)
+                        .expect("test/Test.java",
+                                "package test;\n" +
+                                "import java.util.Set;\n" +
+                                "public class Test {\n" +
+                                "    private void test1(Set<String> set, String str) {\n" +
+                                "        if (set.add(str)) {\n" +
+                                "            System.err.println(0);\n" +
+                                "        }\n" +
+                                "    }\n" +
+                                "    private void test2(Set<String> set2, String str2) {\n" +
+                                "        if (!set2.contains(str2)) {\n" +
+                                "            set2.add(str2);\n" +
+                                "            System.err.println(0);\n" +
+                                "        }\n" +
+                                "    }\n" +
+                                "    private int test3(Set<String> set3, String str3) {\n" +
+                                "        if (set3.add(str3)) {\n" +
+                                "            return 0;\n" +
+                                "        }\n" +
+                                "        return 1;\n" +
+                                "    }\n" +
+                                "    private void test4(Set<String> set, Set<String> set2, String str) {\n" +
+                                "        if (!set.contains(str)) {\n" +
+                                "            set2.add(str);\n" +
+                                "            System.err.println(0);\n" +
+                                "        }\n" +
+                                "    }\n" +
+                                "}\n",
+                                Kind.POSITIVE,
+                                PatternGenerator.CERTAIN) //TODO: probability?
+                        .expect("test/Test.java",
+                                "package test;\n" +
+                                "import java.util.Set;\n" +
+                                "public class Test {\n" +
+                                "    private void test1(Set<String> set, String str) {\n" +
+                                "        if (set.add(str)) {\n" +
+                                "            System.err.println(0);\n" +
+                                "        }\n" +
+                                "    }\n" +
+                                "    private void test2(Set<String> set2, String str2) {\n" +
+                                "        if (!set2.contains(str2)) {\n" +
+                                "            set2.add(str2);\n" +
+                                "            System.err.println(0);\n" +
+                                "        }\n" +
+                                "    }\n" +
+                                "    private int test3(Set<String> set3, String str3) {\n" +
+                                "        if (!set3.contains(str3)) {\n" +
+                                "            set3.add(str3);\n" +
+                                "            return 0;\n" +
+                                "        }\n" +
+                                "        return 1;\n" +
+                                "    }\n" +
+                                "    private void test4(Set<String> set, Set<String> set2, String str) {\n" +
+                                "        if (set2.add(str)) {\n" +
+                                "            System.err.println(0);\n" +
+                                "        }\n" +
+                                "    }\n" +
+                                "}\n",
+                                Kind.POSITIVE,
+                                PatternGenerator.CERTAIN / 2) //TODO: probability?
+                        .assertAllChecked();
+    }
+
     final class TestBuilder {
         private final List<FileDesc> files = new ArrayList<>();
         private final FileObject sourceRoot;

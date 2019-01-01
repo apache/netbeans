@@ -214,7 +214,7 @@ public final class JavaSource {
             throw new IllegalArgumentException ("fileObject == null");  //NOI18N
         }
         if (!fileObject.isValid()) {
-            LOGGER.log(Level.FINE, "FileObject ({0}) passed to JavaSource.forFileObject is invalid", fileObject.toURI().toString());
+            LOGGER.log(Level.FINE, "FileObject ({0}) passed to JavaSource.forFileObject is invalid", fileObject.getURL().toURI().toString());
             return null;
         }
 

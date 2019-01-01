@@ -542,9 +542,9 @@ public class ConfigureToolbarPanel extends javax.swing.JPanel implements Runnabl
                     Object instance = instanceCookie.instanceCreate();
                     if( null != instance ) {
                         if( instance instanceof Action ) {
-							if (!obj.getName().toLowerCase().contains(searchTextField.getText().toLowerCase())){
-								return false;
-							}
+						   if (!obj.getName().toLowerCase().contains(searchTextField.getText().toLowerCase())){
+						        return false;
+						   }
                             Action action = (Action)instance;
                             boolean noIconBase = false;
                             try {

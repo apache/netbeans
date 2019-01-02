@@ -37,7 +37,7 @@ matrix:
         - env: SIGTEST=true COMPILETEST=false RAT=false EOL=true LICENSE=false CV=true RUN_TESTS_JDK8=false RUN_JAVA_TESTS=false
           jdk: oraclejdk8
 
-        - env: OPTS="-quiet -Dpermit.jdk9.builds=true -Dvanilla.javac.exists=true" TARGET="build-platform"
+        - env: OPTS="-quiet" TARGET="build-platform"
           jdk: oraclejdk11
 
         - env: SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_TESTS_JDK9PLUS=false RUN_TESTS_JDK8=true TEST_MODULES="java/java.completion" OPTS="-Dcluster.config=java -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"

@@ -46,7 +46,10 @@
     <fail message="You need JDK 8+ to build NetBeans; nbjdk.home=${nbjdk.home} java.home=${java.home}">
         <condition>
             <not>
-                <isset property="have-jdk-1.8"/>
+                <or>
+                    <isset property="have-jdk-1.8"/>
+                    <isset property="have-jdk-1.9"/>
+                </or>
             </not>
         </condition>
     </fail>
@@ -451,6 +454,8 @@ Hg ID:    ${hg.id}
       <mkdir dir="${netbeans.dest.dir}"/>
       <ant dir="." target="-build-platform" inheritAll="false">
           <property name="cluster.config" value="platform"/>
+          <property name="permit.jdk9.builds" value="true"/>
+          <property name="vanilla.javac.exists" value="true"/>
       </ant>
   </target>
 

@@ -1151,6 +1151,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
 
   <target name="clean" depends="-init-clean,bootstrap" description="Clean everything possible.">
       <taskdef name="try-else" classname="org.netbeans.nbbuild.TryElse" classpath="${nbantext.jar}"/>
+      <property name="vanilla.javac.exists" value="true"/>
       <try-else first="-hg-clean" second="-real-clean"/>
   </target>
 

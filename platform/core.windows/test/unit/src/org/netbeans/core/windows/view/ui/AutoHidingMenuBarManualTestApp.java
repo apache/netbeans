@@ -37,7 +37,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  * A standalone Swing app that can be used to manually test {@link AutoHidingMenuBar} without
  * launching the full IDE. Tested on Windows 10. Not applicable to MacOS.
  */
-public final class AutoHidingMenuBarManualTest {
+public final class AutoHidingMenuBarManualTestApp {
     private final JFrame frame = new JFrame();
     private final JMenuBar mainMenuBar = new JMenuBar();
 
@@ -52,12 +52,12 @@ public final class AutoHidingMenuBarManualTest {
                 {
                     e.printStackTrace();
                 }
-                new AutoHidingMenuBarManualTest().setVisible(true);
+                new AutoHidingMenuBarManualTestApp().setVisible(true);
             }
         });
     }
 
-    public AutoHidingMenuBarManualTest() {
+    public AutoHidingMenuBarManualTestApp() {
         initComponents();
     }
 

@@ -159,7 +159,9 @@ public class JarFileSystemHidden extends NbTestCase {
 
         // sign the jar
         try {
-            sun.security.tools.jarsigner.Main.main(new String[]{
+            Class<?> jarSignererMain = Class.forName("sun.security.tools.jarsigner.Main");
+            Method main = jarSignererMain.getMethod("main", String[].class);
+            main.invoke(null, (Object) new String[]{
                 "-keystore", keystoreFile.getAbsolutePath(),
                 "-storepass", "testpass",
                 jarFile.getAbsolutePath(),

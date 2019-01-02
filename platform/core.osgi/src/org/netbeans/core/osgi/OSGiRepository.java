@@ -118,17 +118,6 @@ class OSGiRepository extends Repository {
     private static final class SFS extends MultiFileSystem implements LookupListener {
 
         static {
-            try {
-                // FELIX-2128
-                Object _1 = Class.forName("org.openide.filesystems.FileSystem$Environment"); // NOI18N
-            } catch (ClassNotFoundException ex) {
-                // ignore
-            }
-            try {
-                Object _2 = Class.forName("org.openide.filesystems.FileSystemCapability"); // NOI18N
-            } catch (ClassNotFoundException ex) {
-                // ignore
-            }
             Object _3 = FileStatusListener.class;
             Object _4 = LookupEvent.class; // FELIX-3477
         }

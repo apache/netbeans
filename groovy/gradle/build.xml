@@ -25,14 +25,18 @@
 
     <property name="test-unit-sys-prop.test.data.dir" location="test/data"/>
     <property name="tooling" value="netbeans-gradle-tooling"/>
-    
+    <available property="have.gradle.wrapper" file="${tooling}/gradle/wrapper/gradle-wrapper.jar"/>
+
     <target name="-uptodate-tooling">
         <uptodate property="tooling.uptodate" targetfile="release/modules/gradle/${tooling}.jar">
             <srcfiles dir="${tooling}/src/main"/>
         </uptodate>
     </target>
+    <target name="-download-gradle-wrapper" unless="have.gradle.wrapper">
+        <get src="https://raw.githubusercontent.com/gradle/gradle/master/gradle/wrapper/gradle-wrapper.jar" dest="${tooling}/gradle/wrapper/gradle-wrapper.jar"/>
+    </target>
     
-    <target name="build-tooling-lib" depends="-uptodate-tooling" unless="tooling.uptodate">
+    <target name="build-tooling-lib" depends="-download-gradle-wrapper,-uptodate-tooling" unless="tooling.uptodate">
         <java fork="true" dir="${tooling}" classpath="${tooling}/gradle/wrapper/gradle-wrapper.jar" classname="org.gradle.wrapper.GradleWrapperMain" failonerror="true">
             <sysproperty key="org.gradle.appname" value="Gradle"/>
             <arg line="clean build -x check"/>

@@ -1784,22 +1784,15 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     </subant>
   </target>
 
-  <target name="gen-sigtests-release" depends="bootstrap"
+  <target name="gen-sigtests-release" depends="init"
     description="Generates signature files into stable API modules directories"
   >
     <echo message="Generating signature files into stable API modules directories"/>
 
-    <pathconvert property="modules.fullpath" >
-        <path>
-            <dirset dir="${nb_all}" includes="${config.javadoc.stable},${config.javadoc.devel}" />
-        </path>
-        <mapper type="identity" />
-    </pathconvert>
-    
     <subant target="gen-sigtest" buildpath="${modules.fullpath}"/>
   </target>
   
-  <target name="check-sigtests-release" depends="bootstrap"
+  <target name="check-sigtests-release" depends="init"
     description="Checks signature files of stable API modules"
   >
     <echo message="Checking signature files of stable API modules"/>
@@ -1808,12 +1801,6 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     <property name="fail.on.error" value="true"/>
     <delete dir="${sigtest.output.dir}"/>
     <mkdir dir="${sigtest.output.dir}"/>
-    <pathconvert property="modules.fullpath" >
-        <path>
-            <dirset dir="${nb_all}" includes="${config.javadoc.stable}" />
-        </path>
-        <mapper type="identity" />
-    </pathconvert>
     <subant target="check-sigtest" buildpath="${modules.fullpath}" failonerror="${fail.on.error}">
         <property name="sigtest.output.dir" value="${sigtest.output.dir}"/>
     </subant>

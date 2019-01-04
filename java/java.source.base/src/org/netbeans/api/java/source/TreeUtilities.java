@@ -1355,7 +1355,11 @@ public final class TreeUtilities {
         
         switch (leaf.getKind()) {
             case BREAK:
-                return (StatementTree) ((JCTree.JCBreak) leaf).target;
+                Tree breakTarget = (Tree) ((JCTree.JCBreak) leaf).target;
+                if (breakTarget == null || !(breakTarget instanceof StatementTree)) {
+                    return null;
+                }
+                return (StatementTree) breakTarget;
             case CONTINUE:
                 StatementTree target = (StatementTree) ((JCTree.JCContinue) leaf).target;
                 

@@ -334,17 +334,40 @@
       <include name="${nb.cluster.platform.dir}/lib/nbexec" />
     </fixcrlf>
   </target>
-  <target name="finish-build-nb" depends="init,-check-nb-cluster" if="has.nb.cluster">
-    <loadproperties srcFile="${clusters.list.file}" />
-
+  <target name="-shall-build-nb-windows-launchers" depends="init,-check-nb-cluster">
+      <condition property="shall.build.windows.launchers">
+          <and>
+              <istrue value="${do.build.windows.launchers}"/>
+              <istrue value="${has.nb.cluster}"/>
+          </and>
+      </condition>
+  </target>
+  
+  <target name="-build-nb-windows-launchers" depends="-shall-build-nb-windows-launchers" if="shall.build.windows.launchers">
+    <exec executable="make" dir="../nb/ide.launcher/windows">
+        <arg value="-f"/>
+        <arg value="Makefile.mingw"/>
+    </exec>
+    <copy todir="${netbeans.dest.dir}/bin" overwrite="true">
+        <fileset dir="../nb/ide.launcher/windows" includes="netbeans*.exe"/>
+    </copy>
+  </target>
+  
+  <target name="-download-nb-windows-launchers" depends="init,-check-nb-cluster" if="has.nb.cluster" unless="do.build.windows.launchers">
     <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
         <manifest dir="${nb_all}" includes="nb/ide.launcher/external/binaries-list"/>
     </downloadbinaries>
 
     <mkdir dir="${netbeans.dest.dir}/bin" />
+    <unzip src="../nb/ide.launcher/external/launchers-10.0.zip" dest="${netbeans.dest.dir}/bin" />
+  </target>
+
+  <target name="finish-build-nb" depends="init,-check-nb-cluster, -download-nb-windows-launchers, -build-nb-windows-launchers" if="has.nb.cluster">
+    <loadproperties srcFile="${clusters.list.file}" />
+
+    <mkdir dir="${netbeans.dest.dir}/bin" />
     <copy file="../nb/ide.launcher/unix/netbeans" todir="${netbeans.dest.dir}/bin" />
     <chmod file="${netbeans.dest.dir}/bin/netbeans" perm="ugo+rx"/>
-    <unzip src="../nb/ide.launcher/external/launchers-10.0.zip" dest="${netbeans.dest.dir}/bin" />
     <!-- if anybody knows better place for icons, let me know: jtulach@netbeans.org -->
 
     <mkdir dir="${netbeans.dest.dir}/etc" />

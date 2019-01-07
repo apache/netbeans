@@ -44,7 +44,7 @@
             <arg value="-f"/>
             <arg value="Makefile.mingw"/>
         </exec>
-        <copy todir="${cluster}/bin" overwrite="true">
+        <copy todir="${cluster}/lib" overwrite="true">
             <fileset dir="launcher/windows">
                 <include name="nbexec*.dll"/>
                 <include name="nbexec*.exe"/>

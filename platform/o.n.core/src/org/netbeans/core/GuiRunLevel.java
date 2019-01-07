@@ -25,13 +25,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-import org.netbeans.TopSecurityManager;
 import org.netbeans.core.startup.CLIOptions;
 import org.netbeans.core.startup.MainLookup;
 import org.netbeans.core.startup.RunLevel;
 import org.netbeans.core.startup.Splash;
 import org.netbeans.core.startup.StartLog;
-import org.netbeans.swing.plaf.Startup;
 import org.openide.awt.StatusDisplayer;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
@@ -83,19 +81,9 @@ public class GuiRunLevel implements RunLevel {
             });
         }
 
-        // -----------------------------------------------------------------------------------------------------
-        // 8. Advance Policy
-
-        if (!Boolean.getBoolean("TopSecurityManager.disable")) {
-            // set security manager
-            TopSecurityManager.install();
-            if (CLIOptions.isGui()) {
-                TopSecurityManager.makeSwingUseSpecialClipboard(Lookup.getDefault().lookup(org.openide.util.datatransfer.ExClipboard.class));
-            }
-        }
-
+        NbLifecycleManager.advancePolicy();
         NbAuthenticator.install();
-        
+
         StartLog.logProgress ("Security managers installed"); // NOI18N
         Splash.getInstance().increment(1);
     }
@@ -141,7 +129,7 @@ public class GuiRunLevel implements RunLevel {
         SwingUtilities.invokeLater(new InitWinSys(windowSystem));
         StartLog.logEnd ("Main window initialization"); //NOI18N
     }
-  
+
     private static void waitForMainWindowPaint() {
         // Waits for notification about processed paint event for main window
         // require modified java.awt.EventQueue to run succesfully

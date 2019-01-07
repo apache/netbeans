@@ -6,4 +6,4 @@ METHOD     inject(Closure)                            Object
 METHOD     inject(Object, Closure)                    Object
 METHOD     inspect()                                  String
 METHOD     invokeMethod(String, Object)               Object
-FIELD      instance                        [STATIC]   Singleton1
+FIELD      instance                        [STATIC,   Singleton1

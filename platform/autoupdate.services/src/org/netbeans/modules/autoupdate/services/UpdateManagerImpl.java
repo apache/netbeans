@@ -67,6 +67,27 @@ public class UpdateManagerImpl extends Object {
         }
     }    
     
+    /**
+     * Flushes the cache, but does not flush the cache units themselves.
+     * This prevents re-creation of UpdateUnit instances; old instances were
+     * updated with info from the update step.
+     */
+    public void flushComputedInfo() {
+        Cache c;
+        
+        synchronized(UpdateManagerImpl.Cache.class) {
+            Reference<Cache> cr = getCacheReference();
+            if (cr == null) {
+                return;
+            }
+            c = cr.get();
+            if (c == null) {
+                return;
+            }
+        }
+        c.clearMaps();
+    }
+    
     public static List<UpdateUnit> getUpdateUnits (UpdateProvider provider, UpdateManager.TYPE... types) {
         return filterUnitsByAskedTypes (UpdateUnitFactory.getDefault().getUpdateUnits (provider).values (), type2checkedList (types));
     }
@@ -235,7 +256,7 @@ public class UpdateManagerImpl extends Object {
     }
     
     private class Cache {
-        private Map<String, UpdateUnit> units;
+        private final Map<String, UpdateUnit> units;
         private Set<UpdateElement> availableEagers = null;
         private Set<UpdateElement> installedEagers = null;
         private Map<String, Collection<ModuleInfo>> token2installedProviders = null;
@@ -245,35 +266,44 @@ public class UpdateManagerImpl extends Object {
         Cache() {
             units = UpdateUnitFactory.getDefault ().getUpdateUnits ();
         }        
-        public Set<UpdateElement> getAvailableEagers() {
+        
+        synchronized void clearMaps() {
+            availableEagers = null;
+            installedEagers = null;
+            token2installedProviders = null;
+            token2availableProviders = null;
+            cluster2installedKits = null;
+        }
+        
+        public synchronized Set<UpdateElement> getAvailableEagers() {
             if (availableEagers == null) {
                 createMaps ();
             }
             assert availableEagers != null : "availableEagers initialized";
             return availableEagers;
         }
-        public Set<UpdateElement> getInstalledEagers() {
+        public synchronized Set<UpdateElement> getInstalledEagers() {
             if (installedEagers == null) {
                 createMaps ();
             }            
             assert installedEagers != null : "installedEagers initialized";
             return installedEagers;
         }                        
-        public Map<String, Collection<ModuleInfo>> createMapToken2InstalledProviders () {
+        public synchronized Map<String, Collection<ModuleInfo>> createMapToken2InstalledProviders () {
             if (token2installedProviders == null) {
                 createMaps ();
             }            
             assert token2installedProviders != null : "token2installedProviders initialized";
             return token2installedProviders;
         }                        
-        public Map<String, Collection<ModuleInfo>> createMapToken2AvailableProviders () {
+        public synchronized Map<String, Collection<ModuleInfo>> createMapToken2AvailableProviders () {
             if (token2availableProviders == null) {
                 createMaps ();
             }
             assert token2availableProviders != null : "token2availableProviders initialized";
             return token2availableProviders;
         }                        
-        public Map<String, TreeSet<UpdateElement>> createMapCluster2installedKits() {
+        public synchronized Map<String, TreeSet<UpdateElement>> createMapCluster2installedKits() {
             if (cluster2installedKits == null) {
                 createMaps();
             }

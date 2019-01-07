@@ -45,12 +45,8 @@
   <property name="s2b_root_client_7_0" location="src/org/netbeans/modules/j2ee/dd/impl/client/model_7_0"/>
   <property name="j2ee.dd.resources.dir" value="src/org/netbeans/modules/j2ee/dd/impl/"/>
 
-  <target name="build-init" depends="projectized.build-init">
-  <unzip src="external/j2ee.dd-w3c-resources.zip" dest="${j2ee.dd.resources.dir}"/>
-  <unzip src="external/j2ee.dd-glassfish-resources.zip" dest="${j2ee.dd.resources.dir}"/>
-    </target>
 
-  <target name="s2binit" depends="build-init">
+  <target name="s2binit" depends="projectized.build-init">
       <!-- XXX do not know how to replace with @Schema2Beans; see issue #178426 for discussion -->
 	<taskdef name="schema2beans" classname="org.netbeans.modules.s2banttask.Schema2BeansAntTask">
 	  <classpath>
@@ -665,7 +661,7 @@
   </target>
 
   <target name="compile" depends="dd2beansgen,projectized-common.compile"/>
-  
+
   <target name="clean" depends="projectized-common.clean,clean-ddgen-src"/>
 
   <target name="clean-ddgen-src">
@@ -796,14 +792,14 @@
         </delete>
         <delete dir="${s2b_root_client_7_0}"/>
   </target>
-  
+
   <target name="javadoc" depends="init-javadoc, projectized.javadoc"/>
-  
+
   <target name="init-javadoc">
       <mkdir dir="${netbeans.javadoc.dir}/org-netbeans-modules-j2ee-dd/arch"/>
       <copy file="doc/ddapi_architecture.html" todir="${netbeans.javadoc.dir}/org-netbeans-modules-j2ee-dd/arch"/>
       <copy file="doc/dd_api_schema.jpg" todir="${netbeans.javadoc.dir}/org-netbeans-modules-j2ee-dd/arch"/>
       <copy file="doc/usage.html" todir="${netbeans.javadoc.dir}/org-netbeans-modules-j2ee-dd/arch"/>
   </target>
-  
+
 </project>

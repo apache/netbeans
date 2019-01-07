@@ -46,7 +46,7 @@ import org.netbeans.swing.tabcontrol.WinsysInfoForTabbedContainer;
  *
  * @author Tim Boudreau
  */
-public final class AquaViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
+public class AquaViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
 
     private static final int TXT_X_PAD = 5;
     private static final int ICON_X_PAD = 2;
@@ -64,7 +64,7 @@ public final class AquaViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
     /**
      * Should be constructed only from createUI method.
      */
-    private AquaViewTabDisplayerUI(TabDisplayer displayer) {
+    protected AquaViewTabDisplayerUI(TabDisplayer displayer) {
         super(displayer);
         prefSize = new Dimension(100, 19); //XXX huh?
     }

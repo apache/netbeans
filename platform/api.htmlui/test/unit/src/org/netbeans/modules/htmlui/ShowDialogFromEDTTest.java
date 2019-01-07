@@ -34,7 +34,9 @@ public class ShowDialogFromEDTTest implements Runnable {
     }
     
     private CountDownLatch cdl;
-    @Test public void showDialog() throws InterruptedException {
+    
+    @Test(timeOut = 9000)
+    public void showDialog() throws InterruptedException {
         cdl = new CountDownLatch(1);
         EventQueue.invokeLater(this);
         cdl.await();

@@ -20,8 +20,6 @@
 package org.netbeans;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
 import java.util.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -61,15 +59,20 @@ public final class Util {
         String suffix = "-test.jar"; // NOI18N
         File physicalModuleFile = File.createTempFile(prefix, suffix);
         physicalModuleFile.deleteOnExit();
-        try (InputStream is = Files.newInputStream(moduleFile.toPath());
-                OutputStream os = Files.newOutputStream(physicalModuleFile.toPath())) {
-            byte[] buf = new byte[4096];
-            int i;
-            while ((i = is.read(buf)) != -1) {
-                os.write(buf, 0, i);
+        InputStream is = new FileInputStream(moduleFile);
+        try {
+            OutputStream os = new FileOutputStream(physicalModuleFile);
+            try {
+                byte[] buf = new byte[4096];
+                int i;
+                while ((i = is.read(buf)) != -1) {
+                    os.write(buf, 0, i);
+                }
+            } finally {
+                os.close();
             }
-        } catch (InvalidPathException ex) {
-            throw new IOException(ex);
+        } finally {
+            is.close();
         }
         err.fine("Made " + physicalModuleFile);
         return physicalModuleFile;

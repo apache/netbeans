@@ -208,7 +208,7 @@ public class AutoupdateSettings {
         //catching strange IDs like
         //unique=-n+NB0c15fdc4f-2182-40c3-b6d8-ae09ef28922a_526df012-fe24-4849-b343-b4d77b11f6e6
         assert !(newPrefix + id).startsWith("-n+") : 
-            "Product Indentity is of wrong format, prefix=" +
+            "Product Identity is of wrong format, prefix=" +
                 newPrefix + ", id=" +
                 id + ", oldPrefix=" +
                 oldPrefix +
@@ -283,7 +283,7 @@ public class AutoupdateSettings {
                 err.log (Level.INFO, ex.getLocalizedMessage (), ex);
             }
         } else if (exp == null) {
-            err.log (Level.FINEST, "No preferences imported from previous versoin.");
+            err.log (Level.FINEST, "No preferences imported from previous version.");
         } else {
             err.log (Level.FINEST, "Read preferences from userdir " + exp);
         }

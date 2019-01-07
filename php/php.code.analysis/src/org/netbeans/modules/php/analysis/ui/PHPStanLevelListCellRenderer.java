@@ -21,6 +21,7 @@ package org.netbeans.modules.php.analysis.ui;
 import java.awt.Component;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
+import org.netbeans.modules.php.analysis.options.AnalysisOptions;
 
 public class PHPStanLevelListCellRenderer implements ListCellRenderer<String> {
 
@@ -33,7 +34,7 @@ public class PHPStanLevelListCellRenderer implements ListCellRenderer<String> {
     @Override
     public Component getListCellRendererComponent(JList<? extends String> list, String value, int index, boolean isSelected, boolean cellHasFocus) {
         String level = value;
-        if ("7".equals(level)) { // NOI18N
+        if (String.valueOf(AnalysisOptions.PHPSTAN_MAX_LEVEL).equals(level)) {
             level += " (max)"; // NOI18N
         }
         return defaultRenderer.getListCellRendererComponent(list, level, index, isSelected, cellHasFocus);

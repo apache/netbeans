@@ -180,8 +180,10 @@ public SyncPipe(InputStream istrm, OutputStream ostrm) {
     @Test
     public void testListSdks() throws Exception {
         MobilePlatform instance = org.netbeans.modules.cordova.platforms.api.PlatformManager.getPlatform(PlatformManager.IOS_TYPE);
-        for (SDK sdks: instance.getSDKs()) {
-            System.out.println(sdks);
+        if (instance != null) {
+            for (SDK sdks : instance.getSDKs()) {
+                System.out.println(sdks);
+            }
         }
     }
     

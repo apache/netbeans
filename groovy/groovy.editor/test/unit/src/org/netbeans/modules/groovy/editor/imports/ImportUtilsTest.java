@@ -21,7 +21,6 @@ package org.netbeans.modules.groovy.editor.imports;
 
 import java.util.HashSet;
 import java.util.Set;
-import static junit.framework.Assert.assertTrue;
 import org.netbeans.modules.groovy.editor.spi.completion.DefaultImportsProvider;
 import org.netbeans.modules.groovy.editor.test.GroovyTestBase;
 import org.openide.util.test.MockLookup;

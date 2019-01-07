@@ -24,6 +24,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Collections;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
@@ -49,7 +50,7 @@ final class MobilePlatformsPanel extends javax.swing.JPanel {
     private final MobilePlatformsOptionsPanelController controller;
     private DocumentListener documentL;
     private String codeSignIdentity;
-    private Collection<? extends ProvisioningProfile> provisioningProfiles;
+    private Collection<? extends ProvisioningProfile> provisioningProfiles = Collections.emptyList();
     private String provisioningProfilePath;
     private boolean inited = false;
     private RequestProcessor.Task versionTask;
@@ -273,9 +274,11 @@ final class MobilePlatformsPanel extends javax.swing.JPanel {
 
     void load() {
         final MobilePlatform iosPlatform = PlatformManager.getPlatform(PlatformManager.IOS_TYPE);
-        codeSignIdentity = iosPlatform.getCodeSignIdentity();
-        provisioningProfiles = iosPlatform.getProvisioningProfiles();
-        provisioningProfilePath = iosPlatform.getProvisioningProfilePath();
+        if (iosPlatform != null) {
+            codeSignIdentity = iosPlatform.getCodeSignIdentity();
+            provisioningProfiles = iosPlatform.getProvisioningProfiles();
+            provisioningProfilePath = iosPlatform.getProvisioningProfilePath();
+        }
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -309,8 +312,12 @@ final class MobilePlatformsPanel extends javax.swing.JPanel {
     void setupComponenets() {
         if (!inited) {
             removeAll();
-            initComponents();            
-            
+            initComponents();
+            MobilePlatform iosPlatform = PlatformManager.getPlatform(PlatformManager.IOS_TYPE);
+            if (iosPlatform == null) {
+                iOSPanel.setVisible(false);
+            }
+
             cordovaPathField.getDocument().addDocumentListener(new DocumentListener() {
                 @Override
                 public void insertUpdate(DocumentEvent e) {

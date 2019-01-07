@@ -23,11 +23,14 @@ import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
+import com.sun.tools.javac.tree.JCTree.JCCatch;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
+import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.List;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
@@ -49,10 +52,12 @@ public class NBAttr extends Attr {
     }
 
     private final CancelService cancelService;
+    private final TreeMaker tm;
 
     public NBAttr(Context context) {
         super(context);
         cancelService = CancelService.instance(context);
+        tm = TreeMaker.instance(context);
     }
 
     @Override
@@ -71,6 +76,11 @@ public class NBAttr extends Attr {
     public void visitBlock(JCBlock tree) {
         cancelService.abortIfCanceled();
         super.visitBlock(tree);
+    }
+
+    @Override
+    public void visitCatch(JCCatch that) {
+        super.visitBlock(tm.Block(0, List.of(that.param, that.body)));
     }
 
     private boolean fullyAttribute;

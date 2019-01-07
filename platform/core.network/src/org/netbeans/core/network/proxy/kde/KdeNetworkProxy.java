@@ -19,11 +19,12 @@
 package org.netbeans.core.network.proxy.kde;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -132,7 +133,10 @@ public class KdeNetworkProxy implements NetworkProxyResolver {
         Map<String, String> map = new HashMap<String, String>();
 
         if (kioslavercFile.exists()) {
-            try (BufferedReader br = Files.newBufferedReader(kioslavercFile.toPath())) {
+            try {
+                FileInputStream fis = new FileInputStream(kioslavercFile);
+                DataInputStream dis = new DataInputStream(fis);
+                BufferedReader br = new BufferedReader(new InputStreamReader(dis));
                 String line;
                 boolean inGroup = false;
                 while ((line = br.readLine()) != null) {
@@ -149,8 +153,11 @@ public class KdeNetworkProxy implements NetworkProxyResolver {
                         inGroup = true;
                     }
                 }
-            } catch (IOException | InvalidPathException ex) {
-                LOGGER.log(Level.SEVERE, "Cannot read file: ", ex);
+                dis.close();
+            } catch (FileNotFoundException fnfe) {
+                LOGGER.log(Level.SEVERE, "Cannot read file: ", fnfe);
+            } catch (IOException ioe) {
+                LOGGER.log(Level.SEVERE, "Cannot read file: ", ioe);
             }
         } else {
             LOGGER.log(Level.WARNING, "KDE system proxy resolver: The kioslaverc file not found ({0})", KIOSLAVERC_PATH);

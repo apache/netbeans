@@ -2664,6 +2664,7 @@ public abstract class CslTestBase extends NbTestCase {
             caretOffset = -1;
         }
 
+        final String[] described = new String[1];
         UserTask task = new UserTask() {
             public @Override void run(ResultIterator resultIterator) throws Exception {
                 Parser.Result r = caretOffset == -1 ? resultIterator.getParserResult() : resultIterator.getParserResult(caretOffset);
@@ -2783,17 +2784,18 @@ public abstract class CslTestBase extends NbTestCase {
                     }
                 };
 
-                String described = describeCompletion(caretLine, pr.getSnapshot().getSource().createSnapshot().getText().toString(), caretOffset, true, caseSensitive, type, proposals, includeModifiers, deprecatedHolder, formatter);
-                assertDescriptionMatches(file, described, true, ".completion");
+                described[0] = describeCompletion(caretLine, pr.getSnapshot().getSource().createSnapshot().getText().toString(), caretOffset, true, caseSensitive, type, proposals, includeModifiers, deprecatedHolder, formatter);
             }
         };
         if (classPathsForTest == null || classPathsForTest.isEmpty()) {
             ParserManager.parse(Collections.singleton(testSource), task);
+            assertDescriptionMatches(file, described[0], true, ".completion");
         } else {
             Future<Void> future = ParserManager.parseWhenScanFinished(Collections.singleton(testSource), task);
             if (!future.isDone()) {
                 future.get();
             }
+            assertDescriptionMatches(file, described[0], true, ".completion");
         }
     }
 

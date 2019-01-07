@@ -3007,4 +3007,30 @@ public class Utilities {
         }
         return false;
     }
+
+    public static ExecutableElement getFunctionalMethodFromElement(CompilationInfo info, Element element) {
+        Element classType = info.getTypes().asElement(element.asType());
+
+        //return null if classType is invalid, such as a primitive type
+        if (classType == null || !classType.getKind().isInterface()) {
+            return null;
+        }
+
+        ExecutableElement elementToReturn = null;
+        int methodCounter = 0;
+        for (Element e : classType.getEnclosedElements()) {
+            if (e.getKind() == ElementKind.METHOD && e.getModifiers().contains(Modifier.ABSTRACT)) {
+                elementToReturn = (ExecutableElement) e;
+                methodCounter++;
+            }
+        }
+
+        //not a functional element, i.e. doesn't declare a single method
+        if (methodCounter != 1) {
+            return null;
+        }
+
+        return elementToReturn;
+    }
+
 }

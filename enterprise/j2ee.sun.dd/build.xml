@@ -22,8 +22,4 @@
 <project basedir="." default="build" name="enterprise/j2ee.sun.dd">
   <import file="../../nbbuild/templates/projectized.xml"/>
 
-  <property name="j2ee.sun.dd.resources.dir" value="./src/org/netbeans/modules/j2ee/sun/dd/impl/"/>
-   <target name="build-init" depends="projectized.build-init">
-       <unzip src="external/j2ee.sun.dd-glassfish-ext-resources.zip" dest="${j2ee.sun.dd.resources.dir}"/> 
-   </target>
 </project>

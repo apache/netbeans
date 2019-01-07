@@ -87,6 +87,8 @@ import org.netbeans.modules.java.source.parsing.FileManagerTransaction;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.java.source.parsing.OutputFileManager;
+import org.netbeans.modules.java.source.usages.BinaryAnalyser;
+import org.netbeans.modules.java.source.usages.ClassIndexImpl;
 import org.netbeans.modules.java.source.usages.ExecutableFilesIndex;
 import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
@@ -395,7 +397,12 @@ final class VanillaCompileWorker extends CompileWorker {
                         if (binaryFO == null)
                             continue;
                         FileManagerTransaction fmtx = TransactionContext.get().get(FileManagerTransaction.class);
-                        copyRecursively(binaryFO, cache, cache, filter, fmtx);
+                        List<File> copied = new ArrayList<>();
+                        copyRecursively(binaryFO, cache, cache, filter, fmtx, copied);
+                        final ClassIndexImpl cii = javaContext.getClassIndexImpl();
+                        if (cii != null) {
+                            cii.getBinaryAnalyser().analyse(context, cache, copied);
+                        }
                     }
                 });
                 done.get();
@@ -406,7 +413,7 @@ final class VanillaCompileWorker extends CompileWorker {
         return ParsingOutput.success(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
     }
 
-    private static void copyRecursively(FileObject source, File targetRoot, File target, Set<String> filter, FileManagerTransaction fmtx) throws IOException {
+    private static void copyRecursively(FileObject source, File targetRoot, File target, Set<String> filter, FileManagerTransaction fmtx, List<File> copied) throws IOException {
         if (source.isFolder()) {
             if (target.exists() && !target.isDirectory()) {
                 throw new IOException("Cannot create folder: " + target.getAbsolutePath() + ", already exists as a file.");
@@ -418,7 +425,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 String name = f.getNameExt();
                 if (name.endsWith(".class"))
                     name = name.substring(0, name.length() - FileObjects.CLASS.length()) + FileObjects.SIG;
-                copyRecursively(f, targetRoot, new File(target, name), filter, fmtx);
+                copyRecursively(f, targetRoot, new File(target, name), filter, fmtx, copied);
             }
         } else {
             if (target.isDirectory()) {
@@ -438,8 +445,10 @@ final class VanillaCompileWorker extends CompileWorker {
                 copy = true;
             }
 
-            if (copy)
+            if (copy) {
                 copyFile(source, fmtx.createFileObject(StandardLocation.CLASS_OUTPUT, target, targetRoot, null, null));
+                copied.add(target);
+            }
         }
     }
 

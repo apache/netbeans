@@ -20,11 +20,14 @@ package org.netbeans.nbbuild;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.netbeans.junit.NbTestCase;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Target;
@@ -32,6 +35,8 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.CallTarget;
 
 public class InsertModuleAllTargetsTest extends NbTestCase {
+    private static final Pattern VARIABLE_SUBST = Pattern.compile("\\$\\{([^}]+)}");
+
     private Project p;
     private File nball;
     
@@ -68,7 +73,24 @@ public class InsertModuleAllTargetsTest extends NbTestCase {
         }
         
         for (Entry<Object, Object> en : clusterProps.entrySet()) {
-            p.setProperty(en.getKey().toString(), en.getValue().toString());
+            String key = en.getKey().toString();
+            String value = en.getValue().toString();
+            while(true) {
+                Matcher m = VARIABLE_SUBST.matcher(value);
+                StringBuffer sb = new StringBuffer(value.length());
+                boolean modified = false;
+                while (m.find()) {
+                    modified = true;
+                    String searchKey = m.group(1);
+                    m.appendReplacement(sb, Matcher.quoteReplacement(clusterProps.getProperty(searchKey)));
+                }
+                m.appendTail(sb);
+                value = sb.toString();
+                if(! modified) {
+                    break;
+                }
+            }
+            p.setProperty(key, value);
         }
     }
     
@@ -84,10 +106,10 @@ public class InsertModuleAllTargetsTest extends NbTestCase {
         Object obj = p.getTargets().get("all-java.source.queries");
         assertNotNull("Target found", obj);
         Target t = (Target)obj;
-        
+
         Set<String> s = depsToNames(t.getDependencies());
-        assertEquals("One dep: " + s, 1, s.size());
-        assertEquals("Just dep on init", "init", s.iterator().next());
+        assertEquals("Five dependencies: " + s, 5, s.size());
+        assertEquals(new HashSet<>(Arrays.asList("init", "all-openide.dialogs", "all-openide.util", "all-openide.util.lookup", "all-api.annotations.common")), s);
         
         int callTargets = 0;
         for (Task task : t.getTasks()) {
@@ -95,7 +117,7 @@ public class InsertModuleAllTargetsTest extends NbTestCase {
                 callTargets++;
             }
         }
-        assertEquals("One call target to build super cluster", 1, callTargets);
+        assertEquals("No call targes", 0, callTargets);
     }
     
     

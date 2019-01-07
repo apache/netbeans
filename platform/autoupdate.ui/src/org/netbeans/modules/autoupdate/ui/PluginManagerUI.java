@@ -62,7 +62,7 @@ public class PluginManagerUI extends javax.swing.JPanel  {
     private final Object initLock = new Object();
     private Object helpInstance = null;
     
-    private static RequestProcessor.Task runningTask;
+    private static volatile RequestProcessor.Task runningTask;
     private static Collection<Runnable> runOnCancel = null;
     private boolean wasSettings = false;
     public static final int INDEX_OF_UPDATES_TAB = 0;

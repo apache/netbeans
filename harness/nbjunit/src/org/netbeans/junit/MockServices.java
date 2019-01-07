@@ -96,7 +96,11 @@ public class MockServices {
             int x = g.enumerate(ts, true);
             if (x < s) {
                 for (int i = 0; i < x; i++) {
-                    ts[i].setContextClassLoader(l);
+                    try {
+                        ts[i].setContextClassLoader(l);
+                    } catch (SecurityException e) {
+                        LOG.log(Level.FINE, "Cannot set context classloader for " + ts[i].getName(), e);
+                    }
                 }
                 LOG.log(Level.FINE, "Set context class loader on {0} threads", x);
                 break;

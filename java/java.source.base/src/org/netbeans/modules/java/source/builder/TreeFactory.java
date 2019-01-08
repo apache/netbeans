@@ -54,7 +54,6 @@ import static com.sun.tools.javac.code.Flags.*;
 import com.sun.tools.javac.code.Kinds;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Type.ErrorType;
 import com.sun.tools.javac.code.Type.WildcardType;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.jvm.ClassReader;
@@ -842,6 +841,7 @@ public class TreeFactory {
                 break;
             }
             case DECLARED:
+            case ERROR:
                 JCExpression clazz = (JCExpression) QualIdent(t.tsym);
                 tp = t.getTypeArguments().isEmpty()
                 ? clazz
@@ -853,9 +853,6 @@ public class TreeFactory {
                 break;
             case NULL:
                 tp = make.at(NOPOS).Literal(TypeTag.BOT, null);
-                break;
-            case ERROR:
-                tp = make.at(NOPOS).Ident(((ErrorType) type).tsym.name);
                 break;
             default:
                 return make.at(NOPOS).Type((Type)type);

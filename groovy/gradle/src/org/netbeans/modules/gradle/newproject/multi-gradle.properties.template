@@ -1,4 +1,6 @@
-org.gradle.daemon=true
+<#-- FreeMarker template (see http://freemarker.org/) -->
+<#assign licensePrefix = "# ">
+<#include "${project.licensePath}">
 
 <#if version != "">
 # Generally it is better to set the version only for release builds, build time

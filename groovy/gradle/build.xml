@@ -44,14 +44,17 @@
         <copy file="${tooling}/build/libs/${tooling}.jar" todir="release/modules/gradle" overwrite="true"/>
         <copy file="${tooling}/src/main/resources/nb-tooling.gradle" todir="release/modules/gradle" overwrite="true"/>
     </target>
-    
     <target name="package-project-templates">
         <local name="templates.dir"/>
         <property name="templates.dir" location="build/classes-generated/org/netbeans/modules/gradle/templates"/>
         <mkdir dir="${templates.dir}"/>
         <zip compress="9" basedir="templates/multi-project" zipfile="${templates.dir}/multi-project.zip"/>
     </target>
+
+    <target name="clean" depends="projectized.clean">
+        <delete dir="${tooling}/build"/>
+    </target>
+    <target name="compile" depends="build-tooling-lib, projectized-common.compile"/>
     
-    <target name="files-init" depends="build-tooling-lib, projectized-common.files-init"/>
 </project>
 

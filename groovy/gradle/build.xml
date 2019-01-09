@@ -33,7 +33,7 @@
         </uptodate>
     </target>
     <target name="-copy-gradle-wrapper" depends="projectized-common.-release.files" unless="have.gradle.wrapper">
-        <copy file="external/gradle-wrapper.jar" tofile="${tooling}/gradle/wrapper/gradle-wrapper.jar"/>
+        <copy file="external/gradle-wrapper-4.10.2.jar" tofile="${tooling}/gradle/wrapper/gradle-wrapper.jar"/>
     </target>
     
     <target name="build-tooling-lib" depends="-copy-gradle-wrapper,-uptodate-tooling" unless="tooling.uptodate">

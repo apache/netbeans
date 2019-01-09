@@ -120,9 +120,13 @@
     
     <target name="generate-html" depends="init">
         <tstamp>
-            <format property="modules-javadoc-date" pattern="d MMM yyyy" locale="en"/>
+            <format property="timestamp-modules-javadoc-date" pattern="d MMM yyyy" locale="en"/>
         </tstamp>
-        
+        <condition property="modules-javadoc-date" value="${timestamp-modules-javadoc-date}">
+	    <not>
+		<isset property="modules-javadoc-date"/>
+	    </not>
+        </condition>
         <style in="${netbeans.javadoc.dir}/modules.xml" out="${netbeans.javadoc.dir}/usecases.html" style="export2usecases.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
         </style>
@@ -136,8 +140,13 @@
         </style>
 
         <tstamp>
-            <format property="atom-date" pattern="yyyy-MM-dd'T'HH:mm:ss'Z'" timezone="UTC"/>
+            <format property="timestamp-atom-date" pattern="yyyy-MM-dd'T'HH:mm:ss'Z'" timezone="UTC"/>
         </tstamp>
+	<condition property="atom-date" value="${timestamp-atom-date}">
+ 	    <not>
+               <isset property="atom-date"/> 
+            </not>		
+        </condition>
         <style in="${netbeans.javadoc.dir}/apichanges.xml" out="${netbeans.javadoc.dir}/apichanges.atom" style="export2apichanges-atom.xsl">
             <param name="date" expression="${atom-date}"/>
         </style>

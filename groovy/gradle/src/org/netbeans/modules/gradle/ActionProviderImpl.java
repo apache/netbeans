@@ -383,9 +383,9 @@ public class ActionProviderImpl implements ActionProvider {
     @ActionReferences({
         @ActionReference(position = 1400, path = "Projects/" + NbGradleProject.GRADLE_PROJECT_TYPE + "/Actions"),
         @ActionReference(position = 250, path = "Loaders/text/x-gradle+x-groovy/Actions"),
-        @ActionReference(position = 1296, path = "Loaders/text/x-java/Actions"),
+        @ActionReference(position = 1295, path = "Loaders/text/x-java/Actions"),
         @ActionReference(position = 1821, path = "Editors/text/x-java/Popup"),
-        @ActionReference(position = 1296, path = "Loaders/text/x-groovy/Actions"),
+        @ActionReference(position = 1295, path = "Loaders/text/x-groovy/Actions"),
         @ActionReference(position = 1821, path = "Editors/text/x-groovy/Popup")
     })
     @NbBundle.Messages({"LBL_Custom_Run=Run Gradle", "LBL_Custom_Run_File=Run Gradle"})

@@ -148,6 +148,7 @@
                 <file name="org-netbeans-modules-java-hints-errors-ImportClass.instance"/>
                 <file name="org-netbeans-modules-java-hints-errors-AddCast.instance"/>
                 <file name="org-netbeans-modules-java-hints-errors-VarCompDeclaration.instance"/>
+                <file name="org-netbeans-modules-java-hints-errors-ConvertToRuleSwitch.instance"/>
                 <file name="org-netbeans-modules-java-hints-errors-CreateElement.instance"/>
                 <file name="org-netbeans-modules-java-hints-errors-ChangeMethodParameters.instance"/>
                 <file name="org-netbeans-modules-java-hints-errors-RenameConstructor.instance"/>

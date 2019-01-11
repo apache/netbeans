@@ -77,7 +77,7 @@ public class GradlePersistenceProvider implements PersistenceLocationProvider,
     public GradlePersistenceProvider(Project proj, Lookup lkp) {
         this.project = proj;
         NbGradleProject watcher = lkp.lookup(NbGradleProject.class);
-        locProvider = new PersistenceLocationProviderImpl(proj, watcher);
+        locProvider = new PersistenceLocationProviderImpl(proj);
         scopeProvider = new PersistenceScopeProviderImpl(locProvider, proj);
         scopesProvider = new PersistenceScopesProviderImpl(scopeProvider);
 

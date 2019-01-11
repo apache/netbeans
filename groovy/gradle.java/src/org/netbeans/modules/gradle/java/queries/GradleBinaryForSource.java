@@ -63,7 +63,7 @@ public class GradleBinaryForSource implements BinaryForSourceQueryImplementation
                         for (GradleJavaSourceSet.SourceType type : GradleJavaSourceSet.SourceType.values()) {
                             for (File sourceDir : ss.getSourceDirs(type)) {
                                 if (root.equals(sourceDir)) {
-                                    ret = new Res(NbGradleProject.get(project), ss.getName(),
+                                    ret = new Res(project, ss.getName(),
                                             type == GradleJavaSourceSet.SourceType.RESOURCES);
                                     cache.put(sourceRoot, ret);
                                     return ret;
@@ -81,11 +81,11 @@ public class GradleBinaryForSource implements BinaryForSourceQueryImplementation
 
     public static class Res implements BinaryForSourceQuery.Result {
 
-        private final NbGradleProject prj;
+        private final Project prj;
         private final String sourceSetName;
         private final boolean resource;
 
-        public Res(NbGradleProject prj, String sourceSetName, boolean resource) {
+        public Res(Project prj, String sourceSetName, boolean resource) {
             this.prj = prj;
             this.sourceSetName = sourceSetName;
             this.resource = resource;

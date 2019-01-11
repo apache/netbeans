@@ -66,19 +66,19 @@ public class GradleSourceForBinary implements SourceForBinaryQueryImplementation
             try {
                 NbGradleProject watcher = NbGradleProject.get(project);
                 if (watcher.getQuality().atLeast(NbGradleProject.Quality.FULL)) {
-                    GradleJavaProject prj = GradleJavaProject.get(watcher);
+                    GradleJavaProject prj = GradleJavaProject.get(project);
                     switch (binaryRoot.getProtocol()) {
                         case "file": {  //NOI18N
                             File root = FileUtil.normalizeFile(Utilities.toFile(binaryRoot.toURI()));
                             for (GradleJavaSourceSet ss : prj.getSourceSets().values()) {
                                 for (File dir : ss.getOutputClassDirs()) {
                                     if (root.equals(dir)) {
-                                        ret = new Res(watcher, ss.getName(), EnumSet.of(JAVA, GROOVY, SCALA));
+                                        ret = new Res(project, ss.getName(), EnumSet.of(JAVA, GROOVY, SCALA));
                                         break;
                                     }
                                 }
                                 if (root.equals(ss.getOutputResources())) {
-                                    ret = new Res(watcher, ss.getName(), EnumSet.of(RESOURCES));
+                                    ret = new Res(project, ss.getName(), EnumSet.of(RESOURCES));
                                 }
                                 if (ret != null) {
                                     break;
@@ -89,9 +89,9 @@ public class GradleSourceForBinary implements SourceForBinaryQueryImplementation
                         case "jar": { //NOI18N
                             File jar = FileUtil.normalizeFile(Utilities.toFile(FileUtil.getArchiveFile(binaryRoot).toURI()));
                             if (jar.equals(prj.getMainJar()) && prj.getSourceSets().containsKey(MAIN_SOURCESET_NAME)) {
-                                ret = new Res(watcher, MAIN_SOURCESET_NAME, EnumSet.allOf(SourceType.class));
+                                ret = new Res(project, MAIN_SOURCESET_NAME, EnumSet.allOf(SourceType.class));
                             } else if (jar.equals(prj.getArchive(GradleJavaProject.CLASSIFIER_TESTS)) && prj.getSourceSets().containsKey(TEST_SOURCESET_NAME)) {
-                                ret = new Res(watcher, TEST_SOURCESET_NAME, EnumSet.allOf(SourceType.class));
+                                ret = new Res(project, TEST_SOURCESET_NAME, EnumSet.allOf(SourceType.class));
                             }
                             break;
                         }
@@ -115,11 +115,11 @@ public class GradleSourceForBinary implements SourceForBinaryQueryImplementation
 
     public static class Res implements Result {
 
-        private final NbGradleProject project;
+        private final Project project;
         private final String sourceSet;
         private final Set<SourceType> sourceTypes;
 
-        public Res(NbGradleProject project, String sourceSet, Set<SourceType> sourceTypes) {
+        public Res(Project project, String sourceSet, Set<SourceType> sourceTypes) {
             this.project = project;
             this.sourceSet = sourceSet;
             this.sourceTypes = sourceTypes;

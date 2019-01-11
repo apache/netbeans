@@ -37,7 +37,7 @@ abstract class AbstractSourceSetClassPathImpl extends AbstractGradleClassPathImp
     }
 
     public GradleJavaSourceSet getSourceSet() {
-        GradleJavaProject prj = GradleJavaProject.get(getProject());
+        GradleJavaProject prj = GradleJavaProject.get(project);
         return prj != null ? prj.getSourceSets().get(sourceSetName) : null;
     }
 

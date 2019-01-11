@@ -48,16 +48,14 @@ public class PersistenceLocationProviderImpl implements PersistenceLocationProvi
     private FileObject location = null;
     private File persistenceXml = null;
     private boolean initialized = false;
-    private final NbGradleProject gproject;
 
     /**
      * Creates a new instance of PersistenceLocationProviderImpl
      *
-     * @param proj reference to the NbMavenProject provider
+     * @param proj reference to the NbGradleProject
      */
-    public PersistenceLocationProviderImpl(Project proj, NbGradleProject mProj) {
+    public PersistenceLocationProviderImpl(Project proj) {
         project = proj;
-        gproject = mProj;
     }
 
     /**
@@ -126,7 +124,7 @@ public class PersistenceLocationProviderImpl implements PersistenceLocationProvi
     private File findPersistenceXml() {
         File ret = null;
 
-        GradleJavaProject gjp = GradleJavaProject.get(gproject);
+        GradleJavaProject gjp = GradleJavaProject.get(project);
         if (gjp != null && gjp.getMainSourceSet() != null) {
             ret = gjp.getMainSourceSet().findResource(REL_PERSISTENCE, false, RESOURCES, JAVA, GROOVY, SCALA);
             if (ret == null && !gjp.getMainSourceSet().getResourcesDirs().isEmpty()) {

@@ -27,7 +27,7 @@ import org.openide.filesystems.FileObject;
  *
  * @author Laszlo Kishalmi
  */
-public class Location {
+public final class Location {
 
     final String fileName;
     final String target;

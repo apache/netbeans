@@ -43,7 +43,7 @@ import org.openide.text.Line;
  *
  * @author Laszlo Kishalmi
  */
-public class LocationOpener {
+public final class LocationOpener {
 
     public static final Location.Finder GLOBAL_FINDER = new Location.Finder() {
 

@@ -349,7 +349,7 @@ public final class NbGradleProjectImpl implements Project {
             NbGradleProject watcher = watcherRef.get();
             if (watcher != null) {
                 lookupsChanged = !watcher.isGradleProjectLoaded();
-                GradleBaseProject prj = GradleBaseProject.get(watcher);
+                GradleBaseProject prj = watcher.projectLookup(GradleBaseProject.class);
                 Set<String> currentPlugins = new HashSet<>(prj.getPlugins());
                 if (prj.isRoot()) {
                     currentPlugins.add(NB_ROOT_PLUGIN);

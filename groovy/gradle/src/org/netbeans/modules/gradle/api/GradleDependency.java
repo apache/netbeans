@@ -37,7 +37,7 @@ public abstract class GradleDependency implements Serializable, Comparable<Gradl
 
     final String id;
 
-    public GradleDependency(String id) {
+    GradleDependency(String id) {
         this.id = id;
     }
 

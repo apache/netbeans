@@ -45,7 +45,7 @@ public abstract class GradleGlobalClassPathImpl extends AbstractGradleClassPathI
 
     @Override
     protected final List<URL> createPath() {
-        GradleJavaProject jp = GradleJavaProject.get(getProject());
+        GradleJavaProject jp = GradleJavaProject.get(project);
         List<URL> ret = Collections.<URL>emptyList();
         if (jp != null) {
             Set<URL> sources = new LinkedHashSet<>();

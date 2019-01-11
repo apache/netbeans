@@ -28,7 +28,7 @@ import java.util.Set;
  *
  * @author Laszlo Kishalmi
  */
-public class GradleConfiguration implements Serializable, ModuleSearchSupport, Comparable<GradleConfiguration> {
+public final class GradleConfiguration implements Serializable, ModuleSearchSupport, Comparable<GradleConfiguration> {
 
     final String name;
     String description;
@@ -40,7 +40,7 @@ public class GradleConfiguration implements Serializable, ModuleSearchSupport, C
     boolean transitive;
     boolean canBeResolved = true;
 
-    public GradleConfiguration(String name) {
+    GradleConfiguration(String name) {
         this.name = name;
     }
 

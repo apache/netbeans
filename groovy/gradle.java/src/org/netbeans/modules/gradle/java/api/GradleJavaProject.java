@@ -50,7 +50,7 @@ public final class GradleJavaProject implements Serializable {
 
     Map<String, GradleJavaSourceSet> sourceSets = new LinkedHashMap<>();
 
-    protected GradleJavaProject() {
+    GradleJavaProject() {
     }
 
     public File getMainJar() {
@@ -121,16 +121,8 @@ public final class GradleJavaProject implements Serializable {
     }
 
     public static GradleJavaProject get(Project project) {
-        GradleJavaProject ret = null;
         NbGradleProject gprj = NbGradleProject.get(project);
-        if (gprj != null) {
-            ret = get(gprj);
-        }
-        return ret;
-    }
-
-    public static GradleJavaProject get(NbGradleProject project) {
-        return project.projectLookup(GradleJavaProject.class);
+        return gprj != null ? gprj.projectLookup(GradleJavaProject.class) : null;
     }
 
     static boolean parentOrSame(File f, File supposedParent) {

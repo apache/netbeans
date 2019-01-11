@@ -36,23 +36,6 @@
                     </file>
                 </folder>
             </folder>
-            <folder name="x-scala">
-                <folder name="Popup">
-                    <file name="SeparatorBeforeRunSingle.instance">
-			<attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                        <attr name="position" intvalue="1710"/>
-                    </file>
-                    <file name="org-netbeans-modules-project-ui-RunSingle.shadow">
-                        <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-RunSingle.instance"/>
-                        <attr name="position" intvalue="1720"/>
-                    </file>
-                    <file name="SeparatorAfterRunSingle.instance">
-			<attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                        <attr name="position" intvalue="1730"/>
-                    </file>
-                </folder>
-            </folder>
-
         </folder>
     </folder>
 </filesystem>

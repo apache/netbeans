@@ -106,10 +106,6 @@ abstract class AbstractGradleClassPathImpl implements ClassPathImplementation {
         return resources;
     }
 
-    protected final NbGradleProject getProject() {
-        return project.getLookup().lookup(NbGradleProject.class);
-    }
-
     @Override
     public void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
         synchronized (support) {

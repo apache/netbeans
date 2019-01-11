@@ -36,7 +36,7 @@ import java.util.Objects;
 import java.util.Set;
 import static org.openide.util.NbBundle.Messages;
 
-public class GradleJavaSourceSet implements Serializable {
+public final class GradleJavaSourceSet implements Serializable {
 
     @Messages({
         "LBL_JAVA=Java",

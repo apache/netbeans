@@ -258,11 +258,7 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
 
     public static GradleBaseProject get(Project project) {
         NbGradleProject gp = NbGradleProject.get(project);
-        return gp != null ? get(gp) : null;
-    }
-
-    public static GradleBaseProject get(NbGradleProject project) {
-        return project.projectLookup(GradleBaseProject.class);
+        return gp != null ? gp.projectLookup(GradleBaseProject.class) : null;
     }
 
     public static GradleBaseProject getFallback(GradleFiles files) {

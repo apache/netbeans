@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.gradle.spi;
 
-import org.netbeans.modules.gradle.api.GradleFiles;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;

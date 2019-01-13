@@ -25,11 +25,12 @@
 package org.netbeans.modules.gradle.api;
 
 import java.io.Serializable;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *
+ * Represent a task in a Gradle project.
+ * 
+ * @since 1.0
  * @author Laszlo Kishalmi
  */
 public final class GradleTask implements Serializable {
@@ -41,7 +42,7 @@ public final class GradleTask implements Serializable {
     final String name;
     final String description;
 
-    public GradleTask(String path, String group, String name, String description) {
+    GradleTask(String path, String group, String name, String description) {
         this.path = path;
         this.group = group;
         this.name = name;
@@ -64,10 +65,20 @@ public final class GradleTask implements Serializable {
         return description != null ? description : "";
     }
 
+    /**
+     * Tasks without groups are considered private in Gradle.
+     * 
+     * @return true if this task is private.
+     */
     public boolean isPrivate() {
         return group == null;
     }
 
+    /**
+     * Returns true if the given CamelCase abbreviation matches this task name.
+     * @param abbrev the camel case abbreviation
+     * @return true if the abbreviation can be matched to this task name.
+     */
     public boolean matches(String abbrev) {
         return abbrevMatch(abbrev, name);
     }

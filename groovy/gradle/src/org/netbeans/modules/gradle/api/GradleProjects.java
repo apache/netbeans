@@ -26,19 +26,34 @@ import java.util.HashMap;
 import java.util.Map;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.gradle.spi.GradleFiles;
 
 /**
- *
+ * Utility methods working with Gradle projects and Artifacts.
+ * 
+ * @since 1.0
  * @author Laszlo Kishalmi
  */
 public final class GradleProjects {
 
     private GradleProjects() {}
 
+    /**
+     * Get the Source artifact for the given binary if available.
+     * @param binary the location of the binary artifact.
+     * @return the location of the Source artifact or {@code null} if that is
+     * not available.
+     */
     public static File getSources(File binary) {
         return GradleArtifactStore.getDefault().getSources(binary);
     }
 
+    /**
+     * Get the JavaDoc artifact for the given binary if available.
+     * @param binary the location of the binary artifact.
+     * @return the location of the JavaDoc artifact or {@code null} if that is
+     * not available.
+     */
     public static File getJavadoc(File binary) {
         return GradleArtifactStore.getDefault().getJavadoc(binary);
     }
@@ -96,6 +111,30 @@ public final class GradleProjects {
         return Collections.unmodifiableMap(ret);
     }
 
+    /**
+     * Try to determine if the given directory belongs to a Gradle project.
+     * This method use heuristics and usual project layout of project files.
+     * The returned value is not necessary correct.
+     * 
+     * @param dir the directory to test
+     * @return true if the given directory is suspected as a Gradle project. 
+     */
+    public static boolean testForProject(File dir) {
+        return new GradleFiles(dir).isProject();
+    }
+    
+    /**
+     * Try to determine if the given directory belongs to a Gradle root project.
+     * This method use heuristics and usual project layout of project files.
+     * The returned value is not necessary correct.
+     * 
+     * @param dir the directory to test
+     * @return true if the given directory is suspected as a Gradle root project. 
+     */
+    public static boolean testForRootProject(File dir) {
+        return new GradleFiles(dir).isRootProject();
+    }
+    
     private static void collectProjectDependencies(final Map<String, Project> ret, Map<String, Project> siblings, final Project prj) {
         GradleBaseProject gbp = GradleBaseProject.get(prj);
         for (GradleDependency.ProjectDependency dep : gbp.getProjectDependencies()) {

@@ -21,8 +21,6 @@ package org.netbeans.modules.gradle.spi.newproject;
 
 import org.netbeans.modules.gradle.GradleProjectCache;
 import org.netbeans.modules.gradle.NbGradleProjectImpl;
-import org.netbeans.modules.gradle.api.GradleFiles;
-import org.netbeans.modules.gradle.GradleProject;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -54,6 +52,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
+import org.netbeans.modules.gradle.api.GradleProjects;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
@@ -211,8 +210,7 @@ public final class TemplateOperation implements Runnable {
 
         @Override
         public final Set<FileObject> execute() {
-            GradleFiles gf = new GradleFiles(dir);
-            if (gf.isProject()) {
+            if (GradleProjects.testForProject(dir)) {
                 try {
                     FileObject projectDir = FileUtil.toFileObject(dir);
                     Project project = ProjectManager.getDefault().findProject(projectDir);
@@ -245,14 +243,12 @@ public final class TemplateOperation implements Runnable {
             "MSG_PRELOAD_PROJECT=Load: {0}"
         })
         public String getMessage() {
-            GradleFiles gf = new GradleFiles(dir);
-            return gf.isProject() ? MSG_PRELOAD_PROJECT(dir.getName()) : MSM_CHECKING_FOLDER(dir.getName());
+            return GradleProjects.testForProject(dir) ? MSG_PRELOAD_PROJECT(dir.getName()) : MSM_CHECKING_FOLDER(dir.getName());
         }
 
         @Override
         public Set<FileObject> execute() {
-            GradleFiles gf = new GradleFiles(dir);
-            if (gf.isProject()) {
+            if (GradleProjects.testForProject(dir)) {
                 try {
                     FileObject projectDir = FileUtil.toFileObject(dir);
                     Project project = ProjectManager.getDefault().findProject(projectDir);

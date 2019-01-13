@@ -26,13 +26,23 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
+ * This object represents a Gradle dependency element in a {@link GradleConfiguration}.
  *
+ * @since 1.0
  * @author Laszlo Kishalmi
  */
 public abstract class GradleDependency implements Serializable, Comparable<GradleDependency> {
 
+    /** The type of a Dependency. */
     public static enum Type {
-        UNRESOLVED, PROJECT, MODULE, FILE
+        /** Dependency type for modules which was not able to be resolved by Gradle. */
+        UNRESOLVED,
+        /** Dependency type for sub-project in the current multi-project setup. */
+        PROJECT,
+        /** Dependency type for modules usually downloaded from a remote repository. */
+        MODULE,
+        /** Dependency type for files available on local filesystem. */
+        FILE
     }
 
     final String id;
@@ -53,6 +63,10 @@ public abstract class GradleDependency implements Serializable, Comparable<Gradl
 
     public abstract Type getType();
 
+    /**
+     * Dependency for modules usually downloaded from a remote repository.
+     * @since 1.0
+     */
     public final static class ModuleDependency extends GradleDependency {
 
         final Set<File> artifacts;
@@ -62,7 +76,7 @@ public abstract class GradleDependency implements Serializable, Comparable<Gradl
         String name;
         String version;
 
-        public ModuleDependency(String id, Set<File> artifacts) {
+        ModuleDependency(String id, Set<File> artifacts) {
             super(id);
             this.artifacts = artifacts;
             String[] parts = id.split(":");
@@ -144,12 +158,16 @@ public abstract class GradleDependency implements Serializable, Comparable<Gradl
 
     }
 
+    /**
+     * Dependency for sub-project in the current multi-project setup.
+     * @since 1.0
+     */
     public final static class ProjectDependency extends GradleDependency {
 
         final File path;
         String description;
 
-        public ProjectDependency(String id, File path) {
+        ProjectDependency(String id, File path) {
             super(id);
             this.path = path;
         }
@@ -197,11 +215,15 @@ public abstract class GradleDependency implements Serializable, Comparable<Gradl
 
     }
 
+    /**
+     * Dependency for files available on local filesystem.
+     * @since 1.0
+     */
     public final static class FileCollectionDependency extends GradleDependency {
 
         final Set<File> files;
 
-        public FileCollectionDependency(Set<File> files) {
+        FileCollectionDependency(Set<File> files) {
             super("Files");
             this.files = files;
         }
@@ -216,11 +238,14 @@ public abstract class GradleDependency implements Serializable, Comparable<Gradl
         }
     }
 
+    /**
+     * Dependency for modules which was not able to be resolved by Gradle.
+     */
     public final static class UnresolvedDependency extends GradleDependency {
 
         String problem;
 
-        public UnresolvedDependency(String id) {
+        UnresolvedDependency(String id) {
             super(id);
         }
 

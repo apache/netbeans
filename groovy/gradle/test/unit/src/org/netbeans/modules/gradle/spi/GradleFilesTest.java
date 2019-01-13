@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.gradle.api;
+package org.netbeans.modules.gradle.spi;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,10 +34,10 @@ import org.openide.util.Utilities;
  * @author Laszlo Kishalmi
  */
 public class GradleFilesTest {
-    
+
     @Rule
     public TemporaryFolder root = new TemporaryFolder();
-    
+
 
     /**
      * Test of getBuildScript method, of class GradleFiles.
@@ -81,7 +81,7 @@ public class GradleFilesTest {
         GradleFiles gf = new GradleFiles(module);
         assertEquals("build.gradle", gf.getBuildScript().getName());
     }
-    
+
     @Test
     public void testGetParentScript() throws IOException{
         File build = root.newFile("build.gradle");
@@ -134,7 +134,7 @@ public class GradleFilesTest {
         GradleFiles gf = new GradleFiles(module);
         assertNull(gf.getProjectDir());
     }
-    
+
     /**
      * Test of getRootDir method, of class GradleFiles.
      */
@@ -160,7 +160,7 @@ public class GradleFilesTest {
     public void testGetGradlew() throws IOException {
         root.newFile("build.gradle");
         root.newFile("settings.gradle");
-        File gradlew = root.newFile("gradlew");        
+        File gradlew = root.newFile("gradlew");
         File gradlewBat = root.newFile("gradlew.bat");
         File wrapperProps = new File(root.newFolder("gradle", "wrapper"), "gradle-wrapper.properties");
         wrapperProps.createNewFile();
@@ -175,7 +175,7 @@ public class GradleFilesTest {
     public void testGetWrapperProperties() throws IOException {
         root.newFile("build.gradle");
         root.newFile("settings.gradle");
-        root.newFile("gradlew");        
+        root.newFile("gradlew");
         root.newFile("gradlew.bat");
         File wrapperProps = new File(root.newFolder("gradle", "wrapper"), "gradle-wrapper.properties");
         wrapperProps.createNewFile();
@@ -187,7 +187,7 @@ public class GradleFilesTest {
     public void testHasWrapper() throws IOException {
         root.newFile("build.gradle");
         root.newFile("settings.gradle");
-        root.newFile("gradlew");        
+        root.newFile("gradlew");
         root.newFile("gradlew.bat");
         File wrapperProps = new File(root.newFolder("gradle", "wrapper"), "gradle-wrapper.properties");
         wrapperProps.createNewFile();
@@ -201,7 +201,7 @@ public class GradleFilesTest {
         File settings = root.newFile("settings.gradle");
         Files.write(settings.toPath(), Arrays.asList("include ':module'"));
         File module = root.newFolder("module");
-        root.newFile("gradlew");        
+        root.newFile("gradlew");
         root.newFile("gradlew.bat");
         File wrapperProps = new File(root.newFolder("gradle", "wrapper"), "gradle-wrapper.properties");
         wrapperProps.createNewFile();
@@ -247,7 +247,7 @@ public class GradleFilesTest {
         GradleFiles gf = new GradleFiles(module);
         assertFalse(gf.isSubProject());
     }
-    
+
     @Test
     public void testIsSubProject4() throws IOException {
         File build = root.newFile("build.gradle");
@@ -258,7 +258,7 @@ public class GradleFilesTest {
         GradleFiles gf = new GradleFiles(module);
         assertTrue(gf.isSubProject());
     }
-    
+
     @Test
     public void testIsSubProject5() throws IOException {
         File build = root.newFile("build.gradle");
@@ -269,7 +269,7 @@ public class GradleFilesTest {
         GradleFiles gf = new GradleFiles(module);
         assertTrue(gf.isSubProject());
     }
-    
+
     @Test
     public void testIsSubProject6() throws IOException {
         File build = root.newFile("build.gradle");
@@ -280,7 +280,7 @@ public class GradleFilesTest {
         GradleFiles gf = new GradleFiles(module);
         assertTrue(gf.isSubProject());
     }
-    
+
     /**
      * Test of isScriptlessSubProject method, of class GradleFiles.
      */
@@ -313,13 +313,13 @@ public class GradleFilesTest {
         GradleFiles gf = new GradleFiles(root.getRoot());
         assertFalse(gf.isProject());
     }
-    
+
     @Test
     public void testNonProjectIsRootProject() {
         GradleFiles gf = new GradleFiles(root.getRoot());
         assertFalse(gf.isRootProject());
     }
-    
+
     @Test
     public void testNonExisitingIsProject() {
         File prj = new File(root.getRoot(), "shared");
@@ -340,7 +340,7 @@ public class GradleFilesTest {
         GradleFiles gf = new GradleFiles(root.getRoot());
         assertTrue(gf.isProject());
     }
-    
+
     @Test
     public void testSimpleIsProject2() throws IOException {
         root.newFile("build.gradle");
@@ -348,14 +348,14 @@ public class GradleFilesTest {
         GradleFiles gf = new GradleFiles(root.getRoot());
         assertTrue(gf.isProject());
     }
-    
+
     @Test
     public void testSimpleIsRootProject() throws IOException {
         root.newFile("build.gradle");
         GradleFiles gf = new GradleFiles(root.getRoot());
         assertTrue(gf.isRootProject());
     }
-    
+
     @Test
     public void testSimpleIsRootProject2() throws IOException {
         root.newFile("build.gradle");
@@ -363,7 +363,7 @@ public class GradleFilesTest {
         GradleFiles gf = new GradleFiles(root.getRoot());
         assertTrue(gf.isRootProject());
     }
-    
+
     /**
      * Test of getProjectFiles method, of class GradleFiles.
      */
@@ -410,5 +410,5 @@ public class GradleFilesTest {
         assertEquals(settings.lastModified(), gf.lastChanged());
     }
 
-    
+
 }

@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.gradle.spi.newproject;
 
-import org.netbeans.modules.gradle.api.GradleFiles;
 import org.netbeans.modules.gradle.newproject.ProjectAttriburesPanel;
 import java.awt.Component;
 import java.io.File;
@@ -32,6 +31,7 @@ import java.util.Set;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.modules.gradle.api.GradleProjects;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.openide.WizardDescriptor;
 
@@ -112,9 +112,8 @@ public abstract class BaseGradleWizardIterator implements WizardDescriptor.Progr
 
         File loc = (File) data.getProperty(CommonProjectActions.PROJECT_PARENT_FOLDER);
         if (loc != null) {
-            GradleFiles gf = new GradleFiles(loc);
             //TODO: Better evaluate possible roots.
-            ret = gf.isRootProject() ? loc : null;
+            ret = GradleProjects.testForRootProject(loc) ? loc : null;
         }
         return ret;
     }

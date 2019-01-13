@@ -19,7 +19,7 @@
 
 package org.netbeans.modules.gradle;
 
-import org.netbeans.modules.gradle.api.GradleFiles;
+import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import org.netbeans.modules.gradle.spi.GradleSettings;

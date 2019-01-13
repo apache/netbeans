@@ -20,7 +20,7 @@
 package org.netbeans.modules.gradle.java.api;
 
 import org.netbeans.modules.gradle.api.GradleBaseProject;
-import org.netbeans.modules.gradle.api.GradleFiles;
+import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.spi.ProjectInfoExtractor;
 import java.io.File;
 import java.util.Collections;

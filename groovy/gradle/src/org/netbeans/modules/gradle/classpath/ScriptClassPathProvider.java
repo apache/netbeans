@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.gradle.classpath;
 
-import org.netbeans.modules.gradle.api.GradleFiles;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -27,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatformManager;
+import org.netbeans.modules.gradle.api.GradleProjects;
 import org.netbeans.spi.java.classpath.ClassPathFactory;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -64,8 +64,7 @@ public class ScriptClassPathProvider implements ClassPathProvider {
         }
         boolean isGradle = "gradle".equals(fo.getExt());
         if (fo.isFolder() && (FileUtil.toFile(fo) != null)) {
-            GradleFiles gf = new GradleFiles(FileUtil.toFile(fo));
-            isGradle = gf.isProject();
+            isGradle = GradleProjects.testForProject(FileUtil.toFile(fo));
         }
 
         if (isGradle) {

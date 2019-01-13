@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.gradle.api;
+package org.netbeans.modules.gradle.spi;
 
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import java.io.File;
@@ -42,7 +42,8 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.Utilities;
 
 /**
- *
+ * Collection of notable files used in a Gradle project.
+ * 
  * @author Laszlo Kishalmi
  */
 public final class GradleFiles implements Serializable {
@@ -274,7 +275,7 @@ public final class GradleFiles implements Serializable {
         return "GradleFiles[projectDir=" + projectDir + ", rootDir=" + rootDir + "]";
     }
 
-    static class SettingsFile {
+    public static class SettingsFile {
 
         private static final Pattern SET_PROJECTDIR_PATTERN
                 = Pattern.compile(".*['\\\"](.+)['\\\"].*\\.projectDir.*=.*['\\\"](.+)['\\\"].*"); //NOI18N

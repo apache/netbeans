@@ -43,36 +43,42 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.Utilities;
 
 /**
+ * Facade object for NetBeans Gradle project internals, with some convenience
+ * methods.
  *
+ *
+ * @since 1.0
  * @author Laszlo Kishalmi
  */
 public final class NbGradleProject {
 
     /**
      * As loading a Gradle project information into the memory could be a time
-     * consuming task each the Gradle Plugin uses heuristics and offline 
+     * consuming task each the Gradle Plugin uses heuristics and offline
      * evaluation of a project in order to provide optimal responsiveness.
-     * E.g. If we just need to know if the project is a Gradle project, there 
+     * E.g. If we just need to know if the project is a Gradle project, there
      * is no need to go and fetch all the dependencies.
      * <p/>
      * Gradle project is associated with the quality of the
      * information available at the time. The quality of data can be improved,
      * by reloading the project.
+     *
+     * @since 1.0
      */
     public static enum Quality {
 
-        /** 
+        /**
          * The data of this project is unreliable, based on heuristics. This is
-         * the quickest way to retrieve some information as it the code do not 
+         * the quickest way to retrieve some information as it the code do not
          * even turns to Gradle for it. Tries to apply some common usage
-         * patterns. 
+         * patterns.
          */
         FALLBACK,
-        
-        /** The data of this project is unreliable. This usually means that the 
+
+        /** The data of this project is unreliable. This usually means that the
          * project was once in a better quality, but some recent change made the
-         * the project un-loadable. E.g. syntax error in the recently edited 
-         * build.gradle file. The IDE cannot reload it but tries to work with 
+         * the project un-loadable. E.g. syntax error in the recently edited
+         * {@code build.gradle} file. The IDE cannot reload it but tries to work with
          * the previously retrieved information. */
         EVALUATED,
 
@@ -122,7 +128,7 @@ public final class NbGradleProject {
     private final NbGradleProjectImpl project;
     private final PropertyChangeSupport support;
     private final Set<File> resources = new HashSet<>();
-    
+
     private Preferences privatePrefs;
     private Preferences sharedPrefs;
 
@@ -172,16 +178,16 @@ public final class NbGradleProject {
     public <T> T projectLookup(Class<T> clazz) {
         return project.getGradleProject().getLookup().lookup(clazz);
     }
-    
+
     /**
      * Return the actual Quality information on the currently loaded Project.
-     * 
+     *
      * @return the information Quality of the project data;
      */
     public Quality getQuality() {
         return project.getGradleProject().getQuality();
     }
-    
+
     /**
      * The requested information on this project. Mostly FALLBACK or FULL.
      * @return the information Quality requested.
@@ -190,6 +196,10 @@ public final class NbGradleProject {
         return project.getAimedQuality();
     }
 
+    /**
+     * The project is unloadable if it's actual quality is worse than {@link Quality#SIMPLE}.
+     * @return true if the project is unloadable.
+     */
     public boolean isUnloadable() {
         return getQuality().worseThan(Quality.SIMPLE);
     }
@@ -264,10 +274,6 @@ public final class NbGradleProject {
      *         is not a Gradle project.
      */
     public static NbGradleProject get(Project project) {
-        if (project instanceof NbGradleProjectImpl) {
-            NbGradleProjectImpl impl = (NbGradleProjectImpl) project;
-            return impl.getProjectWatcher();
-        }
         return project instanceof NbGradleProjectImpl ? ((NbGradleProjectImpl) project).getProjectWatcher() : null;
     }
 

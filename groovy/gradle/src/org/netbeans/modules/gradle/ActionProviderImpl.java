@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.gradle;
 
+import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.*;
@@ -73,7 +74,6 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.ProjectUtils;
-import org.netbeans.modules.gradle.api.GradleFiles;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;

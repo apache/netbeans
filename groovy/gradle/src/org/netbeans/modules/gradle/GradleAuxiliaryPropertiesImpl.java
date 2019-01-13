@@ -19,7 +19,7 @@
 
 package org.netbeans.modules.gradle;
 
-import org.netbeans.modules.gradle.api.GradleFiles;
+import org.netbeans.modules.gradle.spi.GradleFiles;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

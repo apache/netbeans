@@ -60,7 +60,8 @@ import org.openide.util.NbBundle;
 import org.openide.util.Pair;
 
 /**
- *
+ * Utilities, that allow to invoke Gradle.
+ * @since 1.0
  * @author Laszlo Kishalmi
  */
 public final class RunUtils {
@@ -70,6 +71,8 @@ public final class RunUtils {
     public static final String PROP_COMPILE_ON_SAVE = "compile.on.save"; //NOI18N
     public static final String PROP_AUGMENTED_BUILD = "augmented.build"; //NOI18N
     public static final String PROP_DEFAULT_CLI = "gradle.cli"; //NOI18N
+
+    private RunUtils() {}
 
     public static FileObject extractFileObjectfromLookup(Lookup lookup) {
         FileObject[] fos = extractFileObjectsfromLookup(lookup);
@@ -92,10 +95,6 @@ public final class RunUtils {
         return files.toArray(new FileObject[files.size()]);
     }
 
-       private RunUtils() {
-    }
-
-
     public static ExecutorTask executeGradle(RunConfig config, String initialOutput) {
         LifecycleManager.getDefault().saveAll();
 
@@ -107,20 +106,20 @@ public final class RunUtils {
 
     public static RunConfig createRunConfig(Project project, String action, String displayName, String[] args) {
         GradleBaseProject gbp = GradleBaseProject.get(project);
-        
+
         GradleCommandLine syscmd = GradleCommandLine.getDefaultCommandLine();
         GradleCommandLine prjcmd = getDefaultCommandLine(project);
         GradleCommandLine basecmd = syscmd;
         if (prjcmd != null) {
             basecmd = GradleCommandLine.combine(syscmd, prjcmd);
         }
-        
-        // Make sure we only exclude 'test' and 'check' by default if the 
+
+        // Make sure we only exclude 'test' and 'check' by default if the
         // project allows this (has these tasks or root project with sub projects).
         validateExclude(basecmd, gbp, GradleCommandLine.TEST_TASK);
         validateExclude(basecmd, gbp, GradleCommandLine.CHECK_TASK); //NOI18N
-        
-        
+
+
         GradleCommandLine cmd = GradleCommandLine.combine(basecmd, new GradleCommandLine(args));
         RunConfig ret = new RunConfig(project, action, displayName, EnumSet.of(RunConfig.ExecFlag.REPEATABLE), cmd);
         return ret;
@@ -157,7 +156,7 @@ public final class RunUtils {
         String args = NbGradleProject.getPreferences(project, true).get(PROP_DEFAULT_CLI, null);
         return args != null ? new GradleCommandLine(args) : null;
     }
-    
+
     private static boolean isOptionEnabled(Project project, String option, boolean defaultValue) {
         GradleBaseProject gbp = GradleBaseProject.get(project);
         if (gbp != null) {
@@ -191,7 +190,7 @@ public final class RunUtils {
             public Set<String> getSupportedTokens() {
                 return Collections.singleton(token);
             }
-            
+
             @Override
             public Map<String, String> createReplacements(String action, Lookup context) {
                 return Collections.singletonMap(token, value);
@@ -283,7 +282,7 @@ public final class RunUtils {
         }
         return getActivePlatform(platformId);
     }
-    
+
     private static String stringsInCurly(List<String> l) {
         StringBuilder sb = new StringBuilder("(");
         Iterator<String> it = l.iterator();

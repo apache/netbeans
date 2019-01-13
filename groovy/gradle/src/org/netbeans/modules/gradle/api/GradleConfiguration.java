@@ -25,7 +25,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- *
+ * This object represents a configuration in a Gradle project.
+ * @since 1.0
  * @author Laszlo Kishalmi
  */
 public final class GradleConfiguration implements Serializable, ModuleSearchSupport, Comparable<GradleConfiguration> {

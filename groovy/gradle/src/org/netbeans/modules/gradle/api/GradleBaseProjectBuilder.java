@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.gradle.api;
 
+import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.GradleArtifactStore;
 import static org.netbeans.modules.gradle.api.GradleDependency.*;
 import org.netbeans.modules.gradle.spi.ProjectInfoExtractor;
@@ -37,7 +38,8 @@ import java.util.TreeSet;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- *
+ * This is the de-serialization support class for GradleBaseProject.
+ * 
  * @author Laszlo Kishalmi
  */
 @SuppressWarnings("unchecked")

@@ -20,7 +20,7 @@
 package org.netbeans.modules.gradle.nodes;
 
 import org.netbeans.modules.gradle.spi.nodes.NodeUtils;
-import org.netbeans.modules.gradle.api.GradleFiles;
+import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import java.awt.Image;

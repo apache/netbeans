@@ -358,7 +358,7 @@
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>gradle/netbeans-gradle-tooling.jar</runtime-relative-path>
-                <binary-origin>release/modules/gradle/netbeans-gradle-tooling.jar</binary-origin>
+                <binary-origin>build/tooling/netbeans-gradle-tooling.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>gradle/gradle-tooling-api.jar</runtime-relative-path>

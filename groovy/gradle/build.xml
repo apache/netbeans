@@ -28,21 +28,21 @@
     <available property="have.gradle.wrapper" file="${tooling}/gradle/wrapper/gradle-wrapper.jar"/>
 
     <target name="-uptodate-tooling">
-        <uptodate property="tooling.uptodate" targetfile="release/modules/gradle/${tooling}.jar">
+        <uptodate property="tooling.uptodate" targetfile="build/tooling/${tooling}.jar">
             <srcfiles dir="${tooling}/src/main"/>
         </uptodate>
     </target>
     <target name="-copy-gradle-wrapper" depends="projectized-common.-release.files" unless="have.gradle.wrapper">
         <copy file="external/gradle-wrapper-4.10.2.jar" tofile="${tooling}/gradle/wrapper/gradle-wrapper.jar"/>
     </target>
-    
+
     <target name="build-tooling-lib" depends="-copy-gradle-wrapper,-uptodate-tooling" unless="tooling.uptodate">
         <java fork="true" dir="${tooling}" classpath="${tooling}/gradle/wrapper/gradle-wrapper.jar" classname="org.gradle.wrapper.GradleWrapperMain" failonerror="true">
             <sysproperty key="org.gradle.appname" value="Gradle"/>
             <arg line="clean build -x check"/>
         </java>
-        <copy file="${tooling}/build/libs/${tooling}.jar" todir="release/modules/gradle" overwrite="true"/>
-        <copy file="${tooling}/src/main/resources/nb-tooling.gradle" todir="release/modules/gradle" overwrite="true"/>
+        <copy file="${tooling}/build/libs/${tooling}.jar" todir="build/tooling" overwrite="true"/>
+        <copy file="${tooling}/src/main/resources/nb-tooling.gradle" todir="build/tooling" overwrite="true"/>
     </target>
     <target name="package-project-templates">
         <local name="templates.dir"/>
@@ -55,6 +55,6 @@
         <delete dir="${tooling}/build"/>
     </target>
     <target name="compile" depends="build-tooling-lib, projectized-common.compile"/>
-    
+
 </project>
 

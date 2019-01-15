@@ -1,0 +1,2 @@
+roman.|>MARK_OCCURRENCES:getFirstName<|();
+   console.log(|>MARK_OCCURRENCES:getFirst^Name<|()); 

@@ -1,0 +1,2 @@
+  function |>MARK_OCCURRENCES:f1<|() {
+     this.y1 = |>MARK_OCCURRENCES:f^1<|;  

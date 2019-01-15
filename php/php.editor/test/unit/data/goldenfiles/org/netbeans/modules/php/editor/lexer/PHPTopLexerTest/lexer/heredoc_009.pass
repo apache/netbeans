@@ -1,0 +1,5 @@
+token #0 T_HTML --TEST--\nTorture the T_END_HEREDOC rules (heredoc)\n--FILE--\n
+token #1 T_PHP_OPEN_DELIMITER <?php
+token #2 T_PHP \n\nrequire_once 'nowdoc.inc';\n\nprint <<<ENDOFHEREDOC\nENDOFHEREDOC    ;\n    ENDOFHEREDOC;\nENDOFHEREDOC    \n    ENDOFHEREDOC\n$ENDOFHEREDOC;\n\nENDOFHEREDOC;\n\n$x = <<<ENDOFHEREDOC\nENDOFHEREDOC    ;\n    ENDOFHEREDOC;\nENDOFHEREDOC    \n    ENDOFHEREDOC\n$ENDOFHEREDOC;\n\nENDOFHEREDOC;\n\nprint "{$x}";\n\n
+token #3 T_PHP_CLOSE_DELIMITER ?>
+token #4 T_HTML \n--EXPECTF--\nNotice: Undefined variable: ENDOFHEREDOC in %s on line %d\nENDOFHEREDOC    ;\n    ENDOFHEREDOC;\nENDOFHEREDOC    \n    ENDOFHEREDOC\n;\n\nNotice: Undefined variable: ENDOFHEREDOC in %s on line %d\nENDOFHEREDOC    ;\n    ENDOFHEREDOC;\nENDOFHEREDOC    \n    ENDOFHEREDOC\n;\n

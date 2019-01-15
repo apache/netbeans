@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="general">General Queries API</apidef>
+        <!-- etc. -->
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+
+    <changes>
+        <change id="VersioningQuery">
+            <api name="general"/>
+            <summary>added VersioningQuery</summary>
+            <version major="1" minor="35"/>
+            <date day="16" month="5" year="2013"/>
+            <author login="tstupka"/>
+            <compatibility addition="yes" binary="compatible" semantic="compatible" source="compatible">
+            </compatibility>
+            <description>
+                <p>
+                    Added a new query <code>VersioningQuery</code> which provides Versioning relevant info like 
+                    e.g. if a particular file is managed by a Versioning System.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.queries" name="VersioningQueryImplementation"/>
+            <class package="org.netbeans.api.queries" name="VersioningQuery"/>
+            <issue number="229281"/>
+        </change>        
+        <change id="VQChangeEvent">
+            <api name="general"/>
+            <summary>VisibilityQueryChangeEvent added</summary>
+            <version major="1" minor="32"/>
+            <date day="9" month="11" year="2012"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes" binary="compatible" semantic="compatible" source="compatible">
+            </compatibility>
+            <description>
+                <p>
+                    Added new class <code>VisibilityQueryChangeEvent</code> which extends <code>ChangeEvent</code> and can be used by <code>VisibilityQueryImplementation</code> implementors
+                    to fire a change event with additional information attached. <code>ChangeListener</code> implementions listening on <code>VisibilityQuery</code> can then check the
+                    event's type when it arrives and use the additional information to their advantage.
+                </p>
+          
+            </description>
+            <class package="org.netbeans.spi.queries" name="VisibilityQueryChangeEvent"/>
+            <issue number="220749"/>
+        </change>        
+       <change id="SharabilityQueryBasedOnURI">
+        <api name="general"/>
+        <summary>SharabilityQuery and CollocationQuery extended to use URI</summary>
+        <version major="1" minor="27"/>
+        <date day="13" month="1" year="2012"/>
+        <author login="alexvsimon"/>
+        <compatibility addition="yes" binary="compatible" semantic="compatible" source="compatible">
+        </compatibility>
+        <description>
+          <p>
+             Added new methods CollocationQuery.areCollocated(URI, URI) and CollocationQuery.findRoot(URI).
+             Methods query all CollocationQueryImplementation (if possible) and CollocationQueryImplementation2 instances found in global lookup.
+             Deprecated existing methods CollocationQuery.areCollocated(File, File) and CollocationQuery.findRoot(File).
+             Methods query all CollocationQueryImplementation and CollocationQueryImplementation2 instances found in global lookup.
+          </p>
+          <p>
+             Added new methods SharabilityQuery.getSharability(URI) and SharabilityQuery.getSharability(FileObject).
+             Methods query all SharabilityQueryImplementation (if possible) and SharabilityQueryImplementation2 instances found in global lookup.
+             Deprecated existing method SharabilityQuery.getSharability(File).
+             Method query all SharabilityQueryImplementation and SharabilityQueryImplementation2 instances found in global lookup.
+          </p>
+        </description>
+        <class package="org.netbeans.api.queries" name="CollocationQuery"/>
+        <class package="org.netbeans.api.queries" name="SharabilityQuery"/>
+        <class package="org.netbeans.spi.queries" name="CollocationQueryImplementation"/>
+        <class package="org.netbeans.spi.queries" name="CollocationQueryImplementation2"/>
+        <class package="org.netbeans.spi.queries" name="SharabilityQueryImplementation"/>
+        <class package="org.netbeans.spi.queries" name="SharabilityQueryImplementation2"/>
+        <issue number="198060"/>
+      </change>
+      <change id="FileBasedIsVisible">
+        <api name="general"/>
+        <summary>VisibilityQuery.isVisible(File) added</summary>
+        <version major="1" minor="12"/>
+        <date day="24" month="3" year="2008"/>
+        <author login="mkleint"/>
+        <compatibility addition="yes" binary="compatible" semantic="compatible" source="compatible">
+        </compatibility>
+        <description>
+          <p>
+             Added new method VisibilityQuery.isVisible(File). 
+             It queries all VisibilityQueryImplementation instances found in global lookup.
+             If such instance implements VisibilityQueryImplementation2, it's isVisible(File) method is used directly. 
+             If not, it attempts to delegate to the isVisible(FileObject) method. That might not work for non-existing files.
+             All implementations of VisibilityQueryImplementation are encouraged to upgrade to VisibilityQueryImplementation2.
+          </p>
+        </description>
+        <class package="org.netbeans.api.queries" name="VisibilityQuery"/>
+        <class package="org.netbeans.spi.queries" name="VisibilityQueryImplementation2"/>
+        <issue number="95974"/>
+      </change>
+        
+      <change id="FileEncodingQueryOnDefaultFS">
+        <api name="general"/>
+        <summary>Default Encoding of System File System is always UTF-8</summary>
+        <version major="1" minor="10"/>
+        <date day="28" month="3" year="2007"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes" binary="compatible" semantic="compatible" source="compatible">
+        </compatibility>
+        <description>
+          <p>
+          Whenever someone queries for encoding of a file object on default
+          file system (e.g. the one that is provided by layers), it will get
+          UTF-8 as the default encoding and not the system one. As a result
+          all resources on layers should be in UTF-8 encoding.
+          </p>
+        </description>
+        <class package="org.netbeans.api.queries" name="FileEncodingQuery"/>
+        <issue number="94676"/>
+      </change>
+      <change id="FileEncodingQuery">
+        <api name="general"/>
+        <summary>Added support for obtaining encoding of files</summary>
+        <version major="1" minor="9"/>
+        <date day="8" month="2" year="2007"/>
+        <author login="tzezula"/>
+        <compatibility addition="yes" binary="compatible" semantic="compatible" source="compatible">
+        </compatibility>
+        <description>
+          <p>
+            Added a query (<code>FileEncodingQuery</code>) to find out the encoding of the file. The query
+            delegates to the instances of the SPI interface (<code>FileEncodingQueryImplementation</code>),
+            when the SPI implementations don't know anything about the file encoding it returns the encoding
+            corresponding to the file.encoding property. The API also provides getter and setter for default
+            project encoding which should be used by the project generator.
+          </p>
+        </description>
+        <class package="org.netbeans.api.queries" name="FileEncodingQuery"/>
+        <class package="org.netbeans.spi.queries" name="FileEncodingQueryImplementation"/>
+        <issue number="42638"/>
+        </change>
+        <change id="fileinfo-NonRecursiveFolder">
+            <api name="general"/>
+            <summary>Added <code>fileinfo</code> package with <code>NonRecursiveFolder</code> interface.</summary>
+            <version major="1" minor="4"/>
+            <date day="14" month="1" year="2005"/>
+            <author login="mentlicher"/>
+            <compatibility addition="yes" binary="compatible" semantic="compatible" />
+            <description>
+                <p>
+                    <code>fileinfo</code> package introduced for classes providing extra
+                    information about files or folders. <code>NonRecursiveFolder</code> interface
+                    added. It marks a representation of a folder that have non-recursive
+                    content (does not contain subfiles).
+                </p>
+            </description>
+            <class package="org.netbeans.api.fileinfo" name="NonRecursiveFolder"/>
+            <issue number="52271"/>
+        </change>
+
+        <change id="rel-vers-1">
+            <api name="general"/>
+            <summary>Switched to major release version 1</summary>
+            <version major="1" minor="3"/>
+            <date day="22" month="12" year="2004"/>
+            <author login="jglick"/>
+            <compatibility>
+                <p>
+                    Clients should begin requesting the new version to avoid a warning at startup.
+                </p>
+            </compatibility>
+            <description>
+                <p>
+                    To indicate that this is now considered a stable API, the major release version was
+                    incremented to 1 from 0.
+                </p>
+            </description>
+            <issue number="51468"/>
+        </change>
+
+    </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <==============
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE projects/queries/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the General Queries API API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the <a href="@org-netbeans-modules-queries@/index.html">General Queries API</a>.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+      <hr/>
+      <standard-changelists module-code-name="org.netbeans.modules.queries/1"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

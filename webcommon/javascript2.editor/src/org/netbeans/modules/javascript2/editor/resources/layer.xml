@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Editors">
+        <file name="org-netbeans-modules-javascript2-editor-embedding-JsEmbeddingProvider$Factory.instance">
+            <attr name="instanceOf" stringvalue="org.netbeans.modules.parsing.spi.TaskFactory"/>
+        </file>
+        <folder name="text">
+            <folder name="javascript">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javascript2.editor.resources.Bundle"/>
+                <file name="org-netbeans-modules-javascript2-editor-index-JsIndexer$Factory.instance">
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexerFactory"/>
+                </file>
+                <!-- colors -->
+                <folder name="FontsColors">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="coloring.xml" url="fontsColors.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javascript2.editor.resources.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                    <folder name="BlueTheme">
+                        <folder name="Defaults">
+                            <file name="coloring.xml" url="fontsColors-bluetheme.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javascript2.editor.resources.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                    <folder name="CityLights">
+                        <folder name="Defaults">
+                            <file name="coloring.xml" url="fontsColors-citylights.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javascript2.editor.resources.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+
+                <!-- custom editor folding -->
+                <folder name="FoldManager">
+                    <file name="org-netbeans-editor-CustomFoldManager$Factory.instance">
+                	<attr name="position" intvalue="1100"/>
+            	    </file>
+                </folder>
+
+                <!-- code templates -->
+                <folder name="CodeTemplates">
+                    <folder name="Defaults">
+                        <file name="org-netbeans-modules-javascript2-editor-codetemplates.xml" url="codetemplates.xml">
+                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javascript2.editor.resources.Bundle"/>
+                        </file>
+                    </folder>
+                </folder>
+                <folder name="CodeTemplateFilterFactories">
+                    <file name="org-netbeans-modules-javascript2-editor-JsCodeTemplateFilter$Factory.instance"/>
+                </folder>
+                <folder name="CompletionProviders">
+                    <file name="org-netbeans-modules-html-editor-completion-HtmlCompletionProvider.instance"/>
+                </folder>
+                <!-- file popup menu -->
+                <folder name="Popup">
+                    <file name="select-connection">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.php.editor.resources.Bundle"/>
+                        <attr name="position" intvalue="110"/>
+                    </file>
+                    <file name="generate-fold-popup">
+                        <attr name="position" intvalue="4200"/>
+                    </file>
+                </folder>
+                <folder name="Keybindings">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-javascript2-editor-keybindings.xml" url="DefaultKeyBindings.xml"/>
+                            <file name="org-netbeans-modules-javascript2-editor-keybindings-mac.xml" url="DefaultKeyBindings-Mac.xml">
+                                <attr name="nbeditor-settings-targetOS" stringvalue="OS_MAC"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+
+                <file name="AutoIndenter.instance">
+                    <attr name="instanceOf" stringvalue="org.netbeans.spi.editor.typinghooks.TypedTextInterceptor$Factory"/>
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.indent.spi.support.AutomatedIndenting.createHotCharsIndenter"/>
+                    <attr name="regex1" stringvalue="\s*\{"/>
+                    <attr name="regex2" stringvalue="\s*\}"/>
+                    <attr name="regex3" stringvalue="\s*case\s"/>
+                    <attr name="regex4" stringvalue="\s*default[:\s]"/>
+                    <!-- <attr name="regex5" stringvalue="\s*else[\s\{]"/> -->
+                    <attr name="regex6" stringvalue="\s*\."/>
+                </file>
+            </folder>
+            <folder name="x-json">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javascript2.editor.resources.Bundle"/>
+                <folder name="FontsColors">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="coloring.xml" url="fontsColors.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javascript2.editor.resources.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+
+            </folder>
+            <folder name="javascript-doc">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javascript2.editor.resources.Bundle"/>
+<!--                <folder name="CodeTemplateFilterFactories">
+                    <file name="org-netbeans-modules-javascript2-editor-doc-JsDocumentationCodeTemplateFilter$Factory.instance"/>
+                </folder>-->
+                <folder name="CodeTemplates">
+                    <folder name="Defaults">
+                        <file name="org-netbeans-modules-javascript2-editor-codetemplates-doc.xml" url="codetemplates-doc.xml">
+                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javascript2.editor.resources.Bundle"/>
+                        </file>
+                    </folder>
+                </folder>
+                <folder name="CodeTemplateFilterFactories">
+                    <file name="org-netbeans-modules-javascript2-editor-doc-JsDocCodeTemplateFilter$Factory.instance"/>
+                </folder>
+            </folder>
+<!--            <folder name="javascript">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javascript.editing.Bundle"/>
+
+                <file name="language.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.javascript.editing.lexer.JsTokenId.language"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
+                </file>
+
+                <folder name="BracesMatchers">
+                    <file name="org-netbeans-modules-javascript-editing-JsBracesMatcherFactory.instance">
+                        <attr name="position" intvalue="0"/>
+                    </file>
+                </folder>
+                
+                <folder name="FontsColors">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="coloring.xml" url="fontsColors.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javascript.editing.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+                <folder name="Popup">
+                    <file name="SeparatorFolding.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="4900"/>
+                    </file>
+                    <file name="generate-fold-popup">
+                        <attr name="position" intvalue="5000"/>
+                    </file>
+                </folder>
+            </folder>
+
+            <folder name="x-javascript-string">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javascript.editing.Bundle"/>
+                <file name="language.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.javascript.editing.lexer.JsStringTokenId.language"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
+                </file>
+                <folder name="FontsColors">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="coloring.xml" url="stringColors.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javascript.editing.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+            <folder name="javascript-comment">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.javascript2.editor.Bundle#Editors/text/javascript-comment"/>
+                <file name="language.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.javascript2.editor.doclets.JsDocTokenId.language"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
+                </file>
+                <folder name="FontsColors">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="coloring.xml" url="fontsColors-comment.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javascript.editing.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+            
+            <folder name="x-json">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javascript.editing.Bundle"/>
+
+                <file name="language.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.javascript.editing.lexer.JsTokenId.language"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
+                </file>
+
+                <folder name="FontsColors">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="coloring.xml" url="fontsColors.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javascript.editing.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+
+                <folder name="Keybindings">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-javascript-editing-keybindings.xml" url="DefaultKeyBindings.xml"/>
+                        </folder>
+                    </folder>
+                </folder>
+
+                <folder name="Popup">
+                    <file name="SeparatorFolding.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="4900"/>
+                    </file>
+                    <file name="generate-fold-popup">
+                        <attr name="position" intvalue="5000"/>
+                    </file>
+                </folder>
+            </folder>-->
+
+        </folder>
+    </folder>
+
+    <folder name="OptionsDialog">
+        <folder name="PreviewExamples">
+            <folder name="text">
+                <file name="javascript" url="JsExample"/>
+                <file name="x-json" url="JsonExample.json"/>
+            </folder>
+        </folder>
+        <folder name="Editor">
+            <folder name="Hints">
+                <attr name="position" intvalue="0"/>
+                <folder name="text">
+                    <folder name="javascript">
+                        <file name="JSHints.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.spi.options.OptionsPanelController"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.javascript2.editor.hints.HintsAdvancedOption.createStatic"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+            <folder name="Formatting">
+                <attr name="position" intvalue="0"/>
+                <folder name="text">
+                    <folder name="javascript">
+                        <file name="TabsAndIndents.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.modules.options.editor.spi.PreferencesCustomizer$Factory"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.javascript2.editor.formatter.ui.FmtTabsIndents.getController"/>
+                            <attr name="position" intvalue="100"/>
+                        </file>
+
+                        <file name="Alignment.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.modules.options.editor.spi.PreferencesCustomizer$Factory"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.javascript2.editor.formatter.ui.FmtAlignment.getController"/>
+                            <attr name="position" intvalue="200"/>
+                        </file>
+
+                        <file name="BlankLines.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.modules.options.editor.spi.PreferencesCustomizer$Factory"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.javascript2.editor.formatter.ui.FmtBlankLines.getController"/>
+                            <attr name="position" intvalue="250"/>
+                        </file>
+
+                        <file name="Braces.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.modules.options.editor.spi.PreferencesCustomizer$Factory"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.javascript2.editor.formatter.ui.FmtBraces.getController"/>
+                            <attr name="position" intvalue="300"/>
+                        </file>
+
+                        <file name="Spaces.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.modules.options.editor.spi.PreferencesCustomizer$Factory"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.javascript2.editor.formatter.ui.FmtSpaces.getController"/>
+                            <attr name="position" intvalue="700"/>
+                        </file>
+
+                        <file name="Wrapping.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.modules.options.editor.spi.PreferencesCustomizer$Factory"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.javascript2.editor.formatter.ui.FmtWrapping.getController"/>
+                            <attr name="position" intvalue="750"/>
+                        </file>
+
+                    </folder>
+                    <folder name="x-json">
+                        <file name="TabsAndIndents.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.modules.options.editor.spi.PreferencesCustomizer$Factory"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.javascript2.editor.formatter.ui.json.FmtTabsIndents.getController"/>
+                            <attr name="position" intvalue="100"/>
+                        </file>
+
+                        <file name="BlankLines.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.modules.options.editor.spi.PreferencesCustomizer$Factory"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.javascript2.editor.formatter.ui.json.FmtBlankLines.getController"/>
+                            <attr name="position" intvalue="250"/>
+                        </file>
+
+                        <file name="Spaces.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.modules.options.editor.spi.PreferencesCustomizer$Factory"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.javascript2.editor.formatter.ui.json.FmtSpaces.getController"/>
+                            <attr name="position" intvalue="700"/>
+                        </file>
+
+                        <file name="Wrapping.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.modules.options.editor.spi.PreferencesCustomizer$Factory"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.javascript2.editor.formatter.ui.json.FmtWrapping.getController"/>
+                            <attr name="position" intvalue="750"/>
+                        </file>
+
+                    </folder>
+                </folder>
+            </folder>
+            <folder name="CodeCompletion">
+                <folder name="text">
+                    <folder name="javascript">
+                        <file name="JavaScriptCodeCompletion.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.modules.options.editor.spi.PreferencesCustomizer$Factory"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.javascript2.editor.options.ui.CodeCompletionPanel.getCustomizerFactory"/>
+                            <attr name="position" intvalue="100"/>
+                        </file>
+                        <file name="JavaScriptSpecificCustomCustomizer.instance">
+                            <attr name="instanceCreate" newvalue="org.netbeans.modules.javascript2.editor.options.ui.CodeCompletionPanel$CustomCustomizerImpl"/>
+                            <attr name="position" intvalue="110"/>
+                        </file>
+                    </folder>
+                    <folder name="x-json">
+                        <file name="JsonCodeCompletion.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.modules.options.editor.spi.PreferencesCustomizer$Factory"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.javascript2.editor.options.ui.json.CodeCompletionPanel.getCustomizerFactory"/>
+                            <attr name="position" intvalue="100"/>
+                        </file>
+                        <file name="JsonSpecificCustomCustomizer.instance">
+                            <attr name="instanceCreate" newvalue="org.netbeans.modules.javascript2.editor.options.ui.json.CodeCompletionPanel$CustomCustomizerImpl"/>
+                            <attr name="position" intvalue="110"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+
+    <folder name="Loaders">
+        <folder name="text">
+            <folder name="javascript">
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/javascript2/editor/resources/javascript.png"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/javascript2/editor/resources/javascript.png"/>
+                <folder name="Actions">
+                    <file name="CopyAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>
+                        <attr name="position" intvalue="400"/>
+                    </file>
+                    <file name="CutAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CutAction.instance"/>
+                        <attr name="position" intvalue="300"/>
+                    </file>
+                    <file name="DeleteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-DeleteAction.instance"/>
+                        <attr name="position" intvalue="800"/>
+                    </file>
+                    <file name="FileSystemAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-FileSystemAction.instance"/>
+                        <attr name="position" intvalue="1300"/>
+                    </file>
+                    <file name="NewAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-NewAction.instance"/>
+                        <attr name="position" intvalue="700"/>
+                    </file>
+                    <file name="OpenAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-OpenAction.instance"/>
+                        <attr name="position" intvalue="100"/>
+                    </file>
+                    <file name="PasteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-PasteAction.instance"/>
+                        <attr name="position" intvalue="500"/>
+                    </file>
+                    <file name="PropertiesAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PropertiesAction.instance"/>
+                        <attr name="position" intvalue="1600"/>
+                    </file>
+                    <file name="RenameAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-RenameAction.instance"/>
+                        <attr name="position" intvalue="900"/>
+                    </file>
+                    <file name="SaveAsTemplateAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAsTemplateAction.instance"/>
+                        <attr name="position" intvalue="1100"/>
+                    </file>
+                    <file name="Separator1.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="200"/>
+                    </file>     
+                    <file name="Separator2.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="600"/>
+                    </file>
+                    <file name="Separator3.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1000"/>
+                    </file>
+                    <file name="Separator4.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1200"/>
+                    </file>
+                    <file name="Separator5.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1400"/>
+                    </file> 
+                     
+                     
+                    <file name="ToolsAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ToolsAction.instance"/>
+                        <attr name="position" intvalue="1500"/>
+                    </file>
+                </folder>            
+            </folder>
+            <folder name="x-json">
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/javascript2/editor/resources/javascript.png"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/javascript2/editor/resources/javascript.png"/>
+                <folder name="Actions">
+                    <file name="CopyAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>
+                        <attr name="position" intvalue="400"/>
+                    </file>
+                    <file name="CutAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CutAction.instance"/>
+                        <attr name="position" intvalue="300"/>
+                    </file>
+                    <file name="DeleteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-DeleteAction.instance"/>
+                        <attr name="position" intvalue="800"/>
+                    </file>
+                    <file name="FileSystemAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-FileSystemAction.instance"/>
+                        <attr name="position" intvalue="1300"/>
+                    </file>
+                    <file name="NewAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-NewAction.instance"/>
+                        <attr name="position" intvalue="700"/>
+                    </file>
+                    <file name="OpenAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-OpenAction.instance"/>
+                        <attr name="position" intvalue="100"/>
+                    </file>
+                    <file name="PasteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-PasteAction.instance"/>
+                        <attr name="position" intvalue="500"/>
+                    </file>
+                    <file name="PropertiesAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PropertiesAction.instance"/>
+                        <attr name="position" intvalue="1600"/>
+                    </file>
+                    <file name="RenameAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-RenameAction.instance"/>
+                        <attr name="position" intvalue="900"/>
+                    </file>
+                    <file name="SaveAsTemplateAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAsTemplateAction.instance"/>
+                        <attr name="position" intvalue="1100"/>
+                    </file>
+                    <file name="Separator1.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="200"/>
+                    </file>
+                    <file name="Separator2.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="600"/>
+                    </file>
+                    <file name="Separator3.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1000"/>
+                    </file>
+                    <file name="Separator4.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1200"/>
+                    </file>
+                    <file name="Separator5.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1400"/>
+                    </file>
+
+
+                    <file name="ToolsAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ToolsAction.instance"/>
+                        <attr name="position" intvalue="1500"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="jshintrc+x-json">
+                <folder name="Factories">
+                    <file name="org-netbeans-modules-csl-core-GsfDataLoader.instance"/>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+
+    <folder name="Templates">
+        <folder name="Other">
+            <file name="javascript.js" url="nbresloc:/org/netbeans/modules/javascript2/editor/resources/jstemplate.js">
+                <attr name="position" intvalue="400"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javascript2.editor.resources.Bundle"/>
+                <attr name="templateCategory" stringvalue="simple-files"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javascript2/editor/resources/javascript.html"/>
+                <attr name="requireProject" boolvalue="false"/>
+            </file>
+            <file name="json.json" url="nbresloc:/org/netbeans/modules/javascript2/editor/resources/jsontemplate.json">
+                <attr name="position" intvalue="450"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javascript2.editor.resources.Bundle"/>
+                <attr name="templateCategory" stringvalue="simple-files"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javascript2/editor/resources/json.html"/>
+                <attr name="requireProject" boolvalue="false"/>
+            </file>
+        </folder>
+    </folder>
+
+       <folder name="csl-hints">
+        <folder name="text">
+            <folder name="javascript">
+                <folder name="hints">
+                    <folder name="convention">
+                       <attr name="position" intvalue="90"/>
+                       <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javascript2.editor.hints.Bundle"/> 
+<!--                       <file name="org-netbeans-modules-javascript2-editor-hints-JsConventionRule.instance"/>-->
+                       <file name="org-netbeans-modules-javascript2-editor-hints-BetterConditionHint.instance"/>
+                       <file name="org-netbeans-modules-javascript2-editor-hints-MissingSemicolonHint.instance"/>
+                       <file name="org-netbeans-modules-javascript2-editor-hints-DuplicatePropertyName.instance"/>
+                       <file name="org-netbeans-modules-javascript2-editor-hints-AssignmentInCondition.instance"/>
+                       <file name="org-netbeans-modules-javascript2-editor-hints-ObjectTrailingComma.instance"/>
+                       <file name="org-netbeans-modules-javascript2-editor-hints-ArrayTrailingComma.instance"/>
+                    </folder>
+                    <folder name="documentation">
+                        <attr name="position" intvalue="100"/>
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javascript2.editor.hints.Bundle"/>
+                        <file name="org-netbeans-modules-javascript2-editor-hints-UndocumentedParameterRule.instance"/>
+                        <file name="org-netbeans-modules-javascript2-editor-hints-IncorrectDocumentationRule.instance"/>
+                    </folder>
+                    <folder name="other">
+                        <attr name="position" intvalue="110"/>
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javascript2.editor.hints.Bundle"/> 
+                        <file name="org-netbeans-modules-javascript2-editor-hints-WeirdAssignment.instance"/>
+                        <file name="org-netbeans-modules-javascript2-editor-hints-GlobalIsNotDefined.instance"/>
+                        <file name="org-netbeans-modules-javascript2-editor-hints-IncorrectReturnStatement.instance"/>
+                        <file name="org-netbeans-modules-javascript2-editor-hints-Ecma6Rule.instance"/>
+                        <file name="org-netbeans-modules-javascript2-editor-hints-Ecma7Rule.instance"/>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+       </folder>
+       <folder name="JavaScript">
+           <folder name="Model">
+               <folder name="MethodCallProcessors">
+                   <file name="org-netbeans-modules-javascript2-editor-extjs-ExtModelExtender$ExtDefineMethodProcessor.instance">
+                       <attr name="instanceOf" stringvalue="org.netbeans.modules.javascript2.editor.model.MethodCallProcessor"/>
+                       <attr name="position" intvalue="2"/>
+                   </file>
+                   <file name="org-netbeans-modules-javascript2-editor-extjs-ExtModelExtender$ExtNamespaceMethodProcessor.instance">
+                       <attr name="instanceOf" stringvalue="org.netbeans.modules.javascript2.editor.model.MethodCallProcessor"/>
+                       <attr name="position" intvalue="1"/>
+                   </file>
+               </folder>
+           </folder>
+       </folder>
+</filesystem>

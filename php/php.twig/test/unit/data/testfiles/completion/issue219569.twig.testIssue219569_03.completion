@@ -1,0 +1,32 @@
+Code completion result for source line:
+{% filter  |%}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+RULE       abs                                        Filter
+RULE       capitalize                                 Filter
+RULE       convert_encoding('to', 'from')             Filter
+RULE       date('format')                             Filter
+RULE       date_modify('modifier')                    Filter
+RULE       default('value')                           Filter
+RULE       escape('html')                             Filter
+RULE       format(var)                                Filter
+RULE       join('separator')                          Filter
+RULE       json_encode()                              Filter
+RULE       keys                                       Filter
+RULE       length                                     Filter
+RULE       lower                                      Filter
+RULE       merge(array)                               Filter
+RULE       nl2br                                      Filter
+RULE       number_format                              Filter
+RULE       raw                                        Filter
+RULE       replace()                                  Filter
+RULE       reverse                                    Filter
+RULE       slice(start, length)                       Filter
+RULE       sort                                       Filter
+RULE       striptags                                  Filter
+RULE       title                                      Filter
+RULE       trans                                      Filter
+RULE       trim                                       Filter
+RULE       truncate(int)                              Filter
+RULE       upper                                      Filter
+RULE       url_encode()                               Filter
+RULE       wordwrap(width, 'break', cut)              Filter

@@ -1,0 +1,12 @@
+function |>METHOD:f1<|(p) {
+    p.|>METHOD:x<| = f2;
+}
+  
+function |>METHOD:f2<|(p) {
+    p.|>METHOD:x<| = f1;
+}
+
+function |>METHOD:f3<| (p) {
+    p.|>METHOD:x<| = f3;
+}
+

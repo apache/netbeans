@@ -1,0 +1,16 @@
+
+.test {
+    color: red;
+}
+.test{
+    font-style: italic;
+}
+@media (max-width: 2000px) {
+    #el2{
+
+    }
+    #nic{
+        font-size: 10px;
+        width: 100%;
+    }
+}

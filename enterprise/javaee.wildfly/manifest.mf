@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.modules.javaee.wildfly/1
+OpenIDE-Module-Layer: org/netbeans/modules/javaee/wildfly/resources/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/javaee/wildfly/resources/Bundle.properties
+OpenIDE-Module-Provides: org.netbeans.modules.serverplugins.javaee
+OpenIDE-Module-Specification-Version: 1.6

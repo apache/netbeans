@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.j2eeserver.test
+OpenIDE-Module-Layer: org/netbeans/tests/j2eeserver/plugin/layer.xml

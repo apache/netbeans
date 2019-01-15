@@ -1,0 +1,59 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+#main {
+    width: 1000px;
+    margin: 0 auto;
+    position: relative;
+}
+
+#header {
+    margin-top: 10px;
+    margin-left: 26px;
+    margin-bottom: 20px;
+}
+#header i, #header .title {
+    float: left;
+    margin-right: 14px;
+}
+#header .title {
+    margin-top: 34px;
+}
+#header .nb {
+    float: right;
+}
+#header, #content, #footer {
+    font-size: 0.75em;
+}
+
+.col-1, .col-2, .col-3 {
+    float: left;
+}
+
+#page #content .col-1 {
+    width: 250px;
+    margin-right: 20px;
+}
+#page #content .col-2 {
+    width: 650px;
+    min-height: 500px;
+}
+
+#footer {
+    height: 89px;
+}

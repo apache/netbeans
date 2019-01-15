@@ -1,0 +1,3 @@
+MyOb:CLASS:[PUBLIC]:ESCAPED{MyOb}:
+  fn1:METHOD:[PUBLIC]:ESCAPED{fn1}ESCAPED{(}ESCAPED{data}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  xxx:FIELD:[PUBLIC]:ESCAPED{xxx}<font color="#999999">ESCAPED{ : }MyOb.xxx</font>:

@@ -1,0 +1,3 @@
+ * @method Foo||>MARK_OCCURRENCES:Bar<| method() This is my cool magic method description.
+class |>MARK_OCCURRENCES:B^ar<| {
+$b = new |>MARK_OCCURRENCES:Bar<|();

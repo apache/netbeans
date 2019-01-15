@@ -1,0 +1,3 @@
+    function _myLib_in(|>MARK_OCCURRENCES:it^em<|, container) {
+            return _myLib_indexOf(container, |>MARK_OCCURRENCES:item<|) >= 0;
+            if( container[key] === |>MARK_OCCURRENCES:item<| )

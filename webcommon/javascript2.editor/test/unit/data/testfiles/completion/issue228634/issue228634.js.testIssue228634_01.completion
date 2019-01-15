@@ -1,0 +1,5 @@
+Code completion result for source line:
+con.y("a").te|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      testik: Number                  [PUBLIC,   issue228634.js

@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.netbeans.modules.apisupport.project/1
-OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/apisupport/project/api/Bundle.properties
-OpenIDE-Module-Requires: javax.script.ScriptEngine.freemarker
-OpenIDE-Module-Layer: org/netbeans/modules/apisupport/project/ui/resources/layer.xml
-AutoUpdate-Show-In-Client: false
-OpenIDE-Module-Specification-Version: 1.77
-

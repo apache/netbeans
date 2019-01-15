@@ -1,0 +1,5 @@
+Code completion result for source line:
+document.getElementById("dd").getElementsByTagName("*").item(2).getFeature("pero").toLocale|String().charCodeAt(10).toExponential();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     toLocaleString(): String        [PUBLIC]   JS Platform

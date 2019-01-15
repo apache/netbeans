@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.apisupport.project</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
+            <code-name-base>org.netbeans.modules.profiler.api</code-name-base>
+            <module-dependencies>
+                <dependency>
+                    <code-name-base>org.netbeans.api.progress</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.45</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.lib.profiler</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.97</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.lib.profiler.common</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.41</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.editor.mimelookup</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.23</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.awt</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>7.32</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.filesystems</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>9.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.util</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>9.3</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.util.lookup</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>8.8</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.util.ui</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>9.3</specification-version>
+                    </run-dependency>
+                </dependency>
+            </module-dependencies>
+            <friend-packages>
+                <friend>com.sun.tools.visualvm.application.views</friend>
+                <friend>com.sun.tools.visualvm.charts</friend>
+                <friend>com.sun.tools.visualvm.core</friend>
+                <friend>com.sun.tools.visualvm.heapdump</friend>
+                <friend>com.sun.tools.visualvm.heapviewer</friend>
+                <friend>com.sun.tools.visualvm.heapviewer.console</friend>
+                <friend>com.sun.tools.visualvm.heapviewer.truffle</friend>
+                <friend>com.sun.tools.visualvm.modules.appui</friend>
+                <friend>com.sun.tools.visualvm.profiler</friend>
+                <friend>com.sun.tools.visualvm.profiling</friend>
+                <friend>com.sun.tools.visualvm.sampler</friend>
+                <friend>oracle.jdevimpl.profiler.actions</friend>
+                <friend>oracle.jdevimpl.profiler.impl</friend>
+                <friend>org.netbeans.lib.profiler.ui</friend>
+                <friend>org.netbeans.modules.autoproject.profiler</friend>
+                <friend>org.netbeans.modules.javame.profiler.j2me</friend>
+                <friend>org.netbeans.modules.maven.profiler</friend>
+                <friend>org.netbeans.modules.profiler</friend>
+                <friend>org.netbeans.modules.profiler.attach</friend>
+                <friend>org.netbeans.modules.profiler.commandrunner</friend>
+                <friend>org.netbeans.modules.profiler.freeform</friend>
+                <friend>org.netbeans.modules.profiler.heapwalker</friend>
+                <friend>org.netbeans.modules.profiler.j2ee</friend>
+                <friend>org.netbeans.modules.profiler.j2se</friend>
+                <friend>org.netbeans.modules.profiler.loadgen</friend>
+                <friend>org.netbeans.modules.profiler.nbimpl</friend>
+                <friend>org.netbeans.modules.profiler.nbmodule</friend>
+                <friend>org.netbeans.modules.profiler.options</friend>
+                <friend>org.netbeans.modules.profiler.oql</friend>
+                <friend>org.netbeans.modules.profiler.ppoints</friend>
+                <friend>org.netbeans.modules.profiler.projectsupport</friend>
+                <friend>org.netbeans.modules.profiler.snaptracer</friend>
+                <package>org.netbeans.modules.profiler.api</package>
+                <package>org.netbeans.modules.profiler.api.icons</package>
+                <package>org.netbeans.modules.profiler.api.java</package>
+                <package>org.netbeans.modules.profiler.api.project</package>
+                <package>org.netbeans.modules.profiler.spi</package>
+                <package>org.netbeans.modules.profiler.spi.java</package>
+                <package>org.netbeans.modules.profiler.spi.project</package>
+            </friend-packages>
+        </data>
+    </configuration>
+</project>

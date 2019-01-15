@@ -1,0 +1,4 @@
+CSSClass.remove = function(|>MARK_OCCURRENCES:p^aram<|, c)
+    if (typeof |>MARK_OCCURRENCES:param<| == "string")
+        |>MARK_OCCURRENCES:param<| = document.getElementById(|>MARK_OCCURRENCES:param<|);
+    |>MARK_OCCURRENCES:param<|.className = |>MARK_OCCURRENCES:param<|.className.replace(new RegExp("\\b" + c + "\\b\\s*", "g"), "");

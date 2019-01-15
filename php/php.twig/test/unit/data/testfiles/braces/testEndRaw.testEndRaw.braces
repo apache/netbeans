@@ -1,0 +1,5 @@
+<html>
+{% *raw* %}
+text
+{% *end^raw* %}
+</html>

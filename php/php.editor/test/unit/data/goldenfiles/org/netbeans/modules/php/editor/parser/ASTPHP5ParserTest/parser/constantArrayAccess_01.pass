@@ -1,0 +1,1554 @@
+<testresult testFile='constantArrayAccess_01.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='6' end='12'>
+            <text>$index</text>
+        </token>
+        <token id='T_EQUAL' start='13' end='14'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='15' end='16'>
+            <text>0</text>
+        </token>
+        <token id='T_SEMICOLON' start='16' end='17'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='18' end='23'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='24' end='33'>
+            <text>CONSTANT1</text>
+        </token>
+        <token id='T_EQUAL' start='34' end='35'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='36' end='37'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='37' end='38'>
+            <text>0</text>
+        </token>
+        <token id='T_COMMA' start='38' end='39'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='40' end='41'>
+            <text>1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='41' end='42'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='42' end='43'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='44' end='49'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='50' end='59'>
+            <text>CONSTANT2</text>
+        </token>
+        <token id='T_EQUAL' start='60' end='61'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='62' end='71'>
+            <text>CONSTANT1</text>
+        </token>
+        <token id='T_OPEN_RECT' start='71' end='72'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='72' end='73'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='73' end='74'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='74' end='75'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='76' end='81'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='82' end='91'>
+            <text>CONSTANT3</text>
+        </token>
+        <token id='T_EQUAL' start='92' end='93'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='94' end='102'>
+            <text>"String"</text>
+        </token>
+        <token id='T_OPEN_RECT' start='102' end='103'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='103' end='104'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='104' end='105'>
+            <text>]</text>
+        </token>
+        <token id='T_PLUS' start='106' end='107'>
+            <text>+</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='108' end='116'>
+            <text>"String"</text>
+        </token>
+        <token id='T_OPEN_RECT' start='116' end='117'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='117' end='118'>
+            <text>1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='118' end='119'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='119' end='120'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='121' end='126'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='127' end='136'>
+            <text>CONSTANT4</text>
+        </token>
+        <token id='T_EQUAL' start='137' end='138'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='139' end='140'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='140' end='141'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='141' end='142'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='143' end='144'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='144' end='145'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_RECT' start='145' end='146'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='146' end='147'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='147' end='148'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='148' end='149'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='150' end='155'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='156' end='165'>
+            <text>CONSTANT5</text>
+        </token>
+        <token id='T_EQUAL' start='166' end='167'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='168' end='177'>
+            <text>CONSTANT1</text>
+        </token>
+        <token id='T_OPEN_RECT' start='177' end='178'>
+            <text>[</text>
+        </token>
+        <token id='T_STRING' start='178' end='187'>
+            <text>CONSTANT1</text>
+        </token>
+        <token id='T_OPEN_RECT' start='187' end='188'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='188' end='189'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='189' end='190'>
+            <text>]</text>
+        </token>
+        <token id='T_PLUS' start='191' end='192'>
+            <text>+</text>
+        </token>
+        <token id='T_STRING' start='193' end='202'>
+            <text>CONSTANT1</text>
+        </token>
+        <token id='T_OPEN_RECT' start='202' end='203'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='203' end='204'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='204' end='205'>
+            <text>]</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='205' end='206'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='206' end='207'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='208' end='213'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='214' end='223'>
+            <text>CONSTANT6</text>
+        </token>
+        <token id='T_EQUAL' start='224' end='225'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='226' end='227'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='227' end='230'>
+            <text>"a"</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='231' end='233'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_OPEN_RECT' start='234' end='235'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='235' end='236'>
+            <text>0</text>
+        </token>
+        <token id='T_COMMA' start='236' end='237'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='238' end='239'>
+            <text>1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='239' end='240'>
+            <text>]</text>
+        </token>
+        <token id='T_COMMA' start='240' end='241'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='242' end='245'>
+            <text>"b"</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='246' end='248'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_OPEN_RECT' start='249' end='250'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='250' end='253'>
+            <text>"c"</text>
+        </token>
+        <token id='T_COMMA' start='253' end='254'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='255' end='258'>
+            <text>"d"</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='258' end='259'>
+            <text>]</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='259' end='260'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='260' end='261'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='262' end='267'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='268' end='277'>
+            <text>CONSTANT7</text>
+        </token>
+        <token id='T_EQUAL' start='278' end='279'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='280' end='289'>
+            <text>CONSTANT6</text>
+        </token>
+        <token id='T_OPEN_RECT' start='289' end='290'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='290' end='293'>
+            <text>"b"</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='293' end='294'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_RECT' start='294' end='295'>
+            <text>[</text>
+        </token>
+        <token id='T_STRING' start='295' end='304'>
+            <text>CONSTANT1</text>
+        </token>
+        <token id='T_OPEN_RECT' start='304' end='305'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='305' end='306'>
+            <text>1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='306' end='307'>
+            <text>]</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='307' end='308'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='308' end='309'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='311' end='320'>
+            <text>CONSTANT1</text>
+        </token>
+        <token id='T_OPEN_RECT' start='320' end='321'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='321' end='322'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='322' end='323'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='323' end='324'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='325' end='334'>
+            <text>CONSTANT1</text>
+        </token>
+        <token id='T_OPEN_RECT' start='334' end='335'>
+            <text>[</text>
+        </token>
+        <token id='T_VARIABLE' start='335' end='341'>
+            <text>$index</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='341' end='342'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='342' end='343'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='344' end='348'>
+            <text>echo</text>
+        </token>
+        <token id='T_STRING' start='349' end='358'>
+            <text>CONSTANT6</text>
+        </token>
+        <token id='T_OPEN_RECT' start='358' end='359'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='359' end='362'>
+            <text>"a"</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='362' end='363'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_RECT' start='363' end='364'>
+            <text>[</text>
+        </token>
+        <token id='T_STRING' start='364' end='373'>
+            <text>CONSTANT1</text>
+        </token>
+        <token id='T_OPEN_RECT' start='373' end='374'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='374' end='375'>
+            <text>1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='375' end='376'>
+            <text>]</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='376' end='377'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='377' end='378'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='379' end='383'>
+            <text>echo</text>
+        </token>
+        <token id='T_STRING' start='384' end='393'>
+            <text>CONSTANT7</text>
+        </token>
+        <token id='T_SEMICOLON' start='393' end='394'>
+            <text>;</text>
+        </token>
+        <token id='T_CLASS' start='396' end='401'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='402' end='415'>
+            <text>ConstantClass</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='416' end='417'>
+            <text>{</text>
+        </token>
+        <token id='T_CONST' start='423' end='428'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='429' end='444'>
+            <text>CLASS_CONSTANT1</text>
+        </token>
+        <token id='T_EQUAL' start='445' end='446'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='447' end='448'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='448' end='451'>
+            <text>"a"</text>
+        </token>
+        <token id='T_COMMA' start='451' end='452'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='453' end='456'>
+            <text>"b"</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='456' end='457'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='457' end='458'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='463' end='468'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='469' end='484'>
+            <text>CLASS_CONSTANT2</text>
+        </token>
+        <token id='T_EQUAL' start='485' end='486'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='487' end='491'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='491' end='493'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='493' end='508'>
+            <text>CLASS_CONSTANT1</text>
+        </token>
+        <token id='T_OPEN_RECT' start='508' end='509'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='509' end='510'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='510' end='511'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='511' end='512'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='517' end='522'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='523' end='538'>
+            <text>CLASS_CONSTANT3</text>
+        </token>
+        <token id='T_EQUAL' start='539' end='540'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='541' end='550'>
+            <text>CONSTANT1</text>
+        </token>
+        <token id='T_OPEN_RECT' start='550' end='551'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='551' end='552'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='552' end='553'>
+            <text>]</text>
+        </token>
+        <token id='T_PLUS' start='554' end='555'>
+            <text>+</text>
+        </token>
+        <token id='T_STRING' start='556' end='565'>
+            <text>CONSTANT1</text>
+        </token>
+        <token id='T_OPEN_RECT' start='565' end='566'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='566' end='567'>
+            <text>1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='567' end='568'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='568' end='569'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='574' end='579'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='580' end='595'>
+            <text>CLASS_CONSTANT4</text>
+        </token>
+        <token id='T_EQUAL' start='596' end='597'>
+            <text>=</text>
+        </token>
+        <token id='T_ARRAY' start='598' end='603'>
+            <text>array</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='603' end='604'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='604' end='609'>
+            <text>"foo"</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='610' end='612'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_ARRAY' start='613' end='618'>
+            <text>array</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='618' end='619'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='619' end='624'>
+            <text>"one"</text>
+        </token>
+        <token id='T_COMMA' start='624' end='625'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='626' end='631'>
+            <text>"two"</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='631' end='632'>
+            <text>)</text>
+        </token>
+        <token id='T_COMMA' start='632' end='633'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='634' end='639'>
+            <text>"bar"</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='640' end='642'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_ARRAY' start='643' end='648'>
+            <text>array</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='648' end='649'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='649' end='656'>
+            <text>"three"</text>
+        </token>
+        <token id='T_COMMA' start='656' end='657'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='658' end='664'>
+            <text>"four"</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='664' end='665'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='665' end='666'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='666' end='667'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='672' end='677'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='678' end='693'>
+            <text>CLASS_CONSTANT5</text>
+        </token>
+        <token id='T_EQUAL' start='694' end='695'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='696' end='709'>
+            <text>ConstantClass</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='709' end='711'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='711' end='726'>
+            <text>CLASS_CONSTANT4</text>
+        </token>
+        <token id='T_OPEN_RECT' start='726' end='727'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='727' end='732'>
+            <text>"foo"</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='732' end='733'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_RECT' start='733' end='734'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='734' end='735'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='735' end='736'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='736' end='737'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='743' end='749'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='750' end='758'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='759' end='763'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='763' end='764'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='764' end='765'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='766' end='767'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='776' end='782'>
+            <text>$index</text>
+        </token>
+        <token id='T_EQUAL' start='783' end='784'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='785' end='786'>
+            <text>0</text>
+        </token>
+        <token id='T_SEMICOLON' start='786' end='787'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='796' end='800'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='800' end='802'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='802' end='817'>
+            <text>CLASS_CONSTANT1</text>
+        </token>
+        <token id='T_OPEN_RECT' start='817' end='818'>
+            <text>[</text>
+        </token>
+        <token id='T_STRING' start='818' end='827'>
+            <text>CONSTANT1</text>
+        </token>
+        <token id='T_OPEN_RECT' start='827' end='828'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='828' end='829'>
+            <text>1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='829' end='830'>
+            <text>]</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='830' end='831'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='831' end='832'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='841' end='845'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='845' end='847'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='847' end='862'>
+            <text>CLASS_CONSTANT1</text>
+        </token>
+        <token id='T_OPEN_RECT' start='862' end='863'>
+            <text>[</text>
+        </token>
+        <token id='T_VARIABLE' start='863' end='869'>
+            <text>$index</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='869' end='870'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='870' end='871'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='876' end='877'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='878' end='879'>
+            <text>}</text>
+        </token>
+        <token id='T_STRING' start='881' end='894'>
+            <text>ConstantClass</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='894' end='896'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='896' end='911'>
+            <text>CLASS_CONSTANT1</text>
+        </token>
+        <token id='T_OPEN_RECT' start='911' end='912'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='912' end='913'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='913' end='914'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='914' end='915'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='916' end='929'>
+            <text>ConstantClass</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='929' end='931'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='931' end='946'>
+            <text>CLASS_CONSTANT1</text>
+        </token>
+        <token id='T_OPEN_RECT' start='946' end='947'>
+            <text>[</text>
+        </token>
+        <token id='T_VARIABLE' start='947' end='953'>
+            <text>$index</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='953' end='954'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='954' end='955'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='956' end='960'>
+            <text>echo</text>
+        </token>
+        <token id='T_STRING' start='961' end='974'>
+            <text>ConstantClass</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='974' end='976'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='976' end='991'>
+            <text>CLASS_CONSTANT5</text>
+        </token>
+        <token id='T_SEMICOLON' start='991' end='992'>
+            <text>;</text>
+        </token>
+        <token id='T_INTERFACE' start='994' end='1003'>
+            <text>interface</text>
+        </token>
+        <token id='T_STRING' start='1004' end='1021'>
+            <text>ConstantInterface</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1022' end='1023'>
+            <text>{</text>
+        </token>
+        <token id='T_CONST' start='1029' end='1034'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1035' end='1054'>
+            <text>INTERFACE_CONSTANT1</text>
+        </token>
+        <token id='T_EQUAL' start='1055' end='1056'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1057' end='1058'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1058' end='1061'>
+            <text>"a"</text>
+        </token>
+        <token id='T_COMMA' start='1061' end='1062'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1063' end='1066'>
+            <text>"b"</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1066' end='1067'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='1067' end='1068'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1073' end='1078'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1079' end='1098'>
+            <text>INTERFACE_CONSTANT2</text>
+        </token>
+        <token id='T_EQUAL' start='1099' end='1100'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1101' end='1105'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1105' end='1107'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1107' end='1126'>
+            <text>INTERFACE_CONSTANT1</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1126' end='1127'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='1127' end='1128'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1128' end='1129'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='1129' end='1130'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1135' end='1140'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1141' end='1160'>
+            <text>INTERFACE_CONSTANT3</text>
+        </token>
+        <token id='T_EQUAL' start='1161' end='1162'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1163' end='1172'>
+            <text>CONSTANT1</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1172' end='1173'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='1173' end='1174'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1174' end='1175'>
+            <text>]</text>
+        </token>
+        <token id='T_PLUS' start='1176' end='1177'>
+            <text>+</text>
+        </token>
+        <token id='T_STRING' start='1178' end='1187'>
+            <text>CONSTANT1</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1187' end='1188'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='1188' end='1189'>
+            <text>1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1189' end='1190'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='1190' end='1191'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1193' end='1194'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='1195' end='1195'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1195'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='6' end='17'>
+                <Assignment start='6' end='16' operator='EQUAL'>
+                    <Variable start='6' end='12' isDollared='true'>
+                        <Identifier start='7' end='12' name='index'/>
+                    </Variable>
+                    <Scalar start='15' end='16' type='INT' value='0'/>
+                </Assignment>
+            </ExpressionStatement>
+            <GlobalConstantDeclaration start='18' end='43'>
+                <Names>
+                    <Identifier start='24' end='33' name='CONSTANT1'/>
+                </Names>
+                <Initializers>
+                    <ArrayCreation start='36' end='42' type='NEW'>
+                        <ArrayElement start='37' end='38'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='37' end='38' type='INT' value='0'/>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='40' end='41'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='40' end='41' type='INT' value='1'/>
+                            </Value>
+                        </ArrayElement>
+                    </ArrayCreation>
+                </Initializers>
+            </GlobalConstantDeclaration>
+            <GlobalConstantDeclaration start='44' end='75'>
+                <Names>
+                    <Identifier start='50' end='59' name='CONSTANT2'/>
+                </Names>
+                <Initializers>
+                    <ExpressionArrayAccess start='62' end='74'>
+                        <Identifier start='62' end='71' name='CONSTANT1'/>
+                        <ArrayDimension start='71' end='74'>
+                            <Index>
+                                <Scalar start='72' end='73' type='INT' value='0'/>
+                            </Index>
+                        </ArrayDimension>
+                    </ExpressionArrayAccess>
+                </Initializers>
+            </GlobalConstantDeclaration>
+            <GlobalConstantDeclaration start='76' end='120'>
+                <Names>
+                    <Identifier start='82' end='91' name='CONSTANT3'/>
+                </Names>
+                <Initializers>
+                    <InfixExpression start='94' end='119' operator='PLUS'>
+                        <ExpressionArrayAccess start='94' end='105'>
+                            <Identifier start='94' end='102' name='"String"'/>
+                            <ArrayDimension start='102' end='105'>
+                                <Index>
+                                    <Scalar start='103' end='104' type='INT' value='0'/>
+                                </Index>
+                            </ArrayDimension>
+                        </ExpressionArrayAccess>
+                        <ExpressionArrayAccess start='108' end='119'>
+                            <Identifier start='108' end='116' name='"String"'/>
+                            <ArrayDimension start='116' end='119'>
+                                <Index>
+                                    <Scalar start='117' end='118' type='INT' value='1'/>
+                                </Index>
+                            </ArrayDimension>
+                        </ExpressionArrayAccess>
+                    </InfixExpression>
+                </Initializers>
+            </GlobalConstantDeclaration>
+            <GlobalConstantDeclaration start='121' end='149'>
+                <Names>
+                    <Identifier start='127' end='136' name='CONSTANT4'/>
+                </Names>
+                <Initializers>
+                    <ExpressionArrayAccess start='139' end='148'>
+                        <ArrayCreation start='139' end='145' type='NEW'>
+                            <ArrayElement start='140' end='141'>
+                                <Key>
+                                </Key>
+                                <Value>
+                                    <Scalar start='140' end='141' type='INT' value='1'/>
+                                </Value>
+                            </ArrayElement>
+                            <ArrayElement start='143' end='144'>
+                                <Key>
+                                </Key>
+                                <Value>
+                                    <Scalar start='143' end='144' type='INT' value='2'/>
+                                </Value>
+                            </ArrayElement>
+                        </ArrayCreation>
+                        <ArrayDimension start='145' end='148'>
+                            <Index>
+                                <Scalar start='146' end='147' type='INT' value='0'/>
+                            </Index>
+                        </ArrayDimension>
+                    </ExpressionArrayAccess>
+                </Initializers>
+            </GlobalConstantDeclaration>
+            <GlobalConstantDeclaration start='150' end='207'>
+                <Names>
+                    <Identifier start='156' end='165' name='CONSTANT5'/>
+                </Names>
+                <Initializers>
+                    <ExpressionArrayAccess start='168' end='206'>
+                        <Identifier start='168' end='177' name='CONSTANT1'/>
+                        <ArrayDimension start='177' end='206'>
+                            <Index>
+                                <InfixExpression start='178' end='205' operator='PLUS'>
+                                    <ExpressionArrayAccess start='178' end='190'>
+                                        <Identifier start='178' end='187' name='CONSTANT1'/>
+                                        <ArrayDimension start='187' end='190'>
+                                            <Index>
+                                                <Scalar start='188' end='189' type='INT' value='0'/>
+                                            </Index>
+                                        </ArrayDimension>
+                                    </ExpressionArrayAccess>
+                                    <ExpressionArrayAccess start='193' end='205'>
+                                        <Identifier start='193' end='202' name='CONSTANT1'/>
+                                        <ArrayDimension start='202' end='205'>
+                                            <Index>
+                                                <Scalar start='203' end='204' type='INT' value='0'/>
+                                            </Index>
+                                        </ArrayDimension>
+                                    </ExpressionArrayAccess>
+                                </InfixExpression>
+                            </Index>
+                        </ArrayDimension>
+                    </ExpressionArrayAccess>
+                </Initializers>
+            </GlobalConstantDeclaration>
+            <GlobalConstantDeclaration start='208' end='261'>
+                <Names>
+                    <Identifier start='214' end='223' name='CONSTANT6'/>
+                </Names>
+                <Initializers>
+                    <ArrayCreation start='226' end='260' type='NEW'>
+                        <ArrayElement start='227' end='240'>
+                            <Key>
+                                <Scalar start='227' end='230' type='STRING' value='"a"'/>
+                            </Key>
+                            <Value>
+                                <ArrayCreation start='234' end='240' type='NEW'>
+                                    <ArrayElement start='235' end='236'>
+                                        <Key>
+                                        </Key>
+                                        <Value>
+                                            <Scalar start='235' end='236' type='INT' value='0'/>
+                                        </Value>
+                                    </ArrayElement>
+                                    <ArrayElement start='238' end='239'>
+                                        <Key>
+                                        </Key>
+                                        <Value>
+                                            <Scalar start='238' end='239' type='INT' value='1'/>
+                                        </Value>
+                                    </ArrayElement>
+                                </ArrayCreation>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='242' end='259'>
+                            <Key>
+                                <Scalar start='242' end='245' type='STRING' value='"b"'/>
+                            </Key>
+                            <Value>
+                                <ArrayCreation start='249' end='259' type='NEW'>
+                                    <ArrayElement start='250' end='253'>
+                                        <Key>
+                                        </Key>
+                                        <Value>
+                                            <Scalar start='250' end='253' type='STRING' value='"c"'/>
+                                        </Value>
+                                    </ArrayElement>
+                                    <ArrayElement start='255' end='258'>
+                                        <Key>
+                                        </Key>
+                                        <Value>
+                                            <Scalar start='255' end='258' type='STRING' value='"d"'/>
+                                        </Value>
+                                    </ArrayElement>
+                                </ArrayCreation>
+                            </Value>
+                        </ArrayElement>
+                    </ArrayCreation>
+                </Initializers>
+            </GlobalConstantDeclaration>
+            <GlobalConstantDeclaration start='262' end='309'>
+                <Names>
+                    <Identifier start='268' end='277' name='CONSTANT7'/>
+                </Names>
+                <Initializers>
+                    <ExpressionArrayAccess start='280' end='308'>
+                        <ExpressionArrayAccess start='280' end='294'>
+                            <Identifier start='280' end='289' name='CONSTANT6'/>
+                            <ArrayDimension start='289' end='294'>
+                                <Index>
+                                    <Scalar start='290' end='293' type='STRING' value='"b"'/>
+                                </Index>
+                            </ArrayDimension>
+                        </ExpressionArrayAccess>
+                        <ArrayDimension start='294' end='308'>
+                            <Index>
+                                <ExpressionArrayAccess start='295' end='307'>
+                                    <Identifier start='295' end='304' name='CONSTANT1'/>
+                                    <ArrayDimension start='304' end='307'>
+                                        <Index>
+                                            <Scalar start='305' end='306' type='INT' value='1'/>
+                                        </Index>
+                                    </ArrayDimension>
+                                </ExpressionArrayAccess>
+                            </Index>
+                        </ArrayDimension>
+                    </ExpressionArrayAccess>
+                </Initializers>
+            </GlobalConstantDeclaration>
+            <ExpressionStatement start='311' end='324'>
+                <ExpressionArrayAccess start='311' end='323'>
+                    <Identifier start='311' end='320' name='CONSTANT1'/>
+                    <ArrayDimension start='320' end='323'>
+                        <Index>
+                            <Scalar start='321' end='322' type='INT' value='0'/>
+                        </Index>
+                    </ArrayDimension>
+                </ExpressionArrayAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='325' end='343'>
+                <ExpressionArrayAccess start='325' end='342'>
+                    <Identifier start='325' end='334' name='CONSTANT1'/>
+                    <ArrayDimension start='334' end='342'>
+                        <Index>
+                            <Variable start='335' end='341' isDollared='true'>
+                                <Identifier start='336' end='341' name='index'/>
+                            </Variable>
+                        </Index>
+                    </ArrayDimension>
+                </ExpressionArrayAccess>
+            </ExpressionStatement>
+            <EchoStatement start='344' end='378'>
+                <ExpressionArrayAccess start='349' end='377'>
+                    <ExpressionArrayAccess start='349' end='363'>
+                        <Identifier start='349' end='358' name='CONSTANT6'/>
+                        <ArrayDimension start='358' end='363'>
+                            <Index>
+                                <Scalar start='359' end='362' type='STRING' value='"a"'/>
+                            </Index>
+                        </ArrayDimension>
+                    </ExpressionArrayAccess>
+                    <ArrayDimension start='363' end='377'>
+                        <Index>
+                            <ExpressionArrayAccess start='364' end='376'>
+                                <Identifier start='364' end='373' name='CONSTANT1'/>
+                                <ArrayDimension start='373' end='376'>
+                                    <Index>
+                                        <Scalar start='374' end='375' type='INT' value='1'/>
+                                    </Index>
+                                </ArrayDimension>
+                            </ExpressionArrayAccess>
+                        </Index>
+                    </ArrayDimension>
+                </ExpressionArrayAccess>
+            </EchoStatement>
+            <EchoStatement start='379' end='394'>
+                <NamespaceName start='384' end='393' isCurrent='false' isGlobal='false'>
+                    <Identifier start='384' end='393' name='CONSTANT7'/>
+                </NamespaceName>
+            </EchoStatement>
+            <ClassDeclaration start='396' end='879' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='402' end='415' name='ConstantClass'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='416' end='879' isCurly='true'>
+                    <ClassConstantDeclaration start='423' end='458' modifier='public'>
+                        <Names>
+                            <Identifier start='429' end='444' name='CLASS_CONSTANT1'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='447' end='457' type='NEW'>
+                                <ArrayElement start='448' end='451'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='448' end='451' type='STRING' value='"a"'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='453' end='456'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='453' end='456' type='STRING' value='"b"'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='463' end='512' modifier='public'>
+                        <Names>
+                            <Identifier start='469' end='484' name='CLASS_CONSTANT2'/>
+                        </Names>
+                        <Initializers>
+                            <StaticConstantAccess start='487' end='511'>
+                                <NamespaceName start='487' end='491' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='487' end='491' name='self'/>
+                                </NamespaceName>
+                                <Constant>
+                                    <ExpressionArrayAccess start='493' end='511'>
+                                        <Identifier start='493' end='508' name='CLASS_CONSTANT1'/>
+                                        <ArrayDimension start='508' end='511'>
+                                            <Index>
+                                                <Scalar start='509' end='510' type='INT' value='0'/>
+                                            </Index>
+                                        </ArrayDimension>
+                                    </ExpressionArrayAccess>
+                                </Constant>
+                                <Member>
+                                    <ExpressionArrayAccess start='493' end='511'>
+                                        <Identifier start='493' end='508' name='CLASS_CONSTANT1'/>
+                                        <ArrayDimension start='508' end='511'>
+                                            <Index>
+                                                <Scalar start='509' end='510' type='INT' value='0'/>
+                                            </Index>
+                                        </ArrayDimension>
+                                    </ExpressionArrayAccess>
+                                </Member>
+                            </StaticConstantAccess>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='517' end='569' modifier='public'>
+                        <Names>
+                            <Identifier start='523' end='538' name='CLASS_CONSTANT3'/>
+                        </Names>
+                        <Initializers>
+                            <InfixExpression start='541' end='568' operator='PLUS'>
+                                <ExpressionArrayAccess start='541' end='553'>
+                                    <Identifier start='541' end='550' name='CONSTANT1'/>
+                                    <ArrayDimension start='550' end='553'>
+                                        <Index>
+                                            <Scalar start='551' end='552' type='INT' value='0'/>
+                                        </Index>
+                                    </ArrayDimension>
+                                </ExpressionArrayAccess>
+                                <ExpressionArrayAccess start='556' end='568'>
+                                    <Identifier start='556' end='565' name='CONSTANT1'/>
+                                    <ArrayDimension start='565' end='568'>
+                                        <Index>
+                                            <Scalar start='566' end='567' type='INT' value='1'/>
+                                        </Index>
+                                    </ArrayDimension>
+                                </ExpressionArrayAccess>
+                            </InfixExpression>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='574' end='667' modifier='public'>
+                        <Names>
+                            <Identifier start='580' end='595' name='CLASS_CONSTANT4'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='598' end='666' type='OLD'>
+                                <ArrayElement start='604' end='632'>
+                                    <Key>
+                                        <Scalar start='604' end='609' type='STRING' value='"foo"'/>
+                                    </Key>
+                                    <Value>
+                                        <ArrayCreation start='613' end='632' type='OLD'>
+                                            <ArrayElement start='619' end='624'>
+                                                <Key>
+                                                </Key>
+                                                <Value>
+                                                    <Scalar start='619' end='624' type='STRING' value='"one"'/>
+                                                </Value>
+                                            </ArrayElement>
+                                            <ArrayElement start='626' end='631'>
+                                                <Key>
+                                                </Key>
+                                                <Value>
+                                                    <Scalar start='626' end='631' type='STRING' value='"two"'/>
+                                                </Value>
+                                            </ArrayElement>
+                                        </ArrayCreation>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='634' end='665'>
+                                    <Key>
+                                        <Scalar start='634' end='639' type='STRING' value='"bar"'/>
+                                    </Key>
+                                    <Value>
+                                        <ArrayCreation start='643' end='665' type='OLD'>
+                                            <ArrayElement start='649' end='656'>
+                                                <Key>
+                                                </Key>
+                                                <Value>
+                                                    <Scalar start='649' end='656' type='STRING' value='"three"'/>
+                                                </Value>
+                                            </ArrayElement>
+                                            <ArrayElement start='658' end='664'>
+                                                <Key>
+                                                </Key>
+                                                <Value>
+                                                    <Scalar start='658' end='664' type='STRING' value='"four"'/>
+                                                </Value>
+                                            </ArrayElement>
+                                        </ArrayCreation>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='672' end='737' modifier='public'>
+                        <Names>
+                            <Identifier start='678' end='693' name='CLASS_CONSTANT5'/>
+                        </Names>
+                        <Initializers>
+                            <StaticConstantAccess start='696' end='736'>
+                                <NamespaceName start='696' end='709' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='696' end='709' name='ConstantClass'/>
+                                </NamespaceName>
+                                <Constant>
+                                    <ExpressionArrayAccess start='711' end='736'>
+                                        <ExpressionArrayAccess start='711' end='733'>
+                                            <Identifier start='711' end='726' name='CLASS_CONSTANT4'/>
+                                            <ArrayDimension start='726' end='733'>
+                                                <Index>
+                                                    <Scalar start='727' end='732' type='STRING' value='"foo"'/>
+                                                </Index>
+                                            </ArrayDimension>
+                                        </ExpressionArrayAccess>
+                                        <ArrayDimension start='733' end='736'>
+                                            <Index>
+                                                <Scalar start='734' end='735' type='INT' value='0'/>
+                                            </Index>
+                                        </ArrayDimension>
+                                    </ExpressionArrayAccess>
+                                </Constant>
+                                <Member>
+                                    <ExpressionArrayAccess start='711' end='736'>
+                                        <ExpressionArrayAccess start='711' end='733'>
+                                            <Identifier start='711' end='726' name='CLASS_CONSTANT4'/>
+                                            <ArrayDimension start='726' end='733'>
+                                                <Index>
+                                                    <Scalar start='727' end='732' type='STRING' value='"foo"'/>
+                                                </Index>
+                                            </ArrayDimension>
+                                        </ExpressionArrayAccess>
+                                        <ArrayDimension start='733' end='736'>
+                                            <Index>
+                                                <Scalar start='734' end='735' type='INT' value='0'/>
+                                            </Index>
+                                        </ArrayDimension>
+                                    </ExpressionArrayAccess>
+                                </Member>
+                            </StaticConstantAccess>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <MethodDeclaration start='743' end='877' modifiers='public'>
+                        <FunctionDeclaration start='750' end='877' isReference='false'>
+                            <Identifier start='759' end='763' name='test'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='766' end='877' isCurly='true'>
+                                <ExpressionStatement start='776' end='787'>
+                                    <Assignment start='776' end='786' operator='EQUAL'>
+                                        <Variable start='776' end='782' isDollared='true'>
+                                            <Identifier start='777' end='782' name='index'/>
+                                        </Variable>
+                                        <Scalar start='785' end='786' type='INT' value='0'/>
+                                    </Assignment>
+                                </ExpressionStatement>
+                                <ExpressionStatement start='796' end='832'>
+                                    <StaticConstantAccess start='796' end='831'>
+                                        <NamespaceName start='796' end='800' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='796' end='800' name='self'/>
+                                        </NamespaceName>
+                                        <Constant>
+                                            <ExpressionArrayAccess start='802' end='831'>
+                                                <Identifier start='802' end='817' name='CLASS_CONSTANT1'/>
+                                                <ArrayDimension start='817' end='831'>
+                                                    <Index>
+                                                        <ExpressionArrayAccess start='818' end='830'>
+                                                            <Identifier start='818' end='827' name='CONSTANT1'/>
+                                                            <ArrayDimension start='827' end='830'>
+                                                                <Index>
+                                                                    <Scalar start='828' end='829' type='INT' value='1'/>
+                                                                </Index>
+                                                            </ArrayDimension>
+                                                        </ExpressionArrayAccess>
+                                                    </Index>
+                                                </ArrayDimension>
+                                            </ExpressionArrayAccess>
+                                        </Constant>
+                                        <Member>
+                                            <ExpressionArrayAccess start='802' end='831'>
+                                                <Identifier start='802' end='817' name='CLASS_CONSTANT1'/>
+                                                <ArrayDimension start='817' end='831'>
+                                                    <Index>
+                                                        <ExpressionArrayAccess start='818' end='830'>
+                                                            <Identifier start='818' end='827' name='CONSTANT1'/>
+                                                            <ArrayDimension start='827' end='830'>
+                                                                <Index>
+                                                                    <Scalar start='828' end='829' type='INT' value='1'/>
+                                                                </Index>
+                                                            </ArrayDimension>
+                                                        </ExpressionArrayAccess>
+                                                    </Index>
+                                                </ArrayDimension>
+                                            </ExpressionArrayAccess>
+                                        </Member>
+                                    </StaticConstantAccess>
+                                </ExpressionStatement>
+                                <ExpressionStatement start='841' end='871'>
+                                    <StaticConstantAccess start='841' end='870'>
+                                        <NamespaceName start='841' end='845' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='841' end='845' name='self'/>
+                                        </NamespaceName>
+                                        <Constant>
+                                            <ExpressionArrayAccess start='847' end='870'>
+                                                <Identifier start='847' end='862' name='CLASS_CONSTANT1'/>
+                                                <ArrayDimension start='862' end='870'>
+                                                    <Index>
+                                                        <Variable start='863' end='869' isDollared='true'>
+                                                            <Identifier start='864' end='869' name='index'/>
+                                                        </Variable>
+                                                    </Index>
+                                                </ArrayDimension>
+                                            </ExpressionArrayAccess>
+                                        </Constant>
+                                        <Member>
+                                            <ExpressionArrayAccess start='847' end='870'>
+                                                <Identifier start='847' end='862' name='CLASS_CONSTANT1'/>
+                                                <ArrayDimension start='862' end='870'>
+                                                    <Index>
+                                                        <Variable start='863' end='869' isDollared='true'>
+                                                            <Identifier start='864' end='869' name='index'/>
+                                                        </Variable>
+                                                    </Index>
+                                                </ArrayDimension>
+                                            </ExpressionArrayAccess>
+                                        </Member>
+                                    </StaticConstantAccess>
+                                </ExpressionStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <ExpressionStatement start='881' end='915'>
+                <StaticConstantAccess start='881' end='914'>
+                    <NamespaceName start='881' end='894' isCurrent='false' isGlobal='false'>
+                        <Identifier start='881' end='894' name='ConstantClass'/>
+                    </NamespaceName>
+                    <Constant>
+                        <ExpressionArrayAccess start='896' end='914'>
+                            <Identifier start='896' end='911' name='CLASS_CONSTANT1'/>
+                            <ArrayDimension start='911' end='914'>
+                                <Index>
+                                    <Scalar start='912' end='913' type='INT' value='0'/>
+                                </Index>
+                            </ArrayDimension>
+                        </ExpressionArrayAccess>
+                    </Constant>
+                    <Member>
+                        <ExpressionArrayAccess start='896' end='914'>
+                            <Identifier start='896' end='911' name='CLASS_CONSTANT1'/>
+                            <ArrayDimension start='911' end='914'>
+                                <Index>
+                                    <Scalar start='912' end='913' type='INT' value='0'/>
+                                </Index>
+                            </ArrayDimension>
+                        </ExpressionArrayAccess>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='916' end='955'>
+                <StaticConstantAccess start='916' end='954'>
+                    <NamespaceName start='916' end='929' isCurrent='false' isGlobal='false'>
+                        <Identifier start='916' end='929' name='ConstantClass'/>
+                    </NamespaceName>
+                    <Constant>
+                        <ExpressionArrayAccess start='931' end='954'>
+                            <Identifier start='931' end='946' name='CLASS_CONSTANT1'/>
+                            <ArrayDimension start='946' end='954'>
+                                <Index>
+                                    <Variable start='947' end='953' isDollared='true'>
+                                        <Identifier start='948' end='953' name='index'/>
+                                    </Variable>
+                                </Index>
+                            </ArrayDimension>
+                        </ExpressionArrayAccess>
+                    </Constant>
+                    <Member>
+                        <ExpressionArrayAccess start='931' end='954'>
+                            <Identifier start='931' end='946' name='CLASS_CONSTANT1'/>
+                            <ArrayDimension start='946' end='954'>
+                                <Index>
+                                    <Variable start='947' end='953' isDollared='true'>
+                                        <Identifier start='948' end='953' name='index'/>
+                                    </Variable>
+                                </Index>
+                            </ArrayDimension>
+                        </ExpressionArrayAccess>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+            <EchoStatement start='956' end='992'>
+                <StaticConstantAccess start='961' end='991'>
+                    <NamespaceName start='961' end='974' isCurrent='false' isGlobal='false'>
+                        <Identifier start='961' end='974' name='ConstantClass'/>
+                    </NamespaceName>
+                    <Constant>
+                        <Identifier start='976' end='991' name='CLASS_CONSTANT5'/>
+                    </Constant>
+                    <Member>
+                        <Identifier start='976' end='991' name='CLASS_CONSTANT5'/>
+                    </Member>
+                </StaticConstantAccess>
+            </EchoStatement>
+            <InterfaceDeclaration start='994' end='1194'>
+                <Name>
+                    <Identifier start='1004' end='1021' name='ConstantInterface'/>
+                </Name>
+                <Block start='1022' end='1194' isCurly='true'>
+                    <ClassConstantDeclaration start='1029' end='1068' modifier='public'>
+                        <Names>
+                            <Identifier start='1035' end='1054' name='INTERFACE_CONSTANT1'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='1057' end='1067' type='NEW'>
+                                <ArrayElement start='1058' end='1061'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='1058' end='1061' type='STRING' value='"a"'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='1063' end='1066'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='1063' end='1066' type='STRING' value='"b"'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1073' end='1130' modifier='public'>
+                        <Names>
+                            <Identifier start='1079' end='1098' name='INTERFACE_CONSTANT2'/>
+                        </Names>
+                        <Initializers>
+                            <StaticConstantAccess start='1101' end='1129'>
+                                <NamespaceName start='1101' end='1105' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1101' end='1105' name='self'/>
+                                </NamespaceName>
+                                <Constant>
+                                    <ExpressionArrayAccess start='1107' end='1129'>
+                                        <Identifier start='1107' end='1126' name='INTERFACE_CONSTANT1'/>
+                                        <ArrayDimension start='1126' end='1129'>
+                                            <Index>
+                                                <Scalar start='1127' end='1128' type='INT' value='0'/>
+                                            </Index>
+                                        </ArrayDimension>
+                                    </ExpressionArrayAccess>
+                                </Constant>
+                                <Member>
+                                    <ExpressionArrayAccess start='1107' end='1129'>
+                                        <Identifier start='1107' end='1126' name='INTERFACE_CONSTANT1'/>
+                                        <ArrayDimension start='1126' end='1129'>
+                                            <Index>
+                                                <Scalar start='1127' end='1128' type='INT' value='0'/>
+                                            </Index>
+                                        </ArrayDimension>
+                                    </ExpressionArrayAccess>
+                                </Member>
+                            </StaticConstantAccess>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1135' end='1191' modifier='public'>
+                        <Names>
+                            <Identifier start='1141' end='1160' name='INTERFACE_CONSTANT3'/>
+                        </Names>
+                        <Initializers>
+                            <InfixExpression start='1163' end='1190' operator='PLUS'>
+                                <ExpressionArrayAccess start='1163' end='1175'>
+                                    <Identifier start='1163' end='1172' name='CONSTANT1'/>
+                                    <ArrayDimension start='1172' end='1175'>
+                                        <Index>
+                                            <Scalar start='1173' end='1174' type='INT' value='0'/>
+                                        </Index>
+                                    </ArrayDimension>
+                                </ExpressionArrayAccess>
+                                <ExpressionArrayAccess start='1178' end='1190'>
+                                    <Identifier start='1178' end='1187' name='CONSTANT1'/>
+                                    <ArrayDimension start='1187' end='1190'>
+                                        <Index>
+                                            <Scalar start='1188' end='1189' type='INT' value='1'/>
+                                        </Index>
+                                    </ArrayDimension>
+                                </ExpressionArrayAccess>
+                            </InfixExpression>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                </Block>
+            </InterfaceDeclaration>
+        </Statements>
+    </Program>
+</testresult>

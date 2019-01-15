@@ -1,0 +1,13 @@
+let obj = {
+    foo: "baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaar",
+    [ "baz" + q() ]: "ss"
+}
+
+obj2 = {
+    foo: "bar", [ "baz" + test() ]: "ssssssssssssssssssssssssssssssssssssssssssssss"
+}
+
+let obj = {
+    ok: "ok",
+    ["baz" + yes() ]: 42
+}

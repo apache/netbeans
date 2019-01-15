@@ -1,0 +1,29 @@
+<script type="text/javascript">
+    var defaultWidth = 537;
+    var defaultHeight = 420;
+    var largerWidth = 537;
+    var largerHeight = 465;
+</script>
+<div id="pozadi_karty" class="pozadi_karty">
+    {if $closeCard}
+        <script type="text/javascript">
+            self.opener = this;
+            self.close();
+        </script>
+    {elseif $u gt 0 || $sho^wingCard}
+        {if $userSmazan}
+            <script type="text/javascript">
+                window.resizeTo(defaultWidth, defaultHeight);
+            </script>
+            <div id="table_position">
+                <table border="0">
+                    <tr class="vyskaRadku">
+                        <td class="text">
+                            Tato karta byla nenávratně smazána!
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        {/if}
+    {/if}
+</div>

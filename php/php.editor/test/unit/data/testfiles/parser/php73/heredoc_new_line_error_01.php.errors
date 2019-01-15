@@ -1,0 +1,16 @@
+[[865,868]-Syntax error
+ unexpected:	identifier 'ING'
+ after:	END_HEREDOC
+ expected:	instanceof, as, =>, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ], ), :, ??] 865-868:Syntax error
+ unexpected:	identifier 'ING'
+ after:	END_HEREDOC
+ expected:	instanceof, as, =>, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ], ), :, ??
+[[869,872]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	identifier 'END'] 869-872:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	identifier 'END'
+[[872,873]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	','] 872-873:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	','
+[[879,880]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	]] 879-880:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	]

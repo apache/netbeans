@@ -1,0 +1,2 @@
+Core.ItemsCache = function(|>MARK_OCCURRENCES:par1<|) {
+    this.par1 = |>MARK_OCCURRENCES:pa^r1<|; // this one is not in navigator

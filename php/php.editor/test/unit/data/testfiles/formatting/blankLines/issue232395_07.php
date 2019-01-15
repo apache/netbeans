@@ -1,0 +1,12 @@
+<?php
+
+use F;
+
+class ClassName {
+
+    function __construct() {
+
+    }
+
+}
+?>

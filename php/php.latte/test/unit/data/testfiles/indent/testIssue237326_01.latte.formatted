@@ -1,0 +1,7 @@
+<a href="#">
+    {if $create}
+        {_"Create category"}
+    {else}
+        {_"Edit category"}
+    {/if}
+</a>

@@ -1,0 +1,9 @@
+var |>METHOD:watch<| = function(scope, attr, name, defaultVal) {
+    if (attr) {
+        scope.$watch(attr,function(val, |>UNUSED:oldVal<|, scope){
+            scope[name] = val;
+        });
+    } else {
+        scope[name] = defaultVal;
+    }
+};

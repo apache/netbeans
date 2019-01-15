@@ -1,0 +1,5 @@
+    int |>MARK_OCCURRENCES:field1<| = 1;
+	|>MARK_OCCURRENCES:field1<| = inputval
+        |>MARK_OCCURRENCES:field1<| = 2
+        this.|>MARK_OCCURRENCES:fi^eld1<| = 77
+hello.|>MARK_OCCURRENCES:field1<| = 9

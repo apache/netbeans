@@ -1,0 +1,5 @@
+<html>
+{*last*}
+text
+{*/^last*}
+</html>

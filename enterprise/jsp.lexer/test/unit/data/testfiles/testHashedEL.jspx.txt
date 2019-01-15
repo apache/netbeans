@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="1.2"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:af="http://xmlns.oracle.com/adf/faces" >
+    <jsp:directive.page isELIgnored ="true"/>
+    <f:view>
+        <af:document title="Survey Demo">
+            <af:form>
+
+                <af:panelPage title="Question 2 of 5">
+
+
+                    <af:panelForm>
+                        <af:inputText label="#{survey.q1.prompt}"
+                                      required="true"
+                                      value="#{survey.a1}"/>
+                    </af:panelForm>
+
+                    <f:facet name="actions">
+                        ${test.tst}
+                        <af:singleStepButtonBar selectedStep="2" maxStep="5"
+                                                nextAction="#{survey.next}"
+                                                previousAction="#{survey.back}"
+                                                />
+                    </f:facet>
+                </af:panelPage>
+            </af:form>
+        </af:document>
+    </f:view>
+</jsp:root>

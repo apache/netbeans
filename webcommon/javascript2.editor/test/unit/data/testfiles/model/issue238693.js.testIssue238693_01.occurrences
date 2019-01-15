@@ -1,0 +1,3 @@
+    this.|>MARK_OCCURRENCES:logger<| = new HudsonReader.utils.Logger();
+    this.|>MARK_OCCURRENCES:lo^gger<|.printLevel = 1; // here is this purple as variable
+    this.indexedDb = new HudsonReader.utils.DB(databaseListener, this.|>MARK_OCCURRENCES:logger<|);

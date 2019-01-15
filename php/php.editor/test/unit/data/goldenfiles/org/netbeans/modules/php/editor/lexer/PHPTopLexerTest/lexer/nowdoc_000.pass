@@ -1,0 +1,3 @@
+token #0 T_HTML --TEST--\nnon finished now doc\n--FILE--\n
+token #1 T_PHP_OPEN_DELIMITER <?php
+token #2 T_PHP \n\nrequire_once 'nowdoc.inc';\n\nprint <<<'ENDOFNOWDOC'\nThis is a nowdoc test.\nThis is text is not fully finished\n

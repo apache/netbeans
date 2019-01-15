@@ -1,0 +1,261 @@
+<testresult testFile='testVariadicFunctions_02.php'>
+    <scanner>
+        <token id='T_FUNCTION' start='6' end='14'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='15' end='16'>
+            <text>f</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='16' end='17'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='17' end='21'>
+            <text>$req</text>
+        </token>
+        <token id='T_COMMA' start='21' end='22'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='23' end='27'>
+            <text>$opt</text>
+        </token>
+        <token id='T_EQUAL' start='28' end='29'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='30' end='34'>
+            <text>null</text>
+        </token>
+        <token id='T_COMMA' start='34' end='35'>
+            <text>,</text>
+        </token>
+        <token id='T_REFERENCE' start='36' end='37'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_ELLIPSIS' start='37' end='40'>
+            <text>...</text>
+        </token>
+        <token id='T_VARIABLE' start='40' end='47'>
+            <text>$params</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='47' end='48'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='49' end='50'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='114' end='115'>
+            <text>}</text>
+        </token>
+        <token id='T_STRING' start='117' end='118'>
+            <text>f</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='118' end='119'>
+            <text>(</text>
+        </token>
+        <token id='T_LNUMBER' start='119' end='120'>
+            <text>1</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='120' end='121'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='121' end='122'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='123' end='124'>
+            <text>f</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='124' end='125'>
+            <text>(</text>
+        </token>
+        <token id='T_LNUMBER' start='125' end='126'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='126' end='127'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='128' end='129'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='129' end='130'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='130' end='131'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='132' end='133'>
+            <text>f</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='133' end='134'>
+            <text>(</text>
+        </token>
+        <token id='T_LNUMBER' start='134' end='135'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='135' end='136'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='137' end='138'>
+            <text>2</text>
+        </token>
+        <token id='T_COMMA' start='138' end='139'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='140' end='141'>
+            <text>3</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='141' end='142'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='142' end='143'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='144' end='145'>
+            <text>f</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='145' end='146'>
+            <text>(</text>
+        </token>
+        <token id='T_LNUMBER' start='146' end='147'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='147' end='148'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='149' end='150'>
+            <text>2</text>
+        </token>
+        <token id='T_COMMA' start='150' end='151'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='152' end='153'>
+            <text>3</text>
+        </token>
+        <token id='T_COMMA' start='153' end='154'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='155' end='156'>
+            <text>4</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='156' end='157'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='157' end='158'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='159' end='162'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='162' end='162'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='161'>
+        <Comments>
+            <Comment start='55' end='114' commentType='singleLine'/>
+            <Comment start='55' end='114' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <FunctionDeclaration start='6' end='115' isReference='false'>
+                <Identifier start='15' end='16' name='f'/>
+                <FormalParameters>
+                    <FormalParameter start='17' end='21' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='17' end='21' isDollared='true'>
+                                <Identifier start='18' end='21' name='req'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <FormalParameter start='23' end='34' isMandatory='false' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='23' end='27' isDollared='true'>
+                                <Identifier start='24' end='27' name='opt'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                            <NamespaceName start='30' end='34' isCurrent='false' isGlobal='false'>
+                                <Identifier start='30' end='34' name='null'/>
+                            </NamespaceName>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <FormalParameter start='36' end='47' isMandatory='false' isVariadic='true'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Reference start='36' end='47'>
+                                <Variadic start='37' end='47'>
+                                    <Variable start='40' end='47' isDollared='true'>
+                                        <Identifier start='41' end='47' name='params'/>
+                                    </Variable>
+                                </Variadic>
+                            </Reference>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                </FormalParameters>
+                <Block start='49' end='115' isCurly='true'>
+                </Block>
+            </FunctionDeclaration>
+            <ExpressionStatement start='117' end='122'>
+                <FunctionInvocation start='117' end='121'>
+                    <FucntionName start='117' end='118'>
+                        <NamespaceName start='117' end='118' isCurrent='false' isGlobal='false'>
+                            <Identifier start='117' end='118' name='f'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='119' end='120' type='INT' value='1'/>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='123' end='131'>
+                <FunctionInvocation start='123' end='130'>
+                    <FucntionName start='123' end='124'>
+                        <NamespaceName start='123' end='124' isCurrent='false' isGlobal='false'>
+                            <Identifier start='123' end='124' name='f'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='125' end='126' type='INT' value='1'/>
+                        <Scalar start='128' end='129' type='INT' value='2'/>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='132' end='143'>
+                <FunctionInvocation start='132' end='142'>
+                    <FucntionName start='132' end='133'>
+                        <NamespaceName start='132' end='133' isCurrent='false' isGlobal='false'>
+                            <Identifier start='132' end='133' name='f'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='134' end='135' type='INT' value='1'/>
+                        <Scalar start='137' end='138' type='INT' value='2'/>
+                        <Scalar start='140' end='141' type='INT' value='3'/>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='144' end='158'>
+                <FunctionInvocation start='144' end='157'>
+                    <FucntionName start='144' end='145'>
+                        <NamespaceName start='144' end='145' isCurrent='false' isGlobal='false'>
+                            <Identifier start='144' end='145' name='f'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='146' end='147' type='INT' value='1'/>
+                        <Scalar start='149' end='150' type='INT' value='2'/>
+                        <Scalar start='152' end='153' type='INT' value='3'/>
+                        <Scalar start='155' end='156' type='INT' value='4'/>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <EmptyStatement start='159' end='161'/>
+        </Statements>
+    </Program>
+</testresult>

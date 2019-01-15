@@ -1,0 +1,4 @@
+var |>MARK_OCCURRENCES:A<| = {}
+|>MARK_OCCURRENCES:A<|.f1 = function f1 (cont) {
+|>MARK_OCCURRENCES:A<|.f1(true);
+var b = |>MARK_OCCURRENCES:A^<|;

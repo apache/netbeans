@@ -1,0 +1,5 @@
+Code completion result for source line:
+foo.|bar();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     bar(name): undefined            [PUBLIC]   issue242408.js

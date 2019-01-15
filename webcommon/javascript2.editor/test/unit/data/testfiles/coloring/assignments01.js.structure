@@ -1,0 +1,9 @@
+prom:VARIABLE:[PUBLIC]:ESCAPED{prom}<font color="#999999">ESCAPED{ : }String</font>:
+Address2:CLASS:[PUBLIC]:ESCAPED{Address2}:
+  city:FIELD:[PUBLIC]:ESCAPED{city}<font color="#999999">ESCAPED{ : }String</font>:
+  street:FIELD:[PUBLIC]:ESCAPED{street}<font color="#999999">ESCAPED{ : }String</font>:
+  toString:METHOD:[PUBLIC]:ESCAPED{toString}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  zip:FIELD:[PUBLIC]:ESCAPED{zip}<font color="#999999">ESCAPED{ : }String</font>:
+test:VARIABLE:[PUBLIC]:ESCAPED{test}<font color="#999999">ESCAPED{ : }Address2ESCAPED{|}String</font>:
+test2:VARIABLE:[PUBLIC]:ESCAPED{test2}<font color="#999999">ESCAPED{ : }NumberESCAPED{|}String</font>:
+change:METHOD:[PUBLIC]:ESCAPED{change}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }NumberESCAPED{|}String</font>:

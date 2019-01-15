@@ -1,0 +1,2 @@
+        return $two->|>MARK_OCCURRENCES:get^Two<|();
+(new Two)->|>MARK_OCCURRENCES:getTwo<|();

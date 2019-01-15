@@ -1,0 +1,5 @@
+    var |>MARK_OCCURRENCES:container<| = {};
+    |>MARK_OCCURRENCES:container<|.name = n;
+    |>MARK_OCCURRENCES:container<|.course = 1;
+        a.url = |>MARK_OCCURRENCES:cont^ainer<|.name;
+    return |>MARK_OCCURRENCES:container<|;

@@ -1,0 +1,10 @@
+<?php
+
+class Test1 {
+
+    private function testMethod1()
+    {
+        
+    }
+
+}

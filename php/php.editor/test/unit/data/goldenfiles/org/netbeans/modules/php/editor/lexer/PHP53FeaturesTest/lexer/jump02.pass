@@ -1,0 +1,50 @@
+token #0 T_INLINE_HTML --TEST--\njump 02: goto forward\n--FILE--\n
+token #1 PHP_OPENTAG <?php
+token #2 WHITESPACE \n
+token #3 PHP_VARIABLE $n
+token #4 WHITESPACE  
+token #5 PHP_OPERATOR =
+token #6 WHITESPACE  
+token #7 PHP_NUMBER 1
+token #8 PHP_SEMICOLON ;
+token #9 WHITESPACE \n
+token #10 PHP_STRING L1
+token #11 PHP_TOKEN :
+token #12 WHITESPACE \n
+token #13 PHP_IF if
+token #14 WHITESPACE  
+token #15 PHP_TOKEN (
+token #16 PHP_VARIABLE $n
+token #17 WHITESPACE  
+token #18 PHP_OPERATOR >
+token #19 WHITESPACE  
+token #20 PHP_NUMBER 3
+token #21 PHP_TOKEN )
+token #22 WHITESPACE  
+token #23 PHP_GOTO goto
+token #24 WHITESPACE  
+token #25 PHP_STRING L2
+token #26 PHP_SEMICOLON ;
+token #27 WHITESPACE \n
+token #28 PHP_ECHO echo
+token #29 WHITESPACE  
+token #30 PHP_CONSTANT_ENCAPSED_STRING "
+token #31 PHP_VARIABLE $n
+token #32 PHP_ENCAPSED_AND_WHITESPACE : ok\n
+token #33 PHP_CONSTANT_ENCAPSED_STRING "
+token #34 PHP_SEMICOLON ;
+token #35 WHITESPACE \n
+token #36 PHP_VARIABLE $n
+token #37 PHP_OPERATOR ++
+token #38 PHP_SEMICOLON ;
+token #39 WHITESPACE \n
+token #40 PHP_GOTO goto
+token #41 WHITESPACE  
+token #42 PHP_STRING L1
+token #43 PHP_SEMICOLON ;
+token #44 WHITESPACE \n
+token #45 PHP_STRING L2
+token #46 PHP_TOKEN :
+token #47 WHITESPACE \n
+token #48 PHP_CLOSETAG ?>
+token #49 T_INLINE_HTML \n--EXPECT--\n1: ok\n2: ok\n3: ok\n

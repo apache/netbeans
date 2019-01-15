@@ -1,0 +1,2 @@
+    var |>MARK_OCCURRENCES:mon_yr<| = getInputValue(document.form1.mon_yr), period = getInputValue(document.form1.period);
+        mon_yr: |>MARK_OCCURRENCES:mo^n_yr<|,

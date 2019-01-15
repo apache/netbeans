@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-AutoUpdate-Essential-Module: true
-OpenIDE-Module: org.netbeans.api.progress.compat8
-OpenIDE-Module-Localizing-Bundle: api/progress/compat8/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.48
-OpenIDE-Module-Fragment-Host: org.netbeans.api.progress
-

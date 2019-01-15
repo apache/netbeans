@@ -1,0 +1,11 @@
+Code completion result for source line:
+Singleton2.get|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     getAt(String)                              Object
+METHOD     getClass()                      [PUBLIC]   Class<?>
+METHOD     getInstance()                   [STATIC]   Singleton2
+METHOD     getMetaClass()                             MetaClass
+METHOD     getMetaPropertyValues()                    List
+METHOD     getProperties()                            Map
+METHOD     getProperty(String)             [PUBLIC]   Object

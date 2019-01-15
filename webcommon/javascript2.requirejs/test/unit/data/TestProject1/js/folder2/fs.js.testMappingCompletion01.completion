@@ -1,0 +1,5 @@
+Code completion result for source line:
+'lib/a|',
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FILE       lib/api                                    

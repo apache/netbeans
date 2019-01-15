@@ -1,0 +1,5 @@
+Code completion result for source line:
+A135618::|AAA;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   AAA "aaa"                       [PUBLIC]   A135618
+CONSTANT   class \A135618                  [PUBLIC]   Magic Constant

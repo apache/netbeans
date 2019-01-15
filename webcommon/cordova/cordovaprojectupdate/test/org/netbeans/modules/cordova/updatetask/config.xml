@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<widget xmlns     = "http://www.w3.org/ns/widgets"
+        xmlns:gap = "http://phonegap.com/ns/1.0"
+        id        = "$id"
+        version   = "2.0.0">
+    <name>$name</name>
+
+    <description>
+        $description
+    </description>
+
+    <author href="$author_href" email="$author_email">
+        $author
+    </author>
+
+    <icon src="res/icon/android/icon-96-xhdpi.png" width="96"  height="96"  gap:platform="android" />
+    <icon src="res/icon/ios/icon-72-2x.png"    width="144" height="144" gap:platform="ios" />
+
+    <gap:splash src="res/screen/android/screen_hdpi_landscape.png"      width="800"  height="480"  gap:platform="android" />
+    <gap:splash src="res/screen/android/screen_hdpi_portrait.png"       width="480"  height="800"  gap:platform="android" />
+    <gap:splash src="res/screen/android/screen_ldpi_landscape.png"      width="320"  height="200"  gap:platform="android" />
+    <gap:splash src="res/screen/android/screen_ldpi_portrait.png"       width="200"  height="320"  gap:platform="android" />
+    <gap:splash src="res/screen/android/screen_mdpi_landscape.png"      width="480"  height="320"  gap:platform="android" />
+    <gap:splash src="res/screen/android/screen_mdpi_portrait.png"       width="320"  height="480"  gap:platform="android" />
+    <gap:splash src="res/screen/android/screen_xhdpi_landscape.png"     width="1280" height="720"  gap:platform="android" />
+    <gap:splash src="res/screen/android/screen_xhdpi_portrait.png"      width="720"  height="1280" gap:platform="android" />
+    <gap:splash src="res/screen/ios/screen-ipad-landscape.png"              width="1024" height="748"  gap:platform="ios" />
+    <gap:splash src="res/screen/ios/screen-ipad-portrait.png"               width="768"  height="1004" gap:platform="ios" />
+    <gap:splash src="res/screen/ios/screen-ipad-landscape.png"       width="2048" height="1496" gap:platform="ios" />
+    <gap:splash src="res/screen/ios/screen-ipad-portrait-2x.png"        width="1536" height="2008" gap:platform="ios" />
+    <gap:splash src="res/screen/ios/screen-iphone-landscape.png"            width="480"  height="320"  gap:platform="ios" />
+    <gap:splash src="res/screen/ios/screen-iphone-portrait.png"             width="320"  height="480"  gap:platform="ios" />
+    <gap:splash src="res/screen/ios/screen-iphone-landscape-2x.png"     width="960"  height="640"  gap:platform="ios" />
+    <gap:splash src="res/screen/ios/screen-iphone-portrait-2x.png"      width="640"  height="960"  gap:platform="ios" />
+
+    <feature name="http://api.phonegap.com/1.0/device" />
+
+    <preference name="phonegap-version" value="2.4.0" />
+    <preference name="orientation"      value="default" />
+    <preference name="target-device"    value="universal" />
+    <preference name="fullscreen"       value="false" />
+
+    <access origin="*" />
+</widget>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<bindings
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    wsdlLocation="AddNumbers2.wsdl"
+    xmlns="http://java.sun.com/xml/ns/jaxws">
+    <package name="external_customize.client"/>
+    <!-- default settings -->
+    <enableWrapperStyle>true</enableWrapperStyle>
+    <enableAsyncMapping>false</enableAsyncMapping>
+
+    <!-- wsdl:portType customization -->
+    <bindings node="wsdl:definitions/wsdl:portType[@name='AddNumbersImpl']">
+        <!-- change the generated SEI class -->
+        <class name="MathUtil"/>
+        
+        <!-- you can also override the following customization settings -->
+        <enableWrapperStyle>true</enableWrapperStyle>
+        <enableAsyncMapping>false</enableAsyncMapping>
+    </bindings>
+    
+    <!-- wsdl:portType operation customization -->    
+    <bindings node="wsdl:definitions/wsdl:portType[@name='AddNumbersImpl']/wsdl:operation[@name='addNumbers']">
+        <!-- change java method name from addNumbers() to add() -->
+        <method name="add"/>   
+                
+        <!-- rename method parameters-->           
+        <parameter part="wsdl:definitions/wsdl:message[@name='addNumbers']/wsdl:part[@name='parameters']" childElementName="tns:number1" name="num1"/>
+        <parameter part="wsdl:definitions/wsdl:message[@name='addNumbers']/wsdl:part[@name='parameters']" childElementName="tns:number2" name="num2"/>      
+         
+         <!-- you can also override the following customization settings -->
+        <enableWrapperStyle>true</enableWrapperStyle>
+        <enableAsyncMapping>false</enableAsyncMapping>
+    </bindings> 
+    
+    <!-- change the generated exception class name -->
+    <bindings node="wsdl:definitions/wsdl:portType[@name='AddNumbersImpl']/wsdl:operation[@name='addNumbers']/wsdl:fault[@name='AddNumbersException']">
+        <class name="MathUtilException"/>
+    </bindings>
+    
+    <!-- wsdl:service customization -->
+    <bindings node="wsdl:definitions/wsdl:service[@name='AddNumbersService']">
+        <!-- change the generated service class -->
+        <class name="MathUtilService"/>
+    </bindings>
+    
+    <!-- change the port accessor method -->
+    <bindings node="wsdl:definitions/wsdl:service[@name='AddNumbersService']/wsdl:port[@name='AddNumbersImplPort']">
+        <method name="getMathUtil"/>
+    </bindings>    
+    
+</bindings>

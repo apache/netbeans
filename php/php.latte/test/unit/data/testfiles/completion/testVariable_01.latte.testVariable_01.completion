@@ -1,0 +1,11 @@
+Code completion result for source line:
+{$|}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   $basePath                                  Default Variable
+VARIABLE   $baseUri                                   Default Variable
+VARIABLE   $control                                   Default Variable
+VARIABLE   $flashes                                   Default Variable
+VARIABLE   $netteCacheStorage                         Default Variable
+VARIABLE   $netteHttpResponse                         Default Variable
+VARIABLE   $presenter                                 Default Variable
+VARIABLE   $user                                      Default Variable

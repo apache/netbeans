@@ -1,0 +1,76 @@
+Code completion result for source line:
+{|}{$bar}{}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     !                                          Macro
+METHOD     !_                                         Macro
+METHOD     #                                          Macro
+METHOD     /_                                         End Macro
+METHOD     /block                                     End Macro
+METHOD     /cache                                     End Macro
+METHOD     /capture                                   End Macro
+METHOD     /define                                    End Macro
+METHOD     /first                                     End Macro
+METHOD     /for                                       End Macro
+METHOD     /foreach                                   End Macro
+METHOD     /form                                      End Macro
+METHOD     /if                                        End Macro
+METHOD     /ifCurrent                                 End Macro
+METHOD     /ifset                                     End Macro
+METHOD     /label                                     End Macro
+METHOD     /last                                      End Macro
+METHOD     /sep                                       End Macro
+METHOD     /snippet                                   End Macro
+METHOD     /syntax                                    End Macro
+METHOD     /while                                     End Macro
+METHOD     =                                          Macro
+METHOD     _                                          Macro
+METHOD     assign                                     Macro
+METHOD     block #name                                Macro
+METHOD     breakIf true                               Macro
+METHOD     cache $key                                 Macro
+METHOD     capture $var                               Macro
+METHOD     contentType $type                          Macro
+METHOD     continueIf true                            Macro
+METHOD     control name                               Macro
+METHOD     debugbreak $cond                           Macro
+METHOD     default $name = $value                     Macro
+METHOD     define #name                               Macro
+METHOD     dump $var                                  Macro
+METHOD     else                                       Macro
+METHOD     elseif true                                Macro
+METHOD     elseifset $var                             Macro
+METHOD     extends 'file.latte'                       Macro
+METHOD     first                                      Macro
+METHOD     for init; cond; exec                       Macro
+METHOD     foreach $array as $item                    Macro
+METHOD     form $name                                 Macro
+METHOD     if true                                    Macro
+METHOD     ifCurrent Presenter:action                 Macro
+METHOD     ifset #block                               Macro
+METHOD     ifset $var                                 Macro
+METHOD     include #block                             Macro
+METHOD     include 'file.latte'                       Macro
+METHOD     includeblock 'file.latte'                  Macro
+METHOD     input $name                                Macro
+METHOD     l                                          Macro
+METHOD     label $name                                Macro
+METHOD     last                                       Macro
+METHOD     layout 'file.latte'                        Macro
+METHOD     link Presenter:action                      Macro
+METHOD     plink Presenter:action                     Macro
+METHOD     r                                          Macro
+METHOD     sep                                        Macro
+METHOD     snippet $name                              Macro
+METHOD     status $code                               Macro
+METHOD     syntax mode                                Macro
+METHOD     use Class                                  Macro
+METHOD     var $name = $value                         Macro
+METHOD     while true                                 Macro
+VARIABLE   $basePath                                  Default Variable
+VARIABLE   $baseUri                                   Default Variable
+VARIABLE   $control                                   Default Variable
+VARIABLE   $flashes                                   Default Variable
+VARIABLE   $netteCacheStorage                         Default Variable
+VARIABLE   $netteHttpResponse                         Default Variable
+VARIABLE   $presenter                                 Default Variable
+VARIABLE   $user                                      Default Variable

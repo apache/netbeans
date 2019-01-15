@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jax-ws xmlns="http://www.netbeans.org/ns/jax-ws/1">
+  <services>
+    <service name="ReturnValueService">
+      <implementation-class>hints.ReturnValue</implementation-class>
+    </service>
+    <service name="IOParametrsService">
+      <implementation-class>hints.IOParametrs</implementation-class>
+    </service>
+    <service name="AddOperationService">
+      <implementation-class>hints.AddOperation</implementation-class>
+    </service>
+    <service name="HandlersService">
+      <implementation-class>hints.Handlers</implementation-class>
+    </service>
+    <service name="ExceptionsService">
+      <implementation-class>hints.Exceptions</implementation-class>
+    </service>
+  </services>
+  <clients/>
+</jax-ws>

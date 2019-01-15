@@ -1,0 +1,34 @@
+Code completion result for source line:
+Mixin::|protectedStaticMethodC1(); // CC
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     protectedStaticMethodC1()       [PROTECTE  C1
+METHOD     protectedStaticMethodC2()       [PROTECTE  C2
+METHOD     protectedStaticMethodC3()       [PROTECTE  C3
+METHOD     protectedStaticMethodC4()       [PROTECTE  C4
+METHOD     protectedStaticMethodC5()       [PROTECTE  C5
+METHOD     publicStaticMethodC1()          [STATIC]   C1
+METHOD     publicStaticMethodC2()          [STATIC]   C2
+METHOD     publicStaticMethodC3()          [STATIC]   C3
+METHOD     publicStaticMethodC4()          [STATIC]   C4
+METHOD     publicStaticMethodC5()          [STATIC]   C5
+VARIABLE   ? $protectedStaticFieldC1       [PROTECTE  C1
+VARIABLE   ? $protectedStaticFieldC2       [PROTECTE  C2
+VARIABLE   ? $protectedStaticFieldC3       [PROTECTE  C3
+VARIABLE   ? $protectedStaticFieldC4       [PROTECTE  C4
+VARIABLE   ? $protectedStaticFieldC5       [PROTECTE  C5
+VARIABLE   ? $publicStaticFieldC1          [STATIC]   C1
+VARIABLE   ? $publicStaticFieldC2          [STATIC]   C2
+VARIABLE   ? $publicStaticFieldC3          [STATIC]   C3
+VARIABLE   ? $publicStaticFieldC4          [STATIC]   C4
+VARIABLE   ? $publicStaticFieldC5          [STATIC]   C5
+CONSTANT   PROTECTED_CONST_C1 "PROTECTED_  [PROTECTE  C1
+CONSTANT   PROTECTED_CONST_C2 "PROTECTED_  [PROTECTE  C2
+CONSTANT   PROTECTED_CONST_C3 "PROTECTED_  [PROTECTE  C3
+CONSTANT   PROTECTED_CONST_C4 "PROTECTED_  [PROTECTE  C4
+CONSTANT   PROTECTED_CONST_C5 "PROTECTED_  [PROTECTE  C5
+CONSTANT   PUBLIC_CONST_C1 "PUBLIC_CONST_  [PUBLIC]   C1
+CONSTANT   PUBLIC_CONST_C2 "PUBLIC_CONST_  [PUBLIC]   C2
+CONSTANT   PUBLIC_CONST_C3 "PUBLIC_CONST_  [PUBLIC]   C3
+CONSTANT   PUBLIC_CONST_C4 "PUBLIC_CONST_  [PUBLIC]   C4
+CONSTANT   PUBLIC_CONST_C5 "PUBLIC_CONST_  [PUBLIC]   C5
+CONSTANT   class \Mixin                    [PUBLIC]   Magic Constant

@@ -1,0 +1,7 @@
+function |>METHOD:outer<|() {
+    |>GLOBAL:foo22<| = "fasfdas";
+    function |>METHOD,UNUSED:test<|(foo, bar) {
+        |>GLOBAL:foobar<| = (typeof |>GLOBAL:foo22<| == "undefined") ? bar : foo;
+    }
+}
+

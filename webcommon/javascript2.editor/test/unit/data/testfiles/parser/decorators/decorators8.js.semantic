@@ -1,0 +1,7 @@
+@annotation 
+class |>CLASS,GLOBAL:MyClass<| { }
+
+function |>METHOD:annotation<|(target) {
+   // Add a property on target
+   target.|>FIELD:annotated<| = true;
+}

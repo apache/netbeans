@@ -1,0 +1,2 @@
+function Man (|>MARK_OCCURRENCES:firstName<|) {
+    var firstName = |>MARK_OCCURRENCES:firs^tName<|; 

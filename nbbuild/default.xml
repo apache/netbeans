@@ -121,7 +121,7 @@
 
   <target name="init" depends="init-tasks,-define-cluster-path">
     <!-- Gets the module name -->
-    <getmodulename name="module.name" root="${nb_all}"/>
+    <getmodulename name="module.name" id="module.id" root="${nb_all}"/>
     
     <property name="cluster.dir.fallback" value="extra" />
     <setcluster name="cluster.dir" module="${module.name}" defaultLocation="${cluster.dir.fallback}" clusterName="module.cluster.name"/>
@@ -134,8 +134,10 @@
     <!-- Writing the module's cluster to property file -->
     <propertyfile file="${moduleCluster.file}">
       <entry  key="${module.name}.dir" value="$${netbeans.dest.dir}/${cluster.dir}"/>
+      <entry  key="${module.id}.dir" value="$${netbeans.dest.dir}/${cluster.dir}"/>
     </propertyfile>
     <property name="${module.name}.dir" value="${netbeans.dest.dir}/${cluster.dir}"/>
+    <property name="${module.id}.dir" value="${netbeans.dest.dir}/${cluster.dir}"/>
   </target>
 
   <target name="-define-cluster-path">

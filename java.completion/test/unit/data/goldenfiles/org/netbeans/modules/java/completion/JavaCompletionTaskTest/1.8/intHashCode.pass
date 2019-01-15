@@ -1,2 +1,0 @@
-public native int hashCode()
-public static int Integer.hashCode(int arg0)

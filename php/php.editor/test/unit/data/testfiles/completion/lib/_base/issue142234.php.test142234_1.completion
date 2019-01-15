@@ -1,0 +1,5 @@
+Code completion result for source line:
+parent::|__construct();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     __construct()                   [PUBLIC]   Basic142234
+CONSTANT   class \Basic142234              [PUBLIC]   Magic Constant

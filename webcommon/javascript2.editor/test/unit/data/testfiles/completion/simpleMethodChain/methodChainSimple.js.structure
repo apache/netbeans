@@ -1,0 +1,7 @@
+MyObj:CLASS:[PUBLIC]:ESCAPED{MyObj}:
+  create:METHOD:[PUBLIC]:ESCAPED{create}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }MyObj</font>:
+  factory:METHOD:[PUBLIC]:ESCAPED{factory}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }MyObj</font>:
+  getInfo:METHOD:[PUBLIC]:ESCAPED{getInfo}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }String</font>:
+  getVersion:METHOD:[PUBLIC]:ESCAPED{getVersion}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }NumberESCAPED{|}version</font>:
+  version:FIELD:[PUBLIC]:ESCAPED{version}<font color="#999999">ESCAPED{ : }Number</font>:
+martion:METHOD:[PUBLIC]:ESCAPED{martion}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }NumberESCAPED{|}version</font>:

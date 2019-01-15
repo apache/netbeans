@@ -1,0 +1,40 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+D6330851B59C33A3A8D98C86FF438F23DD3B4267 ant-misc-1.10.4.zip
+A164A1EF47F15ECDF4F986B23694D000237429EF org.apache.ant:ant:1.10.4
+550AAA1B4671A51B89A5C3DB32B5B42E8EE616FF org.apache.ant:ant-antlr:1.10.4
+1E95DA3613FC33F984A6664FD172310C705DEFBC org.apache.ant:ant-apache-bcel:1.10.4
+92F42F81CFE1EC4348A0BABC9EEF55C2E14D388B org.apache.ant:ant-apache-bsf:1.10.4
+4564B1E9502EE401EE43E98FC7EEAFF8F8741F95 org.apache.ant:ant-apache-log4j:1.10.4
+DE1E5CB6A930CF81933411858C7505717D3E1D28 org.apache.ant:ant-apache-oro:1.10.4
+D6061456B239C9D56204C3204F5CCE5F64455690 org.apache.ant:ant-apache-regexp:1.10.4
+EA3B8355696331C03301B3EB0EF77A65857BE502 org.apache.ant:ant-apache-resolver:1.10.4
+0A93369AE0CAE7E76EEF9F24CD157881CA051943 org.apache.ant:ant-apache-xalan2:1.10.4
+FA9B661B31F3232DE77E5685B5CEA7ED7ABD8754 org.apache.ant:ant-commons-logging:1.10.4
+2161D22EABD78425A58B637B1E1D770B26111C64 org.apache.ant:ant-commons-net:1.10.4
+32BBAD05AC034DC2AA40B81170227BA3028BD286 org.apache.ant:ant-jai:1.10.4
+5E215ADBE4E5DCFC53C2BB90FF38056E6EE733FD org.apache.ant:ant-javamail:1.10.4
+CAC4F42150E4043D19801B8E20ACD7B8A7E4E82D org.apache.ant:ant-jdepend:1.10.4
+6E62191CC5C9DC2A5B4C70C87F41D1CA6A6CEA19 org.apache.ant:ant-jmf:1.10.4
+F6D72BEC0AF904BA3CD11B24DD9649E0E1982367 org.apache.ant:ant-jsch:1.10.4
+3BFD5B656A60777492E5EF0D99B8AA11BFFA309F org.apache.ant:ant-junit:1.10.4
+A79FD54C34AF7C07872DE598951C7FAC2F540426 org.apache.ant:ant-junit4:1.10.4
+9C4E40A331BB07E30AD87E0F55D48231C1711FE1 org.apache.ant:ant-launcher:1.10.4
+5C84A8063C793F39B75E81B6FC7A501B8FEC5A0D org.apache.ant:ant-netrexx:1.10.4
+A5BF7707EE8EDF597D3C353F61B7DC8019D80FD5 org.apache.ant:ant-swing:1.10.4
+1E617966BB4ECC0C49D2E6D1D2B0511FA470D43E org.apache.ant:ant-testutil:1.10.4
+2D154E15E744AA3FF2DDAE8A6C1019CC595F6A81 org.apache.ant:ant-xz:1.10.4

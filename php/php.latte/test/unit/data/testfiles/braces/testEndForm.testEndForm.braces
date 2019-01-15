@@ -1,0 +1,5 @@
+<html>
+{*form*}
+text
+{*/^form*}
+</html>

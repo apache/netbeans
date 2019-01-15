@@ -1,0 +1,188 @@
+<testresult testFile='exponentiation_01.php'>
+    <scanner>
+        <token id='T_STRING' start='6' end='12'>
+            <text>printf</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='12' end='13'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='13' end='34'>
+            <text>"2 ** 3 ==      %d\n"</text>
+        </token>
+        <token id='T_COMMA' start='34' end='35'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='36' end='37'>
+            <text>2</text>
+        </token>
+        <token id='T_POW' start='38' end='40'>
+            <text>**</text>
+        </token>
+        <token id='T_LNUMBER' start='41' end='42'>
+            <text>3</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='42' end='43'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='43' end='44'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='45' end='51'>
+            <text>printf</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='51' end='52'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='52' end='73'>
+            <text>"2 ** 3 ** 2 == %d\n"</text>
+        </token>
+        <token id='T_COMMA' start='73' end='74'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='75' end='76'>
+            <text>2</text>
+        </token>
+        <token id='T_POW' start='77' end='79'>
+            <text>**</text>
+        </token>
+        <token id='T_LNUMBER' start='80' end='81'>
+            <text>3</text>
+        </token>
+        <token id='T_POW' start='82' end='84'>
+            <text>**</text>
+        </token>
+        <token id='T_LNUMBER' start='85' end='86'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='86' end='87'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='87' end='88'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='90' end='92'>
+            <text>$a</text>
+        </token>
+        <token id='T_EQUAL' start='93' end='94'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='95' end='96'>
+            <text>2</text>
+        </token>
+        <token id='T_SEMICOLON' start='96' end='97'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='98' end='100'>
+            <text>$a</text>
+        </token>
+        <token id='T_POW_EQUAL' start='101' end='104'>
+            <text>**=</text>
+        </token>
+        <token id='T_LNUMBER' start='105' end='106'>
+            <text>3</text>
+        </token>
+        <token id='T_SEMICOLON' start='106' end='107'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='108' end='114'>
+            <text>printf</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='114' end='115'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='115' end='136'>
+            <text>"a ==           %d\n"</text>
+        </token>
+        <token id='T_COMMA' start='136' end='137'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='138' end='140'>
+            <text>$a</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='140' end='141'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='141' end='142'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='143' end='146'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='146' end='146'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='145'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='6' end='44'>
+                <FunctionInvocation start='6' end='43'>
+                    <FucntionName start='6' end='12'>
+                        <NamespaceName start='6' end='12' isCurrent='false' isGlobal='false'>
+                            <Identifier start='6' end='12' name='printf'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='13' end='34' type='STRING' value='"2 ** 3 ==      %d\n"'/>
+                        <InfixExpression start='36' end='42' operator='POW'>
+                            <Scalar start='36' end='37' type='INT' value='2'/>
+                            <Scalar start='41' end='42' type='INT' value='3'/>
+                        </InfixExpression>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='45' end='88'>
+                <FunctionInvocation start='45' end='87'>
+                    <FucntionName start='45' end='51'>
+                        <NamespaceName start='45' end='51' isCurrent='false' isGlobal='false'>
+                            <Identifier start='45' end='51' name='printf'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='52' end='73' type='STRING' value='"2 ** 3 ** 2 == %d\n"'/>
+                        <InfixExpression start='75' end='86' operator='POW'>
+                            <Scalar start='75' end='76' type='INT' value='2'/>
+                            <InfixExpression start='80' end='86' operator='POW'>
+                                <Scalar start='80' end='81' type='INT' value='3'/>
+                                <Scalar start='85' end='86' type='INT' value='2'/>
+                            </InfixExpression>
+                        </InfixExpression>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='90' end='97'>
+                <Assignment start='90' end='96' operator='EQUAL'>
+                    <Variable start='90' end='92' isDollared='true'>
+                        <Identifier start='91' end='92' name='a'/>
+                    </Variable>
+                    <Scalar start='95' end='96' type='INT' value='2'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='98' end='107'>
+                <Assignment start='98' end='106' operator='POW_EQUAL'>
+                    <Variable start='98' end='100' isDollared='true'>
+                        <Identifier start='99' end='100' name='a'/>
+                    </Variable>
+                    <Scalar start='105' end='106' type='INT' value='3'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='108' end='142'>
+                <FunctionInvocation start='108' end='141'>
+                    <FucntionName start='108' end='114'>
+                        <NamespaceName start='108' end='114' isCurrent='false' isGlobal='false'>
+                            <Identifier start='108' end='114' name='printf'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='115' end='136' type='STRING' value='"a ==           %d\n"'/>
+                        <Variable start='138' end='140' isDollared='true'>
+                            <Identifier start='139' end='140' name='a'/>
+                        </Variable>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <EmptyStatement start='143' end='145'/>
+        </Statements>
+    </Program>
+</testresult>

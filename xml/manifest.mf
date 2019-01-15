@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.netbeans.modules.xml
-OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/xml/resources/Bundle.properties
-OpenIDE-Module-Install: org/netbeans/modules/xml/CoreModuleInstall.class
-OpenIDE-Module-Layer: org/netbeans/modules/xml/resources/mf-layer.xml
-AutoUpdate-Show-In-Client: false
-OpenIDE-Module-Specification-Version: 1.34

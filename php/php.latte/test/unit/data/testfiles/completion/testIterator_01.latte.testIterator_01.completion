@@ -1,0 +1,13 @@
+Code completion result for source line:
+{$iterator->|}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     getCounter()                               Iterator
+METHOD     isEven()                                   Iterator
+METHOD     isFirst()                                  Iterator
+METHOD     isLast()                                   Iterator
+METHOD     isOdd()                                    Iterator
+FIELD      counter                                    Iterator
+FIELD      even                                       Iterator
+FIELD      first                                      Iterator
+FIELD      last                                       Iterator
+FIELD      odd                                        Iterator

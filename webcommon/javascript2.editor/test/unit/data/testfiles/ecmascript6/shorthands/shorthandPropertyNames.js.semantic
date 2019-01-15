@@ -1,0 +1,24 @@
+var |>GLOBAL:a<| = "foo",
+    |>GLOBAL:b<| = 42,
+    |>CLASS:c<| = {
+        |>FIELD:first<|: "1th",
+        |>FIELD:second<|: "2th"
+    };
+
+var |>GLOBAL:o<| = {|>GLOBAL:a<|, |>GLOBAL:b<|, |>GLOBAL:c<|};
+
+|>GLOBAL:console<|.log(|>GLOBAL:o<|.|>GLOBAL:a<|);           // foo
+|>GLOBAL:console<|.log(|>GLOBAL:o<|.|>GLOBAL:b<|);           // 42
+|>GLOBAL:console<|.log(|>GLOBAL:o<|.|>GLOBAL:c<|);           // { first: '1th', second: '2th' }
+|>GLOBAL:console<|.log(|>GLOBAL:o<|.|>GLOBAL:c<|.|>FIELD:first<|);     // 1th
+|>GLOBAL:console<|.log(|>GLOBAL:o<|.|>GLOBAL:c<|.|>FIELD:second<|);    // 2th
+
+|>GLOBAL:o<|.|>GLOBAL:c<|.|>FIELD:third<| = "3th";
+|>GLOBAL:console<|.log(|>GLOBAL:o<|.|>GLOBAL:c<|.|>FIELD:third<|);     // 3th
+|>GLOBAL:console<|.log(|>GLOBAL:c<|.|>FIELD:third<|);       // 3th 
+
+|>GLOBAL:o<|.|>GLOBAL:c<|.|>METHOD:sayHello<| = function () {
+    return "Hello";
+}
+
+|>GLOBAL:console<|.log(|>GLOBAL:c<|.sayHello());  // Hello

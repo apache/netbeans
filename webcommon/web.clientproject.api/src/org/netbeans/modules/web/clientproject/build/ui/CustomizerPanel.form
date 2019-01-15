@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="cleanCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="rebuildCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="buildCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="runProjectCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="debugProjectCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="testProjectCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="runFileCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="debugFileCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="testFileCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="runFileTextField" alignment="1" max="32767" attributes="0"/>
+                  <Component id="rebuildTextField" alignment="1" max="32767" attributes="0"/>
+                  <Component id="cleanTextField" alignment="1" max="32767" attributes="0"/>
+                  <Component id="buildTextField" alignment="1" max="32767" attributes="0"/>
+                  <Component id="runProjectTextField" alignment="1" max="32767" attributes="0"/>
+                  <Component id="debugProjectTextField" alignment="1" max="32767" attributes="0"/>
+                  <Component id="testProjectTextField" max="32767" attributes="0"/>
+                  <Component id="debugFileTextField" alignment="1" max="32767" attributes="0"/>
+                  <Component id="testFileTextField" alignment="1" max="32767" attributes="0"/>
+              </Group>
+          </Group>
+          <Group type="102" attributes="0">
+              <Component id="assignLabel" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+          </Group>
+          <Component id="extenderPanel" max="32767" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <Component id="assignLabel" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="buildCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="buildTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="cleanCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cleanTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="rebuildCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="rebuildTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="runProjectCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="runProjectTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="debugProjectCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="debugProjectTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="testProjectCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="testProjectTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="runFileCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="runFileTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="debugFileCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="debugFileTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="testFileCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="testFileTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="extenderPanel" max="32767" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JLabel" name="assignLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="TITLE" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="buildCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/web/clientproject/build/ui/Bundle.properties" key="CustomizerPanel.buildCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="buildTextField">
+      <Properties>
+        <Property name="columns" type="int" value="20"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="cleanCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/web/clientproject/build/ui/Bundle.properties" key="CustomizerPanel.cleanCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="cleanTextField">
+      <Properties>
+        <Property name="columns" type="int" value="20"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="rebuildCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/web/clientproject/build/ui/Bundle.properties" key="CustomizerPanel.rebuildCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="rebuildTextField">
+      <Properties>
+        <Property name="columns" type="int" value="20"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="runProjectCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/web/clientproject/build/ui/Bundle.properties" key="CustomizerPanel.runProjectCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="runProjectTextField">
+      <Properties>
+        <Property name="columns" type="int" value="20"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="debugProjectCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/web/clientproject/build/ui/Bundle.properties" key="CustomizerPanel.debugProjectCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="debugProjectTextField">
+      <Properties>
+        <Property name="columns" type="int" value="20"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="testProjectCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/web/clientproject/build/ui/Bundle.properties" key="CustomizerPanel.testProjectCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="testProjectTextField">
+      <Properties>
+        <Property name="columns" type="int" value="20"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="runFileCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/web/clientproject/build/ui/Bundle.properties" key="CustomizerPanel.runFileCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="runFileTextField">
+      <Properties>
+        <Property name="columns" type="int" value="20"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="debugFileCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/web/clientproject/build/ui/Bundle.properties" key="CustomizerPanel.debugFileCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="debugFileTextField">
+      <Properties>
+        <Property name="columns" type="int" value="20"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="testFileCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/web/clientproject/build/ui/Bundle.properties" key="CustomizerPanel.testFileCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="testFileTextField">
+      <Properties>
+        <Property name="columns" type="int" value="20"/>
+      </Properties>
+    </Component>
+    <Container class="javax.swing.JPanel" name="extenderPanel">
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
+    </Container>
+  </SubComponents>
+</Form>

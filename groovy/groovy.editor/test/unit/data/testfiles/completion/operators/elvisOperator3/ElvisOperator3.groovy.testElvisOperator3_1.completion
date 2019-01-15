@@ -1,0 +1,24 @@
+Code completion result for source line:
+def something = x ?: e|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     each(Closure)                              Object
+METHOD     eachLine(Closure)                          Object
+METHOD     eachLine(int, Closure)                     Object
+METHOD     eachMatch(CharSequence, Closur             CharSequence
+METHOD     eachMatch(Pattern, Closure)                String
+METHOD     eachMatch(String, Closure)                 String
+METHOD     eachWithIndex(Closure)                     Object
+METHOD     endsWith(String)                [PUBLIC]   boolean
+METHOD     endsWithAny(CharSequence[])                boolean
+METHOD     equals(Object)                  [PUBLIC]   boolean
+METHOD     equalsIgnoreCase(String)        [PUBLIC]   boolean
+METHOD     every()                                    boolean
+METHOD     every(Closure)                             boolean
+METHOD     execute()                                  Process
+METHOD     execute(List, File)                        Process
+METHOD     execute(String[], File)                    Process
+METHOD     expand()                                   String
+METHOD     expand(int)                                String
+METHOD     expandLine(int)                            String
+FIELD      empty                           [PUBLIC]   boolean

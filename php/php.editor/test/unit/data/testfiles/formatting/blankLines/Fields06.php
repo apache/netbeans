@@ -1,0 +1,18 @@
+<?php
+class Simple {
+
+/**
+ * A comment
+ * @var int
+ */
+
+
+
+    
+                    public $field1 = 22;
+
+                    public function method01() {
+                        
+                    }
+
+}

@@ -1,0 +1,82 @@
+--------- JspParserAPI.parseResult(), success: true
+ ---- PAGEINFO
+----- PageInfo -----
+      imports:
+        javax.servlet.*
+        javax.servlet.http.*
+        javax.servlet.jsp.*
+      dependants:
+      taglibsMap:
+      prefixMapper:
+      approxXmlPrefixMapper :
+      language            : java
+      xtends              : org.apache.jasper.runtime.HttpJspBase
+      contentType         : text/html
+      session             : true
+      buffer              : 8192
+      autoFlush           : true
+      threadSafe          : true
+      isErrorPage         : false
+      errorPage           : null
+      scriptless          : false
+      scriptingInvalid    : false
+      elIgnored           : false
+      omitXmlDecl         : null
+      isJspPrefixHijacked : false
+      doctypeName         : null
+      doctypeSystem       : null
+      doctypePublic       : null
+      hasJspRoot          : false
+      prefixes:
+      includePrelude:
+      includeCoda:
+      pluginDcls:
+      beans:
+ ------- XML View (constructed from the original data structure) -----
+<?xml version="1.0" encoding="UTF-8" ?>
+<jsp:root
+  version="2.0"
+  xmlns:jsp="http://java.sun.com/JSP/Page"
+  jsp:id="0"
+>
+<jsp:directive.page
+  jsp:id="1"
+  pageEncoding="UTF-8"
+  contentType="text/html"
+/>
+<jsp:text
+  jsp:id="2"
+>
+<![CDATA[
+
+]]>
+</jsp:text>
+<jsp:scriptlet
+  jsp:id="3"
+>
+<![CDATA[
+ list.add ("Added in body"); ]]>
+</jsp:scriptlet>
+<jsp:text
+  jsp:id="4"
+>
+<![CDATA[
+        
+Body was executed ]]>
+</jsp:text>
+<jsp:text
+  jsp:id="5"
+>
+<![CDATA[
+<br/>]]>
+</jsp:text>
+</jsp:root>
+
+ ---- NODES
+
+Node [/includePreludeCoda.jsp(1,1), TemplateText] 
+
+Node [/includePreludeCoda.jsp(2,2), Scriptlet] <% list.add ("Added in body"); %>
+Node [/includePreludeCoda.jsp(2,33), TemplateText]         
+Body was executed 
+Node [/includePreludeCoda.jsp(3,18), TemplateText] <br/>

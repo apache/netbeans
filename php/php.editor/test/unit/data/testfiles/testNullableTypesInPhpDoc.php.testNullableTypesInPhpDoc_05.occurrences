@@ -1,0 +1,6 @@
+ * @method ?\|>MARK_OCCURRENCES:PHPDocTags<| testMethod2(?|>MARK_OCCURRENCES:PHPDocTags<| $tags) Description
+ * @property ?|>MARK_OCCURRENCES:PHPDocTags<| $test Description
+class |>MARK_OCCURRENCES:PHPDocTags<| {
+     * @param ?|>MARK_OCCURRENCES:PHPDoc^Tags<| $tags
+     * @return ?|>MARK_OCCURRENCES:PHPDocTags<|
+    public function testMethod(?|>MARK_OCCURRENCES:PHPDocTags<| $tags) {

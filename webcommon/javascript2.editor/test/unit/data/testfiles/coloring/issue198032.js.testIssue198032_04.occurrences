@@ -1,0 +1,2 @@
+        var |>MARK_OCCURRENCES:fir^st<| = "defined in level1_2";// This hidden declaration causes the damage.
+        return |>MARK_OCCURRENCES:first<|;

@@ -1,0 +1,7 @@
+Code completion result for source line:
+'js/|lib/moduleLib2.js',
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FILE       app                                        
+FILE       lib                                        
+FILE       picnic.js                                  

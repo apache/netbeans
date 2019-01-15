@@ -1,0 +1,10 @@
+Code completion result for source line:
+l|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      length: Number                  [PUBLIC]   JS Platform
+FIELD      localStorage: Storage           [PUBLIC]   JS Platform
+FIELD      location: Location              [PUBLIC]   JS Platform
+FIELD      locationbar: Object             [PUBLIC]   JS Platform
+VARIABLE   longString: String              [PUBLIC]   stringLiterals01.js
+KEYWORD    let                                        ECMAScript 6

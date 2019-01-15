@@ -1,0 +1,33 @@
+FUNCTION extend1 [ANONYMOUS: false, DECLARED: true - extend1, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+ko : OBJECT ko [ANONYMOUS: false, DECLARED: false - ko, MODIFIERS: PUBLIC, OBJECT]
+   # PROPERTIES
+   utils : OBJECT utils [ANONYMOUS: false, DECLARED: false - utils, MODIFIERS: PUBLIC, OBJECT]
+         # PROPERTIES
+         extend : FUNCTION extend [ANONYMOUS: false, DECLARED: false - extend, MODIFIERS: PUBLIC, METHOD]
+                # PARAMETERS
+                OBJECT param1 [ANONYMOUS: false, DECLARED: true - param1, MODIFIERS: PUBLIC, PARAMETER]
+                OBJECT param2 [ANONYMOUS: false, DECLARED: true - param2, MODIFIERS: PUBLIC, PARAMETER]
+                # PROPERTIES
+                arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+x  : OBJECT x [ANONYMOUS: false, DECLARED: true - x, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+   # PROPERTIES
+   a : OBJECT a [ANONYMOUS: false, DECLARED: true - a, MODIFIERS: PUBLIC, PROPERTY]
+   b : OBJECT b [ANONYMOUS: false, DECLARED: true - b, MODIFIERS: PUBLIC, PROPERTY]
+   r : FUNCTION r [ANONYMOUS: false, DECLARED: true - r, MODIFIERS: PUBLIC, METHOD]
+     # RETURN TYPES
+     undefined, RESOLVED: true
+     # PROPERTIES
+     arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+y  : OBJECT y [ANONYMOUS: false, DECLARED: true - y, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+   # PROPERTIES
+   a : OBJECT a [ANONYMOUS: false, DECLARED: true - a, MODIFIERS: PUBLIC, PROPERTY]
+   b : OBJECT b [ANONYMOUS: false, DECLARED: true - b, MODIFIERS: PUBLIC, PROPERTY]
+   c : OBJECT c [ANONYMOUS: false, DECLARED: true - c, MODIFIERS: PUBLIC, PROPERTY]
+   r : FUNCTION r [ANONYMOUS: false, DECLARED: true - r, MODIFIERS: PUBLIC, METHOD]
+     # RETURN TYPES
+     undefined, RESOLVED: true
+     # PROPERTIES
+     arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

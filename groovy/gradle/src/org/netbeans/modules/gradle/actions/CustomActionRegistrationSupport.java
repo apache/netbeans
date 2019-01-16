@@ -29,7 +29,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.api.execute.ActionMapping;
-import org.netbeans.modules.gradle.api.execute.ProjectActionMappingProvider;
 import org.netbeans.modules.gradle.customizer.CustomActionMapping;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;

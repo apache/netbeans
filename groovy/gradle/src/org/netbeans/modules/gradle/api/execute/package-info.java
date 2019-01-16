@@ -17,10 +17,6 @@
  * under the License.
  */
 /**
- * Domain and access classes for Gradle projects.
- * <p>
- * <img src="doc-files/gradle-classes.png" alt="Main Gradle Support Classes"/>
- * </p>
- * @since 1.0
+ * API support for executing Gradle actions/commands in the IDE.
  */
-package org.netbeans.modules.gradle.api;
+package org.netbeans.modules.gradle.api.execute;

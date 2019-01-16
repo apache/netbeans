@@ -58,11 +58,14 @@ public final class NbGradleProject {
      * evaluation of a project in order to provide optimal responsiveness.
      * E.g. If we just need to know if the project is a Gradle project, there
      * is no need to go and fetch all the dependencies.
-     * <p/>
+     * <p>
+     * <img src="doc-files/gradle-quality.png" alt="Quality States"/>
+     * </p>
+     * <p>
      * Gradle project is associated with the quality of the
      * information available at the time. The quality of data can be improved,
      * by reloading the project.
-     *
+     * </p>
      * @since 1.0
      */
     public static enum Quality {

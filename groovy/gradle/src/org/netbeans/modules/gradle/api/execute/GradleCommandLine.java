@@ -38,17 +38,26 @@ import static org.netbeans.modules.gradle.api.execute.GradleCommandLine.Argument
 import org.netbeans.modules.gradle.spi.GradleSettings;
 
 /**
+ * Object representation of a Gradle command line.
+ * This object can be used to add remove different flags, options and properties
+ * in a Gradle command line. It can be used to merge and subtract command lines.
  *
+ * @since 1.0
  * @author Laszlo Kishalmi
  */
 public final class GradleCommandLine implements Serializable {
 
+    /** Gradle log levels. */
     public enum LogLevel {DEBUG, INFO, LIFECYCLE, WARN, QUIET}
+    /** Gradle stacktrace output levels. */
     public enum StackTrace {NONE, SHORT, FULL}
 
+    /** The common name of the task which invokes tests. */
     public static final String TEST_TASK = "test"; //NOI18N
+    /** The common name of the task which invokes checks. */
     public static final String CHECK_TASK = "check"; //NOI18N
 
+    /** Gradle command line flags */
     public enum Flag {
         NO_REBUILD(PARAM, "-a", "--no-rebuild"),
         BUILD_CACHE(PARAM, "--build-cache"),
@@ -67,7 +76,7 @@ public final class GradleCommandLine implements Serializable {
 
         STACKTRACE(PARAM, "-s", "--stacktrace"),
         STACKTRACE_FULL(PARAM, "-S", "--full-stacktrace"),
-        
+
         PROFILE(PARAM, "--profile"),
         NO_BUILD_CACHE(PARAM, "--no-build-cache"),
         NO_CONFIGURE_ON_DEMAND(PARAM, "--no-configure-on-demand"),
@@ -93,24 +102,24 @@ public final class GradleCommandLine implements Serializable {
         static {
             DAEMON.incompatibleWith(NO_DAEMON);
             NO_DAEMON.incompatibleWith(DAEMON);
-            
+
             LOG_DEBUG.incompatibleWith(LOG_INFO, LOG_QUIET, LOG_WARN);
             LOG_INFO.incompatibleWith(LOG_DEBUG, LOG_QUIET, LOG_WARN);
             LOG_WARN.incompatibleWith(LOG_DEBUG, LOG_INFO, LOG_QUIET);
             LOG_QUIET.incompatibleWith(LOG_DEBUG, LOG_INFO, LOG_WARN);
-            
+
             STACKTRACE.incompatibleWith(STACKTRACE_FULL);
             STACKTRACE_FULL.incompatibleWith(STACKTRACE);
-            
+
             SCAN.incompatibleWith(NO_SCAN);
             NO_SCAN.incompatibleWith(SCAN);
-            
+
             CONFIGURE_ON_DEMAND.incompatibleWith(NO_CONFIGURE_ON_DEMAND);
             NO_CONFIGURE_ON_DEMAND.incompatibleWith(CONFIGURE_ON_DEMAND);
-            
+
             BUILD_CACHE.incompatibleWith(NO_BUILD_CACHE);
             NO_BUILD_CACHE.incompatibleWith(BUILD_CACHE);
-            
+
             PARALLEL.incompatibleWith(NO_PARALLEL);
             NO_PARALLEL.incompatibleWith(PARALLEL);
         }
@@ -123,7 +132,7 @@ public final class GradleCommandLine implements Serializable {
         private void incompatibleWith(Flag first, Flag... rest) {
             incompatible = Collections.unmodifiableSet(EnumSet.of(first, rest));
         }
-        
+
         public boolean isSupported() {
             return kind != UNSUPPORTED;
         }
@@ -131,9 +140,9 @@ public final class GradleCommandLine implements Serializable {
         public List<String> getFlags() {
             return flags;
         }
-        
+
         public final String getDescription() {
-            return NbBundle.getMessage(GradleCommandLine.class, this.name() + "_DSC"); 
+            return NbBundle.getMessage(GradleCommandLine.class, this.name() + "_DSC");
         }
     }
 
@@ -200,11 +209,11 @@ public final class GradleCommandLine implements Serializable {
                 FLAG_ARGS.put(flag, new FlagArgument(flag));
             }
         }
-  
+
         public static FlagArgument of(Flag f) {
             return FLAG_ARGS.get(f);
         }
-        
+
         private FlagArgument(Flag flag) {
             this.flag = flag;
         }
@@ -430,11 +439,11 @@ public final class GradleCommandLine implements Serializable {
             }
         }
     }
-    
+
     public GradleCommandLine(CharSequence argLine) {
         this(parseArgLine(argLine));
     }
-    
+
     static String[] parseArgLine(CharSequence cli) {
         char quote = 0;
         StringBuilder buf = new StringBuilder();
@@ -458,7 +467,7 @@ public final class GradleCommandLine implements Serializable {
                 if (quote == ch) {
                     quote = 0;
                 } else {
-                    buf.append(ch);                    
+                    buf.append(ch);
                 }
             }
         }
@@ -478,12 +487,26 @@ public final class GradleCommandLine implements Serializable {
         return ret;
     }
 
+    /**
+     * Retrieve the command line which is actually supported to be executed
+     * from the IDE.
+     *
+     * @return the list of IDE supported arguments.
+     */
     public List<String> getSupportedCommandLine() {
         List<String> ret = getArgs(EnumSet.of(PARAM, SYSTEM));
         ret.addAll(tasks);
         return ret;
     }
 
+    /**
+     * Retrieve the command line as a list of strings.
+     * This list can contain arguments which is no meaning or not supported
+     * in the IDE, like '--no-daemon' as due to the nature of Gradle tooling,
+     * Gradle daemon is always being used.
+     *
+     * @return the list of Gradle arguments.
+     */
     public List<String> getFullCommandLine() {
         List<String> ret = getArgs(EnumSet.allOf(Argument.Kind.class));
         ret.addAll(tasks);
@@ -532,7 +555,7 @@ public final class GradleCommandLine implements Serializable {
         }
         return !reserved.contains(f);
     }
-    
+
     public void removeFlag(Flag flag) {
         Iterator<Argument> it = arguments.iterator();
         while (it.hasNext()) {
@@ -684,7 +707,7 @@ public final class GradleCommandLine implements Serializable {
         }
         return ret;
     }
-    
+
     public String getProperty(Property type, String key) {
         for (Argument arg : arguments) {
             if (arg instanceof PropertyArgument) {
@@ -804,11 +827,11 @@ public final class GradleCommandLine implements Serializable {
             Set<String> newExcludes = ret.getExcludedTasks();
             newExcludes.removeAll(layer.tasks);
             newExcludes.addAll(layer.getExcludedTasks());
-            
+
             Set<String> newTasks = ret.getTasks();
             newTasks.removeAll(layer.getExcludedTasks());
             newTasks.addAll(layer.getTasks());
-            
+
             layer.arguments.forEach((argument) -> {
                 if (argument instanceof PropertyArgument) {
                     PropertyArgument parg = (PropertyArgument) argument;
@@ -827,25 +850,25 @@ public final class GradleCommandLine implements Serializable {
                     ret.arguments.add(argument);
                 }
             });
-            
+
             ret.setExcludedTasks(newExcludes);
             ret.setTasks(newTasks);
-            
+
         }
         return ret;
     }
-    
+
     public static GradleCommandLine getDefaultCommandLine() {
         GradleSettings settings = GradleSettings.getDefault();
         GradleCommandLine ret = new GradleCommandLine();
-        
+
         ret.setFlag(Flag.OFFLINE, settings.isOffline());
         ret.setFlag(Flag.CONFIGURE_ON_DEMAND, settings.isConfigureOnDemand());
         ret.setFlag(Flag.NO_REBUILD, settings.getNoRebuild());
-        
+
         ret.setLogLevel(settings.getDefaultLogLevel());
         ret.setStackTrace(settings.getDefaultStackTrace());
-        
+
         if (settings.skipCheck()) {
             ret.addParameter(Parameter.EXCLUDE_TASK, CHECK_TASK);
         }
@@ -854,5 +877,5 @@ public final class GradleCommandLine implements Serializable {
         }
         return ret;
     }
-    
+
 }

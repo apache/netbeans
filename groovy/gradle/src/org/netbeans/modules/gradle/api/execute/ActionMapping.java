@@ -25,6 +25,7 @@ import java.util.Set;
 /**
  * Mapping for IDE actions to Gradle command line.
  *
+ * @since 1.0
  * @author Laszlo Kishalmi
  */
 public interface ActionMapping extends Serializable, Comparable<ActionMapping> {

@@ -22,7 +22,6 @@ package org.netbeans.modules.gradle.actions;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.ActionMapping;
-import org.netbeans.modules.gradle.api.execute.ProjectActionMappingProvider;
 import org.netbeans.modules.gradle.spi.WatchedResourceProvider;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

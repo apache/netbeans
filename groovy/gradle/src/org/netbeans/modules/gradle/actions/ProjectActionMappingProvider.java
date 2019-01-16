@@ -17,28 +17,28 @@
  * under the License.
  */
 
-package org.netbeans.modules.gradle.api.execute;
+package org.netbeans.modules.gradle.actions;
 
 import java.util.Set;
+import org.netbeans.modules.gradle.api.execute.ActionMapping;
 
 /**
- *
  * @author Laszlo Kishalmi
  */
 public interface ProjectActionMappingProvider {
-    
+
     /**
-     * Try to find an ActionMapping for the given action. 
+     * Try to find an ActionMapping for the given action.
      * If no mapping has been found it returns {@code null}.
-     * 
+     *
      * @param action the action name
      * @return the action mapping for the action or {@code null} if none found
      */
     ActionMapping findMapping(String action);
-    
+
     /**
      * Get the list of those actions which has been customized.
-     * 
+     *
      * @return the list of customized action names.
      */
     Set<String> customizedActions();

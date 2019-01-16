@@ -24,7 +24,9 @@ import java.util.Set;
 import org.netbeans.api.project.Project;
 
 /**
+ * This object represents the configuration context of a Gradle command execution.
  *
+ * @since 1.0
  * @author Laszlo Kishalmi
  */
 public final class RunConfig {
@@ -36,10 +38,10 @@ public final class RunConfig {
     final Project project;
     final Set<ExecFlag> execFlags;
     final GradleCommandLine commandLine;
-    
+
     final String action;
     final String displayName;
-    
+
 
     public RunConfig(Project project, String action, String displayName, Set<ExecFlag> execFlags, GradleCommandLine commandLine) {
         this.project = project;
@@ -52,7 +54,7 @@ public final class RunConfig {
     public Project getProject() {
         return project;
     }
-    
+
     public GradleCommandLine getCommandLine() {
         return commandLine;
     }
@@ -60,11 +62,11 @@ public final class RunConfig {
     public RunConfig withCommandLine(GradleCommandLine cmd) {
         return new RunConfig(project, action, displayName, execFlags, cmd);
     }
-    
+
     public Set<ExecFlag> getExecFlags() {
         return execFlags;
     }
-    
+
     public String getTaskDisplayName() {
         return displayName;
     }
@@ -72,5 +74,5 @@ public final class RunConfig {
     public String getActionName() {
         return action;
     }
-    
+
 }

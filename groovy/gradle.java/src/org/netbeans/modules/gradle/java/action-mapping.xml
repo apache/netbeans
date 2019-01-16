@@ -40,7 +40,7 @@
         </action>
 
         <action name="debug.fix" repeatable="false">
-            <args>-offline --no-rebuild ${affectedBuildTasks}</args>
+            <args>--offline --no-rebuild ${affectedBuildTasks}</args>
             <reload rule="NEVER"/>
         </action>
 

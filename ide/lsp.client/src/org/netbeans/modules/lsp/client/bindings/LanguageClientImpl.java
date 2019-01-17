@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
@@ -42,6 +43,8 @@ import org.eclipse.lsp4j.ApplyWorkspaceEditResponse;
 import org.eclipse.lsp4j.CodeActionContext;
 import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.Command;
+import org.eclipse.lsp4j.ConfigurationItem;
+import org.eclipse.lsp4j.ConfigurationParams;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DiagnosticSeverity;
 import org.eclipse.lsp4j.ExecuteCommandParams;
@@ -67,6 +70,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
+import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -75,6 +79,7 @@ import org.openide.util.Exceptions;
 public class LanguageClientImpl implements LanguageClient {
 
     private static final Logger LOG = Logger.getLogger(LanguageClientImpl.class.getName());
+    private static final RequestProcessor WORKER = new RequestProcessor(LanguageClientImpl.class.getName(), 1, false, false);
 
     private LSPBindings bindings;
 
@@ -160,6 +165,19 @@ public class LanguageClientImpl implements LanguageClient {
     @Override
     public void logMessage(MessageParams arg0) {
         System.err.println("logMessage: " + arg0);
+    }
+
+    @Override
+    public CompletableFuture<List<Object>> configuration(ConfigurationParams configurationParams) {
+        CompletableFuture<List<Object>> result = new CompletableFuture<>();
+        WORKER.post(() -> {
+            List<Object> outcome = new ArrayList<>();
+            for (ConfigurationItem ci : configurationParams.getItems()) {
+                outcome.add(null);
+            }
+            result.complete(outcome);
+        });
+        return result;
     }
 
     private final class DiagnosticFixList implements LazyFixList {

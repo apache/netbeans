@@ -29,6 +29,7 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JToolTip;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
@@ -37,7 +38,11 @@ import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionItemKind;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
+import org.eclipse.lsp4j.ParameterInformation;
+import org.eclipse.lsp4j.SignatureHelp;
+import org.eclipse.lsp4j.SignatureInformation;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
+import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
@@ -67,6 +72,64 @@ public class CompletionProviderImpl implements CompletionProvider {
 
     @Override
     public CompletionTask createTask(int queryType, JTextComponent component) {
+        if ((queryType & TOOLTIP_QUERY_TYPE) != 0) {
+            return new AsyncCompletionTask(new AsyncCompletionQuery() {
+                @Override
+                protected void query(CompletionResultSet resultSet, Document doc, int caretOffset) {
+                    try {
+                        FileObject file = NbEditorUtilities.getFileObject(doc);
+                        if (file == null) {
+                            //TODO: beep
+                            return ;
+                        }
+                        LSPBindings server = LSPBindings.getBindings(file);
+                        if (server == null) {
+                            return ;
+                        }
+                        String uri = Utils.toURI(file);
+                        TextDocumentPositionParams params;
+                        params = new TextDocumentPositionParams(new TextDocumentIdentifier(uri),
+                                Utils.createPosition(doc, caretOffset));
+                        SignatureHelp help = server.getTextDocumentService().signatureHelp(params).get();
+                        if (help == null || help.getSignatures().isEmpty()) {
+                            return ;
+                        }
+                        //TODO: active signature?
+                        StringBuilder signatures = new StringBuilder();
+                        signatures.append("<html>");
+                        for (SignatureInformation info : help.getSignatures()) {
+                            if (info.getParameters().isEmpty()) {
+                                signatures.append("No parameter.");
+                                continue;
+                            }
+                            String sigSep = "";
+                            int idx = 0;
+                            for (ParameterInformation pi : info.getParameters()) {
+                                if (idx == help.getActiveParameter()) {
+                                    signatures.append("<b>");
+                                }
+                                signatures.append(sigSep);
+                                signatures.append(pi.getLabel());
+                                if (idx == help.getActiveParameter()) {
+                                    signatures.append("</b>");
+                                }
+                                sigSep = ", ";
+                                idx++;
+                            }
+                        }
+                        JToolTip tip = new JToolTip();
+                        tip.setTipText(signatures.toString());
+                        resultSet.setToolTip(tip);
+                    } catch (BadLocationException | InterruptedException ex) {
+                        Exceptions.printStackTrace(ex);
+                    } catch (ExecutionException ex) {
+                        Exceptions.printStackTrace(ex);
+                    } finally {
+                        resultSet.finish();
+                    }
+                }
+            }, component);
+        }
         return new AsyncCompletionTask(new AsyncCompletionQuery() {
             @Override
             protected void query(CompletionResultSet resultSet, Document doc, int caretOffset) {

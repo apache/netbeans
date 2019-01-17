@@ -50,6 +50,7 @@ import org.netbeans.modules.lsp.client.spi.LanguageServerProvider;
 import org.netbeans.modules.lsp.client.spi.LanguageServerProvider.LanguageServerDescription;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.modules.OnStop;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
@@ -225,5 +226,24 @@ public class LSPBindings {
 
     public interface BackgroundTask {
         public void run(LSPBindings bindings, FileObject file);
+    }
+
+    @OnStop
+    public static class Cleanup implements Runnable {
+
+        @Override
+        public void run() {
+            for (Map<String, LSPBindings> mime2Bindings : project2MimeType2Server.values()) {
+                for (LSPBindings b : mime2Bindings.values()) {
+                    b.process.destroy();
+                }
+            }
+            for (Map<String, LSPBindings> mime2Bindings : workspace2Extension2Server.values()) {
+                for (LSPBindings b : mime2Bindings.values()) {
+                    b.process.destroy();
+                }
+            }
+        }
+
     }
 }

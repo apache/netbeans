@@ -504,7 +504,7 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         <!-- (XXX maybe the viewer task can automagically do this...) -->
         <mkdir dir="${build.javahelp.dir}/org/netbeans/modules/usersguide"/>
         <copy tofile="${build.javahelp.dir}/org/netbeans/modules/usersguide/ide.css"
-              file="${nb_all}/usersguide/javahelp/org/netbeans/modules/usersguide/ide.css"
+              file="${nb_all}/ide/usersguide/javahelp/org/netbeans/modules/usersguide/ide.css"
               failonerror="false"/>
         <mkdir dir="${cluster}/${javahelp.jar.dir}"/>
         <jar jarfile="${cluster}/${javahelp.jar}" compress="true">

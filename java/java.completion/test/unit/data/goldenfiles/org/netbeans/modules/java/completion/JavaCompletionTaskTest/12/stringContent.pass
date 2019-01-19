@@ -1,5 +1,3 @@
-public String align()
-public String align(int arg0)
 public char charAt(int arg0)
 public IntStream chars()
 public int codePointAt(int arg0)

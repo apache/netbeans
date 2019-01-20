@@ -148,7 +148,7 @@ public class GradleDataObject extends MultiDataObject {
             return annotateName(title, true, isModified(), !getPrimaryFile().canWrite());
         }
 
-        
+
         @Override
         protected boolean asynchronousOpen() {
             return true;
@@ -159,8 +159,8 @@ public class GradleDataObject extends MultiDataObject {
 
     static String getFileOrProjectName(FileObject primaryFile) {
         String ret = primaryFile.getNameExt();
-    
-        if (BUILD_GRADLE.equals(ret)) { 
+
+        if (BUILD_GRADLE.equals(ret)) {
             try {
                 Project prj = ProjectManager.getDefault().findProject(primaryFile.getParent());
                 if (prj != null) {

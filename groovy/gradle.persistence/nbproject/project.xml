@@ -30,7 +30,6 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>0</release-version>
                         <specification-version>1.0</specification-version>
                     </run-dependency>
                 </dependency>

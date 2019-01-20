@@ -25,6 +25,14 @@
         <args>clean</args>
     </action>
 
+    <action name="build">
+        <args>build</args>
+    </action>
+
+    <action name="rebuild">
+        <args>clean build</args>
+    </action>
+
     <action name="download.javadoc">
         <!--
             We do not really execute any tasks here, rather just reload the project

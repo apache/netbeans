@@ -41,6 +41,7 @@ import org.openide.loaders.FileEntry;
 import org.openide.loaders.MultiDataObject;
 import org.openide.loaders.MultiFileLoader;
 import org.netbeans.api.editor.mimelookup.test.MockMimeLookup;
+import org.netbeans.api.scripting.Scripting;
 import org.openide.loaders.CreateFromTemplateHandler;
 import org.openide.util.SharedClassObject;
 import org.openide.util.test.MockLookup;
@@ -98,7 +99,7 @@ public class ScriptingCreateFromTemplateTest extends NbTestCase {
         FileObject root = FileUtil.createMemoryFileSystem().getRoot();
         FileObject template = FileUtil.createData(root, "simple.pl");
         OutputStream os = template.getOutputStream();
-        ScriptEngine jsEngine = new javax.script.ScriptEngineManager().getEngineByExtension("js");
+        ScriptEngine jsEngine = Scripting.createManager().getEngineByExtension("js");
         boolean isNashorn = (jsEngine != null && jsEngine.toString().indexOf("Nashorn") > 0);
         if (isNashorn) {
             // print() behaves like println() and println() does not exist:

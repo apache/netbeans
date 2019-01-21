@@ -80,8 +80,7 @@
         <em>NetBeans</em> one is free to choose the set of modules and their APIs 
         to satisfy one's needs.
         <p>
-        This is a list of APIs for development version, if you want to see
-        a list of APIs for a particular version, you may want to go to:
+        The list of APIs for development version of Apache NetBeans is available here:
         </p>
         <ul>
             <li><a href="http://bits.netbeans.org/10.0/javadoc/" target="_top">10.0</a> - Javadoc as released for NetBeans IDE 10.0</li>

@@ -18,6 +18,8 @@
  */
 package org.netbeans.core.network.proxy.pac.impl;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URI;
@@ -304,7 +306,41 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
         }
     }
     
+    private boolean isNashornFactory(ScriptEngineFactory f) {
+        try {
+            Class<?> klass = Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory");
+            return klass.isInstance(f);
+        } catch (ClassNotFoundException ex) {
+            return false;
+        }
+    }
+
+    private ScriptEngine secureEngineEngine(ScriptEngine e) {
+        try {
+            ScriptEngineFactory f = e.getFactory();
+            final Class<? extends ScriptEngineFactory> factoryClass = f.getClass();
+            final ClassLoader factoryClassLoader = factoryClass.getClassLoader();
+            Class<?> filterClass = Class.forName("jdk.nashorn.api.scripting.ClassFilter", true, factoryClassLoader);
+            Method createMethod = factoryClass.getMethod("getScriptEngine", filterClass);
+            Object filter = java.lang.reflect.Proxy.newProxyInstance(factoryClassLoader, new Class[] { filterClass }, (Object proxy, Method method, Object[] args) -> {
+                return false;
+            });
+            return (ScriptEngine) createMethod.invoke(f, filter);
+        } catch (NoSuchMethodException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            Exceptions.printStackTrace(ex);
+            return e;
+        }
+    }
+
     private ScriptEngine getGenericJSScriptEngine() {
+        ScriptEngine eng = newGenericJSScriptEngine();
+        if (isNashornFactory(eng.getFactory())) {
+            return secureEngineEngine(eng);
+        }
+        return eng;
+    }
+
+    private ScriptEngine newGenericJSScriptEngine() {
         ScriptEngineManager manager = Scripting.createManager();
         ScriptEngine mimeBased = manager.getEngineByMimeType("text/javascript");
         if (mimeBased != null) {

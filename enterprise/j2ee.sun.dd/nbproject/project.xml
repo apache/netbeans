@@ -131,6 +131,8 @@
                 <friend>org.netbeans.modules.j2ee.sun.ws7</friend>
                 <friend>org.netbeans.modules.glassfish.javaee</friend>
                 <friend>org.netbeans.modules.glassfish.eecommon</friend>
+                <friend>org.netbeans.modules.payara.javaee</friend>
+                <friend>org.netbeans.modules.payara.eecommon</friend>
                 <friend>org.netbeans.modules.visualweb.ejb</friend>
                 <package>org.netbeans.modules.j2ee.sun.dd.api</package>
                 <package>org.netbeans.modules.j2ee.sun.dd.api.app</package>
@@ -141,8 +143,48 @@
                 <package>org.netbeans.modules.j2ee.sun.dd.api.serverresources</package>
                 <package>org.netbeans.modules.j2ee.sun.dd.api.services</package>
                 <package>org.netbeans.modules.j2ee.sun.dd.api.web</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.app</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.client</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.common</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.ejb</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.ejb.model_3_1_0</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.ejb.model_3_1_1</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.ejb.model_3_0_0</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.ejb.model_2_1_1</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.ejb.model_2_1_0</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.ejb.model_2_0_0</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.ejb.model_3_0_0</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.web.model_3_0_1</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.web.model_3_0_0</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.web.model_2_5_0</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.web.model_2_4_1</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.web.model_2_4_0</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.web.model_2_3_0</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.app.model_1_3_0</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.app.model_6_0_1</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.app.model_6_0_0</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.app.model_5_0_0</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.app.model_1_4_0</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.client.model_5_0_0</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.client.model_6_0_1</package> 
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.client.model_6_0_0</package> 
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.client.model_1_4_1</package> 
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.client.model_1_4_0</package> 
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.client.model_1_3_0</package> 
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.common.model_6_0_0</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.common.model_6_0_1</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.common.model_2_1_0</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.common.model_2_1_0</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.common.model_2_1_0</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.common.model_2_1_0</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.common.model_2_1_1</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.common.model_3_0_0</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.serverresources.model_1_5</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.serverresources</package>
                 <package>org.netbeans.modules.j2ee.sun.dd.impl.serverresources.model</package>
                 <package>org.netbeans.modules.j2ee.sun.dd.impl.verifier</package>
+                <package>org.netbeans.modules.j2ee.sun.dd.impl.web</package>
             </friend-packages>
         </data>
     </configuration>

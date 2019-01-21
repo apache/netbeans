@@ -418,10 +418,13 @@
                 </test-type>
             </test-dependencies>
             <public-packages>
+                <package>org.netbeans.modules.j2ee.deployment.config</package>
                 <package>org.netbeans.modules.j2ee.deployment.common.api</package>
                 <package>org.netbeans.modules.j2ee.deployment.devmodules.api</package>
                 <package>org.netbeans.modules.j2ee.deployment.devmodules.capabilities</package>
                 <package>org.netbeans.modules.j2ee.deployment.devmodules.spi</package>
+                <package>org.netbeans.modules.j2ee.deployment.execution</package>
+                <package>org.netbeans.modules.j2ee.deployment.impl</package>
                 <package>org.netbeans.modules.j2ee.deployment.plugins.api</package>
                 <package>org.netbeans.modules.j2ee.deployment.plugins.spi</package>
                 <package>org.netbeans.modules.j2ee.deployment.plugins.spi.config</package>

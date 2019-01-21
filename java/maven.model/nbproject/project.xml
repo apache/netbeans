@@ -209,6 +209,7 @@
                 </test-type>
             </test-dependencies>
             <friend-packages>
+                <friend>org.netbeans.modules.payara.micro</friend>
                 <friend>org.javeleon.netbeans</friend>
                 <friend>org.netbeans.modules.groovy.support</friend>
                 <friend>org.netbeans.modules.hudson.maven</friend>

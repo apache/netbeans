@@ -584,6 +584,7 @@
                 </test-type>
             </test-dependencies>
             <friend-packages>
+                <friend>org.netbeans.modules.payara.micro</friend>
                 <friend>org.javeleon.netbeans</friend>
                 <!-- sven reimers -->
                 <friend>org.nbheaven.sqe.core.maven</friend>
@@ -627,6 +628,7 @@
                 <friend>org.netbeans.modules.maven.util</friend>
                 <!-- JShel support -->
                 <friend>org.netbeans.modules.jshell.support</friend>
+                <package>org.netbeans.modules.maven</package>
                 <package>org.netbeans.modules.maven.api</package>
                 <package>org.netbeans.modules.maven.api.archetype</package>
                 <package>org.netbeans.modules.maven.api.classpath</package>
@@ -635,9 +637,11 @@
                 <package>org.netbeans.modules.maven.api.execute</package>
                 <package>org.netbeans.modules.maven.api.output</package>
                 <package>org.netbeans.modules.maven.api.problem</package>
+                <package>org.netbeans.modules.maven.execute</package>
                 <package>org.netbeans.modules.maven.execute.model</package>
                 <package>org.netbeans.modules.maven.execute.model.io.jdom</package>
                 <package>org.netbeans.modules.maven.execute.model.io.xpp3</package>
+                <package>org.netbeans.modules.maven.runjar</package>
                 <package>org.netbeans.modules.maven.spi</package>
                 <package>org.netbeans.modules.maven.spi.actions</package>
                 <package>org.netbeans.modules.maven.spi.cos</package>

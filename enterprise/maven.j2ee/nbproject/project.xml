@@ -538,7 +538,11 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <public-packages/>
+            <public-packages>
+                <package>org.netbeans.modules.maven.j2ee.utils</package>
+                <package>org.netbeans.modules.maven.j2ee.ui</package>
+                <package>org.netbeans.modules.maven.j2ee.ui.customizer</package>
+            </public-packages>
         </data>
     </configuration>
 </project>

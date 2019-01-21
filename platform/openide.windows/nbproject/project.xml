@@ -95,6 +95,7 @@
             </test-dependencies>
             <public-packages>
                 <package>org.openide.windows</package>
+                <package>org.netbeans.modules.openide.windows</package>
             </public-packages>
         </data>
     </configuration>

@@ -80,10 +80,18 @@
         <em>NetBeans</em> one is free to choose the set of modules and their APIs 
         to satisfy one's needs.
         <p>
-        This is a list of APIs for development version, if you want to see
-        a list of APIs for a particular version, you may want to go to:
+        The list of APIs for development version of Apache NetBeans is available here:
         </p>
         <ul>
+            <li><a href="https://netbeans.apache.org/javadoc/dev/" target="_top">Dev</a> - Javadoc for development version of Apache NetBeans</li>
+        </ul>
+        <p>
+        If you want to see
+        a list of APIs for a historical version released before donation to
+        Apache, you may want to go to:
+        </p>
+        <ul>
+            <li><a href="http://bits.netbeans.org/8.2/javadoc/" target="_top">8.1</a> - Javadoc as released for NetBeans IDE 8.2</li>
             <li><a href="http://bits.netbeans.org/8.1/javadoc/" target="_top">8.1</a> - Javadoc as released for NetBeans IDE 8.1</li>
             <li><a href="http://bits.netbeans.org/8.0.1/javadoc/" target="_top">8.0.1</a> - Javadoc as released for NetBeans IDE 8.0.1</li>
             <li><a href="http://bits.netbeans.org/8.0/javadoc/" target="_top">8.0</a> - Javadoc as released for NetBeans IDE 8.0</li>

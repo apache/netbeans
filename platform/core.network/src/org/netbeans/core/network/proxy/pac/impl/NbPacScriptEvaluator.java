@@ -37,8 +37,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
-import jdk.nashorn.api.scripting.ScriptObjectMirror;
+import org.netbeans.api.scripting.Scripting;
 import org.netbeans.core.network.utils.SimpleObjCache;
 import org.netbeans.core.network.proxy.pac.PacHelperMethods;
 import org.netbeans.core.network.proxy.pac.PacJsEntryFunction;
@@ -195,13 +194,11 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
     private static final String PAC_SOCKS5_FFEXT = "SOCKS5"; // Mozilla Firefox extension. Not part of original Netscape spec.
     private static final String PAC_HTTP_FFEXT = "HTTP"; // Mozilla Firefox extension. Not part of original Netscape spec.
     private static final String PAC_HTTPS_FFEXT = "HTTPS"; // Mozilla Firefox extension. Not part of original Netscape spec.
-    private final boolean nashornJava8u40Available;
     private final String pacScriptSource;
 
 
     public NbPacScriptEvaluator(String pacSourceCocde) throws PacParsingException {
         this.pacScriptSource = pacSourceCocde;
-        nashornJava8u40Available = getNashornJava8u40Available();
         scriptEngine = getScriptEngine(pacSourceCocde);
         canUseURLCaching = !usesTimeDateFunctions(pacSourceCocde);
         if (canUseURLCaching) {
@@ -281,12 +278,7 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
             String helperJSScript = getHelperJsScriptSource();
             LOGGER.log(Level.FINER, "PAC Helper JavaScript :\n{0}", helperJSScript);
             
-            ScriptEngine engine;
-            if (nashornJava8u40Available) {
-                engine = getNashornJSScriptEngine();
-            } else {
-                engine = getGenericJSScriptEngine();
-            }
+            ScriptEngine engine = getGenericJSScriptEngine();
             
             LOGGER.log(Level.FINE, "PAC script evaluator using:  {0}", getEngineInfo(engine));
             
@@ -304,11 +296,7 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
 
             // Do some minimal testing of the validity of the PAC Script.
             final PacJsEntryFunction jsMainFunction;
-            if (nashornJava8u40Available) {
-                jsMainFunction = testScriptEngine(engine, true);
-            } else {
-                jsMainFunction = testScriptEngine(engine, false);
-            }
+            jsMainFunction = testScriptEngine(engine, false);
             
             return new PacScriptEngine(engine, jsMainFunction);
         } catch (ScriptException ex) {
@@ -316,25 +304,17 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
         }
     }
     
-    private boolean getNashornJava8u40Available() {
-        try {
-            Class<?> klass = Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory");
-        } catch (ClassNotFoundException ex) {
-            return false;
-        }
-        return true;
-    }
-    
-    private ScriptEngine getNashornJSScriptEngine() {
-        NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
-        return factory.getScriptEngine(new ClassFilterPacHelpers());
-    }
-    
     private ScriptEngine getGenericJSScriptEngine() {
-        // The result of the statements below may be Rhino, but more likely
-        // - since Java 8 - it will be a Nashorn engine.
-        ScriptEngineManager factory = new ScriptEngineManager();
-        return factory.getEngineByName("JavaScript");
+        ScriptEngineManager manager = Scripting.createManager();
+        ScriptEngine mimeBased = manager.getEngineByMimeType("text/javascript");
+        if (mimeBased != null) {
+            return mimeBased;
+        }
+        ScriptEngine namedJavaScript = manager.getEngineByName("JavaScript");
+        if (namedJavaScript != null) {
+            return namedJavaScript;
+        }
+        return manager.getEngineByExtension("js");
     }
     
     /**
@@ -352,29 +332,14 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
     }
 
     private boolean isJsFunctionAvailable(ScriptEngine eng, String functionName, boolean doDeepTest) {
-        // We want to test if the function is there, but without actually 
-        // invoking it.        
-        Object obj = eng.get(functionName);
-        
-        if (!doDeepTest && obj != null) {  
-            // Shallow test. We've established that there's
-            // "something" in the ENGINE_SCOPE with a name like
-            // functionName, and we *hope* it is a function, but we really don't
-            // know, therefore we call it a shallow test.
-            return true;
+        try {
+            Object typeofCheck = eng.eval("(function(name) { return typeof this[name]; })");
+            Object type = ((Invocable) eng).invokeMethod(typeofCheck, "call", null, functionName);
+            return "function".equals(type);
+        } catch (NoSuchMethodException | ScriptException ex) {
+            LOGGER.log(Level.WARNING, null, ex);
+            return false;
         }
-        
-        // For Nashorn post JDK8u40 we can do even deeper validation
-        // using the ScriptObjectMirror class. This will not work for Rhino.
-        if (doDeepTest && obj != null) {
-            if (obj instanceof ScriptObjectMirror) {
-                    ScriptObjectMirror  som = (ScriptObjectMirror) obj;
-                    if (som.isFunction()) {
-                        return true;
-                    }
-            }
-        }        
-        return false;
     }
     
 

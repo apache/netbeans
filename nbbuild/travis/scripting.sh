@@ -32,6 +32,7 @@ fi
 ant -f platform/api.scripting/build.xml test
 ant -f ide/libs.graalsdk/build.xml test
 ant -f webcommon/libs.graaljs/build.xml test
+ant -f platform/core.network/build.xml test
 
 $GRAALVM/bin/gu install python
 $GRAALVM/bin/gu install R
@@ -44,5 +45,6 @@ JAVA_HOME=$GRAALVM ant -f ide/libs.graalsdk/build.xml test
 # currently broken. fixed by
 # https://github.com/oracle/graal/commit/4c217f2b2fba77c55d05c7aa3654e13c215b5ddb
 # which is likely to appear in GraalVM RC12
+JAVA_HOME=$GRAALVM ant -f platform/core.network/build.xml test || echo "==== May fail ===="
 JAVA_HOME=$GRAALVM ant -f webcommon/libs.graaljs/build.xml test || echo "==== Expected failure ===="
 

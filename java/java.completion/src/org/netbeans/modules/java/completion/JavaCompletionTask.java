@@ -49,8 +49,7 @@ import org.netbeans.api.java.source.ClassIndex.Symbols;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import org.netbeans.api.java.source.support.ReferencesCount;
 import org.netbeans.api.lexer.TokenSequence;
-
-
+import org.netbeans.modules.java.completion.TreeShims;
 import org.netbeans.modules.parsing.api.Source;
 import org.openide.util.Pair;
 
@@ -2339,21 +2338,22 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 || (cst.getExpression().getKind() == Tree.Kind.ERRONEOUS && ((ErroneousTree) cst.getExpression()).getErrorTrees().isEmpty() && sourcePositions.getEndPosition(root, cst.getExpression()) >= offset))) {
             TreePath path1 = path.getParentPath();
             if (path1.getLeaf().getKind() == Tree.Kind.SWITCH || path1.getLeaf().getKind().toString().equals("SWITCH_EXPRESSION")) { //NOI18N
-                ExpressionTree expressionTree = null;
-
+                ExpressionTree exprTree = null;
                 if (path1.getLeaf().getKind() == Tree.Kind.SWITCH) {
-                    expressionTree = ((SwitchTree) path1.getLeaf()).getExpression();
+                    exprTree = ((SwitchTree) path1.getLeaf()).getExpression();
                 } else {
-                    expressionTree = (ExpressionTree) ReflectionHelper.invokeMethod("com.sun.source.tree.SwitchExpressionTree", "getExpression", null, path1.getLeaf()); //NOI18N
+                    List<? extends ExpressionTree> exprTrees = TreeShims.getExpressions(path1.getLeaf());
+                    if (!exprTrees.isEmpty()) {
+                        exprTree = exprTrees.get(0);
+                    }
                 }
-                TypeMirror tm = controller.getTrees().getTypeMirror(new TreePath(path1, expressionTree));
+                TypeMirror tm = controller.getTrees().getTypeMirror(new TreePath(path1, exprTree));
                 if (tm.getKind() == TypeKind.DECLARED && ((DeclaredType) tm).asElement().getKind() == ENUM) {
                     addEnumConstants(env, (TypeElement) ((DeclaredType) tm).asElement());
                 } else {
                     addLocalConstantsAndTypes(env);
                 }
             }
-
         } else {
             TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(env, cst, offset);
             if (ts != null && ts.token().id() != JavaTokenId.DEFAULT) {
@@ -3686,12 +3686,11 @@ public final class JavaCompletionTask<T> extends BaseTask {
         TreePath path = env.getPath().getParentPath();
         Set<Element> alreadyUsed = new HashSet<>();
         List<? extends CaseTree> caseTrees = null;
-
         if (path != null && path.getLeaf().getKind() == Tree.Kind.SWITCH) {
             SwitchTree st = (SwitchTree) path.getLeaf();
             caseTrees = st.getCases();
-        } else if (path.getLeaf().getKind().toString().equals("SWITCH_EXPRESSION")) { //NOI18N
-            caseTrees = (List<? extends CaseTree>) ReflectionHelper.invokeMethod("com.sun.source.tree.SwitchExpressionTree", "getCases", null, path.getLeaf()); //NOI18N
+        } else if (path != null && path.getLeaf().getKind().toString().equals("SWITCH_EXPRESSION")) { //NOI18N
+            caseTrees = TreeShims.getCases(path.getLeaf());
         }
         if (caseTrees != null) {
             for (CaseTree ct : caseTrees) {

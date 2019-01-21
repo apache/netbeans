@@ -63,6 +63,7 @@ import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.queries.FileEncodingQuery;
+import org.netbeans.api.scripting.Scripting;
 import org.netbeans.modules.apisupport.project.api.ManifestManager;
 import org.netbeans.modules.apisupport.project.api.Util;
 import org.netbeans.modules.apisupport.project.api.EditableManifest;
@@ -1488,7 +1489,7 @@ public final class CreatedModifiedFiles {
         if (l == null) {
             l = Thread.currentThread().getContextClassLoader();
         }
-        ScriptEngineManager scriptEngineManager = new ScriptEngineManager(l);
+        ScriptEngineManager scriptEngineManager = Scripting.createManager();
         ScriptEngine engine = scriptEngineManager.getEngineByName("freemarker");
         assert engine != null : "#163878: " + scriptEngineManager.getEngineFactories() + " lacks freemarker using "
                 + l + " though lookup has "

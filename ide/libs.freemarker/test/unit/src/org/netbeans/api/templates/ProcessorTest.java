@@ -45,6 +45,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import junit.framework.TestCase;
+import org.netbeans.api.scripting.Scripting;
 import org.netbeans.junit.MockServices;
 import org.netbeans.spi.queries.FileEncodingQueryImplementation;
 import org.openide.filesystems.FileObject;
@@ -75,7 +76,7 @@ public class ProcessorTest extends TestCase {
     }
 
     public void testWorksWithoutFileObjects() throws UnsupportedEncodingException, ScriptException {
-        ScriptEngineManager manager = new ScriptEngineManager();
+        ScriptEngineManager manager = Scripting.createManager();
         ScriptEngine eng = manager.getEngineByName("freemarker");
         assertNotNull("engine found", eng);
 
@@ -510,7 +511,7 @@ public class ProcessorTest extends TestCase {
     }
     
     static void apply(FileObject template, Writer w, Map<String,? extends Object> values, TemplateExceptionHandler teh) throws Exception {
-        ScriptEngineManager mgr = new ScriptEngineManager();
+        ScriptEngineManager mgr = Scripting.createManager();
         ScriptEngine eng = mgr.getEngineByName("freemarker");
         assertNotNull("We do have such engine", eng);
         eng.getContext().setWriter(w);

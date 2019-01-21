@@ -277,8 +277,9 @@
       </verifyjnlp>
   </target>
   
-  <target name="build-javadoc">
-      <echo message="Deprecated, use nbbuild/javadoctools/build.xml directly"/>
+  <target name="build-javadoc" depends="javadoc"/>
+
+  <target name="javadoc" depends="bootstrap" description="Builds Javadoc for all NetBeans modules with some APIs">
       <ant dir="javadoctools" target="build-javadoc"/>
   </target>
 

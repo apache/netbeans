@@ -23,16 +23,15 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import junit.framework.Test;
+import org.netbeans.api.scripting.Scripting;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.NbTestSuite;
 import org.openide.filesystems.FileObject;
@@ -73,7 +72,7 @@ public class SpeedTest extends NbTestCase {
         fo = lfs.findResource("template.txt");
         
 
-        ScriptEngineManager mgr = new ScriptEngineManager();
+        ScriptEngineManager mgr = Scripting.createManager();
         eng = mgr.getEngineByName("freemarker");
         assertNotNull("We do have such engine", eng);
         eng.getContext().setAttribute(FileObject.class.getName(), fo, ScriptContext.ENGINE_SCOPE);

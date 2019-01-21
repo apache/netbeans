@@ -18,11 +18,13 @@
  */
 package org.netbeans.modules.java.source;
 
+import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -43,6 +45,56 @@ public class TreeShims {
         try {
             Method getBody = CaseTree.class.getDeclaredMethod("getBody");
             return (Tree) getBody.invoke(node);
+        } catch (NoSuchMethodException ex) {
+            return null;
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+
+    public static List<? extends ExpressionTree> getExpressions(Tree node) {
+        List<? extends ExpressionTree> exprTrees = new ArrayList<>();
+
+        switch (node.getKind().toString()) {
+            case "CASE":
+                exprTrees = getExpressions((CaseTree) node);
+                break;
+            case "SWITCH_EXPRESSION": {
+                try {
+                    Class swExprTreeClass = Class.forName("com.sun.source.tree.SwitchExpressionTree");
+                    Method getExpressions = swExprTreeClass.getDeclaredMethod("getExpression");
+                    exprTrees = Collections.singletonList((ExpressionTree) getExpressions.invoke(node));
+                } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                    throw TreeShims.<RuntimeException>throwAny(ex);
+                }
+                break;
+            }
+            default:
+                break;
+        }
+        return exprTrees;
+    }
+
+    public static List<? extends CaseTree> getCases(Tree node) {
+        List<? extends CaseTree> caseTrees = new ArrayList<>();
+
+        if (node.getKind().toString().equals("SWITCH_EXPRESSION")) {
+            try {
+                Class swExprTreeClass = Class.forName("com.sun.source.tree.SwitchExpressionTree");
+                Method getCases = swExprTreeClass.getDeclaredMethod("getCases");
+                caseTrees = (List<? extends CaseTree>) getCases.invoke(node);
+            } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                throw TreeShims.<RuntimeException>throwAny(ex);
+            }
+
+        }
+        return caseTrees;
+    }
+
+    public static ExpressionTree getValue(BreakTree node) {
+        try {
+            Method getExpression = BreakTree.class.getDeclaredMethod("getValue");
+            return (ExpressionTree) getExpression.invoke(node);
         } catch (NoSuchMethodException ex) {
             return null;
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {

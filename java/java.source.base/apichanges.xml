@@ -25,18 +25,6 @@
     <apidef name="javasource_base">Java Source API</apidef>
 </apidefs>
 <changes>
-     <change id="ReflectionHelper.invokeMethod">
-        <api name="javasource_base"/>
-        <summary>Adding ReflectionHelper.invokeMethod method</summary>
-        <version major="1" minor="2.41"/>
-        <date day="27" month="12" year="2018"/>
-        <author login="arusinha"/>
-        <compatibility addition="yes" binary="compatible" source="compatible"/>
-        <description>
-            Added ReflectionHelper.invokeMethod to call methods of a class using Reflection.
-        </description>
-        <class name="ReflectionHelper" package="org.netbeans.api.java.source"/>
-    </change>
     <change id="Matcher.setKeepSyntheticTrees">
         <api name="javasource_base"/>
         <summary>Adding Matcher.setKeepSyntheticTrees method</summary>

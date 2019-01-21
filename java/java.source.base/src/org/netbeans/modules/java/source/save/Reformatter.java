@@ -27,11 +27,9 @@ import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
-import com.sun.tools.javac.tree.JCTree.JCCase;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCModifiers;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.*;
 import javax.lang.model.element.Name;
@@ -55,6 +53,7 @@ import org.netbeans.modules.editor.indent.spi.ExtraLock;
 import org.netbeans.modules.editor.indent.spi.ReformatTask;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
 import org.netbeans.modules.java.source.NoJavacHelper;
+import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.parsing.api.Embedding;
@@ -66,7 +65,6 @@ import org.netbeans.modules.parsing.impl.Utilities;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
-import org.openide.util.Exceptions;
 import org.openide.util.Pair;
 
 /**
@@ -580,7 +578,7 @@ public class Reformatter implements ReformatTask {
             try {
                 if (endPos < 0)
                     return false;
-                Boolean ret = tokens.offset() <= endPos ? (tree.getKind().toString().equals("SWITCH_EXPRESSION")) ? scanSwitchExpression(tree, p) : super.scan(tree, p) : null; //NOI18N
+                Boolean ret = tokens.offset() <= endPos ? (tree.getKind().toString().equals("SWITCH_EXPRESSION")) ? scanSwitchExpression(tree,p) : super.scan(tree, p) : null; //NOI18N
                 return ret != null ? ret : true;
             }
             finally {
@@ -2651,15 +2649,18 @@ public class Reformatter implements ReformatTask {
             indent = lastIndent = old;
             return true;
         }
-        
+
         public Boolean scanSwitchExpression(Tree node, Void p) {
             accept(SWITCH);
             boolean oldContinuationIndent = continuationIndent;
             try {
                 continuationIndent = true;
                 spaces(cs.spaceBeforeSwitchParen() ? 1 : 0);
-                ExpressionTree expressionTree = (ExpressionTree) ReflectionHelper.invokeMethod("com.sun.source.tree.SwitchExpressionTree", "getExpression", null, node);  //NOI18N
-                scan(expressionTree, p);
+                List<? extends ExpressionTree> exprTrees = TreeShims.getExpressions(node);
+                if (!exprTrees.isEmpty()) {
+                    ExpressionTree expressionTree = exprTrees.get(0);
+                    scan(expressionTree, p);
+                }
             } finally {
                 continuationIndent = oldContinuationIndent;
             }
@@ -2693,7 +2694,7 @@ public class Reformatter implements ReformatTask {
             }
             continuationIndent = false;
             indent = lastIndent + indentSize;
-            List<? extends CaseTree> caseTrees = (List<? extends CaseTree>) ReflectionHelper.invokeMethod("com.sun.source.tree.SwitchExpressionTree", "getCases", null, node);  //NOI18N
+            List<? extends CaseTree> caseTrees = TreeShims.getCases(node);  //NOI18N
             try {
                 for (CaseTree caseTree : caseTrees) {
                     newline();
@@ -2705,7 +2706,7 @@ public class Reformatter implements ReformatTask {
                 Diff diff = diffs.isEmpty() ? null : diffs.getFirst();
                 if (diff != null && diff.end == tokens.offset()) {
                     if (diff.text != null) {
-                        int idx = diff.text.lastIndexOf('\n'); //NOI18N
+                        int idx = diff.text.lastIndexOf('\n'); //NOI18N                                                                                                                
                         if (idx < 0) {
                             diff.text = getIndent();
                         } else {
@@ -2735,9 +2736,7 @@ public class Reformatter implements ReformatTask {
             } finally {
                 continuationIndent = oldContinuationIndent;
             }
-
             indent = lastIndent = old;
-
             return true;
         }
 
@@ -2752,16 +2751,15 @@ public class Reformatter implements ReformatTask {
                 accept(DEFAULT);
             }
             List<? extends StatementTree> statements = node.getStatements();
-            if (statements != null)
-                accept(COLON);
-            else if (node instanceof JCCase) {
-                statements = ((JCCase) node).stats;
+            if(statements != null)
+            accept(COLON);
+            else if (node instanceof JCTree.JCCase) {
+                statements = ((JCTree.JCCase) node).stats;
                 accept(ARROW);
-            }      
+            }
             int old = indent;
             indent = lastIndent + indentSize;
             boolean first = true;
-
             for (StatementTree stat : statements) {
                 if (first) {
                     if (stat.getKind() == Tree.Kind.BLOCK) {
@@ -2774,7 +2772,6 @@ public class Reformatter implements ReformatTask {
                 }
                 first = false;
             }
-                        
             indent = old;
             return true;
         }
@@ -2782,25 +2779,11 @@ public class Reformatter implements ReformatTask {
         @Override
         public Boolean visitBreak(BreakTree node, Void p) {
             accept(BREAK);
-             Boolean getValueMethodFound = false;
-
-            try {
-                Method method = BreakTree.class.getMethod("getValue"); //NOI18N
-                getValueMethodFound = true;
-            } catch (NoSuchMethodException ex) {
-                getValueMethodFound = false;
-            } catch (SecurityException ex) {
-                Exceptions.printStackTrace(ex);
+            ExpressionTree exprTree = TreeShims.getValue(node) ;
+            if (exprTree != null) {
+                space();
+                scan(exprTree, p);
             }
-
-            if (getValueMethodFound == true) {
-                ExpressionTree expressionTree = (ExpressionTree) ReflectionHelper.invokeMethod(BreakTree.class.getCanonicalName(), "getValue", null, node); //NOI18N
-                if (expressionTree != null) {
-                    space();
-                    scan(expressionTree, p);
-                }
-            }
-
             Name label = node.getLabel();
             if (label != null) {
                 space();

@@ -1788,12 +1788,12 @@ public class CopyFinder extends ErrorAwareTreeScanner<Boolean, TreePath> {
                 return ((BlockTree) firstLeaf.getParentPath().getLeaf()).getStatements();
             case CASE:
                 CaseTree caseTree = (CaseTree) firstLeaf.getParentPath().getLeaf();
-                if(caseTree.getStatements() != null){
+                if (caseTree.getStatements() != null) {
                     return caseTree.getStatements();
-                }else if(caseTree instanceof JCTree.JCCase){
-                    return ((JCTree.JCCase)caseTree).stats;
-                }else {
-		    return null;
+                } else if (caseTree instanceof JCTree.JCCase) {
+                    return ((JCTree.JCCase) caseTree).stats;
+                } else {
+                    return null;
                 }
             default:
                 return Collections.singletonList((StatementTree) firstLeaf.getLeaf());

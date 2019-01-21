@@ -148,7 +148,7 @@
                 <file name="org-netbeans-modules-java-hints-errors-ImportClass.instance"/>
                 <file name="org-netbeans-modules-java-hints-errors-AddCast.instance"/>
                 <file name="org-netbeans-modules-java-hints-errors-VarCompDeclaration.instance"/>
-                <file name="org-netbeans-modules-java-hints-errors-ConvertToRuleSwitch.instance"/>
+                <file name="org-netbeans-modules-java-hints-errors-DifferentCaseKindsFix.instance"/>
                 <file name="org-netbeans-modules-java-hints-errors-CreateElement.instance"/>
                 <file name="org-netbeans-modules-java-hints-errors-ChangeMethodParameters.instance"/>
                 <file name="org-netbeans-modules-java-hints-errors-RenameConstructor.instance"/>
@@ -326,7 +326,7 @@
 
                 <folder name="bugs">
                     <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.java.hints.resources.Bundle"/>
-                    <file name="org-netbeans-modules-java-hints-SuspiciousNamesCombination.instance" />
+                    <file name="org-netbeans-modules-java-hints-SuspiciousNamesCombination.instance"/>
                 </folder>
 
                 <folder name="thread">

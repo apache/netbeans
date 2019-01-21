@@ -48,7 +48,6 @@ import java.util.Set;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.VariableElement;
-import javax.tools.Diagnostic;
 import org.netbeans.api.java.queries.CompilerOptionsQuery;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreeMaker;
@@ -66,7 +65,7 @@ import org.openide.util.NbBundle;
  *
  * @author vkprabha
  */
-public class ConvertToRuleSwitch implements ErrorRule<Void> {
+public class DifferentCaseKindsFix implements ErrorRule<Void> {
 
     private static final Set<String> ERROR_CODES = new HashSet<String>(Arrays.asList(
             "compiler.err.switch.mixing.case.types")); // NOI18N
@@ -106,7 +105,7 @@ public class ConvertToRuleSwitch implements ErrorRule<Void> {
             }
         }
 
-        return Collections.<Fix>singletonList(new ConvertToRuleSwitch.FixImpl(info, treePath).toEditorFix());
+        return Collections.<Fix>singletonList(new DifferentCaseKindsFix.FixImpl(info, treePath).toEditorFix());
     }
 
     private static boolean completesNormally(CompilationInfo info, TreePath tp) {
@@ -187,16 +186,16 @@ public class ConvertToRuleSwitch implements ErrorRule<Void> {
 
     @Override
     public String getId() {
-        return ConvertToRuleSwitch.class.getName();
+        return DifferentCaseKindsFix.class.getName();
     }
 
     @Override
     public String getDisplayName() {
-        return NbBundle.getMessage(ConvertToRuleSwitch.class, "FIX_SWITCH_MIX_CASE"); // NOI18N
+        return NbBundle.getMessage(DifferentCaseKindsFix.class, "FIX_SWITCH_MIX_CASE"); // NOI18N
     }
 
     public String getDescription() {
-        return NbBundle.getMessage(ConvertToRuleSwitch.class, "FIX_SWITCH_MIX_CASE"); // NOI18N
+        return NbBundle.getMessage(DifferentCaseKindsFix.class, "FIX_SWITCH_MIX_CASE"); // NOI18N
     }
 
     @Override
@@ -216,11 +215,11 @@ public class ConvertToRuleSwitch implements ErrorRule<Void> {
 
         @Override
         protected String getText() {
-            return NbBundle.getMessage(ConvertToRuleSwitch.class, "FIX_SWITCH_MIX_CASE"); // NOI18N
+            return NbBundle.getMessage(DifferentCaseKindsFix.class, "FIX_SWITCH_MIX_CASE"); // NOI18N
         }
 
         public String toDebugString() {
-            return NbBundle.getMessage(ConvertToRuleSwitch.class, "FIX_SWITCH_MIX_CASE"); // NOI18N
+            return NbBundle.getMessage(DifferentCaseKindsFix.class, "FIX_SWITCH_MIX_CASE"); // NOI18N
         }
 
         @Override
@@ -230,7 +229,7 @@ public class ConvertToRuleSwitch implements ErrorRule<Void> {
             if (switchBlock instanceof SwitchTree) {
                 SwitchTree st = (SwitchTree) switchBlock;
                 handleSwitchTree(ctx, tp, st);
-            }//else if Handle SwitchExpressionTree using reflexon
+            }
 
         }
 
@@ -247,9 +246,9 @@ public class ConvertToRuleSwitch implements ErrorRule<Void> {
             CaseTree ct = it.next();
             TreePath casePath = new TreePath(tp, ct);
             patterns.addAll(TreeShims.getExpressions(ct));
-            List<? extends StatementTree> statements = null;
+            List<StatementTree> statements;
             if (ct.getStatements() == null) {
-                statements = ((JCCase) ct).stats;
+                statements = new ArrayList<>(((JCCase) ct).stats);
             } else {
                 statements = new ArrayList<>(ct.getStatements());
             }
@@ -277,7 +276,7 @@ public class ConvertToRuleSwitch implements ErrorRule<Void> {
             }
             Set<Element> seenVariables = new HashSet<>();
             int idx = 0;
-            for (StatementTree statement : new ArrayList<>(statements)) {
+            for (StatementTree statement : statements) {
                 TreePath statementPath = new TreePath(casePath, statement);
                 if (statement.getKind() == Tree.Kind.EXPRESSION_STATEMENT) {
                     ExpressionTree expr = ((ExpressionStatementTree) statement).getExpression();
@@ -302,15 +301,14 @@ public class ConvertToRuleSwitch implements ErrorRule<Void> {
                         }
                         return super.visitIdentifier(node, p);
                     }
-                }.scan(statementPath, null);
-                
-// Todo : Need to check the use case
-//                if (!thisStatementSeenVariables.isEmpty()) {
-//                    for (Element el : thisStatementSeenVariables) {
-//                        VariableElement var = (VariableElement) el;
-//                        statements.add(idx++, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), var.getSimpleName(), make.Type(var.asType()), null));
-//                    }
-//                }
+                }.scan(statementPath, null);             
+
+                if (!thisStatementSeenVariables.isEmpty()) {
+                    for (Element el : thisStatementSeenVariables) {
+                        VariableElement var = (VariableElement) el;
+                        statements.add(idx++, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), var.getSimpleName(), make.Type(var.asType()), null));
+                    }
+                }
                 idx++;
             }
             Tree body = make.Block(statements, false);

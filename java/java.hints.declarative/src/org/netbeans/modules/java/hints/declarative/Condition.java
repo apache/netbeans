@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.declarative.conditionapi.Context;
+import org.netbeans.modules.java.hints.declarative.conditionapi.Variable;
 
 /**
  *
@@ -59,13 +60,12 @@ public abstract class Condition {
 
         @Override
         public boolean holds(Context ctx, boolean global) {
-            if (global && !not) {
-                //if this is a global condition, not == false, then the computation should always lead to true
-                //note that ctx.getVariables().get(variable) might even by null (implicit this)
-                return true;
+            TreePath boundTo = APIAccessor.IMPL.getSingleVariable(ctx, new Variable(variable));
+
+            if (boundTo == null) {
+                throw new IllegalStateException();
             }
 
-            TreePath boundTo = APIAccessor.IMPL.getSingleVariable(ctx, ctx.variableForName(variable));
             CompilationInfo info = APIAccessor.IMPL.getHintContext(ctx).getInfo();
             TypeMirror realType = info.getTrees().getTypeMirror(boundTo);
             TypeMirror designedType = Hacks.parseFQNType(info, constraint);

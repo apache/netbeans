@@ -59,6 +59,8 @@ public class FormModel
     }
     final static FormVersion LATEST_VERSION = FormVersion.NB74;
 
+    private String leadingComment;
+
     private FormVersion currentVersionLevel;
     private FormVersion lastConfirmedVersionLevel;
     private FormVersion maxVersionLevel; // max version to upgrade to without user confirmation
@@ -159,6 +161,14 @@ public class FormModel
 
     void setName(String name) {
         formName = name;
+    }
+
+    public String getLeadingComment() {
+        return leadingComment;
+    }
+
+    public void setLeadingComment(String leadingComment) {
+        this.leadingComment = leadingComment;
     }
 
     /**

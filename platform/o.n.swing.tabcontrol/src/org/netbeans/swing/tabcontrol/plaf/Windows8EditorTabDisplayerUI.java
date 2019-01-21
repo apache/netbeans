@@ -32,7 +32,7 @@ import org.netbeans.swing.tabcontrol.TabDisplayer;
  * @author S. Aubrecht
  * @since 1.41
  */
-public final class Windows8EditorTabDisplayerUI extends AbstractWinEditorTabDisplayerUI {
+public class Windows8EditorTabDisplayerUI extends AbstractWinEditorTabDisplayerUI {
 
     private static Map<Integer, String[]> buttonIconPaths;
     

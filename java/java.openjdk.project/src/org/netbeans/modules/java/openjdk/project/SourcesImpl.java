@@ -60,6 +60,7 @@ import org.openide.util.Utilities;
 public class SourcesImpl implements Sources, FileChangeListener, ChangeListener {
 
     public static final String SOURCES_TYPE_JDK_PROJECT = "jdk-project-sources";
+    public static final String SOURCES_TYPE_JDK_PROJECT_TESTS = "jdk-project-sources-tests";
 
     private final ChangeSupport cs = new ChangeSupport(this);
     private final JDKProject project;
@@ -125,6 +126,10 @@ public class SourcesImpl implements Sources, FileChangeListener, ChangeListener 
 
                 if (root.kind != RootKind.NATIVE_SOURCES) {
                     addSourceGroup(JavaProjectConstants.SOURCES_TYPE_JAVA, sg);
+                }
+
+                if (root.kind == RootKind.TEST_SOURCES) {
+                    addSourceGroup(SOURCES_TYPE_JDK_PROJECT_TESTS, sg);
                 }
 
                 addSourceGroup(SOURCES_TYPE_JDK_PROJECT, sg);

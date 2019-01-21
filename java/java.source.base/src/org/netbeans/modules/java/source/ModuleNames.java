@@ -129,7 +129,28 @@ public final class ModuleNames {
             final FileObject root = URLMapper.findFileObject(rootUrl);
             if (root != null) {
                 final FileObject file = FileUtil.getArchiveFile(root);
-                final FileObject moduleInfo = root.getFileObject(FileObjects.MODULE_INFO, FileObjects.CLASS);
+                FileObject moduleInfo = null;
+                //try versioned module-infos, as the source/target level is not available here,
+                //use the most up-to-date version:
+                FileObject versions = root.getFileObject("META-INF/versions");
+                if (versions != null) {
+                    int version = -1;
+                    for (FileObject c : versions.getChildren()) {
+                        try {
+                            int currentVersion = Integer.parseInt(c.getNameExt());
+                            FileObject currentMI = c.getFileObject(FileObjects.MODULE_INFO, FileObjects.CLASS);
+                            if (currentVersion > version && currentMI != null) {
+                                moduleInfo = currentMI;
+                                version = currentVersion;
+                            }
+                        } catch (NumberFormatException ex) {
+                            //ok, ignore
+                        }
+                    }
+                }
+                if (moduleInfo == null) {
+                    moduleInfo = root.getFileObject(FileObjects.MODULE_INFO, FileObjects.CLASS);
+                }
                 if (moduleInfo != null) {
                     try {
                         final String modName = readModuleName(moduleInfo);

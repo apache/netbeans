@@ -141,7 +141,9 @@ public class PHPStanReportParser extends DefaultHandler {
     private void processResultStart(Attributes attributes) {
         assert currentFile != null;
         assert currentResult == null : currentResult.getFilePath();
-
+        if (currentFile == null) {
+            return;
+        }
         currentResult = new Result(currentFile);
         int lineNumber = getInt(attributes, "line"); // NOI18N
         // line number can be 0
@@ -173,12 +175,18 @@ public class PHPStanReportParser extends DefaultHandler {
         return i;
     }
 
+    @CheckForNull
     private String getCurrentFile(String fileName) {
-        FileObject parent = root.getParent();
         String sanitizedFileName = sanitizeFileName(fileName);
-        if (parent.isFolder()) {
-            FileObject current = parent.getFileObject(sanitizedFileName);
+        FileObject rootDirectory = root;
+        if (!root.isFolder()) {
+            rootDirectory = root.getParent();
+        }
+        if (rootDirectory.isFolder()) {
+            FileObject current = rootDirectory.getFileObject(sanitizedFileName);
             if (current == null) {
+                LOGGER.log(Level.WARNING, "Cannot get the current file: file name {0}, root directory {1}", // NOI18N
+                        new Object[]{fileName, FileUtil.toFile(rootDirectory).getAbsolutePath()});
                 return null;
             }
             return FileUtil.toFile(current).getAbsolutePath();

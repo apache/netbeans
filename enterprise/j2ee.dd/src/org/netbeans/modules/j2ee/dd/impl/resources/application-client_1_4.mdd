@@ -1,0 +1,495 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright (c) 2006, 2016 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+-->
+<metaDD>
+	<meta-element>
+		<dtd-name>application-client</dtd-name>
+		<namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+		<bean-name>ApplicationClient</bean-name>
+            <comparator-class>org.netbeans.modules.j2ee.dd.impl.common.Comparator</comparator-class>
+            <extends>org.netbeans.modules.j2ee.dd.impl.common.ComponentBeanMultiple</extends>
+            <implements>
+                org.netbeans.modules.j2ee.dd.api.client.AppClient
+            </implements>
+            <user-code>
+                public org.xml.sax.SAXParseException getError() {
+                    return null;
+                }
+                public int getStatus() {
+                    return STATE_VALID;
+                }
+            </user-code>
+	</meta-element>
+
+
+        <meta-element>
+		<dtd-name>callback-handlerType</dtd-name>
+		<namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+		<bean-name>CallbackHandler</bean-name>
+		<wrapper-class>java.lang.String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>env-entryType</dtd-name>
+		<namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+		<bean-name>EnvEntry</bean-name>
+            <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
+            <implements> 
+                org.netbeans.modules.j2ee.dd.api.common.EnvEntry, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+            </implements>
+            <user-code>
+                public String getKeyProperty() {
+                    return "EnvEntryName";
+                }
+                public void setMappedName(String value) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public int removeInjectionTarget(org.netbeans.modules.j2ee.dd.api.common.InjectionTarget valueInterface) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public int addInjectionTarget(org.netbeans.modules.j2ee.dd.api.common.InjectionTarget valueInterface) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public void setInjectionTarget(int index, org.netbeans.modules.j2ee.dd.api.common.InjectionTarget valueInterface) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public org.netbeans.modules.j2ee.dd.api.common.InjectionTarget getInjectionTarget(int index) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public void setInjectionTarget(org.netbeans.modules.j2ee.dd.api.common.InjectionTarget[] value) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public int sizeInjectionTarget() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public org.netbeans.modules.j2ee.dd.api.common.InjectionTarget newInjectionTarget() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public String getMappedName() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public org.netbeans.modules.j2ee.dd.api.common.InjectionTarget[] getInjectionTarget() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+            </user-code>
+	</meta-element>
+	<meta-element>
+		<dtd-name>iconType</dtd-name>
+		<namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+		<bean-name>Icon</bean-name>
+                <implements> 
+                    org.netbeans.modules.j2ee.dd.api.common.Icon
+                </implements>
+	</meta-element>
+	<meta-element>
+            <dtd-name>service-refType</dtd-name>
+            <namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+            <bean-name>ServiceRef</bean-name>
+            <comparator-class>org.netbeans.modules.j2ee.dd.impl.common.Comparator</comparator-class>
+            <extends>org.netbeans.modules.j2ee.dd.impl.common.ComponentBeanMultiple</extends>
+            <implements> 
+                org.netbeans.modules.j2ee.dd.api.common.ServiceRef, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+            </implements>
+            <user-code>
+                public String getKeyProperty() { return "ServiceRefName"; }
+                public void setMappedName(String value) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public String getMappedName() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public void setHandlerChains(org.netbeans.modules.j2ee.dd.api.common.ServiceRefHandlerChains valueInterface) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public org.netbeans.modules.j2ee.dd.api.common.ServiceRefHandlerChains getHandlerChains() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public org.netbeans.modules.j2ee.dd.api.common.ServiceRefHandlerChains newServiceRefHandlerChains() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+            </user-code>
+	</meta-element>
+	<meta-element>
+            <dtd-name>service-ref_handlerType</dtd-name>
+            <namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+            <bean-name>ServiceRefHandler</bean-name>
+            <comparator-class>org.netbeans.modules.j2ee.dd.impl.common.Comparator</comparator-class>
+            <extends>org.netbeans.modules.j2ee.dd.impl.common.ComponentBeanMultiple</extends>
+            <implements> 
+                org.netbeans.modules.j2ee.dd.api.common.ServiceRefHandler, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+            </implements>
+            <user-code>
+                public String getKeyProperty() { return "HandlerName"; }
+            </user-code>
+	</meta-element>
+	<meta-element>
+            <dtd-name>resource-refType</dtd-name>
+            <namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+            <bean-name>ResourceRef</bean-name>
+            <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
+            <implements> 
+                org.netbeans.modules.j2ee.dd.api.common.ResourceRef, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+            </implements>
+            <user-code>
+                public String getKeyProperty() { return "ResRefName"; }
+                public void setMappedName(String value) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public int removeInjectionTarget(org.netbeans.modules.j2ee.dd.api.common.InjectionTarget valueInterface) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public int addInjectionTarget(org.netbeans.modules.j2ee.dd.api.common.InjectionTarget valueInterface) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public void setInjectionTarget(int index, org.netbeans.modules.j2ee.dd.api.common.InjectionTarget valueInterface) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public org.netbeans.modules.j2ee.dd.api.common.InjectionTarget getInjectionTarget(int index) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public void setInjectionTarget(org.netbeans.modules.j2ee.dd.api.common.InjectionTarget[] value) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public int sizeInjectionTarget() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public org.netbeans.modules.j2ee.dd.api.common.InjectionTarget newInjectionTarget() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public String getMappedName() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public org.netbeans.modules.j2ee.dd.api.common.InjectionTarget[] getInjectionTarget() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+            </user-code>
+	</meta-element>
+	<meta-element>
+            <dtd-name>resource-env-refType</dtd-name>
+            <namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+            <bean-name>ResourceEnvRef</bean-name>
+            <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
+            <implements> 
+                org.netbeans.modules.j2ee.dd.api.common.ResourceEnvRef, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+            </implements>
+            <user-code>
+                public String getKeyProperty() { return "ResourceEnvRefName"; }
+                public void setMappedName(String value) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public int removeInjectionTarget(org.netbeans.modules.j2ee.dd.api.common.InjectionTarget valueInterface) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public int addInjectionTarget(org.netbeans.modules.j2ee.dd.api.common.InjectionTarget valueInterface) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public void setInjectionTarget(int index, org.netbeans.modules.j2ee.dd.api.common.InjectionTarget valueInterface) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public org.netbeans.modules.j2ee.dd.api.common.InjectionTarget getInjectionTarget(int index) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public void setInjectionTarget(org.netbeans.modules.j2ee.dd.api.common.InjectionTarget[] value) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public int sizeInjectionTarget() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public org.netbeans.modules.j2ee.dd.api.common.InjectionTarget newInjectionTarget() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public String getMappedName() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public org.netbeans.modules.j2ee.dd.api.common.InjectionTarget[] getInjectionTarget() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+            </user-code>
+	</meta-element>
+	<meta-element>
+            <dtd-name>message-destination-refType</dtd-name>
+            <namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+            <bean-name>MessageDestinationRef</bean-name>
+            <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
+            <implements> 
+                org.netbeans.modules.j2ee.dd.api.common.MessageDestinationRef, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+            </implements>
+            <user-code>
+                public String getKeyProperty() { return "MessageDestinationRefName"; }
+                public void setMappedName(String value) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public int removeInjectionTarget(org.netbeans.modules.j2ee.dd.api.common.InjectionTarget valueInterface) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public int addInjectionTarget(org.netbeans.modules.j2ee.dd.api.common.InjectionTarget valueInterface) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public void setInjectionTarget(int index, org.netbeans.modules.j2ee.dd.api.common.InjectionTarget valueInterface) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public org.netbeans.modules.j2ee.dd.api.common.InjectionTarget getInjectionTarget(int index) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public void setInjectionTarget(org.netbeans.modules.j2ee.dd.api.common.InjectionTarget[] value) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public int sizeInjectionTarget() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public org.netbeans.modules.j2ee.dd.api.common.InjectionTarget newInjectionTarget() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public String getMappedName() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public org.netbeans.modules.j2ee.dd.api.common.InjectionTarget[] getInjectionTarget() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+            </user-code>
+	</meta-element>
+	<meta-element>
+            <dtd-name>message-destinationType</dtd-name>
+            <namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+            <bean-name>MessageDestination</bean-name>
+            <extends>org.netbeans.modules.j2ee.dd.impl.common.ComponentBeanMultiple</extends>
+            <implements> 
+                org.netbeans.modules.j2ee.dd.api.common.MessageDestination, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+            </implements>
+            <user-code>
+                public String getKeyProperty() { return "MessageDestinationName"; }
+                public void setMappedName(String value) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public String getMappedName() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+            </user-code>
+	</meta-element>
+	<meta-element>
+            <dtd-name>ejb-refType</dtd-name>
+            <namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+            <bean-name>EjbRef</bean-name>
+            <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
+            <implements> 
+                org.netbeans.modules.j2ee.dd.api.common.EjbRef, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+            </implements>
+            <user-code>
+                public String getKeyProperty() { return "EjbRefName"; }
+                public void setMappedName(String value) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public int removeInjectionTarget(org.netbeans.modules.j2ee.dd.api.common.InjectionTarget valueInterface) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public int addInjectionTarget(org.netbeans.modules.j2ee.dd.api.common.InjectionTarget valueInterface) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public void setInjectionTarget(int index, org.netbeans.modules.j2ee.dd.api.common.InjectionTarget valueInterface) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public org.netbeans.modules.j2ee.dd.api.common.InjectionTarget getInjectionTarget(int index) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public void setInjectionTarget(org.netbeans.modules.j2ee.dd.api.common.InjectionTarget[] value) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public int sizeInjectionTarget() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public org.netbeans.modules.j2ee.dd.api.common.InjectionTarget newInjectionTarget() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public String getMappedName() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+                public org.netbeans.modules.j2ee.dd.api.common.InjectionTarget[] getInjectionTarget() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                    throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_1_4);
+                }
+            </user-code>
+	</meta-element>
+	<meta-element>
+		<dtd-name>port-component-refType</dtd-name>
+		<namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+		<bean-name>PortComponentRef</bean-name>
+                <implements> 
+                    org.netbeans.modules.j2ee.dd.api.common.PortComponentRef
+                </implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>xsdQNameType</dtd-name>
+		<namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+		<bean-name>XsdQNameType</bean-name>
+		<wrapper-class>java.lang.String</wrapper-class>
+	</meta-element>
+	<meta-element>
+            <dtd-name>service-ref_handlerType</dtd-name>
+            <namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+            <bean-name>ServiceRefHandler</bean-name>
+            <comparator-class>org.netbeans.modules.j2ee.dd.impl.common.Comparator</comparator-class>
+            <extends>org.netbeans.modules.j2ee.dd.impl.common.ComponentBeanMultiple</extends>
+            <implements> 
+                org.netbeans.modules.j2ee.dd.api.common.ServiceRefHandler, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+            </implements>
+            <user-code>
+                public String getKeyProperty() { return "HandlerName"; }
+            </user-code>
+	</meta-element>
+	<meta-element>
+            <dtd-name>param-valueType</dtd-name>
+            <namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+            <bean-name>InitParam</bean-name>
+            <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
+            <implements> 
+                org.netbeans.modules.j2ee.dd.api.common.InitParam, org.netbeans.modules.j2ee.dd.impl.common.KeyBean
+            </implements>
+            <user-code>
+                public String getKeyProperty() { return "ParamName"; }
+            </user-code>
+	</meta-element>
+
+	<meta-element>
+		<dtd-name>string</dtd-name>
+		<namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+		<bean-name>String</bean-name>
+		<wrapper-class>java.lang.String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>descriptionType</dtd-name>
+		<namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+		<bean-name>Description</bean-name>
+		<wrapper-class>java.lang.String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>display-nameType</dtd-name>
+		<namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+		<bean-name>DisplayName</bean-name>
+		<wrapper-class>java.lang.String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>pathType</dtd-name>
+		<namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+		<bean-name>PathType</bean-name>
+		<wrapper-class>java.lang.String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>jndi-nameType</dtd-name>
+		<namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+		<bean-name>JndiNameType</bean-name>
+		<wrapper-class>java.lang.String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>message-destination-typeType</dtd-name>
+		<namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+		<bean-name>MessageDestinationTypeType</bean-name>
+		<wrapper-class>java.lang.String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>message-destination-usageType</dtd-name>
+		<namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+		<bean-name>MessageDestinationUsageType</bean-name>
+		<wrapper-class>java.lang.String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>message-destination-linkType</dtd-name>
+		<namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+		<bean-name>MessageDestinationLinkType</bean-name>
+		<wrapper-class>java.lang.String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>res-authType</dtd-name>
+		<namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+		<bean-name>ResAuthType</bean-name>
+		<wrapper-class>java.lang.String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>res-sharing-scopeType</dtd-name>
+		<namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+		<bean-name>ResSharingScopeType</bean-name>
+		<wrapper-class>java.lang.String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>xsdAnyURIType</dtd-name>
+		<namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+		<bean-name>XsdAnyURIType</bean-name>
+		<wrapper-class>java.net.URI</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>xsdStringType</dtd-name>
+		<namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+		<bean-name>XsdStringType</bean-name>
+		<wrapper-class>java.lang.String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>ejb-ref-nameType</dtd-name>
+		<namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+		<bean-name>EjbRefNameType</bean-name>
+		<wrapper-class>java.lang.String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>ejb-ref-typeType</dtd-name>
+		<namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+		<bean-name>EjbRefTypeType</bean-name>
+		<wrapper-class>java.lang.String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>homeType</dtd-name>
+		<namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+		<bean-name>HomeType</bean-name>
+		<wrapper-class>java.lang.String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>remoteType</dtd-name>
+		<namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+		<bean-name>RemoteType</bean-name>
+		<wrapper-class>java.lang.String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>ejb-linkType</dtd-name>
+		<namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+		<bean-name>EjbLinkType</bean-name>
+		<wrapper-class>java.lang.String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>env-entry-type-valuesType</dtd-name>
+		<namespace>http://java.sun.com/xml/ns/j2ee</namespace>
+		<bean-name>EnvEntryTypeValuesType</bean-name>
+		<wrapper-class>java.lang.String</wrapper-class>
+	</meta-element>
+</metaDD>

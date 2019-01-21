@@ -30,10 +30,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.SwingUtilities;
+import org.netbeans.api.autoupdate.InstallSupport;
 import org.netbeans.api.autoupdate.OperationContainer;
 import org.netbeans.api.autoupdate.OperationContainer.OperationInfo;
 import org.netbeans.api.autoupdate.OperationException;
@@ -45,6 +47,8 @@ import org.netbeans.modules.autoupdate.ui.Containers;
 import org.netbeans.modules.autoupdate.ui.Utilities;
 import org.openide.WizardDescriptor;
 import org.openide.awt.Mnemonics;
+import org.openide.modules.Dependency;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -66,7 +70,25 @@ public abstract class OperationWizardModel {
     static String MORE_BROKEN_PLUGINS = "OperationWizardModel_MoreBrokenPlugins"; // NOI18N
     private TreeMap<String, Set<UpdateElement>> dep2plugins = null;
     abstract OperationType getOperation ();
+    private Callable<OperationContainer>    refreshCallable;
+    private Set<String> missingModules = new HashSet<>();
+    
+    /**
+     * Basic container for the operation. This container represents the operation itself.
+     * @return container for the operation
+     */
     abstract OperationContainer getBaseContainer ();
+    
+    /**
+     * Install container, if part of the operation.
+     * If the operation does not use the install step, returns {@code null}.
+     * 
+     * @return install container or {@code null}
+     */
+    OperationContainer getInstallContainer() {
+        return null;
+    }
+    
     abstract OperationContainer<OperationSupport> getCustomHandledContainer ();
     
     public static enum OperationType {
@@ -116,6 +138,15 @@ public abstract class OperationWizardModel {
                                 brokenDep = "package";
                             } else {
                                 continue;
+                            }
+                        } else if (brokenDep.toLowerCase().startsWith("module ")) { // NOI18N
+                            // Special handling for modules - if the module is missing (there's no UpdateUnit for it), 
+                            String modName = brokenDep.substring(7).trim();
+                            Set<Dependency> deps = Dependency.create(Dependency.TYPE_MODULE, modName);
+                            for (Dependency d : deps) {
+                                if (!UpdateManager.getDefault().getUpdateUnits().stream().anyMatch((m) -> m.getCodeName().equals(d.getName()))) {
+                                    missingModules.add(d.getName());
+                                }
                             }
                         }
                         if (dep2plugins.get (brokenDep) == null) {
@@ -169,6 +200,15 @@ public abstract class OperationWizardModel {
     
     public boolean hasStandardComponents () {
         return ! getBaseContainer ().listAll ().isEmpty ();
+    }
+    
+    /**
+     * Set of unknown modules. May mean that the AU caches are not populated
+     * with all the update centers.
+     * @return missing module codenames
+     */
+    public Set<String> getMissingModules() {
+        return missingModules;
     }
     
     public Set<UpdateElement> getCustomHandledComponents () {
@@ -319,6 +359,15 @@ public abstract class OperationWizardModel {
         });
     }
     
+    /**
+     * Will modify the wizard at the end of the install operation.
+     * The default will delegate to {@link #modifyOptionsForDoClose(org.openide.WizardDescriptor)}.
+     * @param wd 
+     */
+    public void modifyOptionsForEndInstall(WizardDescriptor wd) {
+        modifyOptionsForDoClose (wd, false);
+    }
+    
     // XXX Hack in WizardDescriptor
     public void modifyOptionsForDoClose (final WizardDescriptor wd, final boolean canCancel) {
         recognizeButtons (wd);
@@ -351,8 +400,8 @@ public abstract class OperationWizardModel {
     }
     
     public void modifyOptionsForContinue (final WizardDescriptor wd, boolean canFinish) {
+        recognizeButtons (wd);
         if (canFinish) {
-            recognizeButtons (wd);
             final JButton b = getOriginalFinish (wd);
             Mnemonics.setLocalizedText (b, getBundle ("InstallUnitWizardModel_Buttons_Close"));
             SwingUtilities.invokeLater (new Runnable () {
@@ -362,15 +411,73 @@ public abstract class OperationWizardModel {
                 }
             });
         } else {
-            recognizeButtons (wd);
             removeFinish (wd);
             Mnemonics.setLocalizedText (getOriginalNext (wd), NbBundle.getMessage (InstallUnitWizardModel.class,
                     "InstallUnitWizardModel_Buttons_MnemonicNext", getBundle ("InstallUnitWizardModel_Buttons_Next")));
         }
     }
     
+    /**
+     * Brings back cancel, and sets it as a closing option.
+     * Should work properly if the Cancel was completely removed, or just replaced using
+     * {@link #modifyOptionsForDisabledCancel}.
+     * 
+     * @param wd wizard descriptor to modify
+     */
+    public void modifyOptionsContinueWithCancel(final WizardDescriptor wd) {
+        JButton b = getOriginalNext (wd);
+        JButton c = getOriginalCancel(wd);
+        Object[] opts = wd.getOptions();
+        final Object[] arr;
+        final Object[] closingArr = new Object[] { c };
+        if (!Arrays.asList(opts).contains(c)) {
+            List newOpts = new ArrayList<>(Arrays.asList(opts));
+            Object o = wd.getProperty("OperationWizardModel_disabledCancel");
+            // replace previously disabled cancel
+            int n = o == null ? -1 : newOpts.indexOf(o);
+            if (n > -1) {
+                newOpts.set(n, c);
+            } else {
+                // fallback: find 'next' and place cancel next to it
+                n = newOpts.indexOf(b);
+                if (n == -1) {
+                    n = newOpts.size();
+                }
+                newOpts.add(n, c);
+            }
+            arr = newOpts.toArray();
+        } else {
+            arr = opts;
+        }
+        SwingUtilities.invokeLater (new Runnable () {
+            int cnt;
+            @Override
+            public void run () {
+                b.requestFocus();
+                if (cnt++ > 0) {
+                    return;
+                }
+
+                b.setDefaultCapable(true);
+                wd.setOptions (arr);
+                wd.setClosingOptions(closingArr);
+                SwingUtilities.invokeLater(this);
+            }
+        });
+    }
+    
+    /**
+     * Changes option suitably for "install" phase. Will disable next button
+     * (install is running).
+     * @param wd wizar ddescriptor
+     */
+    public void modifyOptionsForInstall(WizardDescriptor wd) {
+        recognizeButtons (wd);
+        getOriginalNext (wd).setEnabled(false);
+    }
+    
     // XXX Hack in WizardDescriptor
-    public void modifyOptionsForDoOperation (WizardDescriptor wd) {
+    public void modifyOptionsForDoOperation (WizardDescriptor wd, int panelType) {
         recognizeButtons (wd);
         removeFinish (wd);
         switch (getOperation ()) {
@@ -391,6 +498,22 @@ public abstract class OperationWizardModel {
             Mnemonics.setLocalizedText (getOriginalNext (wd), getBundle ("UninstallUnitWizardModel_Buttons_Uninstall"));
             break;
         case ENABLE :
+            if (hasComponentsToInstall()) {
+                // modifications for the nested install during the enable operation
+                switch (panelType) {
+                    case 1:
+                        Mnemonics.setLocalizedText (getOriginalNext (wd), getBundle ("InstallUnitWizardModel_Buttons_Install"));
+                        break;
+                    case 2:
+                        Mnemonics.setLocalizedText (getOriginalNext (wd), getBundle ("UninstallUnitWizardModel_Buttons_TurnOn"));
+                        break;
+                    default:
+                        Mnemonics.setLocalizedText (getOriginalNext (wd), NbBundle.getMessage (InstallUnitWizardModel.class,
+                            "InstallUnitWizardModel_Buttons_MnemonicNext", getBundle ("InstallUnitWizardModel_Buttons_Next")));
+                        break;
+                }
+                break;
+            }
             Mnemonics.setLocalizedText (getOriginalNext (wd), getBundle ("UninstallUnitWizardModel_Buttons_TurnOn"));
             break;
         case DISABLE :
@@ -399,6 +522,7 @@ public abstract class OperationWizardModel {
         default:
             assert false : "Unknown operationType " + getOperation ();
         }
+        getOriginalNext (wd).setEnabled(true);
     }
     
     // XXX Hack in WizardDescriptor
@@ -418,6 +542,7 @@ public abstract class OperationWizardModel {
                 JButton b = (JButton) o;
                 if (b.equals (getOriginalCancel (wd))) {
                     JButton disabledCancel = new JButton (b.getText ());
+                    wd.putProperty("OperationWizardModel_disabledCancel", disabledCancel);
                     disabledCancel.setEnabled (false);
                     newOptionsL.add (disabledCancel);
                 } else {
@@ -438,7 +563,7 @@ public abstract class OperationWizardModel {
         getCustomHandledContainer ().removeAll ();
     }
     
-    private void recognizeButtons (WizardDescriptor wd) {
+    public void recognizeButtons (WizardDescriptor wd) {
         if (! reconized) {
             Object [] options = wd.getOptions ();
             assert options != null : "options: " + options;
@@ -490,6 +615,7 @@ public abstract class OperationWizardModel {
     private void addRequiredElements (Set<UpdateElement> elems) {
         OperationContainer baseContainer = getBaseContainer();
         OperationContainer customContainer = getCustomHandledContainer();
+        OperationContainer installContainer = getInstallContainer();
         for (UpdateElement el : elems) {
             if (el == null || el.getUpdateUnit () == null) {
                 Logger.getLogger (OperationWizardModel.class.getName ()).log (Level.INFO, "UpdateElement " + el + " cannot be null"
@@ -498,13 +624,64 @@ public abstract class OperationWizardModel {
             }
             if (UpdateManager.TYPE.CUSTOM_HANDLED_COMPONENT == el.getUpdateUnit ().getType ()) {
                 customContainer.add (el);
-            } else {
+            } else if (baseContainer.canBeAdded(el.getUpdateUnit(), el)) {
                 baseContainer.add (el);
+            } else if (installContainer != null && installContainer.canBeAdded(el.getUpdateUnit(), el)) {
+                installContainer.add(el);
             }
         }
     }
     
     private String getBundle (String key) {
         return NbBundle.getMessage (InstallUnitWizardModel.class, key);
+    }
+
+    /**
+     * Determines if there are modules to install before the main enable operation
+     * may be successful.
+     * @return modules to install
+     */
+    public boolean hasComponentsToInstall() {
+        OperationContainer<InstallSupport> oc = getInstallContainer();
+        if (oc == null) {
+            return false;
+        }
+        return !oc.listAll().isEmpty();
+    }
+
+    public void setRefreshCallable(Callable<OperationContainer> refreshCallable) {
+        this.refreshCallable = refreshCallable;
+    }
+    
+    /**
+     * Will trigger refresh of this model and possibly UI. If the 
+     * {@link #refreshCallable} is set, the method will call it to obtain
+     * a new {@link OperationContainer} contents to initialize the model.
+     * {@link #refresh} will be called with the new container.
+     */
+    protected void performRefresh() {
+        requiredElements = null;
+        dep2plugins = null;
+        allElements = null;
+        customHandledElements = null;
+        primaryElements = null;
+        
+        if (refreshCallable != null) {
+            try {
+                refresh(refreshCallable.call());
+            } catch (Exception ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+    }
+    
+    /**
+     * Subclasses should override this method to perform a data refresh.
+     * The method is called from {@link #performRefresh} to reinitialize the
+     * wizard model, e.g. after module set/state change during the wizard
+     * 
+     * @param cont the new operation container
+     */
+    protected void refresh(OperationContainer cont) {
     }
 }

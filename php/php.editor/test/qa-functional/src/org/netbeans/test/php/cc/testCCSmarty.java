@@ -17,7 +17,6 @@
  * under the License.
  */
 package org.netbeans.test.php.cc;
-import java.awt.event.InputEvent;
 import junit.framework.Test;
 import org.netbeans.jellytools.EditorOperator;
 import org.netbeans.jemmy.EventTool;

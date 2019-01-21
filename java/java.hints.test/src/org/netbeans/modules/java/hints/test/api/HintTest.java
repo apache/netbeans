@@ -114,6 +114,7 @@ import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.java.hints.Hint.Kind;
 import org.netbeans.spi.java.hints.HintContext;
 import org.netbeans.spi.java.hints.JavaFix;
+import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
 import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation;
 import org.netbeans.spi.java.queries.SourceLevelQueryImplementation;
 import org.openide.LifecycleManager;
@@ -177,6 +178,7 @@ public class HintTest {
     private final HintsSettings hintSettings;
     private final List<FileObject> checkCompilable = new ArrayList<FileObject>();
     private String sourceLevel = "1.5";
+    private List<String> extraOptions = new ArrayList<>();
     private Character caretMarker;
     private FileObject testFile;
     private int caret = -1;
@@ -211,6 +213,7 @@ public class HintTest {
                           new TestProxyClassPathProvider(),
                           new TestSourceForBinaryQuery(),
                           new TestSourceLevelQueryImplementation(),
+                          new TestCompilerOptionsQueryImplementation(),
                           JavaDataLoader.findObject(JavaDataLoader.class, true)),
             Lookups.metaInfServices(HintTest.class.getClassLoader()),
             Lookups.singleton(HintTest.class.getClassLoader())
@@ -384,6 +387,17 @@ public class HintTest {
      */
     public HintTest sourceLevel(String sourceLevel) {
         this.sourceLevel = sourceLevel;
+        return this;
+    }
+
+    /**Sets additional command line options for all Java files used in this test.
+     *
+     * @param options the additional command line options to use while parsing Java files
+     * @return itself
+     * @since 1.23
+     */
+    public HintTest options(String... options) {
+        extraOptions.addAll(Arrays.asList(options));
         return this;
     }
 
@@ -707,6 +721,28 @@ public class HintTest {
 
         public String getSourceLevel(FileObject javaFile) {
             return sourceLevel;
+        }
+
+    }
+
+    private class TestCompilerOptionsQueryImplementation implements CompilerOptionsQueryImplementation {
+
+        @Override
+        public Result getOptions(FileObject file) {
+            return new Result() {
+                @Override
+                public List<? extends String> getArguments() {
+                    return extraOptions;
+                }
+
+                @Override
+                public void addChangeListener(ChangeListener listener) {
+                }
+
+                @Override
+                public void removeChangeListener(ChangeListener listener) {
+                }
+            };
         }
 
     }
@@ -1085,7 +1121,7 @@ public class HintTest {
                         rt = s1.token();
                         if (!wh) {
                             if (!rt.text().toString().equals(gt.text().toString())) {
-                                failNotSame(result, golden, s1.offset());
+                                failNotSame(result, golden, s1.offset(), s2.offset());
                             }
                         } else if (!isWH(rt)) {
                             s1.movePrevious();
@@ -1093,14 +1129,14 @@ public class HintTest {
                         }
                     } while (isWH(rt) && s1.moveNext());
                 } else if (!wh) {
-                    failNotSame(result, golden, s2.offset());
+                    failNotSame(result, golden, s1.offset(), s2.offset());
                 }
             }
             
             s1.movePrevious();
             s2.movePrevious();
             if (s1.moveNext() != s2.moveNext()) {
-                failNotSame(result, golden, s2.offset());
+                failNotSame(result, golden, s1.offset(), s2.offset());
             }
         }
         
@@ -1108,8 +1144,8 @@ public class HintTest {
             return t.id() == JavaTokenId.WHITESPACE;
         }
         
-        private void failNotSame(String result, String golden, int point) {
-            String fakeGolden = result.substring(0, point) + golden.substring(point);
+        private void failNotSame(String result, String golden, int resultPoint, int goldenPoint) {
+            String fakeGolden = result.substring(0, resultPoint) + golden.substring(goldenPoint);
             assertEquals("The output code does not match the expected code.", fakeGolden, result);
         }
         

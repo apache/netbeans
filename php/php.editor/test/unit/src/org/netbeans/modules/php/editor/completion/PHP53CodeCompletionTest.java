@@ -22,7 +22,6 @@ package org.netbeans.modules.php.editor.completion;
 import org.netbeans.modules.php.editor.completion.PHPCodeCompletionTestBase;
 import java.io.File;
 import java.util.Collections;
-import org.netbeans.modules.php.editor.*;
 import java.util.Map;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.modules.php.project.api.PhpSourcePath;

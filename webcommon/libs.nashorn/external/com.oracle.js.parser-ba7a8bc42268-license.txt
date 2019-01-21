@@ -4,7 +4,7 @@ Description: An ECMAScript 6 (ECMAScript 2015) compliant parser for JavaScript s
 License: GPL-2-CP
 Origin: http://hg.openjdk.java.net/graal/graal-js-parser
 Type: compile-time
-Comment: NetBeans JS support will be broken unless Nashorn is compatible-licensed, or a download is provided similar to nb-javac. See NETBEANS-1159, NETBEANS-1160.
+Comment: Compile-time only library, JAR will not be copied to the distribution.
 
 The GNU General Public License (GPL)
 Version 2, June 1991

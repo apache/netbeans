@@ -21,6 +21,8 @@ package org.netbeans.modules.schema2beansdev;
 
 import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 /**
  * EntityParser.java - parses the DTD file for entity declarations and creates new Reader
  * that replaces the entity references with values
@@ -29,56 +31,59 @@ import java.util.*;
  * @author mkuchtiak
  */
 public class EntityParser {
-    private java.util.Map entityMap;
-    private final String text;
-    public EntityParser(Reader reader) throws IOException {
-        StringWriter w = new StringWriter();
+    private static final Pattern ENTITY_PATTERN = Pattern.compile("<!ENTITY\\s+%\\s+(\\S+)\\s+\"([^\"]*)\"\\s*>");
+    private static final Pattern ENTITY_USE_PATTERN = Pattern.compile("%([\\S;]+);");
+
+    private final Map<String,String> entityMap  = new HashMap<>();
+    private String remainingText = "";
+
+    public EntityParser() throws IOException {
+    }
+
+    /**
+     * Parses file for ENTITY declaration, creates map with entities
+     */
+    public void parse(Reader reader) throws IOException {
+        StringBuilder w = new StringBuilder();
         char[] buf = new char[4096];
         int read;
         while ((read = reader.read(buf)) != -1) {
-            w.write(buf, 0, read);
+            w.append(buf, 0, read);
         }
-        this.text = w.toString();
-        entityMap = new java.util.HashMap();
-    }
-    /** Parses file for ENTITY declaration, creates map with entities
-     */
-    public void parse() throws IOException {
-        BufferedReader br = new BufferedReader(new StringReader(text));
-        String line = null;
-        while ((line=br.readLine())!=null) {
-            int startPos = line.indexOf("<!ENTITY ");
-            if (startPos>=0) addEntity(br,line.substring(startPos+9));
-        }
-        br.close();
-    }
-    
-    private void addEntity(BufferedReader br, String line) throws IOException {
-        StringTokenizer tok = new StringTokenizer(line);
-        if (!tok.hasMoreTokens()) return;
-        String percentage = tok.nextToken();
-        if (!"%".equals(percentage)) return; //incorrect ENTITY declaration (missing %)
-        if (!tok.hasMoreTokens()) return; //incorrect ENTITY declaration (missing entity name)
-	
-	// cut the first part including entity key
-        String key = tok.nextToken();
-        int valueStartPos = line.indexOf(key)+key.length();
-        String rest = line.substring(valueStartPos);
-	
-	// looking for starting quotes
-	valueStartPos =  rest.indexOf("\"");
-	if (valueStartPos<0) return;
-	
-	// looking for entity value
-	rest = rest.substring(valueStartPos+1);
-	String value = resolveValue (rest,br);
 
-        // write ENTITY into map	
+        String originalText = w.toString();
+
+        StringBuffer buffer = new StringBuffer(originalText.length());
+        Matcher entityMatcher = ENTITY_PATTERN.matcher(originalText);
+        while(entityMatcher.find()) {
+            addEntity(entityMatcher);
+            entityMatcher.appendReplacement(buffer, "");
+        }
+        entityMatcher.appendTail(buffer);
+
+        StringBuffer buffer2 = new StringBuffer(originalText.length());
+        Matcher entityReplacementMatcher = ENTITY_USE_PATTERN.matcher(buffer);
+        while(entityReplacementMatcher.find()) {
+            String entity = entityReplacementMatcher.group(1);
+            if(entityMap.containsKey(entity)) {
+                entityReplacementMatcher.appendReplacement(buffer2, entityMap.get(entity));
+            }
+        }
+        entityReplacementMatcher.appendTail(buffer2);
+
+        remainingText = buffer2.toString();
+    }
+
+    private void addEntity(Matcher m) throws IOException {
+        String key = m.group(1);
+	String value = m.group(2);
+
+        // write ENTITY into map
         if (value!=null) {
 	    int refStart = value.indexOf("%");
 	    int refEnd = value.indexOf(";");
 	    if (refStart>=0 && refEnd>refStart) { //references other entity
-		String entityKey = value.substring(refStart+1,refEnd);		
+		String entityKey = value.substring(refStart+1,refEnd);
                 String val = (String)entityMap.get(entityKey);
 		if (val!=null) {
 		    String newValue = value.substring(0,refStart)+val+value.substring(refEnd+1);
@@ -92,76 +97,12 @@ public class EntityParser {
             }
         }
     }
-    
-    private String resolveValue(String lineRest, BufferedReader br) throws IOException {
-	// looking for closing quotes
-	int index = lineRest.indexOf("\"");
-	if (index>=0) return lineRest.substring(0,index);	
-	// value across multiple lines	
-	StringBuffer buf = new StringBuffer(lineRest);
-        buf.append("\n");
-	int ch=br.read();
-        while ( ch!=(int)'"' && ch!=(int)'>' && ch!=-1 ) {
-	    buf.append((char)ch);
-	    ch=br.read();
-        }
-	return buf.toString();
-    }
-
-    private boolean containsBlank(String s) {
-        for (int i=0;i<s.length();i++) {
-            if (' '==s.charAt(i)) return true;
-        }
-        return false;
-    }    
 
     /** Creates a StringReader that removes all ENTITY declarations
      *  and replaces entity references with corresponding values
      */
     public Reader getReader() throws IOException {
-        StringBuffer buf = new StringBuffer();
-        BufferedReader br = new BufferedReader(new StringReader(text));
-        String line = null;
-        while ((line=br.readLine())!=null) {
-            // removing line(s) with entity declaration
-            if (line.indexOf("<!ENTITY ")>=0) line = removeEntityDeclaration(line,br); 
-            // searches for entity reference and replace it with value
-            int pos = line.indexOf("%");
-            if (pos>=0) {
-                StringTokenizer tok = new StringTokenizer(line.substring(pos),";%");
-                while (tok.hasMoreTokens()) {
-                    String key = tok.nextToken();
-                    if (key.length()>0 && !containsBlank(key)) {
-                        String value = (String)entityMap.get(key);
-                        if (value!=null) line = line.replaceAll("%"+key+";",value);
-                    }
-                }
-            }
-            if (line.length()>0) buf.append(line);
-        }
-        br.close();
-        return new StringReader(buf.toString());
+        return new StringReader(remainingText);
     }
-    
-    /** Removing line(s) containing ENTITY declaration
-     */ 
-    private String removeEntityDeclaration(String line,BufferedReader br) throws IOException {
-        int start = line.indexOf("<!ENTITY ");
-        StringBuffer buf = new StringBuffer();
-        if (start>0) buf.append(line.substring(0, start));
-        int endPos = line.indexOf(">", start);
-        if (endPos>0) {
-            buf.append(line.substring(endPos+1));
-            return buf.toString();
-        }
-        String ln=null;
-        while (endPos<0 && (ln=br.readLine())!=null) {
-            endPos = ln.indexOf(">");
-            if (endPos>=0) {
-                buf.append(ln.substring(endPos+1));
-            }
-        }
-        return buf.toString();
-    }
-    
+
 }

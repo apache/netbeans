@@ -33,7 +33,6 @@
         <resource>jar:nbinst://org.netbeans.modules.j2ee.platform/docs/javaee-doc-api.jar!/</resource>
     </volume>
     <properties>
-        <!-- please check with mkleint@netbeans.org before/after updating this or "classpath" section -->
         <property>
             <name>maven-dependencies</name>
             <value>org.glassfish:javax.faces:2.2.7:jar</value>

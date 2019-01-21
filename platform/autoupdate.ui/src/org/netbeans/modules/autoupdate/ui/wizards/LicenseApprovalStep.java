@@ -43,7 +43,7 @@ import org.openide.util.RequestProcessor;
  *
  * @author Jiri Rechtacek
  */
-public class LicenseApprovalStep implements WizardDescriptor.FinishablePanel<WizardDescriptor> {
+class LicenseApprovalStep implements WizardDescriptor.FinishablePanel<WizardDescriptor> {
     private LicenseApprovalPanel panel;
     private PanelBodyContainer component;
     private InstallUnitWizardModel model = null;
@@ -70,7 +70,8 @@ public class LicenseApprovalStep implements WizardDescriptor.FinishablePanel<Wiz
             component = new PanelBodyContainer (getBundle (HEAD), getBundle (CONTENT), tmp);
             component.setPreferredSize (OperationWizardModel.PREFFERED_DIMENSION);
             if (wd != null) {
-                model.modifyOptionsForDoOperation (wd);
+                // have "Activate" text during 'enable' phase.
+                model.modifyOptionsForDoOperation (wd, 2);
             }
             component.setWaitingState (true);
             appendLoadingLazy ();
@@ -111,7 +112,8 @@ public class LicenseApprovalStep implements WizardDescriptor.FinishablePanel<Wiz
     public void readSettings (WizardDescriptor wd) {
         this.wd = wd;
         if (panel != null) {
-            model.modifyOptionsForDoOperation (wd);
+            // have "Activate" text during 'enable' phase.
+            model.modifyOptionsForDoOperation (wd, 2);
         }
     }
 

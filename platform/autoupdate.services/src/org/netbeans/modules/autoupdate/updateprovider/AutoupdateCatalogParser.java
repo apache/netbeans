@@ -34,12 +34,12 @@ import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import org.netbeans.Module;
 import org.netbeans.modules.autoupdate.services.Trampoline;
 import org.netbeans.modules.autoupdate.services.UpdateLicenseImpl;
 import org.netbeans.modules.autoupdate.services.Utilities;
 import org.netbeans.spi.autoupdate.UpdateItem;
 import org.netbeans.spi.autoupdate.UpdateLicense;
-import org.openide.util.Exceptions;
 import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -510,7 +510,7 @@ public class AutoupdateCatalogParser extends DefaultHandler {
         private URI base;
         private String catalogDate;
         
-        private boolean isFragment = false;
+        private String fragmentHost;
         
         private static ModuleDescriptor md = null;
         
@@ -545,7 +545,7 @@ public class AutoupdateCatalogParser extends DefaultHandler {
             String autoload = module.getValue (MODULE_ATTR_AUTOLOAD);
             String preferred = module.getValue(MODULE_ATTR_IS_PREFERRED_UPDATE);
                         
-            needsRestart = isFragment || needsrestart == null || needsrestart.trim ().length () == 0 ? null : Boolean.valueOf (needsrestart);
+            needsRestart = needsrestart == null || needsrestart.trim ().length () == 0 ? null : Boolean.valueOf (needsrestart);
             isGlobal = global == null || global.trim ().length () == 0 ? null : Boolean.valueOf (global);
             isEager = Boolean.parseBoolean (eager);
             isAutoload = Boolean.parseBoolean (autoload);
@@ -561,10 +561,9 @@ public class AutoupdateCatalogParser extends DefaultHandler {
         
         public void appendManifest (Attributes manifest) {
             specVersion = manifest.getValue (MANIFEST_ATTR_SPECIFICATION_VERSION);
-            String fragmentHost = manifest.getValue(MANIFEST_ATTR_FRAGMENT_HOST);            
-            isFragment = fragmentHost != null && !fragmentHost.isEmpty();
-            if (isFragment) {
-                needsRestart = true;
+            fragmentHost = manifest.getValue(MANIFEST_ATTR_FRAGMENT_HOST);   
+            if (fragmentHost != null && fragmentHost.isEmpty()) {
+                fragmentHost = null;
             }
             mf = getManifest (manifest);
             id = moduleCodeName + '_' + specVersion; // NOI18N
@@ -600,7 +599,9 @@ public class AutoupdateCatalogParser extends DefaultHandler {
             // read module notification
             UpdateItemImpl impl = Trampoline.SPI.impl(res);
             ((ModuleItem) impl).setModuleNotification (notification);
-            
+            if (fragmentHost != null) {
+                ((ModuleItem) impl).setFragmentHost (fragmentHost);
+            }
             // clean-up ModuleDescriptor
             cleanUp ();
             

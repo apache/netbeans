@@ -20,13 +20,12 @@
 package org.netbeans.core.osgi;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
@@ -123,20 +122,27 @@ class OSGiInstalledFileLocator extends InstalledFileLocator {
                         if (!dir.isDirectory() && !dir.mkdirs()) {
                             throw new IOException("Could not make " + dir);
                         }
-                        try (InputStream is = resource.openStream();
-                                OutputStream os = Files.newOutputStream(f2.toPath())) {
-                            byte[] buf = new byte[4096];
-                            int read;
-                            while ((read = is.read(buf)) != -1) {
-                                os.write(buf, 0, read);
+                        InputStream is = resource.openStream();
+                        try {
+                            OutputStream os = new FileOutputStream(f2);
+                            try {
+                                byte[] buf = new byte[4096];
+                                int read;
+                                while ((read = is.read(buf)) != -1) {
+                                    os.write(buf, 0, read);
+                                }
+                            } finally {
+                                os.close();
                             }
+                        } finally {
+                            is.close();
                         }
                         if (execFiles.contains(name)) {
                             f2.setExecutable(true);
                         }
                     }
                     return f;
-                } catch (IOException | InvalidPathException x) {
+                } catch (IOException x) {
                     Exceptions.printStackTrace(x);
                 }
             }

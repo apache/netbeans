@@ -117,8 +117,8 @@ public final class AquaLFCustoms extends LFCustoms {
 
 
             //UI Delegates for the tab control
-            EDITOR_TAB_DISPLAYER_UI, "org.netbeans.swing.tabcontrol.plaf.AquaEditorTabDisplayerUI",
-            VIEW_TAB_DISPLAYER_UI, "org.netbeans.swing.tabcontrol.plaf.AquaViewTabDisplayerUI",
+            EDITOR_TAB_DISPLAYER_UI, "org.netbeans.swing.tabcontrol.plaf.AquaVectorEditorTabDisplayerUI",
+            VIEW_TAB_DISPLAYER_UI, "org.netbeans.swing.tabcontrol.plaf.AquaVectorViewTabDisplayerUI",
             SLIDING_TAB_BUTTON_UI, "org.netbeans.swing.tabcontrol.plaf.SlidingTabDisplayerButtonUI$Aqua",
             "NbTabControl.focusedTabBackground", new Color(135,189,255),
             "NbTabControl.selectedTabBrighterBackground", new Color(252,252,252),

@@ -203,10 +203,10 @@ public class JDKProject implements Project {
 
         }
 
-        ClassPathProviderImpl cpp = new ClassPathProviderImpl(this);
+        ClassPathProviderImpl cpp = new ClassPathProviderImpl(this, moduleRepository);
 
         Lookup base = Lookups.fixed(cpp,
-                                    new OpenProjectHookImpl(cpp),
+                                    new OpenProjectHookImpl(this, cpp, moduleRepository),
                                     new SourcesImpl(this),
                                     new LogicalViewProviderImpl(this),
                                     new SourceLevelQueryImpl(jdkRoot),

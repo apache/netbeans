@@ -91,9 +91,9 @@ public final class Windows8LFCustoms extends LFCustoms {
     @Override
     public Object[] createApplicationSpecificKeysAndValues () {
         UIBootstrapValue editorTabsUI = new Windows8EditorColorings (
-                "org.netbeans.swing.tabcontrol.plaf.Windows8EditorTabDisplayerUI");
+                "org.netbeans.swing.tabcontrol.plaf.Windows8VectorEditorTabDisplayerUI");
 
-        Object viewTabsUI = editorTabsUI.createShared("org.netbeans.swing.tabcontrol.plaf.Windows8ViewTabDisplayerUI");
+        Object viewTabsUI = editorTabsUI.createShared("org.netbeans.swing.tabcontrol.plaf.Windows8VectorViewTabDisplayerUI");
 
         //TODO change icon (copy & paste)
         Image explorerIcon = UIUtils.loadImage("org/netbeans/swing/plaf/resources/vista_folder.png");

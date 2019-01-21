@@ -1,5 +1,21 @@
-D6F416983EA13C334D5C599A9045414ECAF5D66D javaee-api-6.0.jar
-EBEC44255251E6D3B8DDBAF701F732DAF0238CBF javaee-web-api-6.0.jar
-B290091E71DEED6CE7F9EB40523D49C26399A2B4 javax.annotation.jar
-EB77D3664EEA27D67B799ED28CB766B4D0971505 jaxb-api-osgi.jar
-A5744971ACE1F44A0FC71CCB93DE530CB3022965 webservices-api-osgi.jar
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+D6F416983EA13C334D5C599A9045414ECAF5D66D javax:javaee-api:6.0
+EBEC44255251E6D3B8DDBAF701F732DAF0238CBF javax:javaee-web-api:6.0
+479C1E06DB31C432330183F5CAE684163F186146 javax.annotation:javax.annotation-api:1.2
+ACDC6E43595B4EF739D7B3CBB6A8D36832DA6DDD javax.xml.bind:jaxb-api-osgi:2.2
+36C9E426AB6BDBE656316E3706FCD8878E8639AE javax.xml:webservices-api-osgi:2.0

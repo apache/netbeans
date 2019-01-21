@@ -22,6 +22,7 @@ import java.util.Collection;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -46,6 +47,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
@@ -53,6 +55,9 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.ErrorType;
+import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
@@ -102,7 +107,7 @@ public final class CreateElement implements ErrorRule<Void> {
     }
 
     public Set<String> getCodes() {
-        return new HashSet<String>(Arrays.asList("compiler.err.cant.resolve.location", "compiler.err.cant.resolve.location.args", "compiler.err.cant.apply.symbol", "compiler.err.cant.apply.symbol.1", "compiler.err.cant.apply.symbols", "compiler.err.cant.resolve", "compiler.err.cant.resolve.args", CAST_KEY, "compiler.err.try.with.resources.expr.needs.var")); // NOI18N
+        return new HashSet<String>(Arrays.asList("compiler.err.cant.resolve.location", "compiler.err.cant.resolve.location.args", "compiler.err.cant.apply.symbol", "compiler.err.cant.apply.symbol.1", "compiler.err.cant.apply.symbols", "compiler.err.cant.resolve", "compiler.err.cant.resolve.args", CAST_KEY, "compiler.err.try.with.resources.expr.needs.var", "compiler.err.invalid.mref")); // NOI18N
     }
     public static final String CAST_KEY = "compiler.err.prob.found.req";
 
@@ -141,6 +146,10 @@ public final class CreateElement implements ErrorRule<Void> {
     }
     
     private static List<Fix> analyzeImpl(CompilationInfo info, String diagnosticKey, int offset) throws IOException {
+        if ("compiler.err.invalid.mref".equals(diagnosticKey)) {
+            return computeMissingMemberRefFixes(info, offset);
+        }
+
         TreePath errorPath = ErrorHintsProvider.findUnresolvedElement(info, offset);
 
         if (errorPath == null) {
@@ -494,7 +503,62 @@ public final class CreateElement implements ErrorRule<Void> {
 
         return result;
     }
-    
+
+    private static List<Fix> computeMissingMemberRefFixes(CompilationInfo info, int offset) {
+        TreePath errorPath = info.getTreeUtilities().pathFor(offset + 1);
+        while (errorPath != null && errorPath.getLeaf().getKind() != Kind.MEMBER_REFERENCE) {
+            errorPath = errorPath.getParentPath();
+        }
+        if (errorPath == null) {
+            return Collections.<Fix>emptyList();
+        }
+        MemberReferenceTree mref = (MemberReferenceTree) errorPath.getLeaf();
+        TypeMirror mrefType = info.getTrees().getTypeMirror(errorPath);
+        if (mrefType.getKind() == TypeKind.ERROR) {
+            TypeMirror expectedTargetType = info.getTrees().getOriginalType((ErrorType) mrefType);
+            if (expectedTargetType == null || expectedTargetType.getKind() != TypeKind.DECLARED) {
+                return Collections.<Fix>emptyList();
+            }
+            ExecutableElement expectedMethod = Utilities.getFunctionalMethodFromElement(info, info.getTypes().asElement(expectedTargetType));
+            if (expectedMethod == null) {
+                return Collections.<Fix>emptyList();
+            }
+            ExecutableType methodType = (ExecutableType) info.getTypes().asMemberOf((DeclaredType) expectedTargetType, expectedMethod);
+            if (Utilities.containsErrorsRecursively(methodType)) {
+                return Collections.<Fix>emptyList();
+            }
+            TypeMirror targetType = /*XXX: check the target*/info.getTrees().getTypeMirror(new TreePath(errorPath, mref.getQualifierExpression()));
+            TypeElement target = (TypeElement) info.getTypes().asElement(targetType);
+            //TODO: use thrown types?
+            //IZ 111048 -- don't offer anything if target file isn't writable
+            if(!Utilities.isTargetWritable(target, info))
+                return Collections.<Fix>emptyList();
+
+            FileObject targetFile = SourceUtils.getFile(ElementHandle.create(target), info.getClasspathInfo());
+            if (targetFile == null)
+                return Collections.<Fix>emptyList();
+            Set<Modifier> modifiers = EnumSet.noneOf(Modifier.class);
+            TreePath tp = errorPath;
+            while (tp != null && !TreeUtilities.CLASS_TREE_KINDS.contains(tp.getLeaf().getKind())) {
+                tp = tp.getParentPath();
+            }
+            modifiers.addAll(Utilities.getAccessModifiers(info, (TypeElement) info.getTrees().getElement(tp), (TypeElement) target).getRequiredModifiers());
+            Element targetExprEl = info.getTrees().getElement(new TreePath(errorPath, mref.getQualifierExpression()));
+            List<Fix> fixes = new ArrayList<>();
+            if (targetExprEl.getKind().isClass() || targetExprEl.getKind().isInterface()) {
+                if (methodType.getParameterTypes().size() > 0 && target.equals(info.getTypes().asElement(methodType.getParameterTypes().get(0)))) {
+                    //static ref to instance type:
+                    fixes.add(new CreateMethodFix(info, mref.getName().toString(), EnumSet.copyOf(modifiers), target, methodType.getReturnType(), methodType.getParameterTypes().subList(1, methodType.getParameterTypes().size()), expectedMethod.getParameters().stream().skip(1).map(var -> var.getSimpleName().toString()).collect(Collectors.toList()), Collections.emptyList(), Collections.emptyList(), targetFile));
+                }
+                modifiers.add(Modifier.STATIC);
+            }
+            fixes.add(new CreateMethodFix(info, mref.getName().toString(), modifiers, target, methodType.getReturnType(), methodType.getParameterTypes(), expectedMethod.getParameters().stream().map(var -> var.getSimpleName().toString()).collect(Collectors.toList()), Collections.emptyList(), Collections.emptyList(), targetFile));
+            return fixes;
+        }
+
+        return Collections.<Fix>emptyList();
+    }
+
     private static List<Fix> prepareCreateMethodFix(CompilationInfo info, TreePath invocation, Set<Modifier> modifiers, TypeElement target, String simpleName, List<? extends ExpressionTree> arguments, List<? extends TypeMirror> returnTypes) {
         //return type:
         //XXX: should reasonably consider all the found type candidates, not only the one:

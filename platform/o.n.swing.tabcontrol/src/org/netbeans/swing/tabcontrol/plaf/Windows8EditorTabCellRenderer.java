@@ -24,6 +24,7 @@
 package org.netbeans.swing.tabcontrol.plaf;
 
 import java.awt.*;
+import javax.swing.Icon;
 
 /**
  * Windows 8 implementation of tab renderer
@@ -31,7 +32,7 @@ import java.awt.*;
  * @author S. Aubrecht
  * @since 1.41
  */
-final class Windows8EditorTabCellRenderer extends WinVistaEditorTabCellRenderer {
+class Windows8EditorTabCellRenderer extends WinVistaEditorTabCellRenderer {
 
     public Windows8EditorTabCellRenderer() {
     }
@@ -46,18 +47,16 @@ final class Windows8EditorTabCellRenderer extends WinVistaEditorTabCellRenderer 
         Windows8ViewTabDisplayerUI.paintTabBackground( (Graphics2D)g, rect.x, rect.y, rect.width, rect.height, selected, focused, attention, mouseOver);
     }
 
-    /**
-     * Returns path of icon which is correct for currect state of tab at given
-     * index
-     */
     @Override
-    String findIconPath() {
+    Icon findIcon() {
+        final String file;
         if( inCloseButton() && isPressed() ) {
-            return "org/openide/awt/resources/win8_bigclose_pressed.png"; // NOI18N
+            file = "org/openide/awt/resources/win8_bigclose_pressed.png"; // NOI18N
+        } else if( inCloseButton() ) {
+            file = "org/openide/awt/resources/win8_bigclose_rollover.png"; // NOI18N
+        } else {
+            file = "org/openide/awt/resources/win8_bigclose_enabled.png"; // NOI18N
         }
-        if( inCloseButton() ) {
-            return "org/openide/awt/resources/win8_bigclose_rollover.png"; // NOI18N
-        }
-        return "org/openide/awt/resources/win8_bigclose_enabled.png"; // NOI18N
+        return TabControlButtonFactory.getIcon(file);
     }
 }

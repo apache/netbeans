@@ -19,6 +19,9 @@
 package org.netbeans.lib.nbjavac.services;
 
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.ErroneousTree;
+import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.util.JavacTask;
 import com.sun.source.util.TreePathScanner;
@@ -64,6 +67,38 @@ public class NBAttrTest extends NbTestCase {
         }.scan(parsed.second(), null);
     }
 
+    public void testCrashOrphanedCatch() throws Exception {
+        String code = "public class Test { void t() { catch (Exception ex) { System.err.println(0); } } }";
+        Pair<JavacTask, CompilationUnitTree> parsed = compile(code);
+
+        new TreePathScanner<Void, Void>() {
+            @Override
+            public Void visitErroneous(ErroneousTree node, Void p) {
+                return scan(node.getErrorTrees(), null);
+            }
+            @Override
+            public Void visitMethodInvocation(MethodInvocationTree tree, Void p) {
+                checkIsAttributed();
+                return super.visitMethodInvocation(tree, p);
+            }
+            @Override
+            public Void visitIdentifier(IdentifierTree node, Void p) {
+                checkIsAttributed();
+                return super.visitIdentifier(node, p);
+            }
+            @Override
+            public Void visitMemberSelect(MemberSelectTree node, Void p) {
+                checkIsAttributed();
+                return super.visitMemberSelect(node, p);
+            }
+
+            private void checkIsAttributed() {
+                Trees trees = Trees.instance(parsed.first());
+                assertNotNull(getCurrentPath().getLeaf().toString(), trees.getElement(getCurrentPath()));
+            }
+        }.scan(parsed.second(), null);
+    }
+
     //<editor-fold defaultstate="collapsed" desc=" Test Infrastructure ">
     private static class MyFileObject extends SimpleJavaFileObject {
         private String text;
@@ -97,7 +132,7 @@ public class NBAttrTest extends NbTestCase {
         Context context = new Context();
         NBMessager.preRegister(context, null, DEV_NULL, DEV_NULL, DEV_NULL);
         NBAttr.preRegister(context);
-        final JavacTaskImpl ct = (JavacTaskImpl) ((JavacTool)tool).getTask(null, std, null, Arrays.asList("-source", "1.6", "-target", "1.6"), null, Arrays.asList(new MyFileObject(code)), context);
+        final JavacTaskImpl ct = (JavacTaskImpl) ((JavacTool)tool).getTask(null, std, null, Arrays.asList("-source", "1.8", "-target", "1.8"), null, Arrays.asList(new MyFileObject(code)), context);
 
         CompilationUnitTree cut = ct.parse().iterator().next();
 

@@ -198,7 +198,7 @@ public final  class PhpOptionsPanel extends JPanel {
         globalIncludePathLabel = new JLabel();
         useTheFollowingPathByDefaultLabel = new JLabel();
         includePathScrollPane = new JScrollPane();
-        includePathList = new JList<BasePathSupport.Item>();
+        includePathList = new JList<>();
         addFolderButton = new JButton();
         removeButton = new JButton();
         moveUpButton = new JButton();
@@ -259,8 +259,7 @@ public final  class PhpOptionsPanel extends JPanel {
 
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(Alignment.LEADING)
+        layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(commandLineLabel)
                 .addPreferredGap(ComponentPlacement.RELATED)
@@ -312,8 +311,7 @@ public final  class PhpOptionsPanel extends JPanel {
 
         layout.linkSize(SwingConstants.HORIZONTAL, new Component[] {phpInterpreterBrowseButton, phpInterpreterSearchButton});
 
-        layout.setVerticalGroup(
-            layout.createParallelGroup(Alignment.LEADING)
+        layout.setVerticalGroup(layout.createParallelGroup(Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(Alignment.TRAILING)
                     .addComponent(commandLineLabel)

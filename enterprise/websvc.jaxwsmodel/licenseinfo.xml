@@ -30,4 +30,9 @@
         <license ref="Apache-2.0-ASF" />
         <comment type="TEMPLATE_MINIMAL_IP"/>
     </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/websvc/jaxwsmodel/resources/JaxWsSchemaCatalog.png</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
 </licenseinfo>

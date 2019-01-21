@@ -18,18 +18,10 @@
  */
 package org.netbeans.modules.php.editor.model.impl;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Date;
-import java.util.concurrent.Future;
-import static junit.framework.Assert.assertTrue;
-import org.netbeans.modules.parsing.api.ParserManager;
-import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
-import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.php.editor.model.Model;
-import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;

@@ -21,6 +21,7 @@ package org.netbeans.modules.autoupdate.services;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -54,6 +55,11 @@ public class FeatureUpdateElementImpl extends UpdateElementImpl {
     private String category;
     private InstallInfo installInfo;
     private static final Logger LOG = Logger.getLogger (FeatureUpdateElementImpl.class.getName ());
+    
+    /**
+     * Missing (necessary) dependencies, module codenames
+     */
+    private Set<String> missingElements;
     private Set<ModuleUpdateElementImpl> moduleElementsImpl;
     private Set<FeatureUpdateElementImpl> featureElementsImpl;
     private UpdateManager.TYPE type;
@@ -61,6 +67,7 @@ public class FeatureUpdateElementImpl extends UpdateElementImpl {
     public FeatureUpdateElementImpl (FeatureItem item, String providerName,
             Set<ModuleUpdateElementImpl> moduleElementsImpl,
             Set<FeatureUpdateElementImpl> featureElementsImpl,
+            Set<String> missing, 
             UpdateManager.TYPE type) {
         super (item, providerName);
         this.type = type;
@@ -80,6 +87,7 @@ public class FeatureUpdateElementImpl extends UpdateElementImpl {
         if (category == null) {
             category = NbBundle.getMessage (UpdateElementImpl.class, "UpdateElementImpl_Feature_CategoryName");
         }
+        missingElements = missing == null ? Collections.<String>emptySet() : missing;
     }
     
     @Override
@@ -358,15 +366,24 @@ public class FeatureUpdateElementImpl extends UpdateElementImpl {
     public String toString() {
         return "FeatureUpdateElementImpl[" + this.codeName + "/" + this.specVersion + "]";
     }
-
+    
+    /**
+     * Returns unknown codenames
+     * @return unknown codenames or empty collection
+     */
+    public Set<String> getMissingElements() {
+        return missingElements;
+    }
+    
     public static class Agent extends FeatureUpdateElementImpl {
         
         private Set<ModuleUpdateElementImpl> moduleElementsImpl;
         private Set<FeatureUpdateElementImpl> featureElementsImpl;
+        private Set<String> missingImpl = Collections.emptySet();
         private FeatureItem featureItem;
         
         public Agent (FeatureItem item, String providerName, UpdateManager.TYPE type) {
-            super (item, providerName, null, null, type);
+            super (item, providerName, null, null, null, type);
             this.featureItem = item;
         }
         
@@ -382,6 +399,12 @@ public class FeatureUpdateElementImpl extends UpdateElementImpl {
             initializeAgent();
             assert featureElementsImpl != null : "FeatureUpdateElementImpl depends on features " + featureElementsImpl;
             return featureElementsImpl;
+        }
+
+        @Override
+        public Set<String> getMissingElements() {
+            initializeAgent();
+            return missingImpl;
         }
         
         private void initializeAgent() {
@@ -478,6 +501,7 @@ public class FeatureUpdateElementImpl extends UpdateElementImpl {
                 }
             }
             if (!dependenciesToModulesOrFeatures.isEmpty()) {
+                missingImpl = new HashSet<>(dependenciesToModulesOrFeatures);
                 LOG.log(Level.INFO, this.featureItem + " depends on non-existing " + dependenciesToModulesOrFeatures);
             }
             return res;

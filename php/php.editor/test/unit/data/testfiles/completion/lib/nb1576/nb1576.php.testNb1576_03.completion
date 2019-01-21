@@ -1,0 +1,6 @@
+Code completion result for source line:
+$obj2->|method2();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     method1()                       [PUBLIC]   \Entity\EntityClass
+METHOD     method2()                       [PUBLIC]   \Entity\EntityClass
+METHOD     method3()                       [PUBLIC]   \Entity\EntityClass

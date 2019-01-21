@@ -16,3 +16,4 @@ METHOD     asImmutable()                              Set
 METHOD     asList()                                   List
 METHOD     asSynchronized()                           Set
 METHOD     asType(Class)                              Object
+METHOD     asUnmodifiable()                           Set

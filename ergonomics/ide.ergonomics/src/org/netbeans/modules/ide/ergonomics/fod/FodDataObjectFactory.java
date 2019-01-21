@@ -28,6 +28,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.modules.ide.ergonomics.Utilities;
 import org.openide.cookies.EditCookie;
+import org.openide.cookies.LineCookie;
 import org.openide.cookies.OpenCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataLoader;
@@ -40,6 +41,7 @@ import org.openide.loaders.MultiDataObject;
 import org.openide.loaders.MultiFileLoader;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
+import org.openide.text.Line;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
@@ -96,10 +98,10 @@ public class FodDataObjectFactory implements DataObject.Factory {
     }
 
     private final class Cookies extends MultiDataObject
-    implements OpenCookie, EditCookie, ChangeListener {
+    implements OpenCookie, EditCookie, LineCookie, ChangeListener {
         private final FileObject fo;
         private final ChangeListener weakL;
-        private boolean open;
+        private Boolean open;
         
         private Cookies(FileObject fo, MultiFileLoader loader) throws DataObjectExistsException {
             super(fo, loader);
@@ -130,7 +132,23 @@ public class FodDataObjectFactory implements DataObject.Factory {
             delegate(false);
         }
 
-        private void delegate(boolean open) {
+        @Override
+        public Line.Set getLineSet() {
+            delegate(null);
+            DataObject obj;
+            try {
+                obj = DataObject.find(fo);
+            } catch (DataObjectNotFoundException ex) {
+                return null;
+            }
+            if (this == obj) {
+                return null;
+            }
+            LineCookie lc = obj.getLookup().lookup(LineCookie.class);
+            return lc.getLineSet();
+        }
+        
+        private void delegate(Boolean open) {
             FeatureInfo info = FoDLayersProvider.getInstance().whichProvides(definition);
             String msg = NbBundle.getMessage(FodDataObjectFactory.class, "MSG_Opening_File", fo.getNameExt());
 
@@ -148,7 +166,15 @@ public class FodDataObjectFactory implements DataObject.Factory {
             try {
                 DataObject obj = DataObject.find(fo);
                 FoDLayersProvider.LOG.log(Level.FINER, "finishOpen {0}", obj);
-                Class<?> what = open ? OpenCookie.class : EditCookie.class;
+                if (obj == this) {
+                    obj.setValid(false);
+                    obj = DataObject.find(fo);
+                }
+                Boolean doOpen = open;
+                if (doOpen == null) {
+                    return;
+                }
+                Class<?> what = doOpen ? OpenCookie.class : EditCookie.class;
                 Object oc = obj.getLookup().lookup(what);
                 if (oc == this) {
                     obj.setValid(false);

@@ -49,6 +49,8 @@ public class ModuleItem extends UpdateItemImpl {
     private boolean isPreferedUpdate;
     private String moduleNotification = null;
     
+    private String fragmentHost;
+    
     private URL distribution;
     private Manifest manifest;
 
@@ -181,6 +183,14 @@ public class ModuleItem extends UpdateItemImpl {
     
     void setModuleNotification (String notification) {
         this.moduleNotification = notification;
+    }
+    
+    public void setFragmentHost(String fhost) {
+        this.fragmentHost = fhost;
+    }
+
+    public String getFragmentHost() {
+        return fragmentHost;
     }
 
     @Override

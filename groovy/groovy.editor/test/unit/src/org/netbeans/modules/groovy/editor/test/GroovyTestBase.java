@@ -161,7 +161,7 @@ public class GroovyTestBase extends CslTestBase {
     }
 
     private static ClassPath createCompilePath() {
-        URL url = org.codehaus.groovy.ant.Groovyc.class.getProtectionDomain().getCodeSource().getLocation();
+        URL url = groovy.lang.GroovyObject.class.getProtectionDomain().getCodeSource().getLocation();
         return ClassPathSupport.createClassPath(FileUtil.getArchiveRoot(url));
     }
 

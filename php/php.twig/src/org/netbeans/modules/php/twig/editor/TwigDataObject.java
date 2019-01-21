@@ -22,6 +22,7 @@
 package org.netbeans.modules.php.twig.editor;
 
 import java.io.IOException;
+import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import static org.netbeans.modules.php.twig.editor.TwigDataObject.ACTIONS;
@@ -33,7 +34,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.MIMEResolver;
 import org.openide.loaders.DataNode;
 import org.openide.loaders.DataObject.Registration;
-import org.openide.loaders.DataObjectExistsException;
 import org.openide.loaders.MultiDataObject;
 import org.openide.loaders.MultiFileLoader;
 import org.openide.nodes.Children;
@@ -44,7 +44,7 @@ import org.openide.windows.TopComponent;
 
 @Messages("TwigResolver=Twig Files")
 @MIMEResolver.ExtensionRegistration(displayName = "#TwigResolver", position = 125, extension = "twig", mimeType = TwigLanguage.TWIG_MIME_TYPE)
-@Registration(displayName = "TWIG", iconBase = "org/netbeans/modules/php/twig/resources/filter.png", mimeType = TwigLanguage.TWIG_MIME_TYPE)
+@Registration(displayName = "TWIG", iconBase = TwigDataObject.ICON_LOCATION, mimeType = TwigLanguage.TWIG_MIME_TYPE)
 @ActionReferences(value = {
     @ActionReference(id =
     @ActionID(category = "System", id = "org.openide.actions.OpenAction"), path = ACTIONS, position = 100, separatorAfter = 200),
@@ -66,7 +66,9 @@ import org.openide.windows.TopComponent;
     @ActionID(category = "System", id = "org.openide.actions.PropertiesAction"), path = ACTIONS, position = 1400)})
 public class TwigDataObject extends MultiDataObject {
 
-    static final String ACTIONS = "Loaders/" + TwigLanguage.TWIG_MIME_TYPE + "/Actions";
+    static final String ACTIONS = "Loaders/" + TwigLanguage.TWIG_MIME_TYPE + "/Actions"; // NOI18N
+    @StaticResource
+    static final String ICON_LOCATION = "org/netbeans/modules/php/twig/resources/twig-icon.png"; // NOI18N
 
     public TwigDataObject(FileObject pf, MultiFileLoader loader) throws IOException {
         super(pf, loader);
@@ -81,7 +83,7 @@ public class TwigDataObject extends MultiDataObject {
     @Messages("Source=&Source")
     @MultiViewElement.Registration(
             displayName = "#Source",
-    iconBase = "org/netbeans/modules/php/twig/resources/filter.png",
+    iconBase = ICON_LOCATION,
     persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
     mimeType = TwigLanguage.TWIG_MIME_TYPE,
     preferredID = "php.twig.source",

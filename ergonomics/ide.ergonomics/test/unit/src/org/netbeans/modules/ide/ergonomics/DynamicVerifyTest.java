@@ -29,6 +29,7 @@ import org.netbeans.modules.ide.ergonomics.fod.FeatureManager;
 import org.netbeans.modules.ide.ergonomics.fod.FoDUpdateUnitProvider;
 import org.netbeans.spi.autoupdate.UpdateItem;
 import org.netbeans.spi.project.ProjectFactory;
+import org.openide.modules.ModuleInfo;
 import org.openide.util.Lookup;
 
 /**
@@ -97,9 +98,18 @@ public class DynamicVerifyTest extends NbTestCase {
     }
 
     public void testNoUserDefinedFeaturesInStandardBuild() throws Exception {
-        FoDUpdateUnitProvider instance = new FoDUpdateUnitProvider();
+        // remove the javascript parser from the checklist: it has to be user-installed
+        // through AU when HTML5 is enabled
+        FoDUpdateUnitProvider instance = new FoDUpdateUnitProvider() {
+            @Override
+            protected boolean acceptsModule(ModuleInfo mi) {
+                if (!super.acceptsModule(mi)) {
+                    return false;
+                }
+                return !"org.netbeans.libs.oracle.jsparser".equals(mi.getCodeNameBase());
+            }
+        };
         Map<String, UpdateItem> items = instance.getUpdateItems();
-
         assertNull("No user installed modules should be in standard build. If this happens,\n" +
                 "like in case of http://openide.netbeans.org/issues/show_bug.cgi?id=174052\n" +
                 "then you probably added new module and did not categorize it properly,\n" +

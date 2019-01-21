@@ -28,7 +28,7 @@ import org.netbeans.swing.tabcontrol.TabDisplayer;
  *
  * @author S. Aubrecht
  */
-final class AquaEditorTabCellRenderer extends AbstractTabCellRenderer {
+class AquaEditorTabCellRenderer extends AbstractTabCellRenderer {
     //Default insets values for Mac look and feel
     private static final int TOP_INSET = 0;
     private static final int LEFT_INSET = 3;
@@ -106,6 +106,21 @@ final class AquaEditorTabCellRenderer extends AbstractTabCellRenderer {
         return getTxtColor();
     }
 
+    /**
+     * Returns icon which is correct for currect state of tab at given index
+     */
+    protected Icon findIcon() {
+        final String file;
+        if( inCloseButton() && isPressed() ) {
+            file = "org/openide/awt/resources/mac_close_pressed.png"; // NOI18N
+        } else if( inCloseButton() ) {
+            file = "org/openide/awt/resources/mac_close_rollover.png"; // NOI18N
+        } else {
+            file = "org/openide/awt/resources/mac_close_enabled.png"; // NOI18N
+        }
+        return TabControlButtonFactory.getIcon(file);
+    }
+
     private static void paintTabGradient( Graphics g, AquaEditorTabCellRenderer ren, Polygon poly ) {
         Rectangle rect = poly.getBounds();
         boolean selected = ren.isSelected();
@@ -166,29 +181,13 @@ final class AquaEditorTabCellRenderer extends AbstractTabCellRenderer {
                 rect.height = 0;
                 return;
             }
-            String iconPath = findIconPath(ren);
-            Icon icon = TabControlButtonFactory.getIcon(iconPath);
+            Icon icon = ren.findIcon();
             int iconWidth = icon.getIconWidth();
             int iconHeight = icon.getIconHeight();
             rect.x = bounds.x + bounds.width - iconWidth - 5;
             rect.y = bounds.y + (Math.max(0, bounds.height / 2 - iconHeight / 2));
             rect.width = iconWidth;
             rect.height = iconHeight;
-        }
-
-
-        /**
-         * Returns path of icon which is correct for currect state of tab at given
-         * index
-         */
-        private String findIconPath( AquaEditorTabCellRenderer renderer ) {
-            if( renderer.inCloseButton() && renderer.isPressed() ) {
-                return "org/openide/awt/resources/mac_close_pressed.png"; // NOI18N
-            }
-            if( renderer.inCloseButton() ) {
-                return "org/openide/awt/resources/mac_close_rollover.png"; // NOI18N
-            }
-            return "org/openide/awt/resources/mac_close_enabled.png"; // NOI18N
         }
 
         public Polygon getInteriorPolygon(Component c) {
@@ -278,8 +277,7 @@ final class AquaEditorTabCellRenderer extends AbstractTabCellRenderer {
             }
 
             //paint close button
-            String iconPath = findIconPath( ren );
-            Icon icon = TabControlButtonFactory.getIcon( iconPath );
+            Icon icon = ren.findIcon();
             icon.paintIcon(ren, g, r.x, r.y);
         }
 

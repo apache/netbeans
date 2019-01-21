@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.9.1
+#Version 9.11.1
 
 CLSS public java.awt.datatransfer.Clipboard
 cons public init(java.lang.String)
@@ -1414,6 +1414,7 @@ supr java.lang.Object
 hcls Default
 
 CLSS public abstract org.openide.util.actions.BooleanStateAction
+ anno 0 java.lang.Deprecated()
 cons public init()
 fld public final static java.lang.String PROP_BOOLEAN_STATE = "booleanState"
 intf org.openide.util.actions.Presenter$Menu

@@ -44,4 +44,15 @@
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>
+    <fileset>
+        <file>src/org/netbeans/swing/plaf/util/SmoothScrollPaneUI.java</file>
+        <license ref="Apache-2.0" />
+        <!-- Complete contents of the NOTICE.txt file as retrieved on 2018-09-17 from
+             https://github.com/JetBrains/intellij-community/blob/34b9dfd0585937c3731e06a89554d1dc86f7f235/NOTICE.txt -->
+        <notice>
+This software includes code from IntelliJ IDEA Community Edition
+Copyright (C) JetBrains s.r.o.
+https://www.jetbrains.com/idea/
+</notice>
+    </fileset>
 </licenseinfo>

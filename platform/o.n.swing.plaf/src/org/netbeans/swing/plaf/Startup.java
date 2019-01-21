@@ -255,6 +255,15 @@ public final class Startup {
             }
             curCustoms.disposeValues();
         }
+        installSmoothScrollPane();
+    }
+
+    private void installSmoothScrollPane() {
+      UIDefaults defaults = UIManager.getDefaults();
+      final String SCROLL_PANE_UI_CLASS_ID = "ScrollPaneUI";
+      Object existingValue = defaults.get(SCROLL_PANE_UI_CLASS_ID);
+      if ("javax.swing.plaf.basic.BasicScrollPaneUI".equals(existingValue))
+        defaults.put(SCROLL_PANE_UI_CLASS_ID, "org.netbeans.swing.plaf.util.SmoothScrollPaneUI");
     }
     
     private void loadAllLazyValues (LFCustoms customs) {

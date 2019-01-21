@@ -36,9 +36,15 @@
         <resource>jar:nbinst://org.netbeans.modules.j2ee.platform/docs/javaee-doc-api.jar!/</resource>
     </volume>
     
-    <!-- beware: above JARs do not map to  
-             http://download.java.net/maven/2/javax/javaee-endorsed-api/6.0-SNAPSHOT/javaee-endorsed-api-6.0-SNAPSHOT.pom
-         because javaee-endorsed-api-6.0-SNAPSHOT.pom contains stripped classes.
-    -->
+    <properties>
+        <property>
+            <name>maven-dependencies</name>
+            <value>
+                javax.annotation:javax.annotation-api:1.2
+                javax.xml.bind:jaxb-api-osgi:2.2
+                javax.xml:webservices-api-osgi:2.0
+            </value>
+        </property>
+    </properties>
     
 </library>

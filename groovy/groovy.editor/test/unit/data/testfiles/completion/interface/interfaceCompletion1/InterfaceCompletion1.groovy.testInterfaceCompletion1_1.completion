@@ -7,6 +7,7 @@ PACKAGE    groovy                                     null
 PACKAGE    groovyjarjarantlr                          null
 PACKAGE    groovyjarjarasm                            null
 PACKAGE    groovyjarjarcommonscli                     null
+PACKAGE    groovyjarjarpicocli                        null
 PACKAGE    java                                       null
 PACKAGE    javax                                      null
 PACKAGE    jdk                                        null
@@ -16,6 +17,7 @@ PACKAGE    sun                                        null
 CLASS      AdaptingMetaClass                          null
 CLASS      Appendable                                 null
 CLASS      AutoCloseable                              null
+CLASS      BufferedIterator                           null
 CLASS      Buildable                                  null
 CLASS      CharSequence                               null
 CLASS      Cloneable                                  null

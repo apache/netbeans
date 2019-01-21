@@ -305,7 +305,7 @@ public class UtilitiesTest extends NbTestCase {
         }
 
         public DragSourceContextPeer createDragSourceContextPeer(DragGestureEvent dge) throws InvalidDnDOperationException {
-            return Toolkit.getDefaultToolkit().createDragSourceContextPeer( dge );
+            throw new IllegalStateException("Method not implemented");
         }
 
         public boolean prepareImage(Image image, int width, int height, ImageObserver observer) {
@@ -465,7 +465,6 @@ public class UtilitiesTest extends NbTestCase {
             return new Dimension(0,0);
         }
 
-        @Override
         protected DesktopPeer createDesktopPeer(Desktop target) throws HeadlessException {
             throw new UnsupportedOperationException("Not supported yet.");
         }

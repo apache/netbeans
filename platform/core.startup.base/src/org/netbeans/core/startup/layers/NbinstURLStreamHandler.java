@@ -20,6 +20,7 @@
 package org.netbeans.core.startup.layers;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,8 +29,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.net.UnknownServiceException;
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -141,11 +140,7 @@ public class NbinstURLStreamHandler extends URLStreamHandler {
         public InputStream getInputStream() throws IOException {
             this.connect();
             if (iStream == null) {
-                try {
-                    iStream = Files.newInputStream(f.toPath());
-                } catch (InvalidPathException ex) {
-                    throw new IOException(ex);
-                }
+                iStream = new FileInputStream(f);
             }
             return iStream;
         }

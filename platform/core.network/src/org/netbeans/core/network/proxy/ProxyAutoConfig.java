@@ -25,6 +25,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.core.NbLifecycleManager;
 import org.netbeans.core.network.proxy.pac.PacParsingException;
 import org.netbeans.core.network.proxy.pac.PacScriptEvaluator;
 import org.netbeans.core.network.proxy.pac.PacScriptEvaluatorFactory;
@@ -77,6 +78,7 @@ public class ProxyAutoConfig {
 
             @Override
             public void run() {
+                NbLifecycleManager.advancePolicy();
                 initEngine();
             }
         });

@@ -35,7 +35,7 @@ public class TypesCCTest extends GroovyCCTestBase {
     }
 
     public void testFqnTypeCompletion1() throws Exception {
-        checkCompletion(BASE + "FqnTypeCompletion1.groovy", "groovy.xml.^", false);
+        checkCompletion(BASE + "FqnTypeCompletion1.groovy", "groovy.time.^", false);
     }
 
     // we don't get proper AST for this mini-class, disable it for now.

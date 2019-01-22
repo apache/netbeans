@@ -741,6 +741,26 @@ public abstract class WindowManager extends Object implements Serializable {
         return null;
     }
     
+    /**
+     * Creates a Mode from the ModeConfig XML.
+     * @param xml ModeConfig XML
+     */
+    public abstract void createModeFromXml(String xml);
+    
+    /**
+     * Removes a Mode, intended for removing empty Modes before creating new ones.
+     * @param mode the Mode to be removed
+     * @return success or failure
+     */
+    public abstract boolean removeMode(Mode mode);
+    
+    /**
+     * Changes the SplitConstraints on a Mode, intended for updating the editor Mode 
+     * so that it will fit with Modes that will be created soon.
+     * @param xml ModeConfig XML 
+     */
+    public abstract void updateModeContraintsFromXml(String xml);
+    
     /** A manager that handles operations on top components.
      * It is always attached to a {@link TopComponent}.
      * @deprecated Do not use anymore. This interface is replaced by bunch of protected methods

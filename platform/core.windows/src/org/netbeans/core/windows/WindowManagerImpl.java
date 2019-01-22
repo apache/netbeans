@@ -23,6 +23,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.*;
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
@@ -31,6 +32,7 @@ import javax.swing.*;
 import org.netbeans.core.IDESettings;
 import org.netbeans.core.windows.actions.ActionUtils;
 import org.netbeans.core.windows.options.WinSysPrefs;
+import org.netbeans.core.windows.persistence.ModeConfig;
 import org.netbeans.core.windows.persistence.PersistenceManager;
 import org.netbeans.core.windows.view.dnd.TopComponentDraggable;
 import org.netbeans.core.windows.view.ui.MainWindow;
@@ -457,6 +459,56 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
             System.setProperty("nb.native.filechooser", useNativeFileChooser ? "true" : "false"); //NOI18N
         }
     }
+
+    @Override
+    public void createModeFromXml(String xml) {
+        try {
+            ModeConfig modeConfig = PersistenceManager.getDefault().createModeFromXml(xml);
+            ModeImpl mode = createMode(modeConfig);
+            addMode(mode, modeConfig);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+    
+    public ModeImpl createMode(ModeConfig config) {
+        WindowManagerImpl wmi = WindowManagerImpl.getInstance();
+
+        ModeImpl res = wmi.createMode(config.name, config.kind, config.state, false, config.constraints);
+        Rectangle absBounds = config.bounds == null ? new Rectangle() : config.bounds;
+        Rectangle relBounds = config.relativeBounds == null ? new Rectangle() : config.relativeBounds;
+        Rectangle bounds = PersistenceHandler.computeBounds(false, false,
+                absBounds.x,
+                absBounds.y,
+                absBounds.width,
+                absBounds.height,
+                relBounds.x / 100.0F,
+                relBounds.y / 100.0F,
+                relBounds.width / 100.0F,
+                relBounds.height / 100.0F);
+        res.setBounds(bounds);
+        res.setFrameState(config.frameState);
+        res.setMinimized(config.minimized);
+        return res;
+    }
+    
+    @Override
+    public boolean removeMode(Mode mode) {
+        String modeName = mode.getName();
+        removeMode((ModeImpl)mode);
+        return findMode(modeName) == null;
+    }
+    
+    @Override
+    public void updateModeContraintsFromXml(String xml) {
+        try {
+            ModeConfig modeConfig = PersistenceManager.getDefault().createModeFromXml(xml);
+            ModeImpl mode = findModeImpl(modeConfig.name);
+            mode.setConstraints(modeConfig.constraints);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
     
     private static class WrapMode implements Mode {
         private Mode wrap;
@@ -526,6 +578,11 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
         @Override
         public void setBounds (Rectangle s) {
             wrap.setBounds (s);
+        }
+
+        @Override
+        public String toXml() {
+            throw new UnsupportedOperationException("Not supported yet.");
         }
     } // end of WrapMode
 
@@ -872,6 +929,14 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
             central.addSlidingMode(mode, null, Constants.LEFT, null);
         } else {
             central.addMode(mode, modeConstraints);
+        }
+    }
+    
+    private void addMode(ModeImpl mode, ModeConfig modeConfig) {
+        if (mode.getKind() == Constants.MODE_KIND_SLIDING) {
+            central.addSlidingMode(mode, null, modeConfig.side, modeConfig.slideInSizes);
+        } else {
+            central.addMode(mode, modeConfig.constraints);
         }
     }
     
@@ -1531,7 +1596,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
             if (IDESettings.isGui()) {
                 // running in GUI mode, but
                 if (!WindowManagerImpl.getInstance().isVisible()) {
-                    // window manager isn't yet visible => exit for now
+                        // window manager isn't yet visible => exit for now
                     return;
                 }
             }

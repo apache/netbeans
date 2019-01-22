@@ -124,4 +124,10 @@ public interface Mode extends Serializable {
     /** Gets selected <code>TopComponent</code> in this mode.
      * @since 4.13 */
     public TopComponent getSelectedTopComponent();
+    
+    /**
+     * Generates the Mode configuration as XML.
+     * @return an xml representation of the Mode's configuration.
+     */
+    public String toXml();
 }

@@ -59,7 +59,6 @@ import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
-import org.openide.util.io.SafeException;
 import org.openide.windows.TopComponent;
 import org.openide.xml.XMLUtil;
 import org.xml.sax.EntityResolver;
@@ -1363,6 +1362,16 @@ public final class PersistenceManager implements PropertyChangeListener {
             tcName = tcName.replaceAll("'", "&apos;");
         }
         return tcName;
+    }
+
+    public ModeConfig createModeFromXml(String xml) throws IOException {
+        ModeParser modeParser = ModeParser.parseFromString("NO_NAME_YET", new HashSet(1));
+        return modeParser.load(xml);
+    }
+    
+    public String createXmlFromMode(ModeConfig modeConfig) throws IOException {
+        ModeParser modeParser = ModeParser.parseFromString("NO_NAME_YET", new HashSet(1));
+        return modeParser.modeConfigXml(modeConfig);
     }
     
     /**

@@ -294,7 +294,7 @@
         <description>
             <p>
                 Find the target of <code>break</code> or <code>continue</code> 
-                statement especially when one of them returns a value.
+                statement. Target is of type Tree here.
             </p>
         </description>
         <class name="TreeUtilities" package="org.netbeans.api.java.source"/>

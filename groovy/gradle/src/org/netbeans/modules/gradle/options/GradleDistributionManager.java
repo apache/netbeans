@@ -46,6 +46,7 @@ import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.gradle.util.GradleVersion;
 import org.gradle.wrapper.IDownload;
 import org.gradle.wrapper.Install;
 import org.gradle.wrapper.Logger;
@@ -78,14 +79,15 @@ public class GradleDistributionManager {
     private static String defaultVersion;
 
     private static final Set<String> VERSION_BLACKLIST = new HashSet<>(Arrays.asList("2.3", "2.13")); //NOI18N
-    private static final Map<URL, GradleVersion> VERSIONS = new HashMap<>();
+    private static final Map<URL, NbGradleVersion> VERSIONS = new HashMap<>();
     private static final String LAST_KNOWN_GOOD_RELEASE = "4.10.2"; //NOI18N
+    private static final GradleVersion MINIMUM_SUPPORTED_VERSION = GradleVersion.version("2.0"); //NOI18N
 
     private GradleDistributionManager() {
     }
 
-    public static File distributionDir(File gradleUserHome, GradleVersion version) {
-        File distDir = distributionBaseDir(gradleUserHome, String.format(DOWNLOAD_URI, version.getVersion()));
+    public static File distributionDir(File gradleUserHome, NbGradleVersion version) {
+        File distDir = distributionBaseDir(gradleUserHome, String.format(DOWNLOAD_URI, version.getVersion().getVersion()));
         if (distDir.isDirectory()) {
             List<File> dirs = listDirs(distDir);
             assert dirs.size() <= 1 : "Only one directory allowed in distribution dir"; //NOI18N
@@ -94,7 +96,7 @@ public class GradleDistributionManager {
             }
         }
         //Try to guess something not too wild here
-        return new File(distDir, "gradle-" + version.getVersion());
+        return new File(distDir, "gradle-" + version.getVersion().getVersion());
     }
 
     public static File distributionBaseDir(File gradleUserHome, String downloadURL) {
@@ -215,8 +217,8 @@ public class GradleDistributionManager {
         return ret;
     }
 
-    public static List<GradleVersion> availableVersions(boolean releaseOnly) {
-        List<GradleVersion> ret = new ArrayList<>();
+    public static List<NbGradleVersion> availableVersions(boolean releaseOnly) {
+        List<NbGradleVersion> ret = new ArrayList<>();
         JSONParser parser = new JSONParser();
         try {
             URL allVersions = new URL("http://services.gradle.org/versions/all"); //NOI18N
@@ -234,6 +236,9 @@ public class GradleDistributionManager {
                         continue;
                     }
                     if (!rcFor.isEmpty() && releaseOnly) {
+                        continue;
+                    }
+                    if (GradleVersion.version(version).compareTo(MINIMUM_SUPPORTED_VERSION) < 0) {
                         continue;
                     }
                     ret.add(createVersion(version, downloadURL, rcFor.isEmpty()));
@@ -269,7 +274,7 @@ public class GradleDistributionManager {
         return settings.getGradleVersion().isAvailable(settings.getGradleUserHome());
     }
 
-    public static GradleVersion createVersion(String version) {
+    public static NbGradleVersion createVersion(String version) {
         try {
             URL url = new URL(String.format(DOWNLOAD_URI, version));
             return createVersion(version, url, !version.contains("-"));
@@ -279,10 +284,10 @@ public class GradleDistributionManager {
         return null;
     }
 
-    private static GradleVersion createVersion(String version, URL url, boolean b) {
-        GradleVersion ret = VERSIONS.get(url);
+    private static NbGradleVersion createVersion(String version, URL url, boolean b) {
+        NbGradleVersion ret = VERSIONS.get(url);
         if (ret == null) {
-            ret = new GradleVersion(version, url, b);
+            ret = new NbGradleVersion(version, url, b);
             VERSIONS.put(url, ret);
         }
         return ret;
@@ -313,22 +318,21 @@ public class GradleDistributionManager {
 
     }
 
-    public static class GradleVersion {
+    public static class NbGradleVersion implements Comparable<NbGradleVersion>{
 
         public static final String PROP_AVAILABLE = "available"; //NOI18N
-
-        final String version;
+        final GradleVersion version;
         final URL downloadLocation;
         final boolean release;
         private PropertyChangeSupport pcs;
 
-        private GradleVersion(String version, URL downloadLocation, boolean release) {
-            this.version = version;
+        private NbGradleVersion(String version, URL downloadLocation, boolean release) {
+            this.version = GradleVersion.version(version);
             this.downloadLocation = downloadLocation;
             this.release = release;
         }
 
-        public String getVersion() {
+        public GradleVersion getVersion() {
             return version;
         }
 
@@ -346,7 +350,7 @@ public class GradleDistributionManager {
         }
 
         public boolean isBlackListed() {
-            return VERSION_BLACKLIST.contains(version);
+            return VERSION_BLACKLIST.contains(version.getVersion());
         }
 
         public void install(File gradleUserHome) {
@@ -381,8 +385,8 @@ public class GradleDistributionManager {
 
         @Override
         public boolean equals(Object obj) {
-            if ((obj != null) && (obj instanceof GradleVersion)) {
-                return version.equals(((GradleVersion) obj).version);
+            if ((obj != null) && (obj instanceof NbGradleVersion)) {
+                return version.equals(((NbGradleVersion) obj).version);
             } else {
                 return false;
             }
@@ -390,21 +394,26 @@ public class GradleDistributionManager {
 
         @Override
         public String toString() {
-            return version;
+            return version.getVersion();
+        }
+
+        @Override
+        public int compareTo(NbGradleVersion o) {
+            return version.compareTo(o.getVersion());
         }
 
     }
 
     private static class InstallTask implements Runnable, IDownload {
 
-        private final GradleVersion version;
+        private final NbGradleVersion version;
         private final File gradleUserHome;
         private final ProgressHandle handle;
 
-        public InstallTask(GradleVersion version, File gradleUserHome) {
+        public InstallTask(NbGradleVersion version, File gradleUserHome) {
             this.version = version;
             this.gradleUserHome = gradleUserHome;
-            handle = ProgressHandleFactory.createSystemHandle("Installing Gradle " + version.getVersion());
+            handle = ProgressHandleFactory.createSystemHandle("Installing " + version.getVersion());
         }
 
         @Override

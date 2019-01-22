@@ -20,7 +20,7 @@
 package org.netbeans.modules.gradle.classpath;
 
 import org.netbeans.modules.gradle.options.GradleDistributionManager;
-import org.netbeans.modules.gradle.options.GradleDistributionManager.GradleVersion;
+import org.netbeans.modules.gradle.options.GradleDistributionManager.NbGradleVersion;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -46,7 +46,7 @@ abstract class AbstractGradleScriptClassPath implements ClassPathImplementation 
     private final PreferenceChangeListener prefListener;
     private final PropertyChangeListener propListener;
     private final Preferences prefs = GradleSettings.getDefault().getPreferences();
-    private GradleVersion watchedVersion;
+    private NbGradleVersion watchedVersion;
     private List<PathResourceImplementation> resources;
 
     File distDir;
@@ -67,7 +67,7 @@ abstract class AbstractGradleScriptClassPath implements ClassPathImplementation 
                                 watchedVersion.removePropertyChangeListener(propListener);
                                 watchedVersion = null;
                             }
-                            GradleVersion version = settings.getGradleVersion();
+                            NbGradleVersion version = settings.getGradleVersion();
                             if (!version.isAvailable(settings.getGradleUserHome())) {
                                 watchedVersion = version;
                                 watchedVersion.addPropertyChangeListener(propListener);

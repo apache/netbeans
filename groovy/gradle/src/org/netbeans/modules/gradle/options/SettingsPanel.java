@@ -24,7 +24,7 @@ import java.awt.CardLayout;
 import java.io.File;
 import javax.swing.JFileChooser;
 import org.netbeans.spi.options.OptionsPanelController;
-import org.netbeans.modules.gradle.options.GradleDistributionManager.GradleVersion;
+import org.netbeans.modules.gradle.options.GradleDistributionManager.NbGradleVersion;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -44,6 +44,7 @@ import org.openide.LifecycleManager;
 import org.openide.awt.NotificationDisplayer;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
+import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -581,7 +582,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_lstCategoriesValueChanged
 
     private void cbGradleVersionItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbGradleVersionItemStateChanged
-        GradleVersion v = (GradleVersion) evt.getItem();
+        NbGradleVersion v = (NbGradleVersion) evt.getItem();
         if ((v != null) && (evt.getStateChange() == ItemEvent.SELECTED)) {
             if (v.isBlackListed()) {
                 lbVersionInfo.setText("This version does not work with NetBeans!");
@@ -635,18 +636,18 @@ public class SettingsPanel extends javax.swing.JPanel {
         cbDownloadSources.setSelectedItem(settings.getDownloadSources());
         cbDownloadJavadoc.setSelectedItem(settings.getDownloadJavadoc());
 
-        new SwingWorker<List<GradleVersion>, Void>() {
+        new SwingWorker<List<NbGradleVersion>, Void>() {
 
             @Override
-            protected List<GradleVersion> doInBackground() throws Exception {
+            protected List<NbGradleVersion> doInBackground() throws Exception {
                 return GradleDistributionManager.availableVersions(true);
             }
 
             @Override
             protected void done() {
                 try {
-                    GradleVersion[] items = get().toArray(new GradleVersion[0]);
-                    ComboBoxModel<GradleVersion> model = new DefaultComboBoxModel<>(items);
+                    NbGradleVersion[] items = get().toArray(new NbGradleVersion[0]);
+                    ComboBoxModel<NbGradleVersion> model = new DefaultComboBoxModel<>(items);
                     cbGradleVersion.setModel(model);
                     model.setSelectedItem(settings.getGradleVersion());
                 } catch (InterruptedException | ExecutionException ex) {
@@ -663,7 +664,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     })
     public void applyValues() {
         GradleSettings settings = GradleSettings.getDefault();
-        settings.setGradleVersion((GradleVersion) cbGradleVersion.getSelectedItem());
+        settings.setGradleVersion((NbGradleVersion) cbGradleVersion.getSelectedItem());
         settings.setDistributionHome(tfUseCustomGradle.getText());
         settings.setWrapperPreferred(cbPreferWrapper.isSelected());
         boolean useCustomGradle = bgUsedDistribution.getSelection() == rbUseCustomGradle.getModel();
@@ -748,15 +749,23 @@ public class SettingsPanel extends javax.swing.JPanel {
         }
 
         @Override
+        @NbBundle.Messages (value = {
+            "NbGradleVersion.autoInstall_TXT=<html>This version is not available on this system<br/>It is going to be installed automatically.",
+            "NbGradleVersion.blacklist_TXT=<html>This version is known to have issues with NetBeans, hence usage is not recommended."
+        })
         public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             Component cmp = delegate.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             if (cmp instanceof JLabel) {
                 JLabel label = (JLabel) cmp;
                 label.setHorizontalAlignment(RIGHT);
                 if (value != null) {
-                    GradleVersion version = (GradleVersion) value;
-                    label.setEnabled(version.isAvailable(currentGradleUserHome()));
+                    NbGradleVersion version = (NbGradleVersion) value;
+                    if (!version.isAvailable(currentGradleUserHome())) {
+                        label.setToolTipText(Bundle.NbGradleVersion_autoInstall_TXT());
+                        label.setForeground(Color.gray);
+                    }
                     if (version.isBlackListed()) {
+                        label.setToolTipText(Bundle.NbGradleVersion_blacklist_TXT());
                         label.setForeground(Color.red);
                     }
                 }
@@ -777,7 +786,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox<GradleSettings.DownloadLibsRule> cbDownloadLibs;
     private javax.swing.JComboBox<GradleSettings.DownloadMiscRule> cbDownloadSources;
     private javax.swing.JCheckBox cbEnableCache;
-    private javax.swing.JComboBox<GradleVersion> cbGradleVersion;
+    private javax.swing.JComboBox<NbGradleVersion> cbGradleVersion;
     private javax.swing.JCheckBox cbHideEmptyConfig;
     private javax.swing.JCheckBox cbNoRebuild;
     private javax.swing.JCheckBox cbOffline;

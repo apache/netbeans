@@ -60,13 +60,13 @@ public class ProjectActionMappingProviderImpl implements ProjectActionMappingPro
     private static final ActionMapping DEFAULT_TEST = new DefaultActionMapping("test", "--rerun-tasks test"); //NOI18N
     private static final ActionMapping DEFAULT_DEBUG = new DefaultActionMapping("debug", "debug"); //NOI18N
     private static final ActionMapping DEFAULT_DEBUG2 = new DefaultActionMapping("debug", "run --debug-jvm"); //NOI18N
-    
+
     private static final String NB_ACTIONS = "nb-actions.xml"; //NOI18N
-    
+
     final Project project;
     final PropertyChangeListener pcl;
     final File projectMappingFile;
-    
+
     Set<String> plugins;
     final Map<String, ActionMapping> projectMappings = new HashMap<>();
     final Set<String> noMappingCache = new HashSet<>();
@@ -101,7 +101,7 @@ public class ProjectActionMappingProviderImpl implements ProjectActionMappingPro
         if (result != null) {
             return result;
         }
-        
+
         // then we check the plugin-aware cache
         result = mappingCache.get(action);
         if ((result != null) || noMappingCache.contains(action)) {
@@ -150,7 +150,7 @@ public class ProjectActionMappingProviderImpl implements ProjectActionMappingPro
         }
         return ret;
     }
-    
+
     private synchronized Set<String> getPlugins() {
         if (plugins == null) {
             GradleBaseProject gbp = GradleBaseProject.get(project);
@@ -158,13 +158,13 @@ public class ProjectActionMappingProviderImpl implements ProjectActionMappingPro
         }
         return plugins;
     }
-    
+
     private synchronized void cleanCache() {
         plugins = null;
         noMappingCache.clear();
-        mappingCache.clear();        
+        mappingCache.clear();
     }
-    
+
     private synchronized void loadProjectCustomMappings()  {
         projectMappings.clear();
         if (projectMappingFile.canRead()) {
@@ -174,7 +174,7 @@ public class ProjectActionMappingProviderImpl implements ProjectActionMappingPro
                     projectMappings.put(mapping.getName(), mapping);
                 }
             } catch (IOException | ParserConfigurationException | SAXException ex) {
-                
+
             }
         }
     }
@@ -188,6 +188,6 @@ public class ProjectActionMappingProviderImpl implements ProjectActionMappingPro
     public Set<String> customizedActions() {
         return projectMappings.keySet();
     }
-    
-    
+
+
 }

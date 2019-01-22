@@ -20,7 +20,7 @@
 package org.netbeans.modules.gradle.spi;
 
 import org.netbeans.modules.gradle.options.GradleDistributionManager;
-import org.netbeans.modules.gradle.options.GradleDistributionManager.GradleVersion;
+import org.netbeans.modules.gradle.options.GradleDistributionManager.NbGradleVersion;
 import java.io.File;
 import java.util.prefs.Preferences;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine.LogLevel;
@@ -39,11 +39,11 @@ import org.openide.util.NbPreferences;
 })
 public final class GradleSettings {
 
-    public enum DownloadLibsRule { 
+    public enum DownloadLibsRule {
         NEVER,
         AS_NEEDED,
         ALWAYS;
-    
+
         @Override
         public String toString() {
             switch (this) {
@@ -54,11 +54,11 @@ public final class GradleSettings {
             return name();
         }
     }
-    
-    public enum DownloadMiscRule { 
-        NEVER, 
-        ALWAYS; 
-        
+
+    public enum DownloadMiscRule {
+        NEVER,
+        ALWAYS;
+
         @Override
         public String toString() {
             switch (this) {
@@ -68,7 +68,7 @@ public final class GradleSettings {
             return name();
         }
     }
-    
+
     public static final String PROP_GRADLE_DISTRIBUTION = "gradleHome";
 
     public static final String PROP_PREFER_WRAPPER = "preferWrapper";
@@ -87,7 +87,7 @@ public final class GradleSettings {
 
     public static final String PROP_LOG_LEVEL = "logLevel";
     public static final String PROP_STACKTRACE = "stacktrace";
-    
+
     public static final String PROP_HIDE_EMPTY_CONF = "hideEmptyConfiguration";
 
     public static final String PROP_ALWAYS_SHOW_OUTPUT = "alwaysShowOutput";
@@ -97,7 +97,7 @@ public final class GradleSettings {
     public static final String PROP_DISABLE_CACHE = "disableCache";
     public static final String PROP_LAZY_OPEN_GROUPS = "lazyOpen";
     public static final String PROP_PREFER_MAVEN = "preferMaven";
-    
+
     public static final String PROP_DOWNLOAD_LIBS = "downloadLibs";
     public static final String PROP_DOWNLOAD_SOURCES = "downloadSources";
     public static final String PROP_DOWNLOAD_JAVADOC = "downloadJavaDoc";
@@ -197,11 +197,11 @@ public final class GradleSettings {
         return getPreferences().getBoolean(PROP_SKIP_CHECK, true);
     }
 
-    public void setGradleVersion(GradleVersion version) {
-        getPreferences().put(PROP_GRADLE_VERSION, version.getVersion());
+    public void setGradleVersion(NbGradleVersion version) {
+        getPreferences().put(PROP_GRADLE_VERSION, version.getVersion().getVersion());
     }
 
-    public GradleVersion getGradleVersion() {
+    public NbGradleVersion getGradleVersion() {
         return GradleDistributionManager.createVersion(getPreferences().get(PROP_GRADLE_VERSION, GradleDistributionManager.defaultToolingVersion()));
     }
 
@@ -224,21 +224,21 @@ public final class GradleSettings {
     public void setDefaultLogLevel(LogLevel level) {
         getPreferences().put(PROP_LOG_LEVEL, level.name());
     }
-    
+
     public LogLevel getDefaultLogLevel() {
         String lvl = getPreferences().get(PROP_LOG_LEVEL, LogLevel.LIFECYCLE.name());
         return LogLevel.valueOf(lvl);
     }
-    
+
     public void setDefaultStackTrace(StackTrace st) {
         getPreferences().put(PROP_STACKTRACE, st.name());
     }
-    
+
     public StackTrace getDefaultStackTrace() {
         String st = getPreferences().get(PROP_STACKTRACE, StackTrace.NONE.name());
         return StackTrace.valueOf(st);
     }
-    
+
     public void setHideEmptyConfigurations(boolean b) {
         getPreferences().putBoolean(PROP_HIDE_EMPTY_CONF, b);
     }
@@ -282,33 +282,33 @@ public final class GradleSettings {
     public void setPreferMaven(boolean b) {
         getPreferences().putBoolean(PROP_PREFER_MAVEN, b);
     }
-    
+
     public boolean isPreferMaven() {
         return getPreferences().getBoolean(PROP_PREFER_MAVEN, false);
     }
-    
+
     public void setDownloadLibs(DownloadLibsRule rule) {
         getPreferences().put(PROP_DOWNLOAD_LIBS, rule.name());
     }
-    
+
     public DownloadLibsRule getDownloadLibs() {
         String ruleName = getPreferences().get(PROP_DOWNLOAD_LIBS, DownloadLibsRule.AS_NEEDED.name());
         return DownloadLibsRule.valueOf(ruleName);
     }
-    
+
     public void setDownloadSources(DownloadMiscRule rule) {
         getPreferences().put(PROP_DOWNLOAD_SOURCES, rule.name());
     }
-    
+
     public DownloadMiscRule getDownloadSources() {
         String ruleName = getPreferences().get(PROP_DOWNLOAD_SOURCES, DownloadMiscRule.ALWAYS.name());
         return DownloadMiscRule.valueOf(ruleName);
     }
-    
+
     public void setDownloadJavadoc(DownloadMiscRule rule) {
         getPreferences().put(PROP_DOWNLOAD_JAVADOC, rule.name());
     }
-    
+
     public DownloadMiscRule getDownloadJavadoc() {
         String ruleName = getPreferences().get(PROP_DOWNLOAD_JAVADOC, DownloadMiscRule.NEVER.name());
         return DownloadMiscRule.valueOf(ruleName);

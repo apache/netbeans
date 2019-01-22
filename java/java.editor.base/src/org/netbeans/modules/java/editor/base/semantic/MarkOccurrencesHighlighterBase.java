@@ -546,16 +546,7 @@ public abstract class MarkOccurrencesHighlighterBase extends JavaParserResultTas
             }
         // No need to check for version of JDK, as targetExpressionTree can only be non-null in case of JDK-12 or higher
         } else if (targetExpressionTree != null) {
-            try {
-                Class switchExpressionTree = Class.forName("com.sun.source.tree.SwitchExpressionTree");
-                java.lang.reflect.Method mt = switchExpressionTree.getDeclaredMethod("getExpression");
-                ExpressionTree et = (ExpressionTree) mt.invoke(targetExpressionTree);
-                if (et.getKind() == Kind.BLOCK) {
-                    block = et;
-                }
-            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | ClassNotFoundException | java.lang.reflect.InvocationTargetException ex) {
-                //
-            }
+            block = targetExpressionTree;
         }
 
         if (block != null) {

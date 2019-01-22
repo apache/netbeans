@@ -1345,7 +1345,7 @@ public final class TreeUtilities {
      * @return the tree that is the "target" for the given break or continue statement, or null if there is none. Tree can be of type StatementTree or ExpressionTree
      * @throws IllegalArgumentException if the given tree is not a break or continue tree or if the given {@link CompilationInfo}
      *         is not in the {@link Phase#RESOLVED} phase.
-     * @since 0.16
+     * @since 2.40
      */
     public Tree getBreakContinueTargetTree(TreePath breakOrContinue) throws IllegalArgumentException {
         if (info.getPhase().compareTo(Phase.RESOLVED) < 0)

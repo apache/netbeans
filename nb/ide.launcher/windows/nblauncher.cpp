@@ -89,7 +89,6 @@ int NbLauncher::start(int argc, char *argv[]) {
     parseConfigFile((userDir + "\\etc\\" + getAppName() + ".conf").c_str());
     userDir = oldUserDir;
 
-    adjustHeapAndPermGenSize();
     addExtraClusters();
     string nbexecPath;
     SetDllDirectory(baseDir.c_str());
@@ -488,49 +487,6 @@ bool NbLauncher::parseConfigFile(const char* path) {
 }
 
 typedef void (WINAPI *PGNSI)(LPSYSTEM_INFO);
-
-bool NbLauncher::areWeOn32bits() {
-    // find out if we are on 32-bit Windows
-    SYSTEM_INFO siSysInfo;
-    PGNSI pGNSI;
-    pGNSI = (PGNSI) GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")),
-            "GetNativeSystemInfo");
-    if (NULL != pGNSI)
-        pGNSI(&siSysInfo);
-    else
-        GetSystemInfo(&siSysInfo);
-    logMsg("NbLauncher::areWeOn32bits returns (0=false, 1=true)? %i", ((siSysInfo.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_INTEL) ||
-            (strstr(NBEXEC_FILE_PATH, "64") == NULL)));
-    return ((siSysInfo.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_INTEL) ||
-            (strstr(NBEXEC_FILE_PATH, "64") == NULL));
-}
-
-// Search if -Xmx and -XX:MaxPermSize are specified in existing arguments
-// If it isn't compute default values based on 32/64-bits and available RAM
-void NbLauncher::adjustHeapAndPermGenSize() {
-    if (nbOptions.find("-J-Xmx") == string::npos) {
-        int maxheap;
-        if (areWeOn32bits())
-            maxheap = 512;
-        else
-            maxheap = 1024;
-        // find how much memory we have and add -Xmx as 1/5 of the memory
-        MEMORYSTATUSEX ms;
-        ms.dwLength = sizeof (ms);
-        GlobalMemoryStatusEx(&ms);
-        int memory = (int)((ms.ullTotalPhys / 1024 / 1024) / 5);
-        if (memory < 96) {
-            memory = 96;
-        }
-        else if (memory > maxheap) {
-            memory = maxheap;
-        }
-        char tmp[32];
-        snprintf(tmp, 32, " -J-Xmx%dm", memory);
-        logMsg("Memory settings: -J-Xmx%dm", memory);
-        nbOptions += tmp;
-    }
-}
 
 const char * NbLauncher::getAppName() {
     return "netbeans";

@@ -43,7 +43,6 @@ public class EnabledAutoloadTest extends NbTestCase {
     }
 
     public static Test suite() {
-        NetigsoUtil.downgradeJDK();
         return
             NbModuleSuite.emptyConfiguration().addTest(
                 EnabledAutoloadTest.class

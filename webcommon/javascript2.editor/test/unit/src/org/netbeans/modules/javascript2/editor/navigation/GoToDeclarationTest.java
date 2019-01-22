@@ -53,6 +53,10 @@ public class GoToDeclarationTest extends JsTestBase {
     public void testIssue233298_4() throws Exception { 
         checkDeclaration("testfiles/coloring/issue233298.js", "a.b^", "a.^b");
     }
+
+    public void testIssue233298_5() throws Exception {
+        checkDeclaration("testfiles/coloring/issue233298_3.js", "Foo.test2 = test^1", "var ^test1 = Foo.test2");
+    }
     
     public void testBasicNavigation_01() throws Exception {
         checkDeclaration("testfiles/model/variables01.js", "var address = new A^ddress(\"Prague\", \"Czech Republic\", 15000)", "function ^Address (town, state, number) {");

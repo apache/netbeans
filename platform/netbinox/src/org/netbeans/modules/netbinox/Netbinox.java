@@ -35,7 +35,9 @@ import org.osgi.framework.BundleListener;
 import org.osgi.framework.Filter;
 import org.osgi.framework.FrameworkListener;
 import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceFactory;
 import org.osgi.framework.ServiceListener;
+import org.osgi.framework.ServiceObjects;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 
@@ -215,6 +217,16 @@ class Netbinox extends Equinox {
 
         public void addBundleListener(BundleListener bl) {
             delegate.addBundleListener(bl);
+        }
+
+        @Override
+        public <S> ServiceRegistration<S> registerService(Class<S> type, ServiceFactory<S> sf, Dictionary<String, ?> dctnr) {
+            return delegate.registerService(type, sf, dctnr);
+        }
+
+        @Override
+        public <S> ServiceObjects<S> getServiceObjects(ServiceReference<S> sr) {
+            return delegate.getServiceObjects(sr);
         }
     } // end of Context
 }

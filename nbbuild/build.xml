@@ -46,7 +46,10 @@
     <fail message="You need JDK 8+ to build NetBeans; nbjdk.home=${nbjdk.home} java.home=${java.home}">
         <condition>
             <not>
-                <isset property="have-jdk-1.8"/>
+                <or>
+                    <isset property="have-jdk-1.8"/>
+                    <isset property="have-jdk-1.9"/>
+                </or>
             </not>
         </condition>
     </fail>
@@ -72,8 +75,8 @@
     <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
         <manifest dir="${nb_all}">
             <include name="nbbuild/external/binaries-list"/>
-            <include name="libs.junit4/external/binaries-list"/>
-            <include name="javahelp/external/binaries-list"/>
+            <include name="platform/libs.junit4/external/binaries-list"/>
+            <include name="platform/javahelp/external/binaries-list"/>
         </manifest>
     </downloadbinaries>
 
@@ -277,8 +280,9 @@
       </verifyjnlp>
   </target>
   
-  <target name="build-javadoc">
-      <echo message="Deprecated, use nbbuild/javadoctools/build.xml directly"/>
+  <target name="build-javadoc" depends="javadoc"/>
+
+  <target name="javadoc" depends="bootstrap" description="Builds Javadoc for all NetBeans modules with some APIs">
       <ant dir="javadoctools" target="build-javadoc"/>
   </target>
 
@@ -331,17 +335,40 @@
       <include name="${nb.cluster.platform.dir}/lib/nbexec" />
     </fixcrlf>
   </target>
-  <target name="finish-build-nb" depends="init,-check-nb-cluster" if="has.nb.cluster">
-    <loadproperties srcFile="${clusters.list.file}" />
-
+  <target name="-shall-build-nb-windows-launchers" depends="init,-check-nb-cluster">
+      <condition property="shall.build.windows.launchers">
+          <and>
+              <istrue value="${do.build.windows.launchers}"/>
+              <istrue value="${has.nb.cluster}"/>
+          </and>
+      </condition>
+  </target>
+  
+  <target name="-build-nb-windows-launchers" depends="-shall-build-nb-windows-launchers" if="shall.build.windows.launchers">
+    <exec executable="make" dir="../nb/ide.launcher/windows">
+        <arg value="-f"/>
+        <arg value="Makefile.mingw"/>
+    </exec>
+    <copy todir="${netbeans.dest.dir}/bin" overwrite="true">
+        <fileset dir="../nb/ide.launcher/windows" includes="netbeans*.exe"/>
+    </copy>
+  </target>
+  
+  <target name="-download-nb-windows-launchers" depends="init,-check-nb-cluster" if="has.nb.cluster" unless="do.build.windows.launchers">
     <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
         <manifest dir="${nb_all}" includes="nb/ide.launcher/external/binaries-list"/>
     </downloadbinaries>
 
     <mkdir dir="${netbeans.dest.dir}/bin" />
+    <unzip src="../nb/ide.launcher/external/launchers-10.0.zip" dest="${netbeans.dest.dir}/bin" />
+  </target>
+
+  <target name="finish-build-nb" depends="init,-check-nb-cluster, -download-nb-windows-launchers, -build-nb-windows-launchers" if="has.nb.cluster">
+    <loadproperties srcFile="${clusters.list.file}" />
+
+    <mkdir dir="${netbeans.dest.dir}/bin" />
     <copy file="../nb/ide.launcher/unix/netbeans" todir="${netbeans.dest.dir}/bin" />
     <chmod file="${netbeans.dest.dir}/bin/netbeans" perm="ugo+rx"/>
-    <unzip src="../nb/ide.launcher/external/launchers-9.0.zip" dest="${netbeans.dest.dir}/bin" />
     <!-- if anybody knows better place for icons, let me know: jtulach@netbeans.org -->
 
     <mkdir dir="${netbeans.dest.dir}/etc" />
@@ -451,6 +478,8 @@ Hg ID:    ${hg.id}
       <mkdir dir="${netbeans.dest.dir}"/>
       <ant dir="." target="-build-platform" inheritAll="false">
           <property name="cluster.config" value="platform"/>
+          <property name="permit.jdk9.builds" value="true"/>
+          <property name="vanilla.javac.exists" value="true"/>
       </ant>
   </target>
 
@@ -460,6 +489,8 @@ Hg ID:    ${hg.id}
           <property name="cluster.config" value="platform"/>
           <property name="test.type" value="test-unit"/>
           <property name="test-unit-sys-prop.ignore.random.failures" value="true"/>
+          <property name="permit.jdk9.builds" value="true"/>
+          <property name="vanilla.javac.exists" value="true"/>
       </ant>
   </target>
   
@@ -1144,6 +1175,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
 
   <target name="clean" depends="-init-clean,bootstrap" description="Clean everything possible.">
       <taskdef name="try-else" classname="org.netbeans.nbbuild.TryElse" classpath="${nbantext.jar}"/>
+      <property name="vanilla.javac.exists" value="true"/>
       <try-else first="-hg-clean" second="-real-clean"/>
   </target>
 
@@ -1622,9 +1654,16 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     </condition>
     <zip zipfile="${nb.build.dir}/${cluster.config}-src-${buildnum}.zip" duplicate="preserve">
       <zipfileset dir="${nb_all}" includes="${source.dirs}">
+          <!--exclude all build directories and external jars/zips in the top level directory:-->
           <exclude name="*/build/"/>
           <exclude name="*/external/*.jar"/>
           <exclude name="*/external/*.zip"/>
+          <!--exclude all build directories and external jars/zips in the cluster directories,
+              but keep nbi/infra/build, which is a directory with sources:-->
+          <exclude name="[^n]*/*/build/"/>
+          <exclude name="nb/*/build/"/>
+          <exclude name="*/*/external/*.jar"/>
+          <exclude name="*/*/external/*.zip"/>
           <exclude name="nbbuild/netbeans/**"/>
           <exclude name="nbbuild/cluster.properties" />
       </zipfileset>
@@ -1769,22 +1808,15 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     </subant>
   </target>
 
-  <target name="gen-sigtests-release" depends="bootstrap"
+  <target name="gen-sigtests-release" depends="init"
     description="Generates signature files into stable API modules directories"
   >
     <echo message="Generating signature files into stable API modules directories"/>
 
-    <pathconvert property="modules.fullpath" >
-        <path>
-            <dirset dir="${nb_all}" includes="${config.javadoc.stable},${config.javadoc.devel}" />
-        </path>
-        <mapper type="identity" />
-    </pathconvert>
-    
     <subant target="gen-sigtest" buildpath="${modules.fullpath}"/>
   </target>
   
-  <target name="check-sigtests-release" depends="bootstrap"
+  <target name="check-sigtests-release" depends="init"
     description="Checks signature files of stable API modules"
   >
     <echo message="Checking signature files of stable API modules"/>
@@ -1793,12 +1825,6 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     <property name="fail.on.error" value="true"/>
     <delete dir="${sigtest.output.dir}"/>
     <mkdir dir="${sigtest.output.dir}"/>
-    <pathconvert property="modules.fullpath" >
-        <path>
-            <dirset dir="${nb_all}" includes="${config.javadoc.stable}" />
-        </path>
-        <mapper type="identity" />
-    </pathconvert>
     <subant target="check-sigtest" buildpath="${modules.fullpath}" failonerror="${fail.on.error}">
         <property name="sigtest.output.dir" value="${sigtest.output.dir}"/>
     </subant>

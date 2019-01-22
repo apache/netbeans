@@ -12,8 +12,6 @@ CLASS      AbstractQueue                              null
 CLASS      AbstractSequentialList                     null
 CLASS      AbstractSet                                null
 CLASS      AdaptingMetaClass                          null
-CLASS      AllTestSuite                               null
-CLASS      AntBuilder                                 null
 CLASS      Appendable                                 null
 CLASS      ArithmeticException                        null
 CLASS      ArrayDeque                                 null

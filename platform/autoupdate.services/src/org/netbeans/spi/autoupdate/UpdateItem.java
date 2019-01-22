@@ -142,7 +142,9 @@ public final class UpdateItem {
     /** Creates <code>UpdateItem</code> which represents <code>Feature</code>, it's means group
      * of NetBeans Modules. This <code>Feature</code> is handled in UI as atomic item.
      * UpdateItem is identify by <code>codeName</code> and <code>specificationVersion<code>.
-     * 
+     * <p/>
+     * If some of the tokens in {@code dependencies} is not known, it will be reported
+     * as a missing dependency.
      * 
      * @param codeName code name of feature
      * @param specificationVersion specification version of feature
@@ -151,6 +153,7 @@ public final class UpdateItem {
      * @param description description
      * @param category name of category
      * @return UpdateItem
+     * @since 1.57 specified handling of unknown tokens
      */
     public static UpdateItem createFeature (
                                     String codeName,

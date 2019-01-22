@@ -537,7 +537,7 @@ public class HintsInvoker {
                 for (TreePath candidate : occ.getValue()) {
                     if (cancel.get()) return null;
                 
-                    Iterator<? extends Occurrence> verified = Matcher.create(info).setCancel(cancel).setSearchRoot(candidate).setTreeTopSearch().match(pattern).iterator();
+                    Iterator<? extends Occurrence> verified = Matcher.create(info).setCancel(cancel).setSearchRoot(candidate).setTreeTopSearch().setKeepSyntheticTrees().match(pattern).iterator();
 
                     if (!verified.hasNext()) {
                         continue;

@@ -1338,6 +1338,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
                         handle.finish();
                     }
                     d.setVisible(false);
+                    d.dispose();
                 }
             });
         }

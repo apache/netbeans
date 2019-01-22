@@ -65,6 +65,19 @@ import org.netbeans.nbbuild.extlibs.licenseinfo.Licenseinfo;
  * Creates a list of external binaries and their licenses.
  */
 public class CreateLicenseSummary extends Task {
+    /**
+     * License for which no explicit entry is generated in the license file.
+     * <p>
+     * The license file that is generated contains the ALv2 as the "primary"
+     * license. Files that are licensed as ALv2 don't need to be mentioned
+     * explicitly in the file.
+     * <p>
+     * Currently there are two variants that need to be considered:
+     * the Apache License version 2.0 and the Apache License version 2.0 with
+     * the "licensed to the ASF" preamble.
+     *
+     */
+    private static final Set<String> ALV2_LICENSES = new HashSet<>(Arrays.asList("Apache-2.0", "Apache-2.0-ASF"));
 
     private File nball;
 
@@ -211,7 +224,7 @@ public class CreateLicenseSummary extends Task {
         } catch (IOException x) {
             throw new BuildException(x, getLocation());
         }
-        log(license + ": written");
+        log(license + ": written", Project.MSG_VERBOSE);
         JUnitReportWriter.writeReport(this, null, reportFile, pseudoTests);
     }
     
@@ -229,48 +242,49 @@ public class CreateLicenseSummary extends Task {
             Licenseinfo licenseInfo = Licenseinfo.parse(licenseInfoFile);
             
             for(Fileset fs: licenseInfo.getFilesets()) {
-                if("Apache-2.0-ASF".equals(fs.getLicenseRef())) {
-                    continue;
-                }
                 if(binary && fs.isSourceOnly()) {
                     continue;
                 }
 
-                if (!headerPrinted) {
-                    licenseWriter.println();
-                    licenseWriter.println("******************************************************************************************************************************************************");
-                    licenseWriter.println("Apache NetBeans includes a number of source files that are not covered by the apache license. The following files are part of this distribution.");
-                    licenseWriter.println("******************************************************************************************************************************************************");
-                    licenseWriter.println();
+                // Exclude ALv2 licensed files from listing here -- see definition
+                // of ALV2_LICENSES for more information
+                if (! ALV2_LICENSES.contains(fs.getLicenseRef())) {
+                    if (!headerPrinted) {
+                        licenseWriter.println();
+                        licenseWriter.println("******************************************************************************************************************************************************");
+                        licenseWriter.println("Apache NetBeans includes a number of source files that are not covered by the apache license. The following files are part of this distribution.");
+                        licenseWriter.println("******************************************************************************************************************************************************");
+                        licenseWriter.println();
 
-                    licenseWriter.printf("%-100s%40s%10s\n", "Sourcefile", "LICENSE", "NOTES");
-                    if(licenseTargetDir != null) {
-                        licenseWriter.printf("%-100s%40s\n", "(path in the source)", "(text is in file in licenses directory)");
-                    } else {
-                        licenseWriter.printf("%-100s%40s\n", "(path in the source)", "(see license text reproduced below)");
+                        licenseWriter.printf("%-100s%40s%10s\n", "Sourcefile", "LICENSE", "NOTES");
+                        if (licenseTargetDir != null) {
+                            licenseWriter.printf("%-100s%40s\n", "(path in the source)", "(text is in file in licenses directory)");
+                        } else {
+                            licenseWriter.printf("%-100s%40s\n", "(path in the source)", "(see license text reproduced below)");
+                        }
+                        licenseWriter.println("------------------------------------------------------------------------------------------------------------------------------------------------------");
+                        headerPrinted = true;
                     }
-                    licenseWriter.println("------------------------------------------------------------------------------------------------------------------------------------------------------");
-                    headerPrinted = true;
+
+                    String notes = "";
+                    if (fs.getLicenseInfo() != null) {
+                        int idx = footnotes.indexOf(fs.getLicenseInfo());
+                        if (idx < 0) {
+                            footnotes.add(fs.getLicenseInfo());
+                            idx = footnotes.size() - 1;
+                        }
+                        notes = Integer.toString(idx + 1);
+                    }
+                    for (File f : fs.getFiles()) {
+                        Path relativePath = nball.toPath().relativize(f.toPath());
+                        licenseWriter.printf("%-120s%20s%10s\n", relativePath, fs.getLicenseRef(), notes);
+                    }
+
+                    if (fs.getLicenseRef() != null) {
+                        licenseNames.add(fs.getLicenseRef());
+                    }
                 }
 
-                String notes = "";
-                if(fs.getLicenseInfo() != null) {
-                    int idx = footnotes.indexOf(fs.getLicenseInfo());
-                    if(idx < 0) {
-                        footnotes.add(fs.getLicenseInfo());
-                        idx = footnotes.size() - 1;
-                    }
-                    notes = Integer.toString(idx + 1);
-                }
-                for(File f: fs.getFiles()) {
-                    Path relativePath = nball.toPath().relativize(f.toPath());
-                    licenseWriter.printf("%-120s%20s%10s\n", relativePath, fs.getLicenseRef(), notes);
-                }
-                
-                if(fs.getLicenseRef() != null) {
-                    licenseNames.add(fs.getLicenseRef());
-                }
-                
                 addNotice(noticeWriter, fs.getNotice(), notices);
             }
         }

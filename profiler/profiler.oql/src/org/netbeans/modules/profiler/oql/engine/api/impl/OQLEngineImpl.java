@@ -30,6 +30,7 @@ import javax.script.Invocable;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import org.netbeans.api.scripting.Scripting;
 import org.netbeans.lib.profiler.heap.Instance;
 import org.netbeans.lib.profiler.heap.JavaClass;
 import org.netbeans.modules.profiler.oql.engine.api.OQLEngine.OQLQuery;
@@ -51,7 +52,7 @@ public class OQLEngineImpl {
     static {
         try {
             // Do we have JavaScript engine?
-            ScriptEngineManager manager = new ScriptEngineManager();
+            ScriptEngineManager manager = Scripting.createManager();
             Object engine = manager.getEngineByName("JavaScript"); // NOI18N
 
             oqlSupported = engine != null;
@@ -379,7 +380,7 @@ public class OQLEngineImpl {
     private void init(Snapshot snapshot) throws RuntimeException {
         this.snapshot = snapshot;
         try {
-            ScriptEngineManager manager = new ScriptEngineManager();
+            ScriptEngineManager manager = Scripting.createManager();
             engine = manager.getEngineByName("JavaScript"); // NOI18N
             InputStream strm = getInitStream();
             CompiledScript cs = ((Compilable)engine).compile(new InputStreamReader(strm));

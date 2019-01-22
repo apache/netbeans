@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.php.editor.parser.api;
 
-import java.io.FileReader;
 import java.io.StringReader;
 import java_cup.runtime.Symbol;
 import junit.framework.TestCase;

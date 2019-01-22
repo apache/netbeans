@@ -32,11 +32,24 @@
     <target name="rebuild-main" unless="main.up.to.date">
         <mkdir dir="${build.classes.dir}"/>
         <delete file="${build.classes.dir}/org/netbeans/Main.class"/>
-        <javac srcdir="${src.dir}" destdir="${build.classes.dir}" debug="${build.compiler.debug}" debuglevel="${build.compiler.debuglevel}" deprecation="${build.compiler.deprecation}" optimize="${build.compiler.optimize}" source="1.6" target="1.6" includeantruntime="false">
+        <javac srcdir="${src.dir}" destdir="${build.classes.dir}" debug="${build.compiler.debug}" debuglevel="${build.compiler.debuglevel}" deprecation="${build.compiler.deprecation}" optimize="${build.compiler.optimize}" source="1.8" target="1.8" includeantruntime="false">
             <classpath refid="cp"/>
             <include name="org/netbeans/Main.java"/>
             <compilerarg line="${javac.compilerargs}"/>
         </javac>
     </target>
-
+    
+    <target name="-build-windows-launchers" depends="build-init" if="do.build.windows.launchers">
+        <exec executable="make" dir="launcher/windows">
+            <arg value="-f"/>
+            <arg value="Makefile.mingw"/>
+        </exec>
+        <copy todir="${cluster}/lib" overwrite="true">
+            <fileset dir="launcher/windows">
+                <include name="nbexec*.dll"/>
+                <include name="nbexec*.exe"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="release" depends="projectized.release,-build-windows-launchers" />
 </project>

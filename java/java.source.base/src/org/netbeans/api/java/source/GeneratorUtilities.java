@@ -61,8 +61,6 @@ import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Scope.StarImportScope;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.comp.Modules;
@@ -116,13 +114,13 @@ import javax.script.ScriptException;
 import javax.swing.text.Document;
 import javax.tools.JavaFileObject;
 
-import com.sun.tools.javac.parser.ParserFactory;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.guards.DocumentGuards;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.queries.FileEncodingQuery;
+import org.netbeans.api.scripting.Scripting;
 import org.netbeans.modules.java.source.builder.CommentHandlerService;
 import org.netbeans.modules.java.source.builder.CommentSetImpl;
 import org.netbeans.modules.java.source.parsing.AbstractSourceFileObject;
@@ -133,7 +131,6 @@ import org.netbeans.modules.java.source.save.DiffContext;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
-import org.openide.util.Lookup;
 
 /**
  *
@@ -2212,8 +2209,7 @@ public final class GeneratorUtilities {
         if (obj instanceof String) {
             synchronized (GeneratorUtilities.class) {
                 if (manager == null) {
-                    ClassLoader loader = Lookup.getDefault().lookup(ClassLoader.class);
-                    manager = new ScriptEngineManager(loader != null ? loader : Thread.currentThread().getContextClassLoader());
+                    manager = Scripting.createManager();
                 }
             }
             return manager.getEngineByName((String) obj);

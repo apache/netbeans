@@ -71,10 +71,12 @@
             </test-dependencies>
             <public-packages>
                 <package>org.graalvm.options</package>
+                <package>org.graalvm.collections</package>
                 <package>org.graalvm.polyglot</package>
                 <package>org.graalvm.polyglot.io</package>
                 <package>org.graalvm.polyglot.management</package>
                 <package>org.graalvm.polyglot.proxy</package>
+                <package>org.graalvm.polyglot.impl</package>
                 <package>org.netbeans.libs.graalsdk</package>
             </public-packages>
             <class-path-extension>

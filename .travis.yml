@@ -44,7 +44,7 @@ matrix:
         - env: OPTS="-quiet" TARGET="build-platform"
           jdk: oraclejdk11
 
-        - env: SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_TESTS_JDK9PLUS=false RUN_TESTS_JDK8=true TEST_MODULES="java/java.completion" OPTS="-Dcluster.config=java -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
+        - env: SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_TESTS_JDK9PLUS=false RUN_TESTS_JDK8=true TEST_MODULES="java/java.completion java/spi.java.hints" OPTS="-Dcluster.config=java -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           jdk: oraclejdk8
 
         - env: SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_TESTS_JDK8=false RUN_TESTS_JDK9PLUS=true TEST_JDK_VERSION="--feature 11 --license GPL" TEST_RUN_OPTIONS='-Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument -Dtest.use.jdk.javac=true' TEST_MODULES="java/java.completion" OPTS="-Dcluster.config=java -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"

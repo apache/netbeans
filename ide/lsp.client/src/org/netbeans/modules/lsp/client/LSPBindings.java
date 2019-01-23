@@ -34,8 +34,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
+import org.eclipse.lsp4j.TextDocumentClientCapabilities;
+import org.eclipse.lsp4j.WorkspaceClientCapabilities;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageServer;
@@ -110,6 +113,7 @@ public class LSPBindings {
                                                        initParams.setRootUri(Utils.toURI(prj.getProjectDirectory())); //XXX: what if a different root is expected????
                                                        initParams.setRootPath(FileUtil.toFile(prj.getProjectDirectory()).getAbsolutePath()); //some servers still expect root path
                                                        initParams.setProcessId(0);
+                                                       initParams.setCapabilities(new ClientCapabilities(new WorkspaceClientCapabilities(), new TextDocumentClientCapabilities(), null));
                                                        InitializeResult result = server.initialize(initParams).get();
                                                        LSPBindings b = new LSPBindings(server, result, LanguageServerProviderAccessor.getINSTANCE().getProcess(desc));
                                                        lci.setBindings(b);
@@ -235,12 +239,16 @@ public class LSPBindings {
         public void run() {
             for (Map<String, LSPBindings> mime2Bindings : project2MimeType2Server.values()) {
                 for (LSPBindings b : mime2Bindings.values()) {
-                    b.process.destroy();
+                    if (b != null) {
+                        b.process.destroy();
+                    }
                 }
             }
             for (Map<String, LSPBindings> mime2Bindings : workspace2Extension2Server.values()) {
                 for (LSPBindings b : mime2Bindings.values()) {
-                    b.process.destroy();
+                    if (b != null) {
+                        b.process.destroy();
+                    }
                 }
             }
         }

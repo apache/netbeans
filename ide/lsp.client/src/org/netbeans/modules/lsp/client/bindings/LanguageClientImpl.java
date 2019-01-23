@@ -51,6 +51,7 @@ import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
+import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextEdit;
@@ -82,9 +83,13 @@ public class LanguageClientImpl implements LanguageClient {
     private static final RequestProcessor WORKER = new RequestProcessor(LanguageClientImpl.class.getName(), 1, false, false);
 
     private LSPBindings bindings;
+    private boolean allowCodeActions;
 
     public void setBindings(LSPBindings bindings) {
         this.bindings = bindings;
+        ServerCapabilities serverCapabilities = bindings.getInitResult().getCapabilities();
+        Boolean codeActions = serverCapabilities.getCodeActionProvider();
+        allowCodeActions = codeActions != null && codeActions;
     }
 
     @Override
@@ -100,9 +105,10 @@ public class LanguageClientImpl implements LanguageClient {
             Document doc = ec != null ? ec.getDocument() : null;
             if (doc == null)
                 return ; //ignore...
-            List<ErrorDescription> diags = pdp.getDiagnostics().stream().map(d -> 
-                    ErrorDescriptionFactory.createErrorDescription(severityMap.get(d.getSeverity()), d.getMessage(), new DiagnosticFixList(pdp.getUri(), d), file, Utils.getOffset(doc, d.getRange().getStart()), Utils.getOffset(doc, d.getRange().getEnd()))
-            ).collect(Collectors.toList());
+            List<ErrorDescription> diags = pdp.getDiagnostics().stream().map(d -> {
+                LazyFixList fixList = allowCodeActions ? new DiagnosticFixList(pdp.getUri(), d) : ErrorDescriptionFactory.lazyListForFixes(Collections.emptyList());
+                return ErrorDescriptionFactory.createErrorDescription(severityMap.get(d.getSeverity()), d.getMessage(), fixList, file, Utils.getOffset(doc, d.getRange().getStart()), Utils.getOffset(doc, d.getRange().getEnd()));
+            }).collect(Collectors.toList());
             HintsController.setErrors(doc, LanguageClientImpl.class.getName(), diags);
         } catch (URISyntaxException | MalformedURLException ex) {
             LOG.log(Level.FINE, null, ex);

@@ -37,12 +37,12 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import org.netbeans.api.queries.FileEncodingQuery;
+import org.netbeans.api.scripting.Scripting;
 import org.netbeans.api.templates.CreateDescriptor;
 import org.netbeans.api.templates.CreateFromTemplateHandler;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 
 
@@ -135,8 +135,7 @@ public class ScriptingCreateFromTemplateHandler extends CreateFromTemplateHandle
     public static ScriptEngine getEngine(String engName) {
         synchronized (ScriptingCreateFromTemplateHandler.class) {
             if (manager == null) {
-                ClassLoader loader = Lookup.getDefault().lookup(ClassLoader.class);
-                manager = new ScriptEngineManager(loader != null ? loader : Thread.currentThread().getContextClassLoader());
+                manager = Scripting.createManager();
             }
         }
         return manager.getEngineByName(engName);

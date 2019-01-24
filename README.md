@@ -36,6 +36,7 @@ Apache NetBeans is an open source development environment, tooling platform, and
   * Ant 1.9.9 or above
   * Oracle JDK 8 or OpenJDK 8 (to build NetBeans)
   * Oracle JDK 9 or OpenJDK 9 (to run NetBeans)
+  * MinGW (optional), to build Windows Launchers
 
 **Note:** NetBeans also runs with JDK 8, although then it will not include tools for the JDK 9 Shell.
 
@@ -60,7 +61,20 @@ Build the NetBeans Platform:
 $ ant -Dcluster.config=platform
 ```
 
-**Note:** You can also use `php`, `enterprise`, e.t.c. See the [cluster.properties](https://github.com/apache/incubator-netbeans/blob/master/nbbuild/cluster.properties) file.
+**Note:** You can also use `php`, `enterprise`, etc. See the [cluster.properties](https://github.com/apache/incubator-netbeans/blob/master/nbbuild/cluster.properties) file.
+
+#### Building Windows Launchers
+Windows launchers can be build using [MinGW](http://www.mingw.org/) both on Windows and Linux.
+
+As of [NETBEANS-1145](https://issues.apache.org/jira/browse/NETBEANS-1145), the Windows Launchers can be built adding ```do.build.windows.launchers=true``` property to the build process.
+```
+$ ant -Ddo.build.windows.launchers=true
+```
+
+##### Software Requirement to Build Windows Launchers on Ubuntu (16.04+):
+```
+sudo apt install make mingw-w64
+```
 
 ### Running NetBeans
 
@@ -75,7 +89,7 @@ $ ant tryme
 
 [Subscribe](mailto:users-subscribe@netbeans.incubator.apache.org) or [mail](mailto:users@netbeans.incubator.apache.org) the [users@netbeans.incubator.apache.org](mailto:users@netbeans.incubator.apache.org) list - Ask questions, find answers, and also help other users.
 
-[Subscribe](mailto:dev-subscribe@netbeans.incubator.apache.org) or [mail](mailto:dev@netbeans.incubator.apache.org) the [dev@netbeans.incubator.apache.org](mailto:dev@netbeans.incubator.apache.org) list - Join developement discussions, propose new ideas and connect with contributors.
+[Subscribe](mailto:dev-subscribe@netbeans.incubator.apache.org) or [mail](mailto:dev@netbeans.incubator.apache.org) the [dev@netbeans.incubator.apache.org](mailto:dev@netbeans.incubator.apache.org) list - Join development discussions, propose new ideas and connect with contributors.
 
 ### Download
 

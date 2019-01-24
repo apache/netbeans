@@ -59,6 +59,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import javax.annotation.processing.Processor;
 import javax.swing.event.ChangeEvent;
@@ -872,6 +873,11 @@ public class JavacParser extends Parser {
             options.add(additionalModules.stream().collect(Collectors.joining(",")));   //NOI18N
         }
 
+        //filter out classfiles:
+        files = StreamSupport.stream(files.spliterator(), false)
+                             .filter(file -> file.getKind() == Kind.SOURCE)
+                             .collect(Collectors.toList());
+
         Context context = new Context();
         //need to preregister the Messages here, because the getTask below requires Log instance:
         NBMessager.preRegister(context, null, DEV_NULL, DEV_NULL, DEV_NULL);
@@ -1043,6 +1049,8 @@ public class JavacParser extends Parser {
                 res.add(option);  //NOI18N
                 xmoduleSeen = true;
             } else if (option.equals("-parameters") || option.startsWith("-Xlint")) {     //NOI18N
+                res.add(option);
+            } else if (option.equals("--enable-preview")) {     //NOI18N
                 res.add(option);
             } else if ((
                     option.startsWith("--add-modules") ||   //NOI18N

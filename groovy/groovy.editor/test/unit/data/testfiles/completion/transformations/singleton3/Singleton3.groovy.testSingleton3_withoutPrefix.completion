@@ -2,8 +2,6 @@ Code completion result for source line:
 Singleton3.|
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-CLASS      Singleton3()                               null
-CLASS      y()                                        null
 METHOD     addShutdownHook(Closure)                   void
 METHOD     any()                                      boolean
 METHOD     any(Closure)                               boolean
@@ -71,6 +69,7 @@ METHOD     sleep(long, Closure)                       void
 METHOD     split(Closure)                             Collection
 METHOD     sprintf(String, Object)                    String
 METHOD     sprintf(String, Object)                    String
+METHOD     tap(Closure)                               Object
 METHOD     toString()                      [PUBLIC]   String
 METHOD     use(Class, Closure)                        Object
 METHOD     use(List, Closure)                         Object
@@ -79,6 +78,7 @@ METHOD     wait()                          [PUBLIC]   void
 METHOD     wait(long)                      [PUBLIC]   void
 METHOD     wait(long, int)                 [PUBLIC]   void
 METHOD     with(Closure)                              Object
+METHOD     with(boolean, Closure)                     Object
 METHOD     withTraits(Class[])                        Object
 METHOD     y()                             [PUBLIC]   Object
 FIELD      class                           [PUBLIC]   Class

@@ -21,9 +21,13 @@ package org.netbeans.modules.php.editor.verification;
 import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.prefs.Preferences;
 import javax.swing.JComponent;
 import org.netbeans.api.annotations.common.CheckForNull;
@@ -33,6 +37,13 @@ import org.netbeans.modules.csl.api.HintSeverity;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
 import org.netbeans.modules.php.editor.CodeUtils;
+import org.netbeans.modules.php.editor.api.ElementQuery;
+import org.netbeans.modules.php.editor.api.elements.MethodElement;
+import org.netbeans.modules.php.editor.model.ClassScope;
+import org.netbeans.modules.php.editor.model.FileScope;
+import org.netbeans.modules.php.editor.model.InterfaceScope;
+import org.netbeans.modules.php.editor.model.ModelUtils;
+import org.netbeans.modules.php.editor.model.TraitScope;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
@@ -65,6 +76,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.Include;
 import org.netbeans.modules.php.editor.parser.astnodes.InstanceOfExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.InterfaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocBlock;
@@ -101,6 +113,7 @@ public class UnusedVariableHint extends HintRule implements CustomisableRule {
 
     private static final String HINT_ID = "Unused.Variable.Hint"; //NOI18N
     private static final String CHECK_UNUSED_FORMAL_PARAMETERS = "php.verification.check.unused.formal.parameters"; //NOI18N
+    private static final String CHECK_INHERITED_METHOD_PARAMETERS = "php.verification.check.inherited.method.parameters"; //NOI18N
     private static final List<String> UNCHECKED_VARIABLES = new ArrayList<>();
     private Preferences preferences;
 
@@ -128,13 +141,67 @@ public class UnusedVariableHint extends HintRule implements CustomisableRule {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
-            CheckVisitor checkVisitor = new CheckVisitor(fileObject, context.doc);
+            CheckVisitor checkVisitor = new CheckVisitor(fileObject, context.doc, getInheritedMethods(context));
             phpParseResult.getProgram().accept(checkVisitor);
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
             hints.addAll(checkVisitor.getHints());
         }
+    }
+
+    private Map<String, List<String>> getInheritedMethods(PHPRuleContext context) {
+        if (!checkUnusedFormalParameters(preferences) || checkInheritedMethodParameters(preferences)) {
+            return Collections.emptyMap();
+        }
+        FileScope fileScope = context.fileScope;
+        Collection<? extends ClassScope> allClasses = ModelUtils.getDeclaredClasses(fileScope);
+        ElementQuery.Index index = context.getIndex();
+        Map<String, List<String>> allInheritedMethods = new HashMap<>();
+        for (ClassScope classScope : allClasses) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return Collections.emptyMap();
+            }
+            Set<MethodElement> inheritedMethods = getInheritedMethods(classScope, index);
+            for (MethodElement inheritedMethod : inheritedMethods) {
+                if (CancelSupport.getDefault().isCancelled()) {
+                    return Collections.emptyMap();
+                }
+                List<String> methodElements = allInheritedMethods.get(inheritedMethod.getName());
+                if (methodElements == null) {
+                    methodElements = new ArrayList<>();
+                    methodElements.add(classScope.getName());
+                    allInheritedMethods.put(inheritedMethod.getName(), methodElements);
+                } else {
+                    methodElements.add(classScope.getName());
+                }
+            }
+        }
+        return allInheritedMethods;
+    }
+
+    private Set<MethodElement> getInheritedMethods(final ClassScope classScope, final ElementQuery.Index index) {
+        Set<MethodElement> inheritedMethods = new HashSet<>();
+        Set<MethodElement> declaredSuperMethods = new HashSet<>();
+        Set<MethodElement> accessibleSuperMethods = new HashSet<>();
+        Collection<? extends ClassScope> superClasses = classScope.getSuperClasses();
+        for (ClassScope cls : superClasses) {
+            declaredSuperMethods.addAll(index.getDeclaredMethods(cls));
+            accessibleSuperMethods.addAll(index.getAccessibleMethods(cls, classScope));
+        }
+        Collection<? extends InterfaceScope> superInterface = classScope.getSuperInterfaceScopes();
+        for (InterfaceScope interfaceScope : superInterface) {
+            declaredSuperMethods.addAll(index.getDeclaredMethods(interfaceScope));
+            accessibleSuperMethods.addAll(index.getAccessibleMethods(interfaceScope, classScope));
+        }
+        Collection<? extends TraitScope> traits = classScope.getTraits();
+        for (TraitScope traitScope : traits) {
+            declaredSuperMethods.addAll(index.getDeclaredMethods(traitScope));
+            accessibleSuperMethods.addAll(index.getAccessibleMethods(traitScope, classScope));
+        }
+        inheritedMethods.addAll(declaredSuperMethods);
+        inheritedMethods.addAll(accessibleSuperMethods);
+        return inheritedMethods;
     }
 
     private class CheckVisitor extends DefaultVisitor {
@@ -147,10 +214,14 @@ public class UnusedVariableHint extends HintRule implements CustomisableRule {
         private final List<Hint> hints;
         private boolean forceVariableAsUsed;
         private boolean forceVariableAsUnused;
+        private boolean isInInheritedMethod;
+        private String className = ""; // NOI18N
+        private final Map<String, List<String>> allInheritedMethods; // method name, class names
 
-        CheckVisitor(FileObject fileObject, BaseDocument baseDocument) {
+        CheckVisitor(FileObject fileObject, BaseDocument baseDocument, Map<String, List<String>> allInheritedMethods) {
             this.fileObject = fileObject;
             this.baseDocument = baseDocument;
+            this.allInheritedMethods = allInheritedMethods;
             hints = new ArrayList<>();
         }
 
@@ -557,7 +628,9 @@ public class UnusedVariableHint extends HintRule implements CustomisableRule {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
+            className = node.getName().getName();
             scan(node.getBody());
+            className = ""; // NOI18N
         }
 
         @Override
@@ -604,11 +677,34 @@ public class UnusedVariableHint extends HintRule implements CustomisableRule {
         }
 
         @Override
+        public void visit(MethodDeclaration node) {
+            if (checkUnusedFormalParameters(preferences) && !checkInheritedMethodParameters(preferences)) {
+                String methodName = node.getFunction().getFunctionName().getName();
+                List<String> classNames = allInheritedMethods.get(methodName);
+                if (classNames != null) {
+                    for (String clsName : classNames) {
+                        if (CancelSupport.getDefault().isCancelled()) {
+                            return;
+                        }
+                        if (className.equals(clsName)) {
+                            isInInheritedMethod = true;
+                            break;
+                        }
+                    }
+                }
+                super.visit(node);
+                isInInheritedMethod = false;
+            } else {
+                super.visit(node);
+            }
+        }
+
+        @Override
         public void visit(FormalParameter node) {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
-            if (checkUnusedFormalParameters(preferences)) {
+            if (checkUnusedFormalParameters(preferences) && !isInInheritedMethod) {
                 scan(node.getParameterName());
             } else {
                 forceVariableAsUsed = true;
@@ -670,6 +766,7 @@ public class UnusedVariableHint extends HintRule implements CustomisableRule {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
+            isInInheritedMethod = false;
             forceVariableAsUsed = true;
             scan(node.getLexicalVariables());
             forceVariableAsUsed = false;
@@ -849,6 +946,7 @@ public class UnusedVariableHint extends HintRule implements CustomisableRule {
     public JComponent getCustomizer(Preferences preferences) {
         JComponent customizer = new UnusedVariableCustomizer(preferences, this);
         setCheckUnusedFormalParameters(preferences, checkUnusedFormalParameters(preferences));
+        setCheckInheritedMethodParameters(preferences, checkInheritedMethodParameters(preferences));
         return customizer;
     }
 
@@ -858,6 +956,14 @@ public class UnusedVariableHint extends HintRule implements CustomisableRule {
 
     public boolean checkUnusedFormalParameters(Preferences preferences) {
         return preferences.getBoolean(CHECK_UNUSED_FORMAL_PARAMETERS, true);
+    }
+
+    public void setCheckInheritedMethodParameters(Preferences preferences, boolean isEnabled) {
+        preferences.putBoolean(CHECK_INHERITED_METHOD_PARAMETERS, isEnabled);
+    }
+
+    public boolean checkInheritedMethodParameters(Preferences preferences) {
+        return preferences.getBoolean(CHECK_INHERITED_METHOD_PARAMETERS, true);
     }
 
 }

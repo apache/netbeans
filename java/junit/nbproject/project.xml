@@ -363,6 +363,7 @@
                 </test-type>
             </test-dependencies>
             <friend-packages>
+                <friend>org.netbeans.modules.gradle.test</friend>
                 <friend>org.netbeans.modules.junit.ant</friend>
                 <friend>org.netbeans.modules.junit.ant.ui</friend>
                 <friend>org.netbeans.modules.junit.ui</friend>

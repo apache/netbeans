@@ -18,5 +18,9 @@
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 
+#include <winuser.h>
+
 100 ICON "app.ico"
 
+// Value MANIFEST_FILE id taken from windres parameter -DMANIFEST_FILE
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST MANIFEST_FILE

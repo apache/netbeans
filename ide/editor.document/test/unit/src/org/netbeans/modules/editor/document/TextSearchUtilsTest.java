@@ -40,6 +40,7 @@ public class TextSearchUtilsTest {
     //                                             01234 567890123 4567890
     private static final String MULTI_LINE_TEXT = " ab \n/** jdoc\n * 2nd";
     
+    private static final String MULTI_LINE_TEXT1 = "Hello\nWorld\n";
     /**
      * Test of getWordStart method, of class TextSearchUtils.
      */
@@ -62,6 +63,10 @@ public class TextSearchUtilsTest {
 
         assertEquals(13, TextSearchUtils.getWordEnd(INT_I_TEXT, DC, 10));
         assertEquals(10, TextSearchUtils.getWordEnd(INT_I_TEXT, DC, 8));
+
+        assertEquals(11, TextSearchUtils.getWordEnd(MULTI_LINE_TEXT1, DC, 11));
+        assertEquals(6, TextSearchUtils.getWordEnd(MULTI_LINE_TEXT1, DC, 5));
+        assertEquals(5, TextSearchUtils.getWordEnd(MULTI_LINE_TEXT1, DC, 4));
     }
 
     /**

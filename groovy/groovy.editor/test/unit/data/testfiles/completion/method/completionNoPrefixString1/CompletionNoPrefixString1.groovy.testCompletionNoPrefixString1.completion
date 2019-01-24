@@ -32,10 +32,12 @@ METHOD     copyValueOf(char[])             [STATIC,   String
 METHOD     copyValueOf(char[], int, int)   [STATIC,   String
 METHOD     count(CharSequence)                        int
 METHOD     decodeBase64()                             byte[]
+METHOD     decodeBase64Url()                          byte[]
 METHOD     decodeHex()                                byte[]
 METHOD     denormalize()                              String
+METHOD     digest(String)                             String
 METHOD     drop(int)                                  CharSequence
-METHOD     dropWhile(Closure)                         CharSequence
+METHOD     dropWhile(Closure)                         String
 METHOD     dump()                                     String
 METHOD     each(Closure)                              Object
 METHOD     eachLine(Closure)                          Object
@@ -45,6 +47,7 @@ METHOD     eachMatch(Pattern, Closure)                String
 METHOD     eachMatch(String, Closure)                 String
 METHOD     eachWithIndex(Closure)                     Object
 METHOD     endsWith(String)                [PUBLIC]   boolean
+METHOD     endsWithAny(CharSequence[])                boolean
 METHOD     equals(Object)                  [PUBLIC]   boolean
 METHOD     equalsIgnoreCase(String)        [PUBLIC]   boolean
 METHOD     every()                                    boolean
@@ -111,6 +114,7 @@ METHOD     is(Object)                                 boolean
 METHOD     isAllWhitespace()                          boolean
 METHOD     isBigDecimal()                             boolean
 METHOD     isBigInteger()                             boolean
+METHOD     isBlank()                                  boolean
 METHOD     isCase(Object)                             boolean
 METHOD     isDouble()                                 boolean
 METHOD     isEmpty()                       [PUBLIC]   boolean
@@ -129,6 +133,7 @@ METHOD     leftShift(Object)                          StringBuffer
 METHOD     length()                        [PUBLIC]   int
 METHOD     matches(Pattern)                           boolean
 METHOD     matches(String)                 [PUBLIC]   boolean
+METHOD     md5()                                      String
 METHOD     metaClass(Closure)                         MetaClass
 METHOD     minus(Object)                              String
 METHOD     minus(Pattern)                             String
@@ -158,7 +163,9 @@ METHOD     readLines()                                List
 METHOD     regionMatches(boolean, int, St  [PUBLIC]   boolean
 METHOD     regionMatches(int, String, int  [PUBLIC]   boolean
 METHOD     replace(CharSequence, CharSequ  [PUBLIC]   String
+METHOD     replace(Map)                               String
 METHOD     replace(char, char)             [PUBLIC]   String
+METHOD     replace(int, Map)                          String
 METHOD     replaceAll(CharSequence, CharS             String
 METHOD     replaceAll(CharSequence, Closu             String
 METHOD     replaceAll(Pattern, CharSequen             String
@@ -186,6 +193,7 @@ METHOD     sprintf(String, Object)                    String
 METHOD     sprintf(String, Object)                    String
 METHOD     startsWith(String)              [PUBLIC]   boolean
 METHOD     startsWith(String, int)         [PUBLIC]   boolean
+METHOD     startsWithAny(CharSequence[])              boolean
 METHOD     stripIndent()                              String
 METHOD     stripIndent(int)                           String
 METHOD     stripMargin()                              String
@@ -195,7 +203,8 @@ METHOD     subSequence(int, int)           [PUBLIC]   CharSequence
 METHOD     substring(int)                  [PUBLIC]   String
 METHOD     substring(int, int)             [PUBLIC]   String
 METHOD     take(int)                                  CharSequence
-METHOD     takeWhile(Closure)                         CharSequence
+METHOD     takeWhile(Closure)                         String
+METHOD     tap(Closure)                               Object
 METHOD     toBigDecimal()                             BigDecimal
 METHOD     toBigInteger()                             BigInteger
 METHOD     toBoolean()                                Boolean
@@ -220,6 +229,7 @@ METHOD     tokenize(CharSequence)                     List
 METHOD     tokenize(Character)                        List
 METHOD     tr(CharSequence, CharSequence)             String
 METHOD     trim()                          [PUBLIC]   String
+METHOD     uncapitalize()                             String
 METHOD     unexpand()                                 String
 METHOD     unexpand(int)                              String
 METHOD     unexpandLine(int)                          String
@@ -239,6 +249,7 @@ METHOD     wait()                          [PUBLIC]   void
 METHOD     wait(long)                      [PUBLIC]   void
 METHOD     wait(long, int)                 [PUBLIC]   void
 METHOD     with(Closure)                              Object
+METHOD     with(boolean, Closure)                     Object
 METHOD     withTraits(Class[])                        Object
 FIELD      CASE_INSENSITIVE_ORDER          [STATIC,   Comparator<String>
 FIELD      bytes                           [PUBLIC]   byte[]

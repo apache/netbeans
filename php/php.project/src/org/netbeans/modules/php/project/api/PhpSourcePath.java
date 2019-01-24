@@ -106,16 +106,11 @@ public final class PhpSourcePath {
     public static synchronized List<FileObject> getPreindexedFolders() {
         if (phpStubsFolder == null) {
             // Core classes: Stubs generated for the "builtin" php runtime and extenstions.
-            File clusterFile = InstalledFileLocator.getDefault().locate(
-                    "modules/org-netbeans-modules-php-project.jar", "org.netbeans.modules.php.project", false);   //NOI18N
+            File clusterFile = InstalledFileLocator.getDefault().locate("docs/phpsigfiles.zip", null, true); //NOI18N
 
             if (clusterFile != null) {
-                File phpStubs =
-                        new File(clusterFile.getParentFile().getParentFile().getAbsoluteFile(),
-                        "phpstubs/phpruntime"); // NOI18N
-                assert phpStubs.exists() && phpStubs.isDirectory() : "No stubs found";
-                phpStubsFolder = FileUtil.toFileObject(phpStubs);
-                assert phpStubsFolder != null : "FileObject for stubs " + phpStubs + " not found";
+                FileObject root = FileUtil.getArchiveRoot(FileUtil.toFileObject(clusterFile));
+                phpStubsFolder = root.getFileObject("phpstubs/phpruntime"); //NOI18N
             }
         }
         if (phpStubsFolder == null) {

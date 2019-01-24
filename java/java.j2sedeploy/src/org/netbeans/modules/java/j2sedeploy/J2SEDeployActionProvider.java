@@ -35,6 +35,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
+import org.netbeans.api.scripting.Scripting;
 import org.netbeans.modules.java.j2seproject.api.J2SEPropertyEvaluator;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
@@ -153,7 +154,7 @@ public class J2SEDeployActionProvider implements ActionProvider {
         if(isJSAvailableChecked) {
             return isJSAvailable;
         }
-        ScriptEngineManager mgr = new ScriptEngineManager();
+        ScriptEngineManager mgr = Scripting.createManager();
         List<ScriptEngineFactory> factories = mgr.getEngineFactories();
         for (ScriptEngineFactory factory: factories) {
             List<String> engNames = factory.getNames();

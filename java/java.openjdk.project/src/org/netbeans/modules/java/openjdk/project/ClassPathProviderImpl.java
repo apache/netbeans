@@ -44,6 +44,7 @@ import org.netbeans.api.project.libraries.Library;
 import org.netbeans.api.project.libraries.LibraryManager;
 import org.netbeans.modules.java.openjdk.project.JDKProject.Root;
 import org.netbeans.modules.java.openjdk.project.JDKProject.RootKind;
+import org.netbeans.modules.java.openjdk.project.ModuleDescription.ModuleRepository;
 import org.netbeans.modules.parsing.spi.indexing.PathRecognizerRegistration;
 import org.netbeans.spi.java.classpath.ClassPathImplementation;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
@@ -76,8 +77,9 @@ public class ClassPathProviderImpl implements ClassPathProvider {
     private final ClassPath sourceCP;
     private final ClassPath testsCompileCP;
     private final ClassPath testsRegCP;
+    private final ModuleRepository repository;
 
-    public ClassPathProviderImpl(JDKProject project) {
+    public ClassPathProviderImpl(JDKProject project, ModuleRepository repository) {
         bootCP = ClassPath.EMPTY;
         moduleBootCP = ClassPath.EMPTY;
         
@@ -182,6 +184,7 @@ public class ClassPathProviderImpl implements ClassPathProvider {
         }
         testsCompileCP = ClassPathSupport.createClassPath(testCompileRoots.toArray(new URL[0]));
         testsRegCP = ClassPathSupport.createClassPath(testsRegRoots);
+        this.repository = repository;
     }
 
     private static final String[] TEST_LIBRARIES = new String[] {"testng", "junit_4"};
@@ -193,6 +196,10 @@ public class ClassPathProviderImpl implements ClassPathProvider {
     @Override
     public ClassPath findClassPath(FileObject file, String type) {
         if (sourceCP.findOwnerRoot(file) != null) {
+            if (!repository.isAnyProjectOpened()) {
+                //if no project is open, java.base may not be indexed. Fallback on default queries:
+                return null;
+            }
             if (ClassPath.BOOT.equals(type)) {
                 return bootCP;
             } else if (JavaClassPathConstants.MODULE_BOOT_PATH.equals(type)) {

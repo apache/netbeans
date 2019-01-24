@@ -81,13 +81,13 @@ public class TestOutputListenerProvider implements OutputProcessor {
     
     /** Creates a new instance of TestOutputListenerProvider */
     public TestOutputListenerProvider() {
-        failSeparatePattern = Pattern.compile("(?:\\[surefire\\] )?Tests run.*[<]* FAILURE[!]*(.*)", Pattern.DOTALL); //NOI18N
-        failWindowsPattern1 = Pattern.compile("(?:\\[surefire\\] )?Tests run.*", Pattern.DOTALL); //NOI18N
-        failWindowsPattern2 = Pattern.compile(".*[<]* FAILURE [!]*.*", Pattern.DOTALL); //NOI18N
-        runningPattern = Pattern.compile("(?:\\[surefire\\] )?Running (.*)", Pattern.DOTALL); //NOI18N
-        outDirPattern = Pattern.compile(".*(?:Surefire)?(?:Failsafe)? report directory\\: (.*)", Pattern.DOTALL); //NOI18N
-        outDirPattern2 = Pattern.compile(".*Setting reports dir\\: (.*)", Pattern.DOTALL); //NOI18N
-        runningPattern2 = Pattern.compile("^---\\smaven-surefire-plugin:\\d+\\.\\d+:test\\s.*$", Pattern.DOTALL);
+        failSeparatePattern = Pattern.compile("(?:\\[[a-zA-Z]+\\])?\\s*(?:\\[surefire\\] )?Tests run.*[<]* FAILURE[!]*(.*)", Pattern.DOTALL); //NOI18N
+        failWindowsPattern1 = Pattern.compile("(?:\\[[a-zA-Z]+\\])?\\s*(?:\\[surefire\\] )?Tests run.*", Pattern.DOTALL); //NOI18N
+        failWindowsPattern2 = Pattern.compile("(?:\\[[a-zA-Z]+\\])?.*[<]* FAILURE [!]*.*", Pattern.DOTALL); //NOI18N
+        runningPattern = Pattern.compile("(?:\\[[a-zA-Z]+\\])?\\s*(?:\\[surefire\\] )?Running (.*)", Pattern.DOTALL); //NOI18N
+        outDirPattern = Pattern.compile("(?:\\[[a-zA-Z]+\\])?\\s*(?:Surefire)?(?:Failsafe)? report directory\\: (.*)", Pattern.DOTALL); //NOI18N
+        outDirPattern2 = Pattern.compile("(?:\\[[a-zA-Z]+\\])?\\s*Setting reports dir\\: (.*)", Pattern.DOTALL); //NOI18N
+        runningPattern2 = Pattern.compile("(?:\\[[a-zA-Z]+\\])?\\s*---\\smaven-surefire-plugin:\\d+(?:.\\d+)+[-_a-zA-Z0-9]*:test\\s.*", Pattern.DOTALL);
     }
     
     public String[] getWatchedGoals() {
@@ -128,7 +128,8 @@ public class TestOutputListenerProvider implements OutputProcessor {
                         .evaluate("${project.build.directory}/surefire-reports");
                 if (defaultValue instanceof String) {
                     outputDir = (String) defaultValue;
-                    visitor.setOutputListener(new TestOutputListener(runningTestClass, outputDir), true);
+                    // don't want to create link on the surefire line
+//                    visitor.setOutputListener(new TestOutputListener(runningTestClass, outputDir), true);
                 }
                 return;
             } catch (ExpressionEvaluationException ex) {

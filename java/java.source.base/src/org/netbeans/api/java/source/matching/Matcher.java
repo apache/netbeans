@@ -101,6 +101,17 @@ public class Matcher implements Cancellable {
         return this;
     }
 
+    /**When set, trees (like implicit receivers) that are not in the source code,
+     * but have variable in the pattern, will get a synthetic entry in variables.
+     *
+     * @return the matcher itself
+     * @since 2.40
+     */
+    public @NonNull Matcher setKeepSyntheticTrees() {
+        this.options.add(Options.KEEP_SYNTHETIC_THIS);
+        return this;
+    }
+
     /**Preset values of free variables in the pattern (see {@link Pattern#createPatternWithFreeVariables(com.sun.source.util.TreePath, java.util.Map)}).
      * A tree node will be marked as an occurrence of the pattern only if the subtree
      * corresponding to a specified free variable will match the given value.

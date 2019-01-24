@@ -1,0 +1,5 @@
+Code completion result for source line:
+function something10($arg = false):a| {}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    array                                      null

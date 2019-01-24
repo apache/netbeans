@@ -1,0 +1,8 @@
+    public function test($param1, string $param2): void {
+                                          ------
+HINT:Variable $param1 seems to be unused in its scope
+HINT:Variable $param2 seems to be unused in its scope
+        $anon = function($anonParam) {
+                          ---------
+HINT:Variable $anon seems to be unused in its scope
+HINT:Variable $anonParam seems to be unused in its scope

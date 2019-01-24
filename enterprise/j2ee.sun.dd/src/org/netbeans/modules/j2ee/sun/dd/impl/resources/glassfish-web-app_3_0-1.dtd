@@ -1,0 +1,846 @@
+<!--
+
+    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+    Copyright (c) 2010 Oracle and/or its affiliates. All rights reserved.
+
+    The contents of this file are subject to the terms of either the GNU
+    General Public License Version 2 only ("GPL") or the Common Development
+    and Distribution License("CDDL") (collectively, the "License").  You
+    may not use this file except in compliance with the License.  You can
+    obtain a copy of the License at
+    https://glassfish.dev.java.net/public/CDDL+GPL_1_1.html
+    or packager/legal/LICENSE.txt.  See the License for the specific
+    language governing permissions and limitations under the License.
+
+    When distributing the software, include this License Header Notice in each
+    file and include the License file at packager/legal/LICENSE.txt.
+
+    GPL Classpath Exception:
+    Oracle designates this particular file as subject to the "Classpath"
+    exception as provided by Oracle in the GPL Version 2 section of the License
+    file that accompanied this code.
+
+    Modifications:
+    If applicable, add the following below the License Header, with the fields
+    enclosed by brackets [] replaced by your own identifying information:
+    "Portions Copyright [year] [name of copyright owner]"
+
+    Contributor(s):
+    If you wish your version of this file to be governed by only the CDDL or
+    only the GPL Version 2, indicate your decision by adding "[Contributor]
+    elects to include this software in this distribution under the [CDDL or GPL
+    Version 2] license."  If you don't indicate a single choice of license, a
+    recipient has the option to distribute your version of this file under
+    either the CDDL, the GPL Version 2 or to extend the choice of license to
+    its licensees as provided above.  However, if you add GPL Version 2 code
+    and therefore, elected the GPL Version 2 license, then the option applies
+    only if the new code is made subject to such option by the copyright
+    holder.
+
+-->
+
+<!--
+  XML DTD for Glassfish Application Server specific Java EE web
+  deployment descriptor. This is a companion DTD to web-app_3_0.xsd
+  and web-common_3_0.xsd.
+
+  It must include a DOCTYPE of the following form:
+
+  <!DOCTYPE glassfish-web-app PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Servlet 3.0//EN" "http://glassfish.org/dtds/glassfish-web-app_3_0-1.dtd">
+
+-->
+
+<!ENTITY % boolean "(yes | no | on | off | 1 | 0 | true | false)">
+
+<!-- root element for vendor specific web application (module) configuration -->
+<!ELEMENT glassfish-web-app (context-root?, security-role-mapping*, servlet*, idempotent-url-pattern*, session-config?,
+                       ejb-ref*, resource-ref*, resource-env-ref*,  service-ref*,
+                       message-destination-ref*, cache?, class-loader?,
+                       jsp-config?, locale-charset-info?, parameter-encoding?,
+                       property*, valve*, message-destination*, webservice-description*, keep-state?, version-identifier?)>
+<!ATTLIST glassfish-web-app error-url CDATA ""
+                      httpservlet-security-provider CDATA #IMPLIED>
+
+<!--
+  Idempotent URL Patterns
+    url-pattern      URL Pattern of the idempotent requests
+    num-of-retries  Specifies the number of times the Load Balancer will retry a request that is idempotent.
+-->
+<!ELEMENT idempotent-url-pattern EMPTY>
+<!ATTLIST idempotent-url-pattern url-pattern CDATA #REQUIRED
+                                 num-of-retries CDATA "-1">
+
+<!-- 
+ Context Root for the web application when the war file is a standalone module.
+ When the war module is part of the Java EE Application, use the application.xml
+-->
+<!ELEMENT context-root (#PCDATA)>
+
+<!ELEMENT security-role-mapping (role-name, (principal-name | group-name)+)>
+<!ELEMENT role-name (#PCDATA)>
+
+<!ELEMENT principal-name (#PCDATA)>
+<!ATTLIST principal-name class-name CDATA #IMPLIED>
+<!ELEMENT group-name (#PCDATA)>
+
+<!ELEMENT servlet (servlet-name, principal-name?, webservice-endpoint*)>
+
+<!ELEMENT session-config (session-manager?, session-properties?, cookie-properties?)>
+
+<!ENTITY % persistence-type "(memory | file | custom | ha | s1ws60 | mmap | replicated)">
+
+<!ELEMENT session-manager (manager-properties?, store-properties?)>
+<!ATTLIST session-manager persistence-type CDATA "memory">
+
+<!ELEMENT manager-properties (property*)>
+<!ELEMENT store-properties (property*)>
+<!ELEMENT session-properties (property*)>
+<!ELEMENT cookie-properties (property*)>
+
+<!ELEMENT jndi-name (#PCDATA)>
+
+<!ELEMENT resource-env-ref (resource-env-ref-name, jndi-name)>
+<!ELEMENT resource-env-ref-name (#PCDATA)>
+
+<!ELEMENT resource-ref (res-ref-name, jndi-name, default-resource-principal?)>
+<!ELEMENT res-ref-name (#PCDATA)>
+
+<!ELEMENT default-resource-principal ( name,  password)>
+
+<!--
+This node holds information about a logical message destination
+-->
+<!ELEMENT message-destination (message-destination-name, jndi-name)>
+
+<!--
+This node holds the name of a logical message destination
+-->
+<!ELEMENT message-destination-name (#PCDATA)>
+
+<!--
+message-destination-ref is used to directly bind a message destination reference
+to the jndi-name of a Queue,Topic, or some other physical destination. It should
+only be used when the corresponding message destination reference does not
+specify a message-destination-link to a logical message-destination.
+-->
+<!ELEMENT message-destination-ref (message-destination-ref-name, jndi-name)>
+
+<!--
+name of a message-destination reference.
+-->
+<!ELEMENT message-destination-ref-name (#PCDATA)>
+
+<!--
+This text nodes holds a name string.
+-->
+<!ELEMENT name (#PCDATA)>
+
+<!--
+This element holds password text.
+-->
+<!ELEMENT password (#PCDATA)>
+
+
+<!ELEMENT ejb-ref (ejb-ref-name, jndi-name)>
+<!ELEMENT ejb-ref-name (#PCDATA)>
+
+<!ENTITY % scope "(context.attribute | request.header  | request.parameter | 
+                   request.cookie  | request.attribute | session.attribute)">
+<!ENTITY % key-scope "(context.attribute | request.header | request.parameter | 
+                       request.cookie | session.id | session.attribute)">
+<!ENTITY % expr "(equals | greater | lesser | not-equals | in-range)">
+
+<!-- cache element configures the cache for web application. iAS 7.0 web container    
+     supports one such cache object per application: i.e. <cache> is a sub element    
+     of <ias-web-app>. A cache can have zero or more cache-mapping elements and
+     zero or more customizable cache-helper classes.
+                                                                                   
+        max-entries        Maximum number of entries this cache may hold. [4096]
+        timeout-in-seconds Default timeout for the cache entries in seconds. [30]
+        enabled            Is this cache enabled? [true]                                                   The default value is changed to true from 8.1
+-->
+<!ELEMENT cache (cache-helper*, default-helper?, property*, cache-mapping*)>
+<!ATTLIST cache  max-entries         CDATA     "4096"
+                 timeout-in-seconds  CDATA     "30"
+                 enabled             %boolean; "true">
+
+<!-- cache-helper specifies customizable class which implements CacheHelper interface. 
+
+     name                     Unique name for the helper class; this is referenced in
+                              the cache-mapping elements (see below).
+                              "default" is reserved for the built-in default helper.
+     class-name               Fully qualified class name of the cache-helper; this class
+                              must extend the com.sun.appserv.web.CacheHelper class.
+-->
+<!ELEMENT cache-helper (property*)>
+<!ATTLIST cache-helper name CDATA #REQUIRED
+                       class-name CDATA #REQUIRED>
+
+<!-- 
+Default, built-in cache-helper properties
+-->
+<!ELEMENT default-helper (property*)>
+
+<!-- 
+cache-mapping element defines what to be cached, the key to be used, any other   
+constraints to be applied and a customizable cache-helper to programmatically
+hook this information.
+-->
+<!ELEMENT cache-mapping ((servlet-name | url-pattern), 
+                        (cache-helper-ref |
+                        (dispatcher*, timeout?, refresh-field?, http-method*, key-field*, constraint-field*)))>
+
+<!-- 
+servlet-name element defines a named servlet to which this caching is enabled.
+the specified name must be present in the web application deployment descriptor
+(web.xml)
+-->
+<!ELEMENT servlet-name (#PCDATA)>
+
+<!-- 
+url-pattern element specifies the url pattern to which caching is to be enabled.
+See Servlet 2.3 specification section SRV. 11.2 for the applicable patterns.
+-->
+<!ELEMENT url-pattern  (#PCDATA)>
+
+<!-- 
+cache-helper-ref s a reference to the cache-helper used by this cache-mapping 
+-->
+<!ELEMENT cache-helper-ref (#PCDATA)>
+
+<!-- 
+Specifies the RequestDispatcher methods for which caching is to be
+enabled on the target resource. Valid values are REQUEST, FORWARD, INCLUDE,
+and ERROR (default: REQUEST).
+See SRV.6.2.5 of the Servlet 2.4 Specification for more information.
+-->
+<!ELEMENT dispatcher (#PCDATA)>
+
+<!-- 
+timeout element defines the cache timeout in seconds applicable for this mapping.
+default is to use cache object's timeout. The timeout value is specified statically
+ere (e.g. <timeout> 60 </timeout> or dynamically via fields in the relevant scope.
+
+   name             Name of the field where this timeout could be found
+   scope            Scope of the field. default scope is request attribute.
+-->
+<!ELEMENT timeout (#PCDATA)>
+<!ATTLIST timeout  name  CDATA  #IMPLIED
+                   scope %scope; 'request.attribute'>
+
+<!-- 
+http-method specifies HTTP method eligible for caching default is GET. 
+-->
+<!ELEMENT http-method (#PCDATA)>
+
+<!-- 
+specifies the request parameter name that triggers refresh. the cached entry 
+is refreshed when there such a request parameter is set to "true"
+example:
+<cache-mapping> 
+    <url-pattern> /quote </url-pattern> 
+    <refresh-field name="refresh" scope="request.parameter"/> 
+</cache-mapping> 
+-->
+<!ELEMENT refresh-field EMPTY>
+<!ATTLIST refresh-field name  CDATA       #REQUIRED
+                        scope %key-scope; 'request.parameter'>
+<!-- 
+key-field specifies a component of the key; container looks for the named 
+field in the given scope to access the cached entry. Default is to use
+the Servlet Path (the path section that corresponds to the servlet mapping 
+which activated this request). See Servlet 2.3 specification section SRV 4.4 
+on Servlet Path.
+
+  name             Name of the field to look for in the given scope
+  scope            Scope of the field. default scope is request parameter.
+-->
+<!ELEMENT key-field EMPTY>
+<!ATTLIST key-field name  CDATA       #REQUIRED
+                    scope %key-scope; 'request.parameter'>
+
+<!-- 
+constraint-field specifies a field whose value is used as a cacheability constraint.
+  
+  name                     Name of the field to look for in the given scope
+  scope                    Scope of the field. Default scope is request parameter.
+  cache-on-match           Should this constraint check pass, is the response cacheable?
+                           Default is true (i.e. cache the response on success match). 
+                           Useful to turn off caching when there is an attribute in the 
+                           scope (e.g. don't cache when there is an attribute called UID 
+                           in the session.attribute scope).
+  cache-on-match-failure   Should the constraint check fail, is response not cacheable?
+                           Default is false (i.e. a failure in enforcing the constraint
+                           would negate caching). Useful to turn on caching when the 
+                           an an attribute is not present (e.g. turn on caching 
+                           when there is no session or session attribute called UID).
+
+  Example 1: don't cache when there is a session attribute
+  <constraint-field name="UID" scope="session.attribute" cache-on-match="false">
+
+  Example 2: do cache only when there is no session attribute
+  <constraint-field name="UID" scope="session.attribute" 
+                    cache-on-match-failure="false">
+-->
+<!ELEMENT constraint-field (constraint-field-value*)>
+<!ATTLIST constraint-field  name                    CDATA      #REQUIRED
+                            scope                   %scope;    'request.parameter'
+                            cache-on-match          %boolean;  'true'
+                            cache-on-match-failure  %boolean;  'false'>
+
+<!-- 
+value element specifies the applicable value and a matching expression for a constraint-field
+  match-expr            Expression used to match the value. Default is 'equals'.
+
+  Example 1: cache when the category matches with any value other than a specific value
+  <constraint-field name="category" scope="request.parameter>
+    <value match-expr="equals" cache-on-match-failure="true">
+         bogus
+    </value>
+  </constraint-field>
+-->
+<!ELEMENT constraint-field-value (#PCDATA)>
+<!ATTLIST constraint-field-value 	match-expr              %expr;    'equals'
+                			cache-on-match          %boolean;  'true'
+                			cache-on-match-failure  %boolean;  'false'>
+
+<!--
+  The class-loader element allows developers to customize the behaviour
+  of their web application's classloader.
+
+  attributes
+    extra-class-path          List of comma-separated JAR files to be
+                              added to the web application's class path
+    delegate                  If set to false, the delegation behavior
+                              of the web application's classloader complies
+                              with the Servlet 2.3 specification,
+                              section 9.7.2, and gives preference to classes
+                              and resources within the WAR file or the
+                              extra-class-path over those higher up in the
+                              classloader hierarchy, unless those classes or
+                              resources are part of the Java EE platform.
+                              If set to its default value of true, classes
+                              and resources residing in container-wide library
+                              JAR files are loaded in preference to classes
+                              and resources packaged within the WAR file or
+                              specified on the extra-class-path.
+    dynamic-reload-interval   Not supported. Included for backward
+                              compatibility with previous Sun Java System
+                              Web Server versions
+-->
+<!ELEMENT class-loader (property*)>
+<!ATTLIST class-loader extra-class-path CDATA  #IMPLIED
+                       delegate %boolean; 'true'
+                       dynamic-reload-interval CDATA #IMPLIED >
+
+<!ELEMENT jsp-config (property*)>
+
+<!ELEMENT locale-charset-info (locale-charset-map+, parameter-encoding?)>
+<!ATTLIST locale-charset-info default-locale CDATA #IMPLIED>
+
+<!ELEMENT locale-charset-map (description?)>
+<!ATTLIST locale-charset-map locale  CDATA  #REQUIRED
+                             agent   CDATA  #IMPLIED
+                             charset CDATA  #REQUIRED>
+
+<!ELEMENT parameter-encoding EMPTY>
+<!ATTLIST parameter-encoding form-hint-field CDATA #IMPLIED
+			     default-charset CDATA #IMPLIED>
+
+<!-- 
+Syntax for supplying properties as name value pairs 
+-->
+<!ELEMENT property (description?)>
+<!ATTLIST property name  CDATA  #REQUIRED
+                   value CDATA  #REQUIRED>
+
+<!ELEMENT description (#PCDATA)>
+
+<!--
+This text nodes holds a value string.
+-->
+<!ELEMENT value (#PCDATA)>
+
+<!ELEMENT valve (description?, property*)>
+<!ATTLIST valve name        CDATA  #REQUIRED
+                class-name  CDATA  #REQUIRED>
+
+<!--
+  					W E B   S E R V I C E S 
+-->
+<!--
+Runtime settings for a web service reference.  In the simplest case,
+there is no runtime information required for a service ref.  Runtime info
+is only needed in the following cases :
+ * to define the port that should be used to resolve a container-managed port
+ * to define default Stub/Call property settings for Stub objects
+ * to define the URL of a final WSDL document to be used instead of
+the one packaged with a service-ref
+-->
+<!ELEMENT service-ref ( service-ref-name, port-info*, call-property*, wsdl-override?, service-impl-class?, service-qname? )>
+
+<!--
+Coded name (relative to java:comp/env) for a service-reference
+-->
+<!ELEMENT service-ref-name ( #PCDATA )>
+
+<!-- 
+Information for a port within a service-reference.
+
+Either service-endpoint-interface or wsdl-port or both
+(service-endpoint-interface and wsdl-port) should be specified.  
+
+If both are specified, wsdl-port represents the
+port the container should choose for container-managed port selection.
+
+The same wsdl-port value must not appear in
+more than one port-info entry within the same service-ref.
+
+If a particular service-endpoint-interface is using container-managed port
+selection, it must not appear in more than one port-info entry
+within the same service-ref.
+
+The optional message-security-binding element is used to customize the
+port to provider binding; either by binding the port to a specific provider
+or by providing a definition of the message security requirements to be
+enforced by the provider.
+
+-->
+<!ELEMENT port-info ( service-endpoint-interface?, wsdl-port?, stub-property*, call-property*, message-security-binding? )>
+
+<!--
+Fully qualified name of service endpoint interface
+-->
+<!ELEMENT service-endpoint-interface ( #PCDATA )>
+<!-- 
+Port used in port-info.  
+-->
+<!ELEMENT wsdl-port ( namespaceURI, localpart )>
+
+<!-- 
+JAXRPC property values that should be set on a stub before it's returned to 
+to the web service client.  The property names can be any properties supported
+by the JAXRPC Stub implementation. See javadoc for javax.xml.rpc.Stub
+-->
+<!ELEMENT stub-property ( name, value )>
+
+<!-- 
+JAXRPC property values that should be set on a Call object before it's 
+returned to the web service client.  The property names can be any 
+properties supported by the JAXRPC Call implementation.  See javadoc
+for javax.xml.rpc.Call
+-->
+<!ELEMENT call-property ( name, value )>
+
+<!--
+This is a valid URL pointing to a final WSDL document. It is optional.
+If specified, the WSDL document at this URL will be used during
+deployment instead of the WSDL document associated with the
+service-ref in the standard deployment descriptor.
+
+Examples :
+
+  // available via HTTP
+  <wsdl-override>http://localhost:8000/myservice/myport?WSDL</wsdl-override>
+
+  // in a file
+  <wsdl-override>file:/home/user1/myfinalwsdl.wsdl</wsdl-override>
+
+-->
+<!ELEMENT wsdl-override ( #PCDATA )>
+
+<!--
+Name of generated service implementation class. This is not set by the 
+deployer. It is derived during deployment.
+-->
+<!ELEMENT service-impl-class ( #PCDATA )>
+
+<!-- 
+The service-qname element declares the specific WSDL service
+element that is being refered to.  It is not set by the deployer.
+It is derived during deployment.
+-->
+<!ELEMENT service-qname (namespaceURI, localpart)>
+
+<!-- 
+Runtime information about a web service.  
+
+wsdl-publish-location is optionally used to specify 
+where the final wsdl and any dependent files should be stored.  This location
+resides on the file system from which deployment is initiated.
+
+-->
+<!ELEMENT webservice-description ( webservice-description-name, wsdl-publish-location? )>
+
+<!--
+Unique name of a webservice within a module
+-->
+<!ELEMENT webservice-description-name ( #PCDATA )>
+
+<!--
+file: URL of a directory to which a web-service-description's wsdl should be
+published during deployment.  Any required files will be published to this
+directory, preserving their location relative to the module-specific
+wsdl directory(META-INF/wsdl or WEB-INF/wsdl).
+
+Example :
+
+  For an ejb.jar whose webservices.xml wsdl-file element contains
+    META-INF/wsdl/a/Foo.wsdl 
+
+  <wsdl-publish-location>file:/home/user1/publish
+  </wsdl-publish-location>
+
+  The final wsdl will be stored in /home/user1/publish/a/Foo.wsdl
+
+-->
+<!ELEMENT wsdl-publish-location ( #PCDATA )>
+
+<!--
+Information about a web service endpoint.  
+
+The optional message-security-binding element is used to customize the
+webservice-endpoint to provider binding; either by binding the
+webservice-endpoint to a specific provider or by providing a
+definition of the message security requirements to be enforced by the
+provider.
+
+When login-config is specified, a default message-security provider
+is not applied to the endpoint.
+-->
+<!ELEMENT webservice-endpoint ( port-component-name, endpoint-address-uri?, (login-config | message-security-binding)?, transport-guarantee?, service-qname?, tie-class?, servlet-impl-class?, debugging-enabled? )>
+
+<!--
+Unique name of a port component within a module
+-->
+<!ELEMENT port-component-name ( #PCDATA )>
+
+<!--
+Relative path combined with web server root to form fully qualified
+endpoint address for a web service endpoint.  For servlet endpoints, this
+value is relative to the servlet's web application context root.  In
+all cases, this value must be a fixed pattern(i.e. no "*" allowed).
+If the web service endpoint is a servlet that only implements a single
+endpoint has only one url-pattern, it is not necessary to set 
+this value since the container can derive it from web.xml.
+-->
+<!ELEMENT endpoint-address-uri ( #PCDATA )>
+
+<!--
+The name of tie implementation class for a port-component.  This is
+not specified by the deployer.  It is derived during deployment.
+-->
+<!ELEMENT tie-class (#PCDATA)>
+
+<!-- 
+Optional authentication configuration for an EJB web service endpoint.
+Not needed for servet web service endpoints.  Their security configuration
+is contained in the standard web application descriptor.
+-->
+<!ELEMENT login-config ( auth-method )>
+
+<!--
+The auth-method element is used to configure the authentication
+mechanism for the web application. As a prerequisite to gaining access
+to any web resources which are protected by an authorization
+constraint, a user must have authenticated using the configured
+mechanism.
+-->
+
+<!ELEMENT auth-method (#PCDATA)>
+
+<!--
+Name of application-written servlet impl class contained in deployed war.
+This is not set by the deployer.  It is derived by the container
+during deployment.
+-->
+<!ELEMENT servlet-impl-class (#PCDATA)>
+
+<!--
+Specify whether or not the debugging servlet should be enabled for this 
+Web Service endpoint. 
+
+Supported values : "true" to debug the endpoint
+-->
+<!ELEMENT debugging-enabled (#PCDATA)>
+
+<!--
+The transport-guarantee element specifies that the communication
+between client and server should be NONE, INTEGRAL, or
+CONFIDENTIAL. NONE means that the application does not require any
+transport guarantees. A value of INTEGRAL means that the application
+requires that the data sent between the client and server be sent in
+such a way that it can't be changed in transit. CONFIDENTIAL means
+that the application requires that the data be transmitted in a
+fashion that prevents other entities from observing the contents of
+the transmission. In most cases, the presence of the INTEGRAL or
+CONFIDENTIAL flag will indicate that the use of SSL is required.
+-->
+
+<!ELEMENT transport-guarantee (#PCDATA)>
+
+<!--
+Runtime settings for a web service reference.  In the simplest case,
+there is no runtime information required for a service ref.  Runtime info
+is only needed in the following cases :
+ * to define the port that should be used to resolve a container-managed port
+ * to define default Stub/Call property settings for Stub objects
+ * to define the URL of a final WSDL document to be used instead of
+the one packaged with a service-ref
+-->
+
+<!--
+The localpart element indicates the local part of a QNAME.
+-->
+<!ELEMENT localpart (#PCDATA)>
+
+<!--
+The namespaceURI element indicates a URI.
+-->
+<!ELEMENT namespaceURI (#PCDATA)>
+
+<!--
+The message-layer entity is used to define the value of the
+auth-layer attribute of message-security-binding elements.
+
+Used in: message-security-binding
+-->
+<!ENTITY % message-layer    "(SOAP)">
+
+<!--
+The message-security-binding element is used to customize the
+webservice-endpoint or port to provider binding; either by binding the
+webservice-endpoint or port to a specific provider or by providing a
+definition of the message security requirements to be enforced by the
+provider.
+
+These elements are typically NOT created as a result of the
+deployment of an application. They need only be created when the
+deployer or system administrator chooses to customize the 
+webservice-endpoint or port to provider binding.
+
+The optional (repeating) message-security sub-element is used 
+to accomplish the latter; in which case the specified 
+message-security requirements override any defined with the
+provider.
+
+The auth-layer attribute identifies the message layer at which the
+message-security requirements are to be enforced.
+
+The optional provider-id attribute identifies the provider-config 
+and thus the authentication provider that is to be used to satisfy 
+the application specific message security requirements. If a value for 
+the provider-id attribute is not specified, and a default
+provider is defined for the message layer, then it is used. 
+if a value for the provider-id attribute is not specified, and a
+default provider is not defined at the layer, the authentication
+requirements defined in the message-security-binding are not
+enforced. 
+ 
+Default:
+Used in: webservice-endpoint, port-info
+-->
+<!ELEMENT message-security-binding ( message-security* )>
+<!ATTLIST message-security-binding
+          auth-layer  %message-layer; #REQUIRED
+          provider-id CDATA           #IMPLIED >
+
+<!--
+The message-security element describes message security requirements
+that pertain to the request and response messages of the containing 
+endpoint, or port
+
+When contained within a webservice-endpoint this element describes 
+the message security requirements that pertain to the request and 
+response messages of the containing endpoint. When contained within a 
+port-info of a service-ref this element describes the message security
+requirements of the port of the referenced service.
+
+The one or more contained message elements define the methods or operations
+of the containing application, endpoint, or referenced service to which 
+the message security requirements apply.
+
+Multiple message-security elements occur within a containing
+element when it is necessary to define different message
+security requirements for different messages within the encompassing
+context. In such circumstances, the peer elements should not overlap
+in the messages they pertain to. If there is any overlap in the
+identified messages, no message security requirements apply to
+the messages for which more than one message-security element apply.
+
+Also, no message security requirements apply to any messages of
+the encompassing context that are not identified by a message element. 
+ 
+Default:
+Used in: webservice-endpoint, and port-info
+-->
+<!ELEMENT message-security ( message+, request-protection?, response-protection? )>
+
+<!--
+The message element identifies the methods or operations to which
+the message security requirements apply.
+
+The identified methods or operations are methods or operations of
+the resource identified by the context in which the message-security
+element is defined (e.g. the the resource identified by the
+service-qname of the containing webservice-endpoint or service-ref).
+
+An empty message element indicates that the security requirements
+apply to all the methods or operations of the identified resource.
+
+When operation-name is specified, the security
+requirements defined in the containing message-security 
+element apply to all the operations of the endpoint 
+with the specified (and potentially overloaded) operation name.
+
+Default: 
+Used in: message-security
+-->
+<!ELEMENT message ( java-method? | operation-name? )>
+
+<!--
+The java-method element is used to identify a method (or methods
+in the case of an overloaded method-name) of the java class 
+indicated by the context in which the java-method is contained.
+
+Default: 
+Used in: message
+-->
+<!ELEMENT java-method ( method-name, method-params? )>
+
+<!--
+The operation-name element is used to identify the WSDL name of an
+operation of a web service.
+
+Default: 
+Used in: message
+-->
+<!ELEMENT operation-name ( #PCDATA )>
+
+<!--
+The request-protection element describes the authentication requirements
+that apply to a request.
+
+The auth-source attribute defines a requirement for message layer
+sender authentication (e.g. username password) or content authentication 
+(e.g. digital signature).
+
+The auth-recipient attribute defines a requirement for message
+layer authentication of the reciever of a message to its sender (e.g. by 
+XML encryption).
+
+The before-content attribute value indicates that recipient
+authentication (e.g. encryption) is to occur before any 
+content authentication (e.g. encrypt then sign) with respect
+to the target of the containing auth-policy.
+
+An absent request-protection element is the recommended shorthand
+for a request-protection element with unspecified values for both the
+auth-source and auth-recipient attributes.
+
+Default: 
+Used in: message-security
+
+ * Expected evolution to support partial message protection:
+ *
+ * request-protection ( content-auth-policy* )
+ *
+ * If the request-protection element contains one or more
+ * content-auth-policy sub-elements, they define the authentication
+ * requirements to be applied to the identified request content. If multiple
+ * content-auth-policy sub-elements are defined, a request sender must
+ * satisfy the requirements independently, and in the specified order.  
+ *
+ * The content-auth-policy element would be used to associate authentication
+ * requirements with the parts of the request or response object identified
+ * by the contained method-params or part-name-list sub-elements.
+ *
+ * The content-auth-policy element would be defined as follows:
+ * 
+ * content-auth-policy ( method-params | part-name-list )
+ * ATTLIST content-auth-policy 
+ *         auth-source (sender | content) #IMPLIED
+ *	   auth-recipient (before-content | after-content) #IMPLIED
+ * 
+ * The part-name-list and part-name elements would be defined as follows:
+ *
+ * part-name-list ( part-name* )
+ * part-name ( #PCDATA )
+ *
+-->
+<!ELEMENT request-protection EMPTY >
+<!ATTLIST request-protection
+          auth-source (sender | content) #IMPLIED
+	  auth-recipient (before-content | after-content) #IMPLIED>
+
+<!--
+The response-protection element describes the authentication requirements
+that apply to a response.
+
+The auth-source attribute defines a requirement for message layer
+sender authentication (e.g. username password) or content authentication 
+(e.g. digital signature).
+
+The auth-recipient attribute defines a requirement for message
+layer authentication of the reciever of a message to its sender (e.g. by 
+XML encryption).
+
+The before-content attribute value indicates that recipient
+authentication (e.g. encryption) is to occur before any 
+content authentication (e.g. encrypt then sign) with respect
+to the target of the containing auth-policy.
+
+An absent response-protection element is the recommended shorthand
+for a request-protection element with unspecified values for both the
+auth-source and auth-recipient attributes.
+
+Default: 
+Used in: message-security
+
+ * Expected evolution to support partial message protection:
+ *
+ * response-protection ( content-auth-policy* )
+ *
+ * see request-protection element for more details
+ *
+-->
+<!ELEMENT response-protection EMPTY >
+<!ATTLIST response-protection
+          auth-source (sender | content) #IMPLIED
+	  auth-recipient (before-content | after-content) #IMPLIED>
+
+<!--
+The method-name element contains the name of a service method of a web service
+implementation class.
+
+Used in: java-method
+-->
+<!ELEMENT method-name (#PCDATA)>
+<!--
+The method-params element contains a list of the fully-qualified Java
+type names of the method parameters.
+
+Used in: java-method
+-->
+<!ELEMENT method-params (method-param*)>
+
+<!--
+The method-param element contains the fully-qualified Java type name
+of a method parameter.
+
+Used in: method-params
+-->
+<!ELEMENT method-param (#PCDATA)>
+
+<!--
+The keep-state element indicates whether the state information should be
+preserved across redeployment.
+-->
+<!ELEMENT keep-state (#PCDATA)>
+
+<!--
+The version-identifier element contains the version information. The value is
+ retrieved at deployment.
+-->
+<!ELEMENT version-identifier (#PCDATA)>

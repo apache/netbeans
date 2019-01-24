@@ -253,8 +253,8 @@ public class JarWithModuleAttributesTest extends TestBase {
         File output = new File(getWorkDir(), "output");
         java.io.File manifest = extractString (
 "Bundle-SymbolicName: org.netbeans.modules.sendopts\n" +
-"  \n" +
-"  \n\n\n"
+" \n" +
+" \n\n\n"
         );
         File jar = new File(getWorkDir(), "x.jar");
 

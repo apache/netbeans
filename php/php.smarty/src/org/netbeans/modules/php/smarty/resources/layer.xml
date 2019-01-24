@@ -218,7 +218,7 @@
         <folder name="text">
             <folder name="x-tpl">
                 <!-- GSF -->
-                <attr name="iconBase" stringvalue="org/netbeans/modules/php/smarty/resources/tpl-cc-icon.png"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/php/smarty/resources/tpl-icon.png"/>
                 <!-- eof GSF -->
             </folder>
         </folder>
@@ -228,7 +228,7 @@
     <folder name="Templates">
         <folder name="Scripting">
             <file name="SmartyTemplate.tpl" url="nbresloc:/org/netbeans/modules/php/smarty/resources/TplTemplate.tpl">
-                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/php/smarty/resources/tpl-cc-icon.png"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/php/smarty/resources/tpl-icon.png"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.php.smarty.resources.Bundle"/>
                 <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
                 <attr name="template" boolvalue="true"/>

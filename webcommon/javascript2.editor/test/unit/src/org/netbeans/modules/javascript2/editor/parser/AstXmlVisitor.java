@@ -37,13 +37,13 @@ import com.oracle.js.parser.ir.UnaryNode;
 import com.oracle.js.parser.ir.VarNode;
 import com.oracle.js.parser.ir.visitor.NodeVisitor;
 import com.oracle.js.parser.Token;
-import com.oracle.js.parser.ir.JsxAttributeNode;
-import com.oracle.js.parser.ir.JsxElementNode;
-import com.oracle.js.parser.ir.visitor.JsxNodeVisitor;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.netbeans.modules.javascript2.editor.Utils;
+import org.netbeans.modules.javascript2.editor.formatter.JsxNodeVisitor;
+import org.netbeans.modules.javascript2.editor.formatter.JsxNodeVisitor.JsxAttributeNode;
+import org.netbeans.modules.javascript2.editor.formatter.JsxNodeVisitor.JsxElementNode;
 
 /**
  *
@@ -391,7 +391,7 @@ public class AstXmlVisitor extends NodeVisitor implements JsxNodeVisitor {
         return false;
     }
 
-    @Override 
+    @Override
     public boolean enterJsxElementNode(JsxElementNode node) {
         createOpenTag(node, createTagAttribute("name", node.getName()));
         
@@ -401,7 +401,7 @@ public class AstXmlVisitor extends NodeVisitor implements JsxNodeVisitor {
         return false;
     }
 
-    @Override 
+    @Override
     public boolean enterJsxAttributeNode(JsxAttributeNode node) {
         createOpenTag(node, createTagAttribute("name", node.getName()));
         

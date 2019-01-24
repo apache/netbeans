@@ -50,9 +50,6 @@ import com.oracle.js.parser.ir.ClassNode;
 import com.oracle.js.parser.ir.ExportNode;
 import com.oracle.js.parser.ir.ExpressionStatement;
 import com.oracle.js.parser.ir.ImportNode;
-import com.oracle.js.parser.ir.JsxAttributeNode;
-import com.oracle.js.parser.ir.JsxElementNode;
-import com.oracle.js.parser.ir.visitor.JsxNodeVisitor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -186,7 +183,9 @@ public class JsFormatVisitor extends NodeVisitor implements JsxNodeVisitor {
                 }
             }
         }
-        return JsxNodeVisitor.super.enterJsxElementNode(jsxElementNode);
+        // return JsxNodeVisitor.super.enterJsxElementNode(jsxElementNode);
+        // TBD: ???
+        return false;
     }
 
     @Override
@@ -209,7 +208,9 @@ public class JsFormatVisitor extends NodeVisitor implements JsxNodeVisitor {
                 }
             }
         }
-        return JsxNodeVisitor.super.enterJsxAttributeNode(jsxAttributeNode);
+        // return JsxNodeVisitor.super.enterJsxAttributeNode(jsxAttributeNode);
+        // TBD: ???
+        return false;
     }
 
     @Override

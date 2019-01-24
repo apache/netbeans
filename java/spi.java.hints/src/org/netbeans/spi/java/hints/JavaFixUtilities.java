@@ -685,6 +685,14 @@ public class JavaFixUtilities {
             return super.visitIdentifier(node, p);
         }
 
+        private Element findEnclosingClass() {
+            TreePath findClass = getCurrentPath();
+            while (findClass != null && !TreeUtilities.CLASS_TREE_KINDS.contains(findClass.getLeaf().getKind())) {
+                findClass = findClass.getParentPath();
+            }
+            return findClass != null ? info.getTrees().getElement(findClass) : null;
+        }
+
         @Override
         public Number visitTypeParameter(TypeParameterTree node, Void p) {
             String name = node.getName().toString();
@@ -791,12 +799,27 @@ public class JavaFixUtilities {
                 if (name.startsWith("$") && parameters.get(name) == null) {
                     Element implicitThisClass = implicitThis.get(name);
                     if (implicitThisClass != null) {
-                        Element clazz = findEnclosingClass();
-                        if (clazz != null && implicitThisClass.equals(clazz)) {
-                            //this.<...>, the this may be implicit:
-                            //TODO: any further checks needed?
-                            rewrite(node, make.Identifier(nue.getIdentifier()));
-                            return null;
+                        TreePath findClass = getCurrentPath();
+                        OUTER: while (findClass != null) {
+                            if (TreeUtilities.CLASS_TREE_KINDS.contains(findClass.getLeaf().getKind())) {
+                                Element clazz = info.getTrees().getElement(findClass);
+                                if (implicitThisClass.equals(clazz)) {
+                                    //this.<...>, the this may be implicit:
+                                    rewrite(node, make.Identifier(nue.getIdentifier()));
+                                    return null;
+                                }
+                                if (clazz.getKind().isClass() || clazz.getKind().isInterface()) {
+                                    for (Element currentClassElement : info.getElements().getAllMembers((TypeElement) clazz)) {
+                                        if (currentClassElement.getSimpleName().equals(node.getIdentifier())) {
+                                            //there may be a resolution conflict, let the member select be qualified
+                                            //TODO: no conflicts between fields and methods of the same name
+                                            //but we current still qualify the name
+                                            break OUTER;
+                                        }
+                                    }
+                                }
+                            }
+                            findClass = findClass.getParentPath();
                         }
                         //let visitIdent handle this
                     } else {
@@ -812,14 +835,6 @@ public class JavaFixUtilities {
             }
             
             return super.visitMemberSelect(node, p);
-        }
-
-        private Element findEnclosingClass() {
-            TreePath findClass = getCurrentPath();
-            while (findClass != null && !TreeUtilities.CLASS_TREE_KINDS.contains(findClass.getLeaf().getKind())) {
-                findClass = findClass.getParentPath();
-            }
-            return findClass != null ? info.getTrees().getElement(findClass) : null;
         }
 
         @Override

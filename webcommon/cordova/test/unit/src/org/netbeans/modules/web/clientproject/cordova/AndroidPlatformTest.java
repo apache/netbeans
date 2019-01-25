@@ -87,50 +87,50 @@ public class AndroidPlatformTest extends NbTestCase {
     /**
      * Test of createProject method, of class AndroidPlatform.
      */
-    @Test
-    public void testGetAvds() throws Exception {
-        MobilePlatform instance = org.netbeans.modules.cordova.platforms.api.PlatformManager.getPlatform(PlatformManager.ANDROID_TYPE);
-        instance.setSdkLocation("/Users/beci/android-sdk-macosx");
-        for (Device avd: instance.getVirtualDevices()) {
-            System.out.println(avd);
-        }
-    }
+//    @Test
+//    public void testGetAvds() throws Exception {
+//        MobilePlatform instance = org.netbeans.modules.cordova.platforms.api.PlatformManager.getPlatform(PlatformManager.ANDROID_TYPE);
+//        instance.setSdkLocation("/Users/beci/android-sdk-macosx");
+//        for (Device avd: instance.getVirtualDevices()) {
+//            System.out.println(avd);
+//        }
+//    }
     
-    @Test
-    public void testGetDevices() throws Exception {
-        MobilePlatform instance = org.netbeans.modules.cordova.platforms.api.PlatformManager.getPlatform(PlatformManager.ANDROID_TYPE);
-        instance.setSdkLocation("/Users/beci/android-sdk-macosx");
-        for (Device avd: instance.getVirtualDevices()) {
-            System.out.println(avd);
-        }
-    }
+//    @Test
+//    public void testGetDevices() throws Exception {
+//        MobilePlatform instance = org.netbeans.modules.cordova.platforms.api.PlatformManager.getPlatform(PlatformManager.ANDROID_TYPE);
+//        instance.setSdkLocation("/Users/beci/android-sdk-macosx");
+//        for (Device avd: instance.getVirtualDevices()) {
+//            System.out.println(avd);
+//        }
+//    }
     
-    @Test
-    public void testGetTargets() throws Exception {
-        MobilePlatform instance = org.netbeans.modules.cordova.platforms.api.PlatformManager.getPlatform(PlatformManager.ANDROID_TYPE);
-        instance.setSdkLocation("/Users/beci/android-sdk-macosx");
-        for (SDK target: instance.getSDKs()) {
-            System.out.println(target);
-        }
-    }
+//    @Test
+//    public void testGetTargets() throws Exception {
+//        MobilePlatform instance = org.netbeans.modules.cordova.platforms.api.PlatformManager.getPlatform(PlatformManager.ANDROID_TYPE);
+//        instance.setSdkLocation("/Users/beci/android-sdk-macosx");
+//        for (SDK target: instance.getSDKs()) {
+//            System.out.println(target);
+//        }
+//    }
     
-    @Test
-    public void testEnableDebugging() throws Exception {
-        File f = File.createTempFile("tmp", "tmp");
-        FileWriter fileWriter = new FileWriter(f);
-        BufferedWriter buf = new BufferedWriter(fileWriter);
-        buf.append("attach " + getPid());
-        buf.newLine();
-        buf.append("p (void *)[WebView _enableRemoteInspector]");
-        buf.newLine();
-        buf.append("detach");
-        buf.newLine();
-        buf.append("quit");
-        buf.newLine();
-        buf.close();
-        System.out.println(f.getPath());
-        final Process p = Runtime.getRuntime().exec("gdb --command=" + f.getPath());
-    }
+//    @Test
+//    public void testEnableDebugging() throws Exception {
+//        File f = File.createTempFile("tmp", "tmp");
+//        FileWriter fileWriter = new FileWriter(f);
+//        BufferedWriter buf = new BufferedWriter(fileWriter);
+//        buf.append("attach " + getPid());
+//        buf.newLine();
+//        buf.append("p (void *)[WebView _enableRemoteInspector]");
+//        buf.newLine();
+//        buf.append("detach");
+//        buf.newLine();
+//        buf.append("quit");
+//        buf.newLine();
+//        buf.close();
+//        System.out.println(f.getPath());
+//        final Process p = Runtime.getRuntime().exec("gdb --command=" + f.getPath());
+//    }
 static class SyncPipe implements Runnable
 {
 public SyncPipe(InputStream istrm, OutputStream ostrm) {

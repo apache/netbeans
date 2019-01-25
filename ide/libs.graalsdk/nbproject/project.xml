@@ -70,6 +70,7 @@
                 </test-type>
             </test-dependencies>
             <public-packages>
+                <package>org.graalvm.collections</package>
                 <package>org.graalvm.options</package>
                 <package>org.graalvm.polyglot</package>
                 <package>org.graalvm.polyglot.io</package>

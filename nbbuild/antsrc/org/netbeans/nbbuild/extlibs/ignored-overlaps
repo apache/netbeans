@@ -45,3 +45,13 @@ enterprise/web.core.syntax/external/struts-taglib-1.3.10.jar enterprise/web.stru
 
 # Struts Tiles is used by both web.core.syntax and web.struts
 enterprise/web.core.syntax/external/struts-tiles-1.3.10.jar enterprise/web.struts/external/struts-tiles-1.3.10.jar
+
+# gradle is used at build-time, so we can ignore the duplicates
+groovy/gradle/external/gradle-4.10.2-bin.zip ide/c.google.gson/external/gson-2.7.jar
+groovy/gradle/external/gradle-4.10.2-bin.zip ide/c.jcraft.jsch/external/jsch-0.1.54.jar
+groovy/gradle/external/gradle-4.10.2-bin.zip ide/o.apache.commons.lang/external/commons-lang-2.6.jar
+groovy/gradle/external/gradle-4.10.2-bin.zip java/maven/external/aether-api-1.13.1.jar
+groovy/gradle/external/gradle-4.10.2-bin.zip java/maven.embedder/external/apache-maven-3.3.9-bin.zip
+groovy/gradle/external/gradle-4.10.2-bin.zip platform/api.annotations.common/external/jsr305-2.0.0.jar
+groovy/gradle/external/gradle-4.10.2-bin.zip platform/libs.junit4/external/hamcrest-core-1.3.jar
+groovy/gradle/external/gradle-4.10.2-bin.zip platform/libs.junit4/external/junit-4.12.jar

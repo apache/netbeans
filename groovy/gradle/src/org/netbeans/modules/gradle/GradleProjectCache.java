@@ -25,6 +25,7 @@ import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.*;
 import org.netbeans.modules.gradle.api.NbProjectInfo;
 import org.netbeans.modules.gradle.options.GradleDistributionManager;
+import org.netbeans.modules.gradle.options.GradleDistributionManager.NbGradleVersion;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.modules.gradle.spi.ProjectInfoExtractor;
 import java.io.File;
@@ -69,6 +70,7 @@ import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import java.util.WeakHashMap;
 import javax.swing.JLabel;
+import org.gradle.util.GradleVersion;
 import org.openide.awt.Notification;
 import org.openide.awt.NotificationDisplayer;
 
@@ -94,6 +96,20 @@ public final class GradleProjectCache {
 
     // Increase this number if new info is gathered from the projects.
     private static final int COMPATIBLE_CACHE_VERSION = 10;
+    private static final int JAVA_VERSION;
+
+    static {
+        int ver = 8;
+        String version = System.getProperty("java.version"); //NOI18N
+        int dot = version.indexOf('.');
+        ver = dot > 0 ? Integer.parseInt(version.substring(0,dot)) : Integer.parseInt(version);
+        if (ver == 1) {
+            version = version.substring(dot + 1);
+            dot = version.indexOf('.');
+            ver = dot > 0 ? Integer.parseInt(version.substring(0,dot)) : Integer.parseInt(version);
+        }
+        JAVA_VERSION = ver;
+    }
 
 
     /**
@@ -156,7 +172,7 @@ public final class GradleProjectCache {
         Quality quality = ctx.aim;
         GradleBaseProject base = ctx.previous.getBaseProject();
         GradleConnector gconn = GradleConnector.newConnector();
-        gconn.useInstallation(GradleDistributionManager.evaluateGradleWrapperDistribution(base.getRootDir()));
+        gconn.useInstallation(computeGradleVersion(base.getRootDir()));
         ProjectConnection pconn = gconn.forProjectDirectory(base.getProjectDir()).connect();
 
         GradleCommandLine cmd = new GradleCommandLine(ctx.args);
@@ -191,7 +207,7 @@ public final class GradleProjectCache {
             if (nlist != null) {
                 NOTIFICATIONS.remove(base.getProjectDir());
                 for (Notification notification : nlist) {
-                    notification.clear();                
+                    notification.clear();
                 }
             }
             if (!info.hasException()) {
@@ -246,6 +262,28 @@ public final class GradleProjectCache {
         } else {
             saveCachedProjectInfo(info, ret);
         }
+        return ret;
+    }
+
+    private static File computeGradleVersion(File rootDir) {
+        GradleSettings settings = GradleSettings.getDefault();
+        File ret = null;
+        if (settings.isWrapperPreferred()) {
+            NbGradleVersion ngv = GradleDistributionManager.evaluateGradleWrapperDistribution(rootDir);
+            if (ngv != null) {
+                if (JAVA_VERSION >= 11 && ngv.getVersion().compareTo(GradleVersion.version("4.10.2")) < 0) {
+                    // Gradle is not working stable before 4.10.2 on Java 11 and above.
+                    // Use the version provided with the tooling in this case
+                    ngv = GradleDistributionManager.defaultToolingVersion();
+                }
+                if (ngv.isAvailable(settings.getGradleUserHome())) {
+                    ret = ngv.distributionDir(settings.getGradleUserHome());
+                }
+            }
+        } else {
+            ret = GradleDistributionManager.evaluateGradleDistribution();
+        }
+
         return ret;
     }
 

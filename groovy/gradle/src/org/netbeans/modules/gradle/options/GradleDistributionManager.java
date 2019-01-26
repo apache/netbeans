@@ -72,6 +72,7 @@ public class GradleDistributionManager {
     private static final String TOOLING_API_NAME = "modules/gradle/gradle-tooling-api.jar"; //NOI18N
     private static final File TOOLING_API = InstalledFileLocator.getDefault().locate(TOOLING_API_NAME, NbGradleProject.CODENAME_BASE, false);
     private static final Pattern WRAPPER_DIR_PATTERN = Pattern.compile("gradle-(\\d+\\.\\d+.*)-(bin|all)"); //NOI18N
+    private static final Pattern DIST_VERSION_PATTERN = Pattern.compile(".*gradle-(\\d+\\.\\d+.*)-(bin|all)\\.zip"); //NOI18N
 
     private static final String DOWNLOAD_URI = "https://services.gradle.org/distributions/gradle-%s-all.zip"; //NOI18N
 
@@ -86,55 +87,8 @@ public class GradleDistributionManager {
     private GradleDistributionManager() {
     }
 
-    public static File distributionDir(File gradleUserHome, NbGradleVersion version) {
-        File distDir = distributionBaseDir(gradleUserHome, String.format(DOWNLOAD_URI, version.getVersion().getVersion()));
-        if (distDir.isDirectory()) {
-            List<File> dirs = listDirs(distDir);
-            assert dirs.size() <= 1 : "Only one directory allowed in distribution dir"; //NOI18N
-            if (!dirs.isEmpty()) {
-                return dirs.get(0);
-            }
-        }
-        //Try to guess something not too wild here
-        return new File(distDir, "gradle-" + version.getVersion().getVersion());
-    }
-
-    public static File distributionBaseDir(File gradleUserHome, String downloadURL) {
-        WrapperConfiguration conf = new WrapperConfiguration();
-        try {
-            URI uri = new URI(downloadURL);
-            conf.setDistribution(uri);
-            PathAssembler pa = new PathAssembler(gradleUserHome);
-            PathAssembler.LocalDistribution dist = pa.getDistribution(conf);
-            return dist.getDistributionDir();
-
-        } catch (URISyntaxException ex) {
-            //TODO: Ignore?
-        }
-        assert false : "We can't  evaluete Gradle base distribution dir, maybe Gradle changed something..."; //NOI18N
-        return null;
-    }
-
-    public static String defaultToolingVersion() {
-        if (defaultVersion == null) {
-            try {
-                String jarVersion = null;
-                try {
-                    jarVersion = new JarFile(TOOLING_API).getManifest().getMainAttributes().getValue(Attributes.Name.IMPLEMENTATION_VERSION);
-                } catch (NullPointerException ex) {
-                    try (InputStream is = GradleDistributionManager.class.getClassLoader().getResourceAsStream("/org/gradle/build-receipt.properties")) { //NOI18N
-                        Properties props = new Properties();
-                        props.load(is);
-                        jarVersion = props.getProperty("versionNumber"); //NOI18N
-                    } catch (IOException iex) {}
-                }
-                defaultVersion = !VERSION_BLACKLIST.contains(jarVersion) ? jarVersion : LAST_KNOWN_GOOD_RELEASE;
-            } catch (IOException ex) {
-                //Extreme case, shall not happen
-                assert false : "We can't read the Tooling API something is really broken."; //NOI18N
-            }
-        }
-        return defaultVersion;
+    public static NbGradleVersion defaultToolingVersion() {
+        return createVersion(GradleVersion.current().getVersion());
     }
 
     /**
@@ -146,73 +100,47 @@ public class GradleDistributionManager {
     public static File evaluateGradleDistribution() {
         GradleSettings settings = GradleSettings.getDefault();
         File ret = null;
-        if ((ret == null) && settings.useCustomGradle() && !settings.getDistributionHome().isEmpty()) {
+        if (settings.useCustomGradle() && !settings.getDistributionHome().isEmpty()) {
             File f = FileUtil.normalizeFile(new File(settings.getDistributionHome()));
             if (f.isDirectory()) {
                 ret = f;
             }
         }
-        if (ret == null) {
-            ret = distributionDir(settings.getGradleUserHome(), settings.getGradleVersion());
+        if ((ret == null) && settings.getGradleVersion().isAvailable(settings.getGradleUserHome()) ) {
+            ret = settings.getGradleVersion().distributionDir(settings.getGradleUserHome());
         }
         return ret;
     }
 
-    public static String getDistributionVersion(File distributionBase) {
-        File libs = new File(distributionBase, "lib"); //NOI18N
-        File gradleCore = null;
-        for (File f : libs.listFiles()) {
-            if (f.getName().startsWith("gradle-core") && f.getName().endsWith(".jar")) {
-                gradleCore = f;
-                break;
-            }
-        }
-        if (gradleCore != null) {
-            try (JarFile jar = new JarFile(gradleCore)) {
-                String versionString = jar.getManifest().getMainAttributes().getValue(Attributes.Name.IMPLEMENTATION_VERSION);
-                return versionString;
-            } catch (IOException ex) {
-                //Do not really care.
-                //TODO: At least log this.
-            }
-        }
-        return null;
-    }
-
     /**
-     * Tries to evaluate the project distribution directory offline. If wrapper
+     * Tries to evaluate the project distribution. If wrapper
      * is preferred and no offline execution is required then it's better to
      * leave the GradleConnetor use Installation empty, so the requested
      * distribution will be downloaded.
      *
      * @param rootDir the root directory of the root project.
-     * @return a non-null, but possibly non existent distribution directory.
+     * @return a the version used in the wrapper or null if there is no wrapper
+     *         or the version cannot be determined.
      */
-    public static File evaluateGradleWrapperDistribution(File rootDir) {
-        GradleSettings settings = GradleSettings.getDefault();
-        File ret = null;
-        if (settings.isWrapperPreferred()) {
-            File wrapperProps = new File(rootDir, "gradle/wrapper/gradle-wrapper.properties"); //NOI18N
-            if (wrapperProps.isFile() && wrapperProps.canRead()) {
-                Properties wrapper = new Properties();
-                try (FileInputStream is = new FileInputStream(wrapperProps)) {
-                    wrapper.load(is);
-                } catch (IOException ex) {
+    public static NbGradleVersion evaluateGradleWrapperDistribution(File rootDir) {
+        NbGradleVersion ret = null;
+        File wrapperProps = new File(rootDir, "gradle/wrapper/gradle-wrapper.properties"); //NOI18N
+        if (wrapperProps.isFile() && wrapperProps.canRead()) {
+            Properties wrapper = new Properties();
+            try (FileInputStream is = new FileInputStream(wrapperProps)) {
+                wrapper.load(is);
+            } catch (IOException ex) {
 
-                }
-                String distUrl = wrapper.getProperty("distributionUrl"); //NOI18N
-                if (distUrl != null) {
-                    File distDir = distributionBaseDir(settings.getGradleUserHome(), distUrl);
-                    if (distDir.exists() && distDir.isDirectory()) {
-                        List<File> dirs = listDirs(distDir);
-                        assert dirs.size() <= 1 : "Only one directory allowed in distribution dir"; //NOI18N
-                        ret = dirs.get(0);
-                    }
+            }
+            String distUrlProp = wrapper.getProperty("distributionUrl"); //NOI18N
+            if (distUrlProp != null) {
+                try {
+                    URL distURL = new URL(distUrlProp);
+                    ret = createVersion(distURL);
+                } catch (MalformedURLException ex) {
+                    // Wrong URL, give up
                 }
             }
-        }
-        if (ret == null) {
-            ret = evaluateGradleDistribution();
         }
         return ret;
     }
@@ -226,12 +154,12 @@ public class GradleDistributionManager {
                 JSONArray versions = (JSONArray) parser.parse(is);
                 for (Object o : versions) {
                     JSONObject v = (JSONObject) o;
-                    URL downloadURL = new URL((String) v.get("downloadUrl"));
-                    boolean snapshot = (Boolean) v.get("snapshot");
-                    boolean nightly = (Boolean) v.get("nightly");
-                    boolean broken = (Boolean) v.get("broken");
-                    String version = (String) v.get("version");
-                    String rcFor = (String) v.get("rcFor");
+                    URL downloadURL = new URL((String) v.get("downloadUrl")); //NOI18N
+                    boolean snapshot = (Boolean) v.get("snapshot");           //NOI18N
+                    boolean nightly = (Boolean) v.get("nightly");             //NOI18N
+                    boolean broken = (Boolean) v.get("broken");               //NOI18N
+                    String version = (String) v.get("version");               //NOI18N
+                    String rcFor = (String) v.get("rcFor");                   //NOI18N
                     if (nightly || broken || snapshot) {
                         continue;
                     }
@@ -269,9 +197,14 @@ public class GradleDistributionManager {
         return ret;
     }
 
-    public static boolean isDefaultVersionAvailable() {
-        GradleSettings settings = GradleSettings.getDefault();
-        return settings.getGradleVersion().isAvailable(settings.getGradleUserHome());
+    public static NbGradleVersion createVersion(URL distributionUrl) {
+        NbGradleVersion ret = null;
+        Matcher m = DIST_VERSION_PATTERN.matcher(distributionUrl.getPath());
+        if (m.matches()) {
+            String version = m.group(1);
+            ret = createVersion(version, distributionUrl, !version.contains("-"));
+        }
+        return ret;
     }
 
     public static NbGradleVersion createVersion(String version) {
@@ -345,7 +278,7 @@ public class GradleDistributionManager {
         }
 
         public boolean isAvailable(File gradleUserHome) {
-            File distDir = distributionDir(gradleUserHome, this);
+            File distDir = distributionDir(gradleUserHome);
             return (distDir != null) && distDir.isDirectory();
         }
 
@@ -357,6 +290,35 @@ public class GradleDistributionManager {
             if (!isAvailable(gradleUserHome)) {
                 RP.post(new InstallTask(this, gradleUserHome), 500);
             }
+        }
+
+        public File distributionDir(File gradleUserHome) {
+            File distDir = distributionBaseDir(gradleUserHome);
+            if (distDir.isDirectory()) {
+                List<File> dirs = listDirs(distDir);
+                assert dirs.size() <= 1 : "Only one directory allowed in distribution dir"; //NOI18N
+                if (!dirs.isEmpty()) {
+                    return dirs.get(0);
+                }
+            }
+            //Try to guess something not too wild here
+            return new File(distDir, "gradle-" + version.getVersion());
+        }
+
+        private File distributionBaseDir(File gradleUserHome) {
+            WrapperConfiguration conf = new WrapperConfiguration();
+            try {
+                URI uri = downloadLocation.toURI();
+                conf.setDistribution(uri);
+                PathAssembler pa = new PathAssembler(gradleUserHome);
+                PathAssembler.LocalDistribution dist = pa.getDistribution(conf);
+                return dist.getDistributionDir();
+
+            } catch (URISyntaxException ex) {
+                //TODO: Ignore?
+            }
+            assert false : "We can't  evaluete Gradle base distribution dir, maybe Gradle changed something..."; //NOI18N
+            return null;
         }
 
         public synchronized void addPropertyChangeListener(PropertyChangeListener l) {
@@ -435,7 +397,7 @@ public class GradleDistributionManager {
         public void download(URI uri, File file) throws Exception {
             URL url = uri.toURL();
             URLConnection conn = url.openConnection();
-            byte[] buf = new byte[2048];
+            byte[] buf = new byte[8192];
             try (FileOutputStream os = new FileOutputStream(file)) {
                 conn.connect();
                 int size = conn.getContentLength();

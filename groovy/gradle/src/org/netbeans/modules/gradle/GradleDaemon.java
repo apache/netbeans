@@ -43,7 +43,7 @@ public final class GradleDaemon {
     static final RequestProcessor GRADLE_LOADER_RP = new RequestProcessor("gradle-project-loader", 1); //NOI18N
     static final String INIT_SCRIPT_NAME = "modules/gradle/nb-tooling.gradle"; //NOI18N
     static final String TOOLING_JAR_NAME = "modules/gradle/netbeans-gradle-tooling.jar"; //NOI18N
-    
+
     public static final String PROP_TOOLING_JAR = "NETBEANS_TOOLING_JAR";
     public static final String INIT_SCRIPT = InstalledFileLocator.getDefault().locate(INIT_SCRIPT_NAME, NbGradleProject.CODENAME_BASE, false).getAbsolutePath();
     public static final String TOOLING_JAR = InstalledFileLocator.getDefault().locate(TOOLING_JAR_NAME, NbGradleProject.CODENAME_BASE, false).getAbsolutePath();
@@ -61,7 +61,7 @@ public final class GradleDaemon {
         @Override
         public void run() {
             if ( GradleSettings.getDefault().isStartDaemonOnStart()
-                    && GradleDistributionManager.isDefaultVersionAvailable()) {
+                    && GradleDistributionManager.defaultToolingVersion().isAvailable(GradleSettings.getDefault().getGradleUserHome())) {
                 GRADLE_LOADER_RP.submit(new Runnable() {
                     @Override
                     public void run() {

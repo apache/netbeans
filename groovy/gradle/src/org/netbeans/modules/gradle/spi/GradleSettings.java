@@ -202,7 +202,8 @@ public final class GradleSettings {
     }
 
     public NbGradleVersion getGradleVersion() {
-        return GradleDistributionManager.createVersion(getPreferences().get(PROP_GRADLE_VERSION, GradleDistributionManager.defaultToolingVersion()));
+        String ver = getPreferences().get(PROP_GRADLE_VERSION, null);
+        return ver != null ? GradleDistributionManager.createVersion(ver) : GradleDistributionManager.defaultToolingVersion();
     }
 
     public void setNoRebuild(boolean b) {

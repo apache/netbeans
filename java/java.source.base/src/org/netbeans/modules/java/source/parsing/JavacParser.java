@@ -85,7 +85,7 @@ import org.netbeans.lib.editor.util.swing.PositionRegion;
 import org.netbeans.modules.java.preprocessorbridge.spi.JavaFileFilterImplementation;
 import org.netbeans.modules.java.source.JavaFileFilterQuery;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
-import org.netbeans.modules.java.source.JavadocEnv;
+//import org.netbeans.modules.java.source.JavadocEnv;
 import org.netbeans.modules.java.source.PostFlowAnalysis;
 import org.netbeans.modules.java.source.indexing.APTUtils;
 import org.netbeans.modules.java.source.indexing.FQN2Files;
@@ -94,14 +94,11 @@ import org.netbeans.lib.nbjavac.services.NBClassFinder;
 import org.netbeans.lib.nbjavac.services.NBClassReader;
 import org.netbeans.lib.nbjavac.services.NBEnter;
 import org.netbeans.lib.nbjavac.services.NBJavaCompiler;
-import org.netbeans.lib.nbjavac.services.NBJavadocEnter;
-import org.netbeans.lib.nbjavac.services.NBJavadocMemberEnter;
 import org.netbeans.lib.nbjavac.services.NBMemberEnter;
 import org.netbeans.lib.nbjavac.services.NBParserFactory;
 import org.netbeans.lib.nbjavac.services.NBClassWriter;
 import org.netbeans.lib.nbjavac.services.NBJavacTrees;
-import org.netbeans.lib.nbjavac.services.NBJavadocClassFinder;
-import org.netbeans.lib.nbjavac.services.NBMessager;
+import org.netbeans.lib.nbjavac.services.NBLog;
 import org.netbeans.lib.nbjavac.services.NBResolve;
 import org.netbeans.lib.nbjavac.services.NBTreeMaker;
 import org.netbeans.modules.java.source.base.SourceLevelUtils;
@@ -880,7 +877,7 @@ public class JavacParser extends Parser {
 
         Context context = new Context();
         //need to preregister the Messages here, because the getTask below requires Log instance:
-        NBMessager.preRegister(context, null, DEV_NULL, DEV_NULL, DEV_NULL);
+        NBLog.preRegister(context, DEV_NULL, DEV_NULL, DEV_NULL);
         JavacTaskImpl task = (JavacTaskImpl)JavacTool.create().getTask(null,
                 ClasspathInfoAccessor.getINSTANCE().createFileManager(cpInfo, validatedSourceLevel.name),
                 diagnosticListener, options, files.iterator().hasNext() ? null : Arrays.asList("java.lang.Object"), files,
@@ -908,14 +905,10 @@ public class JavacParser extends Parser {
         NBJavacTrees.preRegister(context);
         if (!backgroundCompilation) {
             JavacFlowListener.preRegister(context, task);
-            NBJavadocEnter.preRegister(context);
-            NBJavadocMemberEnter.preRegister(context);
-            JavadocEnv.preRegister(context, cpInfo);
             NBResolve.preRegister(context);
-        } else {
-            NBEnter.preRegister(context);
-            NBMemberEnter.preRegister(context);
         }
+        NBEnter.preRegister(context);
+        NBMemberEnter.preRegister(context, backgroundCompilation);
         TIME_LOGGER.log(Level.FINE, "JavaC", context);
         return task;
     }
@@ -1333,7 +1326,7 @@ public class JavacParser extends Parser {
         @Override
         public void enhance(Context context, boolean backgroundCompilation) {
             if (!backgroundCompilation)
-                NBJavadocClassFinder.preRegister(context);
+                NBClassFinder.preRegister(context);
             else
                 NBClassFinder.preRegister(context);
             NBJavaCompiler.preRegister(context);

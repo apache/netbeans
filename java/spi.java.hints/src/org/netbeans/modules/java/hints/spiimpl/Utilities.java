@@ -87,7 +87,6 @@ import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Names;
-import com.sun.tools.javadoc.main.Messager;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -1262,14 +1261,8 @@ public class Utilities {
         return false;
     }
 
-    public static boolean isJavadocSupported(CompilationInfo info) {
-        Context c = JavaSourceAccessor.getINSTANCE().getJavacTask(info).getContext();
-
-        try {
-        return c.get(Log.logKey) instanceof Messager;
-        } catch (NoClassDefFoundError e) {
-            return false;
-        }
+    public static boolean isJavadocSupported(CompilationInfo info) { //TODO: unnecessary?
+        return true;
     }
 
     private static class JackpotJavacParser extends NBJavacParser {

@@ -19,10 +19,6 @@
 
 package org.netbeans.modules.javadoc.hints;
 
-import com.sun.javadoc.MethodDoc;
-import com.sun.javadoc.ParamTag;
-import com.sun.javadoc.ThrowsTag;
-import com.sun.javadoc.Type;
 import com.sun.source.doctree.AttributeTree;
 import com.sun.source.doctree.AuthorTree;
 import com.sun.source.doctree.CommentTree;
@@ -55,6 +51,7 @@ import com.sun.source.doctree.VersionTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.ThrowTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.DocSourcePositions;
 import com.sun.source.util.DocTreePath;
@@ -174,13 +171,19 @@ final class Analyzer extends DocTreePathScanner<Void, List<ErrorDescription>> {
                     ElementUtilities elUtils = javac.getElementUtilities();
                     ExecutableElement overridden = method;
                     do {
-                        MethodDoc methodDoc = (MethodDoc) elUtils.javaDocFor(overridden);
+                        DocCommentTree methodDoc = javac.getDocTrees().getDocCommentTree(overridden);
                         if(methodDoc != null) {
-                            for (ParamTag paramTag : methodDoc.paramTags()) {
-                                inheritedParams.add(paramTag.parameterName());
-                            }
-                            for (ParamTag paramTag : methodDoc.typeParamTags()) {
-                                inheritedTypeParams.add(paramTag.parameterName());
+                            for (DocTree tag : methodDoc.getBlockTags()) {
+                                switch (tag.getKind()) {
+                                    case PARAM:
+                                        String name = ((ParamTree) tag).getName().getName().toString();
+                                        if (name.startsWith("<")) {
+                                            inheritedParams.add(name);
+                                        } else {
+                                            inheritedTypeParams.add(name);
+                                        }
+                                        break;
+                                }
                             }
                         }
 
@@ -761,21 +764,25 @@ final class Analyzer extends DocTreePathScanner<Void, List<ErrorDescription>> {
             })) {
                 if(ctx.isCanceled()) { return; }
                 if(javac.getElements().overrides(method, (ExecutableElement) el, typeElement)) {
-                    MethodDoc methodDoc = (MethodDoc) javac.getElementUtilities().javaDocFor(el);
+                    DocCommentTree methodDoc = javac.getDocTrees().getDocCommentTree(el);
                     if(methodDoc != null) {
-                        for (ParamTag paramTag : methodDoc.paramTags()) {
-                            inheritedParams.add(paramTag.parameterName());
-                        }
-                        for (ParamTag paramTag : methodDoc.typeParamTags()) {
-                            inheritedTypeParams.add(paramTag.parameterName());
-                        }
-                        for (ThrowsTag throwsTag : methodDoc.throwsTags()) {
-                            Type exceptionType = throwsTag.exceptionType();
-                            if(exceptionType != null) {
-                                inheritedThrows.add(exceptionType.qualifiedTypeName());
+                        for (DocTree tag : methodDoc.getBlockTags()) {
+                            switch (tag.getKind()) {
+                                case PARAM:
+                                    String name = ((ParamTree) tag).getName().getName().toString();
+                                    if (name.startsWith("<")) {
+                                        inheritedParams.add(name);
+                                    } else {
+                                        inheritedTypeParams.add(name);
+                                    }
+                                    break;
+                                case THROWS:
+                                    inheritedThrows.add(((ThrowsTree) tag).getExceptionName().getSignature());
+                                    break;
+                                case RETURN:
+                                    returnTypeFound |= true;
                             }
                         }
-                        returnTypeFound |= methodDoc.tags("return").length > 0;
                     }
                 }
             }

@@ -39,19 +39,21 @@ import org.netbeans.api.editor.EditorRegistry;
 import org.netbeans.editor.BaseDocumentEvent;
 import org.netbeans.modules.editor.*;
 import org.netbeans.modules.lsp.client.LSPBindings;
+import org.netbeans.modules.lsp.client.Utils;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.OnStart;
 import org.openide.util.Exceptions;
+import org.openide.util.RequestProcessor;
 
-/** TODO: asynchronous
- *  TODO: follow the synchronization options
+/** TODO: follow the synchronization options
  *  TODO: close
  *
  * @author lahvac
  */
 public class TextDocumentSyncServerCapabilityHandler {
 
+    private final RequestProcessor WORKER = new RequestProcessor(TextDocumentSyncServerCapabilityHandler.class.getName(), 1, false, false);
     private final Set<JTextComponent> lastOpened = Collections.newSetFromMap(new IdentityHashMap<>());
 
     private void handleChange() {
@@ -73,25 +75,34 @@ public class TextDocumentSyncServerCapabilityHandler {
             if (file == null)
                 continue; //ignore
 
-            LSPBindings server = LSPBindings.getBindings(file);
+            Document doc = opened.getDocument();
 
-            if (server == null)
-                continue; //ignore
+            WORKER.post(() -> {
+                LSPBindings server = LSPBindings.getBindings(file);
 
-            try {
-                //XXX: should construct events outside of AWT
-                TextDocumentItem textDocumentItem = new TextDocumentItem(file.toURI().toString(),
+                if (server == null)
+                    return ; //ignore
+
+                String uri = Utils.toURI(file);
+                String[] text = new String[1];
+
+                doc.render(() -> {
+                    try {
+                        text[0] = doc.getText(0, doc.getLength());
+                    } catch (BadLocationException ex) {
+                        Exceptions.printStackTrace(ex);
+                        text[0] = "";
+                    }
+                });
+
+                TextDocumentItem textDocumentItem = new TextDocumentItem(uri,
                                                                          FileUtil.getMIMEType(file),
                                                                          0,
-                                                                         opened.getDocument().getText(0, opened.getDocument().getLength())); //XXX: should do in render!
+                                                                         text[0]);
 
                 server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(textDocumentItem));
                 server.scheduleBackgroundTasks(file);
-            } catch (BadLocationException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-
-            Document doc = opened.getDocument();
+            });
 
             doc.addDocumentListener(new DocumentListener() { //XXX: listener
                 int version; //XXX: proper versioning!
@@ -128,9 +139,18 @@ public class TextDocumentSyncServerCapabilityHandler {
                                                                    oldText.length(),
                                                                    newText);
                         VersionedTextDocumentIdentifier di = new VersionedTextDocumentIdentifier(++version);
-                        di.setUri(file.toURI().toString());
-                        server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(di, Arrays.asList(event)));
-                        server.scheduleBackgroundTasks(file);
+                        di.setUri(org.netbeans.modules.lsp.client.Utils.toURI(file));
+                        DidChangeTextDocumentParams params = new DidChangeTextDocumentParams(di, Arrays.asList(event));
+
+                        WORKER.post(() -> {
+                            LSPBindings server = LSPBindings.getBindings(file);
+
+                            if (server == null)
+                                return ; //ignore
+
+                            server.getTextDocumentService().didChange(params);
+                            server.scheduleBackgroundTasks(file);
+                        });
                     } catch (BadLocationException ex) {
                         Exceptions.printStackTrace(ex);
                     }

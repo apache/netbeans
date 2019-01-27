@@ -19,12 +19,13 @@
 
 package org.netbeans.modules.gradle.options;
 
+import org.netbeans.modules.gradle.GradleDistributionManager;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import java.awt.CardLayout;
 import java.io.File;
 import javax.swing.JFileChooser;
 import org.netbeans.spi.options.OptionsPanelController;
-import org.netbeans.modules.gradle.options.GradleDistributionManager.NbGradleVersion;
+import org.netbeans.modules.gradle.GradleDistributionManager.NbGradleVersion;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -58,6 +59,8 @@ public class SettingsPanel extends javax.swing.JPanel {
     private static final String RESTART_ICON = "org/netbeans/modules/gradle/resources/restart.png"; //NOI18
 
     private final static String[] CARDS = {"Execution", "Appearance", "Dependencies", "Experimental"}; //NOI18N
+
+    private final GradleDistributionManager gdm = GradleDistributionManager.get(GradleSettings.getDefault().getGradleUserHome());
 
     /**
      * Creates new form SettingsPanel
@@ -582,7 +585,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_lstCategoriesValueChanged
 
     private void cbGradleVersionItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbGradleVersionItemStateChanged
-        NbGradleVersion v = (NbGradleVersion) evt.getItem();
+        NbGradleVersion v = gdm.createVersion(evt.getItem().toString());
         if ((v != null) && (evt.getStateChange() == ItemEvent.SELECTED)) {
             if (v.isBlackListed()) {
                 lbVersionInfo.setText("This version does not work with NetBeans!");
@@ -640,7 +643,7 @@ public class SettingsPanel extends javax.swing.JPanel {
 
             @Override
             protected List<NbGradleVersion> doInBackground() throws Exception {
-                return GradleDistributionManager.availableVersions(true);
+                return gdm.availableVersions(true);
             }
 
             @Override
@@ -664,7 +667,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     })
     public void applyValues() {
         GradleSettings settings = GradleSettings.getDefault();
-        settings.setGradleVersion((NbGradleVersion) cbGradleVersion.getSelectedItem());
+        settings.setGradleVersion(cbGradleVersion.getSelectedItem().toString());
         settings.setDistributionHome(tfUseCustomGradle.getText());
         settings.setWrapperPreferred(cbPreferWrapper.isSelected());
         boolean useCustomGradle = bgUsedDistribution.getSelection() == rbUseCustomGradle.getModel();
@@ -705,7 +708,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         GradleSettings settings = GradleSettings.getDefault();
         boolean isChanged = !settings.getDistributionHome().equals(tfUseCustomGradle.getText());
         isChanged |= settings.isWrapperPreferred() != cbPreferWrapper.isSelected();
-        isChanged |= !settings.getGradleVersion().equals(cbGradleVersion.getSelectedItem());
+        isChanged |= !settings.getGradleVersion().equals(String.valueOf(cbGradleVersion.getSelectedItem()));
 
         boolean useCustomGradle = bgUsedDistribution.getSelection() == rbUseCustomGradle.getModel();
         isChanged |= settings.useCustomGradle() != useCustomGradle;
@@ -743,7 +746,6 @@ public class SettingsPanel extends javax.swing.JPanel {
 
     private class VersionCellRenderer extends DefaultListCellRenderer {
         final ListCellRenderer delegate;
-
         public VersionCellRenderer(ListCellRenderer delegate) {
             this.delegate = delegate;
         }
@@ -759,8 +761,8 @@ public class SettingsPanel extends javax.swing.JPanel {
                 JLabel label = (JLabel) cmp;
                 label.setHorizontalAlignment(RIGHT);
                 if (value != null) {
-                    NbGradleVersion version = (NbGradleVersion) value;
-                    if (!version.isAvailable(currentGradleUserHome())) {
+                    NbGradleVersion version = gdm.createVersion(value.toString());
+                    if (!version.isAvailable()) {
                         label.setToolTipText(Bundle.NbGradleVersion_autoInstall_TXT());
                         label.setForeground(Color.gray);
                     }

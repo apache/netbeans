@@ -24,7 +24,6 @@ import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import org.netbeans.modules.gradle.api.execute.RunConfig;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
-import org.netbeans.modules.gradle.options.GradleDistributionManager;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.modules.gradle.spi.GradleProgressListenerProvider;
 import java.awt.event.ActionEvent;
@@ -49,6 +48,7 @@ import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.spi.project.ui.support.BuildExecutionSupport;
 import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileUtil;
@@ -65,7 +65,7 @@ import org.openide.windows.InputOutput;
  */
 public final class GradleDaemonExecutor extends AbstractGradleExecutor {
 
-    CancellationTokenSource cancelTokenSource;
+    private CancellationTokenSource cancelTokenSource;
     private static final Logger LOGGER = Logger.getLogger(GradleDaemonExecutor.class.getName());
 
     private final ProgressHandle handle;
@@ -117,11 +117,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
 
             GradleConnector gconn = GradleConnector.newConnector();
             cancelTokenSource = GradleConnector.newCancellationTokenSource();
-
-            File gradleDistribution = GradleDistributionManager.evaluateGradleDistribution();
-            if (!GradleSettings.getDefault().isWrapperPreferred()) {
-                gconn.useInstallation(gradleDistribution);
-            }
+            gconn.useInstallation(RunUtils.evaluateGradleDistribution(config.getProject(), false));
 
             File projectDir = FileUtil.toFile(config.getProject().getProjectDirectory());
             //TODO: GradleUserHome
@@ -216,20 +212,22 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             commandLine.append("cd ").append(dir.getAbsolutePath()).append("; "); //NOI18N
         }
 
-        if (GradleSettings.getDefault().isWrapperPreferred()) {
-            //TODO: Do a better job with wrapper.
-            GradleBaseProject gbp = GradleBaseProject.get(config.getProject());
-            Path rootPath = gbp.getRootDir().toPath();
-            Path projectPath = gbp.getProjectDir().toPath();
+        GradleBaseProject gbp = GradleBaseProject.get(config.getProject());
+        if (gbp != null
+                && new GradleFiles(gbp.getProjectDir()).hasWrapper()
+                && GradleSettings.getDefault().isWrapperPreferred()) {
 
-            String relRoot = projectPath.relativize(rootPath).toString();
-            relRoot = relRoot.isEmpty() ? "." : relRoot;
-            commandLine.append(relRoot).append("/gradlew");
-        } else {
-            File gradleDistribution = GradleDistributionManager.evaluateGradleDistribution();
-            File gradle = new File(gradleDistribution, "bin/gradle"); //NOI18N
-            commandLine.append(gradle.getAbsolutePath());
-        }
+                Path rootPath = gbp.getRootDir().toPath();
+                Path projectPath = gbp.getProjectDir().toPath();
+
+                String relRoot = projectPath.relativize(rootPath).toString();
+                relRoot = relRoot.isEmpty() ? "." : relRoot;
+                commandLine.append(relRoot).append("/gradlew");
+            } else {
+                File gradleDistribution = RunUtils.evaluateGradleDistribution(null, false);
+                File gradle = new File(gradleDistribution, "bin/gradle"); //NOI18N
+                commandLine.append(gradle.getAbsolutePath());
+            }
 
         for (String arg : config.getCommandLine().getSupportedCommandLine()) {
             commandLine.append(' ');

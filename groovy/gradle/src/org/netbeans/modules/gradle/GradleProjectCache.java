@@ -24,8 +24,6 @@ import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.*;
 import org.netbeans.modules.gradle.api.NbProjectInfo;
-import org.netbeans.modules.gradle.options.GradleDistributionManager;
-import org.netbeans.modules.gradle.options.GradleDistributionManager.NbGradleVersion;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.modules.gradle.spi.ProjectInfoExtractor;
 import java.io.File;
@@ -70,7 +68,7 @@ import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import java.util.WeakHashMap;
 import javax.swing.JLabel;
-import org.gradle.util.GradleVersion;
+import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.openide.awt.Notification;
 import org.openide.awt.NotificationDisplayer;
 
@@ -96,21 +94,6 @@ public final class GradleProjectCache {
 
     // Increase this number if new info is gathered from the projects.
     private static final int COMPATIBLE_CACHE_VERSION = 10;
-    private static final int JAVA_VERSION;
-
-    static {
-        int ver = 8;
-        String version = System.getProperty("java.version"); //NOI18N
-        int dot = version.indexOf('.');
-        ver = dot > 0 ? Integer.parseInt(version.substring(0,dot)) : Integer.parseInt(version);
-        if (ver == 1) {
-            version = version.substring(dot + 1);
-            dot = version.indexOf('.');
-            ver = dot > 0 ? Integer.parseInt(version.substring(0,dot)) : Integer.parseInt(version);
-        }
-        JAVA_VERSION = ver;
-    }
-
 
     /**
      * Loads a physical GradleProject either from Gradle or Cache. As project retrieval can be time consuming using
@@ -148,7 +131,7 @@ public final class GradleProjectCache {
             prev = fallbackProject(project.getGradleFiles());
         }
 
-        final ReloadContext ctx = new ReloadContext(prev, aim);
+        final ReloadContext ctx = new ReloadContext(project, prev, aim);
         ctx.args = args;
 
         GradleProject ret;
@@ -172,7 +155,7 @@ public final class GradleProjectCache {
         Quality quality = ctx.aim;
         GradleBaseProject base = ctx.previous.getBaseProject();
         GradleConnector gconn = GradleConnector.newConnector();
-        gconn.useInstallation(computeGradleVersion(base.getRootDir()));
+        gconn.useInstallation(RunUtils.evaluateGradleDistribution(ctx.project, true));
         ProjectConnection pconn = gconn.forProjectDirectory(base.getProjectDir()).connect();
 
         GradleCommandLine cmd = new GradleCommandLine(ctx.args);
@@ -265,28 +248,6 @@ public final class GradleProjectCache {
         return ret;
     }
 
-    private static File computeGradleVersion(File rootDir) {
-        GradleSettings settings = GradleSettings.getDefault();
-        File ret = null;
-        if (settings.isWrapperPreferred()) {
-            NbGradleVersion ngv = GradleDistributionManager.evaluateGradleWrapperDistribution(rootDir);
-            if (ngv != null) {
-                if (JAVA_VERSION >= 11 && ngv.getVersion().compareTo(GradleVersion.version("4.10.2")) < 0) {
-                    // Gradle is not working stable before 4.10.2 on Java 11 and above.
-                    // Use the version provided with the tooling in this case
-                    ngv = GradleDistributionManager.defaultToolingVersion();
-                }
-                if (ngv.isAvailable(settings.getGradleUserHome())) {
-                    ret = ngv.distributionDir(settings.getGradleUserHome());
-                }
-            }
-        } else {
-            ret = GradleDistributionManager.evaluateGradleDistribution();
-        }
-
-        return ret;
-    }
-
     private static BuildActionExecuter<NbProjectInfo> createInfoAction(ProjectConnection pconn, GradleCommandLine cmd, CancellationToken token, ProgressListener pl) {
         BuildActionExecuter<NbProjectInfo> ret = pconn.action(new NbProjectInfoAction());
         cmd.configure(ret);
@@ -363,12 +324,8 @@ public final class GradleProjectCache {
         public GradleProject call() throws Exception {
             tokenSource = GradleConnector.newCancellationTokenSource();
             final ProgressHandle handle = ProgressHandle.createHandle(Bundle.LBL_Loading(ctx.previous.getBaseProject().getName()), this);
-            ProgressListener pl = new ProgressListener() {
-
-                @Override
-                public void statusChanged(ProgressEvent pe) {
-                    handle.progress(pe.getDescription());
-                }
+            ProgressListener pl = (ProgressEvent pe) -> {
+                handle.progress(pe.getDescription());
             };
             handle.start();
             try {
@@ -525,11 +482,13 @@ public final class GradleProjectCache {
     }
 
     static final class ReloadContext {
+        final NbGradleProjectImpl project;
         final GradleProject previous;
         final Quality aim;
         String[] args = new String[0];
 
-        public ReloadContext(GradleProject previous, Quality aim) {
+        public ReloadContext(NbGradleProjectImpl project, GradleProject previous, Quality aim) {
+            this.project = project;
             this.previous = previous;
             this.aim = aim;
         }

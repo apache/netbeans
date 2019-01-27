@@ -19,10 +19,9 @@
 
 package org.netbeans.modules.gradle.spi;
 
-import org.netbeans.modules.gradle.options.GradleDistributionManager;
-import org.netbeans.modules.gradle.options.GradleDistributionManager.NbGradleVersion;
 import java.io.File;
 import java.util.prefs.Preferences;
+import org.gradle.util.GradleVersion;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine.LogLevel;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine.StackTrace;
 import org.openide.util.NbBundle.Messages;
@@ -197,13 +196,12 @@ public final class GradleSettings {
         return getPreferences().getBoolean(PROP_SKIP_CHECK, true);
     }
 
-    public void setGradleVersion(NbGradleVersion version) {
-        getPreferences().put(PROP_GRADLE_VERSION, version.getVersion().getVersion());
+    public void setGradleVersion(String version) {
+        getPreferences().put(PROP_GRADLE_VERSION, version);
     }
 
-    public NbGradleVersion getGradleVersion() {
-        String ver = getPreferences().get(PROP_GRADLE_VERSION, null);
-        return ver != null ? GradleDistributionManager.createVersion(ver) : GradleDistributionManager.defaultToolingVersion();
+    public String getGradleVersion() {
+        return getPreferences().get(PROP_GRADLE_VERSION, GradleVersion.current().getVersion());
     }
 
     public void setNoRebuild(boolean b) {

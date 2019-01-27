@@ -21,7 +21,6 @@ package org.netbeans.modules.gradle;
 
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
-import org.netbeans.modules.gradle.options.GradleDistributionManager;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import java.io.File;
 import org.gradle.tooling.BuildAction;
@@ -60,14 +59,11 @@ public final class GradleDaemon {
 
         @Override
         public void run() {
-            if ( GradleSettings.getDefault().isStartDaemonOnStart()
-                    && GradleDistributionManager.defaultToolingVersion().isAvailable(GradleSettings.getDefault().getGradleUserHome())) {
-                GRADLE_LOADER_RP.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        doLoadDaemon();
-                    }
-                });
+            GradleSettings settings = GradleSettings.getDefault();
+            GradleDistributionManager dmgr = GradleDistributionManager.get(settings.getGradleUserHome());
+            if ( settings.isStartDaemonOnStart()
+                    && dmgr.defaultToolingVersion().isAvailable()) {
+                GRADLE_LOADER_RP.submit(GradleDaemon::doLoadDaemon);
             }
         }
     }

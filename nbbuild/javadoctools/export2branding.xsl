@@ -28,7 +28,7 @@
         <head>
             <!-- projects.netbeans.org -->
            <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-           <title>Description Layer Registration in NetBeans APIs</title>
+           <title>Description Layer Registration in Apache NetBeans (incubating) APIs</title>
             <link rel="stylesheet" href="netbeans.css" type="text/css"/>
 
           <link REL="icon" href="http://www.netbeans.org/favicon.ico" type="image/ico" />
@@ -37,7 +37,7 @@
         </head>
 
         <body>
-            <center><h1>Description of Branding APIs for NetBeans Platform Applications</h1></center>
+            <center><h1>Description of Branding APIs for Apache NetBeans (incubating) Platform Applications</h1></center>
 
             <p>
             Applications built on top of NetBeans Platform may change configuration

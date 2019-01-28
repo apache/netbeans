@@ -96,7 +96,7 @@ public final class GradleCommandLine implements Serializable {
         RECOMPILE_SCRIPTS(UNSUPPORTED, "--recompile-scripts"),
         VERSION(UNSUPPORTED, "--version", "-v");
 
-        private Set<Flag> incompatible;
+        private Set<Flag> incompatible = Collections.emptySet();
         private final Argument.Kind kind;
         private final List<String> flags;
         static {

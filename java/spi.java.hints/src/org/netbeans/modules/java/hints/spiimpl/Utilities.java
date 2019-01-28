@@ -709,7 +709,7 @@ public class Utilities {
         
         StringBuilder clazz = new StringBuilder();
 
-        clazz.append("package $;");
+        clazz.append("package $$;");
 
         for (String i : auxiliaryImports) {
             clazz.append(i);
@@ -717,7 +717,7 @@ public class Utilities {
 
         long count = inc++;
 
-        clazz.append("public class $" + count + "{");
+        clazz.append("public class $$scopeclass$constraints$" + count + "{");
 
         for (Entry<String, TypeMirror> e : constraints.entrySet()) {
             if (e.getValue() != null) {
@@ -742,7 +742,7 @@ public class Utilities {
         Annotate annotate = Annotate.instance(context);
         Log.DiagnosticHandler discardHandler = new Log.DiscardDiagnosticHandler(compiler.log);
 
-        JavaFileObject jfo = FileObjects.memoryFileObject("$", "$", new File("/tmp/$" + count + ".java").toURI(), System.currentTimeMillis(), clazz.toString());
+        JavaFileObject jfo = FileObjects.memoryFileObject("$", "$", new File("/tmp/$$scopeclass$constraints$" + count + ".java").toURI(), System.currentTimeMillis(), clazz.toString());
 
         try {
             resolve.disableAccessibilityChecks();

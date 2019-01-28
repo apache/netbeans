@@ -1,0 +1,16 @@
+function |>METHOD:TestCls<|() {
+    this.|>FIELD:myEvent<| = new |>GLOBAL:MyApi<|.Event(myEventArgs);
+    this.myEventArgs = myEventArgs; // <- here
+    
+    function |>METHOD:myEventArgs<|(iArg) {
+        this.|>FIELD:iArg<| = iArg;
+        |>GLOBAL:console<|.log("run " + this.|>FIELD:iArg<|);
+    }
+    this.|>FIELD:iArg<| = 10;
+    myEventArgs(this.|>FIELD:iArg<|);
+    |>GLOBAL:console<|.log(this.|>FIELD:iArg<|);
+}
+
+var |>GLOBAL:test<| = new TestCls();
+
+|>GLOBAL:console<|.log(|>GLOBAL:test<|.|>FIELD:iArg<|);

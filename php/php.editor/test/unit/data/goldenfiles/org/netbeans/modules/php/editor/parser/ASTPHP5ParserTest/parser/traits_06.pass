@@ -1,0 +1,144 @@
+<testresult testFile='traits_06.php'>
+    <scanner>
+        <token id='T_CLASS' start='6' end='11'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='12' end='22'>
+            <text>TraitClass</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='23' end='24'>
+            <text>{</text>
+        </token>
+        <token id='T_USE' start='29' end='32'>
+            <text>use</text>
+        </token>
+        <token id='T_STRING' start='33' end='40'>
+            <text>MyTrait</text>
+        </token>
+        <token id='T_COMMA' start='40' end='41'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='42' end='52'>
+            <text>Mytrait_02</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='53' end='54'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='63' end='70'>
+            <text>MyTrait</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='70' end='72'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='72' end='75'>
+            <text>foo</text>
+        </token>
+        <token id='T_AS' start='76' end='78'>
+            <text>as</text>
+        </token>
+        <token id='T_STRING' start='79' end='82'>
+            <text>bar</text>
+        </token>
+        <token id='T_SEMICOLON' start='82' end='83'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='92' end='99'>
+            <text>MyTrait</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='99' end='101'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='101' end='104'>
+            <text>foo</text>
+        </token>
+        <token id='T_INSTEADOF' start='105' end='114'>
+            <text>insteadof</text>
+        </token>
+        <token id='T_STRING' start='115' end='125'>
+            <text>MyTrait_02</text>
+        </token>
+        <token id='T_SEMICOLON' start='125' end='126'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='131' end='132'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='133' end='134'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='135' end='138'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='138' end='138'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='137'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='6' end='134' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='12' end='22' name='TraitClass'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='23' end='134' isCurly='true'>
+                    <UseTraitStatement start='29' end='132'>
+                        <Parts>
+                            <UseTraitStatementPart start='33' end='40'>
+                                <Name>
+                                    <NamespaceName start='33' end='40' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='33' end='40' name='MyTrait'/>
+                                    </NamespaceName>
+                                </Name>
+                            </UseTraitStatementPart>
+                            <UseTraitStatementPart start='42' end='52'>
+                                <Name>
+                                    <NamespaceName start='42' end='52' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='42' end='52' name='Mytrait_02'/>
+                                    </NamespaceName>
+                                </Name>
+                            </UseTraitStatementPart>
+                        </Parts>
+                        <Body>
+                            <Block start='53' end='132' isCurly='true'>
+                                <TraitMethodAliasDeclaration start='63' end='83'>
+                                    <NewMethodName>
+                                        <Identifier start='79' end='82' name='bar'/>
+                                    </NewMethodName>
+                                    <OldMethodName>
+                                        <Identifier start='72' end='75' name='foo'/>
+                                    </OldMethodName>
+                                    <TraitName>
+                                        <NamespaceName start='63' end='70' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='63' end='70' name='MyTrait'/>
+                                        </NamespaceName>
+                                    </TraitName>
+                                </TraitMethodAliasDeclaration>
+                                <TraitConflictResolutionDeclaration start='92' end='126'>
+                                    <MethodName>
+                                        <Identifier start='101' end='104' name='foo'/>
+                                    </MethodName>
+                                    <PreferredTraitName>
+                                        <NamespaceName start='92' end='99' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='92' end='99' name='MyTrait'/>
+                                        </NamespaceName>
+                                    </PreferredTraitName>
+                                    <SuppressedTraitNames>
+                                        <NamespaceName start='115' end='125' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='115' end='125' name='MyTrait_02'/>
+                                        </NamespaceName>
+                                    </SuppressedTraitNames>
+                                </TraitConflictResolutionDeclaration>
+                            </Block>
+                        </Body>
+                    </UseTraitStatement>
+                </Block>
+            </ClassDeclaration>
+            <EmptyStatement start='135' end='137'/>
+        </Statements>
+    </Program>
+</testresult>

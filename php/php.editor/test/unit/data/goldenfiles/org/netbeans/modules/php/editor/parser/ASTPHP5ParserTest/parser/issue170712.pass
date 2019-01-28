@@ -1,0 +1,70 @@
+<testresult testFile='issue170712.php'>
+    <scanner>
+        <token id='T_NAMESPACE' start='7' end='16'>
+            <text>namespace</text>
+        </token>
+        <token id='T_STRING' start='17' end='21'>
+            <text>Test</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='22' end='23'>
+            <text>{</text>
+        </token>
+        <token id='T_CLASS' start='29' end='34'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='35' end='38'>
+            <text>Foo</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='39' end='40'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='40' end='41'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='43' end='44'>
+            <text>}</text>
+        </token>
+        <token id='T_CLASS' start='46' end='51'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='52' end='55'>
+            <text>Bar</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='56' end='57'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='57' end='58'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='60' end='63'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='63' end='63'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='62'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <NamespaceDeclaration start='7' end='44' isBracketed='true'>
+                <NamespaceName start='17' end='21' isCurrent='false' isGlobal='false'>
+                    <Identifier start='17' end='21' name='Test'/>
+                </NamespaceName>
+                <Block start='22' end='44' isCurly='true'>
+                    <ClassDeclaration start='29' end='41' modifier='NONE'>
+                        <ClassName>
+                            <Identifier start='35' end='38' name='Foo'/>
+                        </ClassName>
+                        <SuperClassName>
+                        </SuperClassName>
+                        <Interfaces>
+                        </Interfaces>
+                        <Block start='39' end='41' isCurly='true'>
+                        </Block>
+                    </ClassDeclaration>
+                </Block>
+            </NamespaceDeclaration>
+        </Statements>
+    </Program>
+</testresult>

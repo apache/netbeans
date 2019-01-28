@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC
+	"-//NetBeans//DTD API changes list 1.0//EN"
+        "../../nbbuild/javadoctools/apichanges.dtd"
+>
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, this will be done periodically; just
+change the XML. If you can, validate the XML against the DTD, if not
+do not worry about it. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+  <!-- First, a list of API names you may use: -->
+  <apidefs>
+    <!-- org.netbeans.modules.parsing.api -->
+    <apidef name="LuceneSupport">Lucene Support Friend API</apidef>
+  </apidefs>
+
+<!-- ACTUAL CHANGES BEGIN HERE: -->
+
+  <changes>
+  <change id="Convertors-firstNonNull">
+    <api name="LuceneSupport"/>
+    <summary>Added <code>Convertors.firstNonNull</code></summary>
+    <version major="2" minor="33"/>
+    <date day="8" month="7" year="2015"/>
+    <author login="tzezula"/>
+    <compatibility source="compatible" binary="compatible" addition="yes"/>
+    <description>
+        <p>
+            Added a <code>Convertors.firstNonNull</code> creating a Convertor
+            returning the first non null result of its delegates.
+        </p>
+    </description>
+    <class package="org.netbeans.modules.parsing.lucene.support" name="Convertors"/>
+  </change>
+  <change id="CustomCamelCase">
+    <api name="LuceneSupport"/>
+    <summary>Added camel case support methods into <code>Queries</code>.</summary>
+    <version major="2" minor="31"/>
+    <date day="14" month="4" year="2015"/>
+    <author login="tzezula"/>
+    <compatibility source="compatible" binary="compatible" addition="yes"/>
+    <description>
+        <p>
+            Added methods into <code>Queries</code> to test if given string is a camel case
+            and to create a regular expression from the camel case.
+        </p>
+    </description>
+    <class package="org.netbeans.modules.parsing.lucene.support" name="Queries"/>
+  </change>
+  <change id="DocumentIndex2">
+    <api name="LuceneSupport"/>
+    <summary>Added <code>DocumentIndex2</code> allowing execution of arbitrary Lucene query.</summary>
+    <version major="2" minor="24"/>
+    <date day="2" month="5" year="2013"/>
+    <author login="tzezula"/>
+    <compatibility source="compatible" binary="compatible" addition="yes"/>
+    <description>
+        <p>
+            Added <code>DocumentIndex2</code> extending the <code>DocumentIndex</code> by execution of arbitrary Lucene query.
+        </p>
+    </description>
+    <class package="org.netbeans.modules.parsing.lucene.support" name="DocumentIndex2"/>
+    <class package="org.netbeans.modules.parsing.lucene.support" name="Convertors"/>
+  </change>
+  <change id="DocumentIndexCache-WithCustomIndexDocument">
+    <api name="LuceneSupport"/>
+    <summary>Added possibility to use the default <code>DocumentIndex</code> with custom <code>IndexDocument</code>s.</summary>
+    <version major="2" minor="22"/>
+    <date day="6" month="2" year="2013"/>
+    <author login="tzezula"/>
+    <compatibility source="compatible" binary="compatible" addition="yes"/>
+    <description>
+        <p>
+            Added a possibility to use the default <code>DocumentIndex</code> created by <code>IndexManager</code>
+            with a custom <code>IndexDocument</code> implementation.
+        </p>
+    </description>
+    <class package="org.netbeans.modules.parsing.lucene.support" name="DocumentIndexCache"/>
+  </change>
+  <change id="TransactionalDocumentIndex-clear">
+    <api name="LuceneSupport"/>
+    <summary>Added <code>DocumentIndex.Transactional.clear</code> to allow complete index clean up.</summary>
+    <version major="2" minor="20"/>
+    <date day="17" month="12" year="2012"/>
+    <author login="tzezula"/>
+    <compatibility source="incompatible" binary="incompatible" addition="yes"/>
+    <description>
+        <p>
+            Added <code>DocumentIndex.Transactional.clear</code> to allow complete index clean up.
+        </p>
+    </description>
+    <class package="org.netbeans.modules.parsing.lucene.support" name="DocumentIndex"/>
+  </change>
+  <change id="TransactionalDocumentIndex">
+    <api name="LuceneSupport"/>
+    <summary>Added <code>DocumentIndex.Transactional</code> to allow transaction operations on <code>DocumentIndex</code>.</summary>
+    <version major="2" minor="19"/>
+    <date day="27" month="11" year="2012"/>
+    <author login="tzezula"/>
+    <compatibility source="compatible" binary="compatible" addition="yes"/>
+    <description>
+        <p>
+            Added <code>DocumentIndex.Transactional</code> to allow commit and rollback on <code>DocumentIndex</code>.
+        </p>
+    </description>
+    <class package="org.netbeans.modules.parsing.lucene.support" name="IndexManager"/>
+    <class package="org.netbeans.modules.parsing.lucene.support" name="DocumentIndex"/>
+  </change>
+  <change id="DocumentIndexCache">
+    <api name="LuceneSupport"/>
+    <summary>Added <code>DocumentIndexCache</code> class to allow custom caching strategy in DocumentIndex.</summary>
+    <version major="2" minor="18"/>
+    <date day="14" month="11" year="2012"/>
+    <author login="tzezula"/>
+    <compatibility source="compatible" binary="compatible" addition="yes"/>
+    <description>
+        <p>
+            Added <code>DocumentIndexCache</code> class to allow custom caching strategy for added removed
+            documents in DocumentIndex. The default strategy uses <code>SoftReference</code> to detect flush point.
+        </p>
+    </description>
+    <class package="org.netbeans.modules.parsing.lucene.support" name="IndexManager"/>
+    <class package="org.netbeans.modules.parsing.lucene.support" name="DocumentIndexCache"/>
+  </change>
+  <change id="WithTermFrequencies">
+    <api name="LuceneSupport"/>
+    <summary>Added <code>Index</code> with <code>Term</code> frequencies.</summary>
+    <version major="2" minor="13"/>
+    <date day="31" month="5" year="2012"/>
+    <author login="tzezula"/>
+    <compatibility source="compatible" binary="compatible" addition="yes"/>
+    <description>
+        <p>
+            Added <code>Index.WithTermFrequencies</code> index supporting the 
+            <code>Term</code> frequencies estimates. This <code>Index</code> can
+            be used to find out how many <code>Document</code>s contain given <code>Term</code>.
+        </p>
+    </description>
+    <class package="org.netbeans.modules.parsing.lucene.support" name="Index"/>
+    <issue number="213215"/>
+  </change>
+  <change id="IndexReaderInjection">
+    <api name="LuceneSupport"/>
+    <summary>Added <code>IndexReaderInjection</code> to allow <code>IndexReader</code> to be passed to convertors</summary>
+    <version major="2" minor="10"/>
+    <date day="13" month="3" year="2012"/>
+    <author login="tzezula"/>
+    <compatibility source="compatible" binary="compatible" addition="yes"/>
+    <description>
+        <p>
+            Added <code>IndexReaderInjection</code> which allows <code>IndexReader</code> to be passed to the convertor.
+            When implemented by the <code>Convertor</code> or <code>StoppableConvertor</code> the index queries set an
+            <code>IndexReader</code> instance to the passed convertor before calling the convert method. At the end of the query
+            the active <code>IndexReader</code> is replaced by null.
+        </p>
+    </description>
+    <class package="org.netbeans.modules.parsing.lucene.support" name="IndexReaderInjection"/>
+    <issue number=""/>
+  </change>
+  <change id="PriorityAccess">
+    <api name="LuceneSupport"/>
+    <summary>Added <code>IndexManager.priorityAccess</code> to suspend IO during query</summary>
+    <version major="2" minor="9"/>
+    <date day="6" month="2" year="2012"/>
+    <author login="tzezula"/>
+    <compatibility source="compatible" binary="compatible" addition="yes"/>
+    <description>
+        <p>
+            Added <code>IndexManager.priorityAccess</code> to suspend background scan
+            and checking for external changes during query. The methods <code>IndexManager.readAccess</code>
+            and <code>IndexManager.writeAccess</code> were deprecated. The <code>Index</code> is now self
+            guarded and global lock is not needed for correct synchronization.
+        </p>
+    </description>
+    <class package="org.netbeans.modules.parsing.lucene.support" name="IndexManager"/>
+    <issue number="207915"/>
+  </change>
+  <change id="MemoryIndex">
+    <api name="LuceneSupport"/>
+    <summary>Added RAM implementation of Index</summary>
+    <version major="2" minor="8"/>
+    <date day="11" month="1" year="2012"/>
+    <author login="tzezula"/>
+    <compatibility source="compatible" binary="compatible" addition="yes"/>
+    <description>
+        <p>
+            Added the factory method into <code>IndexManager</code> creating the
+            RAM based implementation of <code>Index</code>
+        </p>
+    </description>
+    <class package="org.netbeans.modules.parsing.lucene.support" name="IndexManager"/>
+  </change>
+  <change id="ScanSuspendImplementation">
+    <api name="LuceneSupport"/>
+    <summary>Added ScanSuspendImplementation</summary>
+    <version major="2" minor="7"/>
+    <date day="3" month="1" year="2012"/>
+    <author login="tzezula"/>
+    <compatibility source="compatible" binary="compatible" addition="yes"/>
+    <description>
+        <p>
+            Added the <code>ScanSuspendImplementation</code> interface. The implementation
+            of this inteface registered in global <code>Lookup</code> is called by
+            <code>IndexManager.readAccess(Action)</code> before (suspend) and after (resume) the
+            <code>Action</code> is performed.
+        </p>
+    </description>
+    <class package="org.netbeans.modules.parsing.lucene.spi" name="ScanSuspendImplementation"/>
+  </change>
+  <change id="TransactionalIndex">
+    <api name="LuceneSupport"/>
+    <summary>Added transaction support into the Index</summary>
+    <version major="2" minor="7"/>
+    <date day="3" month="1" year="2012"/>
+    <author login="sdedic"/>
+    <compatibility source="compatible" binary="compatible" addition="yes"/>
+    <description>
+        <p>
+            Added the <code>Index.Transactional</code> interface. The <code>Index.Transactional</code>
+            is a specialization of <code>Index</code> which allows transactional operations on index.
+            The commit operation makes changes visible to <code>IndexReader</code>s,
+            the rollback operation throws away the changes done to <code>IndexWriter</code>
+        </p>
+    </description>
+    <class package="org.netbeans.modules.parsing.lucene.support" name="Index"/>
+  </change>
+  <change id="IndexManager-getOpenIndexes">
+      <api name="LuceneSupport"/>
+      <summary>Added method to get opened indexes</summary>
+      <version major="2" minor="4"/>
+      <date day="21" month="9" year="2011"/>
+      <author login="tzezula"/>
+      <compatibility source="compatible" binary="compatible" addition="yes"/>
+      <description>
+          <p>
+              The <code>IndexManager.getOpenIndexes</code> method was added to allow clients
+              to obtain mapping of cache folder to opened <code>Index</code>.
+          </p>
+      </description>
+      <class package="org.netbeans.modules.parsing.lucene.support" name="IndexManager"/>
+  </change>
+  <change id="Index-getStatus">
+      <api name="LuceneSupport"/>
+      <summary>Index.getStatus replaced Index.isValid and Index.exists</summary>
+      <version major="2" minor="1"/>
+      <date day="19" month="4" year="2011"/>
+      <author login="tzezula"/>
+      <compatibility source="incompatible" binary="incompatible" semantic="incompatible" deletion="yes" addition="yes" modification="no"/>
+      <description>
+          <p>
+              The <code>Index.isValid</code> and <code>Index.exists</code> were removed and replaced by a new
+              method <code>Index.getStatus</code>. The old methods were harder to use. Misuse of these methods
+              caused non needed rescans. Also the single method decreases number of IO operations needed to test the index.
+          </p>
+      </description>
+      <class package="org.netbeans.modules.parsing.lucene.support" name="Index"/>
+      <class package="org.netbeans.modules.parsing.lucene.support" name="DocumentIndex"/>
+      <issue number="197840"/>
+  </change>
+  <change id="adding-LowMemoryWatcher">
+      <api name="LuceneSupport"/>
+      <summary>Adding a LowMemoryWatcher into friend API</summary>
+      <version major="1" minor="2"/>
+      <date day="7" month="1" year="2011"/>
+      <author login="tzezula"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+              Added LowMemoryWatcher into the friend API to remove duplicates in parsing.api and java.source
+          </p>
+      </description>
+      <class package="org.netbeans.modules.parsing.lucene.support" name="LowMemoryWatcher"/>
+      <issue number="194115"/>
+  </change>
+  <change id="adding-document-based-indexing-api">
+      <api name="LuceneSupport"/>
+      <summary>Adding a document based indexing friend API</summary>
+      <version major="1" minor="1"/>
+      <date day="30" month="11" year="2010"/>
+      <author login="tzezula"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+              Added a document based indexing API, this API is used as a base for the parsing api. Removes some code duplication and
+              allows other friends which are not parsing API based to use it.
+          </p>
+      </description>
+      <class package="org.netbeans.modules.parsing.lucene.support" name="IndexDocument"/>
+      <class package="org.netbeans.modules.parsing.lucene.support" name="IndexManager"/>
+      <class package="org.netbeans.modules.parsing.lucene.support" name="DocumentIndex"/>
+      <issue number="168822"/>
+  </change>
+  <change id="adding-friend-low-level-indexing-api">
+      <api name="LuceneSupport"/>
+      <summary>Adding a low level indexing friend API</summary>
+      <version major="1" minor="0"/>
+      <date day="12" month="10" year="2010"/>
+      <author login="tzezula"/>
+      <compatibility source="compatible" binary="compatible" semantic="compatible" deletion="no" addition="yes" modification="no"/>
+      <description>
+          <p>
+                Added a low level indexing friend API based on Lucene to be shared among java.source and parsing.api. The api provides common access to Lucene index, memory caching of indexes, effective lucene index merging, IDE specific queries and file descriptors pool.
+          </p>
+      </description>
+      <class package="org.netbeans.modules.parsing.lucene.support" name="Convertor"/>
+      <class package="org.netbeans.modules.parsing.lucene.support" name="StoppableConvertor"/>
+      <class package="org.netbeans.modules.parsing.lucene.support" name="Index"/>
+      <class package="org.netbeans.modules.parsing.lucene.support" name="IndexManager"/>
+      <class package="org.netbeans.modules.parsing.lucene.support" name="Queries"/>
+      <issue number="190872"/>
+  </change>
+
+  </changes>
+
+  <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <======================
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE parsing.api/apichanges.xml
+
+-->
+    <head>
+        <title>Change History for the Parsing Lucene Support Friend API</title>
+        <link rel="stylesheet" href="prose.css" type="text/css"/>
+        <meta name="CATEGORY" content="OtherDevelopmentDoc"/>
+        <meta name="DESCRIPTION" content="A cross-indexed list of all changes made to the  Parsing Lucene Support Friend API."/>
+    </head>
+    <body>
+        <p class="overviewlink">
+            <a href="overview-summary.html">Overview</a>
+        </p>
+        <h1>Introduction</h1>
+        <h2>What do the Dates Mean?</h2>
+        <p>
+            The supplied dates indicate when the API change was made, on the CVS
+            trunk. From this you can generally tell whether the change should be
+            present in a given build or not; for trunk builds, simply whether it
+            was made before or after the change; for builds on a stabilization
+            branch, whether the branch was made before or after the given date. In
+            some cases corresponding API changes have been made both in the trunk
+            and in an in-progress stabilization branch, if they were needed for a
+            bug fix; this ought to be marked in this list.
+        </p>
+        <hr/>
+        <standard-changelists module-code-name="$codebase"/>
+        <hr/>
+        <p>@FOOTER@</p>
+    </body>
+  </htmlcontents>
+
+</apichanges>

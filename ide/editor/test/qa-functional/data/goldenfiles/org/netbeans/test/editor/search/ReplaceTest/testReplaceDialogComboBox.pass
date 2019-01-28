@@ -1,0 +1,18 @@
+/*
+ * testReplaceDialogComboBox2.java
+ *
+ */
+
+pakaz org.netbeans.test.editor.search.ReplaceTest;
+
+/**
+ *
+ */
+public klasa testReplaceDialogComboBox {
+    
+    /** Creates a new instance of testReplaceDialogComboBox */
+    public testReplaceDialogComboBox() {
+    }
+    
+}
+

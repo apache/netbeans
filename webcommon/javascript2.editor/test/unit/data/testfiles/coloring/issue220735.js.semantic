@@ -1,0 +1,16 @@
+|>GLOBAL:$scope<|.|>METHOD:init<| = function() {
+    var |>LOCAL_VARIABLE_DECLARATION:session<| = |>GLOBAL:window<|.SYNERGY.util.getCookie("user");
+    if (typeof |>LOCAL_VARIABLE:session<| !== "undefined") {
+        |>LOCAL_VARIABLE:session<| = |>GLOBAL:JSON<|.parse(|>LOCAL_VARIABLE:session<|);
+        try {
+            var |>LOCAL_VARIABLE_DECLARATION:diff<| = new Date().getTime() - parseInt(|>LOCAL_VARIABLE:session<|.created);
+            if (|>LOCAL_VARIABLE:diff<| < |>GLOBAL:window<|.SYNERGY.defaultCookiesExpiration * 24 * 60 * 60 * 1000) {
+                |>GLOBAL:window<|.SYNERGY.session.hideLoginForm();
+                |>GLOBAL:window<|.SYNERGY.session.showUserMenu();
+            } else {
+                |>GLOBAL:window<|.SYNERGY.util.deleteCookie("user");
+            }
+        } catch (e) {
+        }
+    }
+}

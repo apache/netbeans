@@ -1,0 +1,4 @@
+Code completion result for source line:
+{$iterator->f|}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+FIELD      first                                      Iterator

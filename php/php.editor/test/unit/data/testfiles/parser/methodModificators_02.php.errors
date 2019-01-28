@@ -1,0 +1,13 @@
+[[48,55]-Syntax error
+ unexpected:	private
+ after:	public
+ expected:	variable, function, const, static, abstract, final] 48-55:Syntax error
+ unexpected:	private
+ after:	public
+ expected:	variable, function, const, static, abstract, final
+[[72,75]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	identifier 'fnc'] 72-75:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	identifier 'fnc'
+[[96,97]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}] 96-97:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}

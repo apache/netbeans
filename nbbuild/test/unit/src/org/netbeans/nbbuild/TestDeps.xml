@@ -36,7 +36,7 @@
     <property name="xtest.testtype" value="testtype"/>
 
     <target name="test-deps" >
-        <parseprojectxml projectfile="${project.file}" project="${nb_all}/java.project.ui/">
+        <parseprojectxml projectfile="${project.file}" project="${nb_all}/java/java.project.ui/">
             <testtype name="unit" folder="unit.dist.folder" compilecp="unit.compile.cp" runtimecp="unit.runtime.cp"/>
             <testtype name="qa-functional" folder="qa.dist.folder" compilecp="qa.compile.cp" runtimecp="qa.runtime.cp"/>
         </parseprojectxml>        
@@ -100,7 +100,7 @@
     </target>
  
      <target name="test-deps-no-test-deps" >
-        <parseprojectxml projectfile="${project.file}" project="${nb_all}/java.project.ui/">
+        <parseprojectxml projectfile="${project.file}" project="${nb_all}/java/java.project.ui/">
             <testtype name="unit" folder="unit.dist.folder" compilecp="unit.compile.cp2" runtimecp="unit.runtime.cp2"/>
             <testtype name="qa-functional" folder="qa.dist.folder" compilecp="qa.compile.cp2" runtimecp="qa.runtime.cp2"/>
         </parseprojectxml>        
@@ -172,7 +172,7 @@
   </target>
 
      <target name="test-deps-missing-module-entry-test-deps" >
-        <parseprojectxml projectfile="${project.file}" project="${nb_all}/java.project.ui/">
+        <parseprojectxml projectfile="${project.file}" project="${nb_all}/java/java.project.ui/">
             <testtype name="unit" folder="unit.dist.folder" compilecp="unit.compile.cp2" runtimecp="unit.runtime.cp2"/>
             <testtype name="qa-functional" folder="qa.dist.folder" compilecp="qa.compile.cp2" runtimecp="qa.runtime.cp2"/>
         </parseprojectxml>        

@@ -1,0 +1,10 @@
+<?php
+
+class |>CLASS:Cls<| {
+
+    /** @deprecated */
+    const |>DEPRECATED,FIELD,STATIC:DEPR<| = 12;
+
+}
+
+?>

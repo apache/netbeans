@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.modules.j2ee.weblogic9/1
+OpenIDE-Module-Implementation-Version: 1
+OpenIDE-Module-Provides: org.netbeans.modules.serverplugins.javaee
+OpenIDE-Module-Layer: org/netbeans/modules/j2ee/weblogic9/resources/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/j2ee/weblogic9/resources/Bundle.properties

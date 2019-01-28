@@ -1,0 +1,21 @@
+@media TV{
+    H1{
+        @TEXT;
+    }
+}
+h1{
+    text-align: : center;
+}
+h2{
+    text-align: center;
+    text-align: ;
+}
+h5{
+    text-align: center;
+    text-align: @
+}
+
+head{
+    background-image: uri();
+}
+

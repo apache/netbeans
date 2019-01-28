@@ -1,0 +1,17 @@
+<PHPDocBlock start='3' end='164'>
+    <Tags>
+        <PHPDocVarTypeTag start='59' end='96' kind='param'>
+            <Variable>
+                <PHPDocNode start='70' end='76' value='$index'/>
+            </Variable>
+            <Types>
+                <PHPDocTypeNode start='66' end='69' value='int' isArray='false'/>
+            </Types>
+        </PHPDocVarTypeTag>
+        <PHPDocTypeTag start='102' end='166' kind='return'>
+            <Types>
+                <PHPDocTypeNode start='110' end='128' value='sfActionStackEntry' isArray='false'/>
+            </Types>
+        </PHPDocTypeTag>
+    </Tags>
+</PHPDocBlock>

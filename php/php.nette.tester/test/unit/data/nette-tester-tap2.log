@@ -1,0 +1,8 @@
+TAP version 13
+not ok Calculator-Nette-Tester/test/Calculator.test.phpt
+# Failed: 12 should be 3
+#
+# in Tester/Framework/Assert.php(370)
+# in Tester/Framework/Assert.php(52) Tester\Assert::fail()
+# in Calculator-Nette-Tester/test/Calculator.test.phpt(71) Tester\Assert::same()
+1..1

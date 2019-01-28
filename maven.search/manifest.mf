@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-AutoUpdate-Show-In-Client: false
-OpenIDE-Module: org.netbeans.modules.maven.search
-OpenIDE-Module-Layer: org/netbeans/modules/maven/search/layer.xml
-OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/maven/search/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.33
-

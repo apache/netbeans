@@ -1,0 +1,5 @@
+Code completion result for source line:
+echo $variable->|getTestName();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     getTestName()                   [PUBLIC]   test

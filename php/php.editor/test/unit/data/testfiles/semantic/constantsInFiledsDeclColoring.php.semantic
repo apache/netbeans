@@ -1,0 +1,15 @@
+<?php
+
+namespace Sux;
+
+class |>CLASS:DateTimePicker<| extends BaseControl  {
+
+    const |>FIELD,STATIC:CSS_CLASS<| = 'datepicker';
+
+    private static $|>FIELD,STATIC,UNUSED:foo<| = array(self::|>FIELD,STATIC:CSS_CLASS<| => "");
+
+    public function |>METHOD:__construct<|($label = null, $type = self::|>FIELD,STATIC:TYPE_DATETIME_LOCAL<|) {
+        $this->|>FIELD:controlPrototype<|->|>CUSTOM1:class<|(self::|>FIELD,STATIC:CSS_CLASS<|);
+    }
+}
+?>

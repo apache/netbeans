@@ -1,0 +1,779 @@
+<testresult testFile='nowdoc_015.php'>
+    <scanner>
+        <token id='T_INLINE_HTML' start='0' end='49'>
+            <text>--TEST--\nTest nowdoc and line numbering\n--FILE--\n</text>
+        </token>
+        <token id='T_FUNCTION' start='55' end='63'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='64' end='77'>
+            <text>error_handler</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='77' end='78'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='78' end='82'>
+            <text>$num</text>
+        </token>
+        <token id='T_COMMA' start='82' end='83'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='84' end='88'>
+            <text>$msg</text>
+        </token>
+        <token id='T_COMMA' start='88' end='89'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='90' end='95'>
+            <text>$file</text>
+        </token>
+        <token id='T_COMMA' start='95' end='96'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='97' end='102'>
+            <text>$line</text>
+        </token>
+        <token id='T_COMMA' start='102' end='103'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='104' end='109'>
+            <text>$vars</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='109' end='110'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='111' end='112'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='114' end='118'>
+            <text>echo</text>
+        </token>
+        <token id='T_VARIABLE' start='119' end='124'>
+            <text>$line</text>
+        </token>
+        <token id='T_COMMA' start='124' end='125'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='125' end='129'>
+            <text>"\n"</text>
+        </token>
+        <token id='T_SEMICOLON' start='129' end='130'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='131' end='132'>
+            <text>}</text>
+        </token>
+        <token id='T_STRING' start='133' end='150'>
+            <text>set_error_handler</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='150' end='151'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='151' end='166'>
+            <text>&apos;error_handler&apos;</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='166' end='167'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='167' end='168'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='169' end='182'>
+            <text>trigger_error</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='182' end='183'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='183' end='189'>
+            <text>"line"</text>
+        </token>
+        <token id='T_COMMA' start='189' end='190'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='191' end='203'>
+            <text>E_USER_ERROR</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='203' end='204'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='204' end='205'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='206' end='208'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='209' end='210'>
+            <text>=</text>
+        </token>
+        <token id='T_START_HEREDOC' start='211' end='218'>
+            <text>&lt;&lt;&lt;EOF\n</text>
+        </token>
+        <token id='T_END_HEREDOC' start='218' end='221'>
+            <text>EOF</text>
+        </token>
+        <token id='T_SEMICOLON' start='221' end='222'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='223' end='231'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='231' end='232'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='232' end='234'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='234' end='235'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='235' end='236'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='237' end='250'>
+            <text>trigger_error</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='250' end='251'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='251' end='257'>
+            <text>"line"</text>
+        </token>
+        <token id='T_COMMA' start='257' end='258'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='259' end='271'>
+            <text>E_USER_ERROR</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='271' end='272'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='272' end='273'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='274' end='276'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='277' end='278'>
+            <text>=</text>
+        </token>
+        <token id='T_START_NOWDOC' start='279' end='288'>
+            <text>&lt;&lt;&lt;&apos;EOF&apos;\n</text>
+        </token>
+        <token id='T_END_NOWDOC' start='288' end='291'>
+            <text>EOF</text>
+        </token>
+        <token id='T_SEMICOLON' start='291' end='292'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='293' end='301'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='301' end='302'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='302' end='304'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='304' end='305'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='305' end='306'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='307' end='320'>
+            <text>trigger_error</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='320' end='321'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='321' end='327'>
+            <text>"line"</text>
+        </token>
+        <token id='T_COMMA' start='327' end='328'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='329' end='341'>
+            <text>E_USER_ERROR</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='341' end='342'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='342' end='343'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='344' end='346'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='347' end='348'>
+            <text>=</text>
+        </token>
+        <token id='T_START_HEREDOC' start='349' end='356'>
+            <text>&lt;&lt;&lt;EOF\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='356' end='361'>
+            <text>test\n</text>
+        </token>
+        <token id='T_END_HEREDOC' start='361' end='364'>
+            <text>EOF</text>
+        </token>
+        <token id='T_SEMICOLON' start='364' end='365'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='366' end='374'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='374' end='375'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='375' end='377'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='377' end='378'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='378' end='379'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='380' end='393'>
+            <text>trigger_error</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='393' end='394'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='394' end='400'>
+            <text>"line"</text>
+        </token>
+        <token id='T_COMMA' start='400' end='401'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='402' end='414'>
+            <text>E_USER_ERROR</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='414' end='415'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='415' end='416'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='417' end='419'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='420' end='421'>
+            <text>=</text>
+        </token>
+        <token id='T_START_NOWDOC' start='422' end='431'>
+            <text>&lt;&lt;&lt;&apos;EOF&apos;\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='431' end='436'>
+            <text>test\n</text>
+        </token>
+        <token id='T_END_NOWDOC' start='436' end='439'>
+            <text>EOF</text>
+        </token>
+        <token id='T_SEMICOLON' start='439' end='440'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='441' end='449'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='449' end='450'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='450' end='452'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='452' end='453'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='453' end='454'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='455' end='468'>
+            <text>trigger_error</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='468' end='469'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='469' end='475'>
+            <text>"line"</text>
+        </token>
+        <token id='T_COMMA' start='475' end='476'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='477' end='489'>
+            <text>E_USER_ERROR</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='489' end='490'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='490' end='491'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='492' end='494'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='495' end='496'>
+            <text>=</text>
+        </token>
+        <token id='T_START_HEREDOC' start='497' end='504'>
+            <text>&lt;&lt;&lt;EOF\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='504' end='525'>
+            <text>test1\ntest2\n\ntest3\n\n\n</text>
+        </token>
+        <token id='T_END_HEREDOC' start='525' end='528'>
+            <text>EOF</text>
+        </token>
+        <token id='T_SEMICOLON' start='528' end='529'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='530' end='538'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='538' end='539'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='539' end='541'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='541' end='542'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='542' end='543'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='544' end='557'>
+            <text>trigger_error</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='557' end='558'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='558' end='564'>
+            <text>"line"</text>
+        </token>
+        <token id='T_COMMA' start='564' end='565'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='566' end='578'>
+            <text>E_USER_ERROR</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='578' end='579'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='579' end='580'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='581' end='583'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='584' end='585'>
+            <text>=</text>
+        </token>
+        <token id='T_START_NOWDOC' start='586' end='595'>
+            <text>&lt;&lt;&lt;&apos;EOF&apos;\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='595' end='616'>
+            <text>test1\ntest2\n\ntest3\n\n\n</text>
+        </token>
+        <token id='T_END_NOWDOC' start='616' end='619'>
+            <text>EOF</text>
+        </token>
+        <token id='T_SEMICOLON' start='619' end='620'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='621' end='629'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='629' end='630'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='630' end='632'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='632' end='633'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='633' end='634'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='635' end='648'>
+            <text>trigger_error</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='648' end='649'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='649' end='655'>
+            <text>"line"</text>
+        </token>
+        <token id='T_COMMA' start='655' end='656'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='657' end='669'>
+            <text>E_USER_ERROR</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='669' end='670'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='670' end='671'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='672' end='676'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='677' end='683'>
+            <text>"ok\n"</text>
+        </token>
+        <token id='T_SEMICOLON' start='683' end='684'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='685' end='688'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='T_INLINE_HTML' start='688' end='850'>
+            <text>--EXPECT--\n6\nstring(0) ""\n10\nstring(0) ""\n14\nstring(4) "test"\n19\nstring(4) "test"\n24\nstring(20) "test1\ntest2\n\ntest3\n\n"\n34\nstring(20) "test1\ntest2\n\ntest3\n\n"\n44\nok\n</text>
+        </token>
+        <token id='EOF' start='850' end='850'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='850'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <InLineHtml start='0' end='49'/>
+            <FunctionDeclaration start='55' end='132' isReference='false'>
+                <Identifier start='64' end='77' name='error_handler'/>
+                <FormalParameters>
+                    <FormalParameter start='78' end='82' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='78' end='82' isDollared='true'>
+                                <Identifier start='79' end='82' name='num'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <FormalParameter start='84' end='88' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='84' end='88' isDollared='true'>
+                                <Identifier start='85' end='88' name='msg'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <FormalParameter start='90' end='95' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='90' end='95' isDollared='true'>
+                                <Identifier start='91' end='95' name='file'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <FormalParameter start='97' end='102' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='97' end='102' isDollared='true'>
+                                <Identifier start='98' end='102' name='line'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <FormalParameter start='104' end='109' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='104' end='109' isDollared='true'>
+                                <Identifier start='105' end='109' name='vars'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                </FormalParameters>
+                <Block start='111' end='132' isCurly='true'>
+                    <EchoStatement start='114' end='130'>
+                        <Variable start='119' end='124' isDollared='true'>
+                            <Identifier start='120' end='124' name='line'/>
+                        </Variable>
+                        <Scalar start='125' end='129' type='STRING' value='"\n"'/>
+                    </EchoStatement>
+                </Block>
+            </FunctionDeclaration>
+            <ExpressionStatement start='133' end='168'>
+                <FunctionInvocation start='133' end='167'>
+                    <FucntionName start='133' end='150'>
+                        <NamespaceName start='133' end='150' isCurrent='false' isGlobal='false'>
+                            <Identifier start='133' end='150' name='set_error_handler'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='151' end='166' type='STRING' value='&apos;error_handler&apos;'/>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='169' end='205'>
+                <FunctionInvocation start='169' end='204'>
+                    <FucntionName start='169' end='182'>
+                        <NamespaceName start='169' end='182' isCurrent='false' isGlobal='false'>
+                            <Identifier start='169' end='182' name='trigger_error'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='183' end='189' type='STRING' value='"line"'/>
+                        <NamespaceName start='191' end='203' isCurrent='false' isGlobal='false'>
+                            <Identifier start='191' end='203' name='E_USER_ERROR'/>
+                        </NamespaceName>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='206' end='222'>
+                <Assignment start='206' end='221' operator='EQUAL'>
+                    <Variable start='206' end='208' isDollared='true'>
+                        <Identifier start='207' end='208' name='x'/>
+                    </Variable>
+                    <Quote start='211' end='221' type='HEREDOC'>
+                        <Expressions>
+                        </Expressions>
+                    </Quote>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='223' end='236'>
+                <FunctionInvocation start='223' end='235'>
+                    <FucntionName start='223' end='231'>
+                        <NamespaceName start='223' end='231' isCurrent='false' isGlobal='false'>
+                            <Identifier start='223' end='231' name='var_dump'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Variable start='232' end='234' isDollared='true'>
+                            <Identifier start='233' end='234' name='x'/>
+                        </Variable>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='237' end='273'>
+                <FunctionInvocation start='237' end='272'>
+                    <FucntionName start='237' end='250'>
+                        <NamespaceName start='237' end='250' isCurrent='false' isGlobal='false'>
+                            <Identifier start='237' end='250' name='trigger_error'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='251' end='257' type='STRING' value='"line"'/>
+                        <NamespaceName start='259' end='271' isCurrent='false' isGlobal='false'>
+                            <Identifier start='259' end='271' name='E_USER_ERROR'/>
+                        </NamespaceName>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='274' end='292'>
+                <Assignment start='274' end='291' operator='EQUAL'>
+                    <Variable start='274' end='276' isDollared='true'>
+                        <Identifier start='275' end='276' name='x'/>
+                    </Variable>
+                    <Scalar start='279' end='291' type='STRING' value=''/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='293' end='306'>
+                <FunctionInvocation start='293' end='305'>
+                    <FucntionName start='293' end='301'>
+                        <NamespaceName start='293' end='301' isCurrent='false' isGlobal='false'>
+                            <Identifier start='293' end='301' name='var_dump'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Variable start='302' end='304' isDollared='true'>
+                            <Identifier start='303' end='304' name='x'/>
+                        </Variable>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='307' end='343'>
+                <FunctionInvocation start='307' end='342'>
+                    <FucntionName start='307' end='320'>
+                        <NamespaceName start='307' end='320' isCurrent='false' isGlobal='false'>
+                            <Identifier start='307' end='320' name='trigger_error'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='321' end='327' type='STRING' value='"line"'/>
+                        <NamespaceName start='329' end='341' isCurrent='false' isGlobal='false'>
+                            <Identifier start='329' end='341' name='E_USER_ERROR'/>
+                        </NamespaceName>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='344' end='365'>
+                <Assignment start='344' end='364' operator='EQUAL'>
+                    <Variable start='344' end='346' isDollared='true'>
+                        <Identifier start='345' end='346' name='x'/>
+                    </Variable>
+                    <Quote start='349' end='364' type='HEREDOC'>
+                        <Expressions>
+                            <Scalar start='356' end='361' type='STRING' value='test\n'/>
+                        </Expressions>
+                    </Quote>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='366' end='379'>
+                <FunctionInvocation start='366' end='378'>
+                    <FucntionName start='366' end='374'>
+                        <NamespaceName start='366' end='374' isCurrent='false' isGlobal='false'>
+                            <Identifier start='366' end='374' name='var_dump'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Variable start='375' end='377' isDollared='true'>
+                            <Identifier start='376' end='377' name='x'/>
+                        </Variable>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='380' end='416'>
+                <FunctionInvocation start='380' end='415'>
+                    <FucntionName start='380' end='393'>
+                        <NamespaceName start='380' end='393' isCurrent='false' isGlobal='false'>
+                            <Identifier start='380' end='393' name='trigger_error'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='394' end='400' type='STRING' value='"line"'/>
+                        <NamespaceName start='402' end='414' isCurrent='false' isGlobal='false'>
+                            <Identifier start='402' end='414' name='E_USER_ERROR'/>
+                        </NamespaceName>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='417' end='440'>
+                <Assignment start='417' end='439' operator='EQUAL'>
+                    <Variable start='417' end='419' isDollared='true'>
+                        <Identifier start='418' end='419' name='x'/>
+                    </Variable>
+                    <Scalar start='422' end='439' type='STRING' value='test\n'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='441' end='454'>
+                <FunctionInvocation start='441' end='453'>
+                    <FucntionName start='441' end='449'>
+                        <NamespaceName start='441' end='449' isCurrent='false' isGlobal='false'>
+                            <Identifier start='441' end='449' name='var_dump'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Variable start='450' end='452' isDollared='true'>
+                            <Identifier start='451' end='452' name='x'/>
+                        </Variable>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='455' end='491'>
+                <FunctionInvocation start='455' end='490'>
+                    <FucntionName start='455' end='468'>
+                        <NamespaceName start='455' end='468' isCurrent='false' isGlobal='false'>
+                            <Identifier start='455' end='468' name='trigger_error'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='469' end='475' type='STRING' value='"line"'/>
+                        <NamespaceName start='477' end='489' isCurrent='false' isGlobal='false'>
+                            <Identifier start='477' end='489' name='E_USER_ERROR'/>
+                        </NamespaceName>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='492' end='529'>
+                <Assignment start='492' end='528' operator='EQUAL'>
+                    <Variable start='492' end='494' isDollared='true'>
+                        <Identifier start='493' end='494' name='x'/>
+                    </Variable>
+                    <Quote start='497' end='528' type='HEREDOC'>
+                        <Expressions>
+                            <Scalar start='504' end='525' type='STRING' value='test1\ntest2\n\ntest3\n\n\n'/>
+                        </Expressions>
+                    </Quote>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='530' end='543'>
+                <FunctionInvocation start='530' end='542'>
+                    <FucntionName start='530' end='538'>
+                        <NamespaceName start='530' end='538' isCurrent='false' isGlobal='false'>
+                            <Identifier start='530' end='538' name='var_dump'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Variable start='539' end='541' isDollared='true'>
+                            <Identifier start='540' end='541' name='x'/>
+                        </Variable>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='544' end='580'>
+                <FunctionInvocation start='544' end='579'>
+                    <FucntionName start='544' end='557'>
+                        <NamespaceName start='544' end='557' isCurrent='false' isGlobal='false'>
+                            <Identifier start='544' end='557' name='trigger_error'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='558' end='564' type='STRING' value='"line"'/>
+                        <NamespaceName start='566' end='578' isCurrent='false' isGlobal='false'>
+                            <Identifier start='566' end='578' name='E_USER_ERROR'/>
+                        </NamespaceName>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='581' end='620'>
+                <Assignment start='581' end='619' operator='EQUAL'>
+                    <Variable start='581' end='583' isDollared='true'>
+                        <Identifier start='582' end='583' name='x'/>
+                    </Variable>
+                    <Scalar start='586' end='619' type='STRING' value='test1\ntest2\n\ntest3\n\n\n'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='621' end='634'>
+                <FunctionInvocation start='621' end='633'>
+                    <FucntionName start='621' end='629'>
+                        <NamespaceName start='621' end='629' isCurrent='false' isGlobal='false'>
+                            <Identifier start='621' end='629' name='var_dump'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Variable start='630' end='632' isDollared='true'>
+                            <Identifier start='631' end='632' name='x'/>
+                        </Variable>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='635' end='671'>
+                <FunctionInvocation start='635' end='670'>
+                    <FucntionName start='635' end='648'>
+                        <NamespaceName start='635' end='648' isCurrent='false' isGlobal='false'>
+                            <Identifier start='635' end='648' name='trigger_error'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='649' end='655' type='STRING' value='"line"'/>
+                        <NamespaceName start='657' end='669' isCurrent='false' isGlobal='false'>
+                            <Identifier start='657' end='669' name='E_USER_ERROR'/>
+                        </NamespaceName>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <EchoStatement start='672' end='684'>
+                <Scalar start='677' end='683' type='STRING' value='"ok\n"'/>
+            </EchoStatement>
+            <EmptyStatement start='685' end='688'/>
+            <InLineHtml start='688' end='850'/>
+        </Statements>
+    </Program>
+</testresult>

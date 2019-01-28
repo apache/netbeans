@@ -1,0 +1,30 @@
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="Profile" minWidth="500.0" prefHeight="500.0" prefWidth="500.0" styleClass="background" xmlns:fx="http://javafx.com/fxml" fx:controller="demo.ProfileController">
+  <children><Label 
+    <GridPane>
+    </GridPane>
+    <GridPane id="GridPane" hgap="15.0" vgap="15.0">
+      <children>
+        <Label/>
+        <Label id="Label" styleClass="profileTitle" text="Please review your profile." GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" fx:id="Fo">
+          <font>
+            <Font size="20.0" fx:id="x1" />
+          </font>
+        </Label>
+      </children>
+    </GridPane>
+  </children>
+  <transforms>
+  </transforms>
+  <stylesheets>
+    <URL value="@Login.css" />
+  </stylesheets>
+</AnchorPane>
+

@@ -1,0 +1,103 @@
+<testresult testFile='coalesce_02.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='6' end='15'>
+            <text>$username</text>
+        </token>
+        <token id='T_EQUAL' start='16' end='17'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='18' end='23'>
+            <text>$_GET</text>
+        </token>
+        <token id='T_OPEN_RECT' start='23' end='24'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='24' end='34'>
+            <text>&apos;username&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='34' end='35'>
+            <text>]</text>
+        </token>
+        <token id='T_COALESCE' start='35' end='37'>
+            <text>??</text>
+        </token>
+        <token id='T_VARIABLE' start='37' end='42'>
+            <text>$_GET</text>
+        </token>
+        <token id='T_OPEN_RECT' start='42' end='43'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='43' end='49'>
+            <text>&apos;user&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='49' end='50'>
+            <text>]</text>
+        </token>
+        <token id='T_COALESCE' start='50' end='52'>
+            <text>??</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='52' end='59'>
+            <text>&apos;guest&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='59' end='60'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='61' end='61'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='61'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='6' end='60'>
+                <Assignment start='6' end='59' operator='EQUAL'>
+                    <Variable start='6' end='15' isDollared='true'>
+                        <Identifier start='7' end='15' name='username'/>
+                    </Variable>
+                    <ConditionalExpression start='18' end='59'>
+                        <Condition>
+                            <ConditionalExpression start='18' end='50'>
+                                <Condition>
+                                    <ArrayAccess start='18' end='35' type='VARIABLE_ARRAY' isDollared='false'>
+                                        <ArrayDimension start='23' end='35'>
+                                            <Index>
+                                                <Scalar start='24' end='34' type='STRING' value='&apos;username&apos;'/>
+                                            </Index>
+                                        </ArrayDimension>
+                                        <Name>
+                                            <Variable start='18' end='23' isDollared='true'>
+                                                <Identifier start='19' end='23' name='_GET'/>
+                                            </Variable>
+                                        </Name>
+                                    </ArrayAccess>
+                                </Condition>
+                                <Then>
+                                </Then>
+                                <Else>
+                                    <ArrayAccess start='37' end='50' type='VARIABLE_ARRAY' isDollared='false'>
+                                        <ArrayDimension start='42' end='50'>
+                                            <Index>
+                                                <Scalar start='43' end='49' type='STRING' value='&apos;user&apos;'/>
+                                            </Index>
+                                        </ArrayDimension>
+                                        <Name>
+                                            <Variable start='37' end='42' isDollared='true'>
+                                                <Identifier start='38' end='42' name='_GET'/>
+                                            </Variable>
+                                        </Name>
+                                    </ArrayAccess>
+                                </Else>
+                            </ConditionalExpression>
+                        </Condition>
+                        <Then>
+                        </Then>
+                        <Else>
+                            <Scalar start='52' end='59' type='STRING' value='&apos;guest&apos;'/>
+                        </Else>
+                    </ConditionalExpression>
+                </Assignment>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

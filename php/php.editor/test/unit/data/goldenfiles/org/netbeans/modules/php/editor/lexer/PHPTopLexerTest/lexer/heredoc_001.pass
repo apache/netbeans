@@ -1,0 +1,5 @@
+token #0 T_HTML --TEST--\nbasic heredoc syntax\n--FILE--\n
+token #1 T_PHP_OPEN_DELIMITER <?php
+token #2 T_PHP \n\nrequire_once 'nowdoc.inc';\n\nprint <<<ENDOFHEREDOC\nThis is a heredoc test.\n\nENDOFHEREDOC;\n\n$x = <<<ENDOFHEREDOC\nThis is another heredoc test.\n\nENDOFHEREDOC;\n\nprint "{$x}";\n\n
+token #3 T_PHP_CLOSE_DELIMITER ?>
+token #4 T_HTML \n--EXPECT--\nThis is a heredoc test.\nThis is another heredoc test.\n

@@ -1,0 +1,5 @@
+token #0 T_HTML --TEST--\nHeredocs can be used as static scalars.\n--FILE--\n
+token #1 T_PHP_OPEN_DELIMITER <?php
+token #2 T_PHP \n\nrequire_once 'nowdoc.inc';\n\nclass e {\n\n    const E = <<<THISMUSTNOTERROR\nIf you see this, everything is ok.\nTHISMUSTNOTERROR;\n\n};\n\nprint e::E . "\n";\n\n
+token #3 T_PHP_CLOSE_DELIMITER ?>
+token #4 T_HTML \n--EXPECT--\nIf you see this, everything is ok.\n

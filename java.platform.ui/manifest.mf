@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.netbeans.modules.java.platform.ui/1
-OpenIDE-Module-Specification-Version: 1.43
-OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/java/platform/Bundle.properties
-OpenIDE-Module-Layer: org/netbeans/modules/java/platform/resources/layer.xml
-AutoUpdate-Show-In-Client: false
-OpenIDE-Module-Recommends: j2seplatform
-OpenIDE-Module-Provides: org.netbeans.modules.java.platform.ui

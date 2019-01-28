@@ -1,0 +1,8 @@
+Code completion result for source line:
+$tc->|traitedTraitField;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     baseTraitMethod()               [PUBLIC]   BaseTrait
+METHOD     functionName()                  [PUBLIC]   TraitedClass
+METHOD     traitedTraitMethod()            [PUBLIC]   TraitedTrait
+VARIABLE   ? baseTraitField                [PUBLIC]   BaseTrait
+VARIABLE   ? traitedTraitField             [PUBLIC]   TraitedTrait

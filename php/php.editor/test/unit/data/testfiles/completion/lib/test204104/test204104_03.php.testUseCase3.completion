@@ -1,0 +1,5 @@
+Code completion result for source line:
+$b->|retObjArray();  // myClass type hinting doesn't work here
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     retObjArray()                   [PUBLIC]   myClass
+METHOD     testHinting()                   [PUBLIC]   myClass

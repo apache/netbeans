@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.netbeans.modules.debugger.jpda.projectsui
-OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/debugger/jpda/projectsui/Bundle.properties
-OpenIDE-Module-Layer: org/netbeans/modules/debugger/jpda/projectsui/resources/mf-layer.xml
-OpenIDE-Module-Provides: org.netbeans.spi.debugger.jpda.EditorContext
-OpenIDE-Module-Package-Dependencies: com.sun.jdi[VirtualMachineManager]
-OpenIDE-Module-Specification-Version: 1.4

@@ -1,0 +1,4 @@
+        const |>MARK_OCCURRENCES:CON<| = 1;
+            parent::|>MARK_OCCURRENCES:C^ON<|;
+            self::|>MARK_OCCURRENCES:CON<|;
+            static::|>MARK_OCCURRENCES:CON<|;

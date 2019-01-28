@@ -1,0 +1,948 @@
+<testresult testFile='functionCallTrailingCommas_01.php'>
+    <scanner>
+        <token id='T_CLASS' start='6' end='11'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='12' end='15'>
+            <text>Foo</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='16' end='17'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='22' end='28'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='29' end='37'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='38' end='41'>
+            <text>bar</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='41' end='42'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='42' end='49'>
+            <text>$param1</text>
+        </token>
+        <token id='T_COMMA' start='49' end='50'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='51' end='58'>
+            <text>$param2</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='58' end='59'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='60' end='61'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='70' end='74'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='75' end='99'>
+            <text>"bar method : class Foo"</text>
+        </token>
+        <token id='T_NEKUDA' start='100' end='101'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='102' end='109'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='109' end='110'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='115' end='116'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='117' end='118'>
+            <text>}</text>
+        </token>
+        <token id='T_STRING' start='138' end='145'>
+            <text>compact</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='145' end='146'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='151' end='154'>
+            <text>$a1</text>
+        </token>
+        <token id='T_COMMA' start='154' end='155'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='160' end='163'>
+            <text>$a2</text>
+        </token>
+        <token id='T_COMMA' start='163' end='164'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='165' end='166'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='166' end='167'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='169' end='176'>
+            <text>$array1</text>
+        </token>
+        <token id='T_EQUAL' start='177' end='178'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='179' end='180'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='180' end='185'>
+            <text>&apos;baz&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='185' end='186'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='186' end='187'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='188' end='195'>
+            <text>$array2</text>
+        </token>
+        <token id='T_EQUAL' start='196' end='197'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='198' end='199'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='199' end='204'>
+            <text>&apos;qux&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='204' end='205'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='205' end='206'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='207' end='214'>
+            <text>$merged</text>
+        </token>
+        <token id='T_EQUAL' start='215' end='216'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='217' end='228'>
+            <text>array_merge</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='228' end='229'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='234' end='241'>
+            <text>$array1</text>
+        </token>
+        <token id='T_COMMA' start='241' end='242'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='247' end='254'>
+            <text>$array2</text>
+        </token>
+        <token id='T_COMMA' start='254' end='255'>
+            <text>,</text>
+        </token>
+        <token id='T_OPEN_RECT' start='260' end='261'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='261' end='266'>
+            <text>&apos;foo&apos;</text>
+        </token>
+        <token id='T_COMMA' start='266' end='267'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='268' end='273'>
+            <text>&apos;bar&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='273' end='274'>
+            <text>]</text>
+        </token>
+        <token id='T_COMMA' start='274' end='275'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='276' end='277'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='277' end='278'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='279' end='287'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='287' end='288'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='288' end='295'>
+            <text>$merged</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='295' end='296'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='296' end='297'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='298' end='301'>
+            <text>$a1</text>
+        </token>
+        <token id='T_EQUAL' start='302' end='303'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='304' end='305'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='310' end='311'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='311' end='312'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='313' end='314'>
+            <text>2</text>
+        </token>
+        <token id='T_COMMA' start='314' end='315'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='316' end='317'>
+            <text>3</text>
+        </token>
+        <token id='T_COMMA' start='317' end='318'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='319' end='320'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='320' end='321'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='323' end='326'>
+            <text>$a2</text>
+        </token>
+        <token id='T_EQUAL' start='327' end='328'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='329' end='330'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='335' end='338'>
+            <text>"a"</text>
+        </token>
+        <token id='T_COMMA' start='338' end='339'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='340' end='343'>
+            <text>"b"</text>
+        </token>
+        <token id='T_COMMA' start='343' end='344'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='345' end='348'>
+            <text>"c"</text>
+        </token>
+        <token id='T_COMMA' start='348' end='349'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='350' end='351'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='351' end='352'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='354' end='362'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='362' end='363'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='368' end='371'>
+            <text>$a1</text>
+        </token>
+        <token id='T_COMMA' start='371' end='372'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='377' end='380'>
+            <text>$a2</text>
+        </token>
+        <token id='T_COMMA' start='380' end='381'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='382' end='383'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='383' end='384'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='386' end='393'>
+            <text>$format</text>
+        </token>
+        <token id='T_EQUAL' start='394' end='395'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='396' end='411'>
+            <text>"sprintf %s %s"</text>
+        </token>
+        <token id='T_SEMICOLON' start='411' end='412'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='413' end='417'>
+            <text>echo</text>
+        </token>
+        <token id='T_STRING' start='418' end='425'>
+            <text>sprintf</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='425' end='426'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='431' end='438'>
+            <text>$format</text>
+        </token>
+        <token id='T_COMMA' start='438' end='439'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='444' end='454'>
+            <text>&apos;NetBeans&apos;</text>
+        </token>
+        <token id='T_COMMA' start='454' end='455'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='460' end='465'>
+            <text>&apos;IDE&apos;</text>
+        </token>
+        <token id='T_COMMA' start='465' end='466'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='467' end='468'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDA' start='469' end='470'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='471' end='478'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='478' end='479'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='507' end='511'>
+            <text>$foo</text>
+        </token>
+        <token id='T_EQUAL' start='512' end='513'>
+            <text>=</text>
+        </token>
+        <token id='T_NEW' start='514' end='517'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='518' end='521'>
+            <text>Foo</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='521' end='522'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='527' end='540'>
+            <text>&apos;constructor&apos;</text>
+        </token>
+        <token id='T_COMMA' start='540' end='541'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='546' end='551'>
+            <text>&apos;foo&apos;</text>
+        </token>
+        <token id='T_COMMA' start='551' end='552'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='553' end='554'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='554' end='555'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='557' end='561'>
+            <text>$foo</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='561' end='563'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='563' end='566'>
+            <text>bar</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='566' end='567'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='572' end='580'>
+            <text>&apos;method&apos;</text>
+        </token>
+        <token id='T_COMMA' start='580' end='581'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='586' end='591'>
+            <text>&apos;bar&apos;</text>
+        </token>
+        <token id='T_COMMA' start='591' end='592'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='593' end='594'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='594' end='595'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='597' end='601'>
+            <text>$bar</text>
+        </token>
+        <token id='T_EQUAL' start='602' end='603'>
+            <text>=</text>
+        </token>
+        <token id='T_FUNCTION' start='604' end='612'>
+            <text>function</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='612' end='613'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='613' end='616'>
+            <text>...</text>
+        </token>
+        <token id='T_VARIABLE' start='616' end='621'>
+            <text>$args</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='621' end='622'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='623' end='624'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='629' end='633'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='634' end='643'>
+            <text>"closure"</text>
+        </token>
+        <token id='T_NEKUDA' start='644' end='645'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='646' end='653'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='653' end='654'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='655' end='656'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='656' end='657'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='658' end='662'>
+            <text>$bar</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='662' end='663'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='668' end='677'>
+            <text>&apos;closure&apos;</text>
+        </token>
+        <token id='T_COMMA' start='677' end='678'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='683' end='688'>
+            <text>&apos;bar&apos;</text>
+        </token>
+        <token id='T_COMMA' start='688' end='689'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='690' end='691'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='691' end='692'>
+            <text>;</text>
+        </token>
+        <token id='T_UNSET' start='717' end='722'>
+            <text>unset</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='722' end='723'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='728' end='735'>
+            <text>$param1</text>
+        </token>
+        <token id='T_COMMA' start='735' end='736'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='741' end='748'>
+            <text>$param2</text>
+        </token>
+        <token id='T_COMMA' start='748' end='749'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='750' end='751'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='751' end='752'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='754' end='761'>
+            <text>$isset1</text>
+        </token>
+        <token id='T_EQUAL' start='762' end='763'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='764' end='772'>
+            <text>"isset1"</text>
+        </token>
+        <token id='T_SEMICOLON' start='772' end='773'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='774' end='781'>
+            <text>$isset2</text>
+        </token>
+        <token id='T_EQUAL' start='782' end='783'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='784' end='792'>
+            <text>"isset2"</text>
+        </token>
+        <token id='T_SEMICOLON' start='792' end='793'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='794' end='802'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='802' end='803'>
+            <text>(</text>
+        </token>
+        <token id='T_ISSET' start='803' end='808'>
+            <text>isset</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='808' end='809'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='809' end='816'>
+            <text>$isset1</text>
+        </token>
+        <token id='T_COMMA' start='816' end='817'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='818' end='825'>
+            <text>$isset2</text>
+        </token>
+        <token id='T_COMMA' start='825' end='826'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='826' end='827'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='827' end='828'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='828' end='829'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='830' end='830'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='830'>
+        <Comments>
+            <Comment start='120' end='138' commentType='singleLine'/>
+            <Comment start='481' end='507' commentType='singleLine'/>
+            <Comment start='694' end='717' commentType='singleLine'/>
+            <Comment start='120' end='138' commentType='singleLine'/>
+            <Comment start='481' end='507' commentType='singleLine'/>
+            <Comment start='694' end='717' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='6' end='118' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='12' end='15' name='Foo'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='16' end='118' isCurly='true'>
+                    <MethodDeclaration start='22' end='116' modifiers='public'>
+                        <FunctionDeclaration start='29' end='116' isReference='false'>
+                            <Identifier start='38' end='41' name='bar'/>
+                            <FormalParameters>
+                                <FormalParameter start='42' end='49' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='42' end='49' isDollared='true'>
+                                            <Identifier start='43' end='49' name='param1'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='51' end='58' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='51' end='58' isDollared='true'>
+                                            <Identifier start='52' end='58' name='param2'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <Block start='60' end='116' isCurly='true'>
+                                <EchoStatement start='70' end='110'>
+                                    <InfixExpression start='75' end='109' operator='CONCAT'>
+                                        <Scalar start='75' end='99' type='STRING' value='"bar method : class Foo"'/>
+                                        <NamespaceName start='102' end='109' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='102' end='109' name='PHP_EOL'/>
+                                        </NamespaceName>
+                                    </InfixExpression>
+                                </EchoStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <ExpressionStatement start='138' end='167'>
+                <FunctionInvocation start='138' end='166'>
+                    <FucntionName start='138' end='145'>
+                        <NamespaceName start='138' end='145' isCurrent='false' isGlobal='false'>
+                            <Identifier start='138' end='145' name='compact'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Variable start='151' end='154' isDollared='true'>
+                            <Identifier start='152' end='154' name='a1'/>
+                        </Variable>
+                        <Variable start='160' end='163' isDollared='true'>
+                            <Identifier start='161' end='163' name='a2'/>
+                        </Variable>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='169' end='187'>
+                <Assignment start='169' end='186' operator='EQUAL'>
+                    <Variable start='169' end='176' isDollared='true'>
+                        <Identifier start='170' end='176' name='array1'/>
+                    </Variable>
+                    <ArrayCreation start='179' end='186' type='NEW'>
+                        <ArrayElement start='180' end='185'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='180' end='185' type='STRING' value='&apos;baz&apos;'/>
+                            </Value>
+                        </ArrayElement>
+                    </ArrayCreation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='188' end='206'>
+                <Assignment start='188' end='205' operator='EQUAL'>
+                    <Variable start='188' end='195' isDollared='true'>
+                        <Identifier start='189' end='195' name='array2'/>
+                    </Variable>
+                    <ArrayCreation start='198' end='205' type='NEW'>
+                        <ArrayElement start='199' end='204'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='199' end='204' type='STRING' value='&apos;qux&apos;'/>
+                            </Value>
+                        </ArrayElement>
+                    </ArrayCreation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='207' end='278'>
+                <Assignment start='207' end='277' operator='EQUAL'>
+                    <Variable start='207' end='214' isDollared='true'>
+                        <Identifier start='208' end='214' name='merged'/>
+                    </Variable>
+                    <FunctionInvocation start='217' end='277'>
+                        <FucntionName start='217' end='228'>
+                            <NamespaceName start='217' end='228' isCurrent='false' isGlobal='false'>
+                                <Identifier start='217' end='228' name='array_merge'/>
+                            </NamespaceName>
+                        </FucntionName>
+                        <Parameters>
+                            <Variable start='234' end='241' isDollared='true'>
+                                <Identifier start='235' end='241' name='array1'/>
+                            </Variable>
+                            <Variable start='247' end='254' isDollared='true'>
+                                <Identifier start='248' end='254' name='array2'/>
+                            </Variable>
+                            <ArrayCreation start='260' end='274' type='NEW'>
+                                <ArrayElement start='261' end='266'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='261' end='266' type='STRING' value='&apos;foo&apos;'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='268' end='273'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='268' end='273' type='STRING' value='&apos;bar&apos;'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Parameters>
+                    </FunctionInvocation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='279' end='297'>
+                <FunctionInvocation start='279' end='296'>
+                    <FucntionName start='279' end='287'>
+                        <NamespaceName start='279' end='287' isCurrent='false' isGlobal='false'>
+                            <Identifier start='279' end='287' name='var_dump'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Variable start='288' end='295' isDollared='true'>
+                            <Identifier start='289' end='295' name='merged'/>
+                        </Variable>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='298' end='321'>
+                <Assignment start='298' end='320' operator='EQUAL'>
+                    <Variable start='298' end='301' isDollared='true'>
+                        <Identifier start='299' end='301' name='a1'/>
+                    </Variable>
+                    <ArrayCreation start='304' end='320' type='NEW'>
+                        <ArrayElement start='310' end='311'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='310' end='311' type='INT' value='1'/>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='313' end='314'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='313' end='314' type='INT' value='2'/>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='316' end='317'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='316' end='317' type='INT' value='3'/>
+                            </Value>
+                        </ArrayElement>
+                    </ArrayCreation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='323' end='352'>
+                <Assignment start='323' end='351' operator='EQUAL'>
+                    <Variable start='323' end='326' isDollared='true'>
+                        <Identifier start='324' end='326' name='a2'/>
+                    </Variable>
+                    <ArrayCreation start='329' end='351' type='NEW'>
+                        <ArrayElement start='335' end='338'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='335' end='338' type='STRING' value='"a"'/>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='340' end='343'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='340' end='343' type='STRING' value='"b"'/>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='345' end='348'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='345' end='348' type='STRING' value='"c"'/>
+                            </Value>
+                        </ArrayElement>
+                    </ArrayCreation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='354' end='384'>
+                <FunctionInvocation start='354' end='383'>
+                    <FucntionName start='354' end='362'>
+                        <NamespaceName start='354' end='362' isCurrent='false' isGlobal='false'>
+                            <Identifier start='354' end='362' name='var_dump'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Variable start='368' end='371' isDollared='true'>
+                            <Identifier start='369' end='371' name='a1'/>
+                        </Variable>
+                        <Variable start='377' end='380' isDollared='true'>
+                            <Identifier start='378' end='380' name='a2'/>
+                        </Variable>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='386' end='412'>
+                <Assignment start='386' end='411' operator='EQUAL'>
+                    <Variable start='386' end='393' isDollared='true'>
+                        <Identifier start='387' end='393' name='format'/>
+                    </Variable>
+                    <Scalar start='396' end='411' type='STRING' value='"sprintf %s %s"'/>
+                </Assignment>
+            </ExpressionStatement>
+            <EchoStatement start='413' end='479'>
+                <InfixExpression start='418' end='478' operator='CONCAT'>
+                    <FunctionInvocation start='418' end='468'>
+                        <FucntionName start='418' end='425'>
+                            <NamespaceName start='418' end='425' isCurrent='false' isGlobal='false'>
+                                <Identifier start='418' end='425' name='sprintf'/>
+                            </NamespaceName>
+                        </FucntionName>
+                        <Parameters>
+                            <Variable start='431' end='438' isDollared='true'>
+                                <Identifier start='432' end='438' name='format'/>
+                            </Variable>
+                            <Scalar start='444' end='454' type='STRING' value='&apos;NetBeans&apos;'/>
+                            <Scalar start='460' end='465' type='STRING' value='&apos;IDE&apos;'/>
+                        </Parameters>
+                    </FunctionInvocation>
+                    <NamespaceName start='471' end='478' isCurrent='false' isGlobal='false'>
+                        <Identifier start='471' end='478' name='PHP_EOL'/>
+                    </NamespaceName>
+                </InfixExpression>
+            </EchoStatement>
+            <ExpressionStatement start='507' end='555'>
+                <Assignment start='507' end='554' operator='EQUAL'>
+                    <Variable start='507' end='511' isDollared='true'>
+                        <Identifier start='508' end='511' name='foo'/>
+                    </Variable>
+                    <ClassInstanceCreation start='514' end='554' anonymous='false'>
+                        <ClassName start='518' end='521'>
+                            <NamespaceName start='518' end='521' isCurrent='false' isGlobal='false'>
+                                <Identifier start='518' end='521' name='Foo'/>
+                            </NamespaceName>
+                        </ClassName>
+                        <Parameters>
+                            <Scalar start='527' end='540' type='STRING' value='&apos;constructor&apos;'/>
+                            <Scalar start='546' end='551' type='STRING' value='&apos;foo&apos;'/>
+                        </Parameters>
+                    </ClassInstanceCreation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='557' end='595'>
+                <MethodInvocation start='557' end='594'>
+                    <Variable start='557' end='561' isDollared='true'>
+                        <Identifier start='558' end='561' name='foo'/>
+                    </Variable>
+                    <Method>
+                        <FunctionInvocation start='563' end='594'>
+                            <FucntionName start='563' end='566'>
+                                <Variable start='563' end='566' isDollared='false'>
+                                    <Identifier start='563' end='566' name='bar'/>
+                                </Variable>
+                            </FucntionName>
+                            <Parameters>
+                                <Scalar start='572' end='580' type='STRING' value='&apos;method&apos;'/>
+                                <Scalar start='586' end='591' type='STRING' value='&apos;bar&apos;'/>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Method>
+                </MethodInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='597' end='657'>
+                <Assignment start='597' end='656' operator='EQUAL'>
+                    <Variable start='597' end='601' isDollared='true'>
+                        <Identifier start='598' end='601' name='bar'/>
+                    </Variable>
+                    <LambdaFunctionDeclaration start='604' end='656' isReference='false'>
+                        <FormalParameter start='613' end='621' isMandatory='false' isVariadic='true'>
+                            <ParametrType>
+                            </ParametrType>
+                            <ParametrName>
+                                <Variadic start='613' end='621'>
+                                    <Variable start='616' end='621' isDollared='true'>
+                                        <Identifier start='617' end='621' name='args'/>
+                                    </Variable>
+                                </Variadic>
+                            </ParametrName>
+                            <DefaultValue>
+                            </DefaultValue>
+                        </FormalParameter>
+                        <Block start='623' end='656' isCurly='true'>
+                            <EchoStatement start='629' end='654'>
+                                <InfixExpression start='634' end='653' operator='CONCAT'>
+                                    <Scalar start='634' end='643' type='STRING' value='"closure"'/>
+                                    <NamespaceName start='646' end='653' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='646' end='653' name='PHP_EOL'/>
+                                    </NamespaceName>
+                                </InfixExpression>
+                            </EchoStatement>
+                        </Block>
+                    </LambdaFunctionDeclaration>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='658' end='692'>
+                <FunctionInvocation start='658' end='691'>
+                    <FucntionName start='658' end='662'>
+                        <Variable start='658' end='662' isDollared='true'>
+                            <Identifier start='659' end='662' name='bar'/>
+                        </Variable>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='668' end='677' type='STRING' value='&apos;closure&apos;'/>
+                        <Scalar start='683' end='688' type='STRING' value='&apos;bar&apos;'/>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='717' end='752'>
+                <FunctionInvocation start='717' end='751'>
+                    <FucntionName start='717' end='722'>
+                        <Identifier start='717' end='722' name='unset'/>
+                    </FucntionName>
+                    <Parameters>
+                        <Variable start='728' end='735' isDollared='true'>
+                            <Identifier start='729' end='735' name='param1'/>
+                        </Variable>
+                        <Variable start='741' end='748' isDollared='true'>
+                            <Identifier start='742' end='748' name='param2'/>
+                        </Variable>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='754' end='773'>
+                <Assignment start='754' end='772' operator='EQUAL'>
+                    <Variable start='754' end='761' isDollared='true'>
+                        <Identifier start='755' end='761' name='isset1'/>
+                    </Variable>
+                    <Scalar start='764' end='772' type='STRING' value='"isset1"'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='774' end='793'>
+                <Assignment start='774' end='792' operator='EQUAL'>
+                    <Variable start='774' end='781' isDollared='true'>
+                        <Identifier start='775' end='781' name='isset2'/>
+                    </Variable>
+                    <Scalar start='784' end='792' type='STRING' value='"isset2"'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='794' end='829'>
+                <FunctionInvocation start='794' end='828'>
+                    <FucntionName start='794' end='802'>
+                        <NamespaceName start='794' end='802' isCurrent='false' isGlobal='false'>
+                            <Identifier start='794' end='802' name='var_dump'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <FunctionInvocation start='803' end='827'>
+                            <FucntionName start='803' end='808'>
+                                <Identifier start='803' end='808' name='isset'/>
+                            </FucntionName>
+                            <Parameters>
+                                <Variable start='809' end='816' isDollared='true'>
+                                    <Identifier start='810' end='816' name='isset1'/>
+                                </Variable>
+                                <Variable start='818' end='825' isDollared='true'>
+                                    <Identifier start='819' end='825' name='isset2'/>
+                                </Variable>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

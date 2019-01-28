@@ -1,0 +1,3 @@
+function Joke (|>MARK_OCCURRENCES:name<|, autor, description) {
+   this.name = |>MARK_OCCURRENCES:na^me<|;
+       return |>MARK_OCCURRENCES:name<|;

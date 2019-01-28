@@ -1,0 +1,4 @@
+    |>MARK_OCCURRENCES:address<|: { // in ondra
+    console.log(|>MARK_OCCURRENCES:address<|);
+    with (|>MARK_OCCURRENCES:address<|) {
+            with(|>MARK_OCCURRENCES:ad^dress<|) { // from ondra

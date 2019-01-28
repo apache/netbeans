@@ -1,0 +1,3 @@
+/** @var    VarType    $|>MARK_OCCURRENCES:value<| */
+foreach ($array as $^|>MARK_OCCURRENCES:value<|) {
+    $|>MARK_OCCURRENCES:value<|->test();

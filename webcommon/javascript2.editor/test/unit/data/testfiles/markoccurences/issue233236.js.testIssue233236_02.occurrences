@@ -1,0 +1,2 @@
+    var |>MARK_OCCURRENCES:firstN^ame<| = firstName; 
+        return |>MARK_OCCURRENCES:firstName<|;

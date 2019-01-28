@@ -1,0 +1,142 @@
+<!--
+ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ 
+ Copyright 1997-2007 Sun Microsystems, Inc. All rights reserved.
+ 
+ The contents of this file are subject to the terms of either the GNU
+ General Public License Version 2 only ("GPL") or the Common Development
+ and Distribution License("CDDL") (collectively, the "License").  You
+ may not use this file except in compliance with the License. You can obtain
+ a copy of the License at https://glassfish.dev.java.net/public/CDDL+GPL.html
+ or glassfish/bootstrap/legal/LICENSE.txt.  See the License for the specific
+ language governing permissions and limitations under the License.
+ 
+ When distributing the software, include this License Header Notice in each
+ file and include the License file at glassfish/bootstrap/legal/LICENSE.txt.
+ Sun designates this particular file as subject to the "Classpath" exception
+ as provided by Sun in the GPL Version 2 section of the License file that
+ accompanied this code.  If applicable, add the following below the License
+ Header, with the fields enclosed by brackets [] replaced by your own
+ identifying information: "Portions Copyrighted [year]
+ [name of copyright owner]"
+ 
+ Contributor(s):
+ 
+ If you wish your version of this file to be governed by only the CDDL or
+ only the GPL Version 2, indicate your decision by adding "[Contributor]
+ elects to include this software in this distribution under the [CDDL or GPL
+ Version 2] license."  If you don't indicate a single choice of license, a
+ recipient has the option to distribute your version of this file under
+ either the CDDL, the GPL Version 2 or to extend the choice of license to
+ its licensees as provided above.  However, if you add GPL Version 2 code
+ and therefore, elected the GPL Version 2 license, then the option applies
+ only if the new code is made subject to such option by the copyright
+ holder.
+-->
+
+
+<!-- This file maps at least one set of beans to tables and columns in a 
+     specific db schema
+-->
+<!ELEMENT sun-cmp-mappings ( sun-cmp-mapping+ ) >
+
+<!-- At least one bean is mapped to database columns in the named schema -->
+<!ELEMENT sun-cmp-mapping ( schema, entity-mapping+) >
+
+<!-- A cmp bean has a name, a primary table, one or more fields, zero or 
+     more relationships, and zero or more secondary tables, plus flags for 
+     consistency checking.
+ 
+     If the consistency checking flag element is not present, then none 
+     is assumed 
+--> 
+<!ELEMENT entity-mapping (ejb-name, table-name, cmp-field-mapping+, 
+        cmr-field-mapping*, secondary-table*, consistency?)>
+
+<!ELEMENT consistency (none | check-modified-at-commit | lock-when-loaded |
+        check-all-at-commit | (lock-when-modified, check-all-at-commit?) |
+        check-version-of-accessed-instances) >
+
+<!ELEMENT read-only EMPTY>
+
+<!-- A cmp-field-mapping has a field, one or more columns that it maps to.  
+     The column can be from a bean's primary table or any defined secondary 
+     table.  If a field is mapped to multiple columns, the column listed first
+     is used as the SOURCE for getting the value from the database.  The 
+     columns are updated in their order.  A field may also be marked as 
+     read-only.  It may also participate in a hierarchial or independent 
+     fetch group. If the fetched-with element is not present, the value,
+          <fetched-with><default/></fetched-with>
+     is assumed.
+-->
+<!ELEMENT cmp-field-mapping (field-name, column-name+, read-only?, 
+        fetched-with?) >
+            
+<!-- The java identifier of a field. Must match the value of the field-name 
+     sub-element of the cmp-field that is being mapped. 
+-->
+<!ELEMENT field-name (#PCDATA) >
+
+<!-- The java identifier of a field.  Must match the value of the 
+     cmr-field-name sub-element of the cmr-field tat is being mapped. 
+-->
+<!ELEMENT cmr-field-name (#PCDATA) >
+
+<!-- The ejb-name from the standard EJB-jar DTD--> 
+<!ELEMENT ejb-name (#PCDATA) >
+
+<!-- The COLUMN name of a column from the primary table, or the table 
+     qualified name (TABLE.COLUMN) of a column from a secondary or related 
+     table
+--> 
+<!ELEMENT column-name (#PCDATA) >
+
+<!-- Holds the fetch group configuration for fields and relationships -->
+<!ELEMENT fetched-with (default | level | named-group | none) >
+
+<!-- Sub element of fetched-with. Implies that a field belongs to the default
+     hierarchical fetch group. -->
+<!ELEMENT default EMPTY>
+
+<!-- A hierarchial fetch group.  The value of this element must be an integer.
+     Fields and relationships that belong to a hierachial fetch group of equal
+     (or lesser) value are fetched at the same time. The value of level must
+     be greater than zero.
+-->
+<!ELEMENT level (#PCDATA) >
+
+<!-- The name of an independent fetch group.  All the fields and relationships 
+  that are part of a named-group are fetched at the same time-->
+<!ELEMENT named-group (#PCDATA) >
+
+<!-- The name of a database table -->
+<!ELEMENT table-name (#PCDATA) >
+
+<!-- a bean's secondary tables -->
+<!ELEMENT secondary-table (table-name, column-pair+) >
+
+<!-- the pair of columns -->
+<!ELEMENT column-pair (column-name, column-name) >
+
+<!-- cmr-field mapping.  A cmr field has a name and one or more column 
+     pairs that define the relationship. The relationship can also 
+     participate in a fetch group.
+     
+     If the fetched-with element is not present, the value,
+          <fetched-with><none/></fetched-with>
+     is assumed. 
+-->
+<!ELEMENT cmr-field-mapping (cmr-field-name, column-pair+, fetched-with? ) >
+
+<!-- The path name to the schema file--> 
+<!ELEMENT schema (#PCDATA) >
+
+<!-- flag elements for consistency levels -->
+
+<!-- note: none is also a sub-element of the fetched-with tag -->
+<!ELEMENT none EMPTY >
+<!ELEMENT check-modified-at-commit EMPTY >
+<!ELEMENT check-all-at-commit EMPTY>
+<!ELEMENT lock-when-modified EMPTY>
+<!ELEMENT lock-when-loaded EMPTY >
+<!ELEMENT check-version-of-accessed-instances (column-name+) >

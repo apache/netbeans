@@ -39,6 +39,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -46,6 +47,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.function.Supplier;
 import java.util.jar.Attributes;
 import java.util.jar.Attributes.Name;
 import java.util.jar.JarEntry;
@@ -301,12 +303,13 @@ public class MakeNBM extends Task {
     private boolean isStandardInclude = true;
     private ArrayList<ExternalPackage> externalPackages = null;
     private ArrayList<String> locales = null;
-    private ArrayList<Attributes> moduleAttributes = null;
     private Attributes englishAttr = null;
     private Path updaterJar;
     private FileSet executablesSet;
+    private ZipFileSet extraNBMFiles;
     private boolean usePack200;
     private String pack200excludes;
+    private boolean alwaysCreateNBM;
 
     /** Try to find and create localized info.xml files */
     public void setLocales(String s) {
@@ -340,9 +343,17 @@ public class MakeNBM extends Task {
         this.pack200excludes = pack200excludes;
     }
 
+    public void setAlwaysCreateNBM(boolean alwaysCreateNBM) {
+        this.alwaysCreateNBM = alwaysCreateNBM;
+    }
+
     /** List of executable files in NBM concatinated by ${line.separator}. */
     public FileSet createExecutables() {
         return (executablesSet = new FileSet());
+    }
+    
+    public ZipFileSet createExtraNBMFiles() {
+        return (extraNBMFiles = new ZipFileSet());
     }
     
     /** Module manifest needed for versioning.
@@ -496,6 +507,8 @@ public class MakeNBM extends Task {
         try {
             try (JarFile mjar = new JarFile(mfile)) {
                 if (mjar.getManifest().getMainAttributes().getValue("Bundle-SymbolicName") != null) {
+                    englishAttr = new Attributes();
+                    englishAttr.putValue("OpenIDE-Module", JarWithModuleAttributes.extractCodeName(mjar.getManifest().getMainAttributes()));
                     // #181025: treat bundles specially.
                     return null;
                 }
@@ -581,25 +594,30 @@ public class MakeNBM extends Task {
 	overrideLicenseIfNeeded() ;
         
         
-        moduleAttributes = new ArrayList<> ();
+        Map<String, Supplier<Document>> moduleAttributes = new LinkedHashMap<>();
         File module = new File( productDir, moduleName );
         Attributes attr = getModuleAttributesForLocale("");
         if (attr == null) {
-            // #181025: OSGi bundle, copy unmodified.
-            Copy copy = new Copy();
-            copy.setProject(getProject());
-            copy.setOwningTarget(getOwningTarget());
-            copy.setFile(module);
-            copy.setTofile(new File(nbm.getAbsolutePath().replaceFirst("[.]nbm$", ".jar")));
-            copy.execute();
-            // XXX possibly sign it
-            // XXX could try to run pack200, though not if it was signed
-            return;
+            if (!alwaysCreateNBM) {
+                // #181025: OSGi bundle, copy unmodified.
+                Copy copy = new Copy();
+                copy.setProject(getProject());
+                copy.setOwningTarget(getOwningTarget());
+                copy.setFile(module);
+                copy.setTofile(new File(nbm.getAbsolutePath().replaceFirst("[.]nbm$", ".jar")));
+                copy.execute();
+                // XXX possibly sign it
+                // XXX could try to run pack200, though not if it was signed
+                return;
+            } else {
+                moduleAttributes.put("", () -> createFakeOSGiInfo(module));
+            }
+        } else {
+            moduleAttributes.put("", () -> createInfoXml(attr));
         }
-        moduleAttributes.add(attr);
         for (String locale : locales) {
             Attributes a = getModuleAttributesForLocale(locale);
-            if (a != null) moduleAttributes.add(a);
+            if (a != null) moduleAttributes.put(locale, () -> createInfoXml(a));
         }
 
         // Will create a file Info/info.xml to be stored in tmp
@@ -615,10 +633,10 @@ public class MakeNBM extends Task {
         }
         
         ArrayList<ZipFileSet> infoXMLFileSets = new ArrayList<>();
-        for (Attributes modAttr : moduleAttributes) {
-            Document infoXmlContents = createInfoXml(modAttr);
+        for (Map.Entry<String, Supplier<Document>> modAttr : moduleAttributes.entrySet()) {
+            Document infoXmlContents = modAttr.getValue().get();
             File infofile;
-            String loc = modAttr.getValue("locale");
+            String loc = modAttr.getKey();
             if (loc == null)
                 throw new BuildException("Found attributes without assigned locale code", getLocation());
             try {
@@ -643,7 +661,6 @@ public class MakeNBM extends Task {
         String codename = englishAttr.getValue("OpenIDE-Module");
         if (codename == null)
  	    new BuildException( "Can't get codenamebase" );
- 	
  	UpdateTracking tracking = new UpdateTracking(productDir.getAbsolutePath());
  	Set<String> _files = new LinkedHashSet<>(Arrays.asList(tracking.getListOfNBM(codename)));
     List<String> __files = new ArrayList<>(_files);
@@ -729,6 +746,10 @@ public class MakeNBM extends Task {
         jar.addZipfileset(fs);
         for (ZipFileSet zfs : infoXMLFileSets) {
             jar.addFileset(zfs);
+        }
+
+        if (extraNBMFiles != null) {
+            jar.addZipfileset(extraNBMFiles);
         }
 
         if (main != null) { // Add the main dir
@@ -941,14 +962,7 @@ public class MakeNBM extends Task {
         } else {
             throw new BuildException("NBM distribution URL is not set", getLocation());
         }
-        // Here we only write a name for the license.
-        if (license != null) {
-            String name = license.getName();
-            if (name == null) {
-                throw new BuildException("Every license must have a name or file attribute", getLocation());
-            }
-            module.setAttribute("license", name);
-        }
+        maybeAddLicenseName(module);
         module.setAttribute("downloadsize", "0");
         if (needsrestart != null) {
             module.setAttribute("needsrestart", needsrestart);
@@ -1008,13 +1022,7 @@ public class MakeNBM extends Task {
             }
         }
         module.appendChild(el);
-        // Maybe write out license text.
-        if (license != null) {
-            el = doc.createElement("license");
-            el.setAttribute("name", license.getName());
-            el.appendChild(license.getTextNode(doc));
-            module.appendChild(el);
-        }
+        maybeAddLicense(module);
         if (updaterJar != null && updaterJar.size() > 0) {
             try {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -1027,6 +1035,53 @@ public class MakeNBM extends Task {
             log("No updater.jar specified, cannot validate Info.xml against DTD", Project.MSG_WARN);
         }
         return doc;
+    }
+
+    private Document createFakeOSGiInfo(File osgiJar) {
+        DOMImplementation domimpl;
+        try {
+            domimpl = DocumentBuilderFactory.newInstance().newDocumentBuilder().getDOMImplementation();
+        } catch (ParserConfigurationException x) {
+            throw new BuildException(x, getLocation());
+        }
+
+        log("Creating fake info.xml for OSGi bundle", Project.MSG_VERBOSE);
+        
+        String pub = "-//NetBeans//DTD Autoupdate Module Info 2.5//EN";
+        String sys = "http://www.netbeans.org/dtds/autoupdate-info-2_5.dtd";
+        Document doc = domimpl.createDocument(null, "module", domimpl.createDocumentType("module", pub, sys));
+        
+        try (JarFile jf = new JarFile(osgiJar)) {
+            MakeUpdateDesc.fakeOSGiInfoXml(jf, osgiJar, doc);
+            maybeAddLicenseName(doc.getDocumentElement());
+            maybeAddLicense(doc.getDocumentElement());
+        } catch (IOException x) {
+            throw new BuildException(x, getLocation());
+        }
+
+        return doc;
+    }
+
+    private void maybeAddLicenseName(Element module) {
+        // Here we only write a name for the license.
+        if (license != null) {
+            String name = license.getName();
+            if (name == null) {
+                throw new BuildException("Every license must have a name or file attribute", getLocation());
+            }
+            module.setAttribute("license", name);
+        }
+    }
+
+    private void maybeAddLicense(Element module) {
+        // Maybe write out license text.
+        if (license != null) {
+            Document doc = module.getOwnerDocument();
+            Element el = doc.createElement("license");
+            el.setAttribute("name", license.getName());
+            el.appendChild(license.getTextNode(doc));
+            module.appendChild(el);
+        }
     }
 
     static void validateAgainstAUDTDs(InputSource input, final Path updaterJar, final Task task) throws IOException, SAXException {

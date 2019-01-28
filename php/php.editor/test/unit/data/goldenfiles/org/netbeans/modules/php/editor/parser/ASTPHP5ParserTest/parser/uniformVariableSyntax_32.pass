@@ -1,0 +1,623 @@
+<testresult testFile='uniformVariableSyntax_32.php'>
+    <scanner>
+        <token id='T_CLASS' start='7' end='12'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='13' end='22'>
+            <text>ArrayCall</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='23' end='24'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='25' end='31'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='32' end='38'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='39' end='47'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='48' end='52'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='52' end='53'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='53' end='54'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='55' end='56'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='57' end='61'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='62' end='74'>
+            <text>"array call"</text>
+        </token>
+        <token id='T_NEKUDA' start='75' end='76'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='77' end='84'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='84' end='85'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='85' end='86'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='87' end='88'>
+            <text>}</text>
+        </token>
+        <token id='T_VARIABLE' start='89' end='95'>
+            <text>$array</text>
+        </token>
+        <token id='T_EQUAL' start='96' end='97'>
+            <text>=</text>
+        </token>
+        <token id='T_NEW' start='98' end='101'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='102' end='111'>
+            <text>ArrayCall</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='111' end='112'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='112' end='113'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='113' end='114'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_RECT' start='115' end='116'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='116' end='127'>
+            <text>&apos;ArrayCall&apos;</text>
+        </token>
+        <token id='T_COMMA' start='127' end='128'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='129' end='135'>
+            <text>&apos;test&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='135' end='136'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='136' end='137'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='137' end='138'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='138' end='139'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='140' end='141'>
+            <text>(</text>
+        </token>
+        <token id='T_OPEN_RECT' start='141' end='142'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='142' end='153'>
+            <text>&apos;ArrayCall&apos;</text>
+        </token>
+        <token id='T_COMMA' start='153' end='154'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='155' end='161'>
+            <text>&apos;test&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='161' end='162'>
+            <text>]</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='162' end='163'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='163' end='164'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='164' end='165'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='165' end='166'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_RECT' start='167' end='168'>
+            <text>[</text>
+        </token>
+        <token id='T_NEW' start='168' end='171'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='172' end='181'>
+            <text>ArrayCall</text>
+        </token>
+        <token id='T_COMMA' start='181' end='182'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='183' end='189'>
+            <text>&apos;test&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='189' end='190'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='190' end='191'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='191' end='192'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='192' end='193'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_RECT' start='194' end='195'>
+            <text>[</text>
+        </token>
+        <token id='T_NEW' start='195' end='198'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='199' end='208'>
+            <text>ArrayCall</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='208' end='209'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='209' end='210'>
+            <text>)</text>
+        </token>
+        <token id='T_COMMA' start='210' end='211'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='212' end='218'>
+            <text>&apos;test&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='218' end='219'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='219' end='220'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='220' end='221'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='221' end='222'>
+            <text>;</text>
+        </token>
+        <token id='T_ARRAY' start='223' end='228'>
+            <text>array</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='228' end='229'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='229' end='240'>
+            <text>&apos;ArrayCall&apos;</text>
+        </token>
+        <token id='T_COMMA' start='240' end='241'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='242' end='248'>
+            <text>&apos;test&apos;</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='248' end='249'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='249' end='250'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='250' end='251'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='251' end='252'>
+            <text>;</text>
+        </token>
+        <token id='T_ARRAY' start='253' end='258'>
+            <text>array</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='258' end='259'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='259' end='265'>
+            <text>$array</text>
+        </token>
+        <token id='T_COMMA' start='265' end='266'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='267' end='273'>
+            <text>&apos;test&apos;</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='273' end='274'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='274' end='275'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='275' end='276'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='276' end='277'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='278' end='283'>
+            <text>$test</text>
+        </token>
+        <token id='T_EQUAL' start='284' end='285'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='286' end='292'>
+            <text>"test"</text>
+        </token>
+        <token id='T_SEMICOLON' start='292' end='293'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_RECT' start='294' end='295'>
+            <text>[</text>
+        </token>
+        <token id='T_NEW' start='295' end='298'>
+            <text>new</text>
+        </token>
+        <token id='T_CLASS' start='299' end='304'>
+            <text>class</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='305' end='306'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='306' end='312'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='313' end='319'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='320' end='328'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='329' end='333'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='333' end='334'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='334' end='340'>
+            <text>$param</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='340' end='341'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='342' end='343'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='343' end='347'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='348' end='376'>
+            <text>"anonymous class array call"</text>
+        </token>
+        <token id='T_NEKUDA' start='377' end='378'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='379' end='386'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='386' end='387'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='387' end='388'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='388' end='389'>
+            <text>}</text>
+        </token>
+        <token id='T_COMMA' start='389' end='390'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='391' end='396'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='396' end='397'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='397' end='398'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='398' end='404'>
+            <text>"test"</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='404' end='405'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='405' end='406'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='407' end='407'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='407'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='7' end='88' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='13' end='22' name='ArrayCall'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='23' end='88' isCurly='true'>
+                    <MethodDeclaration start='25' end='86' modifiers='public static'>
+                        <FunctionDeclaration start='39' end='86' isReference='false'>
+                            <Identifier start='48' end='52' name='test'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='55' end='86' isCurly='true'>
+                                <EchoStatement start='57' end='85'>
+                                    <InfixExpression start='62' end='84' operator='CONCAT'>
+                                        <Scalar start='62' end='74' type='STRING' value='"array call"'/>
+                                        <NamespaceName start='77' end='84' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='77' end='84' name='PHP_EOL'/>
+                                        </NamespaceName>
+                                    </InfixExpression>
+                                </EchoStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <ExpressionStatement start='89' end='114'>
+                <Assignment start='89' end='113' operator='EQUAL'>
+                    <Variable start='89' end='95' isDollared='true'>
+                        <Identifier start='90' end='95' name='array'/>
+                    </Variable>
+                    <ClassInstanceCreation start='98' end='113' anonymous='false'>
+                        <ClassName start='102' end='111'>
+                            <NamespaceName start='102' end='111' isCurrent='false' isGlobal='false'>
+                                <Identifier start='102' end='111' name='ArrayCall'/>
+                            </NamespaceName>
+                        </ClassName>
+                        <Parameters>
+                        </Parameters>
+                    </ClassInstanceCreation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='115' end='139'>
+                <FunctionInvocation start='115' end='138'>
+                    <FucntionName start='115' end='136'>
+                        <ArrayCreation start='115' end='136' type='NEW'>
+                            <ArrayElement start='116' end='127'>
+                                <Key>
+                                </Key>
+                                <Value>
+                                    <Scalar start='116' end='127' type='STRING' value='&apos;ArrayCall&apos;'/>
+                                </Value>
+                            </ArrayElement>
+                            <ArrayElement start='129' end='135'>
+                                <Key>
+                                </Key>
+                                <Value>
+                                    <Scalar start='129' end='135' type='STRING' value='&apos;test&apos;'/>
+                                </Value>
+                            </ArrayElement>
+                        </ArrayCreation>
+                    </FucntionName>
+                    <Parameters>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='140' end='166'>
+                <FunctionInvocation start='140' end='165'>
+                    <FucntionName start='140' end='163'>
+                        <ParenthesisExpression start='140' end='163'>
+                            <ArrayCreation start='141' end='162' type='NEW'>
+                                <ArrayElement start='142' end='153'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='142' end='153' type='STRING' value='&apos;ArrayCall&apos;'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='155' end='161'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='155' end='161' type='STRING' value='&apos;test&apos;'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </ParenthesisExpression>
+                    </FucntionName>
+                    <Parameters>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='167' end='193'>
+                <FunctionInvocation start='167' end='192'>
+                    <FucntionName start='167' end='190'>
+                        <ArrayCreation start='167' end='190' type='NEW'>
+                            <ArrayElement start='168' end='181'>
+                                <Key>
+                                </Key>
+                                <Value>
+                                    <ClassInstanceCreation start='168' end='181' anonymous='false'>
+                                        <ClassName start='172' end='181'>
+                                            <NamespaceName start='172' end='181' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='172' end='181' name='ArrayCall'/>
+                                            </NamespaceName>
+                                        </ClassName>
+                                        <Parameters>
+                                        </Parameters>
+                                    </ClassInstanceCreation>
+                                </Value>
+                            </ArrayElement>
+                            <ArrayElement start='183' end='189'>
+                                <Key>
+                                </Key>
+                                <Value>
+                                    <Scalar start='183' end='189' type='STRING' value='&apos;test&apos;'/>
+                                </Value>
+                            </ArrayElement>
+                        </ArrayCreation>
+                    </FucntionName>
+                    <Parameters>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='194' end='222'>
+                <FunctionInvocation start='194' end='221'>
+                    <FucntionName start='194' end='219'>
+                        <ArrayCreation start='194' end='219' type='NEW'>
+                            <ArrayElement start='195' end='210'>
+                                <Key>
+                                </Key>
+                                <Value>
+                                    <ClassInstanceCreation start='195' end='210' anonymous='false'>
+                                        <ClassName start='199' end='208'>
+                                            <NamespaceName start='199' end='208' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='199' end='208' name='ArrayCall'/>
+                                            </NamespaceName>
+                                        </ClassName>
+                                        <Parameters>
+                                        </Parameters>
+                                    </ClassInstanceCreation>
+                                </Value>
+                            </ArrayElement>
+                            <ArrayElement start='212' end='218'>
+                                <Key>
+                                </Key>
+                                <Value>
+                                    <Scalar start='212' end='218' type='STRING' value='&apos;test&apos;'/>
+                                </Value>
+                            </ArrayElement>
+                        </ArrayCreation>
+                    </FucntionName>
+                    <Parameters>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='223' end='252'>
+                <FunctionInvocation start='223' end='251'>
+                    <FucntionName start='223' end='249'>
+                        <ArrayCreation start='223' end='249' type='OLD'>
+                            <ArrayElement start='229' end='240'>
+                                <Key>
+                                </Key>
+                                <Value>
+                                    <Scalar start='229' end='240' type='STRING' value='&apos;ArrayCall&apos;'/>
+                                </Value>
+                            </ArrayElement>
+                            <ArrayElement start='242' end='248'>
+                                <Key>
+                                </Key>
+                                <Value>
+                                    <Scalar start='242' end='248' type='STRING' value='&apos;test&apos;'/>
+                                </Value>
+                            </ArrayElement>
+                        </ArrayCreation>
+                    </FucntionName>
+                    <Parameters>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='253' end='277'>
+                <FunctionInvocation start='253' end='276'>
+                    <FucntionName start='253' end='274'>
+                        <ArrayCreation start='253' end='274' type='OLD'>
+                            <ArrayElement start='259' end='265'>
+                                <Key>
+                                </Key>
+                                <Value>
+                                    <Variable start='259' end='265' isDollared='true'>
+                                        <Identifier start='260' end='265' name='array'/>
+                                    </Variable>
+                                </Value>
+                            </ArrayElement>
+                            <ArrayElement start='267' end='273'>
+                                <Key>
+                                </Key>
+                                <Value>
+                                    <Scalar start='267' end='273' type='STRING' value='&apos;test&apos;'/>
+                                </Value>
+                            </ArrayElement>
+                        </ArrayCreation>
+                    </FucntionName>
+                    <Parameters>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='278' end='293'>
+                <Assignment start='278' end='292' operator='EQUAL'>
+                    <Variable start='278' end='283' isDollared='true'>
+                        <Identifier start='279' end='283' name='test'/>
+                    </Variable>
+                    <Scalar start='286' end='292' type='STRING' value='"test"'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='294' end='406'>
+                <FunctionInvocation start='294' end='405'>
+                    <FucntionName start='294' end='397'>
+                        <ArrayCreation start='294' end='397' type='NEW'>
+                            <ArrayElement start='295' end='389'>
+                                <Key>
+                                </Key>
+                                <Value>
+                                    <ClassInstanceCreation start='295' end='389' anonymous='true'>
+                                        <Parameters>
+                                        </Parameters>
+                                        <Superclass>
+                                        </Superclass>
+                                        <Interfaces>
+                                        </Interfaces>
+                                        <Block start='305' end='389' isCurly='true'>
+                                            <MethodDeclaration start='306' end='388' modifiers='public static'>
+                                                <FunctionDeclaration start='320' end='388' isReference='false'>
+                                                    <Identifier start='329' end='333' name='test'/>
+                                                    <FormalParameters>
+                                                        <FormalParameter start='334' end='340' isMandatory='true' isVariadic='false'>
+                                                            <ParametrType>
+                                                            </ParametrType>
+                                                            <ParametrName>
+                                                                <Variable start='334' end='340' isDollared='true'>
+                                                                    <Identifier start='335' end='340' name='param'/>
+                                                                </Variable>
+                                                            </ParametrName>
+                                                            <DefaultValue>
+                                                            </DefaultValue>
+                                                        </FormalParameter>
+                                                    </FormalParameters>
+                                                    <Block start='342' end='388' isCurly='true'>
+                                                        <EchoStatement start='343' end='387'>
+                                                            <InfixExpression start='348' end='386' operator='CONCAT'>
+                                                                <Scalar start='348' end='376' type='STRING' value='"anonymous class array call"'/>
+                                                                <NamespaceName start='379' end='386' isCurrent='false' isGlobal='false'>
+                                                                    <Identifier start='379' end='386' name='PHP_EOL'/>
+                                                                </NamespaceName>
+                                                            </InfixExpression>
+                                                        </EchoStatement>
+                                                    </Block>
+                                                </FunctionDeclaration>
+                                            </MethodDeclaration>
+                                        </Block>
+                                    </ClassInstanceCreation>
+                                </Value>
+                            </ArrayElement>
+                            <ArrayElement start='391' end='396'>
+                                <Key>
+                                </Key>
+                                <Value>
+                                    <Variable start='391' end='396' isDollared='true'>
+                                        <Identifier start='392' end='396' name='test'/>
+                                    </Variable>
+                                </Value>
+                            </ArrayElement>
+                        </ArrayCreation>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='398' end='404' type='STRING' value='"test"'/>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

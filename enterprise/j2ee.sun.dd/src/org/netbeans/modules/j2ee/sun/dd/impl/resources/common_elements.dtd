@@ -1,0 +1,89 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!-- This is a dummy element for S2B generation to hold onto -->
+<!ELEMENT dummy #PCDATA>
+
+<!--
+This is the root element which binds an ejb reference to a jndi name.
+-->
+<!ELEMENT ejb-ref (ejb-ref-name, jndi-name)>
+
+<!--
+This node holds all the runtime bindings of a resource env reference.
+-->
+<!ELEMENT resource-env-ref ( resource-env-ref-name, jndi-name )>
+
+<!--
+This node holds all the runtime bindings of a resource reference.
+-->
+<!ELEMENT resource-ref  (res-ref-name, jndi-name, default-resource-principal?)>
+
+<!ELEMENT default-resource-principal (name, password)>
+
+<!ELEMENT security-role-mapping (role-name, (principal-name | group-name)+)>
+
+<!--
+This info is used only by studio plug-in;it is NOT the part of the orgianl DTD.
+Used by plugin to store parameters needed to execute an Application client.
+-->
+<!ELEMENT plugin-data ( auto-generate-sql?, client-jar-path?, client-args? )>
+<!ELEMENT auto-generate-sql (#PCDATA)>
+<!ELEMENT client-jar-path (#PCDATA)>
+<!ELEMENT client-args (#PCDATA)>
+
+<!--
+The ejb ref name locates the name of the ejb reference in the application.
+-->
+<!ELEMENT ejb-ref-name (#PCDATA)>
+
+<!--
+The text in this node is a jndi name.
+-->
+<!ELEMENT  jndi-name (#PCDATA)>
+
+<!--
+The name of a resource env reference.
+-->
+<!ELEMENT resource-env-ref-name (#PCDATA)>
+
+<!--
+The name of a resource reference.
+-->
+<!ELEMENT res-ref-name (#PCDATA)>
+
+<!--
+This text nodes holds a name string.
+-->
+<!ELEMENT name (#PCDATA)>
+
+<!--
+This element holds password text.
+-->
+<!ELEMENT password (#PCDATA)>
+
+<!ELEMENT role-name (#PCDATA)>
+
+<!ELEMENT principal-name (#PCDATA)>
+
+<!ELEMENT group-name (#PCDATA)>
+
+

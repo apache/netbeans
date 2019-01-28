@@ -1,0 +1,3 @@
+Code completion result for source line:
+{% filter|  %}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)

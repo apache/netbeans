@@ -1,0 +1,5 @@
+Code completion result for source line:
+$retval->|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     classfactory()                  [PUBLIC]   ClsFromFactory
+VARIABLE   ? myfld                         [PRIVATE]  ClsFromFactory

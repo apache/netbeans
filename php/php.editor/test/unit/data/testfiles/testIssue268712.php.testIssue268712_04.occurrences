@@ -1,0 +1,2 @@
+    const |>MARK_OCCURRENCES:TEST3<| = \TEST1[0];
+    const TEST4 = \Issue268712_A\|>MARK_OCCURRENCES:TES^T3<|;

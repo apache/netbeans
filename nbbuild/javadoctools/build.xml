@@ -31,13 +31,7 @@
     <import file="../default.xml"/>
 
     <target name="build-javadoc" depends="-jdk-init,-load-build-properties,init-tasks,set-buildnumber" description="Builds Javadoc documentation for modules; on branches pass e.g. -Djavadoc.web.root=http://bits.netbeans.org/6.7/javadoc">
-        <pathconvert property="modules.fullpath">
-            <path>
-                <dirset dir="${nb_all}" includes="${config.javadoc.all}"/>
-            </path>
-            <mapper type="identity"/>
-        </pathconvert>
-        
+        <resolvelist name="allmodules" path="modules.fullpath" dir="${nb_all}" list="${nb.clusters.list}" modules="${config.javadoc.all}"/>
         <sortsuitemodules unsortedmodules="${modules.fullpath}" sortedmodulesproperty="modules.sorted"/>
         
         <property name="export.interfaces" location="${netbeans.javadoc.dir}/../ModulesExportedInterfaces"/>
@@ -126,9 +120,13 @@
     
     <target name="generate-html" depends="init">
         <tstamp>
-            <format property="modules-javadoc-date" pattern="d MMM yyyy" locale="en"/>
+            <format property="timestamp-modules-javadoc-date" pattern="d MMM yyyy" locale="en"/>
         </tstamp>
-        
+        <condition property="modules-javadoc-date" value="${timestamp-modules-javadoc-date}">
+	    <not>
+		<isset property="modules-javadoc-date"/>
+	    </not>
+        </condition>
         <style in="${netbeans.javadoc.dir}/modules.xml" out="${netbeans.javadoc.dir}/usecases.html" style="export2usecases.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
         </style>
@@ -142,8 +140,13 @@
         </style>
 
         <tstamp>
-            <format property="atom-date" pattern="yyyy-MM-dd'T'HH:mm:ss'Z'" timezone="UTC"/>
+            <format property="timestamp-atom-date" pattern="yyyy-MM-dd'T'HH:mm:ss'Z'" timezone="UTC"/>
         </tstamp>
+	<condition property="atom-date" value="${timestamp-atom-date}">
+ 	    <not>
+               <isset property="atom-date"/> 
+            </not>		
+        </condition>
         <style in="${netbeans.javadoc.dir}/apichanges.xml" out="${netbeans.javadoc.dir}/apichanges.atom" style="export2apichanges-atom.xsl">
             <param name="date" expression="${atom-date}"/>
         </style>

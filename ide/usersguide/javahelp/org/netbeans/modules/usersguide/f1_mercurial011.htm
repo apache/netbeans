@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Mercurial: Refresh Patch Dialog Box</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.mercurial.ui.queues.QRefreshPatchAction" name="org.netbeans.modules.mercurial.ui.queues.QRefreshPatchAction"></a></p>
+<div id="NBCSH1230"><!-- infolevel="all" infotype="General" --><a id="sthref137" name="sthref137"></a>
+<h1>Mercurial: Refresh Patch Dialog Box</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>The Refresh Patch dialog box enables you to refresh a patch in a current patch queue series, that contains the changes between last committed and current version of one or more text files.
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2468">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>In the Refresh Patch dialog box, you have to review and specify the following properties:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t13">Element</th>
+<th align="left" valign="bottom" id="r1c2-t13">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t13" headers="r1c1-t13">
+<p>Patch Name</p>
+</td>
+<td align="left" headers="r2c1-t13 r1c2-t13">Review the name of a patch.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t13" headers="r1c1-t13">
+<p>Patch Message</p>
+</td>
+<td align="left" headers="r3c1-t13 r1c2-t13">Update the description of the message to be used as a commit message when the patch is finalized and a made permanent part of the commits history. Click the Recent Messages button to view and select from a list of messages that you have previously entered. Click the Load Template button to select a message template.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t13" headers="r1c1-t13">
+<p>Files To Include In Patch</p>
+</td>
+<td align="left" headers="r4c1-t13 r1c2-t13">Displays a list of files that have been locally added, modified, deleted, or already included into a patch.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t13" headers="r1c1-t13">
+<p>Include</p>
+</td>
+<td align="left" headers="r5c1-t13 r1c2-t13">Select to include individual files into a patch.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t13" headers="r1c1-t13">
+<p>File</p>
+</td>
+<td align="left" headers="r6c1-t13 r1c2-t13">Lists all files that can be included into a patch.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t13" headers="r1c1-t13">
+<p>Status</p>
+</td>
+<td align="left" headers="r7c1-t13 r1c2-t13">Displays the following status values for a file:
+<ul>
+<li><b>Locally New</b>. Indicates a file placed under Mercurial version control locally (not pushed to a Mercurial repository yet).</li>
+<li><b>Locally Modified</b>. Indicates a file that contains changes made locally (not pushed to a Mercurial repository yet).</li>
+<li><b>Locally Removed</b>. Indicates a file that has been deleted locally (not from a Mercurial repository yet).</li>
+<li><b>Up to date</b>. Indicates that a patch already contains all file's modifications.</li>
+</ul>
+<p><b>Note</b>: You can remove a file from a patch by deselecting the file in the Include column or right-clicking the file row in the action column and choosing Exclude from patch.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t13" headers="r1c1-t13">
+<p>Action</p>
+</td>
+<td align="left" headers="r8c1-t13 r1c2-t13">Displays <b>Include In Patch</b> if the file is selected or <b>Exclude from Patch</b> if the file is deselected in the Include column.
+<p><b>Note</b>: If you deselect a file by choosing the Exclude from Patch action, the file will not be included in a patch and will remain marked as Locally New, Locally Modified, or Locally Removed in the working copy.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t13" headers="r1c1-t13">
+<p>Repository Path</p>
+</td>
+<td align="left" headers="r9c1-t13 r1c2-t13">Displays path to the file in your local repository. You can sort the files by their names by clicking the black arrow in the column header.
+<p>Note: Right-click a file row to display the following popup menu items:</p>
+<ul>
+<li><b>Exclude From Patch/Include In Patch</b>. Select to either exclude the file from the patch or include it into the patch.</li>
+<li><b>Diff</b>. Select to display the Diff Viewer.</li>
+</ul>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t13" headers="r1c1-t13">
+<p>Update Issue</p>
+</td>
+<td align="left" headers="r10c1-t13 r1c2-t13">Track issues related to the change being committed using the following fields:</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r11c1-t13" headers="r1c1-t13">
+<p>Issue Tracker</p>
+</td>
+<td align="left" headers="r11c1-t13 r1c2-t13">Choose an issue tracker from the list or press New to create an issue tracker.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r12c1-t13" headers="r1c1-t13">
+<p>Issue</p>
+</td>
+<td align="left" headers="r12c1-t13 r1c2-t13">Specify the issue using its summary or ID.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r13c1-t13" headers="r1c1-t13">
+<p>Resolve as FIXED</p>
+</td>
+<td align="left" headers="r13c1-t13 r1c2-t13">Select to change an issue status to Resolved Fixed.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r14c1-t13" headers="r1c1-t13">
+<p>Add details to commit message and issue</p>
+</td>
+<td align="left" headers="r14c1-t13 r1c2-t13">Select to provide an enhanced commit description.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r15c1-t13" headers="r1c1-t13">
+<p>After Patch Finish</p>
+</td>
+<td align="left" headers="r15c1-t13 r1c2-t13">Choose to update an issue after the patch is finished.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r16c1-t13" headers="r1c1-t13">
+<p>After Push</p>
+</td>
+<td align="left" headers="r16c1-t13 r1c2-t13">Choose to update an issue after the changes contained in a patch are pushed into a remote repository.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH1246" name="NBCSH1246"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG318">
+<param name="text" value="<html><u>&quot;Versioning Applications with Mercurial&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

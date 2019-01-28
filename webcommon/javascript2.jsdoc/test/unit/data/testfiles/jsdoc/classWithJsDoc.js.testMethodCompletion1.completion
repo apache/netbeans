@@ -1,0 +1,5 @@
+Code completion result for source line:
+* @m|e
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+OTHER      @memberOf namePath                         JsDoc

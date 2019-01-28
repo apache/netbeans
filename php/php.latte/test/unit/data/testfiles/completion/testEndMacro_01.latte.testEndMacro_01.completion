@@ -1,0 +1,21 @@
+Code completion result for source line:
+{/|}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     /_                                         End Macro
+METHOD     /block                                     End Macro
+METHOD     /cache                                     End Macro
+METHOD     /capture                                   End Macro
+METHOD     /define                                    End Macro
+METHOD     /first                                     End Macro
+METHOD     /for                                       End Macro
+METHOD     /foreach                                   End Macro
+METHOD     /form                                      End Macro
+METHOD     /if                                        End Macro
+METHOD     /ifCurrent                                 End Macro
+METHOD     /ifset                                     End Macro
+METHOD     /label                                     End Macro
+METHOD     /last                                      End Macro
+METHOD     /sep                                       End Macro
+METHOD     /snippet                                   End Macro
+METHOD     /syntax                                    End Macro
+METHOD     /while                                     End Macro

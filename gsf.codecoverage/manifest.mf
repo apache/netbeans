@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.netbeans.modules.gsf.codecoverage
-OpenIDE-Module-Layer: org/netbeans/modules/gsf/codecoverage/layer.xml
-OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/gsf/codecoverage/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.33
-AutoUpdate-Show-In-Client: false
-

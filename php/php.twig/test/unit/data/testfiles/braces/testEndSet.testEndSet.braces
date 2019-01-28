@@ -1,0 +1,5 @@
+<html>
+{% *set* %}
+text
+{% *end^set* %}
+</html>

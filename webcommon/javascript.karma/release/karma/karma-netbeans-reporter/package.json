@@ -1,0 +1,20 @@
+{
+    "_id": "karma-netbeans-reporter@0.1.0",
+    "name": "karma-netbeans-reporter",
+    "version": "0.1.0",
+    "description": "A Karma plugin that reports results for NetBeans IDE.",
+    "main": "index.js",
+    "author": {
+        "name": "Tomas Mysik",
+        "email": "tmysik@apache.org"
+    },
+    "dependencies": {
+    },
+    "peerDependencies": {
+        "karma": ">=0.10"
+    },
+    "license": "Apache-2.0",
+    "bugs": {
+        "url": "https://issues.apache.org/jira/projects/NETBEANS/issues"
+    }
+}

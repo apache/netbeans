@@ -1,0 +1,28 @@
+angular.module("tripPlanner.auth", []).factory("tp.auth.LoginService", ["tp.auth.Profile", function (Profile) {
+-------
+HINT:The global variable "angular" is not declared.
+FIX:Generate JsHint global directive for variable angular
+            hello.init({
+            -----
+HINT:The global variable "hello" is not declared.
+FIX:Generate JsHint global directive for variable hello
+                hello(serviceName).login().then(function () {
+                -----
+HINT:The global variable "hello" is not declared.
+FIX:Generate JsHint global directive for variable hello
+                    tokens[serviceName] = hello(serviceName).getAuthResponse().access_token;
+                                          -----
+HINT:The global variable "hello" is not declared.
+FIX:Generate JsHint global directive for variable hello
+        hello.on('auth.login', function (r) {
+        -----
+HINT:The global variable "hello" is not declared.
+FIX:Generate JsHint global directive for variable hello
+            hello(LoginService.authProvider).api('me').then(function (profile) {
+            -----
+HINT:The global variable "hello" is not declared.
+FIX:Generate JsHint global directive for variable hello
+angular.module("tripPlanner.controllers",
+-------
+HINT:The global variable "angular" is not declared.
+FIX:Generate JsHint global directive for variable angular

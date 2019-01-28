@@ -1,0 +1,2 @@
+const |>MARK_OCCURRENCES:p^1<| = new Point(5, 5);
+console.log(Point.distance(|>MARK_OCCURRENCES:p1<|, p2)); 

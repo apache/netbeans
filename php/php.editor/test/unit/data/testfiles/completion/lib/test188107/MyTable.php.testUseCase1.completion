@@ -1,0 +1,5 @@
+Code completion result for source line:
+$this->|db->select('Baf')->from('Person');
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     getAllPersons()                 [PUBLIC]   MyTable
+VARIABLE   DatabaseRecord db               [PRIVATE]  MyTable

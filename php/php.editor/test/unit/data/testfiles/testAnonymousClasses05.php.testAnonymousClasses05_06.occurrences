@@ -1,0 +1,2 @@
+    public function |>MARK_OCCURRENCES:log<|($msg2) {
+$x->|>MARK_OCCURRENCES:lo^g<|('');

@@ -1,0 +1,94 @@
+<testresult testFile='spaceship_02.php'>
+    <scanner>
+        <token id='T_FUNCTION' start='6' end='14'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='15' end='25'>
+            <text>order_func</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='25' end='26'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='26' end='28'>
+            <text>$a</text>
+        </token>
+        <token id='T_COMMA' start='28' end='29'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='30' end='32'>
+            <text>$b</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='32' end='33'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='34' end='35'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='40' end='46'>
+            <text>return</text>
+        </token>
+        <token id='T_VARIABLE' start='47' end='49'>
+            <text>$a</text>
+        </token>
+        <token id='T_SPACESHIP' start='50' end='53'>
+            <text>&lt;=&gt;</text>
+        </token>
+        <token id='T_VARIABLE' start='54' end='56'>
+            <text>$b</text>
+        </token>
+        <token id='T_SEMICOLON' start='56' end='57'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='58' end='59'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='60' end='60'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='60'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <FunctionDeclaration start='6' end='59' isReference='false'>
+                <Identifier start='15' end='25' name='order_func'/>
+                <FormalParameters>
+                    <FormalParameter start='26' end='28' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='26' end='28' isDollared='true'>
+                                <Identifier start='27' end='28' name='a'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <FormalParameter start='30' end='32' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='30' end='32' isDollared='true'>
+                                <Identifier start='31' end='32' name='b'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                </FormalParameters>
+                <Block start='34' end='59' isCurly='true'>
+                    <ReturnStatement start='40' end='57'>
+                        <InfixExpression start='47' end='56' operator='SPACESHIP'>
+                            <Variable start='47' end='49' isDollared='true'>
+                                <Identifier start='48' end='49' name='a'/>
+                            </Variable>
+                            <Variable start='54' end='56' isDollared='true'>
+                                <Identifier start='55' end='56' name='b'/>
+                            </Variable>
+                        </InfixExpression>
+                    </ReturnStatement>
+                </Block>
+            </FunctionDeclaration>
+        </Statements>
+    </Program>
+</testresult>

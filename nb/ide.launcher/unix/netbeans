@@ -1,0 +1,173 @@
+#!/bin/sh
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+#
+# resolve symlinks
+#
+
+PRG=$0
+
+while [ -h "$PRG" ]; do
+    ls=`ls -ld "$PRG"`
+    link=`expr "$ls" : '^.*-> \(.*\)$' 2>/dev/null`
+    if expr "$link" : '^/' 2> /dev/null >/dev/null; then
+	PRG="$link"
+    else
+	PRG="`dirname "$PRG"`/$link"
+    fi
+done
+
+progdir=`dirname "$PRG"`
+old=`pwd`
+cd "$progdir"/..
+basedir=`pwd`
+cd "$old"
+
+case "`uname`" in
+    Darwin*)
+        # set default userdir and cachedir on Mac OS X
+        DEFAULT_USERDIR_ROOT="${HOME}/Library/Application Support/NetBeans"
+        DEFAULT_CACHEDIR_ROOT=${HOME}/Library/Caches/NetBeans
+        ;;
+    *) 
+        # set default userdir and cachedir on unix systems
+        DEFAULT_USERDIR_ROOT=${HOME}/.netbeans
+        DEFAULT_CACHEDIR_ROOT=${HOME}/.cache/netbeans
+        ;;
+esac
+
+
+if [ -f "$basedir"/etc/netbeans.conf ] ; then
+    . "$basedir"/etc/netbeans.conf
+fi
+
+# following should be done just in RPM or Solaris Launcher
+# if [ -f /etc/netbeans.conf ] ; then
+#     . /etc/netbeans.conf
+# fi
+
+export DEFAULT_USERDIR_ROOT
+
+# #68373: look for userdir, but do not modify "$@"
+userdir="${netbeans_default_userdir}"
+cachedir="${netbeans_default_cachedir}"
+
+founduserdir=""
+for opt in "$@"; do
+    if [ "${founduserdir}" = "yes" ]; then
+        userdir="$opt"
+        break
+    elif [ "$opt" = "--userdir" ]; then
+        founduserdir="yes"
+    fi
+done
+foundcachedir=""
+for opt in "$@"; do
+    if [ "${foundcachedir}" = "yes" ]; then
+        cachedir="$opt"
+        break
+    elif [ "$opt" = "--cachedir" ]; then
+        foundcachedir="yes"
+    fi
+done
+
+if [ -f "${userdir}"/etc/netbeans.conf ] ; then
+    . "${userdir}"/etc/netbeans.conf
+fi
+
+
+if [ ! -f "$basedir"/etc/netbeans.clusters ]; then
+    echo Cannot read cluster file: "$basedir"/etc/netbeans.clusters 1>&2
+    exit 1
+fi
+
+readClusters() {
+    grep -v "^#" "$basedir"/etc/netbeans.clusters | grep -v "^$" | grep -v platform | while read X; do
+        if expr "$X" : "/.*" >/dev/null; then
+            echo "$X"
+        else
+            echo "$basedir/$X"
+        fi
+    done
+}
+
+absolutize_paths() {
+    while read path; do
+        if [ -d "$path" ]; then
+            (cd "$path" 2>/dev/null && pwd)
+        else
+            echo "$path"
+        fi
+    done
+}
+
+netbeans_clusters=`readClusters | absolutize_paths | tr '\012' ':'`
+
+if [ ! -z "$netbeans_extraclusters" ] ; then
+    netbeans_clusters="$netbeans_clusters:$netbeans_extraclusters"
+fi
+
+launchNbexec() {
+    nbexec=`grep -v "^#" "$basedir"/etc/netbeans.clusters | grep -v "^$" | grep platform | while read X; do
+        if expr "$X" : "/.*" >/dev/null; then
+           echo $X/lib/nbexec
+        elif [ -f "$basedir"/$X/lib/nbexec ]; then
+            echo "$basedir"/$X/lib/nbexec
+        fi
+    done | head -n 1`
+    sh=sh
+    # #73162: Ubuntu uses the ancient Bourne shell, which does not implement trap well.
+    if [ -x /bin/bash ]
+    then
+        sh=/bin/bash
+    fi
+    if [ "${founduserdir}" = "yes" ]; then
+        exec $sh "$nbexec" "$@"
+    else
+        if [ "${foundcachedir}" = "yes" ]; then
+            exec $sh "$nbexec" --userdir "${userdir}" "$@"
+        else
+            exec $sh "$nbexec" --userdir "${userdir}" --cachedir "${cachedir}" "$@"
+        fi
+    fi
+}
+
+# in case of macosx, the apple.laf.useScreenMenuBar property should be ideally in the Info.plist file
+# but it doesn't get propagated into the executed java VM. 
+case "`uname`" in
+    Darwin*)
+        eval launchNbexec \
+            --jdkhome '"$netbeans_jdkhome"' \
+            -J-Xdock:name=NetBeans \
+            '"-J-Xdock:icon=$basedir/nb/netbeans.icns"' \
+            --branding nb \
+            --clusters '"$netbeans_clusters"' \
+            -J-Dnetbeans.importclass=org.netbeans.upgrade.AutoUpgrade \
+            ${netbeans_default_options} \
+            '"$@"'
+        ;;
+    *)
+        eval launchNbexec \
+            --jdkhome '"$netbeans_jdkhome"' \
+            --branding nb \
+            --clusters '"$netbeans_clusters"' \
+            -J-Dnetbeans.importclass=org.netbeans.upgrade.AutoUpgrade \
+            ${netbeans_default_options} \
+            '"$@"'
+        ;;
+esac

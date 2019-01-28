@@ -1,0 +1,26 @@
+Code completion result for source line:
+(1..3).any {aa,ab -> println a|}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      AbstractCollection                         null
+CLASS      AbstractFactory                            null
+CLASS      AbstractList                               null
+CLASS      AbstractMap                                null
+CLASS      AbstractMethodError                        null
+CLASS      AbstractQueue                              null
+CLASS      AbstractSequentialList                     null
+CLASS      AbstractSet                                null
+CLASS      AdaptingMetaClass                          null
+CLASS      Appendable                                 null
+CLASS      ArithmeticException                        null
+CLASS      ArrayDeque                                 null
+CLASS      ArrayIndexOutOfBoundsException             null
+CLASS      ArrayList                                  null
+CLASS      ArrayStoreException                        null
+CLASS      Arrays                                     null
+CLASS      AssertionError                             null
+CLASS      Authenticator                              null
+CLASS      AutoCloseable                              null
+VARIABLE   aa                                         Object
+VARIABLE   ab                                         Object
+KEYWORD    assert                                     null

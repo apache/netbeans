@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ejb-jar version="2.1" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd">
+  <display-name>Secure-EJBModule</display-name>
+  <enterprise-beans>
+    <session>
+      <display-name>AccountStateSB</display-name>
+      <ejb-name>AccountStateBean</ejb-name>
+      <home>ejb.AccountStateRemoteHome</home>
+      <remote>ejb.AccountStateRemote</remote>
+      <local-home>ejb.AccountStateLocalHome</local-home>
+      <local>ejb.AccountStateLocal</local>
+      <ejb-class>ejb.AccountStateBean</ejb-class>
+      <session-type>Stateless</session-type>
+      <transaction-type>Container</transaction-type>
+    </session>
+  </enterprise-beans>
+  <assembly-descriptor>
+    <security-role>
+      <role-name>USERS</role-name>
+    </security-role>
+    <method-permission>
+      <role-name>USERS</role-name>
+      <method>
+        <ejb-name>AccountStateBean</ejb-name>
+        <method-name>*</method-name>
+      </method>
+    </method-permission>
+    <container-transaction>
+      <method>
+        <ejb-name>AccountStateBean</ejb-name>
+        <method-name>*</method-name>
+      </method>
+      <trans-attribute>Required</trans-attribute>
+    </container-transaction>
+  </assembly-descriptor>
+</ejb-jar>

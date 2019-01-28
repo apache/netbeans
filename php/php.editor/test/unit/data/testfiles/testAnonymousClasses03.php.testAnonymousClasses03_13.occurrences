@@ -1,0 +1,2 @@
+    protected function |>MARK_OCCURRENCES:func1<|() {
+                return $this->prop2 + $this->prop3 + $this->|>MARK_OCCURRENCES:fun^c1<|();

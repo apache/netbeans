@@ -1,0 +1,5 @@
+Code completion result for source line:
+var person = new Pe|rson();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CONSTRUCTO Person(name: String)            [PUBLIC]   issue201885.js

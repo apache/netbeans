@@ -1,0 +1,14 @@
+Code completion result for source line:
+new Test().get|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     getAge()                        [PUBLIC]   Object
+METHOD     getAt(String)                              Object
+METHOD     getClass()                      [PUBLIC]   Class<?>
+METHOD     getMetaClass()                             MetaClass
+METHOD     getMetaPropertyValues()                    List
+METHOD     getName()                       [PUBLIC]   String
+METHOD     getOkDef()                      [PUBLIC]   boolean
+METHOD     getProperties()                            Map
+METHOD     getProperty(String)             [PUBLIC]   Object
+METHOD     getSomething()                  [PUBLIC]   Object

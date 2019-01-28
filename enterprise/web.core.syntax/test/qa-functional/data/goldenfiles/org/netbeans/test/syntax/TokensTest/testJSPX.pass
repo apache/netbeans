@@ -1,0 +1,110 @@
+TokenSequence for text/x-jsp at tokenIndex=0. TokenList contains 60 tokens:
+*[ 0]: "<?xml version="1.0" encoding="UTF-8"?>\n\n<!DOCTYPE jsp:root [\n]>\n\n" <0,65> TEXT[0] DefT, la=10, 
+    Embedding[0]: "text/x-jsp/text/html"
+    T[ 0]: "<?xml version="1.0" encoding="UTF-8"?>" <0,38> XML_PI[15] DefT, 
+    T[ 1]: "\n\n" <38,40> TEXT[0] DefT, la=1, 
+    T[ 2]: "<!DOCTYPE" <40,49> DECLARATION[14] DefT, la=1, 
+    T[ 3]: " " <49,50> WS[3] DefT, la=1, 
+    T[ 4]: "jsp:root" <50,58> DECLARATION[14] DefT, la=1, 
+    T[ 5]: " " <58,59> WS[3] DefT, la=1, 
+    T[ 6]: "[" <59,60> DECLARATION[14] DefT, la=1, 
+    T[ 7]: "\n" <60,61> WS[3] DefT, la=1, 
+    T[ 8]: "]" <61,62> DECLARATION[14] DefT, la=1, 
+    T[ 9]: ">" <62,63> DECLARATION[14] DefT, 
+    T[10]: "\n\n" <63,65> TEXT[0] ParT[1/2], 
+
+T[ 1]: "<" <65,66> SYMBOL[5] DefT, la=9, 
+T[ 2]: "jsp:root" <66,74> TAG[3] DefT, la=1, 
+T[ 3]: " " <74,75> WHITESPACE[11] DefT, la=1, 
+T[ 4]: "xmlns:jsp" <75,84> ATTRIBUTE[8] DefT, la=1, 
+T[ 5]: "=" <84,85> SYMBOL[5] DefT, 
+T[ 6]: ""http://java.sun.com/JSP/Page"" <85,115> ATTR_VALUE[9] DefT, 
+T[ 7]: " " <115,116> WHITESPACE[11] DefT, la=1, 
+T[ 8]: "version" <116,123> ATTRIBUTE[8] DefT, la=1, 
+T[ 9]: "=" <123,124> SYMBOL[5] DefT, 
+T[10]: ""2.0"" <124,129> ATTR_VALUE[9] DefT, 
+T[11]: ">" <129,130> SYMBOL[5] DefT, 
+T[12]: "\n\n    <!-- to change the content type or response encoding change the following line -->\n    " <130,223> TEXT[0] DefT, la=20, 
+    Embedding[0]: "text/x-jsp/text/html"
+    T[0]: "\n\n    " <130,136> TEXT[0] ParT[2/2], la=1, 
+    T[1]: "<!-- to change the content type or response encoding change the following line -->" <136,218> BLOCK_COMMENT[12] DefT, 
+    T[2]: "\n    " <218,223> TEXT[0] ParT[1/2], 
+
+T[13]: "<" <223,224> SYMBOL[5] DefT, la=19, 
+T[14]: "jsp:directive.page" <224,242> TAG[3] DefT, la=1, 
+T[15]: " " <242,243> WHITESPACE[11] DefT, la=1, 
+T[16]: "contentType" <243,254> ATTRIBUTE[8] DefT, la=1, 
+T[17]: " " <254,255> WHITESPACE[11] DefT, la=1, 
+T[18]: "=" <255,256> SYMBOL[5] DefT, 
+T[19]: " 'text/xml;charset=UTF-8'" <256,281> ATTR_VALUE[9] DefT, 
+T[20]: " " <281,282> WHITESPACE[11] DefT, la=1, 
+T[21]: "/>" <282,284> SYMBOL[5] DefT, 
+T[22]: "\n\n    <!-- any content can be specified here, e.g.: -->\n    " <284,344> TEXT[0] DefT, la=13, 
+    Embedding[0]: "text/x-jsp/text/html"
+    T[0]: "\n\n    " <284,290> TEXT[0] ParT[2/2], la=1, 
+    T[1]: "<!-- any content can be specified here, e.g.: -->" <290,339> BLOCK_COMMENT[12] DefT, 
+    T[2]: "\n    " <339,344> TEXT[0] ParT[1/5], 
+
+T[23]: "<" <344,345> SYMBOL[5] DefT, la=12, 
+T[24]: "jsp:element" <345,356> TAG[3] DefT, la=1, 
+T[25]: " " <356,357> WHITESPACE[11] DefT, la=1, 
+T[26]: "name" <357,361> ATTRIBUTE[8] DefT, la=1, 
+T[27]: "=" <361,362> SYMBOL[5] DefT, 
+T[28]: ""text"" <362,368> ATTR_VALUE[9] DefT, 
+T[29]: " " <368,369> WHITESPACE[11] DefT, la=1, 
+T[30]: ">" <369,370> SYMBOL[5] DefT, 
+T[31]: "\n        " <370,379> TEXT[0] DefT, la=15, 
+    Embedding[0]: "text/x-jsp/text/html"
+    T[0]: "\n        " <370,379> TEXT[0] ParT[2/5], 
+
+T[32]: "<" <379,380> SYMBOL[5] DefT, la=14, 
+T[33]: "jsp:attribute" <380,393> TAG[3] DefT, la=1, 
+T[34]: " " <393,394> WHITESPACE[11] DefT, la=1, 
+T[35]: "name" <394,398> ATTRIBUTE[8] DefT, la=1, 
+T[36]: "=" <398,399> SYMBOL[5] DefT, 
+T[37]: ""lang"" <399,405> ATTR_VALUE[9] DefT, 
+T[38]: ">" <405,406> SYMBOL[5] DefT, 
+T[39]: "EN" <406,408> TEXT[0] DefT, la=16, 
+    Embedding[0]: "text/x-jsp/text/html"
+    T[0]: "EN" <406,408> TEXT[0] ParT[3/5], 
+
+T[40]: "</" <408,410> SYMBOL[5] DefT, la=14, 
+T[41]: "jsp:attribute" <410,423> ENDTAG[4] DefT, la=1, 
+T[42]: ">" <423,424> SYMBOL[5] DefT, 
+T[43]: "\n        " <424,433> TEXT[0] DefT, la=10, 
+    Embedding[0]: "text/x-jsp/text/html"
+    T[0]: "\n        " <424,433> TEXT[0] ParT[4/5], 
+
+T[44]: "<" <433,434> SYMBOL[5] DefT, la=9, 
+T[45]: "jsp:body" <434,442> TAG[3] DefT, la=1, 
+T[46]: ">" <442,443> SYMBOL[5] DefT, 
+T[47]: "\n        <![CDATA[Node18]]>\n        <?Node16 processing instruction data?>\n        " <443,526> TEXT[0] DefT, la=11, 
+    Embedding[0]: "text/x-jsp/text/html"
+    T[0]: "\n        " <443,452> TEXT[0] ParT[5/5], la=1, 
+    T[1]: "<![CDATA[Node18]]>\n        " <452,479> TEXT[0] DefT, la=1, 
+    T[2]: "<?Node16 processing instruction data?>" <479,517> XML_PI[15] DefT, 
+    T[3]: "\n        " <517,526> TEXT[0] ParT[1/4], 
+
+T[48]: "</" <526,528> SYMBOL[5] DefT, la=9, 
+T[49]: "jsp:body" <528,536> ENDTAG[4] DefT, la=1, 
+T[50]: ">" <536,537> SYMBOL[5] DefT, 
+T[51]: "\n    " <537,542> TEXT[0] DefT, la=14, 
+    Embedding[0]: "text/x-jsp/text/html"
+    T[0]: "\n    " <537,542> TEXT[0] ParT[2/4], 
+
+T[52]: "</" <542,544> SYMBOL[5] DefT, la=12, 
+T[53]: "jsp:element" <544,555> ENDTAG[4] DefT, la=1, 
+T[54]: ">" <555,556> SYMBOL[5] DefT, 
+T[55]: "\n\n" <556,558> TEXT[0] DefT, la=11, 
+    Embedding[0]: "text/x-jsp/text/html"
+    T[0]: "\n\n" <556,558> TEXT[0] ParT[3/4], 
+
+T[56]: "</" <558,560> SYMBOL[5] DefT, la=9, 
+T[57]: "jsp:root" <560,568> ENDTAG[4] DefT, la=1, 
+T[58]: ">" <568,569> SYMBOL[5] DefT, 
+T[59]: "\n\n" <569,571> TEXT[0] DefT, la=1, 
+    Embedding[0]: "text/x-jsp/text/html"
+    T[0]: "\n\n" <569,571> TEXT[0] ParT[4/4], la=1, 
+
+
+

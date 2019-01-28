@@ -1,0 +1,12 @@
+var |>GLOBAL:Utils<| = {
+    |>FIELD:name<| : "test",
+    |>METHOD:values<| : function* () {
+        yield "first";
+        yield "second";
+        yield "third";
+    }
+}
+
+|>GLOBAL:console<|.log(|>GLOBAL:Utils<|.values().next().done);
+|>GLOBAL:console<|.log(|>GLOBAL:Utils<|.values().next().value);
+|>GLOBAL:console<|.log(|>GLOBAL:Utils<|.values().next().value);

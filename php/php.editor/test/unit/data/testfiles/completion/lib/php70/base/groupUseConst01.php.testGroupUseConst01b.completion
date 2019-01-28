@@ -1,0 +1,6 @@
+Code completion result for source line:
+B\|C_B,
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+PACKAGE    C                               [PUBLIC]   A\B
+CONSTANT   C_B 'C-B'                       [PUBLIC]   A\B

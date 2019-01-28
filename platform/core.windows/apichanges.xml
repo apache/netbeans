@@ -84,6 +84,25 @@ is the proper place.
 
   <changes>
 
+    <change id="sort-editor-tabs" >
+        <api name="winsys"/>
+        <summary>Add preference for sorting editor tabs</summary>
+        <version major="2" minor="87"/>
+        <date day="14" month="11" year="2018"/>
+        <author login="junichi11"/>
+        <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+        <description>
+            A new preference option for the windowing system was added: 
+            <code>EDITOR_SORT_TABS</code>. The option allows the user to
+            let the window system sort the opened tabs according to the opened
+            files. The default value is <code>None</code>, which is the netbeans
+            default behaviour. Other supported values are:
+            <code>FileName</code>, <code>FileNameWithParent</code> and
+            <code>FullFilePath</code>.
+        </description>
+        <issue number="NETBEANS-1622"/>
+    </change>
+
     <change id="help-button-at-left-side" >
         <api name="winsys"/>
         <summary>Allow to move the Help button to the left side</summary>

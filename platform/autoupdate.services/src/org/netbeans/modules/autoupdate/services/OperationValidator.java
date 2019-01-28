@@ -25,7 +25,9 @@ import java.util.logging.Logger;
 import org.netbeans.Module;
 import org.netbeans.ModuleManager;
 import org.netbeans.api.autoupdate.UpdateElement;
+import org.netbeans.api.autoupdate.UpdateManager;
 import org.netbeans.api.autoupdate.UpdateUnit;
+import static org.netbeans.modules.autoupdate.services.Utilities.findRequiredUpdateElements;
 import org.openide.modules.Dependency;
 import org.openide.modules.ModuleInfo;
 
@@ -369,6 +371,7 @@ abstract class OperationValidator {
                 }
             }
             List<UpdateElement> retval = new ArrayList<UpdateElement>();
+            Set<Dependency> brokenDeps = new HashSet<Dependency>();
             if (mm != null) {
                 List<Module> toEnable = getModulesToEnable(mm, modules);
                 for (Module module : toEnable) {
@@ -379,7 +382,55 @@ abstract class OperationValidator {
                     }
                 }
             }
+            if (uElementImpl.getUpdateUnit() != null &&
+                uElementImpl.getType() == UpdateManager.TYPE.FEATURE) {
+                FeatureUpdateElementImpl ufi = (FeatureUpdateElementImpl)uElementImpl;
+                for (ModuleUpdateElementImpl module : ufi.getContainedModuleElements ()) {
+                    Set<UpdateElement> els = findRequiredUpdateElements (module.getUpdateElement (), moduleInfos, brokenDeps, true, 
+                           recommendedElements);                
+                    if (module.getUpdateUnit().getInstalled() == null) {
+                        retval.add(module.getUpdateElement());
+                        retval.addAll (els);
+                    }
+                }
+                addMissingElements(ufi, brokenDependencies);
+                for (UpdateElement avail : uElementImpl.getUpdateUnit().getAvailableUpdates()) {
+                    UpdateElementImpl availImpl = Trampoline.API.impl (avail);
+                    if (availImpl.getType() == UpdateManager.TYPE.FEATURE) {
+                        // process container modules, which are known, but not installed
+                        // and are part of the feature
+                        FeatureUpdateElementImpl feature = (FeatureUpdateElementImpl)availImpl;
+                        for (ModuleUpdateElementImpl module : feature.getContainedModuleElements ()) {
+                            if (module.getUpdateUnit().getInstalled() == null) {
+                                retval.add(module.getUpdateElement());
+                                retval.addAll (
+                                        findRequiredUpdateElements (module.getUpdateElement (), moduleInfos, brokenDeps, true, 
+                                   recommendedElements));                
+                            }
+                        }
+                        // process contained modules, which are NOT known into broken deps:
+                        addMissingElements(feature, brokenDependencies);
+                    }
+                }
+                for (FeatureUpdateElementImpl fei : ufi.getDependingFeatures()) {
+                    retval.addAll(getRequiredElementsImpl(fei.getUpdateElement(), fei.getModuleInfos(), 
+                            brokenDependencies, recommendedElements));
+                }
+                // do IGNORE non-module dependencies from the feature: there may be platform- or java-specific
+                // modules that have "broken" requirements.
+                for (Dependency d : brokenDeps) {
+                    if (d.getType() == Dependency.TYPE_MODULE) {
+                        brokenDependencies.add(d.toString());
+                    }
+                }
+            }
             return retval;
+        }
+    }
+    
+    private static void addMissingElements(FeatureUpdateElementImpl feature, Collection<String> broken) {
+        for (String s : feature.getMissingElements()) {
+            broken.add("module " + s); // NOI18N
         }
     }
     

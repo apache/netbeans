@@ -97,6 +97,7 @@ METHOD     sleep(long, Closure)                       void
 METHOD     split(Closure)                             Collection
 METHOD     sprintf(String, Object)                    String
 METHOD     sprintf(String, Object)                    String
+METHOD     tap(Closure)                               Object
 METHOD     toString()                                 String
 METHOD     trampoline()                    [PUBLIC]   Closure<V>
 METHOD     trampoline(Object[])            [PUBLIC]   Closure<V>
@@ -107,6 +108,7 @@ METHOD     wait()                          [PUBLIC]   void
 METHOD     wait(long)                      [PUBLIC]   void
 METHOD     wait(long, int)                 [PUBLIC]   void
 METHOD     with(Closure)                              Object
+METHOD     with(boolean, Closure)                     Object
 METHOD     withTraits(Class[])                        Object
 FIELD      DELEGATE_FIRST                  [STATIC,   int
 FIELD      DELEGATE_ONLY                   [STATIC,   int
@@ -117,6 +119,7 @@ FIELD      OWNER_ONLY                      [STATIC,   int
 FIELD      SKIP                            [STATIC,   int
 FIELD      TO_SELF                         [STATIC,   int
 FIELD      class                           [PUBLIC]   Class
+FIELD      defaultMetaClass                [PRIVATE]  MetaClass
 FIELD      delegate                        [PUBLIC]   Object
 FIELD      directive                       [PUBLIC]   int
 FIELD      maximumNumberOfParameters       [PUBLIC]   int

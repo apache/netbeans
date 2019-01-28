@@ -24,4 +24,27 @@
 
   <import file="../../nbbuild/templates/projectized.xml"/>
 
+  <target name="compile" depends="projectized-common.compile,javafx-nbms"/>
+
+  <target name="javafx-nbms" description="Prepare NBMs for 3rd party libraries" depends="init">
+      <subant  target="nbm" inheritall="false">
+          <property name="build.dir" location="build/3rdparty-nbms"/>
+          <fileset dir="${nb_all}/extra" includes="libs.javafx.*/build.xml"/>
+      </subant>
+      <taskdef name="makeupdatedesc" classname="org.netbeans.nbbuild.MakeUpdateDesc"
+               classpath="${nbantext.jar}"/>
+
+      <property name="3rdparty.dir" location="build/classes/org/netbeans/modules/updatecenters/resources"/>
+      <mkdir dir="${3rdparty.dir}"/>
+      <makeupdatedesc desc="${3rdparty.dir}/3rdparty-catalog.xml" distbase="." uselicenseurl="true">
+          <fileset dir="build/3rdparty-nbms">
+              <include name="*.nbm"/>
+          </fileset>
+      </makeupdatedesc>
+      <copy todir="${3rdparty.dir}">
+          <fileset dir="build/3rdparty-nbms">
+              <include name="*.nbm"/>
+          </fileset>
+      </copy>
+  </target>
 </project>

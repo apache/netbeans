@@ -23,7 +23,9 @@ import java.beans.PropertyVetoException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -33,8 +35,6 @@ import java.lang.management.ManagementFactory;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -503,16 +503,24 @@ public class JarFileSystem extends AbstractFileSystem {
         if (createContent || forceRecreate) {
             // JDK 1.3 contains bug #4336753
             //is = j.getInputStream (je);
-            try (InputStream is = getInputStream4336753(jf, je); OutputStream os = Files.newOutputStream(f.toPath())) {
-                FileUtil.copy(is, os);
-            } catch (InvalidPathException ex) {
-                throw new IOException(ex);
+            InputStream is = getInputStream4336753(jf, je);
+
+            try {
+                OutputStream os = new FileOutputStream(f);
+
+                try {
+                    FileUtil.copy(is, os);
+                } finally {
+                    os.close();
+                }
+            } finally {
+                is.close();
             }
         }
 
         f.deleteOnExit();
 
-        return Files.newInputStream(f.toPath());
+        return new FileInputStream(f);
     }
 
     private static String temporaryName(String filePath, String entryPath) {

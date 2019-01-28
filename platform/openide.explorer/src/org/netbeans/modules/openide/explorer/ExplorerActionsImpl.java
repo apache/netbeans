@@ -36,6 +36,7 @@ import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
@@ -594,17 +595,21 @@ public final class ExplorerActionsImpl {
     }
     
     private static abstract class BaseAction extends AbstractAction {
-        private volatile Boolean toEnable;
+        private static final int NO_CHANGE = 0;
+        private static final int ENABLED = 1;
+        private static final int DISABLED = 2;
+
+        private final AtomicInteger toEnable = new AtomicInteger(NO_CHANGE);
         
         public void toEnabled(boolean e) {
-            toEnable = e;
+            toEnable.set(e ? ENABLED : DISABLED);
         }
         
         public void syncEnable() {
             assert EventQueue.isDispatchThread();
-            if (toEnable != null) {
-                setEnabled(toEnable);
-                toEnable = null;
+            int toEnableValue = toEnable.getAndSet(NO_CHANGE);
+            if (toEnableValue != NO_CHANGE) {
+                setEnabled(toEnableValue == ENABLED);
             }
         }
     }

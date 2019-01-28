@@ -20,6 +20,8 @@
 
 -->
 <project name="Test Recursive Dependecies" basedir="." default="all" >
+    <loadproperties srcFile="../../../../../../cluster.properties" />
+    
     <target name="recursive-deps" >
         <property name="netbeans.dest.dir" location="${netbeans.dest.dir.work}"/>
         <property file="${netbeans.dest.dir}/moduleCluster.properties"/>

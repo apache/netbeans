@@ -36,12 +36,16 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.PreferenceChangeEvent;
@@ -77,6 +81,7 @@ import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.autoupdate.ui.wizards.OperationWizardModel.OperationType;
 import org.openide.awt.Mnemonics;
+import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
@@ -1577,25 +1582,82 @@ public final class UnitTab extends javax.swing.JPanel {
             }
             setEnabled(false);
         }
+        
+        boolean finished = false;
+        Map<String, Boolean> state;
+        
+        void clearContainers() {
+            Containers.forEnable().removeAll();
+            Containers.forDisable().removeAll();
+            Containers.forAvailable().removeAll();
+            Containers.forUninstall ().removeAll();
+        }
+        
+        /**
+         * Forces refresh of UI data. Replans work to EDT, but waits for the result.
+         * First waits until the download/install task completes, so that UI models
+         * for checking items are not suspended by the pending operation.
+         * <p/>
+         * Will <b>clean all containers</b> and populate them again from the UI.
+         * @return newly populated Container
+         */
+        OperationContainer refreshData() {
+            if (!SwingUtilities.isEventDispatchThread()) {
+                final OperationContainer[] c = new OperationContainer[1];
+                RequestProcessor.Task runningTask = PluginManagerUI.getRunningTask();
+                if (runningTask != null) {
+                    runningTask.waitFinished();
+                }
+                try {
+                    SwingUtilities.invokeAndWait(() -> {
+                        c[0] = refreshData();
+                    });
+                } catch (InterruptedException | InvocationTargetException ex) {
+                    OperationContainer x = Containers.forEnable();
+                    x.removeAll();
+                }
+                return c[0];
+            }
+            refreshState ();
+            try {
+                clearContainers();
+                fireUpdataUnitChange();
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+            if(!finished) {
+                UnitCategoryTableModel.restoreState (model.getUnits (), state, model.isMarkedAsDefault ());
+            }
+            return prepareContainer();
+        }
+        
+        OperationContainer prepareContainer() {
+            OperationContainer<OperationSupport> c = Containers.forEnable();
+            Collection<Unit> units = new ArrayList<>();
+            for (Unit u : model.getUnits()) {
+                if (u.isMarked() && isEnabled(u)) {
+                    units.add(u);
+                }
+            }
+            c.removeAll();
+            for (Unit u : units) {
+                    c.add(u.updateUnit, u.getRelevantElement());
+            }
+            return c;
+        }
 
         @Override
         public void performerImpl() {
             final int row = getSelectedRow ();
-            final Map<String, Boolean> state = UnitCategoryTableModel.captureState (model.getUnits ());
-            OperationContainer<OperationSupport> c = Containers.forEnable();
-            for (Unit u : model.getUnits()) {
-                if (u.isMarked() && isEnabled(u)) {
-                    c.add(u.updateUnit, u.getRelevantElement());
-                }
-            }
+            state = UnitCategoryTableModel.captureState (model.getUnits ());
             UninstallUnitWizard wizard = new UninstallUnitWizard ();
-            boolean finished = false;
+            finished = false;
+            // unused, but hold the reference on stack.
+            OperationContainer c = prepareContainer();
             try {
-                finished = wizard.invokeWizard(true);
+                finished = wizard.invokeWizard(true, this::refreshData);
             } finally {
-                Containers.forEnable().removeAll();
-                Containers.forDisable().removeAll();
-                Containers.forUninstall ().removeAll();
+                clearContainers();
                 if (finished) {
                     for (Unit u : model.getMarkedUnits()) {
                         u.setMarked(false);
@@ -1616,7 +1678,7 @@ public final class UnitTab extends javax.swing.JPanel {
             if ((u != null) && (u instanceof Unit.Installed)) {
                 Unit.Installed i = (Unit.Installed)u;
                 if (!i.getRelevantElement ().isEnabled ()) {
-                    retval = Unit.Installed.isOperationAllowed (u.updateUnit, u.getRelevantElement (), Containers.forEnable ());
+                     retval = Unit.Installed.isOperationAllowed (u.updateUnit, u.getRelevantElement (), Containers.forEnable ());
                 }
             }
             return  retval;

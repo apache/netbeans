@@ -16,6 +16,7 @@ METHOD     sprintf(String, Object)                    String
 METHOD     sprintf(String, Object)                    String
 METHOD     startsWith(String)              [PUBLIC]   boolean
 METHOD     startsWith(String, int)         [PUBLIC]   boolean
+METHOD     startsWithAny(CharSequence[])              boolean
 METHOD     stripIndent()                              String
 METHOD     stripIndent(int)                           String
 METHOD     stripMargin()                              String

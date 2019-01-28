@@ -445,7 +445,7 @@ public final class OperationContainerImpl<Support> {
             }
             return requiredElements;
         }
-
+        
         public Set<String> getBrokenDependencies () {
             if (! upToDate) {
                 brokenDeps = null;
@@ -453,14 +453,45 @@ public final class OperationContainerImpl<Support> {
             if (brokenDeps != null) {
                 return brokenDeps;
             }
+            // shortcut, because OperationValidator.getRequiredElements is NOT consistent with
+            // OperationValidator.getBrokenDependencies: while getRequiredElements ignores breakages of 
+            // feature contents, getBrokenDependencies wille verify them in full, so feature's optional (platform-specific) module
+            // will report the whole feature as broken on activation or install.
+            if (requiredElements != null) {
+                getRequiredElements();
+                if (brokenDeps != null) {
+                    return brokenDeps;
+                }
+            }
             List<ModuleInfo> moduleInfos = new ArrayList<ModuleInfo>();
+            Set<String> brokenContents = new HashSet<>();
             for (OperationContainer.OperationInfo oii : listAll ()) {
                 UpdateElementImpl impl = Trampoline.API.impl (oii.getUpdateElement ());
                 Collection<ModuleInfo> infos = impl.getModuleInfos ();
                 assert infos != null : "ModuleInfo for UpdateElement " + oii.getUpdateElement () + " found.";
                 moduleInfos.addAll (infos);
+                if (impl.getType() == UpdateManager.TYPE.FEATURE) {
+                    // add unknown tokens / codenames as broken content.
+                    brokenContents.addAll(((FeatureUpdateElementImpl)impl).getMissingElements());
+                }
             }
-            return OperationValidator.getBrokenDependencies (type, getUpdateElement (), moduleInfos);
+            brokenContents.addAll(OperationValidator.getBrokenDependencies (type, getUpdateElement (), moduleInfos));
+            return brokenContents;
+        }
+        
+        /**
+         * Reports missing parts of the feature.
+         * @return missing/unknown directly contained codenames
+         */
+        public Set<String> getMissingParts() {
+            Set<String> brokenContents = new HashSet<>();
+            for (OperationContainer.OperationInfo oii : listAll ()) {
+                UpdateElementImpl impl = Trampoline.API.impl (oii.getUpdateElement ());
+                if (impl instanceof FeatureUpdateElementImpl) {
+                    brokenContents.addAll(((FeatureUpdateElementImpl)impl).getMissingElements());
+                }
+            }
+            return brokenContents;
         }
     }
     

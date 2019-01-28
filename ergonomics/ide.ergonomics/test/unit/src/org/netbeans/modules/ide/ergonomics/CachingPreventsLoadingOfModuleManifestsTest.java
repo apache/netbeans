@@ -64,7 +64,7 @@ public class CachingPreventsLoadingOfModuleManifestsTest extends NbTestCase {
             ).
             gui(false).
             clusters("ergonomics.*").
-            clusters(".*").
+            clusters("(?!extra).*").
             enableModules("ide[0-9]*", ".*").
             enableClasspathModules(false).
             honorAutoloadEager(true);

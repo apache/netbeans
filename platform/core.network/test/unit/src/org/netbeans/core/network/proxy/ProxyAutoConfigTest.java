@@ -24,6 +24,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import junit.framework.Test;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
@@ -92,13 +94,22 @@ public class ProxyAutoConfigTest extends NbTestCase {
             assertEquals(1, proxies.size());
             Proxy proxy = proxies.get(0);
             assertEquals(pacFileLoc, Proxy.Type.HTTP, proxy.type());
-            assertEquals(pacFileLoc, "www-proxy.us.oracle.com:80", proxy.address().toString());
+
+            final Pattern pattern = Pattern.compile("www-proxy\\.us\\.oracle\\.com.*:80");
+
+            assertTrue(
+                "Configuration " + pacFileLoc + " contains the proxy, but was: " + proxy.address(),
+                pattern.matcher(proxy.address().toString()).matches()
+            );
             
             proxies = pac.findProxyForURL(new URI("https://apache.org"));
             assertEquals(1, proxies.size());
             proxy = proxies.get(0);
             assertEquals(pacFileLoc, Proxy.Type.HTTP, proxy.type());
-            assertEquals(pacFileLoc, "www-proxy.us.oracle.com:80", proxy.address().toString());
+            assertTrue(
+                "Configuration " + pacFileLoc + " contains the proxy, but was: " + proxy.address(),
+                pattern.matcher(proxy.address().toString()).matches()
+            );
         }
     }
     

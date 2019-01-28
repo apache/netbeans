@@ -1301,7 +1301,7 @@ public class ListView extends JScrollPane implements Externalizable {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            if (MouseUtils.isDoubleClick(e)) {
+            if (SwingUtilities.isLeftMouseButton(e) && MouseUtils.isDoubleClick(e)) {
                 int index = list.locationToIndex(e.getPoint());
                 performObjectAt(index, e.getModifiers());
             }

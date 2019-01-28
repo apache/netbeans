@@ -36,6 +36,7 @@ Apache NetBeans is an open source development environment, tooling platform, and
   * Ant 1.9.9 or above
   * Oracle JDK 8 or OpenJDK 8 (to build NetBeans)
   * Oracle JDK 9 or OpenJDK 9 (to run NetBeans)
+  * MinGW (optional), to build Windows Launchers
 
 **Note:** NetBeans also runs with JDK 8, although then it will not include tools for the JDK 9 Shell.
 
@@ -61,6 +62,19 @@ $ ant -Dcluster.config=platform
 ```
 
 **Note:** You can also use `php`, `enterprise`, etc. See the [cluster.properties](https://github.com/apache/incubator-netbeans/blob/master/nbbuild/cluster.properties) file.
+
+#### Building Windows Launchers
+Windows launchers can be build using [MinGW](http://www.mingw.org/) both on Windows and Linux.
+
+As of [NETBEANS-1145](https://issues.apache.org/jira/browse/NETBEANS-1145), the Windows Launchers can be built adding ```do.build.windows.launchers=true``` property to the build process.
+```
+$ ant -Ddo.build.windows.launchers=true
+```
+
+##### Software Requirement to Build Windows Launchers on Ubuntu (16.04+):
+```
+sudo apt install make mingw-w64
+```
 
 ### Running NetBeans
 

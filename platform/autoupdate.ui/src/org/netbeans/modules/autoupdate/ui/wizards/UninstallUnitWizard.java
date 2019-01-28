@@ -22,8 +22,10 @@ package org.netbeans.modules.autoupdate.ui.wizards;
 import org.netbeans.modules.autoupdate.ui.*;
 import java.awt.Dialog;
 import java.text.MessageFormat;
+import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.api.autoupdate.OperationContainer;
 import org.openide.DialogDisplayer;
 import org.openide.WizardDescriptor;
 import org.openide.util.NbBundle;
@@ -40,14 +42,25 @@ public class UninstallUnitWizard {
     public UninstallUnitWizard () {}
     
     public boolean invokeWizard () {
-        return invokeWizardImpl (true, null);
+        return invokeWizardImpl (true, null, null);
     }
     
     public boolean invokeWizard (boolean doEnable) {
-        return invokeWizardImpl (null, doEnable ? Boolean.TRUE : Boolean.FALSE);
+        return invokeWizardImpl (null, doEnable ? Boolean.TRUE : Boolean.FALSE, null);
     }
     
-    private boolean invokeWizardImpl (Boolean doUninstall, Boolean doEnable) {
+    /**
+     * Invokes the wizard with the ability to call back and refresh the model and UI
+     * 
+     * @param doEnable if true will represent enable operation
+     * @param refresher non-{@code null} will be provided to the model to refresh.
+     * @return whether the wizard was cancelled
+     */
+    public boolean invokeWizard (boolean doEnable, Callable<OperationContainer> refresher) {
+        return invokeWizardImpl (null, doEnable ? Boolean.TRUE : Boolean.FALSE, refresher);
+    }
+    
+    private boolean invokeWizardImpl (Boolean doUninstall, Boolean doEnable, Callable<OperationContainer> refresher) {
         assert doUninstall != null || doEnable != null : "At least one action is enabled";
         assert ! (doUninstall != null && doEnable != null) : "Only once action is enabled";
         assert doUninstall == null || Containers.forUninstall () != null : "The OperationContainer<OperationSupport> forUninstall must exist!";
@@ -56,6 +69,7 @@ public class UninstallUnitWizard {
         
         UninstallUnitWizardModel model = new UninstallUnitWizardModel (doUninstall != null
                 ? OperationWizardModel.OperationType.UNINSTALL : doEnable ? OperationWizardModel.OperationType.ENABLE : OperationWizardModel.OperationType.DISABLE);
+        model.setRefreshCallable(refresher);
         WizardDescriptor.Iterator<WizardDescriptor> iterator = new UninstallUnitWizardIterator (model);
         WizardDescriptor wizardDescriptor = new WizardDescriptor (iterator);
         wizardDescriptor.setModal (true);

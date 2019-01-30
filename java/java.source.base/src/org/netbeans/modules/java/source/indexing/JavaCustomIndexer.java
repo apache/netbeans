@@ -22,9 +22,12 @@ package org.netbeans.modules.java.source.indexing;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -36,6 +39,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -147,6 +151,69 @@ public class JavaCustomIndexer extends CustomIndexer {
                 JavaIndex.LOG.fine("Ignoring request with no root"); //NOI18N
                 return;
             }
+            BinaryForSourceQuery.Result binRes = BinaryForSourceQuery.findBinaryRoots(root.toURL());
+            Long newestFile = null;
+            URL singleBinaryRoot = null;
+            FileObject singleBinaryRootFo = null;
+            for (URL u : binRes.getRoots()) {
+                FileObject ufo = URLMapper.findFileObject(u);
+                if (ufo == null || singleBinaryRoot != null) {
+                    newestFile = null;
+                    break;
+                }
+                singleBinaryRoot = u;
+                singleBinaryRootFo = ufo;
+                Enumeration<? extends FileObject> en = ufo.getChildren(true);
+                while (en.hasMoreElements()) {
+                    FileObject ch = en.nextElement();
+                    long modified = ch.lastModified().getTime();
+                    if (newestFile == null || newestFile < modified) {
+                        newestFile = modified;
+                    }
+                }
+            }
+
+            boolean binariesAreNewer = singleBinaryRootFo != null;
+            for (Indexable index : files) {
+                if (!binariesAreNewer) {
+                    break;
+                }
+                FileObject fo = context.getRoot().getFileObject(index.getRelativePath());
+                if (newestFile == null || fo == null || fo.lastModified().getTime() > newestFile) {
+                    binariesAreNewer = false;
+                    break;
+                }
+            }
+
+            if (binariesAreNewer && singleBinaryRootFo != null) {
+                System.err.println("use the binaries: " + root);
+                JavaBinaryIndexer.doIndex(context, singleBinaryRoot);
+                File copyTo = JavaIndex.getClassFolder(context);
+                Enumeration<? extends FileObject> en = singleBinaryRootFo.getChildren(true);
+                while (en.hasMoreElements()) {
+                    FileObject ch = en.nextElement();
+                    if (!ch.isData()) {
+                        continue;
+                    }
+                    String path = FileUtil.getRelativePath(singleBinaryRootFo, ch.getParent());
+                    if (path == null) {
+                        continue;
+                    }
+                    String name = ch.getNameExt();
+                    if (ch.hasExt("class")) {
+                        name = ch.getName() + ".sig";
+                    }
+                    File toDir = new File(copyTo, path.replace('/', File.separatorChar));
+                    toDir.mkdirs();
+                    File to = new File(toDir, name);
+                    try (OutputStream os = new FileOutputStream(to); InputStream is = ch.getInputStream()) {
+                        FileUtil.copy(is, os);
+                    }
+                }
+                System.err.println("copy to done for " + singleBinaryRootFo);
+                return;
+            }
+
             APTUtils.sourceRootRegistered(context.getRoot(), context.getRootURI());
             final ClassPath sourcePath = ClassPath.getClassPath(root, ClassPath.SOURCE);
             final ClassPath moduleSourcePath = ClassPath.getClassPath(root, JavaClassPathConstants.MODULE_SOURCE_PATH);

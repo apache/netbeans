@@ -115,7 +115,7 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
 
         // Add those actions to the combo box which were not customized yet.
         for (String action : allAvailableActions) {
-            if (actionRegistry.getCustomAction(action) != null) {
+            if (actionRegistry.getCustomAction(action) == null) {
                 availableActionsModel.addElement(action);
             }
         }
@@ -373,7 +373,7 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
             mapping.setArgs(taArgs.getText());
             mapping.setReloadRule(ActionMapping.ReloadRule.valueOf(cbReloadRule.getSelectedItem().toString()));
             mapping.setRepeatable(cbRepeatable.isSelected());
-            
+
             actionRegistry.registerCustomAction(mapping);
             lsActions.repaint();
         }

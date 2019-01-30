@@ -846,6 +846,7 @@ public final class GradleCommandLine implements Serializable {
                     for (Flag flag : farg.flag.incompatible) {
                         ret.removeFlag(flag);
                     }
+                    ret.arguments.add(argument);
                 } else {
                     ret.arguments.add(argument);
                 }

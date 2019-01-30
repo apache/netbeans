@@ -68,10 +68,14 @@ public class ReplaceTokenProviderMerger implements ReplaceTokenProvider {
     public Map<String, String> createReplacements(String action, Lookup context) {
         Map<String, String> ret = new HashMap<>();
         for (ReplaceTokenProvider pvd : lookup.lookupAll(ReplaceTokenProvider.class)) {
-            ret.putAll(pvd.createReplacements(action, context));
+            if (pvd != this) {
+                ret.putAll(pvd.createReplacements(action, context));
+            }
         }
         for (ReplaceTokenProvider pvd : context.lookupAll(ReplaceTokenProvider.class)) {
-            ret.putAll(pvd.createReplacements(action, context));
+            if (pvd != this) {
+                ret.putAll(pvd.createReplacements(action, context));
+            }
         }
         return ret;
     }

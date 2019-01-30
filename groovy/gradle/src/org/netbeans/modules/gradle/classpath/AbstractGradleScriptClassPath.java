@@ -104,7 +104,7 @@ abstract class AbstractGradleScriptClassPath implements ClassPathImplementation 
     public final List<? extends PathResourceImplementation> getResources() {
         if (resources == null) {
             resources = new ArrayList<>();
-            if (distDir.isDirectory()) {
+            if ((distDir !=null) && distDir.isDirectory()) {
                 for (FileObject fo : createPath()) {
                     resources.add(ClassPathSupport.createResource(fo.toURL()));
                 }

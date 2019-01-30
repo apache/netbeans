@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.gradle.queries;
 
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -55,8 +56,9 @@ public class GradleSourceForBinary implements SourceForBinaryQueryImplementation
     @Override
     public Result findSourceRoots2(URL binaryRoot) {
         Res ret = cache.get(binaryRoot);
-        if (ret == null) {
-            FileObject distDir = FileUtil.toFileObject(RunUtils.evaluateGradleDistribution(null, false));
+        File dist = RunUtils.evaluateGradleDistribution(null, false);
+        if ((ret == null) && (dist != null)) {
+            FileObject distDir = FileUtil.toFileObject(dist);
             FileObject srcDir = distDir == null ? null : distDir.getFileObject("src"); //NOI18N
             if ((srcDir != null) && ("jar".equals(binaryRoot.getProtocol()))) {  //NOI18N
 

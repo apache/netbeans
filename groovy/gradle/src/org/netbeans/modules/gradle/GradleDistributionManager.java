@@ -55,6 +55,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
+import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -78,13 +79,17 @@ public class GradleDistributionManager {
 
     static {
         int ver = 8;
-        String version = System.getProperty("java.version"); //NOI18N
-        int dot = version.indexOf('.');
-        ver = dot > 0 ? Integer.parseInt(version.substring(0,dot)) : Integer.parseInt(version);
-        if (ver == 1) {
-            version = version.substring(dot + 1);
-            dot = version.indexOf('.');
+        String version = System.getProperty("java.specification.version", System.getProperty("java.version")); //NOI18N
+        try {
+            int dot = version.indexOf('.');
             ver = dot > 0 ? Integer.parseInt(version.substring(0,dot)) : Integer.parseInt(version);
+            if (ver == 1) {
+                version = version.substring(dot + 1);
+                dot = version.indexOf('.');
+                ver = dot > 0 ? Integer.parseInt(version.substring(0,dot)) : Integer.parseInt(version);
+            }
+        } catch (NumberFormatException ex) {
+            Exceptions.printStackTrace(ex);
         }
         JAVA_VERSION = ver;
     }

@@ -58,6 +58,9 @@ public class DifferentCaseKindsFix implements ErrorRule<Void> {
         if (!CompilerOptionsQuery.getOptions(info.getFileObject()).getArguments().contains("--enable-preview")) {
             return null;
         }
+        if(treePath.getParentPath().getLeaf().getKind().toString().equals("SWITCH_EXPRESSION")){
+            return null;
+        }
         SwitchTree st = (SwitchTree) treePath.getParentPath().getLeaf();
         boolean completesNormally = false;
         boolean wasDefault = false;

@@ -109,12 +109,7 @@ public class LSPBindings {
                                                        Launcher<LanguageServer> launcher = LSPLauncher.createClientLauncher(lci, in, out);
                                                        launcher.startListening();
                                                        LanguageServer server = launcher.getRemoteProxy();
-                                                       InitializeParams initParams = new InitializeParams();
-                                                       initParams.setRootUri(Utils.toURI(prj.getProjectDirectory())); //XXX: what if a different root is expected????
-                                                       initParams.setRootPath(FileUtil.toFile(prj.getProjectDirectory()).getAbsolutePath()); //some servers still expect root path
-                                                       initParams.setProcessId(0);
-                                                       initParams.setCapabilities(new ClientCapabilities(new WorkspaceClientCapabilities(), new TextDocumentClientCapabilities(), null));
-                                                       InitializeResult result = server.initialize(initParams).get();
+                                                       InitializeResult result = initServer(server, prj.getProjectDirectory()); //XXX: what if a different root is expected????
                                                        LSPBindings b = new LSPBindings(server, result, LanguageServerProviderAccessor.getINSTANCE().getProcess(desc));
                                                        lci.setBindings(b);
                                                        return b;
@@ -152,11 +147,7 @@ public class LSPBindings {
                 });
                 launcher.startListening();
                 LanguageServer server = launcher.getRemoteProxy();
-
-                InitializeParams initParams = new InitializeParams();
-                initParams.setRootUri(Utils.toURI(root));
-                initParams.setProcessId(0);
-                InitializeResult result = server.initialize(initParams).get();
+                InitializeResult result = initServer(server, root);
                 LSPBindings bindings = new LSPBindings(server, result, null);
 
                 lc.setBindings(bindings);
@@ -166,6 +157,15 @@ public class LSPBindings {
                 Exceptions.printStackTrace(ex);
             }
         }, Bundle.LBL_Connecting());
+    }
+
+    private static InitializeResult initServer(LanguageServer server, FileObject root) throws InterruptedException, ExecutionException {
+       InitializeParams initParams = new InitializeParams();
+       initParams.setRootUri(Utils.toURI(root));
+       initParams.setRootPath(FileUtil.toFile(root).getAbsolutePath()); //some servers still expect root path
+       initParams.setProcessId(0);
+       initParams.setCapabilities(new ClientCapabilities(new WorkspaceClientCapabilities(), new TextDocumentClientCapabilities(), null));
+       return server.initialize(initParams).get();
     }
 
     private final LanguageServer server;
@@ -246,7 +246,7 @@ public class LSPBindings {
             }
             for (Map<String, LSPBindings> mime2Bindings : workspace2Extension2Server.values()) {
                 for (LSPBindings b : mime2Bindings.values()) {
-                    if (b != null) {
+                    if (b != null && b.process != null) {
                         b.process.destroy();
                     }
                 }

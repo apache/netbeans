@@ -47,7 +47,7 @@
 
     <folder name="Toolbars">
         <folder name="Git">
-
+            <attr name="position" intvalue="700"/>
             <file name="org-netbeans-modules-git-ui-blame-AnnotateAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Git/org-netbeans-modules-git-ui-blame-AnnotateAction.instance"/>
                 <attr name="position" intvalue="100"/>

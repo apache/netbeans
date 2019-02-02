@@ -18,19 +18,22 @@
  */
 package org.netbeans.modules.gradle.actions;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.gradle.api.execute.ActionMapping;
 import org.netbeans.modules.gradle.customizer.CustomActionMapping;
+import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.openide.filesystems.FileObject;
+import org.openide.util.EditableProperties;
 import org.openide.util.Exceptions;
 
 /**
@@ -38,7 +41,8 @@ import org.openide.util.Exceptions;
  * @author lkishalmi
  */
 public class CustomActionRegistrationSupport {
-    private static final String NB_ACTIONS = "nb-actions.xml"; //NOI18N
+
+    public static final String ACTION_PROP_PREFIX = "action."; //NOI18N
 
     final Map<String, CustomActionMapping> customActions = new TreeMap<>();
     final Project project;
@@ -68,15 +72,15 @@ public class CustomActionRegistrationSupport {
         mapping.setArgs(args);
         mapping.setReloadRule(rule);
         mapping.setRepeatable(repeatable);
-        
+
         return registerCustomAction(mapping);
     }
-    
+
     public CustomActionMapping registerCustomAction(CustomActionMapping mapping) {
         customActions.put(mapping.getName(), mapping);
         return mapping;
     }
-    
+
     public CustomActionMapping registerCustomAction(String displayName, String args) {
         String name = getByDisplayName(displayName);
         if (name == null) {
@@ -84,19 +88,19 @@ public class CustomActionRegistrationSupport {
         }
         return registerCustomAction(name, displayName, args, ActionMapping.ReloadRule.DEFAULT, true);
     }
-    
+
     public CustomActionMapping unregisterCustomAction(String name) {
         return customActions.remove(name);
     }
-    
+
     public CustomActionMapping getCustomAction(String name) {
         return customActions.get(name);
     }
-    
+
     public Collection<CustomActionMapping> getCustomActions() {
         return Collections.unmodifiableCollection(customActions.values());
     }
-    
+
     private String getByDisplayName(String displayName) {
         String ret = null;
         for (CustomActionMapping value : customActions.values()) {
@@ -107,38 +111,59 @@ public class CustomActionRegistrationSupport {
         }
         return ret;
     }
-    
+
     public void save() {
-        try {
-            FileObject fo = project.getProjectDirectory().getFileObject(NB_ACTIONS);
-            fo = fo != null ? fo : project.getProjectDirectory().createData(NB_ACTIONS);
-            try (PrintWriter out = new PrintWriter(fo.getOutputStream(), true)) {
-                out.println("<?xml version=\"1.0\"?>");
-                out.println("<!DOCTYPE actions SYSTEM \"action-mapping.dtd\">");
-                out.println("<actions>");
+        EditableProperties props = new EditableProperties(false);
+        ProjectManager.mutex().writeAccess(() -> {
+            try {
+                FileObject fo = project.getProjectDirectory().getFileObject(GradleFiles.GRADLE_PROPERTIES_NAME);
+                if (fo != null) {
+                    try (InputStream is = fo.getInputStream()) {
+                        props.load(is);
+                    }
+                }
+                // Remove previously defined acltion, if any
+                Iterator<String> it = props.keySet().iterator();
+                while (it.hasNext()) {
+                    if (it.next().startsWith(ACTION_PROP_PREFIX)) {
+                        it.remove();
+                    }
+                }
+                // Add new actions, if any
                 for (CustomActionMapping mapping : customActions.values()) {
-                    out.print("    <action name=\"" + mapping.getName() + "\"");
+                    String prefix = ACTION_PROP_PREFIX + mapping.getName() + '.';
                     if (mapping.getName().startsWith(ActionMapping.CUSTOM_PREFIX)) {
-                        out.print(" displayName=\"" + mapping.getDisplayName() + "\"");
+                        props.setProperty(ACTION_PROP_PREFIX + mapping.getName(), mapping.getDisplayName());
+                    }
+                    if (!mapping.getArgs().isEmpty()) {
+                        props.setProperty(prefix + "args", mapping.getArgs()); //NOI18N
+                    }
+                    if (!mapping.getReloadArgs().isEmpty()) {
+                        props.setProperty(prefix + "reload.args", mapping.getReloadArgs()); //NOI18N
+                    }
+                    if (mapping.getReloadRule() != ActionMapping.ReloadRule.DEFAULT) {
+                        props.setProperty(prefix + "reload.rule", mapping.getReloadRule().name()); //NOI18N
                     }
                     if (!mapping.isRepeatable()) {
-                        out.print("repeatable=\"false\"");
+                        props.setProperty(prefix + "repeatable", "false"); //NOI18N
                     }
-                    out.println(">");
-
-                    out.println("        <args>" + mapping.getArgs() + "</args>");
-                    if (mapping.getReloadRule() != ActionMapping.ReloadRule.DEFAULT) {
-                        out.println("        <reload rule=\"" + mapping.getReloadRule().name() + "\"/>");
-                    }
-                    out.println("    </action>");
                 }
-                out.println("</actions>");
-            } catch (FileNotFoundException | UnsupportedEncodingException ex) {
+
+                if ((fo != null) && props.isEmpty()) {
+                    fo.delete();
+                }
+                if ((fo == null) && !props.isEmpty()) {
+                    fo = project.getProjectDirectory().createData(GradleFiles.GRADLE_PROPERTIES_NAME);
+                }
+                if ((fo != null) && !props.isEmpty()) {
+                    try (OutputStream os = fo.getOutputStream()) {
+                        props.store(os);
+                    }
+                }
+            } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
-        } catch (IOException ex) {
-
-        }
+        });
     }
-    
+
 }

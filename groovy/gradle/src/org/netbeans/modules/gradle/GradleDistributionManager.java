@@ -95,7 +95,7 @@ public class GradleDistributionManager {
     }
 
     final File gradleUserHome;
-    private final Map<URL, NbGradleVersion> versions = new HashMap<>();
+    private final Map<URI, NbGradleVersion> versions = new HashMap<>();
 
     private GradleDistributionManager(File gradleUserHome) {
         this.gradleUserHome = gradleUserHome;
@@ -137,9 +137,9 @@ public class GradleDistributionManager {
             String distUrlProp = wrapper.getProperty("distributionUrl"); //NOI18N
             if (distUrlProp != null) {
                 try {
-                    URL distURL = new URL(distUrlProp);
+                    URI distURL = new URI(distUrlProp);
                     ret = createVersion(distURL);
-                } catch (MalformedURLException ex) {
+                } catch (URISyntaxException ex) {
                     // Wrong URL, give up
                 }
             }
@@ -156,7 +156,7 @@ public class GradleDistributionManager {
                 JSONArray versions = (JSONArray) parser.parse(is);
                 for (Object o : versions) {
                     JSONObject v = (JSONObject) o;
-                    URL downloadURL = new URL((String) v.get("downloadUrl")); //NOI18N
+                    URI downloadURL = new URI((String) v.get("downloadUrl")); //NOI18N
                     boolean snapshot = (Boolean) v.get("snapshot");           //NOI18N
                     boolean nightly = (Boolean) v.get("nightly");             //NOI18N
                     boolean broken = (Boolean) v.get("broken");               //NOI18N
@@ -173,7 +173,7 @@ public class GradleDistributionManager {
                     }
                     ret.add(createVersion(version, downloadURL, rcFor.isEmpty()));
                 }
-            } catch (ParseException | IOException ex) {
+            } catch (ParseException | IOException | URISyntaxException ex) {
                 //TODO: Shall we do something about this?
             }
         } catch (MalformedURLException ex) {
@@ -199,7 +199,7 @@ public class GradleDistributionManager {
         return ret;
     }
 
-    public NbGradleVersion createVersion(URL distributionUrl) {
+    public NbGradleVersion createVersion(URI distributionUrl) {
         NbGradleVersion ret = null;
         Matcher m = DIST_VERSION_PATTERN.matcher(distributionUrl.getPath());
         if (m.matches()) {
@@ -211,15 +211,15 @@ public class GradleDistributionManager {
 
     public NbGradleVersion createVersion(String version) {
         try {
-            URL url = new URL(String.format(DOWNLOAD_URI, version));
+            URI url = new URI(String.format(DOWNLOAD_URI, version));
             return createVersion(version, url, !version.contains("-"));
-        } catch (MalformedURLException ex) {
+        } catch (URISyntaxException ex) {
             //Should not really happen.
         }
         return null;
     }
 
-    private NbGradleVersion createVersion(String version, URL url, boolean b) {
+    private NbGradleVersion createVersion(String version, URI url, boolean b) {
         NbGradleVersion ret = versions.get(url);
         if (ret == null) {
             ret = new NbGradleVersion(version, url, b);
@@ -244,11 +244,11 @@ public class GradleDistributionManager {
 
         public static final String PROP_AVAILABLE = "available"; //NOI18N
         final GradleVersion version;
-        final URL downloadLocation;
+        final URI downloadLocation;
         final boolean release;
         private PropertyChangeSupport pcs;
 
-        private NbGradleVersion(String version, URL downloadLocation, boolean release) {
+        private NbGradleVersion(String version, URI downloadLocation, boolean release) {
             this.version = GradleVersion.version(version);
             this.downloadLocation = downloadLocation;
             this.release = release;
@@ -258,7 +258,7 @@ public class GradleDistributionManager {
             return version;
         }
 
-        public URL getDownloadLocation() {
+        public URI getDownloadLocation() {
             return downloadLocation;
         }
 
@@ -300,18 +300,10 @@ public class GradleDistributionManager {
 
         private File distributionBaseDir() {
             WrapperConfiguration conf = new WrapperConfiguration();
-            try {
-                URI uri = downloadLocation.toURI();
-                conf.setDistribution(uri);
-                PathAssembler pa = new PathAssembler(gradleUserHome);
-                PathAssembler.LocalDistribution dist = pa.getDistribution(conf);
-                return dist.getDistributionDir();
-
-            } catch (URISyntaxException ex) {
-                //TODO: Ignore?
-            }
-            assert false : "We can't  evaluete Gradle base distribution dir, maybe Gradle changed something..."; //NOI18N
-            return null;
+            conf.setDistribution(downloadLocation);
+            PathAssembler pa = new PathAssembler(gradleUserHome);
+            PathAssembler.LocalDistribution dist = pa.getDistribution(conf);
+            return dist.getDistributionDir();
         }
 
         public synchronized void addPropertyChangeListener(PropertyChangeListener l) {
@@ -373,7 +365,7 @@ public class GradleDistributionManager {
         public void run() {
             try {
                 WrapperConfiguration conf = new WrapperConfiguration();
-                conf.setDistribution(version.getDownloadLocation().toURI());
+                conf.setDistribution(version.getDownloadLocation());
                 PathAssembler pa = new PathAssembler(gradleUserHome);
                 Install install = new Install(new Logger(true), this, pa);
                 install.createDist(conf);

@@ -51,8 +51,6 @@ import org.openide.util.NbBundle.Messages;
 @Messages("TXT_CUSTOM=Custom...")
 public class BuildActionsCustomizer extends javax.swing.JPanel {
 
-    private static final String NB_ACTIONS = "nb-actions.xml"; //NOI18N
-
     private final static String CUSTOM_ACTION = Bundle.TXT_CUSTOM();
     private static final String CARD_NOSELECT = "empty"; //NOI18N
     private static final String CARD_DETAILS = "details"; //NOI18N

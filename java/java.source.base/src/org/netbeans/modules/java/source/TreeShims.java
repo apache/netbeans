@@ -20,11 +20,14 @@ package org.netbeans.modules.java.source;
 
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.Tree;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
+import javax.lang.model.element.Name;
+import org.openide.util.Exceptions;
 
 public class TreeShims {
 
@@ -44,6 +47,29 @@ public class TreeShims {
             Method getBody = CaseTree.class.getDeclaredMethod("getBody");
             return (Tree) getBody.invoke(node);
         } catch (NoSuchMethodException ex) {
+            return null;
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+
+    public static Tree getPattern(InstanceOfTree node) {
+        try {
+            Method getPattern = InstanceOfTree.class.getDeclaredMethod("getPattern");
+            return (Tree) getPattern.invoke(node);
+        } catch (NoSuchMethodException ex) {
+            return null;
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+
+    public static Name getBinding(Tree node) {
+        try {
+            Class bpt = Class.forName("com.sun.source.tree.BindingPatternTree");
+            Method getBinding = bpt.getDeclaredMethod("getBinding");
+            return (Name) getBinding.invoke(node);
+        } catch (NoSuchMethodException | ClassNotFoundException ex) {
             return null;
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             throw TreeShims.<RuntimeException>throwAny(ex);

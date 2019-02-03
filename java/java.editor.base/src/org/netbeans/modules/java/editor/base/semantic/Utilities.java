@@ -26,6 +26,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ContinueTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.LabeledStatementTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -368,6 +369,28 @@ public class Utilities {
                 return null;
             }
             
+           return findTokenWithText(info, name.toString(), start, end);
+        }
+        if (class2Kind.get(InstanceOfTree.class).contains(leaf.getKind())) {
+            Tree pattern = TreeShims.getPattern((InstanceOfTree) leaf);
+
+            if (pattern == null || !"BINDING_PATTERN".equals(pattern.getKind().name()))
+                return null;
+
+            Name name = TreeShims.getBinding(pattern);
+
+            if (name == null || name.length() == 0)
+                return null;
+
+            SourcePositions positions = info.getTrees().getSourcePositions();
+            CompilationUnitTree cu = info.getCompilationUnit();
+            int start = (int)positions.getEndPosition(cu, ((InstanceOfTree) leaf).getType());
+            int end   = (int)positions.getEndPosition(cu, pattern);
+
+            if (start == (-1) || end == (-1)) {
+                return null;
+            }
+
            return findTokenWithText(info, name.toString(), start, end);
         }
         throw new IllegalArgumentException("Only MethodDecl, VariableDecl, MemberSelectTree, IdentifierTree, ParameterizedTypeTree, AnnotatedTypeTree, ClassDecl, BreakTree, ContinueTree, and LabeledStatementTree are accepted by this method. Got: " + leaf.getKind());

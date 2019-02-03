@@ -24,6 +24,7 @@ import com.sun.source.tree.ExportsTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ImportTree;
+import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -644,6 +645,11 @@ public class GoToSupport {
     private static boolean isCaretInsideDeclarationName(CompilationInfo info, Tree t, TreePath path, int caret) {
         try {
             switch (t.getKind()) {
+                case INSTANCE_OF:
+                    Tree pattern = TreeShims.getPattern((InstanceOfTree) t);
+                    if (pattern == null || !"BINDING_PATTERN".equals(pattern.getKind().name())) {
+                        return false;
+                    }
                 case ANNOTATION_TYPE:
                 case CLASS:
                 case ENUM:
@@ -713,10 +719,18 @@ public class GoToSupport {
                 if (found != null) {
                     return null;
                 }
+                if (tree != null && "BINDING_PATTERN".equals(tree.getKind().name())) {
+                    if (process(new TreePath(getCurrentPath(), tree))) {
+                        return null;
+                    }
+                }
                 return super.scan(tree, p);
             }
             private boolean process() {
-                Element resolved = info.getTrees().getElement(getCurrentPath());
+                return process(getCurrentPath());
+            }
+            private boolean process(TreePath path) {
+                Element resolved = info.getTrees().getElement(path);
                 if (toFind.equals(resolved)) {
                     found = getCurrentPath();
                     return true;

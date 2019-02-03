@@ -96,5 +96,7 @@ public class TreeShimsCopier extends AbstractProcessor {
     private static final Map<String, String> ALLOWED_CLASSES2TARGET_PACKAGE = new HashMap<String, String>() {{
         put("org.netbeans.modules.java.hints.infrastructure.ErrorHintsProvider", "org.netbeans.modules.java.hints");
         put("org.netbeans.modules.java.completion.JavaCompletionTask", "org.netbeans.modules.java.completion");
+        put("org.netbeans.modules.editor.java.GoToSupport", "org.netbeans.modules.editor.java");
+        put("org.netbeans.modules.java.editor.base.semantic.SemanticHighlighterBase", "org.netbeans.modules.java.editor.base.semantic");
     }};
 }

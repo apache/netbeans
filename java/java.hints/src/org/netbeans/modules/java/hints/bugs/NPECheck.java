@@ -1045,7 +1045,8 @@ public class NPECheck {
                 switch (ownerFQN) {
                     case "org.testng.Assert": argument = node.getArguments().get(0); break;
                     case "junit.framework.Assert":
-                    case "org.junit.Assert": argument = node.getArguments().get(node.getArguments().size() - 1); break;
+                    case "org.junit.Assert": 
+                    case "org.junit.jupiter.api.Assertions": argument = node.getArguments().get(node.getArguments().size() - 1); break;
                 }
 
                 Element param = argument != null && targetState != null ? info.getTrees().getElement(new TreePath(getCurrentPath(), argument)) : null;
@@ -1249,7 +1250,7 @@ public class NPECheck {
         public State visitBreak(BreakTree node, Void p) {
             super.visitBreak(node, p);
 
-            StatementTree target = info.getTreeUtilities().getBreakContinueTarget(getCurrentPath());
+            Tree target = info.getTreeUtilities().getBreakContinueTargetTree(getCurrentPath());
             
             resumeAfter(target, variable2State);
 

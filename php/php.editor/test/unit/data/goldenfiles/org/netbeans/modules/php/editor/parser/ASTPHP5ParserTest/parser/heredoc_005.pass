@@ -54,11 +54,11 @@
         <token id='T_STRING' start='177' end='178'>
             <text>d</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='178' end='192'>
-            <text>.\n\nENDOFHEREDO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='178' end='181'>
+            <text>.\n\n</text>
         </token>
-        <token id='T_END_HEREDOC' start='192' end='193'>
-            <text>C</text>
+        <token id='T_END_HEREDOC' start='181' end='193'>
+            <text>ENDOFHEREDOC</text>
         </token>
         <token id='T_SEMICOLON' start='193' end='194'>
             <text>;</text>
@@ -108,11 +108,11 @@
         <token id='T_STRING' start='266' end='267'>
             <text>d</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='267' end='281'>
-            <text>.\n\nENDOFHEREDO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='267' end='270'>
+            <text>.\n\n</text>
         </token>
-        <token id='T_END_HEREDOC' start='281' end='282'>
-            <text>C</text>
+        <token id='T_END_HEREDOC' start='270' end='282'>
+            <text>ENDOFHEREDOC</text>
         </token>
         <token id='T_SEMICOLON' start='282' end='283'>
             <text>;</text>
@@ -162,13 +162,13 @@
             <ASTError start='163' end='163'/>
             <ASTError start='163' end='173'/>
             <ASTError start='173' end='178'/>
-            <ASTError start='178' end='192'/>
+            <ASTError start='178' end='181'/>
             <EmptyStatement start='193' end='194'/>
             <ASTError start='196' end='252'/>
             <ASTError start='252' end='252'/>
             <ASTError start='252' end='262'/>
             <ASTError start='262' end='267'/>
-            <ASTError start='267' end='281'/>
+            <ASTError start='267' end='270'/>
             <EmptyStatement start='282' end='283'/>
             <ExpressionStatement start='285' end='298'>
                 <FunctionInvocation start='285' end='297'>

@@ -19,20 +19,10 @@
 package org.netbeans.test.php.cc;
 
 import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.util.List;
-import static junit.framework.Assert.fail;
 import junit.framework.Test;
 import org.netbeans.jellytools.EditorOperator;
-import org.netbeans.jellytools.HelpOperator;
-import org.netbeans.jellytools.modules.editor.CompletionJListOperator;
-import org.netbeans.jemmy.EventTool;
-import org.netbeans.jemmy.Timeouts;
-import org.netbeans.jemmy.operators.JEditorPaneOperator;
-import org.netbeans.jemmy.operators.WindowOperator;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.test.php.GeneralPHP;
-import static org.netbeans.test.php.cc.testCC.TEST_PHP_NAME;
 
 /**
  *

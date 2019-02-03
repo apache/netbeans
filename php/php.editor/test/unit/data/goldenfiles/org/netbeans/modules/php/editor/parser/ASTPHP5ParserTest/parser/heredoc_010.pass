@@ -75,11 +75,11 @@
         <token id='T_CURLY_CLOSE' start='232' end='233'>
             <text>}</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='233' end='258'>
-            <text>ENDOFHEREDOC\n\nENDOFHEREDO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='233' end='247'>
+            <text>ENDOFHEREDOC\n\n</text>
         </token>
-        <token id='T_END_HEREDOC' start='258' end='259'>
-            <text>C</text>
+        <token id='T_END_HEREDOC' start='247' end='259'>
+            <text>ENDOFHEREDOC</text>
         </token>
         <token id='T_SEMICOLON' start='259' end='260'>
             <text>;</text>
@@ -138,11 +138,11 @@
         <token id='T_CURLY_CLOSE' start='356' end='357'>
             <text>}</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='357' end='382'>
-            <text>ENDOFHEREDOC\n\nENDOFHEREDO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='357' end='371'>
+            <text>ENDOFHEREDOC\n\n</text>
         </token>
-        <token id='T_END_HEREDOC' start='382' end='383'>
-            <text>C</text>
+        <token id='T_END_HEREDOC' start='371' end='383'>
+            <text>ENDOFHEREDOC</text>
         </token>
         <token id='T_SEMICOLON' start='383' end='384'>
             <text>;</text>
@@ -227,7 +227,7 @@
                                         <Identifier start='223' end='232' name='fooledYou'/>
                                     </Variable>
                                 </ReflectionVariable>
-                                <Scalar start='233' end='258' type='STRING' value='ENDOFHEREDOC\n\n'/>
+                                <Scalar start='233' end='247' type='STRING' value='ENDOFHEREDOC\n\n'/>
                             </Expressions>
                         </Quote>
                     </Parameters>
@@ -263,7 +263,7 @@
                                     <Identifier start='347' end='356' name='fooledYou'/>
                                 </Variable>
                             </ReflectionVariable>
-                            <Scalar start='357' end='382' type='STRING' value='ENDOFHEREDOC\n\n'/>
+                            <Scalar start='357' end='371' type='STRING' value='ENDOFHEREDOC\n\n'/>
                         </Expressions>
                     </Quote>
                 </Assignment>

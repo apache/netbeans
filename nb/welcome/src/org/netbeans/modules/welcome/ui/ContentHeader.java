@@ -49,12 +49,12 @@ public class ContentHeader extends JPanel implements Constants {
         IMG_BANNER = ImageUtilities.loadImage(imgName, true);
         Color c = UIManager.getColor( "nb.startpage.contentheader.color1" ); //NOI18N
         if( null == c )
-            c = new Color( 28, 82, 157 );
+            c = new Color(235, 0, 71);
         COL_BANNER_LEFT = c;
 
         c = UIManager.getColor( "nb.startpage.contentheader.color2" ); //NOI18N
         if( null == c )
-            c = new Color( 41, 62, 109 );
+            c = new Color(0, 116, 226);
         COL_BANNER_RIGHT = c;
     };
 

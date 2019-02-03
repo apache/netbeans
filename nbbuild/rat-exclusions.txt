@@ -115,6 +115,7 @@ java/java.j2semodule/src/org/netbeans/modules/java/j2semodule/ui/resources/modul
 java/java.platform.ui/src/org/netbeans/modules/java/platform/resources/templates/javaplatform.xml
 java/java.project.ui/src/org/netbeans/modules/java/project/ui/resources/*.template
 java/java.source/src/org/netbeans/modules/**/*.template
+groovy/gradle/src/org/netbeans/modules/gradle/newproject/*.template
 ### user templates for mercurial commits, etc.
 ide/mercurial/src/org/netbeans/modules/mercurial/util/log*
 ide/properties/src/org/netbeans/modules/properties/sample.properties.template
@@ -128,7 +129,7 @@ websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/oauth/*.templa
 **/*.nib
 **/*.oql
 **/*.ser
-ide.etc/launcher/macosx/NetBeansLauncher/ReadMe.rtf
+nb/ide.launcher/macosx/NetBeansLauncher/ReadMe.rtf
 harness/jellytools.platform/src/org/netbeans/jellytools/version_info
 
 ######  generated test files 
@@ -149,6 +150,7 @@ platform/openide.util/test/unit/src/org/openide/util/LookupUsesRequestProcessorT
 ######  external dependencies licences and notices 
 **/external/*-license.txt
 **/external/*-notice.txt
+**/external/*.jar.external
 
 ###### generated
 ### signatures for past versions 
@@ -169,7 +171,6 @@ java/java.api.common/src/org/netbeans/modules/java/api/common/project/ui/customi
 apisupport/apisupport.installer/src/org/netbeans/modules/apisupport/installer/resources/licenses/**
 ### companion files for CDDL licensed binaries
 profiler/lib.profiler/release/lib/deployed/**/*.map
-platform/o.n.core/licenses/**
 ### A prefix that is added to license file
 nbbuild/license-dialog-stub.txt
 nbbuild/notice-stub.txt
@@ -189,8 +190,6 @@ java/junit.ui/src/org/netbeans/modules/junit/ui/resources/*.template
 ide/languages.diff/src/org/netbeans/modules/languages/diff/DiffExample.diff
 ide/languages.yaml/src/org/netbeans/modules/languages/yaml/*.yaml
 ide/languages.yaml/src/org/netbeans/modules/languages/yaml/*.yml
-o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/CustomTask_java
-o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/Project.xml_
 java/spring.beans/src/org/netbeans/modules/spring/beans/resources/templates/*.template
 ide/xml.text/src/org/netbeans/modules/xml/text/resources/DTDExample
 ide/xml.text/src/org/netbeans/modules/xml/text/resources/XMLExample

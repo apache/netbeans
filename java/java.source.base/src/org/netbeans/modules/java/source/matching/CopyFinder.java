@@ -1031,7 +1031,9 @@ public class CopyFinder extends ErrorAwareTreeScanner<Boolean, TreePath> {
                     return true;
                 }
             } finally {
-                bindState = origState;
+                if (!options.contains(Options.KEEP_SYNTHETIC_THIS)) {
+                    bindState = origState;
+                }
             }
         }
 
@@ -1554,15 +1556,16 @@ public class CopyFinder extends ErrorAwareTreeScanner<Boolean, TreePath> {
                 bindState.variables.put(name, getCurrentPath());
                 bindState.variables2Names.put(name, currentName);
             }
-        }
-
-        if (allowVariablesRemap) {
+        } else if (allowVariablesRemap) {
             VariableElement nodeEl = (VariableElement) info.getTrees().getElement(getCurrentPath());
             VariableElement pEl = (VariableElement) info.getTrees().getElement(p);
 
             if (nodeEl != null && pEl != null && isSameTypeForVariableRemap(nodeEl.asType(), pEl.asType())) {
                 bindState.variablesRemapToElement.put(pEl, nodeEl);
             }
+        } else {
+            if (!node.getName().contentEquals(name))
+                return false;
         }
 
         return scan(node.getInitializer(), t.getInitializer(), p);
@@ -1878,7 +1881,7 @@ public class CopyFinder extends ErrorAwareTreeScanner<Boolean, TreePath> {
     }
 
     public enum Options {
-        ALLOW_VARIABLES_IN_PATTERN, ALLOW_REMAP_VARIABLE_TO_EXPRESSION, ALLOW_GO_DEEPER, NO_ELEMENT_VERIFY;
+        ALLOW_VARIABLES_IN_PATTERN, ALLOW_REMAP_VARIABLE_TO_EXPRESSION, ALLOW_GO_DEEPER, NO_ELEMENT_VERIFY, KEEP_SYNTHETIC_THIS;
     }
     
     //TODO: copied from java.hints' Utilities:

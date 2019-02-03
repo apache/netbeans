@@ -1,0 +1,72 @@
+<testresult testFile='heredoc_new_line_03.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='815' end='821'>
+            <text>$array</text>
+        </token>
+        <token id='T_EQUAL' start='822' end='823'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='824' end='825'>
+            <text>[</text>
+        </token>
+        <token id='T_START_HEREDOC' start='825' end='833'>
+            <text>&lt;&lt;&lt; END\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='833' end='868'>
+            <text>    foo END\n    bar\n        ENDING\n</text>
+        </token>
+        <token id='T_END_HEREDOC' start='868' end='871'>
+            <text>END</text>
+        </token>
+        <token id='T_COMMA' start='871' end='872'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='873' end='878'>
+            <text>&apos;qux&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='878' end='879'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='879' end='880'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='881' end='881'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='881'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='815' end='880'>
+                <Assignment start='815' end='879' operator='EQUAL'>
+                    <Variable start='815' end='821' isDollared='true'>
+                        <Identifier start='816' end='821' name='array'/>
+                    </Variable>
+                    <ArrayCreation start='824' end='879' type='NEW'>
+                        <ArrayElement start='825' end='871'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Quote start='825' end='871' type='HEREDOC'>
+                                    <Expressions>
+                                        <Scalar start='833' end='868' type='STRING' value='    foo END\n    bar\n        ENDING\n'/>
+                                    </Expressions>
+                                </Quote>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='873' end='878'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='873' end='878' type='STRING' value='&apos;qux&apos;'/>
+                            </Value>
+                        </ArrayElement>
+                    </ArrayCreation>
+                </Assignment>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

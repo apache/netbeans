@@ -422,7 +422,7 @@ public class InfiniteRecursion {
 
         @Override
         public State visitBreak(BreakTree node, Void p) {
-            StatementTree target = ci.getTreeUtilities().getBreakContinueTarget(getCurrentPath());
+            Tree target = ci.getTreeUtilities().getBreakContinueTargetTree(getCurrentPath());
             breakContinueJumps.add(target);
             return State.NO;
         }

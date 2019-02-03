@@ -52,7 +52,7 @@ import org.openide.util.NbBundle.Messages;
  */
 public class NewNbModuleWizardIterator implements WizardDescriptor.AsynchronousInstantiatingIterator<WizardDescriptor> {
     
-    private static final String FOLDER = "Project/APISupport";
+    private static final String FOLDER = "Project/AntJava/APISupport";
     private static final String MODULE_ICON = "org/netbeans/modules/apisupport/project/resources/module.png";
     private static final String SUITE_ICON = "org/netbeans/modules/apisupport/project/suite/resources/suite.png";
 

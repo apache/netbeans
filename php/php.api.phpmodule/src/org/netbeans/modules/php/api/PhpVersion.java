@@ -33,6 +33,7 @@ import org.openide.util.NbBundle;
     "PhpVersion.PHP_70=PHP 7.0",
     "PhpVersion.PHP_71=PHP 7.1",
     "PhpVersion.PHP_72=PHP 7.2",
+    "PhpVersion.PHP_73=PHP 7.3"
 })
 public enum PhpVersion {
 
@@ -71,7 +72,12 @@ public enum PhpVersion {
      * PHP 7.2.
      * @since 2.61
      */
-    PHP_72(Bundle.PhpVersion_PHP_72());
+    PHP_72(Bundle.PhpVersion_PHP_72()),
+    /**
+     * PHP 7.3.
+     * @since 2.62
+     */
+    PHP_73(Bundle.PhpVersion_PHP_73());
 
     private final String displayName;
     private final boolean namespaces;

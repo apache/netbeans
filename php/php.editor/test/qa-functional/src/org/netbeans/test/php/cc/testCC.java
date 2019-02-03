@@ -23,7 +23,6 @@ import java.awt.event.KeyEvent;
 import java.util.List;
 import junit.framework.Test;
 import org.netbeans.jellytools.EditorOperator;
-import org.netbeans.jellytools.HelpOperator;
 import org.netbeans.jellytools.modules.editor.CompletionJListOperator;
 import org.netbeans.jemmy.EventTool;
 import org.netbeans.jemmy.Timeouts;

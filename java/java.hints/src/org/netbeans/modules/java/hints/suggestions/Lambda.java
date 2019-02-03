@@ -225,6 +225,11 @@ public class Lambda {
     @TriggerTreeKind(Kind.LAMBDA_EXPRESSION)
     public static ErrorDescription explicitParameterTypes(HintContext ctx) {
         LambdaExpressionTree let = (LambdaExpressionTree) ctx.getPath().getLeaf();
+
+        if (ctx.getInfo().getTreeUtilities().hasError(let)) {
+            return null;
+        }
+
         boolean hasSyntheticParameterName = false;
         
         for (VariableTree var : let.getParameters()) {
@@ -246,16 +251,17 @@ public class Lambda {
             return null;
         }
         // Check invalid lambda parameter declaration
-        if (ctx.getInfo().getTreeUtilities().hasError(ctx.getPath().getLeaf(), LAMBDA_PARAMETER_ERROR_CODES)) {
+        if (ctx.getInfo().getTreeUtilities().hasError(ctx.getPath().getLeaf())) {
             return null;
         }
         // Check var parameter types
         LambdaExpressionTree let = (LambdaExpressionTree) ctx.getPath().getLeaf();
-        if (let.getParameters() != null && let.getParameters().size() > 0) {
-            VariableTree var = let.getParameters().get(0);
-            if (ctx.getInfo().getTreeUtilities().isVarType(new TreePath(ctx.getPath(), var))) {
-                return null;
-            }
+        if (let.getParameters() == null || let.getParameters().isEmpty()) {
+            return null;
+        }
+        VariableTree var = let.getParameters().get(0);
+        if (ctx.getInfo().getTreeUtilities().isVarType(new TreePath(ctx.getPath(), var))) {
+            return null;
         }
 
         return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), NbBundle.getMessage(Lambda.class, "ERR_ConvertVarLambdaParameters"), new AddVarLambdaParameterTypes(ctx.getInfo(), ctx.getPath()).toEditorFix());

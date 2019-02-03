@@ -126,6 +126,10 @@
                 <package>org.netbeans.modules.xml.wsdl.model.visitor</package>
                 <package>org.netbeans.modules.xml.wsdl.validator.spi</package>
             </public-packages>
+            <class-path-extension>
+                <runtime-relative-path>ext/generated-wsdl-xsd-2004.08.24.jar</runtime-relative-path>
+                <binary-origin>external/generated-wsdl-xsd-2004.08.24.jar</binary-origin>
+            </class-path-extension>
         </data>
     </configuration>
 </project>

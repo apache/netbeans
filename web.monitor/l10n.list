@@ -1,3 +1,0 @@
-# monitor
-read global
-${l10n-module}/serversrc/**/Bundle*.properties

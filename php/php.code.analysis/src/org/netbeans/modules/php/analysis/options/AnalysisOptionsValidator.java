@@ -19,17 +19,21 @@
 package org.netbeans.modules.php.analysis.options;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.netbeans.modules.php.analysis.commands.CodeSniffer;
 import org.netbeans.modules.php.analysis.commands.CodingStandardsFixer;
 import org.netbeans.modules.php.analysis.commands.MessDetector;
+import org.netbeans.modules.php.analysis.commands.PHPStan;
+import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.api.validation.ValidationResult;
 import org.openide.util.NbBundle;
 
 public final class AnalysisOptionsValidator {
 
+    private static final Pattern PHPSTAN_MEMORY_LIMIT_PATTERN = Pattern.compile("^\\-?\\d+[kmg]?$", Pattern.CASE_INSENSITIVE); // NOI18N
     private final ValidationResult result = new ValidationResult();
-
 
     public AnalysisOptionsValidator validateCodeSniffer(String codeSnifferPath, String codeSnifferStandard) {
         validateCodeSnifferPath(codeSnifferPath);
@@ -45,6 +49,13 @@ public final class AnalysisOptionsValidator {
 
     public AnalysisOptionsValidator validateCodingStandardsFixer(String codingStandardsFixerPath) {
         validateCodingStandardsFixerPath(codingStandardsFixerPath);
+        return this;
+    }
+
+    public AnalysisOptionsValidator validatePHPStan(ValidatorPHPStanParameter param) {
+        validatePHPStanPath(param.getPHPStanPath());
+        validatePHPStanConfiguration(param.getConfiguration());
+        validatePHPStanMemoryLimit(param.getMemoryLimit());
         return this;
     }
 
@@ -88,6 +99,37 @@ public final class AnalysisOptionsValidator {
         String warning = CodingStandardsFixer.validate(codingStandardsFixerPath);
         if (warning != null) {
             result.addWarning(new ValidationResult.Message("codingStandardsFixer.path", warning)); // NOI18N
+        }
+        return this;
+    }
+
+    private AnalysisOptionsValidator validatePHPStanPath(String phpStanPath) {
+        if (phpStanPath != null) {
+            String warning = PHPStan.validate(phpStanPath);
+            if (warning != null) {
+                result.addWarning(new ValidationResult.Message("phpStan.path", warning)); // NOI18N
+            }
+        }
+        return this;
+    }
+
+    private AnalysisOptionsValidator validatePHPStanConfiguration(String configuration) {
+        if (!StringUtils.isEmpty(configuration)) {
+            String warning = FileUtils.validateFile("Configuration file", configuration, false); // NOI18N
+            if (warning != null) {
+                result.addWarning(new ValidationResult.Message("phpStan.configuration", warning)); // NOI18N
+            }
+        }
+        return this;
+    }
+
+    @NbBundle.Messages("AnalysisOptionsValidator.phpStan.memory.limit.invalid=Valid memory limit value must be set.")
+    private AnalysisOptionsValidator validatePHPStanMemoryLimit(String memoryLimit) {
+        if (!StringUtils.isEmpty(memoryLimit)) {
+            Matcher matcher = PHPSTAN_MEMORY_LIMIT_PATTERN.matcher(memoryLimit);
+            if (!matcher.matches()) {
+                result.addWarning(new ValidationResult.Message("phpStan.memory.limit", Bundle.AnalysisOptionsValidator_phpStan_memory_limit_invalid())); // NOI18N
+            }
         }
         return this;
     }

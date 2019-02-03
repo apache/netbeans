@@ -23,6 +23,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+import javax.swing.text.BadLocationException;
 import org.codehaus.groovy.ast.ASTNode;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.Hint;
@@ -43,15 +45,28 @@ import org.netbeans.modules.groovy.editor.compiler.error.GroovyError;
 public class GroovyHintsProvider implements HintsProvider {
     
     public static final Logger LOG = Logger.getLogger(GroovyHintsProvider.class.getName()); // NOI18N
-    private boolean cancelled;
+    private volatile boolean cancelled;
 
     @Override
     public RuleContext createRuleContext() {
-        return new RuleContext();
+        return new GroovyRuleContext();
     }
 
     @Override
     public void computeHints(HintsManager manager, RuleContext context, List<Hint> hints) {
+        Map<?, List<? extends Rule.AstRule>> allHints = manager.getHints(false, context);
+        for (Map.Entry<?,List<? extends Rule.AstRule>> hintsEntry : allHints.entrySet()) {
+            for (Rule.AstRule rule : hintsEntry.getValue()) {
+                if (rule instanceof GroovyAstRule) {
+                    ((GroovyAstRule)rule).computeHints((GroovyRuleContext)context, hints);
+                }
+            }
+
+        }
+    }
+
+    private void invokeHint(GroovyAstRule rule, HintsManager manager, RuleContext context, List<Hint> hints) {
+        rule.computeHints((GroovyRuleContext) context, hints);
     }
 
     @Override
@@ -139,6 +154,7 @@ public class GroovyHintsProvider implements HintsProvider {
 
     @Override
     public void cancel() {
+        cancelled = true;
     }
 
     @Override
@@ -189,4 +205,21 @@ public class GroovyHintsProvider implements HintsProvider {
         
         return false;
     }    
+
+    public class GroovyRuleContext extends RuleContext {
+
+        private GroovyParserResult groovyParserResult = null;
+
+        public GroovyParserResult getGroovyParserResult() {
+            if (groovyParserResult == null) {
+                groovyParserResult = (GroovyParserResult)parserResult;
+            }
+            return groovyParserResult;
+        }
+
+        public boolean isCancelled() {
+            return cancelled;
+        }
+
+    }
 }

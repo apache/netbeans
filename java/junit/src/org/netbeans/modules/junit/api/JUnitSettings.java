@@ -39,6 +39,8 @@ public class JUnitSettings extends CommonSettings {
     /** */
     static final String JUNIT4_GENERATOR = JUnitVersion.JUNIT4.name().toLowerCase();
     /** */
+    static final String JUNIT5_GENERATOR = JUnitVersion.JUNIT5.name().toLowerCase();
+    /** */
     static final String JUNIT_GENERATOR_ASK_USER = "ask";               //NOI18N
     /** */
     static final String DEFAULT_GENERATOR = JUNIT_GENERATOR_ASK_USER;

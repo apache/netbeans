@@ -613,7 +613,7 @@ public class NativeExecutionBaseTestCase extends NbTestCase {
     /**
      * Removes directory recursively
      * @param dir directory  to remove
-     * @return true in the case the directory was removed sucessfully, otherwise false
+     * @return true in the case the directory was removed successfully, otherwise false
      */
     public static boolean removeDirectory(File dir) {
         return removeDirectory(dir, true);
@@ -622,7 +622,7 @@ public class NativeExecutionBaseTestCase extends NbTestCase {
     /**
      * Removes directory content (recursively)
      * @param dir directory  to remove
-     * @return true in the case the directory content was removed sucessfully, otherwise false
+     * @return true in the case the directory content was removed successfully, otherwise false
      */
     public static boolean removeDirectoryContent(File dir) {
         return removeDirectory(dir, false);
@@ -631,7 +631,7 @@ public class NativeExecutionBaseTestCase extends NbTestCase {
     /**
      * Removes directory recursively
      * @param dir directory  to remove
-     * @return true in the case the directory was removed sucessfully, otherwise false
+     * @return true in the case the directory was removed successfully, otherwise false
      */
     private static boolean removeDirectory(File dir, boolean removeItself) {
         boolean success = true;

@@ -20,10 +20,8 @@ package org.netbeans.modules.php.editor.typinghooks;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.prefs.Preferences;
 import javax.swing.JEditorPane;
 import javax.swing.text.Document;
-import org.netbeans.modules.editor.indent.spi.CodeStylePreferences;
 import org.netbeans.modules.php.editor.indent.CodeStyle;
 import org.netbeans.modules.php.editor.indent.FmtOptions;
 

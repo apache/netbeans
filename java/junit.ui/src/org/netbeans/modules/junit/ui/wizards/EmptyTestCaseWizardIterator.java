@@ -66,6 +66,11 @@ import org.openide.util.NbBundle;
             content = "../resources/JUnit4TestClass.java.template",
             displayName = "org.netbeans.modules.junit.ui.Bundle#Templates/UnitTests/JUnit4TestClass.java",
             iconBase = "org/netbeans/modules/junit/ui/resources/JUnitLogo.png",
+            description = "/org/netbeans/modules/junit/ui/resources/EmptyJUnitTest.html", category = "invisible"),
+    @TemplateRegistration(folder = "UnitTests", position = 800, scriptEngine = "freemarker",
+            content = "../resources/JUnit5TestClass.java.template",
+            displayName = "org.netbeans.modules.junit.ui.Bundle#Templates/UnitTests/JUnit5TestClass.java",
+            iconBase = "org/netbeans/modules/junit/ui/resources/junit5-logo.png",
             description = "/org/netbeans/modules/junit/ui/resources/EmptyJUnitTest.html", category = "invisible")
 })
 @SuppressWarnings("serial")

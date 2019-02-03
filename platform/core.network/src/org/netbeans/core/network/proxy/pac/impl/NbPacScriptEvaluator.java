@@ -30,9 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.script.Bindings;
 import javax.script.Invocable;
-import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
@@ -182,8 +180,6 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
     private static final Logger LOGGER = Logger.getLogger(NbPacScriptEvaluator.class.getName());
 
 
-    private static final String JS_HELPER_METHODS_INSTANCE_NAME = "jsPacHelpers";
-    
     private final boolean canUseURLCaching;
     private final PacScriptEngine scriptEngine;
     private final SimpleObjCache<URI,List<Proxy>> resultCache;
@@ -278,9 +274,6 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
     private PacScriptEngine getScriptEngine(String pacSource) throws PacParsingException {
 
         try {
-            String helperJSScript = getHelperJsScriptSource();
-            LOGGER.log(Level.FINER, "PAC Helper JavaScript :\n{0}", helperJSScript);
-            
             ScriptEngine engine;
             if (nashornJava8u40Available) {
                 engine = getNashornJSScriptEngine();
@@ -295,12 +288,51 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
             if (pacHelpers == null) { // this should be redundant but we take no chances
                 pacHelpers = new NbPacHelperMethods();
             }
-            Bindings b = engine.createBindings();
-            b.put(JS_HELPER_METHODS_INSTANCE_NAME, pacHelpers);
-            engine.setBindings(b, ScriptContext.ENGINE_SCOPE);
+
+            String[] allowedGlobals =
+                    ("Object,Function,Array,String,Date,Number,BigInt,"
+                    + "Boolean,RegExp,Math,JSON,NaN,Infinity,undefined,"
+                    + "isNaN,isFinite,parseFloat,parseInt,encodeURI,"
+                    + "encodeURIComponent,decodeURI,decodeURIComponent,eval,"
+                    + "escape,unescape,"
+                    + "Error,EvalError,RangeError,ReferenceError,SyntaxError,"
+                    + "TypeError,URIError,ArrayBuffer,Int8Array,Uint8Array,"
+                    + "Uint8ClampedArray,Int16Array,Uint16Array,Int32Array,"
+                    + "Uint32Array,Float32Array,Float64Array,BigInt64Array,"
+                    + "BigUint64Array,DataView,Map,Set,WeakMap,"
+                    + "WeakSet,Symbol,Reflect,Proxy,Promise,SharedArrayBuffer,"
+                    + "Atomics,console,performance,"
+                    + "arguments").split(",");
+
+            Object cleaner = engine.eval("(function(allowed) {\n"
+                    + "   var names = Object.getOwnPropertyNames(this);\n"
+                    + "   MAIN: for (var i = 0; i < names.length; i++) {\n"
+                    + "     for (var j = 0; j < allowed.length; j++) {\n"
+                    + "       if (names[i] === allowed[j]) {\n"
+                    + "         continue MAIN;\n"
+                    + "       }\n"
+                    + "     }\n"
+                    + "     delete this[names[i]];\n"
+                    + "   }\n"
+                    + "})");
+
+            try {
+                ((Invocable)engine).invokeMethod(cleaner, "call", null, allowedGlobals);
+            } catch (NoSuchMethodException ex) {
+                throw new ScriptException(ex);
+            }
+
             
             engine.eval(pacSource);
-            engine.eval(helperJSScript);
+
+            String helperJSScript = HelperScriptFactory.getPacHelperSource();
+            LOGGER.log(Level.FINER, "PAC Helper JavaScript :\n{0}", helperJSScript);
+            Object registerPacMethods = engine.eval(helperJSScript);
+            try {
+                ((Invocable) engine).invokeMethod(registerPacMethods, "call", null, pacHelpers);
+            } catch (NoSuchMethodException ex) {
+                throw new ScriptException(ex);
+            }
 
             // Do some minimal testing of the validity of the PAC Script.
             final PacJsEntryFunction jsMainFunction;
@@ -377,11 +409,6 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
         return false;
     }
     
-
-    private String getHelperJsScriptSource() throws PacParsingException {
-        return HelperScriptFactory.getPacHelperSource(JS_HELPER_METHODS_INSTANCE_NAME);
-    }
-
 
     /**
      * Does the script source make reference to any of the date/time functions

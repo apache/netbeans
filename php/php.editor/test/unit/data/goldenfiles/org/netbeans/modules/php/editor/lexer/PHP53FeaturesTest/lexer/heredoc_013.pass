@@ -16,13 +16,14 @@ token #14 PHP_STRING prefix
 token #15 PHP_HEREDOC_TAG_START <<<"MYLABEL"\n
 token #16 PHP_ENCAPSED_AND_WHITESPACE test: 
 token #17 PHP_VARIABLE $test
-token #18 PHP_HEREDOC_TAG_END \nMYLABEL
-token #19 PHP_SEMICOLON ;
-token #20 WHITESPACE \n
-token #21 PHP_ECHO echo
-token #22 WHITESPACE  
-token #23 PHP_VARIABLE $var
-token #24 PHP_SEMICOLON ;
-token #25 WHITESPACE \n
-token #26 PHP_CLOSETAG ?>
-token #27 T_INLINE_HTML \n--EXPECTF--\nParse error: syntax error, unexpected T_START_HEREDOC in %sheredoc_013.php on line %d\n
+token #18 PHP_CONSTANT_ENCAPSED_STRING \n
+token #19 PHP_HEREDOC_TAG_END MYLABEL
+token #20 PHP_SEMICOLON ;
+token #21 WHITESPACE \n
+token #22 PHP_ECHO echo
+token #23 WHITESPACE  
+token #24 PHP_VARIABLE $var
+token #25 PHP_SEMICOLON ;
+token #26 WHITESPACE \n
+token #27 PHP_CLOSETAG ?>
+token #28 T_INLINE_HTML \n--EXPECTF--\nParse error: syntax error, unexpected T_START_HEREDOC in %sheredoc_013.php on line %d\n

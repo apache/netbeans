@@ -1310,7 +1310,7 @@ public class JavaCustomIndexer extends CustomIndexer {
 
     private static String computeJavacVersion() {
         if (NoJavacHelper.hasNbJavac()) {
-            File nbJavac = InstalledFileLocator.getDefault().locate("modules/ext/nb-javac-impl.jar", null, false);
+            File nbJavac = InstalledFileLocator.getDefault().locate("modules/ext/nb-javac-impl.jar", "org.netbeans.modules.nbjavac.impl", false);
             if (nbJavac != null) {
                 return String.valueOf(nbJavac.lastModified());
             }

@@ -114,7 +114,7 @@ public class PropertySheetTest extends NbTestCase {
                     Thread.sleep(1000);
                 } else break;
             }
-            // Test if the initialization was sucessfull
+            // Test if the initialization was successfull
             
             initEditorValue = te.getAsText();
             LOG.info("Got initial editor value " + initEditorValue);
@@ -151,7 +151,7 @@ public class PropertySheetTest extends NbTestCase {
                 }
             });
             
-            // Test if the reinitialization was sucessfull
+            // Test if the reinitialization was successfull
             postChangeEditorValue = te.getAsText();
             LOG.info("postEditorChangeValue = " + postChangeEditorValue);
         } finally {

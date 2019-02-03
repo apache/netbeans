@@ -21,8 +21,8 @@
  */
 
 #include "applauncher.h"
-#include "../../o.n.bootstrap/launcher/windows/utilsfuncs.h"
-#include "../../o.n.bootstrap/launcher/windows/argnames.h"
+#include "../../../platform/o.n.bootstrap/launcher/windows/utilsfuncs.h"
+#include "../../../platform/o.n.bootstrap/launcher/windows/argnames.h"
 
 using namespace std;
 

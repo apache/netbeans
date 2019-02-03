@@ -9,11 +9,11 @@
         <token id='T_START_NOWDOC' start='236' end='249'>
             <text>&lt;&lt;&lt; &apos;NOWDOC&apos;\n</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='272' end='278'>
-            <text>\nNOWDO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='249' end='273'>
+            <text>simpletextwithoutspaces\n</text>
         </token>
-        <token id='T_END_NOWDOC' start='278' end='279'>
-            <text>C</text>
+        <token id='T_END_NOWDOC' start='273' end='279'>
+            <text>NOWDOC</text>
         </token>
         <token id='T_SEMICOLON' start='279' end='280'>
             <text>;</text>
@@ -46,7 +46,7 @@
         <Statements>
             <InLineHtml start='0' end='213'/>
             <EchoStatement start='231' end='280'>
-                <Scalar start='236' end='279' type='STRING' value='\n'/>
+                <Scalar start='236' end='279' type='STRING' value='simpletextwithoutspaces\n'/>
             </EchoStatement>
             <ExpressionStatement start='306' end='318'>
                 <Assignment start='306' end='317' operator='EQUAL'>

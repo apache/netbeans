@@ -573,6 +573,7 @@
                 </test-type>
             </test-dependencies>
             <friend-packages>
+                <friend>org.netbeans.modules.gradle.spring</friend>
                 <friend>org.netbeans.modules.maven.spring</friend>
                 <friend>org.netbeans.modules.spring.webmvc</friend>
                 <package>org.netbeans.modules.spring.api</package>

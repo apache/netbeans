@@ -19,6 +19,11 @@
 
 package org.netbeans.lib.editor.util.swing;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import javax.swing.event.DocumentEvent;
@@ -26,7 +31,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 import org.netbeans.junit.NbTestCase;
-import org.openide.util.Exceptions;
 
 public class DocumentUtilitiesTest extends NbTestCase {
 
@@ -129,4 +133,56 @@ public class DocumentUtilitiesTest extends NbTestCase {
         
     }
 
+    private static class SampleListener implements PropertyChangeListener {
+        private Map<String,Integer> invokations = new HashMap<>();
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            Integer oldCallCount = invokations.get(evt.getPropertyName());
+            invokations.put(evt.getPropertyName(), oldCallCount == null ? 1 : (oldCallCount + 1));
+        }
+
+        public void reset() {
+            invokations.clear();
+        }
+
+        public int getCallCount(String propertyName) {
+            Integer count = invokations.get(propertyName);
+            return count == null ? 0 : count;
+        }
+    }
+
+    public void testAddWeakPropertyChangeListenerUnsupported() {
+        // It is expected, that if the backing document does not support
+        // PropertyChangeListener (PlainDocument), null is returned
+        SampleListener sl = new SampleListener();
+        PlainDocument pd = new PlainDocument();
+        PropertyChangeListener weakListener = DocumentUtilities.addWeakPropertyChangeListener(pd, sl);
+        assertNull(weakListener);
+    }
+
+    public void testAddWeakPropertyChangeListenerSupported() {
+        SampleListener sl = new SampleListener();
+        // This simulates the construction of the BaseDocument
+        PlainDocument pd = new PlainDocument();
+        PropertyChangeSupport pcs = new PropertyChangeSupport(pd);
+        pd.putProperty(PropertyChangeSupport.class, pcs);
+
+        PropertyChangeListener weakListener = DocumentUtilities.addWeakPropertyChangeListener(pd, sl);
+        // A PropertyChangeListener added through addWeakPropertyChangeListener
+        // to a PropertyChangeListener supporting document, must be reflected
+        // in a non-null return value
+        assertNotNull(weakListener);
+
+        // the backing listner needs to be invoked when a property is changed
+        pcs.firePropertyChange("demoProperty", null, "demoValue");
+        assertEquals(1, sl.getCallCount("demoProperty"));
+
+        // The returned Listner must be usable for listener removal
+        DocumentUtilities.removePropertyChangeListener(pd, weakListener);
+        sl.reset();
+        pcs.firePropertyChange("demoProperty", null, "demoValue");
+        assertEquals(0, sl.getCallCount("demoProperty"));
+
+    }
 }

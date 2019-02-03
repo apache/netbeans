@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -42,6 +43,7 @@ import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.lexer.InputAttributes;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Pair;
 import org.openide.xml.XMLUtil;
@@ -128,9 +130,11 @@ public class ModuleDescription {
         if (projectDirectory.getFileObject("../../src/java.base/share/classes/module-info.java") != null &&
             projectDirectory.getFileObject("../../src/java.compiler/share/classes/module-info.java") != null)
             return Pair.of(projectDirectory.getFileObject("../.."), Pair.of(true, false));
-        if (projectDirectory.getFileObject("../../../modules.xml") != null || projectDirectory.getFileObject("../../../jdk/src/java.base/share/classes/module-info.java") != null)
+        if (projectDirectory.getFileObject("../../../modules.xml") != null ||
+            (projectDirectory.getFileObject("../../../jdk/src/java.base/share/classes/module-info.java") != null && projectDirectory.getFileObject("../../../langtools/src/java.compiler/share/classes/module-info.java") != null))
             return Pair.of(projectDirectory.getFileObject("../../.."), Pair.of(false, false));
-        if (projectDirectory.getFileObject("../../../../modules.xml") != null || projectDirectory.getFileObject("../../../../jdk/src/java.base/share/classes/module-info.java") != null)
+        if (projectDirectory.getFileObject("../../../../modules.xml") != null ||
+            (projectDirectory.getFileObject("../../../../jdk/src/java.base/share/classes/module-info.java") != null && projectDirectory.getFileObject("../../../langtools/src/java.compiler/share/classes/module-info.java") != null))
             return Pair.of(projectDirectory.getFileObject("../../../.."), Pair.of(false, false));
 
         return null;
@@ -231,7 +235,7 @@ public class ModuleDescription {
                 }
             }
 
-            if (current.getNameExt().equals("test") && current.getFileObject("TEST.ROOT") != null) {
+            if (current.getFileObject("TEST.ROOT") != null) {
                 continue; //do not look inside test folders
             }
 
@@ -332,6 +336,7 @@ public class ModuleDescription {
     }
 
     public static class ModuleRepository {
+        private final Set<Project> openProjects = new HashSet<>();
         private final FileObject root;
         private final boolean hasModuleInfos;
         private final boolean consolidatedRepository;
@@ -448,6 +453,18 @@ public class ModuleDescription {
 
         public boolean isConsolidatedRepo() {
             return consolidatedRepository;
+        }
+
+        public synchronized void projectOpened(Project opened) {
+            this.openProjects.add(opened);
+        }
+
+        public synchronized void projectClosed(Project closed) {
+            this.openProjects.remove(closed);
+        }
+
+        public synchronized boolean isAnyProjectOpened() {
+            return !this.openProjects.isEmpty();
         }
     }
 

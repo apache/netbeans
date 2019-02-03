@@ -30,11 +30,11 @@
         <token id='T_START_NOWDOC' start='141' end='158'>
             <text>&lt;&lt;&lt;&apos;ENDOFNOWDOC&apos;\n</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='158' end='253'>
-            <text>{$fooledYou}ENDOFNOWDOC{$fooledYou}\nENDOFNOWDOC{$fooledYou}\n{$fooledYou}ENDOFNOWDOC\n\nENDOFNOWDO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='158' end='243'>
+            <text>{$fooledYou}ENDOFNOWDOC{$fooledYou}\nENDOFNOWDOC{$fooledYou}\n{$fooledYou}ENDOFNOWDOC\n\n</text>
         </token>
-        <token id='T_END_NOWDOC' start='253' end='254'>
-            <text>C</text>
+        <token id='T_END_NOWDOC' start='243' end='254'>
+            <text>ENDOFNOWDOC</text>
         </token>
         <token id='T_SEMICOLON' start='254' end='255'>
             <text>;</text>
@@ -48,11 +48,11 @@
         <token id='T_START_NOWDOC' start='262' end='279'>
             <text>&lt;&lt;&lt;&apos;ENDOFNOWDOC&apos;\n</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='279' end='374'>
-            <text>{$fooledYou}ENDOFNOWDOC{$fooledYou}\nENDOFNOWDOC{$fooledYou}\n{$fooledYou}ENDOFNOWDOC\n\nENDOFNOWDO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='279' end='364'>
+            <text>{$fooledYou}ENDOFNOWDOC{$fooledYou}\nENDOFNOWDOC{$fooledYou}\n{$fooledYou}ENDOFNOWDOC\n\n</text>
         </token>
-        <token id='T_END_NOWDOC' start='374' end='375'>
-            <text>C</text>
+        <token id='T_END_NOWDOC' start='364' end='375'>
+            <text>ENDOFNOWDOC</text>
         </token>
         <token id='T_SEMICOLON' start='375' end='376'>
             <text>;</text>

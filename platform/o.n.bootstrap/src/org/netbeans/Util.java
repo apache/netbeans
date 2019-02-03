@@ -20,8 +20,6 @@
 package org.netbeans;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
 import java.util.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -61,15 +59,20 @@ public final class Util {
         String suffix = "-test.jar"; // NOI18N
         File physicalModuleFile = File.createTempFile(prefix, suffix);
         physicalModuleFile.deleteOnExit();
-        try (InputStream is = Files.newInputStream(moduleFile.toPath());
-                OutputStream os = Files.newOutputStream(physicalModuleFile.toPath())) {
-            byte[] buf = new byte[4096];
-            int i;
-            while ((i = is.read(buf)) != -1) {
-                os.write(buf, 0, i);
+        InputStream is = new FileInputStream(moduleFile);
+        try {
+            OutputStream os = new FileOutputStream(physicalModuleFile);
+            try {
+                byte[] buf = new byte[4096];
+                int i;
+                while ((i = is.read(buf)) != -1) {
+                    os.write(buf, 0, i);
+                }
+            } finally {
+                os.close();
             }
-        } catch (InvalidPathException ex) {
-            throw new IOException(ex);
+        } finally {
+            is.close();
         }
         err.fine("Made " + physicalModuleFile);
         return physicalModuleFile;
@@ -256,9 +259,7 @@ public final class Util {
                     List<Module> providers = providersOf.get(dep.getName());
 
                     if (providers != null) {
-                        if (l == null) {
-                            l = new LinkedList<Module>();
-                        }
+                        l = fillMapSlot(m, m1);
                         l.addAll(providers);
                     }
                 }
@@ -267,9 +268,7 @@ public final class Util {
                     Module m2 = modulesByName.get(cnb);
 
                     if (m2 != null && modulesSet.contains(m2)) {
-                        if (l == null) {
-                            l = new LinkedList<Module>();
-                        }
+                        l = fillMapSlot(m, m1);
                         l.add(m2);
                     }
                 }
@@ -283,14 +282,14 @@ public final class Util {
                 frags.retainAll(modules);
             
                 for (Module f : frags) {
+                    List<Module> fragmentDep = fillMapSlot(m, f);
+                    fragmentDep.add(m1);
                     for (Dependency dep : f.getDependenciesArray()) {
                         if (dep.getType() == Dependency.TYPE_REQUIRES) {
                             List<Module> providers = providersOf.get(dep.getName());
 
                             if (providers != null) {
-                                if (l == null) {
-                                    l = new LinkedList<Module>();
-                                }
+                                l = fillMapSlot(m, m1);
                                 l.addAll(providers);
                             }
                         }
@@ -299,9 +298,7 @@ public final class Util {
                             Module m2 = modulesByName.get(cnb);
 
                             if (m2 != null && modulesSet.contains(m2)) {
-                                if (l == null) {
-                                    l = new LinkedList<Module>();
-                                }
+                                l = fillMapSlot(m, m1);
                                 l.add(m2);
                             }
                         }
@@ -316,6 +313,15 @@ public final class Util {
             }
         }
         return m;
+    }
+
+    private static List<Module> fillMapSlot(Map<Module, List<Module>> map, Module module) {
+        List<Module> l = map.get(module);
+        if (l == null) {
+            l = new LinkedList<>();
+            map.put(module, l);
+        }
+        return l;
     }
     
     /**

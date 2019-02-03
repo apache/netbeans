@@ -127,13 +127,9 @@ public class PHP53FeaturesTest extends PHPLexerTestBase {
         performTest("lexer/nowdoc_008");
     }
 
-    public void testNowDoc_09() throws Exception {
-        performTest("lexer/nowdoc_009");
-    }
-
-    public void testNowDoc_10() throws Exception {
-        performTest("lexer/nowdoc_010");
-    }
+    // 09, 10: old syntax tests
+    // we don't provide support for them any longer
+    // we can use the new syntax since PHP 7.3
 
     public void testNowDoc_11() throws Exception {
         performTest("lexer/nowdoc_011");
@@ -187,13 +183,9 @@ public class PHP53FeaturesTest extends PHPLexerTestBase {
         performTest("lexer/heredoc_008");
     }
 
-    public void testHereDoc53_09() throws Exception {
-        performTest("lexer/heredoc_009");
-    }
-
-    public void testHereDoc53_10() throws Exception {
-        performTest("lexer/heredoc_010");
-    }
+    // 09, 10: old syntax tests
+    // we don't provide support for them any longer
+    // we can use the new syntax since PHP 7.3
 
     public void testHereDoc53_11() throws Exception {
         performTest("lexer/heredoc_011");

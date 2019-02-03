@@ -43,7 +43,6 @@ public class NetigsoUsesSwingTest extends SetupHid {
     }
 
     protected @Override void setUp() throws Exception {
-        NetigsoUtil.downgradeJDK();
         Locale.setDefault(Locale.US);
         clearWorkDir();
 

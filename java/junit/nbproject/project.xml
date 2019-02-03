@@ -155,7 +155,7 @@
                 <dependency>
                     <code-name-base>org.netbeans.modules.junitlib</code-name-base>
                     <run-dependency>
-                        <specification-version>1.2</specification-version>
+                        <specification-version>1.8</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -349,6 +349,10 @@
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
+                        <code-name-base>org.netbeans.libs.junit5</code-name-base>
+                        <compile-dependency/>
+                    </test-dependency>
+                    <test-dependency>
                         <code-name-base>org.netbeans.modules.nbjunit</code-name-base>
                         <recursive/>
                         <compile-dependency/>
@@ -359,6 +363,7 @@
                 </test-type>
             </test-dependencies>
             <friend-packages>
+                <friend>org.netbeans.modules.gradle.test</friend>
                 <friend>org.netbeans.modules.junit.ant</friend>
                 <friend>org.netbeans.modules.junit.ant.ui</friend>
                 <friend>org.netbeans.modules.junit.ui</friend>

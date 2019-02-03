@@ -18,9 +18,6 @@
  */
 package org.netbeans.test.php.operators;
 
-import java.awt.Component;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import junit.framework.Test;
 import org.netbeans.jellytools.Bundle;

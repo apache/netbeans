@@ -210,11 +210,11 @@
         <token id='T_START_HEREDOC' start='349' end='356'>
             <text>&lt;&lt;&lt;EOF\n</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='360' end='363'>
-            <text>\nEO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='356' end='361'>
+            <text>test\n</text>
         </token>
-        <token id='T_END_HEREDOC' start='363' end='364'>
-            <text>F</text>
+        <token id='T_END_HEREDOC' start='361' end='364'>
+            <text>EOF</text>
         </token>
         <token id='T_SEMICOLON' start='364' end='365'>
             <text>;</text>
@@ -264,11 +264,11 @@
         <token id='T_START_NOWDOC' start='422' end='431'>
             <text>&lt;&lt;&lt;&apos;EOF&apos;\n</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='435' end='438'>
-            <text>\nEO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='431' end='436'>
+            <text>test\n</text>
         </token>
-        <token id='T_END_NOWDOC' start='438' end='439'>
-            <text>F</text>
+        <token id='T_END_NOWDOC' start='436' end='439'>
+            <text>EOF</text>
         </token>
         <token id='T_SEMICOLON' start='439' end='440'>
             <text>;</text>
@@ -318,11 +318,11 @@
         <token id='T_START_HEREDOC' start='497' end='504'>
             <text>&lt;&lt;&lt;EOF\n</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='522' end='527'>
-            <text>\n\n\nEO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='504' end='525'>
+            <text>test1\ntest2\n\ntest3\n\n\n</text>
         </token>
-        <token id='T_END_HEREDOC' start='527' end='528'>
-            <text>F</text>
+        <token id='T_END_HEREDOC' start='525' end='528'>
+            <text>EOF</text>
         </token>
         <token id='T_SEMICOLON' start='528' end='529'>
             <text>;</text>
@@ -372,11 +372,11 @@
         <token id='T_START_NOWDOC' start='586' end='595'>
             <text>&lt;&lt;&lt;&apos;EOF&apos;\n</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='613' end='618'>
-            <text>\n\n\nEO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='595' end='616'>
+            <text>test1\ntest2\n\ntest3\n\n\n</text>
         </token>
-        <token id='T_END_NOWDOC' start='618' end='619'>
-            <text>F</text>
+        <token id='T_END_NOWDOC' start='616' end='619'>
+            <text>EOF</text>
         </token>
         <token id='T_SEMICOLON' start='619' end='620'>
             <text>;</text>
@@ -620,7 +620,7 @@
                     </Variable>
                     <Quote start='349' end='364' type='HEREDOC'>
                         <Expressions>
-                            <Scalar start='360' end='363' type='STRING' value='\n'/>
+                            <Scalar start='356' end='361' type='STRING' value='test\n'/>
                         </Expressions>
                     </Quote>
                 </Assignment>
@@ -659,7 +659,7 @@
                     <Variable start='417' end='419' isDollared='true'>
                         <Identifier start='418' end='419' name='x'/>
                     </Variable>
-                    <Scalar start='422' end='439' type='STRING' value='\n'/>
+                    <Scalar start='422' end='439' type='STRING' value='test\n'/>
                 </Assignment>
             </ExpressionStatement>
             <ExpressionStatement start='441' end='454'>
@@ -698,7 +698,7 @@
                     </Variable>
                     <Quote start='497' end='528' type='HEREDOC'>
                         <Expressions>
-                            <Scalar start='522' end='527' type='STRING' value='\n\n\n'/>
+                            <Scalar start='504' end='525' type='STRING' value='test1\ntest2\n\ntest3\n\n\n'/>
                         </Expressions>
                     </Quote>
                 </Assignment>
@@ -737,7 +737,7 @@
                     <Variable start='581' end='583' isDollared='true'>
                         <Identifier start='582' end='583' name='x'/>
                     </Variable>
-                    <Scalar start='586' end='619' type='STRING' value='\n\n\n'/>
+                    <Scalar start='586' end='619' type='STRING' value='test1\ntest2\n\ntest3\n\n\n'/>
                 </Assignment>
             </ExpressionStatement>
             <ExpressionStatement start='621' end='634'>

@@ -39,10 +39,12 @@ import javax.swing.event.ChangeListener;
 
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
+import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.project.libraries.Library;
 import org.netbeans.api.project.libraries.LibraryManager;
 import org.netbeans.modules.java.openjdk.project.JDKProject.Root;
 import org.netbeans.modules.java.openjdk.project.JDKProject.RootKind;
+import org.netbeans.modules.java.openjdk.project.ModuleDescription.ModuleRepository;
 import org.netbeans.modules.parsing.spi.indexing.PathRecognizerRegistration;
 import org.netbeans.spi.java.classpath.ClassPathImplementation;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
@@ -69,14 +71,17 @@ public class ClassPathProviderImpl implements ClassPathProvider {
     };
     
     private final ClassPath bootCP;
+    private final ClassPath moduleBootCP;
     private final ClassPath compileCP;
     private final ClassPath moduleCompileCP;
     private final ClassPath sourceCP;
     private final ClassPath testsCompileCP;
     private final ClassPath testsRegCP;
+    private final ModuleRepository repository;
 
-    public ClassPathProviderImpl(JDKProject project) {
+    public ClassPathProviderImpl(JDKProject project, ModuleRepository repository) {
         bootCP = ClassPath.EMPTY;
+        moduleBootCP = ClassPath.EMPTY;
         
         File fakeJdk = InstalledFileLocator.getDefault().locate("modules/ext/fakeJdkClasses.zip", "org.netbeans.modules.java.openjdk.project", false);
         URL fakeJdkURL = null;
@@ -179,6 +184,7 @@ public class ClassPathProviderImpl implements ClassPathProvider {
         }
         testsCompileCP = ClassPathSupport.createClassPath(testCompileRoots.toArray(new URL[0]));
         testsRegCP = ClassPathSupport.createClassPath(testsRegRoots);
+        this.repository = repository;
     }
 
     private static final String[] TEST_LIBRARIES = new String[] {"testng", "junit_4"};
@@ -187,22 +193,22 @@ public class ClassPathProviderImpl implements ClassPathProvider {
         return FileUtil.getArchiveRoot(projectDir.toURI().resolve("fake-target.jar").toURL());
     }
 
-    /**
-     * Copied from JavaClassPathConstants, to avoid depending on a new version of it.
-     */
-    private static final String MODULE_COMPILE_PATH = "modules/compile";
-    private static final String MODULE_CLASS_PATH = "modules/classpath";
-
     @Override
     public ClassPath findClassPath(FileObject file, String type) {
         if (sourceCP.findOwnerRoot(file) != null) {
+            if (!repository.isAnyProjectOpened()) {
+                //if no project is open, java.base may not be indexed. Fallback on default queries:
+                return null;
+            }
             if (ClassPath.BOOT.equals(type)) {
+                return bootCP;
+            } else if (JavaClassPathConstants.MODULE_BOOT_PATH.equals(type)) {
                 return bootCP;
             } else if (ClassPath.COMPILE.equals(type)) {
                 return compileCP;
             } else if (ClassPath.SOURCE.equals(type)) {
                 return sourceCP;
-            } else if (MODULE_COMPILE_PATH.equals(type)) {
+            } else if (JavaClassPathConstants.MODULE_COMPILE_PATH.equals(type)) {
                 return moduleCompileCP;
             }
         } else {
@@ -211,8 +217,8 @@ public class ClassPathProviderImpl implements ClassPathProvider {
             if (ClassPath.BOOT.equals(type)) {
                 return ClassPath.EMPTY;
             } else if (ClassPath.COMPILE.equals(type) ||
-                       MODULE_COMPILE_PATH.equals(type) ||
-                       MODULE_CLASS_PATH.equals(type)) {
+                       JavaClassPathConstants.MODULE_COMPILE_PATH.equals(type) ||
+                       JavaClassPathConstants.MODULE_CLASS_PATH.equals(type)) {
                 return testsCompileCP;
             }
 

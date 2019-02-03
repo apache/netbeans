@@ -30,11 +30,11 @@
         <token id='T_CURLY_CLOSE' start='143' end='144'>
             <text>}</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='144' end='158'>
-            <text>.\n\nENDOFHEREDO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='144' end='147'>
+            <text>.\n\n</text>
         </token>
-        <token id='T_END_HEREDOC' start='158' end='159'>
-            <text>C</text>
+        <token id='T_END_HEREDOC' start='147' end='159'>
+            <text>ENDOFHEREDOC</text>
         </token>
         <token id='T_SEMICOLON' start='159' end='160'>
             <text>;</text>
@@ -60,11 +60,11 @@
         <token id='T_CURLY_CLOSE' start='208' end='209'>
             <text>}</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='209' end='223'>
-            <text>.\n\nENDOFHEREDO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='209' end='212'>
+            <text>.\n\n</text>
         </token>
-        <token id='T_END_HEREDOC' start='223' end='224'>
-            <text>C</text>
+        <token id='T_END_HEREDOC' start='212' end='224'>
+            <text>ENDOFHEREDOC</text>
         </token>
         <token id='T_SEMICOLON' start='224' end='225'>
             <text>;</text>
@@ -124,7 +124,7 @@
                                         <Identifier start='142' end='143' name='a'/>
                                     </Variable>
                                 </ReflectionVariable>
-                                <Scalar start='144' end='158' type='STRING' value='.\n\n'/>
+                                <Scalar start='144' end='147' type='STRING' value='.\n\n'/>
                             </Expressions>
                         </Quote>
                     </Parameters>
@@ -143,7 +143,7 @@
                                     <Identifier start='207' end='208' name='b'/>
                                 </Variable>
                             </ReflectionVariable>
-                            <Scalar start='209' end='223' type='STRING' value='.\n\n'/>
+                            <Scalar start='209' end='212' type='STRING' value='.\n\n'/>
                         </Expressions>
                     </Quote>
                 </Assignment>

@@ -34,7 +34,7 @@ import org.openide.util.Exceptions;
  *
  * @author Jiri Rechtacek
  */
-public final class InstallUnitWizardModel extends OperationWizardModel {
+public class InstallUnitWizardModel extends OperationWizardModel {
     private Installer installer = null;
     private OperationType doOperation;
     private static Set<String> approvedLicences = new HashSet<String> ();
@@ -66,6 +66,11 @@ public final class InstallUnitWizardModel extends OperationWizardModel {
         assert c.getSupport() != null || c.listAll().isEmpty() : "Non empty container[list: " + c.listAll() +
                 ", invalid: " + c.listInvalid() + "]: but support is " + c.getSupport();
         return c;
+    }
+
+    @Override
+    OperationContainer<InstallSupport> getInstallContainer() {
+        return getBaseContainer();
     }
     
     private OperationContainer<InstallSupport> getBaseContainerImpl() {
@@ -179,5 +184,4 @@ public final class InstallUnitWizardModel extends OperationWizardModel {
     public void setPluginManager (PluginManagerUI manager) {
         this.manager = manager;
     }
-    
 }

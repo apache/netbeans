@@ -68,6 +68,10 @@ public class DefaultTestCase extends NbTestCase {
         }
     }
     
+    protected InputStream updateCatalogContents() {
+        return TestUtils.class.getResourceAsStream("data/updates.xml");
+    }
+    
     protected void setUp() throws Exception {
         super.setUp();
         this.clearWorkDir ();
@@ -76,7 +80,7 @@ public class DefaultTestCase extends NbTestCase {
             catalogFile.createNewFile();
         }
         catalogURL = org.openide.util.Utilities.toURI(catalogFile).toURL();
-        populateCatalog(TestUtils.class.getResourceAsStream("data/updates.xml"));
+        populateCatalog(updateCatalogContents());
         
         TestUtils.setUserDir (getWorkDirPath ());
         TestUtils.testInit();

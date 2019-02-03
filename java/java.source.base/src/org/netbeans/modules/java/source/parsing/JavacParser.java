@@ -59,6 +59,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import javax.annotation.processing.Processor;
 import javax.swing.event.ChangeEvent;
@@ -670,6 +671,7 @@ public class JavacParser extends Parser {
 
     static JavacTaskImpl createJavacTask(
             final FileObject file,
+            final JavaFileObject jfo,
             final FileObject root,
             final ClasspathInfo cpInfo,
             final JavacParser parser,
@@ -727,19 +729,6 @@ public class JavacParser extends Parser {
                 compilerOptions = null;
                 sourceLevel = null;
             }
-            AbstractSourceFileObject source = null;
-            if (file != null) {
-                try {
-                    source = FileObjects.sourceFileObject(file, root, null, false);
-                    if (source.getKind() != Kind.SOURCE) {
-                        source = null;
-                    }
-                } catch (FileObjects.InvalidFileException ife) {
-                    //ignore, it will be handled again later, see #parse.
-                } catch (IOException ex) {
-                    throw new IllegalStateException(ex);
-                }
-            }
             final JavacTaskImpl javacTask = createJavacTask(cpInfo,
                     diagnosticListener,
                     sourceLevel != null ? sourceLevel.getSourceLevel() : null,
@@ -750,7 +739,7 @@ public class JavacParser extends Parser {
                     APTUtils.get(root),
                     compilerOptions,
                     additionalModules,
-                    source != null ? Arrays.asList(source) : Collections.emptyList());
+                    jfo != null ? Arrays.asList(jfo) : Collections.emptyList());
             Lookup.getDefault()
                   .lookupAll(TreeLoaderRegistry.class)
                   .stream()
@@ -884,6 +873,11 @@ public class JavacParser extends Parser {
             options.add(additionalModules.stream().collect(Collectors.joining(",")));   //NOI18N
         }
 
+        //filter out classfiles:
+        files = StreamSupport.stream(files.spliterator(), false)
+                             .filter(file -> file.getKind() == Kind.SOURCE)
+                             .collect(Collectors.toList());
+
         Context context = new Context();
         //need to preregister the Messages here, because the getTask below requires Log instance:
         NBMessager.preRegister(context, null, DEV_NULL, DEV_NULL, DEV_NULL);
@@ -1003,9 +997,9 @@ public class JavacParser extends Parser {
                                new Object[]{srcClassPath, sourceLevel, bootClassPath}); //NOI18N
                 }
                 if (source.compareTo(SourceLevelUtils.JDK1_8) >= 0 &&
-                    !hasResource("java/util/stream/Streams", new ClassPath[] {bootClassPath}, new ClassPath[] {classPath}, new ClassPath[] {srcClassPath})) { //NOI18N
+                    !hasResource("java/lang/invoke/LambdaMetafactory", new ClassPath[] {bootClassPath}, new ClassPath[] {classPath}, new ClassPath[] {srcClassPath})) { //NOI18N
                     LOGGER.log(warnLevel,
-                               "Even though the source level of {0} is set to: {1}, java.util.stream.Streams cannot be found on the bootclasspath: {2}\n" +   //NOI18N
+                               "Even though the source level of {0} is set to: {1}, java.lang.invoke.LambdaMetafactory cannot be found on the bootclasspath: {2}\n" +   //NOI18N
                                "Changing source level to 1.7",  //NOI18N
                                new Object[]{srcClassPath, sourceLevel, bootClassPath}); //NOI18N
                     return SourceLevelUtils.JDK1_7;
@@ -1055,6 +1049,8 @@ public class JavacParser extends Parser {
                 res.add(option);  //NOI18N
                 xmoduleSeen = true;
             } else if (option.equals("-parameters") || option.startsWith("-Xlint")) {     //NOI18N
+                res.add(option);
+            } else if (option.equals("--enable-preview")) {     //NOI18N
                 res.add(option);
             } else if ((
                     option.startsWith("--add-modules") ||   //NOI18N

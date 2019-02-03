@@ -105,6 +105,10 @@ public class ValidateClassLinkageTest extends NbTestCase {
                     if (clazz.equals("org.netbeans.modules.javacard.source.JavaCardErrorProcessor")) {
                         continue; // seems to link against JDK 7 javac's AbstractTypeProcessor
                     }
+                    if (clazz.startsWith("org.netbeans.modules.javahelp")) {
+                        // javahelp is not distributed with Apache
+                        continue; 
+                    }
                         Throwable t = null;
                         try {
                             Class.forName(clazz, false, l);

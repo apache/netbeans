@@ -91,4 +91,14 @@ public abstract class GroovyCCTestBase extends GroovyTestBase {
         }
         return nameWithoutPrefix;
     }
+    
+    @Override
+    protected void assertDescriptionMatches(String relFilePath, 
+            String description, boolean includeTestName, String ext, boolean checkFileExistence) throws Exception {
+        super.assertDescriptionMatches(relFilePath, removeSpuriousCompletionItemsFromDescription(description), includeTestName, ext, checkFileExistence);            
+    }    
+    
+    private String removeSpuriousCompletionItemsFromDescription(String description) {
+        return description.replaceAll("PACKAGE\\s+apple\\s+null\n", "");
+    }
 }

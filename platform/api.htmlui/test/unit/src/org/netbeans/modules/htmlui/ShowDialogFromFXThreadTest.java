@@ -36,7 +36,8 @@ import org.testng.annotations.Test;
 public class ShowDialogFromFXThreadTest implements Runnable {
     private volatile boolean returned;
     
-    @BeforeClass public static void initFX() {
+    @BeforeClass(timeOut = 9000)
+    public static void initFX() {
         JFXPanel p = new JFXPanel();
         JFrame f = new JFrame();
         f.getContentPane().add(p);
@@ -49,7 +50,9 @@ public class ShowDialogFromFXThreadTest implements Runnable {
     
     
     private volatile CountDownLatch cdl;
-    @Test public void showDialog() throws Exception {
+
+    @Test(timeOut = 9000)
+    public void showDialog() throws Exception {
         cdl = new CountDownLatch(1);
         Platform.runLater(this);
         cdl.await();

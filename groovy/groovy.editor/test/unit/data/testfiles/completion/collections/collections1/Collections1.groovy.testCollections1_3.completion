@@ -19,3 +19,4 @@ METHOD     asImmutable()                              List
 METHOD     asList()                                   List
 METHOD     asSynchronized()                           List
 METHOD     asType(Class)                              Object
+METHOD     asUnmodifiable()                           List

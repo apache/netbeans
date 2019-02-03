@@ -41,7 +41,7 @@ public class FreeGeoProviderTest {
     private Position position;
     private Exception error;
 
-    @BeforeClass
+    @BeforeClass(timeOut = 9000)
     public static void initializeContext() throws Exception {
         final JFXPanel p = new JFXPanel();
         final URL u = DialogsTest.class.getResource("/org/netbeans/api/htmlui/empty.html");
@@ -68,7 +68,7 @@ public class FreeGeoProviderTest {
     }
 
 
-    @Test
+    @Test(timeOut = 9000)
     public void checkGeoLocation() throws InterruptedException {
         ctx.execute(new Runnable() {
             @Override

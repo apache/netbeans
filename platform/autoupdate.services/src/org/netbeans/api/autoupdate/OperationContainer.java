@@ -376,6 +376,15 @@ public final class OperationContainer<Support> {
          */
         public Set<String> getBrokenDependencies(){return impl.getBrokenDependencies();}
         
+        /**
+         * Reports parts missing from the installation. Will return codenames of required
+         * unknown modules (e.g. from catalogs not fetched yet). Note differences to {@link #getBrokenDependencies()},
+         * which report also broken requirements for packages or java version for specialized / optional modules.
+         * @return set of missing parts (modules). If nothing is missing, returns empty set.
+         * @since 1.57
+         */
+        public Set<String> getMissingParts() { return impl.getMissingParts(); }
+        
         @Override
         public String toString () {
             return "OperationInfo: " + impl.getUpdateElement ().toString (); // NOI18N

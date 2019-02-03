@@ -21,11 +21,11 @@
         <token id='T_START_NOWDOC' start='76' end='93'>
             <text>&lt;&lt;&lt;&apos;ENDOFNOWDOC&apos;\n</text>
         </token>
-        <token id='T_ENCAPSED_AND_WHITESPACE' start='178' end='209'>
-            <text>\nNow let&apos;s finish it\nENDOFNOWDO</text>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='93' end='199'>
+            <text>This is a nowdoc test.\nNOTREALLYEND;\nAnother line\nNOTENDEITHER;\nENDOFNOWDOCWILLBESOON\nNow let&apos;s finish it\n</text>
         </token>
-        <token id='T_END_NOWDOC' start='209' end='210'>
-            <text>C</text>
+        <token id='T_END_NOWDOC' start='199' end='210'>
+            <text>ENDOFNOWDOC</text>
         </token>
         <token id='T_SEMICOLON' start='210' end='211'>
             <text>;</text>
@@ -79,7 +79,7 @@
                     <Variable start='71' end='73' isDollared='true'>
                         <Identifier start='72' end='73' name='x'/>
                     </Variable>
-                    <Scalar start='76' end='210' type='STRING' value='\nNow let&apos;s finish it\n'/>
+                    <Scalar start='76' end='210' type='STRING' value='This is a nowdoc test.\nNOTREALLYEND;\nAnother line\nNOTENDEITHER;\nENDOFNOWDOCWILLBESOON\nNow let&apos;s finish it\n'/>
                 </Assignment>
             </ExpressionStatement>
             <ExpressionStatement start='212' end='227'>

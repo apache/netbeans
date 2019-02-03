@@ -33,8 +33,8 @@
         <file>src/org/netbeans/modules/welcome/resources/btn_right.png</file>
         <file>src/org/netbeans/modules/welcome/resources/content_banner.png</file>
         <file>src/org/netbeans/modules/welcome/resources/nb_logo.png</file>
-        <file>src/org/netbeans/modules/welcome/resources/java_logo.png</file>
-        <file>src/org/netbeans/modules/welcome/resources/java_logo_dark.png</file>
+        <file>src/org/netbeans/modules/welcome/resources/incubator_logo.png</file>
+        <file>src/org/netbeans/modules/welcome/resources/incubator_logo_dark.png</file>
         <file>src/org/netbeans/modules/welcome/resources/broken_image.gif</file>
         <file>src/org/netbeans/modules/welcome/resources/tab_rollover.png</file>
         <file>src/org/netbeans/modules/welcome/resources/picture_frame.png</file>

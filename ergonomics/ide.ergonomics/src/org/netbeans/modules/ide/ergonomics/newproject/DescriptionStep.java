@@ -74,10 +74,8 @@ public class DescriptionStep implements WizardDescriptor.Panel<WizardDescriptor>
     private FeatureInfo info;
     private WizardDescriptor wd;
     private ConfigurationPanel configPanel;
-    private final boolean autoEnable;
 
-    public DescriptionStep(boolean autoEnable) {
-        this.autoEnable = autoEnable;
+    public DescriptionStep() {
     }
 
     @Override
@@ -90,7 +88,7 @@ public class DescriptionStep implements WizardDescriptor.Panel<WizardDescriptor>
                     waitForDelegateWizard(true);
                     return new JLabel(" ");
                 }
-            }, autoEnable);
+            });
             panel = new ContentPanel (getBundle ("DescriptionPanel_Name"));
             panel.addPropertyChangeListener (findModules);
         }
@@ -132,14 +130,24 @@ public class DescriptionStep implements WizardDescriptor.Panel<WizardDescriptor>
     private final PresentModules findModules = new PresentModules();
     private class PresentModules extends Object
     implements PropertyChangeListener, TaskListener {
+        private FindComponentModules findComponents;
+        
         @Override
         public void propertyChange (PropertyChangeEvent evt) {
             if (ContentPanel.FINDING_MODULES.equals (evt.getPropertyName ())) {
                 schedule();
             }
         }
-        public void schedule() {
-            new FindComponentModules(info).onFinished(this);
+        void reset() {
+            synchronized (this) {
+                findComponents = null;
+            }
+        }
+        public synchronized void schedule() {
+            if (findComponents == null) {
+                findComponents = new FindComponentModules(info);
+            }
+            findComponents.onFinished(this);
         }
         @Override
         public void taskFinished(Task task) {
@@ -153,12 +161,14 @@ public class DescriptionStep implements WizardDescriptor.Panel<WizardDescriptor>
                 panel.replaceComponents ();
                 handle = null;
             }
+            final  Collection<UpdateElement> toInstall = f.getModulesForInstall();
             final  Collection<UpdateElement> elems = f.getModulesForEnable ();
-            if (elems != null && !elems.isEmpty ()) {
+            if (!elems.isEmpty ()|| f.getIncompleteFeatures().contains(info) || !f.getUpdateErrors().isEmpty()) {
                 Collection<UpdateElement> visible = f.getVisibleUpdateElements (elems);
                 final String name = ModulesInstaller.presentUpdateElements (visible);
-                configPanel.setInfo(info);
-                configPanel.setPanelName(name);
+                configPanel.setUpdateErrors(f.getUpdateErrors());
+                configPanel.setInfo(info, name, toInstall, f.getMissingModules(info), 
+                        f.getExtrasToDownload(), f.isDownloadRequired());
                 panel.replaceComponents(configPanel);
                 forEnable = elems;
                 fireChange ();
@@ -187,6 +197,11 @@ public class DescriptionStep implements WizardDescriptor.Panel<WizardDescriptor>
         FileObject fileObject = (FileObject) o;
         info = FoDLayersProvider.getInstance ().whichProvides(fileObject);
         assert info != null : "No info for " + fileObject;
+        if (settings.getValue() == WizardDescriptor.CANCEL_OPTION ||
+            settings.getValue() == WizardDescriptor.CLOSED_OPTION) {
+            return;
+        }
+        findModules.reset();
         findModules.schedule();
     }
 

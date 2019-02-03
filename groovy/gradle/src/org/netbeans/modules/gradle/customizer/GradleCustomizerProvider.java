@@ -63,7 +63,7 @@ public class GradleCustomizerProvider implements CustomizerProvider2 {
         "# {0} - project display name",
         "TIT_Project_Properties=Project Properties - {0}",
         "TXT_Unloadable=Project is unloadable, the project information is unreliable. Show Project Properties dialog?",
-        "TIT_Unloadable=Project Unlodable"
+        "TIT_Unloadable=Project Unloadable"
     })
     @Override
     public void showCustomizer(final String preselectedCategory, final String preselectedSubCategory) {

@@ -26,7 +26,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.modules.java.classpath.QueriesAccessor;
 import org.netbeans.spi.java.queries.BinaryForSourceQueryImplementation;
+import org.netbeans.spi.java.queries.BinaryForSourceQueryImplementation2;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
@@ -85,34 +87,7 @@ public final class BinaryForSourceQuery {
     }
 
     public static Result2 findBinaryRoots2(URL sourceRoot) {
-        Result res = findBinaryRoots(sourceRoot);
-        if (res instanceof Result2) {
-            return (Result2) res;
-        }
-
-        class ProxyRes extends Result2 {
-            @Override
-            public URL[] getRoots() {
-                return res.getRoots();
-            }
-
-            @Override
-            public void addChangeListener(ChangeListener l) {
-                res.addChangeListener(l);
-            }
-
-            @Override
-            public void removeChangeListener(ChangeListener l) {
-                res.removeChangeListener(l);
-            }
-
-            @Override
-            public boolean preferBinaries() {
-                return false;
-            }
-        }
-
-        return new ProxyRes();
+        return Result2.wrap(findBinaryRoots(sourceRoot));
     }
     
     /**
@@ -145,6 +120,37 @@ public final class BinaryForSourceQuery {
         }
 
         public abstract boolean preferBinaries();
+
+        public static Result2 wrap(Result res) {
+            if (res instanceof Result2) {
+                return (Result2) res;
+            }
+
+            class ProxyRes extends Result2 {
+
+                @Override
+                public URL[] getRoots() {
+                    return res.getRoots();
+                }
+
+                @Override
+                public void addChangeListener(ChangeListener l) {
+                    res.addChangeListener(l);
+                }
+
+                @Override
+                public void removeChangeListener(ChangeListener l) {
+                    res.removeChangeListener(l);
+                }
+
+                @Override
+                public boolean preferBinaries() {
+                    return false;
+                }
+            }
+
+            return new ProxyRes();
+        }
     }
     
     private static class DefaultResult extends Result2 {
@@ -187,5 +193,46 @@ public final class BinaryForSourceQuery {
         public boolean preferBinaries() {
             return false;
         }
+    }
+
+    private static final class Result2Impl<T> extends Result2 {
+        final BinaryForSourceQueryImplementation2<T> impl;
+        final T value;
+
+        Result2Impl(BinaryForSourceQueryImplementation2<T> impl, T value) {
+            this.impl = impl;
+            this.value = value;
+        }
+
+        @Override
+        public boolean preferBinaries() {
+            return impl.computePreferBinaries(value);
+        }
+
+        @Override
+        public URL[] getRoots() {
+            return impl.computeRoots(value);
+        }
+
+        @Override
+        public void addChangeListener(ChangeListener l) {
+            impl.computeChangeListener(value, true, l);
+        }
+
+        @Override
+        public void removeChangeListener(ChangeListener l) {
+            impl.computeChangeListener(value, false, l);
+        }
+
+
+    }
+
+    static {
+        QueriesAccessor.setInstance(new QueriesAccessor() {
+            @Override
+            public <T> Result2 create(BinaryForSourceQueryImplementation2<T> impl, T value) {
+                return new Result2Impl<>(impl, value);
+            }
+        });
     }
 }

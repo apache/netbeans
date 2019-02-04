@@ -151,67 +151,74 @@ public class JavaCustomIndexer extends CustomIndexer {
                 JavaIndex.LOG.fine("Ignoring request with no root"); //NOI18N
                 return;
             }
-            BinaryForSourceQuery.Result binRes = BinaryForSourceQuery.findBinaryRoots(root.toURL());
-            Long newestFile = null;
-            URL singleBinaryRoot = null;
-            FileObject singleBinaryRootFo = null;
-            for (URL u : binRes.getRoots()) {
-                FileObject ufo = URLMapper.findFileObject(u);
-                if (ufo == null || singleBinaryRoot != null) {
-                    newestFile = null;
-                    break;
-                }
-                singleBinaryRoot = u;
-                singleBinaryRootFo = ufo;
-                Enumeration<? extends FileObject> en = ufo.getChildren(true);
-                while (en.hasMoreElements()) {
-                    FileObject ch = en.nextElement();
-                    long modified = ch.lastModified().getTime();
-                    if (newestFile == null || newestFile < modified) {
-                        newestFile = modified;
+            BinaryForSourceQuery.Result2 binRes = BinaryForSourceQuery.findBinaryRoots2(root.toURL());
+            if (binRes.preferBinaries()) {
+                final URL[] binaryRoots = binRes.getRoots();
+                final FileObject[] binaryRootsFo = new FileObject[binaryRoots.length];
+                Long newestFile = null;
+                int at = 0;
+                for (URL u : binaryRoots) {
+                    FileObject ufo = URLMapper.findFileObject(u);
+                    if (ufo == null) {
+                        newestFile = null;
+                        break;
+                    }
+                    binaryRootsFo[at++] = ufo;
+                    Enumeration<? extends FileObject> en = ufo.getChildren(true);
+                    while (en.hasMoreElements()) {
+                        FileObject ch = en.nextElement();
+                        long modified = ch.lastModified().getTime();
+                        if (newestFile == null || newestFile < modified) {
+                            newestFile = modified;
+                        }
                     }
                 }
-            }
 
-            boolean binariesAreNewer = singleBinaryRootFo != null;
-            for (Indexable index : files) {
-                if (!binariesAreNewer) {
-                    break;
+                boolean binariesAreNewer = true;
+                for (Indexable index : files) {
+                    if (!binariesAreNewer) {
+                        break;
+                    }
+                    FileObject fo = context.getRoot().getFileObject(index.getRelativePath());
+                    if (newestFile == null || fo == null || fo.lastModified().getTime() > newestFile) {
+                        binariesAreNewer = false;
+                        break;
+                    }
                 }
-                FileObject fo = context.getRoot().getFileObject(index.getRelativePath());
-                if (newestFile == null || fo == null || fo.lastModified().getTime() > newestFile) {
-                    binariesAreNewer = false;
-                    break;
-                }
-            }
 
-            if (binariesAreNewer && singleBinaryRootFo != null) {
-                System.err.println("use the binaries: " + root);
-                JavaBinaryIndexer.doIndex(context, singleBinaryRoot);
-                File copyTo = JavaIndex.getClassFolder(context);
-                Enumeration<? extends FileObject> en = singleBinaryRootFo.getChildren(true);
-                while (en.hasMoreElements()) {
-                    FileObject ch = en.nextElement();
-                    if (!ch.isData()) {
-                        continue;
+                if (binariesAreNewer) {
+                    JavaIndex.LOG.log(Level.FINE, "Using binaries for {0}", FileUtil.getFileDisplayName(root)); // NOI18N
+                    File copyTo = JavaIndex.getClassFolder(context);
+                    at = 0;
+                    for (URL singleBinaryRoot : binaryRoots) {
+                        FileObject singleBinaryRootFo = binaryRootsFo[at++];
+                        JavaBinaryIndexer.doIndex(context, singleBinaryRoot);
+                        JavaIndex.LOG.log(Level.FINE, "  copying from {0} to {1}", new Object[] { FileUtil.getFileDisplayName(singleBinaryRootFo), copyTo }); // NOI18N
+                        Enumeration<? extends FileObject> en = singleBinaryRootFo.getChildren(true);
+                        while (en.hasMoreElements()) {
+                            FileObject ch = en.nextElement();
+                            if (!ch.isData()) {
+                                continue;
+                            }
+                            String path = FileUtil.getRelativePath(singleBinaryRootFo, ch.getParent());
+                            if (path == null) {
+                                continue;
+                            }
+                            String name = ch.getNameExt();
+                            if (ch.hasExt("class")) {
+                                name = ch.getName() + ".sig";
+                            }
+                            File toDir = new File(copyTo, path.replace('/', File.separatorChar));
+                            toDir.mkdirs();
+                            File to = new File(toDir, name);
+                            try (OutputStream os = new FileOutputStream(to); InputStream is = ch.getInputStream()) {
+                                FileUtil.copy(is, os);
+                            }
+                        }
                     }
-                    String path = FileUtil.getRelativePath(singleBinaryRootFo, ch.getParent());
-                    if (path == null) {
-                        continue;
-                    }
-                    String name = ch.getNameExt();
-                    if (ch.hasExt("class")) {
-                        name = ch.getName() + ".sig";
-                    }
-                    File toDir = new File(copyTo, path.replace('/', File.separatorChar));
-                    toDir.mkdirs();
-                    File to = new File(toDir, name);
-                    try (OutputStream os = new FileOutputStream(to); InputStream is = ch.getInputStream()) {
-                        FileUtil.copy(is, os);
-                    }
+                    JavaIndex.LOG.log(Level.FINE, "Binaries copied for {0}", FileUtil.getFileDisplayName(root)); // NOI18N
+                    return;
                 }
-                System.err.println("copy to done for " + singleBinaryRootFo);
-                return;
             }
 
             APTUtils.sourceRootRegistered(context.getRoot(), context.getRootURI());

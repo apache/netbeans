@@ -83,6 +83,37 @@ public final class BinaryForSourceQuery {
            sourceRoot);
        return new DefaultResult (sourceRoot);
     }
+
+    public static Result2 findBinaryRoots2(URL sourceRoot) {
+        Result res = findBinaryRoots(sourceRoot);
+        if (res instanceof Result2) {
+            return (Result2) res;
+        }
+
+        class ProxyRes extends Result2 {
+            @Override
+            public URL[] getRoots() {
+                return res.getRoots();
+            }
+
+            @Override
+            public void addChangeListener(ChangeListener l) {
+                res.addChangeListener(l);
+            }
+
+            @Override
+            public void removeChangeListener(ChangeListener l) {
+                res.removeChangeListener(l);
+            }
+
+            @Override
+            public boolean preferBinaries() {
+                return false;
+            }
+        }
+
+        return new ProxyRes();
+    }
     
     /**
      * Result of finding binaries, encapsulating the answer as well as the
@@ -107,9 +138,16 @@ public final class BinaryForSourceQuery {
          * @param l a listener to remove
          */
         void removeChangeListener(ChangeListener l);
-    }        
+    }
+
+    public static abstract class Result2 implements Result {
+        Result2() {
+        }
+
+        public abstract boolean preferBinaries();
+    }
     
-    private static class DefaultResult implements Result {
+    private static class DefaultResult extends Result2 {
         
         private final URL sourceRoot;
         
@@ -143,6 +181,11 @@ public final class BinaryForSourceQuery {
         }
 
         public void removeChangeListener(ChangeListener l) {            
+        }
+
+        @Override
+        public boolean preferBinaries() {
+            return false;
         }
     }
 }

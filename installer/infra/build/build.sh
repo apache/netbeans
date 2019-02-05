@@ -62,6 +62,11 @@ if [ -z "$BUILD_NETBEANS" ] ; then
     BUILD_NETBEANS=1
 fi
 
+if [ -z "$BUILD_NB" ] ; then
+    #build NetBeans full bundle by default
+    BUILD_NB=0
+fi
+
 if [ -z "$BUILD_NBJDK7" ] ; then
     #do not build NetBeans/JDK7 bundles by default
     BUILD_NBJDK7=0
@@ -222,6 +227,7 @@ run() {
             \"-Dbuild.mysql=${BUILD_MYSQL}\" \
             \"-Dbuild.weblogic=${BUILD_WEBLOGIC}\" \
             \"-Dbuild.netbeans.bundles=${BUILD_NETBEANS}\" \
+            \"-Dbuild.nb=${BUILD_NB}\" \
             \"-Dbuild.javafx=${RUNJAVAFX}\" \
             \"-Dglassfish.home=${GLASSFISH_HOME}\" \
             \"-Dglassfish.asadmin=${GLASSFISH_ASADMIN}\" \

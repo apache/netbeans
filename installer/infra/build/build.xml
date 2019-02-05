@@ -242,7 +242,7 @@
         -->
 
 	<set property="nb.full.version"
-             value="10.0.0.0.${nb.build.number}"/>
+             value="11.0.0.0.${nb.build.number}"/>
 
         <set property="nb.zip.files.prefix"
              value="${nb.files.prefix}"/>
@@ -254,7 +254,7 @@
              value="${nb.files.prefix}-${build.number}"/>
 	
         <set property="jdk.bundle.files.suffix"
-             value="nb-10"/>
+             value="${nb.files.prefix}"/>
 	
 	<set property="nb.bundles.output.dir"
              value="${output.dir}/bundles"/>
@@ -263,7 +263,7 @@
          value="${nb.files.prefix}"/>
 
     <set property="weblogic.bundle.files.suffix"
-         value="nb-10"/>
+         value="${nb.files.prefix}"/>
 
         <condition property="do.build.jdk">
              <or>
@@ -284,7 +284,9 @@
         <condition property="do.build.netbeans">
 	     <equals arg1="${build.netbeans.bundles}" arg2="1"/>
         </condition>
-
+        <condition property="do.build.nb-all">
+             <equals arg1="${build.nb}" arg2="1"/>
+        </condition>
         <condition property="do.build.weblogic">
 	     <equals arg1="${build.weblogic}" arg2="1"/>
         </condition>        
@@ -647,6 +649,7 @@ jarsigner.storepass=${jarsigner.storepass}
         <antcall target="build-engine"/>
                 
         <antcall target="build-netbeans-components"/>
+        <antcall target="build-nb-all"/>
         <antcall target="build-nbjdk-components"/>
         <antcall target="build-nbweblogic-components"/>        
 
@@ -693,6 +696,55 @@ jarsigner.storepass=${jarsigner.storepass}
         </antcall>
     </target>
 
+<target name="generate-nb-all-bundles" if="do.build.nb-all">
+        <antcall target="generate-nb-all-bundle-single">
+            <param name="nb.version"            value="${nb.full.version}"/>
+            <param name="nb.bundle.files.prefix"     value="${nb.bundle.files.prefix}"/>
+            <param name="bundled.jvm.file.prefix"     value="jre-8u101"/>
+            <param name="license.resource"            value="$S{nbi.overall.license.jdk7.resource}"/>
+        </antcall>
+    </target>
+
+    <target name="generate-nb-all-bundle-single">
+        <for-each list="${bundle.jdk.platform}" separator="," property="bundle.jdk.platform.single">
+            <antcall target="generate-nb-all-bundle-single-${bundle.jdk.platform.single}"/>
+        </for-each>
+    </target>
+
+    <target name="generate-nb-all-bundle-single-windows-x64">
+        <antcall target="generate-nb-all-bundle">
+                <param name="bundle.platform"           value="windows-x64"/>
+                <param name="bundle.platform.filename"  value="windows-x64"/>
+                <param name="bundle.extension"          value=".exe"/>
+                <param name="bundled.jvm.file.suffix"   value="windows-x64.exe"/>
+                <!--param name="nb.full.version"          value="${nb.full.version.platform}"/-->
+        </antcall>
+    </target>
+
+    <target name="generate-nb-all-bundle-single-linux-x64">
+        <antcall target="generate-nb-all-bundle">
+                <param name="bundle.platform"           value="linux-x64"/>
+                <param name="bundle.platform.filename"  value="linux-x64"/>
+                <param name="bundle.extension"          value=".sh"/>
+                <param name="bundled.jvm.file.suffix"   value="linux-x64.bin"/>
+                <!--param name="nb.full.version"          value="${nb.full.version.platform}"/-->
+        </antcall>
+    </target>
+
+    <target name="generate-nb-all-bundle">
+        <property name="bundle.prefix"
+                      value="${nb.bundles.output.dir}/${nb.bundle.files.prefix}-${bundle.platform.filename}"/>
+
+        <create-bundle root="${output.dir}/registry-temp"
+                        platform="${bundle.platform}"
+                        target="${bundle.prefix}${bundle.extension}">
+            <component uid="nb-all"   version="${nb.full.version}"/>
+            <bundleProperty name="${welcome.type}" value="nb-all"/>
+            <!--                 <bundleProperty name="nbi.overall.license.resource" value="${license.resource}"/>
+            -->
+        </create-bundle>
+    </target>
+
     <target name="generate-netbeans-bundles" if="do.build.netbeans">        
         <for-each list="javase javaee full" separator=" " property="bundle.type">
 	     <antcall target="generate-netbeans-${bundle.type}-bundles"/>
@@ -710,6 +762,7 @@ jarsigner.storepass=${jarsigner.storepass}
 	<property name="welcome.type" value="NWP.welcome.page.type"/>
 	<property name="bundledproduct.name" value="NWP.welcome.page.bundledproduct.name"/>
         <antcall target="generate-netbeans-bundles"/>
+        <antcall target="generate-nb-all-bundles"/>
         <antcall target="generate-jdk-bundles"/>
         <antcall target="generate-weblogic-bundles"/>        
     </target>

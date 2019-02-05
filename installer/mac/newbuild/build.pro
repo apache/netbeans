@@ -27,10 +27,10 @@
     <property name="install.dir" value="/Applications/NetBeans"/>
     
     <!-- Base IDE properties   -->       
-    <property name="nbide.version" value="10.0"/>
-    <property name="nbide.id" value="10.0"/>
-    <property name="appname" value="Apache NetBeans 10.0"/> 
-    <property name="mpkg.name_nb" value="Apache NetBeans 10.0"/> 
+    <property name="nbide.version" value="11.0"/>
+    <property name="nbide.id" value="${nbide.version}"/>
+    <property name="appname" value="Apache NetBeans 11.0"/> 
+    <property name="mpkg.name_nb" value="${appname}"/> 
     <property name="app.name" value="${install.dir}/${appname}.app"/>
     <property name="nbClusterDir" value="nb"/>      
     <property name="nb.check.build.number" value="0"/>
@@ -40,9 +40,9 @@
     <!-- Unique ID in db/receipts for release build -->
     <property name="nb.id" value="${nbide.id}"/>
 
-    <property name="appversion" value="8.2"/>
-    <property name="nb.display.version.long"  value="8.2"/>
-    <property name="nb.display.version.short" value="8.2"/>
+    <property name="appversion" value="${nbide.version}"/>
+    <property name="nb.display.version.long"  value="${nbide.version}"/>
+    <property name="nb.display.version.short" value="${nbide.version}"/>
 
     <!-- Tomcat properties   -->    
     <property name="tomcat.version" value="8.0.27"/>

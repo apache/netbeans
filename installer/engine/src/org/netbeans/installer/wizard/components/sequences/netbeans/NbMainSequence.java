@@ -319,7 +319,7 @@ public class NbMainSequence extends WizardSequence {
             Progress deleteTempDirProgress = new Progress();
             compositeProgress.addChild(deleteTempDirProgress, 5);
                         
-            File populateLogDir = new File(nbInstallLocation, "nb"/*nb cluster*/ + File.separator + "var" + File.separator + "log");
+            File populateLogDir = new File(nbInstallLocation, "netbeans"+ File.separator + "nb"/*nb cluster*/ + File.separator + "var" + File.separator + "log");
             File tmpMessagesLog = new File(tmpUserDir, "var" + File.separator + "log" + File.separator + "messages.log");
             LogManager.log("    NB log location = " + populateLogDir);
             try {                
@@ -346,7 +346,7 @@ public class NbMainSequence extends WizardSequence {
                 LogManager.log("    .... done. ");
             }
             
-            File populateCacheDir = new File(nbInstallLocation, "nb"/*nb cluster*/ + File.separator + "var" + File.separator + "cache");
+            File populateCacheDir = new File(nbInstallLocation, "netbeans" + File.separator +"nb"/*nb cluster*/ + File.separator + "var" + File.separator + "cache");
             LogManager.log("    populated cache location = " + populateCacheDir);
             try {                
                 FileUtils.copyFile(tmpCacheDir, populateCacheDir, true, populeteCacheDirProgress);

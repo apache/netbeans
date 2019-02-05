@@ -1133,7 +1133,8 @@ public class NbWelcomePanel extends ErrorMessagePanel {
         CUSTOMIZE("customize"),        
         JAVA_TOOLS("java.tools"),
 	MYSQL("mysql"),
-        BUNDLEDPRODUCT("bundledproduct");
+        BUNDLEDPRODUCT("bundledproduct"),
+        NBALL("nb-all");
         
         private String name;
         private BundleType(String s) {

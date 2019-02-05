@@ -910,7 +910,7 @@ public class ConfigurationLogic extends ProductConfigurationLogic {
             "/netbeans/" + NB_CLUSTER + "/netbeans.icns"; // NOI18N
     
     public static final String SHORTCUT_FILENAME =
-            "netbeans-{display-version}.desktop"; // NOI18N
+            "Apache NetBeans-{display-version}.desktop"; // NOI18N
     public static final String[] SHORTCUT_CATEGORIES = new String[] {
         "Application",
         "Development", // NOI18N

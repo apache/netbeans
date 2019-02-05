@@ -42,68 +42,6 @@
       Default
     ============================================================================= -->
     <!--
-    <target name="clean-all">
-        <antcall target="clean-platform">
-            <param name="product.platforms" value="windows"/>
-        </antcall>
-        <antcall target="clean-platform">
-            <param name="product.platforms" value="linux"/>
-        </antcall>
-        <antcall target="clean-platform">
-            <param name="product.platforms" value="solaris-x86"/>
-        </antcall>
-        <antcall target="clean-platform">
-            <param name="product.platforms" value="solaris-sparc"/>
-        </antcall>        
-        <antcall target="clean-platform">
-            <param name="product.platforms" value="macosx-x86 macosx-ppc"/>
-        </antcall>
-
-    </target>
-
-    <target name="build-all">
-        <antcall target="build-platform">
-            <param name="product.platforms" value="windows"/>
-        </antcall>
-        <antcall target="build-platform">
-            <param name="product.platforms" value="linux"/>
-        </antcall>
-        <antcall target="build-platform">
-            <param name="product.platforms" value="solaris-x86"/>
-        </antcall>
-        <antcall target="build-platform">
-            <param name="product.platforms" value="solaris-sparc"/>
-        </antcall>        
-        <antcall target="build-platform">
-            <param name="product.platforms" value="macosx-x86 macosx-ppc"/>
-        </antcall>
-
-    </target>
-
-    <target name="release-all">
-        <antcall target="release-platform">
-            <param name="product.platforms" value="windows"/>
-        </antcall>
-        <antcall target="release-platform">
-            <param name="product.platforms" value="linux"/>
-        </antcall>
-        <antcall target="release-platform">
-            <param name="product.platforms" value="solaris-x86"/>
-        </antcall>
-        <antcall target="release-platform">
-            <param name="product.platforms" value="solaris-sparc"/>
-        </antcall>        
-        <antcall target="release-platform">
-            <param name="product.platforms" value="macosx-x86 macosx-ppc"/>
-        </antcall>
-    </target>
-
-    <target name="clean-platform" depends="clean"/>
-    <target name="build-platform" depends="clean-platform,checkout,build"/>
-    <target name="release-platform" depends="build-platform,release"/>
-    -->
-
-    <!--
       The default target. 
       
       Does nothing except printing the usage information.

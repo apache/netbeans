@@ -23,6 +23,7 @@ set -x -e
 dmgname=$1
 volname=$2
 outputdir=$3
+pwd
 
 bunzip2 -d -c `dirname $0`/template.sparseimage.bz2 > ./dist/template.sparseimage
 

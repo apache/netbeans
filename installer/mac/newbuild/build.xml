@@ -152,10 +152,9 @@
     </target>
     
     <target name="unzip-cluster">
-        <!--mkdir dir="${basedir}/netBeans/nbide/build/netbeans"/-->
         <exec executable="sh" failonerror="yes">
             <arg value="-c"/>
-            <arg value="unzip -o -d ${basedir}/netBeans/nbide/build ${common.name}incubating-netbeans-10.0-vc3-bin.zip"/>
+            <arg value="unzip -o -d ${basedir}/netBeans/nbide/build ${common.name}NetBeans-dev-incubator-netbeans-linux-996-on-20190203-release.zip"/>
         </exec>    
     </target>
     
@@ -307,14 +306,29 @@
                                           "/>
 
         <property name="jdk-bundle.bundles" value="-jdk(./build/nbide-${nb.id}.pkg ./build/jdk.pkg)"/>
+        <property name="nbide.bundles" value="-nbide(./build/nbide-${nb.id}.pkg)"/>
 
         <condition property="all.bundles" value="${main.bundles},${fx.bundles}" else="${main.bundles}"> 
             <equals arg1="${javafx.build}" arg2="1"/>
         </condition>
-        <condition property="bundles" value="${jdk-bundle.bundles}" else="${all.bundles}"> 
+        <condition property="bundles" value="${jdk-bundle.bundles}" else="${nbide.bundles}"> 
             <istrue value="${do.build.jdk}"/>
         </condition>
         
+    </target>
+
+    <target name="build-nb-dmg" depends="clean,init,build-pkg,init-bundles">
+        <for-each list="${bundles}" separator="," property="bundle.type"  propertyArg="packages">
+            <delete dir="${basedir}/dist_pkg" failonerror="false"/>
+            <ant target="build-dmg">
+                 <property name="dmg.name" value="${dmg.prefix.name}-macosx"/>
+                 <property name="pkg.name" value="${mpkg.name_nb}"/>
+                 <property name="background.name" value="bgimage.tif"/>
+                 <property name="license.file" value="${basedir}/dmg/Resources/license.txt"/>
+            </ant>
+        </for-each>
+
+        <delete file="${basedir}/build/sizes.pro"/>
     </target>
     
     <target name="build-all-dmg" depends="clean,init,build-pkg,build-jre-nested-pkg,build-glassfish-pkg,build-tomcat-pkg,init-bundles">
@@ -492,7 +506,10 @@
         </exec>
         
         <antcall target="pack-bundle"/>
-
+        <exec executable="sh" failonerror="no">
+            <arg value="-c"/>
+            <arg value="cd ${basedir}"/>
+        </exec>
         <condition property="output.dir" value="${output.jdk.dir}" else="">
 	     <istrue value="${do.build.jdk}"/>
         </condition>

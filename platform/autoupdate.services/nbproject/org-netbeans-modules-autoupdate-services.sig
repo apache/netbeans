@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.54.1
+#Version 1.57.1
 
 CLSS public abstract interface java.io.Serializable
 
@@ -133,6 +133,7 @@ CLSS public final static org.netbeans.api.autoupdate.OperationContainer$Operatio
  outer org.netbeans.api.autoupdate.OperationContainer
 meth public java.lang.String toString()
 meth public java.util.Set<java.lang.String> getBrokenDependencies()
+meth public java.util.Set<java.lang.String> getMissingParts()
 meth public java.util.Set<org.netbeans.api.autoupdate.UpdateElement> getRequiredElements()
 meth public org.netbeans.api.autoupdate.UpdateElement getUpdateElement()
 meth public org.netbeans.api.autoupdate.UpdateUnit getUpdateUnit()

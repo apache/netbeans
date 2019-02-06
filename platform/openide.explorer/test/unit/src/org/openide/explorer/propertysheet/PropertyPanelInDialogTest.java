@@ -19,7 +19,6 @@
 
 package org.openide.explorer.propertysheet;
 
-import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
@@ -664,13 +663,6 @@ public class PropertyPanelInDialogTest extends NbTestCase {
         
         public String getAsText() {
             return getValue() == null ? "null" : getValue().toString();
-        }
-    }
-    
-    
-    private static class PseudoWindowsLookAndFeel extends WindowsLookAndFeel {
-        public boolean isSupportedLookAndFeel() {
-            return true;
         }
     }
     

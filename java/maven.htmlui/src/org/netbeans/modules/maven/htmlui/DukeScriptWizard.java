@@ -56,10 +56,10 @@ import org.openide.util.RequestProcessor;
 })
 public class DukeScriptWizard {
     @TemplateRegistration(
-            position = 133,
+            position = 120,
             page = "dukeScriptWizard.html",
             content = "dukescript.archetype",
-            folder = "Project/Standard",
+            folder = "Project/Maven2",
             displayName = "#DukeScriptWizard_displayName",
             iconBase = "org/netbeans/modules/maven/htmlui/DukeHTML.png",
             description = "description.html"

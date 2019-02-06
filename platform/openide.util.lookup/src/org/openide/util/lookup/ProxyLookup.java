@@ -598,14 +598,18 @@ public class ProxyLookup extends Lookup {
 
                 if (oldItems != null) {
                     Collection<? extends Item<T>> newItems = allItems(false);
-                    if (oldItems.equals(newItems)) {
-                        modified = false;
+                    if (newItems != null && newItems.size() == oldItems.size()) {
+                        if (oldItems.equals(newItems)) {
+                            modified = false;
+                        }
                     }
                 } else {
                     if (oldInstances != null) {
                         Collection newInstances = allInstances(false);
-                        if (oldInstances.equals(newInstances)) {
-                            modified = false;
+                        if (newInstances != null && newInstances.size() == oldInstances.size()) {
+                            if (oldInstances.equals(newInstances)) {
+                                modified = false;
+                            }
                         }
                     } else {
                         Collection<? extends Item<T>> newItems = allItems(false);

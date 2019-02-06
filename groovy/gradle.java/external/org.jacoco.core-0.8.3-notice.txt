@@ -1,0 +1,2 @@
+This product includes/uses JaCoCo Core (https://www.jacoco.org/)
+developed by EclEmma Project, 2006-2019

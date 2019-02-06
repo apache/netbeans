@@ -21,6 +21,7 @@ package org.netbeans.spi.knockout;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import org.netbeans.api.scripting.Scripting;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import static org.testng.Assert.*;
@@ -36,7 +37,7 @@ public class BindingsNGTest {
     }
 
     @BeforeMethod public void initEngine() {
-        ScriptEngineManager sem = new ScriptEngineManager();
+        ScriptEngineManager sem = Scripting.createManager();
         eng = sem.getEngineByMimeType("text/javascript");
     }
 
@@ -65,7 +66,7 @@ public class BindingsNGTest {
         assertNotNull(eng.eval("ko"));
         assertNotNull(eng.eval("ko.value"));
         assertEquals(eng.eval("ko.value.loading"), true, "Boolean values are set to true");
-        assertEquals(eng.eval("ko.value.currentTweets[0].from_user_id"), 0d, "Boolean values are set to true");
+        assertNumber(eng.eval("ko.value.currentTweets[0].from_user_id"), 0d, "Boolean values are set to true");
     }
 
     @Test
@@ -122,6 +123,14 @@ public class BindingsNGTest {
             eng.eval(txt);
         } catch (ScriptException ex) {
             throw new AssertionError(txt, ex);
+        }
+    }
+
+    private void assertNumber(Object real, double exp, String msg) {
+        if (real instanceof Number) {
+            assertEquals(((Number) real).doubleValue(), exp, 0.1, msg);
+        } else {
+            fail("Expecting number: " + real);
         }
     }
 

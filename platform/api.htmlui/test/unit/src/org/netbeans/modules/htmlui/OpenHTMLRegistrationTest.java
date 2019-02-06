@@ -46,7 +46,8 @@ public class OpenHTMLRegistrationTest {
     public static void main() {
     }
     
-    @Test public void verifyRegistered() {
+    @Test(timeOut = 9000)
+    public void verifyRegistered() {
         final String path = "Actions/Test/html-test.instance";
         final FileObject fo = FileUtil.getConfigFile(path);
         assertNotNull(fo, "Registration found");

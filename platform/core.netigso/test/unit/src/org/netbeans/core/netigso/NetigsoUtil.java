@@ -34,13 +34,6 @@ public final class NetigsoUtil {
     private NetigsoUtil() {
     }
     
-    static void downgradeJDK() {
-        final Pattern JDK9 = Pattern.compile("(1\\.)?9");   //NOI18N
-        if (JDK9.matcher(System.getProperty("java.specification.version")).matches()) {
-            System.setProperty("java.specification.version", "1.8");
-        }
-    }
-
     public static Framework framework(ModuleManager mgr) throws Exception {
         final Method nm = mgr.getClass().getDeclaredMethod("netigso");
         nm.setAccessible(true);

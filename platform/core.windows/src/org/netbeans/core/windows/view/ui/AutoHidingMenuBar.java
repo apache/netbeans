@@ -44,6 +44,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.util.Utilities;
 
+/* Note to developers: To manually test the behavior of this class without running the entire IDE,
+run AutoHidingMenuBarManualTestApp.java in the test sources. */
 /**
  * Container for logic that allows a {@link JFrame}'s {@link JMenuBar} to be hidden by default in
  * full screen mode, but shown again if the user moves the mouse to the top of the screen or invokes

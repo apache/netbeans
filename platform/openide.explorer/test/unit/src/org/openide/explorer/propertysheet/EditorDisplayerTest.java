@@ -19,7 +19,6 @@
 
 package org.openide.explorer.propertysheet;
 
-import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -570,12 +569,6 @@ public class EditorDisplayerTest extends NbTestCase {
         }
     }
     
-    
-    private static class PseudoWindowsLookAndFeel extends WindowsLookAndFeel {
-        public boolean isSupportedLookAndFeel() {
-            return true;
-        }
-    }
     
     public class TagsEditor extends PropertyEditorSupport implements ExPropertyEditor {
         PropertyEnv env;

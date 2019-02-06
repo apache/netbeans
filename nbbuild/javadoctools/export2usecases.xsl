@@ -28,7 +28,7 @@
         <head>
             <!-- projects.netbeans.org -->
            <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-           <title>How to use certain NetBeans APIs</title>
+           <title>How to use certain Apache NetBeans (incubating) APIs</title>
             <link rel="stylesheet" href="netbeans.css" type="text/css"/>
 
           <link REL="icon" href="http://www.netbeans.org/favicon.ico" type="image/ico" />
@@ -37,7 +37,7 @@
         </head>
 
         <body>
-            <center><h1>How to use certain NetBeans APIs</h1></center>
+            <center><h1>How to use certain Apache NetBeans (incubating) APIs</h1></center>
 
             This page contains extracted usecases for some of the NetBeans modules
             that <a href="overview-summary.html">offer an API</a>. 

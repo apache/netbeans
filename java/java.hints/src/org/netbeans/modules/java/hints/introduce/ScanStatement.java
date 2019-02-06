@@ -238,7 +238,7 @@ final class ScanStatement extends ErrorAwareTreePathScanner<Void, Void> {
 
     @Override
     public Void visitBreak(BreakTree node, Void p) {
-        if (isMethodCode() && phase == PHASE_INSIDE_SELECTION && !treesSeensInSelection.contains(info.getTreeUtilities().getBreakContinueTarget(getCurrentPath()))) {
+        if (isMethodCode() && phase == PHASE_INSIDE_SELECTION && !treesSeensInSelection.contains(info.getTreeUtilities().getBreakContinueTargetTree(getCurrentPath()))) {
             selectionExits.add(getCurrentPath());
             hasBreaks = true;
         }
@@ -319,7 +319,7 @@ final class ScanStatement extends ErrorAwareTreePathScanner<Void, Void> {
         if ((exitsFromAllBranches ? 0 : i) + usedAfterSelection.size() > 1) {
             return "ERR_Too_Many_Return_Values"; // NOI18N
         }
-        StatementTree breakOrContinueTarget = null;
+        Tree breakOrContinueTarget = null;
         boolean returnValueComputed = false;
         TreePath returnValue = null;
         for (TreePath tp : selectionExits) {
@@ -344,7 +344,7 @@ final class ScanStatement extends ErrorAwareTreePathScanner<Void, Void> {
                     }
                 }
             } else {
-                StatementTree target = info.getTreeUtilities().getBreakContinueTarget(tp);
+                Tree target = info.getTreeUtilities().getBreakContinueTargetTree(tp);
                 if (breakOrContinueTarget == null) {
                     breakOrContinueTarget = target;
                 }

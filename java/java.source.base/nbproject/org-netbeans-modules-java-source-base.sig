@@ -1577,6 +1577,7 @@ meth public com.sun.source.tree.Scope reattributeTreeTo(com.sun.source.tree.Tree
 meth public com.sun.source.tree.Scope scopeFor(int)
 meth public com.sun.source.tree.Scope toScopeWithDisabledAccessibilityChecks(com.sun.source.tree.Scope)
 meth public com.sun.source.tree.StatementTree getBreakContinueTarget(com.sun.source.util.TreePath)
+meth public com.sun.source.tree.Tree getBreakContinueTargetTree(com.sun.source.util.TreePath)
 meth public com.sun.source.tree.StatementTree parseStatement(java.lang.String,com.sun.source.util.SourcePositions[])
 meth public com.sun.source.tree.Tree translate(com.sun.source.tree.Tree,java.util.Map<? extends com.sun.source.tree.Tree,? extends com.sun.source.tree.Tree>)
  anno 0 org.netbeans.api.annotations.common.NonNull()

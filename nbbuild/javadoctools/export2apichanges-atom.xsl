@@ -28,7 +28,7 @@
     <xsl:template match="/" >
         <atom:feed>
             <atom:id>urn:netbeans-org:apichanges</atom:id>
-            <atom:title>NetBeans API Changes</atom:title>
+            <atom:title>Apache NetBeans (incubating) API Changes</atom:title>
             <atom:author><atom:name>netbeans.org</atom:name></atom:author>
             <atom:link rel="alternate" type="text/html" href="apichanges.html"/>
             <atom:link rel="self" type="application/xml+atom" href="http://deadlock.netbeans.org/job/nbms-and-javadoc/javadoc/apichanges.atom"/>

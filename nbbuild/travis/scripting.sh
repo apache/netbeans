@@ -20,8 +20,8 @@
 set -e
 
 if [ -z "$GRAALVM" ]; then
-  BASE=graalvm-ce-1.0.0-rc10
-  URL=https://github.com/oracle/graal/releases/download/vm-1.0.0-rc10/$BASE-linux-amd64.tar.gz
+  BASE=graalvm-ce-1.0.0-rc12
+  URL=https://github.com/oracle/graal/releases/download/vm-1.0.0-rc12/$BASE-linux-amd64.tar.gz
   curl -L $URL --output graalvm.tgz
   tar fxz graalvm.tgz
   GRAALVM=`pwd`/$BASE

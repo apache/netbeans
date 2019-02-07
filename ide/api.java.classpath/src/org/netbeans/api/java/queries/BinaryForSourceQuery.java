@@ -21,7 +21,9 @@ package org.netbeans.api.java.queries;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeListener;
@@ -37,7 +39,8 @@ import org.openide.util.Lookup;
 /**
  *
  * The query is used for finding binaries for sources,
- * this is intended to be the inverse of the SourceForBinaryQuery.
+ * this is intended to be the inverse of the {@link SourceForBinaryQuery}.
+ * @see BinaryForSourceQueryImplementation2
  * @see BinaryForSourceQueryImplementation
  * @see SourceForBinaryQuery
  * @since org.netbeans.api.java/1 1.12
@@ -86,8 +89,17 @@ public final class BinaryForSourceQuery {
        return new DefaultResult (sourceRoot);
     }
 
+    /**
+     * Returns the binary root for given source root as computed by {@link BinaryForSourceQueryImplementation2}.
+     * @param sourceRoot the source path root. The URL must refer to folder.
+     * In the case of archive file the jar protocol URL must be used.
+     * The folder URL has to end with '/' The {@link FileUtil#urlForArchiveOrDir}
+     * can be used to create folder URLs.
+     * @return a result object encapsulating the answer (never null)
+     * @since 1.58
+     */
     public static Result2 findBinaryRoots2(URL sourceRoot) {
-        return Result2.wrap(findBinaryRoots(sourceRoot));
+        return QueriesAccessor.wrap(findBinaryRoots(sourceRoot));
     }
     
     /**
@@ -115,42 +127,24 @@ public final class BinaryForSourceQuery {
         void removeChangeListener(ChangeListener l);
     }
 
+    /** Enhanced version of {@link Result} obtained via
+     * {@link BinaryForSourceQuery#findBinaryRoots2(java.net.URL)} method.
+     * Use {@link BinaryForSourceQueryImplementation2} to create instance
+     * of this class.
+     * @since 1.58
+     */
     public static abstract class Result2 implements Result {
         Result2() {
         }
 
+        /**
+         * Check whether the binaries should be prefered over sources.
+         * Return {@code true} if the classes (if newer than sources) shall be
+         * copied instead of compiling the sources by the IDE.
+         * @return true or false
+         * @since 1.58
+         */
         public abstract boolean preferBinaries();
-
-        public static Result2 wrap(Result res) {
-            if (res instanceof Result2) {
-                return (Result2) res;
-            }
-
-            class ProxyRes extends Result2 {
-
-                @Override
-                public URL[] getRoots() {
-                    return res.getRoots();
-                }
-
-                @Override
-                public void addChangeListener(ChangeListener l) {
-                    res.addChangeListener(l);
-                }
-
-                @Override
-                public void removeChangeListener(ChangeListener l) {
-                    res.removeChangeListener(l);
-                }
-
-                @Override
-                public boolean preferBinaries() {
-                    return false;
-                }
-            }
-
-            return new ProxyRes();
-        }
     }
     
     private static class DefaultResult extends Result2 {
@@ -161,6 +155,7 @@ public final class BinaryForSourceQuery {
             this.sourceRoot = sourceRoot;
         }
     
+        @Override
         public URL[] getRoots() {
             FileObject fo = URLMapper.findFileObject(sourceRoot);
             if (fo == null) {
@@ -170,7 +165,7 @@ public final class BinaryForSourceQuery {
             if (exec == null) {
                 return new URL[0];
             }           
-            Set<URL> result = new HashSet<URL>();
+            Set<URL> result = new HashSet<>();
             for (ClassPath.Entry e : exec.entries()) {
                 final URL eurl = e.getURL();
                 FileObject[] roots = SourceForBinaryQuery.findSourceRoots(eurl).getRoots();
@@ -183,9 +178,11 @@ public final class BinaryForSourceQuery {
             return result.toArray(new URL[result.size()]);
         }
 
+        @Override
         public void addChangeListener(ChangeListener l) {            
         }
 
+        @Override
         public void removeChangeListener(ChangeListener l) {            
         }
 
@@ -226,13 +223,35 @@ public final class BinaryForSourceQuery {
 
 
     }
-
+    
+    static final QueriesAccessorImpl CACHE = new QueriesAccessorImpl();
     static {
-        QueriesAccessor.setInstance(new QueriesAccessor() {
-            @Override
-            public <T> Result2 create(BinaryForSourceQueryImplementation2<T> impl, T value) {
-                return new Result2Impl<>(impl, value);
+        QueriesAccessor.setInstance(CACHE);
+    }
+
+    static final class QueriesAccessorImpl extends QueriesAccessor {
+        QueriesAccessorImpl() {
+        }
+        private final Map<Object, Result2Impl> cache = new WeakHashMap<>();
+
+        @Override
+        public synchronized <T> Result2 create(BinaryForSourceQueryImplementation2<T> impl, T value) {
+            Result2Impl result = cache.get(value);
+            if (result == null) {
+                result = new Result2Impl<>(impl, value);
+                cache.put(value, result);
             }
-        });
+            assert impl == result.impl;
+            return result;
+        }
+
+        synchronized Object findRegistered(Object prototype) {
+            for (Object object : cache.keySet()) {
+                if (prototype.equals(object)) {
+                    return object;
+                }
+            }
+            return null;
+        }
     }
 }

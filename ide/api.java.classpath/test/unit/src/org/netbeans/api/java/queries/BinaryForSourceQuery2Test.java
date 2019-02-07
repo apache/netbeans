@@ -20,98 +20,125 @@
 package org.netbeans.api.java.queries;
 
 import java.net.URL;
+import java.util.Objects;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.spi.java.queries.BinaryForSourceQueryImplementation;
 import org.netbeans.spi.java.queries.BinaryForSourceQueryImplementation2;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.ServiceProvider;
 
 public class BinaryForSourceQuery2Test extends NbTestCase {
-
-    private FileObject srcRoot1;
-    private FileObject srcRoot2;
-    private FileObject binaryRoot2;
-
-
     public BinaryForSourceQuery2Test (String n) {
         super(n);
     }
 
     public void testQuery2() throws Exception {
-        MockServices.setServices(TestQuery2.class);
+        MockServices.setServices(SampleQuery.class);
+        SampleQuery sampleQuery = Lookup.getDefault().lookup(SampleQuery.class);
+        assertNotNull("Instance of SampleQuery is registered", sampleQuery);
 
         FileSystem fs = FileUtil.createMemoryFileSystem();
         FileObject data = FileUtil.createData(fs.getRoot(), "fldr/data.txt");
         URL url = data.toURL();
 
-        assertNull("No query yet", TestQuery2.LAST);
 
         BinaryForSourceQuery.Result2 result = BinaryForSourceQuery.findBinaryRoots2(url);
 
-        assertNotNull("Queried now", TestQuery2.LAST);
+        assertNotNull("Queried now", sampleQuery);
         assertTrue("prefers binaries", result.preferBinaries());
 
         URL[] roots = result.getRoots();
         assertEquals("One", 1, roots.length);
         assertEquals("Same", roots[0], url);
 
+        SampleQuery.PrivateData privateData = (SampleQuery.PrivateData) BinaryForSourceQuery.CACHE.findRegistered(new SampleQuery.PrivateData(url, null));
+        assertNotNull("Internal data found", privateData);
+
         ChangeListener listener = (ChangeEvent e) -> {};
         result.addChangeListener(listener);
-        assertEquals(TestQuery2.LAST.listener, listener);
+        assertEquals(privateData.listener, listener);
         result.removeChangeListener(listener);
-        assertNull(TestQuery2.LAST.listener);
+        assertNull(privateData.listener);
 
+        BinaryForSourceQuery.Result2 result2 = BinaryForSourceQuery.findBinaryRoots2(url);
+        assertSame("The result should be cached", result, result2);
     }
 
-    private static final class AnyData {
-        final URL url;
-        final FileObject fo;
+    @SuppressWarnings("PackageVisibleField")
+    // BEGIN: org.netbeans.api.java.queries.BinaryForSourceQuery2Test.SampleQuery
+    @ServiceProvider(service = BinaryForSourceQueryImplementation.class)
+    public final static class SampleQuery
+    implements BinaryForSourceQueryImplementation2<SampleQuery.PrivateData> {
+        public SampleQuery() {
+        }
 
-        AnyData(URL url, FileObject fo) {
+        @Override
+        public PrivateData findBinaryRoots2(URL sourceRoot) {
+            final FileObject fo = URLMapper.findFileObject(sourceRoot);
             assertNotNull("FileObject found", fo);
-            this.fo = fo;
-            this.url = url;
-        }
-
-    }
-
-    public static class TestQuery2 implements BinaryForSourceQueryImplementation2<AnyData>{
-        static TestQuery2 LAST;
-        ChangeListener listener;
-
-        public TestQuery2() {
+            return new PrivateData(sourceRoot, fo);
         }
 
         @Override
-        public AnyData findBinaryRoots2(URL sourceRoot) {
-            LAST = this;
-            return new AnyData(sourceRoot, URLMapper.findFileObject(sourceRoot));
-        }
-
-        @Override
-        public URL[] computeRoots(AnyData result) {
+        public URL[] computeRoots(PrivateData result) {
             return new URL[] { result.url };
         }
 
         @Override
-        public boolean computePreferBinaries(AnyData result) {
+        public boolean computePreferBinaries(PrivateData result) {
             return true;
         }
 
         @Override
-        public void computeChangeListener(AnyData result, boolean add, ChangeListener l) {
+        public void computeChangeListener(PrivateData data, boolean add, ChangeListener l) {
             if (add) {
-                assertNull("No listener yet", this.listener);
-                this.listener = l;
+                assertNull("No listener yet", data.listener);
+                data.listener = l;
             } else {
-                assertEquals("Removing", this.listener, l);
-                this.listener = null;
+                assertEquals("Removing", data.listener, l);
+                data.listener = null;
+            }
+        }
+
+        public static final class PrivateData {
+            final URL url;
+            final FileObject fo;
+            ChangeListener listener;
+
+            PrivateData(URL url, FileObject fo) {
+                this.fo = fo;
+                this.url = url;
+            }
+
+            @Override
+            public int hashCode() {
+                int hash = 7;
+                hash = 97 * hash + Objects.hashCode(this.url);
+                return hash;
+            }
+
+            @Override
+            public boolean equals(Object obj) {
+                if (this == obj) {
+                    return true;
+                }
+                if (obj == null) {
+                    return false;
+                }
+                if (getClass() != obj.getClass()) {
+                    return false;
+                }
+                final PrivateData other = (PrivateData) obj;
+                return Objects.equals(this.url, other.url);
             }
         }
     }
-
+    // END: org.netbeans.api.java.queries.BinaryForSourceQuery2Test.SampleQuery
 }

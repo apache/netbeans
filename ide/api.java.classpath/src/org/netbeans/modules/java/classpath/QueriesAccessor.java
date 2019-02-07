@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.java.classpath;
 
+import java.net.URL;
+import javax.swing.event.ChangeListener;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.queries.BinaryForSourceQuery;
 import org.netbeans.spi.java.queries.BinaryForSourceQueryImplementation2;
@@ -46,6 +48,43 @@ public abstract class QueriesAccessor {
             }
         }
         return res;
+    }
+
+    private static final BinaryForSourceQueryImplementation2<BinaryForSourceQuery.Result> WRAP = new BinaryForSourceQueryImplementation2<BinaryForSourceQuery.Result>() {
+        @Override
+        public BinaryForSourceQuery.Result findBinaryRoots2(URL sourceRoot) {
+            return null;
+        }
+
+        @Override
+        public URL[] computeRoots(BinaryForSourceQuery.Result result) {
+            return result.getRoots();
+        }
+
+        @Override
+        public boolean computePreferBinaries(BinaryForSourceQuery.Result result) {
+            if (result instanceof BinaryForSourceQuery.Result2) {
+                return ((BinaryForSourceQuery.Result2) result).preferBinaries();
+            } else {
+                return false;
+            }
+        }
+
+        @Override
+        public void computeChangeListener(BinaryForSourceQuery.Result result, boolean add, ChangeListener l) {
+            if (add) {
+                result.addChangeListener(l);
+            } else {
+                result.removeChangeListener(l);
+            }
+        }
+    };
+
+    public static BinaryForSourceQuery.Result2 wrap(BinaryForSourceQuery.Result res) {
+        if (res instanceof BinaryForSourceQuery.Result2) {
+            return (BinaryForSourceQuery.Result2) res;
+        }
+        return _instance.create(WRAP, res);
     }
 
     @NonNull

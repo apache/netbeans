@@ -71,6 +71,7 @@ import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.tree.JCTree;
 import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1789,7 +1790,14 @@ public class CopyFinder extends ErrorAwareTreeScanner<Boolean, TreePath> {
             case BLOCK:
                 return ((BlockTree) firstLeaf.getParentPath().getLeaf()).getStatements();
             case CASE:
-                return ((CaseTree) firstLeaf.getParentPath().getLeaf()).getStatements();
+                CaseTree caseTree = (CaseTree) firstLeaf.getParentPath().getLeaf();
+                if (caseTree.getStatements() != null) {
+                    return caseTree.getStatements();
+                } else if (caseTree instanceof JCTree.JCCase) {
+                    return ((JCTree.JCCase) caseTree).stats;
+                } else {
+                    return null;
+                }
             default:
                 return Collections.singletonList((StatementTree) firstLeaf.getLeaf());
         }

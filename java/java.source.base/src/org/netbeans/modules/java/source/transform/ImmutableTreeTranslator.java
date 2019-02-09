@@ -805,6 +805,19 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
 	return tree;
     }
 
+    protected final Tree rewriteChildren(Tree tree) {
+	ExpressionTree selector = (ExpressionTree)translate(TreeShims.getExpressions(tree).get(0));
+	List<? extends CaseTree> cases = translateStable(TreeShims.getCases(tree));
+	if (selector != TreeShims.getExpressions(tree).get(0) || !cases.equals(TreeShims.getCases(tree))) {
+	    Tree switchExpression = make.SwitchExpression(selector, cases);
+            model.setType(switchExpression, model.getType(tree));
+	    copyCommentTo(tree,switchExpression);
+            copyPosTo(tree,switchExpression);
+	    tree = switchExpression;
+	}
+	return tree;
+    }
+
     protected final CaseTree rewriteChildren(CaseTree tree) {
         Tree body = TreeShims.getBody(tree);
         List<? extends ExpressionTree> expressions = TreeShims.getExpressions(tree);

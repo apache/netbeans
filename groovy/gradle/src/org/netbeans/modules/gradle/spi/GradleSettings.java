@@ -76,6 +76,7 @@ public final class GradleSettings {
     public static final String PROP_REUSE_OUTPUT_TABS = "reuseOutputTabs";
     public static final String PROP_USE_CUSTOM_GRADLE = "useCustomGradle";
     public static final String PROP_GRADLE_VERSION = "gradleVersion";
+    public static final String PROP_SILENT_INSTALL = "silentInstall";
 
     public static final String PROP_OPT_OFFLINE = "offline";
     public static final String PROP_OPT_NO_REBUILD = "noRebuild";
@@ -138,6 +139,14 @@ public final class GradleSettings {
     public File getGradleUserHome() {
         String dir = getPreferences().get(PROP_GRADLE_USER_HOME, System.getenv("GRADLE_USER_HOME")); //NOI18N
         return dir != null ? new File(dir) : new File(System.getProperty("user.home"), ".gradle"); //NOI18N
+    }
+
+    public void setSilentInstall(boolean b) {
+        getPreferences().putBoolean(PROP_SILENT_INSTALL, b);
+    }
+
+    public boolean isSilentInstall() {
+        return getPreferences().getBoolean(PROP_SILENT_INSTALL, false);
     }
 
     public void setReuseOutputTabs(boolean b) {

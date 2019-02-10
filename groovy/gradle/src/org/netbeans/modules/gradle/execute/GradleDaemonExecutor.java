@@ -171,6 +171,9 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             //TODO: Handle Cancelled builds
             // We just swallow BUILD FAILED exception silently
         } finally {
+            BuildExecutionSupport.registerFinishedItem(item);
+            ioput.getOut().close();
+            ioput.getErr().close();
             if (pconn != null) {
                 pconn.close();
             }
@@ -190,7 +193,6 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             handle.finish();
             markFreeTab();
             actionStatesAtFinish();
-            BuildExecutionSupport.registerFinishedItem(item);
         }
     }
 

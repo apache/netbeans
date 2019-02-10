@@ -40,6 +40,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -118,6 +120,8 @@ import org.netbeans.modules.java.completion.JavaCompletionTask.Options;
 import org.netbeans.modules.java.hints.infrastructure.CreatorBasedLazyFixList;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsProvider;
 import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
+import org.netbeans.modules.java.hints.spiimpl.hints.HintsInvoker;
+import org.netbeans.modules.java.hints.spiimpl.options.HintsSettings;
 import org.netbeans.modules.java.source.ui.ElementOpenAccessor;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
@@ -675,48 +679,85 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     private void runDiagnoticTasks(String uri) {
+        //XXX: cancelling/deferring the tasks!
         diagnosticTasks.computeIfAbsent(uri, u -> {
             return BACKGROUND_TASKS.create(() -> {
-                try {
-                    FileObject file = fromUri(u);
-                    EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
-                    Document doc = ec.openDocument();
-                    ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
-                        @Override
-                        public void run(ResultIterator it) throws Exception {
-                            CompilationController cc = CompilationController.get(it.getParserResult());
-                            cc.toPhase(JavaSource.Phase.RESOLVED);
-                            ErrorHintsProvider ehp = new ErrorHintsProvider();
-                            Map<String, ErrorDescription> id2Errors = new HashMap<>();
-                            List<Diagnostic> diags = new ArrayList<>();
-                            int idx = 0;
-                            for (ErrorDescription err : ehp.computeErrors(cc, doc, "text/x-java")) { //TODO: mimetype?
-                                Diagnostic diag = new Diagnostic(new Range(createPosition(cc.getCompilationUnit(), err.getRange().getBegin().getOffset()),
-                                                                           createPosition(cc.getCompilationUnit(), err.getRange().getEnd().getOffset())),
-                                                                 err.getDescription());
-                                switch (err.getSeverity()) {
-                                    case ERROR: diag.setSeverity(DiagnosticSeverity.Error); break;
-                                    case WARNING: diag.setSeverity(DiagnosticSeverity.Warning); break;
-                                    case HINT: diag.setSeverity(DiagnosticSeverity.Hint); break;
-                                    default: diag.setSeverity(DiagnosticSeverity.Information); break;
-                                }
-                                String id = idx + "-" + err.getId();
-                                diag.setCode(id);
-                                id2Errors.put(id, err);
-                                diags.add(diag);
-                            }
-                            doc.putProperty("lsp-errors", id2Errors);
-                            client.publishDiagnostics(new PublishDiagnosticsParams(u, diags));
-                        }
-                    });
-                } catch (IOException | ParseException ex) {
-                    throw new IllegalStateException(ex);
-                }
+                computeDiags(u, (info, doc) -> {
+                    ErrorHintsProvider ehp = new ErrorHintsProvider();
+                    return ehp.computeErrors(info, doc, "text/x-java"); //TODO: mimetype?
+                }, "errors", false);
+                BACKGROUND_TASKS.create(() -> {
+                    computeDiags(u, (info, doc) -> {
+                        return new HintsInvoker(HintsSettings.getGlobalSettings(), new AtomicBoolean()).computeHints(info);
+                    }, "hints", true);
+                }).schedule(DELAY);
             });
         }).schedule(DELAY);
     }
 
     private static final int DELAY = 500;
+
+    private void computeDiags(String uri, ProduceErrors produceErrors, String keyPrefix, boolean update) {
+        try {
+            FileObject file = fromUri(uri);
+            EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+            Document doc = ec.openDocument();
+            ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
+                @Override
+                public void run(ResultIterator it) throws Exception {
+                    CompilationController cc = CompilationController.get(it.getParserResult());
+                    cc.toPhase(JavaSource.Phase.RESOLVED);
+                    Map<String, ErrorDescription> id2Errors = new HashMap<>();
+                    List<Diagnostic> diags = new ArrayList<>();
+                    int idx = 0;
+                    List<ErrorDescription> errors = produceErrors.computeErrors(cc, doc);
+                    if (errors == null) {
+                        errors = Collections.emptyList();
+                    }
+                    for (ErrorDescription err : errors) {
+                        Diagnostic diag = new Diagnostic(new Range(createPosition(cc.getCompilationUnit(), err.getRange().getBegin().getOffset()),
+                                                                   createPosition(cc.getCompilationUnit(), err.getRange().getEnd().getOffset())),
+                                                         err.getDescription());
+                        switch (err.getSeverity()) {
+                            case ERROR: diag.setSeverity(DiagnosticSeverity.Error); break;
+                            case WARNING: diag.setSeverity(DiagnosticSeverity.Warning); break;
+                            case HINT: diag.setSeverity(DiagnosticSeverity.Hint); break;
+                            default: diag.setSeverity(DiagnosticSeverity.Information); break;
+                        }
+                        String id = keyPrefix + ":" + idx + "-" + err.getId();
+                        diag.setCode(id);
+                        id2Errors.put(id, err);
+                        diags.add(diag);
+                    }
+                    doc.putProperty("lsp-errors-" + keyPrefix, id2Errors);
+                    doc.putProperty("lsp-errors-diags-" + keyPrefix, diags);
+                    Map<String, ErrorDescription> mergedId2Errors = new HashMap<>();
+                    List<Diagnostic> mergedDiags = new ArrayList<>();
+                    for (String k : ERROR_KEYS) {
+                        Map<String, ErrorDescription> prevErrors = (Map<String, ErrorDescription>) doc.getProperty("lsp-errors-" + k);
+                        if (prevErrors != null) {
+                            mergedId2Errors.putAll(prevErrors);
+                        }
+                        List<Diagnostic> prevDiags = (List<Diagnostic>) doc.getProperty("lsp-errors-diags-" + k);
+                        if (prevDiags != null) {
+                            mergedDiags.addAll(prevDiags);
+                        }
+                    }
+                    doc.putProperty("lsp-errors", mergedId2Errors);
+                    doc.putProperty("lsp-errors-diags", mergedDiags);
+                    client.publishDiagnostics(new PublishDiagnosticsParams(uri, mergedDiags));
+                }
+            });
+        } catch (IOException | ParseException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
+    private static final String[] ERROR_KEYS = {"errors", "hints"};
+
+    private interface ProduceErrors {
+        public List<ErrorDescription> computeErrors(CompilationInfo info, Document doc) throws IOException;
+    }
 
     private JavaSource getSource(String fileUri) {
         Document doc = openedDocuments.get(fileUri);
@@ -803,7 +844,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         return file.toURI().toString();
     }
 
-    private static FileObject fromUri(String uri) throws MalformedURLException {
+    //TODO: move to a separate Utils class:
+    public static FileObject fromUri(String uri) throws MalformedURLException {
         File cacheDir = Places.getCacheSubfile("java-server");
         URI uriUri = URI.create(uri);
         URI relative = cacheDir.toURI().relativize(uriUri);

@@ -20,14 +20,19 @@ package org.netbeans.modules.java.lsp.server;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+import junit.framework.TestCase;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionContext;
 import org.eclipse.lsp4j.CodeActionParams;
@@ -56,6 +61,7 @@ import org.eclipse.lsp4j.TextDocumentItem;
 import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
+import org.eclipse.lsp4j.WorkspaceFolder;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.launch.LSPLauncher;
@@ -63,6 +69,7 @@ import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageServer;
 import org.junit.Test;
 import org.netbeans.junit.NbTestCase;
+import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 
@@ -135,7 +142,8 @@ public class ServerTest extends NbTestCase {
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeResult result = server.initialize(new InitializeParams()).get();
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(src.toURI().toString(), "java", 0, code)));
-        assertDiags(diags);
+        assertDiags(diags);//errors
+        assertDiags(diags);//hints
         int hashCodeStart = code.indexOf("hashCode");
         Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(src.toURI().toString()), new Position(0, hashCodeStart + 2))).get();
         assertTrue(completion.isRight());
@@ -144,7 +152,8 @@ public class ServerTest extends NbTestCase {
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(1);
         id.setUri(src.toURI().toString());
         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, hashCodeStart), new Position(0, hashCodeStart + "hashCode".length())), "hashCode".length(), "equ"))));
-        assertDiags(diags, "Error:0:31-0:34");
+        assertDiags(diags, "Error:0:31-0:34");//errors
+        assertDiags(diags, "Error:0:31-0:34");//hints
         completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(src.toURI().toString()), new Position(0, hashCodeStart + 2))).get();
         actualItems = completion.getRight().getItems().stream().map(ci -> ci.getKind() + ":" + ci.getLabel()).collect(Collectors.toList());
         assertEquals(Arrays.asList("Method:equals", "Method:equalsIgnoreCase"), actualItems);
@@ -154,7 +163,8 @@ public class ServerTest extends NbTestCase {
         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, hashCodeStart), new Position(0, hashCodeStart + "equ".length())), "equ".length(), "hashCode"))));
         int closingBrace = code.indexOf("}");
         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, closingBrace), new Position(0, closingBrace)), 0, "private String c(Object o) {\nreturn o;\n}"))));
-        List<Diagnostic> diagnostics = assertDiags(diags, "Error:1:0-1:9");
+        List<Diagnostic> diagnostics = assertDiags(diags, "Error:1:0-1:9"); //errors
+        assertDiags(diags, "Error:1:0-1:9");//hints
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(1, 0), new Position(1, 9)), new CodeActionContext(Arrays.asList(diagnostics.get(0))))).get();
         String log = codeActions.toString();
         assertEquals(log, 2, codeActions.size());
@@ -169,6 +179,9 @@ public class ServerTest extends NbTestCase {
         assertEquals(1, edit.getRange().getEnd().getLine());
         assertEquals(7, edit.getRange().getEnd().getCharacter());
         assertEquals("(String) ", edit.getNewText());
+        server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, closingBrace), new Position(0, closingBrace)), 0, "private void assignToSelf(Object o) { o = o; }"))));
+        assertDiags(diags, "Error:1:0-1:9");//errors
+        assertDiags(diags, "Error:1:0-1:9", "Information:0:81-0:86", "Information:0:85-0:86");//hints
         serverThread.stop();
     }
 
@@ -181,18 +194,18 @@ public class ServerTest extends NbTestCase {
                     //ignore
                 }
             }
-            List<String> actualDiags = diags[0].stream()
+            Set<String> actualDiags = diags[0].stream()
                                                .map(d -> d.getSeverity() + ":" +
                                                          d.getRange().getStart().getLine() + ":" + d.getRange().getStart().getCharacter() + "-" +
                                                          d.getRange().getEnd().getLine() + ":" + d.getRange().getEnd().getCharacter())
-                                               .collect(Collectors.toList());
+                                               .collect(Collectors.toSet());
             String diagsMessage = diags[0].stream()
                                           .map(d -> d.getSeverity() + ":" +
                                                     d.getRange().getStart().getLine() + ":" + d.getRange().getStart().getCharacter() + "-" +
                                                     d.getRange().getEnd().getLine() + ":" + d.getRange().getEnd().getCharacter() + ": " +
                                                     d.getMessage())
                                                .collect(Collectors.joining("\n"));
-            assertEquals(diagsMessage, Arrays.asList(expected), actualDiags);
+            assertEquals(diagsMessage, new HashSet<>(Arrays.asList(expected)), actualDiags);
 
             List<Diagnostic> result = diags[0];
 
@@ -394,4 +407,89 @@ public class ServerTest extends NbTestCase {
         assertEquals(23, definition.get(0).getRange().getStart().getCharacter());
         //XXX: test jump to another file!
     }
+
+    @Test
+    public void testOpenProjectOpenJDK() throws Exception {
+        getWorkDir().mkdirs();
+
+        FileObject root = FileUtil.toFileObject(getWorkDir());
+        try (Writer w = new OutputStreamWriter(FileUtil.createData(root, "jdk/src/java.base/share/classes/java/lang/Object.java").getOutputStream(), StandardCharsets.UTF_8)) {
+            w.write("package java.lang; public class Object {}");
+        }
+        FileUtil.createData(root, "jdk/src/java.base/share/classes/impl/Service.java");
+        FileObject javaBaseMI = FileUtil.createData(root, "jdk/src/java.base/share/classes/module-info.java");
+        try (Writer w = new OutputStreamWriter(javaBaseMI.getOutputStream(), StandardCharsets.UTF_8)) {
+            w.write("module java.base { exports java.lang; }");
+        }
+        try (Writer w = new OutputStreamWriter(FileUtil.createData(root, "jdk/src/java.compiler/share/classes/module-info.java").getOutputStream(), StandardCharsets.UTF_8)) {
+            w.write("module java.compiler { }");
+        }
+
+        ServerSocket srv = new ServerSocket(0);
+        Thread serverThread = new Thread(() -> {
+            try {
+                Socket server = srv.accept();
+                Server.run(server.getInputStream(), server.getOutputStream());
+            } catch (Exception ex) {
+                throw new IllegalStateException(ex);
+            }
+        });
+        serverThread.start();
+        Socket client = new Socket(InetAddress.getLocalHost(), srv.getLocalPort());
+        List<Diagnostic>[] diags = new List[1];
+        boolean[] indexingComplete = new boolean[1];
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+                synchronized (diags) {
+                    diags[0] = params.getDiagnostics();
+                    diags.notifyAll();
+                }
+            }
+
+            @Override
+            public void showMessage(MessageParams params) {
+                if (Server.INDEXING_COMPLETED.equals(params.getMessage())) {
+                    synchronized (indexingComplete) {
+                        indexingComplete[0] = true;
+                        indexingComplete.notifyAll();
+                    }
+                } else {
+                    throw new UnsupportedOperationException("Unexpected message.");
+                }
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeParams initParams = new InitializeParams();
+        initParams.setWorkspaceFolders(Arrays.asList(new WorkspaceFolder(root.getFileObject("jdk/src/java.base").toURI().toString())));
+        InitializeResult result = server.initialize(initParams).get();
+        synchronized (indexingComplete) {
+            while (!indexingComplete[0]) {
+                try {
+                    indexingComplete.wait();
+                } catch (InterruptedException ex) {
+                    //ignore...
+                }
+            }
+        }
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(javaBaseMI.toURI().toString(), "java", 0, javaBaseMI.asText("UTF-8"))));
+        assertDiags(diags);
+    }
+    
 }

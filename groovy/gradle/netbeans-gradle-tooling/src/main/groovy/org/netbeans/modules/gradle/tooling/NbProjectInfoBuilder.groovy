@@ -108,7 +108,7 @@ class NbProjectInfoBuilder {
             sp.put(p.name, p.projectDir);
         }
         model.info.project_subProjects = sp;
-        
+
         Map<String, File> ib = new HashMap<>();
         println "Gradle Version: $gradleVersion"
         if (gradleVersion.compareTo(VersionNumber.parse('3.1')) >= 0) {
@@ -118,7 +118,7 @@ class NbProjectInfoBuilder {
             }
         }
         model.info.project_includedBuilds = ib;
-        
+
         try {
             model.info.buildClassPath = storeSet(project.buildscript.configurations.classpath.files)
         } catch (Exception e) {
@@ -140,6 +140,9 @@ class NbProjectInfoBuilder {
             'scala-base', 'scala', 'groovy-base', 'groovy',\
             'distribution', 'application', 'maven', 'osgi', \
             'jacoco', 'checkstyle', 'pmd', 'findbugs', 'ear', \
+            'play', 'java-library-distribution', 'maven-publish',
+            'ivy-publish', 'antlr', \
+            'org.springframework.boot', \
             'com.github.lkishalmi.gatling', \
             'com.android.library', 'com.android.application']) {
             if (project.plugins.hasPlugin(plugin)) {

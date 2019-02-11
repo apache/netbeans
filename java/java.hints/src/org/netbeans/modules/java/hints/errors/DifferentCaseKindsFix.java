@@ -64,7 +64,6 @@ public class DifferentCaseKindsFix implements ErrorRule<Void> {
         List<? extends CaseTree> caseTrees = null;
         boolean flag = false;
         if(parentPath.getLeaf().getKind().toString().equals("SWITCH_EXPRESSION")){
-            List<? extends ExpressionTree> exprTrees = TreeShims.getExpressions(parentPath.getLeaf());
             caseTrees = TreeShims.getCases(parentPath.getLeaf());            
         } else {
             flag = true;
@@ -74,7 +73,7 @@ public class DifferentCaseKindsFix implements ErrorRule<Void> {
             boolean wasDefault = false;
             boolean wasEmpty = false;
             for (CaseTree ct : caseTrees) {
-                if (ct.getStatements() == null && !(ct instanceof JCCase && ((JCCase) ct).stats != null)) { //TODO: test 
+                if (ct.getStatements() == null && TreeShims.getBody(ct) == null) {
                     return null;
                 } else if (flag && ct.getStatements() != null) {
                     if (completesNormally) {

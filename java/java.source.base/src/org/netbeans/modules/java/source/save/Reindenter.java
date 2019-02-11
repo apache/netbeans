@@ -649,30 +649,37 @@ public class Reindenter implements IndentTask {
                 }
                 break;
             case SWITCH:
-               currentIndent = insideSwitch(startOffset, endOffset,nextTokenId,lastPos,currentIndent) ;
+               currentIndent = getSwitchIndent(startOffset, endOffset,nextTokenId,lastPos,currentIndent) ;
                 break;
             case CASE:
                 t = null;
                 JavaTokenId tokenId = null;
                 List<? extends StatementTree> statements = ((CaseTree) last).getStatements();
-                if (statements != null)
+                if (statements != null) {
                     tokenId = JavaTokenId.COLON;
-                else {
-                    statements = TreeShims.getStatements((CaseTree) last);
-                    tokenId = JavaTokenId.ARROW;
+                } else {
+                    Tree caseBody = TreeShims.getBody((CaseTree) last);
+                    if (caseBody instanceof StatementTree) {
+                        statements = Collections.singletonList((StatementTree) caseBody);
+                        tokenId = JavaTokenId.ARROW;
+                    } else if (getEndPosition(caseBody) > startOffset) {
+                        return getContinuationIndent(path, currentIndent);
+                    }
                 }
+
                 for (StatementTree st : statements) {
                     if (getEndPosition(st) > startOffset) {
                         break;
                     }
                     t = st;
                 }
-                if (t != null) {
-                    int i = getCurrentIndent(t, path);
-                    currentIndent = i < 0 ? getStmtIndent(startOffset, endOffset, EnumSet.of(tokenId), getEndPosition(((CaseTree)last).getExpression()), currentIndent) : i;
-                } else {
-                    currentIndent = getStmtIndent(startOffset, endOffset, EnumSet.of(tokenId), getEndPosition(((CaseTree)last).getExpression()), currentIndent);
-                }
+                    if (t != null) {
+                        int i = getCurrentIndent(t, path);
+                        currentIndent = i < 0 ? getStmtIndent(startOffset, endOffset, EnumSet.of(tokenId), getEndPosition(((CaseTree) last).getExpression()), currentIndent) : i;
+                    } else {
+                        currentIndent = getStmtIndent(startOffset, endOffset, EnumSet.of(tokenId), getEndPosition(((CaseTree) last).getExpression()), currentIndent);
+                    }
+
                 break;
             case NEW_ARRAY:
                 token = findFirstNonWhitespaceToken(startOffset, endOffset);
@@ -774,7 +781,7 @@ public class Reindenter implements IndentTask {
                 break;
             default:
                 if (last.getKind().toString().equals("SWITCH_EXPRESSION")) {  //NOI18N
-                   currentIndent = insideSwitch(startOffset, endOffset,nextTokenId,lastPos,currentIndent) ;
+                   currentIndent = getSwitchIndent(startOffset, endOffset,nextTokenId,lastPos,currentIndent) ;
                 }
                 else currentIndent = getContinuationIndent(path, currentIndent);
                 break;
@@ -782,10 +789,11 @@ public class Reindenter implements IndentTask {
         return currentIndent;
     }
 
-    private int insideSwitch(int startOffset, int endOffset, JavaTokenId nextTokenId, int lastPos, int currentIndent) throws BadLocationException {
+    private int getSwitchIndent(int startOffset, int endOffset, JavaTokenId nextTokenId, int lastPos, int currentIndent) throws BadLocationException {
         LinkedList<? extends Tree> path = getPath(startOffset);
         Tree last = path.getFirst();
         TokenSequence<JavaTokenId> token = findFirstNonWhitespaceToken(startOffset, endOffset);
+        boolean indentCases = cs.indentCasesFromSwitch() ;
         nextTokenId = token != null ? token.token().id() : null;
         if (nextTokenId != null && nextTokenId == JavaTokenId.RBRACE) {
             if (isLeftBraceOnNewLine(lastPos, startOffset)) {
@@ -810,11 +818,22 @@ public class Reindenter implements IndentTask {
                 CaseTree ct = (CaseTree) t;
                 if (nextTokenId == null || !EnumSet.of(JavaTokenId.CASE, JavaTokenId.DEFAULT).contains(nextTokenId)) {
                     t = null;
-                    List<? extends StatementTree> statements = TreeShims.getStatements(ct);
-                    for (StatementTree st : statements) {
-                        if (getEndPosition(st) > startOffset) {
-                            break;
+                    List<? extends StatementTree> statements = ct.getStatements();
+                    if(statements == null)
+                    {
+                        Tree caseBody = TreeShims.getBody(ct);
+                        if (caseBody instanceof StatementTree) {
+                            statements = Collections.singletonList((StatementTree) caseBody);
                         }
+                        else if (getEndPosition(caseBody) > startOffset ) {
+                            return getContinuationIndent(path, currentIndent);
+                        }
+                    }
+                    if (statements != null)
+                        for (StatementTree st : statements) {
+                            if (getEndPosition(st) > startOffset) {
+                                break;
+                            }
                         t = st;
                     }
                     if (t != null) {
@@ -827,14 +846,18 @@ public class Reindenter implements IndentTask {
                     }
                 } else {
                     int i = getCurrentIndent(t, path);
-                    currentIndent = i < 0 ? currentIndent + (cs.indentCasesFromSwitch() ? cs.getIndentSize() : 0) : i;
+                    currentIndent = i < 0 ? currentIndent + (indentCases ? cs.getIndentSize() : 0) : i;
                 }
             } else {
                 token = findFirstNonWhitespaceToken(startOffset, lastPos);
                 if (token != null && token.token().id() == JavaTokenId.LBRACE) {
-                    currentIndent += (cs.indentCasesFromSwitch() ? cs.getIndentSize() : 0);
+                    currentIndent += (indentCases ? cs.getIndentSize() : 0);
                 } else {
-                    currentIndent = getStmtIndent(startOffset, endOffset, EnumSet.of(JavaTokenId.RPAREN), getEndPosition(((SwitchTree) last).getExpression()) - 1, currentIndent);
+                    if (last.getKind() == Tree.Kind.SWITCH) {
+                        currentIndent = getStmtIndent(startOffset, endOffset, EnumSet.of(JavaTokenId.RPAREN), getEndPosition(((SwitchTree) last).getExpression()) - 1, currentIndent);
+                    } else {
+                        currentIndent = getStmtIndent(startOffset, endOffset, EnumSet.of(JavaTokenId.RPAREN), getEndPosition(TreeShims.getExpressions(last).get(0)) - 1, currentIndent);
+                    }
                 }
             }
         }

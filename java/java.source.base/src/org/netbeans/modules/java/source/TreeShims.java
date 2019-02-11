@@ -72,6 +72,9 @@ public class TreeShims {
                 }
                 break;
             }
+            case "SWITCH":
+                exprTrees = Collections.singletonList(((SwitchTree) node).getExpression());
+                break;
             default:
                 break;
         }
@@ -107,15 +110,6 @@ public class TreeShims {
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             throw TreeShims.<RuntimeException>throwAny(ex);
         }
-    }
-
-    public static List<? extends StatementTree> getStatements(CaseTree node) {
-        List<? extends StatementTree> statements = null;
-        statements = ((CaseTree) node).getStatements();
-        if (statements == null && node instanceof JCTree.JCCase) {
-            statements = ((JCTree.JCCase) node).stats;
-        }
-        return statements;
     }
 
     @SuppressWarnings("unchecked")

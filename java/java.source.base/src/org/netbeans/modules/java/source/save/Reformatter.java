@@ -2566,91 +2566,14 @@ public class Reformatter implements ReformatTask {
 
         @Override
         public Boolean visitSwitch(SwitchTree node, Void p) {
-            accept(SWITCH);
-            boolean oldContinuationIndent = continuationIndent;
-            try {
-                continuationIndent = true;
-                spaces(cs.spaceBeforeSwitchParen() ? 1 : 0);
-                scan(node.getExpression(), p);
-            } finally {
-                continuationIndent = oldContinuationIndent;
-            }
-            CodeStyle.BracePlacement bracePlacement = cs.getOtherBracePlacement();
-            boolean spaceBeforeLeftBrace = cs.spaceBeforeSwitchLeftBrace();
-            boolean indentCases = cs.indentCasesFromSwitch();
-            int old = lastIndent;
-            int halfIndent = lastIndent;
-            switch(bracePlacement) {
-                case SAME_LINE:
-                    spaces(spaceBeforeLeftBrace ? 1 : 0, tokens.offset() < startOffset);
-                    accept(LBRACE);
-                    if (indentCases)
-                        indent = lastIndent + indentSize;
-                    break;
-                case NEW_LINE:
-                    newline();
-                    accept(LBRACE);
-                    if (indentCases)
-                        indent = lastIndent + indentSize;
-                    break;
-                case NEW_LINE_HALF_INDENTED:
-                    int oldLast = lastIndent;
-                    indent = lastIndent + (indentSize >> 1);
-                    halfIndent = indent;
-                    newline();
-                    accept(LBRACE);
-                    if (indentCases)
-                        indent = oldLast + indentSize;
-                    else
-                        indent = old;
-                    break;
-                case NEW_LINE_INDENTED:
-                    indent = lastIndent + indentSize;
-                    halfIndent = indent;
-                    newline();
-                    accept(LBRACE);
-                    if (!indentCases)
-                        indent = old;
-                    break;
-            }
-            for (CaseTree caseTree : node.getCases()) {
-                newline();
-                scan(caseTree, p);
-            }
-            newline();
-            indent = halfIndent;
-            Diff diff = diffs.isEmpty() ? null : diffs.getFirst();
-            if (diff != null && diff.end == tokens.offset()) {
-                if (diff.text != null) {
-                    int idx = diff.text.lastIndexOf('\n'); //NOI18N
-                    if (idx < 0)
-                        diff.text = getIndent();
-                    else
-                        diff.text = diff.text.substring(0, idx + 1) + getIndent();
-                    
-                }
-                String spaces = diff.text != null ? diff.text : getIndent();
-                if (spaces.equals(fText.substring(diff.start, diff.end)))
-                    diffs.removeFirst();
-            } else if (tokens.movePrevious()) {
-                if (tokens.token().id() == WHITESPACE) {
-                    String text =  tokens.token().text().toString();
-                    int idx = text.lastIndexOf('\n'); //NOI18N
-                    if (idx >= 0) {
-                        text = text.substring(idx + 1);
-                        String ind = getIndent();
-                        if (!ind.equals(text))
-                            addDiff(new Diff(tokens.offset() + idx + 1, tokens.offset() + tokens.token().length(), ind));
-                    }
-                }
-                tokens.moveNext();
-            }
-            accept(RBRACE);
-            indent = lastIndent = old;
-            return true;
+            return handleSwitch(node, p);
         }
 
-        public Boolean scanSwitchExpression(Tree node, Void p) {
+        private Boolean scanSwitchExpression(Tree node, Void p) {
+         return handleSwitch(node,p);
+        }
+
+        private boolean handleSwitch(Tree node, Void p) {
             accept(SWITCH);
             boolean oldContinuationIndent = continuationIndent;
             try {
@@ -2666,17 +2589,26 @@ public class Reformatter implements ReformatTask {
             }
             CodeStyle.BracePlacement bracePlacement = cs.getOtherBracePlacement();
             boolean spaceBeforeLeftBrace = cs.spaceBeforeSwitchLeftBrace();
+            boolean indentCases = cs.indentCasesFromSwitch() ;
             int old = lastIndent;
             int halfIndent = lastIndent;
-
+            if (node.getKind().toString().equals("SWITCH_EXPRESSION")) {
+                continuationIndent = false;
+            }
             switch (bracePlacement) {
                 case SAME_LINE:
                     spaces(spaceBeforeLeftBrace ? 1 : 0, tokens.offset() < startOffset);
                     accept(LBRACE);
+                    if (indentCases) {
+                        indent = lastIndent + indentSize;
+                    }
                     break;
                 case NEW_LINE:
                     newline();
                     accept(LBRACE);
+                    if (indentCases) {
+                        indent = lastIndent + indentSize;
+                    }
                     break;
                 case NEW_LINE_HALF_INDENTED:
                     int oldLast = lastIndent;
@@ -2684,17 +2616,27 @@ public class Reformatter implements ReformatTask {
                     halfIndent = indent;
                     newline();
                     accept(LBRACE);
+                    if (indentCases) {
+                        indent = oldLast + indentSize;
+                    } else {
+                        indent = old;
+                    }
                     break;
                 case NEW_LINE_INDENTED:
                     indent = lastIndent + indentSize;
                     halfIndent = indent;
                     newline();
                     accept(LBRACE);
+                    if (!indentCases) {
+                        indent = old;
+                    }
                     break;
             }
-            continuationIndent = false;
-            indent = lastIndent + indentSize;
-            List<? extends CaseTree> caseTrees = TreeShims.getCases(node);  //NOI18N
+            if (node.getKind().toString().equals("SWITCH_EXPRESSION")) { //NOI18N
+                old = indent;
+                indent = lastIndent + indentSize;
+            }
+            List<? extends CaseTree> caseTrees = TreeShims.getCases(node);
             try {
                 for (CaseTree caseTree : caseTrees) {
                     newline();
@@ -2732,10 +2674,10 @@ public class Reformatter implements ReformatTask {
                     }
                     tokens.moveNext();
                 }
-                accept(RBRACE);
             } finally {
                 continuationIndent = oldContinuationIndent;
             }
+                accept(RBRACE);
             indent = lastIndent = old;
             return true;
         }
@@ -2751,26 +2693,38 @@ public class Reformatter implements ReformatTask {
                 accept(DEFAULT);
             }
             List<? extends StatementTree> statements = node.getStatements();
+            Tree caseBody = null;
             if(statements != null)
             accept(COLON);
-            else if (node instanceof JCTree.JCCase) {
-                statements = ((JCTree.JCCase) node).stats;
+            else {
                 accept(ARROW);
+                caseBody = TreeShims.getBody(node);
+                if (caseBody instanceof StatementTree)
+                    statements = Collections.singletonList((StatementTree) caseBody);
             }
             int old = indent;
             indent = lastIndent + indentSize;
             boolean first = true;
-            for (StatementTree stat : statements) {
-                if (first) {
-                    if (stat.getKind() == Tree.Kind.BLOCK) {
-                        indent = lastIndent;
+            if(statements != null)
+            {
+                for (StatementTree stat : statements) {
+                    if (first) {
+                        if (stat.getKind() == Tree.Kind.BLOCK) {
+                            indent = lastIndent;
+                        }
+                        wrapStatement(cs.wrapCaseStatements(), CodeStyle.BracesGenerationStyle.LEAVE_ALONE, 1, stat);
+                    } else {
+                        newline();
+                        scan(stat, p);
                     }
-                    wrapStatement(cs.wrapCaseStatements(), CodeStyle.BracesGenerationStyle.LEAVE_ALONE, 1, stat);
-                } else {
-                    newline();
-                    scan(stat, p);
+                    first = false;
                 }
-                first = false;
+            }
+            else if (caseBody != null) {
+                newline();
+                scan(caseBody, p);
+                spaces(cs.spaceBeforeSemi() ? 1 : 0);
+                accept(SEMICOLON);
             }
             indent = old;
             return true;
@@ -2778,16 +2732,17 @@ public class Reformatter implements ReformatTask {
 
         @Override
         public Boolean visitBreak(BreakTree node, Void p) {
-            accept(BREAK);
-            ExpressionTree exprTree = TreeShims.getValue(node) ;
+            JavaTokenId token = accept(BREAK);
+            ExpressionTree exprTree = TreeShims.getValue(node);
             if (exprTree != null) {
                 space();
                 scan(exprTree, p);
-            }
-            Name label = node.getLabel();
-            if (label != null) {
-                space();
-                accept(IDENTIFIER, UNDERSCORE);
+            } else {
+                Name label = node.getLabel();
+                if (label != null) {
+                    space();
+                    accept(IDENTIFIER, UNDERSCORE);
+                }
             }
             accept(SEMICOLON);
             return true;
@@ -3234,6 +3189,9 @@ public class Reformatter implements ReformatTask {
                         break;
                     case SYNCHRONIZED:
                         spaceWithinParens = cs.spaceWithinSynchronizedParens();
+                        break;
+                    case VARIABLE:
+                        spaceWithinParens = cs.spaceWithinSwitchParens();
                         break;
                     default:
                         spaceWithinParens = cs.spaceWithinParens();

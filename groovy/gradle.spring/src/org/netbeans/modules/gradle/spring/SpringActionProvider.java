@@ -16,31 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.netbeans.modules.gradle.spring;
 
-package org.netbeans.modules.gradle.actions;
-
-import org.netbeans.modules.gradle.api.execute.ActionMapping;
-import java.io.IOException;
-import java.util.Set;
-import javax.xml.parsers.ParserConfigurationException;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.xml.sax.SAXException;
+import org.netbeans.modules.gradle.spi.actions.DefaultGradleActionsProvider;
+import org.netbeans.modules.gradle.spi.actions.GradleActionsProvider;
+import org.openide.util.lookup.ServiceProvider;
+import static org.netbeans.spi.project.ActionProvider.*;
 
 /**
- *
- * @author Laszlo Kishalmi
+ * Provides run and debug action for spring boot apps out-of-the-box.
+ * @author lkishalmi
  */
-public class ActionMappingScannerTest {
+@ServiceProvider(service = GradleActionsProvider.class)
+public class SpringActionProvider extends DefaultGradleActionsProvider {
+    private static final String[] SUPPORTED = new String[]{
+        COMMAND_RUN,
+        COMMAND_DEBUG,
+    };
 
-    public ActionMappingScannerTest() {
+    public SpringActionProvider() {
+        super(SUPPORTED);
     }
-
-    @Test
-    public void testVisitDocument() throws ParserConfigurationException, SAXException, IOException {
-        Set<ActionMapping> mappings = ActionMappingScanner.loadMappings(ActionMappingScanner.class.getResourceAsStream("action-mapping.xml"));
-        assertTrue(mappings.size() > 0);
-    }
-
 
 }

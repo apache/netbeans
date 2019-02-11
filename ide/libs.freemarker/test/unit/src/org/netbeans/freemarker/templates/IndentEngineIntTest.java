@@ -30,6 +30,7 @@ import javax.script.ScriptEngineManager;
 import javax.swing.text.BadLocationException;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.test.MockMimeLookup;
+import org.netbeans.api.scripting.Scripting;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.editor.indent.spi.Context;
@@ -77,7 +78,7 @@ public class IndentEngineIntTest extends NbTestCase {
     }
     
     public void testSupportedMimeTypes() {
-        ScriptEngineManager sem = new ScriptEngineManager();
+        ScriptEngineManager sem = Scripting.createManager();
         ScriptEngine eng = sem.getEngineByName("freemarker");
         assertNotNull("freemarker engine is found", eng);
         assertEquals("[text/x-freemarker]", eng.getFactory().getMimeTypes().toString());

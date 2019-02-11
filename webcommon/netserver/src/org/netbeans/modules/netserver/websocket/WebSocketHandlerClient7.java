@@ -23,9 +23,10 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
+import java.util.Base64;
 import java.util.List;
 
-import javax.xml.bind.DatatypeConverter;
+
 
 
 /**
@@ -171,7 +172,7 @@ class WebSocketHandlerClient7 extends AbstractWSHandler7<WebSocketClientImpl> {
         if ( myGeneratedKey == null ){
             byte[] bytes = new byte[ 16 ];
             getRandom().nextBytes(bytes);
-            myGeneratedKey =  DatatypeConverter.printBase64Binary(bytes);
+            myGeneratedKey =  Base64.getEncoder().encodeToString(bytes);
         }
         return myGeneratedKey;
     }

@@ -1250,7 +1250,7 @@ public class NPECheck {
         public State visitBreak(BreakTree node, Void p) {
             super.visitBreak(node, p);
 
-            StatementTree target = info.getTreeUtilities().getBreakContinueTarget(getCurrentPath());
+            Tree target = info.getTreeUtilities().getBreakContinueTargetTree(getCurrentPath());
             
             resumeAfter(target, variable2State);
 

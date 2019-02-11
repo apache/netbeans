@@ -102,10 +102,10 @@ public class RemoveUnnecessary {
     @Hint(displayName="#DN_RemoveUnnecessaryContinue", description="#DESC_RemoveUnnecessaryContinue", category="general", suppressWarnings="UnnecessaryContinue")
     @TriggerPattern("continue $val$;")
     public static ErrorDescription unnecessaryContinue(HintContext ctx) {
-        return unnecessaryReturnContinue(ctx, ctx.getInfo().getTreeUtilities().getBreakContinueTarget(ctx.getPath()), "UnnecessaryContinueStatement", false);
+        return unnecessaryReturnContinue(ctx, ctx.getInfo().getTreeUtilities().getBreakContinueTargetTree(ctx.getPath()), "UnnecessaryContinueStatement", false);
     }
     
-    private static ErrorDescription unnecessaryReturnContinue(HintContext ctx, StatementTree targetLoop, String key, boolean isReturn) {
+    private static ErrorDescription unnecessaryReturnContinue(HintContext ctx, Tree targetLoop, String key, boolean isReturn) {
         TreePath tp = ctx.getPath();
 
         OUTER: while (tp != null && !TreeUtilities.CLASS_TREE_KINDS.contains(tp.getLeaf().getKind())) {
@@ -193,7 +193,7 @@ public class RemoveUnnecessary {
                 }
 
                 if (next.getKind() == Kind.BREAK) {
-                    StatementTree target = ctx.getInfo().getTreeUtilities().getBreakContinueTarget(new TreePath(tp, next));
+                    Tree target = ctx.getInfo().getTreeUtilities().getBreakContinueTargetTree(new TreePath(tp, next));
                     
                     if (target == null) return null;
                     
@@ -467,7 +467,7 @@ public class RemoveUnnecessary {
         
         if (loop == null) return null;
         
-        if (ctx.getInfo().getTreeUtilities().getBreakContinueTarget(ctx.getPath()) != loop.getParentPath().getLeaf()) return null;
+        if (ctx.getInfo().getTreeUtilities().getBreakContinueTargetTree(ctx.getPath()) != loop.getParentPath().getLeaf()) return null;
         
         Fix fix = JavaFixUtilities.rewriteFix(ctx, brk ? Bundle.FIX_UnnecessaryBreakStatementLabel() : Bundle.FIX_UnnecessaryContinueStatementLabel(), ctx.getPath(), brk ? "break;" : "continue;");
         

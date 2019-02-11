@@ -39,6 +39,7 @@
         </folder>
 
         <folder name="Project">
+            <folder name="AntJava">
             <folder name="JavaFX">
                 <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.project.Bundle#Templates/Project/JavaFX"/>
                 <attr name="position" intvalue="195"/>
@@ -87,6 +88,7 @@
                     <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javafx2/project/templates/JavaFXExistingSources.html"/>
                     <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.javafx2.project.JavaFXProjectWizardIterator.existing"/>
                 </file>
+            </folder>
             </folder>
         </folder>
 

@@ -610,11 +610,6 @@ final class DummyWindowManager extends WindowManager {
 
                 return (tcs.length > 0) ? tcs[0] : null;
             }
-
-            @Override
-            public String toXml() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
         }
     }
 

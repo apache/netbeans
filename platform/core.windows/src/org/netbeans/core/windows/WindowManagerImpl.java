@@ -509,7 +509,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
             Exceptions.printStackTrace(ex);
         }
     }
-    
+
     private static class WrapMode implements Mode {
         private Mode wrap;
         
@@ -578,11 +578,6 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
         @Override
         public void setBounds (Rectangle s) {
             wrap.setBounds (s);
-        }
-
-        @Override
-        public String toXml() {
-            throw new UnsupportedOperationException("Not supported yet.");
         }
     } // end of WrapMode
 

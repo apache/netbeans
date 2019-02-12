@@ -44,7 +44,7 @@ import org.openide.util.Exceptions;
  *
  * @author Peter Zavadsky
  */
-public final class ModeImpl implements Mode {
+public final class ModeImpl implements Mode.Xml {
 
     /** Name constant as a base for nonamed modes. */
     private static final String MODE_ANONYMOUS_NAME = "anonymousMode"; // NOI18N

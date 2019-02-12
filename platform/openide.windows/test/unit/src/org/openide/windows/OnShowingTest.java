@@ -189,21 +189,6 @@ public class OnShowingTest extends NbTestCase{
                 public TopComponent findTopComponent(String tcID) {
                     throw new UnsupportedOperationException("Not supported yet.");
                 }
-
-                @Override
-                public void createModeFromXml(String xml) {
-                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                }
-
-                @Override
-                public boolean removeMode(Mode mode) {
-                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                }
-
-                @Override
-                public void updateModeContraintsFromXml(String xml) {
-                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                }
             }
         );
     }

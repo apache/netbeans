@@ -41,4 +41,22 @@ public final class ModeXml {
                 ? ((Mode.Xml) mode).toXml()
                 : null;
     }
+    
+    public final static void createModeFromXml(WindowManager windowManager, String xml) {
+        if(windowManager instanceof WindowManager.ModeManager) {
+            ((WindowManager.ModeManager)windowManager).createModeFromXml(xml);
+        }
+    }
+    
+    public final static void updateModeConstraintsFromXml(WindowManager windowManager, String xml) {
+        if(windowManager instanceof WindowManager.ModeManager) {
+            ((WindowManager.ModeManager)windowManager).updateModeConstraintsFromXml(xml);
+        }
+    }
+    
+    public final static boolean removeMode(WindowManager windowManager, Mode mode) {
+        return windowManager instanceof WindowManager.ModeManager
+                ? ((WindowManager.ModeManager)windowManager).removeMode(mode)
+                : false;
+    }
 }

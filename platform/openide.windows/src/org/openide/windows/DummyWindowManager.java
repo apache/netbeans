@@ -430,21 +430,6 @@ final class DummyWindowManager extends WindowManager {
         return "editor".equals(mode.getName());
     }
 
-    @Override
-    public void createModeFromXml(String xml) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public boolean removeMode(Mode mode) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void updateModeContraintsFromXml(String xml) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     private final class W implements Workspace {
         private static final long serialVersionUID = 1L;
         private final String name;

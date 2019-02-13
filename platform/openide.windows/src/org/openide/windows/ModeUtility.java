@@ -37,9 +37,9 @@ package org.openide.windows;
  * 
  * @author Mark Phipps
  */
-public final class ModeXml {
+public final class ModeUtility {
 
-    private ModeXml() {
+    private ModeUtility() {
     }
 
     /**

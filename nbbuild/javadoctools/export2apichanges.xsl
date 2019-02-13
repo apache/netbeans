@@ -51,7 +51,7 @@
 
             <center>
                 <h1>Apache NetBeans (incubating) API Changes since Last Release</h1>
-                <h3>Current Development Version</h3>
+                <h3>Apache NetBeans (incubating) 11.0</h3>
                 <xsl:if test="$date" >
                     <xsl:value-of select="$date" />
                     <p/>

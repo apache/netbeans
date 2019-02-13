@@ -174,7 +174,7 @@ public class FileObjSymlinkTest extends NbTestCase {
         assertTrue(linkFO.readSymbolicLinkPath().endsWith("data.dat"));
     }
 
-    public void testBrokenSymbolicLink1() throws IOException {
+    public void ignoreBrokenSymbolicLink1() throws IOException {
         if (!checkSymlinksSupported()) {
             return;
         }
@@ -186,7 +186,7 @@ public class FileObjSymlinkTest extends NbTestCase {
         assertNull(linkFO);
     }
 
-    public void testBrokenSymbolicLink2() throws IOException {
+    public void ignoreBrokenSymbolicLink2() throws IOException {
         if (!checkSymlinksSupported()) {
             return;
         }
@@ -199,7 +199,7 @@ public class FileObjSymlinkTest extends NbTestCase {
         assertEquals(children.length, 0);
     }
 
-    public void testBrokenSymbolicLink3() throws IOException {
+    public void ignoreBrokenSymbolicLink3() throws IOException {
         if (!checkSymlinksSupported()) {
             return;
         }

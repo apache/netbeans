@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -103,6 +104,9 @@ public class Server {
         Class<?> main = Class.forName("org.netbeans.core.startup.Main");
         main.getDeclaredMethod("initializeURLFactory").invoke(null);
         new File(cachedir, "index").mkdirs();
+        Class jsClass = JavaSource.class;
+        File javaCluster = new File(jsClass.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getParentFile();
+        System.setProperty("netbeans.dirs", javaCluster.getAbsolutePath());
         CacheFolderProvider.getCacheFolderForRoot(Places.getUserDirectory().toURI().toURL(), EnumSet.noneOf(CacheFolderProvider.Kind.class), CacheFolderProvider.Mode.EXISTENT);
 
         Lookup.getDefault().lookup(ModuleInfo.class); //start the module system

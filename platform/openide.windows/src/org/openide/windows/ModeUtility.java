@@ -31,7 +31,12 @@ package org.openide.windows;
  * The configuration of each Mode can be expressed in XML. This class gives access
  * to that XML with a mechanism to reproduce a Mode from XML so you can construct 
  * ways to save Mode and TopComponent combinations, which can subsequently be
- * reloaded at a later time.
+ * chosen and reloaded at a later time.
+ * <br>
+ * <br>
+ * Note that this is a different approach to how the Platform tends to save the layout
+ * of TopComponents at shut-down time in the Windows2Local file system. Note also that 
+ * this is not connected with the deprecated notion of {@link Workspace}.
  * 
  * @see http://wiki.apidesign.org/wiki/ExtendingInterfaces
  * 

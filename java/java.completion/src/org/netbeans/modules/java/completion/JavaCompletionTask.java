@@ -49,6 +49,7 @@ import org.netbeans.api.java.source.ClassIndex.Symbols;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import org.netbeans.api.java.source.support.ReferencesCount;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.modules.java.completion.TreeShims;
 import org.netbeans.modules.parsing.api.Source;
 import org.openide.util.Pair;
 
@@ -2336,8 +2337,17 @@ public final class JavaCompletionTask<T> extends BaseTask {
         if (cst.getExpression() != null && ((sourcePositions.getStartPosition(root, cst.getExpression()) >= offset)
                 || (cst.getExpression().getKind() == Tree.Kind.ERRONEOUS && ((ErroneousTree) cst.getExpression()).getErrorTrees().isEmpty() && sourcePositions.getEndPosition(root, cst.getExpression()) >= offset))) {
             TreePath path1 = path.getParentPath();
-            if (path1.getLeaf().getKind() == Tree.Kind.SWITCH) {
-                TypeMirror tm = controller.getTrees().getTypeMirror(new TreePath(path1, ((SwitchTree) path1.getLeaf()).getExpression()));
+            if (path1.getLeaf().getKind() == Tree.Kind.SWITCH || path1.getLeaf().getKind().toString().equals("SWITCH_EXPRESSION")) { //NOI18N
+                ExpressionTree exprTree = null;
+                if (path1.getLeaf().getKind() == Tree.Kind.SWITCH) {
+                    exprTree = ((SwitchTree) path1.getLeaf()).getExpression();
+                } else {
+                    List<? extends ExpressionTree> exprTrees = TreeShims.getExpressions(path1.getLeaf());
+                    if (!exprTrees.isEmpty()) {
+                        exprTree = exprTrees.get(0);
+                    }
+                }
+                TypeMirror tm = controller.getTrees().getTypeMirror(new TreePath(path1, exprTree));
                 if (tm.getKind() == TypeKind.DECLARED && ((DeclaredType) tm).asElement().getKind() == ENUM) {
                     addEnumConstants(env, (TypeElement) ((DeclaredType) tm).asElement());
                 } else {
@@ -3675,9 +3685,15 @@ public final class JavaCompletionTask<T> extends BaseTask {
         Trees trees = env.getController().getTrees();
         TreePath path = env.getPath().getParentPath();
         Set<Element> alreadyUsed = new HashSet<>();
+        List<? extends CaseTree> caseTrees = null;
         if (path != null && path.getLeaf().getKind() == Tree.Kind.SWITCH) {
-            SwitchTree st = (SwitchTree)path.getLeaf();
-            for (CaseTree ct : st.getCases()) {
+            SwitchTree st = (SwitchTree) path.getLeaf();
+            caseTrees = st.getCases();
+        } else if (path != null && path.getLeaf().getKind().toString().equals("SWITCH_EXPRESSION")) { //NOI18N
+            caseTrees = TreeShims.getCases(path.getLeaf());
+        }
+        if (caseTrees != null) {
+            for (CaseTree ct : caseTrees) {
                 Element e = ct.getExpression() != null ? trees.getElement(new TreePath(path, ct.getExpression())) : null;
                 if (e != null && e.getKind() == ENUM_CONSTANT) {
                     alreadyUsed.add(e);

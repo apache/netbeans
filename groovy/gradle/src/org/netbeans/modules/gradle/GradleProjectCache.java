@@ -112,10 +112,9 @@ public final class GradleProjectCache {
         }
         GradleProject prev = project.project;
 
-        ignoreCache |= GradleSettings.getDefault().isCacheDisabled();
-
         // Try to turn to the cache
-        if (!ignoreCache && (prev.getQuality() == FALLBACK))  {
+        if (!(ignoreCache || GradleSettings.getDefault().isCacheDisabled())
+                && (prev.getQuality() == FALLBACK))  {
             ProjectCacheEntry cacheEntry = loadCachedProject(files);
             if (cacheEntry != null) {
                 if (cacheEntry.isCompatible()) {
@@ -155,7 +154,18 @@ public final class GradleProjectCache {
         Quality quality = ctx.aim;
         GradleBaseProject base = ctx.previous.getBaseProject();
         GradleConnector gconn = GradleConnector.newConnector();
-        gconn.useInstallation(RunUtils.evaluateGradleDistribution(ctx.project, true));
+
+        File gradleInstall = RunUtils.evaluateGradleDistribution(ctx.project, true);
+        if (gradleInstall == null) {
+            GradleDistributionManager gdm = GradleDistributionManager.get(GradleSettings.getDefault().getGradleUserHome());
+            GradleDistributionManager.NbGradleVersion version = gdm.createVersion(GradleSettings.getDefault().getGradleVersion());
+            gradleInstall = gdm.install(version);
+        }
+        if (gradleInstall == null) {
+            return ctx.previous;
+        }
+        gconn.useInstallation(gradleInstall);
+
         ProjectConnection pconn = gconn.forProjectDirectory(base.getProjectDir()).connect();
 
         GradleCommandLine cmd = new GradleCommandLine(ctx.args);

@@ -90,7 +90,7 @@ public class NBClassWriterTest extends NbTestCase {
 
         Context context = new Context();
         NBMessager.preRegister(context, null, DEV_NULL, DEV_NULL, DEV_NULL);
-        final JavacTaskImpl ct = (JavacTaskImpl) ((JavacTool)tool).getTask(null, std, null, Arrays.asList("-bootclasspath",  bootPath, "-source", "1.6", "-target", "1.6"), null, Arrays.asList(new MyFileObject(code)), context);
+        final JavacTaskImpl ct = (JavacTaskImpl) ((JavacTool)tool).getTask(null, std, null, Arrays.asList("-bootclasspath",  bootPath, "-source", "1.7", "-target", "1.7"), null, Arrays.asList(new MyFileObject(code)), context);
 
         NBClassReader.preRegister(ct.getContext());
         NBClassWriter.preRegister(ct.getContext());

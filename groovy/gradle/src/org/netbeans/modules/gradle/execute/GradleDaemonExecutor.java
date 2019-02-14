@@ -117,7 +117,12 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
 
             GradleConnector gconn = GradleConnector.newConnector();
             cancelTokenSource = GradleConnector.newCancellationTokenSource();
-            gconn.useInstallation(RunUtils.evaluateGradleDistribution(config.getProject(), false));
+            File gradleInstall = RunUtils.evaluateGradleDistribution(config.getProject(), false);
+            if (gradleInstall != null) {
+                gconn.useInstallation(gradleInstall);
+            } else {
+                gconn.useBuildDistribution();
+            }
 
             File projectDir = FileUtil.toFile(config.getProject().getProjectDirectory());
             //TODO: GradleUserHome
@@ -171,6 +176,9 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             //TODO: Handle Cancelled builds
             // We just swallow BUILD FAILED exception silently
         } finally {
+            BuildExecutionSupport.registerFinishedItem(item);
+            ioput.getOut().close();
+            ioput.getErr().close();
             if (pconn != null) {
                 pconn.close();
             }
@@ -190,7 +198,6 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             handle.finish();
             markFreeTab();
             actionStatesAtFinish();
-            BuildExecutionSupport.registerFinishedItem(item);
         }
     }
 
@@ -225,8 +232,10 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
                 commandLine.append(relRoot).append("/gradlew");
             } else {
                 File gradleDistribution = RunUtils.evaluateGradleDistribution(null, false);
-                File gradle = new File(gradleDistribution, "bin/gradle"); //NOI18N
-                commandLine.append(gradle.getAbsolutePath());
+                if (gradleDistribution != null) {
+                    File gradle = new File(gradleDistribution, "bin/gradle"); //NOI18N
+                    commandLine.append(gradle.getAbsolutePath());
+                }
             }
 
         for (String arg : config.getCommandLine().getSupportedCommandLine()) {

@@ -38,9 +38,9 @@ import org.openide.util.Mutex.Action;
  * @author Laszlo Kishalmi
  */
 public class GradleAuxiliaryPropertiesImpl implements AuxiliaryProperties {
-    
+
     private static final String PROP_PREFIX = "nb-config."; //NOI18N
-    
+
     final NbGradleProjectImpl project;
 
     public GradleAuxiliaryPropertiesImpl(NbGradleProjectImpl project) {
@@ -59,18 +59,15 @@ public class GradleAuxiliaryPropertiesImpl implements AuxiliaryProperties {
 
     @Override
     public void put(final String key, final String value, final boolean shared) {
-        ProjectManager.mutex().writeAccess(new Runnable() {
-            @Override
-            public void run() {
-                EditableProperties props = getProperties(shared);
-                if (value != null) {
-                    props.put(PROP_PREFIX + key, value);
-                } else {
-                    props.remove(PROP_PREFIX + key);
-                }
-                
-                putProperties(props, shared);
+        ProjectManager.mutex().writeAccess(() -> {
+            EditableProperties props = getProperties(shared);
+            if (value != null) {
+                props.put(PROP_PREFIX + key, value);
+            } else {
+                props.remove(PROP_PREFIX + key);
             }
+
+            putProperties(props, shared);
         });
     }
 
@@ -85,7 +82,7 @@ public class GradleAuxiliaryPropertiesImpl implements AuxiliaryProperties {
         }
         return ret;
     }
-    
+
     private EditableProperties getProperties(boolean shared) {
         EditableProperties ret = new EditableProperties(false);
         File input = getPropFile(shared);
@@ -98,7 +95,7 @@ public class GradleAuxiliaryPropertiesImpl implements AuxiliaryProperties {
         }
         return ret;
     }
-    
+
     private void putProperties(EditableProperties props, boolean shared) {
         File output = getPropFile(shared);
         if (!props.isEmpty()) {
@@ -114,7 +111,7 @@ public class GradleAuxiliaryPropertiesImpl implements AuxiliaryProperties {
             output.delete();
         }
      }
-    
+
     private File getPropFile(boolean shared) {
         GradleFiles gf = project.getGradleFiles();
         return new File(shared ? gf.getProjectDir() : GradleProjectCache.getCacheDir(gf), GradleFiles.GRADLE_PROPERTIES_NAME);

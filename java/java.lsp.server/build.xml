@@ -5,10 +5,26 @@
     <target name="build-lsp-server" depends="build,test-init">
         <mkdir dir="${lsp.build.dir}/bin" />
         <mkdir dir="${lsp.build.dir}/lib" />
-        <copy todir="${lsp.build.dir}/lib" flatten="true" failonerror="false">
-            <path refid="test.unit.run.cp" />
+        <copy todir="${lsp.build.dir}/lib/platform" failonerror="false">
+            <fileset dir="${netbeans.dest.dir}/platform" />
         </copy>
-        <copy todir="${lsp.build.dir}/bin" file="script/nb-java-lsp-server" />
+        <copy todir="${lsp.build.dir}/lib/ide" failonerror="false">
+            <fileset dir="${netbeans.dest.dir}/ide" />
+        </copy>
+        <copy todir="${lsp.build.dir}/lib/extide" failonerror="false">
+            <fileset dir="${netbeans.dest.dir}/extide" />
+        </copy>
+        <copy todir="${lsp.build.dir}/lib/java" failonerror="false">
+            <fileset dir="${netbeans.dest.dir}/java" excludes="**/org-netbeans-modules-java-hints-test.jar" />
+        </copy>
+        <pathconvert refid="test.unit.run.cp" property="server.classpath">
+            <flattenmapper/>
+        </pathconvert>
+        <copy todir="${lsp.build.dir}/bin" file="script/nb-java-lsp-server">
+            <filterset>
+                <filter token="CLASSPATH" value="${server.classpath}" />
+            </filterset>
+        </copy>
         <chmod file="${lsp.build.dir}/bin/nb-java-lsp-server" perm="u+x" />
         <delete file="${lsp.build.dir}/lib/nb-javac-9-api.jar" />
         <delete file="${lsp.build.dir}/lib/nb-javac-9-impl.jar" />

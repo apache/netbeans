@@ -19,6 +19,13 @@
 
 LIB_DIR=`dirname $0`/../lib
 LIB_DIR=`realpath $LIB_DIR`
-CLASSPATH=`find $LIB_DIR -name "*.jar" | tr '\n' ':'`
+CLASSPATH_SOURCE="@CLASSPATH@"
+CLASSPATH=""
+for f in `echo $CLASSPATH_SOURCE | tr ':' '\n'`; do
+    FILE=`find $LIB_DIR -name "$f"`;
+    if [ -e "$FILE" ]; then
+        CLASSPATH="$CLASSPATH:$FILE";
+    fi;
+done
 
 java --add-exports jdk.javadoc/com.sun.tools.javadoc.main=ALL-UNNAMED -classpath "$CLASSPATH" org.netbeans.modules.java.lsp.server.Server

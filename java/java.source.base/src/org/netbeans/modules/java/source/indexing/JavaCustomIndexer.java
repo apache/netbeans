@@ -213,6 +213,7 @@ public class JavaCustomIndexer extends CustomIndexer {
                             }
                         }
                     }
+                    APTUtils.sourceRootRegistered(context.getRoot(), context.getRootURI());
                     JavaIndex.LOG.log(Level.FINE, "Binaries copied for {0}", FileUtil.getFileDisplayName(root)); // NOI18N
                     return;
                 }

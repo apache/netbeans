@@ -1170,7 +1170,7 @@ public class Flow {
         public Boolean visitBreak(BreakTree node, ConstructorData p) {
             super.visitBreak(node, p);
 
-            StatementTree target = info.getTreeUtilities().getBreakContinueTarget(getCurrentPath());
+            Tree target = info.getTreeUtilities().getBreakContinueTargetTree(getCurrentPath());
             
             resumeAfter(target, variable2State);
 

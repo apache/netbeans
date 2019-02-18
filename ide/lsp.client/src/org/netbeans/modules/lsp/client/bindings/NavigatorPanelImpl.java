@@ -32,6 +32,7 @@ import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.modules.lsp.client.LSPBindings.BackgroundTask;
+import org.netbeans.modules.lsp.client.Utils;
 import org.netbeans.spi.navigator.NavigatorPanel;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.view.BeanTreeView;
@@ -135,7 +136,8 @@ public class NavigatorPanelImpl extends Children.Keys<SymbolInformation> impleme
     public void run(LSPBindings bindings, FileObject file) {
         if (file.equals(this.file)) {
             try {
-                List<? extends SymbolInformation> symbols = bindings.getTextDocumentService().documentSymbol(new DocumentSymbolParams(new TextDocumentIdentifier(file.toURI().toString()))).get();
+                String uri = Utils.toURI(file);
+                List<? extends SymbolInformation> symbols = bindings.getTextDocumentService().documentSymbol(new DocumentSymbolParams(new TextDocumentIdentifier(uri))).get();
 
                 setKeys(symbols);
             } catch (InterruptedException | ExecutionException ex) {

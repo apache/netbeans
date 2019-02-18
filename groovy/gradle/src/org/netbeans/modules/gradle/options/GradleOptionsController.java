@@ -19,9 +19,9 @@
 
 package org.netbeans.modules.gradle.options;
 
+import org.netbeans.modules.gradle.GradleDistributionManager;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import java.beans.PropertyChangeListener;
-import java.io.File;
 import javax.swing.JComponent;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
@@ -50,8 +50,11 @@ public class GradleOptionsController extends OptionsPanelController {
     @Override
     public void applyChanges() {
         getPanel().applyValues();
-        File gradleUserHome = GradleSettings.getDefault().getGradleUserHome();
-        GradleSettings.getDefault().getGradleVersion().install(gradleUserHome);
+        if (GradleSettings.getDefault().isSilentInstall()) {
+            // If allowed, let's just install the required Gradle version.
+            GradleDistributionManager gdm = GradleDistributionManager.get(GradleSettings.getDefault().getGradleUserHome());
+            gdm.createVersion(GradleSettings.getDefault().getGradleVersion()).install();
+        }
     }
 
     @Override

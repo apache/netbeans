@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,26 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.lsp.client.bindings;
+package org.netbeans.modules.gradle.spring;
 
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import org.eclipse.lsp4j.Position;
-import org.netbeans.api.editor.document.LineDocument;
-import org.netbeans.api.editor.document.LineDocumentUtils;
+import org.netbeans.modules.gradle.spi.actions.DefaultGradleActionsProvider;
+import org.netbeans.modules.gradle.spi.actions.GradleActionsProvider;
+import org.openide.util.lookup.ServiceProvider;
+import static org.netbeans.spi.project.ActionProvider.*;
 
 /**
- *
- * @author lahvac
+ * Provides run and debug action for spring boot apps out-of-the-box.
+ * @author lkishalmi
  */
-public class Utils {
+@ServiceProvider(service = GradleActionsProvider.class)
+public class SpringActionProvider extends DefaultGradleActionsProvider {
+    private static final String[] SUPPORTED = new String[]{
+        COMMAND_RUN,
+        COMMAND_DEBUG,
+    };
 
-    public static Position createPosition(Document doc, int offset) throws BadLocationException {
-         return new Position(LineDocumentUtils.getLineIndex((LineDocument) doc, offset),
-                             offset - LineDocumentUtils.getLineStart((LineDocument) doc, offset));
+    public SpringActionProvider() {
+        super(SUPPORTED);
     }
 
-    public static int getOffset(Document doc, Position pos) {
-        return LineDocumentUtils.getLineStartFromIndex((LineDocument) doc, pos.getLine()) + pos.getCharacter();
-    }
 }

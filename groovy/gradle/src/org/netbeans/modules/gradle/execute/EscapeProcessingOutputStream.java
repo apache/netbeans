@@ -23,16 +23,18 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  *
  * @author Laszlo Kishalmi
  */
 class EscapeProcessingOutputStream extends OutputStream {
-    
+
     boolean esc;
     boolean csi;
-    ByteBuffer buffer = new ByteBuffer();
+    final AtomicBoolean closed = new AtomicBoolean();
+    final ByteBuffer buffer = new ByteBuffer();
     final EscapeProcessor processor;
 
     public EscapeProcessingOutputStream(EscapeProcessor processor) {
@@ -41,9 +43,8 @@ class EscapeProcessingOutputStream extends OutputStream {
 
     @Override
     public void write(int b) throws IOException {
-        if (buffer == null) {
-            throw new IOException("Write attempt on a closed stream."); //NOI18N
-        }
+        // Simply ignore writing on a closed stream.
+        if (closed.get()) return;
         if (b == 0x1B) {
             esc = true;                   //Entering EscapeProcessingMode
             processBulk();                //Process the Buffer collected so far
@@ -72,8 +73,9 @@ class EscapeProcessingOutputStream extends OutputStream {
 
     @Override
     public void close() throws IOException {
-        flush();
-        buffer = null;
+        if (closed.compareAndSet(false, true)) {
+            flush();
+        }
     }
 
     @Override
@@ -83,7 +85,7 @@ class EscapeProcessingOutputStream extends OutputStream {
         }
     }
 
-    
+
     private void processCommand(char command) {
         String buf = buffer.read();
         String[] sargs = buf.split(";");
@@ -105,18 +107,18 @@ class EscapeProcessingOutputStream extends OutputStream {
             processor.processText(out);
         }
     }
-    
+
     private static class ByteBuffer {
         private int pos = 0;
         private byte[] buf = new byte[1024];
-        
+
         public void put(int b) {
             if (pos == buf.length) {
                 buf = Arrays.copyOf(buf, buf.length + 1024);
             }
             buf[pos++] = (byte) b;
         }
-        
+
         public String read() {
             String ret = new String(buf, 0, pos, StandardCharsets.UTF_8);
             pos = 0;

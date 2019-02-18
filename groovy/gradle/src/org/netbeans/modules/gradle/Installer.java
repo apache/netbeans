@@ -27,7 +27,7 @@ import org.openide.util.NbBundle.Messages;
 public final class Installer extends ModuleInstall {
 
     private static final String CONFLICTING_PROJECT = "org.netbeans.gradle.project";
-    
+
     @Override
     @Messages(
             "MSG_MODULE_CONFLICT=Gradle Projects module conflicts with the Gradle Support module.\n"
@@ -41,4 +41,5 @@ public final class Installer extends ModuleInstall {
             throw new IllegalStateException(Bundle.MSG_MODULE_CONFLICT());
         }
     }
+
 }

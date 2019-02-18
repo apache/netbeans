@@ -297,6 +297,21 @@
             </p>
         </description>
     </change>
+    <change id="TreeUtilities.getBreakContinueTargetTree">
+        <api name="javasource_base" />
+        <summary>Find the target of Break or Continue statement</summary>
+        <version major="1" minor="2.40.0"/>
+        <date day="22" month="1" year="2019"/>
+        <author login="sarveshkesharwani"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"/>
+        <description>
+            <p>
+                Find the target of <code>break</code> or <code>continue</code> 
+                statement. Target is of type Tree here.
+            </p>
+        </description>
+        <class name="TreeUtilities" package="org.netbeans.api.java.source"/>
+    </change>
 </changes>
 <htmlcontents>
 <head>

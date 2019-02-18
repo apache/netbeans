@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.gradle.api.execute;
 
+import java.io.File;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.execute.GradleDaemonExecutor;
@@ -52,9 +53,12 @@ import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.java.platform.Specification;
 
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.modules.gradle.GradleDistributionManager;
+import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
@@ -156,6 +160,43 @@ public final class RunUtils {
         String args = NbGradleProject.getPreferences(project, true).get(PROP_DEFAULT_CLI, null);
         return args != null ? new GradleCommandLine(args) : null;
     }
+
+    public static File evaluateGradleDistribution(Project project, boolean forceCompatibility) {
+        File ret = null;
+
+        GradleSettings settings = GradleSettings.getDefault();
+        GradleDistributionManager mgr = GradleDistributionManager.get(settings.getGradleUserHome());
+
+        GradleBaseProject gbp = GradleBaseProject.get(project);
+
+        if ((gbp != null) && settings.isWrapperPreferred()) {
+            GradleDistributionManager.NbGradleVersion ngv = mgr.evaluateGradleWrapperDistribution(gbp.getRootDir());
+            if ( (ngv != null) && forceCompatibility && !ngv.isCompatibleWithSystemJava()) {
+                ngv = mgr.defaultToolingVersion();
+            }
+            if ((ngv != null) && ngv.isAvailable()) {
+                ret = ngv.distributionDir();
+            }
+        }
+
+        if ((ret == null) && settings.useCustomGradle() && !settings.getDistributionHome().isEmpty()) {
+            File f = FileUtil.normalizeFile(new File(settings.getDistributionHome()));
+            if (f.isDirectory()) {
+                ret = f;
+            }
+        }
+        if (ret == null) {
+            GradleDistributionManager.NbGradleVersion ngv = mgr.createVersion(settings.getGradleVersion());
+            if ( (ngv != null) && forceCompatibility && !ngv.isCompatibleWithSystemJava()) {
+                ngv = mgr.defaultToolingVersion();
+            }
+            if ((ngv != null) && ngv.isAvailable()) {
+                ret = ngv.distributionDir();
+            }
+        }
+        return ret;
+    }
+
 
     private static boolean isOptionEnabled(Project project, String option, boolean defaultValue) {
         GradleBaseProject gbp = GradleBaseProject.get(project);

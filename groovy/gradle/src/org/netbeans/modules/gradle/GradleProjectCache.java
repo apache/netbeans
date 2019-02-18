@@ -24,7 +24,6 @@ import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.*;
 import org.netbeans.modules.gradle.api.NbProjectInfo;
-import org.netbeans.modules.gradle.options.GradleDistributionManager;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.modules.gradle.spi.ProjectInfoExtractor;
 import java.io.File;
@@ -69,6 +68,7 @@ import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import java.util.WeakHashMap;
 import javax.swing.JLabel;
+import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.openide.awt.Notification;
 import org.openide.awt.NotificationDisplayer;
 
@@ -95,7 +95,6 @@ public final class GradleProjectCache {
     // Increase this number if new info is gathered from the projects.
     private static final int COMPATIBLE_CACHE_VERSION = 10;
 
-
     /**
      * Loads a physical GradleProject either from Gradle or Cache. As project retrieval can be time consuming using
      * Gradle sometimes it's just enough to shoot for FALLBACK information. Aiming for FALLBACK quality either retrieves
@@ -113,10 +112,9 @@ public final class GradleProjectCache {
         }
         GradleProject prev = project.project;
 
-        ignoreCache |= GradleSettings.getDefault().isCacheDisabled();
-
         // Try to turn to the cache
-        if (!ignoreCache && (prev.getQuality() == FALLBACK))  {
+        if (!(ignoreCache || GradleSettings.getDefault().isCacheDisabled())
+                && (prev.getQuality() == FALLBACK))  {
             ProjectCacheEntry cacheEntry = loadCachedProject(files);
             if (cacheEntry != null) {
                 if (cacheEntry.isCompatible()) {
@@ -132,7 +130,7 @@ public final class GradleProjectCache {
             prev = fallbackProject(project.getGradleFiles());
         }
 
-        final ReloadContext ctx = new ReloadContext(prev, aim);
+        final ReloadContext ctx = new ReloadContext(project, prev, aim);
         ctx.args = args;
 
         GradleProject ret;
@@ -156,7 +154,18 @@ public final class GradleProjectCache {
         Quality quality = ctx.aim;
         GradleBaseProject base = ctx.previous.getBaseProject();
         GradleConnector gconn = GradleConnector.newConnector();
-        gconn.useInstallation(GradleDistributionManager.evaluateGradleWrapperDistribution(base.getRootDir()));
+
+        File gradleInstall = RunUtils.evaluateGradleDistribution(ctx.project, true);
+        if (gradleInstall == null) {
+            GradleDistributionManager gdm = GradleDistributionManager.get(GradleSettings.getDefault().getGradleUserHome());
+            GradleDistributionManager.NbGradleVersion version = gdm.createVersion(GradleSettings.getDefault().getGradleVersion());
+            gradleInstall = gdm.install(version);
+        }
+        if (gradleInstall == null) {
+            return ctx.previous;
+        }
+        gconn.useInstallation(gradleInstall);
+
         ProjectConnection pconn = gconn.forProjectDirectory(base.getProjectDir()).connect();
 
         GradleCommandLine cmd = new GradleCommandLine(ctx.args);
@@ -191,7 +200,7 @@ public final class GradleProjectCache {
             if (nlist != null) {
                 NOTIFICATIONS.remove(base.getProjectDir());
                 for (Notification notification : nlist) {
-                    notification.clear();                
+                    notification.clear();
                 }
             }
             if (!info.hasException()) {
@@ -325,12 +334,8 @@ public final class GradleProjectCache {
         public GradleProject call() throws Exception {
             tokenSource = GradleConnector.newCancellationTokenSource();
             final ProgressHandle handle = ProgressHandle.createHandle(Bundle.LBL_Loading(ctx.previous.getBaseProject().getName()), this);
-            ProgressListener pl = new ProgressListener() {
-
-                @Override
-                public void statusChanged(ProgressEvent pe) {
-                    handle.progress(pe.getDescription());
-                }
+            ProgressListener pl = (ProgressEvent pe) -> {
+                handle.progress(pe.getDescription());
             };
             handle.start();
             try {
@@ -487,11 +492,13 @@ public final class GradleProjectCache {
     }
 
     static final class ReloadContext {
+        final NbGradleProjectImpl project;
         final GradleProject previous;
         final Quality aim;
         String[] args = new String[0];
 
-        public ReloadContext(GradleProject previous, Quality aim) {
+        public ReloadContext(NbGradleProjectImpl project, GradleProject previous, Quality aim) {
+            this.project = project;
             this.previous = previous;
             this.aim = aim;
         }

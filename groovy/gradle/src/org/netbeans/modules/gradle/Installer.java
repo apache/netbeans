@@ -30,15 +30,18 @@ public final class Installer extends ModuleInstall {
 
     @Override
     @Messages(
-            "MSG_MODULE_CONFLICT=Gradle Projects module conflicts with the Gradle Support module.\n"
-                    + "In order to be able to activate the Gradle Project module (and modules depending on that):\n"
-                    + "Please go to Tools > Plugins > Installed, search for Gradle Support, disable the plugin\n"
-                    + "then restart NetBeans and enable Gradle Projects plugin."
+        "MSG_MODULE_CONFLICT= Apache NetBeans Gradle integration conflicts with the 'Gradle Support' pugin.\n"
+                + "In favor of the 'Gradle Support' plugin, Apache NetBeans Gradle integration will be "
+                + "disabled.\n"
+                + "In order to re-enable Apache NetBeans Gradle integration:\n"
+                + "Please go to Tools > Plugins > Installed, search for Gradle Support, uninstall the plugin\n"
+                + "then restart NetBeans and enable Gradle plugin.\n"
+                + "In order to suppress this message, just deactivate 'Gradle' in the installed plugins."
     )
     public void validate() throws IllegalStateException {
         ModuleInfo module = Modules.getDefault().findCodeNameBase(CONFLICTING_PROJECT);
-        if ((module != null) && module.isEnabled()) {
-            throw new IllegalStateException(Bundle.MSG_MODULE_CONFLICT());
+        if (module != null) {
+//            throw new IllegalStateException(Bundle.MSG_MODULE_CONFLICT());
         }
     }
 

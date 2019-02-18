@@ -349,13 +349,13 @@ public class NbPostInstallSummaryPanel extends WizardPanel {
             }
 
             if(nbInstalled) {                
-                metricsList.setContentType(DEFAULT_MESSAGE_METRICS_LIST_CONTENT_TYPE);
+                /*metricsList.setContentType(DEFAULT_MESSAGE_METRICS_LIST_CONTENT_TYPE);
                 metricsList.setText(DEFAULT_MESSAGE_METRICS_LIST);
                 metricsInfo.setContentType(DEFAULT_MESSAGE_METRICS_TEXT_CONTENT_TYPE);
                 metricsInfo.setText(DEFAULT_MESSAGE_METRICS_TEXT);
                 metricsCheckbox.setText(DEFAULT_MESSAGE_METRICS_CHECKBOX);
                 metricsCheckbox.doClick();
-            } else {
+            } else {*/
                 metricsPanel.setVisible(false);
             }
             products.clear();

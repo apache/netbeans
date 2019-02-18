@@ -3,9 +3,8 @@
     <title>netbeans-Title</title>
     <welcome file="Welcome.html"></welcome>
     <license file="License.txt"></license>
-    <background file="background.tif" scaling="none" alignment="topleft"></background>
-    <options allow-external-scripts="yes" customize="allow" rootVolumeOnly="false" hostArchitectures="i386"></options>
-    <installation-check script="checkSystem()"></installation-check>
+    <background file="background.tif" scaling="none" alignment="bottomleft"></background>
+    <options allow-external-scripts="yes" customize="never" rootVolumeOnly="true"></options>
     <volume-check script="checkSystemversion()"></volume-check>
     <script>
 /* js:pkmk:start */

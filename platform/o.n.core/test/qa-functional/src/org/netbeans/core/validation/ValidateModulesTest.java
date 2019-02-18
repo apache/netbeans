@@ -22,7 +22,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +48,8 @@ import org.openide.filesystems.FileUtil;
 import org.openide.modules.Dependency;
 
 public class ValidateModulesTest extends NbTestCase {
-
+    protected boolean ignoreEager;
+    
     static {
         System.setProperty("java.awt.headless", "true");
     }
@@ -69,10 +70,10 @@ public class ValidateModulesTest extends NbTestCase {
                 clusters("(?!extra$).*").enableModules(".*").honorAutoloadEager(true).gui(false).enableClasspathModules(false).suite());
         suite.addTest(NbModuleSuite.createConfiguration(ValidateModulesTest.class).
                 clusters(".*").enableModules(".*").honorAutoloadEager(true).gui(false).enableClasspathModules(false).suite());
-        suite.addTest(NbModuleSuite.createConfiguration(ValidateModulesTest.class).
+        suite.addTest(NbModuleSuite.createConfiguration(ValidateModulesTest.NoStrictEager.class).
                 clusters("platform|harness|ide|websvccommon|java|profiler|nb|extide").enableModules(".*").
                 honorAutoloadEager(true).gui(false).enableClasspathModules(false).suite());
-        suite.addTest(NbModuleSuite.createConfiguration(ValidateModulesTest.class).
+        suite.addTest(NbModuleSuite.createConfiguration(ValidateModulesTest.NoStrictEager.class).
                 clusters("platform|harness|ide|extide").enableModules(".*").honorAutoloadEager(true).gui(false).enableClasspathModules(false).suite());
         return suite;
     }
@@ -129,17 +130,71 @@ public class ValidateModulesTest extends NbTestCase {
             fail("Some modules are AutoUpdate-Show-In-Client=true but have no specified OpenIDE-Module-Display-Category" + problems);
         }
     }
+    
+    private static Map<String, String> SPECIAL_MODULES = new HashMap<>();
+    
+    static {
+        // delivered through AutoUpdate
+        SPECIAL_MODULES.put("org.netbeans.modules.java.source.nbjavac", "org.netbeans.modules.nbjavac");
+        SPECIAL_MODULES.put("org.netbeans.libs.nashorn", "com.oracle.js.parser.implementation");
+        
+        // has dependency from nb to webcommon cluster
+        SPECIAL_MODULES.put("org.netbeans.modules.ko4j.debugging", "org.netbeans.modules.web.browser.api.PageInspector");
+    }
 
     public void testConsistency() throws Exception {
         Set<Manifest> manifests = loadManifests();
         SortedMap<String,SortedSet<String>> problems = ConsistencyVerifier.findInconsistencies(manifests, null);
         if (!problems.isEmpty()) {
             StringBuilder message = new StringBuilder();
+
+            // 1st pass: start with modules, which are excluded from the check
+            Set<String> excludedModules = new HashSet<>();
+            boolean excludesChanged = false;
+            
             for (Map.Entry<String, SortedSet<String>> entry : problems.entrySet()) {
-                // hack: the module is required, but is not installed in the distribution.
-                if ("org.netbeans.modules.java.source.nbjavac".equals(entry.getKey()) &&
-                    entry.getValue().size() == 1 && entry.getValue().first().contains("org.netbeans.modules.nbjavac")) {
-                    continue;
+                String affectedModule = entry.getKey();
+                String msg = entry.getValue().first();
+                String reason = SPECIAL_MODULES.get(affectedModule);
+                if (reason != null && msg.contains(reason)) {
+                    excludedModules.add(affectedModule);
+                    excludesChanged = true;
+                }
+            }
+            
+            while (excludesChanged) {
+                problems.keySet().removeAll(excludedModules);
+                excludesChanged = false;
+                O: for (Map.Entry<String, SortedSet<String>> entry : problems.entrySet()) {
+                    String affectedModule = entry.getKey();
+                    String msg = entry.getValue().first();
+                    
+                    for (String m : excludedModules) {
+                        int pos = msg.indexOf(m);
+                        if (pos != -1) {
+                            pos += m.length();
+                            // check if it is not just a prefix
+                            if (msg.length() <= pos ||
+                                ((msg.charAt(pos) != '.' && !Character.isAlphabetic(msg.charAt(pos))))) {
+                                excludedModules.add(affectedModule);
+                                excludesChanged = true;
+                                break O;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // next passes: add modules, which are disabled because of already "excluded" modules
+            for (Map.Entry<String, SortedSet<String>> entry : problems.entrySet()) {
+                String affectedModule = entry.getKey();
+                if (ignoreEager) {
+                    // eager modules may depend on other cluster's modules, which are not part
+                    // of the test.
+                    Module m = Main.getModuleSystem().getManager().get(affectedModule);
+                    if (m != null && m.isEager()) {
+                        continue;
+                    }
                 }
                 message.append("\nProblems found for module ").append(entry.getKey()).append(": ").append(entry.getValue());
             }
@@ -239,6 +294,13 @@ public class ValidateModulesTest extends NbTestCase {
             }
         }
         return name.replaceFirst("/\\d+$", "");
+    }
+    
+    public static class NoStrictEager extends ValidateModulesTest {
+        public NoStrictEager(String n) {
+            super(n);
+            ignoreEager = true;
+        }
     }
 
 }

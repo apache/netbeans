@@ -330,7 +330,7 @@ public class OutputOptions {
             if (size < MIN_FONT_SIZE) {
                 size = 11;
             }
-            defaultFont = new Font("Monospaced", Font.PLAIN, size);     //NOI18N
+            defaultFont = new Font(Font.MONOSPACED, Font.PLAIN, size);     //NOI18N
         }
         return defaultFont;
     }

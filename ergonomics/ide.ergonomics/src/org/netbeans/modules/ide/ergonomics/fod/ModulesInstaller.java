@@ -31,14 +31,11 @@ import javax.swing.JComponent;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.autoupdate.InstallSupport;
-import org.netbeans.api.autoupdate.InstallSupport.Installer;
-import org.netbeans.api.autoupdate.InstallSupport.Validator;
 import org.netbeans.api.autoupdate.OperationContainer;
 import org.netbeans.api.autoupdate.OperationException;
-import org.netbeans.api.autoupdate.OperationSupport.Restarter;
 import org.netbeans.api.autoupdate.UpdateElement;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
+import org.netbeans.modules.autoupdate.ui.api.PluginManager;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.Mnemonics;
@@ -207,32 +204,19 @@ public class ModulesInstaller {
         if (! installContainer.listInvalid ().isEmpty ()) {
             throw new IllegalArgumentException ("Some are invalid for install: " + installContainer.listInvalid ());
         }
-        InstallSupport installSupport = installContainer.getSupport ();
-        if (downloadHandle == null) {
-            downloadHandle = ProgressHandleFactory.createHandle (
-                getBundle ("InstallerMissingModules_Download",
-                presentUpdateElements (finder.getVisibleUpdateElements (modules4install))));
-        }
-        progressMonitor.onDownload(downloadHandle);
-        Validator v = installSupport.doDownload (downloadHandle, false);
-        if (verifyHandle == null) {
-            verifyHandle = ProgressHandleFactory.createHandle (
-                    getBundle ("InstallerMissingModules_Verify"));
+        boolean ok = PluginManager.openInstallWizard(installContainer);
+        if (!ok) {
+            StringBuilder sb = new StringBuilder();
+            String sep = "";
+            for (UpdateElement el : modules4install) {
+                sb.append(sep);
+                sb.append(el.getDisplayName());
+                sep = ", ";
             }
-        progressMonitor.onValidate(verifyHandle);
-        Installer i = installSupport.doValidate (v, verifyHandle);
-        if (installHandle == null) {
-            installHandle = ProgressHandleFactory.createHandle (
-                    getBundle ("InstallerMissingModules_Install"));
-            }
-        progressMonitor.onInstall(installHandle);
-        Restarter r = installSupport.doInstall (i, installHandle);
-        if (r != null) {
-            installSupport.doRestartLater (r);
-        } else {
-            waitToModuleLoaded ();
+            progressMonitor.onError(
+                getBundle("InstallerMissingModules_Cancelled", sb) // NOI18N
+            );
         }
-        /// XXX FindBrokenModules.clearModulesForRepair ();
     }
     
     public static String presentUpdateElements (Collection<UpdateElement> elems) {

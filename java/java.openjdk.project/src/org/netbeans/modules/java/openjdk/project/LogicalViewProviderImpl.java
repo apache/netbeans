@@ -155,8 +155,28 @@ public class LogicalViewProviderImpl implements LogicalViewProvider  {
 
             javaSourceGroups.addAll(Arrays.asList(sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)));
 
+            Set<SourceGroup> testGroups = Collections.newSetFromMap(new IdentityHashMap<SourceGroup, Boolean>());
+
+            testGroups.addAll(Arrays.asList(sources.getSourceGroups(SourcesImpl.SOURCES_TYPE_JDK_PROJECT_TESTS)));
+
             for (SourceGroup sg : sources.getSourceGroups(SourcesImpl.SOURCES_TYPE_JDK_PROJECT)) {
-                if (javaSourceGroups.contains(sg)) {
+                if (testGroups.contains(sg)) {
+                    //for tests, don't create PackageView:
+                    toPopulate.add(new Key(sg) {
+                        @Override public Node createNode() {
+                            try {
+                                DataObject od = DataObject.find(group.getRootFolder());
+                                return new FilterNode(od.getNodeDelegate()) {
+                                    @Override public String getDisplayName() {
+                                        return group.getDisplayName();
+                                    }
+                                };
+                            } catch (DataObjectNotFoundException ex) {
+                                return Node.EMPTY;
+                            }
+                        }
+                    });
+                } else if (javaSourceGroups.contains(sg)) {
                     toPopulate.add(new Key(sg) {
                         @Override public Node createNode() {
                             return PackageView.createPackageView(group);

@@ -38,6 +38,7 @@ import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.modules.java.source.transform.Transformer;
 import org.netbeans.modules.editor.java.JavaKit;
 import org.netbeans.modules.java.JavaDataLoader;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.ClassIndexTestCase;
 import org.netbeans.modules.java.source.indexing.TransactionContext;
 import org.netbeans.modules.java.source.save.Reindenter;
@@ -99,7 +100,7 @@ public abstract class GeneratorTestBase extends ClassIndexTestCase {
                     if (type == ClassPath.COMPILE)
                         return ClassPathSupport.createClassPath(new FileObject[0]);
                     if (type == ClassPath.BOOT)
-                        return createClassPath(System.getProperty("sun.boot.class.path"));
+                        return BootClassPathUtil.getBootClassPath();
                     return null;
             }
         };
@@ -134,20 +135,6 @@ public abstract class GeneratorTestBase extends ClassIndexTestCase {
             }
         }).commit();
         printFile();
-    }
-    
-    private static ClassPath createClassPath(String classpath) {
-        StringTokenizer tokenizer = new StringTokenizer(classpath, File.pathSeparator);
-        List/*<PathResourceImplementation>*/ list = new ArrayList();
-        while (tokenizer.hasMoreTokens()) {
-            String item = tokenizer.nextToken();
-            File f = FileUtil.normalizeFile(new File(item));
-            URL url = getRootURL(f);
-            if (url!=null) {
-                list.add(ClassPathSupport.createResource(url));
-            }
-        }
-        return ClassPathSupport.createClassPath(list);
     }
     
     // XXX this method could probably be removed... use standard FileUtil stuff

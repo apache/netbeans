@@ -76,6 +76,10 @@ public class MouseUtils extends Object {
         if ((e.getID() != MouseEvent.MOUSE_CLICKED) || (e.getClickCount() == 0)) {
             return false;
         }
+        // do not report already consumed events
+        if (e.isConsumed()) {
+            return false;
+        }
 
         return ((e.getClickCount() % 2) == 0) || isDoubleClickImpl(e);
     }

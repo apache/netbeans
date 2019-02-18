@@ -32,7 +32,7 @@
         <folder name="Project">
             <folder name="Maven2">
                 <attr name="displayName" bundlevalue="org.netbeans.modules.maven.newproject.Bundle#Templates/Project/Maven2"/>
-                <attr name="position" intvalue="513"/>
+                <attr name="position" intvalue="100"/>
             </folder>
         </folder>
     </folder>

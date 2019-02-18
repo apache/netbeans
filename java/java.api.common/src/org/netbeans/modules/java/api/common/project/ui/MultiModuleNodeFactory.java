@@ -64,6 +64,7 @@ import org.netbeans.modules.java.api.common.queries.MultiModuleGroupQuery;
 import org.netbeans.spi.java.project.support.ui.PackageView;
 import org.netbeans.spi.project.support.ant.PropertyEvaluator;
 import org.netbeans.spi.project.support.ant.ReferenceHelper;
+import org.netbeans.spi.project.ui.PathFinder;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.netbeans.spi.project.ui.support.NodeFactory;
 import org.netbeans.spi.project.ui.support.NodeList;
@@ -473,7 +474,7 @@ public final class MultiModuleNodeFactory implements NodeFactory {
             }
             setIconBaseWithExtension(ICON);
             setName(moduleName);
-            lookup.update(new ContentLkp(this, key.getProject()));
+            lookup.update(new ContentLkp(this, key.getProject(), new ModulePathFinder()));
             updateFileStatusListeners();
         }
 
@@ -884,6 +885,25 @@ public final class MultiModuleNodeFactory implements NodeFactory {
                 return delegate.paste();
             }
         }
+        
+        private static final class ModulePathFinder implements PathFinder {
+            ModulePathFinder() {
+            }
+
+            @Override
+            public Node findPath(Node root, Object target) {
+                for(Node node : root.getChildren().getNodes(true)) {
+                    PathFinder pf = node.getLookup().lookup(PathFinder.class);
+                    if(pf != null) {
+                        Node result = pf.findPath(node, target);
+                        if(result != null) {
+                            return result;
+                        }
+                    }
+                }
+                return null;
+            } 
+        }    
     }
 
     private static final class ModuleChildren extends Children.Keys<ModuleChildren.Key> implements PropertyChangeListener {

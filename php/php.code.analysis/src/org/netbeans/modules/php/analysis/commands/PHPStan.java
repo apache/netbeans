@@ -50,6 +50,7 @@ public final class PHPStan {
 
     public static final String NAME = "phpstan"; // NOI18N
     public static final String LONG_NAME = NAME + ".phar"; // NOI18N
+    public static final String MAX_LEVEL = "max"; // NOI18N
     static final File XML_LOG = new File(System.getProperty("java.io.tmpdir"), "nb-php-phpstan-log.xml"); // NOI18N
     private static final Logger LOGGER = Logger.getLogger(PHPStan.class.getName());
 
@@ -59,6 +60,7 @@ public final class PHPStan {
     // params
     private static final String CONFIGURATION_PARAM = "--configuration=%s"; // NOI18N
     private static final String LEVEL_PARAM = "--level=%s"; // NOI18N
+    private static final String MEMORY_LIMIT_PARAM = "--memory-limit=%s"; // NOI18N
     private static final String ERROR_FORMAT_PARAM = "--error-format=checkstyle"; // NOI18N Or json, raw, table
     private static final String NO_PROGRESS_PARAM = "--no-progress"; // NOI18N
     private static final String NO_INTERACTION_PARAM = "--no-interaction"; // NOI18N
@@ -182,6 +184,10 @@ public final class PHPStan {
         FileObject configuration = parameters.getConfiguration();
         if (configuration != null) {
             params.add(String.format(CONFIGURATION_PARAM, FileUtil.toFile(configuration).getAbsolutePath()));
+        }
+        String memoryLimit = parameters.getMemoryLimit();
+        if (!StringUtils.isEmpty(memoryLimit)) {
+            params.add(String.format(MEMORY_LIMIT_PARAM, memoryLimit));
         }
         params.add(FileUtil.toFile(file).getAbsolutePath());
         return params;

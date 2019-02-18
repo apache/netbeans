@@ -36,7 +36,7 @@ import org.netbeans.swing.tabcontrol.TabDisplayer;
  * @author S. Aubrecht
  * @since 1.41
  */
-public final class Windows8ViewTabDisplayerUI extends AbstractWinViewTabDisplayerUI {
+public class Windows8ViewTabDisplayerUI extends AbstractWinViewTabDisplayerUI {
 
     /**
      * True when colors were already initialized, false otherwise
@@ -58,7 +58,7 @@ public final class Windows8ViewTabDisplayerUI extends AbstractWinViewTabDisplaye
     /**
      * Should be constructed only from createUI method.
      */
-    private Windows8ViewTabDisplayerUI(TabDisplayer displayer) {
+    protected Windows8ViewTabDisplayerUI(TabDisplayer displayer) {
         super(displayer);
     }
 

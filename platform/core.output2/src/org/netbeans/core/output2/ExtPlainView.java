@@ -28,7 +28,6 @@ import javax.swing.text.*;
 import java.awt.*;
 import javax.swing.text.Position.Bias;
 import org.netbeans.core.output2.options.OutputOptions;
-import org.openide.windows.IOColors;
 
 /**
  * Extension to PlainView which can paint hyperlinked lines in different
@@ -39,7 +38,7 @@ import org.openide.windows.IOColors;
  * @author  Tim Boudreau
  */
 class ExtPlainView extends PlainView {
-    private final Segment SEGMENT = new Segment(); 
+    private final Segment SEGMENT = new Segment();
     private static final int MAX_LINE_LENGTH = 4096;
     private static final String LINE_TOO_LONG_MSG = org.openide.util.NbBundle.getMessage(ExtPlainView.class, "MSG_LINE_TOO_LONG");
 
@@ -48,7 +47,7 @@ class ExtPlainView extends PlainView {
                                              "Aqua".equals (UIManager.getLookAndFeel().getID()); // NOI18N
 
     private static Map<RenderingHints.Key, Object> hintsMap = null;
-    
+
     @SuppressWarnings("unchecked")
     static Map<RenderingHints.Key, Object> getHints() {
         if (hintsMap == null) {
@@ -63,7 +62,7 @@ class ExtPlainView extends PlainView {
         }
         return hintsMap;
     }
-    
+
     /** Creates a new instance of ExtPlainView */
     ExtPlainView(Element elem) {
         super (elem);
@@ -74,9 +73,9 @@ class ExtPlainView extends PlainView {
         ((Graphics2D)g).addRenderingHints(getHints());
         super.paint(g, allocation);
     }
-    
+
     Segment getSegment() {
-        return SwingUtilities.isEventDispatchThread() ? SEGMENT : new Segment(); 
+        return SwingUtilities.isEventDispatchThread() ? SEGMENT : new Segment();
     }
 
     private int drawText(Graphics g, int x, int y, int p0, int p1,
@@ -182,81 +181,6 @@ class ExtPlainView extends PlainView {
     }
 
     @Override
-    public Shape modelToView(int pos, Shape a, Bias b) throws BadLocationException {
-        // line coordinates
-        Element map = getElement();
-        int lineIndex = map.getElementIndex(pos);
-        Rectangle lineArea = lineToRect(a, lineIndex);
-        
-        // determine span from the start of the line
-        tabBase = lineArea.x;
-        Element line = map.getElement(lineIndex);
-        int lineStart = line.getStartOffset();
-        Segment s = getSegment();
-        getText(lineStart, pos - lineStart, s);
-        int xOffs = Utilities.getTabbedTextWidth(s, metrics, tabBase, this, lineStart);
-
-        // fill in the results and return
-        lineArea.x += xOffs;
-        lineArea.width = 1;
-        lineArea.height = metrics.getHeight();
-        return lineArea;        
-    }
-
-    @Override
-    public int viewToModel(float fx, float fy, Shape a, Bias[] bias) {
-        Document doc = getDocument();
-        if (!(doc instanceof Document)) {
-            return super.viewToModel(fx, fy, a, bias);
-        }
-        Rectangle alloc = a.getBounds();
-        int x = (int) fx;
-        int y = (int) fy;
-        if (y < alloc.y) {
-            // above the area covered by this icon, so the the position
-            // is assumed to be the start of the coverage for this view.
-            return getStartOffset();
-        } else if (y > alloc.y + alloc.height) {
-            // below the area covered by this icon, so the the position
-            // is assumed to be the end of the coverage for this view.
-            return getEndOffset() - 1;
-        } else {
-            // positioned within the coverage of this view vertically,
-            // so we figure out which line the point corresponds to.
-            // if the line is greater than the number of lines contained, then
-            // simply use the last line as it represents the last possible place
-            // we can position to.
-            Element map = doc.getDefaultRootElement();
-            int lineIndex = Math.abs((y - alloc.y) / metrics.getHeight() );
-            if (lineIndex >= map.getElementCount()) {
-                return getEndOffset() - 1;
-            }
-            Element line = map.getElement(lineIndex);
-            if (x < alloc.x) {
-                // point is to the left of the line
-                return line.getStartOffset();
-            } else if (x > alloc.x + alloc.width) {
-                // point is to the right of the line
-                return line.getEndOffset() - 1;
-            } else {
-                // Determine the offset into the text
-                try {
-                    int p0 = line.getStartOffset();
-                    int p1 = line.getEndOffset() - 1;
-                    Segment s = getSegment();
-                    getText(p0, p1 - p0, s);
-                    tabBase = alloc.x;
-                    int offs = p0 + Utilities.getTabbedTextOffset(s, metrics, tabBase, x, this, p0);
-                    return offs;
-                } catch (BadLocationException e) {
-                    // should not happen
-                    return -1;
-                }
-            }
-        }
-    }
-
-    @Override
     public float getPreferredSpan(int axis) {
         if (axis == Y_AXIS) {
             return super.getPreferredSpan(axis);
@@ -267,7 +191,7 @@ class ExtPlainView extends PlainView {
             return longestLineLength + 1;
         }
     }
-    
+
     Font font;
     int tabBase;
     int longestLineLength = -1;
@@ -288,7 +212,7 @@ class ExtPlainView extends PlainView {
 		longestLine = line;
 	    }
 	}
-    }    
+    }
 
     /**
      * Calculate the width of the line represented by the given element.
@@ -306,8 +230,8 @@ class ExtPlainView extends PlainView {
 	    w = 0;
 	}
 	return w;
-    }    
-    
+    }
+
     @Override
     protected void updateDamage(DocumentEvent changes, Shape a, ViewFactory f) {
         Document doc = getDocument();
@@ -319,12 +243,12 @@ class ExtPlainView extends PlainView {
             calcLongestLineLength();
         }
 	Component host = getContainer();
-	updateMetrics();        
+	updateMetrics();
 	Element elem = getElement();
 	DocumentEvent.ElementChange ec = changes.getChange(elem);
 	Element[] added = (ec != null) ? ec.getChildrenAdded() : null;
 	Element[] removed = (ec != null) ? ec.getChildrenRemoved() : null;
-	if (((added != null) && (added.length > 0)) || 
+	if (((added != null) && (added.length > 0)) ||
 	    ((removed != null) && (removed.length > 0))) {
 	    // lines were added or removed...
 	    if (added != null) {
@@ -366,7 +290,7 @@ class ExtPlainView extends PlainView {
 		    // removed from longest line... recalc
 		    calcLongestLineLength();
 		    preferenceChanged(null, true, false);
-		}			
+		}
 	    }
 	}
     }
@@ -391,7 +315,7 @@ class ExtPlainView extends PlainView {
         if (pos == -1) {
             pos = (direction == SOUTH || direction == EAST) ? getStartOffset() : (getEndOffset() - 1);
         }
-        
+
         int lineIndex;
         int lineStart;
         switch (direction) {
@@ -429,7 +353,7 @@ class ExtPlainView extends PlainView {
                 lineStart = elem.getElement(lineIndex).getStartOffset();
                 if (pos - lineStart > MAX_LINE_LENGTH) {
                     pos = (elem.getElementCount() > lineIndex + 1) ? elem.getElement(lineIndex + 1).getStartOffset() : lineStart + MAX_LINE_LENGTH;
-                }                
+                }
                 break;
             default:
                 throw new IllegalArgumentException("Bad direction: " + direction);

@@ -22,6 +22,8 @@ import java.io.IOException;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.netbeans.modules.cordova.CordovaPerformer;
+import org.netbeans.modules.cordova.platforms.api.PlatformManager;
+import org.netbeans.modules.cordova.platforms.spi.MobilePlatform;
 import org.netbeans.modules.cordova.updatetask.SourceConfig;
 import org.netbeans.modules.cordova.wizard.CordovaTemplate;
 import org.openide.util.NbBundle;
@@ -71,6 +73,10 @@ public class CordovaPanel extends javax.swing.JPanel {
     public CordovaPanel() {
         this(null);
         platformsPane.setVisible(true);
+        MobilePlatform iosPlatform = PlatformManager.getPlatform(PlatformManager.IOS_TYPE);
+        if (iosPlatform == null) {
+            iOSPanel.setVisible(false);
+        }
     }
     
     public void setControlsEnabled(boolean enabled) {

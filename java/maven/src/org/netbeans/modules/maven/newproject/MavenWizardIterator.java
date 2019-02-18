@@ -73,7 +73,7 @@ public class MavenWizardIterator implements WizardDescriptor.BackgroundInstantia
 //        return ArchetypeWizards.definedArchetype("org.apache.maven.archetypes", "maven-archetype-quickstart", "1.1", null, LBL_Maven_Quickstart_Archetype());
 //    }
     
-    @TemplateRegistration(folder=ArchetypeWizards.TEMPLATE_FOLDER, position=120, displayName="#LBL_Maven_JavaFx_Archetype", iconBase="org/netbeans/modules/maven/resources/jaricon.png", description="javafx.html")
+    @TemplateRegistration(folder=ArchetypeWizards.TEMPLATE_FOLDER, position=920, displayName="#LBL_Maven_JavaFx_Archetype", iconBase="org/netbeans/modules/maven/resources/jaricon.png", description="javafx.html")
     @Messages("LBL_Maven_JavaFx_Archetype=JavaFX Application")
     public static WizardDescriptor.InstantiatingIterator<?> javafx() {
         return ArchetypeWizards.definedArchetype("org.codehaus.mojo.archetypes", "javafx", "0.6", null, LBL_Maven_JavaFx_Archetype());

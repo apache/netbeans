@@ -19,7 +19,9 @@
 package org.netbeans.modules.groovy.editor.imports;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import javax.lang.model.element.ElementKind;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.modules.groovy.editor.api.completion.CompletionItem;
@@ -44,15 +46,13 @@ public class FastImportTest extends GroovyTestBase {
     }
 
     @Override
-    protected Map<String, ClassPath> createClassPathsForTest() {
-        return Collections.singletonMap(
-            ClassPath.SOURCE,
-            ClassPathSupport.createClassPath(new FileObject[] {
-                FileUtil.toFileObject(getDataFile("/testfiles/ccresult"))
-            })
-        );
-    }
+    protected Set<String> additionalSourceClassPath() {
+        HashSet<String> sourceClassPath = new HashSet<String>();
+        sourceClassPath.add("/testfiles/ccresult");
 
+        return sourceClassPath;
+    }
+   
     public void testNoImportsYet_spaceAfterPackageStatement() throws Exception {
         checkResult("NoImportsSpaceAfterPackage", "    AAA^", aaaType);
     }

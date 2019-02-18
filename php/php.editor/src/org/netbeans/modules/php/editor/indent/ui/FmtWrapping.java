@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.php.editor.indent.ui;
 
-import java.awt.Dimension;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.IOException;

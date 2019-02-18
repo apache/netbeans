@@ -64,6 +64,11 @@ final class EditRootAction extends NodeAction {
         return new HelpCtx(PlatformNode.class);
     }
 
+    @Override
+    protected boolean asynchronous() {
+        return false;
+    }
+
 }
 
 

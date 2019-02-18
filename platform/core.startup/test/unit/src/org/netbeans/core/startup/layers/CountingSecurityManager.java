@@ -85,8 +85,37 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
 
     static void assertReflection(int maxCount, String whitelist) {
         System.setProperty("counting.reflection.whitelist", whitelist);
-        System.getSecurityManager().checkMemberAccess(null, maxCount);
+        System.getSecurityManager().checkPermission(new MaxCountCheck(maxCount, "MaxCountCheck"));
         System.getProperties().remove("counting.reflection.whitelist");
+    }
+
+    private static final class MaxCountCheck extends Permission {
+        final int maxCount;
+
+        MaxCountCheck(int maxCount, String name) {
+            super(name);
+            this.maxCount = maxCount;
+        }
+
+        @Override
+        public boolean implies(Permission permission) {
+            return false;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return this == obj;
+        }
+
+        @Override
+        public int hashCode() {
+            return this.hashCode();
+        }
+
+        @Override
+        public String getActions() {
+            return "MaxCountCheck";
+        }
     }
 
     @Override
@@ -126,6 +155,11 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
 
     @Override
     public void checkPermission(Permission p) {
+        if (p instanceof MaxCountCheck) {
+            checkMemberAccess(null, ((MaxCountCheck) p).maxCount);
+            return;
+        }
+
         if (isDisabled()) {
             return;
         }
@@ -227,7 +261,6 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
     }
 
     private final Map<Class,Who> members = Collections.synchronizedMap(new HashMap<Class, Who>());
-    @Override
     public void checkMemberAccess(Class<?> clazz, int which) {
         if (clazz == null) {
             assertMembers(which);

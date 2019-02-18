@@ -63,8 +63,9 @@
             <arg value="-f"/>
             <arg value="Makefile.mingw"/>
         </exec>
-        <copy file="windows-launcher-src/app.exe" tofile="${cluster}/launchers/app.exe" overwrite="true" />
-        <copy file="windows-launcher-src/app64.exe" tofile="${cluster}/launchers/app64.exe" overwrite="true" />
+        <copy todir="${cluster}/launchers" overwrite="true">
+            <fileset dir="windows-launcher-src" includes="app*.exe"/>
+        </copy>
     </target>
 
 </project>

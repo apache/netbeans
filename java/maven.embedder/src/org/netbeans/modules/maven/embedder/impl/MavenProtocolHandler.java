@@ -46,7 +46,7 @@ import org.openide.util.BaseUtilities;
  * Currently only resolves artifacts from Central.
  * Could put repo ID in host field, but would require this to be moved to maven.indexer to use RepositoryPreferences.
  */
-@URLStreamHandlerRegistration(protocol="m2")
+@URLStreamHandlerRegistration(position = 99, protocol="m2")
 public class MavenProtocolHandler extends URLStreamHandler {
 
     protected @Override URLConnection openConnection(URL u) throws IOException {

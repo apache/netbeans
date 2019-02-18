@@ -1247,25 +1247,41 @@ PHP_TYPE_OBJECT=[o][b][j][e][c][t]
             yypushback(back);
             yybegin(ST_PHP_END_HEREDOC);
         } else {
-            int indexOfVariable1 = yytext().indexOf("$");
-            int indexOfVariable2 = yytext().indexOf("{$");
-            if (indexOfVariable1 > 0 && indexOfVariable2 == -1) {
-                yypushback(yylength() - indexOfVariable1);
-                return PHPTokenId.PHP_ENCAPSED_AND_WHITESPACE;
-            } else if (indexOfVariable2 > 0 && indexOfVariable1 == -1) {
-                yypushback(yylength() - indexOfVariable2);
-                return PHPTokenId.PHP_ENCAPSED_AND_WHITESPACE;
-            } else if (indexOfVariable1 > 0 && indexOfVariable2 > 0) {
-                yypushback(yylength() - Math.min(indexOfVariable1, indexOfVariable2));
-                return PHPTokenId.PHP_ENCAPSED_AND_WHITESPACE;
-            } else {
+            // handle variable
+            char previousChar = ' ';
+            int indexOfVariable = -1;
+            for (int i = 0; i < yylength(); i++) {
+                char currentChar = yytext().charAt(i);
+                if (currentChar == '$' && previousChar == '{') {
+                    indexOfVariable = i - 1;
+                    break;
+                }
+                if (currentChar == '$' && previousChar != '\\') {
+                    indexOfVariable = i;
+                    break;
+                }
+                previousChar = currentChar;
+            }
+
+            if (indexOfVariable == -1) {
                 yypushback(trailingNewLineLength);
+            } else {
+                yypushback(yylength() - indexOfVariable);
+                return PHPTokenId.PHP_ENCAPSED_AND_WHITESPACE;
             }
         }
         return PHPTokenId.PHP_CONSTANT_ENCAPSED_STRING;
     }
 
     {HEREDOC_CHARS} {
+        int indexOfNewline = yytext().indexOf("\r");
+        if (indexOfNewline == -1) {
+            indexOfNewline = yytext().indexOf("\n");
+        }
+        if (indexOfNewline > 0) {
+            // if index equals 0, don't pushback (infinite loop)
+            yypushback(yylength() - indexOfNewline);
+        }
         return PHPTokenId.PHP_CONSTANT_ENCAPSED_STRING;
     }
 

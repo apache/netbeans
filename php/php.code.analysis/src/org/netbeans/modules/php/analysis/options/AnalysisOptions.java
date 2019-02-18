@@ -53,6 +53,9 @@ public final class AnalysisOptions {
     private static final String PHPSTAN_PATH = "phpstan.path"; // NOI18N
     private static final String PHPSTAN_LEVEL = "phpstan.level"; // NOI18N
     private static final String PHPSTAN_CONFIGURATION = "phpstan.configuration"; // NOI18N
+    private static final String PHPSTAN_MEMORY_LIMIT = "phpstan.memory.limit"; // NOI18N
+    public static final int PHPSTAN_MIN_LEVEL = Integer.getInteger("nb.phpstan.min.level", 0); // NOI18N
+    public static final int PHPSTAN_MAX_LEVEL = Integer.getInteger("nb.phpstan.max.level", 7); // NOI18N
 
     private volatile boolean codeSnifferSearched = false;
     private volatile boolean messDetectorSearched = false;
@@ -208,20 +211,26 @@ public final class AnalysisOptions {
         getPreferences().put(PHPSTAN_PATH, path);
     }
 
-    public int getPHPStanLevel() {
-        int level = getPreferences().getInt(PHPSTAN_LEVEL, 0);
-        if (level < 0 || 7 < level) {
-            level = 0;
-        }
-        return level;
+    public String getPHPStanLevel() {
+        String level = getPreferences().get(PHPSTAN_LEVEL, String.valueOf(PHPSTAN_MIN_LEVEL));
+        return getValidPHPStanLevel(level);
     }
 
-    public void setPHPStanLevel(int level) {
-        int l = level;
-        if (level < 0 || 7 < level) {
-            l = 0;
+    public void setPHPStanLevel(String level) {
+        getPreferences().put(PHPSTAN_LEVEL, getValidPHPStanLevel(level));
+    }
+
+    public static String getValidPHPStanLevel(String level) {
+        if (PHPStan.MAX_LEVEL.equals(level)) {
+            return level;
         }
-        getPreferences().putInt(PHPSTAN_LEVEL, l);
+        String phpstanLevel;
+        try {
+            phpstanLevel = String.valueOf(AnalysisUtils.getValidInt(PHPSTAN_MIN_LEVEL, PHPSTAN_MAX_LEVEL, Integer.valueOf(level)));
+        } catch (NumberFormatException e) {
+            phpstanLevel = level;
+        }
+        return phpstanLevel;
     }
 
     @CheckForNull
@@ -231,6 +240,14 @@ public final class AnalysisOptions {
 
     public void setPHPStanConfigurationPath(String configuration) {
         getPreferences().put(PHPSTAN_CONFIGURATION, configuration);
+    }
+
+    public String getPHPStanMemoryLimit() {
+        return getPreferences().get(PHPSTAN_MEMORY_LIMIT, ""); // NOI18N
+    }
+
+    public void setPHPStanMemoryLimit(String memoryLimit) {
+        getPreferences().put(PHPSTAN_MEMORY_LIMIT, memoryLimit);
     }
 
     private Preferences getPreferences() {

@@ -109,6 +109,7 @@ METHOD     splitEachLine(String, Closure)             Object
 METHOD     splitEachLine(String, String,              Object
 METHOD     sprintf(String, Object)                    String
 METHOD     sprintf(String, Object)                    String
+METHOD     tap(Closure)                               Object
 METHOD     toExternalForm()                [PUBLIC]   String
 METHOD     toString()                      [PUBLIC]   String
 METHOD     toURI()                         [PUBLIC]   URI
@@ -119,6 +120,7 @@ METHOD     wait()                          [PUBLIC]   void
 METHOD     wait(long)                      [PUBLIC]   void
 METHOD     wait(long, int)                 [PUBLIC]   void
 METHOD     with(Closure)                              Object
+METHOD     with(boolean, Closure)                     Object
 METHOD     withInputStream(Closure)                   Object
 METHOD     withReader(Closure)                        Object
 METHOD     withReader(String, Closure)                Object
@@ -128,6 +130,7 @@ FIELD      authority                       [PUBLIC]   String
 FIELD      class                           [PUBLIC]   Class
 FIELD      content                         [PUBLIC]   Object
 FIELD      defaultPort                     [PUBLIC]   int
+FIELD      deserializedFields              [PRIVATE]  URLStreamHandler
 FIELD      file                            [PUBLIC]   String
 FIELD      host                            [PUBLIC]   String
 FIELD      path                            [PUBLIC]   String
@@ -135,4 +138,5 @@ FIELD      port                            [PUBLIC]   int
 FIELD      protocol                        [PUBLIC]   String
 FIELD      query                           [PUBLIC]   String
 FIELD      ref                             [PUBLIC]   String
+FIELD      serializedHashCode              [PRIVATE]  int
 FIELD      userInfo                        [PUBLIC]   String

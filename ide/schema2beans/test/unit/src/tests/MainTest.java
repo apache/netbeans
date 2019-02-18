@@ -34,9 +34,10 @@ public class MainTest extends NbTestCase {
         super(testName);
     }
 
-    public void testPurchaseOrder() throws IOException, Schema2BeansException, InterruptedException {
-        generalTest("TestPurchaseOrder", true, true, true);
-    }
+/////  Disabled as schema/DTD/XML was not donated
+//    public void testPurchaseOrder() throws IOException, Schema2BeansException, InterruptedException {
+//        generalTest("TestPurchaseOrder", true, true, true);
+//    }
     
     public void testInvoice() throws IOException, Schema2BeansException, InterruptedException {
         GenBeans.Config config = new GenBeans.Config();
@@ -113,14 +114,15 @@ public class MainTest extends NbTestCase {
         generalTest("TestEmpty");
     }
 
-    public void testNamespace() throws IOException, Schema2BeansException, InterruptedException {
-        GenBeans.Config config = new GenBeans.Config();
-        config.setOutputType(GenBeans.Config.OUTPUT_JAVABEANS);
-        config.setAttributesAsProperties(true);
-        config.setRemoveUnreferencedNodes(true);
-        config.setGenerateValidate(true);
-        generalTest("TestNamespace", true, config);
-    }
+/////  Disabled as schema/DTD/XML was not donated
+//    public void testNamespace() throws IOException, Schema2BeansException, InterruptedException {
+//        GenBeans.Config config = new GenBeans.Config();
+//        config.setOutputType(GenBeans.Config.OUTPUT_JAVABEANS);
+//        config.setAttributesAsProperties(true);
+//        config.setRemoveUnreferencedNodes(true);
+//        config.setGenerateValidate(true);
+//        generalTest("TestNamespace", true, config);
+//    }
 
     public void testExtensionSample() throws IOException, Schema2BeansException, InterruptedException {
         generalTest("TestExtensionSample", true, true, true);
@@ -147,42 +149,46 @@ public class MainTest extends NbTestCase {
         generalTest("TestExtension2", true, config);
     }
 
-    public void testWebApp() throws IOException, Schema2BeansException, InterruptedException {
-        GenBeans.Config config = new GenBeans.Config();
-        config.setOutputType(GenBeans.Config.OUTPUT_JAVABEANS);
-        config.setAttributesAsProperties(true);
-        config.setGenerateCommonInterface("CommonBean");
-        config.setRemoveUnreferencedNodes(true);
-        generalTest("TestWebApp", true, config);
-    }
+/////  Disabled as schema/DTD/XML was not donated
+//    public void testWebApp() throws IOException, Schema2BeansException, InterruptedException {
+//        GenBeans.Config config = new GenBeans.Config();
+//        config.setOutputType(GenBeans.Config.OUTPUT_JAVABEANS);
+//        config.setAttributesAsProperties(true);
+//        config.setGenerateCommonInterface("CommonBean");
+//        config.setRemoveUnreferencedNodes(true);
+//        generalTest("TestWebApp", true, config);
+//    }
 
-    public void testWebAppDelegator() throws IOException, Schema2BeansException, InterruptedException {
-        GenBeans.Config config = new GenBeans.Config();
-        config.buyPremium();
-        config.setGenerateDelegator(true);
-        config.setGenerateHasChanged(true);
-        generalTest("TestWebAppDelegator", true, config);
-    }
+/////  Disabled as schema/DTD/XML was not donated
+//    public void testWebAppDelegator() throws IOException, Schema2BeansException, InterruptedException {
+//        GenBeans.Config config = new GenBeans.Config();
+//        config.buyPremium();
+//        config.setGenerateDelegator(true);
+//        config.setGenerateHasChanged(true);
+//        generalTest("TestWebAppDelegator", true, config);
+//    }
 
-    public void testWebAppDelegatorBaseBean() throws IOException, Schema2BeansException, InterruptedException {
-        GenBeans.Config config = new GenBeans.Config();
-        config.buyPremium();
-        config.setGenerateDelegator(true);
-        config.setOutputType(GenBeans.Config.OUTPUT_TRADITIONAL_BASEBEAN);
-        generalTest("TestWebAppDelegatorBaseBean", true, config);
-    }
+/////  Disabled as schema/DTD/XML was not donated
+//    public void testWebAppDelegatorBaseBean() throws IOException, Schema2BeansException, InterruptedException {
+//        GenBeans.Config config = new GenBeans.Config();
+//        config.buyPremium();
+//        config.setGenerateDelegator(true);
+//        config.setOutputType(GenBeans.Config.OUTPUT_TRADITIONAL_BASEBEAN);
+//        generalTest("TestWebAppDelegatorBaseBean", true, config);
+//    }
 
-    public void testFinalWebApp() throws IOException, Schema2BeansException, InterruptedException {
-        GenBeans.Config config = new GenBeans.Config();
-        config.setOutputType(GenBeans.Config.OUTPUT_JAVABEANS);
-        config.setAttributesAsProperties(true);
-        config.setGenerateCommonInterface("CommonBean");
-        config.setGenerateValidate(true);
-        config.setProcessComments(true);
-        config.setProcessDocType(true);
-        config.addReadBeanGraphFiles(new File(getDataDir(), "TestFinalWebAppBeanGraph.xml"));
-        generalTest("TestFinalWebApp", true, config);
-    }
+/////  Disabled as schema/DTD/XML was not donated
+//    public void testFinalWebApp() throws IOException, Schema2BeansException, InterruptedException {
+//        GenBeans.Config config = new GenBeans.Config();
+//        config.setOutputType(GenBeans.Config.OUTPUT_JAVABEANS);
+//        config.setAttributesAsProperties(true);
+//        config.setGenerateCommonInterface("CommonBean");
+//        config.setGenerateValidate(true);
+//        config.setProcessComments(true);
+//        config.setProcessDocType(true);
+//        config.addReadBeanGraphFiles(new File(getDataDir(), "TestFinalWebAppBeanGraph.xml"));
+//        generalTest("TestFinalWebApp", true, config);
+//    }
 
     public void testBadNames() throws IOException, Schema2BeansException, InterruptedException {
         GenBeans.Config config = new GenBeans.Config();
@@ -214,9 +220,10 @@ public class MainTest extends NbTestCase {
         generalTest("TestGroupUnbounded", true, config);
     }
 
-    public void testApplication1_4() throws IOException, Schema2BeansException, InterruptedException {
-        generalTest("TestApplication1_4", true, true, true);
-    }
+/////  Disabled as schema/DTD/XML was not donated
+//    public void testApplication1_4() throws IOException, Schema2BeansException, InterruptedException {
+//        generalTest("TestApplication1_4", true, true, true);
+//    }
 
     public void testInclude() throws IOException, Schema2BeansException, InterruptedException {
         GenBeans.Config config = new GenBeans.Config();
@@ -241,77 +248,78 @@ public class MainTest extends NbTestCase {
         generalTest("TestMergeExtendBaseBean", false, config);
     }
 
-    public void testBeanWrapper() throws IOException, Schema2BeansException, InterruptedException {
-        String testName = "TestBeanWrapper";
-        try {
-            System.out.println(": Starting "+testName);
-            File workDir = getWorkDir();
-            System.out.println("workDir="+workDir.toString());
-            File schemaFile;
-            File beanTreeFile = File.createTempFile("beanTree", "txt");
-            InputStream dtdIn;
-            InputStream mddIn;
-
-            GenBeans.Config config = new GenBeans.Config();
-            config.setOutputType(GenBeans.Config.OUTPUT_JAVABEANS);
-            config.setAttributesAsProperties(true);
-            config.setGenerateCommonInterface("CommonBean");
-            config.setGenerateInterfaces(true);
-            config.setGeneratePropertyEvents(true);
-            config.setAuto(true);
-            config.setStandalone(false);
-            schemaFile = new File(getDataDir(), "simple.xsd");
-            dtdIn = new FileInputStream(schemaFile);
-            config.setFileIn(dtdIn);
-            config.setInputURI(schemaFile.toString());
-            config.setMddIn(null);
-            config.setSchemaType(GenBeans.Config.XML_SCHEMA);
-            config.setRootDir(new File(workDir.toString()));
-            String simpleBeanGraph = getDataDir() + File.pathSeparator + "simpleBeanGraph.xml";
-            config.setWriteBeanGraphFile(new File(simpleBeanGraph));
-            ref("Calling GenBeans.doIt");
-            GenBeans.doIt(config);
-            beanTreeFile.delete();
-
-            config = new GenBeans.Config();
-            config.setOutputType(GenBeans.Config.OUTPUT_JAVABEANS);
-            config.setAttributesAsProperties(true);
-            config.setGenerateCommonInterface("CommonBean");
-            config.setGenerateInterfaces(true);
-            config.setGeneratePropertyEvents(true);
-            config.setAuto(true);
-            config.setStandalone(false);
-            schemaFile = new File(getDataDir(), "TestNamespace.xsd");
-            dtdIn = new FileInputStream(schemaFile);
-            config.setFileIn(dtdIn);
-            config.setInputURI(schemaFile.toString());
-            //mddIn = new FileInputStream(new File(getDataDir(), "TestBeanWrapper.mdd"));
-            //config.setMddIn(mddIn);
-            config.setSchemaType(GenBeans.Config.XML_SCHEMA);
-            config.setRootDir(workDir);
-            config.setDumpBeanTree(beanTreeFile);
-            config.addReadBeanGraphFiles(new File(simpleBeanGraph));
-            ref("Calling GenBeans.doIt");
-            GenBeans.doIt(config);
-
-            ref("Bean Tree:");
-            ref(beanTreeFile);
-
-            ref("Compiling");
-            String cmd = getJdkHome() + "javac -nowarn -classpath "+workDir.toString()+File.pathSeparator+getDataDir().toString()+File.pathSeparator+theClassPath+" "+getDataDir().toString()+"/"+testName+".java";
-            int result = runCommandToSystemOut(cmd);
-            ref("Finished compiling: "+result);
-
-            cmd = getJdkHome() + "java -classpath "+workDir.toString()+File.pathSeparator+getDataDir().toString()+File.pathSeparator+theClassPath+" "+testName+" "+getDataDir().toString()+"/";
-            result = runCommand(cmd);
-            ref("Finished running "+testName+": "+result);
-
-            System.out.println("Finished.\n");
-        } catch (Exception e) {
-            ref(e.getMessage());
-            e.printStackTrace();
-        }
-    }
+/////  Disabled as schema/DTD/XML was not donated
+//    public void testBeanWrapper() throws IOException, Schema2BeansException, InterruptedException {
+//        String testName = "TestBeanWrapper";
+//        try {
+//            System.out.println(": Starting "+testName);
+//            File workDir = getWorkDir();
+//            System.out.println("workDir="+workDir.toString());
+//            File schemaFile;
+//            File beanTreeFile = File.createTempFile("beanTree", "txt");
+//            InputStream dtdIn;
+//            InputStream mddIn;
+//
+//            GenBeans.Config config = new GenBeans.Config();
+//            config.setOutputType(GenBeans.Config.OUTPUT_JAVABEANS);
+//            config.setAttributesAsProperties(true);
+//            config.setGenerateCommonInterface("CommonBean");
+//            config.setGenerateInterfaces(true);
+//            config.setGeneratePropertyEvents(true);
+//            config.setAuto(true);
+//            config.setStandalone(false);
+//            schemaFile = new File(getDataDir(), "simple.xsd");
+//            dtdIn = new FileInputStream(schemaFile);
+//            config.setFileIn(dtdIn);
+//            config.setInputURI(schemaFile.toString());
+//            config.setMddIn(null);
+//            config.setSchemaType(GenBeans.Config.XML_SCHEMA);
+//            config.setRootDir(new File(workDir.toString()));
+//            String simpleBeanGraph = getDataDir() + File.pathSeparator + "simpleBeanGraph.xml";
+//            config.setWriteBeanGraphFile(new File(simpleBeanGraph));
+//            ref("Calling GenBeans.doIt");
+//            GenBeans.doIt(config);
+//            beanTreeFile.delete();
+//
+//            config = new GenBeans.Config();
+//            config.setOutputType(GenBeans.Config.OUTPUT_JAVABEANS);
+//            config.setAttributesAsProperties(true);
+//            config.setGenerateCommonInterface("CommonBean");
+//            config.setGenerateInterfaces(true);
+//            config.setGeneratePropertyEvents(true);
+//            config.setAuto(true);
+//            config.setStandalone(false);
+//            schemaFile = new File(getDataDir(), "TestNamespace.xsd");
+//            dtdIn = new FileInputStream(schemaFile);
+//            config.setFileIn(dtdIn);
+//            config.setInputURI(schemaFile.toString());
+//            //mddIn = new FileInputStream(new File(getDataDir(), "TestBeanWrapper.mdd"));
+//            //config.setMddIn(mddIn);
+//            config.setSchemaType(GenBeans.Config.XML_SCHEMA);
+//            config.setRootDir(workDir);
+//            config.setDumpBeanTree(beanTreeFile);
+//            config.addReadBeanGraphFiles(new File(simpleBeanGraph));
+//            ref("Calling GenBeans.doIt");
+//            GenBeans.doIt(config);
+//
+//            ref("Bean Tree:");
+//            ref(beanTreeFile);
+//
+//            ref("Compiling");
+//            String cmd = getJdkHome() + "javac -nowarn -classpath "+workDir.toString()+File.pathSeparator+getDataDir().toString()+File.pathSeparator+theClassPath+" "+getDataDir().toString()+"/"+testName+".java";
+//            int result = runCommandToSystemOut(cmd);
+//            ref("Finished compiling: "+result);
+//
+//            cmd = getJdkHome() + "java -classpath "+workDir.toString()+File.pathSeparator+getDataDir().toString()+File.pathSeparator+theClassPath+" "+testName+" "+getDataDir().toString()+"/";
+//            result = runCommand(cmd);
+//            ref("Finished running "+testName+": "+result);
+//
+//            System.out.println("Finished.\n");
+//        } catch (Exception e) {
+//            ref(e.getMessage());
+//            e.printStackTrace();
+//        }
+//    }
     
     public void generalTest(String testName) throws IOException, Schema2BeansException, InterruptedException {
         generalTest(testName, false, false, false);

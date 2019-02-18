@@ -194,6 +194,7 @@ abstract class AbstractEntry implements ModuleEntry {
                     case 10: // CONSTANT_Methodref
                     case 11: // CONSTANT_InterfaceMethodref
                     case 12: // CONSTANT_NameAndType
+                    case 17: // CONSTANT_ConstantDynamic
                     case 18:    //CONSTANT_InvokeDynamic
                         skip(input, 4);
                         break;

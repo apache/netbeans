@@ -46,6 +46,6 @@
 
     <target name="build-wrapper" depends="netbeans,ext-jar"/>
 
-    <target name="-process.release.files" depends="projectized.-process.release.files,ext-jar"/>
+    <target name="netbeans-extra" depends="projectized-common.netbeans-extra,ext-jar"/>
 
 </project>

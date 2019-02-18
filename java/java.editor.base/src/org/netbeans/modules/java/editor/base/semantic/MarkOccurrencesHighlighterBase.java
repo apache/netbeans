@@ -24,6 +24,7 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ContinueTree;
 import com.sun.source.tree.DoWhileLoopTree;
 import com.sun.source.tree.EnhancedForLoopTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.LabeledStatementTree;
@@ -47,6 +48,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -499,11 +501,11 @@ public abstract class MarkOccurrencesHighlighterBase extends JavaParserResultTas
 
     private List<int[]> detectBreakOrContinueTarget(CompilationInfo info, Document document, TreePath breakOrContinue, int caretPosition) {
         List<int[]> result = new ArrayList<int[]>();
-        StatementTree target = info.getTreeUtilities().getBreakContinueTarget(breakOrContinue);
+        Tree target = info.getTreeUtilities().getBreakContinueTargetTree(breakOrContinue);
 
         if (target == null)
             return null;
-
+        
         TokenSequence<JavaTokenId> ts = info.getTokenHierarchy().tokenSequence(JavaTokenId.language());
         
         ts.move((int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), target));
@@ -511,30 +513,40 @@ public abstract class MarkOccurrencesHighlighterBase extends JavaParserResultTas
         if (ts.moveNext()) {
             result.add(new int[] {ts.offset(), ts.offset() + ts.token().length()});
         }
-
-        StatementTree statement = target.getKind() == Kind.LABELED_STATEMENT ? ((LabeledStatementTree) target).getStatement() : target;
+        StatementTree targetStatementTree = null;
+        ExpressionTree targetExpressionTree = null;
+        if (target instanceof StatementTree) {
+            targetStatementTree = target.getKind() == Kind.LABELED_STATEMENT ?  ((LabeledStatementTree) target).getStatement() : (StatementTree) target;
+        } else if (target instanceof ExpressionTree) {
+            targetExpressionTree = (ExpressionTree) target;
+        }
         Tree block = null;
-
-        switch (statement.getKind()) {
-            case SWITCH:
-                block = statement;
-                break;
-            case WHILE_LOOP:
-                if (((WhileLoopTree) statement).getStatement().getKind() == Kind.BLOCK)
-                    block = ((WhileLoopTree) statement).getStatement();
-                break;
-            case FOR_LOOP:
-                if (((ForLoopTree) statement).getStatement().getKind() == Kind.BLOCK)
-                    block = ((ForLoopTree) statement).getStatement();
-                break;
-            case ENHANCED_FOR_LOOP:
-                if (((EnhancedForLoopTree) statement).getStatement().getKind() == Kind.BLOCK)
-                    block = ((EnhancedForLoopTree) statement).getStatement();
-                break;
-            case DO_WHILE_LOOP:
-                if (((DoWhileLoopTree) statement).getStatement().getKind() == Kind.BLOCK)
-                    block = ((DoWhileLoopTree) statement).getStatement();
-                break;
+        
+        if (targetStatementTree != null) {
+            switch (targetStatementTree.getKind()) {
+                case SWITCH:
+                    block = targetStatementTree;
+                    break;
+                case WHILE_LOOP:
+                    if (((WhileLoopTree) targetStatementTree).getStatement().getKind() == Kind.BLOCK)
+                        block = ((WhileLoopTree) targetStatementTree).getStatement();
+                    break;
+                case FOR_LOOP:
+                    if (((ForLoopTree) targetStatementTree).getStatement().getKind() == Kind.BLOCK)
+                        block = ((ForLoopTree) targetStatementTree).getStatement();
+                    break;
+                case ENHANCED_FOR_LOOP:
+                    if (((EnhancedForLoopTree) targetStatementTree).getStatement().getKind() == Kind.BLOCK)
+                        block = ((EnhancedForLoopTree) targetStatementTree).getStatement();
+                    break;
+                case DO_WHILE_LOOP:
+                    if (((DoWhileLoopTree) targetStatementTree).getStatement().getKind() == Kind.BLOCK)
+                        block = ((DoWhileLoopTree) targetStatementTree).getStatement();
+                    break;
+            }
+        // No need to check for version of JDK, as targetExpressionTree can only be non-null in case of JDK-12 or higher
+        } else if (targetExpressionTree != null) {
+            block = targetExpressionTree;
         }
 
         if (block != null) {

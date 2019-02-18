@@ -110,23 +110,23 @@ public class TestMethodNode extends AbstractNode {
                            : testcase.getTrouble().isError() ? 1 : 2;
         
         if ((status == 0) && (testcase.getTimeMillis() < 0)) {
-            setDisplayName(testcase.getName());
+            setDisplayName(testcase.getDisplayName());
             return;
         }
         
         if(testcase.getTimeMillis() < 0) {
             if(status == 1) {
-                setDisplayName(Bundle.MSG_TestMethodError(testcase.getName()));
+                setDisplayName(Bundle.MSG_TestMethodError(testcase.getDisplayName()));
             } else if(status == 2) {
-                setDisplayName(Bundle.MSG_TestMethodFailed(testcase.getName()));
+                setDisplayName(Bundle.MSG_TestMethodFailed(testcase.getDisplayName()));
             }
         } else {
             if(status == 0) {
-                setDisplayName(Bundle.MSG_TestMethodPassed_time(testcase.getName(), testcase.getTimeMillis() / 1000f));
+                setDisplayName(Bundle.MSG_TestMethodPassed_time(testcase.getDisplayName(), testcase.getTimeMillis() / 1000f));
             } else if(status == 1) {
-                setDisplayName(Bundle.MSG_TestMethodError_time(testcase.getName(), testcase.getTimeMillis() / 1000f));
+                setDisplayName(Bundle.MSG_TestMethodError_time(testcase.getDisplayName(), testcase.getTimeMillis() / 1000f));
             } else if(status == 2) {
-                setDisplayName(Bundle.MSG_TestMethodFailed_time(testcase.getName(), testcase.getTimeMillis() / 1000f));
+                setDisplayName(Bundle.MSG_TestMethodFailed_time(testcase.getDisplayName(), testcase.getTimeMillis() / 1000f));
             }
         }
     }
@@ -145,7 +145,7 @@ public class TestMethodNode extends AbstractNode {
         Status status = testcase.getStatus();
 
         StringBuffer buf = new StringBuffer(60);
-        buf.append(testcase.getName());
+        buf.append(testcase.getDisplayName());
         buf.append("&nbsp;&nbsp;");                                     //NOI18N
         buf.append("<font color='#");                                   //NOI18N
         buf.append(status.getHtmlDisplayColor() + "'>"); //NOI18N

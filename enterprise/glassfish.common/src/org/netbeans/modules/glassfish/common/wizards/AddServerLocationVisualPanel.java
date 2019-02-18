@@ -48,7 +48,7 @@ public class AddServerLocationVisualPanel extends javax.swing.JPanel implements 
     public static enum DownloadState { AVAILABLE, DOWNLOADING, COMPLETED };
 
     // expose for qa-functional tests
-    public static final String V3_DOWNLOAD_PREFIX = "http://download.java.net/"; // NOI18N
+    public static final String V3_DOWNLOAD_PREFIX = "https://download.oracle.com/"; // NOI18N
     
     private final List<ChangeListener> listeners = new CopyOnWriteArrayList<ChangeListener>();
     private Retriever retriever;
@@ -427,7 +427,7 @@ public class AddServerLocationVisualPanel extends javax.swing.JPanel implements 
 private void readlicenseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_readlicenseButtonActionPerformed
         try {
             URLDisplayer.getDefault().showURL(
-                    new URL("http://glassfish.java.net/public/CDDL+GPL.html")); //NOI18N
+                    new URL("https://javaee.github.io/glassfish/LICENSE")); //NOI18N
         } catch (Exception ex){
             Logger.getLogger("glassfish").log(Level.INFO, ex.getLocalizedMessage(), ex);
         }

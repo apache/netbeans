@@ -97,14 +97,17 @@ public class JavaCompletionTask111FeaturesTest extends CompletionTestBase {
     }
 
     public void testSecondLambdaParam4() throws Exception {
+        if (shouldDisableForNETBEANS_1808()) return ;
         performTest("SimpleLambdaExpression2Start", 1131, "t.test((var s,", "var.pass", SOURCE_LEVEL);
     }
 
     public void testSecondLambdaParam5() throws Exception {
+        if (shouldDisableForNETBEANS_1808()) return ;
         performTest("SimpleLambdaExpression2Start", 1131, "t.test2( \"hello\",2,( var s,", "var.pass", SOURCE_LEVEL);
     }
 
     public void testSecondLambdaParamWithAnnotation() throws Exception {
+        if (shouldDisableForNETBEANS_1808()) return ;
         performTest("SimpleLambdaExpression2Start", 1131, "t.test((@TestAnnotation var x, ", "var.pass", SOURCE_LEVEL);
     }
 
@@ -113,5 +116,14 @@ public class JavaCompletionTask111FeaturesTest extends CompletionTestBase {
 
     static {
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+    }
+
+    private boolean shouldDisableForNETBEANS_1808() {
+        try {
+            Class.forName("com.sun.tools.javac.model.LazyTreeLoader");
+            return true;
+        } catch (ClassNotFoundException ex) {
+            return false;
+        }
     }
 }

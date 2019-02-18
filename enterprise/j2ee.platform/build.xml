@@ -24,4 +24,24 @@
     <import file="../../nbbuild/templates/projectized.xml"/>
     <property file="nbproject/project.properties" />
 
+    <!-- Hook into harness "-process.release.files" task -->
+    <target name="-process.release.files" depends="prepare-doc"/>
+
+    <!-- Check if generated doc file was already generated -->
+    <target name="-check-prepared-doc">
+        <condition property="j2ee.platform.doccreated" value="present">
+            <and>
+                <available file="external/generated-javaee-api-7.0-javadoc.jar" />
+            </and>
+        </condition>
+    </target>
+
+    <target name="prepare-doc" depends="-check-prepared-doc" unless="j2ee.platform.doccreated">
+        <delete file="external/generated-javaee-api-7.0-javadoc.jar" />
+
+        <!-- repackage doc file into the format netbeans used prior to switching to the maven central artefact -->
+        <jar destfile="external/generated-javaee-api-7.0-javadoc.jar">
+            <zipfileset src="external/javaee-api-7.0-javadoc.jar" includes="**" prefix="docs/api" />
+        </jar>
+    </target>
 </project>

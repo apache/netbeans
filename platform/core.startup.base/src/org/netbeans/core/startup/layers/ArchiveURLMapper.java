@@ -20,6 +20,7 @@
 package org.netbeans.core.startup.layers;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -29,8 +30,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -242,10 +241,16 @@ public class ArchiveURLMapper extends URLMapper {
                     copy = copy.getCanonicalFile();
                     copy.deleteOnExit();
                 }
-                try (InputStream is = fo.getInputStream(); OutputStream os = Files.newOutputStream(copy.toPath())) {
-                    FileUtil.copy(is, os);
-                } catch (InvalidPathException ex) {
-                    throw new IOException(ex);
+                InputStream is = fo.getInputStream();
+                try {
+                    OutputStream os = new FileOutputStream(copy);
+                    try {
+                        FileUtil.copy(is, os);
+                    } finally {
+                        os.close();
+                    }
+                } finally {
+                    is.close();
                 }
                 copiedJARs.put(archiveFileURI, copy);
             }

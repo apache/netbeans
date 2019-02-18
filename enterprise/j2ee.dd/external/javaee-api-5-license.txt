@@ -4,6 +4,7 @@ Description: Stripped version of Java EE 5 API.
 License: CDDL-1.0
 Origin: http://java.sun.com/javaee
 Comment: Typically added on classpath of tests to resolve Java EE anotations.
+Type: compile-time
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
 

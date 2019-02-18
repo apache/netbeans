@@ -231,7 +231,7 @@ Contributor(s): Sebastian Hörl
         <folder name="text">
             <folder name="x-twig">
                 <!-- keep for language annotation-->
-                <attr name="iconBase" stringvalue="org/netbeans/modules/php/twig/resources/filter.png"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/php/twig/resources/twig-icon.png"/>
             </folder>
         </folder>
     </folder>
@@ -262,7 +262,7 @@ Contributor(s): Sebastian Hörl
     <folder name="Templates">
         <folder name="Scripting">
             <file name="TwigTemplate.html.twig" url="TwigTemplate.html.twig">
-                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/php/twig/resources/filter.png"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/php/twig/resources/twig-icon.png"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.php.twig.resources.Bundle"/>
                 <attr name="template" boolvalue="true"/>
                 <attr name="templateCategory" stringvalue="PHP"/>

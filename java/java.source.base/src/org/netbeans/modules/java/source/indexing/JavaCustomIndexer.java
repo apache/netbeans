@@ -176,9 +176,6 @@ public class JavaCustomIndexer extends CustomIndexer {
 
                 boolean binariesAreNewer = true;
                 for (Indexable index : files) {
-                    if (!binariesAreNewer) {
-                        break;
-                    }
                     FileObject fo = context.getRoot().getFileObject(index.getRelativePath());
                     if (newestFile == null || fo == null || fo.lastModified().getTime() > newestFile) {
                         binariesAreNewer = false;

@@ -164,6 +164,16 @@ public enum ServerDetails {
         500,
         "https://download.oracle.com/glassfish/5.0/release/glassfish-5.0.zip", // NOI18N
         "https://download.oracle.com/glassfish/5.0/release/glassfish-5.0.zip" // NOI18N
+    ),
+    
+    /**
+     * details for an instance of GlassFish Server 5
+     */
+    GLASSFISH_SERVER_5_1(NbBundle.getMessage(ServerDetails.class, "STR_51_SERVER_NAME", new Object[]{}), // NOI18N
+        "deployer:gfv3ee6wc", // NOI18N
+        500,
+        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/5.1.0/glassfish-5.1.0.zip", // NOI18N
+        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/5.1.0/glassfish-5.1.0.zip" // NOI18N
     );
 
     /**
@@ -175,6 +185,7 @@ public enum ServerDetails {
     public static WizardDescriptor.InstantiatingIterator
             getInstantiatingIterator() {
         return new ServerWizardIterator(new ServerDetails[]{
+                    GLASSFISH_SERVER_5_1,
                     GLASSFISH_SERVER_5_0,
                     GLASSFISH_SERVER_4_1_2,
                     GLASSFISH_SERVER_4_1_1,
@@ -188,12 +199,12 @@ public enum ServerDetails {
                     GLASSFISH_SERVER_3_0_1,
                     GLASSFISH_SERVER_3,},
                 new ServerDetails[]{
+                    GLASSFISH_SERVER_5_1,
                     GLASSFISH_SERVER_5_0,
                     GLASSFISH_SERVER_4_1_2,
                     GLASSFISH_SERVER_4_1_1,
                     GLASSFISH_SERVER_4_1,
-                    GLASSFISH_SERVER_4_0,
-                    GLASSFISH_SERVER_3_1_2_2});
+                    GLASSFISH_SERVER_4_0});
     }
 
     /**
@@ -226,6 +237,7 @@ public enum ServerDetails {
                 case GF_4_1_1:   return GLASSFISH_SERVER_4_1_1.getVersion();
                 case GF_4_1_2:   return GLASSFISH_SERVER_4_1_2.getVersion();
                 case GF_5:       return GLASSFISH_SERVER_5_0.getVersion();
+                case GF_5_1:     return GLASSFISH_SERVER_5_1.getVersion();
                 default:         return -1;
             }
         }

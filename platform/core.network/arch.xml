@@ -104,7 +104,9 @@
       which clients are supposed to download and execute in order to find 
       out which proxy to use. This is known as <a href="https://en.wikipedia.org/wiki/Proxy_auto-config">Proxy Auto-Config</a>
       (or PAC). This module provides a pluggable PAC evaluation environment
-      based on Rhino. Execution of the downloaded JavaScript code is sandboxed.
+      based on Nashorn. However, it will gracefully degrade to any other JavaScript
+      which may be installed in the JVM. Execution of the downloaded
+      JavaScript code is sandboxed. (only true for Nashorn)
   </p>
   <p>
       If you don't like the PAC evaluation environment provided
@@ -730,6 +732,14 @@
         </question>
 -->
  <answer id="exec-reflection">
+  <p>
+   Yes. It detects the presence of Nashorn (as opposed to say Rhino) by way 
+      of reflection. In particular it needs to know if the Java version is
+      Java 8u40 as Nashorn was greatly enhanced in that update and was more
+      or less useless (for our purpose) before this time. The use of reflection
+      means the code will gracefully 'degrade' to whatever script engine is
+      available if we are not on Java 8u40 or later.
+  </p>
   <p>
    For testing only a dirty hack is used in our <code>FakeDns</code> class.
    This installs itself as a preferred name service in Java. This is done

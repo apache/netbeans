@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.openjdk.project;
 
+import org.netbeans.modules.java.openjdk.project.ModuleDescription.ModuleRepository;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 
 /**
@@ -26,20 +27,30 @@ import org.netbeans.spi.project.ui.ProjectOpenedHook;
  */
 public class OpenProjectHookImpl extends ProjectOpenedHook {
 
+    private final JDKProject project;
     private final ClassPathProviderImpl cpp;
+    private final ModuleRepository repository;
 
-    public OpenProjectHookImpl(ClassPathProviderImpl cpp) {
+    public OpenProjectHookImpl(JDKProject project, ClassPathProviderImpl cpp, ModuleRepository repository) {
+        this.project = project;
         this.cpp = cpp;
+        this.repository = repository;
     }
     
     @Override
     protected void projectOpened() {
+        if (repository != null) {
+            repository.projectOpened(project);
+        }
         cpp.registerClassPaths();
     }
 
     @Override
     protected void projectClosed() {
         cpp.unregisterClassPaths();
+        if (repository != null) {
+            repository.projectClosed(project);
+        }
     }
     
 }

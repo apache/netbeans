@@ -23,7 +23,9 @@
 
     <import file="../default.xml"/>
     <import file="common.xml"/>
-    
+
+    <target name="build" depends="netbeans,test-build,check-sigtest"/>
+
     <target name="-build-dir-init" depends="default.init">
         <property name="_build.dir" location=""/>
         <condition property="build.dir" value="${nb.build.dir}${file.separator}modules${file.separator}${module.name}">
@@ -172,7 +174,7 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         <property name="locmakenbm.brands" value="${brandings}"/>
         <!-- When requires.nb.javac property is true, prepend javac-api and javac-impl on bootclasspath to allow override the default annotation
              processing API located in rt.jar. -->
-        <property name="bootclasspath.prepend.nb" value="${nb_all}/java/libs.javacapi/external/nb-javac-9-api.jar${path.separator}${nb_all}/java/libs.javacimpl/external/nb-javac-9-impl.jar" />
+        <property name="bootclasspath.prepend.nb" value="${nb_all}/java/libs.javacapi/external/nb-javac-12-api.jar${path.separator}${nb_all}/java/libs.javacimpl/external/nb-javac-12-impl.jar" />
         <property name="bootclasspath.prepend.vanilla" value="${nb_all}/nbbuild/external/vanilla-javac-api.jar${path.separator}${nb_all}/nbbuild/external/vanilla-javac-impl.jar" />
         <condition property="bootclasspath.prepend" value="${bootclasspath.prepend.nb}">
             <istrue value="${requires.nb.javac.impl}"/>
@@ -375,11 +377,6 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         <available file="${src.dir}" property="sources.exist"/>
     </target>
     
-<!-- Disabled, the version 17 of apitest does not handle well changed JDKs,
-     for example it failed in openide/nodes for 1.5.0_11, 1.5.0_12 and Mac's 1.5.0_07
-
-    <target name="netbeans" depends="projectized-common.netbeans,check-sigtest"/>
--->    
     <target name="sources-zip" depends="build-init, check-sources-exist" if="sources.exist" description="Simple sources zip creation intended for use in maven repository.">
 
         <taskdef name="createlicensesummary" classname="org.netbeans.nbbuild.extlibs.CreateLicenseSummary" classpath="${nbantext.jar}"/>
@@ -507,7 +504,7 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         <!-- (XXX maybe the viewer task can automagically do this...) -->
         <mkdir dir="${build.javahelp.dir}/org/netbeans/modules/usersguide"/>
         <copy tofile="${build.javahelp.dir}/org/netbeans/modules/usersguide/ide.css"
-              file="${nb_all}/usersguide/javahelp/org/netbeans/modules/usersguide/ide.css"
+              file="${nb_all}/ide/usersguide/javahelp/org/netbeans/modules/usersguide/ide.css"
               failonerror="false"/>
         <mkdir dir="${cluster}/${javahelp.jar.dir}"/>
         <jar jarfile="${cluster}/${javahelp.jar}" compress="true">

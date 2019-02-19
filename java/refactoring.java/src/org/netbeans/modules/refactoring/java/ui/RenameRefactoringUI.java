@@ -409,7 +409,7 @@ public class RenameRefactoringUI implements RefactoringUI, RefactoringUIBypass, 
                 if(resolve != null && EnumSet.of(Kind.LABELED_STATEMENT, Kind.BREAK, Kind.CONTINUE).contains(resolve.getLeaf().getKind())) {
                     TreePath path = resolve;
                     if (path.getLeaf().getKind() != Kind.LABELED_STATEMENT) {
-                        StatementTree tgt = info.getTreeUtilities().getBreakContinueTarget(path);
+                        Tree tgt = info.getTreeUtilities().getBreakContinueTargetTree(path);
                         path = tgt != null ? info.getTrees().getPath(info.getCompilationUnit(), tgt) : null;
                     }
                     if (path == null) {

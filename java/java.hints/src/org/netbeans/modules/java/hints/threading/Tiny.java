@@ -352,7 +352,7 @@ public class Tiny {
 
     private static boolean equals(VariableElement var1, VariableElement var2) {
         if (   var1.getSimpleName() == var2.getSimpleName()
-            && var1.getSimpleName().contentEquals("class")) {
+            && (var1.getSimpleName().contentEquals("class") || var1.getSimpleName().contentEquals("this"))) {
             return var1.getEnclosingElement().equals(var2.getEnclosingElement());
         } else {
             return var1.equals(var2);

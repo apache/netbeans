@@ -38,6 +38,7 @@ import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderExt;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.lsp.client.LSPBindings;
+import org.netbeans.modules.lsp.client.Utils;
 import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
@@ -84,10 +85,10 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
         if (server == null) {
             return ;
         }
-        URI uri = file.toURI();
+        String uri = Utils.toURI(file);
         try {
             TextDocumentPositionParams params;
-            params = new TextDocumentPositionParams(new TextDocumentIdentifier(uri.toString()),
+            params = new TextDocumentPositionParams(new TextDocumentIdentifier(uri),
                                                     Utils.createPosition(doc, offset));
             //TODO: Location or Location[]
             CompletableFuture<List<? extends Location>> def = server.getTextDocumentService().definition(params);

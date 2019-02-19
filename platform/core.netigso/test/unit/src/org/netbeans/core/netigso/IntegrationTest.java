@@ -47,7 +47,6 @@ public class IntegrationTest extends NbTestCase {
     }
 
     public static Test suite() {
-        NetigsoUtil.downgradeJDK();
         return
             NbModuleSuite.emptyConfiguration().addTest(
                 IntegrationTest.class

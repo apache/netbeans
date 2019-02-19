@@ -45,7 +45,8 @@ public class ComponentsTest {
         NbResloc.init();
     }
 
-    @Test public void loadSwing() throws Exception {
+    @Test(timeOut = 9000)
+    public void loadSwing() throws Exception {
         CountDownLatch cdl = new CountDownLatch(1);
         JComponent p = TestPages.getSwing(10, cdl);
         JFrame f = new JFrame();
@@ -55,7 +56,8 @@ public class ComponentsTest {
         cdl.await();
     }
 
-    @Test public void loadFX() throws Exception {
+    @Test(timeOut = 9000)
+    public void loadFX() throws Exception {
         final CountDownLatch cdl = new CountDownLatch(1);
         final CountDownLatch done = new CountDownLatch(1);
         final JFXPanel p = new JFXPanel();

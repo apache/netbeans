@@ -301,6 +301,7 @@ public final class PathsCustomizer extends javax.swing.JPanel {
         private final DefaultListModel mpModel;
         private final DefaultListModel cpModel;
         private byte active = 0;
+        private byte previousActive = 0;
 
         public JoinModel(DefaultListModel mpModel, DefaultListModel cpModel) {
             this.mpModel = mpModel;
@@ -413,6 +414,7 @@ public final class PathsCustomizer extends javax.swing.JPanel {
                 cpModel.setElementAt(element, index - mpModel.getSize() - 1);
             }
             active = 0;
+            previousActive = 0;
         }
 
         @Override
@@ -423,6 +425,7 @@ public final class PathsCustomizer extends javax.swing.JPanel {
                 cpModel.removeElementAt(index - mpModel.getSize() - 1);
             }
             active = 0;
+            previousActive = 0;
         }
 
         @Override
@@ -433,21 +436,34 @@ public final class PathsCustomizer extends javax.swing.JPanel {
                 cpModel.insertElementAt(element, index - mpModel.getSize());
             }
             active = 0;
+            previousActive = 0;
         }
 
         @Override
         public void addElement(Object element) {
-            if (active == MP_ACTIVE) {
-                mpModel.addElement(element);
-            } else {
-                cpModel.addElement(element);
-            }
+            switch(active) {
+                case CP_ACTIVE:
+                    cpModel.addElement(element);
+                    previousActive = active;
+                    break;
+                case MP_ACTIVE:
+                    mpModel.addElement(element);
+                    previousActive = active;
+                    break;
+                default:
+                    if (previousActive == MP_ACTIVE) {
+                        mpModel.addElement(element);
+                    } else {
+                        cpModel.addElement(element);
+                    }
+            }       
             active = 0;
         }
 
         @Override
         public boolean removeElement(Object obj) {
             active = 0;
+            previousActive = 0;
             return mpModel.removeElement(obj) || cpModel.removeElement(obj);
         }
 
@@ -456,6 +472,7 @@ public final class PathsCustomizer extends javax.swing.JPanel {
             mpModel.removeAllElements();
             cpModel.removeAllElements();
             active = 0;
+            previousActive = 0;
         }
 
         @Override
@@ -481,6 +498,7 @@ public final class PathsCustomizer extends javax.swing.JPanel {
         @Override
         public Object set(int index, Object element) {
             active = 0;
+            previousActive = 0;
             return index <= mpModel.getSize() ? mpModel.set(index, element) : cpModel.set(index - mpModel.getSize() - 1, element);
         }
 
@@ -489,16 +507,27 @@ public final class PathsCustomizer extends javax.swing.JPanel {
             switch(active) {
                 case CP_ACTIVE:
                     cpModel.add(Math.max(index - mpModel.getSize() - 1, 0), element);
+                    previousActive = active;
                     break;
                 case MP_ACTIVE:
                     mpModel.add(Math.min(index, mpModel.getSize()), element);
+                    previousActive = active;
                     break;
                 default:
-                    if (index <= mpModel.getSize()) {
-                        mpModel.add(index, element);
-                    } else {
-                        cpModel.add(index - mpModel.getSize() - 1, element);
-                    }
+                    switch(previousActive) {
+                        case CP_ACTIVE:
+                            cpModel.add(Math.max(index - mpModel.getSize() - 1, 0), element);
+                            break;
+                        case MP_ACTIVE:
+                            mpModel.add(Math.min(index, mpModel.getSize()), element);
+                            break;
+                        default:
+                            if (index <= mpModel.getSize()) {
+                                mpModel.add(index, element);
+                            } else {
+                                cpModel.add(index - mpModel.getSize() - 1, element);
+                            }
+                    }                    
             }
             active = 0;
         }
@@ -506,6 +535,7 @@ public final class PathsCustomizer extends javax.swing.JPanel {
         @Override
         public Object remove(int index) {
             active = 0;
+            previousActive = 0;
             return index < mpModel.getSize()
                     ? mpModel.remove(index)
                     : index == mpModel.getSize() ? null : cpModel.remove(index - mpModel.getSize() - 1);
@@ -514,6 +544,7 @@ public final class PathsCustomizer extends javax.swing.JPanel {
         @Override
         public void clear() {
             active = 0;
+            previousActive = 0;
             mpModel.clear();
             cpModel.clear();
         }

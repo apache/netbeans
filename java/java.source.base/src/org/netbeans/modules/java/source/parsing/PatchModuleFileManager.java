@@ -23,6 +23,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -33,10 +34,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import javax.tools.FileObject;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
+
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -213,16 +216,18 @@ final class PatchModuleFileManager implements JavaFileManager {
             final PatchLocation pl = PatchLocation.cast(location);
             final ModuleLocation bin = pl.getBin();
             final ModuleLocation src = pl.getSrc();
+            final Set<JavaFileObject.Kind> binKinds = EnumSet.copyOf(kinds);
+            binKinds.remove(JavaFileObject.Kind.SOURCE);
             if (bin == null) {
                 return src == null ?
                         Collections.emptyList() :
                         srcDelegate.list(src, packageName, kinds, recurse);
             } else {
                 if (src == null) {
-                    return binDelegate.list(bin, packageName, kinds, recurse);
+                    return binDelegate.list(bin, packageName, binKinds, recurse);
                 } else {
                     final List<Iterable<JavaFileObject>> res = new ArrayList<>(2);
-                    res.add(binDelegate.list(bin, packageName, kinds, recurse));
+                    res.add(binDelegate.list(bin, packageName, binKinds, recurse));
                     res.add(srcDelegate.list(src, packageName, kinds, recurse));
                     return Iterators.chained(res);
                 }

@@ -15,7 +15,5 @@
 # specific language governing permissions and limitations
 # under the License.
 8BFEBCD4B39B87BBE788B4EECED068C8DBE75822 com.amazonaws:aws-java-sdk:1.2.1
-5043BFEBC3DB072ED80FBD362E7CAF00E885D8AE commons-logging:commons-logging:1.1.1
-FD32786786E2ADB664D5ECC965DA47629DCA14BA commons-codec:commons-codec:1.3
 3D1D918F32709E33BA7DDB2C4E8D1C543EBE713E org.apache.httpcomponents:httpclient:4.1.1
 33FC26C02F8043AB0EDE19EADC8C9885386B255C org.apache.httpcomponents:httpcore:4.1

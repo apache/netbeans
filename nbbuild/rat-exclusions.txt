@@ -115,6 +115,7 @@ java/java.j2semodule/src/org/netbeans/modules/java/j2semodule/ui/resources/modul
 java/java.platform.ui/src/org/netbeans/modules/java/platform/resources/templates/javaplatform.xml
 java/java.project.ui/src/org/netbeans/modules/java/project/ui/resources/*.template
 java/java.source/src/org/netbeans/modules/**/*.template
+groovy/gradle/src/org/netbeans/modules/gradle/newproject/*.template
 ### user templates for mercurial commits, etc.
 ide/mercurial/src/org/netbeans/modules/mercurial/util/log*
 ide/properties/src/org/netbeans/modules/properties/sample.properties.template
@@ -170,7 +171,6 @@ java/java.api.common/src/org/netbeans/modules/java/api/common/project/ui/customi
 apisupport/apisupport.installer/src/org/netbeans/modules/apisupport/installer/resources/licenses/**
 ### companion files for CDDL licensed binaries
 profiler/lib.profiler/release/lib/deployed/**/*.map
-platform/o.n.core/licenses/**
 ### A prefix that is added to license file
 nbbuild/license-dialog-stub.txt
 nbbuild/notice-stub.txt

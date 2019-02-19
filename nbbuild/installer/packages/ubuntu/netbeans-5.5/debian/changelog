@@ -1,0 +1,259 @@
+netbeans5.5 (5.5.1-2) gutsy; urgency=low
+
+  * Fix logic in postinstall step for IDE package. It patches netbeans.conf 
+    with netbeans_jdkhome pointing to Sun JDK 6 or 5.
+  * debian/rules 'clean' target delete auxiliary files generated during package build
+
+ -- Marek Slama <marek.slama@sun.com>  Mon, 22 Jun 2007 14:11:22 +0200
+
+netbeans5.5 (5.5.1-1) gutsy; urgency=low
+
+  * Updated to NetBeans 5.5.1
+  * Postinstall step for IDE package patches netbeans.conf with netbeans_jdkhome
+    pointing to Sun JDK 6 or 5.
+  * [Daniel Holbach]
+    - debian/netbeans5.5.poinst: don't die, if no alternatives exist.
+
+ -- Marek Slama <marek.slama@sun.com>  Mon, 4 Jun 2007 14:11:22 +0200
+
+netbeans5.5 (5.5-2) feisty; urgency=low
+
+  [ Daniel Holbach ]
+
+  * debian/rules:
+    - DEB_SRCDIiR -> DEB_SRCDIR.
+
+  [ Tom Marble ]
+
+  * Updated ide-license.patch
+
+ -- Tom Marble <tom.marble@sun.com>  Fri, 20 Apr 2007 14:11:22 -0500
+
+netbeans5.5 (5.5-1) feisty; urgency=low
+
+  * Resolved licensing issue ("installer" no longer necessary)
+  * Corrected license reference for Swing Layout Extensions to LGPL 2.1
+    (for both the platform and IDE packages)
+  * Updated netbeans.desktop (added TryExec, removed duplicate Categories)
+  * Remove empty upstream build target files
+
+ -- Tom Marble <tom.marble@sun.com>  Tue, 17 Apr 2007 12:43:22 -0500
+
+netbeans5.5 (5.5-0.59) feisty; urgency=low
+
+  * Updated netbeans5.5.prerm to remove certain directories appropriately
+
+ -- Tom Marble <tom.marble@sun.com>  Thu, 15 Mar 2007 14:09:31 -0500
+
+netbeans5.5 (5.5-0.58) feisty; urgency=low
+
+  * Change rules to not clean debian/copyright even though it is generated
+
+ -- Tom Marble <tom.marble@sun.com>  Thu, 15 Mar 2007 08:47:57 -0500
+
+netbeans5.5 (5.5-0.57) feisty; urgency=low
+
+  * Removed md5sum comment from control
+  * Used Debian GPL reference in copyright for NetBeans platform third 
+    party code instead of the full GPL
+  * Removed lintian overrides for common-license-file-for-gpl
+  * Added netbeans5.5.prerm to remove files created by the installer
+    such that package removal is successful
+  * Added IDE HTML documents to debian/nb-docs so that doc-base will work
+    as expected
+  
+ -- Tom Marble <tom.marble@sun.com>  Thu, 15 Mar 2007 08:41:19 -0500
+
+netbeans5.5 (5.5-0.56) feisty; urgency=low
+
+  * Insure netbeans.conf.orig is added in rules (so that
+    upon removal this file is appropriately deleted)
+  * Added defensive tests to netbeans5.5.postinst
+  
+ -- Tom Marble <tom.marble@sun.com>  Mon, 12 Mar 2007 00:49:41 -0500
+
+netbeans5.5 (5.5-0.55) feisty; urgency=low
+
+  * Due to licensing concerns changed the IDE package "netbeans5.5"
+    to be just an installer package (requires the user to pre-download
+    the IDE tarball from the website).
+
+ -- Tom Marble <tom.marble@sun.com>  Tue,  6 Mar 2007 21:48:43 -0600
+
+netbeans5.5 (5.5-0.54) feisty; urgency=low
+
+  * Some deleted zip files cannot be deleted as they contain API doc. Fixed.
+  * Add javadoc URL to PKG_PREAMBLE
+
+ -- Marek Slama <mslama@netbeans.org>  Fri, 23 Feb 2007 12:50:00 +0100
+
+netbeans5.5 (5.5-0.53) feisty; urgency=low
+
+  * Added unzip to Build-Depends:
+  * Changed localization Suggests:
+  * removed unnecessary netbeans5.5.conffiles
+  * Updated README.Debian with comment about needing packed *.zip files
+
+ -- Tom Marble <tom.marble@sun.com>  Thu, 22 Feb 2007 11:33:12 -0600
+
+netbeans5.5 (5.5-0.52) feisty; urgency=low
+
+  * Added javadoc to doc package
+  * Register doc with doc-base
+
+ -- Marek Slama <mslama@netbeans.org>  Tue, 20 Feb 2007 19:15:00 +0100
+
+netbeans5.5 (5.5-0.51) feisty; urgency=low
+
+  * Note for reviewers: netbeans5.5.prerm removes the alternative for
+    /usr/bin/netbeans (which is used so that a future netbeans6.0 package 
+    could co-exist with a netbeans5.5 package).
+  * Certain unnecessary *.dll files were removed
+  * Certain unnecessary *.zip files were removed
+  * The manpage should be fixed
+  * Worked around an apparent cdbs bug to clean *.cdbs-config_list files
+  * Added note in README.Debian to explain why certain *.exe files are needed
+  * Changed release in changelog to feisty
+  * The new netbeans5.5-doc package has been added
+  * Added upstream doc source to copyright (PKG_PREAMBLE)
+
+ -- Tom Marble <tom.marble@sun.com>  Thu, 15 Feb 2007 23:21:18 -0600
+
+netbeans5.5 (5.5-0.50) feisty; urgency=low
+
+  * Move netbeans.conf to /etc/netbeans5.5. Symlink to /etc/netbeans5.5/netbeans.conf
+    is created at original netbeans.conf location at /usr/share/netbeans/5.5/etc.
+  * Fix man page and desktop file so that it works correctly with alternatives.
+  * Add netbeans5.5.conffiles and add netbeans.conf to it.
+
+ -- Marek Slama <mslama@netbeans.org>  Wed, 14 Feb 2007 13:10:00 +0100
+
+netbeans5.5 (5.5-0.49) feisty; urgency=low
+
+  [ Marek Slama ]
+
+  * Add file nb5.5/config/productid with 'NBUBU' to identify Ubuntu package 
+    installation in autoupdate
+
+  [ Tom Marble ]
+
+  * Merged previous changes back into CVS
+  * Updated rules to copy the productid
+
+ -- Tom Marble <tom.marble@sun.com>  Sat, 10 Feb 2007 18:10:09 -0600
+
+netbeans5.5 (5.5-0.48) feisty; urgency=low
+
+  * Removed some debugging information from rules
+  * Changed target distribution to feisty for REVU
+
+  [ as yet unresolved TODO items ]
+
+  * registering/unpacking the documentation (/usr/share/doc)
+  * move/symlink certain configuration information to /etc
+  * refactoring redundant components insomuch as possible
+
+ -- Tom Marble <tom.marble@sun.com>  Thu,  8 Feb 2007 00:32:32 -0600
+
+netbeans5.5 (5.5-0.47) feisty; urgency=low
+
+  * Added rsync to Build-Depends:
+  * Fixed IDE localization packages (missing many files)
+  * Add overrides for localization packages
+
+ -- Tom Marble <tom.marble@sun.com>  Thu,  8 Feb 2007 00:15:14 -0600
+
+netbeans5.5 (5.5-0.46) feisty; urgency=low
+
+  * Insure platform script harness/launchers/app.sh is executable
+  * Corrected placement of DISTRIBUTION.txt for the platform package
+  * Removed unnecesary netbeans5.5-platform.postrm
+
+ -- Tom Marble <tom.marble@sun.com>  Wed,  7 Feb 2007 23:52:32 -0600
+
+netbeans5.5 (5.5-0.45) feisty; urgency=low
+
+  * Created lists of files to move (instead of copying/deleting)
+  * Began separation of localized files
+
+ -- Tom Marble <tom.marble@sun.com>  Wed,  7 Feb 2007 23:13:27 -0600
+
+netbeans5.5 (5.5-0.44) feisty; urgency=low
+
+  * Included tarball.mk to unpack the upstream tarballs
+  * Included simple-patchsys.mk to fix spelling error as a patch
+  * Added variables to handle package names and directories
+  * Leveraged DEB_INSTALL_DIRS_pkg to create installation directories
+  * Moved one time confiration work to common-build-indep::
+  * Broke installation into two package specific install/% targets
+  * No longer need extra/ directory as netbeans.desktop moved to debian/
+
+ -- Tom Marble <tom.marble@sun.com>  Wed,  7 Feb 2007 16:31:41 -0600
+
+netbeans5.5 (5.5-0.43) feisty; urgency=low
+
+  * Concentrated debian/copyright work in debian/copyright-files
+  * Migrate to cdbs
+  
+ -- Tom Marble <tom.marble@sun.com>  Wed,  7 Feb 2007 06:33:52 -0600
+
+netbeans5.5 (5.5-0.42) feisty; urgency=low
+
+  * Included upstream tarballs in orig file
+
+ -- Tom Marble <tom.marble@sun.com>  Tue,  6 Feb 2007 15:35:59 -0600
+
+netbeans5.5 (5.5-0.41) feisty; urgency=low
+
+  * removed netbeans5.5-platform.postinst which is no longer necessary
+  * fixed upstream spelling error in copyright file (removed override)
+  * Now removing alternative in prerm instead of postrm
+  
+ -- Tom Marble <tom.marble@sun.com>  Tue, 30 Jan 2007 13:58:21 -0600
+
+netbeans5.5 (5.5-0.4) feisty; urgency=low
+
+  * Fix alternatives - man page is installed using alternatives. netbeans.desktop is added
+    to alternatives.
+
+ -- Marek Slama <mslama@netbeans.org>  Tue, 30 Jan 2007 14:11:00 +0100
+
+netbeans5.5 (5.5-0.3) feisty; urgency=low
+
+  * Remove --verbose from netbeans5.5.postinst and netbeans5.5.postrm in command
+    update-alternatives.
+  * Modify dependency of netbeans5.5-platform - changed from bin to jre.
+  * netbeans5.5 suggests change | to , to be able to install both versions of java sources
+    as with Synaptic Package Manager it is possible to select only one altarnative using
+    Suggests submenu when | is used.
+
+ -- Marek Slama <mslama@netbeans.org>  Fri, 26 Jan 2007 16:50:00 +0100
+
+netbeans5.5 (5.5-0.2) feisty; urgency=low
+
+  * Non-maintainer upload
+  * Fixed dependency bugs in control
+
+ -- Tom Marble <tom.marble@sun.com>  Thu, 25 Jan 2007 14:23:27 -0600
+
+netbeans5.5 (5.5-0.1) feisty; urgency=low
+
+  [ Trung Duc Tran ]
+  
+  * NetBeans specific packaging proposals
+  * Initial packaging for Debian
+
+  [ Daniel Baumann ]
+  
+  * Initial packaging for Debian
+
+  [ Marek Slama ]
+
+  * Revised packaging
+
+  [ Tom Marble ]
+
+  * Packaging review and publication
+
+ -- Tom Marble <tom.marble@sun.com>  Thu, 25 Jan 2007 12:29:06 -0600
+

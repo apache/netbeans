@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=NetBeans
+Comment=Integrated Development Environment
+TryExec=/usr/bin/netbeans
+Exec=/usr/bin/netbeans
+Icon=/usr/share/netbeans/5.5/nb5.5/netbeans.png
+Categories=Development;Java;IDE;
+Terminal=false
+Type=Application
+StartupNotify=true

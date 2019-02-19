@@ -1,0 +1,17 @@
+sh build-nb --help
+build-nb [-h|--help|-a architecture| --arch architecture| -u ditribution_zip|--unzip ditribution_zip
+    |-d source_dir|--dir source_dir|-c|--compress|-w work_dir|--work work_dir]
+Build NetBeans packages for the Java Desktop System Rel 3 for the Solaris Operating Environment
+   -h, --help                   display this help
+   --arch, -a architecture      architecture, for which the packages will be constructed
+                                the default is both sparc and i386 architectures
+   --unzip, -u ditribution_zip  unzip the ZIP Netbeans distribution into the source directory
+                                the default is NetBeans--.zip in working directory
+                                where env. variables MILESTONE and BUILD_DEV_NUMBER should be defined
+   --dir,-d source_dir          the NetBeans source directory, the default is /var/tmp
+                                so the NetBeans source distribution is in /var/tmp/netbeans
+   --gnome,-g gnome_dir         the source directory of the GNOME related resources
+                                default is the current directory
+   --compress, -c               tar and gzip the contructed packages
+   --work,-w work_dir           the working directory, where the packages will be placed
+                                default is the current directory

@@ -1,0 +1,25 @@
+This directory contains project to build NetBeans IDE packages for Ubuntu.
+
+Prerequisities:
+Standard packages for building packages must be installed (debhelper, fakeroot).
+
+Packages are arch independent so it is possible to generate just one set of packages
+for both i386 and amd64 arch.
+
+make.sh invokes dpkg-buildpackage to build IDE and Platform packages.
+
+clean.sh cleans temporary files created by building process in current directory and in debian
+directory.
+
+Source for building process (for building binary packages) are tar.gz files of IDE and Platform
+builds in current directory. Javadoc and documentation. It is set in file debian/rules.
+nb55-jumbodocpack.zip
+netbeans-5_5_1-javadoc.tar.gz
+netbeans-5_5_1-platform.tar.gz
+netbeans-5_5_1.tar.gz
+
+Packages are built in parent directory. (This is default behavior of dpkg-buildpackage and I did not find
+any way how to change it.
+
+General description of project files/generated package files can be found at
+http://www.debian.org/doc/manuals/maint-guide/index.en.html#contents

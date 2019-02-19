@@ -1,0 +1,313 @@
+#!/bin/bash
+#
+# Script: nb_buildnbrpm
+#
+# Author: mk <martin.krauskopf at sun.com>
+# Editor: VIM - Vi IMproved 6.3 (2004 June 7, compiled Jun 26 2004 15:03:59)
+#
+# Helps with building NetBeans RPMs for JDS. Customize following variables to
+# your environment.
+
+# Enter value that apply to your environment
+
+# default where to store final RPMs (can be overrided by parameter)
+TARGET_DIR="$PWD/nbrpm"
+
+# storage used for unzipped distribution(s)
+NB_BLD_TMP=/tmp/netbeans-rpms/netbeans-building
+
+# debuggin options
+# (un)comment to (don't) use the option
+#NOBUILD="-nobuild"
+#NOCLEAN="-noclean"
+
+# What to do
+CREATE_PLATFORM5=false
+CREATE_IDE5_MODULES=false
+CREATE_BRANDING=false
+CREATE_ENTERPRISE1=false
+CREATE_IDE=false
+CREATE_MOBILITY=false
+
+# functions ================================================================== #
+
+function cleanUp()
+{
+  pinfo "Deleting tmp directory \"$NB_BLD_TMP\"...."
+  rm -r "$NB_BLD_TMP"
+}
+
+function cleanExit()
+{
+  cleanUp
+  pinfo "Exiting with code $1"
+  exit $1
+}
+
+function usage()
+{
+  echo "Usage: `basename $0` [-h|--help] [-n nb_distibution|--nbdist nb_distibution] [-m|--mobility mobility_pack] [-t|--wtk wtk_archive_zip] [-w|--work work_dir]"
+  echo ""
+  echo "Builds RMP packages"
+  echo "  --help     |-h                  display this help"
+  echo "  --nbdist   |-n nb_distibution   ZIP file containing NetBeans distribution"
+  echo "                                  (e.g. latest daily build)"
+  echo "  --mobility |-m mobility_pack    ZIP file containing mobility pack"
+  echo "                                  (something like mobility-latest.zip)"
+  echo "  --wtk      |-w wtk_archive_zip  ZIP file containing wtk emulator archive"
+  echo "                                  (something like wtk_lin-latest.zip)"
+  echo "  --target   |-t work_dir         the target directory where the packages will be placed. Default is the current directory."
+  exit 2
+}
+
+function pinfo()
+{
+  echo "INFORMATION: $1"
+}
+
+function perror()
+{
+  echo -e "\nERROR: $1"
+}
+
+function exitIfNotDir()
+{
+  if [ ! -d "$1" ]; then
+    pinfo "Directory \"$1\" doesn't exist!";
+    cleanExit 3
+  fi
+}
+
+unzipped=0
+function unzipNB()
+{
+  if [ $unzipped -ne 1 ]; then
+    mkdir -p $NB_BLD_TMP
+    pinfo "Unzipping \"$NB_BIN_ZIP\" to \"$NB_BLD_TMP\"..."
+    unzip -q $NB_BIN_ZIP -d $NB_BLD_TMP || cleanExit 4
+    unzipped=1
+    NB_BIN=$NB_BLD_TMP/netbeans
+    exitIfNotDir "$NB_BIN"
+    # remove files which are not acceptable or needed by JDS
+    # XXX nbexec.cmd gone anyway
+    rm $NB_BIN/platform5/lib/nbexec.cmd \
+       $NB_BIN/platform5/lib/nbexec.exe \
+       $NB_BIN/platform5/update_tracking/* \
+       $NB_BIN/enterprise1/update_tracking/* \
+       $NB_BIN/ide5/update_tracking/* \
+       $NB_BIN/nb4.1/update_tracking/* \
+       $NB_BIN/platform5/modules/ext/jh-2.0_02.jar || cleanExit 5
+  fi
+}
+
+# pass argument_name and its value
+function checkArgument()
+{
+  if [ -z "$1" ]; then
+    perror "Option \"$2\" requires an argument"
+    usage
+  fi
+}
+
+function processParams()
+{
+  while [ $# != 0 ]; do
+    #pinfo "processing param: $1"
+    case "$1" in
+      --help|-h)
+          usage
+          ;;
+      --nbdist|-n)
+        checkArgument "$2" "$1"
+        NB_BIN_ZIP=$2
+        CREATE_PLATFORM5=true
+        CREATE_IDE5_MODULES=true
+        CREATE_BRANDING=true
+        CREATE_ENTERPRISE1=true
+        CREATE_IDE=true
+        shift
+        ;;
+      --mobility|-m)
+        checkArgument "$2" "$1"
+        MOBILITY_ZIP=$2
+        CREATE_MOBILITY=true
+        shift
+        ;;
+      --wtk|-w)
+        checkArgument "$2" "$1"
+        WTK_LIN_ZIP=$2
+        CREATE_MOBILITY=true
+        shift
+        ;;
+      --target|-t)
+        checkArgument "$2" "$1"
+        TARGET_DIR=$2/nbrpm
+        shift
+        ;;
+      --) break ;;
+      *)
+        perror "\"$1\": invalid argument"
+        usage
+        ;;
+    esac
+    shift
+  done
+}
+
+function checkFile()
+{
+  if [ ! -f "$1" ]; then
+    perror "\"$1\" doesn't exist or is not a regular file.\n"
+    cleanExit 6
+  fi
+}
+
+function checkParams()
+{
+
+
+  if [ -z "$NB_BIN_ZIP" -a -z "$MOBILITY_ZIP" -a -z "$WTK_LIN_ZIP" ]; then
+    echo "Must be defined at least one source."
+    usage
+  fi
+  if [ -n "$MOBILITY_ZIP" -a -n "$WTK_LIN_ZIP" ]; then
+    checkFile "$MOBILITY_ZIP"
+    checkFile "$WTK_LIN_ZIP"
+  fi
+  if [ -n "$NB_BIN_ZIP" ]; then
+    checkFile "$NB_BIN_ZIP"
+  fi
+  if [ -d "$TARGET_DIR" ]; then
+    perror "Directory \"$TARGET_DIR\" must not exist."
+    cleanExit 7
+  fi
+}
+
+# script phase =============================================================== #
+
+SPEC_DIR="../spec"
+
+processParams $@
+checkParams $@
+
+EOPTIONS="$NOCLEAN $NOBUILD"
+
+# Backup previous build
+#if [ -d $NB_BLD_TMP ]; then
+  #pinfo "Backuping old build to $NB_BLD_TMP.bck"
+  #[ -d $NB_BLD_TMP.bck ] && rm -r $NB_BLD_TMP.bck
+  #mv $NB_BLD_TMP $NB_BLD_TMP.bck
+#fi
+
+if [ ! -d $SPEC_DIR ]; then
+  perror "The \"$SPEC_DIR\" directory doesn't exist. Be sure you are running the script directly from it's directory.";
+  cleanExit 8
+fi
+
+# perl script must be run from the 'spec' dir - because of 'erpm_common.spec' file
+cd $SPEC_DIR
+mkdir -p $TARGET_DIR
+exitIfNotDir $TARGET_DIR
+pinfo "Producing RPMs into \"$PWD/`basename $TARGET_DIR`\"..."
+
+# PLATFORM5 cluster RPM
+if [ "$CREATE_PLATFORM5" = "true" ]; then
+  pinfo "Creating RPM for platform5 cluster"
+  unzipNB
+  PLATFORM5_SPEC_FILE="$SPEC_DIR/SUNWnetbeans-platform5.spec"
+  pinfo "perl ../bin/easy_rpm.pl $EOPTIONS -define nb_destdir $NB_BIN -targetdir $TARGET_DIR $PLATFORM5_SPEC_FILE"
+  perl ../bin/easy_rpm.pl $EOPTIONS -define nb_destdir $NB_BIN -targetdir $TARGET_DIR $PLATFORM5_SPEC_FILE
+else
+  pinfo "Skipping RPM creation for platform5 cluster"
+fi
+
+# IDE5 cluster RPM
+if [ "$CREATE_IDE5_MODULES" = "true" ]; then
+  pinfo "Creating RPM for ide5 cluster"
+  unzipNB
+  IDE5_MODULES_SPEC_FILE="$SPEC_DIR/SUNWnetbeans-ide5-modules.spec" # depends on PLATFORM5_SPEC_FILE
+  pinfo "perl ../bin/easy_rpm.pl $EOPTIONS -define nb_destdir $NB_BIN -targetdir $TARGET_DIR $IDE5_MODULES_SPEC_FILE"
+  perl ../bin/easy_rpm.pl $EOPTIONS -define nb_destdir $NB_BIN -targetdir $TARGET_DIR $IDE5_MODULES_SPEC_FILE
+else
+  pinfo "Skipping RPM creation for ide5 cluster"
+fi
+
+
+# BRANDING cluster RPM
+if [ "$CREATE_BRANDING" = "true" ]; then
+  pinfo "Creating RPM for branding cluster"
+  unzipNB
+  BRANDING_SPEC_FILE="$SPEC_DIR/SUNWnetbeans-nb-branding.spec" # depends on IDE5_MODULES_SPEC_FILE
+  pinfo "perl ../bin/easy_rpm.pl $EOPTIONS -define nb_destdir $NB_BIN -targetdir $TARGET_DIR $BRANDING_SPEC_FILE"
+  perl ../bin/easy_rpm.pl $EOPTIONS -define nb_destdir $NB_BIN -targetdir $TARGET_DIR $BRANDING_SPEC_FILE
+else
+  pinfo "Skipping RPM creation for branding cluster"
+fi
+
+
+# ENTERPRISE1 cluster RPM
+if [ "$CREATE_ENTERPRISE1" = "true" ]; then
+  pinfo "Creating RPM for enterprise1 cluster"
+  unzipNB
+  ENTERPRISE1_SPEC_FILE="$SPEC_DIR/SUNWnetbeans-enterprise1.spec" # depends on IDE5_MODULES_SPEC_FILE
+  pinfo "perl ../bin/easy_rpm.pl $EOPTIONS -define nb_destdir $NB_BIN -targetdir $TARGET_DIR $ENTERPRISE1_SPEC_FILE"
+  perl ../bin/easy_rpm.pl $EOPTIONS -define nb_destdir $NB_BIN -targetdir $TARGET_DIR $ENTERPRISE1_SPEC_FILE
+else
+  pinfo "Skipping RPM creation for enterprise1 cluster"
+fi
+
+
+# IDE cluster RPM
+if [ "$CREATE_IDE" = "true" ]; then
+  pinfo "Creating RPM for NB branding cluster"
+  unzipNB
+  # Ugly hack - stops muttering about missing dirs
+  # (TODO - there is a better way, at least copy there icon)
+  [ -d "$NB_BIN/applications" ] || mkdir "$NB_BIN/applications"
+  [ -d "$NB_BIN/pixmaps" ] || mkdir "$NB_BIN/pixmaps"
+  IDE_SPEC_FILE="$SPEC_DIR/SUNWnetbeans-ide.spec" # depends on IDE5_MODULES_SPEC_FILE
+  pinfo "perl ../bin/easy_rpm.pl $EOPTIONS -define nb_destdir $NB_BIN -targetdir $TARGET_DIR $IDE_SPEC_FILE"
+  perl ../bin/easy_rpm.pl $EOPTIONS -define nb_destdir $NB_BIN -targetdir $TARGET_DIR $IDE_SPEC_FILE
+else
+  pinfo "Skipping RPM creation for NB branding cluster"
+fi
+
+
+# MOBILITY cluster RPM
+if [ "$CREATE_MOBILITY" = "true" ]; then
+  pinfo "Creating RPM for mobility cluster"
+
+  # decompressing archives
+  echo "Unzipping $MOBILITY_ZIP..."
+  unzip -q $MOBILITY_ZIP -d $NB_BLD_TMP || cleanExit 9
+  echo "Unzipping $WTK_LIN_ZIP..."
+  unzip -q $WTK_LIN_ZIP -d $NB_BLD_TMP || cleanExit 10
+
+  MOBILITY=$NB_BLD_TMP/mobility
+  exitIfNotDir "$MOBILITY"
+  # remove files which are not acceptable or needed by JDS
+  rm $MOBILITY/update_tracking/* || cleanExit 11
+
+  WTK_LIN=$NB_BLD_TMP/wtk_lin
+  exitIfNotDir "$WTK_LIN"
+
+  echo "cp -a $WTK_LIN/* $MOBILITY"
+  cp -a $WTK_LIN/* $MOBILITY
+  echo "cp -a $MOBILITY $NB_BIN"
+  cp -a $MOBILITY $NB_BIN
+
+  MOBILITY_SPEC_FILE="$SPEC_DIR/SUNWnetbeans-mobility.spec" # depends on IDE_SPEC_FILE
+  pinfo "perl ../bin/easy_rpm.pl $EOPTIONS -define nb_destdir $NB_BIN -targetdir $TARGET_DIR $MOBILITY_SPEC_FILE"
+  perl ../bin/easy_rpm.pl $EOPTIONS -define nb_destdir $NB_BIN -targetdir $TARGET_DIR $MOBILITY_SPEC_FILE
+else
+  pinfo "Skipping RPM creation for mobility cluster"
+fi
+
+# clean up
+
+cleanUp
+
+echo
+pinfo "Produced RPMs are stored in \"$TARGET_DIR\". Listing follows..."
+ls -l $TARGET_DIR
+

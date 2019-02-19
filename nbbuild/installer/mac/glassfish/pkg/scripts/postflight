@@ -1,0 +1,73 @@
+#!/bin/sh -x
+
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+set -e
+
+#update netbeans.conf
+script_dir=`dirname "$0"`
+
+. "$script_dir"/env.sh
+
+"$script_dir"/add_gf.sh "$2/../$NETBEANS_INSTALL_DIR" "$2"
+
+"$script_dir"/unpack200.sh "$2" "$2"
+
+cd "$2"
+
+echo Configuring GlassFish in `pwd`
+
+ant_bin=./lib/ant/bin/ant
+java_exe=/System/Library/Frameworks/JavaVM.framework/Versions/1.5/Home/bin/java
+
+getPort() {
+   basePort=$1
+   freePort=`$java_exe -jar "$script_dir"/getport.jar $basePort`
+   echo $freePort
+}
+
+if [ -f $ant_bin ]
+then
+  echo Ant found:
+  ls -l $ant_bin
+  if ! [ -x $ant_bin ]
+  then
+    echo Making ant executable: $ant_bin
+    chmod a+x $ant_bin
+  fi
+
+  admin_port=`getPort 4848`
+  instance_port=`getPort 8080`
+  orb_port=`getPort 3700`
+  imq_port=`getPort 7676`
+  https_port=`getPort 8181`
+
+  $ant_bin -f setup.xml -Dadmin.port=$admin_port -Dinstance.port=$instance_port -Dorb.port=$orb_port -Dimq.port=$imq_port -Dhttps.port=$https_port
+else
+  echo No ant found: $ant_bin
+fi
+
+"$script_dir"/perm.sh
+
+if [ -d "/Library/Receipts/glassfish-v2ur2.pkg" ] ; then
+    rm -rf "/Library/Receipts/glassfish-v2ur2.pkg"
+fi
+
+#Fix for 132115
+sed -i -e "s/never/TUE/" ./updatecenter/config/config.xml

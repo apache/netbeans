@@ -1,0 +1,18 @@
+* nb-ide-group
+    * nb-platform
+    * nb-base
+    * nb-javase
+    * nb-addons-group
+        * nb-javaee
+        * nb-javame
+        * nb-ccpp
+        * nb-soa
+        * nb-uml
+        * nb-ruby
+        * nb-php
+* runtimes-group
+    * glassfish
+    * tomcat
+    * openesb
+    * sjsam
+    * wtk

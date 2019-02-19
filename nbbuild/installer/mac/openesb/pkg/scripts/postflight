@@ -1,0 +1,43 @@
+#!/bin/sh -x
+
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+set -e
+
+script_dir=`dirname "$0"`
+
+"$script_dir"/unpack200.sh "$2" "$2"
+
+cd "$2"
+cd ..
+
+glassfish_dir=`pwd`
+# http://www.netbeans.org/issues/show_bug.cgi?id=125358
+# run the jbi core installer first - temporary solution 
+#mv "$glassfish_dir/addons/jbi-core-installer.jar" "$glassfish_dir/jbi-core-installer.jar"
+#/System/Library/Frameworks/JavaVM.framework/Versions/1.5/Home/bin/java -jar "$glassfish_dir/jbi-core-installer.jar" "$glassfish_dir" install
+#rm "$glassfish_dir/jbi-core-installer.jar"
+
+./bin/asadmin install-addon "$glassfish_dir/addons/jbi_components_installer.jar"
+
+"$script_dir"/perm.sh
+
+if [ -d "/Library/Receipts/openesb.pkg" ] ; then
+    rm -rf "/Library/Receipts/openesb.pkg"
+fi

@@ -69,4 +69,4 @@ nb/ide.launcher/external/launchers-10.0.zip
 webcommon/libs.oracle.jsparser/build/webcommon/**
 
 #only used to build installers
-installer/external/*
+nbbuild/installer/external/*

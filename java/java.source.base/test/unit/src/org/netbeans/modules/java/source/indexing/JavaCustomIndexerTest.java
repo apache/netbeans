@@ -20,7 +20,11 @@ package org.netbeans.modules.java.source.indexing;
 
 import java.io.File;
 import java.io.IOException;
-import static org.junit.Assert.*;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.api.java.source.TestUtilities;
@@ -28,6 +32,7 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.modules.parsing.spi.indexing.ErrorsCache;
+import org.netbeans.spi.java.queries.BinaryForSourceQueryImplementation2;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -37,12 +42,35 @@ import org.openide.filesystems.FileUtil;
  * @author lahvac
  */
 public class JavaCustomIndexerTest extends NbTestCase {
+    private BinQueryImpl2 binQuery2;
 
     public JavaCustomIndexerTest(String name) {
         super(name);
     }
 
     private FileObject src;
+
+    public void testCopyTheClassInsteadOfCompiling() throws Exception {
+        FileObject classesRoot = FileUtil.createFolder(src.getParent(), "mockclasses");
+
+        FileObject testFile = FileUtil.createData(src, "test2/NoCompileTest.java");
+        TestUtilities.copyStringToFile(testFile, "package test2; public class Test { error!; }");
+
+        FileObject testClass = FileUtil.createData(classesRoot, "test2/NoCompileTest.class");
+        try (
+            OutputStream os = testClass.getOutputStream();
+            InputStream is = getClass().getResourceAsStream("/test2/NoCompileTest.class")
+        ) {
+            assertNotNull("test2/NoCompileTest found", is);
+            FileUtil.copy(is, os);
+        }
+
+        binQuery2.root = classesRoot.toURL();
+        binQuery2.source = src.toURL();
+
+        SourceUtilsTestUtil.compileRecursively(src);
+        assertFalse("Nobody shall notice there is an error", ErrorsCache.isInError(src, true));
+    }
 
     public void testMoveClassLivingElseWhere() throws Exception {
         FileObject testFile = FileUtil.createData(src, "test/Test.java");
@@ -138,7 +166,8 @@ public class JavaCustomIndexerTest extends NbTestCase {
     
     @Override
     protected void setUp() throws Exception {
-        SourceUtilsTestUtil.prepareTest(new String[0], new Object[0]);
+        binQuery2 = new BinQueryImpl2();
+        SourceUtilsTestUtil.prepareTest(new String[0], binQuery2);
         
         clearWorkDir();
         File wdFile = getWorkDir();
@@ -170,5 +199,32 @@ public class JavaCustomIndexerTest extends NbTestCase {
         FileObject testFile = src.getFileObject(pathAndName);
         assertNotNull(testFile);
         testFile.delete();
+    }
+
+    public static final class BinQueryImpl2 implements BinaryForSourceQueryImplementation2<URL> {
+        URL source;
+        URL root;
+
+        @Override
+        public URL findBinaryRoots2(URL sourceRoot) {
+            if (source != null && source.equals(sourceRoot)) {
+                return root;
+            }
+            return null;
+        }
+
+        @Override
+        public URL[] computeRoots(URL result) {
+            return new URL[]{root};
+        }
+
+        @Override
+        public boolean computePreferBinaries(URL result) {
+            return true;
+        }
+
+        @Override
+        public void computeChangeListener(URL result, boolean add, ChangeListener l) {
+        }
     }
 }

@@ -79,6 +79,12 @@
             <include name="platform/javahelp/external/binaries-list"/>
         </manifest>
     </downloadbinaries>
+    <!--
+    nb-extra-files denotes directories/files, that are not packed for
+    distribution. The clusters are only used for local development/testing.
+    The files must not be included in distribution zip and also need to be
+    excluded from license analysis
+    -->
     <property name="nb-extra-files" value="test/**,extra/**"/>
 
     <echo message="Bootstrapping NetBeans-specific Ant extensions..."/>

@@ -79,6 +79,13 @@
             <include name="platform/javahelp/external/binaries-list"/>
         </manifest>
     </downloadbinaries>
+    <!--
+    nb-extra-files denotes directories/files, that are not packed for
+    distribution. The clusters are only used for local development/testing.
+    The files must not be included in distribution zip and also need to be
+    excluded from license analysis
+    -->
+    <property name="nb-extra-files" value="test/**,extra/**"/>
 
     <echo message="Bootstrapping NetBeans-specific Ant extensions..."/>
     <path id="bootstrap-cp">
@@ -442,8 +449,6 @@ Hg ID:    ${hg.id}
     <delete file="NetBeans-${buildnum}-build-extra-data.zip"/>
     <delete file="NetBeans-${buildnum}-javadoc-web.zip"/> <!-- XXX why? -->
     <delete file="NetBeans-${buildnum}-javadoc.zip"/> <!-- XXX why? -->
-
-    <property name="nb-extra-files" value="test/**,extra/**"/>
 
     <antcall target="zip-cluster-config" inheritall="true"/>
   </target>
@@ -1568,7 +1573,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         
         <delete dir="${netbeans.dest.dir}/licenses" />
         <mkdir dir="${netbeans.dest.dir}/licenses" />
-        
+
         <createlicensesummary licenseStub="${nb_all}/LICENSE" 
                               noticeStub="notice-stub.txt" 
                               report="${nb.build.dir}/createlicensesummary.xml" 
@@ -1578,6 +1583,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                               licenseTargetDir="${netbeans.dest.dir}/licenses"
                               notice="${nb.build.dir}/notice-temp"
                               binary="true"
+                              excludes="${nb-extra-files}"
         />
         
         <concat destfile="${netbeans.dest.dir}/NOTICE">

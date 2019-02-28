@@ -24,7 +24,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.queries.CompilerOptionsQuery;
 import org.netbeans.api.java.source.CompilationInfo;
-import org.netbeans.modules.java.hints.jdk.mapreduce.TreeUtilities;
+import org.netbeans.modules.java.hints.errors.Utilities;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
 import org.netbeans.spi.java.hints.Hint;
@@ -62,7 +62,7 @@ public class ConvertSwitchToRuleSwitch {
                 if (!wasDefault && ct.getExpression() == null) //fall-through from a case to default
                     return null;
             }
-            completesNormally = TreeUtilities.completesNormally(ctx.getInfo(), new TreePath(ctx.getPath(), ct));
+            completesNormally = Utilities.completesNormally(ctx.getInfo(), new TreePath(ctx.getPath(), ct));
             wasDefault = ct.getExpression() == null;
             wasEmpty = ct.getStatements().isEmpty();
         }
@@ -85,7 +85,7 @@ public class ConvertSwitchToRuleSwitch {
         protected void performRewrite(TransformationContext ctx) {
             TreePath tp = ctx.getPath();
             SwitchTree st = (SwitchTree) tp.getLeaf();
-            TreeUtilities.performRewriteRuleSwitch(ctx, tp, st);
+            Utilities.performRewriteRuleSwitch(ctx, tp, st);
         }
         
     }

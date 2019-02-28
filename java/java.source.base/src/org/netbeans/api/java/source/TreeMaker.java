@@ -1049,6 +1049,7 @@ public final class TreeMaker {
      * @param expression the expression which provides the value to be switched.
      * @param cases the list of cases, or an empty list.
      * @see com.sun.source.tree.SwitchExpressionTree
+     * @since 2.41
      */
     public Tree SwitchExpression(ExpressionTree expression, List<? extends CaseTree> cases) {
         return delegate.SwitchExpression(expression, cases);

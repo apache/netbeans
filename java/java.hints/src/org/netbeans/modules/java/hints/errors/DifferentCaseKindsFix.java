@@ -19,11 +19,9 @@
 package org.netbeans.modules.java.hints.errors;
 
 import com.sun.source.tree.CaseTree;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
-import com.sun.tools.javac.tree.JCTree.JCCase;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -31,7 +29,6 @@ import java.util.List;
 import java.util.Set;
 import org.netbeans.api.java.queries.CompilerOptionsQuery;
 import org.netbeans.api.java.source.CompilationInfo;
-import org.netbeans.modules.java.hints.jdk.mapreduce.TreeUtilities;
 import org.netbeans.modules.java.hints.spi.ErrorRule;
 import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.spi.editor.hints.Fix;
@@ -87,7 +84,7 @@ public class DifferentCaseKindsFix implements ErrorRule<Void> {
                             return null;
                         }
                     }
-                    completesNormally = TreeUtilities.completesNormally(info, new TreePath(treePath.getParentPath(), ct));
+                    completesNormally = Utilities.completesNormally(info, new TreePath(treePath.getParentPath(), ct));
                     wasDefault = ct.getExpression() == null;
                     wasEmpty = ct.getStatements().isEmpty();
                 }
@@ -138,7 +135,7 @@ public class DifferentCaseKindsFix implements ErrorRule<Void> {
         protected void performRewrite(TransformationContext ctx) {
             TreePath tp = ctx.getPath();
             Tree switchBlock = tp.getParentPath().getLeaf();
-            TreeUtilities.performRewriteRuleSwitch(ctx, tp, switchBlock);
+            Utilities.performRewriteRuleSwitch(ctx, tp, switchBlock);
         }
 
     } 

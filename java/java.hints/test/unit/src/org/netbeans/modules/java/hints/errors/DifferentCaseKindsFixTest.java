@@ -83,7 +83,7 @@ public class DifferentCaseKindsFixTest extends ErrorHintsTestBase {
                 + "         String result;\n"
                 + "         switch (p) {\n"
                 + "             case 1: result = \"1\"; break;\n"
-                + "             case 2 -> result = \"2\"; break;\n"
+                + "             case 2 -> result = \"2\";\n"
                 + "             default -> result = \"3\";\n"
                 + "         }\n"
                 + "     }\n"

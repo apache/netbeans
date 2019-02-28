@@ -117,8 +117,6 @@ import org.netbeans.modules.java.source.save.Reformatter;
 import org.netbeans.modules.java.source.transform.FieldGroupTree;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 
-import org.openide.util.Exceptions;
-
 /** Prints out a tree as an indented Java source program.
  */
 public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<Void, Void>, TrimBufferObserver {
@@ -1441,8 +1439,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         if (TreeShims.getValue(tree) != null) {
             needSpace();
             print((JCTree) TreeShims.getValue(tree));
-        }
-        if (tree.getLabel() != null) {
+        } else if (tree.getLabel() != null) {
             needSpace();
             print(tree.getLabel());
         }

@@ -22,6 +22,7 @@
 
 <project name="bootstrap" default="all" basedir=".">
     <property file="${basedir}/build.properties"/>
+    <property file="${basedir}/build-properties.properties"/>
     
     <target name="build" depends="init,-build"/>
     
@@ -320,14 +321,19 @@
 	<set property="weblogic.full.version" value="${weblogic.version}.0.0"/>
 
         <set property="glassfish.ml.appendix" value="-ml"/>
-	
+        <!--Not required for current installer, but nbi build fails if these are not set, need to investigate-->
+	<set property="glassfish-mod.release.number"      value="4.1.1"/>
+        <set property="glassfish-mod.milestone.number" value="0"/>
+        <set property="glassfish-mod.milestone.number.real" value="0"/>
+        <set property="glassfish-mod.build.number" value="01"/>
+        <!--
         <get
             src="${glassfish.builds.host}/java/re/glassfish/4.1.1/promoted/latest/archive/bundles/"
             dest="${temp.file}"/>
         <glassfish-buildnumber 
             file="${temp.file}" 
             prefix="glassfish-mod"/>
-        
+        -->
         <!-- product version: ${glassfish-mod.release.number}.${glassfish-mod.milestone.number}.${glassfish-mod.build.number} -->
         <echo message="Property glassfish-mod.release.number: ${glassfish-mod.release.number}"/>
         <echo message="Property glassfish-mod.milestone.number: ${glassfish-mod.milestone.number}"/>

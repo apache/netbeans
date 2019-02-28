@@ -83,5 +83,5 @@ fi
 
 rm -rf "$basename"/dist_en
 
-/usr/local/ant/bin/ant -f $basename/build.xml $target -Dlocales=$nb_locales -Dcommon.name=$commonname -Dprefix=$prefix -Dbuildnumber=$buildnumber -Dmac.sign.client=$mac_sign_client -Dmac.sign.user=$mac_sign_user -Dmac.sign.guid=$mac_sign_guid -Dbuild.jdk7=$build_jdk7 -Dbuild.jdk8=$build_jdk8 -Dbuild.jdk11=$build_jdk11 -Dgf_builds_host=$GLASSFISH_BUILDS_HOST -Djre_builds_host=$JRE_BUILDS_HOST -Djdk_builds_host=$JDK_BUILDS_HOST -Djre_builds_path=$JRE_BUILDS_PATH -Djdk7_builds_path=$JDK7_BUILDS_PATH -Djdk8_builds_path=$JDK8_BUILDS_PATH -Djdk11_builds_path=$JDK11_BUILDS_PATH -Dbinary_cache_host=$BINARY_CACHE_HOST
+ant -f $basename/build.xml $target -Dlocales=$nb_locales -Dcommon.name=$commonname -Dprefix=$prefix -Dbuildnumber=$buildnumber -Dmac.sign.client=$mac_sign_client -Dmac.sign.user=$mac_sign_user -Dmac.sign.guid=$mac_sign_guid -Dbuild.jdk7=$build_jdk7 -Dbuild.jdk8=$build_jdk8 -Dbuild.jdk11=$build_jdk11 -Dgf_builds_host=$GLASSFISH_BUILDS_HOST -Djre_builds_host=$JRE_BUILDS_HOST -Djdk_builds_host=$JDK_BUILDS_HOST -Djre_builds_path=$JRE_BUILDS_PATH -Djdk7_builds_path=$JDK7_BUILDS_PATH -Djdk8_builds_path=$JDK8_BUILDS_PATH -Djdk11_builds_path=$JDK11_BUILDS_PATH -Dbinary_cache_host=$BINARY_CACHE_HOST
 mv -f "$basename"/dist "$basename"/dist_en

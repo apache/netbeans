@@ -32,7 +32,6 @@ source ../../../../build-private.sh
 else
     echo "No build-private.sh file exist"
 fi
-sh init.sh | cat > build-private.properties
 ################################################################################
 # define the environment for running ant
 
@@ -172,8 +171,8 @@ if [ -z "$NB_FILES_PREFIX" ] && [ -n "$BASENAME_PREFIX" ] ; then
     NB_FILES_PREFIX="$BASENAME_PREFIX"
 fi
 
-
 run() {
+    
     ################################################################################
     # run the build
     ant build\
@@ -237,7 +236,8 @@ run() {
 }
 
 NB_BUILDS_HOST=${NB_BUILDS_HOST_EN}
-
+export NB_BUILDS_HOST
+sh init.sh | cat > build-private.properties
 run $*
 
 ################################################################################

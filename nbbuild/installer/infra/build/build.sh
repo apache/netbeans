@@ -238,6 +238,7 @@ run() {
 NB_BUILDS_HOST=${NB_BUILDS_HOST_EN}
 export NB_BUILDS_HOST
 sh init.sh | cat > build-private.properties
+cat build-private.properties
 run $*
 
 ################################################################################

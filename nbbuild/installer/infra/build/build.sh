@@ -226,6 +226,7 @@ run() {
 	    \"-Dmakedmg.ssh.keyfile=${MAKEDMG_MACOSX_SYSTEM_SSH_KEYFILE}\" \
 	    \"-Dmakedmg.ssh.keypass=${MAKEDMG_MACOSX_SYSTEM_SSH_PASSPHRASE}\" \
             \"-Dnbi.cache.dir=${CACHE_DIR}\" \
+            \"-Dnb.binary.name=${BINARY_NAME}\" \
             ${ADDITIONAL_PARAMETERS} \
             $*
             ERROR_CODE=$?

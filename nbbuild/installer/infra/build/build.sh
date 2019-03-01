@@ -99,6 +99,7 @@ if [ -z "$CACHE_DIR" ] ; then
     CACHE_DIR=`pwd`
     cd "$curdir"
     echo "NBI Cache : $CACHE_DIR"
+    export CACHE_DIR
 fi
 
 

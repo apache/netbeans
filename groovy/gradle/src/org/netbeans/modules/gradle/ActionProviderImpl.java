@@ -147,7 +147,7 @@ public class ActionProviderImpl implements ActionProvider {
         DataObject dobj = lkp.lookup(DataObject.class);
         String dobjName = dobj != null ? dobj.getName() : "";
         Project prj = project != null ? project : lkp.lookup(Project.class);
-        String prjLabel = prj != null ? ProjectUtils.getInformation(prj).getDisplayName() : "No Project on Lookup";
+        String prjLabel = prj != null ? ProjectUtils.getInformation(prj).getDisplayName() : "No Project on Lookup"; //NOI18N
         switch (action) {
             case ActionProvider.COMMAND_RUN:
                 title = TXT_Run(prjLabel);
@@ -349,8 +349,8 @@ public class ActionProviderImpl implements ActionProvider {
                     } else {
                         Project p = findOwner(projects, fo);
                         if(p == null) {
-                            p = FileOwnerQuery.getOwner(fo);                            
-                        }                        
+                            p = FileOwnerQuery.getOwner(fo);
+                        }
                         if (p != null) {
                              triggeredOnFile = true;
                              Action a = forProject(p, fo);

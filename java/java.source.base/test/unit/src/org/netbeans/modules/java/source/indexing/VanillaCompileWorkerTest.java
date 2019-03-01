@@ -24,8 +24,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import junit.framework.Test;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
+import org.netbeans.junit.NbTestSuite;
+import org.netbeans.modules.java.source.NoJavacHelper;
 import org.netbeans.modules.java.source.indexing.CompileWorker.ParsingOutput;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer.CompileTuple;
 import org.netbeans.modules.parsing.spi.indexing.Context;
@@ -149,8 +152,25 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig",
-                                                       "cache/s1/java/15/classes/test/Test4$1.sig")),
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
+                     createdFiles);
+        //TODO: check file content!!!
+    }
+
+    public void testRepairEnum2() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test4.java", "package test; public enum Test4 { B(Unknown.unknownO(), Unknown.unknownB(), Unknown.unknownI()) {}; private Test4(String str, boolean b, int i) {} }")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
                      createdFiles);
         //TODO: check file content!!!
     }
@@ -250,4 +270,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         //TODO: check file content!!!
     }
 
+    public static void noop() {}
+
+    public static Test suite() {
+        if (NoJavacHelper.hasNbJavac()) {
+            return new VanillaCompileWorkerTest("noop");
+        } else {
+            return new NbTestSuite(VanillaCompileWorkerTest.class);
+        }
+    }
 }

@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -296,7 +297,7 @@ public final class FileObjectFactory {
                 } else {
                     //!!!!!!!!!!!!!!!!! inconsistence
                     exist = touchExists(file, realExists);
-                    if (!exist) {
+                    if (!exist  && !Files.isSymbolicLink(file.toPath())) {
                         refreshFromGetter(parent,asyncFire);
                     }
                 }

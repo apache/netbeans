@@ -302,7 +302,19 @@
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>gradle/org.jacoco.core.jar</runtime-relative-path>
-                <binary-origin>external/org.jacoco.core-0.8.2.jar</binary-origin>
+                <binary-origin>external/org.jacoco.core-0.8.3.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>gradle/asm.jar</runtime-relative-path>
+                <binary-origin>external/asm-7.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>gradle/asm-commons.jar</runtime-relative-path>
+                <binary-origin>external/asm-commons-7.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>gradle/asm-tree.jar</runtime-relative-path>
+                <binary-origin>external/asm-tree-7.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

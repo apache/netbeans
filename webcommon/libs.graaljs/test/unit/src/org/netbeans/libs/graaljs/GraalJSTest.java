@@ -21,21 +21,29 @@ package org.netbeans.libs.graaljs;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
+import junit.framework.Test;
 import org.graalvm.polyglot.Context;
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
 import org.netbeans.api.scripting.Scripting;
+import org.netbeans.junit.NbModuleSuite;
+import org.netbeans.junit.NbTestCase;
 
-public class GraalJSTest {
-    @Test
-    public void evaluateGraalJS() {
+public final class GraalJSTest extends NbTestCase {
+    public GraalJSTest(String name) {
+        super(name);
+    }
+
+    public static Test suite() {
+        return NbModuleSuite.createConfiguration(GraalJSTest.class).suite();
+    }
+
+
+    public void testDirectEvaluationOfGraalJS() {
         Context ctx = Context.newBuilder("js").build();
         int fourtyTwo = ctx.eval("js", "6 * 7").asInt();
         assertEquals(42, fourtyTwo);
     }
 
-    @Test
-    public void firstJavaScriptEngineIsGraalJS() {
+    public void testJavaScriptEngineIsGraalJS() {
         ScriptEngineManager m = Scripting.createManager();
         StringBuilder sb = new StringBuilder();
         for (ScriptEngineFactory f : m.getEngineFactories()) {

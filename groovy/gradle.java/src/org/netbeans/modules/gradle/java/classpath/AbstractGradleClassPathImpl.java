@@ -56,25 +56,21 @@ abstract class AbstractGradleClassPathImpl implements ClassPathImplementation {
     protected AbstractGradleClassPathImpl(Project proj) {
         this.project = proj;
         final NbGradleProject watcher = proj.getLookup().lookup(NbGradleProject.class);
-        listener = new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (watcher.isUnloadable()) {
-                    return;
-                }
-                List<URL> newValue = createPath();
-                boolean hasChanged;
-                synchronized (AbstractGradleClassPathImpl.this) {
-                    hasChanged = hasChanged(rawResources, newValue);
-                    if (hasChanged) {
-                        rawResources = newValue;
-                        resources = null;
-                    }
-                }
+        listener = (PropertyChangeEvent evt) -> {
+            if (watcher.isUnloadable()) {
+                return;
+            }
+            List<URL> newValue = createPath();
+            boolean hasChanged;
+            synchronized (AbstractGradleClassPathImpl.this) {
+                hasChanged = hasChanged(rawResources, newValue);
                 if (hasChanged) {
-                    support.firePropertyChange(ClassPathImplementation.PROP_RESOURCES, null, null);
+                    rawResources = newValue;
+                    resources = null;
                 }
+            }
+            if (hasChanged) {
+                support.firePropertyChange(ClassPathImplementation.PROP_RESOURCES, null, null);
             }
         };
         watcher.addPropertyChangeListener(WeakListeners.propertyChange(listener, null));
@@ -128,26 +124,9 @@ abstract class AbstractGradleClassPathImpl implements ClassPathImplementation {
     static void addAllFile(Collection<URL> ret, @NonNull Collection<File> files) {
         assert files != null;
         for (File f : files) {
-            FileObject fo = FileUtil.toFileObject(f);
-            if (fo != null) {
-                if (FileUtil.isArchiveFile(fo)) {
-                    ret.add(FileUtil.getArchiveRoot(fo).toURL());
-                } else {
-                    ret.add(fo.toURL());
-                }
-            } else {
-                try {
-                    URL url = Utilities.toURI(f).toURL();
-                    String surl = url.toString();
-                    if (surl.endsWith(".jar")) {             //NOI18N
-                        url = new URL("jar:" + surl + "!/"); //NOI18N
-                    } else if (!surl.endsWith("/")) {        //NOI18N
-                        url = new URL(surl + "/");           //NOI18N
-                    }
-                    ret.add(url);
-                } catch (MalformedURLException ex) {
-                    //TODO: Shall not happen on files.
-                }
+            URL u = FileUtil.urlForArchiveOrDir(f);
+            if (u != null) {
+                ret.add(u);
             }
         }
     }

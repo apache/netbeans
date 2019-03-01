@@ -14,4 +14,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-977B33AFE2344A9EE801FD3317C54D8E1F9D7A79 org.jacoco:org.jacoco.core:0.8.2
+79F84BE0B764847DF8652D2DCA6F658EE5101F3E org.jacoco:org.jacoco.core:0.8.3
+D74D4BA0DEE443F68FB2DCB7FCDB945A2CD89912 org.ow2.asm:asm:7.0
+478006D07B7C561AE3A92DDC1829BCA81AE0CDD1 org.ow2.asm:asm-commons:7.0
+29BC62DCB85573AF6E62E5B2D735EF65966C4180 org.ow2.asm:asm-tree:7.0

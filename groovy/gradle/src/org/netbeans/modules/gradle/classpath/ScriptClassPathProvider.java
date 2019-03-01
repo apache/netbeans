@@ -42,7 +42,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class ScriptClassPathProvider implements ClassPathProvider {
 
     private static final String GRADLE_EXT = "gradle";
-    
+
     final ClassPath BOOT_CP;
     final ClassPath GRADLE_CP;
     final ClassPath SOURCE_CP;
@@ -56,7 +56,7 @@ public class ScriptClassPathProvider implements ClassPathProvider {
     }
 
     HashMap<FileObject, ClassPath> cache = new HashMap<>();
-    
+
     @Override
     public ClassPath findClassPath(FileObject fo, String type) {
         if ("classpath/html5".equals(type)) {
@@ -72,7 +72,7 @@ public class ScriptClassPathProvider implements ClassPathProvider {
                 case ClassPath.BOOT:    return BOOT_CP;
                 case ClassPath.SOURCE:  return SOURCE_CP;
                 case ClassPath.COMPILE: return GRADLE_CP;
-                case ClassPath.EXECUTE: return GRADLE_CP;                    
+                case ClassPath.EXECUTE: return GRADLE_CP;
                 }
                 }
         return null;
@@ -87,11 +87,13 @@ public class ScriptClassPathProvider implements ClassPathProvider {
         @Override
         protected List<FileObject> createPath() {
             List<FileObject> ret = new ArrayList<>();
-            FileObject srcDir = FileUtil.toFileObject(new File(distDir, "src"));
-            if ((srcDir != null) && srcDir.isFolder()) {
-                Enumeration<? extends FileObject> folders = srcDir.getFolders(false);
-                while (folders.hasMoreElements()) {
-                    ret.add(folders.nextElement());
+            if (distDir != null) {
+                FileObject srcDir = FileUtil.toFileObject(new File(distDir, "src"));
+                if ((srcDir != null) && srcDir.isFolder()) {
+                    Enumeration<? extends FileObject> folders = srcDir.getFolders(false);
+                    while (folders.hasMoreElements()) {
+                        ret.add(folders.nextElement());
+                    }
                 }
             }
             return ret;
@@ -103,8 +105,10 @@ public class ScriptClassPathProvider implements ClassPathProvider {
         @Override
         protected List<FileObject> createPath() {
             List<FileObject> ret = new ArrayList<>();
-            addJars(ret, FileUtil.toFileObject(new File(distDir, "lib")));
-            addJars(ret, FileUtil.toFileObject(new File(distDir, "lib/plugins")));
+            if (distDir != null) {
+                addJars(ret, FileUtil.toFileObject(new File(distDir, "lib")));
+                addJars(ret, FileUtil.toFileObject(new File(distDir, "lib/plugins")));
+            }
             return ret;
         }
 

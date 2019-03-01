@@ -70,7 +70,7 @@ public final class GraalEnginesTest {
                 .append("\nnames: ").append(engineNames)
                 .append("\ntypes: ").append(types);
 
-            if (engineNames.contains("llvm")) {
+            if (engineNames.contains("LLVM")) {
                 llvmFactory = factory;
             }
             if (types.contains("text/javascript")) {

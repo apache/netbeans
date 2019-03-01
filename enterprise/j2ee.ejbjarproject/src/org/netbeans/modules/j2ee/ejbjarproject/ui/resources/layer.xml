@@ -23,6 +23,7 @@
 <filesystem>
     <folder name="Templates">
         <folder name="Project">
+            <folder name="AntJava">
             <folder name="J2EE">
                 <!-- Add template for the J2SE project -->
                 <file name="emptyEjbJar.xml">
@@ -41,6 +42,7 @@
                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/j2ee/ejbjarproject/ui/resources/ejbjarProjectIcon.gif"/>
                    <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/j2ee/ejbjarproject/ui/resources/ejb-importProject.html"/>
                 </file>
+            </folder>
             </folder>
         </folder>
     </folder>

@@ -2189,8 +2189,8 @@ public class CasualDiff {
     }
 
     protected int diffBreak(JCBreak oldT, JCBreak newT, int[] bounds) {
-        final Name oldTLabel = oldT.label;
-        final Name newTlabel = newT.label;
+        final Name oldTLabel = oldT.getLabel();
+        final Name newTlabel = newT.getLabel();
         return printBreakContinueTree(bounds, oldTLabel, newTlabel, oldT);
     }
 

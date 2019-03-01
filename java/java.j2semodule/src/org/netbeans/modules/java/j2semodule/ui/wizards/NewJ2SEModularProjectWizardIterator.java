@@ -59,7 +59,7 @@ public class NewJ2SEModularProjectWizardIterator implements WizardDescriptor.Pro
     private NewJ2SEModularProjectWizardIterator() {
     }
 
-    @TemplateRegistration(folder="Project/Standard", position=350, displayName="#template_multimodule", iconBase="org/netbeans/modules/java/j2semodule/ui/resources/j2seModuleProject.png", description="../resources/emptyModuleProject.html")
+    @TemplateRegistration(folder="Project/AntJava", position=350, displayName="#template_multimodule", iconBase="org/netbeans/modules/java/j2semodule/ui/resources/j2seModuleProject.png", description="../resources/emptyModuleProject.html")
     @Messages("template_multimodule=Java Modular Project")
     public static NewJ2SEModularProjectWizardIterator multiModule() {
         return new NewJ2SEModularProjectWizardIterator();

@@ -53,7 +53,12 @@ public final class NbGradleProjectFactory implements ProjectFactory2 {
                 ret = false;
             } else {
                 GradleFiles files = new GradleFiles(FileUtil.toFile(dir));
-                ret = files.isProject();
+                if (!files.isRootProject()) {
+                    Boolean inSubDirCache = GradleProjectCache.isKnownSubProject(files.getRootDir(), files.getProjectDir());
+                    ret = inSubDirCache != null ? inSubDirCache : files.isProject();
+                } else {
+                    ret = true;
+                }
             }
         }
 

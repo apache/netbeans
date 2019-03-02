@@ -457,7 +457,7 @@ public final class GradleProjectCache {
     private static void saveCachedProjectInfo(NbProjectInfo data, GradleProject gp) {
         assert gp.getQuality().betterThan(FALLBACK) : "Never attempt to cache FALLBACK projects."; //NOi18N
         //TODO: Make it possible to handle external file set as cache.
-        GradleFiles gf = new GradleFiles(gp.getBaseProject().getProjectDir());
+        GradleFiles gf = new GradleFiles(gp.getBaseProject().getProjectDir(), true);
 
         ProjectCacheEntry entry = new ProjectCacheEntry(new StoredProjectInfo(data), gp, gf.getProjectFiles());
         File cacheFile = new File(getCacheDir(gp), INFO_CACHE_FILE_NAME);

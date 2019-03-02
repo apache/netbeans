@@ -32,7 +32,6 @@ import com.amazonaws.services.elasticbeanstalk.model.CheckDNSAvailabilityRequest
 import com.amazonaws.services.elasticbeanstalk.model.CheckDNSAvailabilityResult;
 import com.amazonaws.services.elasticbeanstalk.model.CreateApplicationRequest;
 import com.amazonaws.services.elasticbeanstalk.model.CreateApplicationVersionRequest;
-import com.amazonaws.services.elasticbeanstalk.model.CreateApplicationVersionResult;
 import com.amazonaws.services.elasticbeanstalk.model.CreateEnvironmentRequest;
 import com.amazonaws.services.elasticbeanstalk.model.DescribeEnvironmentsRequest;
 import com.amazonaws.services.elasticbeanstalk.model.DescribeEnvironmentsResult;
@@ -46,8 +45,11 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -55,8 +57,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
+import java.util.jar.JarOutputStream;
+import java.util.jar.Manifest;
+import java.util.jar.Attributes;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.server.ServerInstance;
 import org.netbeans.modules.cloud.common.spi.support.serverplugin.DeploymentStatus;
@@ -260,12 +267,14 @@ public class AmazonInstance {
             // this mean object does not exist in S3 - fine
         }
         if (!exist) {
-            InputStream is = AmazonInstance.class.getResourceAsStream("resources/empty.war");
-            s3.putObject(new PutObjectRequest(bucket, DEFAULT_EMPTY_APPLICATION, is, new ObjectMetadata()));
             try {
-                is.close();
+                s3.putObject(new PutObjectRequest(
+                        bucket,
+                        DEFAULT_EMPTY_APPLICATION,
+                        new ByteArrayInputStream(createEmptyWar()),
+                        new ObjectMetadata()));
             } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
+                LOG.log(Level.INFO, "Failed to create empty application war", ex);
             }
         }
         return new S3Location().withS3Bucket(bucket).withS3Key(DEFAULT_EMPTY_APPLICATION);
@@ -413,5 +422,33 @@ public class AmazonInstance {
         Future<T> f = AMAZON_RP.submit(callable);
         return f;
     }
-    
+
+    byte[] createEmptyWar() throws IOException {
+        // The empty war is about 2kB in size -- so build it in memory
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
+        Manifest manifest = new Manifest();
+        manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
+        manifest.getMainAttributes().put(new Attributes.Name("Created-By"), "Apache NetBeans");
+        try (JarOutputStream jos = new JarOutputStream(baos, manifest)) {
+            copyResourceToJar(jos, "resources/welcome.jsp",  "welcome.jsp");
+            copyResourceToJar(jos, "resources/web.xml",  "WEB-INF/web.xml");
+        }
+        return baos.toByteArray();
+    }
+
+    private void copyResourceToJar(ZipOutputStream zos, String sourceFile, String outputPath) throws IOException {
+        try (InputStream welcomeIS = AmazonInstance.class.getResourceAsStream(sourceFile)) {
+            ZipEntry ze = new ZipEntry(outputPath);
+            zos.putNextEntry(ze);
+            copyStream(welcomeIS, zos);
+        }
+    }
+
+    private void copyStream(InputStream is, OutputStream os) throws IOException {
+        byte[] buffer = new byte[1024];
+        int read = 0;
+        while((read = is.read(buffer)) > 0) {
+            os.write(buffer, 0, read);
+        }
+    }
 }

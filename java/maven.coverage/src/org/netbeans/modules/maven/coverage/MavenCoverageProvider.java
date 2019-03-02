@@ -135,6 +135,11 @@ public final class MavenCoverageProvider implements CoverageProvider {
                     return null;
                 }
             }
+            File outputFile = FileUtil.normalizeFile(new File(outputDirectory));
+            if (!outputFile.exists()) {
+                // NETBEANS-1768 checking the plugin executions if the outputDirectory is customised
+                outputDirectory = PluginPropertyUtils.getPluginProperty(p, GROUP_JOCOCO, ARTIFACT_JOCOCO, "outputDirectory", "report", null);
+            }
             return FileUtil.normalizeFile(new File(outputDirectory, "jacoco.xml"));
         } else {
         String outputDirectory = PluginPropertyUtils.getReportPluginProperty(p, GROUP_COBERTURA, ARTIFACT_COBERTURA, "outputDirectory", null);

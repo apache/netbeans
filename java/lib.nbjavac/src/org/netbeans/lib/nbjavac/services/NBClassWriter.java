@@ -48,13 +48,11 @@ public class NBClassWriter extends ClassWriter {
     }
 
     private final NBNames nbNames;
-    private final NBMessager nbMessager;
     private final Types types;
 
     protected NBClassWriter(Context context) {
         super(context);
         nbNames = NBNames.instance(context);
-        nbMessager = NBMessager.instance(context);
         types = Types.instance(context);
     }
     

@@ -69,7 +69,7 @@ public class JackpotTrees {
                 Method visitIdent = Visitor.class.getDeclaredMethod("visitIdent", JCIdent.class);
                 Method visitIdentifier = TreeVisitor.class.getDeclaredMethod("visitIdentifier", IdentifierTree.class, Object.class);
                 Method toString = Object.class.getDeclaredMethod("toString");
-                fake = new ByteBuddy()
+                fake = Utilities.load(new ByteBuddy()
                         .subclass(clazz)
                         .implement(IdentifierTree.class)
                         .defineField("ident", Name.class, Visibility.PUBLIC)
@@ -79,8 +79,7 @@ public class JackpotTrees {
                         .method(ElementMatchers.named("accept").and(ElementMatchers.takesArguments(Visitor.class))).intercept(MethodCall.invoke(visitIdent).onArgument(0).withField("jcIdent"))
                         .method(ElementMatchers.named("accept").and(ElementMatchers.takesArgument(0, TreeVisitor.class))).intercept(MethodCall.invoke(visitIdentifier).onArgument(0).withThis().withArgument(1))
                         .method(ElementMatchers.named("toString")).intercept(MethodCall.invoke(toString).onField("ident"))
-                        .make()
-                        .load(JackpotTrees.class.getClassLoader())
+                        .make())
                         .getLoaded();
                 baseClass2Impl.put(clazz, fake);
             }

@@ -69,6 +69,9 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
     private static final Logger LOGGER = Logger.getLogger(GradleDaemonExecutor.class.getName());
 
     private final ProgressHandle handle;
+    private OutputStream outStream;
+    private OutputStream errStream;
+    private boolean cancelling;
 
     @SuppressWarnings("LeakingThisInConstructor")
     public GradleDaemonExecutor(RunConfig config) {
@@ -97,7 +100,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
                 try {
                     taskSemaphore.wait();
                 } catch (InterruptedException ex) {
-                    LOGGER.log(Level.FINE, "interrupted", ex);
+                    LOGGER.log(Level.FINE, "interrupted", ex); //NOI18N
                 }
             }
         }
@@ -106,8 +109,6 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
         final InputOutput ioput = getInputOutput();
         actionStatesAtStart();
         handle.start();
-        OutputStream outStream = null;
-        OutputStream errStream = null;
         try {
 
             BuildExecutionSupport.registerRunningItem(item);
@@ -117,7 +118,12 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
 
             GradleConnector gconn = GradleConnector.newConnector();
             cancelTokenSource = GradleConnector.newCancellationTokenSource();
-            gconn.useInstallation(RunUtils.evaluateGradleDistribution(config.getProject(), false));
+            File gradleInstall = RunUtils.evaluateGradleDistribution(config.getProject(), false);
+            if (gradleInstall != null) {
+                gconn.useInstallation(gradleInstall);
+            } else {
+                gconn.useBuildDistribution();
+            }
 
             File projectDir = FileUtil.toFile(config.getProject().getProjectDirectory());
             //TODO: GradleUserHome
@@ -162,35 +168,27 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             buildLauncher.run();
             StatusDisplayer.getDefault().setStatusText(Bundle.BUILD_SUCCESS(getProjectName()));
         } catch (BuildCancelledException ex) {
-            try {
-                IOColorPrint.print(io, "\nBUILD ABORTED\n", IOColors.getColor(io, IOColors.OutputType.ERROR)); //NOI18N
-            } catch (IOException iex) {
-            }
+            showAbort();
         } catch (UncheckedException | BuildException ex) {
-            StatusDisplayer.getDefault().setStatusText(Bundle.BUILD_FAILED(getProjectName()));
-            //TODO: Handle Cancelled builds
-            // We just swallow BUILD FAILED exception silently
+            if (!cancelling) {
+                StatusDisplayer.getDefault().setStatusText(Bundle.BUILD_FAILED(getProjectName()));
+            } else {
+                // This can happen if cancelling a Gradle build which is running
+                // an external aplication
+                showAbort();
+            }
         } finally {
+            BuildExecutionSupport.registerFinishedItem(item);
+            ioput.getOut().close();
+            ioput.getErr().close();
             if (pconn != null) {
                 pconn.close();
             }
-            if (outStream != null) {
-                try {
-                    outStream.close();
-                } catch (IOException iox) {
-                }
-            }
-            if (errStream != null) {
-                try {
-                    errStream.close();
-                } catch (IOException iox) {
-                }
-            }
+            closeOutErr();
             checkForExternalModifications();
             handle.finish();
             markFreeTab();
             actionStatesAtFinish();
-            BuildExecutionSupport.registerFinishedItem(item);
         }
     }
 
@@ -222,11 +220,13 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
 
                 String relRoot = projectPath.relativize(rootPath).toString();
                 relRoot = relRoot.isEmpty() ? "." : relRoot;
-                commandLine.append(relRoot).append("/gradlew");
+                commandLine.append(relRoot).append("/gradlew"); //NOI18N
             } else {
                 File gradleDistribution = RunUtils.evaluateGradleDistribution(null, false);
-                File gradle = new File(gradleDistribution, "bin/gradle"); //NOI18N
-                commandLine.append(gradle.getAbsolutePath());
+                if (gradleDistribution != null) {
+                    File gradle = new File(gradleDistribution, "bin/gradle"); //NOI18N
+                    commandLine.append(gradle.getAbsolutePath());
+                }
             }
 
         for (String arg : config.getCommandLine().getSupportedCommandLine()) {
@@ -245,7 +245,20 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
                 io.getOut().print(commandLine);
             }
         } catch (IOException ex) {
-            //TODO: Shall not happen...
+            // Shall not happen...
+        }
+    }
+
+    private synchronized void closeOutErr() {
+        if (outStream != null) try {outStream.close();} catch (IOException ex) {}
+        if (errStream != null) try {errStream.close();} catch (IOException ex)  {}
+    }
+
+    @NbBundle.Messages("TXT_BUILD_ABORTED=\nBUILD ABORTED\n")
+    private void showAbort() {
+        try {
+            IOColorPrint.print(io, Bundle.TXT_BUILD_ABORTED(), IOColors.getColor(io, IOColors.OutputType.LOG_DEBUG));
+        } catch (IOException ex) {
         }
     }
 
@@ -255,6 +268,9 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
         if (cancelTokenSource != null) {
             handle.switchToIndeterminate();
             handle.setDisplayName(Bundle.LBL_ABORTING_BUILD());
+            // Closing out and err streams to prevent ambigous output NETBEANS-2038
+            closeOutErr();
+            cancelling = true;
             cancelTokenSource.cancel();
         }
         return true;

@@ -72,6 +72,8 @@ public enum GlassFishVersion {
     GF_4_1      ((short) 4, (short) 1, (short) 0, (short) 0, GlassFishVersion.GF_4_1_STR),
     /** GlassFish 4.1.1. */
     GF_4_1_1    ((short) 4, (short) 1, (short) 1, (short) 0, GlassFishVersion.GF_4_1_1_STR),
+    /** GlassFish 4.1.2. */
+    GF_4_1_2    ((short) 4, (short) 1, (short) 1, (short) 2, GlassFishVersion.GF_4_1_2_STR),
     /** GlassFish 5. */
     GF_5        ((short) 5, (short) 0, (short) 0, (short) 0, GlassFishVersion.GF_5_STR);
 
@@ -165,6 +167,11 @@ public enum GlassFishVersion {
     /** Additional <code>String</code> representations of GF_4_1 value. */
     static final String GF_4_1_1_STR_NEXT[] = {"4.1.1.0"};
 
+    /**  A <code>String</code> representation of GF_4_1_2 value. */
+    static final String GF_4_1_2_STR = "4.1.2";
+    /** Additional <code>String</code> representations of GF_4_1_2 value. */
+    static final String GF_4_1_2_STR_NEXT[] = {"4.1.2.0"};
+    
     /**  A <code>String</code> representation of GF_5 value. */
     static final String GF_5_STR = "5";
     /** Additional <code>String</code> representations of GF_5 value. */
@@ -195,6 +202,7 @@ public enum GlassFishVersion {
         initStringValuesMapFromArray(GF_4_0_1, GF_4_0_1_STR_NEXT);
         initStringValuesMapFromArray(GF_4_1, GF_4_1_STR_NEXT);
         initStringValuesMapFromArray(GF_4_1_1, GF_4_1_1_STR_NEXT);
+        initStringValuesMapFromArray(GF_4_1_2, GF_4_1_2_STR_NEXT);
         initStringValuesMapFromArray(GF_5, GF_5_STR_NEXT);
     }
 

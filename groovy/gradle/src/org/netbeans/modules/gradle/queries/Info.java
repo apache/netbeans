@@ -73,8 +73,7 @@ public final class Info implements ProjectInformation, PropertyChangeListener {
     public String getName() {
         GradleBaseProject prj = GradleBaseProject.get(project);
 
-        String ret = prj.getParentName() != null ? prj.getParentName() + ":" : "";  //NOI18N
-        ret += prj.getName();        //NOI18N
+        String ret = prj.isRoot() ? prj.getName() : prj.getRootDir().getName() + prj.getPath();
         return ret;
     }
 
@@ -92,6 +91,9 @@ public final class Info implements ProjectInformation, PropertyChangeListener {
                 && !prj.getDescription().isEmpty()) {
             ret = prj.getDescription();
         } else {
+            // The current implementation of Gradle's displayName is kind of ugly
+            // and cannot be configured.
+            //ret = prj.getDisplayName() != null ? prj.getDisplayName() : getName();
             ret = getName();
         }
         return ret;
@@ -124,7 +126,7 @@ public final class Info implements ProjectInformation, PropertyChangeListener {
         if (prefChangeListenerSet.compareAndSet(false, true)) {
             Preferences prefs = GradleSettings.getDefault().getPreferences();
             prefs.addPreferenceChangeListener(WeakListeners.create(
-                    PreferenceChangeListener.class, preferenceChangeListener, prefs));            
+                    PreferenceChangeListener.class, preferenceChangeListener, prefs));
         }
         if (!pcs.hasListeners(null)) {
             project.getLookup().lookup(NbGradleProject.class).addPropertyChangeListener(this);

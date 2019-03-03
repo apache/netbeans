@@ -93,7 +93,7 @@ public final class GradleProjectCache {
     private static AtomicInteger loadedProjects = new AtomicInteger();
 
     // Increase this number if new info is gathered from the projects.
-    private static final int COMPATIBLE_CACHE_VERSION = 10;
+    private static final int COMPATIBLE_CACHE_VERSION = 11;
 
     /**
      * Loads a physical GradleProject either from Gradle or Cache. As project retrieval can be time consuming using

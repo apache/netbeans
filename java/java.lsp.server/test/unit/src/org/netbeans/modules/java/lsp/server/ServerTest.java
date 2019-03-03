@@ -26,6 +26,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -43,6 +44,8 @@ import org.eclipse.lsp4j.CompletionParams;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
 import org.eclipse.lsp4j.DidOpenTextDocumentParams;
+import org.eclipse.lsp4j.DocumentHighlight;
+import org.eclipse.lsp4j.DocumentHighlightKind;
 import org.eclipse.lsp4j.DocumentSymbol;
 import org.eclipse.lsp4j.DocumentSymbolParams;
 import org.eclipse.lsp4j.InitializeParams;
@@ -492,4 +495,75 @@ public class ServerTest extends NbTestCase {
         assertDiags(diags);
     }
     
+    @Test
+    public void testMarkOccurrences() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "public class Test {\n" +
+                      "    public int method(int ppp) {\n" +
+                      "        if (ppp < 0) return -1;\n" +
+                      "        else if (ppp > 0) return 1;\n" +
+                      "        else return 0;\n" +
+                      "    }\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        FileUtil.refreshFor(getWorkDir());
+        ServerSocket srv = new ServerSocket(0);
+        new Thread(() -> {
+            try {
+                Socket server = srv.accept();
+                Server.run(server.getInputStream(), server.getOutputStream());
+            } catch (Exception ex) {
+                throw new IllegalStateException(ex);
+            }
+        }).start();
+        Socket client = new Socket(InetAddress.getLocalHost(), srv.getLocalPort());
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+            }
+
+            @Override
+            public void showMessage(MessageParams arg0) {
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeResult result = server.initialize(new InitializeParams()).get();
+        assertTrue(result.getCapabilities().getDocumentHighlightProvider());
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(src.toURI().toString(), "java", 0, code)));
+        assertHighlights(server.getTextDocumentService().documentHighlight(new TextDocumentPositionParams(new TextDocumentIdentifier(src.toURI().toString()), new Position(1, 13))).get(),
+                         "<none>:2:21-2:31", "<none>:3:26-3:35", "<none>:4:13-4:22");
+        assertHighlights(server.getTextDocumentService().documentHighlight(new TextDocumentPositionParams(new TextDocumentIdentifier(src.toURI().toString()), new Position(1, 27))).get(),
+                         "<none>:1:26-1:29", "<none>:2:12-2:15", "<none>:3:17-3:20");
+    }
+
+    private void assertHighlights(List<? extends DocumentHighlight> highlights, String... expected) {
+        Set<String> stringHighlights = new HashSet<>();
+        for (DocumentHighlight h : highlights) {
+            DocumentHighlightKind kind = h.getKind();
+            stringHighlights.add((kind != null ? kind.name() : "<none>") + ":" +
+                                 h.getRange().getStart().getLine() + ":" + h.getRange().getStart().getCharacter() + "-" +
+                                 h.getRange().getEnd().getLine() + ":" + h.getRange().getEnd().getCharacter());
+        }
+        assertEquals(new HashSet<>(Arrays.asList(expected)),
+                     stringHighlights);
+    }
 }

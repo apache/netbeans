@@ -42,6 +42,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.prefs.Preferences;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -117,6 +118,8 @@ import org.netbeans.modules.editor.java.GoToSupport.GoToTarget;
 import org.netbeans.modules.editor.java.Utilities;
 import org.netbeans.modules.java.completion.JavaCompletionTask;
 import org.netbeans.modules.java.completion.JavaCompletionTask.Options;
+import org.netbeans.modules.java.editor.base.semantic.MarkOccurrencesHighlighterBase;
+import org.netbeans.modules.java.editor.options.MarkOccurencesSettings;
 import org.netbeans.modules.java.hints.infrastructure.CreatorBasedLazyFixList;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsProvider;
 import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
@@ -128,6 +131,7 @@ import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
+import org.netbeans.modules.parsing.spi.SchedulerEvent;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.editor.hints.LazyFixList;
@@ -439,8 +443,40 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     @Override
-    public CompletableFuture<List<? extends DocumentHighlight>> documentHighlight(TextDocumentPositionParams arg0) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public CompletableFuture<List<? extends DocumentHighlight>> documentHighlight(TextDocumentPositionParams params) {
+        class MOHighligther extends MarkOccurrencesHighlighterBase {
+            @Override
+            protected void process(CompilationInfo arg0, Document arg1, SchedulerEvent arg2) {
+                throw new UnsupportedOperationException("Should not be called.");
+            }
+            @Override
+            public List<int[]> processImpl(CompilationInfo info, Preferences node, Document doc, int caretPosition) {
+                return super.processImpl(info, node, doc, caretPosition);
+            }
+        }
+
+        Preferences node = MarkOccurencesSettings.getCurrentNode();
+
+        JavaSource js = getSource(params.getTextDocument().getUri());
+        List<DocumentHighlight> result = new ArrayList<>();
+        try {
+            js.runUserActionTask(cc -> {
+                cc.toPhase(JavaSource.Phase.RESOLVED);
+                Document doc = cc.getSnapshot().getSource().getDocument(true);
+                int offset = getOffset(doc, params.getPosition());
+                List<int[]> spans = new MOHighligther().processImpl(cc, node, doc, offset);
+                if (spans != null) {
+                    for (int[] span : spans) {
+                        result.add(new DocumentHighlight(new Range(createPosition(cc.getCompilationUnit(), span[0]),
+                                                                   createPosition(cc.getCompilationUnit(), span[1]))));
+                    }
+                }
+            }, true);
+        } catch (IOException ex) {
+            //TODO: include stack trace:
+            client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+        }
+        return CompletableFuture.completedFuture(result);
     }
 
     @Override

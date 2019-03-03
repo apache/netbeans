@@ -190,6 +190,7 @@ public class Server {
             capabilities.setCodeActionProvider(true);
             capabilities.setDocumentSymbolProvider(true);
             capabilities.setDefinitionProvider(true);
+            capabilities.setDocumentHighlightProvider(true);
             return CompletableFuture.completedFuture(new InitializeResult(capabilities));
         }
 

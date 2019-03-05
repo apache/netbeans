@@ -54,12 +54,11 @@
     <property name="glassfish.build.type"      value=""/>
     <property name="glassfish.location.prefix" value="${gf_builds_host}/java/re/glassfish/4.1.1/promoted"/>
     
-    <loadresource property="glassfish.build.number">
+    <!--loadresource property="glassfish.build.number">
           <url url="${glassfish.location.prefix}/latest/archive/release"/>
           <filterchain>
             <striplinebreaks/>
             <tokenfilter>
-              <!-- replaceregex pattern="(.*)glassfish-4.1.1-b([0-9a-z]+)\.zip(.*)" replace="\2" flags="g"/ -->
               <replaceregex pattern="(.*)glassfish-4.1.1-a.zip(.*)" replace="\2" flags="g"/>
             </tokenfilter>
           </filterchain>
@@ -69,16 +68,15 @@
     <property name="glassfish.version"      value="b${glassfish.build.number}"/>
     <property name="glassfish.id"           value="${glassfish.display.version}"/>
     <property name="glassfish.install.dir"  value="${install.dir}/glassfish-4.1.1"/>
-    <!-- property name="glassfish_location"     value="${glassfish.location.prefix}/${glassfish.build.type}/${glassfish.version}/archive/bundles/glassfish-4.1.1-${glassfish.version}.zip"/ -->
     <property name="glassfish_location"     value="${glassfish.location.prefix}/${glassfish.build.type}/latest/archive/release/glassfish-4.1.1-a.zip"/>
-    <property name="glassfish.subdir"       value="glassfish4"/>
+    <property name="glassfish.subdir"       value="glassfish4"/-->
     
     <property name="dmg.prefix.name" value="${prefix}"/>                         
 
     <!-- Nested JRE Properties-->        
     <property name="jre.builds.path" value="${jre_builds_host}/${jre_builds_path}/latest/bundles/macosx-x64"/><!-- Change latest to fcs/b{proper buildnumber} -->
     <!-- e.g. 1.8.0 - jre-8u31-macosx-x64.tar.gz -->
-    <loadresource property="jre.version.number">
+    <!--loadresource property="jre.version.number">
           <url url="${jre.builds.path}"/>
           <filterchain>
             <striplinebreaks/>
@@ -119,7 +117,7 @@
     
     <condition property="jre.version.string.long" value="1.${jre.version.number}.0" else="1.${jre.version.number}.0_${jre.update.number}">
         <equals arg1="${jre.update.number}" arg2="0"/>
-    </condition>
+    </condition-->
     
     <!--condition property="jre.folder.name" value="jre1.${jre.version.number}.0.jre" else="jre1.${jre.version.number}.0_${jre.update.number}.jre">
         <equals arg1="${jre.update.number}" arg2="0"/>
@@ -134,8 +132,8 @@
     <!-- e.g. 1.7.0_55 - jdk-7u55-fcs-bin-b07-macosx-x64-04_feb_2014.dmg -->
     <!-- e.g. 1.8.0 - jdk-8-fcs-bin-b129-macosx-x64-06_feb_2014.dmg -->
 
-    <loadresource property="jdk.version.number">
     <!--e.g. jdk-11.0.1_osx-x64_bin.dmg -->
+    <!--loadresource property="jdk.version.number">
           <url url="${jdk.builds.path}"/>
           <filterchain>
             <striplinebreaks/>
@@ -160,14 +158,10 @@
           <filterchain>
             <striplinebreaks/>
             <tokenfilter>
-              <!--replaceregex pattern="(.*)jdk-([0-9]+)([u]?)([0-9]*)(-[a-z]+)-bin-b(([0-9]+)+)-(.*)" replace="\4" flags="g"/-->
               <replaceregex pattern="(.*)jdk-([1-9][0-9]*).0.([1-9])([0-9]*)(_[a-z]+)-x64_bin(.*)" replace="\3" flags="g"/>
             </tokenfilter>
           </filterchain>
     </loadresource>
-    <!--condition property="jdk.update.number" value="${jdk.update.number.opt}" else="0">
-        <equals arg1="${is.update}" arg2="u"/>
-    </condition>
     
     <loadresource property="jdk.build.type">
           <url url="${jdk.builds.path}"/>

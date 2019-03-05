@@ -21,8 +21,8 @@
 -->
 
 <project name="bootstrap" default="all" basedir=".">
-    <property file="${basedir}/build.properties"/>
     <property file="${basedir}/build-private.properties"/>
+    <property file="${basedir}/build.properties"/>
     
     <target name="build" depends="init,-build"/>
     

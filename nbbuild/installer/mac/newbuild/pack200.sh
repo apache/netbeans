@@ -29,7 +29,8 @@ doVerify=0
 #   doVerify=1
 #fi
 
-javaPath="/Library/Java/JavaVirtualMachines/1.6.0_65-b14-462.jdk/Contents/Home"
+javaPath=`/usr/libexec/java_home`
+#javaPath="/Library/Java/JavaVirtualMachines/1.6.0_65-b14-462.jdk/Contents/Home"
 unpackCommand="$javaPath/bin/unpack200"
 javaCommand="$javaPath/bin/java"
 packCommand="$javaPath/bin/pack200"

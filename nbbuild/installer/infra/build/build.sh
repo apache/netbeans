@@ -177,56 +177,6 @@ run() {
     ################################################################################
     # run the build
     ant build\
-            \"-Dbuild.number=${NB_BUILD_NUMBER}\" \
-            \"-Doutput.dir=${OUTPUT_DIR}\" \
-            \"-Dbinary.cache.host=${BINARY_CACHE_HOST}\" \
-            \"-Dnb.builds.host=${NB_BUILDS_HOST}\" \
-            \"-Dnb.files.prefix=${BASENAME_PREFIX}\" \
-            \"-Dnb.locales=${LOCALES}\" \
-            \"-Dcommunity.mlbuild=${COMMUNITY_ML_BUILD}\" \
-            \"-Dglassfish.builds.host=${GLASSFISH_BUILDS_HOST}\" \
-            \"-Djdk.builds.host=${JDK_BUILDS_HOST}\" \
-            \"-Djdk7.builds.path=${JDK7_BUILDS_PATH}\" \
-            \"-Djdk8.builds.path=${JDK8_BUILDS_PATH}\" \
-            \"-Djdk11.builds.path=${JDK11_BUILDS_PATH}\" \
-            \"-Dopenesb.builds.host=${OPENESB_BUILDS_HOST}\" \
-            \"-Dsjsam.builds.host=${SJSAM_BUILDS_HOST}\" \
-            \"-Dportalpack.builds.host=${PORTALPACK_BUILDS_HOST}\" \
-    	    \"-Dwtk.builds.host=${WTK_BUILDS_HOST}\" \
-            \"-Djavafx.builds.host=${JAVAFX_BUILDS_HOST}\" \
-            \"-Djdk.home=${JDK_HOME}\" \
-            \"-Dcvs.root=${CVS_ROOT}\" \
-            \"-Dcvs.timestamp=${CVS_STAMP}\" \
-            \"-Dcvs.branch=${CVS_BRANCH}\" \
-            \"-Dbuild.jdk7=${BUILD_NBJDK7}\" \
-            \"-Dbuild.jdk8=${BUILD_NBJDK8}\" \
-            \"-Dbuild.jdk11=${BUILD_NBJDK11}\" \
-            \"-Dbundle.jdk.platform=${BUNDLE_JDK_PLATFORM}\" \
-            \"-Dbuild.jtb=${BUILD_JTB}\" \
-            \"-Dbuild.mysql=${BUILD_MYSQL}\" \
-            \"-Dbuild.weblogic=${BUILD_WEBLOGIC}\" \
-            \"-Dbuild.netbeans.bundles=${BUILD_NETBEANS}\" \
-            \"-Dbuild.nb=${BUILD_NB}\" \
-            \"-Dbuild.javafx=${RUNJAVAFX}\" \
-            \"-Dglassfish.home=${GLASSFISH_HOME}\" \
-            \"-Dglassfish.asadmin=${GLASSFISH_ASADMIN}\" \
-            \"-Dglassfish.http.port=${GLASSFISH_HTTP_PORT}\" \
-            \"-Dglassfish.admin.port=${GLASSFISH_ADMIN_PORT}\" \
-            \"-Dglassfish.host=${GLASSFISH_HOST}\" \
-            \"-Dglassfish.user=${GLASSFISH_USER}\" \
-            \"-Dglassfish.password=${GLASSFISH_PASSWORD}\" \
-            \"-Djarsigner.enabled=${USE_JARSIGNER}\" \
-            \"-Djarsigner.keystore=${JARSIGNER_KEYSTORE}\" \
-            \"-Djarsigner.alias=${JARSIGNER_ALIAS}\" \
-            \"-Djarsigner.storepass=${JARSIGNER_STOREPASS}\" \
-            \"-Dpack200.enabled=${USE_PACK200}\" \
-	    \"-Dmakedmg.remote.port=${MAKEDMG_MACOSX_SYSTEM_PORT}\" \
-	    \"-Dmakedmg.remote.host=${MAKEDMG_MACOSX_SYSTEM_HOST}\" \
-	    \"-Dmakedmg.remote.user=${MAKEDMG_MACOSX_SYSTEM_USER}\" \
-	    \"-Dmakedmg.ssh.keyfile=${MAKEDMG_MACOSX_SYSTEM_SSH_KEYFILE}\" \
-	    \"-Dmakedmg.ssh.keypass=${MAKEDMG_MACOSX_SYSTEM_SSH_PASSPHRASE}\" \
-            \"-Dnbi.cache.dir=${CACHE_DIR}\" \
-            \"-Dnb.binary.name=${BINARY_NAME}\" \
             ${ADDITIONAL_PARAMETERS} \
             $*
             ERROR_CODE=$?

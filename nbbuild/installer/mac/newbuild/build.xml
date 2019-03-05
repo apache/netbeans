@@ -154,7 +154,7 @@
     <target name="unzip-cluster">
         <exec executable="sh" failonerror="yes">
             <arg value="-c"/>
-            <arg value="unzip -o -d ${basedir}/netBeans/nbide/build ${common.name}NetBeans-dev-incubator-netbeans-linux-996-on-20190203-release.zip"/>
+            <arg value="unzip -o -d ${basedir}/netBeans/nbide/build ${common.name}${nb.binary.name}"/>
         </exec>    
     </target>
     
@@ -538,9 +538,9 @@
             <arg value="-c"/>            
             <arg value="pkgbuild --nopayload --scripts '${target.scriptsdir}' --identifier org.netbeans.postinstallscripts '${basedir}/build/postinstallscripts.pkg'"/>
         </exec>
-        <java jar="${mac.sign.client}" fork="true" failonerror="true" maxmemory="2048m">
+        <!--java jar="${mac.sign.client}" fork="true" failonerror="true" maxmemory="2048m">
             <arg line="sign -user ${mac.sign.user} -global_uid ${mac.sign.guid} -file_to_sign '${basedir}/build/postinstallscripts.pkg' -signed_location '${basedir}/build' -sign_method mac_pkg -server UK" />
-        </java>
+        </java-->
     </target>
 
     <target name="pack-bundle" description="Packs nested packages into the main one">
@@ -549,8 +549,8 @@
             <arg value="-cv"/>
             <arg value="productbuild --distribution '${pkg.file}/distribution.xml' --package-path '${pkg.file}/packages' --resources '${pkg.file}/resources/' '${pkg.file}/inst_package/${pkg.name}.pkg'"/>
         </exec>
-        <java jar="${mac.sign.client}" fork="true" failonerror="true" maxmemory="2048m">
+        <!--java jar="${mac.sign.client}" fork="true" failonerror="true" maxmemory="2048m">
             <arg line="sign -user ${mac.sign.user} -global_uid ${mac.sign.guid} -file_to_sign '${pkg.file}/inst_package/${pkg.name}.pkg' -signed_location '${pkg.file}/inst_package' -sign_method mac_pkg -server UK" />
-        </java>
+        </java-->
     </target>    
 </project>

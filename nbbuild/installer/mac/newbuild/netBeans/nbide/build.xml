@@ -132,9 +132,9 @@ TOMCAT_ID="${tomcat.id}"
             <arg value="-c"/>
             <arg value="echo creds : $CODESIGNBUREAU_CREDFILE"/>
         </exec>
-        <java jar="${mac.sign.client}" fork="true" failonerror="true" maxmemory="2048m">
+        <!--java jar="${mac.sign.client}" fork="true" failonerror="true" maxmemory="2048m">
             <arg line="sign -user ${mac.sign.user} -global_uid ${mac.sign.guid} -file_to_sign ${basedir}/../../build/nbide-${nb.id}.pkg -signed_location /${basedir}/../../build/ -sign_method mac_pkg -server UK" />
-        </java>
+        </java-->
     </target>
     
     

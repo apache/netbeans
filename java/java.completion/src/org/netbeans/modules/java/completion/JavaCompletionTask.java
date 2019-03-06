@@ -3200,6 +3200,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                                     env.getController().getSourceVersion().compareTo(SourceVersion.RELEASE_8) >= 0 && eu.isEffectivelyFinal((VariableElement)e)
                                 || (method == null && (e.getEnclosingElement().getKind() == INSTANCE_INIT
                                 || e.getEnclosingElement().getKind() == STATIC_INIT
+                                || e.getEnclosingElement().getKind() == CONSTRUCTOR
                                 || e.getEnclosingElement().getKind() == METHOD && e.getEnclosingElement().getEnclosingElement().getKind() == FIELD)))
                                 && (!illegalForwardRefs.containsKey(e.getSimpleName()) || illegalForwardRefs.get(e.getSimpleName()).getEnclosingElement() != e.getEnclosingElement());
                     case FIELD:

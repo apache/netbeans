@@ -212,7 +212,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
 
         GradleBaseProject gbp = GradleBaseProject.get(config.getProject());
         if (gbp != null
-                && new GradleFiles(gbp.getProjectDir()).hasWrapper()
+                && new GradleFiles(gbp.getProjectDir(), true).hasWrapper()
                 && GradleSettings.getDefault().isWrapperPreferred()) {
 
                 Path rootPath = gbp.getRootDir().toPath();

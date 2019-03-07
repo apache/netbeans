@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.gradle;
 
+import java.io.File;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.spi.GradleSettings;
@@ -52,8 +53,14 @@ public final class NbGradleProjectFactory implements ProjectFactory2 {
             if ((pom != null) && pom.isData() && GradleSettings.getDefault().isPreferMaven()) {
                 ret = false;
             } else {
-                GradleFiles files = new GradleFiles(FileUtil.toFile(dir));
-                ret = files.isProject();
+                File suspect = FileUtil.toFile(dir);
+                GradleFiles files = new GradleFiles(suspect);
+                if (!files.isRootProject()) {
+                    Boolean inSubDirCache = GradleProjectCache.isKnownSubProject(files.getRootDir(), suspect);
+                    ret = inSubDirCache != null ? inSubDirCache : files.isProject();
+                } else {
+                    ret = true;
+                }
             }
         }
 

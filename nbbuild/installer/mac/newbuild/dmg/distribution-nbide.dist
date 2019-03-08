@@ -24,7 +24,8 @@
     <welcome file="Welcome.html"></welcome>
     <license file="License.txt"></license>
     <background file="background.tif" scaling="none" alignment="bottomleft"></background>
-    <options allow-external-scripts="yes" customize="never" rootVolumeOnly="true"></options>
+    <options allow-external-scripts="yes" customize="never" rootVolumeOnly="true" hostArchitectures="i386"></options>
+    <installation-check script="checkSystem()"></installation-check>
     <volume-check script="checkSystemversion()"></volume-check>
     <script>
 /* js:pkmk:start */
@@ -132,7 +133,7 @@ function checkSystemversion() {
         <line choice="netbeans">
             <line choice="nbide"></line>            
         </line>
-        <!--line choice="postinstallscripts"></line-->
+        <line choice="postinstallscripts"></line>
     </choices-outline>
     <choice id="netbeans" title="netbeans-title" description="netbeans-description" start_selected="true" start_enabled="true" start_visible="true"></choice>
     <choice id="nbide" title="nbide-title" description="nbide--description" start_selected="true" start_enabled="true" start_visible="true">

@@ -73,14 +73,14 @@ if [ -z $en_build ] ; then
     en_build=1
 fi
 
-if [ -z $mac_sign_client || 0 -eq $mac_sign_client || -z $mac_sign_user || 0 -eq $mac_sign_user || -z $mac_sign_guid || 0 -eq $mac_sign_guid || -z $codesignbureau_credfile || 0 -eq $codesignbureau_credfile ] ; then
-    mac_sign_client=0
-    mac_sign_user=0
-    mac_sign_guid=0
-    codesignbureau_credfile=0
-else    
-    export CODESIGNBUREAU_CREDFILE=$codesignbureau_credfile
-fi
+#if [ -z $mac_sign_client || 0 -eq $mac_sign_client || -z $mac_sign_user || 0 -eq $mac_sign_user || -z $mac_sign_guid || 0 -eq $mac_sign_guid || -z $codesignbureau_credfile || 0 -eq $codesignbureau_credfile ] ; then
+#    mac_sign_client=0
+#    mac_sign_user=0
+#    mac_sign_guid=0
+#    codesignbureau_credfile=0
+#else    
+#    export CODESIGNBUREAU_CREDFILE=$codesignbureau_credfile
+#fi
 
 rm -rf "$basename"/dist_en
 

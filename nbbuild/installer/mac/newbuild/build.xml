@@ -528,9 +528,12 @@
         
         <copy file="${basedir}/netBeans/nbide/build/scripts/env.sh" todir="${target.scriptsdir}"/>        
         <copy file="${basedir}/commonfiles/get_current_jdk.sh" todir="${target.scriptsdir}"/>        
-        <copy todir="${target.scriptsdir}" failonerror="false" verbose="true" overwrite="true">
+        <copy file="${basedir}/commonfiles/postinstall/perm.sh" todir="${target.scriptsdir}"/>        
+        <copy file="${basedir}/commonfiles/postinstall/populate_caches.sh" todir="${target.scriptsdir}"/>        
+        <copy file="${basedir}/commonfiles/postinstall/postinstall" todir="${target.scriptsdir}"/>        
+        <!--copy todir="${target.scriptsdir}" failonerror="false" verbose="true" overwrite="true">
             <fileset dir="${basedir}/commonfiles/postinstall/"/>
-        </copy>
+        </copy-->
 
         <chmod dir="${target.scriptsdir}" perm="ugo+x" includes="**/*"/>
         

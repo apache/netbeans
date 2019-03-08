@@ -131,8 +131,7 @@ if [ ! -z $MAC_PATH ]; then
         #copy the bits back
         mkdir -p $DIST/bundles
 
-        #rsync -avz -e ssh $NATIVE_MAC_MACHINE:$MAC_PATH/nbbuild/installer/mac/newbuild/dist_en/* $DIST/bundles
-        rsync -avz -e $NB_ALL/nbbuild/installer/mac/newbuild/dist_en/* $DIST/bundles
+        rsync -avz $NB_ALL/nbbuild/installer/mac/newbuild/dist_en/* $DIST/bundles
         ERROR_CODE=$?
         if [ $ERROR_CODE != 0 ]; then
             #echo "ERROR: $ERROR_CODE - Connection to MAC machine $NATIVE_MAC_MACHINE failed, can't get installers"

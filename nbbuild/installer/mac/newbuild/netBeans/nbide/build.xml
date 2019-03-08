@@ -83,11 +83,11 @@ NETBEANS_BUILDNUMBER="${buildnumber}"
 NETBEANS_CHECK_BUILDNUMBER=${nb.check.build.number}
 TOMCAT_INSTALL_DIR="${tomcat.install.dir}"
 NB_CLUSTER_DIR="${nbClusterDir}"
-GLASSFISH_INSTALL_DIR="${glassfish.install.dir}"
-DEFAULT_JDK_HOME="${default.jdk.home}"
+#GLASSFISH_INSTALL_DIR="${glassfish.install.dir}"
+#DEFAULT_JDK_HOME="${default.jdk.home}"
 NB_ID="${nb.id}"
-GLASSFISH_ID="${glassfish.id}"
-TOMCAT_ID="${tomcat.id}"
+#GLASSFISH_ID="${glassfish.id}"
+#TOMCAT_ID="${tomcat.id}"
 ]]></echo>
 
         <copy file="pkg/Info.plist" filtering="true" tofile="${builddir}/Info.plist">

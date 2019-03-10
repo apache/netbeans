@@ -18,7 +18,7 @@
 # under the License.
 
 LIB_DIR=`dirname $0`/../lib
-LIB_DIR=`realpath $LIB_DIR`
+LIB_DIR=`readlink -f $LIB_DIR`
 CLASSPATH_SOURCE="@CLASSPATH@"
 CLASSPATH=""
 for f in `echo $CLASSPATH_SOURCE | tr ':' '\n'`; do

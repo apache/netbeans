@@ -258,9 +258,9 @@
             <arg value="-c"/>            
             <arg value="pkgbuild --root '${module.builddir}/netbeans' --scripts '${scriptsdir}' --identifier org.netbeans.ide.${module.name}.${nb.id} --install-location '/${app.name}/Contents/Resources/NetBeans' '${basedir}/build/${module.name}-${nb.id}.pkg'"/>
         </exec>
-        <java jar="${mac.sign.client}" fork="true" failonerror="true" maxmemory="2048m">
+        <!--java jar="${mac.sign.client}" fork="true" failonerror="true" maxmemory="2048m">
             <arg line="sign -user ${mac.sign.user} -global_uid ${mac.sign.guid} -file_to_sign '${basedir}/build/${module.name}-${nb.id}.pkg' -signed_location '${basedir}/build' -sign_method mac_pkg -server UK" />
-        </java>
+        </java-->
     </target>          
 
 

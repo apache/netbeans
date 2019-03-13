@@ -27,6 +27,7 @@ if [ ! -d "$tmp_dir" ] ; then
     mkdir -p "$tmp_dir"
 fi
 
+javapath=`/usr/libexec/java_home --version 1.8`
 echo Calling unpack200 in "$unpack_dir". Saving result in "$tmp_dir"
 cd "$unpack_dir"
 for x in `find . -name \*.jar.pack` ; do
@@ -34,7 +35,7 @@ for x in `find . -name \*.jar.pack` ; do
     jar="$tmp_dir"/"$jar_subpath"   
     mkdir -p `dirname "$jar"`
     echo "Unpack file $x into $tmp_dir / $jar_subpath"
-    /Library/Java/JavaVirtualMachines/1.6.0_65-b14-462.jdk/Contents/Home/bin/unpack200 "$x" "$jar"
+    $javapath/bin/unpack200 "$x" "$jar"
 done
 
 exit 0

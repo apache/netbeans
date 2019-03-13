@@ -120,18 +120,6 @@ NB_ID="${nb.id}"
             <arg value="-c"/>
             <arg value="pkgutil --expand ${basedir}/../../build/nbide-${nb.id}.pkg ${basedir}/test"/>
         </exec>
-        <exec executable="sh" failonerror="yes">
-            <arg value="-c"/>
-            <arg value="ls -al ${basedir}/test"/>
-        </exec>
-        <exec executable="sh" failonerror="yes">
-            <arg value="-c"/>
-            <arg value="rm -rf ${basedir}/test"/>
-        </exec>
-        <exec executable="sh" failonerror="yes">
-            <arg value="-c"/>
-            <arg value="echo creds : $CODESIGNBUREAU_CREDFILE"/>
-        </exec>
         <!--java jar="${mac.sign.client}" fork="true" failonerror="true" maxmemory="2048m">
             <arg line="sign -user ${mac.sign.user} -global_uid ${mac.sign.guid} -file_to_sign ${basedir}/../../build/nbide-${nb.id}.pkg -signed_location /${basedir}/../../build/ -sign_method mac_pkg -server UK" />
         </java-->

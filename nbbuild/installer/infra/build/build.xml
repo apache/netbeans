@@ -712,9 +712,8 @@ jarsigner.storepass=${jarsigner.storepass}
     </target>
 
     <target name="generate-nb-all-bundle-single">
-        <for-each list="${bundle.jdk.platform}" separator="," property="bundle.jdk.platform.single">
-            <antcall target="generate-nb-all-bundle-single-${bundle.jdk.platform.single}"/>
-        </for-each>
+            <antcall target="generate-nb-all-bundle-single-windows-x64"/>
+            <antcall target="generate-nb-all-bundle-single-linux-x64"/>
     </target>
 
     <target name="generate-nb-all-bundle-single-windows-x64">

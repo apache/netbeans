@@ -14,8 +14,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
-javac.compilerargs=-Xlint -Xlint:-serial
-nbm.homepage=http://wiki.netbeans.org/TestNG
-nbm.module.author=Lukas Jungmann
-is.eager=true
+B57B684518D7C4F9B80B580699AF901459B77944 org.glassfish.corba:glassfish-corba-omgapi:4.1.0

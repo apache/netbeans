@@ -44,6 +44,9 @@ matrix:
         - env: OPTS="-quiet" TARGET="build-platform"
           jdk: oraclejdk11
 
+        - env: OPTS="-Dcluster.config=standard -quiet -Dpermit.jdk9.builds=true -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false" TARGET="build"
+          jdk: oraclejdk11
+
         - env: SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_TESTS_JDK9PLUS=false RUN_TESTS_JDK8=true TEST_MODULES="java/java.completion java/spi.java.hints java/java.hints.declarative" OPTS="-Dcluster.config=java -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           jdk: oraclejdk8
 

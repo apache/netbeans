@@ -156,16 +156,15 @@
         <property name="langtools.jdk.home" value="${java.home}" />
     </ant>
     <mkdir dir="${nb_all}/nbbuild/build/langtools/build/nb" />
-    <javac srcdir="${nb_all}/nbbuild/build/langtools/src/java.compiler/share/classes:${nb_all}/nbbuild/build/langtools/src/jdk.compiler/share/classes:${nb_all}/nbbuild/build/langtools/src/jdk.javadoc/share/classes:${nb_all}/nbbuild/build/langtools/src/jdk.jdeps/share/classes:${nb_all}/nbbuild/build/langtools/build/gensrc/jdk.compiler"
+    <javac srcdir="${nb_all}/nbbuild/build/langtools/src/java.compiler/share/classes:${nb_all}/nbbuild/build/langtools/src/jdk.compiler/share/classes:${nb_all}/nbbuild/build/langtools/src/jdk.jdeps/share/classes:${nb_all}/nbbuild/build/langtools/build/gensrc/jdk.compiler"
            destdir="${nb_all}/nbbuild/build/langtools/build/nb"
-           excludes="**/module-info.java,com/sun/tools/javac/main/JavacToolProvider.java,com/sun/tools/jdeps/**,com/sun/tools/jdeprscan/**,com/sun/tools/javap/Main.java,jdk/javadoc/internal/tool/JavadocToolProvider.java,com/sun/tools/doclets/standard/Standard.java" />
+           excludes="**/module-info.java,com/sun/tools/javac/main/JavacToolProvider.java,com/sun/tools/jdeps/**,com/sun/tools/jdeprscan/**,com/sun/tools/javap/Main.java,jdk/javadoc/internal/tool/JavadocToolProvider.java,com/sun/tools/doclets/standard/Standard.java" source="1.8" target="1.8"/>
     <copy todir="${nb_all}/nbbuild/build/langtools/build/nb">
         <fileset dir="${nb_all}/nbbuild/build/langtools/src/java.compiler/share/classes" includes="**/*.properties"/>
         <fileset dir="${nb_all}/nbbuild/build/langtools/src/jdk.compiler/share/classes" includes="**/*.properties"/>
-        <fileset dir="${nb_all}/nbbuild/build/langtools/src/jdk.javadoc/share/classes" includes="**/*.properties"/>
         <fileset dir="${nb_all}/nbbuild/build/langtools/src/jdk.jdeps/share/classes" includes="**/*.properties"/>
     </copy>
-    <jar destfile="${nb_all}/nbbuild/external/vanilla-javac-api.jar" basedir="${nb_all}/nbbuild/build/langtools/build/nb" includes="javax/**,com/sun/source/**,com/sun/javadoc/**" />
+    <jar destfile="${nb_all}/nbbuild/external/vanilla-javac-api.jar" basedir="${nb_all}/nbbuild/build/langtools/build/nb" includes="javax/**,com/sun/source/**" />
     <jar destfile="${nb_all}/nbbuild/external/vanilla-javac-impl.jar" basedir="${nb_all}/nbbuild/build/langtools/build/nb" excludes="javax/**,com/sun/source/**,com/sun/javadoc/**" />
   </target>
 

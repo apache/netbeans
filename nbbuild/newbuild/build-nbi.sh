@@ -79,13 +79,12 @@ if [ ! -z $NATIVE_MAC_MACHINE ] && [ ! -z $MAC_PATH ]; then
    REMOTE_MAC_PID=$!
 
 fi
-
-if [ ! -z $MAC_PATH ]; then
+if [ ! -z $BUILD_MAC ]; then
    # Run new builds
    sh $NB_ALL/nbbuild/installer/mac/newbuild/init.sh | cat > $NB_ALL/nbbuild/installer/mac/newbuild/build-private.sh
    chmod a+x $NB_ALL/nbbuild/installer/mac/newbuild/build.sh
 
-   BASE_COMMAND="$NB_ALL/nbbuild/installer/mac/newbuild/build.sh $MAC_PATH $BASENAME_PREFIX $BUILDNUMBER $BUILD_NBJDK7 $BUILD_NBJDK8 $BUILD_NBJDK11 $MAC_SIGN_CLIENT $MAC_SIGN_USER $MAC_SIGN_GUID $CODESIGNBUREAU_CREDFILE $LOCALES $BINARY_NAME"
+   BASE_COMMAND="$NB_ALL/nbbuild/installer/mac/newbuild/build.sh $DIST $BASENAME_PREFIX $BUILDNUMBER $BUILD_NBJDK7 $BUILD_NBJDK8 $BUILD_NBJDK11 $BINARY_NAME $MAC_SIGN_IDENTITY_NAME $LOCALES"
 
    $BASE_COMMAND
 fi
@@ -122,8 +121,8 @@ mv $OUTPUT_DIR/* $DIST
 rmdir $OUTPUT_DIR
 
 #Check if Mac installer was OK, 10 "BUILD SUCCESSFUL" messages should be in Mac log
-#if [ ! -z $NATIVE_MAC_MACHINE ] && [ ! -z $MAC_PATH ]; then
-if [ ! -z $MAC_PATH ]; then
+if [ ! -z $NATIVE_MAC_MACHINE ] && [ ! -z $MAC_PATH ]; then
+
     IS_NEW_MAC_FAILED=`cat $MAC_LOG_NEW | grep "BUILD FAILED" | wc -l | tr " " "\n" | grep -v '^$'`
     IS_NEW_MAC_CONNECT=`cat $MAC_LOG_NEW | grep "Connection timed out" | wc -l | tr " " "\n" | grep -v '^$'`
 
@@ -131,10 +130,10 @@ if [ ! -z $MAC_PATH ]; then
         #copy the bits back
         mkdir -p $DIST/bundles
 
-        rsync -avz $NB_ALL/nbbuild/installer/mac/newbuild/dist_en/* $DIST/bundles
+        rsync -avz -e ssh $NATIVE_MAC_MACHINE:$MAC_PATH/nbbuild/installer/mac/newbuild/dist_en/* $DIST/bundles
         ERROR_CODE=$?
         if [ $ERROR_CODE != 0 ]; then
-            #echo "ERROR: $ERROR_CODE - Connection to MAC machine $NATIVE_MAC_MACHINE failed, can't get installers"
+            echo "ERROR: $ERROR_CODE - Connection to MAC machine $NATIVE_MAC_MACHINE failed, can't get installers"
             exit $ERROR_CODE;
         fi
     else
@@ -144,6 +143,13 @@ if [ ! -z $MAC_PATH ]; then
     fi
 fi
 
+if [ ! -z $BUILD_MAC ]; then
+        rsync -avz $NB_ALL/nbbuild/installer/mac/newbuild/dist_en/*.dmg $DIST/bundles
+        ERROR_CODE=$?
+        if [ $ERROR_CODE != 0 ]; then
+            exit $ERROR_CODE;
+        fi
+fi
 ###################################################################
 #
 # Sign Windows ML installers

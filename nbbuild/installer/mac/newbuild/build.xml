@@ -25,7 +25,11 @@
     
     <import file="${basedir}/build.pro"/>
     <property file="${basedir}/Bundle.properties"/>
-    
+    <loadfile property="sign_iden_name" srcFile="${mac.sign.idname}">
+        <filterchain>
+            <striplinebreaks/>
+        </filterchain>
+    </loadfile>    
     <target name="build-jre-nested-pkg">
         <echo message="Building nested JRE into ${basedir}/jre-nested"/>
         <ant dir="netbeans/jre-nested" target="build-pkg"/>              
@@ -164,11 +168,11 @@
             <arg value="cd ${basedir}/netBeans/nbide; du -sk build | sed 's/[\t]*build//'"/>
         </exec>        
         <echo message="sizeof.${module.name}=${size}${line.separator}" file="${basedir}/build/sizes.pro" append="true"/>                    
-        <exec executable="sh" failonerror="yes">
+        <!--exec executable="sh" failonerror="yes">
             <arg value="-c"/>
             <arg value="sh ${basedir}/pack200.sh ${module.builddir} ${VerifyFile.class.name} ${VerifyFile.classpath}"/>
         </exec>
-        <ant target="update-crc32-info-module"/>
+        <ant target="update-crc32-info-module"/-->
     </target>
 
     <target name="update-crc32-info-module" description="Update crc32 info in the update_tracking files for the module (Issue #159657)">
@@ -246,7 +250,7 @@
         <copy file="${basedir}/netBeans/nbide/build/scripts/env.sh" todir="${scriptsdir}"/>
         <copy file="${basedir}/netBeans/nbide/build/scripts/addproduct_id.sh" todir="${scriptsdir}"/>
         <copy file="${basedir}/commonfiles/get_current_jdk.sh" todir="${scriptsdir}"/>
-        <copy file="${basedir}/commonfiles/unpack200.sh" todir="${scriptsdir}"/>
+        <!--copy file="${basedir}/commonfiles/unpack200.sh" todir="${scriptsdir}"/-->
         <copy file="${basedir}/commonfiles/postupgrade_generic" tofile="${scriptsdir}/postupgrade" overwrite="false"/>
         <copy file="${basedir}/commonfiles/postinstall_generic" tofile="${scriptsdir}/postinstall" overwrite="false"/>
         <copy file="${basedir}/commonfiles/postinstall_generic" tofile="${scriptsdir}/postinstall_generic" overwrite="false"/>
@@ -285,7 +289,7 @@
         <copy file="${basedir}/netBeans/nbide/build/scripts/env.sh" todir="${target.scriptsdir}"/>
         <copy file="${basedir}/netBeans/nbide/pkg/scripts/addproduct_id.sh" todir="${target.scriptsdir}"/>
         <copy file="${basedir}/commonfiles/get_current_jdk.sh" todir="${target.scriptsdir}"/>
-        <copy file="${basedir}/commonfiles/unpack200.sh" todir="${target.scriptsdir}"/>
+        <!--copy file="${basedir}/commonfiles/unpack200.sh" todir="${target.scriptsdir}"/-->
         <copy file="${basedir}/commonfiles/postupgrade_generic" tofile="${target.scriptsdir}/postupgrade" overwrite="false"/>
         <copy file="${basedir}/commonfiles/postinstall_generic" tofile="${target.scriptsdir}/postinstall" overwrite="false"/>
 
@@ -527,19 +531,19 @@
         <mkdir dir="${target.scriptsdir}"/>        
         
         <copy file="${basedir}/netBeans/nbide/build/scripts/env.sh" todir="${target.scriptsdir}"/>        
-        <copy file="${basedir}/commonfiles/get_current_jdk.sh" todir="${target.scriptsdir}"/>        
-        <copy file="${basedir}/commonfiles/postinstall/perm.sh" todir="${target.scriptsdir}"/>        
-        <copy file="${basedir}/commonfiles/postinstall/populate_caches.sh" todir="${target.scriptsdir}"/>        
-        <copy file="${basedir}/commonfiles/postinstall/postinstall" todir="${target.scriptsdir}"/>        
+        <copy file="${basedir}/commonfiles/get_current_jdk.sh" todir="${target.scriptsdir}"/>
+        <copy file="${basedir}/commonfiles/postinstall/perm.sh" todir="${target.scriptsdir}"/>
+        <copy file="${basedir}/commonfiles/postinstall/populate_caches.sh" todir="${target.scriptsdir}"/>
+        <copy file="${basedir}/commonfiles/postinstall/postinstall" todir="${target.scriptsdir}"/>
         <!--copy todir="${target.scriptsdir}" failonerror="false" verbose="true" overwrite="true">
-            <fileset dir="${basedir}/commonfiles/postinstall/"/>
+          <fileset dir="${basedir}/commonfiles/postinstall/"/>
         </copy-->
 
         <chmod dir="${target.scriptsdir}" perm="ugo+x" includes="**/*"/>
         
         <exec executable="sh" failonerror="yes">
             <arg value="-c"/>            
-            <arg value="pkgbuild --nopayload --scripts '${target.scriptsdir}' --identifier org.netbeans.postinstallscripts '${basedir}/build/postinstallscripts.pkg'"/>
+            <arg value="pkgbuild --nopayload --scripts '${target.scriptsdir}' --identifier org.netbeans.postinstallscripts --sign '${sign_iden_name}' '${basedir}/build/postinstallscripts.pkg'"/>
         </exec>
         <!--java jar="${mac.sign.client}" fork="true" failonerror="true" maxmemory="2048m">
             <arg line="sign -user ${mac.sign.user} -global_uid ${mac.sign.guid} -file_to_sign '${basedir}/build/postinstallscripts.pkg' -signed_location '${basedir}/build' -sign_method mac_pkg -server UK" />
@@ -550,7 +554,7 @@
         <mkdir dir="${pkg.file}/inst_package"/>
         <exec executable="sh" failonerror="yes">
             <arg value="-cv"/>
-            <arg value="productbuild --distribution '${pkg.file}/distribution.xml' --package-path '${pkg.file}/packages' --resources '${pkg.file}/resources/' '${pkg.file}/inst_package/${pkg.name}.pkg'"/>
+            <arg value="productbuild --distribution '${pkg.file}/distribution.xml' --package-path '${pkg.file}/packages' --resources '${pkg.file}/resources/' --sign '${sign_iden_name}' '${pkg.file}/inst_package/${pkg.name}.pkg'"/>
         </exec>
         <!--java jar="${mac.sign.client}" fork="true" failonerror="true" maxmemory="2048m">
             <arg line="sign -user ${mac.sign.user} -global_uid ${mac.sign.guid} -file_to_sign '${pkg.file}/inst_package/${pkg.name}.pkg' -signed_location '${pkg.file}/inst_package' -sign_method mac_pkg -server UK" />

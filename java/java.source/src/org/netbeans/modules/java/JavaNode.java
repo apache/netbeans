@@ -52,6 +52,8 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.Task;
+import org.netbeans.api.project.FileOwnerQuery;
+import org.netbeans.api.project.Project;
 import org.netbeans.api.queries.FileBuiltQuery;
 import org.netbeans.api.queries.FileBuiltQuery.Status;
 import org.netbeans.modules.classfile.Access;
@@ -75,6 +77,7 @@ import static org.openide.util.ImageUtilities.loadImage;
 import org.openide.util.Lookup;
 
 import static org.openide.util.NbBundle.getMessage;
+import org.openide.util.NbPreferences;
 
 import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
@@ -212,6 +215,48 @@ public final class JavaNode extends DataNode implements ChangeListener {
                     getMessage(JavaNode.class, "HINT_JavaNode_boot_classpath")),
         });
         sheet.put(ps);
+        
+        Project parentProject = FileOwnerQuery.getOwner(super.getDataObject().getPrimaryFile());
+        String fileName = super.getDataObject().getPrimaryFile().getName();
+        // If any of the parent folders is a project, this menu won't appear.
+        if (parentProject == null) {
+            Node.Property arguments = new org.openide.nodes.PropertySupport.ReadWrite<String> (
+                    "runFileArguments", // NOI18N
+                    String.class,
+                    "Arguments",
+                    "Arguments passed to the main method while running the file."
+                ) {
+                    public String getValue () {
+                        return NbPreferences.forModule(JavaNode.class).get(fileName + "_SINGLE_FILE_RUN_ARGUMENTS", "");
+                    }
+
+                    public void setValue (String o) {
+                        NbPreferences.forModule(JavaNode.class).put(fileName + "_SINGLE_FILE_RUN_ARGUMENTS", o);
+                    }
+                };
+            Node.Property vmOptions = new org.openide.nodes.PropertySupport.ReadWrite<String> (
+                    "runFileVMOptions", // NOI18N
+                    String.class,
+                    "VM Options",
+                    "VM Options to be considered while running the file."
+                ) {
+                    public String getValue () {
+                        return NbPreferences.forModule(JavaNode.class).get(fileName + "_SINGLE_FILE_RUN_VM_OPTIONS", "");
+                    }
+
+                    public void setValue (String o) {
+                        NbPreferences.forModule(JavaNode.class).put(fileName + "_SINGLE_FILE_RUN_VM_OPTIONS", o);
+                    }
+                };
+            Sheet.Set ss = new Sheet.Set();
+            ss.setName("runFileArguments"); // NOI18N
+            ss.setDisplayName(getMessage(JavaNode.class, "LBL_JavaNode_without_project_run"));
+            ss.setShortDescription("Run the file's source code.");
+            ss.put (arguments);
+            ss.put (vmOptions);
+            sheet.put(ss);
+        }
+        
         
         @SuppressWarnings("LocalVariableHidesMemberVariable")
         PropertySet[] propertySets = sheet.toArray();

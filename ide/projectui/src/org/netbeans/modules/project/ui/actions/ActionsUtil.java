@@ -38,6 +38,9 @@ import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
 import org.openide.util.Pair;
+import org.netbeans.spi.project.support.RunJavaFileActionProviderV2;
+import org.openide.filesystems.JavaFileObjectLkp;
+import org.openide.util.lookup.Lookups;
 
 /** Nice utility methods to be used in ProjectBased Actions
  * 
@@ -140,6 +143,26 @@ class ActionsUtil {
         return fos;
     }
     
+    public static FileObject[] getFilesFromLookupWithoutProject( Lookup lookup ) {
+        HashSet<FileObject> result = new HashSet<FileObject>();
+        for (DataObject dObj : lookup.lookupAll(DataObject.class)) {
+            FileObject fObj = dObj.getPrimaryFile();
+            result.add(fObj);
+        }
+        FileObject[] fos = new FileObject[ result.size() ];
+        result.toArray( fos );
+        return fos;
+    }
+    
+    public static DataObject[] getDataObjectsFromLookupWithoutProject (Lookup lookup) {
+        HashSet<DataObject> result = new HashSet<DataObject>();
+        for (DataObject dObj : lookup.lookupAll(DataObject.class)) {
+            result.add(dObj);
+        }
+        DataObject[] dos = new DataObject[result.size()];
+        result.toArray(dos);
+        return dos;
+    }
     
     /** 
      * Tests whether given command is available on the project and whether

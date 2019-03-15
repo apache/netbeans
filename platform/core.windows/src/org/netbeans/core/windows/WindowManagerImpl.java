@@ -50,7 +50,7 @@ import org.openide.windows.*;
  * @author Peter Zavadsky
  */
 @org.openide.util.lookup.ServiceProvider(service=org.openide.windows.WindowManager.class)
-public final class WindowManagerImpl extends WindowManager implements Workspace, WindowManager.ModeManager {
+public final class WindowManagerImpl extends WindowManager implements Workspace {
 // XXX Implements Workspace for backward compatibility of old API only,
 // there are no workspaces any more.
     
@@ -461,13 +461,15 @@ public final class WindowManagerImpl extends WindowManager implements Workspace,
     }
 
     @Override
-    public void createModeFromXml(String xml) {
+    public Mode createModeFromXml(String xml) {
         try {
             ModeConfig modeConfig = PersistenceManager.getDefault().createModeFromXml(xml);
             ModeImpl mode = createMode(modeConfig);
             addMode(mode, modeConfig);
+            return mode;
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
+            return null;
         }
     }
     
@@ -500,13 +502,15 @@ public final class WindowManagerImpl extends WindowManager implements Workspace,
     }
     
     @Override
-    public void updateModeConstraintsFromXml(String xml) {
+    public boolean updateModeConstraintsFromXml(String xml) {
         try {
             ModeConfig modeConfig = PersistenceManager.getDefault().createModeFromXml(xml);
             ModeImpl mode = findModeImpl(modeConfig.name);
             mode.setConstraints(modeConfig.constraints);
+            return true;
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
+            return false;
         }
     }
 

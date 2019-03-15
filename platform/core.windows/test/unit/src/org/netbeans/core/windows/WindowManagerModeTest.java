@@ -25,20 +25,24 @@ import org.netbeans.junit.NbTestCase;
 import org.openide.modules.ModuleInfo;
 import org.openide.util.Lookup;
 import org.openide.windows.Mode;
-import org.openide.windows.ModeUtility;
+import org.openide.windows.ModeUtilities;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
 /**
- * This test exercises the WindowManager.ModeManager interface, 
- * as implemented by WindowManagerImpl, through the API of ModeUtility.
+ * This test exercises the Mode management methods of WindowManager 
+ * and Mode XML extraction via ModeUtilities.
+ * <br>
+ * <br>
+ * It would be better placed in Windows System API but it needs
+ * PersistenceHandler to load the window system.
  *
  * @author Mark Phipps
  */
-public class ModeManagerTest extends NbTestCase {
+public class WindowManagerModeTest extends NbTestCase {
 
     public static junit.framework.Test suite() {
-        return GraphicsEnvironment.isHeadless() ? new TestSuite() : new TestSuite(ModeManagerTest.class);
+        return GraphicsEnvironment.isHeadless() ? new TestSuite() : new TestSuite(WindowManagerModeTest.class);
     }
 
     private static boolean loaded = false;
@@ -69,7 +73,7 @@ public class ModeManagerTest extends NbTestCase {
             + "<empty-behavior permanent=\"true\" />"
             + "</mode>";
 
-    public ModeManagerTest(String testName) {
+    public WindowManagerModeTest(String testName) {
         super(testName);
     }
 
@@ -95,7 +99,7 @@ public class ModeManagerTest extends NbTestCase {
 
         Mode mode = wm.findMode("editor");
 
-        String xml = ModeUtility.toXml(mode);
+        String xml = ModeUtilities.toXml(mode);
         assertNotNull("editor Mode XML should not be null", xml);
 
     }
@@ -105,11 +109,22 @@ public class ModeManagerTest extends NbTestCase {
         WindowManager wm = WindowManager.getDefault();
         assertNotNull(wm);
 
-        ModeUtility.createModeFromXml(wm, anonymousModeXml);
-        Mode mode = wm.findMode("anonymousMode_1");
+        Mode mode = wm.createModeFromXml(anonymousModeXml);
         assertNotNull("Anonymous Mode should have been created", mode);
+        
+        assertEquals("Anonymous Mode should be find-able", mode, wm.findMode(mode.getName()));
 
-        assertTrue("Anonymous Mode should have been removed", ModeUtility.removeMode(wm, mode));
+        assertTrue("Anonymous Mode should have been removed", wm.removeMode(mode));
+    }
+    
+    public void testUpdateModeConstraints() {
+        
+        WindowManager wm = WindowManager.getDefault();
+        assertNotNull(wm);
+        
+        boolean updated = wm.updateModeConstraintsFromXml(editorModeXml);
+        
+        assertTrue("Should have found and updated the editor Mode", updated);
     }
 
     public void testExampleWorkFlowSaveAndLoadWorkSpace() {
@@ -117,7 +132,7 @@ public class ModeManagerTest extends NbTestCase {
         assertNotNull(wm);
 
         // User creates TopComponents in the application, drags them around.
-        TopComponent testTc = Component00.getDefault();
+        TopComponent testTc = new TopComponent();
         wm.findMode("editor").dockInto(testTc);
         testTc.open();
 
@@ -126,7 +141,7 @@ public class ModeManagerTest extends NbTestCase {
         
         // User decides to save the layout.
         for (Mode mode : wm.getModes()) {
-            String xml = ModeUtility.toXml(mode);
+            String xml = ModeUtilities.toXml(mode);
             // Save the Mode xml somehow...
         }
         
@@ -141,12 +156,11 @@ public class ModeManagerTest extends NbTestCase {
         for (TopComponent tc : wm.getRegistry().getOpened()) {
             tc.close();
         }
-        Component00.clearRef();
         
         // Remove unwanted Modes.
         for (Mode mode: wm.getModes()) {
             if (mode.getName().startsWith("anonymous")) {
-                ModeUtility.removeMode(wm, mode);
+                wm.removeMode(mode);
             }
         }
         
@@ -157,15 +171,15 @@ public class ModeManagerTest extends NbTestCase {
             // an anonymous Mode or a defined Mode.
             if (modeXml.contains("anonymous")) {
                 // Create the new Mode
-                ModeUtility.createModeFromXml(wm, modeXml);
+                wm.createModeFromXml(modeXml);
             } else {
                 // Adjust the constraints of defined Modes.
-                ModeUtility.updateModeConstraintsFromXml(wm, modeXml);
+                wm.updateModeConstraintsFromXml(modeXml);
             }
         }
         
         // Restore the TopComponents and the names of their Modes somehow...
-        testTc = Component00.getDefault();
+        testTc = new TopComponent();
         // Earlier in the test we pretended that testTc was dragged into anonymousMode_1.
         wm.findMode("anonymousMode_1").dockInto(testTc);
         assertEquals("anonymousMode_1", wm.findMode(testTc).getName());

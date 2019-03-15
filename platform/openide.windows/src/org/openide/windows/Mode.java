@@ -136,6 +136,7 @@ public interface Mode extends Serializable {
         /**
          * Generates the Mode configuration as XML.
          * @return an XML representation of the Mode's configuration.
+         * @since 6.81
          */
         public String toXml();
     }

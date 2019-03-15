@@ -742,32 +742,41 @@ public abstract class WindowManager extends Object implements Serializable {
     }
     
     /**
-     * An extension to enable client code to manage
-     * Modes directly.
+     * Given some XML, attempts to create a Mode that can
+     * subsequently be used to dock a TopComponent into.
+     * Usually this will be an anonymous Mode.
      * 
-     * @see ModeXml
+     * @param xml ModeConfig XML that was originally produced by {@link ModeUtilities#toXml}
+     * @return an instance of Mode or null if the attempt to create the Mode failed
+     * @see ModeUtilities
      */
-    public interface ModeManager {
-        
-        /**
-         * Creates a Mode from the ModeConfig XML.
-         * @param xml ModeConfig XML
-         */
-        public void createModeFromXml(String xml);
+    public Mode createModeFromXml(String xml) {
+        return null;
+    }
 
-        /**
-         * Removes a Mode, intended for removing empty Modes before creating new ones.
-         * @param mode the Mode to be removed
-         * @return success or failure
-         */
-        public boolean removeMode(Mode mode);
+    /**
+     * Before restoring a whole bunch of Modes (for example with XML that has been
+     * previously saved somewhere and now loaded), it is useful to remove the
+     * anonymous modes from the system.
+     * 
+     * @param mode the {@link Mode} to be removed
+     * @return success or failure of the attempt to remove the {@link Mode}
+     */
+    public boolean removeMode(Mode mode) {
+        return false;
+    }
 
-        /**
-         * Changes the SplitConstraints on a Mode, intended for updating the editor Mode 
-         * so that it will fit with Modes that will be created soon.
-         * @param xml ModeConfig XML 
-         */
-        public void updateModeConstraintsFromXml(String xml);
+    /**
+     * Before restoring anonymous Modes, it is useful to update whatever defined Modes
+     * may exist like editor, explorer etc., so that all the Modes will eventually
+     * re-appear in the desired locations.
+     * 
+     * @param xml ModeConfig XML that was originally produced by {@link ModeUtilities#toXml}
+     * @return success or failure of the attempt to find the Mode and update it
+     * @see ModeUtilities
+     */
+    public boolean updateModeConstraintsFromXml(String xml) {
+        return false;
     }
             
     /** A manager that handles operations on top components.

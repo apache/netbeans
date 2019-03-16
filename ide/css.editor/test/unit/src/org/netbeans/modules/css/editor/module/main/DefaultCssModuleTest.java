@@ -27,6 +27,7 @@ import org.netbeans.modules.css.editor.module.spi.FutureParamTask;
 import org.netbeans.modules.css.editor.module.spi.HelpResolver;
 import org.netbeans.modules.css.lib.api.properties.Properties;
 import org.netbeans.modules.css.lib.api.properties.PropertyDefinition;
+import org.netbeans.modules.parsing.spi.ParseException;
 import org.openide.util.Pair;
 
 /**
@@ -225,5 +226,50 @@ public class DefaultCssModuleTest extends CssModuleTestBase {
         assertNotNull(task);
         
     }
-    
+
+    public void testVariableCompletionDeclared() throws ParseException {
+        checkCC(
+            ":root {--c1-fore: coral, --c1-back: blue} p { background: var(|",
+            arr("--c1-fore", "--c1-back"),
+            Match.CONTAINS);
+        checkCC(
+            ":root {--c1-fore: coral, --c1-back: blue} p { background: var(-|",
+            arr("--c1-fore", "--c1-back"),
+            Match.CONTAINS);
+        checkCC(
+            ":root {--c1-fore: coral, --c1-back: blue} p { background: var(--|",
+            arr("--c1-fore", "--c1-back"),
+            Match.CONTAINS);
+        checkCC(
+            ":root {--c1-fore: coral, --c1-back: blue} p { background: var(--c1|",
+            arr("--c1-fore", "--c1-back"),
+            Match.CONTAINS);
+        checkCC(
+            ":root {--c1-fore: coral, --c1-back: blue} p { background: var(--c1-f|",
+            arr("--c1-fore"),
+            Match.CONTAINS);
+    }
+
+    public void testVariableCompletionUsed() throws ParseException {
+        checkCC(
+            "h1 {background-color: var(--c1-fore, coral); color: var(--c1-back)} p { background: var(|",
+            arr("--c1-fore", "--c1-back"),
+            Match.CONTAINS);
+        checkCC(
+            "h1 {background-color: var(--c1-fore, coral); color: var(--c1-back)} p { background: var(-|",
+            arr("--c1-fore", "--c1-back"),
+            Match.CONTAINS);
+        checkCC(
+            "h1 {background-color: var(--c1-fore, coral); color: var(--c1-back)} p { background: var(--|",
+            arr("--c1-fore", "--c1-back"),
+            Match.CONTAINS);
+        checkCC(
+            "h1 {background-color: var(--c1-fore, coral); color: var(--c1-back)} p { background: var(--c1|",
+            arr("--c1-fore", "--c1-back"),
+            Match.CONTAINS);
+        checkCC(
+            "h1 {background-color: var(--c1-fore, coral); color: var(--c1-back)} p { background: var(--c1-f|",
+            arr("--c1-fore"),
+            Match.CONTAINS);
+    }
 }

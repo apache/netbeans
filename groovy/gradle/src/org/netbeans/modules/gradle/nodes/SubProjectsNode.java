@@ -117,8 +117,8 @@ public class SubProjectsNode extends AbstractNode {
         @Override
         protected boolean createKeys(final List<NbGradleProjectImpl> modules) {
             Map<String, File> subProjects = project.getGradleProject().getBaseProject().getSubProjects();
-            for (String name : subProjects.keySet()) {
-                File projDir = subProjects.get(name);
+            for (String path : subProjects.keySet()) {
+                File projDir = subProjects.get(path);
                 FileObject fo = FileUtil.toFileObject(projDir);
                 if (fo != null) {
                     try {

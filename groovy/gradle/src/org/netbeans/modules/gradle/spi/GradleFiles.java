@@ -43,7 +43,7 @@ import org.openide.util.Utilities;
 
 /**
  * Collection of notable files used in a Gradle project.
- * 
+ *
  * @author Laszlo Kishalmi
  */
 public final class GradleFiles implements Serializable {
@@ -68,6 +68,7 @@ public final class GradleFiles implements Serializable {
     public static final String WRAPPER_PROPERTIES     = "gradle/wrapper/gradle-wrapper.properties"; //NOI18N
 
     final File projectDir;
+    final boolean knownProject;
     File rootDir;
     File buildScript;
     File parentScript;
@@ -77,6 +78,11 @@ public final class GradleFiles implements Serializable {
     File wrapperProperties;
 
     public GradleFiles(File dir) {
+        this(dir, false);
+    }
+    
+    public GradleFiles(File dir, boolean knownProject) {
+        this.knownProject = knownProject;
         try {
             dir = dir.getCanonicalFile();
         } catch (IOException ex) {
@@ -179,7 +185,7 @@ public final class GradleFiles implements Serializable {
     }
 
     public boolean isProject() {
-        boolean ret = buildScript != null;
+        boolean ret = knownProject || (buildScript != null);
         if (!ret && (settingsScript != null)) {
             ret = SettingsFile.getSubProjects(settingsScript).contains(projectDir);
         }
@@ -344,7 +350,7 @@ public final class GradleFiles implements Serializable {
             }
             return firstGuess;
         }
-        
+
         public static Set<File> getSubProjects(File f) {
             SettingsFile sf = CACHE.get(f);
             if ((sf == null) || (sf.time < f.lastModified())) {

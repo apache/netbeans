@@ -85,7 +85,7 @@ class DocumentSwitcherTable extends SwitcherTable {
             return false;
         Item item = ( Item ) getModel().getValueAt( selRow, selCol );
         // #268040 - check whether the item is closable
-        if (isClosable(item)) {
+        if (null != item && isClosable(item)) {
             Rectangle rect = getCellRect( selRow, selCol, false );
             if( rect.contains( p ) ) {
                 Dimension size = btnClose.getPreferredSize();

@@ -1,0 +1,28 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+</head>
+<body>
+<font face="dialog"><b>Linha de comando de execução</b><br> <font size="-1"><br> <b>Parâmetros:</b><br> &nbsp;&nbsp;&nbsp;&nbsp;<b>platformhome</b> - início da plataforma preenchida acima<br> &nbsp;&nbsp;&nbsp;&nbsp;<b>device</b> - nome do dispositivo preenchido acima<br> &nbsp;&nbsp;&nbsp;&nbsp;<b>classpath</b> - o classpath da plataforma será definido na próxima etapa do assistente<br> &nbsp;&nbsp;&nbsp;&nbsp;<b>jadfile</b> - nome do arquivo jad<br> &nbsp;&nbsp;&nbsp;&nbsp;<b>jadurl</b> - url de jad para execução OTA<br> &nbsp;&nbsp;&nbsp;&nbsp;<b>securitydomain</b> - domínio de segurança para execução OTA<br> &nbsp;&nbsp;&nbsp;&nbsp;<b>cmdoptions</b> - opções de linha de comando propagadas das definições do projeto<br> &nbsp;&nbsp;&nbsp;&nbsp;<b>/</b> - separador específico de diretórios do sistema operacional<br> <br> <b>Formatos do parâmetro:</b><br> {argumento} é uma substituição simples, de modo que, por exemplo, {jadfile} será substituído pelo caminho real do arquivo jad.<br> {argumento|parte da linha de comando} é a condição, se o argumento estiver definido com algum valor, a parte da linha de comando será adicionada à linha de comando.<br> Combinação de condições e substituição simples são permitidas. Por exemplo: {jadfile|-Xdescriptor:"{jadfile}"} significa que, se o argumento jadfile contiver /myfolder/my.jad, então -Xdescriptor:"/myfolder/my.jad" será adicionado à linha de comando.<br> </font></font>
+</body>
+</html>

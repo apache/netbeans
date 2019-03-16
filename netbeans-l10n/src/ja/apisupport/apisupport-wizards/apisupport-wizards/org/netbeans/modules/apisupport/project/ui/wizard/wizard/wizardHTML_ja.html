@@ -1,0 +1,78 @@
+
+<!--">
+<#assign licensePrefix = "">
+<#assign licenseLast = "-->
+<!--<#assign licenseFirst = "-->
+<!--">
+<#include "${project.licensePath}">
+-->
+<html>
+    <head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>${TR_displayName}</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <div>
+            <section data-bind="step: { 'id' : 'init', text : 'Initial Page'}" >
+                <p>
+                移植可能なHTMLでUIを記述し、NetBeansまたはWebで表示します。詳細は、<a href="http://wiki.netbeans.org/HtmlUIForTemplates">NetBeansのWiki</a>を参照してください...
+                </p>
+            </section>
+
+            <section data-bind="step: 'info'" >
+                <p>
+                    <a href="http://knockoutjs.com">knockout.js</a>バインドを使用して、HTMLページの実際の外観からビュー・モデルを切り離します。JavaまたはJavaScriptで記述されたモデルにビューをバインドします。
+                </p>
+                <h3>すべてOKですか?</h3>
+                <input type="checkbox" data-bind="checked: ok"/>
+                <h3>ご感想をどうぞ。</h3>
+                <input type='text' data-bind="textInput: msg"/>
+            </section>
+
+            <section data-bind="step: 'targetChooser'">
+                <!-- placeholder section for providing default location chooser 
+                  you can also use "step: 'targetChooser:java'" to request
+                  chooser showing list of packages 
+                -->
+            </section>
+            
+            <section data-bind="step: { 'id' : 'summary' }" >
+                <p>
+                ご感想をありがとうございます<span data-bind="text: msg"></span>! <a href="http://freemarker.org/">Freemarker</a>テンプレート・エンジンおよびこのウィザードに入力された値を使用して感想を伝えるファイルの作成に進みましょう。
+                </p>
+            </section>
+        </div>
+<#if HTML4J> <#else>
+        <script>
+            function init() { 
+                var msg = ko.observable();
+                var current = ko.observable();
+                var ok = ko.observable();
+                return {
+                    'current' : current,
+                    'errorCode': ko.computed(function() {
+                        if (current() === 'info') {
+                            // checking the input fields
+                            if (!ok()) return 1;
+                            if (!msg()) return 2;
+                        }
+                        // no errors
+                        return 0;
+                    }),
+                    'ok' : ok,
+                    'msg' : msg
+                }; 
+            }
+        </script>
+</#if>
+        <!-- display the error message -->
+        <div data-bind="visible: errorCode() === 1" style="color: red">
+            「OK」チェックボックスを選択してください。
+        </div>
+        <div data-bind="visible: errorCode() === 2" style="color: red">
+            入力フィールドに入力してください。
+        </div>
+    </body>
+</html>

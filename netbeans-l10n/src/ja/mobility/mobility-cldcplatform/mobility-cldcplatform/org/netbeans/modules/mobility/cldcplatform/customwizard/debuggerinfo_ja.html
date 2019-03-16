@@ -1,0 +1,28 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+</head>
+<body>
+<font face="dialog"><b>デバッガのコマンド行</b><br><font size="-1"><br><b>パラメータ:</b><br>&nbsp;&nbsp;&nbsp;&nbsp;<b>platformhome</b> - 上記で指定したプラットフォームのホーム<br>&nbsp;&nbsp;&nbsp;&nbsp;<b>device</b> - 上記で指定したデバイス名<br>&nbsp;&nbsp;&nbsp;&nbsp;<b>classpath</b> - プラットフォームのクラスパス(ウィザードの次のステップで定義)<br>&nbsp;&nbsp;&nbsp;&nbsp;<b>jadfile</b> - JADファイル名<br>&nbsp;&nbsp;&nbsp;&nbsp;<b>jadurl</b> - OTA実行用のJAD URL<br>&nbsp;&nbsp;&nbsp;&nbsp;<b>securitydomain</b> - OTA実行用のセキュリティ・ドメイン<br>&nbsp;&nbsp;&nbsp;&nbsp;<b>debug</b> - デバッグ・モードを示す単なる条件<br>&nbsp;&nbsp;&nbsp;&nbsp;<b>debugaddress</b> - デバッグのアドレス<br>&nbsp;&nbsp;&nbsp;&nbsp;<b>debugtransport</b> - デバッグのトランスポート<br>&nbsp;&nbsp;&nbsp;&nbsp;<b>debugserver</b> - デバッグのサーバー・モード - デフォルトでtrue<br>&nbsp;&nbsp;&nbsp;&nbsp;<b>debugsuspend</b> - デバッグの一時停止モード - デフォルトでtrue<br>&nbsp;&nbsp;&nbsp;&nbsp;<b>cmdoptions</b> - プロジェクト設定から反映されたコマンド行オプション<br>&nbsp;&nbsp;&nbsp;&nbsp;<b>/</b> - OS固有のディレクトリ区切り文字<br><br><b>パラメータの書式:</b><br> {argument}は簡単な置換です。たとえば、{jadfile}は、JADファイルの実際のパスに置き換えます。<br> {argument|command line part}は、条件です。argumentが何らかの値に設定されると、command line partがコマンド行に追加されます。<br>条件と簡単な置換は組み合わせて指定できます。例: {jadfile|-Xdescriptor:"{jadfile}"}は、jadfile引数が/myfolder/my.jadであった場合、-Xdescriptor:"/myfolder/my.jad"がコマンド行に追加されます。<br></font></font>
+</body>
+</html>

@@ -85,7 +85,7 @@
         Probably you failed to clean your sources before updating. Try: ant hg-clean
     </fail>
     <!-- OK, continue: -->
-    <javac srcdir="antsrc" destdir="build/antclasses" deprecation="true" debug="true" source="1.5" target="1.5">
+    <javac srcdir="antsrc" destdir="build/antclasses" deprecation="true" debug="true" source="1.8" target="1.8">
       <classpath refid="bootstrap-cp"/>
       <compilerarg line="-Xlint -Xlint:-serial"/>
     </javac>

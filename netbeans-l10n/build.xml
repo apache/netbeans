@@ -1,0 +1,510 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2008 Sun Microsystems, Inc. All rights reserved.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Sun designates this
+particular file as subject to the "Classpath" exception as provided
+by Sun in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2008 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE someant  [
+  <!ENTITY links SYSTEM "javadoctools/links.xml">
+  <!ENTITY properties SYSTEM "javadoctools/properties.xml">
+  <!ENTITY replaces SYSTEM "javadoctools/replaces.xml">
+  <!ENTITY disallowed-links SYSTEM "javadoctools/disallowed-links.xml">
+]>
+
+<project name="ml-build" default="build" basedir=".">
+  <import file="../nbbuild/default.xml"/>
+
+  <target name="assure-ant">
+      <fail message="You need Ant version 1.7.0 or later to build NetBeans.">
+          <condition>
+              <not>
+                  <antversion atleast="1.7.0"/>
+              </not>
+          </condition>
+      </fail>
+  </target>
+
+  <!-- Fallback for ant.core.lib - it is not set in some cases - 124554 -->
+  <available property="ant.core.lib" value="${ant.home}/lib/ant.jar" file="${ant.home}/lib/ant.jar"/>
+  <!-- if the previous location is not correct than find the ant.jar from the java.class.path value -->
+  <pathconvert property="ant.core.lib">
+    <mapper type="regexp" from="${path.separator}([^${path.separator}]*ant.jar)${path.separator}" to="\1"/>
+    <path location="${path.separator}${java.class.path}${path.separator}"/>
+  </pathconvert>
+
+  <target name="bootstrap"
+          description="Bootstrap NetBeans-specific Ant extensions."
+          depends="assure-ant">
+    <property file="build.properties"/>
+    <property name="main.dir" location=".."/>
+    <property name="jh.jar" value="apisupport.harness/external/jsearch*.jar"/>
+    <property name="jsearch.jar" value="javahelp/external/jh*.jar"/>
+
+    <mkdir dir="build/antclasses"/>
+    <echo message="Bootstrapping NetBeans-specific Ant extensions..."/>
+    <path id="bootstrap-cp">
+     <pathelement location="${ant.core.lib}"/>
+     <fileset dir="${main.dir}">
+        <!-- For JavaHelp indexing: -->
+        <include name="${jh.jar}"/>
+        <!-- For JavaHelp link checking: -->
+        <include name="${jsearch.jar}"/>
+      </fileset>
+     <pathelement location="${nbantext.jar}"/>
+    </path>
+    <!-- Sanity check: -->
+    <pathconvert pathsep=":" property="class.files.in.antsrc">
+        <path>
+            <fileset dir="antsrc">
+                <include name="**/*.class"/>
+            </fileset>
+        </path>
+    </pathconvert>
+    <fail>
+        <condition>
+            <not>
+                <equals arg1="${class.files.in.antsrc}" arg2=""/>
+            </not>
+        </condition>
+        You have stray *.class files in ${basedir}/antsrc which you must remove.
+        Probably you failed to clean your sources before updating. Try: ant hg-clean
+    </fail>
+    <!-- OK, continue: -->
+    <javac srcdir="antsrc" destdir="build/antclasses" deprecation="true" debug="true" source="1.5" target="1.5">
+      <classpath refid="bootstrap-cp"/>
+      <compilerarg line="-Xlint -Xlint:-serial"/>
+    </javac>
+    <jar jarfile="l10nantext.jar">
+      <fileset dir="build/antclasses"/>
+      <fileset dir="antsrc">
+        <exclude name="**/*.java"/>
+        <exclude name="**/package.html"/>
+        <exclude name="package-list"/>
+      </fileset>
+    </jar>
+  </target>
+
+  <target name="-hg-check-can-clean">
+    <available property="can.hg.clean" type="dir" file="../.hg"/>
+  </target>
+  <target name="-hg-clean-alternative" depends="-hg-check-can-clean" unless="can.hg.clean">
+    <antcall target="-real-clean"/>
+  </target>
+  <target name="hg-clean" depends="-hg-clean-alternative" if="can.hg.clean"
+          description="Clean everything possible.">
+    <antcall target="-do-hg-clean">
+      <!-- <include name="."/> does not seem to work in a dirset -->
+      <param name="basedir" location="."/>
+    </antcall>
+  </target>
+  <target name="-do-hg-clean">
+    <echo>Cleaning untracked files in ${basedir}...</echo>
+    <exec executable="hg" failonerror="yes" outputproperty="hg.unknown.files">
+      <arg value="--cwd"/>
+      <arg file="."/>
+      <arg value="status"/>
+      <arg value="--unknown"/>
+      <arg value="--no-status"/>
+    </exec>
+    <fail message="Will not run clean; checkout contains unknown and not ignored files (did you forget to hg add?):&#10;${hg.unknown.files}">
+        <condition>
+            <not>
+                <equals arg1="${hg.unknown.files}" arg2=""/>
+            </not>
+        </condition>
+    </fail>
+    <exec executable="hg" failonerror="yes">
+      <arg value="--cwd"/>
+      <arg file="."/>
+      <arg value="--config"/>
+      <arg value="extensions.purge="/>
+      <arg value="--verbose"/>
+      <arg value="clean"/>
+      <arg value="--all"/>
+      <arg value="--exclude"/>
+      <!-- Do not use **/nbproject/private/ as this will match some test/{results,work} dirs: -->
+      <arg value="glob:{*/nbproject/private/**,*/*/nbproject/private/**,**/user.build.properties,nbbuild/misc/build-site-local.sh}"/>
+    </exec>
+  </target>
+
+ <target name="build" depends="bootstrap">
+    <taskdef name="jhindexer"
+         classname="org.netbeans.nbbuild.JHIndexer"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="locjhindexer"
+         classname="org.netbeans.nbbuild.LocJHIndexer"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="repeat"
+         classname="org.netbeans.nbbuild.Repeat"
+         classpath="${nbantext.jar}"/> 
+
+     <property name="locjhindexer.jhall" value="${main.dir}/${jh.jar}"/>
+     <property name="locales" value="ja,zh_CN,pt_BR"/>
+     <property name="dist.dir" location="dist"/>
+     <property name="nbms.dist.dir" location="nbms"/>
+     <property name="nbms.dir" location="../nbbuild/nbms"/>
+     <property name="keystore" location=""/>
+     <property name="storepass" value=""/>
+     <property name="nbm_alias" value="nb_ide"/>
+     
+     <taskdef name="package-build" classname="org.netbeans.l10n.Package">
+        <classpath>
+            <pathelement path="l10nantext.jar"/>
+            <pathelement path="${nbantext.jar}"/>
+        </classpath>
+     </taskdef>
+     <package-build src="src" locales="${locales}" dist="${dist.dir}" nbms="${nbms.dir}" nbmsDist="${nbms.dist.dir}" 
+                    keystore="${keystore}" storepass="${storepass}" alias="${nbm_alias}">
+            <classpath>
+                <pathelement location="${nbantext.jar}"/>
+                <fileset dir="${main.dir}">
+                    <include name="apisupport.harness/external/jsearch*.jar"/>
+                </fileset>
+                <fileset dir="${netbeans.dest.dir}">
+                    <include name="harness/jsearch*.jar"/>
+                </fileset>
+            </classpath>
+     </package-build>
+     <repeat target="copy-docs-for-locale" name="one.locale" values="${locales}"/>
+ </target>
+
+ <target name="copy-docs-for-locale" if="one.locale"> 
+     <copy todir="${dist.dir}" flatten="true">
+         <fileset dir="src">
+            <include name="*/other/ide.branding/release-toplevel/*_${one.locale}.html"/>
+         </fileset>
+     </copy>
+     <copy todir="${dist.dir}/nb" flatten="true">
+         <fileset dir="src">
+            <include name="*/other/ide.branding/release/*_${one.locale}.pdf"/>
+         </fileset>
+     </copy>
+ </target>
+
+ <target name="build-community-nbms" depends="bootstrap,init-tasks">
+      <taskdef name="repeat" classname="org.netbeans.nbbuild.Repeat"
+               classpath="${nbantext.jar}"/>
+
+      <pathconvert property="dlocales" setonempty="false">
+          <path path="${locales}"/>
+          <chainedmapper>
+          <filtermapper>
+              <replacestring from="," to="_"/>
+              <replacestring from="-" to="_"/>
+          </filtermapper>
+          <flattenmapper/>
+          </chainedmapper>
+      </pathconvert>
+
+      <property name="netbeans.dest.dir.ml" location="nbms/community/${dlocales}"/>
+      <mkdir dir="${netbeans.dest.dir.ml}"/>
+
+      <property name="netbeans.build.dir.ml" location="build/community"/>
+      <delete dir="${netbeans.build.dir.ml}"/>
+      <mkdir dir="${netbeans.build.dir.ml}"/>
+
+      <tstamp>
+          <format property="spec.version" pattern="yyyy.M.d.kmm" locale="en" />
+      </tstamp>
+      <delete file="build/ml/cluster-nbms-ml.properties"/>
+
+      <pathconvert property="base.dir" pathsep=",">
+          <path>
+              <pathelement location="dist"/>
+          </path>
+      </pathconvert>
+
+      <echo>Base dir: ${base.dir}</echo>
+
+      <pathconvert property="comm.clusters.list" pathsep=",">
+          <path>
+              <dirset dir="dist" id="cluster.dirs">
+                  <include name="*"/>
+                  <exclude name="nb*.*"/>
+              </dirset>
+          </path>
+          <map from="${base.dir}/" to=""/>
+      </pathconvert>
+
+      <echo>Cluster dirs: ${comm.clusters.list}</echo>
+      <condition property="is.localized" value="true">
+          <not>
+             <equals arg1="${comm.clusters.list}" arg2="" trim="true"/>
+          </not>
+      </condition>
+      <echo>IS localized: ${is.localized}</echo>
+
+      <antcall target="build-all-nbm-ml"/>
+  </target>
+
+  <target name="build-all-nbm-ml" if="is.localized">
+      <repeat target="build-one-nbm-ml" name="one.cluster.dir.ml" values="${comm.clusters.list}"/>
+      <antcall target="build-one-nbm-ml" inheritall="false">
+          <param name="is.kit" value="true"/>
+          <param name="locales" value="${locales}"/>
+          <param name="dlocales" value="${dlocales}"/>
+          <param name="one.cluster.dir.ml" value="nb6.7"/>
+          <param name="nb.cluster.nb" value="${nb.cluster.nb}"/>
+          <param name="comm.clusters.list" value="${comm.clusters.list}"/>
+          <param name="spec.version" value="${spec.version}"/>
+          <param name="netbeans.dest.dir.ml" value="${netbeans.dest.dir.ml}"/>
+          <param name="netbeans.build.dir.ml" value="${netbeans.build.dir.ml}"/>
+          <param name="buildnumber" value="${buildnumber}"/>
+      </antcall>
+  </target>
+
+
+  <target name="-create-cluster-ml-nbm-metadata" unless="is.kit">
+      <echo file="build/ml/nbms/tmp/manifest.mf">OpenIDE-Module: ${code.name}
+OpenIDE-Module-Localizing-Bundle: ${code.name.base.slashes}/Bundle.properties
+OpenIDE-Module-Specification-Version: ${spec.version}
+</echo>
+      <echo file="build/ml/nbms/classes/${code.name.base.slashes}/Bundle.properties">
+OpenIDE-Module-Name=NetBeans 6.7 ${one.cluster.dir.ml} cluster localization (${locales})
+OpenIDE-Module-Display-Category=Localization
+OpenIDE-Module-Short-Description=NetBeans 6.7 ${one.cluster.dir.ml} cluster localization (${locales})
+OpenIDE-Module-Long-Description=Delivers ${locales} localization for all modules in ${one.cluster.dir.ml} cluster of NetBeans 6.7
+</echo>
+  </target>
+ 
+    <target name="-prepare-localizing-bundles" if="one.kit.locale">
+       <echo file="build/ml/nbms/classes/${code.name.base.slashes}/Bundle_${one.kit.locale}.properties">
+OpenIDE-Module-Name=NetBeans 6.7 ${one.kit.locale} localization plugin
+OpenIDE-Module-Display-Category=Localization
+OpenIDE-Module-Short-Description=NetBeans 6.7 ${one.kit.locale} localization plugin
+OpenIDE-Module-Long-Description=Delivers ${one.kit.locale} localization of whole NetBeans 6.7
+</echo>
+       <!-- try to look for Bundle properties file provided by translation team -->
+       <copy file="l10n_uc_kits/${code.name.base.slashes}/../${one.kit.locale}/Bundle.properties"
+             tofile="build/ml/nbms/classes/${code.name.base.slashes}/Bundle_${one.kit.locale}.properties"
+             overwrite="true"
+             failonerror="false"/>
+       <!-- enforce display category to be "Localization", the same for all umbrella kit NBMs -->
+       <propertyfile file="build/ml/nbms/classes/${code.name.base.slashes}/Bundle_${one.kit.locale}.properties">
+         <entry key="OpenIDE-Module-Display-Category" value="Localization"/>
+       </propertyfile>
+    </target>
+
+    <target name="-create-kit-ml-nbm-metadata" if="is.kit">
+      <echo file="build/ml/nbms/tmp/manifest.mf">OpenIDE-Module: ${code.name}
+OpenIDE-Module-Localizing-Bundle: ${code.name.base.slashes}/Bundle.properties
+OpenIDE-Module-Specification-Version: ${spec.version}
+OpenIDE-Module-Module-Dependencies: ${kit.deps}
+</echo>
+       <!-- prepare localization jarfiles - it's just for localized info.xml files inf NBMs -->
+<!--
+       <repeat target="-prepare-localizing-bundles" name="one.kit.locale" values="${locales}"/>
+       <property name="locjar.locales" value="${locales}"/>
+       <locjar jarfile="${cluster}/${module.jar}"
+               basedir="build/ml/nbms/classes"
+               compress="false"/>
+       <delete>
+           <fileset dir="build/ml/nbms/classes/${code.name.base.slashes}" includes="Bundle_*.properties"/>
+       </delete>
+-->
+
+       <!-- create default Bundle properties -->
+       <echo file="build/ml/nbms/classes/${code.name.base.slashes}/Bundle.properties">
+OpenIDE-Module-Name=NetBeans 6.7 ${locales} localization kit
+OpenIDE-Module-Display-Category=Localization
+OpenIDE-Module-Short-Description=NetBeans 6.7 ${locales} localization kit
+OpenIDE-Module-Long-Description=Delivers ${locales} localization of whole NetBeans 6.7
+</echo>
+       <!-- try to look for Bundle properties file provided by translation team -->
+       <copy file="../translatedfiles/src/nbbuild/${code.name.base.slashes}/Bundle.properties"
+             tofile="build/ml/nbms/classes/${code.name.base.slashes}/Bundle.properties"
+             overwrite="true"
+             failonerror="false"/>
+       <!-- enforce display category to be "Localization", the same for all umbrella kit NBMs -->
+       <propertyfile file="build/ml/nbms/classes/${code.name.base.slashes}/Bundle.properties">
+         <entry key="OpenIDE-Module-Display-Category" value="Localization"/>
+       </propertyfile>
+  </target>
+
+  <target name="-check-ml-nbm-props">
+      <condition property="run.ml.nbm.build" value="true">
+          <and>
+              <isset property="locales"/>
+              <isset property="dlocales"/>
+              <isset property="one.cluster.dir.ml"/>
+              <isset property="comm.clusters.list"/>
+              <isset property="spec.version"/>
+              <isset property="netbeans.dest.dir.ml"/>
+              <isset property="netbeans.build.dir.ml"/>
+          </and>
+      </condition>
+  </target>
+
+  <target name="build-one-nbm-ml" depends="init-tasks,-check-ml-nbm-props" if="run.ml.nbm.build">
+      <property file="build/ml/cluster-nbms-ml.properties"/>
+
+      <echo>Cluster dir: ${one.cluster.dir.ml}</echo>
+
+      <pathconvert property="cluster.package.dir" setonempty="false">
+          <path path="${one.cluster.dir.ml}"/>
+          <chainedmapper>
+          <filtermapper>
+              <replacestring from="," to="_"/>
+              <replacestring from="-" to="_"/>
+              <replacestring from="." to="_"/>
+          </filtermapper>
+          <flattenmapper/>
+          </chainedmapper>
+      </pathconvert>
+      <property name="cluster" location="${netbeans.build.dir.ml}/${one.cluster.dir.ml}"/>
+
+      <delete dir="build/ml/nbms"/>
+      <delete dir="${netbeans.build.dir.ml}"/>
+      <mkdir dir="${netbeans.build.dir.ml}/${one.cluster.dir.ml}"/>
+      <copy todir="${netbeans.build.dir.ml}/${one.cluster.dir.ml}">
+          <fileset dir="dist/${one.cluster.dir.ml}"/>
+      </copy>
+
+      <condition property="code.name.base" value="org.netbeans.localization.${cluster.package.dir}.${dlocales}">
+          <not>
+              <isset property="is.kit"/>
+          </not>
+      </condition>
+      <condition property="code.name.base" value="org.netbeans.localization.kit.${cluster.package.dir}.${dlocales}">
+          <isset property="is.kit"/>
+      </condition>
+
+      <pathconvert property="code.name.base.slashes" setonempty="false">
+          <path path="${code.name.base}"/>
+          <chainedmapper>
+              <flattenmapper/>
+              <filtermapper>
+                  <replacestring from="." to="/"/>
+              </filtermapper>
+          </chainedmapper>
+      </pathconvert>
+      <pathconvert property="code.name.base.dashes" setonempty="false">
+          <path path="${code.name.base}"/>
+          <chainedmapper>
+              <flattenmapper/>
+              <filtermapper>
+                  <replacestring from="." to="-"/>
+              </filtermapper>
+          </chainedmapper>
+      </pathconvert>
+      <property name="public.packages" value="${code.name.base}.*"/>
+      <property name="code.name" value="${code.name.base}/1"/>
+      <mkdir dir="build/ml/nbms/classes/${code.name.base.slashes}"/>
+      <mkdir dir="build/ml/nbms/tmp"/>
+      <antcall target="-create-cluster-ml-nbm-metadata"/>
+      <antcall target="-create-kit-ml-nbm-metadata"/>
+      <property name="is.autoload" value="false"/>
+      <property name="is.eager" value="false"/>
+      <condition property="module.jar.dir" value="modules">
+          <!-- set module.jar.dir property only when building kit NBM - leads to               AutoUpdate-Show-In-Client manifest attribute is set to true -->
+          <isset property="is.kit"/>
+      </condition>
+      <property name="module.jar" value="modules/${code.name.base.dashes}.jar"/>      <mkdir dir="${cluster}/modules"/>
+      <jarwithmoduleattributes jarfile="${cluster}/${module.jar}"
+          compress="${build.package.compress}"
+          index="${build.package.index}"
+          manifest="build/ml/nbms/tmp/manifest.mf">
+          <fileset dir="build/ml/nbms/classes"/>
+      </jarwithmoduleattributes>
+      <createmodulexml xmldir="${cluster}/config/Modules">
+          <enabled dir="${cluster}">
+              <include name="${module.jar}"/>
+          </enabled>
+      </createmodulexml>
+      <patternset id="module.files">
+          <!-- include name="${module.jar}"/ -->
+          <include name="**/*.jar"/>
+          <include name="config/Modules/${code.name.base.dashes}.xml"/>
+      </patternset>
+      <property name="module.files.toString" refid="module.files"/>
+      <echo level="verbose">Basic matching module files (${code.name.base.dashes}): ${module.files.toString}</echo>
+      <genlist outputfiledir="${cluster}" module="${module.jar}">
+          <fileset dir="${cluster}">
+              <patternset refid="module.files"/>
+          </fileset>
+      </genlist>
+      <property name="license.file.override" location="build/ml/nbms/license"/>
+      <property name="extra.license.files" value=""/>
+      <taskdef name="releasefileslicense" classname="org.netbeans.nbbuild.extlibs.ReleaseFilesLicense" classpath="${nbantext.jar}"/>
+      <releasefileslicense license="${license.file.override}" standardlicense="${nb_all}/nbbuild/standard-nbm-license.txt" extralicensefiles="${extra.license.files}"/>
+      <taskdef name="makenbm" classname="org.netbeans.nbbuild.MakeNBM" classpath="${nbantext.jar}"/>
+      <property name="nbm_alias" value="nb_ide"/>
+      <makenbm file="build/ml/${code.name.base.dashes}.nbm"
+               productdir="${cluster}"
+               module="${module.jar}"
+               homepage="http://translatedfiles.netbeans.org/"
+               distribution="http://translatedfiles.netbeans.org/"
+               needsrestart="true"
+               global="true"
+               targetcluster="${one.cluster.dir.ml}"
+               releasedate=""
+               moduleauthor="">
+          <license file="${license.file.override}"/>
+          <signature keystore="${keystore}" storepass="${storepass}" alias="${nbm_alias}"/>
+      </makenbm>
+      <move todir="${netbeans.dest.dir.ml}" file="build/ml/${code.name.base.dashes}.nbm"/>
+      <property file="build/ml/cluster-nbms-ml.properties"/>
+      <condition property="new.kit.deps" value="${code.name} &gt; ${spec.version}">
+          <and>
+              <not>
+                  <isset property="kit.deps"/>
+              </not>
+              <not>
+                  <isset property="is.kit"/>
+              </not>
+          </and>
+      </condition>
+      <condition property="new.kit.deps" value="${kit.deps},${code.name} &gt; ${spec.version}">
+          <and>
+              <isset property="kit.deps"/>
+              <not>
+                  <isset property="is.kit"/>
+              </not>
+          </and>
+      </condition>
+      <condition property="new.kit.deps" value="${kit.deps}">
+          <isset property="is.kit"/>
+      </condition>
+      <propertyfile file="build/ml/cluster-nbms-ml.properties">
+          <entry key="kit.deps" value="${new.kit.deps}"/>
+      </propertyfile>
+
+ </target>
+
+</project>

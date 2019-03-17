@@ -1,0 +1,78 @@
+
+<!--">
+<#assign licensePrefix = "">
+<#assign licenseLast = "-->
+<!--<#assign licenseFirst = "-->
+<!--">
+<#include "${project.licensePath}">
+-->
+<html>
+    <head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>${TR_displayName}</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <div>
+            <section data-bind="step: { 'id' : 'init', text : 'Initial Page'}" >
+                <p>
+                Crie sua IU em HTML portável e exiba-a no NetBeans ou na web! Leia mais em <a href="http://wiki.netbeans.org/HtmlUIForTemplates">nossa wiki</a>...
+                </p>
+            </section>
+
+            <section data-bind="step: 'info'" >
+                <p>
+                    Use vinculações <a href="http://knockoutjs.com">knockout.js</a> para isolar seu modelo de view da aparência real de sua página HTML. Vincule sua view ao modelo criado em Java ou JavaScript.
+                </p>
+                <h3>Está tudo OK?</h3>
+                <input type="checkbox" data-bind="checked: ok"/>
+                <h3>Como você se sente?</h3>
+                <input type='text' data-bind="textInput: msg"/>
+            </section>
+
+            <section data-bind="step: 'targetChooser'">
+                <!-- placeholder section for providing default location chooser 
+                  you can also use "step: 'targetChooser:java'" to request
+                  chooser showing list of packages 
+                -->
+            </section>
+            
+            <section data-bind="step: { 'id' : 'summary' }" >
+                <p>
+                Você está se sentindo <span data-bind="text: msg"></span>! Vamos prosseguir para a criação de um arquivo que expressará seu sentimento usando o mecanismo de modelo <a href="http://freemarker.org/">Freemarker</a> e os valores preenchidos neste assistente.
+                </p>
+            </section>
+        </div>
+<#if HTML4J> <#else>
+        <script>
+            function init() { 
+                var msg = ko.observable();
+                var current = ko.observable();
+                var ok = ko.observable();
+                return {
+                    'current' : current,
+                    'errorCode': ko.computed(function() {
+                        if (current() === 'info') {
+                            // checking the input fields
+                            if (!ok()) return 1;
+                            if (!msg()) return 2;
+                        }
+                        // no errors
+                        return 0;
+                    }),
+                    'ok' : ok,
+                    'msg' : msg
+                }; 
+            }
+        </script>
+</#if>
+        <!-- display the error message -->
+        <div data-bind="visible: errorCode() === 1" style="color: red">
+            Marque a caixa de seleção OK!
+        </div>
+        <div data-bind="visible: errorCode() === 2" style="color: red">
+            Preencha o campo de entrada!
+        </div>
+    </body>
+</html>

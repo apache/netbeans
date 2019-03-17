@@ -1,0 +1,25 @@
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+</head><body>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+</head>
+<font face="dialog"><b>Execution Command Line</b><br>
+<font size="-1"><br>
+<b>Parameters:</b><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<b>platformhome</b> - platform home filled above<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<b>device</b> - device name filled above<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<b>classpath</b> - platform classpath will be defined on the next wizard step<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<b>jadfile</b> - jad file name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<b>jadurl</b> - jad url for OTA execution<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<b>securitydomain</b> - security domain for OTA execution<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<b>cmdoptions</b> - command line options propagated from project settings<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<b>/</b> - OS specific directory separator<br>
+<br>
+<b>Parameter formats:</b><br>
+{argument} is a simple replacement, so for example {jadfile} will be replaced by the real path to the jad file.<br>
+{argument|command line part} is a condition, if argument is set to some value the command line part will be added to the command line.<br>
+Combination of condition and simple replacement is allowed. For example: {jadfile|-Xdescriptor:&quot;{jadfile}&quot;} means that if the jadfile argument contains /myfolder/my.jad then -Xdescriptor:&quot;/myfolder/my.jad&quot; will be added to the command line.<br>
+</font></font></body>
+</html>

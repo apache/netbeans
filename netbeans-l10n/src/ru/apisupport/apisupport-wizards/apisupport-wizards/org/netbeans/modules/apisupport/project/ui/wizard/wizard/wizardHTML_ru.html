@@ -1,0 +1,78 @@
+
+<!--">
+<#assign licensePrefix = "">
+<#assign licenseLast = "-->
+<!--<#assign licenseFirst = "-->
+<!--">
+<#include "${project.licensePath}">
+-->
+<html>
+    <head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>${TR_displayName}</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <div>
+            <section data-bind="step: { 'id' : 'init', text : 'Initial Page'}" >
+                <p>
+                Создавайте пользовательский интерфейс в переносимом HTML-редакторе для отображения в NetBeans и в Интернете! Подробнее см. <a href="http://wiki.netbeans.org/HtmlUIForTemplates">wiki-страницы</a>...
+                </p>
+            </section>
+
+            <section data-bind="step: 'info'" >
+                <p>
+                    С помощью привязок <a href="http://knockoutjs.com">knockout.js</a> можно изолировать модель представления от реального отображения HTML-страницы. Представление можно связать с моделью, разработанной на Java или JavaScript.
+                </p>
+                <h3>Все в порядке?</h3>
+                <input type="checkbox" data-bind="checked: ok"/>
+                <h3>Как самочувствие?</h3>
+                <input type='text' data-bind="textInput: msg"/>
+            </section>
+
+            <section data-bind="step: 'targetChooser'">
+                <!-- placeholder section for providing default location chooser 
+                  you can also use "step: 'targetChooser:java'" to request
+                  chooser showing list of packages 
+                -->
+            </section>
+            
+            <section data-bind="step: { 'id' : 'summary' }" >
+                <p>
+                Вы чувствуете себя <span data-bind="text: msg"></span>! Давайте продолжим и создадим файл, который будет выражать ваши чувства, используя механизм создания шаблонов <a href="http://freemarker.org/">Freemarker</a> и значения, указанные с помощью этого мастера.
+                </p>
+            </section>
+        </div>
+<#if HTML4J> <#else>
+        <script>
+            function init() { 
+                var msg = ko.observable();
+                var current = ko.observable();
+                var ok = ko.observable();
+                return {
+                    'current' : current,
+                    'errorCode': ko.computed(function() {
+                        if (current() === 'info') {
+                            // checking the input fields
+                            if (!ok()) return 1;
+                            if (!msg()) return 2;
+                        }
+                        // no errors
+                        return 0;
+                    }),
+                    'ok' : ok,
+                    'msg' : msg
+                }; 
+            }
+        </script>
+</#if>
+        <!-- display the error message -->
+        <div data-bind="visible: errorCode() === 1" style="color: red">
+            Установите флажок "OK".
+        </div>
+        <div data-bind="visible: errorCode() === 2" style="color: red">
+            Заполните поле ввода.
+        </div>
+    </body>
+</html>

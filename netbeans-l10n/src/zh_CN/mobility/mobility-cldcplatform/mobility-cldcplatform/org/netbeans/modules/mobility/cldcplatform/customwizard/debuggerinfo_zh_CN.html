@@ -1,0 +1,47 @@
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright (c) 2006, 2016 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+-->
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+</head>
+<body>
+<font face="dialog"><b>调试器命令行</b><br> <font size="-1"><br> <b>参数: </b><br> &nbsp;&nbsp;&nbsp;&nbsp;<b>platformhome</b> - 在其中填写平台的起始目录<br> &nbsp;&nbsp;&nbsp;&nbsp;<b>device</b> - 在其中填写设备名称<br> &nbsp;&nbsp;&nbsp;&nbsp;<b>classpath</b> - 将在下一个向导步骤中定义的平台类路径<br> &nbsp;&nbsp;&nbsp;&nbsp;<b>jadfile</b> - jad 文件名<br> &nbsp;&nbsp;&nbsp;&nbsp;<b>jadurl</b> - 用于 OTA 执行的 jad url<br> &nbsp;&nbsp;&nbsp;&nbsp;<b>securitydomain</b> - 用于 OTA 执行的安全域<br> &nbsp;&nbsp;&nbsp;&nbsp;<b>debug</b> - 这只是一个表示调试模式的条件<br> &nbsp;&nbsp;&nbsp;&nbsp;<b>debugaddress</b> - 调试地址<br> &nbsp;&nbsp;&nbsp;&nbsp;<b>debugtransport</b> - 调试传输<br> &nbsp;&nbsp;&nbsp;&nbsp;<b>debugserver</b> - 调试服务器模式 - 默认设置为 true<br> &nbsp;&nbsp;&nbsp;&nbsp;<b>debugsuspend</b> - 调试挂起模式 - 默认设置为 true<br> &nbsp;&nbsp;&nbsp;&nbsp;<b>cmdoptions</b> - 来自项目设置的命令行选项<br> &nbsp;&nbsp;&nbsp;&nbsp;<b>/</b> - 特定于 OS 的目录分隔符<br> <br> <b>参数格式: </b><br> {argument} 是一个简单的替换变量, 例如, {jadfile} 将替换为实际的 jad 文件路径。<br> {argument|command line part} 是一个条件, 如果将 argument 设置为某个值, 则 command line part 将会添加到命令行中。<br> 允许将条件和简单的替换变量结合在一起使用。例如: {jadfile|-Xdescriptor:"{jadfile}"} 表示如果 jadfile 参数包含 /myfolder/my.jad, 则 -Xdescriptor:"/myfolder/my.jad" 将会添加到命令行。<br> </font></font>
+</body>
+</html>

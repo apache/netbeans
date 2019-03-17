@@ -1,5 +1,0 @@
-^build/
-^dist/*
-^nbms/
-/JavaHelpSearch/
-^l10nantext.jar$

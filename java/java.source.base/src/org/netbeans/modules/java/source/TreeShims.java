@@ -25,6 +25,8 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.TreeMaker;
+import com.sun.tools.javac.util.ListBuffer;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -112,6 +114,19 @@ public class TreeShims {
         }
     }
 
+    public static Tree SwitchExpression(TreeMaker make, ExpressionTree selector, List<? extends CaseTree> caseList) throws SecurityException {
+        ListBuffer<JCTree.JCCase> cases = new ListBuffer<JCTree.JCCase>();
+        for (CaseTree t : caseList) {
+            cases.append((JCTree.JCCase) t);
+        }
+        try {
+            Method getMethod = TreeMaker.class.getDeclaredMethod("SwitchExpression", JCTree.JCExpression.class, com.sun.tools.javac.util.List.class);
+            return (Tree) getMethod.invoke(make, (JCTree.JCExpression) selector, cases.toList());
+        } catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+  
     @SuppressWarnings("unchecked")
     private static <T extends Throwable> RuntimeException throwAny(Throwable t) throws T {
         throw (T) t;

@@ -267,7 +267,7 @@ implements Cloneable, Stamps.Updater {
                 }
                 throw new IOException("Not found bundle:" + m.getCodeNameBase());
             }
-            ClassLoader l = new NetigsoLoader(b, m, jar);
+            NetigsoLoader l = new NetigsoLoader(b, m, jar);
             Set<String> pkgs = new HashSet<String>();
             String[] knownPkgs = registered.get(m.getCodeNameBase());
             Object exported = b.getHeaders("").get("Export-Package");
@@ -326,7 +326,17 @@ implements Cloneable, Stamps.Updater {
                 if (isRealBundle(b)) {
                     throw possible;
                 }
-                LOG.log(Level.FINE, "Not starting fragment {0}", m.getCodeNameBase());
+                // Bundle is a fragment, replace it with host in classloader
+                String fragmentHost = b.getHeaders("").get("Fragment-Host");
+                Bundle hostBundle = findBundle(fragmentHost);
+                if (hostBundle == null) {
+                    LOG.log(Level.WARNING, "Failed to locate fragment host bundle {0} for fragment bundle {1}",
+                            new Object[]{fragmentHost, m.getCodeNameBase()});
+                    throw new IOException("Not found bundle: " + hostBundle);
+                }
+                l.setBundle(hostBundle);
+                LOG.log(Level.FINE, "Not starting fragment {0}, using host bundle {1} for classloading instead", 
+                        new Object[]{m.getCodeNameBase(), fragmentHost});
             }
             return pkgs;
         } catch (BundleException ex) {
@@ -349,7 +359,7 @@ implements Cloneable, Stamps.Updater {
     @Override
     protected void stopLoader(ModuleInfo m, ClassLoader loader) {
         NetigsoLoader nl = (NetigsoLoader)loader;
-        Bundle b = nl.bundle;
+        Bundle b = nl.getBundle();
         try {
             assert b != null;
             try {

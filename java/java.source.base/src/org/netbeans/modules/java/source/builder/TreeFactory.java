@@ -80,6 +80,7 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.JavaFileObject;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.modules.java.source.TreeShims;
 import static org.netbeans.modules.java.source.save.PositionEstimator.*;
 
 /**
@@ -803,7 +804,11 @@ public class TreeFactory {
             cases.append((JCCase)t);
         return make.at(NOPOS).Switch((JCExpression)expression, cases.toList());
     }
-    
+
+    public Tree SwitchExpression(ExpressionTree expression, List<? extends CaseTree> caseList) {
+        return TreeShims.SwitchExpression(make.at(NOPOS), expression, caseList);
+    }
+
     public SynchronizedTree Synchronized(ExpressionTree expression, BlockTree block) {
         return make.at(NOPOS).Synchronized((JCExpression)expression, (JCBlock)block);
     }

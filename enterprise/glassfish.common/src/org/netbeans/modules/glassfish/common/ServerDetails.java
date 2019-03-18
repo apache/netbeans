@@ -57,7 +57,8 @@ public enum ServerDetails {
         "deployer:gfv3ee6", // NOI18N
         300,
         "https://download.oracle.com/glassfish/v3/release/glassfish-v3.zip", // NOI18N
-        "https://download.oracle.com/glassfish/v3/release/glassfish-v3.zip" // NOI18N
+        "https://download.oracle.com/glassfish/v3/release/glassfish-v3.zip", // NOI18N
+        "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
     /**
      * details for an instance of GlassFish Server 3.0/3.0.x
@@ -66,7 +67,8 @@ public enum ServerDetails {
         "deployer:gfv3ee6", // NOI18N
         301,
         "https://download.oracle.com/glassfish/3.0.1/release/glassfish-3.0.1-ml.zip", // NOI18N
-        "https://download.oracle.com/glassfish/3.0.1/release/glassfish-3.0.1-ml.zip" // NOI18N
+        "https://download.oracle.com/glassfish/3.0.1/release/glassfish-3.0.1-ml.zip", // NOI18N
+        "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
     /**
      * details for an instance of GlassFish Server 3.1
@@ -75,7 +77,8 @@ public enum ServerDetails {
         "deployer:gfv3ee6wc", // NOI18N
         310,
         "https://download.oracle.com/glassfish/3.1/release/glassfish-3.1-ml.zip", // NOI18N
-        "https://download.oracle.com/glassfish/3.1/release/glassfish-3.1-ml.zip" // NOI18N
+        "https://download.oracle.com/glassfish/3.1/release/glassfish-3.1-ml.zip", // NOI18N
+        "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
     /**
      * details for an instance of GlassFish Server 3.1.1
@@ -84,8 +87,9 @@ public enum ServerDetails {
         "deployer:gfv3ee6wc", // NOI18N
         311,
         "https://download.oracle.com/glassfish/3.1.1/release/glassfish-3.1.1-ml.zip", // NOI18N
-        "https://download.oracle.com/glassfish/3.1.1/release/glassfish-3.1.1-ml.zip" // NOI18N
-            ),
+        "https://download.oracle.com/glassfish/3.1.1/release/glassfish-3.1.1-ml.zip", // NOI18N
+        "https://javaee.github.io/glassfish/LICENSE" //NOI18N
+    ),
     /**
      * details for an instance of GlassFish Server 3.1.2
      */
@@ -93,7 +97,8 @@ public enum ServerDetails {
         "deployer:gfv3ee6wc", // NOI18N
         312,
         "https://download.oracle.com/glassfish/3.1.2/release/glassfish-3.1.2-ml.zip", // NOI18N
-        "https://download.oracle.com/glassfish/3.1.2/release/glassfish-3.1.2-ml.zip" // NOI18N
+        "https://download.oracle.com/glassfish/3.1.2/release/glassfish-3.1.2-ml.zip", // NOI18N
+        "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
 
     /**
@@ -103,7 +108,8 @@ public enum ServerDetails {
         "deployer:gfv3ee6wc", // NOI18N
         312,
         "https://download.oracle.com/glassfish/3.1.2.2/release/glassfish-3.1.2.2-ml.zip", // NOI18N
-        "https://download.oracle.com/glassfish/3.1.2.2/release/glassfish-3.1.2.2-ml.zip" // NOI18N
+        "https://download.oracle.com/glassfish/3.1.2.2/release/glassfish-3.1.2.2-ml.zip", // NOI18N
+        "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
 
     /**
@@ -113,7 +119,8 @@ public enum ServerDetails {
         "deployer:gfv3ee6wc", // NOI18N
         400,
         "https://download.oracle.com/glassfish/4.0/release/glassfish-4.0-ml.zip", // NOI18N
-        "https://download.oracle.com/glassfish/4.0/release/glassfish-4.0-ml.zip" // NOI18N
+        "https://download.oracle.com/glassfish/4.0/release/glassfish-4.0-ml.zip", // NOI18N
+        "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
 
     /**
@@ -123,7 +130,8 @@ public enum ServerDetails {
         "deployer:gfv3ee6wc", // NOI18N
         401,
         "https://download.oracle.com/glassfish/4.0.1/release/glassfish-4.0.1-ml.zip", // NOI18N
-        "https://download.oracle.com/glassfish/4.0.1/release/glassfish-4.0.1-ml.zip" // NOI18N
+        "https://download.oracle.com/glassfish/4.0.1/release/glassfish-4.0.1-ml.zip", // NOI18N
+        "https://javaee.github.io/glassfish/LICENSE" //NOI18N"
     ),
     
     /**
@@ -133,7 +141,8 @@ public enum ServerDetails {
         "deployer:gfv3ee6wc", // NOI18N
         410,
         "https://download.oracle.com/glassfish/4.1/release/glassfish-4.1.zip", // NOI18N
-        "https://download.oracle.com/glassfish/4.1/release/glassfish-4.1.zip" // NOI18N
+        "https://download.oracle.com/glassfish/4.1/release/glassfish-4.1.zip", // NOI18N
+        "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
 
     /**
@@ -143,7 +152,8 @@ public enum ServerDetails {
         "deployer:gfv3ee6wc", // NOI18N
         411,
         "https://download.oracle.com/glassfish/4.1.1/release/glassfish-4.1.1.zip", // NOI18N
-        "https://download.oracle.com/glassfish/4.1.1/release/glassfish-4.1.1.zip" // NOI18N
+        "https://download.oracle.com/glassfish/4.1.1/release/glassfish-4.1.1.zip", // NOI18N
+        "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
     
     /**
@@ -153,7 +163,8 @@ public enum ServerDetails {
         "deployer:gfv3ee6wc", // NOI18N
         412,
         "https://download.oracle.com/glassfish/4.1.2/release/glassfish-4.1.2.zip", // NOI18N
-        "https://download.oracle.com/glassfish/4.1.2/release/glassfish-4.1.2.zip" // NOI18N
+        "https://download.oracle.com/glassfish/4.1.2/release/glassfish-4.1.2.zip", // NOI18N
+        "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
     
     /**
@@ -163,7 +174,19 @@ public enum ServerDetails {
         "deployer:gfv3ee6wc", // NOI18N
         500,
         "https://download.oracle.com/glassfish/5.0/release/glassfish-5.0.zip", // NOI18N
-        "https://download.oracle.com/glassfish/5.0/release/glassfish-5.0.zip" // NOI18N
+        "https://download.oracle.com/glassfish/5.0/release/glassfish-5.0.zip", // NOI18N
+        "https://javaee.github.io/glassfish/LICENSE" //NOI18N
+    ),
+    
+    /**
+     * details for an instance of GlassFish Server 5
+     */
+    GLASSFISH_SERVER_5_1(NbBundle.getMessage(ServerDetails.class, "STR_51_SERVER_NAME", new Object[]{}), // NOI18N
+        "deployer:gfv3ee6wc", // NOI18N
+        510,
+        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/5.1.0/glassfish-5.1.0.zip", // NOI18N
+        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/5.1.0/glassfish-5.1.0.zip", // NOI18N
+        "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     );
 
     /**
@@ -175,6 +198,7 @@ public enum ServerDetails {
     public static WizardDescriptor.InstantiatingIterator
             getInstantiatingIterator() {
         return new ServerWizardIterator(new ServerDetails[]{
+                    GLASSFISH_SERVER_5_1,
                     GLASSFISH_SERVER_5_0,
                     GLASSFISH_SERVER_4_1_2,
                     GLASSFISH_SERVER_4_1_1,
@@ -188,12 +212,12 @@ public enum ServerDetails {
                     GLASSFISH_SERVER_3_0_1,
                     GLASSFISH_SERVER_3,},
                 new ServerDetails[]{
+                    GLASSFISH_SERVER_5_1,
                     GLASSFISH_SERVER_5_0,
                     GLASSFISH_SERVER_4_1_2,
                     GLASSFISH_SERVER_4_1_1,
                     GLASSFISH_SERVER_4_1,
-                    GLASSFISH_SERVER_4_0,
-                    GLASSFISH_SERVER_3_1_2_2});
+                    GLASSFISH_SERVER_4_0});
     }
 
     /**
@@ -226,6 +250,7 @@ public enum ServerDetails {
                 case GF_4_1_1:   return GLASSFISH_SERVER_4_1_1.getVersion();
                 case GF_4_1_2:   return GLASSFISH_SERVER_4_1_2.getVersion();
                 case GF_5:       return GLASSFISH_SERVER_5_0.getVersion();
+                case GF_5_1:     return GLASSFISH_SERVER_5_1.getVersion();
                 default:         return -1;
             }
         }
@@ -259,16 +284,18 @@ public enum ServerDetails {
     private String uriFragment;
     private String indirectUrl;
     private String directUrl;
+    private String licenseUrl;
     private int versionInt;
     
 
     ServerDetails(String displayName, String uriFragment, int versionInt,
-            String directUrl, String indirectUrl) {
+            String directUrl, String indirectUrl, String licenseUrl) {
             this.displayName = displayName;
             this.uriFragment = uriFragment;
             this.indirectUrl = indirectUrl;
             this.directUrl = directUrl;
             this.versionInt = versionInt;
+            this.licenseUrl = licenseUrl;
     }
     
     @Override 
@@ -319,4 +346,7 @@ public enum ServerDetails {
         return indirectUrl;
     }
 
+    public String getLicenseUrl() {
+        return licenseUrl;
+    }
 }

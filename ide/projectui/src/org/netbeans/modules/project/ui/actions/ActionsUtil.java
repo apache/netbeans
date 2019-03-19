@@ -38,8 +38,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
 import org.openide.util.Pair;
-import org.netbeans.spi.project.support.RunJavaFileActionProviderV2;
-import org.openide.filesystems.JavaFileObjectLkp;
 import org.openide.util.lookup.Lookups;
 
 /** Nice utility methods to be used in ProjectBased Actions

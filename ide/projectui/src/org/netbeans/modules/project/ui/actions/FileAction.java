@@ -121,12 +121,8 @@ public final class FileAction extends LookupSensitiveAction implements ContextAw
                         LOG.log(Level.FINER, "Enabling [{0}, {1}] for {2}. (no projects in lookup)", new Object[]{presenterName, enable, files.isEmpty() ? "no files" : files.iterator().next().getPrimaryFile()}); // NOI18N
                     }
                 } else {
-                    // Java Files without parent projects can be run (JEP-330).
                     DataObject dObj = ActionsUtil.getDataObjectsFromLookupWithoutProject(context)[0];
-                    if (SingleSourceFileActionProvider.isActionSupported(dObj, command))
-                        enable = true;
-                    else
-                        enable = false;
+                    enable = false;
                     presenterName = ActionsUtil.formatName(namePattern, 0, "");
                     if (LOG.isLoggable(Level.FINER)) {
                         Collection<? extends DataObject> files = context.lookupAll(DataObject.class);
@@ -223,8 +219,6 @@ public final class FileAction extends LookupSensitiveAction implements ContextAw
                         ActionProvider ap = projects[0].getLookup().lookup(ActionProvider.class);
                         ap.invokeAction( command, context );
                         return;
-                    } else if (projects.length == 0) {
-                        SingleSourceFileActionProvider.invokeAction(command, fileObjects[0]);
                     }
 
                     ActionProvider provider = globalProvider(context);

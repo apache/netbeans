@@ -65,6 +65,12 @@ public class SingleJavaSourceRunActionProvider implements ActionProvider {
 
     @Override
     public boolean isActionEnabled(String command, Lookup context) throws IllegalArgumentException {
+        // JEP-330 is supported only on JDK-11 and above.
+        try {
+            SourceVersion r11 = SourceVersion.valueOf("RELEASE_11");
+        } catch (IllegalArgumentException ex) {
+            return false;
+        }
         return getJavaFileWithoutProjectFromLookup(context) != null;
     }
 

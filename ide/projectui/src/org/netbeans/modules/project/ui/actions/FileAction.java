@@ -36,7 +36,6 @@ import org.openide.util.ContextAwareAction;
 import org.openide.util.Lookup;
 import org.openide.util.Mutex;
 import org.openide.util.RequestProcessor.Task;
-import org.netbeans.modules.java.source.run.SingleSourceFileActionProvider;
 
 /** An action sensitive to selected node. Used for 1-off actions
  */
@@ -121,8 +120,7 @@ public final class FileAction extends LookupSensitiveAction implements ContextAw
                         LOG.log(Level.FINER, "Enabling [{0}, {1}] for {2}. (no projects in lookup)", new Object[]{presenterName, enable, files.isEmpty() ? "no files" : files.iterator().next().getPrimaryFile()}); // NOI18N
                     }
                 } else {
-                    DataObject dObj = ActionsUtil.getDataObjectsFromLookupWithoutProject(context)[0];
-                    enable = false;
+                    enable = false; // Zero or more than one projects found or command not supported
                     presenterName = ActionsUtil.formatName(namePattern, 0, "");
                     if (LOG.isLoggable(Level.FINER)) {
                         Collection<? extends DataObject> files = context.lookupAll(DataObject.class);
@@ -210,7 +208,6 @@ public final class FileAction extends LookupSensitiveAction implements ContextAw
         
         if (command != null) {
             final Project[] projects = ActionsUtil.getProjectsFromLookup( context, command );
-            final FileObject[] fileObjects = ActionsUtil.getFilesFromLookupWithoutProject(context);
             Runnable r2 = new Runnable() {
 
                 @Override

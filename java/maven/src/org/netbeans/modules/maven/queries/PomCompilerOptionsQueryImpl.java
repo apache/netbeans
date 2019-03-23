@@ -20,6 +20,7 @@ package org.netbeans.modules.maven.queries;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -104,14 +105,13 @@ public final class PomCompilerOptionsQueryImpl implements CompilerOptionsQueryIm
         private List<String> createArguments() {
             String[] compilerArgs = PluginPropertyUtils.getPluginPropertyList(proj, Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER, "compilerArgs", "arg", null); // NOI18N
             if (compilerArgs != null) {
+                List<String> args = new ArrayList();
                 for (String compilerArg : compilerArgs) {
-                    if (compilerArg != null)  {
-                        if (ARG_PARAMETERS.equals(compilerArg.trim())) {
-                            return Arrays.asList(ARG_PARAMETERS);//reqd?
-                        }
-                        return Arrays.asList(compilerArgs);
+                    if (compilerArg != null) {
+                        args.add(compilerArg);
                     }
                 }
+                return args;
             }
             return EMPTY;
         }

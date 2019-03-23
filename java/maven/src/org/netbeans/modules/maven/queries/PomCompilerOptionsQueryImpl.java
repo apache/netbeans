@@ -105,8 +105,11 @@ public final class PomCompilerOptionsQueryImpl implements CompilerOptionsQueryIm
             String[] compilerArgs = PluginPropertyUtils.getPluginPropertyList(proj, Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER, "compilerArgs", "arg", null); // NOI18N
             if (compilerArgs != null) {
                 for (String compilerArg : compilerArgs) {
-                    if(compilerArg != null && ARG_PARAMETERS.equals(compilerArg.trim())) {
-                        return Arrays.asList(ARG_PARAMETERS);
+                    if (compilerArg != null)  {
+                        if (ARG_PARAMETERS.equals(compilerArg.trim())) {
+                            return Arrays.asList(ARG_PARAMETERS);//reqd?
+                        }
+                        return Arrays.asList(compilerArgs);
                     }
                 }
             }

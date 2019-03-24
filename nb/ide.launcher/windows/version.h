@@ -19,10 +19,10 @@
 
 #define COMPANY ""
 #define COMPONENT "NetBeans IDE"
-#define VER "9.0.0.0"
-#define FVER 9,0,0,0
+#define VER "11.0.0.0"
+#define FVER 11,0,0,0
 #define BUILD_ID "03062018"
 #define INTERNAL_NAME "netbeans"
 #define COPYRIGHT "Based on Apache NetBeans from the Apache Software Foundation and is licensed under Apache License Version 2.0"
-#define NAME "NetBeans IDE 9.0"
+#define NAME "NetBeans IDE 11.0"
 

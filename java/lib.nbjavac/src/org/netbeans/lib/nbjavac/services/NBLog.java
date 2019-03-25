@@ -76,20 +76,19 @@ public final class NBLog extends Log {
     @Override
     public void error(JCDiagnostic.DiagnosticFlag flag, JCDiagnostic.DiagnosticPosition pos, JCDiagnostic.Error errorKey) {
         //XXX: needs testing!
-        //XXX: cannot find getCod() and getArgs()???
-//        if (ERR_NOT_IN_PROFILE.equals(errorKey.getCode())) {
-//            final JavaFileObject currentFile = currentSourceFile();
-//            if (currentFile != null) {
-//                final URI uri = currentFile.toUri();
-//                Symbol.ClassSymbol type = (Symbol.ClassSymbol) errorKey.getArgs()[0];
-//                Collection<Symbol.ClassSymbol> types = notInProfiles.get(uri);
-//                if (types == null) {
-//                    types = new ArrayList<>();
-//                    notInProfiles.put(uri,types);
-//                }
-//                types.add(type);
-//            }
-//        }
+        if (ERR_NOT_IN_PROFILE.equals(errorKey.getCode())) {
+            final JavaFileObject currentFile = currentSourceFile();
+            if (currentFile != null) {
+                final URI uri = currentFile.toUri();
+                Symbol.ClassSymbol type = (Symbol.ClassSymbol) errorKey.getArgs()[0];
+                Collection<Symbol.ClassSymbol> types = notInProfiles.get(uri);
+                if (types == null) {
+                    types = new ArrayList<>();
+                    notInProfiles.put(uri,types);
+                }
+                types.add(type);
+            }
+        }
         super.error(flag, pos, errorKey);
     }
 

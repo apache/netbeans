@@ -86,7 +86,6 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.java.source.builder.ElementsService;
-//import org.netbeans.modules.java.source.JavadocEnv;
 import org.netbeans.modules.java.source.base.SourceLevelUtils;
 import org.openide.util.Parameters;
 

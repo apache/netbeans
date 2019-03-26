@@ -1,1 +1,0 @@
-Configuration-Logic-Class: org.netbeans.installer.products.mysql.connector.ConfigurationLogic

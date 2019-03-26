@@ -122,6 +122,7 @@ public final class FileAction extends LookupSensitiveAction implements ContextAw
                 } else {
                     enable = false; // Zero or more than one projects found or command not supported
                     presenterName = ActionsUtil.formatName(namePattern, 0, "");
+
                     if (LOG.isLoggable(Level.FINER)) {
                         Collection<? extends DataObject> files = context.lookupAll(DataObject.class);
                         LOG.log(Level.FINER, "Enabling [{0}, {1}] for {2}. (projects > 1 in lookup)", new Object[]{presenterName, enable, files.isEmpty() ? "no files" : files.iterator().next().getPrimaryFile()}); // NOI18N
@@ -131,6 +132,7 @@ public final class FileAction extends LookupSensitiveAction implements ContextAw
                 FileObject[] files = ActionsUtil.getFilesFromLookup(context, projects[0]);
                 enable = true;
                 presenterName = ActionsUtil.formatName(namePattern, files.length, files.length > 0 ? files[0].getNameExt() : ""); // NOI18N
+
                 if (LOG.isLoggable(Level.FINER)) {
                     LOG.log(Level.FINER, "Enabling [{0}, {1}] for {2}. (one project in lookup)", new Object[]{presenterName, enable, files.length == 0 ? "no files" : files[0]}); // NOI18N
                 }
@@ -212,7 +214,7 @@ public final class FileAction extends LookupSensitiveAction implements ContextAw
 
                 @Override
                 public void run() {
-                    if ( projects.length == 1 ) {
+                    if ( projects.length == 1 ) {            
                         ActionProvider ap = projects[0].getLookup().lookup(ActionProvider.class);
                         ap.invokeAction( command, context );
                         return;

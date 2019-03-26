@@ -19,9 +19,10 @@
 package org.netbeans.api.java.source.support;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
-import javax.lang.model.SourceVersion;
 import org.openide.filesystems.FileObject;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
@@ -32,6 +33,7 @@ import org.netbeans.spi.project.ActionProvider;
 import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
 import org.openide.util.NbPreferences;
+import org.openide.util.Utilities;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -56,9 +58,15 @@ public class SingleJavaSourceRunActionProvider implements ActionProvider {
         String vmOptions = NbPreferences.forModule(SingleJavaSourceRunActionProvider.class).get(fileObject.getName() + "_SINGLE_FILE_RUN_VM_OPTIONS", "");
         ExecutionDescriptor descriptor = new ExecutionDescriptor().controllable(true).frontWindow(true).
                 preExecution(null).postExecution(null);
-        String javaPath = "\"" + System.getProperty("java.home") + "\\bin\\java\"";
+        List<String> commandsList = new ArrayList<>();
+        if (Utilities.isUnix()) {
+            commandsList.add("bash");
+            commandsList.add("-c");
+        }
+        String javaPath = "\"" + System.getProperty("java.home") + File.separator + "bin" + File.separator + "java\"";
+        commandsList.add(javaPath + " " + vmOptions + " " + filePath + " " + arguments);
         ExecutionService exeService = ExecutionService.newService(
-                new RunProcess(javaPath + " " + vmOptions + " " + filePath + " " + arguments),
+                new RunProcess(commandsList),
                 descriptor, "Running Single Java File");
         Future<Integer> exitCode = exeService.run();
     }
@@ -66,12 +74,12 @@ public class SingleJavaSourceRunActionProvider implements ActionProvider {
     @Override
     public boolean isActionEnabled(String command, Lookup context) throws IllegalArgumentException {
         // JEP-330 is supported only on JDK-11 and above.
-        try {
-            SourceVersion r11 = SourceVersion.valueOf("RELEASE_11");
-        } catch (IllegalArgumentException ex) {
-            return false;
+        String javaVersion = System.getProperty("java.specification.version");
+        if (javaVersion.startsWith("1.")) {
+            javaVersion = javaVersion.substring(2);
         }
-        return getJavaFileWithoutProjectFromLookup(context) != null;
+        int version = Integer.parseInt(javaVersion);
+        return version >= 11;
     }
 
     private FileObject getJavaFileWithoutProjectFromLookup(Lookup lookup) {
@@ -87,21 +95,28 @@ public class SingleJavaSourceRunActionProvider implements ActionProvider {
 
     private class RunProcess implements Callable<Process> {
 
-        private final String command;
         private final String dirPath;
+        private final List<String> commandsList;
 
         public RunProcess(String command, String dirPath) {
-            this.command = command;
             this.dirPath = dirPath;
+            commandsList = new ArrayList<>();
+            commandsList.add(command);
         }
 
         public RunProcess(String command) {
-            this.command = command;
+            commandsList = new ArrayList<>();
+            commandsList.add(command);
+            this.dirPath = System.getProperty("user.home");
+        }
+
+        public RunProcess(List<String> commandsList) {
+            this.commandsList = commandsList;
             this.dirPath = System.getProperty("user.home");
         }
 
         public Process call() throws Exception {
-            ProcessBuilder runFileProcessBuilder = new ProcessBuilder(command);
+            ProcessBuilder runFileProcessBuilder = new ProcessBuilder(commandsList);
             runFileProcessBuilder.directory(new File(dirPath));
             runFileProcessBuilder.redirectErrorStream(true);
             return runFileProcessBuilder.start();

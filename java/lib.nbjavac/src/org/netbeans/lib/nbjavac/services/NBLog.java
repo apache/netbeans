@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
 /**
@@ -74,13 +75,14 @@ public final class NBLog extends Log {
     }
 
     @Override
-    public void error(JCDiagnostic.DiagnosticFlag flag, JCDiagnostic.DiagnosticPosition pos, JCDiagnostic.Error errorKey) {
+    public void report(JCDiagnostic diagnostic) {
         //XXX: needs testing!
-        if (ERR_NOT_IN_PROFILE.equals(errorKey.getCode())) {
+        if (diagnostic.getKind() == Diagnostic.Kind.ERROR &&
+            ERR_NOT_IN_PROFILE.equals(diagnostic.getCode())) {
             final JavaFileObject currentFile = currentSourceFile();
             if (currentFile != null) {
                 final URI uri = currentFile.toUri();
-                Symbol.ClassSymbol type = (Symbol.ClassSymbol) errorKey.getArgs()[0];
+                Symbol.ClassSymbol type = (Symbol.ClassSymbol) diagnostic.getArgs()[0];
                 Collection<Symbol.ClassSymbol> types = notInProfiles.get(uri);
                 if (types == null) {
                     types = new ArrayList<>();
@@ -89,7 +91,7 @@ public final class NBLog extends Log {
                 types.add(type);
             }
         }
-        super.error(flag, pos, errorKey);
+        super.report(diagnostic);
     }
 
     Collection<? extends Symbol.ClassSymbol> removeNotInProfile(final URI uri) {

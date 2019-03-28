@@ -100,6 +100,8 @@ public final class JavaNode extends DataNode implements ChangeListener {
     private static final String ANNOTATION_ICON_BASE = "org/netbeans/modules/java/resources/annotation_file.png";   //NOI18N
     private static final String EXECUTABLE_BADGE_URL = "org/netbeans/modules/java/resources/executable-badge.png";  //NOI18N
     private static final String NEEDS_COMPILE_BADGE_URL = "org/netbeans/modules/java/resources/needs-compile.png";  //NOI18N
+    private static final String FILE_ARGUMENTS = "single_file_run_arguments"; //NOI18N
+    private static final String FILE_VM_OPTIONS = "single_file_vm_options"; //NOI18N
 
     private static final Map<String,Image> IMAGE_CACHE = new ConcurrentHashMap<>();
     private static final boolean ALWAYS_PREFFER_COMPUTED_ICON = Boolean.getBoolean("JavaNode.prefferComputedIcon"); //NOI18N
@@ -217,8 +219,8 @@ public final class JavaNode extends DataNode implements ChangeListener {
         sheet.put(ps);
         
         Project parentProject = FileOwnerQuery.getOwner(super.getDataObject().getPrimaryFile());
-        String fileName = super.getDataObject().getPrimaryFile().getName();
-        // If any of the parent folders is a project, this menu won't appear.
+        DataObject dObj = super.getDataObject();
+        // If any of the parent folders is a project, user won't have the option to specify these attributes to the java files.
         if (parentProject == null) {
             Node.Property arguments = new org.openide.nodes.PropertySupport.ReadWrite<String> (
                     "runFileArguments", // NOI18N
@@ -227,11 +229,19 @@ public final class JavaNode extends DataNode implements ChangeListener {
                     "Arguments passed to the main method while running the file."
                 ) {
                     public String getValue () {
-                        return NbPreferences.forModule(JavaNode.class).get(fileName + "_SINGLE_FILE_RUN_ARGUMENTS", "");
+                        Object arguments = dObj.getPrimaryFile().getAttribute(FILE_ARGUMENTS);
+                        return arguments != null ? (String) arguments : "";
                     }
 
                     public void setValue (String o) {
-                        NbPreferences.forModule(JavaNode.class).put(fileName + "_SINGLE_FILE_RUN_ARGUMENTS", o);
+                        try {
+                            dObj.getPrimaryFile().setAttribute(FILE_ARGUMENTS, o);
+                        } catch (IOException ex) {
+                            LOG.log(
+                                    Level.WARNING,
+                                    "Java File does not exist : {0}", //NOI18N
+                                    dObj.getPrimaryFile().getName());
+                        }
                     }
                 };
             Node.Property vmOptions = new org.openide.nodes.PropertySupport.ReadWrite<String> (
@@ -241,11 +251,19 @@ public final class JavaNode extends DataNode implements ChangeListener {
                     "VM Options to be considered while running the file."
                 ) {
                     public String getValue () {
-                        return NbPreferences.forModule(JavaNode.class).get(fileName + "_SINGLE_FILE_RUN_VM_OPTIONS", "");
+                        Object vmOptions = dObj.getPrimaryFile().getAttribute(FILE_VM_OPTIONS);
+                        return vmOptions != null ? (String) vmOptions : "";
                     }
 
                     public void setValue (String o) {
-                        NbPreferences.forModule(JavaNode.class).put(fileName + "_SINGLE_FILE_RUN_VM_OPTIONS", o);
+                        try {
+                            dObj.getPrimaryFile().setAttribute(FILE_VM_OPTIONS, o);
+                        } catch (IOException ex) {
+                            LOG.log(
+                                    Level.WARNING,
+                                    "Java File does not exist : {0}", //NOI18N
+                                    dObj.getPrimaryFile().getName());
+                        }
                     }
                 };
             Sheet.Set ss = new Sheet.Set();

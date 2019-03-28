@@ -16,23 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.api.java.source.support;
+package org.netbeans.modules.java.api.common;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
-import org.openide.filesystems.FileObject;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.java.JavaNode;
 import org.netbeans.spi.project.ActionProvider;
+import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
-import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -44,6 +42,9 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = ActionProvider.class)
 public class SingleJavaSourceRunActionProvider implements ActionProvider {
+    
+    private static final String FILE_ARGUMENTS = "single_file_run_arguments"; //NOI18N
+    private static final String FILE_VM_OPTIONS = "single_file_vm_options"; //NOI18N
 
     @Override
     public String[] getSupportedActions() {
@@ -53,9 +54,13 @@ public class SingleJavaSourceRunActionProvider implements ActionProvider {
     @Override
     public void invokeAction(String command, Lookup context) throws IllegalArgumentException {
         FileObject fileObject = getJavaFileWithoutProjectFromLookup(context);
+        if (fileObject == null) 
+            return;
         String filePath = fileObject.getPath();
-        String arguments = NbPreferences.forModule(SingleJavaSourceRunActionProvider.class).get(fileObject.getName() + "_SINGLE_FILE_RUN_ARGUMENTS", "");
-        String vmOptions = NbPreferences.forModule(SingleJavaSourceRunActionProvider.class).get(fileObject.getName() + "_SINGLE_FILE_RUN_VM_OPTIONS", "");
+        Object argumentsObject = fileObject.getAttribute(FILE_ARGUMENTS);
+        String arguments = argumentsObject != null ? (String) argumentsObject : "";
+        Object vmOptionsObject = fileObject.getAttribute(FILE_VM_OPTIONS);
+        String vmOptions = vmOptionsObject != null ? (String) vmOptionsObject : "";
         ExecutionDescriptor descriptor = new ExecutionDescriptor().controllable(true).frontWindow(true).
                 preExecution(null).postExecution(null);
         List<String> commandsList = new ArrayList<>();
@@ -63,7 +68,10 @@ public class SingleJavaSourceRunActionProvider implements ActionProvider {
             commandsList.add("bash");
             commandsList.add("-c");
         }
-        String javaPath = "\"" + System.getProperty("java.home") + File.separator + "bin" + File.separator + "java\"";
+        File javaPathFile = new File(new File(new File(System.getProperty("java.home")), "bin"), "java");
+        if (!javaPathFile.exists())
+            return;
+        String javaPath = "\"" + javaPathFile.getAbsolutePath() + "\"";
         commandsList.add(javaPath + " " + vmOptions + " " + filePath + " " + arguments);
         ExecutionService exeService = ExecutionService.newService(
                 new RunProcess(commandsList),
@@ -86,7 +94,7 @@ public class SingleJavaSourceRunActionProvider implements ActionProvider {
         for (DataObject dObj : lookup.lookupAll(DataObject.class)) {
             FileObject fObj = dObj.getPrimaryFile();
             Project p = FileOwnerQuery.getOwner(fObj);
-            if (p == null && dObj.getNodeDelegate() instanceof JavaNode) {
+            if (p == null && fObj.getExt().equalsIgnoreCase("java")) {
                 return fObj;
             }
         }
@@ -122,5 +130,5 @@ public class SingleJavaSourceRunActionProvider implements ActionProvider {
             return runFileProcessBuilder.start();
         }
     }
-
+        
 }

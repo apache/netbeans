@@ -178,7 +178,7 @@ public final class CheckoutAction implements ActionListener, HelpCtx.Provider {
                                        "/" +  // NOI18N
                                        repositoryFiles[i].getName()); // XXX what if the whole repository is seletcted
                 destination = FileUtil.normalizeFile(destination);
-                destination.mkdir();
+                destination.mkdirs();
             } else {
                 destination = workingDir;
             }

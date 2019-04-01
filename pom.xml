@@ -12,10 +12,10 @@
     <kotlin.version>1.1.1</kotlin.version> 
   </properties>  
   <name>Kotlin</name>  
-  <description url="http://kotlinlang.org/">Kotlin language support</description>  
+  <description url="https://kotlinlang.org/">Kotlin language support</description>  
   <organization> 
     <name>JetBrains</name>  
-    <url>http://www.jetbrains.com/</url> 
+    <url>https://www.jetbrains.com/</url> 
   </organization>  
   <developers> 
     <developer> 
@@ -202,7 +202,7 @@
     <repository> 
       <id>netbeans-modules</id>  
       <name>Repository hosting NetBeans modules</name>  
-      <url>http://bits.netbeans.org/nexus/content/groups/netbeans</url>  
+      <url>https://bits.netbeans.org/nexus/content/groups/netbeans</url>  
       <snapshots> 
         <enabled>false</enabled> 
       </snapshots> 
@@ -210,7 +210,7 @@
     <repository> 
       <id>netbeans-api-artifacts</id>  
       <name>Repository hosting netbeans.org api artifacts</name>  
-      <url>http://bits.netbeans.org/maven2/</url>  
+      <url>https://bits.netbeans.org/maven2/</url>  
       <releases> 
         <enabled>true</enabled> 
       </releases>  

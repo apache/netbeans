@@ -4,7 +4,7 @@
     "authors": [
         {
             "name": "NetBeans",
-            "email": "tomas.mysik@oracle.com"
+            "email": "tmysik@apache.org"
         }
     ],
     "require": {

@@ -11,7 +11,7 @@
 
     },
     "require-dev": {
-        "atoum/atoum": "2.0.x"
+        "atoum/atoum": "3.3.x"
     },
     "autoload": {
         "classmap": ["src/"]

@@ -4,14 +4,14 @@
     "authors": [
         {
             "name": "NetBeans",
-            "email": "tomas.mysik@oracle.com"
+            "email": "tmysik@apache.org"
         }
     ],
     "require": {
 
     },
     "require-dev": {
-        "atoum/atoum": "2.0.x"
+        "atoum/atoum": "3.3.x"
     },
     "autoload": {
         "classmap": ["src/"]

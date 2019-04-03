@@ -2334,20 +2334,37 @@ public final class JavaCompletionTask<T> extends BaseTask {
         SourcePositions sourcePositions = env.getSourcePositions();
         CompilationUnitTree root = env.getRoot();
         CompilationController controller = env.getController();
-        if (cst.getExpression() != null && ((sourcePositions.getStartPosition(root, cst.getExpression()) >= offset)
-                || (cst.getExpression().getKind() == Tree.Kind.ERRONEOUS && ((ErroneousTree) cst.getExpression()).getErrorTrees().isEmpty() && sourcePositions.getEndPosition(root, cst.getExpression()) >= offset))) {
-            TreePath path1 = path.getParentPath();
-            if (path1.getLeaf().getKind() == Tree.Kind.SWITCH || path1.getLeaf().getKind().toString().equals("SWITCH_EXPRESSION")) { //NOI18N
+        TreePath parentPath = path.getParentPath();
+        ExpressionTree caseExpressionTree = null;
+        ExpressionTree caseErroneousTree = null;
+        List<? extends ExpressionTree> caseTreeList = TreeShims.getExpressions(cst);
+        if (!caseTreeList.isEmpty() && caseTreeList.size() == 1) {
+            caseExpressionTree = caseTreeList.get(0);
+            caseErroneousTree = caseTreeList.get(0);
+        } else if (caseTreeList.size() > 1) {
+            caseExpressionTree = caseTreeList.get(0);
+            for (ExpressionTree et : caseTreeList) {
+                if (et != null && et.getKind() == Tree.Kind.ERRONEOUS) {
+                    caseErroneousTree = et;
+                    break;
+                }
+            }
+        }
+
+        if (caseExpressionTree != null && ((sourcePositions.getStartPosition(root, caseExpressionTree) >= offset)
+                || (caseErroneousTree != null && caseErroneousTree.getKind() == Tree.Kind.ERRONEOUS && ((ErroneousTree) caseErroneousTree).getErrorTrees().isEmpty() && sourcePositions.getEndPosition(root, caseErroneousTree) >= offset))) {
+
+            if (parentPath.getLeaf().getKind() == Tree.Kind.SWITCH || parentPath.getLeaf().getKind().toString().equals("SWITCH_EXPRESSION")) { //NOI18N
                 ExpressionTree exprTree = null;
-                if (path1.getLeaf().getKind() == Tree.Kind.SWITCH) {
-                    exprTree = ((SwitchTree) path1.getLeaf()).getExpression();
+                if (parentPath.getLeaf().getKind() == Tree.Kind.SWITCH) {
+                    exprTree = ((SwitchTree) parentPath.getLeaf()).getExpression();
                 } else {
-                    List<? extends ExpressionTree> exprTrees = TreeShims.getExpressions(path1.getLeaf());
+                    List<? extends ExpressionTree> exprTrees = TreeShims.getExpressions(parentPath.getLeaf());
                     if (!exprTrees.isEmpty()) {
                         exprTree = exprTrees.get(0);
                     }
                 }
-                TypeMirror tm = controller.getTrees().getTypeMirror(new TreePath(path1, exprTree));
+                TypeMirror tm = controller.getTrees().getTypeMirror(new TreePath(parentPath, exprTree));
                 if (tm.getKind() == TypeKind.DECLARED && ((DeclaredType) tm).asElement().getKind() == ENUM) {
                     addEnumConstants(env, (TypeElement) ((DeclaredType) tm).asElement());
                 } else {
@@ -3693,14 +3710,18 @@ public final class JavaCompletionTask<T> extends BaseTask {
         } else if (path != null && path.getLeaf().getKind().toString().equals("SWITCH_EXPRESSION")) { //NOI18N
             caseTrees = TreeShims.getCases(path.getLeaf());
         }
+
         if (caseTrees != null) {
             for (CaseTree ct : caseTrees) {
-                Element e = ct.getExpression() != null ? trees.getElement(new TreePath(path, ct.getExpression())) : null;
-                if (e != null && e.getKind() == ENUM_CONSTANT) {
-                    alreadyUsed.add(e);
+                for (ExpressionTree et : TreeShims.getExpressions(ct)) {
+                    Element e = et != null ? trees.getElement(new TreePath(path, et)) : null;
+                    if (e != null && e.getKind() == ENUM_CONSTANT) {
+                        alreadyUsed.add(e);
+                    }
                 }
             }
         }
+
         for (Element e : elem.getEnclosedElements()) {
             if (e.getKind() == ENUM_CONSTANT && !alreadyUsed.contains(e)) {
                 String name = e.getSimpleName().toString();

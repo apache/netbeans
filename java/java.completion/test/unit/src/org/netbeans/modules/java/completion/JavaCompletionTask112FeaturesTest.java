@@ -61,6 +61,18 @@ public class JavaCompletionTask112FeaturesTest extends CompletionTestBase {
         performTest("SwitchExprWithEnumValues2", 1020, null, "switchEnumCaseValues2.pass");
     }
 
+    public void testSwitchExprMultiEnumCaseValue() throws Exception {
+        performTest("SwitchExprWithMultiEnumValues", 994, null, "switchExprEnumCaseValues.pass");
+    }
+
+    public void testSwitchStatementMultiEnumCaseValue() throws Exception {
+        performTest("SwitchStatementWithMultiEnumValues", 990, null, "switchExprEnumCaseValues.pass");
+    }
+
+    public void testRuleSwitchMultiEnumCaseValue() throws Exception {
+        performTest("RuleSwitchWithMultiEnumValues", 1024, null, "ruleSwitchEnumCaseValues.pass");
+    }
+
     public void noop() {
     }
 

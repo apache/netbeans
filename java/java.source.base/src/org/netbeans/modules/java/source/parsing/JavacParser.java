@@ -85,7 +85,6 @@ import org.netbeans.lib.editor.util.swing.PositionRegion;
 import org.netbeans.modules.java.preprocessorbridge.spi.JavaFileFilterImplementation;
 import org.netbeans.modules.java.source.JavaFileFilterQuery;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
-//import org.netbeans.modules.java.source.JavadocEnv;
 import org.netbeans.modules.java.source.PostFlowAnalysis;
 import org.netbeans.modules.java.source.indexing.APTUtils;
 import org.netbeans.modules.java.source.indexing.FQN2Files;
@@ -1325,10 +1324,7 @@ public class JavacParser extends Parser {
     public static class VanillaJavacContextEnhancer implements ContextEnhancer {
         @Override
         public void enhance(Context context, boolean backgroundCompilation) {
-            if (!backgroundCompilation)
-                NBClassFinder.preRegister(context);
-            else
-                NBClassFinder.preRegister(context);
+            NBClassFinder.preRegister(context);
             NBJavaCompiler.preRegister(context);
         }
     }

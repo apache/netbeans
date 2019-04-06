@@ -25,6 +25,7 @@ import org.netbeans.modules.gradle.java.api.GradleJavaProject;
 import org.netbeans.modules.gradle.java.api.GradleJavaSourceSet;
 import org.netbeans.modules.gradle.spi.actions.DefaultGradleActionsProvider;
 import org.netbeans.modules.gradle.spi.actions.GradleActionsProvider;
+import static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType.*;
 import java.io.File;
 import static org.netbeans.spi.project.ActionProvider.*;
 import static org.netbeans.api.java.project.JavaProjectConstants.*;
@@ -46,8 +47,9 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = GradleActionsProvider.class)
 public class JavaActionProvider extends DefaultGradleActionsProvider {
 
-    private static final String GATLING_PLUGIN = "com.github.lkishalmi.gatling";
-    private static final String SIMULATION_POSTFIX = "Simulation.scala";
+    public static final String COMMAND_TEST_SINGLE_PACKAGE = "test.single.package"; //NOI18N
+    private static final String GATLING_PLUGIN = "com.github.lkishalmi.gatling"; //NOI18N
+    private static final String SIMULATION_POSTFIX = "Simulation.scala"; //NOI18N
 
     private static final String[] SUPPORTED = new String[]{
         COMMAND_BUILD,
@@ -64,7 +66,8 @@ public class JavaActionProvider extends DefaultGradleActionsProvider {
         COMMAND_DEBUG_FIX,
         COMMAND_RUN_SINGLE,
         COMMAND_DEBUG_SINGLE,
-        COMMAND_COMPILE_SINGLE
+        COMMAND_COMPILE_SINGLE,
+        COMMAND_TEST_SINGLE_PACKAGE
     };
 
     public JavaActionProvider() {
@@ -81,6 +84,8 @@ public class JavaActionProvider extends DefaultGradleActionsProvider {
                 if (gbp.hasPlugins(GATLING_PLUGIN) && COMMAND_RUN_SINGLE.equals(action)) {
                     ret = fo.getNameExt().endsWith(SIMULATION_POSTFIX);
                 } else {
+                    ret = false;
+                    GradleJavaProject gjp = GradleJavaProject.get(project);
                     switch (action) {
                         case COMMAND_COMPILE_SINGLE:
                             FileBuiltQuery.Status status = FileBuiltQuery.getStatus(fo);
@@ -88,8 +93,6 @@ public class JavaActionProvider extends DefaultGradleActionsProvider {
                             break;
                         case COMMAND_DEBUG_SINGLE:
                         case COMMAND_RUN_SINGLE: {
-                            ret = false;
-                            GradleJavaProject gjp = GradleJavaProject.get(project);
                             if (RunUtils.isAugmentedBuildEnabled(project) && (gjp != null)) {
                                 File f = FileUtil.toFile(fo);
                                 GradleJavaSourceSet sourceSet = gjp.containingSourceSet(f);
@@ -98,7 +101,7 @@ public class JavaActionProvider extends DefaultGradleActionsProvider {
                                     if (relPath != null) {
                                         relPath = relPath.substring(0, relPath.lastIndexOf('.')).replace('/', '.');
                                         ret = SourceUtils.isMainClass(relPath, ClasspathInfo.create(fo), true);
-                                    } 
+                                    }
                                 }
                             }
 
@@ -109,14 +112,21 @@ public class JavaActionProvider extends DefaultGradleActionsProvider {
                         case COMMAND_RUN_SINGLE_METHOD:
                         case COMMAND_DEBUG_SINGLE_METHOD: {
                             if ("text/x-java".equals(fo.getMIMEType())) { //NOI18N
-                                GradleJavaProject gjp = GradleJavaProject.get(project);
-                                if (gjp != null) {
-                                    GradleJavaSourceSet sourceSet = gjp.containingSourceSet(FileUtil.toFile(fo));
-                                    ret = sourceSet != null && sourceSet.isTestSourceSet();
+                                if ( gjp != null ) {
+                                    File f = FileUtil.toFile(fo);
+                                    GradleJavaSourceSet sourceSet = gjp.containingSourceSet(f);
+                                    ret = sourceSet != null && sourceSet.isTestSourceSet() && sourceSet.getSourceType(f) != RESOURCES;
                                 }
                             }
                             break;
                         }
+                        case COMMAND_TEST_SINGLE_PACKAGE:
+                            if ( (gjp != null) && fo.isFolder() ) {
+                                File dir = FileUtil.toFile(fo);
+                                GradleJavaSourceSet sourceSet = gjp.containingSourceSet(dir);
+                                ret = sourceSet != null && sourceSet.getSourceType(dir) != RESOURCES;
+                            }
+                            break;
                     }
                 }
             }

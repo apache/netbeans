@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.70.1
+#Version 7.71.1
 
 CLSS public java.awt.Canvas
 cons public init()
@@ -3204,8 +3204,8 @@ meth public void setOrientation(int)
 meth public void updateUI()
 meth public void validate()
 supr javax.swing.JToolBar
-hfds PROP_DRAGGER,PROP_JDEV_DISABLE_OVERFLOW,PROP_PREF_ICON_SIZE,awtEventListener,componentAdapter,displayOverflowOnHover,overflowButton,overflowToolbar,popup,showingPopup,toolbarArrowHorizontal,toolbarArrowVertical
-hcls SafePopupMenu,SafeToolBar
+hfds PROP_DRAGGER,PROP_JDEV_DISABLE_OVERFLOW,PROP_PREF_ICON_SIZE,awtEventListener,componentAdapter,displayOverflowOnHover,overflowButton,overflowToolbar,popup,showingPopup
+hcls SafePopupMenu,SafeToolBar,ToolbarArrowIcon
 
 CLSS public abstract interface org.openide.awt.UndoRedo
 fld public final static org.openide.awt.UndoRedo NONE

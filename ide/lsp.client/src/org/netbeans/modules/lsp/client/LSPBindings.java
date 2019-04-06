@@ -239,7 +239,7 @@ public class LSPBindings {
         public void run() {
             for (Map<String, LSPBindings> mime2Bindings : project2MimeType2Server.values()) {
                 for (LSPBindings b : mime2Bindings.values()) {
-                    if (b != null) {
+                    if (b != null && b.process != null) {
                         b.process.destroy();
                     }
                 }

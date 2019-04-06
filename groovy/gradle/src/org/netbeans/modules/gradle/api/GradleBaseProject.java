@@ -256,7 +256,7 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
 
     @Override
     public Set<GradleDependency.ModuleDependency> findModules(String gav) {
-        String parts[] = gav.split(":");
+        String parts[] = GradleDependency.gavSplit(gav);
         if (parts.length != 3) {
             throw new IllegalArgumentException("Invalid gav filter: "  + gav);
         }

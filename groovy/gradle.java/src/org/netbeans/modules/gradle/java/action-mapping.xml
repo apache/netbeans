@@ -25,6 +25,9 @@
         <action name="test.single">
             <args>--rerun-tasks test --tests ${selectedClass}</args>
         </action>
+        <action name="test.single.package">
+            <args>--rerun-tasks test --tests ${selectedPackage}*</args>
+        </action>
         <action name="run.single.method">
             <args>--rerun-tasks test --tests ${selectedMethod}</args>
         </action>

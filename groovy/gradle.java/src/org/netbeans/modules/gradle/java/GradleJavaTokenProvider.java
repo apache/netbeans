@@ -57,11 +57,12 @@ import org.openide.util.Lookup;
 public class GradleJavaTokenProvider implements ReplaceTokenProvider {
 
     private static final Set<String> SUPPORTED = Collections.unmodifiableSet(new HashSet(Arrays.asList(
-            "selectedClass",
-            "selectedMethod",
-            "affectedBuildTasks"
+            "selectedClass",       //NOI18N
+            "selectedMethod",      //NOI18N
+            "selectedPackage",     //NOI18N
+            "affectedBuildTasks"   //NOI18N
     )));
-    
+
     final Project project;
 
     public GradleJavaTokenProvider(Project project) {
@@ -76,22 +77,29 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
     @Override
     public Map<String, String> createReplacements(String action, Lookup context) {
         Map<String, String> ret = new HashMap<>();
-        processSelectedClass(ret, context);
+        processSelectedPackageAndClass(ret, context);
         processSelectedMethod(ret, context);
         processSourceSets(ret, context);
         return ret;
     }
 
-    private void processSelectedClass(final Map<String, String> map, Lookup context) {
+    private void processSelectedPackageAndClass(final Map<String, String> map, Lookup context) {
         FileObject fo = RunUtils.extractFileObjectfromLookup(context);
         GradleJavaProject gjp = GradleJavaProject.get(project);
         if ((gjp != null) && (fo != null)) {
             File f = FileUtil.toFile(fo);
             GradleJavaSourceSet sourceSet = gjp.containingSourceSet(f);
-            if (sourceSet != null) {
-                String relPath = sourceSet.relativePath(f);
-                String className = relPath.substring(0, relPath.lastIndexOf('.')).replace('/', '.');
-                map.put("selectedClass", className);
+            if (sourceSet != null)  {
+                if (f.isFile()) {
+                    String relPath = sourceSet.relativePath(f);
+                    String className = (relPath.lastIndexOf('.') > 0 ?
+                            relPath.substring(0, relPath.lastIndexOf('.')) :
+                            relPath).replace('/', '.');
+                    map.put("selectedClass", className);  //NOI18N
+                    f = f.getParentFile();
+                }
+                String pkg = sourceSet.relativePath(f).replace('/', '.');
+                map.put("selectedPackage", pkg); //NOI18N
             }
         }
     }
@@ -102,7 +110,7 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
         String methodName = method != null ? method.getMethodName() : null;
         if (fo != null) {
              String selectedMethod = evaluateSingleMethod(fo, methodName);
-             map.put("selectedMethod", selectedMethod);
+             map.put("selectedMethod", selectedMethod); //NOI18N
         }
     }
 
@@ -125,7 +133,7 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
             for (String task : buildTasks) {
                 tasks.append(task).append(' ');
             }
-            map.put("affectedBuildTasks", tasks.toString());
+            map.put("affectedBuildTasks", tasks.toString()); //NOI18N
         }
     }
 

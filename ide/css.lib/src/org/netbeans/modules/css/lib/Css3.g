@@ -558,6 +558,7 @@ property
     //(the IE allows also just ident as its content)
     {isScssSource()}? sass_selector_interpolation_exp
     | {isLessSource()}? less_selector_interpolation_exp
+    | VARIABLE
     | IDENT
     | GEN
     | {isCssPreprocessorSource()}? cp_variable
@@ -868,6 +869,7 @@ term
     ( unaryOperator ws? )?
     (
         (functionName ws? LPAREN)=>function //"myfunction(" as predicate
+        | VARIABLE
         | IDENT
         | NUMBER
         | PERCENTAGE
@@ -1683,6 +1685,10 @@ LESS_JS_STRING  : '`' ( ~('\r'|'\f'|'`') )*
                     ;
 
 NOT		: 'NOT';
+
+// Variable. Used to define properties, that can be used in the grammar by the
+//           var function (https://www.w3.org/TR/css-variables-1/)
+VARIABLE        : '--' NMSTART NMCHAR*  ;
 
 // -------------
 // Identifier.  Identifier tokens pick up properties names and values

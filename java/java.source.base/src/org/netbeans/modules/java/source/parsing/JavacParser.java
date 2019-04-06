@@ -25,6 +25,9 @@ import com.sun.source.util.JavacTask;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
+import com.sun.tools.javac.comp.AttrContext;
+import com.sun.tools.javac.comp.Env;
+import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.util.Abort;
 
 import org.netbeans.lib.nbjavac.services.CancelAbort;
@@ -631,7 +634,17 @@ public class JavacParser extends Parser {
                 }
                 long start = System.currentTimeMillis ();
                 JavacTaskImpl jti = currentInfo.getJavacTask();
-                PostFlowAnalysis.analyze(jti.analyze(), jti.getContext());
+                JavaCompiler compiler = JavaCompiler.instance(jti.getContext());
+                List<Env<AttrContext>> savedTodo = new ArrayList<>(compiler.todo);
+                try {
+                    compiler.todo.retainFiles(Collections.singletonList(currentInfo.jfo));
+                    savedTodo.removeAll(compiler.todo);
+                    PostFlowAnalysis.analyze(jti.analyze(), jti.getContext());
+                } finally {
+                    for (Env<AttrContext> env : savedTodo) {
+                        compiler.todo.offer(env);
+                    }
+                }
                 currentPhase = Phase.RESOLVED;
                 long end = System.currentTimeMillis ();
                 logTime(currentInfo.getFileObject(),currentPhase,(end-start));

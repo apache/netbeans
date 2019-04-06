@@ -105,7 +105,7 @@ class NbProjectInfoBuilder {
 
         Map<String, File> sp = new HashMap<>();
         for(Project p: project.subprojects) {
-            sp.put(p.name, p.projectDir);
+            sp.put(p.path, p.projectDir);
         }
         model.info.project_subProjects = sp;
 
@@ -119,6 +119,9 @@ class NbProjectInfoBuilder {
         }
         model.info.project_includedBuilds = ib;
 
+        if (gradleVersion.compareTo(VersionNumber.parse('3.3')) >= 0) {
+            model.info.project_display_name = project.displayName;
+        }
         try {
             model.info.buildClassPath = storeSet(project.buildscript.configurations.classpath.files)
         } catch (Exception e) {

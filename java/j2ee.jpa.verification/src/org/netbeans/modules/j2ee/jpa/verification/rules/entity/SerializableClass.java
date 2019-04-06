@@ -56,7 +56,7 @@ import org.openide.util.NbBundle;
         enabled = true,
         suppressWarnings = "SerializableClass")
 @NbBundle.Messages({
-    "SerializableClass.display.name=Entity impleents Serializable verification",
+    "SerializableClass.display.name=Entity implements Serializable verification",
     "SerializableClass.desc=If an entity instance is to be passed by value as a detached object (e.g., through a remote interface), the entity class must implement the Serializable interface."
 })
 public class SerializableClass {

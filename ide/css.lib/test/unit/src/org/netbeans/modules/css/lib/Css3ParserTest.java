@@ -1409,4 +1409,11 @@ public class Css3ParserTest extends CssTestBase {
                 + "	color: #ff3366;\n"
                 + "}");
     }
+
+    public void testParseVariable() {
+        assertParses("h1 {"
+            + "--demoVar: 1em;"
+            + "margin: var(--demoVar, 3ex 2em);"
+            + "}");
+    }
 }

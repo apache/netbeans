@@ -334,6 +334,10 @@ public class JavaCompletionTask18FeaturesTest extends CompletionTestBase {
         performTest("LambdaExpression", 1159, null, "lambdaSmartInt2.pass", "1.8");
     }
     
+    public void testLambdaExpressionOutsideMethodBody() throws Exception {
+        performTest("LambdaExpressionOutsideMethodBody", 959, null, "lambdaOutsideMethodBodyContent.pass", "1.8");
+    }
+    
     static {
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
     }

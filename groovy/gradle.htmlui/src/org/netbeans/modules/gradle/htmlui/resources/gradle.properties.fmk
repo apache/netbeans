@@ -19,11 +19,8 @@
 
 -->
 action.run.args=bck2brwsrShow
-action.run.reload.rule=NEVER
 
 action.debug.args=run --debug-jvm
-action.debug.reload.rule=NEVER
 
 action.custom-1=Run in Browser
 action.custom-1.args=bck2brwsrShow
-action.custom-1.reload.rule=NEVER

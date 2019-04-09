@@ -251,7 +251,7 @@ public abstract class TestBase extends NbTestCase {
         }
     
         @Override
-        public void setHighlights(Document doc, Collection<int[]> highlights) {
+        public void setHighlights(Document doc, Collection<int[]> highlights, Map<int[], String> preText) {
             for (int[] h : highlights) {
                 this.highlights.add(new HighlightImpl(doc, h[0], h[1], EnumSet.of(getColoringAttribute())));
             }

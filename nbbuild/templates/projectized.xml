@@ -697,7 +697,7 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         <property name="sigtest.public.packages" value="${public.packages}"/>
         <property name="sigtest.fail.on.error" value="true"/>
         <taskdef name="sigtest" classname="org.netbeans.nbbuild.Sigtest" classpath="${nbantext.jar}"/>
-        <property name="sigtest.jar" location="${nb_all}/nbbuild/external/apitest-70.jar"/> 
+        <property name="sigtest.jar" location="${nb_all}/nbbuild/external/sigtest-maven-plugin-1.2.jar"/>
         <loadproperties srcFile="${manifest.mf}" prefix="mf.">
             <filterchain>
                 <replaceregex pattern="[\n\r]+ ([^ ][^\n\r]*)"

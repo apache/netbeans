@@ -18,58 +18,55 @@
  */
 package org.netbeans.lib.nbjavac.services;
 
-import com.sun.javadoc.SourcePosition;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.Log;
-import com.sun.tools.javadoc.main.Messager;
 import java.io.PrintWriter;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
 /**
  *
  * @author Tomas Zezula
  */
-public final class NBMessager extends Messager {
+public final class NBLog extends Log {
 
     private static final String ERR_NOT_IN_PROFILE = "not.in.profile";  //NOI18N
 
     private final Map<URI,Collection<Symbol.ClassSymbol>> notInProfiles =
             new HashMap<>();
     
-    private NBMessager(
+    private NBLog(
             final Context context,
-            final String programName,
             final PrintWriter errWriter,
             final PrintWriter warnWriter,
             final PrintWriter noticeWriter) {
-        super(context, programName, errWriter, warnWriter, noticeWriter);
+        super(context, errWriter, warnWriter, noticeWriter);
     }
 
-    public static NBMessager instance(Context context) {
+    public static NBLog instance(Context context) {
         final Log log = Log.instance(context);
-        if (!(log instanceof NBMessager)) {
-            throw new InternalError("No NBMessager instance!"); //NOI18N
+        if (!(log instanceof NBLog)) {
+            throw new InternalError("No NBLog instance!"); //NOI18N
         }
-        return (NBMessager) log;
+        return (NBLog) log;
     }
     
     public static void preRegister(Context context,
-                                   final String programName,
                                    final PrintWriter errWriter,
                                    final PrintWriter warnWriter,
                                    final PrintWriter noticeWriter) {
         context.put(logKey, new Context.Factory<Log>() {
             @Override
             public Log make(Context c) {
-                return new NBMessager(
+                return new NBLog(
                     c,
-                    programName,
                     errWriter,
                     warnWriter,
                     noticeWriter);
@@ -78,15 +75,14 @@ public final class NBMessager extends Messager {
     }
 
     @Override
-    public void error(
-            final SourcePosition pos,
-            final String key,
-            final Object ... args) {
-        if (ERR_NOT_IN_PROFILE.equals(key)) {
+    public void report(JCDiagnostic diagnostic) {
+        //XXX: needs testing!
+        if (diagnostic.getKind() == Diagnostic.Kind.ERROR &&
+            ERR_NOT_IN_PROFILE.equals(diagnostic.getCode())) {
             final JavaFileObject currentFile = currentSourceFile();
             if (currentFile != null) {
                 final URI uri = currentFile.toUri();
-                Symbol.ClassSymbol type = (Symbol.ClassSymbol) args[0];
+                Symbol.ClassSymbol type = (Symbol.ClassSymbol) diagnostic.getArgs()[0];
                 Collection<Symbol.ClassSymbol> types = notInProfiles.get(uri);
                 if (types == null) {
                     types = new ArrayList<>();
@@ -95,7 +91,7 @@ public final class NBMessager extends Messager {
                 types.add(type);
             }
         }
-        super.error(pos, key, args);
+        super.report(diagnostic);
     }
 
     Collection<? extends Symbol.ClassSymbol> removeNotInProfile(final URI uri) {

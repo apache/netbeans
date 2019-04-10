@@ -49,10 +49,6 @@ public class HtmlJavaApplicationProjectWizard extends SimpleGradleWizardIterator
 
     private static Map<String, Object> initParams() {
         Map<String, Object> params = new HashMap<>();
-        params.put(PROP_PLUGINS, Arrays.asList("java", "jacoco", "application"));
-        params.put(PROP_DEPENDENCIES, Arrays.asList(
-                "testCompile 'junit:junit:4.12'"
-        ));
         return params;
     }
     

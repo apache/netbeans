@@ -118,7 +118,7 @@ public final class SingleModuleProperties extends ModuleProperties {
     public static final String SPEC_VERSION_BASE = "spec.version.base"; // NOI18N
     /** @see "#66278" */
     public static final String JAVAC_COMPILERARGS = "javac.compilerargs"; // NOI18N
-    static final String[] SOURCE_LEVELS = {"1.4", "1.5", "1.6", "1.7", "1.8", "9", "10"}; // NOI18N
+    static final String[] SOURCE_LEVELS = {"1.4", "1.5", "1.6", "1.7", "1.8", "9", "10", "11", "12"}; // NOI18N
     private final static Map<String, String> DEFAULTS;
 
     private static final Logger LOG = Logger.getLogger(SingleModuleProperties.class.getName());

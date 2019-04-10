@@ -411,6 +411,19 @@ public class DetectorTest extends TestBase {
         });
     }
     
+    private void performTest(String fileName, String content, String expected) throws Exception {
+        performTest(fileName, content, new Performer() {
+            public void compute(CompilationController parameter, Document doc, final ErrorDescriptionSetter setter) {
+                new SemanticHighlighterBase() {
+                    @Override
+                    protected boolean process(CompilationInfo info, Document doc) {
+                        return process(info, doc, setter);
+                    }
+                }.process(parameter, doc);
+            }
+        }, false, expected);
+    }
+
     private FileObject testSourceFO;
     
     static {

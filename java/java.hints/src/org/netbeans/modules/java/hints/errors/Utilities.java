@@ -3111,13 +3111,45 @@ public class Utilities {
         return scanner.completesNormally;
     }
 
-    public static void performRewriteRuleSwitch(JavaFix.TransformationContext ctx, TreePath tp, Tree st) {
+    public static boolean isCompitableToSwitchExpression(SwitchTree st){
+        boolean firstCase = true;
+        com.sun.tools.javac.util.Name leftTreeName = null;
+        for (CaseTree ct : st.getCases()) {
+            List<StatementTree> statements = new ArrayList<>(ct.getStatements());
+            if (statements.isEmpty()){
+                continue;
+            } else if (statements.size() == 1) {
+                return false;
+            } else if (statements.size() == 2 ) {
+                if(statements.get(0).getKind() != Tree.Kind.EXPRESSION_STATEMENT || statements.get(1).getKind() != Tree.Kind.BREAK){
+                    return false;
+                }
+            } else {
+                return false;
+            }
+            StatementTree statementTree = statements.get(0);
+            JCTree.JCExpressionStatement jceTree = (JCTree.JCExpressionStatement) statementTree;
+            if(!(jceTree.expr instanceof JCTree.JCAssign)) return false;
+            JCTree.JCAssign assignTree = (JCTree.JCAssign) jceTree.expr;
+            if (firstCase) {
+                if(assignTree.lhs.isPoly()) return false;
+                leftTreeName = ((JCTree.JCIdent)assignTree.lhs).name;
+                firstCase = false;
+            } else if(leftTreeName == null || leftTreeName.compareTo(((JCTree.JCIdent)assignTree.lhs).name) != 0){
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    public static void performRewriteRuleSwitch(JavaFix.TransformationContext ctx, TreePath tp, Tree st, boolean isExpression) {
         WorkingCopy wc = ctx.getWorkingCopy();
         TreeMaker make = wc.getTreeMaker();
         List<CaseTree> newCases = new ArrayList<>();
         List<? extends CaseTree> cases;
         Set<VariableElement> variablesDeclaredInOtherCases = new HashSet<>();
         List<ExpressionTree> patterns = new ArrayList<>();
+        Tree variable = null;
         boolean switchExpressionFlag = st.getKind().toString().equals("SWITCH_EXPRESSION");
         if (switchExpressionFlag) {
             cases = TreeShims.getCases(st);
@@ -3201,7 +3233,15 @@ public class Utilities {
                     body = statements.get(0);
                 }
             }
-            newCases.add(make.Case(patterns, body));
+            if (isExpression) {
+                JCTree.JCExpressionStatement jceTree = (JCTree.JCExpressionStatement) statements.get(0);
+                body = ((JCTree.JCAssign) jceTree.expr).rhs;
+                variable = ((JCTree.JCAssign) jceTree.expr).lhs;
+                newCases.add(make.Case(patterns, make.ExpressionStatement((ExpressionTree) body)));
+            } else {
+                newCases.add(make.Case(patterns, body));
+            }
+
             patterns = new ArrayList<>();
             for (StatementTree statement : getSwitchStatement(ct)) {
                 if (statement.getKind() == Tree.Kind.VARIABLE) {
@@ -3209,7 +3249,10 @@ public class Utilities {
                 }
             }
         }
-        if (switchExpressionFlag) {
+        if (isExpression) {
+            ExpressionTree et = (ExpressionTree)make.SwitchExpression(TreeShims.getExpressions(st).get(0), newCases);
+            wc.rewrite(st, make.ExpressionStatement((ExpressionTree)make.Assignment((ExpressionTree)variable, et)));
+        } else if (switchExpressionFlag) {
             wc.rewrite(st, make.SwitchExpression(TreeShims.getExpressions(st).get(0), newCases));
         } else {
             wc.rewrite((SwitchTree) st, make.Switch(((SwitchTree) st).getExpression(), newCases));

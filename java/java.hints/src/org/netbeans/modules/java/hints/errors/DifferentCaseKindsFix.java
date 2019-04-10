@@ -135,7 +135,7 @@ public class DifferentCaseKindsFix implements ErrorRule<Void> {
         protected void performRewrite(TransformationContext ctx) {
             TreePath tp = ctx.getPath();
             Tree switchBlock = tp.getParentPath().getLeaf();
-            Utilities.performRewriteRuleSwitch(ctx, tp, switchBlock);
+            Utilities.performRewriteRuleSwitch(ctx, tp, switchBlock, false);
         }
 
     } 

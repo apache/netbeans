@@ -51,6 +51,7 @@ import com.sun.tools.javac.api.JavacScope;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Flags;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.comp.Annotate;
@@ -87,7 +88,6 @@ import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Names;
-import com.sun.tools.javadoc.main.Messager;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -729,7 +729,9 @@ public class Utilities {
 
         long count = inc++;
 
-        clazz.append("public class $$scopeclass$constraints$" + count + "{");
+        String classname = "$$scopeclass$constraints$" + count;
+
+        clazz.append("public class " + classname + "{");
 
         for (Entry<String, TypeMirror> e : constraints.entrySet()) {
             if (e.getValue() != null) {
@@ -752,6 +754,8 @@ public class Utilities {
         Log log = Log.instance(context);
         NBResolve resolve = NBResolve.instance(context);
         Annotate annotate = Annotate.instance(context);
+        Names names = Names.instance(context);
+        Symtab syms = Symtab.instance(context);
         Log.DiagnosticHandler discardHandler = new Log.DiscardDiagnosticHandler(compiler.log);
 
         JavaFileObject jfo = FileObjects.memoryFileObject("$", "$", new File("/tmp/$$scopeclass$constraints$" + count + ".java").toURI(), System.currentTimeMillis(), clazz.toString());
@@ -772,7 +776,8 @@ public class Utilities {
             }
             
             JCCompilationUnit cut = compiler.parse(jfo);
-            modules.enter(com.sun.tools.javac.util.List.of(cut), null);
+            ClassSymbol enteredClass = syms.enterClass(modules.getDefaultModule(), names.fromString("$$." + classname));
+            modules.enter(com.sun.tools.javac.util.List.of(cut), enteredClass);
             compiler.enterTrees(com.sun.tools.javac.util.List.of(cut));
 
             Todo todo = compiler.todo;
@@ -1274,14 +1279,8 @@ public class Utilities {
         return false;
     }
 
-    public static boolean isJavadocSupported(CompilationInfo info) {
-        Context c = JavaSourceAccessor.getINSTANCE().getJavacTask(info).getContext();
-
-        try {
-        return c.get(Log.logKey) instanceof Messager;
-        } catch (NoClassDefFoundError e) {
-            return false;
-        }
+    public static boolean isJavadocSupported(CompilationInfo info) { //TODO: unnecessary?
+        return true;
     }
 
     private static Class<?> parserClass;

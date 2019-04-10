@@ -39,7 +39,7 @@ public class PrependedTextHighlightsView extends HighlightsView {
     private TextLayout prependedTextLayout;
     private double leftShift;
     private double prependedTextWidth;
-    private double moveup;
+    private double heighCorrection;
 
     public PrependedTextHighlightsView(int length, AttributeSet attributes) {
         super(length, attributes);
@@ -47,17 +47,13 @@ public class PrependedTextHighlightsView extends HighlightsView {
 
     @Override
     void setTextLayout(TextLayout textLayout, float width) {
-        Font font = ViewUtils.getFont(getAttributes(), getDocumentView().op.getDefaultFont());
-        font = font.deriveFont((float) (font.getSize2D() * 0.75));
+        DocumentViewOp op = getDocumentView().op;
+        Font font = ViewUtils.getFont(getAttributes(), op.getDefaultHintFont());
         prependedTextLayout = getDocumentView().op.createTextLayout((String) getAttributes().getAttribute("virtual-text-prepend"), font);
         Rectangle2D textBounds = prependedTextLayout.getBounds(); //TODO: allocation!
-        double em = getDocumentView().op.createTextLayout("m", font).getBounds().getWidth();
+        double em = op.getDefaultCharWidth();
         leftShift = em / 2;
         prependedTextWidth = textBounds.getWidth() + em;
-        double actualTextHeight = textLayout.getBounds().getHeight();
-        moveup = (actualTextHeight - textBounds.getHeight()) / 2;
-//        double actualTextHeight = textLayout.getAscent();
-//        moveup = (actualTextHeight - prependedTextLayout.getAscent()) / 2;
         super.setTextLayout(textLayout, (float) (width + prependedTextWidth));
     }
 
@@ -90,13 +86,12 @@ public class PrependedTextHighlightsView extends HighlightsView {
 
         if (highlights.moveNext()) {
             AttributeSet attrs = highlights.getAttributes();
-            System.err.println("attrs=" + attrs);
             HighlightsViewUtils.fillBackground(g, span, attrs, getDocumentView().getTextComponent());
             HighlightsViewUtils.paintBackgroundHighlights(g, span, attrs, getDocumentView()); //TODO: clear some attributes (like boxes)???
         }
 
         g.setColor(Color.gray);
-        span.setRect(span.getX() + leftShift, span.getY() - moveup, prependedTextWidth - 2 * leftShift, span.getHeight());
+        span.setRect(span.getX() + leftShift, span.getY(), prependedTextWidth - 2 * leftShift, span.getHeight());
 //        g.drawRoundRect((int) span.getX(), (int) span.getY(), (int) span.getWidth(), (int) span.getHeight(), 2, 2);
         HighlightsViewUtils.paintTextLayout(g, span, prependedTextLayout, getDocumentView());
     }

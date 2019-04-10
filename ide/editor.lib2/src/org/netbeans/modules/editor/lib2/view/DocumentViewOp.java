@@ -291,6 +291,7 @@ public final class DocumentViewOp
     private Map<Font,FontInfo> fontInfos = new HashMap<Font, FontInfo>(4);
     
     private Font defaultFont;
+    private Font defaultHintFont;
     
     private boolean fontRenderContextFromPaint;
 
@@ -1060,6 +1061,7 @@ public final class DocumentViewOp
             fontInfos.put(null, defaultFontInfo); // Alternative way to find default font info
             updateRowHeight(defaultFontInfo, true);
             defaultFont = font;
+            defaultHintFont = font.deriveFont((float) (font.getSize2D() * 0.75));
             defaultCharWidth = defaultFontInfo.charWidth;
             
             tabTextLayout = null;
@@ -1257,6 +1259,10 @@ public final class DocumentViewOp
 
     public Font getDefaultFont() {
         return defaultFont;
+    }
+
+    public Font getDefaultHintFont() {
+        return defaultHintFont;
     }
 
     public float getDefaultRowHeight() {

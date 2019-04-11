@@ -3111,32 +3111,31 @@ public class Utilities {
         return scanner.completesNormally;
     }
 
-    public static boolean isCompitableToSwitchExpression(SwitchTree st){
+    public static boolean isCompitableToSwitchExpression(SwitchTree st) {
         boolean firstCase = true;
         com.sun.tools.javac.util.Name leftTreeName = null;
         for (CaseTree ct : st.getCases()) {
             List<StatementTree> statements = new ArrayList<>(ct.getStatements());
-            if (statements.isEmpty()){
-                continue;
+            if (statements.isEmpty()) {
             } else if (statements.size() == 1) {
-                return false;
-            } else if (statements.size() == 2 ) {
-                if(statements.get(0).getKind() != Tree.Kind.EXPRESSION_STATEMENT || statements.get(1).getKind() != Tree.Kind.BREAK){
+                if (!firstCase || statements.get(0).getKind() != Tree.Kind.RETURN) {
+                    return false;
+                }
+            } else if (statements.size() == 2 && statements.get(0).getKind() == Tree.Kind.EXPRESSION_STATEMENT && statements.get(1).getKind() == Tree.Kind.BREAK) {
+                StatementTree statementTree = statements.get(0);
+                JCTree.JCExpressionStatement jceTree = (JCTree.JCExpressionStatement) statementTree;
+                if (!(jceTree.expr instanceof JCTree.JCAssign)) {
+                    return false;
+                }
+                JCTree.JCAssign assignTree = (JCTree.JCAssign) jceTree.expr;
+                if (firstCase) {
+                    leftTreeName = ((JCTree.JCIdent) assignTree.lhs).name;
+                    firstCase = false;
+                } else if (leftTreeName == null || leftTreeName.compareTo(((JCTree.JCIdent) assignTree.lhs).name) != 0) {
                     return false;
                 }
             } else {
                 return false;
-            }
-            StatementTree statementTree = statements.get(0);
-            JCTree.JCExpressionStatement jceTree = (JCTree.JCExpressionStatement) statementTree;
-            if(!(jceTree.expr instanceof JCTree.JCAssign)) return false;
-            JCTree.JCAssign assignTree = (JCTree.JCAssign) jceTree.expr;
-            if (firstCase) {
-                if(assignTree.lhs.isPoly()) return false;
-                leftTreeName = ((JCTree.JCIdent)assignTree.lhs).name;
-                firstCase = false;
-            } else if(leftTreeName == null || leftTreeName.compareTo(((JCTree.JCIdent)assignTree.lhs).name) != 0){
-                    return false;
             }
         }
         return true;
@@ -3150,6 +3149,7 @@ public class Utilities {
         Set<VariableElement> variablesDeclaredInOtherCases = new HashSet<>();
         List<ExpressionTree> patterns = new ArrayList<>();
         Tree variable = null;
+        boolean isReturnExpression = false;
         boolean switchExpressionFlag = st.getKind().toString().equals("SWITCH_EXPRESSION");
         if (switchExpressionFlag) {
             cases = TreeShims.getCases(st);
@@ -3234,9 +3234,14 @@ public class Utilities {
                 }
             }
             if (isExpression) {
-                JCTree.JCExpressionStatement jceTree = (JCTree.JCExpressionStatement) statements.get(0);
-                body = ((JCTree.JCAssign) jceTree.expr).rhs;
-                variable = ((JCTree.JCAssign) jceTree.expr).lhs;
+                if (statements.get(0).getKind() == Tree.Kind.RETURN){
+                    body = ((JCTree.JCReturn)statements.get(0)).getExpression();
+                    isReturnExpression = true;
+                } else{
+                    JCTree.JCExpressionStatement jceTree = (JCTree.JCExpressionStatement) statements.get(0);
+                    body = ((JCTree.JCAssign) jceTree.expr).rhs;
+                    variable = ((JCTree.JCAssign) jceTree.expr).lhs;
+                }
                 newCases.add(make.Case(patterns, make.ExpressionStatement((ExpressionTree) body)));
             } else {
                 newCases.add(make.Case(patterns, body));
@@ -3249,7 +3254,10 @@ public class Utilities {
                 }
             }
         }
-        if (isExpression) {
+        if (isReturnExpression) {
+            ExpressionTree et = (ExpressionTree)make.SwitchExpression(TreeShims.getExpressions(st).get(0), newCases);
+            wc.rewrite(st, make.Return(et));
+        } else if (isExpression) {
             ExpressionTree et = (ExpressionTree)make.SwitchExpression(TreeShims.getExpressions(st).get(0), newCases);
             wc.rewrite(st, make.ExpressionStatement((ExpressionTree)make.Assignment((ExpressionTree)variable, et)));
         } else if (switchExpressionFlag) {

@@ -93,7 +93,6 @@ public class ConvertSwitchToRuleSwitch {
             SwitchTree st = (SwitchTree) tp.getLeaf();
             Utilities.performRewriteRuleSwitch(ctx, tp, st, false);
         }
-
     }
 
     private static final class FixImpl1 extends JavaFix {
@@ -114,6 +113,5 @@ public class ConvertSwitchToRuleSwitch {
             SwitchTree st = (SwitchTree) tp.getLeaf();
             Utilities.performRewriteRuleSwitch(ctx, tp, st, true);
         }
-        
     }
 }

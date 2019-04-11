@@ -459,7 +459,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
 
     //Test cases for switch expression
 
-    public void testSwitch2SwitchExpression1() throws Exception {
+    public void testSwitch2SwitchExpression() throws Exception {
         HintTest.create()
                 .input("package test;" +
                        "public class Test {\n" +
@@ -526,7 +526,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                               "}\n");
     }
 
-    public void testSwitch2SwitchExpressionInnerSwitch() throws Exception {
+    public void testSwitch2SwitchExpressionNestedInnerSwitchExpression() throws Exception {
         HintTest.create()
                 .input("package test;" +
                        "public class Test {\n" +
@@ -562,6 +562,124 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                               "             case 2 -> \"2\";\n" +
                               "             default -> \"default\";\n" +
                               "         };\n" +
+                              "     }\n" +
+                              "}\n");
+    }
+
+    public void testSwitch2SwitchExpressionReturnValue() throws Exception {
+        HintTest.create()
+                .input("package test;" +
+                       "public class Test {\n" +
+                       "     private String test(int p) {\n" +
+                       "         switch (p) {\n" +
+                       "             case 1: return \"1\"; \n" +
+                       "             default: return \"default\"; \n" +
+                       "         }\n" +
+                       "     }\n" +
+                       "}\n")
+                .sourceLevel(SourceVersion.latest().name())
+                .options("--enable-preview")
+                .run(ConvertSwitchToRuleSwitch.class)
+                .findWarning("2:9-2:15:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
+                .applyFix()
+                .assertCompilable()
+                .assertOutput("package test;" +
+                              "public class Test {\n" +
+                              "     private String test(int p) {\n" +
+                              "         return switch (p) {\n" +
+                              "             case 1 -> \"1\";\n" +
+                              "             default -> \"default\";\n" +
+                              "         };\n" +
+                              "     }\n" +
+                              "}\n");
+    }
+
+    public void testSwitch2SwitchExpressionNestedOuterSwitchStatement() throws Exception {
+        HintTest.create()
+                .input("package test;" +
+                       "public class Test {\n" +
+                       "     private void test(int p) {\n" +
+                       "         String result;\n" +
+                       "         int x = 10;\n" +
+                       "         switch (p) {\n" +
+                       "             case 1 : \n" +
+                       "                switch (x) {\n" +
+                       "                    case 1 : result = \"1\"; break;\n" +
+                       "                    default : result =  \"Inner Default\"; break;\n" +
+                       "                }\n" +
+                       "             break;\n" +
+                       "             default:\n" +
+                       "                result = \"d\";\n" +
+                       "                break;\n" +
+                       "         }\n" +
+                       "     }\n" +
+                       "}\n")
+                .sourceLevel(SourceVersion.latest().name())
+                .options("--enable-preview")
+                .run(ConvertSwitchToRuleSwitch.class)
+                .findWarning("4:9-4:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
+                .applyFix()
+                .assertCompilable()
+                .assertOutput("package test;" +
+                              "public class Test {\n" +
+                              "     private void test(int p) {\n" +
+                              "         String result;\n" +
+                              "         int x = 10;\n" +
+                              "         switch (p) {\n" +
+                              "             case 1 -> {\n" +
+                              "                switch (x) {\n" +
+                              "                    case 1 : result = \"1\"; break;\n" +
+                              "                    default : result =  \"Inner Default\"; break;\n" +
+                              "                 }\n" +
+                              "             }\n" +
+                              "             default -> result = \"d\";\n" +
+                              "         }\n" +
+                              "     }\n" +
+                              "}\n");
+    }
+
+    public void testSwitch2SwitchExpressionNestedInnerSwitchStatement() throws Exception {
+        HintTest.create()
+                .input("package test;" +
+                       "public class Test {\n" +
+                       "     private void test(int p) {\n" +
+                       "         String result;\n" +
+                       "         int x = 10;\n" +
+                       "         switch (p) {\n" +
+                       "             case 1 : \n" +
+                       "                switch (x) {\n" +
+                       "                    case 1 : result = \"1\"; break;\n" +
+                       "                    default : result =  \"Inner Default\"; break;\n" +
+                       "                }\n" +
+                       "                break;\n" +
+                       "             default:\n" +
+                       "                result = \"d\";\n" +
+                       "                break;\n" +
+                       "         }\n" +
+                       "     }\n" +
+                       "}\n")
+                .sourceLevel(SourceVersion.latest().name())
+                .options("--enable-preview")
+                .run(ConvertSwitchToRuleSwitch.class)
+                .findWarning("6:16-6:22:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
+                .applyFix()
+                .assertCompilable()
+                .assertOutput("package test;" +
+                              "public class Test {\n" +
+                              "     private void test(int p) {\n" +
+                              "         String result;\n" +
+                              "         int x = 10;\n" +
+                              "         switch (p) {\n" +
+                              "             case 1 :\n" +
+                              "             result = switch (x) {\n" +
+                              "                 case 1 -> \"1\";\n" +
+                              "                 default ->  \"Inner Default\";\n" +
+                              "             };\n" +
+                              "                 break;\n\n" +
+                              "             default:\n" +
+                              "                 result = \"d\";\n" +
+                              "                 break;\n" +
+                              "         }\n" +
                               "     }\n" +
                               "}\n");
     }

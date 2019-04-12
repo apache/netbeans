@@ -1,6 +1,6 @@
 Name: NetBeans Installer Binaries
 Description: NetBeans Installer Binaries
-Version: 8.2
+Version: 11
 License: CDDL-1.0
 Source: https://netbeans.org/
 Origin: NetBeans

@@ -410,7 +410,7 @@ public final class AppClientProvider extends J2eeModuleProvider
     
     private void showErrorMessage(final String message) {
         // only display the messages if the project is open
-        if(new Date().getTime() > notificationTimeout && isProjectOpen()) {
+        if(System.currentTimeMillis() > notificationTimeout && isProjectOpen()) {
             // DialogDisplayer waits for the AWT thread, blocking the calling
             // thread -- deadlock-prone, see issue #64888. therefore invoking
             // only in the AWT thread

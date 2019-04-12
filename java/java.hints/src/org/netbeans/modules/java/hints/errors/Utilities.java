@@ -3234,10 +3234,10 @@ public class Utilities {
                 }
             }
             if (isExpression) {
-                if (statements.get(0).getKind() == Tree.Kind.RETURN){
-                    body = ((JCTree.JCReturn)statements.get(0)).getExpression();
+                if (statements.get(0).getKind() == Tree.Kind.RETURN) {
+                    body = ((JCTree.JCReturn) statements.get(0)).getExpression();
                     isReturnExpression = true;
-                } else{
+                } else {
                     JCTree.JCExpressionStatement jceTree = (JCTree.JCExpressionStatement) statements.get(0);
                     body = ((JCTree.JCAssign) jceTree.expr).rhs;
                     variable = ((JCTree.JCAssign) jceTree.expr).lhs;
@@ -3255,11 +3255,11 @@ public class Utilities {
             }
         }
         if (isReturnExpression) {
-            ExpressionTree et = (ExpressionTree)make.SwitchExpression(TreeShims.getExpressions(st).get(0), newCases);
+            ExpressionTree et = (ExpressionTree) make.SwitchExpression(TreeShims.getExpressions(st).get(0), newCases);
             wc.rewrite(st, make.Return(et));
         } else if (isExpression) {
-            ExpressionTree et = (ExpressionTree)make.SwitchExpression(TreeShims.getExpressions(st).get(0), newCases);
-            wc.rewrite(st, make.ExpressionStatement((ExpressionTree)make.Assignment((ExpressionTree)variable, et)));
+            ExpressionTree et = (ExpressionTree) make.SwitchExpression(TreeShims.getExpressions(st).get(0), newCases);
+            wc.rewrite(st, make.ExpressionStatement((ExpressionTree) make.Assignment((ExpressionTree) variable, et)));
         } else if (switchExpressionFlag) {
             wc.rewrite(st, make.SwitchExpression(TreeShims.getExpressions(st).get(0), newCases));
         } else {

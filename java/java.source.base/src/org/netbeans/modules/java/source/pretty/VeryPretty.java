@@ -403,7 +403,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             } else {
                 boolean saveComments = this.commentsEnabled;
                 this.commentsEnabled = printComments;
-                if(t.getKind().toString().equals("SWITCH_EXPRESSION")){
+                if (t.getKind().toString().equals("SWITCH_EXPRESSION")) {
                     visitSwitchExpression(t);
                 } else {
                     t.accept(this);
@@ -1274,41 +1274,44 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     }
 
     public void visitSwitchExpression(Tree tree) {
-	print("switch");
+        print("switch");
         print(cs.spaceBeforeSwitchParen() ? " (" : "(");
-        if (cs.spaceWithinSwitchParens())
+        if (cs.spaceWithinSwitchParens()) {
             print(' ');
-	printNoParenExpr((JCTree)TreeShims.getExpressions(tree).get(0));
+        }
+        printNoParenExpr((JCTree) TreeShims.getExpressions(tree).get(0));
         print(cs.spaceWithinSwitchParens() ? " )" : ")");
         int bcol = out.leftMargin;
-        switch(cs.getOtherBracePlacement()) {
-        case NEW_LINE:
-            newline();
-            toColExactly(bcol);
-            break;
-        case NEW_LINE_HALF_INDENTED:
-            newline();
-	    bcol += (indentSize >> 1);
-            toColExactly(bcol);
-            break;
-        case NEW_LINE_INDENTED:
-            newline();
-	    bcol += indentSize;
-            toColExactly(bcol);
-            break;
+        switch (cs.getOtherBracePlacement()) {
+            case NEW_LINE:
+                newline();
+                toColExactly(bcol);
+                break;
+            case NEW_LINE_HALF_INDENTED:
+                newline();
+                bcol += (indentSize >> 1);
+                toColExactly(bcol);
+                break;
+            case NEW_LINE_INDENTED:
+                newline();
+                bcol += indentSize;
+                toColExactly(bcol);
+                break;
         }
-        if (cs.spaceBeforeSwitchLeftBrace())
+        if (cs.spaceBeforeSwitchLeftBrace()) {
             needSpace();
-	print('{');
+        }
+        print('{');
         if (!TreeShims.getCases(tree).isEmpty()) {
             newline();
             ListBuffer<JCTree.JCCase> newTcases = new ListBuffer<JCTree.JCCase>();
-            for (CaseTree t : TreeShims.getCases(tree))
-                newTcases.append((JCTree.JCCase)t);
+            for (CaseTree t : TreeShims.getCases(tree)) {
+                newTcases.append((JCTree.JCCase) t);
+            }
             printStats(newTcases.toList());
             toColExactly(bcol);
         }
-	print('}');
+        print('}');
     }
 
     @Override

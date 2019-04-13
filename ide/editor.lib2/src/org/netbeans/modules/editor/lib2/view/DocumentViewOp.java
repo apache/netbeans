@@ -315,6 +315,7 @@ public final class DocumentViewOp
     boolean asTextField;
     
     private boolean guideLinesEnable;
+    private boolean inlineHintsEnable;
     
     private int indentLevelSize;
     
@@ -922,10 +923,13 @@ public final class DocumentViewOp
         // Line height correction
         float lineHeightCorrectionOrig = rowHeightCorrection;
         rowHeightCorrection = prefs.getFloat(SimpleValueNames.LINE_HEIGHT_CORRECTION, 1.0f);
+        boolean inlineHintsEnableOrig = inlineHintsEnable;
+        inlineHintsEnable = Boolean.TRUE.equals(prefs.getBoolean("enable.inline.hints", false)); // NOI18N
         boolean updateMetrics = (rowHeightCorrection != lineHeightCorrectionOrig);
         boolean releaseChildren = nonInitialUpdate && 
                 ((nonPrintableCharactersVisible != nonPrintableCharactersVisibleOrig) ||
-                 (rowHeightCorrection != lineHeightCorrectionOrig));  
+                 (rowHeightCorrection != lineHeightCorrectionOrig) ||
+                 (inlineHintsEnable != inlineHintsEnableOrig));
         indentLevelSize = getIndentSize();
         tabSize = prefs.getInt(SimpleValueNames.TAB_SIZE, EditorPreferencesDefaults.defaultTabSize);
         if (updateMetrics) {
@@ -1165,6 +1169,10 @@ public final class DocumentViewOp
     
     public boolean isGuideLinesEnable() {
         return guideLinesEnable && !asTextField;
+    }
+
+    public boolean isInlineHintsEnable() {
+        return inlineHintsEnable;
     }
 
     public int getIndentLevelSize() {

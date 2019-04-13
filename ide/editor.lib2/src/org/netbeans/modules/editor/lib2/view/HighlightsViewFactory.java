@@ -216,9 +216,10 @@ public final class HighlightsViewFactory extends EditorViewFactory implements Hi
                     }
                             
                 }
-                AttributeSet attrs = hList.cutSameFont(defaultFont, limitOffset, wsEndOffset, docText);
+                boolean inlineHints = documentView().op.isInlineHintsEnable();
+                AttributeSet attrs = hList.cutSameFont(defaultFont, limitOffset, wsEndOffset, docText, inlineHints);
                 int length = hList.startOffset() - startOffset;
-                HighlightsView view = attrs != null && attrs.getAttribute("virtual-text-prepend") != null ? new PrependedTextHighlightsView(length, attrs) : new HighlightsView(length, attrs);
+                HighlightsView view = attrs != null && inlineHints && attrs.getAttribute("virtual-text-prepend") != null ? new PrependedTextHighlightsView(length, attrs) : new HighlightsView(length, attrs);
                 if (origView != null && origView.getClass() == HighlightsView.class && origView.getLength() == length) { // Reuse XXX: reuse disabled for PrependedTextHighlightsView!
                     HighlightsView origHView = (HighlightsView) origView;
                     TextLayout origTextLayout = origHView.getTextLayout();

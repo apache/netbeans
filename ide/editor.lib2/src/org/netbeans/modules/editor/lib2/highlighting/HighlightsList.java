@@ -118,9 +118,10 @@ public final class HighlightsList {
      * @param wsEndOffset whitespace end offset must be lower than or equal to maxEndOffset
      *  and when exceeded a first whitespace char in docText means that the cutting will end there.
      * @param docText document text in order properly handle wsEndOffset parameter.
+     * @param usePrependText reflect the prepended text setting.
      * @return either simple or compound attribute set.
      */
-    public AttributeSet cutSameFont(Font defaultFont, int maxEndOffset, int wsEndOffset, CharSequence docText) {
+    public AttributeSet cutSameFont(Font defaultFont, int maxEndOffset, int wsEndOffset, CharSequence docText, boolean usePrependText) {
         assert (maxEndOffset <= endOffset()) :
                 "maxEndOffset=" + maxEndOffset + " > endOffset()=" + endOffset() + ", " + this; // NOI18N
         HighlightItem item = get(0);
@@ -158,7 +159,7 @@ public final class HighlightsList {
 
         // Extends beyond first highlight
         Font firstFont = ViewUtils.getFont(firstAttrs, defaultFont);
-        Object firstPrependText = firstAttrs.getAttribute("virtual-text-prepend");
+        Object firstPrependText = usePrependText ? firstAttrs.getAttribute("virtual-text-prepend") : null;
         int index = 1;
         while (true) {
             item = get(index);

@@ -59,7 +59,6 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
     private static final Set<String> SUPPORTED = Collections.unmodifiableSet(new HashSet(Arrays.asList(
             "selectedClass",       //NOI18N
             "selectedMethod",      //NOI18N
-            "selectedPackage",     //NOI18N
             "affectedBuildTasks"   //NOI18N
     )));
 
@@ -97,9 +96,10 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
                             relPath).replace('/', '.');
                     map.put("selectedClass", className);  //NOI18N
                     f = f.getParentFile();
+                } else {
+                    String pkg = sourceSet.relativePath(f).replace('/', '.');
+                    map.put("selectedClass", pkg + "*"); //NOI18N
                 }
-                String pkg = sourceSet.relativePath(f).replace('/', '.');
-                map.put("selectedPackage", pkg); //NOI18N
             }
         }
     }

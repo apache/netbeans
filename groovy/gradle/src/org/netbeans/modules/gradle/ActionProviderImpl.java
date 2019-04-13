@@ -124,28 +124,13 @@ public class ActionProviderImpl implements ActionProvider {
 
     @Override
     public void invokeAction(String command, Lookup context) throws IllegalArgumentException {
-        String cmd = translateCommand(command, context);
-        ActionMapping mapping = ActionToTaskUtils.getActiveMapping(cmd, project);
+        ActionMapping mapping = ActionToTaskUtils.getActiveMapping(command, project);
         invokeProjectAction(project, mapping, context, false);
     }
 
     @Override
     public boolean isActionEnabled(String command, Lookup context) throws IllegalArgumentException {
-        String cmd = translateCommand(command, context);
-        return ActionToTaskUtils.isActionEnabled(cmd, project, context);
-    }
-
-    // TODO: Create an SPI for these kind of translations. Maven projects do something similar
-    // Fix for: NETBEANS-2348
-    private String translateCommand(String command, Lookup context) {
-        String ret = command;
-        if ("test.single".equals(command)) { //NOI18N
-            FileObject fo = RunUtils.extractFileObjectfromLookup(context);
-            if (fo.isFolder()) {
-                ret = "test.single.package"; //NOI18N
-            }
-        }
-        return ret;
+        return ActionToTaskUtils.isActionEnabled(command, project, context);
     }
 
     @NbBundle.Messages({

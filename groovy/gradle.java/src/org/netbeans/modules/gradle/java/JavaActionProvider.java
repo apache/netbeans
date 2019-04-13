@@ -47,7 +47,6 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = GradleActionsProvider.class)
 public class JavaActionProvider extends DefaultGradleActionsProvider {
 
-    public static final String COMMAND_TEST_SINGLE_PACKAGE = "test.single.package"; //NOI18N
     private static final String GATLING_PLUGIN = "com.github.lkishalmi.gatling"; //NOI18N
     private static final String SIMULATION_POSTFIX = "Simulation.scala"; //NOI18N
 
@@ -67,7 +66,6 @@ public class JavaActionProvider extends DefaultGradleActionsProvider {
         COMMAND_RUN_SINGLE,
         COMMAND_DEBUG_SINGLE,
         COMMAND_COMPILE_SINGLE,
-        COMMAND_TEST_SINGLE_PACKAGE
     };
 
     public JavaActionProvider() {
@@ -86,47 +84,42 @@ public class JavaActionProvider extends DefaultGradleActionsProvider {
                 } else {
                     ret = false;
                     GradleJavaProject gjp = GradleJavaProject.get(project);
-                    switch (action) {
-                        case COMMAND_COMPILE_SINGLE:
-                            FileBuiltQuery.Status status = FileBuiltQuery.getStatus(fo);
-                            ret = status == null || !status.isBuilt();
-                            break;
-                        case COMMAND_DEBUG_SINGLE:
-                        case COMMAND_RUN_SINGLE: {
-                            if (RunUtils.isAugmentedBuildEnabled(project) && (gjp != null)) {
-                                File f = FileUtil.toFile(fo);
-                                GradleJavaSourceSet sourceSet = gjp.containingSourceSet(f);
-                                if ((sourceSet != null) && fo.isData()) {
-                                    String relPath = sourceSet.relativePath(f);
-                                    if (relPath != null) {
-                                        relPath = relPath.substring(0, relPath.lastIndexOf('.')).replace('/', '.');
-                                        ret = SourceUtils.isMainClass(relPath, ClasspathInfo.create(fo), true);
+                    if ( gjp != null ) {
+                        switch (action) {
+                            case COMMAND_COMPILE_SINGLE:
+                                FileBuiltQuery.Status status = FileBuiltQuery.getStatus(fo);
+                                ret = status == null || !status.isBuilt();
+                                break;
+                            case COMMAND_DEBUG_SINGLE:
+                            case COMMAND_RUN_SINGLE:
+                                if (RunUtils.isAugmentedBuildEnabled(project)) {
+                                    File f = FileUtil.toFile(fo);
+                                    GradleJavaSourceSet sourceSet = gjp.containingSourceSet(f);
+                                    if ((sourceSet != null) && fo.isData()) {
+                                        String relPath = sourceSet.relativePath(f);
+                                        if (relPath != null) {
+                                            relPath = relPath.substring(0, relPath.lastIndexOf('.')).replace('/', '.');
+                                            ret = SourceUtils.isMainClass(relPath, ClasspathInfo.create(fo), true);
+                                        }
                                     }
                                 }
-                            }
-
-                            break;
-                        }
-                        case COMMAND_TEST_SINGLE:
-                        case COMMAND_DEBUG_TEST_SINGLE:
-                        case COMMAND_RUN_SINGLE_METHOD:
-                        case COMMAND_DEBUG_SINGLE_METHOD: {
-                            if ("text/x-java".equals(fo.getMIMEType())) { //NOI18N
-                                if ( gjp != null ) {
+                                break;
+                            case COMMAND_TEST_SINGLE:
+                            case COMMAND_DEBUG_TEST_SINGLE:
+                            case COMMAND_RUN_SINGLE_METHOD:
+                            case COMMAND_DEBUG_SINGLE_METHOD:
+                                if ("text/x-java".equals(fo.getMIMEType())) { //NOI18N
                                     File f = FileUtil.toFile(fo);
                                     GradleJavaSourceSet sourceSet = gjp.containingSourceSet(f);
                                     ret = sourceSet != null && sourceSet.isTestSourceSet() && sourceSet.getSourceType(f) != RESOURCES;
                                 }
-                            }
-                            break;
+                                if ( fo.isFolder() ) {
+                                    File dir = FileUtil.toFile(fo);
+                                    GradleJavaSourceSet sourceSet = gjp.containingSourceSet(dir);
+                                    ret = sourceSet != null && sourceSet.getSourceType(dir) != RESOURCES;
+                                }
+                                break;
                         }
-                        case COMMAND_TEST_SINGLE_PACKAGE:
-                            if ( (gjp != null) && fo.isFolder() ) {
-                                File dir = FileUtil.toFile(fo);
-                                GradleJavaSourceSet sourceSet = gjp.containingSourceSet(dir);
-                                ret = sourceSet != null && sourceSet.getSourceType(dir) != RESOURCES;
-                            }
-                            break;
                     }
                 }
             }

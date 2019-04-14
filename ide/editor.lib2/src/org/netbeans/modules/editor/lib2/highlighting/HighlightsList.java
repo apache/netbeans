@@ -159,13 +159,13 @@ public final class HighlightsList {
 
         // Extends beyond first highlight
         Font firstFont = ViewUtils.getFont(firstAttrs, defaultFont);
-        Object firstPrependText = usePrependText ? firstAttrs.getAttribute("virtual-text-prepend") : null;
+        Object firstPrependText = usePrependText && firstAttrs != null ? firstAttrs.getAttribute("virtual-text-prepend") : null;
         int index = 1;
         while (true) {
             item = get(index);
             AttributeSet attrs = item.getAttributes();
             Font font = ViewUtils.getFont(attrs, defaultFont);
-            Object prependText = attrs != null ? attrs.getAttribute("virtual-text-prepend") : null;
+            Object prependText = usePrependText && attrs != null ? attrs.getAttribute("virtual-text-prepend") : null;
             if (!font.equals(firstFont) || !Objects.equals(firstPrependText, prependText)) { // Stop at itemEndOffset
                 if (index == 1) { // Just single attribute set
                     cutStartItems(1);

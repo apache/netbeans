@@ -151,6 +151,93 @@ public class HighlightsListTest {
         return reader.highlightsList();
     }
     
+    @Test
+    public void testSplitPrependText() throws Exception {
+        Document doc = document();
+
+        OffsetsBag bag = new OffsetsBag(doc);
+        AttributeSet attrs1 = AttributesUtilities.createImmutable(
+                StyleConstants.Foreground, Color.RED,
+                StyleConstants.FontFamily, fontNames[0]);
+        AttributeSet attrs2 = AttributesUtilities.createImmutable(
+                StyleConstants.Foreground, Color.RED,
+                StyleConstants.FontFamily, fontNames[0],
+                "virtual-text-prepend", "test");
+        AttributeSet attrs3 = AttributesUtilities.createImmutable(
+                StyleConstants.Foreground, Color.RED,
+                StyleConstants.FontFamily, fontNames[1]);
+
+        bag.addHighlight(0, 2, attrs1);
+        bag.addHighlight(2, 4, attrs2);
+        bag.addHighlight(4, 6, attrs1);
+        bag.addHighlight(8, 10, attrs3);
+
+        int end = 14;
+        DirectMergeContainer dmc = new DirectMergeContainer(new HighlightsContainer[]{ bag }, true);
+
+        {
+        HighlightsReader reader = new HighlightsReader(dmc, 0, end);
+        reader.readUntil(end);
+        HighlightsList hList = reader.highlightsList();
+
+        // Fetch first
+        AttributeSet attrs = hList.cutSameFont(defaultFont, end, end, null, false);
+        assert (attrs instanceof CompoundAttributes) : "Non-CompoundAttributes attrs=" + attrs;
+        CompoundAttributes cAttrs = (CompoundAttributes) attrs;
+        assert (cAttrs.startOffset() == 0) : "startOffset=" + cAttrs.startOffset();
+        HighlightItem[] items = cAttrs.highlightItems();
+        assert (items.length == 4);
+        assertItem(items[0], 2, attrs1);
+        assertItem(items[1], 4, attrs2);
+        assertItem(items[2], 6, attrs1);
+        assertItem(items[3], 8, null);
+        // Fetch next
+        assert (hList.startOffset() == 8);
+        attrs = hList.cutSameFont(defaultFont, end, end, null, false);
+        assert !(attrs instanceof CompoundAttributes);
+        assert attrs == attrs3;
+        assert (hList.startOffset() == 10);
+        attrs = hList.cutSameFont(defaultFont, end, end, null, false);
+        assert !(attrs instanceof CompoundAttributes);
+        assert (attrs == null);
+        assert (hList.startOffset() == 14);
+        }
+
+        {
+        HighlightsReader reader = new HighlightsReader(dmc, 0, end);
+        reader.readUntil(end);
+        HighlightsList hList = reader.highlightsList();
+
+        // Fetch first
+        AttributeSet attrs = hList.cutSameFont(defaultFont, end, end, null, true);
+        assert !(attrs instanceof CompoundAttributes) : "CompoundAttributes attrs=" + attrs;
+        assert attrs == attrs1;
+        assert (hList.startOffset() == 2);
+        attrs = hList.cutSameFont(defaultFont, end, end, null, true);
+        assert !(attrs instanceof CompoundAttributes);
+        assert (attrs == attrs2);
+        assert (hList.startOffset() == 4);
+        attrs = hList.cutSameFont(defaultFont, end, end, null, true);
+        assert (attrs instanceof CompoundAttributes) : "Non-CompoundAttributes attrs=" + attrs;
+        CompoundAttributes cAttrs = (CompoundAttributes) attrs;
+        assert (cAttrs.startOffset() == 4) : "startOffset=" + cAttrs.startOffset();
+        HighlightItem[] items = cAttrs.highlightItems();
+        assert (items.length == 2);
+        assertItem(items[0], 6, attrs1);
+        assertItem(items[1], 8, null);
+        // Fetch next
+        assert (hList.startOffset() == 8);
+        attrs = hList.cutSameFont(defaultFont, end, end, null, true);
+        assert !(attrs instanceof CompoundAttributes);
+        assert attrs == attrs3;
+        assert (hList.startOffset() == 10);
+        attrs = hList.cutSameFont(defaultFont, end, end, null, true);
+        assert !(attrs instanceof CompoundAttributes);
+        assert (attrs == null);
+        assert (hList.startOffset() == 14);
+        }
+    }
+
     private static void assertItem(HighlightItem item, int endOffset, AttributeSet attrs) {
         assert (item.getEndOffset() == endOffset) : "itemEndOffset=" + item.getEndOffset() + " != endOffset=" + endOffset; // NOI18N
         assert (item.getAttributes() == attrs) : "itemAttrs=" + item.getAttributes() + " != attrs=" + attrs; // NOI18N

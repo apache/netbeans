@@ -26,6 +26,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URL;
@@ -146,7 +147,7 @@ public abstract class TestBase extends NbTestCase {
             FileObject wd = FileUtil.toFileObject(getWorkDir());
             FileObject result = FileUtil.createData(wd, filename);
 
-            try (Writer out = new OuputStreamWriter(result.getOutputStream())) {
+            try (Writer out = new OutputStreamWriter(result.getOutputStream())) {
                 out.write(content);
             }
 
@@ -271,6 +272,12 @@ public abstract class TestBase extends NbTestCase {
         this.sourceLevel = sourceLevel;
     }
 
+    private boolean showPrependedText;
+
+    protected final void setShowPrependedText(boolean showPrependedText) {
+        this.showPrependedText = showPrependedText;
+    }
+
     final class ErrorDescriptionSetterImpl implements SemanticHighlighterBase.ErrorDescriptionSetter {
         private final Set<HighlightImpl> highlights = new TreeSet<HighlightImpl>(new Comparator<HighlightImpl>() {
             public int compare(HighlightImpl o1, HighlightImpl o2) {
@@ -286,6 +293,11 @@ public abstract class TestBase extends NbTestCase {
         public void setHighlights(Document doc, Collection<int[]> highlights, Map<int[], String> preText) {
             for (int[] h : highlights) {
                 this.highlights.add(new HighlightImpl(doc, h[0], h[1], EnumSet.of(getColoringAttribute())));
+            }
+            if (showPrependedText) {
+                for (Entry<int[], String> e : preText.entrySet()) {
+                    this.highlights.add(new HighlightImpl(doc, e.getKey()[0], e.getKey()[1], e.getValue()));
+                }
             }
         }
 

@@ -252,6 +252,39 @@ public class DetectorTest extends TestBase {
         performTest("GenericBoundIsClassUse");
     }
 
+    public void testParameterNames() throws Exception {
+        setShowPrependedText(true);
+        performTest("Test.java",
+                    "package test;" +
+                    "public class Test {" +
+                    "    public void api(String param1, int param2, int param3, float param4, Object param5) {" +
+                    "    }" +
+                    "    private int getValue() {" +
+                    "        return -1;" +
+                    "    }" +
+                    "    private void test() {" +
+                    "        api(\"\", 2, getValue(), 1.0f, null);" +
+                    "    }" +
+                    "}",
+                    "[PUBLIC, CLASS, DECLARATION], 0:26-0:30\n" +
+                    "[PUBLIC, METHOD, DECLARATION], 0:48-0:51\n" +
+                    "[PUBLIC, CLASS], 0:52-0:58\n" +
+                    "[PARAMETER, DECLARATION], 0:59-0:65\n" +
+                    "[PARAMETER, DECLARATION], 0:71-0:77\n" +
+                    "[PARAMETER, DECLARATION], 0:83-0:89\n" +
+                    "[PARAMETER, DECLARATION], 0:97-0:103\n" +
+                    "[PUBLIC, CLASS], 0:105-0:111\n" +
+                    "[PARAMETER, DECLARATION], 0:112-0:118\n" +
+                    "[PRIVATE, METHOD, DECLARATION], 0:142-0:150\n" +
+                    "[PRIVATE, METHOD, UNUSED, DECLARATION], 0:194-0:198\n" +
+                    "[PUBLIC, METHOD], 0:210-0:213\n" +
+                    "[param1:], 0:214-0:216\n" +
+                    "[param2:], 0:218-0:219\n" +
+                    "[PRIVATE, METHOD], 0:221-0:229\n" +
+                    "[param4:], 0:233-0:237\n" +
+                    "[param5:], 0:239-0:243\n");
+    }
+
     @RandomlyFails
     public void testBLE91246() throws Exception {
         final boolean wasThrown[] = new boolean[1];

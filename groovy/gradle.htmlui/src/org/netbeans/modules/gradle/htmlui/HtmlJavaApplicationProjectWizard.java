@@ -23,21 +23,19 @@ import org.netbeans.modules.gradle.spi.newproject.SimpleGradleWizardIterator;
 import org.netbeans.modules.gradle.spi.newproject.TemplateOperation;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.netbeans.api.project.Project;
-import org.netbeans.api.templates.TemplateRegistration;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.loaders.TemplateWizard;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
 
-@TemplateRegistration(folder="Project/Gradle", position=999, displayName="#template.htmlUIProject", iconBase="org/netbeans/modules/gradle/htmlui/DukeHTML.png", description="description.html")
 @Messages("template.htmlUIProject=Java Frontend Application")
 public class HtmlJavaApplicationProjectWizard extends SimpleGradleWizardIterator {
     private static final String DEFAULT_LICENSE_TEMPLATE = "/Templates/Licenses/license-default.txt"; //NOI18N
@@ -72,25 +70,26 @@ public class HtmlJavaApplicationProjectWizard extends SimpleGradleWizardIterator
         mainParams.put("package", packageBase); //NOI18N
         mainParams.put("name", mainClassName); //NOI18N
 
-        ops.addConfigureProject(projectDir, new CopyTree(projectDir, mainParams));
+        FileObject folder = ((TemplateWizard)this.getData()).getTemplate().getPrimaryFile();
+        ops.addConfigureProject(projectDir, new CopyTree(folder, projectDir, mainParams));
     }
 
     private static class CopyTree implements TemplateOperation.ProjectConfigurator {
+        private final FileObject templateFolder;
         private final File projectDir;
         private final Map<String, Object> params;
 
-        private CopyTree(File projectDir, Map<String, Object> params) {
+        private CopyTree(FileObject templateFolder, File projectDir, Map<String, Object> params) {
             this.projectDir = projectDir;
             this.params = params;
+            this.templateFolder = templateFolder;
         }
 
         @Override
         public void configure(Project project) {
             FileObject projectFo = FileUtil.toFileObject(projectDir);
-            FileObject templates = FileUtil.getConfigFile("Templates/Project/Gradle/org-netbeans-modules-gradle-htmlui-HtmlJavaApplicationProjectWizard.dir");
-            assert templates != null;
 
-            GradleArchetype ga = new GradleArchetype(templates, projectFo, params);
+            GradleArchetype ga = new GradleArchetype(templateFolder, projectFo, params);
             try {
                 ga.copyTemplates();
             } catch (IOException ex) {

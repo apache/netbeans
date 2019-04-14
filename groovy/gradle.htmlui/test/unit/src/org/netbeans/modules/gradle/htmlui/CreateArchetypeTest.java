@@ -48,7 +48,7 @@ public class CreateArchetypeTest extends NbTestCase {
 
 
     public void testCreateFromArchetype() throws Exception {
-        FileObject dir = FileUtil.getConfigFile("Templates/Project/Gradle/org-netbeans-modules-gradle-htmlui-HtmlJavaApplicationProjectWizard.dir");
+        FileObject dir = FileUtil.getConfigFile("Templates/Project/Gradle/org-netbeans-modules-gradle-htmlui-HtmlJavaApplicationProjectWizard");
         assertNotNull("Templates directory found", dir);
 
         FileObject dest = FileUtil.createFolder(workFo, "sample/dest");

@@ -25,7 +25,16 @@
     <folder name="Templates">
         <folder name="Project">
             <folder name="Gradle">
-                <folder name="org-netbeans-modules-gradle-htmlui-HtmlJavaApplicationProjectWizard.dir">
+                <folder name="org-netbeans-modules-gradle-htmlui-HtmlJavaApplicationProjectWizard">
+                    <!--org.netbeans.modules.gradle.htmlui.HtmlJavaApplicationProjectWizard-->
+                    <attr boolvalue="true" name="template"/>
+                    <attr intvalue="999" name="position"/>
+                    <attr
+                        bundlevalue="org.netbeans.modules.gradle.htmlui.Bundle#template.htmlUIProject" name="displayName"/>
+                    <attr name="iconBase" stringvalue="org/netbeans/modules/gradle/htmlui/DukeHTML.png"/>
+                    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/gradle/htmlui/description.html"/>
+                    <attr name="instantiatingIterator" newvalue="org.netbeans.modules.gradle.htmlui.HtmlJavaApplicationProjectWizard"/>
+                    <attr boolvalue="true" name="requireProject"/>
                     <file name="build.gradle" url="root_build.gradle.fmk">
                         <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
                     </file>

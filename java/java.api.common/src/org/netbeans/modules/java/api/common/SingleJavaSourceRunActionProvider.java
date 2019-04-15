@@ -69,8 +69,6 @@ public class SingleJavaSourceRunActionProvider implements ActionProvider {
             commandsList.add("-c");
         }
         File javaPathFile = new File(new File(new File(System.getProperty("java.home")), "bin"), "java");
-        if (!javaPathFile.exists())
-            return;
         String javaPath = "\"" + javaPathFile.getAbsolutePath() + "\"";
         commandsList.add(javaPath + " " + vmOptions + " " + filePath + " " + arguments);
         ExecutionService exeService = ExecutionService.newService(

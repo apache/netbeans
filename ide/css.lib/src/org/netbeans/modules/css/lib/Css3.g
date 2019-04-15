@@ -361,6 +361,7 @@ mediaBodyItem
     | vendorAtRule
     //Just a partial hotfix for nested MQ: complete grammar is defined in: http://www.w3.org/TR/css3-conditional/#processing
     | media
+    | supportsAtRule
     ;
 
 mediaQueryList
@@ -431,12 +432,54 @@ bodyItem
         consumeUntil(input, BitSet.of(NL));
     }
 
+supportsAtRule
+	:
+	SUPPORTS_SYM ws? supportsCondition ws? LBRACE ws? syncToFollow mediaBody? RBRACE
+	;
+
+
+supportsCondition
+	:
+	NOT ws supportsInParens
+	| supportsInParens (ws supportsWithOperator)?
+	;
+
+supportsWithOperator
+        :
+        supportsConjunction (ws supportsConjunction)*
+        | supportsDisjunction (ws supportsDisjunction)*
+        ;
+
+supportsConjunction
+        : (key_and ws supportsInParens)
+        ;
+
+supportsDisjunction
+        : (key_or ws supportsInParens)
+        ;
+
+supportsInParens
+	:
+	LPAREN ws? (supportsCondition | supportsFeature) ws? RPAREN
+	;
+	
+supportsFeature
+	:
+	supportsDecl
+	;
+	
+supportsDecl
+	:
+	declaration
+	;
+
 at_rule
     :
     media
     | page
     | counterStyle
     | fontFace
+    | supportsAtRule
     | vendorAtRule
     ;
 
@@ -1710,6 +1753,7 @@ NAMESPACE_SYM       : '@NAMESPACE' ;
 CHARSET_SYM         : '@CHARSET';
 COUNTER_STYLE_SYM   : '@COUNTER-STYLE';
 FONT_FACE_SYM       : '@FONT-FACE';
+SUPPORTS_SYM        : '@SUPPORTS';
 
 TOPLEFTCORNER_SYM     :'@TOP-LEFT-CORNER';
 TOPLEFT_SYM           :'@TOP-LEFT';

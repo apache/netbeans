@@ -112,6 +112,9 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
                       compilecp="test.qa-functional.compile.cp"
                       compiledep="test.qa-functional.testdep"/>
         </parseprojectxml>
+        <condition property="requires.nb.javac" value="true">
+            <contains string="${module.classpath}" substring="/org-netbeans-libs-javacapi.jar" />
+        </condition>
         <property name="spec.version.base.fatal.warning" value="true"/>
         <condition property="is.regular">
             <not>
@@ -697,7 +700,7 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         <property name="sigtest.public.packages" value="${public.packages}"/>
         <property name="sigtest.fail.on.error" value="true"/>
         <taskdef name="sigtest" classname="org.netbeans.nbbuild.Sigtest" classpath="${nbantext.jar}"/>
-        <property name="sigtest.jar" location="${nb_all}/nbbuild/external/apitest-70.jar"/> 
+        <property name="sigtest.jar" location="${nb_all}/nbbuild/external/sigtest-maven-plugin-1.2.jar"/>
         <loadproperties srcFile="${manifest.mf}" prefix="mf.">
             <filterchain>
                 <replaceregex pattern="[\n\r]+ ([^ ][^\n\r]*)"

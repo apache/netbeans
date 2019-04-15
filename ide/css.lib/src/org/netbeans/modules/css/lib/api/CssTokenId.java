@@ -70,6 +70,7 @@ public enum CssTokenId implements TokenId {
     URI(Css3Lexer.URI, URIS),
     COMMA(Css3Lexer.COMMA, SEPARATORS),
     MEDIA_SYM(Css3Lexer.MEDIA_SYM, AT_RULE_SYMBOL),
+    SUPPORTS_SYM(Css3Lexer.SUPPORTS_SYM, AT_RULE_SYMBOL),
     LBRACE(Css3Lexer.LBRACE, BRACES),
     RBRACE(Css3Lexer.RBRACE, BRACES),
     IDENT(Css3Lexer.IDENT, IDENTIFIERS),

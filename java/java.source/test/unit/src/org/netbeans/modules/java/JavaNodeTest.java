@@ -18,19 +18,9 @@
  */
 package org.netbeans.modules.java;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 import org.netbeans.junit.NbTestCase;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.nodes.Node.PropertySet;
 import org.openide.nodes.Sheet;
-import org.openide.util.Exceptions;
-import org.openide.util.Utilities;
 
 /**
  *

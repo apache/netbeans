@@ -21,12 +21,12 @@ package org.netbeans.modules.java.api.common;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.java.api.common.util.RunProcess;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
@@ -56,24 +56,12 @@ public class SingleJavaSourceRunActionProvider implements ActionProvider {
         FileObject fileObject = getJavaFileWithoutProjectFromLookup(context);
         if (fileObject == null) 
             return;
-        String filePath = fileObject.getPath();
-        Object argumentsObject = fileObject.getAttribute(FILE_ARGUMENTS);
-        String arguments = argumentsObject != null ? (String) argumentsObject : "";
-        Object vmOptionsObject = fileObject.getAttribute(FILE_VM_OPTIONS);
-        String vmOptions = vmOptionsObject != null ? (String) vmOptionsObject : "";
         ExecutionDescriptor descriptor = new ExecutionDescriptor().controllable(true).frontWindow(true).
-                preExecution(null).postExecution(null);
-        List<String> commandsList = new ArrayList<>();
-        if (Utilities.isUnix()) {
-            commandsList.add("bash");
-            commandsList.add("-c");
-        }
-        File javaPathFile = new File(new File(new File(System.getProperty("java.home")), "bin"), "java");
-        String javaPath = "\"" + javaPathFile.getAbsolutePath() + "\"";
-        commandsList.add(javaPath + " " + vmOptions + " " + filePath + " " + arguments);
+                    preExecution(null).postExecution(null);
+        RunProcess process = invokeActionHelper(command, fileObject);
         ExecutionService exeService = ExecutionService.newService(
-                new RunProcess(commandsList),
-                descriptor, "Running Single Java File");
+                    process,
+                    descriptor, "Running Single Java File");
         Future<Integer> exitCode = exeService.run();
     }
 
@@ -87,6 +75,25 @@ public class SingleJavaSourceRunActionProvider implements ActionProvider {
         int version = Integer.parseInt(javaVersion);
         return version >= 11;
     }
+    
+    public RunProcess invokeActionHelper (String command, FileObject fileObject) {
+        RunProcess runProcess;
+        String filePath = fileObject.getPath();
+        Object argumentsObject = fileObject.getAttribute(FILE_ARGUMENTS);
+        String arguments = argumentsObject != null ? (String) argumentsObject : "";
+        Object vmOptionsObject = fileObject.getAttribute(FILE_VM_OPTIONS);
+        String vmOptions = vmOptionsObject != null ? (String) vmOptionsObject : "";
+        List<String> commandsList = new ArrayList<>();
+        if (Utilities.isUnix()) {
+            commandsList.add("bash");
+            commandsList.add("-c");
+        }
+        File javaPathFile = new File(new File(new File(System.getProperty("java.home")), "bin"), "java");
+        String javaPath = "\"" + javaPathFile.getAbsolutePath() + "\"";
+        commandsList.add(javaPath + " " + vmOptions + " " + filePath + " " + arguments);
+        runProcess = new RunProcess(commandsList);
+        return runProcess;
+    }
 
     private FileObject getJavaFileWithoutProjectFromLookup(Lookup lookup) {
         for (DataObject dObj : lookup.lookupAll(DataObject.class)) {
@@ -97,36 +104,6 @@ public class SingleJavaSourceRunActionProvider implements ActionProvider {
             }
         }
         return null;
-    }
-
-    private class RunProcess implements Callable<Process> {
-
-        private final String dirPath;
-        private final List<String> commandsList;
-
-        public RunProcess(String command, String dirPath) {
-            this.dirPath = dirPath;
-            commandsList = new ArrayList<>();
-            commandsList.add(command);
-        }
-
-        public RunProcess(String command) {
-            commandsList = new ArrayList<>();
-            commandsList.add(command);
-            this.dirPath = System.getProperty("user.home");
-        }
-
-        public RunProcess(List<String> commandsList) {
-            this.commandsList = commandsList;
-            this.dirPath = System.getProperty("user.home");
-        }
-
-        public Process call() throws Exception {
-            ProcessBuilder runFileProcessBuilder = new ProcessBuilder(commandsList);
-            runFileProcessBuilder.directory(new File(dirPath));
-            runFileProcessBuilder.redirectErrorStream(true);
-            return runFileProcessBuilder.start();
-        }
     }
         
 }

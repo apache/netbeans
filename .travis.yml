@@ -55,3 +55,7 @@ matrix:
 
         - env: SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_TESTS_JDK8=false RUN_TESTS_JDK9PLUS=true TEST_JDK_VERSION="--feature 12 --license GPL" TEST_RUN_OPTIONS='-Dtest.run.args=--add-exports=jdk.javadoc/com.sun.tools.javadoc.main=ALL-UNNAMED -Dtest.use.jdk.javac=true' TEST_MODULES="java/java.completion" OPTS="-Dcluster.config=java -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
           jdk: oraclejdk8
+
+        - env: SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_TESTS_JDK8=false RUN_TESTS_JDK9PLUS=true TEST_JDK_VERSION="--feature 12 --license GPL" TEST_RUN_OPTIONS='-Dtest.run.args=--add-exports=jdk.javadoc/com.sun.tools.javadoc.main=ALL-UNNAMED -Dtest.use.jdk.javac=true' TEST_MODULES="java/java.api.common" OPTS="-Dcluster.config=java -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
+          jdk: oraclejdk11
+

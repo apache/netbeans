@@ -57,7 +57,11 @@ args=""
 
 case "`uname`" in
     Darwin*)
-        userdir="${default_mac_userdir}"
+        if [ ! -z "$default_mac_userdir" ]; then
+          userdir="${default_mac_userdir}"
+        else
+          userdir="${default_userdir}"
+        fi
         ;;
     *)
         userdir="${default_userdir}"

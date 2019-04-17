@@ -30,6 +30,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.netbeans.modules.java.api.common.util.RunProcess;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -48,7 +49,11 @@ public class TestJavaFile extends NbTestCase {
             
             File f1 = new File(new File(new File (getDataDir().getAbsolutePath()), "files"), "TestSingleJavaFile.java");
             FileObject javaFO = FileUtil.toFileObject(f1);
-            RunProcess process = new SingleJavaSourceRunActionProvider().invokeActionHelper("run.single", javaFO);
+            SingleJavaSourceRunActionProvider runActionProvider = new SingleJavaSourceRunActionProvider();
+            if (!runActionProvider.isActionEnabled("run.single", Lookup.EMPTY)) {
+                return;
+            }
+            RunProcess process = runActionProvider.invokeActionHelper("run.single", javaFO);
             BufferedReader reader =
                     new BufferedReader(new InputStreamReader(process.getInputStream()));
             StringBuilder builder = new StringBuilder();

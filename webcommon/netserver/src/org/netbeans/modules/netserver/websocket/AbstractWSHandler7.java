@@ -24,13 +24,13 @@ import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.xml.bind.DatatypeConverter;
 
 import org.netbeans.modules.netserver.SocketFramework;
 
@@ -228,7 +228,7 @@ abstract class AbstractWSHandler7<T extends SocketFramework> extends AbstractWSH
         StringBuilder builder = new StringBuilder( key );
         builder.append(SALT);
         try {
-            return DatatypeConverter.printBase64Binary( MessageDigest.getInstance(
+            return Base64.getEncoder().encodeToString( MessageDigest.getInstance(
                     "SHA").digest(builder.toString().getBytes(  // NOI18N
                             Charset.forName(Utils.UTF_8))));
         }

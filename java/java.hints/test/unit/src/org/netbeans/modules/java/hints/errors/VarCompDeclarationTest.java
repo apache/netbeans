@@ -68,7 +68,7 @@ public class VarCompDeclarationTest extends ErrorHintsTestBase {
                        "package test; \n" +
                        "public class Test {\n" +
                        "    private void test() { \n" +
-                       "        var v = 1, /*comment*/ v1 = 10;\n" +
+                       "        var v = 1, v1 = 10, v2 = 100;\n" +
                        "    } \n" +
                        "}",
                        -1,
@@ -76,8 +76,9 @@ public class VarCompDeclarationTest extends ErrorHintsTestBase {
                        ("package test; \n" +
                        "public class Test {\n" +
                        "    private void test() { \n" +
-                       "        var v = 1; /*comment*/ \n" +
+                       "        var v = 1;\n" +
                        "        var v1 = 10;\n" +
+                       "        var v2 = 100;\n" +
                        "    } \n" +
                        "}").replaceAll("[\\s]+", " "));
     }
@@ -259,6 +260,25 @@ public class VarCompDeclarationTest extends ErrorHintsTestBase {
                        "}").replaceAll("[\\s]+", " "));
     }
     
+    public void testCase11() throws Exception {
+        performFixTest("test/Test.java",
+                       "package test; \n" +
+                       "public class Test {\n" +
+                       "    private void test() { \n" +
+                       "        var v = {1, 2}, w = 2;\n" +
+                       "    } \n" +
+                       "}",
+                       -1,
+                       NbBundle.getMessage(VarCompDeclarationTest.class, "FIX_VarCompDeclaration"),
+                       ("package test; \n" +
+                       "public class Test {\n" +
+                       "    private void test() { \n" +
+                       "        var v = {1, 2};\n" +
+                       "        var w = 2;\n" +
+                       "    } \n" +
+                       "}").replaceAll("[\\s]+", " "));
+    }
+
     @Override
     protected List<Fix> computeFixes(CompilationInfo info, int pos, TreePath path) throws Exception {
         return new VarCompDeclaration().run(info, null, pos, path, null);

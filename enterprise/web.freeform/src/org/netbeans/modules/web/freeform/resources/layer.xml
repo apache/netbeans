@@ -23,6 +23,7 @@
 <filesystem>
     <folder name="Templates">
         <folder name="Project">
+            <folder name="AntJava">
             <folder name="Web">
                 <file name="webfreeform.xml">
                     <attr name="position" intvalue="300"/>
@@ -34,7 +35,7 @@
                     <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/web/freeform/resources/freeform-project-web.html"/>
                 </file>
             </folder>
-
+            </folder>
         </folder>
     </folder>
     <folder name="ProjectXMLCatalog">

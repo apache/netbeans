@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.89.1
+#Version 1.92.1
 
 CLSS public java.io.IOException
 cons public init()
@@ -442,6 +442,7 @@ meth public org.netbeans.junit.NbModuleSuite$Configuration failOnMessage(java.ut
 meth public org.netbeans.junit.NbModuleSuite$Configuration gui(boolean)
 meth public org.netbeans.junit.NbModuleSuite$Configuration hideExtraModules(boolean)
 meth public org.netbeans.junit.NbModuleSuite$Configuration honorAutoloadEager(boolean)
+meth public org.netbeans.junit.NbModuleSuite$Configuration parentClassLoader(java.lang.ClassLoader)
 meth public org.netbeans.junit.NbModuleSuite$Configuration reuseUserDir(boolean)
 supr java.lang.Object
 hfds clusterRegExp,enableClasspathModules,failOnException,failOnMessage,gui,hideExtraModules,honorAutoEager,latestTestCaseClass,moduleRegExp,parentClassLoader,reuseUserDir,startupArgs,tests

@@ -34,6 +34,10 @@
         </copy>
     </target>
 
+    <target name="-do-junit" unless="is.jdk9">
+        <antcall target="projectized-common.-do-junit"/>
+    </target>
+
     <target name="do-unit-test-build" unless="is.jdk9">
         <antcall target="projectized-common.do-unit-test-build"/>
     </target>

@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.concurrent.Callable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import org.netbeans.api.scripting.Scripting;
 import org.openide.cookies.CloseCookie;
 import org.openide.cookies.EditCookie;
 import org.openide.cookies.EditorCookie;
@@ -177,7 +178,7 @@ PrintCookie, CloseCookie, SaveAsCapable, LineCookie {
             Object n = entry.getFile().getAttribute("javax.script.ScriptEngine");
             if (n instanceof String) {
                 String name = (String) n;
-                ScriptEngineManager m = new ScriptEngineManager();
+                ScriptEngineManager m = Scripting.createManager();
                 ScriptEngine eng = m.getEngineByName(name);
                 if (eng != null) {
                     for (String mime : eng.getFactory().getMimeTypes()) {

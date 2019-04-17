@@ -561,39 +561,13 @@ public class ConvertToLambdaPreconditionChecker {
         return true;
     }
 
-    private ExecutableElement getFunctionalMethodFromElement(Element element) {
-
-        Element classType = types.asElement(element.asType());
-
-        //return null if classType is invalid, such as a primitive type
-        if (classType == null) {
-            return null;
-        }
-
-        ExecutableElement elementToReturn = null;
-        int methodCounter = 0;
-        for (Element e : classType.getEnclosedElements()) {
-            if (e.getKind() == ElementKind.METHOD) {
-                elementToReturn = (ExecutableElement) e;
-                methodCounter++;
-            }
-        }
-
-        //not a functional element, i.e. doesn't declare a single method
-        if (methodCounter != 1) {
-            return null;
-        }
-
-        return elementToReturn;
-    }
-    
     private boolean doesLambdaElementMatchFound(ExecutableElement possibleMatchingElement, int indexOfLambdaInArgs) {
         
         TreePath pathToLambdaMethod = new TreePath(pathToNewClassTree, lambdaMethodTree);
         ExecutableElement lambdaMethodElement = (ExecutableElement) getElementFromTreePath(pathToLambdaMethod);
         
         Element paramAtIndexOfLambda = possibleMatchingElement.getParameters().get(indexOfLambdaInArgs);
-        ExecutableElement possibleLambdaMatch = getFunctionalMethodFromElement(paramAtIndexOfLambda);
+        ExecutableElement possibleLambdaMatch = Utilities.getFunctionalMethodFromElement(info, paramAtIndexOfLambda);
 
         if (possibleLambdaMatch == null) {
             return false;

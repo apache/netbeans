@@ -46,7 +46,10 @@
     <fail message="You need JDK 8+ to build NetBeans; nbjdk.home=${nbjdk.home} java.home=${java.home}">
         <condition>
             <not>
-                <isset property="have-jdk-1.8"/>
+                <or>
+                    <isset property="have-jdk-1.8"/>
+                    <isset property="have-jdk-1.9"/>
+                </or>
             </not>
         </condition>
     </fail>
@@ -76,6 +79,13 @@
             <include name="platform/javahelp/external/binaries-list"/>
         </manifest>
     </downloadbinaries>
+    <!--
+    nb-extra-files denotes directories/files, that are not packed for
+    distribution. The clusters are only used for local development/testing.
+    The files must not be included in distribution zip and also need to be
+    excluded from license analysis
+    -->
+    <property name="nb-extra-files" value="test/**,extra/**"/>
 
     <echo message="Bootstrapping NetBeans-specific Ant extensions..."/>
     <path id="bootstrap-cp">
@@ -146,16 +156,15 @@
         <property name="langtools.jdk.home" value="${java.home}" />
     </ant>
     <mkdir dir="${nb_all}/nbbuild/build/langtools/build/nb" />
-    <javac srcdir="${nb_all}/nbbuild/build/langtools/src/java.compiler/share/classes:${nb_all}/nbbuild/build/langtools/src/jdk.compiler/share/classes:${nb_all}/nbbuild/build/langtools/src/jdk.javadoc/share/classes:${nb_all}/nbbuild/build/langtools/src/jdk.jdeps/share/classes:${nb_all}/nbbuild/build/langtools/build/gensrc/jdk.compiler"
+    <javac srcdir="${nb_all}/nbbuild/build/langtools/src/java.compiler/share/classes:${nb_all}/nbbuild/build/langtools/src/jdk.compiler/share/classes:${nb_all}/nbbuild/build/langtools/src/jdk.jdeps/share/classes:${nb_all}/nbbuild/build/langtools/build/gensrc/jdk.compiler"
            destdir="${nb_all}/nbbuild/build/langtools/build/nb"
            excludes="**/module-info.java,com/sun/tools/javac/main/JavacToolProvider.java,com/sun/tools/jdeps/**,com/sun/tools/jdeprscan/**,com/sun/tools/javap/Main.java,jdk/javadoc/internal/tool/JavadocToolProvider.java,com/sun/tools/doclets/standard/Standard.java" />
     <copy todir="${nb_all}/nbbuild/build/langtools/build/nb">
         <fileset dir="${nb_all}/nbbuild/build/langtools/src/java.compiler/share/classes" includes="**/*.properties"/>
         <fileset dir="${nb_all}/nbbuild/build/langtools/src/jdk.compiler/share/classes" includes="**/*.properties"/>
-        <fileset dir="${nb_all}/nbbuild/build/langtools/src/jdk.javadoc/share/classes" includes="**/*.properties"/>
         <fileset dir="${nb_all}/nbbuild/build/langtools/src/jdk.jdeps/share/classes" includes="**/*.properties"/>
     </copy>
-    <jar destfile="${nb_all}/nbbuild/external/vanilla-javac-api.jar" basedir="${nb_all}/nbbuild/build/langtools/build/nb" includes="javax/**,com/sun/source/**,com/sun/javadoc/**" />
+    <jar destfile="${nb_all}/nbbuild/external/vanilla-javac-api.jar" basedir="${nb_all}/nbbuild/build/langtools/build/nb" includes="javax/**,com/sun/source/**" />
     <jar destfile="${nb_all}/nbbuild/external/vanilla-javac-impl.jar" basedir="${nb_all}/nbbuild/build/langtools/build/nb" excludes="javax/**,com/sun/source/**,com/sun/javadoc/**" />
   </target>
 
@@ -277,8 +286,9 @@
       </verifyjnlp>
   </target>
   
-  <target name="build-javadoc">
-      <echo message="Deprecated, use nbbuild/javadoctools/build.xml directly"/>
+  <target name="build-javadoc" depends="javadoc"/>
+
+  <target name="javadoc" depends="bootstrap" description="Builds Javadoc for all NetBeans modules with some APIs">
       <ant dir="javadoctools" target="build-javadoc"/>
   </target>
 
@@ -331,17 +341,40 @@
       <include name="${nb.cluster.platform.dir}/lib/nbexec" />
     </fixcrlf>
   </target>
-  <target name="finish-build-nb" depends="init,-check-nb-cluster" if="has.nb.cluster">
-    <loadproperties srcFile="${clusters.list.file}" />
-
+  <target name="-shall-build-nb-windows-launchers" depends="init,-check-nb-cluster">
+      <condition property="shall.build.windows.launchers">
+          <and>
+              <istrue value="${do.build.windows.launchers}"/>
+              <istrue value="${has.nb.cluster}"/>
+          </and>
+      </condition>
+  </target>
+  
+  <target name="-build-nb-windows-launchers" depends="-shall-build-nb-windows-launchers" if="shall.build.windows.launchers">
+    <exec executable="make" dir="../nb/ide.launcher/windows">
+        <arg value="-f"/>
+        <arg value="Makefile.mingw"/>
+    </exec>
+    <copy todir="${netbeans.dest.dir}/bin" overwrite="true">
+        <fileset dir="../nb/ide.launcher/windows" includes="netbeans*.exe"/>
+    </copy>
+  </target>
+  
+  <target name="-download-nb-windows-launchers" depends="init,-check-nb-cluster" if="has.nb.cluster" unless="do.build.windows.launchers">
     <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
         <manifest dir="${nb_all}" includes="nb/ide.launcher/external/binaries-list"/>
     </downloadbinaries>
 
     <mkdir dir="${netbeans.dest.dir}/bin" />
+    <unzip src="../nb/ide.launcher/external/launchers-10.0.zip" dest="${netbeans.dest.dir}/bin" />
+  </target>
+
+  <target name="finish-build-nb" depends="init,-check-nb-cluster, -download-nb-windows-launchers, -build-nb-windows-launchers" if="has.nb.cluster">
+    <loadproperties srcFile="${clusters.list.file}" />
+
+    <mkdir dir="${netbeans.dest.dir}/bin" />
     <copy file="../nb/ide.launcher/unix/netbeans" todir="${netbeans.dest.dir}/bin" />
     <chmod file="${netbeans.dest.dir}/bin/netbeans" perm="ugo+rx"/>
-    <unzip src="../nb/ide.launcher/external/launchers-10.0.zip" dest="${netbeans.dest.dir}/bin" />
     <!-- if anybody knows better place for icons, let me know: jtulach@netbeans.org -->
 
     <mkdir dir="${netbeans.dest.dir}/etc" />
@@ -416,8 +449,6 @@ Hg ID:    ${hg.id}
     <delete file="NetBeans-${buildnum}-javadoc-web.zip"/> <!-- XXX why? -->
     <delete file="NetBeans-${buildnum}-javadoc.zip"/> <!-- XXX why? -->
 
-    <property name="nb-extra-files" value="test/**,extra/**"/>
-
     <antcall target="zip-cluster-config" inheritall="true"/>
   </target>
 
@@ -451,6 +482,8 @@ Hg ID:    ${hg.id}
       <mkdir dir="${netbeans.dest.dir}"/>
       <ant dir="." target="-build-platform" inheritAll="false">
           <property name="cluster.config" value="platform"/>
+          <property name="permit.jdk9.builds" value="true"/>
+          <property name="vanilla.javac.exists" value="true"/>
       </ant>
   </target>
 
@@ -460,6 +493,8 @@ Hg ID:    ${hg.id}
           <property name="cluster.config" value="platform"/>
           <property name="test.type" value="test-unit"/>
           <property name="test-unit-sys-prop.ignore.random.failures" value="true"/>
+          <property name="permit.jdk9.builds" value="true"/>
+          <property name="vanilla.javac.exists" value="true"/>
       </ant>
   </target>
   
@@ -1144,6 +1179,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
 
   <target name="clean" depends="-init-clean,bootstrap" description="Clean everything possible.">
       <taskdef name="try-else" classname="org.netbeans.nbbuild.TryElse" classpath="${nbantext.jar}"/>
+      <property name="vanilla.javac.exists" value="true"/>
       <try-else first="-hg-clean" second="-real-clean"/>
   </target>
 
@@ -1536,7 +1572,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         
         <delete dir="${netbeans.dest.dir}/licenses" />
         <mkdir dir="${netbeans.dest.dir}/licenses" />
-        
+
         <createlicensesummary licenseStub="${nb_all}/LICENSE" 
                               noticeStub="notice-stub.txt" 
                               report="${nb.build.dir}/createlicensesummary.xml" 
@@ -1546,6 +1582,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                               licenseTargetDir="${netbeans.dest.dir}/licenses"
                               notice="${nb.build.dir}/notice-temp"
                               binary="true"
+                              excludes="${nb-extra-files}"
         />
         
         <concat destfile="${netbeans.dest.dir}/NOTICE">
@@ -1776,22 +1813,15 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     </subant>
   </target>
 
-  <target name="gen-sigtests-release" depends="bootstrap"
+  <target name="gen-sigtests-release" depends="init"
     description="Generates signature files into stable API modules directories"
   >
     <echo message="Generating signature files into stable API modules directories"/>
 
-    <pathconvert property="modules.fullpath" >
-        <path>
-            <dirset dir="${nb_all}" includes="${config.javadoc.stable},${config.javadoc.devel}" />
-        </path>
-        <mapper type="identity" />
-    </pathconvert>
-    
     <subant target="gen-sigtest" buildpath="${modules.fullpath}"/>
   </target>
   
-  <target name="check-sigtests-release" depends="bootstrap"
+  <target name="check-sigtests-release" depends="init"
     description="Checks signature files of stable API modules"
   >
     <echo message="Checking signature files of stable API modules"/>
@@ -1800,12 +1830,6 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     <property name="fail.on.error" value="true"/>
     <delete dir="${sigtest.output.dir}"/>
     <mkdir dir="${sigtest.output.dir}"/>
-    <pathconvert property="modules.fullpath" >
-        <path>
-            <dirset dir="${nb_all}" includes="${config.javadoc.stable}" />
-        </path>
-        <mapper type="identity" />
-    </pathconvert>
     <subant target="check-sigtest" buildpath="${modules.fullpath}" failonerror="${fail.on.error}">
         <property name="sigtest.output.dir" value="${sigtest.output.dir}"/>
     </subant>

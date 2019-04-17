@@ -32,7 +32,9 @@ import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.SymbolMetadata;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
@@ -40,6 +42,7 @@ import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Type.ForAll;
 import com.sun.tools.javac.code.Type.TypeVar;
 import com.sun.tools.javac.code.TypeTag;
+import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.CompileStates.CompileState;
 import com.sun.tools.javac.comp.Enter;
@@ -48,7 +51,9 @@ import com.sun.tools.javac.comp.Modules;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
+import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCModuleDecl;
+import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.tree.JCTree.JCPackageDecl;
 import com.sun.tools.javac.tree.TreeMaker;
 import org.netbeans.lib.nbjavac.services.CancelAbort;
@@ -61,6 +66,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.*;
 import java.util.Map.Entry;
@@ -87,6 +93,8 @@ import org.netbeans.modules.java.source.parsing.FileManagerTransaction;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.java.source.parsing.OutputFileManager;
+import org.netbeans.modules.java.source.usages.BinaryAnalyser;
+import org.netbeans.modules.java.source.usages.ClassIndexImpl;
 import org.netbeans.modules.java.source.usages.ExecutableFilesIndex;
 import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
@@ -395,7 +403,12 @@ final class VanillaCompileWorker extends CompileWorker {
                         if (binaryFO == null)
                             continue;
                         FileManagerTransaction fmtx = TransactionContext.get().get(FileManagerTransaction.class);
-                        copyRecursively(binaryFO, cache, cache, filter, fmtx);
+                        List<File> copied = new ArrayList<>();
+                        copyRecursively(binaryFO, cache, cache, filter, fmtx, copied);
+                        final ClassIndexImpl cii = javaContext.getClassIndexImpl();
+                        if (cii != null) {
+                            cii.getBinaryAnalyser().analyse(context, cache, copied);
+                        }
                     }
                 });
                 done.get();
@@ -406,7 +419,7 @@ final class VanillaCompileWorker extends CompileWorker {
         return ParsingOutput.success(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
     }
 
-    private static void copyRecursively(FileObject source, File targetRoot, File target, Set<String> filter, FileManagerTransaction fmtx) throws IOException {
+    private static void copyRecursively(FileObject source, File targetRoot, File target, Set<String> filter, FileManagerTransaction fmtx, List<File> copied) throws IOException {
         if (source.isFolder()) {
             if (target.exists() && !target.isDirectory()) {
                 throw new IOException("Cannot create folder: " + target.getAbsolutePath() + ", already exists as a file.");
@@ -418,7 +431,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 String name = f.getNameExt();
                 if (name.endsWith(".class"))
                     name = name.substring(0, name.length() - FileObjects.CLASS.length()) + FileObjects.SIG;
-                copyRecursively(f, targetRoot, new File(target, name), filter, fmtx);
+                copyRecursively(f, targetRoot, new File(target, name), filter, fmtx, copied);
             }
         } else {
             if (target.isDirectory()) {
@@ -438,8 +451,10 @@ final class VanillaCompileWorker extends CompileWorker {
                 copy = true;
             }
 
-            if (copy)
+            if (copy) {
                 copyFile(source, fmtx.createFileObject(StandardLocation.CLASS_OUTPUT, target, targetRoot, null, null));
+                copied.add(target);
+            }
         }
     }
 
@@ -453,6 +468,7 @@ final class VanillaCompileWorker extends CompileWorker {
     private void dropMethodsAndErrors(com.sun.tools.javac.util.Context ctx, CompilationUnitTree cut) {
         Symtab syms = Symtab.instance(ctx);
         Names names = Names.instance(ctx);
+        Types types = Types.instance(ctx);
         TreeMaker make = TreeMaker.instance(ctx);
         //TODO: should preserve error types!!!
         new TreePathScanner<Void, Void>() {
@@ -461,6 +477,17 @@ final class VanillaCompileWorker extends CompileWorker {
                 JCTree.JCVariableDecl decl = (JCTree.JCVariableDecl) node;
                 if ((decl.mods.flags & Flags.ENUM) == 0) {
                     decl.init = null;
+                } else {
+                    MethodSymbol constructor = (MethodSymbol) decl.type.tsym.members().findFirst(names.init);
+                    ListBuffer<JCExpression> args = new ListBuffer<>();
+                    for (VarSymbol param : constructor.params) {
+                        args.add(make.TypeCast(param.type, make.Literal(TypeTag.BOT, null).setType(syms.botType)));
+                    }
+                    JCNewClass nct = (JCNewClass) decl.init;
+                    nct.args = args.toList();
+                    nct.constructor = constructor;
+                    nct.constructorType = constructor.type;
+                    nct.def = null;
                 }
                 decl.sym.type = decl.type = error2Object(decl.type);
                 clearAnnotations(decl.sym.getMetadata());
@@ -572,8 +599,19 @@ final class VanillaCompileWorker extends CompileWorker {
                         Type.WildcardType wt = ((Type.WildcardType) t);
                         wt.type = error2Object(wt.type);
                         TypeVar tv = wt.bound;
-                        tv.bound = error2Object(tv.bound);
-                        tv.lower = error2Object(tv.lower);
+                        if (tv != null) {
+                            String[] boundNames = {"bound", "_bound"};
+                            for (String boundName : boundNames) {
+                                try {
+                                    Field bound = tv.getClass().getDeclaredField(boundName);
+                                    bound.setAccessible(true);
+                                    bound.set(tv, error2Object((Type) bound.get(tv)));
+                                } catch (IllegalAccessException | NoSuchFieldException | SecurityException ex) {
+                                    JavaIndex.LOG.log(Level.FINEST, null, ex);
+                                }
+                            }
+                            tv.lower = error2Object(tv.lower);
+                        }
                         break;
                     }
                 }

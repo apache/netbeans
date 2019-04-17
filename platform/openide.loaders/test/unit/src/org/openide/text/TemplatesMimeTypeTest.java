@@ -28,6 +28,7 @@ import java.util.*;
 import java.util.logging.Level;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import org.netbeans.api.scripting.Scripting;
 import org.openide.*;
 import org.openide.nodes.Node;
 import org.openide.util.Enumerations;
@@ -88,7 +89,7 @@ public class TemplatesMimeTypeTest extends NbTestCase {
         CloneableEditorSupport sup = s.getLookup().lookup(CloneableEditorSupport.class);
         assertEquals("content/unknown", sup.cesEnv().getMimeType());
         
-        ScriptEngineManager sem = new ScriptEngineManager();
+        ScriptEngineManager sem = Scripting.createManager();
         ScriptEngine eng = sem.getEngineByName("javascript");
         assertNotNull("java script engine found", eng);
         

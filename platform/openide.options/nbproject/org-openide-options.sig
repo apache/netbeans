@@ -1,8 +1,9 @@
 #Signature file v4.1
-#Version 6.32
+#Version 6.41.1
 
 CLSS public abstract java.awt.Component
 cons protected init()
+fld protected javax.accessibility.AccessibleContext accessibleContext
 fld public final static float BOTTOM_ALIGNMENT = 1.0
 fld public final static float CENTER_ALIGNMENT = 0.5
 fld public final static float LEFT_ALIGNMENT = 0.0
@@ -273,7 +274,7 @@ meth public void transferFocusUpCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.lang.Object
-hfds FOCUS_TRAVERSABLE_DEFAULT,FOCUS_TRAVERSABLE_SET,FOCUS_TRAVERSABLE_UNKNOWN,LOCK,acc,accessibleContext,actionListenerK,adjustmentListenerK,appContext,autoFocusTransferOnDisposal,background,backgroundEraseDisabled,boundsOp,bufferStrategy,changeSupport,coalesceEventsParams,coalesceMap,coalescingEnabled,componentListener,componentListenerK,componentOrientation,componentSerializedDataVersion,compoundShape,containerListenerK,cursor,dropTarget,enabled,eventCache,eventLog,eventMask,focusListener,focusListenerK,focusLog,focusTraversalKeyPropertyNames,focusTraversalKeys,focusTraversalKeysEnabled,focusable,font,foreground,graphicsConfig,height,hierarchyBoundsListener,hierarchyBoundsListenerK,hierarchyListener,hierarchyListenerK,ignoreRepaint,incRate,inputMethodListener,inputMethodListenerK,isAddNotifyComplete,isFocusTraversableOverridden,isInc,isPacked,itemListenerK,keyListener,keyListenerK,locale,log,maxSize,maxSizeSet,minSize,minSizeSet,mixingCutoutRegion,mixingLog,mouseListener,mouseListenerK,mouseMotionListener,mouseMotionListenerK,mouseWheelListener,mouseWheelListenerK,name,nameExplicitlySet,newEventsOnly,objectLock,ownedWindowK,parent,peer,peerFont,popups,prefSize,prefSizeSet,requestFocusController,serialVersionUID,textListenerK,valid,visible,width,windowClosingException,windowFocusListenerK,windowListenerK,windowStateListenerK,x,y
+hfds FOCUS_TRAVERSABLE_DEFAULT,FOCUS_TRAVERSABLE_SET,FOCUS_TRAVERSABLE_UNKNOWN,LOCK,acc,actionListenerK,adjustmentListenerK,appContext,autoFocusTransferOnDisposal,background,backgroundEraseDisabled,boundsOp,bufferStrategy,changeSupport,coalesceEventsParams,coalesceMap,coalescingEnabled,componentListener,componentListenerK,componentOrientation,componentSerializedDataVersion,compoundShape,containerListenerK,cursor,dropTarget,enabled,eventCache,eventLog,eventMask,focusListener,focusListenerK,focusLog,focusTraversalKeyPropertyNames,focusTraversalKeys,focusTraversalKeysEnabled,focusable,font,foreground,graphicsConfig,height,hierarchyBoundsListener,hierarchyBoundsListenerK,hierarchyListener,hierarchyListenerK,ignoreRepaint,incRate,inputMethodListener,inputMethodListenerK,isAddNotifyComplete,isFocusTraversableOverridden,isInc,isPacked,itemListenerK,keyListener,keyListenerK,locale,log,maxSize,maxSizeSet,minSize,minSizeSet,mixingCutoutRegion,mixingLog,mouseListener,mouseListenerK,mouseMotionListener,mouseMotionListenerK,mouseWheelListener,mouseWheelListenerK,name,nameExplicitlySet,newEventsOnly,objectLock,ownedWindowK,parent,peer,peerFont,popups,prefSize,prefSizeSet,requestFocusController,serialVersionUID,textListenerK,valid,visible,width,windowClosingException,windowFocusListenerK,windowListenerK,windowStateListenerK,x,y
 hcls AWTTreeLock,BltSubRegionBufferStrategy,DummyRequestFocusController,FlipSubRegionBufferStrategy,ProxyCapabilities,SingleBufferStrategy
 
 CLSS public java.awt.Container
@@ -553,7 +554,6 @@ meth public abstract javax.accessibility.AccessibleContext getAccessibleContext(
 
 CLSS public abstract javax.swing.JComponent
 cons public init()
-fld protected javax.accessibility.AccessibleContext accessibleContext
 fld protected javax.swing.event.EventListenerList listenerList
 fld protected javax.swing.plaf.ComponentUI ui
 fld public final static int UNDEFINED_CONDITION = -1
@@ -636,7 +636,6 @@ meth public java.beans.VetoableChangeListener[] getVetoableChangeListeners()
 meth public java.lang.String getToolTipText()
 meth public java.lang.String getToolTipText(java.awt.event.MouseEvent)
 meth public java.lang.String getUIClassID()
-meth public javax.accessibility.AccessibleContext getAccessibleContext()
 meth public javax.swing.InputVerifier getInputVerifier()
 meth public javax.swing.JPopupMenu getComponentPopupMenu()
 meth public javax.swing.JRootPane getRootPane()
@@ -660,6 +659,8 @@ meth public void firePropertyChange(java.lang.String,boolean,boolean)
 meth public void firePropertyChange(java.lang.String,char,char)
 meth public void firePropertyChange(java.lang.String,int,int)
 meth public void grabFocus()
+meth public void hide()
+ anno 0 java.lang.Deprecated()
 meth public void paint(java.awt.Graphics)
 meth public void paintImmediately(int,int,int,int)
 meth public void paintImmediately(java.awt.Rectangle)
@@ -707,7 +708,7 @@ meth public void unregisterKeyboardAction(javax.swing.KeyStroke)
 meth public void update(java.awt.Graphics)
 meth public void updateUI()
 supr java.awt.Container
-hfds ACTIONMAP_CREATED,ANCESTOR_INPUTMAP_CREATED,ANCESTOR_USING_BUFFER,AUTOSCROLLS_SET,COMPLETELY_OBSCURED,CREATED_DOUBLE_BUFFER,DEBUG_GRAPHICS_LOADED,FOCUS_INPUTMAP_CREATED,FOCUS_TRAVERSAL_KEYS_BACKWARD_SET,FOCUS_TRAVERSAL_KEYS_FORWARD_SET,INHERITS_POPUP_MENU,INPUT_VERIFIER_SOURCE_KEY,IS_DOUBLE_BUFFERED,IS_OPAQUE,IS_PAINTING_TILE,IS_PRINTING,IS_PRINTING_ALL,IS_REPAINTING,KEYBOARD_BINDINGS_KEY,KEY_EVENTS_ENABLED,NEXT_FOCUS,NOT_OBSCURED,OPAQUE_SET,PARTIALLY_OBSCURED,REQUEST_FOCUS_DISABLED,RESERVED_1,RESERVED_2,RESERVED_3,RESERVED_4,RESERVED_5,RESERVED_6,REVALIDATE_RUNNABLE_SCHEDULED,WHEN_IN_FOCUSED_WINDOW_BINDINGS,WIF_INPUTMAP_CREATED,WRITE_OBJ_COUNTER_FIRST,WRITE_OBJ_COUNTER_LAST,aaTextInfo,actionMap,alignmentX,alignmentY,ancestorInputMap,autoscrolls,border,clientProperties,componentObtainingGraphicsFrom,componentObtainingGraphicsFromLock,defaultLocale,flags,focusController,focusInputMap,inputVerifier,isAlignmentXSet,isAlignmentYSet,managingFocusBackwardTraversalKeys,managingFocusForwardTraversalKeys,paintingChild,popupMenu,readObjectCallbacks,tempRectangles,uiClassID,verifyInputWhenFocusTarget,vetoableChangeSupport,windowInputMap
+hfds ACTIONMAP_CREATED,ANCESTOR_INPUTMAP_CREATED,ANCESTOR_USING_BUFFER,AUTOSCROLLS_SET,COMPLETELY_OBSCURED,CREATED_DOUBLE_BUFFER,DEBUG_GRAPHICS_LOADED,FOCUS_INPUTMAP_CREATED,FOCUS_TRAVERSAL_KEYS_BACKWARD_SET,FOCUS_TRAVERSAL_KEYS_FORWARD_SET,INHERITS_POPUP_MENU,INPUT_VERIFIER_SOURCE_KEY,IS_DOUBLE_BUFFERED,IS_OPAQUE,IS_PAINTING_TILE,IS_PRINTING,IS_PRINTING_ALL,IS_REPAINTING,KEYBOARD_BINDINGS_KEY,KEY_EVENTS_ENABLED,NEXT_FOCUS,NOT_OBSCURED,OPAQUE_SET,PARTIALLY_OBSCURED,REQUEST_FOCUS_DISABLED,RESERVED_1,RESERVED_2,RESERVED_3,RESERVED_4,RESERVED_5,RESERVED_6,WHEN_IN_FOCUSED_WINDOW_BINDINGS,WIF_INPUTMAP_CREATED,WRITE_OBJ_COUNTER_FIRST,WRITE_OBJ_COUNTER_LAST,aaTextInfo,actionMap,alignmentX,alignmentY,ancestorInputMap,autoscrolls,border,clientProperties,componentObtainingGraphicsFrom,componentObtainingGraphicsFromLock,defaultLocale,flags,focusController,focusInputMap,inputVerifier,isAlignmentXSet,isAlignmentYSet,managingFocusBackwardTraversalKeys,managingFocusForwardTraversalKeys,paintingChild,popupMenu,readObjectCallbacks,revalidateRunnableScheduled,tempRectangles,uiClassID,verifyInputWhenFocusTarget,vetoableChangeSupport,windowInputMap
 hcls ActionStandin,IntVector,KeyboardState,ReadObjectCallback
 
 CLSS public abstract interface javax.swing.text.Document
@@ -730,6 +731,10 @@ meth public abstract void remove(int,int) throws javax.swing.text.BadLocationExc
 meth public abstract void removeDocumentListener(javax.swing.event.DocumentListener)
 meth public abstract void removeUndoableEditListener(javax.swing.event.UndoableEditListener)
 meth public abstract void render(java.lang.Runnable)
+
+CLSS public abstract interface javax.swing.text.Position
+innr public final static Bias
+meth public abstract int getOffset()
 
 CLSS public abstract interface javax.swing.text.StyledDocument
 intf javax.swing.text.Document
@@ -1038,7 +1043,7 @@ meth public void removeChangeListener(javax.swing.event.ChangeListener)
 meth public void saveDocument() throws java.io.IOException
 meth public void setMIMEType(java.lang.String)
 supr org.openide.windows.CloneableOpenSupport
-hfds ERR,LOCAL_CLOSE_DOCUMENT,LOCK_PRINTING,PROP_PANE,alreadyModified,annotationsLoaded,checkModificationLock,docFilter,inUserQuestionExceptionHandler,kit,lastReusable,lastSaveTime,lastSelected,lineSet,lineSetWHM,listener,listeners,listeningOnEnv,lookup,mimeType,openClose,positionManager,preventModification,printing,propertyChangeSupport,reloadDialogOpened,undoRedo,warnedClasses
+hfds ERR,LOCAL_CLOSE_DOCUMENT,LOCK_PRINTING,PROP_PANE,alreadyModified,annotationsLoaded,checkModificationLock,docFilter,inUserQuestionExceptionHandler,isSaving,kit,lastReusable,lastSaveTime,lastSelected,lineSet,lineSetLineVector,listener,listeners,listeningOnEnv,lookup,mimeType,openClose,positionManager,preventModification,printing,propertyChangeSupport,reloadDialogOpened,undoRedo,warnedClasses
 hcls DocFilter,Listener,PlainEditorKit
 
 CLSS public abstract interface static org.openide.text.CloneableEditorSupport$Env
@@ -1088,7 +1093,7 @@ meth public void unmarkCurrentLine()
 meth public void unmarkError()
  anno 0 java.lang.Deprecated()
 supr org.openide.text.Line
-hfds assigned,breakpoint,current,docL,error,lineParts,listener,serialVersionUID
+hfds assigned,breakpoint,current,dlEqualsCounter,docL,error,lineParts,listener,serialVersionUID
 hcls FindAnnotationPosition,LR,Part
 
 CLSS public abstract static org.openide.text.DocumentLine$Set
@@ -1101,6 +1106,7 @@ meth public org.openide.text.Line getCurrent(int)
 meth public org.openide.text.Line getOriginal(int)
 supr org.openide.text.Line$Set
 hfds list,listener
+hcls OffsetLineCreator
 
 CLSS public org.openide.text.FilterDocument
 cons public init(javax.swing.text.Document)
@@ -1242,7 +1248,7 @@ meth public abstract org.openide.text.Line getOriginal(int)
 meth public final java.util.Date getDate()
 meth public int getOriginalLineNumber(org.openide.text.Line)
 supr java.lang.Object
-hfds date,whm
+hfds date,lineVector
 
 CLSS public final static !enum org.openide.text.Line$ShowOpenType
  outer org.openide.text.Line
@@ -1371,6 +1377,7 @@ hfds begin,end,serialVersionUID
 
 CLSS public final org.openide.text.PositionRef
 intf java.io.Serializable
+intf javax.swing.text.Position
 meth public int getColumn() throws java.io.IOException
 meth public int getLine() throws java.io.IOException
 meth public int getOffset()
@@ -1379,7 +1386,7 @@ meth public javax.swing.text.Position getPosition() throws java.io.IOException
 meth public javax.swing.text.Position$Bias getPositionBias()
 meth public org.openide.text.CloneableEditorSupport getCloneableEditorSupport()
 supr java.lang.Object
-hfds insertAfter,kind,manager,serialVersionUID
+hfds LOG,insertAfter,kind,manager,serialVersionUID
 hcls Manager
 
 CLSS public final org.openide.text.PrintPreferences
@@ -1540,7 +1547,7 @@ meth public abstract <%0 extends java.lang.Object> org.openide.util.Lookup$Resul
 meth public abstract <%0 extends java.lang.Object> {%%0} lookup(java.lang.Class<{%%0}>)
 meth public static org.openide.util.Lookup getDefault()
 supr java.lang.Object
-hfds LOG,defaultLookup
+hfds LOG,defaultLookup,defaultLookupProvider
 hcls DefLookup,Empty
 
 CLSS public abstract interface static org.openide.util.Lookup$Provider

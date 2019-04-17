@@ -71,6 +71,7 @@ import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.tree.JCTree;
 import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -100,6 +101,7 @@ import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.modules.java.source.TreeShims;
 
 /**TODO: tested by CopyFinderTest in java.hints module.
  *
@@ -1031,7 +1033,9 @@ public class CopyFinder extends ErrorAwareTreeScanner<Boolean, TreePath> {
                     return true;
                 }
             } finally {
-                bindState = origState;
+                if (!options.contains(Options.KEEP_SYNTHETIC_THIS)) {
+                    bindState = origState;
+                }
             }
         }
 
@@ -1554,15 +1558,16 @@ public class CopyFinder extends ErrorAwareTreeScanner<Boolean, TreePath> {
                 bindState.variables.put(name, getCurrentPath());
                 bindState.variables2Names.put(name, currentName);
             }
-        }
-
-        if (allowVariablesRemap) {
+        } else if (allowVariablesRemap) {
             VariableElement nodeEl = (VariableElement) info.getTrees().getElement(getCurrentPath());
             VariableElement pEl = (VariableElement) info.getTrees().getElement(p);
 
             if (nodeEl != null && pEl != null && isSameTypeForVariableRemap(nodeEl.asType(), pEl.asType())) {
                 bindState.variablesRemapToElement.put(pEl, nodeEl);
             }
+        } else {
+            if (!node.getName().contentEquals(name))
+                return false;
         }
 
         return scan(node.getInitializer(), t.getInitializer(), p);
@@ -1786,7 +1791,14 @@ public class CopyFinder extends ErrorAwareTreeScanner<Boolean, TreePath> {
             case BLOCK:
                 return ((BlockTree) firstLeaf.getParentPath().getLeaf()).getStatements();
             case CASE:
-                return ((CaseTree) firstLeaf.getParentPath().getLeaf()).getStatements();
+                CaseTree caseTree = (CaseTree) firstLeaf.getParentPath().getLeaf();
+                if (caseTree.getStatements() != null) {
+                    return caseTree.getStatements();
+                } else if (TreeShims.getBody(caseTree) instanceof StatementTree) {
+                    return Collections.singletonList((StatementTree) TreeShims.getBody(caseTree));
+                } else {
+                    return null;
+                }
             default:
                 return Collections.singletonList((StatementTree) firstLeaf.getLeaf());
         }
@@ -1878,7 +1890,7 @@ public class CopyFinder extends ErrorAwareTreeScanner<Boolean, TreePath> {
     }
 
     public enum Options {
-        ALLOW_VARIABLES_IN_PATTERN, ALLOW_REMAP_VARIABLE_TO_EXPRESSION, ALLOW_GO_DEEPER, NO_ELEMENT_VERIFY;
+        ALLOW_VARIABLES_IN_PATTERN, ALLOW_REMAP_VARIABLE_TO_EXPRESSION, ALLOW_GO_DEEPER, NO_ELEMENT_VERIFY, KEEP_SYNTHETIC_THIS;
     }
     
     //TODO: copied from java.hints' Utilities:

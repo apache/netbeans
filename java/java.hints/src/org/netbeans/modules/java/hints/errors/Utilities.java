@@ -125,10 +125,10 @@ import org.openide.util.Exceptions;
 
 import static com.sun.source.tree.Tree.Kind.*;
 import com.sun.source.tree.UnaryTree;
+import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.api.JavacScope;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.comp.ArgumentAttr;
 import com.sun.tools.javac.comp.Attr;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Enter;
@@ -149,6 +149,8 @@ import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.java.source.CodeStyleUtils;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
+import org.netbeans.modules.java.source.TreeShims;
+import org.netbeans.spi.java.hints.JavaFix;
 import org.netbeans.spi.java.hints.JavaFixUtilities;
 import org.openide.util.Pair;
 
@@ -3007,4 +3009,221 @@ public class Utilities {
         }
         return false;
     }
+
+    public static ExecutableElement getFunctionalMethodFromElement(CompilationInfo info, Element element) {
+        Element classType = info.getTypes().asElement(element.asType());
+
+        //return null if classType is invalid, such as a primitive type
+        if (classType == null || !classType.getKind().isInterface()) {
+            return null;
+        }
+
+        ExecutableElement elementToReturn = null;
+        int methodCounter = 0;
+        for (Element e : classType.getEnclosedElements()) {
+            if (e.getKind() == ElementKind.METHOD && e.getModifiers().contains(Modifier.ABSTRACT)) {
+                elementToReturn = (ExecutableElement) e;
+                methodCounter++;
+            }
+        }
+
+        //not a functional element, i.e. doesn't declare a single method
+        if (methodCounter != 1) {
+            return null;
+        }
+
+        return elementToReturn;
+    }
+
+    public static boolean completesNormally(CompilationInfo info, TreePath tp) {
+        class Scanner extends TreePathScanner<Void, Void> {
+
+            private boolean completesNormally = true;
+            private Set<Tree> seenTrees = new HashSet<>();
+
+            @Override
+            public Void visitReturn(ReturnTree node, Void p) {
+                completesNormally = false;
+                return null;
+            }
+
+            @Override
+            public Void visitBreak(BreakTree node, Void p) {
+                completesNormally &= seenTrees.contains(info.getTreeUtilities().getBreakContinueTarget(getCurrentPath()));
+                return null;
+            }
+
+            @Override
+            public Void visitContinue(ContinueTree node, Void p) {
+                completesNormally &= seenTrees.contains(info.getTreeUtilities().getBreakContinueTarget(getCurrentPath()));
+                return null;
+            }
+
+            @Override
+            public Void visitThrow(ThrowTree node, Void p) {
+                completesNormally = false;
+                return null;
+            }
+
+            @Override
+            public Void visitIf(IfTree node, Void p) {
+                boolean origCompletesNormally = completesNormally;
+                scan(node.getThenStatement(), p);
+                boolean afterThen = completesNormally;
+                completesNormally = origCompletesNormally;
+                scan(node.getElseStatement(), p);
+                completesNormally |= afterThen;
+                return null;
+            }
+
+            @Override
+            public Void visitSwitch(SwitchTree node, Void p) {
+                //exhaustiveness: (TODO)
+                boolean hasDefault = node.getCases().stream().anyMatch(c -> c.getExpression() == null);
+                if (node.getCases().size() > 0) {
+                    scan(node.getCases().get(node.getCases().size() - 1), p);
+                }
+                completesNormally |= !hasDefault;
+                return null;
+            }
+
+            //TODO: loops
+            @Override
+            public Void scan(Tree tree, Void p) {
+                seenTrees.add(tree);
+                return super.scan(tree, p);
+            }
+
+            @Override
+            public Void visitLambdaExpression(LambdaExpressionTree node, Void p) {
+                return null;
+            }
+
+            @Override
+            public Void visitClass(ClassTree node, Void p) {
+                return null;
+            }
+        }
+
+        Scanner scanner = new Scanner();
+
+        scanner.scan(tp, null);
+        return scanner.completesNormally;
+    }
+
+    public static void performRewriteRuleSwitch(JavaFix.TransformationContext ctx, TreePath tp, Tree st) {
+        WorkingCopy wc = ctx.getWorkingCopy();
+        TreeMaker make = wc.getTreeMaker();
+        List<CaseTree> newCases = new ArrayList<>();
+        List<? extends CaseTree> cases;
+        Set<VariableElement> variablesDeclaredInOtherCases = new HashSet<>();
+        List<ExpressionTree> patterns = new ArrayList<>();
+        boolean switchExpressionFlag = st.getKind().toString().equals("SWITCH_EXPRESSION");
+        if (switchExpressionFlag) {
+            cases = TreeShims.getCases(st);
+        } else {
+            cases = ((SwitchTree) st).getCases();
+        }
+        for (Iterator<? extends CaseTree> it = cases.iterator(); it.hasNext();) {
+            CaseTree ct = it.next();
+            TreePath casePath = new TreePath(tp, ct);
+            patterns.addAll(TreeShims.getExpressions(ct));
+            List<StatementTree> statements;
+            if (ct.getStatements() == null) {
+                statements = new ArrayList<>(((JCTree.JCCase) ct).stats);//Collections.singletonList((StatementTree) TreeShims.getBody(ct));
+            } else {
+                statements = new ArrayList<>(ct.getStatements());
+            }
+            if (statements.isEmpty()) {
+                if (it.hasNext()) {
+                    continue;
+                }
+                //last case, no break
+            } else if (!switchExpressionFlag && statements.get(statements.size() - 1).getKind() == Tree.Kind.BREAK
+                    && ctx.getWorkingCopy().getTreeUtilities().getBreakContinueTarget(new TreePath(new TreePath(tp, ct), statements.get(statements.size() - 1))) == st) {
+                statements.remove(statements.size() - 1);
+            } else {
+                new TreePathScanner<Void, Void>() {
+                    @Override
+                    public Void visitBlock(BlockTree node, Void p) {
+                        if (!node.getStatements().isEmpty()
+                                && node.getStatements().get(node.getStatements().size() - 1).getKind() == Tree.Kind.BREAK
+                                && ctx.getWorkingCopy().getTreeUtilities().getBreakContinueTarget(new TreePath(getCurrentPath(), node.getStatements().get(node.getStatements().size() - 1))) == st) {
+                            wc.rewrite(node, make.removeBlockStatement(node, node.getStatements().get(node.getStatements().size() - 1)));
+                            //TODO: optimize ifs?
+                        }
+                        return super.visitBlock(node, p);
+                    }
+                }.scan(new TreePath(new TreePath(tp, ct), statements.get(statements.size() - 1)), null);
+            }
+            Set<Element> seenVariables = new HashSet<>();
+            int idx = 0;
+            for (StatementTree statement : new ArrayList<>(statements)) {
+                TreePath statementPath = new TreePath(casePath, statement);
+                if (statement.getKind() == Tree.Kind.EXPRESSION_STATEMENT) {
+                    ExpressionTree expr = ((ExpressionStatementTree) statement).getExpression();
+                    if (expr.getKind() == Tree.Kind.ASSIGNMENT) {
+                        AssignmentTree at = (AssignmentTree) expr;
+                        Element var = wc.getTrees().getElement(new TreePath(new TreePath(statementPath, at), at.getVariable()));
+                        if (variablesDeclaredInOtherCases.contains(var)) {
+                            seenVariables.add(var);
+                            //XXX: take type from the original variable
+                            wc.rewrite(statement,
+                                    make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), var.getSimpleName(), make.Type(var.asType()), at.getExpression()));
+                        }
+                    }
+                }
+                Set<Element> thisStatementSeenVariables = new HashSet<>();
+                new TreePathScanner<Void, Void>() {
+                    @Override
+                    public Void visitIdentifier(IdentifierTree node, Void p) {
+                        Element el = wc.getTrees().getElement(getCurrentPath());
+                        if (variablesDeclaredInOtherCases.contains(el) && seenVariables.add(el)) {
+                            thisStatementSeenVariables.add(el);
+                        }
+                        return super.visitIdentifier(node, p);
+                    }
+                }.scan(statementPath, null);
+
+                if (!thisStatementSeenVariables.isEmpty()) {
+                    for (Element el : thisStatementSeenVariables) {
+                        VariableElement var = (VariableElement) el;
+                        statements.add(idx++, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), var.getSimpleName(), make.Type(var.asType()), null));
+                    }
+                }
+                idx++;
+            }
+            Tree body = make.Block(statements, false);
+            if (statements.size() == 1) {
+                if (statements.get(0).getKind() == Tree.Kind.EXPRESSION_STATEMENT
+                        || statements.get(0).getKind() == Tree.Kind.THROW
+                        || statements.get(0).getKind() == Tree.Kind.BLOCK) {
+                    body = statements.get(0);
+                }
+            }
+            newCases.add(make.Case(patterns, body));
+            patterns = new ArrayList<>();
+            for (StatementTree statement : getSwitchStatement(ct)) {
+                if (statement.getKind() == Tree.Kind.VARIABLE) {
+                    variablesDeclaredInOtherCases.add((VariableElement) wc.getTrees().getElement(new TreePath(casePath, statement)));
+                }
+            }
+        }
+        if (switchExpressionFlag) {
+            wc.rewrite(st, make.SwitchExpression(TreeShims.getExpressions(st).get(0), newCases));
+        } else {
+            wc.rewrite((SwitchTree) st, make.Switch(((SwitchTree) st).getExpression(), newCases));
+        }
+    }
+
+    private static List<? extends StatementTree> getSwitchStatement(CaseTree ct) {
+        if (ct.getStatements() != null) {
+            return ct.getStatements();
+        } else if (ct instanceof JCTree.JCCase) {
+            return ((JCTree.JCCase) ct).stats;
+        } else {
+            return null;
+        }
+   }
+
 }

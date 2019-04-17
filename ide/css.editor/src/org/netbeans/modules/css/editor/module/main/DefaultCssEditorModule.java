@@ -22,26 +22,32 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.lib.editor.util.CharSequenceUtilities;
 import org.netbeans.modules.csl.api.ColoringAttributes;
+import org.netbeans.modules.csl.api.CompletionProposal;
 import org.netbeans.modules.csl.api.DeclarationFinder.DeclarationLocation;
+import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.StructureItem;
 import org.netbeans.modules.css.editor.Css3Utils;
 import org.netbeans.modules.css.editor.CssHelpResolver;
 import org.netbeans.modules.css.editor.csl.CssNodeElement;
+import org.netbeans.modules.css.editor.module.spi.CompletionContext;
 import org.netbeans.modules.css.editor.module.spi.CssEditorModule;
 import org.netbeans.modules.css.editor.module.spi.EditorFeatureContext;
 import org.netbeans.modules.css.editor.module.spi.FeatureContext;
@@ -49,6 +55,7 @@ import org.netbeans.modules.css.editor.module.spi.FutureParamTask;
 import org.netbeans.modules.css.editor.module.spi.HelpResolver;
 import org.netbeans.modules.css.editor.module.spi.Utilities;
 import org.netbeans.modules.css.lib.api.CssModule;
+import org.netbeans.modules.css.lib.api.CssParserResult;
 import org.netbeans.modules.css.lib.api.CssTokenId;
 import org.netbeans.modules.css.lib.api.Node;
 import org.netbeans.modules.css.lib.api.NodeType;
@@ -282,55 +289,78 @@ public class DefaultCssEditorModule extends CssEditorModule {
             return null;
         }
 
+        Node realCurrent = NodeUtil.findNodeAtOffset(context.getParseTreeRoot(), astCaretOffset);
+
         Node current = NodeUtil.findNonTokenNodeAtOffset(context.getParseTreeRoot(), astCaretOffset);
-        if (current == null) {
-            //this may happen if the offset falls to the area outside the selectors rule node.
-            //(for example when the stylesheet starts or ends with whitespaces or comment and
-            //and the offset falls there).
-            //In such case root node (with null parent) is returned from NodeUtil.findNodeAtOffset() 
-            return null;
-        }
+//        if (current == null) {
+//            //this may happen if the offset falls to the area outside the selectors rule node.
+//            //(for example when the stylesheet starts or ends with whitespaces or comment and
+//            //and the offset falls there).
+//            //In such case root node (with null parent) is returned from NodeUtil.findNodeAtOffset()
+//            return null;
+//        }
 
         //process only some interesting nodes
-        if (!NodeUtil.isSelectorNode(current)) {
-            return null;
-        }
+        final NodeType currentNodeType = current != null ? current.type() : null;
+        final CharSequence currentNodeImage = current != null ? current.image() : null;
+        final NodeType realCurrentNodeType = realCurrent.type();
+        final CharSequence realCurrentNodeImage = realCurrent.image();
 
-        final NodeType nodeType = current.type();
-        final CharSequence currentNodeImage = current.image();
+        if (current != null && NodeUtil.isSelectorNode(current)) {
+            return new NodeVisitor<T>(result) {
+                @Override
+                public boolean visit(Node node) {
+                    if (currentNodeType == node.type()) {
+                        boolean ignoreCase = currentNodeType == NodeType.hexColor;
+                        if (LexerUtils.equals(currentNodeImage, node.image(), ignoreCase, false)) {
 
-        return new NodeVisitor<T>(result) {
+                            int[] trimmedNodeRange = NodeUtil.getTrimmedNodeRange(node);
+                            int docFrom = snapshot.getOriginalOffset(trimmedNodeRange[0]);
 
-            @Override
-            public boolean visit(Node node) {
-                if (nodeType == node.type()) {
-                    boolean ignoreCase = nodeType == NodeType.hexColor;
-                    if (LexerUtils.equals(currentNodeImage, node.image(), ignoreCase, false)) {
+                            //virtual class or id handling - the class and id elements inside
+                            //html tag's CLASS or ID attribute has the dot or hash prefix just virtual
+                            //so if we want to highlight such occurances we need to increment the
+                            //start offset by one
+                            if (docFrom == -1 && (node.type() == NodeType.cssClass || node.type() == NodeType.cssId)) {
+                                docFrom = snapshot.getOriginalOffset(trimmedNodeRange[0] + 1); //lets try +1 offset
+                            }
 
+                            int docTo = snapshot.getOriginalOffset(trimmedNodeRange[1]);
+
+                            if (docFrom != -1 && docTo != -1) {
+                                getResult().add(new OffsetRange(docFrom, docTo));
+                            }
+                        }
+                    }
+
+                    return false;
+
+                }
+            };
+        } else if (realCurrent.type() == NodeType.token
+            && NodeUtil.getTokenNodeTokenId(realCurrent) == CssTokenId.VARIABLE) {
+            return new NodeVisitor<T>(result) {
+                @Override
+                public boolean visit(Node node) {
+                    if (realCurrentNodeType == node.type()
+                        && NodeUtil.getTokenNodeTokenId(node) == CssTokenId.VARIABLE
+                        && realCurrentNodeImage.equals(node.image())) {
                         int[] trimmedNodeRange = NodeUtil.getTrimmedNodeRange(node);
                         int docFrom = snapshot.getOriginalOffset(trimmedNodeRange[0]);
-
-                        //virtual class or id handling - the class and id elements inside
-                        //html tag's CLASS or ID attribute has the dot or hash prefix just virtual
-                        //so if we want to highlight such occurances we need to increment the
-                        //start offset by one
-                        if (docFrom == -1 && (node.type() == NodeType.cssClass || node.type() == NodeType.cssId)) {
-                            docFrom = snapshot.getOriginalOffset(trimmedNodeRange[0] + 1); //lets try +1 offset
-                        }
-
                         int docTo = snapshot.getOriginalOffset(trimmedNodeRange[1]);
 
                         if (docFrom != -1 && docTo != -1) {
                             getResult().add(new OffsetRange(docFrom, docTo));
                         }
                     }
+
+                    return false;
+
                 }
+            };
+        }
 
-                return false;
-
-            }
-        };
-
+        return null;
     }
 
     @Override
@@ -608,6 +638,157 @@ public class DefaultCssEditorModule extends CssEditorModule {
             }
         };
 
+    }
+
+    @Override
+    public boolean isInstantRenameAllowed(EditorFeatureContext context) {
+        CssParserResult result = context.getParserResult();
+        Snapshot snapshot = result.getSnapshot();
+        Node node = NodeUtil.findNodeAtOffset(result.getParseTree(), snapshot.getEmbeddedOffset(context.getCaretOffset()));
+        return node.type() == NodeType.token && NodeUtil.getTokenNodeTokenId(node) == CssTokenId.VARIABLE;
+    }
+
+    @Override
+    public <T extends Set<OffsetRange>> NodeVisitor<T> getInstantRenamerVisitor(final EditorFeatureContext context, final T result) {
+        CssParserResult parserResult = context.getParserResult();
+        final Snapshot snapshot = parserResult.getSnapshot();
+        Node node = NodeUtil.findNodeAtOffset(parserResult.getParseTree(), snapshot.getEmbeddedOffset(context.getCaretOffset()));
+
+        final NodeType targetNodeType;
+        final CharSequence targetImage;
+
+        if(node.type() == NodeType.token && NodeUtil.getTokenNodeTokenId(node) == CssTokenId.VARIABLE) {
+            targetNodeType = node.type();
+            targetImage = node.image();
+        } else {
+            targetNodeType = null;
+            targetImage = null;
+        }
+
+        return new NodeVisitor<T>(result) {
+            @Override
+            public boolean visit(Node node) {
+                if(targetNodeType == null || targetImage == null) {
+                    return true;
+                }
+
+                if (node.type() == targetNodeType && targetImage.equals(node.image())) {
+                    int[] trimmedNodeRange = NodeUtil.getTrimmedNodeRange(node);
+                    int docFrom = snapshot.getOriginalOffset(trimmedNodeRange[0]);
+                    int docTo = snapshot.getOriginalOffset(trimmedNodeRange[1]);
+
+                    if (docFrom != -1 && docTo != -1) {
+                        getResult().add(new OffsetRange(docFrom, docTo));
+                    }
+                }
+
+                return false;
+            }
+        };
+    }
+
+    @Override
+    public List<CompletionProposal> getCompletionProposals(CompletionContext context) {
+        if(context.getActiveTokenId() == null) {
+            return Collections.emptyList();
+        }
+
+        // This sequence implements variable completion proposals. That is
+        // the completion items consist of the variables declared in the file.
+        TokenSequence ts = context.getTokenSequence();
+
+        // Build prefix from the context
+        boolean prefixRead = false;
+        StringBuilder prefixBuilder = new StringBuilder();
+
+        // If the current token is already recoginized as a VARIABLE, the context
+        // contains the slice of the variable from the start to the position of
+        // the caret.
+        if(ts.token().id() == CssTokenId.VARIABLE) {
+            prefixBuilder.append(context.getPrefix());
+            prefixRead = true;
+            ts.movePrevious();
+        }
+
+        // We scan backwards in the token stream till we reach a (, which
+        // is a potential function start. While scanning backwards, we skip
+        // three elements:
+        // - whitespace (does not matter when parsing)
+        // - a single - (indicated by a MINUS token
+        // - two -- (indicated by a MINUS token and an ERROR token
+        // The latter two must be considered as prefixes of the value to search
+        // and for the anchor calculation
+        Token openParen = null;
+        do {
+            if(ts.token().id() == CssTokenId.LPAREN) {
+                openParen = ts.token();
+                break;
+            } else if (ts.token().id() == CssTokenId.WS) {
+                prefixRead = true;
+            } else if ((! prefixRead) && (ts.token().id() == CssTokenId.MINUS || ts.token().id() == CssTokenId.ERROR)) {
+                prefixBuilder.insert(0, ts.token().text());
+            }
+        } while((ts.token().id() == CssTokenId.WS
+            || ts.token().id() == CssTokenId.MINUS
+            || ts.token().id() == CssTokenId.ERROR) && ts.movePrevious());
+
+        String prefix = prefixBuilder.toString();
+
+        // If we found an open parenthesis, we speculate, that we are in a var
+        // function
+        if(openParen != null) {
+            // scan further back, skipping whitespace to find the next identifier
+            // if it is "var", we complete the first position of a var function
+            Token ident = LexerUtils.followsToken(
+                ts,
+                Collections.singleton(CssTokenId.IDENT),
+                true,
+                false,
+                false,
+                CssTokenId.WS
+            );
+            if(ident != null && "var".equals(ident.text())) {
+                // There are two sources for "variable" names:
+                // - declared custom properties are of course considered
+                // - all variable uses are also considered, that way we can
+                //   support variables from imports, if they are at least once
+                //   manually used.
+
+                Set<String> variables = new TreeSet<>();
+
+                variables.addAll(NodeUtil
+                    .getChildrenRecursivelyByType(context.getParseTreeRoot(), NodeType.property)
+                    .stream()
+                    .map(Node::image)
+                    .map(CharSequence::toString)
+                    .filter(s -> s.startsWith("--"))
+                    .filter(s -> s.startsWith(prefix))
+                    .collect(Collectors.toList()));
+
+                variables.addAll(NodeUtil
+                    .getChildrenRecursivelyByType(context.getParseTreeRoot(), NodeType.token)
+                    .stream()
+                    .filter(n -> NodeUtil.getTokenNodeTokenId(n) == CssTokenId.VARIABLE)
+                    .map(Node::image)
+                    .map(CharSequence::toString)
+                    .filter(s -> s.startsWith("--"))
+                    .filter(s -> s.startsWith(prefix))
+                    .collect(Collectors.toList()));
+
+                // the currently modified variable can be part of the found items
+                // this assumes, that we don't want to complete to ourself
+                variables.remove(prefix);
+
+                context.restoreTokenSequence();
+
+                return Utilities.createRAWCompletionProposals(
+                    variables,
+                    ElementKind.VARIABLE,
+                    context.getAnchorOffset() - prefix.length() + context.getPrefix().length());
+            }
+        }
+        context.restoreTokenSequence();
+        return Collections.emptyList();
     }
 
     private static class CssRuleStructureItemHashableByName extends CssRuleStructureItem {

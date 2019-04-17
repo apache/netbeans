@@ -18,8 +18,9 @@
  */
 package org.netbeans.spi.java.hints;
 
-import com.sun.javadoc.Doc;
-import com.sun.javadoc.Tag;
+import com.sun.source.doctree.DocCommentTree;
+import com.sun.source.doctree.DocTree;
+import com.sun.source.doctree.SinceTree;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
@@ -57,6 +58,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
+import com.sun.source.util.TreeScanner;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.io.IOException;
@@ -67,6 +69,7 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -91,10 +94,12 @@ import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ClasspathInfo.PathKind;
 import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.TreePathHandle;
+import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.java.source.matching.Occurrence;
@@ -144,8 +149,17 @@ public class JavaFixUtilities {
     static Fix rewriteFix(CompilationInfo info, String displayName, TreePath what, final String to, Map<String, TreePath> parameters, Map<String, Collection<? extends TreePath>> parametersMulti, final Map<String, String> parameterNames, Map<String, TypeMirror> constraints, Map<String, String> options, String... imports) {
         final Map<String, TreePathHandle> params = new HashMap<String, TreePathHandle>();
         final Map<String, Object> extraParamsData = new HashMap<String, Object>();
+        final Map<String, ElementHandle<?>> implicitThis = new HashMap<>();
 
         for (Entry<String, TreePath> e : parameters.entrySet()) {
+            TreePath tp = e.getValue();
+            if (tp.getParentPath() != null && !immediateChildren(tp.getParentPath().getLeaf()).contains(tp.getLeaf())) {
+                Element el = info.getTrees().getElement(tp);
+                if (el != null && el.getSimpleName().contentEquals("this")) {
+                    implicitThis.put(e.getKey(), ElementHandle.create(el.getEnclosingElement()));
+                    continue;
+                }
+            }
             params.put(e.getKey(), TreePathHandle.create(e.getValue(), info));
             if (e.getValue() instanceof Callable) {
                 try {
@@ -183,7 +197,22 @@ public class JavaFixUtilities {
             displayName = defaultFixDisplayName(info, parameters, to);
         }
 
-        return new JavaFixRealImpl(info, what, options, displayName, to, params, extraParamsData, paramsMulti, parameterNames, constraintsHandles, Arrays.asList(imports)).toEditorFix();
+        return new JavaFixRealImpl(info, what, options, displayName, to, params, extraParamsData, implicitThis, paramsMulti, parameterNames, constraintsHandles, Arrays.asList(imports)).toEditorFix();
+    }
+
+    private static Set<Tree> immediateChildren(Tree t) {
+        Set<Tree> children = new HashSet<>();
+
+        t.accept(new TreeScanner<Void, Void>() {
+            @Override
+            public Void scan(Tree tree, Void p) {
+                if (tree != null)
+                    children.add(tree);
+                return null;
+            }
+        }, null);
+
+        return children;
     }
 
     /**Creates a fix that removes the given code corresponding to the given tree
@@ -276,12 +305,16 @@ public class JavaFixUtilities {
     static SpecificationVersion computeSpecVersion(CompilationInfo info, Element el) {
         if (!Utilities.isJavadocSupported(info)) return null;
 
-        Doc javaDoc = info.getElementUtilities().javaDocFor(el);
+        DocCommentTree javaDoc = info.getDocTrees().getDocCommentTree(el);
 
         if (javaDoc == null) return null;
 
-        for (Tag since : javaDoc.tags("@since")) {
-            String text = since.text();
+        for (DocTree tag : javaDoc.getBlockTags()) {
+            if (tag.getKind() != DocTree.Kind.SINCE) {
+                continue;
+            }
+
+            String text = ((SinceTree) tag).getBody().toString();
 
             Matcher m = SPEC_VERSION.matcher(text);
 
@@ -357,19 +390,21 @@ public class JavaFixUtilities {
         private final String displayName;
         private final Map<String, TreePathHandle> params;
         private final Map<String, Object> extraParamsData;
+        private final Map<String, ElementHandle<?>> implicitThis;
         private final Map<String, Collection<TreePathHandle>> paramsMulti;
         private final Map<String, String> parameterNames;
         private final Map<String, TypeMirrorHandle<?>> constraintsHandles;
         private final Iterable<? extends String> imports;
         private final String to;
 
-        public JavaFixRealImpl(CompilationInfo info, TreePath what, Map<String, String> options, String displayName, String to, Map<String, TreePathHandle> params, Map<String, Object> extraParamsData, Map<String, Collection<TreePathHandle>> paramsMulti, final Map<String, String> parameterNames, Map<String, TypeMirrorHandle<?>> constraintsHandles, Iterable<? extends String> imports) {
+        public JavaFixRealImpl(CompilationInfo info, TreePath what, Map<String, String> options, String displayName, String to, Map<String, TreePathHandle> params, Map<String, Object> extraParamsData, Map<String, ElementHandle<?>> implicitThis, Map<String, Collection<TreePathHandle>> paramsMulti, final Map<String, String> parameterNames, Map<String, TypeMirrorHandle<?>> constraintsHandles, Iterable<? extends String> imports) {
             super(info, what, options);
 
             this.displayName = displayName;
             this.to = to;
             this.params = params;
             this.extraParamsData = extraParamsData;
+            this.implicitThis = implicitThis;
             this.paramsMulti = paramsMulti;
             this.parameterNames = parameterNames;
             this.constraintsHandles = constraintsHandles;
@@ -398,6 +433,19 @@ public class JavaFixUtilities {
                 }
 
                 parameters.put(e.getKey(), p);
+            }
+
+            Map<String, Element> implicitThis = new HashMap<>();
+
+            for (Entry<String, ElementHandle<?>> e : this.implicitThis.entrySet()) {
+                Element clazz = e.getValue().resolve(wc);
+
+                if (clazz == null) {
+                    Logger.getLogger(JavaFix.class.getName()).log(Level.SEVERE, "Cannot resolve handle={0}", e.getValue());
+                    continue;
+                }
+
+                implicitThis.put(e.getKey(), clazz);
             }
 
             final Map<String, Collection<TreePath>> parametersMulti = new HashMap<String, Collection<TreePath>>();
@@ -528,7 +576,7 @@ public class JavaFixUtilities {
                 }
             }.scan(original, null);
             
-            new ReplaceParameters(wc, ctx.isCanShowUI(), inImport, parameters, extraParamsData, parametersMulti, parameterNames, rewriteFromTo, order, originalTrees).scan(new TreePath(tp.getParentPath(), rewriteFromTo.get(original)), null);
+            new ReplaceParameters(wc, ctx.isCanShowUI(), inImport, parameters, extraParamsData, implicitThis, parametersMulti, parameterNames, rewriteFromTo, order, originalTrees).scan(new TreePath(tp.getParentPath(), rewriteFromTo.get(original)), null);
 
             if (inPackage) {
                 String newPackage = wc.getTreeUtilities().translate(wc.getCompilationUnit().getPackageName(), new IdentityHashMap<Tree, Tree>(rewriteFromTo))./*XXX: not correct*/toString();
@@ -587,19 +635,22 @@ public class JavaFixUtilities {
         private final boolean inImport;
         private final Map<String, TreePath> parameters;
         private final Map<String, Object> extraParamsData;
+        private final Map<String, Element> implicitThis;
         private final Map<String, Collection<TreePath>> parametersMulti;
         private final Map<String, String> parameterNames;
         private final Map<Tree, Tree> rewriteFromTo;
         private final Set<Tree> originalTrees;
         private final List<Tree> order;
+        private final List<Element> nestedTypes = new ArrayList<>();
 
-        public ReplaceParameters(WorkingCopy wc, boolean canShowUI, boolean inImport, Map<String, TreePath> parameters, Map<String, Object> extraParamsData, Map<String, Collection<TreePath>> parametersMulti, Map<String, String> parameterNames, Map<Tree, Tree> rewriteFromTo, List<Tree> order, Set<Tree> originalTrees) {
+        public ReplaceParameters(WorkingCopy wc, boolean canShowUI, boolean inImport, Map<String, TreePath> parameters, Map<String, Object> extraParamsData, Map<String, Element> implicitThis, Map<String, Collection<TreePath>> parametersMulti, Map<String, String> parameterNames, Map<Tree, Tree> rewriteFromTo, List<Tree> order, Set<Tree> originalTrees) {
             this.parameters = parameters;
             this.info = wc;
             this.make = wc.getTreeMaker();
             this.canShowUI = canShowUI;
             this.inImport = inImport;
             this.extraParamsData = extraParamsData;
+            this.implicitThis = implicitThis;
             this.parametersMulti = parametersMulti;
             this.parameterNames = parameterNames;
             this.rewriteFromTo = rewriteFromTo;
@@ -617,6 +668,17 @@ public class JavaFixUtilities {
                 if (NUMBER_LITERAL_KINDS.contains(newNode.getKind())) {
                     return (Number) ((LiteralTree) newNode).getValue();
                 }
+            } else {
+                Element implicitThisClass = implicitThis.get(name);
+                if (implicitThisClass != null) {
+                    Element enclClass = findEnclosingClass();
+                    if (enclClass == implicitThisClass) {
+                        rewrite(node, make.Identifier("this"));
+                    } else {
+                        rewrite(node, make.MemberSelect(make.QualIdent(implicitThisClass), "this"));
+                    }
+                    return null;
+                }
             }
 
             Element e = info.getTrees().getElement(getCurrentPath());
@@ -626,6 +688,14 @@ public class JavaFixUtilities {
             }
 
             return super.visitIdentifier(node, p);
+        }
+
+        private Element findEnclosingClass() {
+            TreePath findClass = getCurrentPath();
+            while (findClass != null && !TreeUtilities.CLASS_TREE_KINDS.contains(findClass.getLeaf().getKind())) {
+                findClass = findClass.getParentPath();
+            }
+            return findClass != null ? info.getTrees().getElement(findClass) : null;
         }
 
         @Override
@@ -732,9 +802,36 @@ public class JavaFixUtilities {
                 String name = ((IdentifierTree) nue.getExpression()).getName().toString();
 
                 if (name.startsWith("$") && parameters.get(name) == null) {
-                    //XXX: unbound variable, use identifier instead of member select - may cause problems?
-                    rewrite(node, make.Identifier(nue.getIdentifier()));
-                    return null;
+                    Element implicitThisClass = implicitThis.get(name);
+                    if (implicitThisClass != null) {
+                        TreePath findClass = getCurrentPath();
+                        OUTER: while (findClass != null) {
+                            if (TreeUtilities.CLASS_TREE_KINDS.contains(findClass.getLeaf().getKind())) {
+                                Element clazz = info.getTrees().getElement(findClass);
+                                if (implicitThisClass.equals(clazz)) {
+                                    //this.<...>, the this may be implicit:
+                                    rewrite(node, make.Identifier(nue.getIdentifier()));
+                                    return null;
+                                }
+                                if (clazz.getKind().isClass() || clazz.getKind().isInterface()) {
+                                    for (Element currentClassElement : info.getElements().getAllMembers((TypeElement) clazz)) {
+                                        if (currentClassElement.getSimpleName().equals(node.getIdentifier())) {
+                                            //there may be a resolution conflict, let the member select be qualified
+                                            //TODO: no conflicts between fields and methods of the same name
+                                            //but we current still qualify the name
+                                            break OUTER;
+                                        }
+                                    }
+                                }
+                            }
+                            findClass = findClass.getParentPath();
+                        }
+                        //let visitIdent handle this
+                    } else {
+                        //XXX: unbound variable, use identifier instead of member select - may cause problems?
+                        rewrite(node, make.Identifier(nue.getIdentifier()));
+                        return null;
+                    }
                 }
             }
 
@@ -814,7 +911,15 @@ public class JavaFixUtilities {
             
             rewrite(node, nue);
             
-            return super.visitClass(nue, p);
+            Element el = info.getTrees().getElement(getCurrentPath());
+
+            nestedTypes.add(el);
+
+            try {
+                return super.visitClass(nue, p);
+            } finally {
+                nestedTypes.remove(nestedTypes.size() - 1);
+            }
         }
 
         @Override

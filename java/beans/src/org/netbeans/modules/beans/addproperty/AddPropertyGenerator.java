@@ -25,10 +25,10 @@ import java.io.Reader;
 import java.io.StringWriter;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.java.source.CodeStyleUtils;
+import org.netbeans.api.scripting.Scripting;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -148,6 +148,6 @@ public class AddPropertyGenerator {
     }
 
     private static ScriptEngine getScriptEngine() {
-        return new ScriptEngineManager().getEngineByName("freemarker"); // NOI18N
+        return Scripting.createManager().getEngineByName("freemarker"); // NOI18N
     }
 }

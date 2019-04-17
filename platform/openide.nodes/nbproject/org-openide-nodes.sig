@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.47.1
+#Version 7.49.1
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1783,6 +1783,7 @@ supr java.lang.Object
 hcls Default
 
 CLSS public abstract org.openide.util.actions.BooleanStateAction
+ anno 0 java.lang.Deprecated()
 cons public init()
 fld public final static java.lang.String PROP_BOOLEAN_STATE = "booleanState"
 intf org.openide.util.actions.Presenter$Menu

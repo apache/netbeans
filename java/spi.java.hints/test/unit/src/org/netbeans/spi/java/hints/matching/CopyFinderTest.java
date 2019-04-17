@@ -48,7 +48,9 @@ import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.java.source.TreePathHandle;
+import org.netbeans.api.java.source.matching.Matcher;
 import org.netbeans.api.java.source.matching.MatchingTestAccessor;
+import org.netbeans.api.java.source.matching.Occurrence;
 import org.netbeans.api.java.source.matching.Pattern;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.junit.NbTestCase;
@@ -1256,6 +1258,36 @@ public class CopyFinderTest extends NbTestCase {
                              false);
     }
     
+    public void testKeepImplicitThis() throws Exception {
+        prepareTest("package test; public class Test { void t() { toString(); } }", -1);
+
+        Map<String, TypeMirror> constraints = new HashMap<>();
+        String patternCode = PatternCompilerUtilities.parseOutTypesFromPattern(info, "$0{test.Test}.toString()", constraints);
+
+        Pattern pattern = PatternCompiler.compile(info, patternCode, constraints, Collections.<String>emptyList());
+
+        Collection<? extends Occurrence> occurrences = Matcher.create(info).setKeepSyntheticTrees().match(pattern);
+
+        assertEquals(1, occurrences.size());
+        Occurrence occ = occurrences.iterator().next();
+        assertEquals("this", occ.getVariables().get("$0").getLeaf().toString());
+    }
+
+    public void testFieldCheckName() throws Exception {
+        prepareTest("package test; public class Test { private int foo; private int foo2; }", -1);
+
+        Map<String, TypeMirror> constraints = new HashMap<>();
+        String patternCode = PatternCompilerUtilities.parseOutTypesFromPattern(info, "private int foo;", constraints);
+
+        Pattern pattern = PatternCompiler.compile(info, patternCode, constraints, Collections.<String>emptyList());
+
+        Collection<? extends Occurrence> occurrences = Matcher.create(info).match(pattern);
+
+        assertEquals(1, occurrences.size());
+        Occurrence occ = occurrences.iterator().next();
+        assertEquals("private int foo", occ.getOccurrenceRoot().getLeaf().toString());
+    }
+
     protected void prepareTest(String code) throws Exception {
         prepareTest(code, -1);
     }

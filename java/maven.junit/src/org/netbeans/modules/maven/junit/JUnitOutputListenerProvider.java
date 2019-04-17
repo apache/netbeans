@@ -599,7 +599,20 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
                 if (name.endsWith(nameSuffix)) {
                     name = name.substring(0, name.length() - nameSuffix.length());
                 }
-                Testcase test = new JUnitTestcase(name, null, session);
+                String displayName = name;
+                String methodName = name;
+                //In some cases (e.g. parameterized tests) Surefire appends some extra text to the test method name.
+                //Remove anything past the first non-dot non-Java identifier character (i.e. anything that would not be part of a legal method name)
+                int dotCodePoint = ".".codePointAt(0);
+                for (int i = 0; i < name.length(); i++) {
+                    int codePoint = name.codePointAt(i);
+                    if (!Character.isJavaIdentifierPart(codePoint) && codePoint != dotCodePoint) {
+                        methodName = methodName.substring(0, i);
+                        break;
+                    }
+                }
+                
+                Testcase test = new JUnitTestcase(methodName, displayName, null, session);
                 Element stdout = testcase.getChild("system-out"); //NOI18N
                 // If *-output.txt file exists do not log standard output here to avoid logging it twice.
                 // By default surefire only reports standard output for failing testcases.

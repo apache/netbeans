@@ -125,6 +125,7 @@
     
     <property name="cluster.dir.fallback" value="extra" />
     <setcluster name="cluster.dir" module="${module.name}" defaultLocation="${cluster.dir.fallback}" clusterName="module.cluster.name"/>
+    <property name="cluster.dir" value="${cluster.dir.fallback}"/>
 
     <property name="cluster" location="${netbeans.dest.dir}/${cluster.dir}"/> <!-- #59872 -->
 

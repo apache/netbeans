@@ -31,7 +31,7 @@ public class TextModuleTest extends CssModuleTestBase {
     public void testProperties() {
         assertPropertyValues("hanging-punctuation", "first force-end");
 //        assertPropertyValues("hyphenate-limit-chars", "auto", "1", "1 2", "1 2 3");
-        assertPropertyValues("text-align", "start center", "center");
+        assertPropertyValues("text-align", "start", "center", "justify-all");
     }
     
 //    public void testTextOverflow() {

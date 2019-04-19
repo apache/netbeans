@@ -257,13 +257,15 @@ public class DetectorTest extends TestBase {
         performTest("Test.java",
                     "package test;" +
                     "public class Test {" +
-                    "    public void api(String param1, int param2, int param3, float param4, Object param5) {" +
+                    "    public void api(String param1, int param2, int param3, float param4, Object... param5) {" +
                     "    }" +
                     "    private int getValue() {" +
                     "        return -1;" +
                     "    }" +
                     "    private void test() {" +
+                    "        api(\"\", 2, getValue(), 1.0f);" +
                     "        api(\"\", 2, getValue(), 1.0f, null);" +
+                    "        api(\"\", 2, getValue(), 1.0f, null, null);" +
                     "    }" +
                     "}",
                     "[PUBLIC, CLASS, DECLARATION], 0:26-0:30\n" +
@@ -274,15 +276,27 @@ public class DetectorTest extends TestBase {
                     "[PARAMETER, DECLARATION], 0:83-0:89\n" +
                     "[PARAMETER, DECLARATION], 0:97-0:103\n" +
                     "[PUBLIC, CLASS], 0:105-0:111\n" +
-                    "[PARAMETER, DECLARATION], 0:112-0:118\n" +
-                    "[PRIVATE, METHOD, DECLARATION], 0:142-0:150\n" +
-                    "[PRIVATE, METHOD, UNUSED, DECLARATION], 0:194-0:198\n" +
-                    "[PUBLIC, METHOD], 0:210-0:213\n" +
-                    "[param1:], 0:214-0:216\n" +
-                    "[param2:], 0:218-0:219\n" +
-                    "[PRIVATE, METHOD], 0:221-0:229\n" +
-                    "[param4:], 0:233-0:237\n" +
-                    "[param5:], 0:239-0:243\n");
+                    "[PARAMETER, DECLARATION], 0:115-0:121\n" +
+                    "[PRIVATE, METHOD, DECLARATION], 0:145-0:153\n" +
+                    "[PRIVATE, METHOD, UNUSED, DECLARATION], 0:197-0:201\n" +
+                    "[PUBLIC, METHOD], 0:213-0:216\n" +
+                    "[param1:], 0:217-0:219\n" +
+                    "[param2:], 0:221-0:222\n" +
+                    "[PRIVATE, METHOD], 0:224-0:232\n" +
+                    "[param4:], 0:236-0:240\n" +
+                    "[PUBLIC, METHOD], 0:250-0:253\n" +
+                    "[param1:], 0:254-0:256\n" +
+                    "[param2:], 0:258-0:259\n" +
+                    "[PRIVATE, METHOD], 0:261-0:269\n" +
+                    "[param4:], 0:273-0:277\n" +
+                    "[param5:], 0:279-0:283\n" +
+                    "[PUBLIC, METHOD], 0:293-0:296\n" +
+                    "[param1:], 0:297-0:299\n" +
+                    "[param2:], 0:301-0:302\n" +
+                    "[PRIVATE, METHOD], 0:304-0:312\n" +
+                    "[param4:], 0:316-0:320\n" +
+                    "[param5:], 0:322-0:326\n" +
+                    "[param5:], 0:328-0:332\n");
     }
 
     @RandomlyFails

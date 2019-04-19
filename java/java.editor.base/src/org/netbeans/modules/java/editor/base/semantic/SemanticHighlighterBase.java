@@ -1075,8 +1075,10 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                     if (invoked != null && (invoked.getKind() == ElementKind.METHOD || invoked.getKind() == ElementKind.CONSTRUCTOR)) {
                         long start = sourcePositions.getStartPosition(info.getCompilationUnit(), node);
                         long end = sourcePositions.getEndPosition(info.getCompilationUnit(), node);
+                        ExecutableElement invokedMethod = (ExecutableElement) invoked;
+                        pos = Math.min(pos, invokedMethod.getParameters().size() - 1);
                         preText.put(new int[] {(int) start, (int) end},
-                                    ((ExecutableElement) invoked).getParameters().get(pos).getSimpleName() + ":");
+                                    invokedMethod.getParameters().get(pos).getSimpleName() + ":");
                     }
                 }
             }

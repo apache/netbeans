@@ -28,6 +28,7 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.hints.test.Utilities.TestLookup;
+import org.netbeans.modules.java.openjdk.common.BuildUtils;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.InstalledFileLocator;
@@ -91,8 +92,8 @@ public class ClassPathProviderImplTest extends NbTestCase {
     }
 
     private void checkCompileClassPath(String module, String expected) {
-        FileObject prj = root.getFileObject(module);
-        FileObject src = prj.getFileObject("share/classes");
+        FileObject prj = BuildUtils.getFileObject(root, module);
+        FileObject src = BuildUtils.getFileObject(prj, "share/classes");
 
         Project project = FileOwnerQuery.getOwner(src);
 

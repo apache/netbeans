@@ -215,9 +215,9 @@ public class ConfigurationImpl implements ProjectConfiguration {
         }
 
         private Preferences prefs() {
-            FileObject javaBase = jdkRoot.getFileObject("jdk/src/java.base");
+            FileObject javaBase = BuildUtils.getFileObject(jdkRoot, "jdk/src/java.base");
             if (javaBase == null)
-                javaBase = jdkRoot.getFileObject("jdk");
+                javaBase = BuildUtils.getFileObject(jdkRoot, "jdk");
             Project javaBaseProject = javaBase != null ? FileOwnerQuery.getOwner(javaBase) : null;
 
             if (javaBaseProject != null) {
@@ -232,7 +232,7 @@ public class ConfigurationImpl implements ProjectConfiguration {
                 return ;
             String name = jdkRoot.getNameExt() + " - " + active.getDisplayName();
             FileObject target = FileUtil.toFileObject(new File(active.getLocation(), "jdk"));
-            if (target == null || target.getFileObject("bin/java") == null) {
+            if (target == null || BuildUtils.getFileObject(target, "bin/java") == null) {
                 return ;
             }
             for (JavaPlatform platform : JavaPlatformManager.getDefault().getInstalledPlatforms()) {

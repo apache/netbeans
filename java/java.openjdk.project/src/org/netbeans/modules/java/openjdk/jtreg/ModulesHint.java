@@ -49,6 +49,7 @@ import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.java.openjdk.common.BuildUtils;
 import org.netbeans.modules.java.openjdk.jtreg.TagParser.Result;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
@@ -273,7 +274,7 @@ public class ModulesHint {
         }
 
         for (Map.Entry<FileObject, Set<String>> e : module2Packages.entrySet()) {
-            FileObject moduleInfo = e.getKey().getFileObject("share/classes/module-info.java");
+            FileObject moduleInfo = BuildUtils.getFileObject(e.getKey(), "share/classes/module-info.java");
             if (moduleInfo == null) { //XXX
                 continue;
             }

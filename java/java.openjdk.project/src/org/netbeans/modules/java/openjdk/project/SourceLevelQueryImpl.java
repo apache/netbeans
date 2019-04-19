@@ -28,6 +28,7 @@ import java.util.regex.Pattern;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.modules.java.openjdk.common.BuildUtils;
 
 import org.netbeans.spi.java.queries.SourceLevelQueryImplementation;
 import org.openide.filesystems.FileObject;
@@ -45,11 +46,11 @@ public class SourceLevelQueryImpl implements SourceLevelQueryImplementation  {
     private final String sourceLevel;
 
     public SourceLevelQueryImpl(FileObject jdkRoot) {
-        FileObject sourceVersion = jdkRoot.getFileObject("src/java.compiler/share/classes/javax/lang/model/SourceVersion.java");
+        FileObject sourceVersion = BuildUtils.getFileObject(jdkRoot, "src/java.compiler/share/classes/javax/lang/model/SourceVersion.java");
         int sl = DEFAULT_SOURCE_LEVEL;
 
         if (sourceVersion == null) {
-            sourceVersion = jdkRoot.getFileObject("langtools/src/java.compiler/share/classes/javax/lang/model/SourceVersion.java");
+            sourceVersion = BuildUtils.getFileObject(jdkRoot, "langtools/src/java.compiler/share/classes/javax/lang/model/SourceVersion.java");
         }
         if (sourceVersion != null) {
             try {

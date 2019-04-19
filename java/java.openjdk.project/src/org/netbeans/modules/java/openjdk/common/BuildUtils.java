@@ -72,7 +72,7 @@ public class BuildUtils {
 
     public static File getBuildTargetDir(Project prj) {
         for (String possibleRootLocation : new String[] {"../../..", "../.."}) {
-            FileObject possibleJDKRoot = prj.getProjectDirectory().getFileObject(possibleRootLocation);
+            FileObject possibleJDKRoot = BuildUtils.getFileObject(prj.getProjectDirectory(), possibleRootLocation);
             Object buildAttr = possibleJDKRoot != null ? possibleJDKRoot.getAttribute(NB_JDK_PROJECT_BUILD) : null;
 
             if (buildAttr instanceof File) {
@@ -85,4 +85,18 @@ public class BuildUtils {
 
     public static final String NB_JDK_PROJECT_BUILD = "nb-jdk-project-build";
 
+    @SuppressWarnings("org.netbeans.modules.java.openjdk.common.BuildUtils.getFileObject")
+    public static FileObject getFileObject(FileObject dir, String relpath) {
+        int pos = 0;
+
+        while ((relpath.startsWith("../", pos)) || (relpath.endsWith("..") && pos + 2 == relpath.length())) {
+            dir = dir.getParent();
+            if (dir == null) {
+                return null;
+            }
+            pos += 3;
+        }
+
+        return pos < relpath.length() ? dir.getFileObject(relpath.substring(pos)) : dir;
+    }
 }

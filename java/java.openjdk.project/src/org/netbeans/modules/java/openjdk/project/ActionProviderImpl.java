@@ -206,7 +206,7 @@ public class ActionProviderImpl implements ActionProvider {
                         sourceCP = ClassPath.getClassPath(file, ClassPath.SOURCE);
                         break;
                     case TEST:
-                        sourceCP = ClassPathSupport.createClassPath(project.getProjectDirectory().getFileObject("../../test"));
+                        sourceCP = ClassPathSupport.createClassPath(BuildUtils.getFileObject(project.getProjectDirectory(), "../../test"));
                         break;
                     default:
                         throw new IllegalStateException(kind.name());
@@ -214,7 +214,7 @@ public class ActionProviderImpl implements ActionProvider {
                 value.append(singleFileProperty.valueType.convert(sourceCP, file));
                 sep = singleFileProperty.separator;
                 FileObject ownerRoot = sourceCP.findOwnerRoot(file);
-                srcdir = FileUtil.getRelativePath(project.getProjectDirectory().getFileObject("../.."), ownerRoot);
+                srcdir = FileUtil.getRelativePath(BuildUtils.getFileObject(project.getProjectDirectory(), "../.."), ownerRoot);
                 moduleName = ownerRoot.getParent().getParent().getNameExt();
             }
             props.put(singleFileProperty.propertyName, value.toString());
@@ -253,7 +253,7 @@ public class ActionProviderImpl implements ActionProvider {
 
     private RootKind getKind(Lookup context) {
         FileObject aFile = context.lookup(FileObject.class);
-        FileObject testDir = project.getProjectDirectory().getFileObject("../../test");
+        FileObject testDir = BuildUtils.getFileObject(project.getProjectDirectory(), "../../test");
         return aFile != null && testDir != null && FileUtil.isParentOf(testDir, aFile) ? RootKind.TEST : RootKind.SOURCE;
     }
 

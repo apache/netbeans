@@ -253,7 +253,7 @@ public class ActionProviderImplTest extends NbTestCase {
 
         @Override
         public Project loadProject(FileObject projectDirectory, ProjectState state) throws IOException {
-            if (projectDirectory.getFileObject("../../../modules.xml") != null) {
+            if (BuildUtils.getFileObject(projectDirectory, "../../../modules.xml") != null) {
                 return new ProjectImpl(projectDirectory);
             }
 

@@ -21,6 +21,7 @@ package org.netbeans.modules.java.openjdk.project;
 import java.io.IOException;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.java.openjdk.common.BuildUtils;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectState;
 import org.openide.filesystems.FileObject;
@@ -38,10 +39,10 @@ public class FilterStandardProjects implements ProjectFactory {
     @Override
     public boolean isProject(FileObject projectDirectory) {
         FileObject jdkRoot;
-        return projectDirectory.getFileObject("nbproject/project.xml") != null &&
-               (jdkRoot = projectDirectory.getFileObject("../../..")) != null &&
-               (JDKProject.isJDKProject(jdkRoot) || jdkRoot.getFileObject("../modules.xml") != null) &&
-               projectDirectory.getParent().equals(jdkRoot.getFileObject("make/netbeans")) &&
+        return BuildUtils.getFileObject(projectDirectory, "nbproject/project.xml") != null &&
+               (jdkRoot = BuildUtils.getFileObject(projectDirectory, "../../..")) != null &&
+               (JDKProject.isJDKProject(jdkRoot) || BuildUtils.getFileObject(jdkRoot, "../modules.xml") != null) &&
+               projectDirectory.getParent().equals(BuildUtils.getFileObject(jdkRoot, "make/netbeans")) &&
                "netbeans".equals(projectDirectory.getParent().getName());
     }
 
@@ -57,16 +58,16 @@ public class FilterStandardProjects implements ProjectFactory {
         if ("langtools".equals(projectDirectory.getNameExt())) {
             if (!BLOCK_LANGTOOLS_PROJECT)
                 return null;
-            repository = projectDirectory.getFileObject("../../../../langtools");
+            repository = BuildUtils.getFileObject(projectDirectory, "../../../../langtools");
             project2Repository = "../..";
         } else {
-            repository = projectDirectory.getFileObject("../../..");
+            repository = BuildUtils.getFileObject(projectDirectory, "../../..");
             project2Repository = "";
         }
         
         if (repository != null) {
             for (Project prj : OpenProjects.getDefault().getOpenProjects()) {
-                if (repository.equals(prj.getProjectDirectory().getFileObject(project2Repository))) {
+                if (repository.equals(BuildUtils.getFileObject(prj.getProjectDirectory(), project2Repository))) {
                     throw new IOException(MSG_FILTER);
                 }
             }

@@ -44,6 +44,7 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectManager;
+import org.netbeans.modules.java.openjdk.common.BuildUtils;
 import org.netbeans.modules.java.openjdk.project.ConfigurationImpl.ProviderImpl;
 import org.netbeans.modules.java.openjdk.project.ModuleDescription.ModuleRepository;
 import org.netbeans.modules.java.openjdk.project.customizer.CustomizerProviderImpl;
@@ -123,7 +124,7 @@ public class JDKProject implements Project {
         properties.setProperty("os", osKey);
         properties.setProperty("generalized-os", generalizedOsKey);
         properties.setProperty("legacy-os", legacyOsKey);
-        FileObject jdkRoot = moduleRepository != null ? moduleRepository.getJDKRoot() : projectDir.getFileObject("..");
+        FileObject jdkRoot = moduleRepository != null ? moduleRepository.getJDKRoot() : BuildUtils.getFileObject(projectDir, "..");
         properties.setProperty("jdkRoot", stripTrailingSlash(jdkRoot.toURI().toString()));
         configurations = ConfigurationImpl.getProvider(jdkRoot);
 
@@ -139,7 +140,7 @@ public class JDKProject implements Project {
         
         evaluator = PropertyUtils.sequentialPropertyEvaluator(properties);
         
-        boolean closed = projectDir.getFileObject("src/closed/share/classes/javax/swing/plaf/basic/icons/JavaCup16.png") != null;
+        boolean closed = BuildUtils.getFileObject(projectDir, "src/closed/share/classes/javax/swing/plaf/basic/icons/JavaCup16.png") != null;
         boolean modular = currentModule != null;
         Configuration configuration =  modular ? MODULAR_CONFIGURATION
                                                : closed ? LEGACY_CLOSED_CONFIGURATION : LEGACY_OPEN_CONFIGURATION;
@@ -173,7 +174,7 @@ public class JDKProject implements Project {
                     break;
             }
 
-            FileObject shareClasses = projectDir.getFileObject("share/classes");
+            FileObject shareClasses = BuildUtils.getFileObject(projectDir, "share/classes");
 
             if (shareClasses != null && Arrays.stream(shareClasses.getChildren()).anyMatch(c -> c.isFolder() && c.getNameExt().contains("."))) {
                 List<String> submodules = Arrays.stream(shareClasses.getChildren()).filter(c -> c.isFolder()).map(c -> c.getNameExt()).collect(Collectors.toList());
@@ -384,7 +385,7 @@ public class JDKProject implements Project {
             if (repository != null) {
                 return repository.findModule(projectDirectory.getNameExt()) != null;
             } else {
-                return projectDirectory.getFileObject("src/share/classes/java/lang/Object.java") != null;
+                return BuildUtils.getFileObject(projectDirectory, "src/share/classes/java/lang/Object.java") != null;
             }
         } catch (Exception ex) {
             Logger.getLogger(JDKProject.class.getName()).log(Level.FINE, null, ex);
@@ -408,7 +409,7 @@ public class JDKProject implements Project {
                 if (prj != null)
                     return prj;
 
-                if (projectDirectory.getFileObject("src/share/classes/java/lang/Object.java") != null) {
+                if (BuildUtils.getFileObject(projectDirectory, "src/share/classes/java/lang/Object.java") != null) {
                     //legacy project:
                     return new JDKProject(projectDirectory, null, null);
                 }

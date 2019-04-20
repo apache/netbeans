@@ -1042,22 +1042,22 @@ public class TreeModelNode extends AbstractNode {
         if (!(text.length() > 6 && text.substring(0, 6).equalsIgnoreCase(HTML_START_TAG))) {
             return text;
         }
-        text = text.replaceAll ("<i>", "");
-        text = text.replaceAll ("</i>", "");
-        text = text.replaceAll ("<b>", "");
-        text = text.replaceAll ("</b>", "");
-        text = text.replaceAll (HTML_START_TAG, "");
-        text = text.replaceAll (HTML_END_TAG, "");
-        text = text.replaceAll ("</font>", "");
+        text = text.replace ("<i>", "");
+        text = text.replace ("</i>", "");
+        text = text.replace ("<b>", "");
+        text = text.replace ("</b>", "");
+        text = text.replace (HTML_START_TAG, "");
+        text = text.replace (HTML_END_TAG, "");
+        text = text.replace ("</font>", "");
         int i = text.indexOf ("<font");
         while (i >= 0) {
             int j = text.indexOf (">", i);
             text = text.substring (0, i) + text.substring (j + 1);
             i = text.indexOf ("<font");
         }
-        text = text.replaceAll ("&lt;", "<");
-        text = text.replaceAll ("&gt;", ">");
-        text = text.replaceAll ("&amp;", "&");
+        text = text.replace ("&lt;", "<");
+        text = text.replace ("&gt;", ">");
+        text = text.replace ("&amp;", "&");
         return text;
     }
     

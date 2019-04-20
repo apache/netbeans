@@ -208,7 +208,7 @@ public class SpecialkeyPanel extends javax.swing.JPanel implements ActionListene
             } else if (source == wheelDownButton) {
                 text = "MOUSE_WHEEL_DOWN"; // NOI18N
             } else {
-                text = ((JButton) source).getText().toUpperCase().replaceAll(" ", "_"); // NOI18N
+                text = ((JButton) source).getText().toUpperCase().replace(" ", "_"); // NOI18N
             }
 
             //add the text to target textfield

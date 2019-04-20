@@ -1359,8 +1359,8 @@ public final class PersistenceManager implements PropertyChangeListener {
      */
     public static String escapeTcId4XmlContent (String tcName) {
         if (tcName.indexOf('&') != -1 || tcName.indexOf('\'') != -1) {
-            tcName = tcName.replaceAll("&", "&amp;");
-            tcName = tcName.replaceAll("'", "&apos;");
+            tcName = tcName.replace("&", "&amp;");
+            tcName = tcName.replace("'", "&apos;");
         }
         return tcName;
     }

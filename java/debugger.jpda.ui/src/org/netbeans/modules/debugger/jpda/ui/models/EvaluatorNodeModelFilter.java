@@ -168,11 +168,11 @@ public class EvaluatorNodeModelFilter implements ExtendedNodeModelFilter {
             if (str != null) {
                 StringBuffer buf = new StringBuffer();
                 buf.append("<html>");
-                str = str.replaceAll ("&", "&amp;");
-                str = str.replaceAll ("<", "&lt;");
-                str = str.replaceAll (">", "&gt;");
-                str = str.replaceAll ("\n", "<br/>");
-                str = str.replaceAll ("\r", "");
+                str = str.replace ("&", "&amp;");
+                str = str.replace ("<", "&lt;");
+                str = str.replace (">", "&gt;");
+                str = str.replace ("\n", "<br/>");
+                str = str.replace ("\r", "");
                 buf.append(str);
                 buf.append("</html>");
                 return buf.toString();

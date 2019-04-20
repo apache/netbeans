@@ -88,9 +88,9 @@ final class NbInputHandler implements InputHandler {
         JLabel prompt = new JLabel();
         if (promptText.contains("\n")) { // #35712
             prompt.setText("<html>" + promptText.
-                    replaceAll("&", "&amp;").
-                    replaceAll("<", "&lt;").
-                    replaceAll("\r?\n", "<br>"));
+                    replace("&", "&amp;").
+                    replace("<", "&lt;").
+                    replace("\r?\n", "<br>"));
         } else {
             prompt.setText(promptText);
         }

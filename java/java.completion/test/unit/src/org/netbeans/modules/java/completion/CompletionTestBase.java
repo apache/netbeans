@@ -726,7 +726,6 @@ public class CompletionTestBase extends CompletionTestBaseBase {
                 case "-//NetBeans//DTD Editor Preferences 1.0//EN":
                     return new InputSource(TestEntityCatalogImpl.class.getResourceAsStream("/org/netbeans/modules/editor/settings/storage/preferences/EditorPreferences-1_0.dtd"));
             }
-            System.err.println("publicID=" + publicID);
             return null;
         }
 

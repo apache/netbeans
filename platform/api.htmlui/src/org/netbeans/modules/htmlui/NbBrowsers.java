@@ -60,29 +60,30 @@ final class NbBrowsers {
 
     static void applyNbSkin() {
         LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
-        String name = lookAndFeel.getName();
+        String name = findLafName(lookAndFeel.getName());
+        if (name == null) {
+            return;
+        }
+        String resource = "nbres:/org/netbeans/modules/htmlui/css/wizard-" + name + ".css";
+        loadCss(resource);
+    }
+
+    private static String findLafName(String name) {
         switch (name) {
             case "Mac OS X":
-                name = "mac";
-                break;
+                return "mac";
             case "Metal":
-                name = "metal";
-                break;
+                return "metal";
             case "GTK look and feel":
-                name = "gtk";
-                break;
+                return "gtk";
             case "Nimbus":
-                name = "nimbus";
-                break;
+                return "nimbus";
             case "Windows":
-                name = "win";
-                break;
+                return "win";
             case "Darcula":
-                name = "darcula";
-                break;
+                return "darcula";
         }
-        final String resource = "nbres:/org/netbeans/modules/htmlui/css/wizard-" + name + ".css";
-        loadCss(resource);
+        return null;
     }
 
     @JavaScriptBody(args = { "css" }, body =

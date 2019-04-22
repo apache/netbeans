@@ -68,7 +68,7 @@ public class ConvertSwitchToRuleSwitch {
             wasDefault = ct.getExpression() == null;
             wasEmpty = ct.getStatements().isEmpty();
         }
-        if (wasDefault && Utilities.isCompitableToSwitchExpression(st)) {
+        if (wasDefault && Utilities.isCompatibleToSwitchExpression(st)) {
             return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_ConvertSwitchToSwitchExpression(), new FixImpl1(ctx.getInfo(), ctx.getPath()).toEditorFix());
         } else {
             return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_ConvertSwitchToRuleSwitch(), new FixImpl(ctx.getInfo(), ctx.getPath()).toEditorFix());

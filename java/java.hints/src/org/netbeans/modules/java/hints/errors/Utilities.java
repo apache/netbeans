@@ -3111,31 +3111,42 @@ public class Utilities {
         return scanner.completesNormally;
     }
 
-    public static boolean isCompitableToSwitchExpression(SwitchTree st) {
+    public static boolean isCompatibleToSwitchExpression(SwitchTree st) {
         boolean firstCase = true;
-        com.sun.tools.javac.util.Name leftTreeName = null;
+        Name leftTreeName = null;
         for (CaseTree ct : st.getCases()) {
             List<StatementTree> statements = new ArrayList<>(ct.getStatements());
-            if (statements.isEmpty()) {
-            } else if (statements.size() == 1) {
-                if (!firstCase || statements.get(0).getKind() != Tree.Kind.RETURN) {
+            switch (statements.size()) {
+                case 0:
+                    break;
+                case 1:
+                    if (firstCase && leftTreeName == null && statements.get(0).getKind() == Tree.Kind.RETURN) {
+                        break;
+                    } else {
+                        return false;
+                    }
+                case 2:
+                    if (statements.get(0).getKind() == Tree.Kind.EXPRESSION_STATEMENT && statements.get(1).getKind() == Tree.Kind.BREAK) {
+                        StatementTree statementTree = statements.get(0);
+                        JCTree.JCExpressionStatement jceTree = (JCTree.JCExpressionStatement) statementTree;
+                        if (!(jceTree.expr instanceof JCTree.JCAssign)) {
+                            return false;
+                        }
+                        JCTree.JCAssign assignTree = (JCTree.JCAssign) jceTree.expr;
+                        if (firstCase) {
+                            leftTreeName = ((JCTree.JCIdent) assignTree.lhs).name;
+                            firstCase = false;
+                            break;
+                        } else if (leftTreeName != null && leftTreeName.contentEquals(((JCTree.JCIdent) assignTree.lhs).name)) {
+                            break;
+                        } else {
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                default:
                     return false;
-                }
-            } else if (statements.size() == 2 && statements.get(0).getKind() == Tree.Kind.EXPRESSION_STATEMENT && statements.get(1).getKind() == Tree.Kind.BREAK) {
-                StatementTree statementTree = statements.get(0);
-                JCTree.JCExpressionStatement jceTree = (JCTree.JCExpressionStatement) statementTree;
-                if (!(jceTree.expr instanceof JCTree.JCAssign)) {
-                    return false;
-                }
-                JCTree.JCAssign assignTree = (JCTree.JCAssign) jceTree.expr;
-                if (firstCase) {
-                    leftTreeName = ((JCTree.JCIdent) assignTree.lhs).name;
-                    firstCase = false;
-                } else if (leftTreeName == null || leftTreeName.compareTo(((JCTree.JCIdent) assignTree.lhs).name) != 0) {
-                    return false;
-                }
-            } else {
-                return false;
             }
         }
         return true;
@@ -3150,7 +3161,7 @@ public class Utilities {
         List<ExpressionTree> patterns = new ArrayList<>();
         Tree variable = null;
         boolean isReturnExpression = false;
-        boolean switchExpressionFlag = st.getKind().toString().equals("SWITCH_EXPRESSION");
+        boolean switchExpressionFlag = st.getKind().toString().equals("SWITCH_EXPRESSION"); //NOI18N
         if (switchExpressionFlag) {
             cases = TreeShims.getCases(st);
         } else {
@@ -3162,7 +3173,7 @@ public class Utilities {
             patterns.addAll(TreeShims.getExpressions(ct));
             List<StatementTree> statements;
             if (ct.getStatements() == null) {
-                statements = new ArrayList<>(((JCTree.JCCase) ct).stats);//Collections.singletonList((StatementTree) TreeShims.getBody(ct));
+                statements = new ArrayList<>(((JCTree.JCCase) ct).stats);
             } else {
                 statements = new ArrayList<>(ct.getStatements());
             }

@@ -19,6 +19,7 @@
 package org.netbeans.modules.maven.modelcache;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -146,8 +147,18 @@ public final class MavenProjectCache {
         M2Configuration active = config.getActiveConfiguration();
         MavenExecutionResult res = null;
         try {
+            FileObject mavenConfig = projectDir.getFileObject(".mvn/maven.config");
+            String[] mavenConfigOpts = {};
+            if (mavenConfig != null && mavenConfig.isData()) {
+                mavenConfigOpts = mavenConfig.asText().split("\\s+");
+            }
             final MavenExecutionRequest req = projectEmbedder.createMavenExecutionRequest();
             req.addActiveProfiles(active.getActivatedProfiles());
+            for (String opt : mavenConfigOpts) {
+                if (opt.startsWith("-P")) {
+                    req.addActiveProfile(opt.substring(2));
+                }
+            }
 
             req.setPom(pomFile);
             req.setNoSnapshotUpdates(true);
@@ -161,6 +172,14 @@ public final class MavenProjectCache {
             req.setOffline(true);
             //#238800 important to merge, not replace
             Properties uprops = req.getUserProperties();
+            for (String opt : mavenConfigOpts) {
+                if (opt.startsWith("-D")) {
+                    int equals = opt.indexOf('=');
+                    if (equals != -1) {
+                        uprops.setProperty(opt.substring(2, equals), opt.substring(equals + 1));
+                    }
+                }
+            }
             uprops.putAll(createUserPropsForProjectLoading(active.getProperties()));
             req.setUserProperties(uprops);
             res = projectEmbedder.readProjectWithDependencies(req, true);
@@ -215,7 +234,7 @@ public final class MavenProjectCache {
                     }
                 }
             }
-        } catch (RuntimeException exc) {
+        } catch (RuntimeException | IOException exc) {
             //guard against exceptions that are not processed by the embedder
             //#136184 NumberFormatException
             LOG.log(Level.INFO, "Runtime exception thrown while loading maven project at " + pomFile, exc); //NOI18N

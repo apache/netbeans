@@ -468,7 +468,7 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
                 el = overlay.resolve(model, elements, qit.getFQN());
             } else {
                 if (el.getKind().isClass() || el.getKind().isInterface() || el.getKind() == ElementKind.PACKAGE) {
-                    el = overlay.resolve(model, elements, ((QualifiedNameable) el).getQualifiedName().toString(), elements.getModuleOf(el));
+                    el = overlay.resolve(model, elements, ((QualifiedNameable) el).getQualifiedName().toString(), el, elements.getModuleOf(el));
                 }
             }
 

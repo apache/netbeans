@@ -26,7 +26,6 @@ import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.java.api.common.util.RunProcess;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
@@ -77,7 +76,6 @@ public class SingleJavaSourceRunActionProvider implements ActionProvider {
     }
     
     public RunProcess invokeActionHelper (String command, FileObject fileObject) {
-        RunProcess runProcess;
         String filePath = fileObject.getPath();
         Object argumentsObject = fileObject.getAttribute(FILE_ARGUMENTS);
         String arguments = argumentsObject != null ? (String) argumentsObject : "";
@@ -91,8 +89,7 @@ public class SingleJavaSourceRunActionProvider implements ActionProvider {
         File javaPathFile = new File(new File(new File(System.getProperty("java.home")), "bin"), "java");
         String javaPath = "\"" + javaPathFile.getAbsolutePath() + "\"";
         commandsList.add(javaPath + " " + vmOptions + " " + filePath + " " + arguments);
-        runProcess = new RunProcess(commandsList);
-        return runProcess;
+        return new RunProcess(commandsList);
     }
 
     private FileObject getJavaFileWithoutProjectFromLookup(Lookup lookup) {

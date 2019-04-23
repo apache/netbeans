@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.api.common.util;
+package org.netbeans.modules.java.api.common;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,13 +26,12 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.openide.util.Exceptions;
 
 /**
  *
  * @author Sarvesh Kesharwani
  */
-public class RunProcess implements Callable<Process> {
+class RunProcess implements Callable<Process> {
     
     private static final Logger LOG = Logger.getLogger(RunProcess.class.getName());
 
@@ -83,4 +82,5 @@ public class RunProcess implements Callable<Process> {
     public Process call() throws Exception {
         return p;
     }
+    
 }

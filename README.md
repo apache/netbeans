@@ -111,7 +111,7 @@ you may want to merge the modern and ancient versions together:
 ```bash
 $ git clone https://github.com/apache/incubator-netbeans.git
 $ cd incubator-netbeans
-$ git log uihandler/arch.xml
+$ git log platform/uihandler/arch.xml
 ```
 
 This gives you just few log entries including the initial checkin and
@@ -127,8 +127,8 @@ $ git replace 6035076ee 32042637 # the 2nd donation
 When you search the log, or use the blame tool, the full history is available:
 
 ```bash
-$ git log uihandler/arch.xml
-$ git blame uihandler/arch.xml
+$ git log platform/uihandler/arch.xml
+$ git blame platform/uihandler/arch.xml
 ```
 
 Many thanks to Emilian Bold who converted the ancient history to his

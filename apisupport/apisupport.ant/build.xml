@@ -25,7 +25,7 @@
 
     <target name="nblib" depends="init">
         <mkdir dir="build/antclasses"/>
-        <javac srcdir="antsrc" destdir="build/antclasses" source="1.4" debug="true" deprecation="true">
+        <javac srcdir="antsrc" destdir="build/antclasses" source="${javac.source}" debug="true" deprecation="true">
             <classpath>
                 <pathelement path="${antsrc.cp}"/>
             </classpath>

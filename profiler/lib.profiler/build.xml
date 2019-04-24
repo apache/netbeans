@@ -32,20 +32,30 @@
   <!-- Compile the engine system library -->
     <target name="compile-system" depends="init">
         <mkdir dir="${build15.classes.dir}"/>
+        <fail message="javac.source of lib.profiler classes should be as low as possible!">
+            <condition>
+                <not>
+                    <or>
+                        <equals arg1="${javac.source}" arg2="1.5"/>
+                        <equals arg1="${javac.source}" arg2="1.7"/>
+                    </or>
+                </not>
+            </condition>
+        </fail>
         <javac srcdir="${src15.dir}" destdir="${build15.classes.dir}" debug="${build.compiler.debug}" debuglevel="${build.compiler.debuglevel}" encoding="UTF-8"
-                deprecation="${build.compiler.deprecation}" optimize="${build.compiler.optimize}" source="1.5" target="1.5" includeantruntime="false">
+                deprecation="${build.compiler.deprecation}" optimize="${build.compiler.optimize}" source="${javac.source}" target="${javac.target}" includeantruntime="false">
             <include name="org/netbeans/lib/profiler/server/system/**"/>
             <compilerarg line="${javac.compilerargs}"/>
         </javac>
         <mkdir dir="${buildcvm.classes.dir}"/>
         <javac  srcdir="${srccvm.dir}" destdir="${buildcvm.classes.dir}" deprecation="${build.compiler.deprecation}"
-             debug="${build.compiler.debug}" source="1.4" target="1.4" includeantruntime="false" optimize="${build.compiler.optimize}" >
+             debug="${build.compiler.debug}" source="${javac.source}" target="${javac.target}" includeantruntime="false" optimize="${build.compiler.optimize}" >
              <include name="org/netbeans/lib/profiler/server/system/**"/>
              <compilerarg line="${javac.compilerargs}"/>
         </javac>
         <mkdir dir="${build.classes.dir}"/>
         <javac srcdir="${src.dir}" destdir="${build.classes.dir}" debug="${build.compiler.debug}" debuglevel="${build.compiler.debuglevel}" encoding="UTF-8"
-                classpath="${build15.classes.dir}" deprecation="${build.compiler.deprecation}" optimize="${build.compiler.optimize}" source="1.4" target="1.4" includeantruntime="false">
+                classpath="${build15.classes.dir}" deprecation="${build.compiler.deprecation}" optimize="${build.compiler.optimize}" source="${javac.source}" target="${javac.target}" includeantruntime="false">
             <include name="org/netbeans/lib/profiler/server/**"/>
             <include name="org/netbeans/lib/profiler/global/**"/>
             <include name="org/netbeans/lib/profiler/wireprotocol/**"/>
@@ -55,7 +65,7 @@
 
     <target name="post-compile" depends="projectized-common.compile">
         <javac srcdir="${src15.dir}" destdir="${build15.classes.dir}" debug="${build.compiler.debug}" debuglevel="${build.compiler.debuglevel}" encoding="UTF-8"
-                classpath="${build.classes.dir}" deprecation="${build.compiler.deprecation}" optimize="${build.compiler.optimize}" source="1.5" target="1.5" includeantruntime="false">
+                classpath="${build.classes.dir}" deprecation="${build.compiler.deprecation}" optimize="${build.compiler.optimize}" source="${javac.source}" target="${javac.target}" includeantruntime="false">
             <compilerarg line="${javac.compilerargs}"/>
         </javac>
     </target>

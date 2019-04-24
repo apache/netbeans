@@ -219,7 +219,10 @@ public final class HighlightsViewFactory extends EditorViewFactory implements Hi
                 boolean inlineHints = documentView().op.isInlineHintsEnable();
                 AttributeSet attrs = hList.cutSameFont(defaultFont, limitOffset, wsEndOffset, docText, inlineHints);
                 int length = hList.startOffset() - startOffset;
-                HighlightsView view = attrs != null && inlineHints && attrs.getAttribute("virtual-text-prepend") != null ? new PrependedTextHighlightsView(length, attrs) : new HighlightsView(length, attrs);
+                EditorView view = new HighlightsView(length, attrs);
+                if (attrs != null && inlineHints && attrs.getAttribute("virtual-text-prepend") != null) {
+                    view = new PrependedTextView(documentView().op, attrs, view);
+                }
                 if (origView != null && origView.getClass() == HighlightsView.class && origView.getLength() == length) { // Reuse XXX: reuse disabled for PrependedTextHighlightsView!
                     HighlightsView origHView = (HighlightsView) origView;
                     TextLayout origTextLayout = origHView.getTextLayout();
@@ -239,8 +242,9 @@ public final class HighlightsViewFactory extends EditorViewFactory implements Hi
                         Font origFont = ViewUtils.getFont(origView.getAttributes(), defaultFont);
                         if (font != null && font.equals(origFont)) {
                             float origWidth = origHView.getWidth();
-                            view.setTextLayout(origTextLayout, origWidth);
-                            view.setBreakInfo(origHView.getBreakInfo());
+                            HighlightsView hv = (HighlightsView) (view instanceof PrependedTextView ? ((PrependedTextView) view).getDelegate() : view);
+                            hv.setTextLayout(origTextLayout, origWidth);
+                            hv.setBreakInfo(origHView.getBreakInfo());
                             ViewStats.incrementTextLayoutReused(length);
                         }
                     }

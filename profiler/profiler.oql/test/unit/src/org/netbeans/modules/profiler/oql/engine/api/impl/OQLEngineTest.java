@@ -50,6 +50,7 @@ public class OQLEngineTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
+        System.setProperty("polyglot.js.nashorn-compat", "true");
     }
 
     @AfterClass
@@ -515,7 +516,7 @@ public class OQLEngineTest {
                 return false;
             }
         });
-        output[0] = output[0].replace("UID=301077366599181570", "UID=301077366599181567");
+        output[0] = output[0].replaceAll("UID=301077366599181[0-9]*", "UID=301077366599181567");
         assertEquals(output[1], output[0]);
     }
 
@@ -670,7 +671,7 @@ public class OQLEngineTest {
     public void testComplexStatement2() throws Exception {
         System.out.println("complex statement 2");
 
-        final String[] rslt = new String[1];
+        final Map[] rslt = new Map[1];
 
         instance.executeQuery(
             "select map(filter(heap.findClass('java.lang.System').statics.props.table, 'it != null && it.key != null && it.value != null'), " +
@@ -678,11 +679,14 @@ public class OQLEngineTest {
 
             public boolean visit(Object o) {
                 System.out.println(o);
-                rslt[0] = o.toString();
+                assertTrue(o instanceof Map);
+                rslt[0] = (Map) o;
                 return true;
             }
         });
-        assertEquals("{value=, key=sun.cpu.isalist}", rslt[0]);
+        assertEquals("Two elements: " + rslt[0], 2, rslt[0].size());
+        assertEquals("Correct key: " + rslt[0], "sun.cpu.isalist", rslt[0].get("key"));
+        assertEquals("Empty value: " + rslt[0], "", rslt[0].get("value"));
     }
 
     @Test

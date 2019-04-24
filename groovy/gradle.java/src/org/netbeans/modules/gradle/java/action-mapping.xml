@@ -40,12 +40,12 @@
         </action>
 
         <action name="debug.fix" repeatable="false">
-            <args>--offline --no-rebuild ${affectedBuildTasks}</args>
+            <args>--offline ${affectedBuildTasks}</args>
             <reload rule="NEVER"/>
         </action>
 
         <action name="compile.single" repetable="false">
-            <args>--offline --no-rebuild ${affectedBuildTasks}</args>
+            <args>--offline ${affectedBuildTasks}</args>
             <reload rule="NEVER"/>
         </action>
 

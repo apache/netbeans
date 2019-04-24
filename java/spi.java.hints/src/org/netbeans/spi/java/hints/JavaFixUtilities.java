@@ -18,8 +18,9 @@
  */
 package org.netbeans.spi.java.hints;
 
-import com.sun.javadoc.Doc;
-import com.sun.javadoc.Tag;
+import com.sun.source.doctree.DocCommentTree;
+import com.sun.source.doctree.DocTree;
+import com.sun.source.doctree.SinceTree;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
@@ -304,12 +305,16 @@ public class JavaFixUtilities {
     static SpecificationVersion computeSpecVersion(CompilationInfo info, Element el) {
         if (!Utilities.isJavadocSupported(info)) return null;
 
-        Doc javaDoc = info.getElementUtilities().javaDocFor(el);
+        DocCommentTree javaDoc = info.getDocTrees().getDocCommentTree(el);
 
         if (javaDoc == null) return null;
 
-        for (Tag since : javaDoc.tags("@since")) {
-            String text = since.text();
+        for (DocTree tag : javaDoc.getBlockTags()) {
+            if (tag.getKind() != DocTree.Kind.SINCE) {
+                continue;
+            }
+
+            String text = ((SinceTree) tag).getBody().toString();
 
             Matcher m = SPEC_VERSION.matcher(text);
 

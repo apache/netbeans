@@ -85,23 +85,20 @@ public final class LocationOpener {
         JavaSource javaSource = JavaSource.forFileObject(fo);
         if (javaSource != null) {
             try {
-                javaSource.runUserActionTask(new Task<CompilationController>() {
-                    @Override
-                    public void run(CompilationController compilationController) throws Exception {
-                        compilationController.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                        Trees trees = compilationController.getTrees();
-                        CompilationUnitTree compilationUnitTree = compilationController.getCompilationUnit();
-                        List<? extends Tree> typeDecls = compilationUnitTree.getTypeDecls();
-                        for (Tree tree : typeDecls) {
-                            Element element = trees.getElement(trees.getPath(compilationUnitTree, tree));
-                            if (element != null && element.getKind() == ElementKind.CLASS && element.getSimpleName().contentEquals(fo.getName())) {
-                                List<? extends ExecutableElement> methodElements = ElementFilter.methodsIn(element.getEnclosedElements());
-                                for (Element child : methodElements) {
-                                    if (child.getSimpleName().contentEquals(methodName)) {
-                                        long pos = trees.getSourcePositions().getStartPosition(compilationUnitTree, trees.getTree(child));
-                                        line[0] = (int) compilationUnitTree.getLineMap().getLineNumber(pos);
-                                        break;
-                                    }
+                javaSource.runUserActionTask((CompilationController compilationController) -> {
+                    compilationController.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                    Trees trees = compilationController.getTrees();
+                    CompilationUnitTree compilationUnitTree = compilationController.getCompilationUnit();
+                    List<? extends Tree> typeDecls = compilationUnitTree.getTypeDecls();
+                    for (Tree tree : typeDecls) {
+                        Element element = trees.getElement(trees.getPath(compilationUnitTree, tree));
+                        if (element != null && element.getKind() == ElementKind.CLASS && element.getSimpleName().contentEquals(fo.getName())) {
+                            List<? extends ExecutableElement> methodElements = ElementFilter.methodsIn(element.getEnclosedElements());
+                            for (Element child : methodElements) {
+                                if (child.getSimpleName().contentEquals(methodName)) {
+                                    long pos = trees.getSourcePositions().getStartPosition(compilationUnitTree, trees.getTree(child));
+                                    line[0] = (int) compilationUnitTree.getLineMap().getLineNumber(pos);
+                                    break;
                                 }
                             }
                         }
@@ -120,20 +117,17 @@ public final class LocationOpener {
         JavaSource javaSource = JavaSource.forFileObject(fo);
         if (javaSource != null) {
             try {
-                javaSource.runUserActionTask(new Task<CompilationController>() {
-                    @Override
-                    public void run(CompilationController compilationController) throws Exception {
-                        compilationController.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                        Trees trees = compilationController.getTrees();
-                        CompilationUnitTree compilationUnitTree = compilationController.getCompilationUnit();
-                        List<? extends Tree> typeDecls = compilationUnitTree.getTypeDecls();
-                        for (Tree tree : typeDecls) {
-                            Element element = trees.getElement(trees.getPath(compilationUnitTree, tree));
-                            if (element != null && element.getKind() == ElementKind.CLASS && element.getSimpleName().contentEquals(fo.getName())) {
-                                long pos = trees.getSourcePositions().getStartPosition(compilationUnitTree, tree);
-                                line[0] = (int) compilationUnitTree.getLineMap().getLineNumber(pos);
-                                break;
-                            }
+                javaSource.runUserActionTask((CompilationController compilationController) -> {
+                    compilationController.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                    Trees trees = compilationController.getTrees();
+                    CompilationUnitTree compilationUnitTree = compilationController.getCompilationUnit();
+                    List<? extends Tree> typeDecls = compilationUnitTree.getTypeDecls();
+                    for (Tree tree : typeDecls) {
+                        Element element = trees.getElement(trees.getPath(compilationUnitTree, tree));
+                        if (element != null && element.getKind() == ElementKind.CLASS && element.getSimpleName().contentEquals(fo.getName())) {
+                            long pos = trees.getSourcePositions().getStartPosition(compilationUnitTree, tree);
+                            line[0] = (int) compilationUnitTree.getLineMap().getLineNumber(pos);
+                            break;
                         }
                     }
                 }, true);
@@ -147,7 +141,7 @@ public final class LocationOpener {
     public static void openAtLine(FileObject file, final int line) {
         openAtLine(file, line, false);
     }
-    
+
     public static void openAtLine(FileObject file, final int line, final boolean reuse) {
         try {
             DataObject data = DataObject.find(file);

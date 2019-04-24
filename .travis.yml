@@ -41,6 +41,9 @@ matrix:
         - env: TARGET="build-platform" SCRIPT=nbbuild/travis/scripting.sh
           jdk: oraclejdk8
 
+        - env: TARGET="build-platform" SCRIPT=nbbuild/travis/gensigtest.sh
+          jdk: oraclejdk8
+
         - env: OPTS="-quiet" TARGET="build-platform"
           jdk: oraclejdk11
 

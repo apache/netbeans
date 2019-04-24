@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.68.1
+#Version 1.69.1
 
 CLSS public abstract interface java.io.Serializable
 
@@ -284,16 +284,24 @@ supr java.lang.Enum<org.netbeans.api.java.queries.AnnotationProcessingQuery$Trig
 
 CLSS public final org.netbeans.api.java.queries.BinaryForSourceQuery
 innr public abstract interface static Result
+innr public abstract static Result2
 meth public static org.netbeans.api.java.queries.BinaryForSourceQuery$Result findBinaryRoots(java.net.URL)
+meth public static org.netbeans.api.java.queries.BinaryForSourceQuery$Result2 findBinaryRoots2(java.net.URL)
 supr java.lang.Object
-hfds LOG
-hcls DefaultResult
+hfds CACHE,LOG
+hcls DefaultResult,QueriesAccessorImpl,Result2Impl
 
 CLSS public abstract interface static org.netbeans.api.java.queries.BinaryForSourceQuery$Result
  outer org.netbeans.api.java.queries.BinaryForSourceQuery
 meth public abstract java.net.URL[] getRoots()
 meth public abstract void addChangeListener(javax.swing.event.ChangeListener)
 meth public abstract void removeChangeListener(javax.swing.event.ChangeListener)
+
+CLSS public abstract static org.netbeans.api.java.queries.BinaryForSourceQuery$Result2
+ outer org.netbeans.api.java.queries.BinaryForSourceQuery
+intf org.netbeans.api.java.queries.BinaryForSourceQuery$Result
+meth public abstract boolean preferBinaries()
+supr java.lang.Object
 
 CLSS public final org.netbeans.api.java.queries.CompilerOptionsQuery
 innr public final static Result
@@ -542,6 +550,14 @@ meth public abstract org.netbeans.api.java.queries.AnnotationProcessingQuery$Res
 
 CLSS public abstract interface org.netbeans.spi.java.queries.BinaryForSourceQueryImplementation
 meth public abstract org.netbeans.api.java.queries.BinaryForSourceQuery$Result findBinaryRoots(java.net.URL)
+
+CLSS public abstract interface org.netbeans.spi.java.queries.BinaryForSourceQueryImplementation2<%0 extends java.lang.Object>
+intf org.netbeans.spi.java.queries.BinaryForSourceQueryImplementation
+meth public abstract boolean computePreferBinaries({org.netbeans.spi.java.queries.BinaryForSourceQueryImplementation2%0})
+meth public abstract java.net.URL[] computeRoots({org.netbeans.spi.java.queries.BinaryForSourceQueryImplementation2%0})
+meth public abstract void computeChangeListener({org.netbeans.spi.java.queries.BinaryForSourceQueryImplementation2%0},boolean,javax.swing.event.ChangeListener)
+meth public abstract {org.netbeans.spi.java.queries.BinaryForSourceQueryImplementation2%0} findBinaryRoots2(java.net.URL)
+meth public org.netbeans.api.java.queries.BinaryForSourceQuery$Result2 findBinaryRoots(java.net.URL)
 
 CLSS public abstract interface org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation
 innr public abstract static Result

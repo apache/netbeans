@@ -131,6 +131,14 @@
     &lt;/folder&gt;
           </pre>
       </usecase>
+      <usecase id="register-grammar-using-java-api" name="Register grammar using Java API">
+          To register a new TextMate grammar using Java API, add the GrammarRegistration
+          annotation to an appropriate package-info file, or an appropriate Java class.
+          For example:
+          <pre>
+    {@literal @}GrammarRegistration(mimeType="text/x-kotlin", grammar="path/to/Kotlin.tmLanguage.json")
+          </pre>
+      </usecase>
   </p>
  </answer>
 
@@ -374,7 +382,7 @@
 -->
  <answer id="deploy-dependencies">
   <p>
-   No real dependencies needed currently.
+   Nothing.
   </p>
  </answer>
 

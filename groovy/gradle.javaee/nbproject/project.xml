@@ -23,15 +23,31 @@
     <type>org.netbeans.modules.apisupport.project</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
-            <code-name-base>org.netbeans.modules.j2ee.api.ejbmodule</code-name-base>
+            <code-name-base>org.netbeans.modules.gradle.javaee</code-name-base>
             <module-dependencies>
                 <dependency>
-                    <code-name-base>org.netbeans.api.java</code-name-base>
+                    <code-name-base>org.netbeans.modules.gradle</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.gradle.java</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.api.annotations.common</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.18</specification-version>
+                        <specification-version>1.26.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -40,7 +56,15 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.0</specification-version>
+                        <specification-version>1.50.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.api.templates</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.6.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -48,15 +72,24 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.15</specification-version>
+                        <specification-version>1.40.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.libs.javacapi</code-name-base>
+                    <code-name-base>org.netbeans.modules.j2ee.api.ejbmodule</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>0.14</specification-version>
+                        <specification-version>1.39.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.j2ee.common</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.105.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -64,8 +97,8 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>0-1</release-version>
-                        <specification-version>1.1</specification-version>
+                        <release-version>0</release-version>
+                        <specification-version>1.26.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -74,7 +107,15 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.3</specification-version>
+                        <specification-version>1.42.1.2</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.j2ee.dd.webservice</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.33.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -83,33 +124,24 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>0</release-version>
-                        <specification-version>1.0</specification-version>
+                        <specification-version>1.31.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.modules.java.project</code-name-base>
+                    <code-name-base>org.netbeans.modules.j2eeserver</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>1.62</specification-version>
+                        <release-version>4</release-version>
+                        <specification-version>1.112.1.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.modules.java.source.base</code-name-base>
+                    <code-name-base>org.netbeans.modules.javaee.project</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.0</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.modules.project.ant</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>1.62</specification-version>
+                        <specification-version>1.20.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -118,6 +150,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
+                        <specification-version>1.65.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -126,7 +159,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.78</specification-version>
+                        <specification-version>1.86.1.8</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -135,23 +168,63 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.78</specification-version>
+                        <specification-version>1.83.1.9</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.modules.queries</code-name-base>
+                    <code-name-base>org.netbeans.modules.j2ee.persistence</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>1</release-version>
+                        <specification-version>1.39</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.openide.actions</code-name-base>
+                    <code-name-base>org.netbeans.modules.web.browser.api</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>6.2</specification-version>
+                        <specification-version>1.44.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.web.clientproject.api</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.98.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.web.common</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.90.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.web.common.ui</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.1.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.awt</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>7.65.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.dialogs</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>7.41.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -159,7 +232,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>9.0</specification-version>
+                        <specification-version>9.8.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -167,7 +240,23 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                      <specification-version>7.61</specification-version>
+                        <specification-version>7.63.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.modules</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>7.47.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.windows</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>6.64</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -175,15 +264,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>7.23</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.openide.util.ui</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>9.3</specification-version>
+                        <specification-version>7.42.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -191,7 +272,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>9.3</specification-version>
+                        <specification-version>9.5.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -199,63 +280,19 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>8.0</specification-version>
+                        <specification-version>8.32.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.util.ui</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>9.4.1</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-            <test-dependencies>
-                <test-type>
-                    <name>unit</name>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.libs.junit4</code-name-base>
-                        <compile-dependency/>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.modules.j2ee.api.ejbmodule</code-name-base>
-                        <recursive/>
-                        <compile-dependency/>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.modules.nbjunit</code-name-base>
-                        <recursive/>
-                        <compile-dependency/>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.modules.projectapi.nb</code-name-base>
-                    </test-dependency>
-                </test-type>
-            </test-dependencies>
-            <friend-packages>
-                <friend>com.sun.eview.project</friend>
-                <friend>org.codehaus.mevenide.netbeans.j2ee</friend>
-                <friend>org.netbeans.modules.gradle.javaee</friend>
-                <friend>org.netbeans.modules.identity.profile.ui</friend>
-                <friend>org.netbeans.modules.j2ee.archive</friend>
-                <friend>org.netbeans.modules.j2ee.clientproject</friend>
-                <friend>org.netbeans.modules.j2ee.common</friend>
-                <friend>org.netbeans.modules.j2ee.dd.webservice</friend>
-                <friend>org.netbeans.modules.j2ee.ddloaders</friend>
-                <friend>org.netbeans.modules.j2ee.earproject</friend>
-                <friend>org.netbeans.modules.j2ee.ejbcore</friend>
-                <friend>org.netbeans.modules.j2ee.ejbfreeform</friend>
-                <friend>org.netbeans.modules.j2ee.ejbjarproject</friend>
-                <friend>org.netbeans.modules.j2ee.ejbrefactoring</friend>
-                <friend>org.netbeans.modules.j2ee.ejbverification</friend>
-                <friend>org.netbeans.modules.j2ee.performancetests</friend>
-                <friend>org.netbeans.modules.javaee.project</friend>
-                <friend>org.netbeans.modules.maven.j2ee</friend>
-                <friend>org.netbeans.modules.maven.jaxws</friend>
-                <friend>org.netbeans.modules.profiler.j2ee</friend>
-                <friend>org.netbeans.modules.web.beans</friend>
-                <friend>org.netbeans.modules.web.project</friend>
-                <friend>org.netbeans.modules.websvc.core</friend>
-                <friend>org.netbeans.modules.websvc.dev</friend>
-                <friend>org.netbeans.modules.websvc.jaxrpc</friend>
-                <friend>org.netbeans.modules.websvc.wsitconf</friend>
-                <package>org.netbeans.modules.j2ee.api.ejbjar</package>
-                <package>org.netbeans.modules.j2ee.spi.ejbjar</package>
-                <package>org.netbeans.modules.j2ee.spi.ejbjar.support</package>
-            </friend-packages>
+            <public-packages/>
         </data>
     </configuration>
 </project>

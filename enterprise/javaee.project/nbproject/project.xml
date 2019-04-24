@@ -360,6 +360,7 @@
                 </dependency>
             </module-dependencies>
             <friend-packages>
+                <friend>org.netbeans.modules.gradle.javaee</friend>
                 <friend>org.netbeans.modules.j2ee.clientproject</friend>
                 <friend>org.netbeans.modules.j2ee.earproject</friend>
                 <friend>org.netbeans.modules.j2ee.ejbcore</friend>

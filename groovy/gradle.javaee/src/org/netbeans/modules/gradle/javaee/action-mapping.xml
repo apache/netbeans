@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!DOCTYPE actions SYSTEM "action-mapping.dtd">
+<actions>
+    <apply-for plugins="war">
+        <action name="run">
+            <args>war</args>
+        </action>
+    </apply-for>
+</actions>
+
+

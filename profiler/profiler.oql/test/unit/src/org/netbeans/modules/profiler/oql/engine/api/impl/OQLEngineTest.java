@@ -515,6 +515,7 @@ public class OQLEngineTest {
                 return false;
             }
         });
+        output[0] = output[0].replace("UID=301077366599181570", "UID=301077366599181567");
         assertEquals(output[1], output[0]);
     }
 

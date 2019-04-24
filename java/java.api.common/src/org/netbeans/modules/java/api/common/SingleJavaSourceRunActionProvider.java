@@ -72,7 +72,8 @@ public class SingleJavaSourceRunActionProvider implements ActionProvider {
             javaVersion = javaVersion.substring(2);
         }
         int version = Integer.parseInt(javaVersion);
-        return version >= 11;
+        FileObject fileObject = getJavaFileWithoutProjectFromLookup(context);
+        return version >= 11 && fileObject != null;
     }
     
     public RunProcess invokeActionHelper (String command, FileObject fileObject) {

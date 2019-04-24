@@ -45,7 +45,8 @@ public class JavaFileTest extends NbTestCase {
         File f1 = new File(new File(new File(getDataDir().getAbsolutePath()), "files"), "TestSingleJavaFile.java");
         FileObject javaFO = FileUtil.toFileObject(f1);
         SingleJavaSourceRunActionProvider runActionProvider = new SingleJavaSourceRunActionProvider();
-        if (!runActionProvider.isActionEnabled("run.single", Lookup.EMPTY)) {
+        if (!isJDK11OrNewer()) {
+            assertFalse("The action is only enabled on JDK11 and newer", runActionProvider.isActionEnabled("run.single", Lookup.EMPTY));
             return;
         }
         RunProcess process = runActionProvider.invokeActionHelper("run.single", javaFO);
@@ -58,6 +59,15 @@ public class JavaFileTest extends NbTestCase {
         }
         String result = builder.toString();
         assertEquals("hello world", result);
+    }
+    
+    private boolean isJDK11OrNewer() {
+        String javaVersion = System.getProperty("java.specification.version");
+        if (javaVersion.startsWith("1.")) {
+            javaVersion = javaVersion.substring(2);
+        }
+        int version = Integer.parseInt(javaVersion);
+        return version >= 11;
     }
     
 }

@@ -19,19 +19,26 @@
 package org.netbeans.modules.textmate.lexer.api;
 
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Target;
 
-/** Register multiple grammars.
+/** Register the given TextMate grammar injection for use in the IDE.
  *
  * @since 1.2
  */
+@Repeatable(GrammarInjectionRegistrations.class)
 @Target({ElementType.PACKAGE, ElementType.TYPE})
-public @interface GrammarRegistrations {
+public @interface GrammarInjectionRegistration {
 
-    /**The grammar registration to delegate to.
+    /** The grammar to register.
      *
-     * @return grammar registrations
+     * @return grammar
      */
-    public GrammarRegistration[] value();
+    public String grammar();
 
+    /** Target language scopes to inject the grammar into.
+     *
+     * @return array of scopes
+     */
+    public String[] injectTo();
 }

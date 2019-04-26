@@ -21,17 +21,17 @@ package org.netbeans.modules.textmate.lexer.api;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
-/** Register multiple grammars.
+/** Register multiple grammar injections.
  *
  * @since 1.2
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
-public @interface GrammarRegistrations {
+public @interface GrammarInjectionRegistrations {
 
-    /**The grammar registration to delegate to.
+    /**The grammar injection registration to delegate to.
      *
-     * @return grammar registrations
+     * @return grammar injection registrations
      */
-    public GrammarRegistration[] value();
+    public GrammarInjectionRegistration[] value();
 
 }

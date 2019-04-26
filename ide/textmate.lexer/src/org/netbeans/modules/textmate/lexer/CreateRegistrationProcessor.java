@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import javax.annotation.processing.Completion;
@@ -52,9 +53,10 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Jan Lahoda
  */
-@SupportedAnnotationTypes({"org.netbeans.modules.textmate.lexer.api.GrammarRegistration", "org.netbeans.modules.textmate.lexer.api.GrammarRegistrations"})
+@SupportedAnnotationTypes({"org.netbeans.modules.textmate.lexer.api.GrammarRegistration", "org.netbeans.modules.textmate.lexer.api.GrammarRegistrations",
+    "org.netbeans.modules.textmate.lexer.api.GrammarInjectionRegistration", "org.netbeans.modules.textmate.lexer.api.GrammarInjectionRegistrations"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-@ServiceProvider(service=Processor.class)
+@ServiceProvider(service = Processor.class)
 public class CreateRegistrationProcessor extends LayerGeneratingProcessor {
 
     @Override
@@ -84,6 +86,36 @@ public class CreateRegistrationProcessor extends LayerGeneratingProcessor {
 
                     for (AnnotationMirror r : NbCollections.iterable(NbCollections.checkedIteratorByFilter(((Iterable) e.getValue().getValue()).iterator(), AnnotationMirror.class, true))) {
                         process(el, r);
+                    }
+                }
+            }
+        }
+
+        TypeElement grammarInjectionRegistration = processingEnv.getElementUtils().getTypeElement("org.netbeans.modules.textmate.lexer.api.GrammarInjectionRegistration");
+
+        for (Element el : roundEnv.getElementsAnnotatedWith(grammarInjectionRegistration)) {
+            for (AnnotationMirror am : el.getAnnotationMirrors()) {
+                if (!grammarInjectionRegistration.equals(am.getAnnotationType().asElement())) {
+                    continue;
+                }
+
+                processInjection(el, am);
+            }
+        }
+
+        TypeElement grammarInjectionRegistrations = processingEnv.getElementUtils().getTypeElement("org.netbeans.modules.textmate.lexer.api.GrammarInjectionRegistrations");
+
+        for (Element el : roundEnv.getElementsAnnotatedWith(grammarInjectionRegistrations)) {
+            for (AnnotationMirror am : el.getAnnotationMirrors()) {
+                if (!grammarInjectionRegistrations.equals(am.getAnnotationType().asElement())) {
+                    continue;
+                }
+
+                for (Entry<? extends ExecutableElement, ? extends AnnotationValue> e : am.getElementValues().entrySet()) {
+                    if (!e.getKey().getSimpleName().contentEquals("value")) continue;
+
+                    for (AnnotationMirror r : NbCollections.iterable(NbCollections.checkedIteratorByFilter(((Iterable) e.getValue().getValue()).iterator(), AnnotationMirror.class, true))) {
+                        processInjection(el, r);
                     }
                 }
             }
@@ -131,7 +163,58 @@ public class CreateRegistrationProcessor extends LayerGeneratingProcessor {
                 String simpleName = grammar.lastIndexOf('/') != (-1) ? grammar.substring(grammar.lastIndexOf('/') + 1) : grammar;
                 layer.file("Editors" + mimeType + "/" + simpleName)
                      .url("nbresloc:/" + grammar)
-                     .stringvalue("textmate-grammar", scopeName).write();    //NOI18N
+                     .stringvalue(TextmateTokenId.LanguageHierarchyImpl.GRAMMAR_MARK, scopeName).write();    //NOI18N
+            } catch (Exception ex) {
+                throw (LayerGenerationException) new LayerGenerationException(ex.getMessage()).initCause(ex);
+            }
+        }
+    }
+
+    private void processInjection(Element toRegister, AnnotationMirror injectionRegistration) throws LayerGenerationException {
+        String grammar = null;
+        String injectTo = null;
+        for (Entry<? extends ExecutableElement, ? extends AnnotationValue> e : injectionRegistration.getElementValues().entrySet()) {
+            Name simpleName = e.getKey().getSimpleName();
+            if (simpleName.contentEquals("grammar")) {
+                grammar = (String) e.getValue().getValue();
+                continue;
+            }
+            if (simpleName.contentEquals("injectTo")) {
+                List<? extends AnnotationValue> values = (List<? extends AnnotationValue>) e.getValue().getValue();
+                for (AnnotationValue value : values) {
+                    if (injectTo == null) {
+                        injectTo = (String) value.getValue();
+                    } else {
+                        injectTo += "," + value.getValue();
+                    }
+                }
+            }
+        }
+
+        if (injectTo != null && grammar != null) {
+            LayerBuilder layer = layer(toRegister);
+            javax.tools.FileObject file = layer.validateResource(grammar, toRegister, null, null, false);
+            try (InputStream in = file.openInputStream()) {
+                IRegistryOptions opts = new IRegistryOptions() {
+                    @Override
+                    public String getFilePath(String scopeName) {
+                        return null;
+                    }
+                    @Override
+                    public InputStream getInputStream(String scopeName) throws IOException {
+                        return null;
+                    }
+                    @Override
+                    public Collection<String> getInjections(String scopeName) {
+                        return null;
+                    }
+                };
+                String scopeName = new Registry(opts).loadGrammarFromPathSync(grammar, in).getScopeName();
+                String simpleName = grammar.lastIndexOf('/') != (-1) ? grammar.substring(grammar.lastIndexOf('/') + 1) : grammar;
+                layer.file("Editors" + "/" + simpleName)
+                     .url("nbresloc:/" + grammar)
+                     .stringvalue(TextmateTokenId.LanguageHierarchyImpl.GRAMMAR_MARK, scopeName)
+                     .stringvalue(TextmateTokenId.LanguageHierarchyImpl.INJECTION_MARK, injectTo).write();    //NOI18N
             } catch (Exception ex) {
                 throw (LayerGenerationException) new LayerGenerationException(ex.getMessage()).initCause(ex);
             }

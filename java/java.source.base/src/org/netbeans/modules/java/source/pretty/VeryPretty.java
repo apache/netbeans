@@ -403,7 +403,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             } else {
                 boolean saveComments = this.commentsEnabled;
                 this.commentsEnabled = printComments;
-                if (t.getKind().toString().equals("SWITCH_EXPRESSION")) {
+                if (t.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
                     visitSwitchExpression(t);
                 } else {
                     t.accept(this);

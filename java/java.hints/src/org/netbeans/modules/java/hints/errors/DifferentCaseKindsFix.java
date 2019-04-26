@@ -60,7 +60,7 @@ public class DifferentCaseKindsFix implements ErrorRule<Void> {
         TreePath parentPath = treePath.getParentPath();
         List<? extends CaseTree> caseTrees = null;
         boolean flag = false;
-        if(parentPath.getLeaf().getKind().toString().equals("SWITCH_EXPRESSION")){
+        if(parentPath.getLeaf().getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)){
             caseTrees = TreeShims.getCases(parentPath.getLeaf());            
         } else {
             flag = true;

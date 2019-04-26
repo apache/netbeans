@@ -3111,7 +3111,7 @@ public class Utilities {
         return scanner.completesNormally;
     }
 
-    public static boolean isCompatibleToSwitchExpression(SwitchTree st) {
+    public static boolean isCompatibleWithSwitchExpression(SwitchTree st) {
         boolean firstCase = true;
         Name leftTreeName = null;
         for (CaseTree ct : st.getCases()) {
@@ -3161,7 +3161,7 @@ public class Utilities {
         List<ExpressionTree> patterns = new ArrayList<>();
         Tree variable = null;
         boolean isReturnExpression = false;
-        boolean switchExpressionFlag = st.getKind().toString().equals("SWITCH_EXPRESSION"); //NOI18N
+        boolean switchExpressionFlag = st.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION);
         if (switchExpressionFlag) {
             cases = TreeShims.getCases(st);
         } else {

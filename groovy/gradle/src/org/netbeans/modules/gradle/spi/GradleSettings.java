@@ -170,7 +170,7 @@ public final class GradleSettings {
     }
 
     public boolean isAlwaysShowOutput() {
-        return getPreferences().getBoolean(PROP_ALWAYS_SHOW_OUTPUT, false);
+        return getPreferences().getBoolean(PROP_ALWAYS_SHOW_OUTPUT, true);
     }
 
     public void setStartDaemonOnStart(boolean b) {

@@ -104,7 +104,7 @@ public class ConfigurationsManager {
                     return s1.compareTo(s2);
                 }
             });
-            for (String kid:sl.toArray(configList)) {
+            for (String kid : sl.toArray(configList)) {
                 if (kid.startsWith(RULE_PREFIX)) {
                     Preferences p = NbPreferences.forModule(this.getClass()).node(kid);
                     String displayName = p.get("display.name", "unknown");

@@ -163,7 +163,7 @@ class DocumentSwitcherTable extends SwitcherTable {
     }
 
     boolean isClosable( Item item ) {
-        if( !SHOW_CLOSE_BUTTON )
+        if( !SHOW_CLOSE_BUTTON || item == null)
             return false;
 
         WinsysInfoForTabbedContainer winsysInfo = displayer.getContainerWinsysInfo();

@@ -25,10 +25,10 @@ Apache NetBeans is an open source development environment, tooling platform, and
 
 ### Build status
    * TravisCI:
-     * [![Build Status](https://travis-ci.org/apache/incubator-netbeans.svg?branch=master)](https://travis-ci.org/apache/incubator-netbeans)
+     * [![Build Status](https://travis-ci.org/apache/netbeans.svg?branch=master)](https://travis-ci.org/apache/netbeans)
    * Apache Jenkins: 
-     * Linux: [![Build Status](https://builds.apache.org/job/incubator-netbeans-linux/badge/icon)](https://builds.apache.org/job/incubator-netbeans-linux/)
-     * Windows: [![Build Status](https://builds.apache.org/job/incubator-netbeans-windows/badge/icon)](https://builds.apache.org/job/incubator-netbeans-windows/)
+     * Linux: [![Build Status](https://builds.apache.org/view/M-R/view/NetBeans/job/netbeans-linux/badge/icon)](https://builds.apache.org/view/M-R/view/NetBeans/job/netbeans-linux/)
+     * Windows: [![Build Status](https://builds.apache.org/view/M-R/view/NetBeans/job/netbeans-windows/badge/icon)](https://builds.apache.org/view/M-R/view/NetBeans/job/netbeans-windows/)
 
 ### Requirements
 

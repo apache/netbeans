@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.110.1
+#Version 1.111.1
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
@@ -51,6 +51,8 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitProvides(com.sun.s
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitRequires(com.sun.source.tree.RequiresTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitReturn(com.sun.source.tree.ReturnTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitSwitch(com.sun.source.tree.SwitchTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitSwitchExpression(com.sun.source.tree.SwitchExpressionTree,{com.sun.source.tree.TreeVisitor%1})
+ anno 0 java.lang.Deprecated()
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitSynchronized(com.sun.source.tree.SynchronizedTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitThrow(com.sun.source.tree.ThrowTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitTry(com.sun.source.tree.TryTree,{com.sun.source.tree.TreeVisitor%1})
@@ -126,6 +128,8 @@ meth public {com.sun.source.util.TreeScanner%0} visitProvides(com.sun.source.tre
 meth public {com.sun.source.util.TreeScanner%0} visitRequires(com.sun.source.tree.RequiresTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitReturn(com.sun.source.tree.ReturnTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitSwitch(com.sun.source.tree.SwitchTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitSwitchExpression(com.sun.source.tree.SwitchExpressionTree,{com.sun.source.util.TreeScanner%1})
+ anno 0 java.lang.Deprecated()
 meth public {com.sun.source.util.TreeScanner%0} visitSynchronized(com.sun.source.tree.SynchronizedTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitThrow(com.sun.source.tree.ThrowTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitTry(com.sun.source.tree.TryTree,{com.sun.source.util.TreeScanner%1})

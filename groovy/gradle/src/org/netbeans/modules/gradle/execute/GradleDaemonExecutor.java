@@ -212,7 +212,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
 
         GradleBaseProject gbp = GradleBaseProject.get(config.getProject());
         if (gbp != null
-                && new GradleFiles(gbp.getProjectDir()).hasWrapper()
+                && new GradleFiles(gbp.getProjectDir(), true).hasWrapper()
                 && GradleSettings.getDefault().isWrapperPreferred()) {
 
                 Path rootPath = gbp.getRootDir().toPath();
@@ -231,8 +231,8 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
 
         for (String arg : config.getCommandLine().getSupportedCommandLine()) {
             commandLine.append(' ');
-            if (arg.contains(" ")) { //NOI18N
-                commandLine.append('"').append(arg).append('"');
+            if (arg.contains(" ") || arg.contains("*")) { //NOI18N
+                commandLine.append('\'').append(arg).append('\'');
             } else {
                 commandLine.append(arg);
             }

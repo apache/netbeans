@@ -69,12 +69,6 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.modules.gradle.kit</code-name-base>
-                    <run-dependency>
-                        <specification-version>1.0</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.netbeans.modules.libs.groovy</code-name-base>
                     <run-dependency>
                         <specification-version>1.0</specification-version>

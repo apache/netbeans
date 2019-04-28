@@ -4,13 +4,13 @@
     "authors": [
         {
             "name": "NetBeans",
-            "email": "tomas.mysik@oracle.com"
+            "email": "tmysik@apache.org"
         }
     ],
     "require": {
     },
     "require-dev": {
-        "codeception/codeception": "~2.1.0"
+        "codeception/codeception": "~2.5.0"
     },
     "autoload": {
         "classmap": ["src/"]

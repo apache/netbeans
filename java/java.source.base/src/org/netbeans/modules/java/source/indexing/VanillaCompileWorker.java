@@ -66,6 +66,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.*;
 import java.util.Map.Entry;
@@ -598,8 +599,19 @@ final class VanillaCompileWorker extends CompileWorker {
                         Type.WildcardType wt = ((Type.WildcardType) t);
                         wt.type = error2Object(wt.type);
                         TypeVar tv = wt.bound;
-                        tv.bound = error2Object(tv.bound);
-                        tv.lower = error2Object(tv.lower);
+                        if (tv != null) {
+                            String[] boundNames = {"bound", "_bound"};
+                            for (String boundName : boundNames) {
+                                try {
+                                    Field bound = tv.getClass().getDeclaredField(boundName);
+                                    bound.setAccessible(true);
+                                    bound.set(tv, error2Object((Type) bound.get(tv)));
+                                } catch (IllegalAccessException | NoSuchFieldException | SecurityException ex) {
+                                    JavaIndex.LOG.log(Level.FINEST, null, ex);
+                                }
+                            }
+                            tv.lower = error2Object(tv.lower);
+                        }
                         break;
                     }
                 }

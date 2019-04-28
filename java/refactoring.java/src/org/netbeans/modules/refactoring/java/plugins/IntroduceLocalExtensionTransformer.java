@@ -517,7 +517,7 @@ public class IntroduceLocalExtensionTransformer extends RefactoringVisitor {
         MethodTree newMethod = make.Method(modifiers, member.getSimpleName(), methodReturnType, newTypeParams, newParameters, newThrownTypes, make.Block(Collections.singletonList(statement), false), null, member.isVarArgs());
         newMethod = genUtils.importFQNs(newMethod);
         DocCommentTree javadoc = workingCopy.getDocTrees().getDocCommentTree(member);
-        if (!javadoc.getFullBody().isEmpty()) {
+        if (javadoc != null && !javadoc.getFullBody().isEmpty()) {
             Comment comment = Comment.create(Comment.Style.JAVADOC, javadoc.toString());
             make.addComment(newMethod, comment, true);
         }
@@ -672,7 +672,7 @@ public class IntroduceLocalExtensionTransformer extends RefactoringVisitor {
 
             newConstr = genUtils.importFQNs(newConstr);
             DocCommentTree javadoc = workingCopy.getDocTrees().getDocCommentTree(constr);
-            if (!javadoc.getFullBody().isEmpty()) {
+            if (javadoc != null && !javadoc.getFullBody().isEmpty()) {
                 Comment comment = Comment.create(Comment.Style.JAVADOC, javadoc.toString());
                 make.addComment(newConstr, comment, true);
             }

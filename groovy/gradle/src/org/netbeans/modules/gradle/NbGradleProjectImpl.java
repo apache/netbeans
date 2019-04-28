@@ -123,7 +123,7 @@ public final class NbGradleProjectImpl implements Project {
     public NbGradleProjectImpl(final FileObject projectDir, ProjectState projectState) {
         this.projectDir = projectDir;
         this.projectState = projectState;
-        this.gradleFiles = new GradleFiles(FileUtil.normalizeFile(FileUtil.toFile(projectDir)));
+        this.gradleFiles = new GradleFiles(FileUtil.normalizeFile(FileUtil.toFile(projectDir)), true);
         lookup = Lookups.proxy(new Lookup.Provider() {
             @Override
             public Lookup getLookup() {

@@ -182,9 +182,16 @@
                         <recursive/>
                         <compile-dependency/>
                     </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.openide.util.lookup</code-name-base>
+                        <compile-dependency/>
+                        <test/>
+                    </test-dependency>
                 </test-type>
             </test-dependencies>
-            <public-packages/>
+            <public-packages>
+                <package>org.netbeans.modules.textmate.lexer.api</package>
+            </public-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/joni-2.1.11.jar</runtime-relative-path>
                 <binary-origin>external/joni-2.1.11.jar</binary-origin>

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.11.1
+#Version 1.12.1
 
 CLSS public abstract interface java.io.Serializable
 
@@ -137,6 +137,16 @@ meth public static org.netbeans.modules.java.completion.JavaTooltipTask create(i
 meth public void run(org.netbeans.modules.parsing.api.ResultIterator) throws java.lang.Exception
 supr org.netbeans.modules.parsing.api.UserTask
 hfds INIT,SUPER_KEYWORD,THIS_KEYWORD,anchorOffset,toolTipData,toolTipIndex,toolTipOffset
+
+CLSS public org.netbeans.modules.java.completion.TreeShims
+cons public init()
+meth public static com.sun.source.tree.ExpressionTree getValue(com.sun.source.tree.BreakTree)
+meth public static com.sun.source.tree.Tree SwitchExpression(com.sun.tools.javac.tree.TreeMaker,com.sun.source.tree.ExpressionTree,java.util.List<? extends com.sun.source.tree.CaseTree>)
+meth public static com.sun.source.tree.Tree getBody(com.sun.source.tree.CaseTree)
+meth public static java.util.List<? extends com.sun.source.tree.CaseTree> getCases(com.sun.source.tree.Tree)
+meth public static java.util.List<? extends com.sun.source.tree.ExpressionTree> getExpressions(com.sun.source.tree.CaseTree)
+meth public static java.util.List<? extends com.sun.source.tree.ExpressionTree> getExpressions(com.sun.source.tree.Tree)
+supr java.lang.Object
 
 CLSS public final org.netbeans.modules.java.completion.Utilities
 meth public static boolean isCaseSensitive()

@@ -27,7 +27,6 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptException;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -38,6 +37,10 @@ import org.junit.runners.Parameterized;
 
 @RunWith(Parameterized.class)
 public class JavaScriptEnginesTest {
+    static {
+        System.setProperty("polyglot.js.nashorn-compat", "true");
+    }
+
     @Parameterized.Parameters(name = "{0}")
     public static Object[][] engines() {
         List<Object[]> arr = new ArrayList<>();

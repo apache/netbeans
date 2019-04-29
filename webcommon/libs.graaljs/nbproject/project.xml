@@ -72,6 +72,10 @@
                 <runtime-relative-path>ext/regex-1.0.0-rc16.jar</runtime-relative-path>
                 <binary-origin>external/regex-1.0.0-rc16.jar</binary-origin>
             </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/icu4j-62.1.jar</runtime-relative-path>
+                <binary-origin>external/icu4j-62.1.jar</binary-origin>
+            </class-path-extension>
         </data>
     </configuration>
 </project>

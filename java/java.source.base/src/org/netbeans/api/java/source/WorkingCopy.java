@@ -864,6 +864,8 @@ public class WorkingCopy extends CompilationController {
                     Tree t;
                     if (translated != null) {
                         t = translate(translated);
+                    } else if (tree != null && tree.getKind().toString().equals("SWITCH_EXPRESSION")) {
+                        t = visitSwitchExpression(tree, null);
                     } else {
                         t = super.translate(tree);
                     }
@@ -885,6 +887,10 @@ public class WorkingCopy extends CompilationController {
                         }
                     }
                     return super.translate(tree);
+                }
+
+                public Tree visitSwitchExpression(Tree set, Object p) {
+                    return rewriteChildren(set);
                 }
             };
             Context c = impl.getJavacTask().getContext();

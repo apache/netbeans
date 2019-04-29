@@ -103,6 +103,7 @@ import org.netbeans.api.java.source.Comment;
 import org.netbeans.api.java.source.Comment.Style;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.builder.CommentHandlerService;
 import org.netbeans.modules.java.source.query.CommentHandler;
 import org.netbeans.modules.java.source.query.CommentSet;
@@ -115,8 +116,6 @@ import org.netbeans.modules.java.source.save.PositionEstimator;
 import org.netbeans.modules.java.source.save.Reformatter;
 import org.netbeans.modules.java.source.transform.FieldGroupTree;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
-
-import org.openide.util.Exceptions;
 
 /** Prints out a tree as an indented Java source program.
  */
@@ -1436,13 +1435,15 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 
     @Override
     public void visitBreak(JCBreak tree) {
-	print("break");
-        //TODO: value breaks
-	if (tree.getLabel() != null) {
-	    needSpace();
-	    print(tree.getLabel());
-	}
-	print(';');
+        print("break");
+        if (TreeShims.getValue(tree) != null) {
+            needSpace();
+            print((JCTree) TreeShims.getValue(tree));
+        } else if (tree.getLabel() != null) {
+            needSpace();
+            print(tree.getLabel());
+        }
+        print(';');
     }
 
     @Override

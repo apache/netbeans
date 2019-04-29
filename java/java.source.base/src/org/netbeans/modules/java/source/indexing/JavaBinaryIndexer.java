@@ -82,7 +82,11 @@ public class JavaBinaryIndexer extends BinaryIndexer {
 
     @Override
     protected void index(final Context context) {
-        LOG.log(Level.FINE, "index({0})", context.getRootURI());
+        doIndex(context, context.getRootURI());
+    }
+
+    static void doIndex(final Context context, URL rootURI) {
+        LOG.log(Level.FINE, "index({0})", rootURI);
         try {
             final ClassIndexManager cim = ClassIndexManager.getDefault();
             ClassIndexImpl uq = cim.createUsagesQuery(context.getRootURI(), false);
@@ -93,12 +97,12 @@ public class JavaBinaryIndexer extends BinaryIndexer {
             if (context.isAllFilesIndexing()) {
                 final BinaryAnalyser ba = uq.getBinaryAnalyser();
                 if (ba != null) { //ba == null => IDE is exiting, indexing will be done on IDE restart
-                    final BinaryAnalyser.Changes changes = ba.analyse(context);
+                    final BinaryAnalyser.Changes changes = ba.analyse(context, rootURI);
                     if (changes.done) {
                         final Map<URL, List<URL>> binDeps = IndexingController.getDefault().getBinaryRootDependencies();
                         final Map<URL, List<URL>> srcDeps = IndexingController.getDefault().getRootDependencies();
                         final Map<URL, List<URL>> peers = IndexingController.getDefault().getRootPeers();
-                        final List<ElementHandle<TypeElement>> changed = new ArrayList<ElementHandle<TypeElement>>(changes.changed.size()+changes.removed.size());
+                        final List<ElementHandle<TypeElement>> changed = new ArrayList<>(changes.changed.size()+changes.removed.size());
                         changed.addAll(changes.changed);
                         changed.addAll(changes.removed);
                         if (!changes.changed.isEmpty() || !changes.added.isEmpty() || !changes.removed.isEmpty()) {

@@ -25,6 +25,18 @@
     <apidef name="javasource_base">Java Source API</apidef>
 </apidefs>
 <changes>
+    <change id="TreeMaker.SwitchExpression">
+        <api name="javasource_base" />
+        <summary>Creates a new SwitchExpressionTree</summary>
+        <version major="1" minor="2.41.0"/>
+        <date day="27" month="2" year="2019"/>
+        <author login="vikasprabhakar"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"/>
+        <description>
+                Creates a new SwitchExpressionTree.
+        </description>
+        <class name="TreeMaker" package="org.netbeans.api.java.source"/>
+    </change>
     <change id="Matcher.setKeepSyntheticTrees">
         <api name="javasource_base"/>
         <summary>Adding Matcher.setKeepSyntheticTrees method</summary>
@@ -296,6 +308,21 @@
                 <code>ant fix-dependencies</code> in your Ant module.
             </p>
         </description>
+    </change>
+    <change id="TreeUtilities.getBreakContinueTargetTree">
+        <api name="javasource_base" />
+        <summary>Find the target of Break or Continue statement</summary>
+        <version major="1" minor="2.40.0"/>
+        <date day="22" month="1" year="2019"/>
+        <author login="sarveshkesharwani"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"/>
+        <description>
+            <p>
+                Find the target of <code>break</code> or <code>continue</code> 
+                statement. Target is of type Tree here.
+            </p>
+        </description>
+        <class name="TreeUtilities" package="org.netbeans.api.java.source"/>
     </change>
 </changes>
 <htmlcontents>

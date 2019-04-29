@@ -331,11 +331,13 @@
                         <recursive/>
                         <compile-dependency/>
                     </test-dependency>
+                    <!--
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.j2ee.jboss4</code-name-base>
                         <recursive/>
                         <compile-dependency/>
                     </test-dependency>
+                    -->
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.j2eeapis</code-name-base>
                     </test-dependency>

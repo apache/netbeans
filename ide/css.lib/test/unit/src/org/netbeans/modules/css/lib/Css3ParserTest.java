@@ -732,7 +732,184 @@ public class Css3ParserTest extends CssTestBase {
         assertEquals("color: green", declaration.image().toString());
 
     }
+    
+    public void testSimpleSupports() throws ParseException, BadLocationException {
+        String content = "@supports ( display: block ) {\n" 
+                + "#content { background: white; color: black; }\n" 
+                + "}";
+        
+        CssParserResult result = TestUtil.parse(content);
+        //TestUtil.dumpTokens(result);
+        //TestUtil.dumpResult(result);
 
+        assertResultOK(result);
+        
+        //test supportsAtRule node
+        Node supportsAtRule = NodeUtil.query(result.getParseTree(),
+                TestUtil.bodysetPath
+                + "at_rule/supportsAtRule");
+        assertNotNull(supportsAtRule);
+        
+        //supportsCondition
+        Node supportsCondition = NodeUtil.query(supportsAtRule,
+                "supportsCondition");
+        assertNotNull(supportsCondition);
+        
+        //supportsInParens
+        Node supportsInParens = NodeUtil.query(supportsCondition,
+                "supportsInParens");
+        assertNotNull(supportsInParens);
+        assertEquals("( display: block )", supportsInParens.image().toString());
+        
+        //supportsFeature
+        Node supportsFeature = NodeUtil.query(supportsInParens,
+                "supportsFeature");
+        assertNotNull(supportsFeature);
+        
+        //supportsDecl
+        Node supportsDecl = NodeUtil.query(supportsFeature,
+                "supportsDecl");
+        assertNotNull(supportsDecl);
+        
+        //declaration
+        Node declaration = NodeUtil.query(supportsDecl,
+                "declaration");
+        assertNotNull(declaration);
+        
+        //propertyDeclaration
+        Node propertyDeclaration = NodeUtil.query(declaration,
+                "propertyDeclaration");
+        assertNotNull(propertyDeclaration);
+        assertEquals("display: block", propertyDeclaration.image().toString());
+        
+        //mediaBody
+        Node mediaBody = NodeUtil.query(supportsAtRule,
+                "mediaBody");
+        assertNotNull(mediaBody);
+        
+        //mediaBodyItem
+        Node mediaBodyItem = NodeUtil.query(mediaBody,
+                "mediaBodyItem");
+        assertNotNull(mediaBodyItem);
+        
+        //rule
+        Node rule = NodeUtil.query(mediaBodyItem,
+                "rule");
+        assertNotNull(rule);
+        assertEquals("#content { background: white; color: black; }", 
+                rule.image().toString());
+        
+    }
+    
+    public void testSupportsNegation() throws ParseException, BadLocationException {
+        String content = "@supports not ( display: inline ) {\n" 
+                + "body { width: 100% }\n" 
+                + "}";
+        
+        CssParserResult result = TestUtil.parse(content);
+        // TestUtil.dumpTokens(result);
+        //TestUtil.dumpResult(result);
+        
+        assertResultOK(result);
+        
+        //test supportsCondition node
+        Node supportsCondition = NodeUtil.query(result.getParseTree(),
+                TestUtil.bodysetPath
+                + "at_rule/supportsAtRule/supportsCondition");
+        assertNotNull(supportsCondition);
+        assertEquals("not ( display: inline )", 
+                supportsCondition.image().toString());
+        
+    }
+    
+    public void testSupportsConjunction() throws ParseException, BadLocationException {
+        String content = "@supports (display: table-cell) and \n" 
+                + "(display: list-item) and \n" 
+                + "(display:run-in) {\n" 
+                + ".myclass {\n" 
+                + "display: table-cell;\n" 
+                + "}\n" 
+                + "}";
+        
+        CssParserResult result = TestUtil.parse(content);
+        // TestUtil.dumpTokens(result);
+        //TestUtil.dumpResult(result);
+        
+        assertResultOK(result);
+        
+        //test supportsCondition node
+        Node supportsCondition = NodeUtil.query(result.getParseTree(),
+                TestUtil.bodysetPath
+                + "at_rule/supportsAtRule/supportsCondition");
+        assertNotNull(supportsCondition);
+        assertEquals("(display: table-cell) and \n"
+                + "(display: list-item) and \n"
+                + "(display:run-in)", 
+                supportsCondition.image().toString());
+        
+    }
+    
+    public void testSupportsDisjunction() throws ParseException, BadLocationException {
+        String content = "@supports ( box-shadow: 2px lime ) or\n"
+                + "( -o-transition: all ) or\n"
+                + "( -moz-box-shadow: 2px lime ) {\n" 
+                + ".outline {\n" 
+                + "box-shadow: 2px lime;\n" 
+                + "  }\n" 
+                + "}";
+        
+        CssParserResult result = TestUtil.parse(content);
+        // TestUtil.dumpTokens(result);
+        TestUtil.dumpResult(result);
+        
+        assertResultOK(result);
+        
+        //test supportsCondition node
+        Node supportsCondition = NodeUtil.query(result.getParseTree(),
+                TestUtil.bodysetPath
+                + "at_rule/supportsAtRule/supportsCondition");
+        assertNotNull(supportsCondition);
+        assertEquals("( box-shadow: 2px lime ) or\n"
+                + "( -o-transition: all ) or\n"
+                + "( -moz-box-shadow: 2px lime )", 
+                supportsCondition.image().toString());
+        
+    }
+    
+    public void testSupportsMixedConjunctionDisjunction() throws ParseException, BadLocationException {
+        String invalidCss = "@supports (color: lightseagreen) or (color: lawngreen) and (color: hotpink) {}";
+        String validCss1 = "@supports ((color: lightseagreen) or (color: lawngreen)) and (color: hotpink) {}";
+        String validCss2 = "@supports (color: lightseagreen) or ((color: lawngreen) and (color: hotpink)) {}";
+        
+        CssParserResult result = TestUtil.parse(invalidCss);
+        assertTrue(result.getParserDiagnostics().size() > 0);
+        
+        assertParses(validCss1);
+        assertParses(validCss2);
+        
+    }
+    
+    public void testSupportsWhitespace() throws ParseException, BadLocationException {
+        String invalidCss1 = "@supports not(color: lightseagreen)";
+        String invalidCss2 = "@supports (color: lightseagreen)or (color: lawngreen) {}";
+        String invalidCss3 = "@supports (color: lightseagreen) or(color: lawngreen) {}";
+        String invalidCss4 = "@supports (color: lawngreen)and (color: hotpink) {}";
+        String invalidCss5 = "@supports (color: lawngreen) and(color: hotpink) {}";
+        
+        CssParserResult result1= TestUtil.parse(invalidCss1);
+        CssParserResult result2= TestUtil.parse(invalidCss2);
+        CssParserResult result3= TestUtil.parse(invalidCss3);
+        CssParserResult result4= TestUtil.parse(invalidCss4);
+        CssParserResult result5= TestUtil.parse(invalidCss5);
+        
+        assertTrue(result1.getParserDiagnostics().size() > 0);
+        assertTrue(result2.getParserDiagnostics().size() > 0);
+        assertTrue(result3.getParserDiagnostics().size() > 0);
+        assertTrue(result4.getParserDiagnostics().size() > 0);
+        assertTrue(result5.getParserDiagnostics().size() > 0);
+        
+    }
+    
     public void testCounterStyle() throws ParseException, BadLocationException {
         String content = "@counter-style cool { glyph: '|'; }";
 
@@ -1408,5 +1585,12 @@ public class Css3ParserTest extends CssTestBase {
         assertParses(".5hallo {\n"
                 + "	color: #ff3366;\n"
                 + "}");
+    }
+
+    public void testParseVariable() {
+        assertParses("h1 {"
+            + "--demoVar: 1em;"
+            + "margin: var(--demoVar, 3ex 2em);"
+            + "}");
     }
 }

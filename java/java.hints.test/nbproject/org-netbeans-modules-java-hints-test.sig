@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.21.1
+#Version 1.23.1
 
 CLSS public java.lang.Object
 cons public init()
@@ -20,6 +20,7 @@ innr public final AppliedFix
 innr public final HintOutput
 innr public final HintWarning
 meth public !varargs org.netbeans.modules.java.hints.test.api.HintTest classpath(java.net.URL[])
+meth public !varargs org.netbeans.modules.java.hints.test.api.HintTest options(java.lang.String[])
 meth public org.netbeans.modules.java.hints.test.api.HintTest input(java.lang.String) throws java.lang.Exception
 meth public org.netbeans.modules.java.hints.test.api.HintTest input(java.lang.String,boolean) throws java.lang.Exception
 meth public org.netbeans.modules.java.hints.test.api.HintTest input(java.lang.String,java.lang.String) throws java.lang.Exception
@@ -33,8 +34,8 @@ meth public org.netbeans.modules.java.hints.test.api.HintTest$HintOutput run(jav
 meth public org.netbeans.modules.java.hints.test.api.HintTest$HintOutput run(java.lang.Class<?>,java.lang.String) throws java.lang.Exception
 meth public static org.netbeans.modules.java.hints.test.api.HintTest create() throws java.lang.Exception
 supr java.lang.Object
-hfds DEBUGGING_HELPER,EMPTY_SFBQ_RESULT,ERRORS_COMPARATOR,INDEXING_LOGGER,JUNIT_PROPERTIES_FILENAME,JUNIT_PROPERTIES_LOCATION_PROPERTY,NBJUNIT_WORKDIR,buildRoot,cache,caret,caretMarker,checkCompilable,compileClassPath,hintSettings,log,sourceLevel,sourcePath,sourceRoot,testFile,testPreferences,usedPaths,workDir
-hcls DeadlockTask,TempPreferences,TestProxyClassPathProvider,TestSourceForBinaryQuery,TestSourceLevelQueryImplementation
+hfds DEBUGGING_HELPER,EMPTY_SFBQ_RESULT,ERRORS_COMPARATOR,INDEXING_LOGGER,JUNIT_PROPERTIES_FILENAME,JUNIT_PROPERTIES_LOCATION_PROPERTY,NBJUNIT_WORKDIR,buildRoot,cache,caret,caretMarker,checkCompilable,compileClassPath,extraOptions,hintSettings,log,sourceLevel,sourcePath,sourceRoot,testFile,testPreferences,usedPaths,workDir
+hcls DeadlockTask,TempPreferences,TestCompilerOptionsQueryImplementation,TestProxyClassPathProvider,TestSourceForBinaryQuery,TestSourceLevelQueryImplementation
 
 CLSS public final org.netbeans.modules.java.hints.test.api.HintTest$AppliedFix
  outer org.netbeans.modules.java.hints.test.api.HintTest

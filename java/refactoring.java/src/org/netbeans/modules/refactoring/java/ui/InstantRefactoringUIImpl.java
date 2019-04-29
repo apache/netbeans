@@ -414,7 +414,7 @@ public final class InstantRefactoringUIImpl implements InstantRefactoringUI {
         }
         if (nameSpan != null && nameSpan[0] <= adjustedCaret[0] && adjustedCaret[0] <= nameSpan[1]) {
             if (path[0].getLeaf().getKind() != Tree.Kind.LABELED_STATEMENT) {
-                StatementTree tgt = info.getTreeUtilities().getBreakContinueTarget(path[0]);
+                Tree tgt = info.getTreeUtilities().getBreakContinueTargetTree(path[0]);
                 path[0] = tgt != null ? info.getTrees().getPath(info.getCompilationUnit(), tgt) : null;
             }
             if (path[0] != null) {

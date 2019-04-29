@@ -20,8 +20,9 @@
 set -e
 
 if [ -z "$GRAALVM" ]; then
-  BASE=graalvm-ce-1.0.0-rc10
-  URL=https://github.com/oracle/graal/releases/download/vm-1.0.0-rc10/$BASE-linux-amd64.tar.gz
+  VERSION=1.0.0-rc16
+  BASE=graalvm-ce-$VERSION
+  URL=https://github.com/oracle/graal/releases/download/vm-$VERSION/$BASE-linux-amd64.tar.gz
   curl -L $URL --output graalvm.tgz
   tar fxz graalvm.tgz
   GRAALVM=`pwd`/$BASE
@@ -42,9 +43,6 @@ $GRAALVM/bin/gu install R
 JAVA_HOME=$GRAALVM ant -f platform/api.scripting/build.xml test
 JAVA_HOME=$GRAALVM ant -f ide/libs.graalsdk/build.xml test
 
-# currently broken. fixed by
-# https://github.com/oracle/graal/commit/4c217f2b2fba77c55d05c7aa3654e13c215b5ddb
-# which is likely to appear in GraalVM RC12
-JAVA_HOME=$GRAALVM ant -f platform/core.network/build.xml test || echo "==== May fail ===="
-JAVA_HOME=$GRAALVM ant -f webcommon/libs.graaljs/build.xml test || echo "==== Expected failure ===="
+JAVA_HOME=$GRAALVM ant -f platform/core.network/build.xml test
+JAVA_HOME=$GRAALVM ant -f webcommon/libs.graaljs/build.xml test
 

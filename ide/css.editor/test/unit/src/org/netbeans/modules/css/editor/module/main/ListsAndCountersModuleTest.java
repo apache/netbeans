@@ -47,7 +47,8 @@ public class ListsAndCountersModuleTest extends CssModuleTestBase {
                 "!identifier","georgian","element","upper-alpha","armenian",
                 "upper-latin","linear-gradient","!string","image","decimal",
                 "upper-roman","!uri","cross-fade","radial-gradient","inside",
-                "decimal-leading-zero","square", "circle","none","symbols","outside", "initial", "inherit");
+                "decimal-leading-zero","square", "circle","none","symbols",
+                "outside", "initial", "inherit", "var");
     }
     
     public void testListStyleType() {
@@ -61,16 +62,18 @@ public class ListsAndCountersModuleTest extends CssModuleTestBase {
     public void testListStyleTypeCompletion() {
         PropertyDefinition p = Properties.getPropertyDefinition( "list-style-type");
         assertAlternatives(p.getGrammarElement(null), "",
-                "georgian","armenian","upper-alpha","upper-latin","!string","lower-latin",
-                "circle","lower-greek","decimal","upper-roman","disc","lower-alpha",
-                "symbols","lower-roman","none","decimal-leading-zero","square","!identifier",
-                "initial", "inherit");
+            "georgian", "armenian", "upper-alpha", "upper-latin", "!string",
+            "lower-latin", "circle", "lower-greek", "decimal", "upper-roman",
+            "disc", "lower-alpha", "symbols", "lower-roman", "none",
+            "decimal-leading-zero", "square", "!identifier", "initial",
+            "inherit", "var");
         
         assertAlternatives(p.getGrammarElement(null), "symbols", "(");
         assertAlternatives(p.getGrammarElement(null), "symbols(",
-                "repeating-linear-gradient","element","numeric","linear-gradient",
-                "!string","alphabetic","image","symbolic","repeating-radial-gradient",
-                "!uri","repeating","cross-fade","non-repeating","radial-gradient");
+            "repeating-linear-gradient", "element", "numeric", "linear-gradient",
+            "!string", "alphabetic", "image", "symbolic", "repeating-radial-gradient",
+            "!uri", "repeating", "cross-fade", "non-repeating", "radial-gradient",
+            "var");
     }
     
     public void testListStyleImage() {

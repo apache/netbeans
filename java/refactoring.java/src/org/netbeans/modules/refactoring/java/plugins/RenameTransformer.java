@@ -170,7 +170,7 @@ public class RenameTransformer extends RefactoringVisitor {
     @Override
     public Tree visitBreak(BreakTree tree, Element p) {
         if(handle != null && handle.getKind() == Tree.Kind.LABELED_STATEMENT) {
-            StatementTree target = workingCopy.getTreeUtilities().getBreakContinueTarget(getCurrentPath());
+            Tree target = workingCopy.getTreeUtilities().getBreakContinueTargetTree(getCurrentPath());
             if(target == handle.resolve(workingCopy).getLeaf()) {
                 BreakTree newTree = make.Break(newName);
                 rewrite(tree, newTree);

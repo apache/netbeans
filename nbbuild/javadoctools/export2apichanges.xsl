@@ -37,7 +37,7 @@
             <head>
                 <!-- projects.netbeans.org -->
                <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-               <title>NetBeans API Changes since Last Release</title>
+               <title>Apache NetBeans (incubating) API Changes since Last Release</title>
                 <link rel="stylesheet" href="netbeans.css" type="text/css"/>
 
               <link REL="icon" href="http://www.netbeans.org/favicon.ico" type="image/ico" />
@@ -50,7 +50,7 @@
 
 
             <center>
-                <h1>NetBeans API Changes since Last Release</h1>
+                <h1>Apache NetBeans (incubating) API Changes since Last Release</h1>
                 <h3>Current Development Version</h3>
                 <xsl:if test="$date" >
                     <xsl:value-of select="$date" />
@@ -101,8 +101,11 @@
                 <a href="http://bits.netbeans.org/7.4/javadoc/apichanges.html">release 7.4</a>,
                 <a href="http://bits.netbeans.org/8.0/javadoc/apichanges.html">release 8.0</a>,
                 <a href="http://bits.netbeans.org/8.0.1/javadoc/apichanges.html">release 8.0.1</a>,
-                <a href="http://bits.netbeans.org/8.1/javadoc/apichanges.html">release 8.1</a>.
-                <a href="http://bits.netbeans.org/8.2/javadoc/apichanges.html">release 8.2</a>.
+                <a href="http://bits.netbeans.org/8.1/javadoc/apichanges.html">release 8.1</a>,
+                <a href="http://bits.netbeans.org/8.2/javadoc/apichanges.html">release 8.2</a>,
+                <a href="http://bits.netbeans.org/9.0/javadoc/apichanges.html">release 9.0</a>,
+                <a href="http://bits.netbeans.org/10.0/javadoc/apichanges.html">release 10.0</a>,
+                <a href="http://bits.netbeans.org/11.0/javadoc/apichanges.html">release 11.0</a>.
             <xsl:call-template name="do-the-table" />
             </body>
             </html>

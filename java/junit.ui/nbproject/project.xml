@@ -271,6 +271,7 @@
                 </dependency>
             </module-dependencies>
             <friend-packages>
+                <friend>org.netbeans.modules.gradle.test</friend>
                 <friend>org.netbeans.modules.junit.ant.ui</friend>
                 <friend>org.netbeans.modules.maven.junit.ui</friend>
                 <package>org.netbeans.modules.junit.ui.api</package>

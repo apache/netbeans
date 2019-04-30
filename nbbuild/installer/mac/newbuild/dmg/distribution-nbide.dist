@@ -142,6 +142,6 @@ function checkSystemversion() {
     <choice id="postinstallscripts" title="postinstallscripts-title" description="postinstallscripts-description" start_selected="true" start_enabled="true" start_visible="false" selected="true" enabled="true" visible="false">
         <pkg-ref id="ident.pkg.postinstallscripts"></pkg-ref>
     </choice>
-    <pkg-ref id="ident.pkg.nbide" version="0.0.0.0.1" installKBytes="@SIZE_BASEIDE@" auth="Root" onConclusion="None">nbide-@NB_ID@.pkg</pkg-ref>
+    <pkg-ref id="ident.pkg.nbide" version="0.0.0.0.1" installKBytes="@SIZE_NBIDE@" auth="Root" onConclusion="None">nbide-@NB_ID@.pkg</pkg-ref>
     <pkg-ref id="ident.pkg.postinstallscripts" version="0.0.0.0.1" auth="Root" onConclusion="None">postinstallscripts.pkg</pkg-ref>
 </installer-gui-script>

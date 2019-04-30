@@ -56,10 +56,7 @@
     <target name="clean">
         <delete dir="${basedir}/build" failonerror="no"/>
         <delete dir="${basedir}/dist" failonerror="no"/>
-        <ant dir="${basedir}/glassfish" target="clean"/>
-        <ant dir="${basedir}/tomcat" target="clean"/>
         <ant dir="${basedir}/netBeans/nbide" target="clean"/>
-        <ant dir="${basedir}/netBeans/jre-nested" target="clean"/>
         <delete dir="${basedir}/netBeans/ruby/build" failonerror="no"/>
         <delete dir="${basedir}/netBeans/cpp/build" failonerror="no"/>
         <delete dir="${basedir}/netBeans/javase/build" failonerror="no"/>

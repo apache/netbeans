@@ -43,32 +43,45 @@ public class TextmateLexer implements Lexer<TextmateTokenId>{
     private List<IToken> lineTokens;
     private int currentIdx;
     private StackElement state;
+    private boolean forceReadLine;
 
     public TextmateLexer(LexerInput li, Object state, TokenFactory<TextmateTokenId> factory, IGrammar grammar) {
-        if (state == DO_NOT_RESUME_HERE) {
-            throw new IllegalStateException("Invalid resume state!");
-        }
         this.li = li;
-        this.state = (StackElement) state;
         this.factory = factory;
         this.grammar = grammar;
+        if (state instanceof IntralineState) {
+            IntralineState istate = (IntralineState) state;
+            this.lineLen = istate.lineLen;
+            this.currentOffset = istate.currentOffset;
+            this.lineTokens = istate.lineTokens;
+            this.currentIdx = istate.currentIdx;
+            this.state = istate.state;
+            this.forceReadLine = true;
+        } else {
+            this.state = (StackElement) state;
+        }
     }
 
     @Override
     public Token<TextmateTokenId> nextToken() {
-        if (currentOffset >= lineLen) {
+        if (currentOffset >= lineLen || forceReadLine) {
             //read next line:
             int read;
             while ((read = li.read()) != LexerInput.EOF && read != '\n');
-            if (li.readLength() != 0) {
-                System.err.println(li.readText().toString());
-                lineLen = li.readText().length();
-                currentOffset = 0;
-                ITokenizeLineResult tokenized = grammar.tokenizeLine(li.readText().toString(), state);
-                lineTokens = new ArrayList<>(Arrays.asList(tokenized.getTokens()));
-                currentIdx = 0;
-                state = tokenized.getRuleStack();
+            if (!forceReadLine) {
+                if (li.readLength() != 0) {
+                    System.err.println(li.readText().toString());
+                    lineLen = li.readText().length();
+                    currentOffset = 0;
+                    ITokenizeLineResult tokenized = grammar.tokenizeLine(li.readText().toString(), state);
+                    lineTokens = new ArrayList<>(Arrays.asList(tokenized.getTokens()));
+                    currentIdx = 0;
+                    state = tokenized.getRuleStack();
+                } else {
+                    lineTokens = null;
+                }
             }
+            forceReadLine = false;
         }
         if (lineTokens != null && currentIdx < lineTokens.size()) {
             IToken current = lineTokens.get(currentIdx);
@@ -101,10 +114,27 @@ public class TextmateLexer implements Lexer<TextmateTokenId>{
     
     @Override
     public Object state() {
-        return lineLen != currentOffset ? DO_NOT_RESUME_HERE : this.state;
+        return lineLen != currentOffset ? new IntralineState(lineLen, currentOffset, lineTokens, currentIdx, state) : this.state;
     }
 
     @Override
     public void release() {}
     
+    private static final class IntralineState {
+        private int lineLen;
+        private int currentOffset;
+        private List<IToken> lineTokens;
+        private int currentIdx;
+        private StackElement state;
+
+        public IntralineState(int lineLen, int currentOffset, List<IToken> lineTokens, int currentIdx, StackElement state) {
+            this.lineLen = lineLen;
+            this.currentOffset = currentOffset;
+            this.lineTokens = lineTokens;
+            this.currentIdx = currentIdx;
+            this.state = state;
+        }
+
+    }
+
 }

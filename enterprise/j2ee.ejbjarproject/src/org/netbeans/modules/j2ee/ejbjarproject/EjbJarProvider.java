@@ -401,7 +401,7 @@ public final class EjbJarProvider extends J2eeModuleProvider
     
     private void showErrorMessage(final String message) {
         // only display the messages if the project is open
-        if(new Date().getTime() > notificationTimeout && isProjectOpen()) {
+        if(System.currentTimeMillis() > notificationTimeout && isProjectOpen()) {
             // DialogDisplayer waits for the AWT thread, blocking the calling
             // thread -- deadlock-prone, see issue #64888. therefore invoking
             // only in the AWT thread
@@ -418,7 +418,7 @@ public final class EjbJarProvider extends J2eeModuleProvider
             
             // set timeout to suppress the same messages during next 20 seconds (feel free to adjust the timeout
             // using more suitable value)
-            notificationTimeout = new Date().getTime() + 20000;
+            notificationTimeout = System.currentTimeMillis() + 20000;
         }
     }
     

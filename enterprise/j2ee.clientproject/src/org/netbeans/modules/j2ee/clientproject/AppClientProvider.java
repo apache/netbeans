@@ -427,7 +427,7 @@ public final class AppClientProvider extends J2eeModuleProvider
             
             // set timeout to suppress the same messages during next 20 seconds (feel free to adjust the timeout
             // using more suitable value)
-            notificationTimeout = new Date().getTime() + 20000;
+            notificationTimeout = System.currentTimeMillis() + 20000;
         }
     }
     

@@ -455,7 +455,7 @@ public abstract class TransferFile {
      * Set the file modification time to the current time.
      */
     public final void touch() {
-        timestamp = new Date().getTime();
+        timestamp = System.currentTimeMillis();
     }
 
     @Override

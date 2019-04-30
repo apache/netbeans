@@ -67,7 +67,7 @@ public class SQLHistoryEntry {
 
     String getDateXMLVariant() {
         if (this.date == null) {
-            return Long.toString(new Date().getTime());
+            return Long.toString(System.currentTimeMillis());
         } else {
             return Long.toString(date.getTime());
         }

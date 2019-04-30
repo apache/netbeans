@@ -88,7 +88,7 @@ public class ProductDescriptor extends Task {
                 "status=\"" + status + "\" " + // NOI18N
                 "offset=\"" + offset + "\" " + // NOI18N
                 "expand=\"" + expand + "\" " + // NOI18N
-                "built=\"" + new Date().getTime() + "\" " + // NOI18N
+                "built=\"" + System.currentTimeMillis() + "\" " + // NOI18N
                 "visible=\"" + visible + "\" " + // NOI18N
                 "features=\"" + features + "\">\n"); // NOI18N
         

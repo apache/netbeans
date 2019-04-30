@@ -376,7 +376,7 @@ public class AutoupdateCheckScheduler {
             case AutoupdateSettings.NEVER:
                 return false;
             case AutoupdateSettings.CUSTOM_CHECK_INTERVAL:
-                return AutoupdateSettings.getLastCheck ().getTime () + AutoupdateSettings.getCheckInterval () < new Date ().getTime ();
+                return AutoupdateSettings.getLastCheck ().getTime () + AutoupdateSettings.getCheckInterval () < System.currentTimeMillis();
             default:
                 Date lastCheck = AutoupdateSettings.getLastCheck();
                 GregorianCalendar calendar = new GregorianCalendar();

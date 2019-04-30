@@ -81,7 +81,7 @@ public class GroupDescriptor extends Task {
         xml.append("        <group uid=\"" + uid + "\" " + // NOI18N
                 "offset=\"" + offset + "\" " + // NOI18N
                 "expand=\"" + expand + "\" " + // NOI18N
-                "built=\"" + new Date().getTime() + "\" " + // NOI18N
+                "built=\"" + System.currentTimeMillis() + "\" " + // NOI18N
                 "visible=\"" + visible + "\">\n"); // NOI18N
         
         // locales //////////////////////////////////////////////////////////////////

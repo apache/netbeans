@@ -39,11 +39,13 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "DN_org.netbeans.modules.java.hints.jdk.ConvertSwitchToRuleSwitch=Convert switch to rule switch",
     "DESC_org.netbeans.modules.java.hints.jdk.ConvertSwitchToRuleSwitch=Converts switch to rule switch",
+    "DN_org.netbeans.modules.java.hints.jdk.ConvertSwitchStatementToSwitchExpression=Convert switch to switch expression",
+    "DESC_org.netbeans.modules.java.hints.jdk.ConvertSwitchStatementToSwitchExpression=Converts switch to switch expression",
 })
 public class ConvertSwitchToRuleSwitch {
     
     @TriggerTreeKind(Tree.Kind.SWITCH)
-    @Messages("ERR_ConverSwitchToRuleSwitch=Convert switch to rule switch")
+    @Messages({"ERR_ConvertSwitchToRuleSwitch=Convert switch to rule switch", "ERR_ConvertSwitchToSwitchExpression=Convert switch to switch expression"})
     public static ErrorDescription switch2RuleSwitch(HintContext ctx) {
         if (!CompilerOptionsQuery.getOptions(ctx.getInfo().getFileObject()).getArguments().contains("--enable-preview"))
             return null;
@@ -66,7 +68,11 @@ public class ConvertSwitchToRuleSwitch {
             wasDefault = ct.getExpression() == null;
             wasEmpty = ct.getStatements().isEmpty();
         }
-        return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_ConverSwitchToRuleSwitch(), new FixImpl(ctx.getInfo(), ctx.getPath()).toEditorFix());
+        if (wasDefault && Utilities.isCompatibleWithSwitchExpression(st)) {
+            return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_ConvertSwitchToSwitchExpression(), new FixImpl1(ctx.getInfo(), ctx.getPath()).toEditorFix());
+        } else {
+            return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_ConvertSwitchToRuleSwitch(), new FixImpl(ctx.getInfo(), ctx.getPath()).toEditorFix());
+        }
     }
 
     private static final class FixImpl extends JavaFix {
@@ -85,8 +91,27 @@ public class ConvertSwitchToRuleSwitch {
         protected void performRewrite(TransformationContext ctx) {
             TreePath tp = ctx.getPath();
             SwitchTree st = (SwitchTree) tp.getLeaf();
-            Utilities.performRewriteRuleSwitch(ctx, tp, st);
+            Utilities.performRewriteRuleSwitch(ctx, tp, st, false);
         }
-        
+    }
+
+    private static final class FixImpl1 extends JavaFix {
+
+        public FixImpl1(CompilationInfo info, TreePath switchStatement) {
+            super(info, switchStatement);
+        }
+
+        @Override
+        @Messages("FIX_ConvertToSwitchExpression=Convert to switch expression")
+        protected String getText() {
+            return Bundle.FIX_ConvertToSwitchExpression();
+        }
+
+        @Override
+        protected void performRewrite(JavaFix.TransformationContext ctx) {
+            TreePath tp = ctx.getPath();
+            SwitchTree st = (SwitchTree) tp.getLeaf();
+            Utilities.performRewriteRuleSwitch(ctx, tp, st, true);
+        }
     }
 }

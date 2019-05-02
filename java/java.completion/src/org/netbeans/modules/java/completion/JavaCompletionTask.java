@@ -2293,7 +2293,14 @@ public final class JavaCompletionTask<T> extends BaseTask {
             }
             if (lastCase != null) {
                 StatementTree last = null;
-                for (StatementTree stat : lastCase.getStatements()) {
+                List<? extends StatementTree> statements = lastCase.getStatements();
+                if (statements == null) {
+                    Tree caseBody = TreeShims.getBody(lastCase);
+                    if (caseBody instanceof StatementTree) {
+                        statements = Collections.singletonList((StatementTree) caseBody);
+                    }
+                }
+                for (StatementTree stat : statements) {
                     int pos = (int) sourcePositions.getStartPosition(root, stat);
                     if (pos == Diagnostic.NOPOS || offset <= pos) {
                         break;

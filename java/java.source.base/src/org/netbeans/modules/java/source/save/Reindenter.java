@@ -780,7 +780,7 @@ public class Reindenter implements IndentTask {
                 }
                 break;
             default:
-                if (last.getKind().toString().equals("SWITCH_EXPRESSION")) {  //NOI18N
+                if (last.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
                    currentIndent = getSwitchIndent(startOffset, endOffset,nextTokenId,lastPos,currentIndent) ;
                 }
                 else currentIndent = getContinuationIndent(path, currentIndent);

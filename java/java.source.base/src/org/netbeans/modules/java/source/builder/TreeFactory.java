@@ -846,6 +846,11 @@ public class TreeFactory {
                 tp = make.at(NOPOS).Wildcard(make.at(NOPOS).TypeBoundKind(a.kind), (JCExpression) Type(a.type));
                 break;
             }
+            case ERROR:
+                if (t.hasTag(TypeTag.ERROR)) {
+                    tp = make.at(NOPOS).Ident(((ErrorType) type).tsym.name);
+                    break;
+                }
             case DECLARED:
                 JCExpression clazz = (JCExpression) QualIdent(t.tsym);
                 tp = t.getTypeArguments().isEmpty()
@@ -858,9 +863,6 @@ public class TreeFactory {
                 break;
             case NULL:
                 tp = make.at(NOPOS).Literal(TypeTag.BOT, null);
-                break;
-            case ERROR:
-                tp = make.at(NOPOS).Ident(((ErrorType) type).tsym.name);
                 break;
             default:
                 return make.at(NOPOS).Type((Type)type);

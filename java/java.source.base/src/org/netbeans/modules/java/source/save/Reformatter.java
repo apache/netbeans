@@ -578,7 +578,7 @@ public class Reformatter implements ReformatTask {
             try {
                 if (endPos < 0)
                     return false;
-                Boolean ret = tokens.offset() <= endPos ? (tree.getKind().toString().equals("SWITCH_EXPRESSION")) ? scanSwitchExpression(tree,p) : super.scan(tree, p) : null; //NOI18N
+                Boolean ret = tokens.offset() <= endPos ? (tree.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) ? scanSwitchExpression(tree,p) : super.scan(tree, p) : null;
                 return ret != null ? ret : true;
             }
             finally {
@@ -2592,7 +2592,7 @@ public class Reformatter implements ReformatTask {
             boolean indentCases = cs.indentCasesFromSwitch() ;
             int old = lastIndent;
             int halfIndent = lastIndent;
-            if (node.getKind().toString().equals("SWITCH_EXPRESSION")) {
+            if (node.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
                 continuationIndent = false;
             }
             switch (bracePlacement) {
@@ -2632,7 +2632,7 @@ public class Reformatter implements ReformatTask {
                     }
                     break;
             }
-            if (node.getKind().toString().equals("SWITCH_EXPRESSION")) { //NOI18N
+            if (node.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
                 old = indent;
                 indent = lastIndent + indentSize;
             }

@@ -49,7 +49,7 @@ import org.openide.windows.TopComponent;
 )
 @DataObject.Registration(
         mimeType = "text/x-kotlin",
-        iconBase = "org/netbeans/modules/kotlin/editor/kotlin16.png",
+        iconBase = "org/netbeans/modules/kotlin/editor/kotlin_file.png",
         displayName = "#LBL_Kt_LOADER",
         position = 300
 )
@@ -119,7 +119,7 @@ public class KtDataObject extends MultiDataObject {
 
     @MultiViewElement.Registration(
             displayName = "#LBL_Kt_EDITOR",
-            iconBase = "org/netbeans/modules/kotlin/editor/kotlin16.png",
+            iconBase = "org/netbeans/modules/kotlin/editor/kotlin_file.png",
             mimeType = "text/x-kotlin",
             persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
             preferredID = "Kt",

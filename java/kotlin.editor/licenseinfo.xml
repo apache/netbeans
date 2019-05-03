@@ -23,9 +23,17 @@
 
 <licenseinfo>
     <fileset>
-        <file>src/org/netbeans/modules/kotlin/editor/kotlin16.png</file>
         <file>src/org/netbeans/modules/kotlin/editor/Kotlin.tmLanguage.json</file>
-        <license ref="Apache-2.0-ASF" />
-        <comment type="COMMENT_UNSUPPORTED" />
+        <license ref="Apache-2.0" />
+        <comment type="COMMENT_UNSUPPORTED">Source: https://github.com/vkostyukov/kotlin-sublime-package/blob/ce599a846ac9f86d4671a024d21220ca08e50f66/Kotlin.JSON-tmLanguage</comment>
+    </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/kotlin/editor/kotlin_file.svg</file>
+        <file>src/org/netbeans/modules/kotlin/editor/kotlin_file.png</file>
+        <file>src/org/netbeans/modules/kotlin/editor/kotlin_file@2x.png</file>
+        <license ref="Apache-2.0" />
+        <comment type="COMMENT_UNSUPPORTED">Source: https://github.com/JetBrains/kotlin/tree/4c674ae27a9b4f53acbf84bda0127c52696d258b/idea/resources/org/jetbrains/kotlin/idea/icons</comment>
+        <notice>Kotlin Compiler
+Copyright 2010-2019 JetBrains s.r.o and respective authors and developers</notice>
     </fileset>
 </licenseinfo>

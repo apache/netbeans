@@ -19,6 +19,8 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="java/form.j2ee">
+
+<project name="contrib/hibernateweb" default="build" basedir=".">
+    <description>Builds, tests, and runs the project hibernateweb.</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

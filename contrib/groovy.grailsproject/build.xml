@@ -19,12 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="enterprise/websvc.wsitmodelext">
+<project basedir="." default="build" name="contrib/groovy.grailsproject">
+    <description>Builds, tests, and runs the project org.netbeans.modules.groovy.grailsproject</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
-    <property name="resources.dir" value="./src/org/netbeans/modules/websvc/wsitmodelext/catalog/resources/"/>
-    <target name="build-init" depends="projectized.build-init">
-        <unzip src="external/websvc.wsitmodelext-glassfish-resources.zip" dest="${resources.dir}"/>
-        <unzip src="external/websvc.wsitmodelext-w3c-resources.zip" dest="${resources.dir}"/>
-        <unzip src="external/websvc.wsitmodelext-oasis-resources.zip" dest="${resources.dir}"/>
-   </target>
 </project>

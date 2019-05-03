@@ -19,14 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="enterprise/javaee.wildfly">
+<project basedir="." default="build" name="contrib/cordova.platforms.ios">
+    <description>Builds, tests, and runs the project org.netbeans.modules.cordova.platforms.ios</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
-
-    <property name="resources.dir" value="./src/org/netbeans/modules/javaee/wildfly/resources/"/>
-    <target name="build-init" depends="projectized.build-init">
-        <unzip src="external/javaee-wildfly-glassfish-resources.zip" dest="${resources.dir}"/>
-        <unzip src="external/javaee-wildfly-jboss-resources.zip" dest="${resources.dir}"/>
-        <unzip src="external/javaee-wildfly-ironjacamar-resources.zip" dest="${resources.dir}"/>
-        <unzip src="external/javaee-wildfly-w3c-resources.zip" dest="${resources.dir}"/>
-    </target>
 </project>

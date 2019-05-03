@@ -18,7 +18,7 @@
  */
 @TemplateRegistration(
     scriptEngine = "freemarker", targetName = "Kotlin",
-    category = "java-classes", folder = "Java",
+    category = "java-classes", folder = "Classes",
     content = "Kotlin.kt.template"
 )
 package org.netbeans.modules.kotlin.editor;

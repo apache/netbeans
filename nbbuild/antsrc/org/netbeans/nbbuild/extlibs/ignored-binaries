@@ -70,3 +70,6 @@ webcommon/libs.oracle.jsparser/build/webcommon/**
 
 #only used to build installers
 nbbuild/installer/mac/newbuild/dmg/template.sparseimage.bz2
+
+# Used in a pure ant project (installer), so not identified as a project
+nbbuild/installer/jnlp/external/*

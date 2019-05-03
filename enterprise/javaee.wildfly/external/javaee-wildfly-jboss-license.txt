@@ -1,10 +1,9 @@
-Name: XML Schema from IronJacamar
+Name: XML Schema for WildFly
 Origin: Red Hat
 Version: 1.1
 License: LGPL-2.1
-Description: IronJacamar is an implementation of the Java EE Connector Architecture 1.7 specification.
-URL: http://www.ironjacamar.org/doc/developerguide/1.1/en-US/html_single/index.html#lgpl
-Files: javaee-wildfly-ironjacamar-resources.zip
+Description: XML Schema for WildFly
+Files: javaee-wildfly-jboss-resources.zip
 
 GNU LESSER GENERAL PUBLIC LICENSE
 		       Version 2.1, February 1999

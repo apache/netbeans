@@ -15,5 +15,5 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-#456A222BA1345D564CAF7CD3699D8FA98EEFE219 jnlp.jar
-#9479880927962525FCDD47EC53735065FD85BC92 jnlp-servlet.jar
+B428664160FBBB4884F319A52A53911235E8F279 com.massisframework:jnlp-definitions:7.0
+24D9B16E2AB7B6B078C15F8742E73C60CE68B4A9 org.codehaus.mojo:webstart-jnlp-servlet:1.0-beta-7

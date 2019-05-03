@@ -98,7 +98,7 @@ public class CreateRegistrationProcessor extends LayerGeneratingProcessor {
         for (Entry<? extends ExecutableElement, ? extends AnnotationValue> e : mimeRegistration.getElementValues().entrySet()) {
             Name simpleName = e.getKey().getSimpleName();
             if (simpleName.contentEquals("grammar")) {
-                grammar = (String) e.getValue().getValue();
+                grammar = LayerBuilder.absolutizeResource(toRegister, (String) e.getValue().getValue());
                 continue;
             }
             if (simpleName.contentEquals("mimeType")) {

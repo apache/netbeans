@@ -26,6 +26,7 @@ import org.netbeans.modules.gradle.spi.actions.AfterBuildActionHook;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.util.prefs.Preferences;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.Deployment;
 import org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider;
@@ -82,10 +83,9 @@ public class DeployHook implements AfterBuildActionHook {
     }
 
     private String showBrowserOnRun() {
-        Boolean show = (Boolean) project.getProjectDirectory().getAttribute(CustomizerRunWar.PROP_SHOW_IN_BROWSER);
-        if (show != null && show.booleanValue()) {
-            String path = (String) project.getProjectDirectory().getAttribute(CustomizerRunWar.PROP_SHOW_PAGE);
-            return path != null ? path : "";
+        Preferences prefs = NbGradleProject.getPreferences(project, false);
+        if (prefs.getBoolean(CustomizerRunWar.PROP_SHOW_IN_BROWSER, false)) {
+            return prefs.get(CustomizerRunWar.PROP_SHOW_PAGE, "");
         } else {
             return null;
         }

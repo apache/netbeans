@@ -22,7 +22,7 @@
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
     <folder name="Projects">
-        <folder name="com-kenai-lkishalmi-netbeans-gradle">
+        <folder name="org-netbeans-modules-gradle">
             <folder name="Customizer">
                 <folder name="JsLibs">
                     <attr intvalue="250" name="position"/>

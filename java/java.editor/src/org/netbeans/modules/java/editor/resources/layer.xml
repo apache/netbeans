@@ -80,6 +80,11 @@
                         <file name="org-netbeans-modules-editor-java-preferences.xml" url="DefaultPreferences.xml" />
                     </folder>
                 </folder>
+                
+                <file name="PaletteFactory.instance">
+                    <attr name="instanceOf" stringvalue="org.netbeans.spi.palette.PaletteController"/>
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.java.editor.palette.JavaSourceFileLayerPaletteFactory.createPalette"/>
+                </file>
                     
                 <folder name="FontsColors">
                     <folder name="NetBeans">
@@ -475,7 +480,15 @@
             </file>
         </folder>
     </folder>
-
+    
+    <folder name="JavaPalette">
+        <folder name="Items">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.java.editor.palette.Bundle"/>
+            <file name="Item.xml" url="../palette/items/resources/Item.xml">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.java.editor.palette.Bundle"/>
+            </file>
+        </folder>
+    </folder>
     <!--
     <folder name="org.netbeans.modules.java.source">
       <folder name="options">

@@ -58,6 +58,7 @@ import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.java.source.parsing.JavacParserFactory;
 import org.netbeans.modules.java.source.parsing.MimeTask;
 import org.netbeans.modules.java.source.parsing.NewComilerTask;
+import org.netbeans.modules.java.source.parsing.ParameterNameProviderImpl;
 import org.netbeans.modules.java.source.save.ElementOverlay;
 import org.netbeans.modules.java.source.usages.ClasspathInfoAccessor;
 import org.netbeans.modules.parsing.api.Embedding;
@@ -802,7 +803,7 @@ public final class JavaSource {
 
         @Override
         public @NonNull String generateReadableParameterName (@NonNull String typeName, @NonNull Set<String> used) {
-            return SourceUtils.generateReadableParameterName(typeName, used);
+            return ParameterNameProviderImpl.generateReadableParameterName(typeName, used);
         }
 
         @Override

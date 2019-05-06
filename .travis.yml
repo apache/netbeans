@@ -32,6 +32,7 @@ script:
   - if [ "x$SCRIPT" != "x" ]; then ./$SCRIPT; fi
   - if [ "x$CV" == "xtrue" ]; then ant -quiet -f ergonomics/ide.ergonomics/ test -Dtest.config=commit; fi
   - if [ "x$RUN_TESTS_JDK8" == "xtrue" ]; then for MODULE in $TEST_MODULES; do cd $MODULE; ant test; done; fi
+  - if [ "x$RUN_TEST_SINGLE_JDK8" == "xtrue" ]; then cd $TEST_MODULE; ant $TEST_SINGLE_OPTIONS test-single; fi
   - if [ "x$RUN_TESTS_JDK9PLUS" == "xtrue" ]; then wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh && export TEST_JDK=`bash install-jdk.sh $TEST_JDK_VERSION --emit-java-home --silent | tail -1` && for MODULE in $TEST_MODULES; do cd $MODULE; ant "-Dtest.nbjdk.home=$TEST_JDK" $TEST_RUN_OPTIONS test; done; fi
 
 matrix:
@@ -55,6 +56,9 @@ matrix:
           jdk: oraclejdk11
 
         - env: SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_TESTS_JDK9PLUS=false RUN_TESTS_JDK8=true TEST_MODULES="java/java.completion java/spi.java.hints java/java.hints.declarative" OPTS="-Dcluster.config=java -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          jdk: oraclejdk8
+
+        - env: SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_TESTS_JDK9PLUS=false RUN_TESTS_JDK8=false RUN_TEST_SINGLE_JDK8=true TEST_MODULE="php/php.editor" TEST_SINGLE_OPTIONS="-Dtest.includes=org/netbeans/modules/php/editor/completion/**/*Test.java " OPTS="-Dcluster.config=php -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           jdk: oraclejdk8
 
         - env: SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_TESTS_JDK8=false RUN_TESTS_JDK9PLUS=true TEST_JDK_VERSION="--feature 11 --license GPL" TEST_RUN_OPTIONS='-Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument -Dtest.use.jdk.javac=true' TEST_MODULES="java/java.completion" OPTS="-Dcluster.config=java -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"

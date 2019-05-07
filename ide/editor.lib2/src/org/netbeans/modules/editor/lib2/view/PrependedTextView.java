@@ -35,24 +35,24 @@ import org.netbeans.spi.editor.highlighting.HighlightsSequence;
 /**
  * TODO
  */
-public class PrependedTextView extends EditorView {
+public final class PrependedTextView extends EditorView {
 
+    private final AttributeSet attributes;
+    private final EditorView delegate;
     private final TextLayout prependedTextLayout;
     private final double leftShift;
     private final double prependedTextWidth;
-    private final AttributeSet attributes;
-    private final EditorView delegate;
 
     public PrependedTextView(DocumentViewOp op, AttributeSet attributes, EditorView delegate) {
         super(null);
-        Font font = ViewUtils.getFont(getAttributes(), op.getDefaultHintFont());
+        this.attributes = attributes;
+        this.delegate = delegate;
+        Font font = ViewUtils.getFont(attributes, op.getDefaultHintFont());
         prependedTextLayout = op.createTextLayout((String) attributes.getAttribute("virtual-text-prepend"), font);
         Rectangle2D textBounds = prependedTextLayout.getBounds(); //TODO: allocation!
         double em = op.getDefaultCharWidth();
         leftShift = em / 2;
         prependedTextWidth = Math.ceil(textBounds.getWidth() + em);
-        this.attributes = attributes;
-        this.delegate = delegate;
     }
 
     @Override

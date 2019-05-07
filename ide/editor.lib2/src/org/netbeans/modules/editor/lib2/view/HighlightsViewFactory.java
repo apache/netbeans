@@ -28,6 +28,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.Element;
 import javax.swing.text.View;
+import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.lib.editor.util.CharSequenceUtilities;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.editor.lib2.highlighting.DirectMergeContainer;
@@ -188,7 +190,7 @@ public final class HighlightsViewFactory extends EditorViewFactory implements Hi
         }
         if (startOffset == lineEndOffset - 1) {
             AttributeSet attrs = hList.cutSingleChar();
-            return new NewlineView(attrs);
+            return wrapWithPrependedText(new NewlineView(attrs), attrs);
         } else { // Regular view with possible highlight(s) or tab view
             updateTabsAndHighlightsAndRTL(startOffset);
             if (charType == TAB_CHAR_TYPE) {
@@ -198,7 +200,7 @@ public final class HighlightsViewFactory extends EditorViewFactory implements Hi
                     limitOffset = tabsEndOffset;
                 }
                 attrs = hList.cut(limitOffset);
-                return new TabView(limitOffset - startOffset, attrs);
+                return wrapWithPrependedText(new TabView(limitOffset - startOffset, attrs), attrs);
 
             } else { // Create regular view with either LTR or RTL text
                 limitOffset = Math.min(limitOffset, nextTabOrRTLOffset); // nextTabOrRTLOffset < lineEndOffset 
@@ -219,12 +221,10 @@ public final class HighlightsViewFactory extends EditorViewFactory implements Hi
                 boolean inlineHints = documentView().op.isInlineHintsEnable();
                 AttributeSet attrs = hList.cutSameFont(defaultFont, limitOffset, wsEndOffset, docText, inlineHints);
                 int length = hList.startOffset() - startOffset;
-                EditorView view = new HighlightsView(length, attrs);
-                if (attrs != null && inlineHints && attrs.getAttribute("virtual-text-prepend") != null) {
-                    view = new PrependedTextView(documentView().op, attrs, view);
-                }
-                if (origView != null && origView.getClass() == HighlightsView.class && origView.getLength() == length) { // Reuse XXX: reuse disabled for PrependedTextHighlightsView!
-                    HighlightsView origHView = (HighlightsView) origView;
+                EditorView view = wrapWithPrependedText(new HighlightsView(length, attrs), attrs);
+                EditorView origViewUnwrapped = origView instanceof PrependedTextView ? ((PrependedTextView) origView).getDelegate() : origView;
+                if (origViewUnwrapped != null && origViewUnwrapped.getClass() == HighlightsView.class && origViewUnwrapped.getLength() == length) {
+                    HighlightsView origHView = (HighlightsView) origViewUnwrapped;
                     TextLayout origTextLayout = origHView.getTextLayout();
                     if (origTextLayout != null) {
                         if (ViewHierarchyImpl.CHECK_LOG.isLoggable(Level.FINE)) {
@@ -239,7 +239,7 @@ public final class HighlightsViewFactory extends EditorViewFactory implements Hi
                             }
                         }
                         Font font = ViewUtils.getFont(attrs, defaultFont);
-                        Font origFont = ViewUtils.getFont(origView.getAttributes(), defaultFont);
+                        Font origFont = ViewUtils.getFont(origViewUnwrapped.getAttributes(), defaultFont);
                         if (font != null && font.equals(origFont)) {
                             float origWidth = origHView.getWidth();
                             HighlightsView hv = (HighlightsView) (view instanceof PrependedTextView ? ((PrependedTextView) view).getDelegate() : view);
@@ -252,6 +252,16 @@ public final class HighlightsViewFactory extends EditorViewFactory implements Hi
                 return view;
             }
         }
+    }
+
+    private @NonNull EditorView wrapWithPrependedText(@NonNull EditorView origView, @NullAllowed AttributeSet attrs) {
+        boolean inlineHints = documentView().op.isInlineHintsEnable();
+
+        if (attrs != null && inlineHints && attrs.getAttribute("virtual-text-prepend") instanceof String) {
+            return new PrependedTextView(documentView().op, attrs, origView);
+        }
+
+        return origView;
     }
 
     private void updateTabsAndHighlightsAndRTL(int offset) {

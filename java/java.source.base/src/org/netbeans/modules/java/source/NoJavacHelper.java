@@ -31,7 +31,6 @@ import java.util.logging.Logger;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.openide.modules.OnStart;
-import sun.misc.Unsafe;
 
 /**
  *
@@ -69,26 +68,10 @@ public class NoJavacHelper {
                 w.visit(Opcodes.V1_8, Opcodes.ACC_ABSTRACT | Opcodes.ACC_PUBLIC, "com/sun/tools/javac/code/Scope$WriteableScope", null, "com/sun/tools/javac/code/Scope", null);
                 byte[] classData = w.toByteArray();
 
-                String JavaVersion = System.getProperty("java.specification.version"); //NOI18N
-                boolean isJdkVer8OrBelow = true;
-                if (!JavaVersion.startsWith("1.")) {   //NOI18N
-                    isJdkVer8OrBelow = false;
-                }
-                if (isJdkVer8OrBelow) {
-                    try {
-                        Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe"); //NOI18N
-                        theUnsafe.setAccessible(true);
-                        Unsafe unsafe = (Unsafe) theUnsafe.get(null);
+                String[] javaVersionElements = System.getProperty("java.version").split("\\.");
+                int major = Integer.parseInt(javaVersionElements[1]);
 
-                        Class scopeClass = Class.forName("com.sun.tools.javac.code.Scope");  //NOI18N
-
-                        Method defineClass = Unsafe.class.getDeclaredMethod("defineClass", String.class, Byte[].class, Integer.class, Integer.class, ClassLoader.class, ProtectionDomain.class);  //NOI18N
-                        defineClass.invoke(unsafe, "com.sun.tools.javac.code.Scope$WriteableScope", classData, 0, classData.length, scopeClass.getClassLoader(), scopeClass.getProtectionDomain());  //NOI18N 
-                    } catch (Throwable t) {
-                        //ignore...
-                        Logger.getLogger(NoJavacHelper.class.getName()).log(Level.FINE, null, t);
-                    }
-                } else {
+                if (major >= 8) {
                     try {
                         Method defineClass = MethodHandles.Lookup.class.getDeclaredMethod("defineClass", Byte[].class); //NOI18N
                         defineClass.invoke(MethodHandles.lookup(), classData);
@@ -96,8 +79,9 @@ public class NoJavacHelper {
                         Logger.getLogger(NoJavacHelper.class.getName()).log(Level.FINE, null, ex);
 
                     }
+                } else {
+                    // Flag an error here?
                 }
-
             }
         }
 

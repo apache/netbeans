@@ -69,9 +69,12 @@ public class NoJavacHelper {
                 byte[] classData = w.toByteArray();
 
                 String[] javaVersionElements = System.getProperty("java.version").split("\\.");
-                int major = Integer.parseInt(javaVersionElements[1]);
+int major = Integer.parseInt(javaVersionElements[1]);
 
-                if (major >= 8) {
+                // Java versioning is changing and has never really made sense.
+                // Look at JEP 322 for the current scheme. 
+                if (((javaVersionElements[0] == 1) && (javaVersionElements[1] >= 8)) ||
+                    (javaVersionElements[0] >= 10)) {
                     try {
                         Method defineClass = MethodHandles.Lookup.class.getDeclaredMethod("defineClass", Byte[].class); //NOI18N
                         defineClass.invoke(MethodHandles.lookup(), classData);

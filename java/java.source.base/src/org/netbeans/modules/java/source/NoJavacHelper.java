@@ -73,14 +73,13 @@ int major = Integer.parseInt(javaVersionElements[1]);
 
                 // Java versioning is changing and has never really made sense.
                 // Look at JEP 322 for the current scheme. 
-                if (((javaVersionElements[0] == 1) && (javaVersionElements[1] >= 8)) ||
-                    (javaVersionElements[0] >= 10)) {
+                if (((Integer.parseInt(javaVersionElements[0]) == 1) && (Integer.parseInt(javaVersionElements[1]) >= 8)) ||
+                    (Integer.parseInt(javaVersionElements[0]) >= 10)) {
                     try {
                         Method defineClass = MethodHandles.Lookup.class.getDeclaredMethod("defineClass", Byte[].class); //NOI18N
                         defineClass.invoke(MethodHandles.lookup(), classData);
                     } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
                         Logger.getLogger(NoJavacHelper.class.getName()).log(Level.FINE, null, ex);
-
                     }
                 } else {
                     // Flag an error here?

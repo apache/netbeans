@@ -122,7 +122,6 @@ import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
-
 import static com.sun.source.tree.Tree.Kind.*;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.util.TreePathScanner;
@@ -137,7 +136,6 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.Log;
 import java.net.URI;
-import java.util.concurrent.Callable;
 import javax.lang.model.element.NestingKind;
 import javax.lang.model.type.ErrorType;
 import javax.lang.model.type.UnionType;
@@ -161,6 +159,7 @@ import org.openide.util.Pair;
 public class Utilities {
     public  static final String JAVA_MIME_TYPE = "text/x-java";
     private static final String DEFAULT_NAME = "name";
+    enum SWITCH_TYPE {TRADITIONAL, SIMPLIFIED, SWITCH_EXPRESSION, SIMPLIFIED_WITH_RETURN_CASE, SIMPLIFIED_WITH_CAST_CASE, SIMPLIFIED_WITH_ASSIGN_CASE}
 
     public Utilities() {
     }
@@ -3156,6 +3155,8 @@ public class Utilities {
         WorkingCopy wc = ctx.getWorkingCopy();
         TreeMaker make = wc.getTreeMaker();
         List<CaseTree> newCases = new ArrayList<>();
+        SWITCH_TYPE switchType = SWITCH_TYPE.TRADITIONAL;
+        Tree typeCast = null;
         List<? extends CaseTree> cases;
         Set<VariableElement> variablesDeclaredInOtherCases = new HashSet<>();
         List<ExpressionTree> patterns = new ArrayList<>();
@@ -3164,6 +3165,7 @@ public class Utilities {
         boolean switchExpressionFlag = st.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION);
         if (switchExpressionFlag) {
             cases = TreeShims.getCases(st);
+            switchType = SWITCH_TYPE.SIMPLIFIED;
         } else {
             cases = ((SwitchTree) st).getCases();
         }
@@ -3247,10 +3249,20 @@ public class Utilities {
             if (isExpression) {
                 if (statements.get(0).getKind() == Tree.Kind.RETURN) {
                     body = ((JCTree.JCReturn) statements.get(0)).getExpression();
-                    isReturnExpression = true;
+                    switchType = SWITCH_TYPE.SIMPLIFIED_WITH_RETURN_CASE;
+                    if (body instanceof JCTree.JCTypeCast) {
+                        typeCast = ((JCTree.JCTypeCast)body).getType();
+                        body = ((JCTree.JCTypeCast)body).getExpression();
+                    }
                 } else {
+                    switchType = SWITCH_TYPE.SWITCH_EXPRESSION;
                     JCTree.JCExpressionStatement jceTree = (JCTree.JCExpressionStatement) statements.get(0);
                     body = ((JCTree.JCAssign) jceTree.expr).rhs;
+                    if (body instanceof JCTree.JCTypeCast) {
+                        switchType = SWITCH_TYPE.SIMPLIFIED_WITH_CAST_CASE;
+                        typeCast = ((JCTree.JCTypeCast)body).getType();
+                        body = ((JCTree.JCTypeCast)body).getExpression();
+                    }
                     variable = ((JCTree.JCAssign) jceTree.expr).lhs;
                 }
                 newCases.add(make.Case(patterns, make.ExpressionStatement((ExpressionTree) body)));
@@ -3265,16 +3277,34 @@ public class Utilities {
                 }
             }
         }
-        if (isReturnExpression) {
-            ExpressionTree et = (ExpressionTree) make.SwitchExpression(TreeShims.getExpressions(st).get(0), newCases);
-            wc.rewrite(st, make.Return(et));
-        } else if (isExpression) {
-            ExpressionTree et = (ExpressionTree) make.SwitchExpression(TreeShims.getExpressions(st).get(0), newCases);
-            wc.rewrite(st, make.ExpressionStatement((ExpressionTree) make.Assignment((ExpressionTree) variable, et)));
-        } else if (switchExpressionFlag) {
-            wc.rewrite(st, make.SwitchExpression(TreeShims.getExpressions(st).get(0), newCases));
-        } else {
-            wc.rewrite((SwitchTree) st, make.Switch(((SwitchTree) st).getExpression(), newCases));
+        ExpressionTree et = null;
+        switch(switchType){
+            case SIMPLIFIED_WITH_RETURN_CASE:
+                et = (ExpressionTree) make.SwitchExpression(TreeShims.getExpressions(st).get(0), newCases);
+                if(typeCast != null){
+                    et = make.Parenthesized(et);
+                    et = make.TypeCast(typeCast, et);
+                }
+                wc.rewrite(st, make.Return(et));
+                break;
+            case SIMPLIFIED_WITH_CAST_CASE:
+                et = (ExpressionTree) make.SwitchExpression(TreeShims.getExpressions(st).get(0), newCases);
+                et = make.Parenthesized(et);
+                et = make.TypeCast(typeCast, et);
+                wc.rewrite(st, make.ExpressionStatement((ExpressionTree) make.Assignment((ExpressionTree) variable, et)));
+                break;
+            case SWITCH_EXPRESSION:
+                et = (ExpressionTree) make.SwitchExpression(TreeShims.getExpressions(st).get(0), newCases);
+                wc.rewrite(st, make.ExpressionStatement((ExpressionTree) make.Assignment((ExpressionTree) variable, et)));
+                break;
+            case SIMPLIFIED:
+                wc.rewrite(st, make.SwitchExpression(TreeShims.getExpressions(st).get(0), newCases));
+                break;
+            case TRADITIONAL:
+                wc.rewrite((SwitchTree) st, make.Switch(((SwitchTree) st).getExpression(), newCases));
+                break;
+            default:
+                break;
         }
     }
 

@@ -82,7 +82,7 @@ int major = Integer.parseInt(javaVersionElements[1]);
                         Logger.getLogger(NoJavacHelper.class.getName()).log(Level.FINE, null, ex);
                     }
                 } else {
-                    // Flag an error here?
+                    // FIXME - Flag an error here?
                 }
             }
         }

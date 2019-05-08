@@ -39,13 +39,13 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "DN_org.netbeans.modules.java.hints.jdk.ConvertSwitchToRuleSwitch=Convert switch to rule switch",
     "DESC_org.netbeans.modules.java.hints.jdk.ConvertSwitchToRuleSwitch=Converts switch to rule switch",
-    "DN_org.netbeans.modules.java.hints.jdk.ConvertSwitchStatementToSwitchExpression=Convert switch to switch expression",
-    "DESC_org.netbeans.modules.java.hints.jdk.ConvertSwitchStatementToSwitchExpression=Converts switch to switch expression",
+    "DN_org.netbeans.modules.java.hints.jdk.ConvertSwitchStatementToSwitchExpression=Convert to switch expression",
+    "DESC_org.netbeans.modules.java.hints.jdk.ConvertSwitchStatementToSwitchExpression=Converts to switch expression",
 })
 public class ConvertSwitchToRuleSwitch {
     
     @TriggerTreeKind(Tree.Kind.SWITCH)
-    @Messages({"ERR_ConvertSwitchToRuleSwitch=Convert switch to rule switch", "ERR_ConvertSwitchToSwitchExpression=Convert switch to switch expression"})
+    @Messages({"ERR_ConvertSwitchToRuleSwitch=Convert switch to rule switch", "ERR_ConvertSwitchToSwitchExpression=Convert to switch expression"})
     public static ErrorDescription switch2RuleSwitch(HintContext ctx) {
         if (!CompilerOptionsQuery.getOptions(ctx.getInfo().getFileObject()).getArguments().contains("--enable-preview"))
             return null;

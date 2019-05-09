@@ -1,5 +1,5 @@
 Name: Html4J JSON Model in Java
-Version: 1.5
+Version: 1.6.1
 Description: Html4j JSON Model in Java
 License: Apache-2.0
 Origin: Apache Software Foundation

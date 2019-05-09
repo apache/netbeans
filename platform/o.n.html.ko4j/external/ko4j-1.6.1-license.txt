@@ -1,5 +1,5 @@
 Name: Knockout4J
-Version: 1.5
+Version: 1.6.1
 Description: Knockout4J
 License: Apache-2.0
 Origin: Apache Software Foundation

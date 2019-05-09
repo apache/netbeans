@@ -613,7 +613,7 @@ public final class ModuleList {
                 } else {
                     // Wildcard. Convert to regexp and do a brute-force search.
                     // Not the most efficient option but should probably suffice.
-                    String regex = "\\Q" + pattern.replace("\\*\\*", "__DBLASTERISK__"). // NOI18N
+                    String regex = "\\Q" + pattern.replaceAll("\\*\\*", "__DBLASTERISK__"). // NOI18N
                                                    replaceAll("\\*", "\\\\E[^/]*\\\\Q"). // NOI18N
                                                    replaceAll("__DBLASTERISK__", "\\\\E.*\\\\Q") + "\\E"; // NOI18N
                     Pattern regexp = Pattern.compile(regex);

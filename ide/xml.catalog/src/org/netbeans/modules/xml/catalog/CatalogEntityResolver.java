@@ -186,6 +186,6 @@ public class CatalogEntityResolver extends UserCatalog implements EntityResolver
      *  see : http://www.faqs.org/rfcs/rfc3151.html
      */
     private String URNtoPublic(String urn) {
-        return urn.replace('+',' ').replace(":","//").replace(";","::").replace("%2B","+").replace("%3A",":").replacl("%2F","/").replace("%3B",";").replace("%27","'").replace("%3F","?").replace("%23","#").replace("%25","%");
+        return urn.replace('+',' ').replace(":","//").replace(";","::").replace("%2B","+").replace("%3A",":").replace("%2F","/").replace("%3B",";").replace("%27","'").replace("%3F","?").replace("%23","#").replace("%25","%");
     }
 }

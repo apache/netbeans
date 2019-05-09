@@ -66,6 +66,9 @@ $ ant -Dcluster.config=platform
 #### Building Windows Launchers
 Windows launchers can be build using [MinGW](http://www.mingw.org/) both on Windows and Linux.
 
+**Note:** In Windows [MSYS](http://www.mingw.org/wiki/MSYS/) must be installed.
+
+
 As of [NETBEANS-1145](https://issues.apache.org/jira/browse/NETBEANS-1145), the Windows Launchers can be built adding ```do.build.windows.launchers=true``` property to the build process.
 ```
 $ ant -Ddo.build.windows.launchers=true

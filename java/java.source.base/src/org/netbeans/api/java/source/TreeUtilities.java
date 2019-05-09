@@ -196,7 +196,19 @@ public final class TreeUtilities {
         while (path != null) {
             if (isSynthetic(path.getCompilationUnit(), path.getLeaf()))
                 return true;
-            
+            if (path.getParentPath() != null &&
+                path.getParentPath().getParentPath() != null &&
+                path.getParentPath().getParentPath().getLeaf().getKind() == Kind.NEW_CLASS) {
+                NewClassTree nct = (NewClassTree) path.getParentPath().getParentPath().getLeaf();
+                ClassTree body = nct.getClassBody();
+
+                if (body != null &&
+                    (body.getExtendsClause() == path.getLeaf() ||
+                     body.getImplementsClause().contains(path.getLeaf()))) {
+                    return true;
+                }
+            }
+
             path = path.getParentPath();
         }
         

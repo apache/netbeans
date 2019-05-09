@@ -247,11 +247,11 @@ public class Attribute extends NodeImpl implements Node, org.w3c.dom.Attr {
     private String insertEntityReference(String text) {
         // just make sure we replace & with &amp; and not &amp; with &&amp;amp; and so on
         String result = removeEntityReference(text);
-        result = result.replaceAll("&","&amp;");   //replace &
-        result = result.replaceAll("<","&lt;");    //replace <
+        result = result.replace("&","&amp;");   //replace &
+        result = result.replace("<","&lt;");    //replace <
 //        result = result.replaceAll(">","&gt;");    //replace >
-        result = result.replaceAll("'","&apos;");  //replace '
-        result = result.replaceAll("\"","&quot;"); //replace "
+        result = result.replace("'","&apos;");  //replace '
+        result = result.replace("\"","&quot;"); //replace "
         return result;
     }
 

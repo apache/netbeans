@@ -307,7 +307,7 @@ public class JSFClientGenerator {
         if (pagesRootFolder.getFileObject(JSFCRUD_JAVASCRIPT) == null) {
             String content = JSFFrameworkProvider.readResource(JSFClientGenerator.class.getClassLoader().getResourceAsStream(RESOURCE_FOLDER + JSFCRUD_JAVASCRIPT), "UTF-8"); //NOI18N
             FileObject target = FileUtil.createData(pagesRootFolder, JSFCRUD_JAVASCRIPT);//NOI18N
-            content = content.replaceAll("__WEB_BUSY_ICON_PATH__", Matcher.quoteReplacement(busyIconPath));//NOI18N
+            content = content.replace("__WEB_BUSY_ICON_PATH__", Matcher.quoteReplacement(busyIconPath));//NOI18N
             JSFFrameworkProvider.createFile(target, content, projectEncoding);  //NOI18N
         }
 
@@ -549,7 +549,7 @@ public class JSFClientGenerator {
         content = content.replaceAll(LINK_TO_SS_VAR, Matcher.quoteReplacement(styleAndScriptTags));
         content = content.replaceAll(MANAGED_BEAN_NAME_VAR, Matcher.quoteReplacement(managedBean));
         content = content.replaceAll(FIELD_NAME_VAR, Matcher.quoteReplacement(fieldName+"Items"));  //NOI18N
-        content = content.replaceAll("__TABLE_VAR_NAME__", Matcher.quoteReplacement(tableVarName));
+        content = content.replace("__TABLE_VAR_NAME__", Matcher.quoteReplacement(tableVarName));
         
         final StringBuffer tableBody = new StringBuffer();
 
@@ -561,7 +561,7 @@ public class JSFClientGenerator {
         commands = commands.replaceAll(MANAGED_BEAN_NAME_VAR, Matcher.quoteReplacement(managedBean));
         commands = commands.replaceAll(ENTITY_NAME_VAR, Matcher.quoteReplacement(simpleEntityName));
         commands = commands.replaceAll(JSF_UTIL_CLASS_VAR, Matcher.quoteReplacement(jsfUtilClass));
-        commands = commands.replaceAll("__REMOVE_METHOD__", useSessionBean ? "remove" : "destroy");
+        commands = commands.replace("__REMOVE_METHOD__", useSessionBean ? "remove" : "destroy");
 
         final String allCommands = commands;
 
@@ -674,7 +674,7 @@ public class JSFClientGenerator {
         JsfForm.createTablesForRelated(controller, typeElement, JsfForm.FORM_TYPE_DETAIL, managedBean + "." + fieldName, idProperty, isInjection, tableBody, embeddedPkSupport, controllerClass, entities, jsfUtilClass);
         content = content.replaceAll(TABLE_BODY_VAR, Matcher.quoteReplacement(tableBody.toString()));
         content = content.replaceAll(FIELD_NAME_VAR,Matcher.quoteReplacement(fieldName));
-        content = content.replaceAll("__REMOVE_VALUE__", useSessionBean ? "remove" : "destroy");
+        content = content.replace("__REMOVE_VALUE__", useSessionBean ? "remove" : "destroy");
         content = content.replaceAll(JSF_UTIL_CLASS_VAR, Matcher.quoteReplacement(jsfUtilClass));
         content = content.replaceAll(LINK_TO_INDEX_VAR, Matcher.quoteReplacement(linkToIndex));
         try {

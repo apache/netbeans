@@ -132,9 +132,9 @@ public class RatReportTask extends Task {
         Set<String> clusterList = new TreeSet<>();
         for (String key : getProject().getProperties().keySet()) {
             if (key.startsWith("nb.cluster.")) {
-                String simplfiedKey = key.replaceAll("nb.cluster.", "");
-                simplfiedKey = simplfiedKey.replaceAll(".dir", "");
-                simplfiedKey = simplfiedKey.replaceAll(".depends", "");
+                String simplfiedKey = key.replace("nb.cluster.", "");
+                simplfiedKey = simplfiedKey.replace(".dir", "");
+                simplfiedKey = simplfiedKey.replace(".depends", "");
                 clusterList.add(simplfiedKey);
                 modulebycluster.put(simplfiedKey, new HashSet<>());
             }
@@ -219,7 +219,7 @@ public class RatReportTask extends Task {
             if (repo != null) {
                 sb.append(repo).append("/tree/master/");
             }
-            sb.append(fileentry.replaceAll(" ", "%20"));
+            sb.append(fileentry.replace(" ", "%20"));
         }
         return sb.toString();
     }

@@ -434,7 +434,7 @@ public class DomainEditor {
             // to -agentpath:C:\Program Files\lib\profileragent.dll="C:\Program Files\lib",5140
             String modifiedOption = jvmOption.replaceAll("\\\\\"", "#"); // replace every \" by #
             modifiedOption = modifiedOption.replaceAll("\\\"", ""); // delete all "
-            modifiedOption = modifiedOption.replaceAll("#", "\""); // replace every # by "
+            modifiedOption = modifiedOption.replace("#", "\""); // replace every # by "
 
             // Modification for AS 9.0, GlassFish should be done only if native launcher isn't used,
             // otherwise will cause server startup failure. It seems that currently native launcher is used

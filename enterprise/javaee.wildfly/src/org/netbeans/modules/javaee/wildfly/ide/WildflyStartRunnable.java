@@ -170,7 +170,7 @@ class WildflyStartRunnable implements Runnable {
                                 while ((line = br.readLine()) != null) {
                                     noNL.append(line);
                                 }
-                                value = noNL.toString().replaceAll("<", "").replace(">", "").replace(" ", "").replace("\"", "").replace('|', ',').trim();
+                                value = noNL.toString().replace("<", "").replace(">", "").replace(" ", "").replace("\"", "").replace('|', ',').trim();
                             } catch (IOException ioe) {
                                 Exceptions.attachLocalizedMessage(ioe, NbBundle.getMessage(WildflyStartRunnable.class, "ERR_NonProxyHostParsingError"));
                                 Logger.getLogger("global").log(Level.WARNING, null, ioe);

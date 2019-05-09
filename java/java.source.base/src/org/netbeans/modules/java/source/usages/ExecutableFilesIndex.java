@@ -164,7 +164,7 @@ public class ExecutableFilesIndex {
                 attribute.append("::"); //NOI18N
             }
             s = s.replaceAll("\\\\", "\\\\\\\\"); //NOI18N
-            s = s.replaceAll(":", "\\\\d"); //NOI18N
+            s = s.replace(":", "\\\\d"); //NOI18N
 
             attribute.append(s);
 

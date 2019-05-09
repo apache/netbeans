@@ -72,8 +72,8 @@ public class GoToSymbolProvider implements SearchProvider {
     }
      
     private static String escapeLtGt(String input) {
-        String temp = input.replaceAll("<", "&lt;"); // NOI18N
-        temp = temp.replaceAll(">", "&gt;"); // NOI18N
+        String temp = input.replace("<", "&lt;"); // NOI18N
+        temp = temp.replace(">", "&gt;"); // NOI18N
         return temp;
     }
      

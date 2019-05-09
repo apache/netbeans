@@ -145,9 +145,9 @@ public class EvaluationResultsModel extends VariablesModel {
             if (str != null) {
                 StringBuffer buf = new StringBuffer();
                 buf.append("<html>");
-                str = str.replaceAll ("&", "&amp;");
-                str = str.replaceAll ("<", "&lt;");
-                str = str.replaceAll (">", "&gt;");
+                str = str.replace ("&", "&amp;");
+                str = str.replace ("<", "&lt;");
+                str = str.replace (">", "&gt;");
                 str = str.replaceAll ("\n", "<br/>");
                 str = str.replaceAll ("\r", "");
                 buf.append(str);

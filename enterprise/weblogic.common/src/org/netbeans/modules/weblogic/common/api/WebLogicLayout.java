@@ -197,7 +197,7 @@ public final class WebLogicLayout {
             File mwHome = getMiddlewareHome(config.getServerHome());
             if (mwHome != null) {
                 File serverModuleFile = FileUtil.normalizeFile(new File(mwHome,
-                        serverModulesJar.replaceAll("/", Matcher.quoteReplacement(File.separator)))); // NOI18N
+                        serverModulesJar.replace("/", Matcher.quoteReplacement(File.separator)))); // NOI18N
                 return new File[] {weblogicJar, serverModuleFile};
             }
         }

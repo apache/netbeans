@@ -165,7 +165,7 @@ public class WadlModeler extends ResourceModel {
     }
     
     private String findResourceNameFromPath(String path) {
-        String name = path.replaceAll("/", "");
+        String name = path.replace("/", "");
         name = name.replace("{", "");
         name = name.replace("}", "");
         return ClientStubModel.normalizeName(name);

@@ -335,7 +335,7 @@ public class GrailsArtifactWizardIterator implements WizardDescriptor.ProgressIn
             packageName = FileUtil.getRelativePath(groups.get(i).getRootFolder(), targetFolder);
         }
         if (packageName != null) {
-            packageName = packageName.replaceAll("/", "."); // NOI18N
+            packageName = packageName.replace("/", "."); // NOI18N
         }
         return packageName;
     }

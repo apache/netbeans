@@ -89,7 +89,7 @@ public final class ServerURLMapping {
         try {
             URL url = projectFile.toURL();
             String urlString = url.toURI().toString();
-            String urlString2 = urlString.replaceAll("file:/", "file:///"); //NOI18N
+            String urlString2 = urlString.replace("file:/", "file:///"); //NOI18N
             if (!urlString.equals(urlString2)) {
                 url = new URL(urlString2);
             }

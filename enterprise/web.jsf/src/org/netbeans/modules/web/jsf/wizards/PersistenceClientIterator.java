@@ -287,7 +287,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                 progressContributor.progress(progressMsg, progressIndex++);
                 progressPanel.setText(progressMsg);
                 String content = JpaControllerUtil.readResource(PersistenceClientIterator.class.getClassLoader().getResourceAsStream(JSFClientGenerator.RESOURCE_FOLDER + UTIL_CLASS_NAMES[i] + ".java.txt"), "UTF-8"); //NOI18N
-                content = content.replaceAll("__PACKAGE__", utilPackage);
+                content = content.replace("__PACKAGE__", utilPackage);
                 FileObject target = FileUtil.createData(utilFolder, UTIL_CLASS_NAMES[i] + "."+JAVA_EXT);//NOI18N
                 String projectEncoding = JpaControllerUtil.getProjectEncodingAsString(project, target);
                 JpaControllerUtil.createFile(target, content, projectEncoding);  //NOI18N

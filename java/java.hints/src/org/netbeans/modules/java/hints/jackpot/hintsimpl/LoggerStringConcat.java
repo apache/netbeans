@@ -178,7 +178,7 @@ public class LoggerStringConcat {
     }
     
     private static String literalToMessageFormat(String v) {
-        String fmtValue = v.replaceAll("'", "''");
+        String fmtValue = v.replace("'", "''");
         fmtValue = fmtValue.replaceAll(Pattern.quote("{"), Matcher.quoteReplacement("'{'"));
         fmtValue = fmtValue.replaceAll(Pattern.quote("}"), Matcher.quoteReplacement("'}'"));
         return fmtValue;

@@ -404,7 +404,7 @@ public final class JWSProjectPropertiesUtils {
         if (target != null) {
             if ((target.getAttribute("depends") != null && target.getAttribute("depends").contains("jnlp"))) { // NOI18N
                 String old = target.getAttribute("depends"); // NOI18N
-                old = old.replaceAll("jnlp", ""); // NOI18N
+                old = old.replace("jnlp", ""); // NOI18N
                 old = old.replaceAll(",[\\s]*$", ""); // NOI18N
                 old = old.replaceAll("^[\\s]*,", ""); // NOI18N
                 old = old.replaceAll(",[\\s]*,", ","); // NOI18N

@@ -446,7 +446,7 @@ public final class WLPluginProperties {
             String mwHome = prodProps.getMiddlewareHome();
             if (mwHome != null) {
                 File serverModuleFile = FileUtil.normalizeFile(new File(new File(mwHome),
-                        serverModulesJar.replaceAll("/", Matcher.quoteReplacement(File.separator)))); // NOI18N
+                        serverModulesJar.replace("/", Matcher.quoteReplacement(File.separator)))); // NOI18N
                 return new File[] {weblogicJar, serverModuleFile};
             }
         }
@@ -516,7 +516,7 @@ public final class WLPluginProperties {
 
         // init the input stream for the file and the w3c document object
         File file = new File(serverRoot + File.separator
-                + DOMAIN_LIST.replaceAll("/", Matcher.quoteReplacement(File.separator)));
+                + DOMAIN_LIST.replace("/", Matcher.quoteReplacement(File.separator)));
         if (!file.exists() || !file.canRead()) {
             return Collections.emptyList();
         }

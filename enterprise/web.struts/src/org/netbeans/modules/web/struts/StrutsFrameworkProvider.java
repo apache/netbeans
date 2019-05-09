@@ -157,7 +157,7 @@ public class StrutsFrameworkProvider extends WebFrameworkProvider {
             if (resource != null){
                 String name = resource.getAttributeValue("parameter");
                 if (name != null) {
-                    name = name.replaceAll("/", ".");
+                    name = name.replace("/", ".");
                     panel.setAppResource(name);
                 }
             }

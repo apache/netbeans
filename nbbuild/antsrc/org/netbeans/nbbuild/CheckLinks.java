@@ -466,7 +466,7 @@ public class CheckLinks extends MatchingTask {
                         try {
                             //URI does not handle jar:file: protocol
                             //okurls.add(new URI(base.getScheme(), base.getUserInfo(), base.getHost(), base.getPort(), base.getPath(), base.getQuery(), /*fragment*/name));
-                            okurls.add(new URI(base + "#" + name.replaceAll(" ", "%20")));
+                            okurls.add(new URI(base + "#" + name.replace(" ", "%20")));
                         } catch (URISyntaxException e) {
                             errors.add(normalize(basepath, mappers) + findLocation(content, m.start(4)) + ": bad anchor name: " + e.getMessage());
                         }
@@ -492,7 +492,7 @@ public class CheckLinks extends MatchingTask {
                         String location = findLocation(content, m.start(4));
                         String fixedUri;
                         if (uri.indexOf(' ') != -1) {
-                            fixedUri = uri.replaceAll(" ", "%20");
+                            fixedUri = uri.replace(" ", "%20");
                             if (checkspaces) {
                                 errors.add(normalize(basepath, mappers) + location + ": spaces in URIs should be encoded as \"%20\": " + uri);
                             }

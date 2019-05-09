@@ -102,7 +102,7 @@ public final class ContentPanel extends JPanel {
     
     private static String prepareToolTip (String original) {
         String res = "";
-        res = "<html>" + original.replaceAll (",", "<br>")+ "</html>"; // NOI18N
+        res = "<html>" + original.replace (",", "<br>")+ "</html>"; // NOI18N
         return res;
     }
     

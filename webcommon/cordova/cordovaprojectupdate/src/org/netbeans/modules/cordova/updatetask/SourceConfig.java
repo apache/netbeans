@@ -216,7 +216,7 @@ public class SourceConfig extends XMLFile {
             String part = tokenizer.nextElement().toString();
             // Cordova replaces all occurences of "-" with "_" during the build,
             // so it is valid to have a dash in app. id (issue #249337).
-            part = part.replaceAll("-", "_"); //NOI18N
+            part = part.replace("-", "_"); //NOI18N
             if (part.isEmpty() || !SourceVersion.isIdentifier(part) || SourceVersion.isKeyword(part)) {
                 return false;
             }

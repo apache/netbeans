@@ -59,7 +59,7 @@ public final class RefactoringUtil {
     }
     
     private static String encodeAngleBrackets(String str) {
-        return str.replaceAll("<", "&lt;").replaceAll(">", "&gt;"); //NOI18N
+        return str.replace("<", "&lt;").replace(">", "&gt;"); //NOI18N
     }
 
     private static String highlight(String text, OffsetRange offsetRange) {

@@ -345,7 +345,7 @@ public class CompletionHandler implements CodeCompletionHandler {
             }
 
             if (forURL) {
-                methodSignature = methodSignature.replaceAll(", ", ",%20");
+                methodSignature = methodSignature.replace(", ", ",%20");
             }
 
             return methodSignature;

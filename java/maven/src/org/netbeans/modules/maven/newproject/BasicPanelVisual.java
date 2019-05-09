@@ -740,7 +740,7 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
         
         if (projectNameTextField.getDocument() == doc) {
             String projName = projectNameTextField.getText().trim();
-            txtArtifactId.setText(projName.replaceAll(" ", ""));
+            txtArtifactId.setText(projName.replace(" ", ""));
         }
         
         if (!changedPackage && (projectNameTextField.getDocument() == doc || txtGroupId.getDocument() == doc)) {

@@ -115,7 +115,7 @@ public class EngineContextProviderImpl extends SourcePathProvider {
             SourcePathProvider provider = getDefaultContext();
             if (provider != null) {
                 String path = relativePath.substring(11);
-                path = path.replaceAll("/_", "/"); // NOI8N
+                path = path.replace("/_", "/"); // NOI8N
                 if (path.startsWith("/")) {
                     path = path.substring(1);
                 }

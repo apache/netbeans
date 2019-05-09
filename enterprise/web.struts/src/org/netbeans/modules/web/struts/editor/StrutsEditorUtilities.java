@@ -345,7 +345,7 @@ public class StrutsEditorUtilities {
         StringWriter sWriter = new StringWriter();
         bean.writeNode(sWriter);
         String sBean = sWriter.toString();
-        sBean = sBean.replaceAll("><", ">"+END_LINE+"<");               //NOI18N
+        sBean = sBean.replace("><", ">"+END_LINE+"<");               //NOI18N
         return sBean;
     }
     

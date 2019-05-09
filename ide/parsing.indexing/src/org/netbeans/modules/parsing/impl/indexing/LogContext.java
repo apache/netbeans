@@ -1000,10 +1000,10 @@ import org.openide.util.BaseUtilities;
         } else {
             sb.append("\nNOT executed");
         }
-        sb.append("\nScanned roots: ").append(scannedSourceRoots.values().toString().replaceAll(",", "\n\t")).
+        sb.append("\nScanned roots: ").append(scannedSourceRoots.values().toString().replace(",", "\n\t")).
                 append("\n, total time: ").append(totalScanningTime);
         
-        sb.append("\nCurrent root(s): ").append(frozenCurrentRoots.values().toString().replaceAll(",", "\n\t"));
+        sb.append("\nCurrent root(s): ").append(frozenCurrentRoots.values().toString().replace(",", "\n\t"));
         sb.append("\nCurrent indexer(s): ");
         for (RootInfo ri : frozenCurrentRoots.values()) {
             sb.append("\n\t").append(ri.url);

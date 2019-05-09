@@ -758,11 +758,11 @@ public class ActionTracker {
     }
 
     private static String getShortenName(String name) {
-        name = name.replaceAll("javax.swing", "j");
-        name = name.replaceAll("org.netbeans.modules", "o.n.m");
-        name = name.replaceAll("org.netbeans", "o.n");
-        name = name.replaceAll("org.openide.awt", "o.o.a");
-        name = name.replaceAll("org.openide", "o.o");
+        name = name.replace("javax.swing", "j");
+        name = name.replace("org.netbeans.modules", "o.n.m");
+        name = name.replace("org.netbeans", "o.n");
+        name = name.replace("org.openide.awt", "o.o.a");
+        name = name.replace("org.openide", "o.o");
         return name;
     }
 

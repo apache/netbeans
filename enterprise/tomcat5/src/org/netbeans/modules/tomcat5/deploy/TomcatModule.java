@@ -76,7 +76,7 @@ public final class TomcatModule implements TargetModuleID {
     }
 
     public String getWebURL () {
-        return target.getServerUri () + path.replaceAll(" ", "%20");
+        return target.getServerUri () + path.replace(" ", "%20");
     }
     
     public String toString () {

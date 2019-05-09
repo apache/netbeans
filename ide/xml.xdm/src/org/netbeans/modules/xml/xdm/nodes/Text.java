@@ -316,9 +316,9 @@ public class Text extends NodeImpl implements Node, org.w3c.dom.Text {
     private String insertEntityReference(String text) {
         // just make sure we replace & with &amp; and not &amp; with &&amp;amp; and so on
         String result = removeEntityReference(text);
-        result = result.replaceAll("&","&amp;");   //replace &
-        result = result.replaceAll("<","&lt;");    //replace <
-        result = result.replaceAll(">","&gt;");    //replace >
+        result = result.replace("&","&amp;");   //replace &
+        result = result.replace("<","&lt;");    //replace <
+        result = result.replace(">","&gt;");    //replace >
 //        result = result.replaceAll("'","&apos;");  //replace '
 //        result = result.replaceAll("\"","&quot;"); //replace "
         return result;

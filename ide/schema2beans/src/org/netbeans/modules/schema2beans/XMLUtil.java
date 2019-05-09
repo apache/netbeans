@@ -146,16 +146,16 @@ public class XMLUtil {
     private static String convertChars(String msg, boolean attribute) {
         String result=msg;
         if (msg.indexOf("&")>=0) //NOI18N
-            result = result.replaceAll("&","&amp;"); //NOI18N
+            result = result.replace("&","&amp;"); //NOI18N
         if (msg.indexOf("<")>=0) //NOI18N
-            result = result.replaceAll("<","&lt;"); //NOI18N
+            result = result.replace("<","&lt;"); //NOI18N
         if (msg.indexOf(">")>=0) //NOI18N   
-            result = result.replaceAll(">","&gt;"); //NOI18N
+            result = result.replace(">","&gt;"); //NOI18N
         if (attribute) { //NOI18N
             if (msg.indexOf("\"")>=0) //NOI18N
                 result = result.replaceAll("\"","&quot;"); //NOI18N
             if (msg.indexOf("'")>=0) //NOI18N
-                result = result.replaceAll("'","&apos;"); //NOI18N
+                result = result.replace("'","&apos;"); //NOI18N
             if (msg.indexOf("\n")>=0) //NOI18N
                 result = result.replaceAll("\n","&#xA"); //NOI18N
             if (msg.indexOf("\t")>=0) //NOI18N

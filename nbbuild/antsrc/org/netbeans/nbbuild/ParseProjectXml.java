@@ -1480,7 +1480,7 @@ public final class ParseProjectXml extends Task {
         String corePattern = pubpkgs.
                 replaceAll(" +", "").
                 replaceAll("\\.", "/").
-                replaceAll(",", "|").
+                replace(",", "|").
                 replaceAll("\\*\\*", "(.+/)?").
                 replaceAll("\\*", "");
         // include e.g. icons so that annotation processors using validateResource can confirm they exist

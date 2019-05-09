@@ -127,6 +127,7 @@ public final class DockerEvent extends EventObject {
         return time;
     }
 
+    @Override
     public DockerInstance getSource() {
         return instance;
     }

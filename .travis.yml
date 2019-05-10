@@ -15,6 +15,10 @@
 # specific language governing permissions and limitations
 # under the License.
 language: java
+before_script:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start || echo No X11
+  - sleep 3
 script:
   - if [ "x$RAT" == "xtrue" ]; then (ant -quiet build-source-config && mkdir scratch && cd scratch && unzip -qq ../nbbuild/build/release-src* && ant -quiet rat -Drat-report.haltonfailure=true && cd .. && rm -rf scratch); fi
   - if [ "x$OPTS" == "x" ]; then OPTS="-quiet -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"; fi

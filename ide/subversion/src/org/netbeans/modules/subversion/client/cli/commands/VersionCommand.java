@@ -84,7 +84,7 @@ public class VersionCommand extends SvnCommand {
             if (pos > -1) {
                 String vString = string.substring(pos + 9);
                 Subversion.LOG.log(Level.INFO, "Commandline client version: {0}", vString);
-                Version version = Version.parse(vString.replace("-dev", ""));
+                Version version = Version.parse(vString, "-");
                 if (version.lowerThan(VERSION_15)) {
                     unsupportedVersion = true;
                     return false;

@@ -92,11 +92,30 @@ public final class Splash implements Stamps.Updater {
     private SplashPainter painter;
     private SplashComponent comp;
     private SplashScreen splashScreen;
+    /**
+     * Indicate if we should try to take advantage of java's "-splash" parameter, which allows
+     * the splash screen to be displayed at an earlier stage in the app startup sequence. See the
+     * original Buzilla RFE at https://netbeans.org/bugzilla/show_bug.cgi?id=60142 . This requires
+     * splash screen image(s) to be written to the cache directory the first time NetBeans starts,
+     * to be available during subsequent NetBeans startups. Despite
+     * https://bugs.openjdk.java.net/browse/JDK-8145173 and
+     * https://bugs.openjdk.java.net/browse/JDK-8151787 , as of OpenJDK 10.0.2 and OpenJDK 12.0.1
+     * I have found no way to make this work properly with HiDPI screens on Windows. HiDPI filenames
+     * attempted include "splash@2x.png", "splash@200pct.png", "splash.scale-200.png", and
+     * "splash.java-scale200.png". In all of these cases, the regular "splash.png" file is used
+     * instead of one of the 2x-scaled ones (for a system DPI scaling of 200%), and the splash
+     * screen becomes half the expected size. Thus, to we disable this feature for now, in favor of
+     * a slightly delayed splash screen that appears with the correct size and resolution on HiDPI
+     * screens.
+     *
+     * <p>See also https://issues.apache.org/jira/browse/NETBEANS-67 .
+     */
+    private static final boolean USE_LAUNCHER_SPLASH = false;
     
     private Splash() {
         Stamps s = Stamps.getModulesJARs();
         if (!CLIOptions.isNoSplash() && !GraphicsEnvironment.isHeadless()) {
-            if (!s.exists("splash.png")) {
+            if (USE_LAUNCHER_SPLASH && !s.exists("splash.png")) {
                 s.scheduleSave(this, "splash.png", false);
             }
             try {
@@ -209,17 +228,29 @@ public final class Splash implements Stamps.Updater {
         c.setBounds(Utilities.findCenterBounds(c.getSize()));
     }
 
-    /** Loads a splash image from its source 
+    /**
+     * Loads a splash image from its source. For high-resolution rendering on HiDPI displays, the
+     * returned image should be converted to a HiDPI-aware Icon instance via
+     * {@link ImageUtilities#image2Icon} prior to painting.
+     *
      *  @param about if true then about image is loaded, if false splash image is loaded
      */
     public static Image loadContent(boolean about) {
+        return ImageUtilities.icon2Image(loadContentIcon(about));
+    }
+
+    private static Icon loadContentIcon(boolean about) {
+        Image ret = null;
         if (about) {
-            Image img = ImageUtilities.loadImage("org/netbeans/core/startup/about.png", true);
-            if (img != null) {
-                return img;
-            }
+            ret = ImageUtilities.loadImage("org/netbeans/core/startup/about.png", true);
         }
-        return ImageUtilities.loadImage("org/netbeans/core/startup/splash.gif", true);
+        if (ret == null)
+            ret = ImageUtilities.loadImage("org/netbeans/core/startup/splash.gif", true);
+        if (ret == null)
+            return null;
+        return new ScaledBitmapIcon(ret,
+                Integer.parseInt(NbBundle.getMessage(Splash.class, "SPLASH_WIDTH")),
+                Integer.parseInt(NbBundle.getMessage(Splash.class, "SPLASH_HEIGHT")));
     }
 
     @Override
@@ -256,7 +287,7 @@ public final class Splash implements Stamps.Updater {
          */
         @Override
         public void paint(Graphics graphics) {
-            painter.graphics = graphics;
+            painter.graphics = (Graphics2D) graphics;
             painter.paint();
         }
         @Override
@@ -388,9 +419,9 @@ public final class Splash implements Stamps.Updater {
         private int maxSteps = 0;
         private int barStart = 0;
         private int barLength = 0;
-        private Image image;
+        private Icon image;
         private String text;
-        private Graphics graphics;
+        private Graphics2D graphics;
         private final JComponent comp;
         private final boolean about;
 
@@ -399,7 +430,7 @@ public final class Splash implements Stamps.Updater {
          * param about true is this component will be used in about dialog
          */
         public SplashPainter(Graphics graphics, JComponent comp, boolean about) {
-            this.graphics = graphics;
+            this.graphics = (Graphics2D) graphics;
             this.comp = comp;
             this.about = about;
         }
@@ -440,7 +471,7 @@ public final class Splash implements Stamps.Updater {
                 bar = new Rectangle(0, 0, 80, 10);
             }
 
-            image = loadContent(about);
+            image = loadContentIcon(about);
 
             if (comp != null)
               comp.setFont(statusBox.font);
@@ -565,12 +596,14 @@ public final class Splash implements Stamps.Updater {
                 int bl = bar.width * progress / maxSteps - barStart;
                 if (bl > 1 || barStart % 2 == 0) {
                     barLength = bl;
-                    bar_inc = new Rectangle(bar.x + barStart, bar.y, barLength + 1, bar.height);
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
                             init();
-                            repaint(bar_inc);
+                            /* Don't try to be smart about which section of the bar to repaint.
+                            There can be tricky rounding issues on HiDPI screens with non-integral
+                            scaling factors (e.g. 150%). */
+                            repaint(bar);
                         }
                     });
                 }
@@ -600,10 +633,9 @@ public final class Splash implements Stamps.Updater {
         }
 	
         void paint() {
-            graphics.drawImage(image, 0, 0, null);
+            image.paintIcon(comp, graphics, 0, 0);
             // turn anti-aliasing on for the splash text
-            Graphics2D g2d = (Graphics2D) graphics;
-            g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+            graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
                     RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
             if (versionBox != null) {
@@ -618,12 +650,18 @@ public final class Splash implements Stamps.Updater {
             if (!noBar && maxSteps > 0/* && barLength > 0*/) {
                 graphics.setColor(color_bar);
                 graphics.fillRect(bar.x, bar.y, barStart + barLength, bar.height);
-                graphics.setColor(color_corner);
-                graphics.drawLine(bar.x, bar.y, bar.x, bar.y + bar.height);
-                graphics.drawLine(bar.x + barStart + barLength, bar.y, bar.x + barStart + barLength, bar.y + bar.height);
-                graphics.setColor(color_edge);
-                graphics.drawLine(bar.x, bar.y + bar.height / 2, bar.x, bar.y + bar.height / 2);
-                graphics.drawLine(bar.x + barStart + barLength, bar.y + bar.height / 2, bar.x + barStart + barLength, bar.y + bar.height / 2);
+                /* To discourage visual artifacts on HiDPI displays, only paint the distinct
+                corner/edge colors if the branding actually calls for them. */
+                if (!color_bar.equals(color_corner)) {
+                  graphics.setColor(color_corner);
+                  graphics.drawLine(bar.x, bar.y, bar.x, bar.y + bar.height);
+                  graphics.drawLine(bar.x + barStart + barLength, bar.y, bar.x + barStart + barLength, bar.y + bar.height);
+                }
+                if (!color_bar.equals(color_edge)) {
+                  graphics.setColor(color_edge);
+                  graphics.drawLine(bar.x, bar.y + bar.height / 2, bar.x, bar.y + bar.height / 2);
+                  graphics.drawLine(bar.x + barStart + barLength, bar.y + bar.height / 2, bar.x + barStart + barLength, bar.y + bar.height / 2);
+                }
                 barStart += barLength;
                 barLength = 0;
             }

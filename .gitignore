@@ -6,6 +6,7 @@
 /*/*/*/nbproject/private/
 /*/*/*/build/
 /*/*/*/dist/
+/*/external/*.ttf
 /*/external/*.zip
 /*/external/*.jar
 /*/external/*.dll
@@ -87,3 +88,13 @@
 /groovy/gradle/netbeans-gradle-tooling/.gradle/
 /groovy/gradle/netbeans-gradle-tooling/gradle/wrapper/gradle-wrapper.jar
 /groovy/gradle/release/modules/gradle/daemon-loader/.gradle/
+
+# Compile-Time Generated Images #
+#################################
+/nb/ide.branding/core.startup/src/org/netbeans/core/startup/about_dark_nb.png
+/nb/ide.branding/core.startup/src/org/netbeans/core/startup/about_nb.png
+/nb/ide.branding/core.startup/src/org/netbeans/core/startup/splash_dark_nb.gif
+/nb/ide.branding/core.startup/src/org/netbeans/core/startup/splash_nb.gif
+/platform/core.startup/src/org/netbeans/core/startup/splash.gif
+/platform/core.startup/src/org/netbeans/core/startup/splash_dark.gif
+

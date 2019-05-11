@@ -29,6 +29,24 @@ Contributor(s): Vincent Brabant, Maxym Mykhalchuk
   <taskdef name="locjar" classname="org.netbeans.nbbuild.LocalizedJar"
            classpath="${nbantext.jar}"/>
 
+  <target name="build-init" depends="projectized.build-init">
+    <taskdef name="splash-screen" classname="org.netbeans.nbbuild.assets.GenerateSplashScreenTask" classpath="${nbantext.jar}" />
+    <echo message="Generating splash screens with build number ${buildnum}" />
+    <splash-screen 
+      font='../../nbbuild/external/montserrat-medium.ttf' 
+      output='core.startup/src/org/netbeans/core/startup/splash_nb.gif'>IDE ${buildnum}</splash-screen>
+    <splash-screen 
+      font='../../nbbuild/external/montserrat-medium.ttf' 
+      output='core.startup/src/org/netbeans/core/startup/splash_dark_nb.gif'>IDE ${buildnum}</splash-screen>
+    <echo message="Generating about screens with build number ${buildnum}" />
+    <splash-screen 
+      about="true" font='../../nbbuild/external/montserrat-medium.ttf' 
+      output='core.startup/src/org/netbeans/core/startup/about_nb.png'>IDE ${buildnum}</splash-screen>
+    <splash-screen 
+      about="true" font='../../nbbuild/external/montserrat-medium.ttf' 
+      output='core.startup/src/org/netbeans/core/startup/about_dark_nb.png'>IDE ${buildnum}</splash-screen>
+  </target>
+
   <target name="netbeans-extra">
 
     <copy todir="${netbeans.dest.dir}">

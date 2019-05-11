@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,16 +18,14 @@
     under the License.
 
 -->
-<project name="platform/core.startup" default="build" basedir=".">
-    <import file="../../nbbuild/templates/projectized.xml"/>
-    <target name="build-init" depends="projectized.build-init">
-      <taskdef name="splash-screen" classname="org.netbeans.nbbuild.assets.GenerateSplashScreenTask" classpath="${nbantext.jar}" />
-      <echo message="Generating splash screens with build number ${buildnum}" />
-      <splash-screen 
-        font='../../nbbuild/external/montserrat-medium.ttf' 
-        output='src/org/netbeans/core/startup/splash.gif'>${buildnum}</splash-screen>
-      <splash-screen 
-        font='../../nbbuild/external/montserrat-medium.ttf' 
-        output='src/org/netbeans/core/startup/splash_dark.gif'>${buildnum}</splash-screen>
-    </target>
-</project>
+Tasks responsible for generating the following Apache NetBeans assets:
+- Apache NetBeans Platform splash image
+- Apache NetBeans IDE splash image
+- Apache NetBeans About image
+See <a href="https://issues.apache.org/jira/browse/NETBEANS-2455">NETBEANS-2455</a>.
+
+This directory contains also the following assets:
+
+- apache-netbeans-splash.svg - InkScape compatible SVG file.
+- apache-netbeans-splash.png - Template PNG file for screen image, with size 640x396
+- apache-netbeans-about.png - Template PNG file for about image, with size 529x327

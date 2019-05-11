@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1242"
+   height="768"
+   viewBox="0 0 328.61249 203.20001"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.1 r15371"
+   sodipodi:docname="apache-netbeans-splash.svg"
+   inkscape:export-filename="/home/antonio/REPOS/netbeans/nbbuild/antsrc/org/netbeans/nbbuild/assets/apache-netbeans-splash.png"
+   inkscape:export-xdpi="49.470001"
+   inkscape:export-ydpi="49.470001">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.70710678"
+     inkscape:cx="354.94648"
+     inkscape:cy="542.91458"
+     inkscape:document-units="mm"
+     inkscape:current-layer="g4761"
+     showgrid="false"
+     units="px"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1920"
+     inkscape:window-height="1012"
+     inkscape:window-x="0"
+     inkscape:window-y="33"
+     inkscape:window-maximized="1"
+     inkscape:measure-start="1320.88,200.818"
+     inkscape:measure-end="474,289.914">
+    <sodipodi:guide
+       position="125.4125,0"
+       orientation="1,0"
+       id="guide4713"
+       inkscape:locked="false"
+       inkscape:label="gr"
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="0,101.6"
+       orientation="0,1"
+       id="guide4715"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="62.706251,0"
+       orientation="1,0"
+       id="guide4717"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="187.83703,278.76212"
+       orientation="1,0"
+       id="guide4719"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="20.6375,125.81622"
+       orientation="1,0"
+       id="guide4721"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="307.975,114.87245"
+       orientation="1,0"
+       id="guide4723"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="205.42335,150.04512"
+       orientation="0,1"
+       id="guide4725"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="186.71449,125.34941"
+       orientation="0,1"
+       id="guide4727"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="209.5393,53.133185"
+       orientation="0,1"
+       id="guide4729"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="254.44058,76.706358"
+       orientation="0,1"
+       id="guide4731"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="287.3375,101.6"
+       orientation="1,0"
+       id="guide4769"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="346.86238,113.37574"
+       orientation="0,1"
+       id="guide4771"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="104.39547,53.133187"
+       orientation="1,0"
+       id="guide4775"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="342.37225,87.557502"
+       orientation="0,1"
+       id="guide5382"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="223.38386,35.172672"
+       orientation="0,1"
+       id="guide5384"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(0,-93.799983)"
+     id="g4761"
+     inkscape:groupmode="layer"
+     inkscape:label="LOGO_TEXT">
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke-width:0.26458332"
+       id="rect5380"
+       width="328.61249"
+       height="203.2"
+       x="0"
+       y="93.799988"
+       inkscape:label="white-background" />
+    <text
+       id="text4735"
+       y="222.41531"
+       x="124.16795"
+       style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:20.98398209px;line-height:1.25;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Medium';font-variant-ligatures:normal;font-variant-caps:small-caps;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#6c6e71;fill-opacity:0.81176471;stroke:none;stroke-width:0.25383911"
+       xml:space="preserve"
+       inkscape:label="IDE-Platform"><tspan
+         sodipodi:role="line"
+         id="tspan4773"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:20.98398209px;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Medium';font-variant-ligatures:normal;font-variant-caps:small-caps;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#6c6e71;fill-opacity:0.81176471;stroke-width:0.25383911"
+         x="124.16795"
+         y="222.41531">IDE &amp; Platform</tspan></text>
+    <text
+       id="text4739"
+       y="194.78751"
+       x="122.96889"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:30.44876289px;line-height:1.25;font-family:Montserrat;-inkscape-font-specification:Montserrat;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#1b6ac6;fill-opacity:1;stroke:none;stroke-width:0.31717458"
+       xml:space="preserve"
+       inkscape:label="NetBeans"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:32.98696136px;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Medium';font-variant-ligatures:discretionary-ligatures;font-variant-caps:small-caps;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#d22128;fill-opacity:1;stroke-width:0.31717458"
+         y="194.78751"
+         x="122.96889"
+         id="tspan4737"
+         sodipodi:role="line">NetBeans</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.03867531px;line-height:1.25;font-family:Montserrat;-inkscape-font-specification:Montserrat;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.17748617"
+       x="126.24415"
+       y="158.48007"
+       id="text3690"
+       inkscape:label="APACHE"><tspan
+         sodipodi:role="line"
+         id="tspan3688"
+         x="126.24415"
+         y="158.48007"
+         style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:14.67219162px;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Light';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#6d6e71;fill-opacity:1;stroke-width:0.17748617">APACHE</tspan></text>
+    <g
+       transform="matrix(0.18918919,0,0,0.18918919,20.70625,146.96755)"
+       style="fill:none;fill-rule:evenodd;stroke-width:0"
+       id="g4759"
+       inkscape:label="LOGO">
+      <path
+         style="fill:#a1c535"
+         inkscape:connector-curvature="0"
+         id="path4741"
+         d="M 222,0 V 99 L 86,178 0,128 Z" />
+      <path
+         style="fill:#add439"
+         inkscape:connector-curvature="0"
+         id="path4743"
+         d="M 444,128 358,178 222,99 V 0 Z" />
+      <path
+         style="fill:#1b6ac6"
+         inkscape:connector-curvature="0"
+         id="path4745"
+         d="M 444,384 358,334 V 178 l 86,-50 z" />
+      <path
+         style="fill:#2e90e8"
+         inkscape:connector-curvature="0"
+         id="path4747"
+         d="m 222,512 v -99 l 136,-79 86,50 z" />
+      <path
+         style="fill:#ea205e"
+         inkscape:connector-curvature="0"
+         id="path4749"
+         d="m 0,384 86,-50 136,79 v 99 z" />
+      <path
+         style="fill:#a5073e"
+         inkscape:connector-curvature="0"
+         id="path4751"
+         d="m 0,128 86,50 V 334 L 0,384 Z" />
+      <path
+         style="fill:#f1f6e2"
+         inkscape:connector-curvature="0"
+         id="path4753"
+         d="M 86,178 222,99 358,178 222,256 Z" />
+      <path
+         style="fill:#cedbe6"
+         inkscape:connector-curvature="0"
+         id="path4755"
+         d="M 222,256 358,178 V 334 L 222,413 Z" />
+      <path
+         style="fill:#ffffff"
+         inkscape:connector-curvature="0"
+         id="path4757"
+         d="m 86,178 136,78 V 413 L 86,334 Z" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.56010532px;line-height:1.25;font-family:Montserrat;-inkscape-font-specification:Montserrat;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#d22128;fill-opacity:1;stroke:none;stroke-width:0.11000109"
+       x="288.88821"
+       y="175.76903"
+       id="text4765"
+       inkscape:label="(R)"><tspan
+         sodipodi:role="line"
+         id="tspan4767"
+         x="288.88821"
+         y="175.76903"
+         style="stroke-width:0.11000109">®</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.39999962px;line-height:1.25;font-family:Montserrat;-inkscape-font-specification:Montserrat;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;display:none;fill:#a1c535;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="125.90004"
+       y="243.05852"
+       id="text5388"
+       inkscape:label="version-info"><tspan
+         sodipodi:role="line"
+         id="tspan5935"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:11.28888893px;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Medium';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#a1c535;fill-opacity:1"
+         x="125.90004"
+         y="243.05852">dev-20190507-16f196de95bf</tspan></text>
+    <rect
+       style="display:none;fill:#a5073e;fill-opacity:1;stroke-width:0.16733705"
+       id="rect5937"
+       width="266.69998"
+       height="2.9934101"
+       x="20.637503"
+       y="265.53152"
+       inkscape:label="progress-bar" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.39999962px;line-height:1.25;font-family:Montserrat;-inkscape-font-specification:Montserrat;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;display:none;fill:#1b6ac6;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="21.532444"
+       y="282.09384"
+       id="text5388-4"
+       inkscape:label="running text area"><tspan
+         sodipodi:role="line"
+         id="tspan5935-1"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:11.28888893px;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Medium';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332"
+         x="21.532444"
+         y="282.09384">Initializing area...</tspan></text>
+  </g>
+</svg>

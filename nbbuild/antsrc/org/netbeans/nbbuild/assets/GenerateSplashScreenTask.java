@@ -62,7 +62,7 @@ public class GenerateSplashScreenTask extends Task {
     @Override
     public void execute() throws BuildException {
         if (!font.exists() || !font.canRead() || !font.isFile()) {
-            throw new BuildException("True type font '%s' not found", font.getAbsolutePath());
+            throw new BuildException(String.format("True type font '%s' not found", font.getAbsolutePath()));
         }
         if (text == null) {
             throw new BuildException("Please specify a text to imprint in the splash screen.");
@@ -104,7 +104,7 @@ public class GenerateSplashScreenTask extends Task {
         try {
             ImageIO.write(splashScreenTemplateImage, "PNG", output);
         } catch (IOException ex) {
-            throw new BuildException("Cannot write splash image to '%s': %s", output.getAbsolutePath(), ex.getMessage());
+            throw new BuildException(String.format("Cannot write splash image to '%s': %s", output.getAbsolutePath(), ex.getMessage()));
         }
 
         log("Generated " + (about ? "about" : "splash") + " screen in " + output.getAbsolutePath());

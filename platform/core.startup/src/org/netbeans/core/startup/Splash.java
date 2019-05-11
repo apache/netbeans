@@ -27,6 +27,7 @@ import java.awt.image.BufferedImage;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
@@ -277,17 +278,20 @@ public final class Splash implements Stamps.Updater {
         final int textSize;
         final Font font;
         final FontMetrics fm;
+        final int horizontalAlignment;
         // Will be set by SwingUtilities.layoutCompoundLabel.
         final Rectangle effectiveBounds = new Rectangle();
 
         private TextBox(
-                Rectangle bounds, Color color, int textSize, Font font, FontMetrics fontMetrics)
+                Rectangle bounds, Color color, int textSize, Font font, FontMetrics fontMetrics,
+                int horizontalAlignment)
         {
             this.bounds = bounds;
             this.color = color;
             this.textSize = textSize;
             this.font = font;
             this.fm = fontMetrics;
+            this.horizontalAlignment = horizontalAlignment;
         }
 
         /**
@@ -300,7 +304,7 @@ public final class Splash implements Stamps.Updater {
               return;
             }
             SwingUtilities.layoutCompoundLabel(fm, text, null,
-                    BOTTOM, LEFT, BOTTOM, LEFT,
+                    BOTTOM, horizontalAlignment, BOTTOM, horizontalAlignment,
                     bounds, new Rectangle(), effectiveBounds, 0);
             if (graphics != null) {
               graphics.setColor(color);
@@ -339,6 +343,26 @@ public final class Splash implements Stamps.Updater {
             } catch (NumberFormatException nfe) {
                 //ignore - use default size
             }
+            int horizontalAlignment = LEFT;
+            try {
+              switch (bundle.getString(prefix + "HorizontalAlignment").toLowerCase(Locale.US)) {
+                case "left":
+                    horizontalAlignment = SwingConstants.LEFT;
+                    break;
+                case "center":
+                    horizontalAlignment = SwingConstants.CENTER;
+                    break;
+                case "right":
+                    horizontalAlignment = SwingConstants.RIGHT;
+                    break;
+                default:
+                    // Ignore; use default
+                    Util.err.warning(
+                        "Invalid horizontal alignment for splash screen text box"); //NOI18N
+              }
+            } catch (MissingResourceException e) {
+              // Ignore; use default
+            }
             Font font = new Font(bundle.getString(prefix + "FontType"), Font.PLAIN, size); // NOI18N
             FontMetrics fontMetrics;
             if (comp != null) {
@@ -346,12 +370,14 @@ public final class Splash implements Stamps.Updater {
             } else {
                 fontMetrics = graphics.getFontMetrics(font);
             }
-            return new TextBox(bounds, color, size, font, fontMetrics);
+            return new TextBox(bounds, color, size, font, fontMetrics, horizontalAlignment);
         }
     }
 
     private static class SplashPainter {
         TextBox statusBox;
+        // May be null.
+        TextBox versionBox;
         Color color_bar;
         Color color_edge;
         Color color_corner;
@@ -389,6 +415,7 @@ public final class Splash implements Stamps.Updater {
 
             ResourceBundle bundle = NbBundle.getBundle(Splash.class);
             statusBox = TextBox.parse(graphics, comp, bundle, "SplashRunningText", false);
+            versionBox = TextBox.parse(graphics, comp, bundle, "SplashVersionText", true);
             StringTokenizer st = new StringTokenizer(
                     bundle.getString("SplashProgressBarBounds"), " ,"); // NOI18N
             try {
@@ -579,6 +606,10 @@ public final class Splash implements Stamps.Updater {
             g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
                     RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
+            if (versionBox != null) {
+                String buildNumber = System.getProperty("netbeans.buildnumber");
+                versionBox.layout(NbBundle.getMessage(TopLogging.class, "currentVersion", buildNumber), graphics);
+            }
             if (text != null) {
                 statusBox.layout(text, graphics);
             }

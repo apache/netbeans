@@ -47,7 +47,7 @@
     </target>
 
     <target name="build-init" depends="projectized.build-init">
-        <unzip src="external/nbi.engine-external-binaries-8.2.zip" dest="${nbi.engine.dir}"/>
+        <unzip src="external/nbi.engine-external-binaries-11.zip" dest="${nbi.engine.dir}"/>
     </target>
 
 </project>

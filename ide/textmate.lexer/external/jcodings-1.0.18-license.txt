@@ -1,5 +1,5 @@
 Name: jcodings
-Version: 1.0.41
+Version: 1.0.18
 License: MIT-nocopyright
 Description: Needed by TextMate support for Eclipse
 Origin: https://github.com/jruby/jcodings

@@ -92,7 +92,9 @@ is the proper place.
             <description>
                 <p>If AttributeSet returned from HighlightsSequence contains key "virtual-text-prepend"
                    with a value of type String, the UI may optionally render the value as a
-                   virtual text before the text of the highlight.</p>
+                   virtual text before the text of the highlight. It is recommended to make the
+                   span of length 1, to avoid problems when the AttributeSet with "virtual-test-prepend"
+                   is merged with other AttributeSets, which could lead to duplication.</p>
             </description>
             <class name="HighlightsSequence" package="org.netbeans.spi.editor.highlighting"/>
         </change>

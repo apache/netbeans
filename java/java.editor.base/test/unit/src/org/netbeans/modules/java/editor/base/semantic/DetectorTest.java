@@ -280,23 +280,23 @@ public class DetectorTest extends TestBase {
                     "[PRIVATE, METHOD, DECLARATION], 0:145-0:153\n" +
                     "[PRIVATE, METHOD, UNUSED, DECLARATION], 0:197-0:201\n" +
                     "[PUBLIC, METHOD], 0:213-0:216\n" +
-                    "[param1:], 0:217-0:219\n" +
+                    "[param1:], 0:217-0:218\n" +
                     "[param2:], 0:221-0:222\n" +
                     "[PRIVATE, METHOD], 0:224-0:232\n" +
-                    "[param4:], 0:236-0:240\n" +
+                    "[param4:], 0:236-0:237\n" +
                     "[PUBLIC, METHOD], 0:250-0:253\n" +
-                    "[param1:], 0:254-0:256\n" +
+                    "[param1:], 0:254-0:255\n" +
                     "[param2:], 0:258-0:259\n" +
                     "[PRIVATE, METHOD], 0:261-0:269\n" +
-                    "[param4:], 0:273-0:277\n" +
-                    "[param5:], 0:279-0:283\n" +
+                    "[param4:], 0:273-0:274\n" +
+                    "[param5:], 0:279-0:280\n" +
                     "[PUBLIC, METHOD], 0:293-0:296\n" +
-                    "[param1:], 0:297-0:299\n" +
+                    "[param1:], 0:297-0:298\n" +
                     "[param2:], 0:301-0:302\n" +
                     "[PRIVATE, METHOD], 0:304-0:312\n" +
-                    "[param4:], 0:316-0:320\n" +
-                    "[param5:], 0:322-0:326\n" +
-                    "[param5:], 0:328-0:332\n");
+                    "[param4:], 0:316-0:317\n" +
+                    "[param5:], 0:322-0:323\n" +
+                    "[param5:], 0:328-0:329\n");
     }
 
     @RandomlyFails

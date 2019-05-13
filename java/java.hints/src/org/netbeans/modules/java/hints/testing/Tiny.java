@@ -238,10 +238,100 @@ public class Tiny {
                                      @ConstraintVariableType(variable="$expected", type="double[]"),
                                      @ConstraintVariableType(variable="$actual", type="double[]")
                                     }
+                       ),
+        @TriggerPattern(value="org.junit.jupiter.api.Assertions.assertEquals($expected, $actual)",
+                        constraints={@ConstraintVariableType(variable="$expected", type="java.lang.Object[]"),
+                                     @ConstraintVariableType(variable="$actual", type="java.lang.Object[]")
+                                    }
+                       ),
+        @TriggerPattern(value="org.junit.jupiter.api.Assertions.assertEquals($expected, $actual, $message, )",
+                        constraints={@ConstraintVariableType(variable="$expected", type="java.lang.Object[]"),
+                                     @ConstraintVariableType(variable="$actual", type="java.lang.Object[]"),
+                                     @ConstraintVariableType(variable="$message", type="java.lang.String")
+                                    }
+                       ),
+        @TriggerPattern(value="org.junit.jupiter.api.Assertions.assertEquals($expected, $actual)",
+                        constraints={@ConstraintVariableType(variable="$expected", type="byte[]"),
+                                     @ConstraintVariableType(variable="$actual", type="byte[]")
+                                    }
+                       ),
+        @TriggerPattern(value="org.junit.jupiter.api.Assertions.assertEquals($expected, $actual, $message)",
+                        constraints={@ConstraintVariableType(variable="$expected", type="byte[]"),
+                                     @ConstraintVariableType(variable="$actual", type="byte[]"),
+                                     @ConstraintVariableType(variable="$message", type="java.lang.String")
+                                    }
+                       ),
+        @TriggerPattern(value="org.junit.jupiter.api.Assertions.assertEquals($expected, $actual)",
+                        constraints={@ConstraintVariableType(variable="$expected", type="char[]"),
+                                     @ConstraintVariableType(variable="$actual", type="char[]")
+                                    }
+                       ),
+        @TriggerPattern(value="org.junit.jupiter.api.Assertions.assertEquals($expected, $actual, $message)",
+                        constraints={@ConstraintVariableType(variable="$expected", type="char[]"),
+                                     @ConstraintVariableType(variable="$actual", type="char[]"),
+                                     @ConstraintVariableType(variable="$message", type="java.lang.String")
+                                    }
+                       ),
+        @TriggerPattern(value="org.junit.jupiter.api.Assertions.assertEquals($expected, $actual)",
+                        constraints={@ConstraintVariableType(variable="$expected", type="short[]"),
+                                     @ConstraintVariableType(variable="$actual", type="short[]")
+                                    }
+                       ),
+        @TriggerPattern(value="org.junit.jupiter.api.Assertions.assertEquals($expected, $actual, $message)",
+                        constraints={@ConstraintVariableType(variable="$expected", type="short[]"),
+                                     @ConstraintVariableType(variable="$actual", type="short[]"),
+                                     @ConstraintVariableType(variable="$message", type="java.lang.String")
+                                    }
+                       ),
+        @TriggerPattern(value="org.junit.jupiter.api.Assertions.assertEquals($expected, $actual)",
+                        constraints={@ConstraintVariableType(variable="$expected", type="int[]"),
+                                     @ConstraintVariableType(variable="$actual", type="int[]")
+                                    }
+                       ),
+        @TriggerPattern(value="org.junit.jupiter.api.Assertions.assertEquals($expected, $actual, $message)",
+                        constraints={@ConstraintVariableType(variable="$expected", type="int[]"),
+                                     @ConstraintVariableType(variable="$actual", type="int[]"),
+                                     @ConstraintVariableType(variable="$message", type="java.lang.String")
+                                    }
+                       ),
+        @TriggerPattern(value="org.junit.jupiter.api.Assertions.assertEquals($expected, $actual)",
+                        constraints={@ConstraintVariableType(variable="$expected", type="long[]"),
+                                     @ConstraintVariableType(variable="$actual", type="long[]")
+                                    }
+                       ),
+        @TriggerPattern(value="org.junit.jupiter.api.Assertions.assertEquals($expected, $actual, $message)",
+                        constraints={@ConstraintVariableType(variable="$expected", type="long[]"),
+                                     @ConstraintVariableType(variable="$actual", type="long[]"),
+                                     @ConstraintVariableType(variable="$message", type="java.lang.String")
+                                    }
+                       ),
+        @TriggerPattern(value="org.junit.jupiter.api.Assertions.assertEquals($expected, $actual)",
+                        constraints={@ConstraintVariableType(variable="$expected", type="float[]"),
+                                     @ConstraintVariableType(variable="$actual", type="float[]")
+                                    }
+                       ),
+        @TriggerPattern(value="org.junit.jupiter.api.Assertions.assertEquals($expected, $actual, $message)",
+                        constraints={@ConstraintVariableType(variable="$expected", type="float[]"),
+                                     @ConstraintVariableType(variable="$actual", type="float[]"),
+                                     @ConstraintVariableType(variable="$message", type="java.lang.String")
+                                    }
+                       ),
+        @TriggerPattern(value="org.junit.jupiter.api.Assertions.assertEquals($expected, $actual)",
+                        constraints={@ConstraintVariableType(variable="$expected", type="double[]"),
+                                     @ConstraintVariableType(variable="$actual", type="double[]")
+                                    }
+                       ),
+        @TriggerPattern(value="org.junit.jupiter.api.Assertions.assertEquals($expected, $actual, $message)",
+                        constraints={@ConstraintVariableType(variable="$expected", type="double[]"),
+                                     @ConstraintVariableType(variable="$actual", type="double[]"),
+                                     @ConstraintVariableType(variable="$message", type="java.lang.String")
+                                    }
                        )
     })
     public static ErrorDescription assertEqualsForArrays(HintContext ctx) {
         TypeElement ojAssert = ctx.getInfo().getElements().getTypeElement("org.junit.Assert");
+        TypeElement oj5Assertion = ctx.getInfo().getElements().getTypeElement("org.junit.jupiter.api.Assertions");
+
         String targetPattern = null;
         
         if (ojAssert != null) {
@@ -251,6 +341,16 @@ public class Tiny {
                         targetPattern = "org.junit.Assert.assertArrayEquals($message, $expected, $actual)";
                     } else {
                         targetPattern = "org.junit.Assert.assertArrayEquals($expected, $actual)";
+                    }
+                }
+            }
+        } else if (oj5Assertion != null) {
+            for (ExecutableElement ee : ElementFilter.methodsIn(ojAssert.getEnclosedElements())) {
+                if (ee.getSimpleName().contentEquals("assertArrayEquals")) {
+                    if (ctx.getVariables().containsKey("$message")) {
+                        targetPattern = "org.junit.jupiter.api.Assertions.assertArrayEquals($expected, $actual, $message)";
+                    } else {
+                        targetPattern = "org.junit.jupiter.api.Assertions.assertArrayEquals($expected, $actual)";
                     }
                 }
             }
@@ -287,16 +387,22 @@ public class Tiny {
         @TriggerPattern(value="org.junit.Assert.assertEquals($expected, $actual)"),
         @TriggerPattern(value="org.junit.Assert.assertEquals($message, $expected, $actual)",
                         constraints=@ConstraintVariableType(variable="$message", type="java.lang.String")
+                       ),
+        @TriggerPattern(value="org.junit.jupiter.api.Assertions.assertEquals($expected, $actual)"),
+        @TriggerPattern(value="org.junit.jupiter.api.Assertions.assertEquals($expected, $actual, $message)",
+                        constraints=@ConstraintVariableType(variable="$message", type="java.lang.String")
                        )
     })
     public static ErrorDescription mismatchedConstantVSReal(HintContext ctx) {
         if (isConstant(ctx, "$expected") || !isConstant(ctx, "$actual")) return null;
         if (!MatcherUtilities.matches(ctx, ctx.getPath(), "$method($arguments$)", true)) return null;
         
+        TypeElement oj5Assertion = ctx.getInfo().getElements().getTypeElement("org.junit.jupiter.api.Assertions");
+
         String targetPattern = null;
         
         if (ctx.getVariables().containsKey("$message")) {
-            targetPattern = "$method($message, $actual, $expected)";
+            targetPattern = oj5Assertion == null ? "$method($message, $actual, $expected)" : "$method($actual, $expected, $message)";
         } else {
             targetPattern = "$method($actual, $expected)";
         }
@@ -323,6 +429,10 @@ public class Tiny {
                        ),
         @TriggerPattern(value="org.junit.Assert.assertEquals($expected, $actual)"),
         @TriggerPattern(value="org.junit.Assert.assertEquals($message, $expected, $actual)",
+                        constraints=@ConstraintVariableType(variable="$message", type="java.lang.String")
+                       ),
+        @TriggerPattern(value="org.junit.jupiter.api.Assertions.assertEquals($expected, $actual)"),
+        @TriggerPattern(value="org.junit.jupiter.api.Assertions.assertEquals($expected, $actual, $message)",
                         constraints=@ConstraintVariableType(variable="$message", type="java.lang.String")
                        )
     })

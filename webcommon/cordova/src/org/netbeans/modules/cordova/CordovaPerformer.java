@@ -171,6 +171,7 @@ public class CordovaPerformer implements BuildPerformer {
         if (provider != null &&
                 "ios_1".equals(provider.getActiveBrowser().getId()) && 
                 (target.equals(BuildPerformer.RUN_IOS) || target.equals(BuildPerformer.BUILD_IOS)) &&
+                PlatformManager.getPlatform(PlatformManager.IOS_TYPE) != null &&
                 PlatformManager.getPlatform(PlatformManager.IOS_TYPE).getProvisioningProfilePath() == null
                 ) {
             throw new IllegalStateException(Bundle.ERR_NO_Provisioning());
@@ -324,15 +325,16 @@ public class CordovaPerformer implements BuildPerformer {
         props.put(PROP_ANDROID_PROJECT_ACTIVITY, activity);//NOI18N
         
         MobilePlatform iosPlatform = PlatformManager.getPlatform(PlatformManager.IOS_TYPE);
+        if (iosPlatform != null) {
+            final String provisioningProfilePath = iosPlatform.getProvisioningProfilePath();
+            if (provisioningProfilePath != null) {
+                props.put(PROP_PROVISIONING_PROFILE, provisioningProfilePath);
+            }
+            final String codeSignIdentity = iosPlatform.getCodeSignIdentity();
 
-        final String provisioningProfilePath = iosPlatform.getProvisioningProfilePath();
-        if (provisioningProfilePath != null) {
-            props.put(PROP_PROVISIONING_PROFILE, provisioningProfilePath);
-        }
-        final String codeSignIdentity = iosPlatform.getCodeSignIdentity();
-
-        if (codeSignIdentity != null) {
-            props.put(PROP_CERTIFICATE_NAME, codeSignIdentity);
+            if (codeSignIdentity != null) {
+                props.put(PROP_CERTIFICATE_NAME, codeSignIdentity);
+            }
         }
 
         //workaround for some strange behavior of ant execution in netbeans
@@ -349,7 +351,7 @@ public class CordovaPerformer implements BuildPerformer {
 
             props.put(PROP_CONFIG, mobileConfig.getId());
             mobileConfig.getDevice().addProperties(props);
-            if (mobileConfig.getId().equals("ios")) { // NOI18N
+            if (mobileConfig.getId().equals("ios") && iosPlatform != null) { // NOI18N
                 boolean sdkVerified = false;
                 try {
                     for (SDK sdk:iosPlatform.getSDKs()) {

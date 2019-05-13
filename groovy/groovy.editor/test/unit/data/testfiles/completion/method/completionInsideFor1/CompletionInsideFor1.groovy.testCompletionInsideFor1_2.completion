@@ -9,6 +9,7 @@ METHOD     asBoolean()                                boolean
 METHOD     asImmutable()                              Map
 METHOD     asSynchronized()                           Map
 METHOD     asType(Class)                              Object
+METHOD     asUnmodifiable()                           Map
 METHOD     clear()                         [PUBLIC]   void
 METHOD     collect()                                  Collection
 METHOD     collect(Closure)                           List
@@ -102,11 +103,13 @@ METHOD     putAt(String, Object)                      void
 METHOD     putIfAbsent(K, V)               [PUBLIC]   V
 METHOD     remove(Object)                  [PUBLIC]   V
 METHOD     remove(Object, Object)          [PUBLIC]   boolean
+METHOD     removeAll(Closure)                         boolean
 METHOD     replace(K, V)                   [PUBLIC]   V
 METHOD     replace(K, V, V)                [PUBLIC]   boolean
 METHOD     replaceAll(BiFunction<? super   [PUBLIC]   void
 METHOD     respondsTo(String)                         List
 METHOD     respondsTo(String, Object)                 List
+METHOD     retainAll(Closure)                         boolean
 METHOD     reverseEach(Closure)                       Map
 METHOD     setMetaClass(MetaClass)                    void
 METHOD     size()                          [PUBLIC]   int
@@ -123,6 +126,7 @@ METHOD     subMap(Collection)                         Map
 METHOD     subMap(Object[])                           Map
 METHOD     take(int)                                  Map
 METHOD     takeWhile(Closure)                         Map
+METHOD     tap(Closure)                               Object
 METHOD     toMapString()                              String
 METHOD     toMapString(int)                           String
 METHOD     toSorted()                                 Map
@@ -138,6 +142,7 @@ METHOD     wait()                          [PUBLIC]   void
 METHOD     wait(long)                      [PUBLIC]   void
 METHOD     wait(long, int)                 [PUBLIC]   void
 METHOD     with(Closure)                              Object
+METHOD     with(boolean, Closure)                     Object
 METHOD     withDefault(Closure)                       Map
 METHOD     withTraits(Class[])                        Object
 FIELD      empty                           [PUBLIC]   boolean

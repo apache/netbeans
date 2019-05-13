@@ -1668,12 +1668,24 @@ public final class ModuleManager extends Modules {
         }
     }
     
+    /**
+     * Determines if enabling compat modules is disruptive. Compat modules are often 
+     * fragment modules augmenting regular ones. If the host module is already enabled / loaded,
+     * the compat module cannot back-patch already existing classes, and IDE restart is needed.
+     * 
+     * @param modules initial set of modules
+     * @return true, if the operation requires a restart
+     * @throws IllegalArgumentException 
+     */
     public boolean hasToEnableCompatModules(Set<Module> modules) throws IllegalArgumentException {
         List<Module> toEnable = simulateEnable(modules);
         for (Module m : toEnable) {            
             String fragmentHostCodeName = m.getFragmentHostCodeName();
             if (fragmentHostCodeName != null && !fragmentHostCodeName.isEmpty()) {
-                return true;
+                Module fragHost = get(fragmentHostCodeName);
+                if (fragHost != null && fragHost.isEnabled()) {
+                    return true;
+                }
             }
         }
         return false;
@@ -1681,7 +1693,9 @@ public final class ModuleManager extends Modules {
     
     private void maybeAddToEnableList(Set<Module> willEnable, Set<Module> mightEnable, Module m, boolean okToFail) {
         if (! missingDependencies(m).isEmpty()) {
-            assert okToFail : "Module " + m + " had unexpected problems: " + missingDependencies(m) + " (willEnable: " + willEnable + " mightEnable: " + mightEnable + ")";
+            if (!okToFail) {
+                Util.err.warning("Module " + m + " had unexpected problems: " + missingDependencies(m) + " (willEnable: " + willEnable + " mightEnable: " + mightEnable + ")");
+            }
             // Cannot satisfy its dependencies, exclude it.
             return;
         }
@@ -1747,7 +1761,7 @@ public final class ModuleManager extends Modules {
         Collection<Module> frags = getAttachedFragments(m);
         for (Module fragMod : frags) {
             if (! fragMod.isEnabled()) {
-                maybeAddToEnableList(willEnable, mightEnable, fragMod, false);
+                maybeAddToEnableList(willEnable, mightEnable, fragMod, fragMod.isEager());
             }
         }
     }

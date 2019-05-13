@@ -39,6 +39,7 @@ import javax.lang.model.util.Elements;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
+import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.builder.ASTService;
 import org.netbeans.modules.java.source.builder.CommentHandlerService;
 import org.netbeans.modules.java.source.builder.QualIdentTree;
@@ -467,7 +468,7 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
                 el = overlay.resolve(model, elements, qit.getFQN());
             } else {
                 if (el.getKind().isClass() || el.getKind().isInterface() || el.getKind() == ElementKind.PACKAGE) {
-                    el = overlay.resolve(model, elements, ((QualifiedNameable) el).getQualifiedName().toString(), elements.getModuleOf(el));
+                    el = overlay.resolve(model, elements, ((QualifiedNameable) el).getQualifiedName().toString(), el, elements.getModuleOf(el));
                 }
             }
 
@@ -804,18 +805,45 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
 	return tree;
     }
 
-    protected final CaseTree rewriteChildren(CaseTree tree) {
-	ExpressionTree pat = (ExpressionTree)translate(tree.getExpression());
-	List<? extends StatementTree> stats = translate(tree.getStatements());
-	if (pat!=tree.getExpression() || !stats.equals(tree.getStatements())) {
-            if (stats != tree.getStatements())
-                stats = optimize(stats);
-	    CaseTree n = make.Case(pat, stats);
-            model.setType(n, model.getType(tree));
-	    copyCommentTo(tree,n);
-            copyPosTo(tree,n);
-	    tree = n;
+    protected final Tree rewriteChildren(Tree tree) {
+	ExpressionTree selector = (ExpressionTree)translate(TreeShims.getExpressions(tree).get(0));
+	List<? extends CaseTree> cases = translateStable(TreeShims.getCases(tree));
+	if (selector != TreeShims.getExpressions(tree).get(0) || !cases.equals(TreeShims.getCases(tree))) {
+	    Tree switchExpression = make.SwitchExpression(selector, cases);
+            model.setType(switchExpression, model.getType(tree));
+	    copyCommentTo(tree,switchExpression);
+            copyPosTo(tree,switchExpression);
+	    tree = switchExpression;
 	}
+	return tree;
+    }
+
+    protected final CaseTree rewriteChildren(CaseTree tree) {
+        Tree body = TreeShims.getBody(tree);
+        List<? extends ExpressionTree> expressions = TreeShims.getExpressions(tree);
+        if (body == null) {
+            List<? extends ExpressionTree> pats = translate(expressions);
+            List<? extends StatementTree> stats = translate(tree.getStatements());
+            if (!pats.equals(expressions) || !stats.equals(tree.getStatements())) {
+                if (stats != tree.getStatements())
+                    stats = optimize(stats);
+                CaseTree n = make.Case(pats, stats);
+                model.setType(n, model.getType(tree));
+                copyCommentTo(tree,n);
+                copyPosTo(tree,n);
+                tree = n;
+            }
+        } else {
+            List<? extends ExpressionTree> pats = translate(expressions);
+            Tree nueBody = translate(body);
+            if (!pats.equals(expressions) || body != nueBody) {
+                CaseTree n = make.Case(pats, nueBody);
+                model.setType(n, model.getType(tree));
+                copyCommentTo(tree,n);
+                copyPosTo(tree,n);
+                tree = n;
+            }
+        }
 	return tree;
     }
 

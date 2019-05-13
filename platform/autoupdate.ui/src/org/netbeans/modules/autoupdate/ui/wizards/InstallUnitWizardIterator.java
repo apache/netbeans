@@ -19,29 +19,13 @@
 
 package org.netbeans.modules.autoupdate.ui.wizards;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import javax.swing.event.ChangeListener;
-import org.openide.WizardDescriptor;
 import org.openide.util.NbBundle;
 
 /**
  *
  * @author Jiri Rechtacek
  */
-public final class InstallUnitWizardIterator implements WizardDescriptor.Iterator<WizardDescriptor> {
-    
-    private int index;
-    private final List<WizardDescriptor.Panel<WizardDescriptor>> panels = new ArrayList<WizardDescriptor.Panel<WizardDescriptor>> ();
-    private InstallUnitWizardModel installModel;
-    private WizardDescriptor.Panel<WizardDescriptor> licenseApprovalStep = null;
-    private WizardDescriptor.Panel<WizardDescriptor> customHandleStep = null;
-    private WizardDescriptor.Panel<WizardDescriptor> installStep = null;
-    private boolean isCompact = false;
-    private boolean clearLazyUnits = false;
-    private final boolean allowRunInBackground;
-    private final boolean runInBackground;
+final class InstallUnitWizardIterator extends InstallableIteratorBase {
     
     public InstallUnitWizardIterator (InstallUnitWizardModel model) {
         this (model, false);
@@ -56,12 +40,8 @@ public final class InstallUnitWizardIterator implements WizardDescriptor.Iterato
     }
     
     public InstallUnitWizardIterator (InstallUnitWizardModel model, boolean clearLazyUnits, boolean allowRunInBackground, boolean runInBackground) {
-        this.installModel = model;
-        this.clearLazyUnits = clearLazyUnits;
-        this.allowRunInBackground = allowRunInBackground;
-        this.runInBackground = runInBackground;
+        super(model, clearLazyUnits, allowRunInBackground, runInBackground);
         createPanels ();
-        index = 0;
     }
     
     public InstallUnitWizardModel getModel () {
@@ -72,18 +52,7 @@ public final class InstallUnitWizardIterator implements WizardDescriptor.Iterato
     private void createPanels () {
         assert panels != null && panels.isEmpty() : "Panels are still empty";
         panels.add (new OperationDescriptionStep (installModel));
-        licenseApprovalStep = new LicenseApprovalStep (installModel);
-        panels.add (licenseApprovalStep);
-        customHandleStep = new CustomHandleStep (installModel);
-        panels.add (customHandleStep);
-        installStep = new InstallStep (installModel, clearLazyUnits, allowRunInBackground, runInBackground);
-        panels.add (installStep);
-    }
-    
-    @Override
-    public WizardDescriptor.Panel<WizardDescriptor> current () {
-        assert panels != null;
-        return panels.get (index);
+        insertPanels(1);
     }
     
     @Override
@@ -92,57 +61,8 @@ public final class InstallUnitWizardIterator implements WizardDescriptor.Iterato
     }
     
     @Override
-    public boolean hasNext () {
-        compactPanels ();
-        return index < panels.size () - 1;
-    }
-    
-    @Override
     public boolean hasPrevious () {
-        compactPanels ();
-        return index > 0 && ! (current () instanceof InstallStep || current () instanceof CustomHandleStep);
-    }
-    
-    @Override
-    public void nextPanel () {
-        compactPanels ();
-        if (!hasNext ()) {
-            throw new NoSuchElementException ();
-        }
-        index++;
-    }
-    
-    @Override
-    public void previousPanel () {
-        compactPanels ();
-        if (!hasPrevious ()) {
-            throw new NoSuchElementException ();
-        }
-        index--;
-    }
-    
-    // If nothing unusual changes in the middle of the wizard, simply:
-    @Override
-    public void addChangeListener (ChangeListener l) {}
-    @Override
-    public void removeChangeListener (ChangeListener l) {}
-
-    private void compactPanels () {
-        if (isCompact) {
-            return ;
-        }
-
-        boolean allLicensesTouched = getModel().allLicensesTouched();
-        if (allLicensesTouched && getModel ().allLicensesApproved ()) {            
-            panels.remove (licenseApprovalStep);
-        }
-        if (! getModel ().hasCustomComponents ()) {
-            panels.remove (customHandleStep);
-        }
-        if (! getModel ().hasStandardComponents ()) {
-            panels.remove (installStep);
-        }
-        isCompact = allLicensesTouched;
+        return super.hasPrevious() && ! (current () instanceof InstallStep || current () instanceof CustomHandleStep);
     }
     
 }

@@ -22,6 +22,7 @@ import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.ContinueTree;
 import com.sun.source.tree.LabeledStatementTree;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
@@ -328,7 +329,7 @@ public class InstantRenamePerformer implements DocumentListener, KeyListener {
                 Token<JavaTokenId> span = org.netbeans.modules.java.editor.base.semantic.Utilities.findIdentifierSpan(info, doc, path);
                 if (span != null && span.offset(null) <= adjustedCaret[0] && adjustedCaret[0] <= span.offset(null) + span.length()) {
                     if (path.getLeaf().getKind() != Kind.LABELED_STATEMENT) {
-                        StatementTree tgt = info.getTreeUtilities().getBreakContinueTarget(path);
+                        Tree tgt = info.getTreeUtilities().getBreakContinueTargetTree(path);
                         path = tgt != null ? info.getTrees().getPath(info.getCompilationUnit(), tgt) : null;
                     }
                     if (path != null) {

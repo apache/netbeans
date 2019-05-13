@@ -1795,6 +1795,154 @@ public class ReindenterTest extends NbTestCase {
         performSpanIndentationTest("package t;\npublic class T {\n|private void t() {\nSystem.err.println(1);\n}\n |}\n",
                 "package t;\npublic class T {\n    private void t() {\n        System.err.println(1);\n    }\n}\n");
     }
+
+    public void testNewLineIndentationBeforeSwitchRuleCases() throws Exception {
+        performNewLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        switch(get()) {|case 1->\n        }\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        switch(get()) {\n            case 1->\n        }\n    }\n}\n");
+    }
+
+    public void testLineIndentationBeforeSwitchRuleCases() throws Exception {
+        performLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        switch(get()) {\n|case 1->\n        }\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        switch(get()) {\n            case 1->\n        }\n    }\n}\n");
+    }
+
+    public void testNewLineIndentationAfterSwitchRuleCase() throws Exception {
+        performNewLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        switch(get()) {\n            case 1->|\n        }\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        switch(get()) {\n            case 1->\n                \n        }\n    }\n}\n");
+    }
+
+    public void testLineIndentationAfterSwitchRuleCase() throws Exception {
+        performLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        switch(get()) {\n            case 1->\n|\n        }\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        switch(get()) {\n            case 1->\n                \n        }\n    }\n}\n");
+    }
+
+    public void testNewLineIndentationBeforeEmptyBlockAfterSwitchRuleCase() throws Exception {
+        performNewLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        switch(get()) {\n            case 1->|{\n            }\n        }\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        switch(get()) {\n            case 1->\n            {\n            }\n        }\n    }\n}\n");
+    }
+
+    public void testLineIndentationBeforeEmptyBlockAfterSwitchRuleCase() throws Exception {
+        performLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        switch(get()) {\n            case 1->\n|{\n            }\n        }\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        switch(get()) {\n            case 1->\n            {\n            }\n        }\n    }\n}\n");
+    }
+
+    public void testNewLineIndentationInsideRuleCase() throws Exception {
+        performNewLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        switch(get()) {\n            case 1->|\n                break;\n        }\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        switch(get()) {\n            case 1->\n                \n                break;\n        }\n    }\n}\n");
+    }
+
+    public void testLineIndentationInsideRuleCase() throws Exception {
+        performLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        switch(get()) {\n            case 1->\n|\n                break;\n        }\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        switch(get()) {\n            case 1->\n                \n                break;\n        }\n    }\n}\n");
+    }
+
+    public void testNewLineIndentationAfterRuleCaseStmt() throws Exception {
+        performNewLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        switch(get()) {\n            case 1->\n                break;|\n        }\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        switch(get()) {\n            case 1->\n                break;\n                \n        }\n    }\n}\n");
+    }
+
+    public void testLineIndentationAfterRuleCaseStmt() throws Exception {
+        performLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        switch(get()) {\n            case 1->\n                break;\n|\n        }\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        switch(get()) {\n            case 1->\n                break;\n                \n        }\n    }\n}\n");
+    }
+
+    public void testNewLineIndentationBeforeSwitchRuleDefault() throws Exception {
+        performNewLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        switch(get()) {\n            case 1->\n                break;|default->\n        }\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        switch(get()) {\n            case 1->\n                break;\n            default->\n        }\n    }\n}\n");
+    }
+
+    public void testLineIndentationBeforeSwitchRuleDefault() throws Exception {
+        performLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        switch(get()) {\n            case 1->\n                break;\n                |default->\n        }\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        switch(get()) {\n            case 1->\n                break;\n            default->\n        }\n    }\n}\n");
+    }
+
+    public void testNewLineIndentationBeforeSwitchRuleEnd() throws Exception {
+        performNewLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        switch(get()) {\n            case 1->\n                break;|}\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        switch(get()) {\n            case 1->\n                break;\n        }\n    }\n}\n");
+    }
+
+    public void testLineIndentationBeforeSwitchRuleEnd() throws Exception {
+        performLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        switch(get()) {\n            case 1->\n                break;\n                |}\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        switch(get()) {\n            case 1->\n                break;\n        }\n    }\n}\n");
+    }
+
+    public void testNewLineIndentationBeforeHalfIndentedSwitchRuleEnd() throws Exception {
+        Preferences preferences = MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class);
+        preferences.put("otherBracePlacement", CodeStyle.BracePlacement.NEW_LINE_HALF_INDENTED.name());
+        try {
+            performNewLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        switch(get())\n          {\n            case 1->\n                break;|}\n    }\n}\n",
+                    "package t;\npublic class T {\n    public void op() {\n        switch(get())\n          {\n            case 1->\n                break;\n          }\n    }\n}\n");
+        } finally {
+            preferences.remove("otherBracePlacement");
+        }
+    }
+
+    public void testLineIndentationBeforeHalfIndentedSwitchRuleEnd() throws Exception {
+        Preferences preferences = MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class);
+        preferences.put("otherBracePlacement", CodeStyle.BracePlacement.NEW_LINE_HALF_INDENTED.name());
+        try {
+            performLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        switch(get())\n          {\n            case 1->\n                break;\n                |}\n    }\n}\n",
+                    "package t;\npublic class T {\n    public void op() {\n        switch(get())\n          {\n            case 1->\n                break;\n          }\n    }\n}\n");
+        } finally {
+            preferences.remove("otherBracePlacement");
+        }
+    }
+
+    public void testNewLineIndentBeforeSwitchExprCases() throws Exception {
+        performNewLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {|case 1->\n        }\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1->\n        }\n    }\n}\n");
+    }
+
+    public void testLineIndentBeforeSwitchExprCases() throws Exception {
+        performLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n|case 1->\n        }\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1->\n        }\n    }\n}\n");
+    }
+
+    public void testNewLineIndentAfterSwitchExprCase() throws Exception {
+        performNewLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1->|\n        }\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1->\n                \n        }\n    }\n}\n");
+    }
+
+    public void testNewLineIndentationInsideSwExpCase() throws Exception {
+        performNewLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1->|\n                5;\n        }\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1->\n                \n                5;\n        }\n    }\n}\n");
+    }
+
+    public void testNewLineIndentationInsideSwExpCase2() throws Exception {
+        performNewLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1:|\n                break 5;\n        }\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1:\n                \n                break 5;\n        }\n    }\n}\n");
+    }
+
+    public void testNewLineIndentationInsideSwExpCase3() throws Exception {
+        performNewLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1->|\n                {break 5;}\n        }\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1->\n                \n                {break 5;}\n        }\n    }\n}\n");
+    }
+
+    public void testNewLineIndentationInsideSwExpIllegalCase() throws Exception {
+        performNewLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1->|\n                break 5;\n        }\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1->\n                \n                break 5;\n        }\n    }\n}\n");
+    }
+
+    public void testNewLineIndentationInsideSwExpIllegalCase2() throws Exception {
+        performNewLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1->|\n                System.out.println(\"aa\");\n        }\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1->\n                \n                System.out.println(\"aa\");\n        }\n    }\n}\n");
+    }
+
+    public void testNewLineIndentationAfterSwExprCase() throws Exception {
+        performNewLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1:\n                break 5;|\n        }\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1:\n                break 5;\n                \n        }\n    }\n}\n");
+    }
+
+    public void testNewLineIndentationAfterSwExprRule() throws Exception {
+        performNewLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1->\n                5;|\n        }\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1->\n                5;\n                \n        }\n    }\n}\n");
+    }
+
+    public void testLineIndentationAfterSwitchExprSwitch() throws Exception {
+        performLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        int a = switch(get())\n| {\n        }\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        int a = switch(get())\n        {\n        }\n    }\n}\n");
+    }
+
     
     private void performNewLineIndentationTest(String code, String golden) throws Exception {
         int pos = code.indexOf('|');

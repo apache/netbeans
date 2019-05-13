@@ -22,11 +22,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
 import java.security.ProtectionDomain;
 import java.util.Arrays;
 import java.util.Collection;
@@ -37,6 +36,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -267,7 +267,7 @@ implements Cloneable, Stamps.Updater {
                 }
                 throw new IOException("Not found bundle:" + m.getCodeNameBase());
             }
-            ClassLoader l = new NetigsoLoader(b, m, jar);
+            NetigsoLoader l = new NetigsoLoader(b, m, jar);
             Set<String> pkgs = new HashSet<String>();
             String[] knownPkgs = registered.get(m.getCodeNameBase());
             Object exported = b.getHeaders("").get("Export-Package");
@@ -326,7 +326,17 @@ implements Cloneable, Stamps.Updater {
                 if (isRealBundle(b)) {
                     throw possible;
                 }
-                LOG.log(Level.FINE, "Not starting fragment {0}", m.getCodeNameBase());
+                // Bundle is a fragment, replace it with host in classloader
+                String fragmentHost = b.getHeaders("").get("Fragment-Host");
+                Bundle hostBundle = findBundle(fragmentHost);
+                if (hostBundle == null) {
+                    LOG.log(Level.WARNING, "Failed to locate fragment host bundle {0} for fragment bundle {1}",
+                            new Object[]{fragmentHost, m.getCodeNameBase()});
+                    throw new IOException("Not found bundle: " + hostBundle);
+                }
+                l.setBundle(hostBundle);
+                LOG.log(Level.FINE, "Not starting fragment {0}, using host bundle {1} for classloading instead", 
+                        new Object[]{m.getCodeNameBase(), fragmentHost});
             }
             return pkgs;
         } catch (BundleException ex) {
@@ -349,7 +359,7 @@ implements Cloneable, Stamps.Updater {
     @Override
     protected void stopLoader(ModuleInfo m, ClassLoader loader) {
         NetigsoLoader nl = (NetigsoLoader)loader;
-        Bundle b = nl.bundle;
+        Bundle b = nl.getBundle();
         try {
             assert b != null;
             try {
@@ -468,11 +478,9 @@ implements Cloneable, Stamps.Updater {
             } else if (symbolicName != null) { // NOI18N
                 if (original != null) {
                     LOG.log(Level.FINE, "Updating bundle {0}", original.getLocation());
-                    try (InputStream is = Files.newInputStream(m.getJarFile().toPath())) {
-                        original.update(is);
-                    } catch (InvalidPathException ex) {
-                        throw new IOException(ex);
-                    }
+                    FileInputStream is = new FileInputStream(m.getJarFile());
+                    original.update(is);
+                    is.close();
                     b = original;
                 } else {
                     BundleContext bc = framework.getBundleContext();

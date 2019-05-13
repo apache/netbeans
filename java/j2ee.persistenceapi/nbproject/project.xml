@@ -193,6 +193,7 @@
                 </test-type>
             </test-dependencies>
             <friend-packages>
+                <friend>org.netbeans.modules.gradle.persistence</friend>
                 <friend>org.netbeans.modules.form.j2ee</friend>
                 <friend>org.netbeans.modules.j2ee.clientproject</friend>
                 <friend>org.netbeans.modules.j2ee.common</friend>

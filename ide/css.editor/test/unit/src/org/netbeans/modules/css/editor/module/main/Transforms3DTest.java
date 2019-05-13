@@ -30,14 +30,14 @@ public class Transforms3DTest extends CssModuleTestBase {
   
     public void testProperties() {
         assertPropertyValues("backface-visibility", "visible", "hidden");
-        assertPropertyValues("perspective", "none", "5");
+        assertPropertyValues("perspective", "none", "5px");
         
         assertPropertyValues("perspective-origin", "10%", "5px", "left", "center", "right");
         assertPropertyValues("perspective-origin", "10% 20px", "5px 5%", "left top", "center 10%", "left bottom");
         
         assertPropertyValues("transform", "none", "rotate(10deg)");
         
-        assertPropertyValues("transform", "rotateX(10deg)", "rotateY(2rad)");
+        assertPropertyValues("transform", "rotateX(10deg)", "rotateY(2rad)", "perspective(100px)");
     }
     
 }

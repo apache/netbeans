@@ -256,17 +256,19 @@ class WinVistaEditorTabCellRenderer extends AbstractTabCellRenderer {
     }
 
     /**
-     * Returns path of icon which is correct for currect state of tab at given
+     * Returns the icon which is correct for currect state of tab at given
      * index
      */
-    String findIconPath() {
+    Icon findIcon() {
+        final String file;
         if( inCloseButton() && isPressed() ) {
-            return "org/openide/awt/resources/vista_close_pressed.png"; // NOI18N
+            file = "org/openide/awt/resources/vista_close_pressed.png"; // NOI18N
+        } else if ( inCloseButton() ) {
+            file = "org/openide/awt/resources/vista_close_rollover.png"; // NOI18N
+        } else {
+            file = "org/openide/awt/resources/vista_close_enabled.png"; // NOI18N
         }
-        if( inCloseButton() ) {
-            return "org/openide/awt/resources/vista_close_rollover.png"; // NOI18N
-        }
-        return "org/openide/awt/resources/vista_close_enabled.png"; // NOI18N
+        return TabControlButtonFactory.getIcon(file);
     }
 
     private static class WinVistaPainter implements TabPainter {
@@ -290,8 +292,7 @@ class WinVistaEditorTabCellRenderer extends AbstractTabCellRenderer {
                 rect.height = 0;
                 return;
             }
-            String iconPath = ren.findIconPath();
-            Icon icon = TabControlButtonFactory.getIcon(iconPath);
+            Icon icon = ren.findIcon();
             int iconWidth = icon.getIconWidth();
             int iconHeight = icon.getIconHeight();
             rect.x = bounds.x + bounds.width - iconWidth - 2;
@@ -389,8 +390,7 @@ class WinVistaEditorTabCellRenderer extends AbstractTabCellRenderer {
             }
             
             //paint close button
-            String iconPath = ren.findIconPath();
-            Icon icon = TabControlButtonFactory.getIcon( iconPath );
+            Icon icon = ren.findIcon();
             icon.paintIcon(ren, g, r.x, r.y);
         }
 

@@ -19,8 +19,7 @@
 
 package org.netbeans.modules.javadoc.hints;
 
-import com.sun.javadoc.Doc;
-import com.sun.javadoc.MethodDoc;
+import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
@@ -103,7 +102,7 @@ public class JavadocUtilities {
         return findInheritedDoc(javac, elm) != null;
     }
 
-    public static MethodDoc findInheritedDoc(CompilationInfo javac, Element elm) {
+    public static DocCommentTree findInheritedDoc(CompilationInfo javac, Element elm) {
         if (elm.getKind() == ElementKind.METHOD) {
             TypeElement clazz = (TypeElement) elm.getEnclosingElement();
             return searchInInterfaces(javac, clazz, clazz,
@@ -119,7 +118,7 @@ public class JavadocUtilities {
      * <p>Do not use MethodDoc.overriddenMethod() instead since it fails for
      * interfaces!
      */
-    private static MethodDoc searchInInterfaces(
+    private static DocCommentTree searchInInterfaces(
             CompilationInfo javac, TypeElement class2query, TypeElement overriderClass,
             ExecutableElement overrider, Set<TypeElement> exclude) {
         
@@ -131,7 +130,7 @@ public class JavadocUtilities {
                     continue;
                 }
                 // check methods
-                MethodDoc jdoc = searchInMethods(javac, ifceEl, overriderClass, overrider);
+                DocCommentTree jdoc = searchInMethods(javac, ifceEl, overriderClass, overrider);
                 if (jdoc != null) {
                     return jdoc;
                 }
@@ -142,7 +141,7 @@ public class JavadocUtilities {
         for (TypeMirror ifceMirror : class2query.getInterfaces()) {
             if (ifceMirror.getKind() == TypeKind.DECLARED) {
                 TypeElement ifceEl = (TypeElement) ((DeclaredType) ifceMirror).asElement();
-                MethodDoc jdoc = searchInInterfaces(javac, ifceEl, overriderClass, overrider, exclude);
+                DocCommentTree jdoc = searchInInterfaces(javac, ifceEl, overriderClass, overrider, exclude);
                 if (jdoc != null) {
                     return jdoc;
                 }
@@ -152,7 +151,7 @@ public class JavadocUtilities {
         return searchInSuperclass(javac, class2query, overriderClass, overrider, exclude);
     }
     
-    private static MethodDoc searchInSuperclass(
+    private static DocCommentTree searchInSuperclass(
             CompilationInfo javac, TypeElement class2query, TypeElement overriderClass,
             ExecutableElement overrider, Set<TypeElement> exclude) {
         
@@ -163,7 +162,7 @@ public class JavadocUtilities {
         }
         TypeElement superclass = (TypeElement) ((DeclaredType) superclassMirror).asElement();
         // check methods
-        MethodDoc jdoc = searchInMethods(javac, superclass, overriderClass, overrider);
+        DocCommentTree jdoc = searchInMethods(javac, superclass, overriderClass, overrider);
         if (jdoc != null) {
             return jdoc;
         }
@@ -172,16 +171,16 @@ public class JavadocUtilities {
         return searchInInterfaces(javac, superclass, overriderClass, overrider, exclude);
     }
     
-    private static MethodDoc searchInMethods(
+    private static DocCommentTree searchInMethods(
             CompilationInfo javac, TypeElement class2query,
             TypeElement overriderClass, ExecutableElement overrider) {
         
         for (Element elm : class2query.getEnclosedElements()) {
             if (elm.getKind() == ElementKind.METHOD &&
                     javac.getElements().overrides(overrider, (ExecutableElement) elm, overriderClass)) {
-                Doc jdoc = javac.getElementUtilities().javaDocFor(elm);
-                return (jdoc != null && jdoc.getRawCommentText().length() > 0)?
-                    (MethodDoc) jdoc: null;
+                DocCommentTree jdoc = javac.getDocTrees().getDocCommentTree(elm);
+                return (jdoc != null && !jdoc.getFullBody().isEmpty())?
+                    jdoc: null;
             }
         }
         return null;

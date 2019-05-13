@@ -89,8 +89,8 @@ public class NBClassWriterTest extends NbTestCase {
         std.setLocation(StandardLocation.CLASS_OUTPUT, Collections.singleton(workingDir));
 
         Context context = new Context();
-        NBMessager.preRegister(context, null, DEV_NULL, DEV_NULL, DEV_NULL);
-        final JavacTaskImpl ct = (JavacTaskImpl) ((JavacTool)tool).getTask(null, std, null, Arrays.asList("-bootclasspath",  bootPath, "-source", "1.6", "-target", "1.6"), null, Arrays.asList(new MyFileObject(code)), context);
+        NBLog.preRegister(context, DEV_NULL, DEV_NULL, DEV_NULL);
+        final JavacTaskImpl ct = (JavacTaskImpl) ((JavacTool)tool).getTask(null, std, null, Arrays.asList("-bootclasspath",  bootPath, "-source", "1.7", "-target", "1.7"), null, Arrays.asList(new MyFileObject(code)), context);
 
         NBClassReader.preRegister(ct.getContext());
         NBClassWriter.preRegister(ct.getContext());
@@ -109,7 +109,7 @@ public class NBClassWriterTest extends NbTestCase {
         std.setLocation(StandardLocation.CLASS_PATH, Collections.singleton(workingDir));
 
         Context context = new Context();
-        NBMessager.preRegister(context, null, DEV_NULL, DEV_NULL, DEV_NULL);
+        NBLog.preRegister(context, DEV_NULL, DEV_NULL, DEV_NULL);
         JavacTaskImpl ct = (JavacTaskImpl)((JavacTool)tool).getTask(null, std, null, Arrays.asList("-bootclasspath",  bootPath, "-source", "1.8", "-target", "1.8"), null, Arrays.<JavaFileObject>asList(), context);
 
         NBClassReader.preRegister(ct.getContext());

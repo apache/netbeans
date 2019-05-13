@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.36
+#Version 9.6.1
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -55,6 +55,12 @@ CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
 
+CLSS public abstract interface !annotation java.lang.FunctionalInterface
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
@@ -70,6 +76,7 @@ meth public int hashCode()
 meth public java.lang.String toString()
 
 CLSS public abstract interface java.lang.Runnable
+ anno 0 java.lang.FunctionalInterface()
 meth public abstract void run()
 
 CLSS public abstract interface java.lang.annotation.Annotation
@@ -193,6 +200,14 @@ meth public static org.openide.execution.NbClassPath createLibraryPath()
 supr java.lang.Object
 hfds classpath,items,serialVersionUID
 
+CLSS public org.openide.execution.NbClassPathCompat
+cons public init()
+meth public static org.openide.execution.NbClassPath createRepositoryPath()
+ anno 0 java.lang.Deprecated()
+meth public static org.openide.execution.NbClassPath createRepositoryPath(org.openide.filesystems.FileSystemCapability)
+ anno 0 java.lang.Deprecated()
+supr java.lang.Object
+
 CLSS public final org.openide.execution.NbProcessDescriptor
 cons public init(java.lang.String,java.lang.String)
 cons public init(java.lang.String,java.lang.String,java.lang.String)
@@ -234,6 +249,13 @@ CLSS public static org.openide.execution.ScriptType$Context
  outer org.openide.execution.ScriptType
 cons public init()
 supr java.lang.Object
+
+CLSS public abstract interface !annotation org.openide.modules.PatchFor
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=CLASS)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+fld public final static java.lang.String MANIFEST_FRAGMENT_HOST = "OpenIDE-Module-Fragment-Host"
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.Class<?> value()
 
 CLSS public final org.openide.util.HelpCtx
 cons public init(java.lang.Class<?>)

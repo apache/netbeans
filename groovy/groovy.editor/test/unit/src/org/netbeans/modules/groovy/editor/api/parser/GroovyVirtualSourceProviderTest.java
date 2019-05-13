@@ -54,12 +54,12 @@ public class GroovyVirtualSourceProviderTest extends GroovyTestBase {
         GroovyVirtualSourceProvider.JavaStubGenerator generator = new GroovyVirtualSourceProvider.JavaStubGenerator();
         CharSequence charSequence = generator.generateClass(classNodes.get(0));
         assertEquals(
-                "import groovy.util.*;" + lineSep +
-                "import java.lang.*;" + lineSep +
                 "import groovy.lang.*;" + lineSep +
-                "import java.util.*;" + lineSep +
-                "import java.io.*;" + lineSep +
                 "import java.net.*;" + lineSep +
+                "import java.util.*;" + lineSep +
+                "import java.lang.*;" + lineSep +
+                "import groovy.util.*;" + lineSep +
+                "import java.io.*;" + lineSep +
                 "" + lineSep +
                 "public class Foo" + lineSep +
                 "  extends java.lang.Object  implements" + lineSep +
@@ -85,17 +85,19 @@ public class GroovyVirtualSourceProviderTest extends GroovyTestBase {
         GroovyVirtualSourceProvider.JavaStubGenerator generator = new GroovyVirtualSourceProvider.JavaStubGenerator();
         CharSequence charSequence = generator.generateClass(classNodes.get(0));
         assertEquals(
-                "import groovy.util.*;" + lineSep +
-                "import java.lang.*;" + lineSep +
                 "import groovy.lang.*;" + lineSep +
-                "import java.util.*;" + lineSep +
-                "import java.io.*;" + lineSep +
                 "import java.net.*;" + lineSep +
+                "import java.util.*;" + lineSep +
+                "import java.lang.*;" + lineSep +
+                "import groovy.util.*;" + lineSep +
+                "import java.io.*;" + lineSep +
                 "" + lineSep +
                 "public class Test" + lineSep +
                 "  extends groovy.lang.Script {" + lineSep +
                 "public Test() {}" + lineSep +
-                "public Test(groovy.lang.Binding context) {}" + lineSep +
+                "public Test(groovy.lang.Binding context) {" + lineSep +
+                "super ();" + lineSep +
+                "}" + lineSep +
                 "public static void main(java.lang.String[] args) { }" + lineSep +
                 "public java.lang.Object run() { return null;}" + lineSep +
                 "public java.lang.Object method1() { return null;}" + lineSep +
@@ -115,12 +117,12 @@ public class GroovyVirtualSourceProviderTest extends GroovyTestBase {
         GroovyVirtualSourceProvider.JavaStubGenerator generator = new GroovyVirtualSourceProvider.JavaStubGenerator();
         CharSequence charSequence = generator.generateClass(classNodes.get(0));
         assertEquals(
-                "import groovy.util.*;" + lineSep +
-                "import java.lang.*;" + lineSep +
                 "import groovy.lang.*;" + lineSep +
-                "import java.util.*;" + lineSep +
-                "import java.io.*;" + lineSep +
                 "import java.net.*;" + lineSep +
+                "import java.util.*;" + lineSep +
+                "import java.lang.*;" + lineSep +
+                "import groovy.util.*;" + lineSep +
+                "import java.io.*;" + lineSep +
                 "" + lineSep +
                 "public class Foo" + lineSep +
                 "  extends java.lang.Object  implements" + lineSep +
@@ -145,13 +147,13 @@ public class GroovyVirtualSourceProviderTest extends GroovyTestBase {
         GroovyVirtualSourceProvider.JavaStubGenerator generator = new GroovyVirtualSourceProvider.JavaStubGenerator();
         CharSequence charSequence = generator.generateClass(classNodes.get(0));
         assertEquals(
-                "import groovy.util.*;" + lineSep +
-                "import java.lang.*;" + lineSep +
                 "import groovy.lang.*;" + lineSep +
+                "import java.net.*;" + lineSep +
                 "import java.util.*;" + lineSep +
+                "import java.lang.*;" + lineSep +
+                "import groovy.util.*;" + lineSep +
                 "import javax.swing.*;" + lineSep +
                 "import java.io.*;" + lineSep +
-                "import java.net.*;" + lineSep +
                 "" + lineSep +
                 "public class MyTest" + lineSep +
                 "  extends javax.swing.JPanel  implements" + lineSep +
@@ -181,12 +183,12 @@ public class GroovyVirtualSourceProviderTest extends GroovyTestBase {
         GroovyVirtualSourceProvider.JavaStubGenerator generator = new GroovyVirtualSourceProvider.JavaStubGenerator();
         CharSequence charSequence = generator.generateClass(classNodes.get(0));
         assertEquals(
-                "import groovy.util.*;" + lineSep +
-                "import java.lang.*;" + lineSep +
                 "import groovy.lang.*;" + lineSep +
-                "import java.util.*;" + lineSep +
-                "import java.io.*;" + lineSep +
                 "import java.net.*;" + lineSep +
+                "import java.util.*;" + lineSep +
+                "import java.lang.*;" + lineSep +
+                "import groovy.util.*;" + lineSep +
+                "import java.io.*;" + lineSep +
                 "" + lineSep +
                 "public class PostService" + lineSep +
                 "  extends java.lang.Object  implements" + lineSep +
@@ -200,12 +202,12 @@ public class GroovyVirtualSourceProviderTest extends GroovyTestBase {
 
         charSequence = generator.generateClass(classNodes.get(1));
         assertEquals(
-                "import groovy.util.*;" + lineSep +
-                "import java.lang.*;" + lineSep +
                 "import groovy.lang.*;" + lineSep +
-                "import java.util.*;" + lineSep +
-                "import java.io.*;" + lineSep +
                 "import java.net.*;" + lineSep +
+                "import java.util.*;" + lineSep +
+                "import java.lang.*;" + lineSep +
+                "import groovy.util.*;" + lineSep +
+                "import java.io.*;" + lineSep +
                 "" + lineSep +
                 "public class PostException" + lineSep +
                 "  extends java.lang.Exception  implements" + lineSep +
@@ -236,12 +238,12 @@ public class GroovyVirtualSourceProviderTest extends GroovyTestBase {
         GroovyVirtualSourceProvider.JavaStubGenerator generator = new GroovyVirtualSourceProvider.JavaStubGenerator();
         CharSequence charSequence = generator.generateClass(classNodes.get(0));
         assertEquals(
-                "import groovy.util.*;" + lineSep +
-                "import java.lang.*;" + lineSep +
                 "import groovy.lang.*;" + lineSep +
-                "import java.util.*;" + lineSep +
-                "import java.io.*;" + lineSep +
                 "import java.net.*;" + lineSep +
+                "import java.util.*;" + lineSep +
+                "import java.lang.*;" + lineSep +
+                "import groovy.util.*;" + lineSep +
+                "import java.io.*;" + lineSep +
                 "" + lineSep +
                 "public class MyTest" + lineSep +
                 "  extends java.lang.Object  implements" + lineSep +

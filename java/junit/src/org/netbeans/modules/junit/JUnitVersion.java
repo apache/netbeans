@@ -23,5 +23,6 @@ package org.netbeans.modules.junit;
  */
 public enum JUnitVersion {
     JUNIT3,
-    JUNIT4
+    JUNIT4,
+    JUNIT5
 }

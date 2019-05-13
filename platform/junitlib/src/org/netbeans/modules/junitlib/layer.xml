@@ -29,6 +29,9 @@
             <file name="hamcrest.xml" url="hamcrest.xml">
                 <attr name="displayName" bundlevalue="org.netbeans.modules.junitlib.Bundle#hamcrest"/>
             </file>
+            <file name="junit_5.xml" url="junit_5.xml">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.junitlib.Bundle#junit_5"/>
+            </file>
         </folder>
     </folder>
 </filesystem>

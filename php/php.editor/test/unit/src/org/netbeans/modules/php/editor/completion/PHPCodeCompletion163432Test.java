@@ -23,7 +23,6 @@ import java.io.File;
 import java.util.Collections;
 import java.util.Map;
 import org.netbeans.api.java.classpath.ClassPath;
-import org.netbeans.junit.RandomlyFails;
 import org.netbeans.modules.php.project.api.PhpSourcePath;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
@@ -39,10 +38,10 @@ public class PHPCodeCompletion163432Test extends PHPCodeCompletionTestBase {
         super(testName);
     }
 
-    @RandomlyFails
     public void test163432() throws Exception {
         checkCompletion("testfiles/completion/lib/test163432/test.php", "@fn^", false);
     }
+
     public void test163432_1() throws Exception {
         checkCompletion("testfiles/completion/lib/test163432/test.php", "@$cls163432->^", false);
     }

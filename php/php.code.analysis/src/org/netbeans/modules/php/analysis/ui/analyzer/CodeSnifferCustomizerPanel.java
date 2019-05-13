@@ -19,8 +19,6 @@
 package org.netbeans.modules.php.analysis.ui.analyzer;
 
 import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.concurrent.TimeUnit;
@@ -64,12 +62,20 @@ public class CodeSnifferCustomizerPanel extends JPanel {
     }
 
     private void init() {
+        boolean isEnabled = settings.getBoolean(ENABLED, false);
+        enabledCheckBox.setSelected(isEnabled);
+        // don't set errors in initialization becuase NPE occurs
+        // so add the listener after setSelected method
         enabledCheckBox.addItemListener((e) -> {
             setStandardComponentsEnabled(enabledCheckBox.isSelected());
             setCodeSnifferEnabled();
+            if (!enabledCheckBox.isSelected()) {
+                // NETBEANS-1550 clear errors because user can't set other configurations
+                context.setError(null);
+            } else {
+                validateData();
+            }
         });
-        boolean isEnabled = settings.getBoolean(ENABLED, false);
-        enabledCheckBox.setSelected(isEnabled);
 
         standardComboBox.setModel(standardsModel);
         standardsModel.fetchStandards(standardComboBox);
@@ -78,7 +84,9 @@ public class CodeSnifferCustomizerPanel extends JPanel {
         standardComboBox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                validateAndSetData();
+                if (enabledCheckBox.isSelected()) {
+                    validateAndSetData();
+                }
             }
         });
 

@@ -275,7 +275,7 @@ public class MethodBodyTest extends GeneratorTestBase {
                 
                 cases.add(treeMaker.Case(treeMaker.Literal(1), switchStatement.getCases().get(0).getStatements()));
                 cases.add(treeMaker.Case(treeMaker.Literal(2), switchStatement.getCases().get(0).getStatements()));
-                cases.add(treeMaker.Case(null, Collections.singletonList(treeMaker.Break(null))));
+                cases.add(treeMaker.Case((ExpressionTree) null, Collections.singletonList(treeMaker.Break(null))));
                 
                 workingCopy.rewrite(switchStatement, treeMaker.Switch(switchStatement.getExpression(), cases));
             }

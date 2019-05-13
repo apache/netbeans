@@ -227,7 +227,7 @@ public final class ExplorerManager extends Object implements Serializable, Clone
                         if (validNodes == null) {
                             validNodes = new ArrayList<Node>(value.length);
                             for (int j = 0; j < i; j++) {
-                                validNodes.add(value[i]);
+                                validNodes.add(value[j]);
                             }
                         }
                     } else if (validNodes != null) {

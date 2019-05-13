@@ -59,7 +59,7 @@ public class LibrariesCheck extends NbTestCase {
                 f = f.substring("nblibraries.".length());
                 FileObject l = fo.getFileObject(f);
                 if (l == null) {
-                    if (f.endsWith("jaxb.xml") || f.endsWith("junit.xml") || f.endsWith("junit_4.xml") || f.endsWith("hamcrest.xml")) {
+                    if (f.endsWith("jaxb.xml") || f.endsWith("junit.xml") || f.endsWith("junit_4.xml") || f.endsWith("hamcrest.xml") || f.endsWith("junit_5.xml")) {
                         // this is a library defined in autoload module
                         // which is not enabled in ergonomic mode right now
                         continue;

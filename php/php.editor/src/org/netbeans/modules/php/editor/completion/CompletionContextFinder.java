@@ -826,7 +826,8 @@ final class CompletionContextFinder {
                 // check reference character (&) [unfortunately, cannot distinguish & as a operator and as a reference mark]
                 // check "..." (is it really operator?)
                 if (!isReference(cToken)
-                        && !isVariadic(cToken)) {
+                        && !isVariadic(cToken)
+                        && !isInitilizerToken(cToken)) { // ($param = '')
                     break;
                 }
             }
@@ -943,6 +944,16 @@ final class CompletionContextFinder {
                 && TokenUtilities.textEquals(token.text(), "?"); // NOI18N
     }
 
+    private static boolean isMinus(Token<PHPTokenId> token) {
+        return token.id().equals(PHPTokenId.PHP_OPERATOR)
+                && TokenUtilities.textEquals(token.text(), "-"); // NOI18N
+    }
+
+    private static boolean isQuoteString(Token<PHPTokenId> token) {
+        return token.id() == PHPTokenId.PHP_CONSTANT_ENCAPSED_STRING
+                && (TokenUtilities.startsWith(token.text(), "'") || (TokenUtilities.startsWith(token.text(), "\""))); // NOI18N
+    }
+
     private static boolean isArray(Token<PHPTokenId> token) {
         return token.id().equals(PHPTokenId.PHP_ARRAY);
     }
@@ -982,6 +993,12 @@ final class CompletionContextFinder {
 
     private static boolean isString(Token<PHPTokenId> token) {
         return token.id().equals(PHPTokenId.PHP_STRING);
+    }
+
+    private static boolean isInitilizerToken(Token<PHPTokenId> token) {
+        return isQuoteString(token)
+                || isEqualSign(token)
+                || isMinus(token);
     }
 
     static boolean lineContainsAny(Token<PHPTokenId> token, int tokenOffset, TokenSequence<PHPTokenId> tokenSequence, List<PHPTokenId> ids) {

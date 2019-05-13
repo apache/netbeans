@@ -19,6 +19,7 @@
 package org.netbeans.modules.ide.ergonomics.fod;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,6 +31,7 @@ import org.netbeans.spi.autoupdate.UpdateItem;
 import org.netbeans.spi.autoupdate.UpdateProvider;
 import org.openide.modules.Dependency;
 import org.openide.modules.ModuleInfo;
+import org.openide.modules.SpecificationVersion;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -65,7 +67,21 @@ public class FoDUpdateUnitProvider implements UpdateProvider {
     public CATEGORY getCategory() {
         return CATEGORY.STANDARD;
     }
+    
+    /**
+     * Known extra modules present during tests. Should contain compile-time
+     * modules like Oracle JS parser and NB Javac stub
+     */
+    private static final Collection<String> EXCLUDE_EXTRA_MODULES = new HashSet<>(Arrays.asList(
+        "org.netbeans.libs.oracle.jsparser",           // NOI18N
+        "org.netbeans.modules.java.source.nbjavac.test"// NOI18N
+    ));
 
+    // protected because of tests obly
+    protected boolean acceptsModule(ModuleInfo mi) {
+        return !EXCLUDE_EXTRA_MODULES.contains(mi.getCodeNameBase());
+    }
+    
     @Override
     public Map<String, UpdateItem> getUpdateItems () throws IOException {
         Map<String, UpdateItem> res = new HashMap<String, UpdateItem> ();
@@ -75,8 +91,30 @@ public class FoDUpdateUnitProvider implements UpdateProvider {
             if (!fi.isPresent()) {
                 continue;
             }
+            Set<String> cnbs = new HashSet<>(fi.getCodeNames());
+            SpecificationVersion jdk = new SpecificationVersion(System.getProperty("java.specification.version")); // NOI18N
+            // add required extra modules
+            // extra module is required iff it provides ONLY getExtraModulesRequiredText (but not recommended one), or
+            // the current JDK does not satisfy the minJDK requirement of the extra module.
+            for (FeatureInfo.ExtraModuleInfo mi :  fi.getExtraModules()) {
+                String m = mi.explicitCodebase();
+                if (m == null) {
+                    continue;
+                }
+                boolean required = false;
+
+                if (mi.recMinJDK != null && jdk.compareTo(mi.recMinJDK) < 0) {
+                    required = true;
+                }
+                if (fi.getExtraModulesRequiredText() != null && fi.getExtraModulesRecommendedText() == null) {
+                    required = true;
+                }
+                if (required) {
+                    cnbs.add(m);
+                }
+            }
             if (registerFeature(
-                all, fi.getCodeNames(),
+                all, cnbs,
                 fi.getFeatureCodeNameBase(), null, res, notYetProcessed
             )) {
                 continue;
@@ -91,7 +129,7 @@ public class FoDUpdateUnitProvider implements UpdateProvider {
                 }
                 if (isIDECluster(mi)) {
                     baseIDE.add(mi.getCodeNameBase());
-                } else {
+                } else if (acceptsModule(mi)) {
                     extra.add(mi.getCodeNameBase());
                 }
             }

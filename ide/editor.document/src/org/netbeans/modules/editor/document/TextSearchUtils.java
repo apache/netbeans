@@ -93,8 +93,8 @@ public class TextSearchUtils {
         for (int i = offset; i < limitOffset; i++) {
             char ch = text.charAt(i);
             if (ch == '\n') {
-                // If first char skip right above it
-                return (i == offset) ? i + 1 : i;
+                // If first char and offset is not at EOF skip right above it
+                return (i == offset && i + 1 < limitOffset) ? i + 1 : i;
             }
             if (classifier.isWhitespace(ch)) {
                 if (inIdentifier) { // End of identifier

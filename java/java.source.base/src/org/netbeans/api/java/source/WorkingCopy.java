@@ -82,6 +82,7 @@ import org.openide.util.Parameters;
 import static org.netbeans.api.java.source.ModificationResult.*;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.java.source.FileObjectFromTemplateCreator;
+import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.builder.CommentHandlerService;
 import org.netbeans.modules.java.source.builder.CommentSetImpl;
 import org.netbeans.modules.java.source.builder.TreeFactory;
@@ -864,6 +865,8 @@ public class WorkingCopy extends CompilationController {
                     Tree t;
                     if (translated != null) {
                         t = translate(translated);
+                    } else if (tree != null && tree.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
+                        t = visitSwitchExpression(tree, null);
                     } else {
                         t = super.translate(tree);
                     }
@@ -885,6 +888,10 @@ public class WorkingCopy extends CompilationController {
                         }
                     }
                     return super.translate(tree);
+                }
+
+                public Tree visitSwitchExpression(Tree set, Object p) {
+                    return rewriteChildren(set);
                 }
             };
             Context c = impl.getJavacTask().getContext();

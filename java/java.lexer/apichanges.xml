@@ -86,7 +86,7 @@ is the proper place.
         <change id="RawStringLiteral">
              <api name="general"/>
              <summary>Added RAW_STRING_LITERAL JavaTokenKind</summary>
-             <version major="1" minor="39"/>
+             <version major="1" minor="41"/>
              <date day="22" month="4" year="2018"/>
              <author login="jlahoda"/>
             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>

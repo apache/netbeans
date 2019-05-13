@@ -21,7 +21,9 @@ package org.netbeans;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -36,8 +38,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
 import java.security.CodeSource;
 import java.security.PermissionCollection;
 import java.security.Policy;
@@ -701,17 +701,22 @@ public class JarClassLoader extends ProxyClassLoader {
             File temp = File.createTempFile(prefix, suffix);
             temp.deleteOnExit();
 
-            try (InputStream is = Files.newInputStream(orig.toPath());
-                    OutputStream os = Files.newOutputStream(temp.toPath())) {
-                byte[] buf = new byte[4096];
-                int j;
-                while ((j = is.read(buf)) != -1) {
-                    os.write(buf, 0, j);
+            InputStream is = new FileInputStream(orig);
+            try {
+                OutputStream os = new FileOutputStream(temp);
+                try {
+                    byte[] buf = new byte[4096];
+                    int j;
+                    while ((j = is.read(buf)) != -1) {
+                        os.write(buf, 0, j);
+                    }
+                } finally {
+                    os.close();
                 }
-            } catch (InvalidPathException ex) {
-                throw new IOException(ex);
+            } finally {
+                is.close();
             }
-
+ 
             doCloseJar();
             file = temp;
             dead = true;
@@ -859,9 +864,9 @@ public class JarClassLoader extends ProxyClassLoader {
             File maniF = new File(new File(dir, "META-INF"), "MANIFEST.MF");
             mf = new Manifest();
             if (maniF.canRead()) {
-                try (InputStream istm = Files.newInputStream(maniF.toPath())) {
+                try (InputStream istm = new FileInputStream(maniF)) {
                     mf.read(istm);
-                } catch (IOException | InvalidPathException ex) {
+                } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);
                 }
             }
@@ -883,14 +888,15 @@ public class JarClassLoader extends ProxyClassLoader {
             
             int len = (int)clsFile.length();
             byte[] data = new byte[len];
-            try (InputStream is = Files.newInputStream(clsFile.toPath())) {
+            InputStream is = new FileInputStream(clsFile);
+            try {
                 int count = 0;
                 while (count < len) {
                     count += is.read(data, count, len - count);
                 }
                 return data;
-            } catch (InvalidPathException ex) {
-                throw new IOException(ex);
+            } finally {
+                is.close();
             }
         }
         

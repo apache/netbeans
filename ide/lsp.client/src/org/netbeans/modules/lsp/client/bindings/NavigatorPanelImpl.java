@@ -27,11 +27,14 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import org.eclipse.lsp4j.DocumentSymbol;
 import org.eclipse.lsp4j.DocumentSymbolParams;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.modules.lsp.client.LSPBindings.BackgroundTask;
+import org.netbeans.modules.lsp.client.Utils;
 import org.netbeans.spi.navigator.NavigatorPanel;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.view.BeanTreeView;
@@ -51,7 +54,7 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author lahvac
  */
-public class NavigatorPanelImpl extends Children.Keys<SymbolInformation> implements NavigatorPanel, BackgroundTask, LookupListener {
+public class NavigatorPanelImpl extends Children.Keys<Either<SymbolInformation, DocumentSymbol>> implements NavigatorPanel, BackgroundTask, LookupListener {
 
     private static final NavigatorPanelImpl INSTANCE = new NavigatorPanelImpl();
 
@@ -135,7 +138,8 @@ public class NavigatorPanelImpl extends Children.Keys<SymbolInformation> impleme
     public void run(LSPBindings bindings, FileObject file) {
         if (file.equals(this.file)) {
             try {
-                List<? extends SymbolInformation> symbols = bindings.getTextDocumentService().documentSymbol(new DocumentSymbolParams(new TextDocumentIdentifier(file.toURI().toString()))).get();
+                String uri = Utils.toURI(file);
+                List<Either<SymbolInformation, DocumentSymbol>> symbols = bindings.getTextDocumentService().documentSymbol(new DocumentSymbolParams(new TextDocumentIdentifier(uri))).get();
 
                 setKeys(symbols);
             } catch (InterruptedException | ExecutionException ex) {
@@ -147,16 +151,66 @@ public class NavigatorPanelImpl extends Children.Keys<SymbolInformation> impleme
     }
 
     @Override
-    protected Node[] createNodes(SymbolInformation sym) {
-        AbstractNode n = new AbstractNode(LEAF);
-        n.setDisplayName(sym.getName());
-        n.setIconBaseWithExtension(Icons.getSymbolIconBase(sym.getKind()));
-        return new Node[] {n};
+    protected Node[] createNodes(Either<SymbolInformation, DocumentSymbol> sym) {
+        return new Node[] {new NodeImpl(sym)};
     }
 
     @Override
     public void resultChanged(LookupEvent arg0) {
         updateFile();
+    }
+
+    private static final class NodeImpl extends AbstractNode {
+
+        private static Children createChildren(Either<SymbolInformation, DocumentSymbol> sym) {
+            if (sym.isLeft()) {
+                return LEAF;
+            }
+            return createChildren(sym.getRight());
+        }
+
+        private static Children createChildren(DocumentSymbol sym) {
+            if (sym.getChildren().isEmpty()) {
+                return LEAF;
+            }
+            return new Keys<DocumentSymbol>() {
+                @Override
+                protected void addNotify() {
+                    setKeys(sym.getChildren());
+                }
+
+                @Override
+                protected Node[] createNodes(DocumentSymbol sym) {
+                    return new Node[] {
+                        new NodeImpl(sym)
+                    };
+                }
+
+                @Override
+                protected void removeNotify() {
+                    setKeys(Collections.emptyList());
+                }
+
+            };
+        }
+
+        public NodeImpl(Either<SymbolInformation, DocumentSymbol> symbol) {
+            super(createChildren(symbol));
+            if (symbol.isLeft()) {
+                setDisplayName(symbol.getLeft().getName());
+                setIconBaseWithExtension(Icons.getSymbolIconBase(symbol.getLeft().getKind()));
+            } else {
+                setDisplayName(symbol.getRight().getName());
+                setIconBaseWithExtension(Icons.getSymbolIconBase(symbol.getRight().getKind()));
+            }
+        }
+
+        public NodeImpl(DocumentSymbol symbol) {
+            super(createChildren(symbol));
+            setDisplayName(symbol.getName());
+            setIconBaseWithExtension(Icons.getSymbolIconBase(symbol.getKind()));
+        }
+
     }
 
     @ServiceProvider(service=DynamicRegistration.class)

@@ -196,7 +196,19 @@ public final class TreeUtilities {
         while (path != null) {
             if (isSynthetic(path.getCompilationUnit(), path.getLeaf()))
                 return true;
-            
+            if (path.getParentPath() != null &&
+                path.getParentPath().getParentPath() != null &&
+                path.getParentPath().getParentPath().getLeaf().getKind() == Kind.NEW_CLASS) {
+                NewClassTree nct = (NewClassTree) path.getParentPath().getParentPath().getLeaf();
+                ClassTree body = nct.getClassBody();
+
+                if (body != null &&
+                    (body.getExtendsClause() == path.getLeaf() ||
+                     body.getImplementsClause().contains(path.getLeaf()))) {
+                    return true;
+                }
+            }
+
             path = path.getParentPath();
         }
         
@@ -1342,6 +1354,54 @@ public final class TreeUtilities {
      *                        The <code>breakOrContinue.getLeaf().getKind()</code>
      *                        has to be either {@link Kind#BREAK} or {@link Kind#CONTINUE}, or
      *                        an IllegalArgumentException is thrown
+     * @return the tree that is the "target" for the given break or continue statement, or null if there is none. Tree can be of type StatementTree or ExpressionTree
+     * @throws IllegalArgumentException if the given tree is not a break or continue tree or if the given {@link CompilationInfo}
+     *         is not in the {@link Phase#RESOLVED} phase.
+     * @since 2.40
+     */
+    public Tree getBreakContinueTargetTree(TreePath breakOrContinue) throws IllegalArgumentException {
+        if (info.getPhase().compareTo(Phase.RESOLVED) < 0)
+            throw new IllegalArgumentException("Not in correct Phase. Required: Phase.RESOLVED, got: Phase." + info.getPhase().toString());
+        
+        Tree leaf = breakOrContinue.getLeaf();
+        
+        switch (leaf.getKind()) {
+            case BREAK:
+                return (Tree) ((JCTree.JCBreak) leaf).target;
+            case CONTINUE:
+                Tree target = (Tree) ((JCTree.JCContinue) leaf).target;
+                
+                if (target == null)
+                    return null;
+                
+                if (((JCTree.JCContinue) leaf).label == null)
+                    return target;
+                
+                TreePath tp = breakOrContinue;
+                
+                while (tp.getLeaf() != target) {
+                    tp = tp.getParentPath();
+                }
+                
+                Tree parent = tp.getParentPath().getLeaf();
+                
+                if (parent.getKind() == Kind.LABELED_STATEMENT) {
+                    return (StatementTree) parent;
+                } else {
+                    return target;
+                }
+            default:
+                throw new IllegalArgumentException("Unsupported kind: " + leaf.getKind());
+        }
+    }
+    
+    /**Find the target of <code>break</code> or <code>continue</code>. The given
+     * {@link CompilationInfo} has to be at least in the {@link Phase#RESOLVED} phase.
+     * 
+     * @param breakOrContinue {@link TreePath} to the tree that should be inspected.
+     *                        The <code>breakOrContinue.getLeaf().getKind()</code>
+     *                        has to be either {@link Kind#BREAK} or {@link Kind#CONTINUE}, or
+     *                        an IllegalArgumentException is thrown
      * @return the tree that is the "target" for the given break or continue statement, or null if there is none.
      * @throws IllegalArgumentException if the given tree is not a break or continue tree or if the given {@link CompilationInfo}
      *         is not in the {@link Phase#RESOLVED} phase.
@@ -1355,7 +1415,11 @@ public final class TreeUtilities {
         
         switch (leaf.getKind()) {
             case BREAK:
-                return (StatementTree) ((JCTree.JCBreak) leaf).target;
+                Tree breakTarget = (Tree) ((JCTree.JCBreak) leaf).target;
+                if (breakTarget == null || !(breakTarget instanceof StatementTree)) {
+                    return null;
+                }
+                return (StatementTree) breakTarget;
             case CONTINUE:
                 StatementTree target = (StatementTree) ((JCTree.JCContinue) leaf).target;
                 

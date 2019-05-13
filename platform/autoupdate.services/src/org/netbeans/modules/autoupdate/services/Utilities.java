@@ -557,6 +557,14 @@ public class Utilities {
         return getModuleInstance(uUnit.getCodeName(), null); // XXX
     }
     
+    public static Module toModule(String codeNameBase) {
+        ModuleInfo mi = ModuleCache.getInstance().find(codeNameBase);
+        if (mi instanceof Module) {
+            return (Module)mi;
+        }
+        return null;
+    }
+    
     public static Module toModule(String codeNameBase, SpecificationVersion specificationVersion) {
         return getModuleInstance(codeNameBase, specificationVersion);
     }
@@ -604,6 +612,8 @@ public class Utilities {
             Set<Dependency> deps = new HashSet<Dependency> (el.getModuleInfo ().getDependencies ());
             Set<ModuleInfo> availableInfos = new HashSet<ModuleInfo> (infos);
             
+            maybeAddImplicitHostDependency(element, deps);
+            
             int max_counter = el.getType().equals(UpdateManager.TYPE.KIT_MODULE) ? 2 : 1;
             int counter = max_counter;
             boolean aggressive = topAggressive && counter > 0;
@@ -618,8 +628,14 @@ public class Utilities {
                     UpdateUnit uu = toUpdateUnit(dep.getName());
                     if (uu != null && uu.getInstalled() != null) {
                         ModuleUpdateElementImpl em = (ModuleUpdateElementImpl) Trampoline.API.impl(uu.getInstalled());
-                        if (em.getInstallInfo().getUpdateItemImpl().isFragment()) {
-                            el.getInstallInfo().getUpdateItemImpl().setNeedsRestart(true);
+                        // fragments which are installed, but not enabled yet, and have live host module will cause
+                        // restart
+                        if (em.getInstallInfo().getUpdateItemImpl().isFragment() && !uu.getInstalled().isEnabled()) {
+                            String fh = em.getInstallInfo().getUpdateItemImpl().getFragmentHost();
+                            Module m = Utilities.toModule(fh);
+                            if (m != null && m.isEnabled()) {
+                                el.getInstallInfo().getUpdateItemImpl().setNeedsRestart(true);
+                            }
                         }
                     }
                 }
@@ -736,6 +752,7 @@ public class Utilities {
                                 Set<Dependency> deps = new HashSet<Dependency>(tryUpdated.getDependencies());
                                 Set<ModuleInfo> availableInfos = new HashSet<ModuleInfo>(forInstall);
                                 Set<Dependency> newones;
+                                maybeAddImplicitHostDependency(tryUE, deps);
                                 while (!(newones = processDependencies(deps, moreRequested, availableInfos, brokenDependencies, tryUE, aggressive, null, false)).isEmpty()) {
                                     deps = newones;
                                 }
@@ -784,6 +801,20 @@ public class Utilities {
 
         return moreRequested;
     }
+    
+    private static boolean maybeAddImplicitHostDependency(UpdateElement el, Set<Dependency> deps) {
+        
+        // check fragment, add implicit dependencies
+        UpdateElementImpl elImpl = Trampoline.API.impl(el);
+        UpdateItemImpl uiImpl = elImpl.getInstallInfo().getUpdateItemImpl();
+        if (!uiImpl.isFragment()) {
+            return false;
+        }
+        String fhost = uiImpl.getFragmentHost();
+        Collection<Dependency> hostDep = Dependency.create(Dependency.TYPE_MODULE, fhost);
+        err.fine(hostDep.toString());
+        return deps.addAll(hostDep);
+    }
 
     private static Set<Dependency> processDependencies (final Set<Dependency> original,
             Set<UpdateElement> retval,
@@ -814,6 +845,7 @@ public class Utilities {
                     availableInfos.add (reqM.getModuleInfo ());
                     retval.add (req);
                     res.addAll (reqM.getModuleInfo ().getDependencies ());
+                    maybeAddImplicitHostDependency(req, res);
                 }
             }
         }

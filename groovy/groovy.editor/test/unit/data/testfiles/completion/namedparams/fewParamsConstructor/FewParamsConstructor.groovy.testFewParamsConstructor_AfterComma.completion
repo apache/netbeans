@@ -14,8 +14,6 @@ CLASS      AbstractQueue                              null
 CLASS      AbstractSequentialList                     null
 CLASS      AbstractSet                                null
 CLASS      AdaptingMetaClass                          null
-CLASS      AllTestSuite                               null
-CLASS      AntBuilder                                 null
 CLASS      Appendable                                 null
 CLASS      ArithmeticException                        null
 CLASS      ArrayDeque                                 null
@@ -37,6 +35,7 @@ CLASS      BitSet                                     null
 CLASS      Boolean                                    null
 CLASS      BootstrapMethodError                       null
 CLASS      BufferedInputStream                        null
+CLASS      BufferedIterator                           null
 CLASS      BufferedOutputStream                       null
 CLASS      BufferedReader                             null
 CLASS      BufferedWriter                             null
@@ -62,7 +61,6 @@ CLASS      ClassFormatError                           null
 CLASS      ClassLoader                                null
 CLASS      ClassNotFoundException                     null
 CLASS      ClassValue                                 null
-CLASS      CliBuilder                                 null
 CLASS      CloneNotSupportedException                 null
 CLASS      Cloneable                                  null
 CLASS      Closeable                                  null
@@ -135,7 +133,6 @@ CLASS      FileDescriptor                             null
 CLASS      FileFilter                                 null
 CLASS      FileInputStream                            null
 CLASS      FileNameByRegexFinder                      null
-CLASS      FileNameFinder                             null
 CLASS      FileNameMap                                null
 CLASS      FileNotFoundException                      null
 CLASS      FileOutputStream                           null
@@ -164,24 +161,18 @@ CLASS      GrabExclude                                null
 CLASS      GrabResolver                               null
 CLASS      Grapes                                     null
 CLASS      GregorianCalendar                          null
-CLASS      GroovyAssert                               null
 CLASS      GroovyCallable                             null
 CLASS      GroovyClassLoader                          null
 CLASS      GroovyCodeSource                           null
 CLASS      GroovyCollections                          null
 CLASS      GroovyInterceptable                        null
-CLASS      GroovyLogTestCase                          null
-CLASS      GroovyMBean                                null
 CLASS      GroovyObject                               null
 CLASS      GroovyObjectSupport                        null
 CLASS      GroovyResourceLoader                       null
 CLASS      GroovyRuntimeException                     null
 CLASS      GroovyScriptEngine                         null
 CLASS      GroovyShell                                null
-CLASS      GroovyShellTestCase                        null
 CLASS      GroovySystem                               null
-CLASS      GroovyTestCase                             null
-CLASS      GroovyTestSuite                            null
 CLASS      HashMap                                    null
 CLASS      HashSet                                    null
 CLASS      Hashtable                                  null
@@ -235,8 +226,6 @@ CLASS      InvalidPropertiesFormatExcepti             null
 CLASS      Iterable                                   null
 CLASS      Iterator                                   null
 CLASS      JarURLConnection                           null
-CLASS      JavadocAssertionTestBuilder                null
-CLASS      JavadocAssertionTestSuite                  null
 CLASS      Lazy                                       null
 CLASS      LineNumberInputStream                      null
 CLASS      LineNumberReader                           null
@@ -300,6 +289,7 @@ CLASS      NotSerializableException                   null
 CLASS      NullPointerException                       null
 CLASS      Number                                     null
 CLASS      NumberFormatException                      null
+CLASS      NumberRange                                null
 CLASS      Object                                     null
 CLASS      ObjectGraphBuilder                         null
 CLASS      ObjectInput                                null
@@ -318,7 +308,6 @@ CLASS      ObservableList                             null
 CLASS      ObservableMap                              null
 CLASS      ObservableSet                              null
 CLASS      Observer                                   null
-CLASS      OptionAccessor                             null
 CLASS      Optional                                   null
 CLASS      OptionalDataException                      null
 CLASS      OptionalDouble                             null
@@ -426,7 +415,6 @@ CLASS      StringBuilder                              null
 CLASS      StringIndexOutOfBoundsExceptio             null
 CLASS      StringJoiner                               null
 CLASS      StringReader                               null
-CLASS      StringTestUtil                             null
 CLASS      StringTokenizer                            null
 CLASS      StringWriter                               null
 CLASS      StringWriterIOException                    null
@@ -446,7 +434,15 @@ CLASS      TracingInterceptor                         null
 CLASS      TreeMap                                    null
 CLASS      TreeSet                                    null
 CLASS      Tuple                                      null
+CLASS      Tuple1                                     null
 CLASS      Tuple2                                     null
+CLASS      Tuple3                                     null
+CLASS      Tuple4                                     null
+CLASS      Tuple5                                     null
+CLASS      Tuple6                                     null
+CLASS      Tuple7                                     null
+CLASS      Tuple8                                     null
+CLASS      Tuple9                                     null
 CLASS      TypeNotPresentException                    null
 CLASS      URI                                        null
 CLASS      URISyntaxException                         null
@@ -478,8 +474,6 @@ CLASS      WeakHashMap                                null
 CLASS      Writable                                   null
 CLASS      WriteAbortedException                      null
 CLASS      Writer                                     null
-CLASS      XmlNodePrinter                             null
-CLASS      XmlParser                                  null
-CLASS      XmlSlurper                                 null
 FIELD      binding                         [PUBLIC]   Binding
 FIELD      class                           [PUBLIC]   Class
+FIELD      defaultMetaClass                [PRIVATE]  MetaClass

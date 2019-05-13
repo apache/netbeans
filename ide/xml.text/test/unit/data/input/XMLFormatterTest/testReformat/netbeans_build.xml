@@ -1680,8 +1680,6 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
       <exclude name="README.html"/>
       <exclude name="CREDITS.html"/>
       <exclude name="LICENSE.txt"/>
-      <exclude name="DISTRIBUTION.txt"/>
-      <exclude name="THIRDPARTYLICENSE.txt"/>
       <exclude name="nb.cluster.*"/>
       <exclude name="etc/netbeans.conf"/>
       <exclude name="build_info"/>

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.68.1
+#Version 7.71.1
 
 CLSS public java.awt.Canvas
 cons public init()
@@ -2453,11 +2453,27 @@ meth public abstract !hasdefault java.lang.String iconBase()
 meth public abstract !hasdefault java.lang.String key()
 meth public abstract !hasdefault java.lang.String menuText()
 meth public abstract !hasdefault java.lang.String popupText()
+meth public abstract !hasdefault org.openide.awt.ActionState checkedOn()
+meth public abstract !hasdefault org.openide.awt.ActionState enabledOn()
 meth public abstract java.lang.String displayName()
+
+CLSS public abstract interface !annotation org.openide.awt.ActionState
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=SOURCE)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[FIELD])
+fld public final static java.lang.String NON_NULL_VALUE = "#non-null"
+fld public final static java.lang.String NULL_VALUE = "#null"
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean useActionInstance()
+meth public abstract !hasdefault java.lang.Class listenOn()
+meth public abstract !hasdefault java.lang.Class<?> type()
+meth public abstract !hasdefault java.lang.String checkedValue()
+meth public abstract !hasdefault java.lang.String listenOnMethod()
+meth public abstract !hasdefault java.lang.String property()
 
 CLSS public org.openide.awt.Actions
 cons public init()
  anno 0 java.lang.Deprecated()
+fld public final static java.lang.String ACTION_VALUE_TOGGLE = "openide.awt.actionToggle"
 fld public final static java.lang.String ACTION_VALUE_VISIBLE = "openide.awt.actionVisible"
 innr public abstract interface static ButtonActionConnector
 innr public abstract interface static SubMenuModel
@@ -2477,7 +2493,9 @@ meth public static void connect(javax.swing.AbstractButton,javax.swing.Action)
 meth public static void connect(javax.swing.AbstractButton,org.openide.util.actions.BooleanStateAction)
 meth public static void connect(javax.swing.AbstractButton,org.openide.util.actions.SystemAction)
  anno 0 java.lang.Deprecated()
+meth public static void connect(javax.swing.JCheckBoxMenuItem,javax.swing.Action,boolean)
 meth public static void connect(javax.swing.JCheckBoxMenuItem,org.openide.util.actions.BooleanStateAction,boolean)
+ anno 0 java.lang.Deprecated()
 meth public static void connect(javax.swing.JMenuItem,javax.swing.Action,boolean)
 meth public static void connect(javax.swing.JMenuItem,org.openide.util.actions.SystemAction,boolean)
  anno 0 java.lang.Deprecated()
@@ -2494,6 +2512,7 @@ meth public abstract boolean connect(javax.swing.JMenuItem,javax.swing.Action,bo
 
 CLSS public static org.openide.awt.Actions$CheckboxMenuItem
  outer org.openide.awt.Actions
+cons public init(javax.swing.Action,boolean)
 cons public init(org.openide.util.actions.BooleanStateAction,boolean)
 supr javax.swing.JCheckBoxMenuItem
 hfds serialVersionUID
@@ -3102,7 +3121,7 @@ meth public void setUI(javax.swing.plaf.ToolBarUI)
 meth public void setVisible(boolean)
 supr org.openide.awt.ToolbarWithOverflow
 hfds LOG,backingFolder,displayName,emptyAction,emptyInsets,isMetalLaF,label,processor,serialVersionUID
-hcls DefaultIconButton,Folder
+hcls DefaultIconButton,DefaultIconToggleButton,Folder
 
 CLSS public static org.openide.awt.Toolbar$DnDEvent
  outer org.openide.awt.Toolbar
@@ -3185,8 +3204,8 @@ meth public void setOrientation(int)
 meth public void updateUI()
 meth public void validate()
 supr javax.swing.JToolBar
-hfds PROP_DRAGGER,PROP_JDEV_DISABLE_OVERFLOW,PROP_PREF_ICON_SIZE,awtEventListener,componentAdapter,displayOverflowOnHover,overflowButton,overflowToolbar,popup,showingPopup,toolbarArrowHorizontal,toolbarArrowVertical
-hcls SafePopupMenu,SafeToolBar
+hfds PROP_DRAGGER,PROP_JDEV_DISABLE_OVERFLOW,PROP_PREF_ICON_SIZE,awtEventListener,componentAdapter,displayOverflowOnHover,overflowButton,overflowToolbar,popup,showingPopup
+hcls SafePopupMenu,SafeToolBar,ToolbarArrowIcon
 
 CLSS public abstract interface org.openide.awt.UndoRedo
 fld public final static org.openide.awt.UndoRedo NONE

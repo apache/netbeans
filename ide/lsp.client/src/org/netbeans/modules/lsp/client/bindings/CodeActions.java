@@ -18,22 +18,24 @@
  */
 package org.netbeans.modules.lsp.client.bindings;
 
-import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
+import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionContext;
 import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.Command;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.lsp.client.LSPBindings;
+import org.netbeans.modules.lsp.client.Utils;
 import org.netbeans.spi.editor.codegen.CodeGenerator;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
@@ -60,26 +62,22 @@ public class CodeActions implements CodeGenerator.Factory {
         if (server == null) {
             return Collections.emptyList();
         }
-        URI uri = file.toURI();
+        String uri = Utils.toURI(file);
         try {
-            List<? extends Command> commands = 
-                    server.getTextDocumentService().codeAction(new CodeActionParams(new TextDocumentIdentifier(uri.toString()),
+            List<Either<Command, CodeAction>> commands =
+                    server.getTextDocumentService().codeAction(new CodeActionParams(new TextDocumentIdentifier(uri),
                     new Range(Utils.createPosition(component.getDocument(), component.getSelectionStart()),
                             Utils.createPosition(component.getDocument(), component.getSelectionEnd())),
                     new CodeActionContext(Collections.emptyList()))).get();
             return commands.stream().map(cmd -> new CodeGenerator() {
                 @Override
                 public String getDisplayName() {
-                    return cmd.getTitle();
+                    return cmd.isLeft() ? cmd.getLeft().getTitle() : cmd.getRight().getTitle();
                 }
 
                 @Override
                 public void invoke() {
-                    try {
-                        server.getWorkspaceService().executeCommand(new ExecuteCommandParams(cmd.getCommand(), cmd.getArguments())).get();
-                    } catch (InterruptedException | ExecutionException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
+                    Utils.applyCodeAction(server, cmd);
                 }
             }).collect(Collectors.toList());
         } catch (BadLocationException | InterruptedException | ExecutionException ex) {

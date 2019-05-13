@@ -24,7 +24,8 @@ package org.netbeans.modules.php.editor.parser.astnodes;
  * <pre>e.g.
  * ($a),
  * (MyClass::CONSTANT),
- * ($variable->getObject())
+ * ($variable->getObject()),
+ * ($uvs = new UVS())->method();
  * </pre>
  */
 public class DereferencableVariable extends VariableBase {

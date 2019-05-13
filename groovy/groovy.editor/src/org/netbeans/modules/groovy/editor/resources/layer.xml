@@ -33,6 +33,12 @@
     <folder name="csl-hints">
         <folder name="text">
             <folder name="x-groovy">
+                <folder name="hints">
+                    <folder name="import">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.groovy.editor.hints.infrastructure.Bundle"/>
+                        <file name="org-netbeans-modules-groovy-editor-hints-RemoveUnusedImportHint.instance"/>
+                    </folder>
+                </folder>
                 <folder name="selection">
                     <file name="org-netbeans-modules-groovy-editor-hints-SurroundWithHint.instance"/>
                 </folder>
@@ -113,6 +119,19 @@
         <folder name="PreviewExamples">
             <folder name="text">
                 <file name="x-groovy" url="FontsAndColorsPreview.groovy"/>
+            </folder>
+        </folder>
+        <folder name="Editor">
+            <folder name="Hints">
+                <attr name="position" intvalue="0"/>
+                <folder name="text">
+                    <folder name="x-groovy">
+                        <file name="GroovyHints.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.spi.options.OptionsPanelController"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.groovy.editor.hints.HintsAdvancedOption.createStatic"/>
+                        </file>
+                    </folder>
+                </folder>
             </folder>
         </folder>
     </folder>

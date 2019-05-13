@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.46.1
+#Version 1.48.1
 
 CLSS public java.lang.Object
 cons public init()
@@ -22,7 +22,7 @@ meth public java.io.Reader getCharacterStream()
 meth public java.lang.String getSystemId()
 meth public java.lang.String toString()
 supr org.xml.sax.InputSource
-hfds LOG,class$org$netbeans$api$xml$parsers$DocumentInputSource,doc
+hfds LOG,doc
 
 CLSS public org.netbeans.api.xml.parsers.SAXEntityParser
 cons public init(org.xml.sax.XMLReader)
@@ -55,7 +55,6 @@ meth public javax.xml.transform.URIResolver getURIResolver()
 meth public org.xml.sax.EntityResolver getEntityResolver()
 meth public static org.netbeans.api.xml.services.UserCatalog getDefault()
 supr java.lang.Object
-hfds class$org$netbeans$api$xml$services$UserCatalog
 
 CLSS public org.xml.sax.InputSource
 cons public init()

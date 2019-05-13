@@ -36,7 +36,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -50,7 +49,7 @@ public class ClipboardHandlerTest extends NbTestCase {
 
     @Override
     protected void setUp() throws Exception {
-        SourceUtilsTestUtil.prepareTest(new String[] {"META-INF/generated-layer.xml", "org/netbeans/modules/java/source/resources/layer.xml", "org/netbeans/modules/java/editor/resources/layer.xml"}, new Object[0]);
+        SourceUtilsTestUtil.prepareTest(new String[] {"META-INF/generated-layer.xml", "org/netbeans/modules/java/source/resources/layer.xml", "org/netbeans/modules/java/editor/resources/layer.xml", "org/netbeans/modules/editor/settings/storage/layer.xml"}, new Object[0]);
         ClipboardHandler.autoImport = true;
         super.setUp();
     }
@@ -88,6 +87,10 @@ public class ClipboardHandlerTest extends NbTestCase {
                 "package test;\n^public class Target {\n\n}", "package test;\n\nimport java.util.List;\n\n@Test.R(List.class) public class Target {\n\n}");
     }
     
+    public void testAnonymousClass() throws Exception {
+        copyAndPaste("package test;\nimport java.util.ArrayList;\npublic class Test { void t() { |new ArrayList<String>() {};| } }\n", "package test;\npublic class Target {\nvoid t() { ^ }\n}", "package test;\n\nimport java.util.ArrayList;\n\npublic class Target {\nvoid t() { new ArrayList<String>() {}; }\n}");
+    }
+
     private void copyAndPaste(String from, final String to, String golden) throws Exception {
         final int pastePos = to.indexOf('^');
 

@@ -28,7 +28,9 @@
         <mkdir dir="${build.dir}/desktop-classes-src" />
         <unzip src="external/applemenu-external-desktop-classes-8.2.zip" dest="${build.dir}/desktop-classes-src"/>
         <mkdir dir="${build.dir}/desktop-classes-classes" />
-        <javac srcdir="${build.dir}/desktop-classes-src" destdir="${build.dir}/desktop-classes-classes" />
+        <javac srcdir="${build.dir}/desktop-classes-src" destdir="${build.dir}/desktop-classes-classes"
+            source="1.8" target="1.8">
+        </javac>
   </target>
 
 </project>

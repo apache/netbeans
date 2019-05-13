@@ -30,12 +30,10 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JPopupMenu;
 import javax.swing.JToggleButton;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
-import org.openide.util.ImageUtilities;
 import org.openide.util.Parameters;
 
 /**
@@ -221,7 +219,7 @@ class DropDownToggleButton extends JToggleButton {
             Icon orig = regIcons.get( ICON_ROLLOVER );
             if( null == orig )
                 orig = regIcons.get( ICON_NORMAL );
-            icon = new IconWithArrow( orig, !mouseInArrowArea );
+            icon = new IconWithArrow( orig, !mouseInArrowArea, false );
             arrowIcons.put( mouseInArrowArea ? ICON_ROLLOVER : ICON_ROLLOVER_LINE, icon );
         }
         return icon;
@@ -236,7 +234,7 @@ class DropDownToggleButton extends JToggleButton {
                 orig = regIcons.get( ICON_ROLLOVER );
             if( null == orig )
                 orig = regIcons.get( ICON_NORMAL );
-            icon = new IconWithArrow( orig, !mouseInArrowArea );
+            icon = new IconWithArrow( orig, !mouseInArrowArea, false );
             arrowIcons.put( mouseInArrowArea ? ICON_ROLLOVER_SELECTED : ICON_ROLLOVER_SELECTED_LINE, icon );
         }
         return icon;
@@ -276,7 +274,8 @@ class DropDownToggleButton extends JToggleButton {
             arrowIcons.remove( iconType );
         } else {
             regIcons.put( iconType, orig );
-            arrow = new ImageIcon(ImageUtilities.icon2Image(new IconWithArrow( orig, false )));
+            arrow = new IconWithArrow( orig, false,
+                iconType.equals(ICON_DISABLED) || iconType.equals(ICON_DISABLED_SELECTED) );
             arrowIcons.put( iconType, arrow );
         }
         return arrow;
@@ -311,14 +310,12 @@ class DropDownToggleButton extends JToggleButton {
 
     @Override
     public void setDisabledIcon(Icon icon) {
-        //TODO use 'disabled' arrow icon
         Icon arrow = updateIcons( icon, ICON_DISABLED );
         super.setDisabledIcon( hasPopupMenu() ? arrow : icon );
     }
 
     @Override
     public void setDisabledSelectedIcon(Icon icon) {
-        //TODO use 'disabled' arrow icon
         Icon arrow = updateIcons( icon, ICON_DISABLED_SELECTED );
         super.setDisabledSelectedIcon( hasPopupMenu() ? arrow : icon );
     }

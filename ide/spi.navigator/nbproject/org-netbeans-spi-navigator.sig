@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.39.1
+#Version 1.42.1
 
 CLSS public java.lang.Object
 cons public init()
@@ -68,12 +68,19 @@ meth public abstract int getPanelsPolicy()
 CLSS public abstract interface org.netbeans.spi.navigator.NavigatorPanel
 innr public abstract interface static !annotation Registration
 innr public abstract interface static !annotation Registrations
+innr public abstract interface static DynamicRegistration
 meth public abstract java.lang.String getDisplayHint()
 meth public abstract java.lang.String getDisplayName()
 meth public abstract javax.swing.JComponent getComponent()
 meth public abstract org.openide.util.Lookup getLookup()
 meth public abstract void panelActivated(org.openide.util.Lookup)
 meth public abstract void panelDeactivated()
+
+CLSS public abstract interface static org.netbeans.spi.navigator.NavigatorPanel$DynamicRegistration
+ outer org.netbeans.spi.navigator.NavigatorPanel
+meth public abstract java.util.Collection<? extends org.netbeans.spi.navigator.NavigatorPanel> panelsFor(java.net.URI)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 
 CLSS public abstract interface static !annotation org.netbeans.spi.navigator.NavigatorPanel$Registration
  outer org.netbeans.spi.navigator.NavigatorPanel

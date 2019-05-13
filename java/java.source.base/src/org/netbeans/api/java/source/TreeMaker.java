@@ -242,6 +242,30 @@ public final class TreeMaker {
     }
     
     /**
+     * Creates a new CaseTree.
+     *
+     * @param patterns the labels for this case statement.
+     * @param statements the list of statements.
+     * @see com.sun.source.tree.CaseTree
+     * @since 2.39
+     */
+    public CaseTree CaseMultipleLabels(List<? extends ExpressionTree> patterns, List<? extends StatementTree> statements) {
+        return delegate.Case(patterns, statements);
+    }
+    
+    /**
+     * Creates a new CaseTree for a rule case (case &lt;constants&gt; -> &lt;body&gt;).
+     *
+     * @param patterns the labels for this case statement.
+     * @param body the case's body
+     * @see com.sun.source.tree.CaseTree
+     * @since 2.39
+     */
+    public CaseTree Case(List<? extends ExpressionTree> patterns, Tree body) {
+        return delegate.Case(patterns, body);
+    }
+    
+    /**
      * Creates a new CatchTree.
      *
      * @param parameter the exception variable declaration.
@@ -1018,7 +1042,19 @@ public final class TreeMaker {
     public SwitchTree Switch(ExpressionTree expression, List<? extends CaseTree> cases) {
         return delegate.Switch(expression, cases);
     }
-    
+
+    /**
+     * Creates a new SwitchExpressionTree.
+     *
+     * @param expression the expression which provides the value to be switched.
+     * @param cases the list of cases, or an empty list.
+     * @see com.sun.source.tree.SwitchExpressionTree
+     * @since 2.41
+     */
+    public Tree SwitchExpression(ExpressionTree expression, List<? extends CaseTree> cases) {
+        return delegate.SwitchExpression(expression, cases);
+    }
+
     /**
      * Creates a new SynchronizedTree.
      *

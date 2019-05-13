@@ -25,6 +25,9 @@ import com.sun.source.util.JavacTask;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
+import com.sun.tools.javac.comp.AttrContext;
+import com.sun.tools.javac.comp.Env;
+import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.util.Abort;
 
 import org.netbeans.lib.nbjavac.services.CancelAbort;
@@ -59,6 +62,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import javax.annotation.processing.Processor;
 import javax.swing.event.ChangeEvent;
@@ -84,7 +88,6 @@ import org.netbeans.lib.editor.util.swing.PositionRegion;
 import org.netbeans.modules.java.preprocessorbridge.spi.JavaFileFilterImplementation;
 import org.netbeans.modules.java.source.JavaFileFilterQuery;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
-import org.netbeans.modules.java.source.JavadocEnv;
 import org.netbeans.modules.java.source.PostFlowAnalysis;
 import org.netbeans.modules.java.source.indexing.APTUtils;
 import org.netbeans.modules.java.source.indexing.FQN2Files;
@@ -93,14 +96,11 @@ import org.netbeans.lib.nbjavac.services.NBClassFinder;
 import org.netbeans.lib.nbjavac.services.NBClassReader;
 import org.netbeans.lib.nbjavac.services.NBEnter;
 import org.netbeans.lib.nbjavac.services.NBJavaCompiler;
-import org.netbeans.lib.nbjavac.services.NBJavadocEnter;
-import org.netbeans.lib.nbjavac.services.NBJavadocMemberEnter;
 import org.netbeans.lib.nbjavac.services.NBMemberEnter;
 import org.netbeans.lib.nbjavac.services.NBParserFactory;
 import org.netbeans.lib.nbjavac.services.NBClassWriter;
 import org.netbeans.lib.nbjavac.services.NBJavacTrees;
-import org.netbeans.lib.nbjavac.services.NBJavadocClassFinder;
-import org.netbeans.lib.nbjavac.services.NBMessager;
+import org.netbeans.lib.nbjavac.services.NBLog;
 import org.netbeans.lib.nbjavac.services.NBResolve;
 import org.netbeans.lib.nbjavac.services.NBTreeMaker;
 import org.netbeans.modules.java.source.base.SourceLevelUtils;
@@ -630,7 +630,17 @@ public class JavacParser extends Parser {
                 }
                 long start = System.currentTimeMillis ();
                 JavacTaskImpl jti = currentInfo.getJavacTask();
-                PostFlowAnalysis.analyze(jti.analyze(), jti.getContext());
+                JavaCompiler compiler = JavaCompiler.instance(jti.getContext());
+                List<Env<AttrContext>> savedTodo = new ArrayList<>(compiler.todo);
+                try {
+                    compiler.todo.retainFiles(Collections.singletonList(currentInfo.jfo));
+                    savedTodo.removeAll(compiler.todo);
+                    PostFlowAnalysis.analyze(jti.analyze(), jti.getContext());
+                } finally {
+                    for (Env<AttrContext> env : savedTodo) {
+                        compiler.todo.offer(env);
+                    }
+                }
                 currentPhase = Phase.RESOLVED;
                 long end = System.currentTimeMillis ();
                 logTime(currentInfo.getFileObject(),currentPhase,(end-start));
@@ -670,6 +680,7 @@ public class JavacParser extends Parser {
 
     static JavacTaskImpl createJavacTask(
             final FileObject file,
+            final JavaFileObject jfo,
             final FileObject root,
             final ClasspathInfo cpInfo,
             final JavacParser parser,
@@ -727,19 +738,6 @@ public class JavacParser extends Parser {
                 compilerOptions = null;
                 sourceLevel = null;
             }
-            AbstractSourceFileObject source = null;
-            if (file != null) {
-                try {
-                    source = FileObjects.sourceFileObject(file, root, null, false);
-                    if (source.getKind() != Kind.SOURCE) {
-                        source = null;
-                    }
-                } catch (FileObjects.InvalidFileException ife) {
-                    //ignore, it will be handled again later, see #parse.
-                } catch (IOException ex) {
-                    throw new IllegalStateException(ex);
-                }
-            }
             final JavacTaskImpl javacTask = createJavacTask(cpInfo,
                     diagnosticListener,
                     sourceLevel != null ? sourceLevel.getSourceLevel() : null,
@@ -750,7 +748,7 @@ public class JavacParser extends Parser {
                     APTUtils.get(root),
                     compilerOptions,
                     additionalModules,
-                    source != null ? Arrays.asList(source) : Collections.emptyList());
+                    jfo != null ? Arrays.asList(jfo) : Collections.emptyList());
             Lookup.getDefault()
                   .lookupAll(TreeLoaderRegistry.class)
                   .stream()
@@ -884,9 +882,14 @@ public class JavacParser extends Parser {
             options.add(additionalModules.stream().collect(Collectors.joining(",")));   //NOI18N
         }
 
+        //filter out classfiles:
+        files = StreamSupport.stream(files.spliterator(), false)
+                             .filter(file -> file.getKind() == Kind.SOURCE)
+                             .collect(Collectors.toList());
+
         Context context = new Context();
         //need to preregister the Messages here, because the getTask below requires Log instance:
-        NBMessager.preRegister(context, null, DEV_NULL, DEV_NULL, DEV_NULL);
+        NBLog.preRegister(context, DEV_NULL, DEV_NULL, DEV_NULL);
         JavacTaskImpl task = (JavacTaskImpl)JavacTool.create().getTask(null,
                 ClasspathInfoAccessor.getINSTANCE().createFileManager(cpInfo, validatedSourceLevel.name),
                 diagnosticListener, options, files.iterator().hasNext() ? null : Arrays.asList("java.lang.Object"), files,
@@ -914,14 +917,11 @@ public class JavacParser extends Parser {
         NBJavacTrees.preRegister(context);
         if (!backgroundCompilation) {
             JavacFlowListener.preRegister(context, task);
-            NBJavadocEnter.preRegister(context);
-            NBJavadocMemberEnter.preRegister(context);
-            JavadocEnv.preRegister(context, cpInfo);
             NBResolve.preRegister(context);
-        } else {
-            NBEnter.preRegister(context);
-            NBMemberEnter.preRegister(context);
         }
+        NBEnter.preRegister(context);
+        NBMemberEnter.preRegister(context, backgroundCompilation);
+        ParameterNameProviderImpl.register(task, cpInfo);
         TIME_LOGGER.log(Level.FINE, "JavaC", context);
         return task;
     }
@@ -1055,6 +1055,8 @@ public class JavacParser extends Parser {
                 res.add(option);  //NOI18N
                 xmoduleSeen = true;
             } else if (option.equals("-parameters") || option.startsWith("-Xlint")) {     //NOI18N
+                res.add(option);
+            } else if (option.equals("--enable-preview")) {     //NOI18N
                 res.add(option);
             } else if ((
                     option.startsWith("--add-modules") ||   //NOI18N
@@ -1336,10 +1338,7 @@ public class JavacParser extends Parser {
     public static class VanillaJavacContextEnhancer implements ContextEnhancer {
         @Override
         public void enhance(Context context, boolean backgroundCompilation) {
-            if (!backgroundCompilation)
-                NBJavadocClassFinder.preRegister(context);
-            else
-                NBClassFinder.preRegister(context);
+            NBClassFinder.preRegister(context);
             NBJavaCompiler.preRegister(context);
         }
     }

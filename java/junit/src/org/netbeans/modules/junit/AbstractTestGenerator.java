@@ -1466,7 +1466,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
 
                     MethodInvocationTree comparison = maker.MethodInvocation(
                             Collections.<ExpressionTree>emptyList(),    //type args.
-                            (retTypeKind == TypeKind.ARRAY && junitVersion == JUnitVersion.JUNIT4) ? maker.Identifier("assertArrayEquals") : maker.Identifier("assertEquals"),               //NOI18N
+                            (retTypeKind == TypeKind.ARRAY && (junitVersion == JUnitVersion.JUNIT4 || junitVersion == JUnitVersion.JUNIT5)) ? maker.Identifier("assertArrayEquals") : maker.Identifier("assertEquals"),               //NOI18N
                             comparisonArgs);
                     StatementTree comparisonStmt = maker.ExpressionStatement(
                             comparison);

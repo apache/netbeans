@@ -41,6 +41,8 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
@@ -83,7 +85,7 @@ import org.openide.util.RequestProcessor;
  *
  * @author Jiri Rechtacek
  */
-public class InstallStep implements WizardDescriptor.FinishablePanel<WizardDescriptor> {
+class InstallStep implements WizardDescriptor.FinishablePanel<WizardDescriptor> {
     private OperationPanel panel;
     private PanelBodyContainer component;
     private InstallUnitWizardModel model = null;
@@ -128,6 +130,15 @@ public class InstallStep implements WizardDescriptor.FinishablePanel<WizardDescr
     private final boolean allowRunInBackground;
     private final boolean runInBackground;
     
+    /**
+     * If true, will trigger delayed modification of the wizard,
+     * see {@link #delayedModifyEnabled}. The flag is set from within 
+     * successful installation, but the actual modification should be done
+     * only after installation task completes, so that access to the 
+     * model is not blocked by a pending operation
+     */
+    boolean delayedModifyEnabled = true;
+    
     /** Creates a new instance of OperationDescriptionStep */
     public InstallStep (InstallUnitWizardModel model) {
         this (model, false);
@@ -156,7 +167,24 @@ public class InstallStep implements WizardDescriptor.FinishablePanel<WizardDescr
     @Override
     public PanelBodyContainer getComponent() {
         if (component == null) {
+            delayedModifyEnabled = false;
             panel = new OperationPanel(allowRunInBackground, runInBackground);
+            
+            // Disable 'install' button right after the panel appears.
+            panel.addAncestorListener(new AncestorListener() {
+                public void ancestorAdded(AncestorEvent event) {
+                    model.modifyOptionsForInstall(wd);
+                }
+
+                @Override
+                public void ancestorRemoved(AncestorEvent event) {
+                }
+
+                @Override
+                public void ancestorMoved(AncestorEvent event) {
+                }
+                
+            });
             panel.addPropertyChangeListener (new PropertyChangeListener () {
                 @Override
                 public void propertyChange (PropertyChangeEvent evt) {
@@ -167,6 +195,10 @@ public class InstallStep implements WizardDescriptor.FinishablePanel<WizardDescr
                             it.waitFinished ();
                         } finally {
                             PluginManagerUI.unregisterRunningTask ();
+                            // wait for the task to finish, THEN refresh the model
+                            // and THEN modify the dialog's appearance
+                            model.performRefresh();
+                            delayedModifyOptions();
                         }
                     } else if (OperationPanel.RUN_IN_BACKGROUND.equals (evt.getPropertyName ())) {
                         setRunInBackground ();
@@ -190,8 +222,7 @@ public class InstallStep implements WizardDescriptor.FinishablePanel<WizardDescr
     
     @SuppressWarnings("null")
     private void doDownloadAndVerificationAndInstall () {
-        
-        OperationContainer<InstallSupport> installContainer = model.getBaseContainer();
+        OperationContainer<InstallSupport> installContainer = model.getInstallContainer();
         final InstallSupport support = installContainer.getSupport();
         assert support != null : "Operation failed: OperationSupport cannot be null because OperationContainer "
                 + "contains elements: " + installContainer.listAll() + " and invalid elements " + installContainer.listInvalid() + "\ncontainer: " + installContainer;
@@ -201,8 +232,8 @@ public class InstallStep implements WizardDescriptor.FinishablePanel<WizardDescr
             log.log(Level.WARNING, "Operation failed: OperationSupport was null because OperationContainer "
                     + "either does not contain any elements: {0} or contains invalid elements {1}",
                     new Object[]{
-                        model.getBaseContainer().listAll(),
-                        model.getBaseContainer().listInvalid()});
+                        model.getInstallContainer().listAll(),
+                        model.getInstallContainer().listInvalid()});
             return ;
         }
         
@@ -222,7 +253,8 @@ public class InstallStep implements WizardDescriptor.FinishablePanel<WizardDescr
             }
         }
         if (! canceled) {
-            fireChange ();
+            // delay the fire untilt he task completes
+            org.netbeans.modules.autoupdate.ui.actions.Installer.RP.post(this::fireChange);
         }
     }
     
@@ -315,7 +347,7 @@ public class InstallStep implements WizardDescriptor.FinishablePanel<WizardDescr
                                 return handleCancel ();
                             }
                         });
-                totalUnits = model.getBaseContainer ().listAll ().size ();
+                totalUnits = model.getInstallContainer ().listAll ().size ();
                 processedUnits = 0;
                 detailLabel.addPropertyChangeListener (TEXT_PROPERTY, new PropertyChangeListener () {
                     @Override
@@ -434,7 +466,7 @@ public class InstallStep implements WizardDescriptor.FinishablePanel<WizardDescr
                             return true;
                         }
                     });
-            totalUnits = model.getBaseContainer ().listAll ().size ();
+            totalUnits = model.getInstallContainer ().listAll ().size ();
             processedUnits = 0;
             if (indeterminateProgress) {
                 detailLabel.addPropertyChangeListener (TEXT_PROPERTY, new PropertyChangeListener () {
@@ -620,7 +652,7 @@ public class InstallStep implements WizardDescriptor.FinishablePanel<WizardDescr
             handle = systemHandle;
         } else {
             spareHandle = ProgressHandleFactory.createHandle (getBundle ("InstallStep_Install_InstallingPlugins"));
-            totalUnits = model.getBaseContainer ().listAll ().size ();
+            totalUnits = model.getInstallContainer ().listAll ().size ();
             processedUnits = 0;
             if (indeterminateProgress) {
                 detailLabel.addPropertyChangeListener (TEXT_PROPERTY, new PropertyChangeListener () {
@@ -668,12 +700,25 @@ public class InstallStep implements WizardDescriptor.FinishablePanel<WizardDescr
         return r;
     }
     
+    /**
+     * Performs delayed update of wizard buttons. Does nothing if the operation
+     * does not complete successfuly.
+     */
+    private void delayedModifyOptions() {
+        if (delayedModifyEnabled) {
+            model.modifyOptionsForEndInstall (wd);
+        }
+    }
+    
     private void presentInstallDone () {
         if (canceled) {
             log.fine("Quit presentInstallDone() because an previous installation was canceled.");
             return ;
         }
-        model.modifyOptionsForDoClose (wd);
+        // The buttons should not be changed right now, because the UI could need to access the model
+        // which is partially obscured by a running install Task. The buttons will be changed once
+        // the Task completes in RequestProcessor.
+        delayedModifyEnabled = true;
         if (installException == null) {
             component.setHeadAndContent (getBundle (HEAD_INSTALL_DONE), getBundle (CONTENT_INSTALL_DONE));
             panel.setBody (getBundle ("InstallStep_InstallDone_Text"),
@@ -817,8 +862,8 @@ public class InstallStep implements WizardDescriptor.FinishablePanel<WizardDescr
             }
         } else if (restarter != null) {
             if (support == null) {
-                assert model.getBaseContainer().listAll() == null : "storeSettings failed. OperationSupport is null because OperationContainer " +
-                        "contains no elements: " + model.getBaseContainer ().listAll ();
+                assert model.getInstallContainer().listAll() == null : "storeSettings failed. OperationSupport is null because OperationContainer " +
+                        "contains no elements: " + model.getInstallContainer ().listAll ();
                 return ;
             }
             if (panel.restartNow ()) {
@@ -927,7 +972,7 @@ public class InstallStep implements WizardDescriptor.FinishablePanel<WizardDescr
         if (codeName == null || codeName.isEmpty()) {
             return null;
         }
-        for (OperationInfo<InstallSupport> info : model.getBaseContainer().listAll()) {
+        for (OperationInfo<InstallSupport> info : model.getInstallContainer().listAll()) {
             if (codeName.equals(info.getUpdateElement().getCodeName())) {
                 return info.getUpdateElement();
             }

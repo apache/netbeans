@@ -20,10 +20,12 @@
 package org.netbeans.modules.groovy.editor.completion.inference;
 
 import java.util.Collections;
+import java.util.ListIterator;
 import java.util.Set;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.ModuleNode;
+import org.codehaus.groovy.ast.expr.ClosureExpression;
 import org.codehaus.groovy.ast.expr.MethodCallExpression;
 import org.codehaus.groovy.ast.expr.VariableExpression;
 import org.netbeans.editor.BaseDocument;
@@ -55,7 +57,7 @@ public class GroovyTypeAnalyzer {
         }
         
         if (caller instanceof MethodCallExpression) {
-            return Collections.singleton(MethodInference.findCallerType(caller));
+            return Collections.singleton(MethodInference.findCallerType(caller, path, document, astOffset));
         }
         
         return Collections.emptySet();

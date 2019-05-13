@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<checkstyle>
+<file name="HelloWorld.php">
+  <error line="5" column="1" severity="error" message="Parameter $date of method HelloWorld::sayHello() has invalid typehint type DateTimeImutable." />
+  <error line="7" column="1" severity="error" message="Call to method format() on an unknown class DateTimeImutable." />
+</file>
+<file name="vendor/nette/php-generator/src/PhpGenerator/Traits/CommentAware.php (in context of class Nette\PhpGenerator\ClassType)">
+  <error line="28" column="1" severity="error" message="Casting to string something that's already string." />
+</file>
+<file name="vendor/nikic/php-parser/test/PhpParser/Builder/ClassTest.php">
+  <error line="0" column="1" severity="error" message="Class PhpParser\Builder\ClassTest was not found while trying to analyse it - autoloading is probably not configured properly." />
+</file>
+</checkstyle>

@@ -49,6 +49,7 @@ import org.netbeans.api.java.source.ClassIndex.Symbols;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import org.netbeans.api.java.source.support.ReferencesCount;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.modules.java.completion.TreeShims;
 import org.netbeans.modules.parsing.api.Source;
 import org.openide.util.Pair;
 
@@ -2292,7 +2293,14 @@ public final class JavaCompletionTask<T> extends BaseTask {
             }
             if (lastCase != null) {
                 StatementTree last = null;
-                for (StatementTree stat : lastCase.getStatements()) {
+                List<? extends StatementTree> statements = lastCase.getStatements();
+                if (statements == null) {
+                    Tree caseBody = TreeShims.getBody(lastCase);
+                    if (caseBody instanceof StatementTree) {
+                        statements = Collections.singletonList((StatementTree) caseBody);
+                    }
+                }
+                for (StatementTree stat : statements) {
                     int pos = (int) sourcePositions.getStartPosition(root, stat);
                     if (pos == Diagnostic.NOPOS || offset <= pos) {
                         break;
@@ -2333,11 +2341,37 @@ public final class JavaCompletionTask<T> extends BaseTask {
         SourcePositions sourcePositions = env.getSourcePositions();
         CompilationUnitTree root = env.getRoot();
         CompilationController controller = env.getController();
-        if (cst.getExpression() != null && ((sourcePositions.getStartPosition(root, cst.getExpression()) >= offset)
-                || (cst.getExpression().getKind() == Tree.Kind.ERRONEOUS && ((ErroneousTree) cst.getExpression()).getErrorTrees().isEmpty() && sourcePositions.getEndPosition(root, cst.getExpression()) >= offset))) {
-            TreePath path1 = path.getParentPath();
-            if (path1.getLeaf().getKind() == Tree.Kind.SWITCH) {
-                TypeMirror tm = controller.getTrees().getTypeMirror(new TreePath(path1, ((SwitchTree) path1.getLeaf()).getExpression()));
+        TreePath parentPath = path.getParentPath();
+        ExpressionTree caseExpressionTree = null;
+        ExpressionTree caseErroneousTree = null;
+        List<? extends ExpressionTree> caseTreeList = TreeShims.getExpressions(cst);
+        if (!caseTreeList.isEmpty() && caseTreeList.size() == 1) {
+            caseExpressionTree = caseTreeList.get(0);
+            caseErroneousTree = caseTreeList.get(0);
+        } else if (caseTreeList.size() > 1) {
+            caseExpressionTree = caseTreeList.get(0);
+            for (ExpressionTree et : caseTreeList) {
+                if (et != null && et.getKind() == Tree.Kind.ERRONEOUS) {
+                    caseErroneousTree = et;
+                    break;
+                }
+            }
+        }
+
+        if (caseExpressionTree != null && ((sourcePositions.getStartPosition(root, caseExpressionTree) >= offset)
+                || (caseErroneousTree != null && caseErroneousTree.getKind() == Tree.Kind.ERRONEOUS && ((ErroneousTree) caseErroneousTree).getErrorTrees().isEmpty() && sourcePositions.getEndPosition(root, caseErroneousTree) >= offset))) {
+
+            if (parentPath.getLeaf().getKind() == Tree.Kind.SWITCH || parentPath.getLeaf().getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
+                ExpressionTree exprTree = null;
+                if (parentPath.getLeaf().getKind() == Tree.Kind.SWITCH) {
+                    exprTree = ((SwitchTree) parentPath.getLeaf()).getExpression();
+                } else {
+                    List<? extends ExpressionTree> exprTrees = TreeShims.getExpressions(parentPath.getLeaf());
+                    if (!exprTrees.isEmpty()) {
+                        exprTree = exprTrees.get(0);
+                    }
+                }
+                TypeMirror tm = controller.getTrees().getTypeMirror(new TreePath(parentPath, exprTree));
                 if (tm.getKind() == TypeKind.DECLARED && ((DeclaredType) tm).asElement().getKind() == ENUM) {
                     addEnumConstants(env, (TypeElement) ((DeclaredType) tm).asElement());
                 } else {
@@ -3200,6 +3234,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                                     env.getController().getSourceVersion().compareTo(SourceVersion.RELEASE_8) >= 0 && eu.isEffectivelyFinal((VariableElement)e)
                                 || (method == null && (e.getEnclosingElement().getKind() == INSTANCE_INIT
                                 || e.getEnclosingElement().getKind() == STATIC_INIT
+                                || e.getEnclosingElement().getKind() == CONSTRUCTOR
                                 || e.getEnclosingElement().getKind() == METHOD && e.getEnclosingElement().getEnclosingElement().getKind() == FIELD)))
                                 && (!illegalForwardRefs.containsKey(e.getSimpleName()) || illegalForwardRefs.get(e.getSimpleName()).getEnclosingElement() != e.getEnclosingElement());
                     case FIELD:
@@ -3675,15 +3710,25 @@ public final class JavaCompletionTask<T> extends BaseTask {
         Trees trees = env.getController().getTrees();
         TreePath path = env.getPath().getParentPath();
         Set<Element> alreadyUsed = new HashSet<>();
+        List<? extends CaseTree> caseTrees = null;
         if (path != null && path.getLeaf().getKind() == Tree.Kind.SWITCH) {
-            SwitchTree st = (SwitchTree)path.getLeaf();
-            for (CaseTree ct : st.getCases()) {
-                Element e = ct.getExpression() != null ? trees.getElement(new TreePath(path, ct.getExpression())) : null;
-                if (e != null && e.getKind() == ENUM_CONSTANT) {
-                    alreadyUsed.add(e);
+            SwitchTree st = (SwitchTree) path.getLeaf();
+            caseTrees = st.getCases();
+        } else if (path != null && path.getLeaf().getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
+            caseTrees = TreeShims.getCases(path.getLeaf());
+        }
+
+        if (caseTrees != null) {
+            for (CaseTree ct : caseTrees) {
+                for (ExpressionTree et : TreeShims.getExpressions(ct)) {
+                    Element e = et != null ? trees.getElement(new TreePath(path, et)) : null;
+                    if (e != null && e.getKind() == ENUM_CONSTANT) {
+                        alreadyUsed.add(e);
+                    }
                 }
             }
         }
+
         for (Element e : elem.getEnclosedElements()) {
             if (e.getKind() == ENUM_CONSTANT && !alreadyUsed.contains(e)) {
                 String name = e.getSimpleName().toString();

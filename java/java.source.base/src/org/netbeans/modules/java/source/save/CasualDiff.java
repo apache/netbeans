@@ -125,6 +125,7 @@ import com.sun.tools.javac.tree.JCTree.TypeBoundKind;
 import com.sun.tools.javac.tree.Pretty;
 import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Position;
@@ -167,6 +168,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbCollections;
 import javax.lang.model.type.TypeKind;
+import org.netbeans.modules.java.source.TreeShims;
 
 public class CasualDiff {
 
@@ -1874,22 +1876,88 @@ public class CasualDiff {
         return bounds[1];
     }
 
+    protected int diffSwitchExpression(Tree oldT, Tree newT, int[] bounds) {
+        int localPointer = bounds[0];
+
+        // rename in switch
+        int[] selectorBounds = getBounds((JCTree)TreeShims.getExpressions(oldT).get(0));
+        copyTo(localPointer, selectorBounds[0]);
+        localPointer = diffTree((JCTree)TreeShims.getExpressions(oldT).get(0), (JCTree)TreeShims.getExpressions(newT).get(0), selectorBounds);
+
+        tokenSequence.move(selectorBounds[1]);
+        do { } while (tokenSequence.moveNext() && JavaTokenId.LBRACE != tokenSequence.token().id());
+        tokenSequence.moveNext();
+        copyTo(localPointer, localPointer = tokenSequence.offset());
+        PositionEstimator est = EstimatorFactory.cases(TreeShims.getCases(oldT), TreeShims.getCases(newT), diffContext);
+        ListBuffer<JCTree.JCCase> oldTcases = new ListBuffer<JCTree.JCCase>();
+        for (CaseTree t : TreeShims.getCases(oldT))
+            oldTcases.append((JCTree.JCCase)t);
+        ListBuffer<JCTree.JCCase> newTcases = new ListBuffer<JCTree.JCCase>();
+        for (CaseTree t : TreeShims.getCases(newT))
+            newTcases.append((JCTree.JCCase)t);
+        localPointer = diffList(oldTcases.toList(), newTcases.toList(), localPointer, est, Measure.MEMBER, printer);
+
+        copyTo(localPointer, bounds[1]);
+        return bounds[1];
+    }
+
     protected int diffCase(JCCase oldT, JCCase newT, int[] bounds) {
         int localPointer = bounds[0];
-        if (oldT.pat != null) {
-            int[] patBounds = getBounds(oldT.pat);
-            copyTo(localPointer, patBounds[0]);
-            localPointer = diffTree(oldT.pat, newT.pat, patBounds);
-            tokenSequence.move(patBounds[1]);
-            do { } while (tokenSequence.moveNext() && JavaTokenId.COLON != tokenSequence.token().id());
+        List<JCExpression> oldPatterns = getCasePatterns(oldT);
+        List<JCExpression> newPatterns = getCasePatterns(newT);
+        PositionEstimator patternEst = EstimatorFactory.casePatterns(
+                oldPatterns,
+                newPatterns,
+                diffContext
+        );
+        int posHint;
+        int endpos;
+        int copyTo;
+        if (oldPatterns.isEmpty()) {
+            moveFwdToOneOfTokens(tokenSequence, bounds[0], EnumSet.of(JavaTokenId.DEFAULT));
+            tokenSequence.moveNext();
+            copyTo = endpos = posHint = tokenSequence.offset();
+
+            if (!newPatterns.isEmpty()) {
+                copyTo = getOldPos(oldT);
+            }
+        } else {
+            copyTo = posHint = oldPatterns.iterator().next().getStartPosition();
+            endpos = endPos(oldPatterns.get(oldPatterns.size() - 1));
+
+            if (newPatterns.isEmpty()) {
+                localPointer = copyTo = posHint = endpos;
+                printer.print("default");
+            }
+        }
+        copyTo(localPointer, copyTo);
+        localPointer = diffList2(oldPatterns, newPatterns, posHint, patternEst);
+        tokenSequence.move(endpos);
+        do { } while (tokenSequence.moveNext() && JavaTokenId.COLON != tokenSequence.token().id() && JavaTokenId.ARROW != tokenSequence.token().id());
+        boolean reindentStatements = false;
+        if (Objects.equals(getCaseKind(oldT), getCaseKind(newT))) {
             tokenSequence.moveNext();
             copyTo(localPointer, localPointer = tokenSequence.offset());
-        }
-        // todo (#pf): hot-fix of #113313, think about correct matching later
-        if (oldT.pat == null && newT.pat != null) {
-            printer.print(newT);
-            printer.newline();
-            return bounds[1];
+        } else {
+            if (JavaTokenId.COLON == tokenSequence.token().id()) {
+                //: => ->
+                printer.out.needSpace();
+                printer.print("-> ");
+                moveToDifferentThan(tokenSequence, Direction.FORWARD, EnumSet.of(JavaTokenId.WHITESPACE));
+                localPointer = tokenSequence.offset();
+            } else if (JavaTokenId.ARROW == tokenSequence.token().id()) {
+                //-> => :
+                printer.print(":");
+                if (newT.stats.size() > 1) {
+                    printer.newline();
+                } else {
+                    printer.out.needSpace();
+                }
+                tokenSequence.moveNext();
+                moveToDifferentThan(tokenSequence, Direction.FORWARD, EnumSet.of(JavaTokenId.WHITESPACE));
+                localPointer = tokenSequence.offset();
+                reindentStatements = true;
+            }
         }
         PositionEstimator est = EstimatorFactory.statements(
                 filterHidden(oldT.stats),
@@ -1897,6 +1965,13 @@ public class CasualDiff {
                 diffContext
         );
         int old = printer.indent();
+        SortedSet<int[]> oldReindentRegions = printer.reindentRegions;
+        printer.reindentRegions = new TreeSet<>(new Comparator<int[]>() { //XXX: copied from the initializer!!
+            @Override public int compare(int[] o1, int[] o2) {
+                return o1[0] - o2[0];
+            }
+        });
+        int reindentStart = localPointer;
         localPointer = diffInnerComments(oldT, newT, localPointer);
         JCClassDecl oldEnclosing = printer.enclClass;
         printer.enclClass = null;
@@ -1905,8 +1980,32 @@ public class CasualDiff {
         if (localPointer < endPos(oldT)) {
             copyTo(localPointer, localPointer = endPos(oldT));
         }
+        if (reindentStatements) {
+            printer.reindentRegions = oldReindentRegions;
+            printer.reindentRegions.add(new int[] {reindentStart, localPointer});
+        } else {
+            oldReindentRegions.addAll(printer.reindentRegions);
+            printer.reindentRegions = oldReindentRegions;
+        }
         printer.undent(old);
         return localPointer;
+    }
+
+    public static List<JCExpression> getCasePatterns(JCCase cs) {
+        try {
+            return (List<JCExpression>) CaseTree.class.getDeclaredMethod("getExpressions").invoke(cs);
+        } catch (Throwable t) {
+            JCExpression pat = cs.getExpression();
+            return pat != null ? Collections.singletonList(pat) : Collections.emptyList();
+        }
+    }
+
+    public static Object getCaseKind(JCCase cs) {
+        try {
+            return CaseTree.class.getDeclaredMethod("getCaseKind").invoke(cs);
+        } catch (Throwable t) {
+            return null;
+        }
     }
 
     protected int diffSynchronized(JCSynchronized oldT, JCSynchronized newT, int[] bounds) {
@@ -2090,8 +2189,8 @@ public class CasualDiff {
     }
 
     protected int diffBreak(JCBreak oldT, JCBreak newT, int[] bounds) {
-        final Name oldTLabel = oldT.label;
-        final Name newTlabel = newT.label;
+        final Name oldTLabel = oldT.getLabel();
+        final Name newTlabel = newT.getLabel();
         return printBreakContinueTree(bounds, oldTLabel, newTlabel, oldT);
     }
 
@@ -5511,6 +5610,10 @@ public class CasualDiff {
                   if (oldT instanceof FieldGroupTree) {
                       return diffFieldGroup((FieldGroupTree) oldT, (FieldGroupTree) newT, elementBounds);
                   }
+                  break;
+              }
+              if(oldT.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)){
+                  retVal = diffSwitchExpression(oldT, newT, elementBounds);
                   break;
               }
               String msg = "Diff not implemented: " +

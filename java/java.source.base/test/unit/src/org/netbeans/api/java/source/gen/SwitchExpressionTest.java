@@ -31,7 +31,6 @@ import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.tree.JCTree;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -169,7 +168,7 @@ public class SwitchExpressionTest extends TreeRewriteTestBase {
                 Tree switchBlock = switcExpression.getInitializer();
                 List<? extends CaseTree> cases;
                 List<ExpressionTree> patterns = new ArrayList<>();
-                boolean switchExpressionFlag = switchBlock.getKind().toString().equals("SWITCH_EXPRESSION");
+                boolean switchExpressionFlag = switchBlock.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION);
                 if (switchExpressionFlag) {
                     cases = TreeShims.getCases(switchBlock);
                 } else {

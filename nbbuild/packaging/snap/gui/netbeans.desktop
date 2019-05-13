@@ -17,9 +17,10 @@
 [Desktop Entry]
 Type=Application
 Encoding=UTF-8
-Name=NetBeans Dev
+Name=Apache NetBeans (development)
 Comment=Apache NetBeans, The Smarter Way to Code
-Exec=netbeans %F
-Categories=Application;Development;Java;PHP;JS;JavaScript;IDE
+Exec=netbeans-dev.netbeans %F
+Categories=Development;IDE
 Icon=${SNAP}/meta/gui/icon.png
 Terminal=false
+

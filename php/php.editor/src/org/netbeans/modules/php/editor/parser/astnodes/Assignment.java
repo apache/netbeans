@@ -20,9 +20,12 @@ package org.netbeans.modules.php.editor.parser.astnodes;
 
 /**
  * Represents an assignment statement.
- * <pre>e.g.<pre> $a = 5,
+ * e.g.
+ * <pre>
+ * $a = 5,
  * $a += 5,
  * $a .= $b,
+ * </pre>
  */
 public class Assignment extends Expression {
 
@@ -39,9 +42,10 @@ public class Assignment extends Expression {
         XOR_EQUAL("^="), //NOI18N
         SL_EQUAL("<<="), //NOI18N
         SR_EQUAL(">>="), //NOI18N
-        POW_EQUAL("**="); //NOI18N
+        POW_EQUAL("**="), //NOI18N
+        COALESCE_EQUAL("??="); //NOI18N PHP 7.4
 
-        private String operator;
+        private final String operator;
 
         private Type(String operator) {
             this.operator = operator;

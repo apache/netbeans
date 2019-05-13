@@ -2293,7 +2293,14 @@ public final class JavaCompletionTask<T> extends BaseTask {
             }
             if (lastCase != null) {
                 StatementTree last = null;
-                for (StatementTree stat : lastCase.getStatements()) {
+                List<? extends StatementTree> statements = lastCase.getStatements();
+                if (statements == null) {
+                    Tree caseBody = TreeShims.getBody(lastCase);
+                    if (caseBody instanceof StatementTree) {
+                        statements = Collections.singletonList((StatementTree) caseBody);
+                    }
+                }
+                for (StatementTree stat : statements) {
                     int pos = (int) sourcePositions.getStartPosition(root, stat);
                     if (pos == Diagnostic.NOPOS || offset <= pos) {
                         break;
@@ -2354,7 +2361,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         if (caseExpressionTree != null && ((sourcePositions.getStartPosition(root, caseExpressionTree) >= offset)
                 || (caseErroneousTree != null && caseErroneousTree.getKind() == Tree.Kind.ERRONEOUS && ((ErroneousTree) caseErroneousTree).getErrorTrees().isEmpty() && sourcePositions.getEndPosition(root, caseErroneousTree) >= offset))) {
 
-            if (parentPath.getLeaf().getKind() == Tree.Kind.SWITCH || parentPath.getLeaf().getKind().toString().equals("SWITCH_EXPRESSION")) { //NOI18N
+            if (parentPath.getLeaf().getKind() == Tree.Kind.SWITCH || parentPath.getLeaf().getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
                 ExpressionTree exprTree = null;
                 if (parentPath.getLeaf().getKind() == Tree.Kind.SWITCH) {
                     exprTree = ((SwitchTree) parentPath.getLeaf()).getExpression();
@@ -3707,7 +3714,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         if (path != null && path.getLeaf().getKind() == Tree.Kind.SWITCH) {
             SwitchTree st = (SwitchTree) path.getLeaf();
             caseTrees = st.getCases();
-        } else if (path != null && path.getLeaf().getKind().toString().equals("SWITCH_EXPRESSION")) { //NOI18N
+        } else if (path != null && path.getLeaf().getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
             caseTrees = TreeShims.getCases(path.getLeaf());
         }
 

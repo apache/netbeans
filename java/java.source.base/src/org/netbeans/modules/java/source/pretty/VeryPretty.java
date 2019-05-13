@@ -84,6 +84,7 @@ import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Convert;
 import com.sun.tools.javac.util.List;
+import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 
@@ -402,7 +403,11 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             } else {
                 boolean saveComments = this.commentsEnabled;
                 this.commentsEnabled = printComments;
-                t.accept(this);
+                if (t.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
+                    visitSwitchExpression(t);
+                } else {
+                    t.accept(this);
+                }
                 this.commentsEnabled = saveComments;
             }
 
@@ -1268,6 +1273,47 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 	print('}');
     }
 
+    public void visitSwitchExpression(Tree tree) {
+        print("switch");
+        print(cs.spaceBeforeSwitchParen() ? " (" : "(");
+        if (cs.spaceWithinSwitchParens()) {
+            print(' ');
+        }
+        printNoParenExpr((JCTree) TreeShims.getExpressions(tree).get(0));
+        print(cs.spaceWithinSwitchParens() ? " )" : ")");
+        int bcol = out.leftMargin;
+        switch (cs.getOtherBracePlacement()) {
+            case NEW_LINE:
+                newline();
+                toColExactly(bcol);
+                break;
+            case NEW_LINE_HALF_INDENTED:
+                newline();
+                bcol += (indentSize >> 1);
+                toColExactly(bcol);
+                break;
+            case NEW_LINE_INDENTED:
+                newline();
+                bcol += indentSize;
+                toColExactly(bcol);
+                break;
+        }
+        if (cs.spaceBeforeSwitchLeftBrace()) {
+            needSpace();
+        }
+        print('{');
+        if (!TreeShims.getCases(tree).isEmpty()) {
+            newline();
+            ListBuffer<JCTree.JCCase> newTcases = new ListBuffer<JCTree.JCCase>();
+            for (CaseTree t : TreeShims.getCases(tree)) {
+                newTcases.append((JCTree.JCCase) t);
+            }
+            printStats(newTcases.toList());
+            toColExactly(bcol);
+        }
+        print('}');
+    }
+
     @Override
     public void visitCase(JCCase tree) {
         int old = cs.indentCasesFromSwitch() ? indent() : out.leftMargin;
@@ -1294,6 +1340,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         } else {
             print(" -> "); //TODO: configure spaces!
             printStat(tree.stats.head);
+            undent(old);
         }
     }
 

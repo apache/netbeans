@@ -55,10 +55,8 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.comp.Annotate;
-import com.sun.tools.javac.comp.ArgumentAttr;
 import com.sun.tools.javac.comp.Attr;
 import com.sun.tools.javac.comp.AttrContext;
-import com.sun.tools.javac.comp.Enter;
 import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.comp.Modules;
 import com.sun.tools.javac.comp.Todo;
@@ -92,13 +90,10 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
-import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.nio.CharBuffer;
@@ -116,8 +111,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.AnnotationValueVisitor;
@@ -173,7 +166,6 @@ import org.netbeans.spi.editor.hints.Severity;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbCollections;
 import org.openide.util.WeakListeners;
@@ -199,6 +191,7 @@ public class Utilities {
     }
 
     private static final String DISABLE_ERRORS = "disable-java-errors";
+    private static final String SWITCH_EXPRESSION = "SWITCH_EXPRESSION";
     
 
     public static <E> Iterable<E> checkedIterableByFilter(final Iterable raw, final Class<E> type, final boolean strict) {
@@ -377,7 +370,7 @@ public class Utilities {
             patternTree = ((SwitchTree) switchTree).getCases().get(0);
         }
 
-        if (patternTree == null || isErrorTree(patternTree) || "SWITCH_EXPRESSION".equals(patternTree.getKind().name())) {
+        if (patternTree == null || isErrorTree(patternTree) || SWITCH_EXPRESSION.equals(patternTree.getKind().name())) {
             SourcePositions[] currentPatternTreePositions = new SourcePositions[1];
             List<Diagnostic<? extends JavaFileObject>> currentPatternTreeErrors = new LinkedList<Diagnostic<? extends JavaFileObject>>();
             Tree currentPatternTree = parseStatement(c, "{" + pattern + "}", currentPatternTreePositions, currentPatternTreeErrors);

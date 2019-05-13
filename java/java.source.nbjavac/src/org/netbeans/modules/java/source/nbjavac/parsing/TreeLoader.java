@@ -22,7 +22,6 @@ package org.netbeans.modules.java.source.nbjavac.parsing;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
@@ -31,15 +30,11 @@ import com.sun.source.util.TaskEvent;
 import com.sun.source.util.TaskListener;
 import com.sun.tools.javac.api.DuplicateClassChecker;
 import com.sun.tools.javac.api.JavacTaskImpl;
-import com.sun.tools.javac.code.Kinds;
-import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Symtab;
-import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Enter;
 import com.sun.tools.javac.comp.Env;
@@ -55,19 +50,13 @@ import com.sun.tools.javac.util.CouplingAbort;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Log.DiscardDiagnosticHandler;
-import java.awt.EventQueue;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.Reader;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -76,15 +65,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 import javax.lang.model.element.Name;
-import javax.swing.text.ChangedCharSetException;
-import javax.swing.text.MutableAttributeSet;
-import javax.swing.text.html.HTML;
-import javax.swing.text.html.HTML.Tag;
-import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.HTMLEditorKit.ParserCallback;
-import javax.swing.text.html.parser.ParserDelegator;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
@@ -94,16 +75,15 @@ import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
-import org.netbeans.modules.java.source.JavadocHelper;
 import org.netbeans.modules.java.source.indexing.FQN2Files;
 import org.netbeans.modules.java.source.indexing.JavaBinaryIndexer;
 import org.netbeans.modules.java.source.indexing.JavaIndex;
 import org.netbeans.modules.java.source.parsing.FileManagerTransaction;
 import org.netbeans.modules.java.source.parsing.FileObjects;
-import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.java.source.parsing.JavacParser.DuplicateClassRegistry;
 import org.netbeans.modules.java.source.parsing.JavacParser.TreeLoaderRegistry;
 import org.netbeans.modules.java.source.parsing.OutputFileManager.InvalidSourcePath;
+import org.netbeans.modules.java.source.parsing.ParameterNameProviderImpl;
 import org.netbeans.modules.java.source.usages.ClasspathInfoAccessor;
 import org.netbeans.modules.parsing.impl.indexing.IndexingUtils;
 import org.openide.filesystems.FileObject;
@@ -118,11 +98,6 @@ import org.openide.util.lookup.ServiceProvider;
 public class TreeLoader extends LazyTreeLoader {
 
     private static final String OPTION_OUTPUT_ROOT = "output-root"; //NOI18N
-    private static final Pattern ctor_summary_name = Pattern.compile("constructor[_.]summary"); //NOI18N
-    private static final Pattern method_summary_name = Pattern.compile("method[_.]summary"); //NOI18N
-    private static final Pattern field_detail_name = Pattern.compile("field[_.]detail"); //NOI18N
-    private static final Pattern ctor_detail_name = Pattern.compile("constructor[_.]detail"); //NOI18N
-    private static final Pattern method_detail_name = Pattern.compile("method[_.]detail"); //NOI18N
     private static final ThreadLocal<Boolean> isTreeLoading = new ThreadLocal<Boolean>();
 
     public static void preRegister(final Context context, final ClasspathInfo cpInfo, final boolean detached) {
@@ -139,7 +114,6 @@ public class TreeLoader extends LazyTreeLoader {
     }
 
     private static final Logger LOGGER = Logger.getLogger(TreeLoader.class.getName());
-    private static final boolean ALWAYS_ALLOW_JDOC_ARG_NAMES = Boolean.getBoolean("java.source.args.from.http.jdoc");  //NOI18N
     public  static boolean DISABLE_CONFINEMENT_TEST = false; //Only for tests!
     public  static boolean DISABLE_ARTIFICAL_PARAMETER_NAMES = false; //Only for tests!
 
@@ -259,11 +233,16 @@ public class TreeLoader extends LazyTreeLoader {
         try {
             assert DISABLE_CONFINEMENT_TEST || JavaSourceAccessor.getINSTANCE().isJavaCompilerLocked() || !contended;
             if (clazz != null) {
-                JavadocHelper.TextStream page = JavadocHelper.getJavadoc(clazz, ALWAYS_ALLOW_JDOC_ARG_NAMES, null);
-                if (page != null && (!page.isRemote() || !EventQueue.isDispatchThread())) {
-                    if (getParamNamesFromJavadocText(page, clazz)) {
-                        return true;
+                boolean javadocParams = ParameterNameProviderImpl.fillInParameterNamesFromJavadoc(context, clazz, (method, names) -> {
+                    MethodSymbol sym = (MethodSymbol)method;
+                    List<VarSymbol> params = sym.params;
+                    for (String name : names) {
+                        params.head.setName(clazz.name.table.fromString(name));
+                        params = params.tail;
                     }
+                });
+                if (javadocParams) {
+                    return true;
                 }
                 if (!DISABLE_ARTIFICAL_PARAMETER_NAMES) {
                     fillArtificalParamNames(clazz);
@@ -529,201 +508,6 @@ public class TreeLoader extends LazyTreeLoader {
         return info;
     }
 
-    private boolean getParamNamesFromJavadocText(final JavadocHelper.TextStream page, final ClassSymbol clazz) {
-        HTMLEditorKit.Parser parser;
-        InputStream is = null;        
-        String charset = null;
-        for (;;) {
-            try{
-                is = page.openStream();
-                Reader reader = charset == null ? new InputStreamReader(is): new InputStreamReader(is, charset);
-                parser = new ParserDelegator();
-                parser.parse(reader, new ParserCallback() {                    
-
-                    private int state = 0; //init
-                    private String signature = null;
-                    private StringBuilder sb = null;
-
-                    @Override
-                    public void handleStartTag(HTML.Tag t, MutableAttributeSet a, int pos) {
-                        if (t == HTML.Tag.A) {
-                            String attrName = (String)a.getAttribute(HTML.Attribute.NAME);
-                            if (attrName != null && ctor_summary_name.matcher(attrName).matches()) {
-                                // we have found desired javadoc constructor info anchor
-                                state = 10; //ctos open
-                            } else if (attrName != null && method_summary_name.matcher(attrName).matches()) {
-                                // we have found desired javadoc method info anchor
-                                state = 20; //methods open
-                            } else if (attrName != null && field_detail_name.matcher(attrName).matches()) {
-                                state = 30; //end
-                            } else if (attrName != null && ctor_detail_name.matcher(attrName).matches()) {
-                                state = 30; //end
-                            } else if (attrName != null && method_detail_name.matcher(attrName).matches()) {
-                                state = 30; //end
-                            } else if (state == 12 || state == 22) {
-                                String attrHref = (String)a.getAttribute(HTML.Attribute.HREF);
-                                if (attrHref != null) {
-                                    int idx = attrHref.indexOf('#');
-                                    if (idx >= 0) {
-                                        signature = attrHref.substring(idx + 1);
-                                        sb = new StringBuilder();
-                                    }
-                                }
-                            }
-                        } else if (t == HTML.Tag.TABLE) {
-                            if (state == 10 || state == 20)
-                                state++;
-                        } else if (t == HTML.Tag.CODE) {
-                            if (state == 11 || state == 21)
-                                state++;
-                        } else if (t == HTML.Tag.DIV && a.containsAttribute(HTML.Attribute.CLASS, "block")) { //NOI18N
-                            if (state == 11 && signature != null && sb != null) {
-                                setParamNames(signature, sb.toString().trim(), true);
-                                signature = null;
-                                sb = null;
-                            } else if (state == 21 && signature != null && sb != null) {
-                                setParamNames(signature, sb.toString().trim(), false);
-                                signature = null;
-                                sb = null;
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void handleEndTag(Tag t, int pos) {
-                        if (t == HTML.Tag.CODE) {
-                            if (state == 12 || state == 22)
-                                state--;
-                        } else if (t == HTML.Tag.TABLE) {
-                            if (state == 11 || state == 21)
-                                state--;
-                        }
-                    }
-
-                    @Override
-                    public void handleText(char[] data, int pos) {
-                        if (signature != null && sb != null && (state == 12 || state == 22))
-                            sb.append(data);
-                    }
-
-                    @Override
-                    public void handleSimpleTag(Tag t, MutableAttributeSet a, int pos) {
-                        if (t == HTML.Tag.BR) {
-                            if (state == 11 && signature != null && sb != null) {
-                                setParamNames(signature, sb.toString().trim(), true);
-                                signature = null;
-                                sb = null;
-                            } else if (state == 21 && signature != null && sb != null) {
-                                setParamNames(signature, sb.toString().trim(), false);
-                                signature = null;
-                                sb = null;
-                            }
-                        }
-                    }
-
-                    private void setParamNames(String signature, String names, boolean isCtor) {
-                        ArrayList<String> paramTypes = new ArrayList<String>();
-                        int idx = -1;
-                        for(int i = 0; i < signature.length(); i++) {
-                            switch(signature.charAt(i)) {
-                                case '-':
-                                case '(':
-                                case ')':
-                                case ',':
-                                    if (idx > -1 && idx < i - 1) {
-                                        String typeName = signature.substring(idx + 1, i).trim();
-                                        if (typeName.endsWith("...")) //NOI18N
-                                            typeName = typeName.substring(0, typeName.length() - 3) + "[]"; //NOI18N
-                                        paramTypes.add(typeName);
-                                    }
-                                    idx = i;
-                                    break;
-                            }
-                        }
-                        String methodName = null;
-                        ArrayList<String> paramNames = new ArrayList<String>();
-                        idx = -1;
-                        for(int i = 0; i < names.length(); i++) {
-                            switch(names.charAt(i)) {
-                                case '(':
-                                    methodName = names.substring(0, i);
-                                    break;
-                                case ')':
-                                case ',':
-                                    if (idx > -1) {
-                                        paramNames.add(names.substring(idx + 1, i));
-                                        idx = -1;
-                                    }
-                                    break;
-                                case 160: //&nbsp;
-                                    idx = i;
-                                    break;
-                            }
-                        }
-                        assert methodName != null : "Null methodName. Signature: [" + signature + "], Names: [" + names + "]";
-                        assert paramTypes.size() == paramNames.size() : "Inconsistent param types/names. Signature: [" + signature + "], Names: [" + names + "]";
-                        if (paramNames.size() > 0) {
-                            for (Symbol s : clazz.members().getSymbolsByName(isCtor
-                                    ? clazz.name.table.names.init
-                                    : clazz.name.table.fromString(methodName))) {
-                                if (s.kind == Kinds.Kind.MTH && s.owner == clazz) {
-                                    MethodSymbol sym = (MethodSymbol)s;
-                                    List<VarSymbol> params = sym.params;
-                                    if (checkParamTypes(params, paramTypes)) {
-                                        for (String name : paramNames) {
-                                            params.head.setName(clazz.name.table.fromString(name));
-                                            params = params.tail;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    private boolean checkParamTypes(List<VarSymbol> params, ArrayList<String> paramTypes) {
-                        Types types = Types.instance(context);
-                        for (String typeName : paramTypes) {
-                            if (params.isEmpty())
-                                return false;
-                            Type type = params.head.type;
-                            if (type.isParameterized())
-                                type = types.erasure(type);
-                            if (!typeName.equals(type.toString()))
-                                return false;
-                            params = params.tail;
-                        }
-                        return params.isEmpty();
-                    }
-                }, charset != null);
-                return true;
-            } catch (ChangedCharSetException e) {
-                if (charset == null) {
-                    charset = JavadocHelper.getCharSet(e);
-                    //restart with valid charset
-                } else {
-                    e.printStackTrace();
-                    break;
-                }
-            } catch (InterruptedIOException x) {
-                //Http javadoc timeout
-                break;
-            } catch(IOException ioe){
-                ioe.printStackTrace();
-                break;
-            }finally{
-                parser = null;
-                if (is!=null) {
-                    try{
-                        is.close();
-                    }catch(IOException ioe){
-                        ioe.printStackTrace();
-                    }
-                }
-            }
-        }
-        return false;
-    }
-    
     private void fillArtificalParamNames(final ClassSymbol clazz) {
         for (Symbol s : clazz.getEnclosedElements()) {
             if (s instanceof MethodSymbol) {

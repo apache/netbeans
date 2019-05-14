@@ -23,8 +23,11 @@ import java.lang.annotation.Repeatable;
 import java.lang.annotation.Target;
 
 /** Register the given TextMate grammar injection for use in the IDE.
- *
- * @since 1.2
+ * <p>For example, to register the injection grammar highlighting TODO keywords
+ * in JavaScript and TypeScript comments, add the following annotation to
+ * an appropriate package-info file or to an appropriate Java class:
+ * <p>{@code @GrammarInjectionRegistration(grammar="path/to/todo-injection.json", injectTo = {"source.js","source.ts"})}
+ * @since 1.3
  */
 @Repeatable(GrammarInjectionRegistrations.class)
 @Target({ElementType.PACKAGE, ElementType.TYPE})

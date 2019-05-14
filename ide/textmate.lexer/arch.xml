@@ -139,8 +139,9 @@
     {@literal @}GrammarRegistration(mimeType="text/x-kotlin", grammar="path/to/Kotlin.tmLanguage.json")
           </pre>
       </usecase>
+      <a name="usecase-injection-grammar">
       <usecase id="register-injection-grammar" name="Register injection grammar">
-          Injection grammars let existing grammars to be extend. An injection grammar is
+          Injection grammars let existing grammars to be extended. An injection grammar is
           a regular TextMate grammar that is injected into a specific scope within
           an existing grammar. To register a new injection grammar, add it as a file
           into the system filesystem under "Editors/", and make sure it has attributes
@@ -158,6 +159,8 @@
     &lt;/folder&gt;
           </pre>
       </usecase>
+      </a>
+      <a name="usecase-injection-grammar-java-api">
       <usecase id="register-injection-grammar-using-java-api" name="Register injection grammar using Java API">
           To register a new injection grammar using Java API, add the GrammarInjectionRegistration
           annotation to an appropriate package-info file, or an appropriate Java class.
@@ -166,6 +169,7 @@
     {@literal @}GrammarInjectionRegistration(grammar="path/to/todo-comment-injection.json", injectTo = {"source.js","source.ts"})
           </pre>
       </usecase>
+      </a>
   </p>
  </answer>
 
@@ -183,8 +187,10 @@
 -->
  <answer id="arch-what">
   <p>
-   This project to allows to easily add syntax highlighting for languages by
-   using the TextMate grammar files.
+   <api category="stable" group="java" type="export" name="TextMateGrammars">
+    This project to allows to easily add syntax highlighting for languages by
+    using the TextMate grammar files.
+   </api>
   </p>
  </answer>
 

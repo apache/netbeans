@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 
 /** Register multiple grammar injections.
  *
- * @since 1.2
+ * @since 1.3
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 public @interface GrammarInjectionRegistrations {

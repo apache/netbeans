@@ -337,6 +337,7 @@ public abstract class ErrorHintsTestBase extends NbTestCase {
             if (d.getKind() == Diagnostic.Kind.ERROR && (supportedErrorKeys == null || supportedErrorKeys.contains(d.getCode()))) {
                 if (found == null) {
                     found = d;
+                } else if (found.getCode().equals(d.getCode())) {
                 } else {
                     throw new IllegalStateException("More than one error: " + diagnosticsToString(info.getDiagnostics()));
                 }
@@ -345,7 +346,7 @@ public abstract class ErrorHintsTestBase extends NbTestCase {
         if (found == null) {
             throw new IllegalStateException("No error found: " + diagnosticsToString(info.getDiagnostics()));
         }
-        
+
         return found;
     }
     

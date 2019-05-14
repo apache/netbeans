@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.35.1
+#Version 2.36.1
 
 CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
 meth public abstract int compareTo({java.lang.Comparable%0})

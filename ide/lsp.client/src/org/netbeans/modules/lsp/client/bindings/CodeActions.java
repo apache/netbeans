@@ -24,12 +24,14 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
+import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionContext;
 import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.Command;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.lsp.client.LSPBindings;
@@ -62,7 +64,7 @@ public class CodeActions implements CodeGenerator.Factory {
         }
         String uri = Utils.toURI(file);
         try {
-            List<? extends Command> commands = 
+            List<Either<Command, CodeAction>> commands =
                     server.getTextDocumentService().codeAction(new CodeActionParams(new TextDocumentIdentifier(uri),
                     new Range(Utils.createPosition(component.getDocument(), component.getSelectionStart()),
                             Utils.createPosition(component.getDocument(), component.getSelectionEnd())),
@@ -70,16 +72,12 @@ public class CodeActions implements CodeGenerator.Factory {
             return commands.stream().map(cmd -> new CodeGenerator() {
                 @Override
                 public String getDisplayName() {
-                    return cmd.getTitle();
+                    return cmd.isLeft() ? cmd.getLeft().getTitle() : cmd.getRight().getTitle();
                 }
 
                 @Override
                 public void invoke() {
-                    try {
-                        server.getWorkspaceService().executeCommand(new ExecuteCommandParams(cmd.getCommand(), cmd.getArguments())).get();
-                    } catch (InterruptedException | ExecutionException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
+                    Utils.applyCodeAction(server, cmd);
                 }
             }).collect(Collectors.toList());
         } catch (BadLocationException | InterruptedException | ExecutionException ex) {

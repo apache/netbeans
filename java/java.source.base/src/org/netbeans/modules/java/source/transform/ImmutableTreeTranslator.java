@@ -468,7 +468,7 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
                 el = overlay.resolve(model, elements, qit.getFQN());
             } else {
                 if (el.getKind().isClass() || el.getKind().isInterface() || el.getKind() == ElementKind.PACKAGE) {
-                    el = overlay.resolve(model, elements, ((QualifiedNameable) el).getQualifiedName().toString(), elements.getModuleOf(el));
+                    el = overlay.resolve(model, elements, ((QualifiedNameable) el).getQualifiedName().toString(), el, elements.getModuleOf(el));
                 }
             }
 
@@ -801,6 +801,19 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
 	    copyCommentTo(tree,n);
             copyPosTo(tree,n);
 	    tree = n;
+	}
+	return tree;
+    }
+
+    protected final Tree rewriteChildren(Tree tree) {
+	ExpressionTree selector = (ExpressionTree)translate(TreeShims.getExpressions(tree).get(0));
+	List<? extends CaseTree> cases = translateStable(TreeShims.getCases(tree));
+	if (selector != TreeShims.getExpressions(tree).get(0) || !cases.equals(TreeShims.getCases(tree))) {
+	    Tree switchExpression = make.SwitchExpression(selector, cases);
+            model.setType(switchExpression, model.getType(tree));
+	    copyCommentTo(tree,switchExpression);
+            copyPosTo(tree,switchExpression);
+	    tree = switchExpression;
 	}
 	return tree;
     }

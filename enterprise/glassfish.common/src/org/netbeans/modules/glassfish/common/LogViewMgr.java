@@ -265,7 +265,7 @@ public class LogViewMgr {
     }
 
     private final Locale logLocale = getLogLocale();
-    private final String logBundleName = getLogBundle();
+    private static final String logBundleName = "org.netbeans.modules.glassfish.common.resources.logging";
     private final String localizedWarning = getLocalized(Level.WARNING.getName());
     private final String localizedSevere = getLocalized(Level.SEVERE.getName());
     private final Map<String, String> localizedLevels = getLevelMap();
@@ -277,10 +277,6 @@ public class LogViewMgr {
             return new Locale(language, System.getProperty("user.country", ""), System.getProperty("user.variant", "")); // NOI18N
         }
         return Locale.getDefault();
-    }
-    
-    private String getLogBundle() {
-        return Level.INFO.getResourceBundleName();
     }
     
     private String getLocalized(String text) {

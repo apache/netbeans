@@ -53,6 +53,7 @@ import org.netbeans.modules.editor.indent.spi.ExtraLock;
 import org.netbeans.modules.editor.indent.spi.ReformatTask;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
 import org.netbeans.modules.java.source.NoJavacHelper;
+import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.parsing.api.Embedding;
@@ -577,7 +578,7 @@ public class Reformatter implements ReformatTask {
             try {
                 if (endPos < 0)
                     return false;
-                Boolean ret = tokens.offset() <= endPos ? super.scan(tree, p) : null;
+                Boolean ret = tokens.offset() <= endPos ? (tree.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) ? scanSwitchExpression(tree,p) : super.scan(tree, p) : null;
                 return ret != null ? ret : true;
             }
             finally {
@@ -2565,32 +2566,49 @@ public class Reformatter implements ReformatTask {
 
         @Override
         public Boolean visitSwitch(SwitchTree node, Void p) {
+            return handleSwitch(node, p);
+        }
+
+        private Boolean scanSwitchExpression(Tree node, Void p) {
+         return handleSwitch(node,p);
+        }
+
+        private boolean handleSwitch(Tree node, Void p) {
             accept(SWITCH);
             boolean oldContinuationIndent = continuationIndent;
             try {
                 continuationIndent = true;
                 spaces(cs.spaceBeforeSwitchParen() ? 1 : 0);
-                scan(node.getExpression(), p);
+                List<? extends ExpressionTree> exprTrees = TreeShims.getExpressions(node);
+                if (!exprTrees.isEmpty()) {
+                    ExpressionTree expressionTree = exprTrees.get(0);
+                    scan(expressionTree, p);
+                }
             } finally {
                 continuationIndent = oldContinuationIndent;
             }
             CodeStyle.BracePlacement bracePlacement = cs.getOtherBracePlacement();
             boolean spaceBeforeLeftBrace = cs.spaceBeforeSwitchLeftBrace();
-            boolean indentCases = cs.indentCasesFromSwitch();
+            boolean indentCases = cs.indentCasesFromSwitch() ;
             int old = lastIndent;
             int halfIndent = lastIndent;
-            switch(bracePlacement) {
+            if (node.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
+                continuationIndent = false;
+            }
+            switch (bracePlacement) {
                 case SAME_LINE:
                     spaces(spaceBeforeLeftBrace ? 1 : 0, tokens.offset() < startOffset);
                     accept(LBRACE);
-                    if (indentCases)
+                    if (indentCases) {
                         indent = lastIndent + indentSize;
+                    }
                     break;
                 case NEW_LINE:
                     newline();
                     accept(LBRACE);
-                    if (indentCases)
+                    if (indentCases) {
                         indent = lastIndent + indentSize;
+                    }
                     break;
                 case NEW_LINE_HALF_INDENTED:
                     int oldLast = lastIndent;
@@ -2598,53 +2616,68 @@ public class Reformatter implements ReformatTask {
                     halfIndent = indent;
                     newline();
                     accept(LBRACE);
-                    if (indentCases)
+                    if (indentCases) {
                         indent = oldLast + indentSize;
-                    else
+                    } else {
                         indent = old;
+                    }
                     break;
                 case NEW_LINE_INDENTED:
                     indent = lastIndent + indentSize;
                     halfIndent = indent;
                     newline();
                     accept(LBRACE);
-                    if (!indentCases)
+                    if (!indentCases) {
                         indent = old;
+                    }
                     break;
             }
-            for (CaseTree caseTree : node.getCases()) {
+            if (node.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
+                old = indent;
+                indent = lastIndent + indentSize;
+            }
+            List<? extends CaseTree> caseTrees = TreeShims.getCases(node);
+            try {
+                for (CaseTree caseTree : caseTrees) {
+                    newline();
+                    scan(caseTree, p);
+                }
+
                 newline();
-                scan(caseTree, p);
-            }
-            newline();
-            indent = halfIndent;
-            Diff diff = diffs.isEmpty() ? null : diffs.getFirst();
-            if (diff != null && diff.end == tokens.offset()) {
-                if (diff.text != null) {
-                    int idx = diff.text.lastIndexOf('\n'); //NOI18N
-                    if (idx < 0)
-                        diff.text = getIndent();
-                    else
-                        diff.text = diff.text.substring(0, idx + 1) + getIndent();
-                    
-                }
-                String spaces = diff.text != null ? diff.text : getIndent();
-                if (spaces.equals(fText.substring(diff.start, diff.end)))
-                    diffs.removeFirst();
-            } else if (tokens.movePrevious()) {
-                if (tokens.token().id() == WHITESPACE) {
-                    String text =  tokens.token().text().toString();
-                    int idx = text.lastIndexOf('\n'); //NOI18N
-                    if (idx >= 0) {
-                        text = text.substring(idx + 1);
-                        String ind = getIndent();
-                        if (!ind.equals(text))
-                            addDiff(new Diff(tokens.offset() + idx + 1, tokens.offset() + tokens.token().length(), ind));
+                indent = halfIndent;
+                Diff diff = diffs.isEmpty() ? null : diffs.getFirst();
+                if (diff != null && diff.end == tokens.offset()) {
+                    if (diff.text != null) {
+                        int idx = diff.text.lastIndexOf('\n'); //NOI18N                                                                                                                
+                        if (idx < 0) {
+                            diff.text = getIndent();
+                        } else {
+                            diff.text = diff.text.substring(0, idx + 1) + getIndent();
+                        }
+
                     }
+                    String spaces = diff.text != null ? diff.text : getIndent();
+                    if (spaces.equals(fText.substring(diff.start, diff.end))) {
+                        diffs.removeFirst();
+                    }
+                } else if (tokens.movePrevious()) {
+                    if (tokens.token().id() == WHITESPACE) {
+                        String text = tokens.token().text().toString();
+                        int idx = text.lastIndexOf('\n'); //NOI18N
+                        if (idx >= 0) {
+                            text = text.substring(idx + 1);
+                            String ind = getIndent();
+                            if (!ind.equals(text)) {
+                                addDiff(new Diff(tokens.offset() + idx + 1, tokens.offset() + tokens.token().length(), ind));
+                            }
+                        }
+                    }
+                    tokens.moveNext();
                 }
-                tokens.moveNext();
+            } finally {
+                continuationIndent = oldContinuationIndent;
             }
-            accept(RBRACE);
+                accept(RBRACE);
             indent = lastIndent = old;
             return true;
         }
@@ -2659,21 +2692,39 @@ public class Reformatter implements ReformatTask {
             } else {
                 accept(DEFAULT);
             }
+            List<? extends StatementTree> statements = node.getStatements();
+            Tree caseBody = null;
+            if(statements != null)
             accept(COLON);
+            else {
+                accept(ARROW);
+                caseBody = TreeShims.getBody(node);
+                if (caseBody instanceof StatementTree)
+                    statements = Collections.singletonList((StatementTree) caseBody);
+            }
             int old = indent;
             indent = lastIndent + indentSize;
             boolean first = true;
-            for (StatementTree stat : node.getStatements()) {
-                if (first) {
-                    if (stat.getKind() == Tree.Kind.BLOCK) {
-                        indent = lastIndent;
+            if(statements != null)
+            {
+                for (StatementTree stat : statements) {
+                    if (first) {
+                        if (stat.getKind() == Tree.Kind.BLOCK) {
+                            indent = lastIndent;
+                        }
+                        wrapStatement(cs.wrapCaseStatements(), CodeStyle.BracesGenerationStyle.LEAVE_ALONE, 1, stat);
+                    } else {
+                        newline();
+                        scan(stat, p);
                     }
-                    wrapStatement(cs.wrapCaseStatements(), CodeStyle.BracesGenerationStyle.LEAVE_ALONE, 1, stat);
-                } else {
-                    newline();
-                    scan(stat, p);
+                    first = false;
                 }
-                first = false;
+            }
+            else if (caseBody != null) {
+                newline();
+                scan(caseBody, p);
+                spaces(cs.spaceBeforeSemi() ? 1 : 0);
+                accept(SEMICOLON);
             }
             indent = old;
             return true;
@@ -2681,11 +2732,17 @@ public class Reformatter implements ReformatTask {
 
         @Override
         public Boolean visitBreak(BreakTree node, Void p) {
-            accept(BREAK);
-            Name label = node.getLabel();
-            if (label != null) {
+            JavaTokenId token = accept(BREAK);
+            ExpressionTree exprTree = TreeShims.getValue(node);
+            if (exprTree != null) {
                 space();
-                accept(IDENTIFIER, UNDERSCORE);
+                scan(exprTree, p);
+            } else {
+                Name label = node.getLabel();
+                if (label != null) {
+                    space();
+                    accept(IDENTIFIER, UNDERSCORE);
+                }
             }
             accept(SEMICOLON);
             return true;
@@ -3132,6 +3189,9 @@ public class Reformatter implements ReformatTask {
                         break;
                     case SYNCHRONIZED:
                         spaceWithinParens = cs.spaceWithinSynchronizedParens();
+                        break;
+                    case VARIABLE:
+                        spaceWithinParens = cs.spaceWithinSwitchParens();
                         break;
                     default:
                         spaceWithinParens = cs.spaceWithinParens();

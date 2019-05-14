@@ -94,8 +94,7 @@ import org.openide.util.Mutex;
 import org.openide.util.MutexException;
 import org.openide.util.NbBundle;
 
-import com.sun.javadoc.Doc;
-import com.sun.javadoc.Tag;
+import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
@@ -505,38 +504,10 @@ public class Utils {
             ExecutableElement methodEl, MethodModel methodModel )
     {
         // populate javadoc
-        Doc javadoc = controller.getElementUtilities().javaDocFor(methodEl);
+        DocCommentTree javadoc = controller.getDocTrees().getDocCommentTree(methodEl);
         if (javadoc!=null) {
             //methodModel.setJavadoc(javadoc.getRawCommentText());
-            JavadocModel javadocModel = new JavadocModel(javadoc.getRawCommentText());
-            // @param part
-            Tag[] paramTags = javadoc.tags("@param"); //NOI18N
-            List<String> paramJavadoc = new ArrayList<String>();
-            for (Tag paramTag:paramTags) {
-                paramJavadoc.add(paramTag.text());
-            }
-            javadocModel.setParamJavadoc(paramJavadoc);
-            
-            // @return part
-            Tag[] returnTags = javadoc.tags("@return"); //NOI18N
-            if (returnTags.length>0) {
-                javadocModel.setReturnJavadoc(returnTags[0].text());
-            }
-            // @throws part
-            Tag[] throwsTags = javadoc.tags("@throws"); //NOI18N
-            List<String> throwsJavadoc = new ArrayList<String>();
-            for (Tag throwsTag:throwsTags) {
-                throwsJavadoc.add(throwsTag.text());
-            }
-            javadocModel.setThrowsJavadoc(throwsJavadoc);
-            
-            // rest part
-            Tag[] inlineTags = javadoc.inlineTags(); //NOI18N
-            List<String> inlineJavadoc = new ArrayList<String>();
-            for (Tag inlineTag:inlineTags) {
-                throwsJavadoc.add(inlineTag.text());
-            }
-            javadocModel.setInlineJavadoc(inlineJavadoc);
+            JavadocModel javadocModel = new JavadocModel(javadoc.toString());
             methodModel.setJavadoc(javadocModel);
         }
     }
@@ -801,7 +772,7 @@ public class Utils {
                         return;
                     }
                     
-                    Doc javadoc = workingCopy.getElementUtilities().javaDocFor(method);
+                    DocCommentTree javadoc = workingCopy.getDocTrees().getDocCommentTree(method);
                     if ( javadoc != null ){
                         make.removeComment(newMethod, 0, true);
                     }

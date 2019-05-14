@@ -86,7 +86,7 @@ public final class GradleConfiguration implements Serializable, ModuleSearchSupp
 
     @Override
     public Set<GradleDependency.ModuleDependency> findModules(String gav) {
-        String parts[] = gav.split(":");
+        String parts[] = GradleDependency.gavSplit(gav);
         if (parts.length != 3) {
             throw new IllegalArgumentException("Invalid gav filter: "  + gav);
         }

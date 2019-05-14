@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.11.1
+#Version 9.12.1
 
 CLSS public java.awt.datatransfer.Clipboard
 cons public init(java.lang.String)
@@ -541,6 +541,11 @@ meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeLis
 meth public abstract void putValue(java.lang.String,java.lang.Object)
 meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public abstract void setEnabled(boolean)
+
+CLSS public abstract interface javax.swing.Icon
+meth public abstract int getIconHeight()
+meth public abstract int getIconWidth()
+meth public abstract void paintIcon(java.awt.Component,java.awt.Graphics,int,int)
 
 CLSS public abstract org.openide.ErrorManager
 cons public init()
@@ -1349,6 +1354,19 @@ meth public java.util.Collection getUnorderable()
 meth public java.util.Map getDeps()
 supr java.lang.RuntimeException
 hfds deps,serialVersionUID,unorderable
+
+CLSS public abstract org.openide.util.VectorIcon
+cons protected init(int,int)
+intf java.io.Serializable
+intf javax.swing.Icon
+meth protected abstract void paintIcon(java.awt.Component,java.awt.Graphics2D,int,int,double)
+meth protected final static int round(double)
+meth protected final static void setAntiAliasing(java.awt.Graphics2D,boolean)
+meth public final int getIconHeight()
+meth public final int getIconWidth()
+meth public final void paintIcon(java.awt.Component,java.awt.Graphics,int,int)
+supr java.lang.Object
+hfds height,width
 
 CLSS public final org.openide.util.WeakListeners
 meth public static <%0 extends java.util.EventListener> {%%0} create(java.lang.Class<{%%0}>,java.lang.Class<? super {%%0}>,{%%0},java.lang.Object)

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.85.1
+#Version 2.87.1
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -382,6 +382,26 @@ meth public abstract boolean imageUpdate(java.awt.Image,int,int,int,int,int)
 
 CLSS public abstract interface java.io.Serializable
 
+CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
+meth public abstract int compareTo({java.lang.Comparable%0})
+
+CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
+cons protected init(java.lang.String,int)
+intf java.io.Serializable
+intf java.lang.Comparable<{java.lang.Enum%0}>
+meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
+meth protected final void finalize()
+meth public final boolean equals(java.lang.Object)
+meth public final int compareTo({java.lang.Enum%0})
+meth public final int hashCode()
+meth public final int ordinal()
+meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
+meth public final java.lang.String name()
+meth public java.lang.String toString()
+meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
+supr java.lang.Object
+hfds name,ordinal
+
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
@@ -734,11 +754,22 @@ hfds changed,changedInnerTabsPanel,panel,pcs
 CLSS public org.netbeans.core.windows.options.TabsPanel
 cons protected init(org.netbeans.core.windows.options.TabsOptionsPanelController)
 fld protected final org.netbeans.core.windows.options.TabsOptionsPanelController controller
+innr public final static !enum EditorSortType
 meth protected boolean store()
 meth protected void initTabsPanel(javax.swing.JPanel)
 meth protected void load()
 supr javax.swing.JPanel
-hfds buttonGroup1,checkMultiRow,defMultiRow,defTabPlacement,filler,isAquaLaF,isCloseActivatesMostRecentDocument,isNewDocumentOpensNextToActiveTab,jLabel1,panelDocTabs,panelTabs,prefs,radioBottom,radioLeft,radioRight,radioTop
+hfds buttonGroup1,checkMultiRow,defMultiRow,defTabPlacement,filler,isAquaLaF,isCloseActivatesMostRecentDocument,isNewDocumentOpensNextToActiveTab,jLabel1,panelDocTabs,panelTabs,prefs,radioBottom,radioLeft,radioRight,radioSortFileName,radioSortFileNameWithParent,radioSortFullFilePath,radioSortNothing,radioTop,sortButtonGroup,sortTabsLabel
+
+CLSS public final static !enum org.netbeans.core.windows.options.TabsPanel$EditorSortType
+ outer org.netbeans.core.windows.options.TabsPanel
+fld public final static org.netbeans.core.windows.options.TabsPanel$EditorSortType FileName
+fld public final static org.netbeans.core.windows.options.TabsPanel$EditorSortType FileNameWithParent
+fld public final static org.netbeans.core.windows.options.TabsPanel$EditorSortType FullFilePath
+fld public final static org.netbeans.core.windows.options.TabsPanel$EditorSortType None
+meth public static org.netbeans.core.windows.options.TabsPanel$EditorSortType valueOf(java.lang.String)
+meth public static org.netbeans.core.windows.options.TabsPanel$EditorSortType[] values()
+supr java.lang.Enum<org.netbeans.core.windows.options.TabsPanel$EditorSortType>
 
 CLSS public org.netbeans.core.windows.options.WinSysOptionsPanelController
 cons public init()
@@ -773,6 +804,7 @@ fld public final static java.lang.String DND_SMALLWINDOWS_WIDTH = "dnd.smallwind
 fld public final static java.lang.String DOCUMENT_TABS_MULTIROW = "document.tabs.multirow"
 fld public final static java.lang.String DOCUMENT_TABS_PLACEMENT = "document.tabs.placement"
 fld public final static java.lang.String EDITOR_CLOSE_ACTIVATES_RECENT = "editor.closing.activates.recent"
+fld public final static java.lang.String EDITOR_SORT_TABS = "editor.sort.tabs"
 fld public final static java.lang.String MAXIMIZE_NATIVE_LAF = "laf.maximize.native"
 fld public final static java.lang.String OPEN_DOCUMENTS_NEXT_TO_ACTIVE_TAB = "editor.open.next.to.active"
 fld public final static java.lang.String SNAPPING = "snapping"

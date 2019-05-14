@@ -18,12 +18,29 @@
  */
 package org.netbeans.modules.lsp.client;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import javax.swing.text.StyledDocument;
+import org.eclipse.lsp4j.CodeAction;
+import org.eclipse.lsp4j.Command;
+import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.Position;
+import org.eclipse.lsp4j.TextEdit;
+import org.eclipse.lsp4j.WorkspaceEdit;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
+import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.URLMapper;
+import org.openide.text.NbDocument;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -42,5 +59,53 @@ public class Utils {
 
     public static int getOffset(Document doc, Position pos) {
         return LineDocumentUtils.getLineStartFromIndex((LineDocument) doc, pos.getLine()) + pos.getCharacter();
+    }
+
+    public static void applyWorkspaceEditor(WorkspaceEdit edit) {
+        for (Map.Entry<String, List<TextEdit>> e : edit.getChanges().entrySet()) {
+            try {
+                FileObject file = URLMapper.findFileObject(new URI(e.getKey()).toURL());
+                EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+                Document doc = ec != null ? ec.openDocument() : null;
+                if (doc == null) {
+                    continue;
+                }
+                NbDocument.runAtomic((StyledDocument) doc, () -> {
+                    e.getValue()
+                     .stream()
+                     .sorted((te1, te2) -> te1.getRange().getEnd().getLine() == te2.getRange().getEnd().getLine() ? te1.getRange().getEnd().getCharacter() - te2.getRange().getEnd().getCharacter() : te1.getRange().getEnd().getLine() - te2.getRange().getEnd().getLine())
+                     .forEach(te -> {
+                        try {
+                            int start = Utils.getOffset(doc, te.getRange().getStart());
+                            int end = Utils.getOffset(doc, te.getRange().getEnd());
+                            doc.remove(start, end - start);
+                            doc.insertString(start, te.getNewText(), null);
+                        } catch (BadLocationException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
+                     });
+                });
+            } catch (URISyntaxException | IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+    }
+
+    public static void applyCodeAction(LSPBindings server, Either<Command, CodeAction> cmd) {
+        try {
+            Command command;
+
+            if (cmd.isLeft()) {
+                command = cmd.getLeft();
+            } else {
+                Utils.applyWorkspaceEditor(cmd.getRight().getEdit());
+                command = cmd.getRight().getCommand();
+            }
+            if (command != null) {
+                server.getWorkspaceService().executeCommand(new ExecuteCommandParams(command.getCommand(), command.getArguments())).get();
+            }
+        } catch (InterruptedException | ExecutionException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
 }

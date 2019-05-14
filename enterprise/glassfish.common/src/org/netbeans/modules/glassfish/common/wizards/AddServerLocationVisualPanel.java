@@ -19,6 +19,8 @@
 
 package org.netbeans.modules.glassfish.common.wizards;
 
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
@@ -48,7 +50,7 @@ public class AddServerLocationVisualPanel extends javax.swing.JPanel implements 
     public static enum DownloadState { AVAILABLE, DOWNLOADING, COMPLETED };
 
     // expose for qa-functional tests
-    public static final String V3_DOWNLOAD_PREFIX = "http://download.java.net/"; // NOI18N
+    public static final String V3_DOWNLOAD_PREFIX = "https://download.oracle.com/"; // NOI18N
     
     private final List<ChangeListener> listeners = new CopyOnWriteArrayList<ChangeListener>();
     private Retriever retriever;
@@ -81,6 +83,14 @@ public class AddServerLocationVisualPanel extends javax.swing.JPanel implements 
             public void removeUpdate(DocumentEvent e) {
                 homeFolderChanged();
             }                    
+        });
+        chooseServerComboBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    serverVersionChanged();
+                }
+            }
         });
         setDownloadState(DownloadState.AVAILABLE);
         updateMessageText("");
@@ -272,6 +282,11 @@ public class AddServerLocationVisualPanel extends javax.swing.JPanel implements 
             updateButton();
         }
     }
+    
+    private void serverVersionChanged() {
+        agreeCheckBox.setSelected(false);
+        agreeCheckBoxActionPerformed(null);
+    }
        
     private static class DirFilter extends javax.swing.filechooser.FileFilter {
         DirFilter() {
@@ -311,6 +326,8 @@ public class AddServerLocationVisualPanel extends javax.swing.JPanel implements 
         downloadStatusLabel = new javax.swing.JLabel();
         localDomainRadioButton = new javax.swing.JRadioButton();
         remoteDomainRadioButton = new javax.swing.JRadioButton();
+        chooseServerLabel = new javax.swing.JLabel();
+        chooseServerComboBox = new javax.swing.JComboBox<ServerDetails>(wizardIterator.downloadableValues);
 
         hk2HomeLabel.setLabelFor(hk2HomeTextField);
         org.openide.awt.Mnemonics.setLocalizedText(hk2HomeLabel, org.openide.util.NbBundle.getMessage(AddServerLocationVisualPanel.class, "LBL_InstallLocation")); // NOI18N
@@ -368,6 +385,11 @@ public class AddServerLocationVisualPanel extends javax.swing.JPanel implements 
             }
         });
 
+        chooseServerLabel.setLabelFor(hk2HomeTextField);
+        org.openide.awt.Mnemonics.setLocalizedText(chooseServerLabel, org.openide.util.NbBundle.getMessage(AddServerLocationVisualPanel.class, "LBL_ChooseOne")); // NOI18N
+
+        chooseServerComboBox.setSelectedItem(wizardIterator.downloadableValues[0]);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -377,23 +399,25 @@ public class AddServerLocationVisualPanel extends javax.swing.JPanel implements 
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(downloadStatusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(localDomainRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(downloadButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(agreeCheckBox)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(readlicenseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                            .addComponent(remoteDomainRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(hk2HomeLabel)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(localDomainRadioButton, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(17, 17, 17)
+                        .addComponent(remoteDomainRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(hk2HomeTextField)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(browseButton)))
+                        .addComponent(browseButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(hk2HomeLabel)
+                            .addComponent(chooseServerLabel)
+                            .addComponent(chooseServerComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(downloadButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(agreeCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(readlicenseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -408,14 +432,22 @@ public class AddServerLocationVisualPanel extends javax.swing.JPanel implements 
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(localDomainRadioButton)
                     .addComponent(remoteDomainRadioButton))
+                .addGap(10, 10, 10)
+                .addComponent(chooseServerLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(downloadButton)
-                    .addComponent(readlicenseButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(agreeCheckBox))
+                .addComponent(chooseServerComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(downloadStatusLabel)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(agreeCheckBox)
+                            .addComponent(downloadButton))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
+                        .addComponent(downloadStatusLabel))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(readlicenseButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         hk2HomeTextField.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(AddServerLocationVisualPanel.class, "AddServerLocationVisualPanel.hk2HomeTextField.AccessibleContext.accessibleDescription")); // NOI18N
@@ -426,8 +458,9 @@ public class AddServerLocationVisualPanel extends javax.swing.JPanel implements 
 
 private void readlicenseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_readlicenseButtonActionPerformed
         try {
+            ServerDetails chosenServerVersion = (ServerDetails) chooseServerComboBox.getSelectedItem();
             URLDisplayer.getDefault().showURL(
-                    new URL("http://glassfish.java.net/public/CDDL+GPL.html")); //NOI18N
+                    new URL(chosenServerVersion.getLicenseUrl())); //NOI18N
         } catch (Exception ex){
             Logger.getLogger("glassfish").log(Level.INFO, ex.getLocalizedMessage(), ex);
         }
@@ -437,11 +470,7 @@ private void downloadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GE
         if(retriever == null) {
             ServerDetails selectedValue = wizardIterator.downloadableValues[0];
             if (wizardIterator.downloadableValues.length > 1) {
-                selectedValue = (ServerDetails) JOptionPane.showInputDialog(null,
-                    NbBundle.getMessage(AddServerLocationVisualPanel.class, "LBL_ChooseOne"), // NOI18N
-                    NbBundle.getMessage(AddServerLocationVisualPanel.class, "LBL_SELECT_BITS"), // NOI18N
-                    JOptionPane.INFORMATION_MESSAGE, null,
-                    wizardIterator.downloadableValues, wizardIterator.downloadableValues[0]);
+                selectedValue = (ServerDetails) chooseServerComboBox.getSelectedItem();
             }
             if (null != selectedValue) {
             updateStatusText("");  // NOI18N
@@ -488,6 +517,8 @@ private void agreeCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox agreeCheckBox;
     private javax.swing.JButton browseButton;
+    private javax.swing.JComboBox<ServerDetails> chooseServerComboBox;
+    private javax.swing.JLabel chooseServerLabel;
     private javax.swing.ButtonGroup domainType;
     private javax.swing.JButton downloadButton;
     private javax.swing.JLabel downloadStatusLabel;

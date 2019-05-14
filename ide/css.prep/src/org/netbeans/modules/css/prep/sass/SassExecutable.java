@@ -52,7 +52,6 @@ final class SassExecutable extends SassCli {
         EXECUTABLE_LONG_NAME,
     };
 
-    private static final String DEBUG_PARAM = "--debug-info"; // NOI18N
     private static final String SOURCEMAP_PARAM = "--sourcemap"; // NOI18N
     private static final String SOURCEMAP_WITH_VALUE_PARAM = "--sourcemap=%s"; // NOI18N
     private static final String VERSION_PARAM = "--version"; // NOI18N
@@ -113,13 +112,7 @@ final class SassExecutable extends SassCli {
                     // noop, the 'auto' sourcemaps work just fine
                 } else if (installedVersion.isAboveOrEqual(MINIMAL_VERSION_WITH_SOURCEMAP)) {
                     params.add(SOURCEMAP_PARAM);
-                } else {
-                    // older versions
-                    params.add(DEBUG_PARAM);
                 }
-            } else {
-                // unknwon sass version
-                params.add(DEBUG_PARAM);
             }
         } else {
             if (installedVersion != null

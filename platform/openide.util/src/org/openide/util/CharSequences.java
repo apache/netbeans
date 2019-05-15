@@ -22,8 +22,34 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 /**
- * Useful static methods to provide and work with memory efficient CharSequence 
- * implementations for ASCII strings.
+ * Effectively store {@link CharSequence strings} in memory. This
+ * class provides useful {@code static} methods to create and
+ * work with memory efficient {@link CharSequence}
+ * implementations for <b>ASCII</b> strings.
+ * <p>
+ * Often the strings we deal with are based on simple English alphabet. Keeping
+ * them in memory as {@code char[]} isn't really effective as they may fit
+ * in simple {@code byte[]}. This utility class does such <em>compression</em>
+ * behind the scene. Use the here-in provided methods and your strings will be
+ * stored as effectively as possible. As can be seen from the following example,
+ * many languages benefit from the <em>compaction</em>:
+ * <p>
+ * {@codesnippet CharSequencesTest#createSample}
+ * <p>
+ * To compare two sequences use dedicated {@link CharSequences#comparator()}
+ * which understands the compacted representation and uses it, prior to falling
+ * back to {@code char} by {@code char} comparision:
+ * <p>
+ * {@codesnippet CharSequencesTest#compareStrings}
+ * <p>
+ * Use {@link CharSequences#indexOf(java.lang.CharSequence, java.lang.CharSequence)} method
+ * to search the compacted strings effectively:
+ * <p>
+ * {@codesnippet CharSequencesTest#indexOfSample}
+ * <p>
+ * This <a target="_blank" href="https://search.maven.org/artifact/org.netbeans.api/org-openide-util/RELEASE110/jar">
+ * library is available on Maven central</a>. Use it with following co-ordinates:
+ * {@codesnippet CharSequencesPomDependency}
  *
  * @since 8.3
  * @author Alexander Simon
@@ -33,6 +59,10 @@ public final class CharSequences {
 
     /**
      * Provides compact char sequence object like {@link String#String(char[], int, int)}
+     * @param buf buffer to copy the characters from
+     * @param start starting offset in the {@code buf} array
+     * @param count number of characters to copy
+     * @return immutable char sequence
      */
     public static CharSequence create(char buf[], int start, int count) {
         if (start < 0) {

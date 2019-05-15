@@ -19,21 +19,22 @@
 
 package org.openide.util;
 
-import org.netbeans.junit.NbTestCase;
 import java.util.Comparator;
 import junit.framework.AssertionFailedError;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import org.junit.Assume;
 import org.junit.Test;
-import org.openide.util.CharSequences;
+import static org.netbeans.junit.NbTestCase.assertSize;
 
 /**
  *
  * @author Vladimir Voskresensky
  */
-public class CharSequencesTest extends NbTestCase {
-
-    public CharSequencesTest(String testName) {
-        super(testName);
-    }
+public class CharSequencesTest  {
 
     @Test
     public void testMaths() {
@@ -130,7 +131,7 @@ public class CharSequencesTest extends NbTestCase {
             assertEquals(cs.toString(), cs.toString());
             assertTrue(str.contentEquals(cs));
         }
-        
+
         for (int i = 0; i< 1024; i++) {
             StringBuilder buf = new StringBuilder();
             for (int j = 0; j< 64; j++) {
@@ -214,6 +215,7 @@ public class CharSequencesTest extends NbTestCase {
 
     @Test
     public void testSizes() {
+        Assume.assumeFalse("Skip the test on JDK11", isJDK11());
         // 32-bit JVM
         //String    String CharSequence
         //Length     Size    Size
@@ -273,11 +275,63 @@ public class CharSequencesTest extends NbTestCase {
             } catch (AssertionFailedError e) {
 //                System.err.println(e.getMessage());
                 stringIsSame = true;
-            }            
+            }
         } catch (AssertionFailedError e) {
 //                    System.err.println(e.getMessage());
             stringIsBigger = true;
         }
         assertTrue("string object \"" + rusText + "\" is smaller than our char sequence with size " + sizeLimit, stringIsBigger || stringIsSame);
+    }
+
+    @Test
+    public void createSample() {
+        // BEGIN: CharSequencesTest#createSample
+        CharSequence englishText = CharSequences.create("English Text");
+        assertTrue("English text can be compacted", CharSequences.isCompact(englishText));
+
+        CharSequence russianText = CharSequences.create("Русский Текст");
+        assertTrue("Russian text can be compacted", CharSequences.isCompact(russianText));
+
+        CharSequence germanText = CharSequences.create("Schlüssel");
+        assertTrue("German text can be compacted", CharSequences.isCompact(germanText));
+
+        CharSequence czechText = CharSequences.create("Žluťoučký kůň");
+        assertTrue("Czech text can be compacted", CharSequences.isCompact(czechText));
+        // END: CharSequencesTest#createSample
+    }
+
+    @Test
+    public void compareStrings() {
+        // BEGIN: CharSequencesTest#compareStrings
+        String h1 = "Hello World!";
+        CharSequence h2 = CharSequences.create(h1);
+        CharSequence h3 = CharSequences.create(h1.toCharArray(), 0, h1.length());
+
+        assertNotSame("Compacted in new object", h1, h2);
+        assertNotSame("Compacted in new object", h1, h3);
+        assertNotSame("Compacted in new object", h2, h3);
+
+        assertEquals("Yet the instances are still same", 0, CharSequences.comparator().compare(h1, h2));
+        assertEquals("Yet the instances are still same", 0, CharSequences.comparator().compare(h2, h3));
+        assertEquals("Yet the instances are still same", 0, CharSequences.comparator().compare(h3, h1));
+        // END: CharSequencesTest#compareStrings
+    }
+
+    @Test
+    public void indexOfSample() {
+        // BEGIN: CharSequencesTest#indexOfSample
+        CharSequence czechText = CharSequences.create("Kůň veze Pepsi.");
+        int findPepsi = CharSequences.indexOf(czechText, "Pepsi");
+        assertEquals("Pepsi found in the sentence", 9, findPepsi);
+        // END: CharSequencesTest#indexOfSample
+    }
+
+    private static boolean isJDK11() {
+        try {
+            Class.forName("java.lang.Module");
+            return true;
+        } catch (ClassNotFoundException ex) {
+            return false;
+        }
     }
 }

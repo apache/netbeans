@@ -49,7 +49,7 @@
 -->
  <answer id="arch-overall">
   <p>
-   This is a lexer an syntax highlighting for TextMate grammars. The grammars
+   This is a lexer and syntax highlighting for TextMate grammars. The grammars
    may be regitered using the system layer.
    <api name="register-grammar" group="layer" type="export" category="devel" />
   </p>
@@ -117,7 +117,7 @@
   <p>
       <usecase id="register-grammar" name="Register grammar">
           To register a new TextMate grammar, add it as a file into the system filesystem,
-          under "Editors/&lt;mime-type&gt;/", and make sure it has an attribute "textmate-grammar",&lt;/mime-type&gt;,
+          under "Editors/&lt;mime-type&gt;/", and make sure it has an attribute "textmate-grammar"
           whose value is a string representing the TextMate top-level scope. For example:
           <pre>
     &lt;folder name="Editors"&gt;
@@ -139,6 +139,37 @@
     {@literal @}GrammarRegistration(mimeType="text/x-kotlin", grammar="path/to/Kotlin.tmLanguage.json")
           </pre>
       </usecase>
+      <a name="usecase-injection-grammar">
+      <usecase id="register-injection-grammar" name="Register injection grammar">
+          Injection grammars let existing grammars to be extended. An injection grammar is
+          a regular TextMate grammar that is injected into a specific scope within
+          an existing grammar. To register a new injection grammar, add it as a file
+          into the system filesystem under "Editors/", and make sure it has attributes
+          "textmate-grammar" whose value is a string representing the TextMate top-level
+          scope and "inject-to" whose value is a string representing comma separated
+          list of scopes that the grammar is injected to. For example, registration
+          of the injection grammar highlighting TODO keywords in JavaScript and TypeScript
+          comments:
+          <pre>
+    &lt;folder name="Editors"&gt;
+        &lt;file name="todo-comment-injection.json" url="todo-comment-injection.json"&gt;
+            &lt;attr name="textmate-grammar" stringvalue="todo-comment.injection" /&gt;
+            &lt;attr name="inject-to" stringvalue="source.js,source.ts" /&gt;
+        &lt;/file&gt;
+    &lt;/folder&gt;
+          </pre>
+      </usecase>
+      </a>
+      <a name="usecase-injection-grammar-java-api">
+      <usecase id="register-injection-grammar-using-java-api" name="Register injection grammar using Java API">
+          To register a new injection grammar using Java API, add the GrammarInjectionRegistration
+          annotation to an appropriate package-info file, or an appropriate Java class.
+          For example:
+          <pre>
+    {@literal @}GrammarInjectionRegistration(grammar="path/to/todo-comment-injection.json", injectTo = {"source.js","source.ts"})
+          </pre>
+      </usecase>
+      </a>
   </p>
  </answer>
 
@@ -156,8 +187,10 @@
 -->
  <answer id="arch-what">
   <p>
-   This project to allows to easily add syntax highlighting for languages by
-   using the TextMate grammar files.
+   <api category="stable" group="java" type="export" name="TextMateGrammars">
+    This project to allows to easily add syntax highlighting for languages by
+    using the TextMate grammar files.
+   </api>
   </p>
  </answer>
 

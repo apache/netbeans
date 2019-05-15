@@ -54,6 +54,8 @@ import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.api.project.Sources;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.java.lsp.server.text.TextDocumentServiceImpl;
 import org.netbeans.modules.java.lsp.server.workspace.WorkspaceServiceImpl;
@@ -174,6 +176,10 @@ public class Server {
                 OpenProjects.getDefault().openProjects().get();
             } catch (InterruptedException | ExecutionException ex) {
                 throw new IllegalStateException(ex);
+            }
+            for (Project prj : projects) {
+                //init source groups/FileOwnerQuery:
+                ProjectUtils.getSources(prj).getSourceGroups(Sources.TYPE_GENERIC);
             }
             try {
                 JavaSource.create(ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY))

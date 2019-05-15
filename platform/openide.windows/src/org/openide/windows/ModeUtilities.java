@@ -42,7 +42,7 @@ package org.openide.windows;
  * @see http://wiki.apidesign.org/wiki/ExtendingInterfaces
  * 
  * @author Mark Phipps
- * @since 6.81
+ * @since 6.82
  */
 public final class ModeUtilities {
 

@@ -36,6 +36,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -67,6 +68,7 @@ import static org.netbeans.modules.gradle.GradleDaemon.*;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.JLabel;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.openide.awt.Notification;
@@ -92,8 +94,10 @@ public final class GradleProjectCache {
     private static AtomicLong timeInLoad = new AtomicLong();
     private static AtomicInteger loadedProjects = new AtomicInteger();
 
+    private static final Map<File, Set<File>> SUB_PROJECT_DIR_CACHE = new ConcurrentHashMap<>();
+
     // Increase this number if new info is gathered from the projects.
-    private static final int COMPATIBLE_CACHE_VERSION = 10;
+    private static final int COMPATIBLE_CACHE_VERSION = 11;
 
     /**
      * Loads a physical GradleProject either from Gradle or Cache. As project retrieval can be time consuming using
@@ -112,15 +116,15 @@ public final class GradleProjectCache {
         }
         GradleProject prev = project.project;
 
-        ignoreCache |= GradleSettings.getDefault().isCacheDisabled();
-
         // Try to turn to the cache
-        if (!ignoreCache && (prev.getQuality() == FALLBACK))  {
+        if (!(ignoreCache || GradleSettings.getDefault().isCacheDisabled())
+                && (prev.getQuality() == FALLBACK))  {
             ProjectCacheEntry cacheEntry = loadCachedProject(files);
             if (cacheEntry != null) {
                 if (cacheEntry.isCompatible()) {
                     prev = createGradleProject(cacheEntry.quality, cacheEntry.data);
-                    if (cacheEntry.isValid(aim)) {
+                    if (cacheEntry.isValid()) {
+                        updateSubDirectoryCache(prev);
                         return prev;
                     }
                 }
@@ -137,6 +141,7 @@ public final class GradleProjectCache {
         GradleProject ret;
         try {
             ret = GRADLE_LOADER_RP.submit(new ProjectLoaderTask(ctx)).get();
+            updateSubDirectoryCache(ret);
         } catch (InterruptedException | ExecutionException ex) {
             ret = fallbackProject(files);
         }
@@ -155,7 +160,18 @@ public final class GradleProjectCache {
         Quality quality = ctx.aim;
         GradleBaseProject base = ctx.previous.getBaseProject();
         GradleConnector gconn = GradleConnector.newConnector();
-        gconn.useInstallation(RunUtils.evaluateGradleDistribution(ctx.project, true));
+
+        File gradleInstall = RunUtils.evaluateGradleDistribution(ctx.project, true);
+        if (gradleInstall == null) {
+            GradleDistributionManager gdm = GradleDistributionManager.get(GradleSettings.getDefault().getGradleUserHome());
+            GradleDistributionManager.NbGradleVersion version = gdm.createVersion(GradleSettings.getDefault().getGradleVersion());
+            gradleInstall = gdm.install(version);
+        }
+        if (gradleInstall == null) {
+            return ctx.previous;
+        }
+        gconn.useInstallation(gradleInstall);
+
         ProjectConnection pconn = gconn.forProjectDirectory(base.getProjectDir()).connect();
 
         GradleCommandLine cmd = new GradleCommandLine(ctx.args);
@@ -424,10 +440,24 @@ public final class GradleProjectCache {
 
     }
 
+    private static void updateSubDirectoryCache(GradleProject gp) {
+        if (gp.getQuality().atLeast(EVALUATED)) {
+            GradleBaseProject baseProject = gp.getBaseProject();
+            if (baseProject.isRoot()) {
+                SUB_PROJECT_DIR_CACHE.put(baseProject.getProjectDir(), new HashSet<File>(baseProject.getSubProjects().values()));
+            }
+        }
+    }
+
+    static Boolean isKnownSubProject(File rootDir, File subProjectDir) {
+        Set<File> cache = SUB_PROJECT_DIR_CACHE.get(rootDir);
+        return (cache != null) ? cache.contains(subProjectDir) : null;
+    }
+
     private static void saveCachedProjectInfo(NbProjectInfo data, GradleProject gp) {
         assert gp.getQuality().betterThan(FALLBACK) : "Never attempt to cache FALLBACK projects."; //NOi18N
         //TODO: Make it possible to handle external file set as cache.
-        GradleFiles gf = new GradleFiles(gp.getBaseProject().getProjectDir());
+        GradleFiles gf = new GradleFiles(gp.getBaseProject().getProjectDir(), true);
 
         ProjectCacheEntry entry = new ProjectCacheEntry(new StoredProjectInfo(data), gp, gf.getProjectFiles());
         File cacheFile = new File(getCacheDir(gp), INFO_CACHE_FILE_NAME);
@@ -526,7 +556,7 @@ public final class GradleProjectCache {
             return version == COMPATIBLE_CACHE_VERSION;
         }
 
-        public boolean isValid(Quality aim) {
+        public boolean isValid() {
             boolean ret = isCompatible();
             if (ret && (sourceFiles != null)) {
                 for (File f : sourceFiles) {

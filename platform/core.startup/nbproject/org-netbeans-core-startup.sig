@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.65.1
+#Version 1.66.1
 
 CLSS public abstract interface java.io.Serializable
 
@@ -258,6 +258,12 @@ meth public java.lang.String[] getInstallAfter()
 meth public java.lang.String[] getInstallBefore()
 supr org.netbeans.core.startup.ManifestSection
 hfds installAfter,installBefore
+
+CLSS public final org.netbeans.core.startup.MavenRepoURLHandler
+cons public init()
+meth protected java.net.URLConnection openConnection(java.net.URL) throws java.io.IOException
+supr java.net.URLStreamHandler
+hfds CENTRAL_REPO_URI
 
 CLSS public final org.netbeans.core.startup.ModuleHistory
 cons public init(java.lang.String)

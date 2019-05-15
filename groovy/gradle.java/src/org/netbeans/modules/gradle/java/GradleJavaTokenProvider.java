@@ -24,24 +24,13 @@ import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.netbeans.modules.gradle.java.api.GradleJavaProject;
 import org.netbeans.modules.gradle.java.api.GradleJavaSourceSet;
 import org.netbeans.modules.gradle.spi.actions.ReplaceTokenProvider;
-import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.tree.Tree;
-import com.sun.source.util.Trees;
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.TypeElement;
-import org.netbeans.api.java.source.CompilationController;
-import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.Task;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.SingleMethod;
@@ -57,11 +46,11 @@ import org.openide.util.Lookup;
 public class GradleJavaTokenProvider implements ReplaceTokenProvider {
 
     private static final Set<String> SUPPORTED = Collections.unmodifiableSet(new HashSet(Arrays.asList(
-            "selectedClass",
-            "selectedMethod",
-            "affectedBuildTasks"
+            "selectedClass",       //NOI18N
+            "selectedMethod",      //NOI18N
+            "affectedBuildTasks"   //NOI18N
     )));
-    
+
     final Project project;
 
     public GradleJavaTokenProvider(Project project) {
@@ -76,33 +65,29 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
     @Override
     public Map<String, String> createReplacements(String action, Lookup context) {
         Map<String, String> ret = new HashMap<>();
-        processSelectedClass(ret, context);
+        processSelectedPackageAndClass(ret, context);
         processSelectedMethod(ret, context);
         processSourceSets(ret, context);
         return ret;
     }
 
-    private void processSelectedClass(final Map<String, String> map, Lookup context) {
+    private void processSelectedPackageAndClass(final Map<String, String> map, Lookup context) {
         FileObject fo = RunUtils.extractFileObjectfromLookup(context);
         GradleJavaProject gjp = GradleJavaProject.get(project);
-        if ((gjp != null) && (fo != null)) {
-            File f = FileUtil.toFile(fo);
-            GradleJavaSourceSet sourceSet = gjp.containingSourceSet(f);
-            if (sourceSet != null) {
-                String relPath = sourceSet.relativePath(f);
-                String className = relPath.substring(0, relPath.lastIndexOf('.')).replace('/', '.');
-                map.put("selectedClass", className);
-            }
+        String className = evaluateClassName(gjp, fo);
+        if (className != null) {
+            map.put("selectedClass", className);
         }
     }
 
-    private static void processSelectedMethod(final Map<String, String> map, Lookup context) {
+    private void processSelectedMethod(final Map<String, String> map, Lookup context) {
         SingleMethod method = context.lookup(SingleMethod.class);
         FileObject fo = method != null ? method.getFile() : RunUtils.extractFileObjectfromLookup(context);
-        String methodName = method != null ? method.getMethodName() : null;
-        if (fo != null) {
-             String selectedMethod = evaluateSingleMethod(fo, methodName);
-             map.put("selectedMethod", selectedMethod);
+        if ((fo != null) && fo.isData()) {
+            GradleJavaProject gjp = GradleJavaProject.get(project);
+            String className = evaluateClassName(gjp, fo);
+            String selectedMethod = method != null ? className + '.' + method.getMethodName() : className;
+            map.put("selectedMethod", selectedMethod);
         }
     }
 
@@ -125,41 +110,26 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
             for (String task : buildTasks) {
                 tasks.append(task).append(' ');
             }
-            map.put("affectedBuildTasks", tasks.toString());
+            map.put("affectedBuildTasks", tasks.toString()); //NOI18N
         }
     }
 
-    private static String evaluateSingleMethod(final FileObject fo, final String method) {
-        final Object[] ret = new Object[1];
-        JavaSource javaSource = JavaSource.forFileObject(fo);
-        if (javaSource != null) {
-            try {
-                javaSource.runUserActionTask(new Task<CompilationController>() {
-                    @Override
-                    public void run(CompilationController compilationController) throws Exception {
-                        compilationController.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                        Trees trees = compilationController.getTrees();
-                        CompilationUnitTree compilationUnitTree = compilationController.getCompilationUnit();
-                        List<? extends Tree> typeDecls = compilationUnitTree.getTypeDecls();
-                        for (Tree tree : typeDecls) {
-                            Element element = trees.getElement(trees.getPath(compilationUnitTree, tree));
-                            if (element != null && element.getKind() == ElementKind.CLASS && element.getSimpleName().contentEquals(fo.getName())) {
-                                TypeElement type = (TypeElement) element;
-                                StringBuilder sb = new StringBuilder(type.getQualifiedName());
-                                if (method != null) {
-                                    sb.append('.').append(method);
-                                }
-                                ret[0] = sb.toString();
-                                break;
-                            }
-                        }
-                    }
-                }, true);
-                return ret[0].toString();
-            } catch (IOException ioe) {
-                //TODO: Do nothing?
+    private String evaluateClassName(GradleJavaProject gjp, FileObject fo) {
+        String ret = null;
+        if ((gjp != null) && (fo != null)) {
+            File f = FileUtil.toFile(fo);
+            GradleJavaSourceSet sourceSet = gjp.containingSourceSet(f);
+            if (sourceSet != null) {
+                String relPath = sourceSet.relativePath(f);
+                ret = (relPath.lastIndexOf('.') > 0 ?
+                        relPath.substring(0, relPath.lastIndexOf('.')) :
+                        relPath).replace('/', '.');
+                if (fo.isFolder()) {
+                    ret = ret + '*';
+                }
             }
         }
-        return null;
+        return ret;
     }
+
 }

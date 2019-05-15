@@ -698,7 +698,7 @@ public final class SQLCloneableEditor extends CloneableEditor implements MultiVi
 
         @Override
         public DatabaseConnection getDatabaseConnection() {
-            return sqlEditorSupport().getActiveDatabaseConnection();
+            return sqlEditorSupport().getDatabaseConnection();
         }
 
         @Override
@@ -763,7 +763,7 @@ public final class SQLCloneableEditor extends CloneableEditor implements MultiVi
         
         @Override
         public String toString() {
-            return "SQLExecution[support=" + sqlEditorSupport().messageName()  + ", dbconn=" + sqlEditorSupport().getActiveDatabaseConnection() + "]"; // NOI18N
+            return "SQLExecution[support=" + sqlEditorSupport().messageName()  + ", dbconn=" + sqlEditorSupport().getDatabaseConnection() + "]"; // NOI18N
         }
         
         private String getText(JEditorPane editorPane) {

@@ -327,7 +327,6 @@ public class Retriever implements Runnable {
         boolean run = true;
         while(run) {
             URLConnection conn;
-            BufferedReader in = null;
             try {
                 URL url = new URL(location);
                 conn = url.openConnection();
@@ -335,6 +334,7 @@ public class Retriever implements Runnable {
                     HttpURLConnection hconn = (HttpURLConnection) conn;
                     hconn.setConnectTimeout(LOCATION_DOWNLOAD_TIMEOUT);
                     hconn.setReadTimeout(LOCATION_DOWNLOAD_TIMEOUT);
+                    hconn.setRequestMethod("HEAD");
                     if (hconn instanceof HttpsURLConnection) {
                         handleSecureConnection((HttpsURLConnection)hconn);
                     }
@@ -355,11 +355,9 @@ public class Retriever implements Runnable {
                             }
                             break;
                         case 200:
-                            in = new BufferedReader(new InputStreamReader(
-                                    hconn.getInputStream()));
-                            String path;
-                            if ((path = in.readLine()) != null) {
-                                result = targetUrlPrefix + path;
+                            int len = hconn.getContentLength();
+                            if (len > 0) {
+                                result = location;
                                 LOGGER.log(Level.FINE,
                                         "New Glassfish Location: {0}", result);
                             }
@@ -376,14 +374,6 @@ public class Retriever implements Runnable {
             } catch (IOException ioe) {
                 LOGGER.log(Level.INFO, "Error reading from URL", ioe);
                 run = false;
-            } finally {
-                if (in != null) {
-                    try {
-                        in.close();
-                    } catch (IOException ioe) {
-                        LOGGER.log(Level.INFO, "Cannot close URL reader", ioe);
-                    }
-                }
             }
         }
         return result;

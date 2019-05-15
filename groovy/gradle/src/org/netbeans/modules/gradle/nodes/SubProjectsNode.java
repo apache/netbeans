@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -53,6 +54,11 @@ import org.openide.util.WeakListeners;
 
 import static org.netbeans.modules.gradle.nodes.Bundle.*;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+import org.netbeans.modules.gradle.spi.Utils;
+import org.openide.ErrorManager;
+import org.openide.nodes.Children;
 
 /**
  *
@@ -63,14 +69,23 @@ public class SubProjectsNode extends AbstractNode {
     @StaticResource
     private static final String SP_BADGE
             = "org/netbeans/modules/gradle/resources/gradle-badge.png";
-    private final NbGradleProjectImpl proj;
 
     @NbBundle.Messages("LBL_SubProjects=Sub Projects")
+    public SubProjectsNode(NbGradleProjectImpl proj, String path) {
+        super(FilterNode.Children.create(new SubProjectsChildFactory(proj, path), true));
+        if (":".equals(path)) {     //NOI18N
+            setName("SubProjects"); //NOI18N
+            setDisplayName(LBL_SubProjects());
+        } else {
+            int colon = path.lastIndexOf(':', path.length() - 2);
+            String partName = path.substring(colon + 1, path.length() - 1);
+            setDisplayName(Utils.capitalize(partName));
+            setName(path);
+        }
+    }
+
     public SubProjectsNode(NbGradleProjectImpl proj) {
-        super(FilterNode.Children.create(new SubProjectsChildFactory(proj), true));
-        this.proj = proj;
-        setName("SubProjects"); //NOI18N
-        setDisplayName(LBL_SubProjects());
+        this(proj, ":"); //NOI18N
     }
 
     @Override
@@ -78,7 +93,7 @@ public class SubProjectsNode extends AbstractNode {
         return new Action[]{};
     }
 
-    private Image getIcon(boolean opened) {
+    private static Image getIcon(boolean opened) {
         Image badge = ImageUtilities.loadImage(SP_BADGE, true); //NOI18N
         return ImageUtilities.mergeImages(NodeUtils.getTreeFolderIcon(opened), badge, 8, 8);
     }
@@ -93,13 +108,15 @@ public class SubProjectsNode extends AbstractNode {
         return getIcon(true);
     }
 
-    private static class SubProjectsChildFactory extends ChildFactory<NbGradleProjectImpl> {
+    private static class SubProjectsChildFactory extends ChildFactory<String> {
 
         private final NbGradleProjectImpl project;
         private final PropertyChangeListener listener;
+        private final String rootPath;
 
-        SubProjectsChildFactory(NbGradleProjectImpl proj) {
+        SubProjectsChildFactory(NbGradleProjectImpl proj, String rootPath) {
             project = proj;
+            this.rootPath = rootPath;
             NbGradleProject watcher = project.getProjectWatcher();
             listener = new PropertyChangeListener() {
                 @Override
@@ -115,34 +132,54 @@ public class SubProjectsNode extends AbstractNode {
         }
 
         @Override
-        protected boolean createKeys(final List<NbGradleProjectImpl> modules) {
+        protected boolean createKeys(final List<String> paths) {
             Map<String, File> subProjects = project.getGradleProject().getBaseProject().getSubProjects();
-            for (String name : subProjects.keySet()) {
-                File projDir = subProjects.get(name);
-                FileObject fo = FileUtil.toFileObject(projDir);
+            Set<String> components = new TreeSet<String>();
+            Set<String> projects = new TreeSet<>();
+            for (String path : subProjects.keySet()) {
+                if (path.startsWith(rootPath)) {
+                    String relPath = path.substring(rootPath.length());
+                    int firstColon = relPath.indexOf(':');
+                    int lastColon = relPath.lastIndexOf(':');
+                    if ((firstColon >= 0) && (firstColon == lastColon)) {
+                        components.add(path.substring(0, rootPath.length() + firstColon + 1));
+                    }
+                    if (firstColon < 0 ) {
+                        projects.add(path);
+                    }
+                }
+            }
+            paths.addAll(components);
+            paths.addAll(projects);
+            return true;
+        }
+
+        @Override
+        protected Node createNodeForKey(String path) {
+            Node ret = null;
+            Map<String, File> subProjects = project.getGradleProject().getBaseProject().getSubProjects();
+            File projectDir = subProjects.get(path);
+            if (projectDir != null) {
+                FileObject fo = FileUtil.toFileObject(projectDir);
                 if (fo != null) {
                     try {
                         Project prj = ProjectManager.getDefault().findProject(fo);
                         if (prj != null && prj.getLookup().lookup(NbGradleProjectImpl.class) != null) {
                             NbGradleProjectImpl proj = (NbGradleProjectImpl) prj;
                             assert prj.getLookup().lookup(LogicalViewProvider.class) != null;
-                            modules.add(proj);
+                            Node original = proj.getLookup().lookup(LogicalViewProvider.class).createLogicalView();
+                            ret = new ProjectFilterNode(proj, original);
                         }
                     } catch (IllegalArgumentException | IOException ex) {
-                        ex.printStackTrace();//TODO log ?
+                        ErrorManager.getDefault().notify(ex);
                     }
                 } else {
                     //TODO broken module reference.. show as such..
                 }
-
+            } else {
+                ret = new SubProjectsNode(project, path);
             }
-            return true;
-        }
-
-        @Override
-        protected Node createNodeForKey(NbGradleProjectImpl proj) {
-            Node original = proj.getLookup().lookup(LogicalViewProvider.class).createLogicalView();
-            return new ProjectFilterNode(proj, original);
+            return ret;
         }
 
     }

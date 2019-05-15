@@ -103,6 +103,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         cbStartDaemonOnStart = new javax.swing.JCheckBox();
         cbPreferWrapper = new javax.swing.JCheckBox();
         lbVersionInfo = new javax.swing.JLabel();
+        cbSilentInstall = new javax.swing.JCheckBox();
         jPanel2 = new javax.swing.JPanel();
         cbOffline = new javax.swing.JCheckBox();
         cbSkipTest = new javax.swing.JCheckBox();
@@ -229,6 +230,8 @@ public class SettingsPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(lbVersionInfo, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.lbVersionInfo.text")); // NOI18N
         lbVersionInfo.setEnabled(false);
 
+        org.openide.awt.Mnemonics.setLocalizedText(cbSilentInstall, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbSilentInstall.text")); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -236,32 +239,37 @@ public class SettingsPanel extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblGradleUserHome)
-                    .addComponent(lblGradleDistribution))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tfGradleUserHome)
+                            .addComponent(lblGradleUserHome)
+                            .addComponent(lblGradleDistribution))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(rbUseCustomGradle)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cbPreferWrapper)
+                                    .addComponent(cbStartDaemonOnStart))
+                                .addGap(0, 165, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(rbUseStandardGradle)
+                                .addGap(18, 18, 18)
+                                .addComponent(cbGradleVersion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tfUseCustomGradle)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btGradleUserHome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btUseCustomGradle)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbPreferWrapper)
-                            .addComponent(cbStartDaemonOnStart))
-                        .addGap(0, 107, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(rbUseStandardGradle)
-                        .addGap(18, 18, 18)
-                        .addComponent(cbGradleVersion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbVersionInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(lbVersionInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(tfGradleUserHome, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                        .addComponent(rbUseCustomGradle)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(tfUseCustomGradle)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btGradleUserHome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btUseCustomGradle)))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(cbSilentInstall)))
                 .addContainerGap())
         );
 
@@ -270,7 +278,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblGradleUserHome)
                     .addComponent(tfGradleUserHome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -290,7 +298,8 @@ public class SettingsPanel extends javax.swing.JPanel {
                 .addComponent(cbPreferWrapper)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cbStartDaemonOnStart)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbSilentInstall))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jPanel2.border.title"))); // NOI18N
@@ -319,7 +328,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbOffline)
                             .addComponent(cbNoRebuild))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 99, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(cbSkipCheck, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cbSkipTest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
@@ -348,19 +357,22 @@ public class SettingsPanel extends javax.swing.JPanel {
         pnlExecutionLayout.setHorizontalGroup(
             pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(pnlExecutionLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(cbPreferMaven)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlExecutionLayout.createSequentialGroup()
+                        .addComponent(cbPreferMaven)
+                        .addGap(0, 367, Short.MAX_VALUE))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         pnlExecutionLayout.setVerticalGroup(
             pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlExecutionLayout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(41, 41, 41)
                 .addComponent(cbPreferMaven)
                 .addContainerGap())
         );
@@ -616,6 +628,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         bgUsedDistribution.setSelected(bm, true);
 
         cbStartDaemonOnStart.setSelected(settings.isStartDaemonOnStart());
+        cbSilentInstall.setSelected(settings.isSilentInstall());
 
         cbOffline.setSelected(settings.isOffline());
         cbConfigureOnDemand.setSelected(settings.isConfigureOnDemand());
@@ -674,6 +687,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         settings.setUseCustomGradle(useCustomGradle);
 
         settings.setStartDaemonOnStart(cbStartDaemonOnStart.isSelected());
+        settings.setSilentInstall(cbSilentInstall.isSelected());
 
         settings.setOffline(cbOffline.isSelected());
         settings.setConfigureOnDemand(cbConfigureOnDemand.isSelected());
@@ -714,6 +728,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         isChanged |= settings.useCustomGradle() != useCustomGradle;
 
         isChanged |= settings.isStartDaemonOnStart() != cbStartDaemonOnStart.isSelected();
+        isChanged |= settings.isSilentInstall() != cbSilentInstall.isSelected();
 
         isChanged |= settings.isOffline() != cbOffline.isSelected();
         isChanged |= settings.isConfigureOnDemand() != cbConfigureOnDemand.isSelected();
@@ -797,6 +812,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox cbPreferWrapper;
     private javax.swing.JCheckBox cbReuseEditorOnStackTrace;
     private javax.swing.JCheckBox cbReuseOutputTabs;
+    private javax.swing.JCheckBox cbSilentInstall;
     private javax.swing.JCheckBox cbSkipCheck;
     private javax.swing.JCheckBox cbSkipTest;
     private javax.swing.JCheckBox cbStartDaemonOnStart;

@@ -18,15 +18,23 @@
  */
 package org.netbeans.modules.java.source;
 
+import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.TreeMaker;
+import com.sun.tools.javac.util.ListBuffer;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class TreeShims {
+
+    public static final String SWITCH_EXPRESSION = "SWITCH_EXPRESSION"; //NOI18N
 
     public static List<? extends ExpressionTree> getExpressions(CaseTree node) {
         try {
@@ -50,6 +58,76 @@ public class TreeShims {
         }
     }
 
+    public static List<? extends ExpressionTree> getExpressions(Tree node) {
+        List<? extends ExpressionTree> exprTrees = new ArrayList<>();
+
+        switch (node.getKind().toString()) {
+            case "CASE":
+                exprTrees = getExpressions((CaseTree) node);
+                break;
+            case SWITCH_EXPRESSION: {
+                try {
+                    Class swExprTreeClass = Class.forName("com.sun.source.tree.SwitchExpressionTree");
+                    Method getExpressions = swExprTreeClass.getDeclaredMethod("getExpression");
+                    exprTrees = Collections.singletonList((ExpressionTree) getExpressions.invoke(node));
+                } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                    throw TreeShims.<RuntimeException>throwAny(ex);
+                }
+                break;
+            }
+            case "SWITCH":
+                exprTrees = Collections.singletonList(((SwitchTree) node).getExpression());
+                break;
+            default:
+                break;
+        }
+        return exprTrees;
+    }
+
+    public static List<? extends CaseTree> getCases(Tree node) {
+        List<? extends CaseTree> caseTrees = new ArrayList<>();
+
+        switch (node.getKind().toString()) {
+            case "SWITCH":
+                caseTrees = ((SwitchTree) node).getCases();
+                break;
+            case "SWITCH_EXPRESSION": {
+                try {
+                    Class swExprTreeClass = Class.forName("com.sun.source.tree.SwitchExpressionTree");
+                    Method getCases = swExprTreeClass.getDeclaredMethod("getCases");
+                    caseTrees = (List<? extends CaseTree>) getCases.invoke(node);
+                } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                    throw TreeShims.<RuntimeException>throwAny(ex);
+                }
+            }
+        }
+        return caseTrees;
+    }
+
+    public static ExpressionTree getValue(BreakTree node) {
+        try {
+            Method getExpression = BreakTree.class.getDeclaredMethod("getValue");
+            return (ExpressionTree) getExpression.invoke(node);
+        } catch (NoSuchMethodException ex) {
+            return null;
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+
+    public static Tree SwitchExpression(TreeMaker make, ExpressionTree selector, List<? extends CaseTree> caseList) throws SecurityException {
+        ListBuffer<JCTree.JCCase> cases = new ListBuffer<JCTree.JCCase>();
+        for (CaseTree t : caseList) {
+            cases.append((JCTree.JCCase) t);
+        }
+        try {
+            Method getMethod = TreeMaker.class.getDeclaredMethod("SwitchExpression", JCTree.JCExpression.class, com.sun.tools.javac.util.List.class);
+            return (Tree) getMethod.invoke(make, (JCTree.JCExpression) selector, cases.toList());
+        } catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+  
     @SuppressWarnings("unchecked")
     private static <T extends Throwable> RuntimeException throwAny(Throwable t) throws T {
         throw (T) t;

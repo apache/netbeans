@@ -116,13 +116,13 @@ public class GrammarResolverListenerTest extends CssTestBase {
         
         Iterator<ResolvedToken> itr = resolved.iterator();
         String next = itr.next().toString();
-        assertEquals("[S0|font]/[S1]/[L2]/[S7|font-size]/[S10|@length]/[L11]/!length (20px(LENGTH;0-4))", next);
+        assertEquals("[S0|font]/[S1]/[L2]/[S16|font-size]/[S19|@length]/[L20]/!length (20px(LENGTH;0-4))", next);
         next = itr.next().toString();
-        assertEquals("[S0|font]/[S1]/[L2]/[L20]// (/(SOLIDUS;5-6))", next);
+        assertEquals("[S0|font]/[S1]/[L2]/[L35]// (/(SOLIDUS;5-6))", next);
         next = itr.next().toString();
-        assertEquals("[S0|font]/[S1]/[L2]/[L20]/[S21|line-height]/[S22|@length]/[L23]/!length (20px(LENGTH;7-11))", next);
+        assertEquals("[S0|font]/[S1]/[L2]/[L35]/[S36|line-height]/[S43|@length]/[L44]/!length (20px(LENGTH;7-11))", next);
         next = itr.next().toString();
-        assertEquals("[S0|font]/[S1]/[L2]/[S32|font-family]/[L33]/[S34]/[S37|@generic-family]/fantasy (fantasy(IDENT;12-19))", next);
+        assertEquals("[S0|font]/[S1]/[L2]/[S59|font-family]/[L60]/[S61]/[S68|@generic-family]/fantasy (fantasy(IDENT;12-19))", next);
         
     }
 

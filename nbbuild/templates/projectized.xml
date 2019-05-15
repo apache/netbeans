@@ -112,6 +112,9 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
                       compilecp="test.qa-functional.compile.cp"
                       compiledep="test.qa-functional.testdep"/>
         </parseprojectxml>
+        <condition property="requires.nb.javac" value="true">
+            <contains string="${module.classpath}" substring="/org-netbeans-libs-javacapi.jar" />
+        </condition>
         <property name="spec.version.base.fatal.warning" value="true"/>
         <condition property="is.regular">
             <not>
@@ -174,7 +177,7 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         <property name="locmakenbm.brands" value="${brandings}"/>
         <!-- When requires.nb.javac property is true, prepend javac-api and javac-impl on bootclasspath to allow override the default annotation
              processing API located in rt.jar. -->
-        <property name="bootclasspath.prepend.nb" value="${nb_all}/java/libs.javacapi/external/nb-javac-9-api.jar${path.separator}${nb_all}/java/libs.javacimpl/external/nb-javac-9-impl.jar" />
+        <property name="bootclasspath.prepend.nb" value="${nb_all}/java/libs.javacapi/external/nb-javac-12-api.jar${path.separator}${nb_all}/java/libs.javacimpl/external/nb-javac-12-impl.jar" />
         <property name="bootclasspath.prepend.vanilla" value="${nb_all}/nbbuild/external/vanilla-javac-api.jar${path.separator}${nb_all}/nbbuild/external/vanilla-javac-impl.jar" />
         <condition property="bootclasspath.prepend" value="${bootclasspath.prepend.nb}">
             <istrue value="${requires.nb.javac.impl}"/>
@@ -224,7 +227,6 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
             <jar>
                 <zipfileset dir="${nb_all}" includes="LICENSE" fullpath="META-INF/LICENSE"/>
                 <zipfileset dir="${nb_all}/nbbuild" includes="notice-stub.txt" fullpath="META-INF/NOTICE"/>
-                <zipfileset dir="${nb_all}" includes="DISCLAIMER" fullpath="META-INF/DISCLAIMER"/>
             </jar>
         </presetdef>
     </target>
@@ -396,7 +398,6 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         <zip zipfile="${netbeans.zipped.sources.dir}/${code.name.base.dashes}.zip">
             <zipfileset dir="${src.dir}" />
             <zipfileset dir="${build.dir}" prefix="META-INF" includes="LICENSE NOTICE" />
-            <zipfileset dir="${nb_all}" prefix="META-INF" includes="DISCLAIMER" />
         </zip>
     </target>
 
@@ -441,7 +442,6 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
           </filterchain>
         </concat>
 
-        <copy file="${nb_all}/DISCLAIMER" todir="${build.dir}/nbm-extras/META-INF/" />
         <property name="license.file.override" location="${build.dir}/nbm-extras/META-INF/LICENSE"/>
         <property name="extra.license.files" value=""/>
         <zipfileset id="extra.nbm.files" dir="${build.dir}/nbm-extras/" />
@@ -544,8 +544,6 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
              </tokenfilter>
           </filterchain>
         </concat>
-
-        <copy file="${nb_all}/DISCLAIMER" todir="${build.classes.dir}/META-INF/" />
     </target>
 
     <target name="jar" depends="-prepare-mandatory-files-for-module,projectized-common.jar" />
@@ -697,7 +695,7 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         <property name="sigtest.public.packages" value="${public.packages}"/>
         <property name="sigtest.fail.on.error" value="true"/>
         <taskdef name="sigtest" classname="org.netbeans.nbbuild.Sigtest" classpath="${nbantext.jar}"/>
-        <property name="sigtest.jar" location="${nb_all}/nbbuild/external/apitest-70.jar"/> 
+        <property name="sigtest.jar" location="${nb_all}/nbbuild/external/sigtest-maven-plugin-1.2.jar"/>
         <loadproperties srcFile="${manifest.mf}" prefix="mf.">
             <filterchain>
                 <replaceregex pattern="[\n\r]+ ([^ ][^\n\r]*)"

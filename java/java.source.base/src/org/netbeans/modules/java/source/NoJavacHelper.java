@@ -18,7 +18,14 @@
  */
 package org.netbeans.modules.java.source;
 
+import com.sun.source.tree.BreakTree;
+import com.sun.source.tree.ExpressionTree;
+import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.security.ProtectionDomain;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.objectweb.asm.ClassWriter;
@@ -61,16 +68,36 @@ public class NoJavacHelper {
                 ClassWriter w = new ClassWriter(0);
                 w.visit(Opcodes.V1_8, Opcodes.ACC_ABSTRACT | Opcodes.ACC_PUBLIC, "com/sun/tools/javac/code/Scope$WriteableScope", null, "com/sun/tools/javac/code/Scope", null);
                 byte[] classData = w.toByteArray();
-                try {
-                    Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
-                    theUnsafe.setAccessible(true);
-                    Unsafe unsafe = (Unsafe) theUnsafe.get(null);
-                    Class scopeClass = Class.forName("com.sun.tools.javac.code.Scope");
-                    unsafe.defineClass("com.sun.tools.javac.code.Scope$WriteableScope", classData, 0, classData.length, scopeClass.getClassLoader(), scopeClass.getProtectionDomain());
-                } catch (Throwable t) {
-                    //ignore...
-                    Logger.getLogger(NoJavacHelper.class.getName()).log(Level.FINE, null, t);
+
+                String JavaVersion = System.getProperty("java.specification.version"); //NOI18N
+                boolean isJdkVer8OrBelow = true;
+                if (!JavaVersion.startsWith("1.")) {   //NOI18N
+                    isJdkVer8OrBelow = false;
                 }
+                if (isJdkVer8OrBelow) {
+                    try {
+                        Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe"); //NOI18N
+                        theUnsafe.setAccessible(true);
+                        Unsafe unsafe = (Unsafe) theUnsafe.get(null);
+
+                        Class scopeClass = Class.forName("com.sun.tools.javac.code.Scope");  //NOI18N
+
+                        Method defineClass = Unsafe.class.getDeclaredMethod("defineClass", String.class, Byte[].class, Integer.class, Integer.class, ClassLoader.class, ProtectionDomain.class);  //NOI18N
+                        defineClass.invoke(unsafe, "com.sun.tools.javac.code.Scope$WriteableScope", classData, 0, classData.length, scopeClass.getClassLoader(), scopeClass.getProtectionDomain());  //NOI18N 
+                    } catch (Throwable t) {
+                        //ignore...
+                        Logger.getLogger(NoJavacHelper.class.getName()).log(Level.FINE, null, t);
+                    }
+                } else {
+                    try {
+                        Method defineClass = MethodHandles.Lookup.class.getDeclaredMethod("defineClass", Byte[].class); //NOI18N
+                        defineClass.invoke(MethodHandles.lookup(), classData);
+                    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
+                        Logger.getLogger(NoJavacHelper.class.getName()).log(Level.FINE, null, ex);
+
+                    }
+                }
+
             }
         }
 

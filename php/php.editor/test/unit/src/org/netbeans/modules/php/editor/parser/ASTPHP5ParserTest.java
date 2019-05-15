@@ -1011,6 +1011,12 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php73/nowdoc_mixed_03");
     }
 
+    // PHP 7.4
+    public void testNullCoalescingAssignmentOperator_01() throws Exception {
+        // "??="
+        performTest("parser/php74/nullCoalescingAssignmentOperator_01");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

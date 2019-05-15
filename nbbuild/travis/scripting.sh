@@ -38,6 +38,8 @@ ant -f ide/libs.graalsdk/build.xml test
 #    Always try to locate the implementation by service loader
 #
 ant -f webcommon/libs.graaljs/build.xml test
+ant -f profiler/profiler.oql/build.xml test
+ant -f platform/api.htmlui/build.xml test
 
 $GRAALVM/bin/gu install python
 $GRAALVM/bin/gu install R
@@ -48,4 +50,5 @@ JAVA_HOME=$GRAALVM ant -f platform/api.scripting/build.xml test
 JAVA_HOME=$GRAALVM ant -f ide/libs.graalsdk/build.xml test
 
 JAVA_HOME=$GRAALVM ant -f webcommon/libs.graaljs/build.xml test
+JAVA_HOME=$GRAALVM ant -f profiler/profiler.oql/build.xml test
 

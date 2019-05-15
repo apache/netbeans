@@ -25,10 +25,10 @@ Apache NetBeans is an open source development environment, tooling platform, and
 
 ### Build status
    * TravisCI:
-     * [![Build Status](https://travis-ci.org/apache/incubator-netbeans.svg?branch=master)](https://travis-ci.org/apache/incubator-netbeans)
+     * [![Build Status](https://travis-ci.org/apache/netbeans.svg?branch=master)](https://travis-ci.org/apache/netbeans)
    * Apache Jenkins: 
-     * Linux: [![Build Status](https://builds.apache.org/job/incubator-netbeans-linux/badge/icon)](https://builds.apache.org/job/incubator-netbeans-linux/)
-     * Windows: [![Build Status](https://builds.apache.org/job/incubator-netbeans-windows/badge/icon)](https://builds.apache.org/job/incubator-netbeans-windows/)
+     * Linux: [![Build Status](https://builds.apache.org/view/M-R/view/NetBeans/job/netbeans-linux/badge/icon)](https://builds.apache.org/view/M-R/view/NetBeans/job/netbeans-linux/)
+     * Windows: [![Build Status](https://builds.apache.org/view/M-R/view/NetBeans/job/netbeans-windows/badge/icon)](https://builds.apache.org/view/M-R/view/NetBeans/job/netbeans-windows/)
 
 ### Requirements
 
@@ -40,11 +40,11 @@ Apache NetBeans is an open source development environment, tooling platform, and
 
 **Note:** NetBeans also runs with JDK 8, although then it will not include tools for the JDK 9 Shell.
 
-**Note:** NetBeans license violation checks are managed via the [rat-exclusions.txt](https://github.com/apache/incubator-netbeans/blob/master/nbbuild/rat-exclusions.txt) file.
+**Note:** NetBeans license violation checks are managed via the [rat-exclusions.txt](https://github.com/apache/netbeans/blob/master/nbbuild/rat-exclusions.txt) file.
 
 ### Building NetBeans
 
-Build with the default config (See the [cluster.config](https://github.com/apache/incubator-netbeans/blob/ab66c7fdfdcbf0bde67b96ddb075c83451cdd1a6/nbbuild/cluster.properties#L19) property.)
+Build with the default config (See the [cluster.config](https://github.com/apache/netbeans/blob/ab66c7fdfdcbf0bde67b96ddb075c83451cdd1a6/nbbuild/cluster.properties#L19) property.)
 ```
 $ ant
 ```
@@ -61,7 +61,7 @@ Build the NetBeans Platform:
 $ ant -Dcluster.config=platform
 ```
 
-**Note:** You can also use `php`, `enterprise`, etc. See the [cluster.properties](https://github.com/apache/incubator-netbeans/blob/master/nbbuild/cluster.properties) file.
+**Note:** You can also use `php`, `enterprise`, etc. See the [cluster.properties](https://github.com/apache/netbeans/blob/master/nbbuild/cluster.properties) file.
 
 #### Building Windows Launchers
 Windows launchers can be build using [MinGW](http://www.mingw.org/) both on Windows and Linux.
@@ -87,13 +87,13 @@ $ ant tryme
 
 ### Get In Touch
 
-[Subscribe](mailto:users-subscribe@netbeans.incubator.apache.org) or [mail](mailto:users@netbeans.incubator.apache.org) the [users@netbeans.incubator.apache.org](mailto:users@netbeans.incubator.apache.org) list - Ask questions, find answers, and also help other users.
+[Subscribe](mailto:users-subscribe@netbeans.apache.org) or [mail](mailto:users@netbeans.apache.org) the [users@netbeans.apache.org](mailto:users@netbeans.apache.org) list - Ask questions, find answers, and also help other users.
 
-[Subscribe](mailto:dev-subscribe@netbeans.incubator.apache.org) or [mail](mailto:dev@netbeans.incubator.apache.org) the [dev@netbeans.incubator.apache.org](mailto:dev@netbeans.incubator.apache.org) list - Join development discussions, propose new ideas and connect with contributors.
+[Subscribe](mailto:dev-subscribe@netbeans.apache.org) or [mail](mailto:dev@netbeans.apache.org) the [dev@netbeans.apache.org](mailto:dev@netbeans.apache.org) list - Join development discussions, propose new ideas and connect with contributors.
 
 ### Download
 
-Developer builds can be downloaded: https://builds.apache.org/job/incubator-netbeans-linux.
+Developer builds can be downloaded: https://builds.apache.org/job/netbeans-linux.
 
 Convenience binary of released source artifacts: https://netbeans.apache.org/download/index.html.
 
@@ -109,8 +109,8 @@ is kept in an independent repository. To fully understand the code
 you may want to merge the modern and ancient versions together:
 
 ```bash
-$ git clone https://github.com/apache/incubator-netbeans.git
-$ cd incubator-netbeans
+$ git clone https://github.com/apache/netbeans.git
+$ cd netbeans
 $ git log platform/uihandler/arch.xml
 ```
 

@@ -54,7 +54,8 @@ import org.openide.windows.CloneableOpenSupport;
 @MIMEResolver.ExtensionRegistration(
         displayName = "#LBL_GradleFile_LOADER",
         mimeType = GradleDataObject.MIME_TYPE,
-        extension = {"gradle"}
+        extension = {"gradle"},
+        position = 290
 )
 @DataObject.Registration(
         mimeType = GradleDataObject.MIME_TYPE,

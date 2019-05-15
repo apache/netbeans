@@ -955,4 +955,10 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php73/nowdoc_mixed_03.php");
     }
 
+    // PHP 7.4
+    public void testNullCoalescingAssignmentOperator_01() throws Exception {
+        // "??="
+        checkErrors("testfiles/parser/php74/nullCoalescingAssignmentOperator_01.php");
+    }
+
 }

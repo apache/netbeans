@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="nb-nav-wrap" content="N">
+
+        <!-- Do not change the order of the scripts-->
+        <script type="text/javascript">
+            var PAGE_ARTIFACTS_LOCATION = "";
+
+            var ADDITIONAL_PAGE_ARTIFACTS_LOCATION = "";
+
+        </script>
+
+        <script type="text/javascript">
+            var currentLocation = PAGE_ARTIFACTS_LOCATION;
+
+            function getPageArtifactsLocation(another) {
+                return anotherLocation(another) ? (ADDITIONAL_PAGE_ARTIFACTS_LOCATION !="" ? ADDITIONAL_PAGE_ARTIFACTS_LOCATION : get_build_info(true).ADDITIONAL_BUILD_LOCATION) : PAGE_ARTIFACTS_LOCATION;
+            }
+
+            function getJSLocation(another) {
+                return getPageArtifactsLocation(another) + "js/";
+            }
+            function getCSSLocation() {
+                return getPageArtifactsLocation() + "css/";
+            }
+            function getImagesLocation() {
+                return getPageArtifactsLocation(useAnotherLocation()) + "img/";
+            }
+            function anotherLocation(another) {
+                return another ? (another == "true" || another == true) :  false;
+            }
+
+            function load_page_js(script_filename, another) {
+                currentLocation = getPageArtifactsLocation(another);
+                var page_location = getJSLocation(another) + script_filename;
+                document.write('<' + 'script ' + 'language="javascript" type="text/javascript" src="' + page_location + '"><' + '/' + 'script' + '>');
+            }
+        </script>
+        <script src="http://netbeans.org/images_www/js/companion-projects.js" type="text/javascript"></script>
+        <script type="text/javascript">load_page_js("common.js")</script>
+        <script type="text/javascript">load_build_info(false)</script>
+        <script type="text/javascript">load_build_info(true)</script>
+        <script type="text/javascript">load_languages(false)</script>
+        <script type="text/javascript">load_languages(true)</script>
+        <script type="text/javascript">load_page_js_locale("common_strings",".js")</script>
+        <script type="text/javascript">load_page_js_locale("download_strings",".js")</script>
+        <script type="text/javascript">load_files_information(false)</script>
+        <script type="text/javascript">load_files_information(true)</script>
+        <script type="text/javascript">load_page_js("download.js")</script>
+        <script type="text/javascript">load_page_js_locale("components",".js")</script>
+        <script type="text/javascript">set_page_title(NETBEANS_DOWNLOAD_PAGE_TITLE.replace('{0}',get_build_info(true).BUILD_DISPLAY_VERSION))</script>
+        <script type="text/javascript">set_page_description(NETBEANS_DOWNLOAD_PAGE_DESCRIPTION.replace('{0}', get_build_info(true).BUILD_DISPLAY_VERSION))</script>
+
+        <link rel="stylesheet" type="text/css" href="http://netbeans.org/netbeans3.css" media="screen"/>
+        <script type="text/javascript">load_page_css("download.css")</script>
+        <link rel="shortcut icon" href="http://netbeans.org/favicon.ico" type="image/x-icon"/>
+    </head>
+
+    <body class="blue-bg" onkeyup="handle_keyup(event)">
+        <div id="wrapper-fixed">
+            <div id="hdr">
+                <div id="lang-sel">
+                    <div class="lang-dropdown" id="pagelanguagesbox" style="visibility: hidden;">
+                        <ul id="nav">
+                            <li><script type="text/javascript">startList()</script>
+                                <a href="#" style="text-decoration:none;color:white;">Choose page language<img src="http://netbeans.org/images_www/v7/design/icon_arrow_language.png" border="0" style="margin-left:3px;"/></a>
+                                <ul class="submenu">
+                                    <script type="text/javascript">write_page_languages()</script>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="navtabs">
+                    <a href="http://netbeans.org/"><img src="//netbeans.org/images_www/v7/design/logo_netbeans_red.png" id="nblogo" width="130" height="32"/></a>
+                    <ul>
+                        <li class="current first"><a href="http://netbeans.org/features/index.html" title="NetBeans&nbsp;IDE"  >NetBeans IDE</a></li>
+                        <li class="hover "><a href="http://netbeans.org/features/platform/index.html" title="NetBeans&nbsp;Platform"  >NetBeans Platform</a></li>
+                        <li class="hover "><a href="http://plugins.netbeans.org/PluginPortal/" title="Plugins"  >Plugins</a></li>
+                        <li class="hover "><a href="http://netbeans.org/kb/index.html" title="Docs&nbsp;&amp;&nbsp;Support"  >Docs &amp; Support</a></li>
+                        <li class="hover "><a href="http://netbeans.org/community/index.html" title="Community"  >Community</a></li>
+                        <li class="hover "><a href="http://netbeans.org/community/partners/index.html" title="Partners"  >Partners</a></li>
+                    </ul>
+                    <div id="search-div">
+                        <form action="http://netbeans.org/search_result.html" id="cse-search-box">
+                            <input type="hidden" name="cx" value="006102455337629464213:mt38ytkbuak" >
+                            <input type="hidden" name="cof" value="FORID:11" >
+                            <input type="text" id="search-input" value="Search" name="q"/>
+                            <input type="image" src="//netbeans.org/images_www/v7/design/icon_search.png" id="magnifier" alt="search"/>
+                        </form>
+                        <script type="text/javascript" src="//www.google.com/coop/cse/brand?form=cse-search-box&lang=en"></script>
+                        <!-- Google CSE Search Box Ends -->
+                    </div>
+                </div>
+            </div>
+            <div id="navig-breadcrumbs"><a href="http://netbeans.org/index.html">HOME</a>  / Download </div>
+            <!-- start content area -->
+            <div id="middle">
+                <table class="colapse full-width f-page-table-2col"> <!-- main content table -->
+                    <tr>
+                        <td class="valign-top">
+
+                            <!-- =============================================== -->
+
+                            <!-- Top header -->
+                            <table class="top_header">
+                                <tr>
+                                    <td class="title"><script type="text/javascript">message(NETBEANS_DOWNLOAD_HEADER.replace('{0}',get_build_info(true).BUILD_DISPLAY_VERSION))</script></td>
+                                    <td class="menu">
+                                        <script type="text/javascript">get_build_info(true).add_download_tabs()</script>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <noscript>
+                            <div class="noscript_warning" style="text-align:center;"><br/><br/><br/><br/>
+                                In order to download NetBeans installers, Javascript must be switched on in your
+                                browser.<br> Please switch it on before proceeding.<br/><br/><br/><br/>
+                            </div>
+                            <style type="text/css">
+                                table.l_p_select {
+                                    display:    none;
+                                }
+                                table.components_table {
+                                    display:    none;
+                                }
+                            </style>
+                            </noscript>
+
+
+                            <table class="subscription_selects b-bottom-dashed" align="center">
+                                <tr>
+                                    <td class="valign-top">
+                                        <table class="subscription">
+                                            <tr>
+                                                <td><script type="text/javascript">message(EMAIL_LABEL)</script></td>
+                                                <td><script type="text/javascript">document.write('<input type="text" name="email" id="emailfield" class="field" style="width:190px;"/></td>')</script>
+                                            </tr>
+                                            <tr>
+                                                <td class="valign-top"><script type="text/javascript">message(SUBSCRIBE_LABEL)</script></td>
+                                                <td>
+                                                    <script type="text/javascript">document.write('<input type="checkbox" id="monthlycb" name="monthly" value="1" checked/>');message(MONTHLY_LABEL)</script>
+                                                    <script type="text/javascript">document.write('<input type="checkbox" id="weeklycb" name="weekly" value="1" />');message(WEEKLY_LABEL)</script>
+                                                    <br/><script type="text/javascript">document.write('<input type="checkbox" id="contactcb" name="contact" value="1" checked/>');message(CONTACT_LABEL)</script>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td class="valign-top">
+                                        <table class="l_p_select_note valign-top">
+                                            <tr>
+                                            <table class="l_p_select">
+                                                <tr>
+                                                <td class="spacer">&nbsp;</td>
+                                                <td class="label"><script type="text/javascript">message(LANGUAGE_LABEL)</script></td>
+                                                <td class="language_select">
+                                                    <select id="language_select" width="120px;" style="width:120px" onchange="update()">
+                                                        <script type="text/javascript">write_languages()</script>
+                                                        <script type="text/javascript">select_language()</script>
+                                                    </select>
+                                                </td>
+                                                <td class="label"><script type="text/javascript">message(PLATFORM_LABEL)</script></td>
+                                                <td class="platform_select">
+                                                    <select id="platform_select" width="180px;" style="width:180px" onchange="update()">
+                                                        <script type="text/javascript">write_platforms()</script>
+                                                    </select>
+                                                </td>
+                                                </tr>
+                                            </table>
+                                            <table class="missing_components">
+                                                <td class="label">
+                                                    <a id="error_message"></a>
+                                                </td>
+                                            </table>
+                                </tr>
+                            </table>
+                        </td>
+                </table>
+                <table class="components_table" id="components_table" align="center">
+                    <script type="text/javascript">initialize()</script>
+                    <script type="text/javascript">write_table_header()</script>
+                    <script type="text/javascript">write_components()</script>
+                    <script type="text/javascript">write_table_footer()</script>
+                    <script type="text/javascript">write_components_sizes()</script>
+                    <script type="text/javascript">highlight()</script>
+                </table>
+
+                <br/>
+                <table>
+                    <td width="60%" style="padding-right:5px;padding-left:30px;vertical-align:top;">
+                        <table>
+                            <tr>
+                                <td width="10px" style="vertical-align:top;">
+                                    <span style="font-size:1.2em;color: #333333; margin: 0px 4px 0px 1px; font-weight: bold"><script type="text/javascript">document.write('*');</script></span>
+                                </td>
+                                <td>
+                                    <div style="">
+                                        <p>
+                                            <span style="width: 95%">
+                                                <script type="text/javascript">message(PLUGIN_MANAGER_LABEL)</script>
+                                            </span>
+                                            <span style="width: 95%" id="jdk_note"></span>
+                                            <span style="width: 95%">
+                                                <!--<script type="text/javascript">message(JAVATOOLSBUNDLE_LABEL)</script>-->
+                                            </span>
+                                        </p>
+                                        <p style="width: 95%">
+                                            <script type="text/javascript">message(PLATFORM_DEV_LABEL.replace("{0}", PLATFORM_INFO_LINK))</script>
+                                            <script type="text/javascript">message(SOURCE_BINARY_LABEL.replace("{0}", getZipUrl()))</script>
+                                            <script type="text/javascript">message(BUILD_WIKI_LABEL.replace("{0}",INSTALL_NOTES_LINK))</script>
+                                        </p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="10px" style="vertical-align:top;">
+                                    <div id="community_number"><br></div>
+                                </td>
+                                <td>
+                                    <div id="community_message"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+
+                    <td style="vertical-align:top;">
+                        <div class="black legal_box">
+                            <div class="bold">
+                                <script type="text/javascript">message(LEGAL_INFO_HEADER)</script>
+                                <br><br>
+                            </div>
+                            <div>
+                                <script type="text/javascript">
+                                    message(LEGAL_INFO_MESSAGE.
+                                        replace("{0}",CDDL_GPLV2_LINK).
+                                        replace("{1}",LICENSE_FILES_LINK).
+                                        replace("{2}",LICENSE_FILES_LINK))
+                                </script>
+                                <br><br>
+                                    <p>
+                                        <script type="text/javascript">
+                                                message(LEGAL_WARNING_MESSAGE)
+                                        </script>
+                                    </p>
+                            </div>
+                        </div>
+
+                    </td>
+                </table>
+                <br/><br/>
+
+                <script type="text/javascript">
+                    detect_platform();
+                    update();
+                </script>
+
+                <!-- =============================================== -->
+
+
+                </td>
+                </tr><!-- end main content -->
+                </table><!-- end main content table -->
+            </div>
+            <!-- end contentarea -->
+            <div id="ftr">
+                <ul class="float-right" id="social-media">
+                    <li><a href="http://www.facebook.com/NetBeans"><img src="//netbeans.org/images_www/v7/design/icin_facebook.png" width="30" height="30" alt="facebook"></a></li>
+                    <li><a href="http://www.youtube.com/user/netbeansvideos"><img src="//netbeans.org/images_www/v7/design/icin_youtube.png" width="30" height="30" alt="youtube"></a></li>
+                    <li><a href="https://plus.google.com/105597468329838196909/"><img src="//netbeans.org/images_www/v7/design/icin_google.png" width="30" height="30" alt="google+"></a></li>
+                    <li><a href="https://twitter.com/netbeans"><img src="//netbeans.org/images_www/v7/design/icin_twitter.png" width="30" height="30" alt="twitter"></a></li>
+                </ul>
+                <ul>
+                    <li><a href="http://netbeans.org/sitemaps/www_map.html">SiteMap</a></li>
+                    <li><a href="http://netbeans.org/about/index.html">About Us</a></li>
+                    <li><a href="http://netbeans.org/about/contact.html">Contact</a></li>
+                    <li><a href="http://netbeans.org/about/legal/index.html">Legal &amp; Licences</a></li>
+                </ul>
+
+            </div>
+            <div id="tof" class="align-right">
+                By use of this website, you agree to the <a href="/about/legal/terms-of-use.html">NetBeans Policies and Terms of Use</a>.
+                &copy; 2012, Oracle Corporation and/or its affiliates. Sponsored by <img src="//netbeans.org/images_www/v7/design/logo_oracle.png" width="56" height="8" alt="Oracle logo"/>
+            </div>
+        </div>
+        <div id="companion-projects">
+            <script type="text/javascript">
+                document.write(renderCompanionProjectIcons());
+
+            </script>
+        </div>
+
+
+        <!-- Begin SiteCatalyst code -->
+        <script language="JavaScript" src="https://netbeans.org/images_www/js/s_code_remote.js" type="text/javascript"></script>
+        <!-- End SiteCatalyst code -->
+
+
+    </body>
+</html>

@@ -49,6 +49,7 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Flags;
+import com.sun.tools.javac.code.Kinds;
 import com.sun.tools.javac.code.Scope.NamedImportScope;
 import com.sun.tools.javac.code.Scope.StarImportScope;
 import com.sun.tools.javac.code.Symbol;
@@ -60,9 +61,18 @@ import com.sun.tools.javac.comp.Check;
 import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.InterruptedIOException;
+import java.io.Reader;
 import java.util.function.Predicate;
 
 import javax.swing.SwingUtilities;
+import javax.swing.text.ChangedCharSetException;
+import javax.swing.text.MutableAttributeSet;
+import javax.swing.text.html.HTML;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.parser.ParserDelegator;
 import javax.tools.JavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.Diagnostic;
@@ -1309,223 +1319,6 @@ public class SourceUtils {
     }    
     
     // --------------- End of getFile () helper methods ------------------------------
-
-    private static final int MAX_LEN = 6;
-    /**
-     * Utility method for generating method parameter names based on incoming
-     * class name when source is unavailable.
-     * <p/>
-     * This method uses both subjective heuristics to follow common patterns
-     * for common JDK classes, acronym creation for bicapitalized names, and
-     * vowel and repeated character elision if that fails, to generate
-     * readable, programmer-friendly method names.
-     *
-     * @param typeName The fqn of the parameter class
-     * @param used A set of names that have already been used for parameters
-     * and should not be reused, to avoid creating uncompilable code
-     * @return A programmer-friendly parameter name (i.e. not arg0, arg1...)
-     */
-    static @NonNull String generateReadableParameterName (@NonNull String typeName, @NonNull Set<String> used) {
-        boolean arr = typeName.indexOf ("[") > 0 || typeName.endsWith("..."); //NOI18N
-        typeName = trimToSimpleName (typeName);
-        String result = typeName.toLowerCase();
-        //First, do some common, sane substitutions that are common java parlance
-        if ( typeName.endsWith ( "Listener" ) ) { //NOI18N
-            result = Character.toLowerCase(typeName.charAt(0)) + "l"; //NOI18N
-        } else if ( "Object".equals (typeName)) { //NOI18N
-            result = "o"; //NOI18N
-        } else if ("Class".equals(typeName)) { //NOI18N
-            result = "type"; //NOI18N
-        } else if ( "InputStream".equals(typeName)) { //NOI18N
-            result = "in"; //NOI18N
-        } else if ( "OutputStream".equals(typeName)) {
-            result = "out"; //NOI18N
-        } else if ( "Runnable".equals(typeName)) {
-            result = "r"; //NOI18N
-        } else if ( "Lookup".equals(typeName)) {
-            result = "lkp"; //NOI18N
-        } else if ( typeName.endsWith ( "Stream" )) { //NOI18N
-            result = "stream"; //NOI18N
-        } else if ( typeName.endsWith ("Writer")) { //NOI18N
-            result = "writer"; //NOI18N
-        } else if ( typeName.endsWith ("Reader")) { //NOI18N
-            result = "reader"; //NOI18N
-        } else if ( typeName.endsWith ( "Panel" )) { //NOI18N
-            result = "pnl"; //NOI18N
-        } else if ( typeName.endsWith ( "Action" )) { //NOI18N
-            result = "action"; //NOI18N
-        }
-        //Now see if we've made a large and unwieldy variable - people
-        //usually prefer reasonably short but legible arguments
-        if ( result.length () > MAX_LEN ) {
-            //See if we can turn, say, NoClassDefFoundError into "ncdfe"
-            result = tryToMakeAcronym ( typeName );
-            //No luck?  We've probably got one long word like Component or Runnable
-            if (result.length() > MAX_LEN) {
-                //First, strip out vowels - people easily figure out words
-                //missing vowels - common in abbreviations and spam mails
-                result = elideVowelsAndRepetitions(result);
-                if (result.length() > MAX_LEN) {
-                    //Still too long?  Give up and give them a 1 character var name
-                    result = new StringBuilder().append(
-                            result.charAt(0)).toString().toLowerCase();
-                }
-            }
-        }
-        //Make sure we haven't killed everything - if so, use a generic version
-        if ( result.trim ().length () == 0 ) {
-            result = "value"; //NOI18N
-        }
-        //If it's an array, pluralize it (english language style - but better than nothing)
-        if (arr) {
-            result += "s"; //NOI18N
-        }
-        //Now make sure it's legal;  if not, make it a single letter
-        if ( isPrimitiveTypeName ( result ) || !BaseUtilities.isJavaIdentifier ( result ) ) {
-            StringBuilder sb = new StringBuilder();
-            sb.append (result.charAt(0));
-            result = sb.toString();
-        }
-        //Now make sure we're not duplicating a variable name we already used
-        String test = result;
-        int revs = 0;
-        while ( used.contains ( test ) ) {
-            revs++;
-            test = result + revs;
-        }
-        result = test;
-        used.add ( result );
-        return result;
-    }
-
-    /**
-     * Trims to the simple class name and removes and generics
-     *
-     * @param typeName The class name
-     * @return A simplified class name
-     */
-    private static String trimToSimpleName (String typeName) {
-        String result = typeName;
-        int ix = result.indexOf ("<"); //NOI18N
-        if (ix > 0 && ix != typeName.length() - 1) {
-            result = typeName.substring(0, ix);
-        }
-        if (result.endsWith ("...")) { //NOI18N
-            result = result.substring (0, result.length() - 3);
-        }
-        ix = result.lastIndexOf ("$"); //NOI18N
-        if (ix > 0 && ix != result.length() - 1) {
-            result = result.substring(ix + 1);
-        } else {
-            ix = result.lastIndexOf("."); //NOI18N
-            if (ix > 0 && ix != result.length() - 1) {
-                result = result.substring(ix + 1);
-            }
-        }
-        ix = result.indexOf ( "[" ); //NOI18N
-        if ( ix > 0 ) {
-            result = result.substring ( 0, ix );
-        }
-        return result;
-    }
-
-    /**
-     * Removes vowels and repeated letters.  This is used to generate names
-     * where the class name a single long word - e.g. abbreviate
-     * Runnable to rnbl
-     * @param name The name
-     * @return A shortened version of it
-     */
-    private static String elideVowelsAndRepetitions (String name) {
-        char[] chars = name.toCharArray();
-        StringBuilder sb = new StringBuilder();
-        char last = 0;
-        char lastUsed = 0;
-        for (int i = 0; i < chars.length; i++) {
-            char c = chars[i];
-            if (Character.isDigit(c)) {
-                continue;
-            }
-            if (i == 0 || Character.isUpperCase(c)) {
-                if (lastUsed != c) {
-                    sb.append (c);
-                    lastUsed = c;
-                }
-            } else if (c != last && !isVowel(c)) {
-                if (lastUsed != c) {
-                    sb.append (c);
-                    lastUsed = c;
-                }
-            }
-            last = c;
-        }
-        return sb.toString();
-    }
-
-    private static boolean isVowel(char c) {
-        return Arrays.binarySearch(VOWELS, c) >= 0;
-    }
-
-    /**
-     * Vowels in various indo-european-based languages
-     */
-    private static final char[] VOWELS = new char[] {
-    //IMPORTANT:  This array is sorted.  If you add to it,
-    //add in the correct place or Arrays.binarySearch will break on it
-    '\u0061', '\u0065', '\u0069', '\u006f', '\u0075', '\u0079', '\u00e9', '\u00ea',  //NOI18N
-    '\u00e8', '\u00e1', '\u00e2', '\u00e6', '\u00e0', '\u03b1', '\u00e3',  //NOI18N
-    '\u00e5', '\u00e4', '\u00eb', '\u00f3', '\u00f4', '\u0153', '\u00f2',  //NOI18N
-    '\u03bf', '\u00f5', '\u00f6', '\u00ed', '\u00ee', '\u00ec', '\u03b9',  //NOI18N
-    '\u00ef', '\u00fa', '\u00fb', '\u00f9', '\u03d2', '\u03c5', '\u00fc',  //NOI18N
-    '\u0430', '\u043e', '\u044f', '\u0438', '\u0439', '\u0435', '\u044b',  //NOI18N
-    '\u044d', '\u0443', '\u044e', };
-
-    //PENDING:  The below would be much prettier;  whether it survives
-    //cross-platform encoding issues in hg is another question;  the hg diff generated
-    //was incorrect
-/*
-    'a', 'e', 'i', 'o', 'u', 'y', 'à', 'á', //NOI18N
-    'â', 'ã', 'ä', 'å', 'æ', 'è', 'é', //NOI18N
-    'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ò', //NOI18N
-    'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', //NOI18N
-    'ü', 'œ', 'α', 'ι', 'ο', 'υ', 'ϒ', //NOI18N
-    'а', 'е', 'и', 'й', 'о', 'у', 'ы', //NOI18N
-    'э', 'ю', 'я'}; //NOI18N
-*/
-    /**
-     * Determine if a string matches a java primitive type.  Used in generating reasonable variable names.
-     */
-    private static boolean isPrimitiveTypeName (String typeName) {
-        return (
-                //Whoa, ascii art!
-                "void".equals ( typeName ) || //NOI18N
-                "int".equals ( typeName ) || //NOI18N
-                "long".equals ( typeName ) || //NOI18N
-                "float".equals ( typeName ) || //NOI18N
-                "double".equals ( typeName ) || //NOI18N
-                "short".equals ( typeName ) || //NOI18N
-                "char".equals ( typeName ) || //NOI18N
-                "boolean".equals ( typeName ) ); //NOI18N
-    }
-
-    /**
-     * Try to create an acronym-style variable name from a string - i.e.,
-     * "JavaDataObject" becomes "jdo".
-     */
-    private static String tryToMakeAcronym (String s) {
-        char[] c = s.toCharArray ();
-        StringBuilder sb = new StringBuilder ();
-        for ( int i = 0; i < c.length; i++ ) {
-            if ( Character.isUpperCase (c[i])) {
-                sb.append ( c[ i ] );
-            }
-        }
-        if ( sb.length () > 1 ) {
-            return sb.toString ().toLowerCase ();
-        } else {
-            return s.toLowerCase();
-        }
-    }
 
     @NonNull
     private static Set<URL> mapToURLs(

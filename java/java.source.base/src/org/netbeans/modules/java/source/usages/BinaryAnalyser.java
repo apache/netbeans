@@ -345,7 +345,15 @@ public class BinaryAnalyser {
      */
     @NonNull
     public final Changes analyse (final @NonNull Context ctx) throws IOException, IllegalArgumentException  {
-        return analyse(ctx, createProcessor(ctx));
+        return analyse(ctx, ctx.getRootURI());
+    }
+    
+    /** Analyses a classpath root.
+     * @param scanning context
+     */
+    @NonNull
+    public final Changes analyse (final @NonNull Context ctx, URL processRoot) throws IOException, IllegalArgumentException  {
+        return analyse(ctx, createProcessor(ctx, processRoot));
     }
 
     @NonNull
@@ -385,8 +393,7 @@ public class BinaryAnalyser {
      */
     @Deprecated
     public final Changes analyse(@NonNull final URL url) throws IOException, IllegalArgumentException  {
-        return analyse(
-            SPIAccessor.getInstance().createContext(
+        Context ctx = SPIAccessor.getInstance().createContext(
                 FileUtil.createMemoryFileSystem().getRoot(),
                 url,
                 JavaIndex.NAME,
@@ -397,13 +404,13 @@ public class BinaryAnalyser {
                 false,
                 SuspendSupport.NOP,
                 null,
-                null));
+                null);
+        return analyse(ctx, ctx.getRootURI());
     }
 
     //<editor-fold defaultstate="collapsed" desc="Private helper methods">
     @NonNull
-    private RootProcessor createProcessor(@NonNull final Context ctx) throws IOException {
-        final URL root = ctx.getRootURI();
+    private RootProcessor createProcessor(@NonNull final Context ctx, URL root) throws IOException {
         final String mainP = root.getProtocol();
         if ("jar".equals(mainP)) {          //NOI18N
             final URL innerURL = FileUtil.getArchiveFile(root);

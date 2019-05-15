@@ -356,7 +356,7 @@ public class CheckoutUI extends javax.swing.JPanel {
         brc.setProperty("connectionUrl", txtUrl.getText());//NOI18N
         if (txtUser.getText().trim().length() != 0) {
             brc.setProperty("username", txtUser.getText());//NOI18N
-            brc.setProperty("password ", new String(txtPassword.getPassword()));//NOI18N
+            brc.setProperty("password", new String(txtPassword.getPassword()));//NOI18N
         }
         brc.setShowDebug(chkPrintDebugInfo.isSelected());
         brc.setShowError(chkPrintDebugInfo.isSelected());

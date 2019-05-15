@@ -22,10 +22,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.netbeans.modules.gradle.api.execute.ActionMapping;
@@ -49,7 +45,7 @@ public class ActionMappingPropertyReaderTest {
     @Test
     public void testLoadMappings2() {
         Properties props = new Properties();
-        props.put("nb-action.run.args", "runArgs");
+        props.put("action.run.args", "runArgs");
         Set<ActionMapping> result = ActionMappingPropertyReader.loadMappings(props);
         assertEquals(result.size(), 1);
         ActionMapping mapping = result.iterator().next();
@@ -63,11 +59,11 @@ public class ActionMappingPropertyReaderTest {
     @Test
     public void testLoadMappings3() {
         Properties props = new Properties();
-        props.put("nb-action.custom-1", "Build with Arguments");
-        props.put("nb-action.custom-1.args", "runArgs ${test}");
-        props.put("nb-action.custom-1.reload.args", "runArgs");
-        props.put("nb-action.custom-1.reload.rule", "NEVER");
-        props.put("nb-action.custom-1.repeatable", "false");
+        props.put("action.custom-1", "Build with Arguments");
+        props.put("action.custom-1.args", "runArgs ${test}");
+        props.put("action.custom-1.reload.args", "runArgs");
+        props.put("action.custom-1.reload.rule", "NEVER");
+        props.put("action.custom-1.repeatable", "false");
         Set<ActionMapping> result = ActionMappingPropertyReader.loadMappings(props);
         assertEquals(result.size(), 1);
         ActionMapping mapping = result.iterator().next();
@@ -82,9 +78,9 @@ public class ActionMappingPropertyReaderTest {
     @Test
     public void testLoadMappings4() {
         Properties props = new Properties();
-        props.put("nb-action.build.args", "build");
-        props.put("nb-action.build.priority", "100");
-        props.put("nb-action.build.plugins", "groovy, war");
+        props.put("action.build.args", "build");
+        props.put("action.build.priority", "100");
+        props.put("action.build.plugins", "groovy, war");
         Set<ActionMapping> result = ActionMappingPropertyReader.loadMappings(props);
         assertEquals(result.size(), 1);
         DefaultActionMapping mapping = (DefaultActionMapping) result.iterator().next();

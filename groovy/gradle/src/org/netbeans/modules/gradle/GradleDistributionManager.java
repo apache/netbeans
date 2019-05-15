@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.gradle;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
@@ -41,6 +42,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.gradle.util.GradleVersion;
@@ -55,7 +58,14 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
+import org.netbeans.modules.gradle.api.NbGradleProject;
+import org.netbeans.modules.gradle.spi.GradleSettings;
+import org.openide.DialogDescriptor;
+import org.openide.DialogDisplayer;
+import org.openide.awt.Notification;
+import org.openide.awt.NotificationDisplayer;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -67,7 +77,7 @@ public class GradleDistributionManager {
     private static final Pattern WRAPPER_DIR_PATTERN = Pattern.compile("gradle-(\\d+\\.\\d+.*)-(bin|all)"); //NOI18N
     private static final Pattern DIST_VERSION_PATTERN = Pattern.compile(".*gradle-(\\d+\\.\\d+.*)-(bin|all)\\.zip"); //NOI18N
 
-    private static final String DOWNLOAD_URI = "https://services.gradle.org/distributions/gradle-%s-all.zip"; //NOI18N
+    private static final String DOWNLOAD_URI = "https://services.gradle.org/distributions/gradle-%s-bin.zip"; //NOI18N
 
     private static final RequestProcessor RP = new RequestProcessor("Gradle Installer", 1); //NOI18N
 
@@ -114,6 +124,33 @@ public class GradleDistributionManager {
         return createVersion(GradleVersion.current().getVersion());
     }
 
+    public File install(NbGradleVersion version) {
+        File ret = null;
+        if (version.install()) {
+            Lock lock = new ReentrantLock();
+            PropertyChangeListener pcl = (PropertyChangeEvent evt) -> {
+                if (NbGradleVersion.PROP_AVAILABLE.equals(evt.getPropertyName())) {
+                    synchronized (lock) {
+                        lock.notifyAll();
+                    }
+                }
+            };
+            try {
+                synchronized (lock) {
+                    version.addPropertyChangeListener(pcl);
+                    lock.wait();
+                }
+            } catch (InterruptedException ex) {
+                return ret;
+            } finally {
+                version.removePropertyChangeListener(pcl);
+            }
+            ret = version.distributionDir();
+        } else {
+            ret = version.distributionDir();
+        }
+        return ret;
+    }
     /**
      * Tries to evaluate the project distribution. If wrapper
      * is preferred and no offline execution is required then it's better to
@@ -279,10 +316,29 @@ public class GradleDistributionManager {
             return VERSION_BLACKLIST.contains(version.getVersion());
         }
 
-        public void install() {
+        @Messages("TIT_GradleInstall=Install Gradle")
+        public boolean install() {
             if (!isAvailable()) {
-                RP.post(new InstallTask(this), 500);
+                if (GradleSettings.getDefault().isSilentInstall()) {
+                    RP.post(new DownloadTask(this), 500);
+                    return true;
+                } else {
+                    GradleInstallPanel panel = new GradleInstallPanel(version.getVersion());
+                    DialogDescriptor dd = new DialogDescriptor(panel,
+                            Bundle.TIT_GradleInstall(),
+                            true,
+                            DialogDescriptor.OK_CANCEL_OPTION,
+                            DialogDescriptor.OK_OPTION,
+                            null
+                    );
+                    if (DialogDisplayer.getDefault().notify(dd) == DialogDescriptor.OK_OPTION) {
+                        GradleSettings.getDefault().setSilentInstall(panel.isSilentInstall());
+                        RP.post(new DownloadTask(this), 500);
+                        return true;
+                    }
+                }
             }
+            return false;
         }
 
         public File distributionDir() {
@@ -351,16 +407,34 @@ public class GradleDistributionManager {
 
     }
 
-    private class InstallTask implements Runnable, IDownload {
+    private class DownloadTask implements Runnable, IDownload {
 
         private final NbGradleVersion version;
         private final ProgressHandle handle;
+        private final Notification notification;
 
-        public InstallTask(NbGradleVersion version) {
+        @Messages({
+            "# {0} - The downloading GradleVersion ",
+            "TIT_Download_Gradle=Downloading {0}",
+            "# {0} - The downloading GradleVersion ",
+            "MSG_Download_Gradle={0} is being downloaded and installed."
+        })
+        public DownloadTask(NbGradleVersion version) {
             this.version = version;
-            handle = ProgressHandleFactory.createSystemHandle("Installing " + version.getVersion());
+            handle = ProgressHandleFactory.createSystemHandle(Bundle.TIT_Download_Gradle(version.getVersion()));
+            notification = NotificationDisplayer.getDefault().notify(
+                    Bundle.TIT_Download_Gradle(version.getVersion()),
+                    NbGradleProject.getIcon(),
+                    Bundle.MSG_Download_Gradle(version.getVersion()),
+                    null,
+                    NotificationDisplayer.Priority.NORMAL,
+                    NotificationDisplayer.Category.INFO);
         }
 
+        @Messages({
+            "# {0} - The downloading GradleVersion ",
+            "TIT_Install_Gradle_Failed=Failed installing {0}",
+        })
         @Override
         public void run() {
             try {
@@ -373,6 +447,16 @@ public class GradleDistributionManager {
             } catch (Exception ex) {
                 //Happens if something goes wrong with the download.
                 //TODO: Is it ok to let id silently die?
+                NotificationDisplayer.getDefault().notify(
+                        Bundle.TIT_Install_Gradle_Failed(version.getVersion()),
+                        NbGradleProject.getWarningIcon(),
+                        ex.getLocalizedMessage(),
+                        null,
+                        NotificationDisplayer.Priority.HIGH,
+                        NotificationDisplayer.Category.WARNING);
+            } finally {
+                handle.finish();
+                notification.clear();
             }
         }
 
@@ -399,8 +483,6 @@ public class GradleDistributionManager {
                         handle.progress(allRead);
                     }
                 }
-            } finally {
-                handle.finish();
             }
         }
 

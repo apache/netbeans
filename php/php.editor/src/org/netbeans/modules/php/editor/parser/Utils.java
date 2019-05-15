@@ -504,6 +504,9 @@ public final class Utils {
             case ASTPHP5Symbols.T_COALESCE:
                 name = "T_COALESCE"; //NOI18N
                 break;
+            case ASTPHP5Symbols.T_COALESCE_EQUAL:
+                name = "T_COALESCE_EQUAL"; //NOI18N
+                break;
             case ASTPHP5Symbols.T_YIELD:
                 name = "T_YIELD"; //NOI18N
                 break;

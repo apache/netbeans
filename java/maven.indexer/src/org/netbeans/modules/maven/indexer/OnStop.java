@@ -41,7 +41,7 @@ public class OnStop implements Runnable {
                 }
                 if (t.isAlive()) {
                     LOG.warning("...hard stop required.");
-                    t.stop(new Cancellation());
+                    t.interrupt();
                 }
             }
         }

@@ -232,3 +232,4 @@
 <property name="javadoc.docs.org-netbeans-libs-graalsdk" value="${javadoc.web.root}/org-netbeans-libs-graalsdk"/>
 <property name="javadoc.docs.org-netbeans-modules-gradle" value="${javadoc.web.root}/org-netbeans-modules-gradle"/>
 <property name="javadoc.docs.org-netbeans-modules-gradle-java" value="${javadoc.web.root}/org-netbeans-modules-gradle-java"/>
+<property name="javadoc.docs.org-netbeans-modules-textmate-lexer" value="${javadoc.web.root}/org-netbeans-modules-textmate-lexer"/>

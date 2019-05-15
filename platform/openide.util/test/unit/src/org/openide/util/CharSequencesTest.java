@@ -307,22 +307,25 @@ public class CharSequencesTest  {
         CharSequence h2 = CharSequences.create(h1);
         CharSequence h3 = CharSequences.create(h1.toCharArray(), 0, h1.length());
 
-        assertNotSame("Compacted in new object", h1, h2);
-        assertNotSame("Compacted in new object", h1, h3);
-        assertNotSame("Compacted in new object", h2, h3);
+        assertNotSame("Compacted into a new object #1", h1, h2);
+        assertNotSame("Compacted into a new object #2", h1, h3);
+        assertNotSame("Compacted into a new object #3", h2, h3);
 
-        assertEquals("Yet the instances are still same", 0, CharSequences.comparator().compare(h1, h2));
-        assertEquals("Yet the instances are still same", 0, CharSequences.comparator().compare(h2, h3));
-        assertEquals("Yet the instances are still same", 0, CharSequences.comparator().compare(h3, h1));
+        assertEquals("Content remains the same #1", 0, CharSequences.comparator().compare(h1, h2));
+        assertEquals("Content remains the same #2", 0, CharSequences.comparator().compare(h2, h3));
+        assertEquals("Content remains the same #3", 0, CharSequences.comparator().compare(h3, h1));
         // END: CharSequencesTest#compareStrings
     }
 
     @Test
     public void indexOfSample() {
         // BEGIN: CharSequencesTest#indexOfSample
-        CharSequence czechText = CharSequences.create("Kůň veze Pepsi.");
-        int findPepsi = CharSequences.indexOf(czechText, "Pepsi");
+        CharSequence horseCarriesPepsi = CharSequences.create("Kůň veze Pepsi.");
+        int findPepsi = CharSequences.indexOf(horseCarriesPepsi, "Pepsi");
         assertEquals("Pepsi found in the sentence", 9, findPepsi);
+        CharSequence pepsi = horseCarriesPepsi.subSequence(findPepsi, findPepsi + 5);
+        assertTrue("It is still compacted", CharSequences.isCompact(pepsi));
+        assertEquals(0, CharSequences.comparator().compare("Pepsi", pepsi));
         // END: CharSequencesTest#indexOfSample
     }
 

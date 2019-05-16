@@ -33,16 +33,26 @@ public class VersionCommandTest {
     
     @Test
     public void testSplitting() {
-        assertFalse(Version.parse(" version 1.2.3").lowerThan(Version.parse("1.2.3")));
-        assertFalse(Version.parse(" version 1.2.3").greaterThan(Version.parse("1.2.3")));
-        assertFalse(Version.parse(" version 0-dev").lowerThan(Version.parse("0")));
-        assertFalse(Version.parse(" version 0-dev").greaterThan(Version.parse("0")));
-        assertFalse(Version.parse(" version 1.2.3-dev").lowerThan(Version.parse("1.2.3")));
-        assertFalse(Version.parse(" version 1.2.3-dev").greaterThan(Version.parse("1.2.3")));
-        assertFalse(Version.parse(" version 1.2.3-SNAPSHOT").lowerThan(Version.parse("1.2.3")));
-        assertFalse(Version.parse(" version 1.2.3-SNAPSHOT").greaterThan(Version.parse("1.2.3")));
-        assertFalse(Version.parse("svn, version 1.9.7-SlikSvn (SlikSvn/1.9.7)").lowerThan(Version.parse("1.9.7")));
-        assertFalse(Version.parse("svn, version 1.9.7-SlikSvn (SlikSvn/1.9.7)").greaterThan(Version.parse("1.9.7")));
+        assertFalse(Version.parse("1.2.3", "-").lowerThan(Version.parse("1.2.3")));
+        assertFalse(Version.parse("1.2.3", "-").greaterThan(Version.parse("1.2.3")));
+        
+        assertFalse(Version.parse("0-dev", "-").lowerThan(Version.parse("0")));
+        assertFalse(Version.parse("0-dev", "-").greaterThan(Version.parse("0")));
+        
+        assertFalse(Version.parse("1.2.3-dev", "-").lowerThan(Version.parse("1.2.3")));
+        assertFalse(Version.parse("1.2.3-dev", "-").greaterThan(Version.parse("1.2.3")));
+        
+        assertFalse(Version.parse("1.2.3-SNAPSHOT", "-").lowerThan(Version.parse("1.2.3")));
+        assertFalse(Version.parse("1.2.3-SNAPSHOT", "-").greaterThan(Version.parse("1.2.3")));
+        
+        assertFalse(Version.parse("1.2-SNAPSHOT", "-").lowerThan(Version.parse("1.2")));
+        assertFalse(Version.parse("1.2-SNAPSHOT", "-").greaterThan(Version.parse("1.2")));
+        
+        assertFalse(Version.parse("1-SNAPSHOT", "-").lowerThan(Version.parse("1")));
+        assertFalse(Version.parse("1-SNAPSHOT", "-").greaterThan(Version.parse("1")));
+        
+        assertFalse(Version.parse("1.9.7-SlikSvn (SlikSvn/1.9.7)", "-").lowerThan(Version.parse("1.9.7")));
+        assertFalse(Version.parse("1.9.7-SlikSvn (SlikSvn/1.9.7)", "-").greaterThan(Version.parse("1.9.7")));
     }
 
     @Test

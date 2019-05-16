@@ -25,7 +25,7 @@ import java.util.Comparator;
  * Effectively store {@link CharSequence strings} in memory. This
  * class provides useful {@code static} methods to create and
  * work with memory efficient {@link CharSequence}
- * implementations for <b>ASCII</b> strings.
+ * implementations for strings using just a subsets of UTF characters.
  * <p>
  * Often the strings we deal with are based on simple English alphabet. Keeping
  * them in memory as {@code char[]} isn't really effective as they may fit
@@ -58,7 +58,10 @@ import java.util.Comparator;
 public final class CharSequences {
 
     /**
-     * Provides compact char sequence object like {@link String#String(char[], int, int)}
+     * Creates new {@link CharSequence} instance representing the chars
+     * in the array. The sequence contains its own copy of the array content
+     * represented in an effective (e.g. {@code byte[]}) way.
+     *
      * @param buf buffer to copy the characters from
      * @param start starting offset in the {@code buf} array
      * @param count number of characters to copy
@@ -108,7 +111,13 @@ public final class CharSequences {
     }
 
     /**
-     * Provides compact char sequence object like {@link String#String(String)}
+     * Creates new {@link CharSequence} instance representing the content
+     * of another sequence or {@link String} effectively.
+     * <p>
+     * {@codesnippet CharSequencesTest#createSample}
+     * <p>
+     * @param s existing string or sequence of chars
+     * @return immutable char sequence effectively representing the data
      */
     public static CharSequence create(CharSequence s) {
         if (s == null) {
@@ -146,20 +155,23 @@ public final class CharSequences {
         char[] v = new char[n];
         for (int i = 0; i < n; i++) {
             v[i] = s.charAt(i);
-        }   
+        }
         return new CharBasedSequence(v);
     }
 
     /**
-     * Provides optimized char sequences comparator
-     * @return comparator
+     * Provides optimized char sequences comparator.
+     *
+     * {@codesnippet CharSequencesTest#compareStrings}
+     *
+     * @return comparator for {@link CharSequence} objects
      */
     public static Comparator<CharSequence> comparator() {
         return Comparator;
     }
-    
+
     /**
-     * Returns object to represent empty sequence ""
+     * Returns object to represent empty sequence {@code ""}.
      * @return char sequence to represent empty sequence
      */
     public static CharSequence empty() {
@@ -167,16 +179,24 @@ public final class CharSequences {
     }
 
     /**
-     * Predicate to check if provides char sequence is based on compact implementation
+     * Predicate to check if provides char sequence is based on compact implementation.
+     *
      * @param cs char sequence object to check
-     * @return true if compact implementation, false otherwise
+     * @return {@code true} if compact implementation, {@code false} otherwise
      */
     public static boolean isCompact(CharSequence cs) {
         return cs instanceof CompactCharSequence;
     }
-    
+
     /**
      * Implementation of {@link String#indexOf(String)} for character sequences.
+     *
+     * {@codesnippet CharSequencesTest#indexOfSample}
+     *
+     * @param text the text to search
+     * @param seq the sequence to find in the {@code text}
+     * @return the index of the first occurrence of the specified substring, or
+     *      {@code -1} if there is no such occurrence
      */
     public static int indexOf(CharSequence text, CharSequence seq) {
         return indexOf(text, seq, 0);
@@ -184,6 +204,12 @@ public final class CharSequences {
 
     /**
      * Implementation of {@link String#indexOf(String,int)} for character sequences.
+     *
+     * @param text the text to search
+     * @param seq the sequence to find in the {@code text}
+     * @param fromIndex the index to start searching from
+     * @return the index of the first occurrence of the specified substring, or
+     *      {@code -1} if there is no such occurrence
      */
     public static int indexOf(CharSequence text, CharSequence seq, int fromIndex) {
         int textLength = text.length();
@@ -331,7 +357,7 @@ public final class CharSequences {
 
     /**
      * compact char sequence implementation for strings in range 0-7 characters
-     * 8 + 2*4 = 16 bytes for all strings vs String impl occupying 
+     * 8 + 2*4 = 16 bytes for all strings vs String impl occupying
      */
     private static final class Fixed_0_7 implements CompactCharSequence, Comparable<CharSequence> {
 
@@ -464,11 +490,11 @@ public final class CharSequences {
                                                                   '.',     // for 'file.ext' names
                                                                       '_'
     };
-    
+
     private static boolean is6BitChar(int d) {
         return d < 128 && encodeTable[d] >= 0;
     }
-    
+
     private static long encode6BitChar(int d) {
         return encodeTable[d];
     }
@@ -476,7 +502,7 @@ public final class CharSequences {
     private static char decode6BitChar(int d) {
         return decodeTable[d];
     }
-    
+
     private static final class Fixed6Bit_1_10 implements CompactCharSequence, Comparable<CharSequence> {
 
         // Length is in lower 4bits
@@ -601,7 +627,7 @@ public final class CharSequences {
             return Comparator.compare(this, o);
         }
     }
-    
+
     private static final class Fixed6Bit_11_20 implements CompactCharSequence, Comparable<CharSequence> {
 
         // Length is in lower 4bits of i1 and l2
@@ -1160,7 +1186,7 @@ public final class CharSequences {
 
     /**
      * compact char sequence implementation for strings in range 16-23 characters
-     * size: 8 + 3*8 = 32 bytes for all strings vs String impl occupying 
+     * size: 8 + 3*8 = 32 bytes for all strings vs String impl occupying
      */
     private static final class Fixed_16_23 implements CompactCharSequence, Comparable<CharSequence> {
 
@@ -1541,7 +1567,7 @@ public final class CharSequences {
             }
             return len1 - len2;
         }
-        
+
         //<editor-fold defaultstate="collapsed" desc="Private methods">
         private static int compareByteBased(ByteBasedSequence bbs1, ByteBasedSequence bbs2) {
             int len1 = bbs1.value.length;

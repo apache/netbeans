@@ -130,6 +130,7 @@ public interface Mode extends Serializable {
      * 
      * @see ModeXml
      * @see http://wiki.apidesign.org/wiki/ExtendingInterfaces
+     * @since 6.82
      */
     public interface Xml extends Mode {
         

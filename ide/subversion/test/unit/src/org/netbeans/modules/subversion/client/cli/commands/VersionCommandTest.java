@@ -53,6 +53,12 @@ public class VersionCommandTest {
         
         assertFalse(Version.parse("1.9.7-SlikSvn (SlikSvn/1.9.7)", "-").lowerThan(Version.parse("1.9.7")));
         assertFalse(Version.parse("1.9.7-SlikSvn (SlikSvn/1.9.7)", "-").greaterThan(Version.parse("1.9.7")));
+
+        assertFalse(Version.parse("1.10.0 (r1827917)").lowerThan(Version.parse("1.10.0")));
+        assertFalse(Version.parse("1.10.0 (r1827917)").greaterThan(Version.parse("1.10.0")));
+
+        assertFalse(Version.parse("1.9.7 (r1800392)").lowerThan(Version.parse("1.9.7")));
+        assertFalse(Version.parse("1.9.7 (r1800392)").greaterThan(Version.parse("1.9.7")));
     }
 
     @Test

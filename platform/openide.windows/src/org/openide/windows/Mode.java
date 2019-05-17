@@ -128,7 +128,6 @@ public interface Mode extends Serializable {
     /**
      * Extension to provide exposure of XML configuration.
      * 
-     * @see ModeXml
      * @see http://wiki.apidesign.org/wiki/ExtendingInterfaces
      * @since 6.82
      */

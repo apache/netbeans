@@ -26,8 +26,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.spi.project.AuxiliaryProperties;
 import org.openide.util.EditableProperties;
@@ -39,7 +41,10 @@ import org.openide.util.Mutex.Action;
  */
 public class GradleAuxiliaryPropertiesImpl implements AuxiliaryProperties {
 
-    private static final String PROP_PREFIX = "nb-config."; //NOI18N
+    private static final String WRONG_PREFIX = "nb-config."; //NOI18N
+    // USE THIS PREFIX [NETBEANS-2288], AS IT CAN BE OVERWRITTEN IN
+    // GRADLE PROPERTY FILES
+    private static final String PROP_PREFIX = "netbeans."; //NOI18N
 
     final NbGradleProjectImpl project;
 
@@ -52,7 +57,8 @@ public class GradleAuxiliaryPropertiesImpl implements AuxiliaryProperties {
         return ProjectManager.mutex().readAccess(new Action<String>() {
             @Override
             public String run() {
-                return getProperties(shared).get(PROP_PREFIX + key);
+                EditableProperties props = getProperties(shared);
+                return props.getOrDefault(PROP_PREFIX + key, props.get(WRONG_PREFIX + key));
             }
         });
     }
@@ -65,6 +71,7 @@ public class GradleAuxiliaryPropertiesImpl implements AuxiliaryProperties {
                 props.put(PROP_PREFIX + key, value);
             } else {
                 props.remove(PROP_PREFIX + key);
+                props.remove(WRONG_PREFIX + key);
             }
 
             putProperties(props, shared);
@@ -73,11 +80,14 @@ public class GradleAuxiliaryPropertiesImpl implements AuxiliaryProperties {
 
     @Override
     public Iterable<String> listKeys(boolean shared) {
-        List<String> ret = new LinkedList<>();
+        Set<String> ret = new HashSet<>();
         EditableProperties props = getProperties(shared);
         for (String key : props.keySet()) {
             if (key.startsWith(PROP_PREFIX)) {
                 ret.add(key.substring(PROP_PREFIX.length()));
+            }
+            if (key.startsWith(WRONG_PREFIX)) {
+                ret.add(key.substring(WRONG_PREFIX.length()));
             }
         }
         return ret;

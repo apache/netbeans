@@ -97,6 +97,8 @@ public class DockerContainerNode extends AbstractNode {
             null,
             SystemAction.get(CopyIdAction.class),
             SystemAction.get(GetPortMappingsAction.class),
+            SystemAction.get(InspectContainerAction.class),
+            SystemAction.get(ProcessListAction.class),
             null,
             SystemAction.get(RefreshAction.class),
             null,

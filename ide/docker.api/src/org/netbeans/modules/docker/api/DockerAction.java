@@ -78,6 +78,7 @@ import org.netbeans.modules.docker.DockerConfig;
 import org.netbeans.modules.docker.DockerUtils;
 import org.netbeans.modules.docker.Endpoint;
 import org.netbeans.modules.docker.StreamResult;
+import static org.netbeans.modules.docker.api.DockerEntityType.Container;
 import org.newsclub.net.unix.AFUNIXSocket;
 import org.newsclub.net.unix.AFUNIXSocketAddress;
 import org.openide.filesystems.FileObject;
@@ -307,9 +308,14 @@ public class DockerAction {
         return new DockerTag(source.getImage(), tagResult);
     }
 
-    public DockerContainerDetail getDetail(DockerContainer container) throws DockerException {
-        JSONObject value = (JSONObject) doGetRequest("/containers/" + container.getId() + "/json",
+    public JSONObject getRawDetails(DockerEntityType entityType, String containerId) throws DockerException {
+        JSONObject value = (JSONObject) doGetRequest(entityType.getUrlPath() + containerId + "/json",
                 Collections.singleton(HttpURLConnection.HTTP_OK));
+        return value;
+    }
+    
+    public DockerContainerDetail getDetail(DockerContainer container) throws DockerException {
+        JSONObject value = getRawDetails(DockerEntityType.Container, container.getId());
         String name = (String) value.get("Name");
         DockerContainer.Status status = DockerContainer.Status.STOPPED;
         JSONObject state = (JSONObject) value.get("State");
@@ -1376,6 +1382,12 @@ public class DockerAction {
             id = tag.getImage().getId();
         }
         return id;
+    }
+
+    public JSONObject getRunningProcessesList(DockerContainer container) throws DockerException {
+        JSONObject value = (JSONObject) doGetRequest(Container.getUrlPath() + container.getId() + "/top",
+                Collections.singleton(HttpURLConnection.HTTP_OK));
+        return value;
     }
 
     private static class DirectFetcher implements StreamItem.Fetcher {

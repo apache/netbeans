@@ -27,6 +27,9 @@ import org.netbeans.modules.gradle.spi.actions.DefaultGradleActionsProvider;
 import org.netbeans.modules.gradle.spi.actions.GradleActionsProvider;
 import static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType.*;
 import java.io.File;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import static org.netbeans.spi.project.ActionProvider.*;
 import static org.netbeans.api.java.project.JavaProjectConstants.*;
 import org.netbeans.api.java.source.ClasspathInfo;
@@ -82,9 +85,9 @@ public class JavaActionProvider extends DefaultGradleActionsProvider {
                 if (gbp.hasPlugins(GATLING_PLUGIN) && COMMAND_RUN_SINGLE.equals(action)) {
                     ret = fo.getNameExt().endsWith(SIMULATION_POSTFIX);
                 } else {
-                    ret = false;
                     GradleJavaProject gjp = GradleJavaProject.get(project);
                     if ( gjp != null ) {
+                        ret = false;
                         switch (action) {
                             case COMMAND_COMPILE_SINGLE:
                                 FileBuiltQuery.Status status = FileBuiltQuery.getStatus(fo);
@@ -119,6 +122,8 @@ public class JavaActionProvider extends DefaultGradleActionsProvider {
                                     ret = sourceSet != null && sourceSet.getSourceType(dir) != RESOURCES;
                                 }
                                 break;
+                            default:
+                                ret = true;
                         }
                     }
                 }

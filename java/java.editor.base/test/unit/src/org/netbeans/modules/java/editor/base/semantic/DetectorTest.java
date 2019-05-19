@@ -406,19 +406,26 @@ public class DetectorTest extends TestBase {
             //OK, presumably no support for raw string literals
         }
         setSourceLevel("11");
-        performTest("RawStringLiteral.java",
+        performTest("RawStringLiteral",
                     "public class RawStringLiteral {\n" +
-                    "    String s = `\n" +
-                    "               int i1 = 1;\n" +
-                    "               int i2 = 2;\n" +
-                    "               `.stripIndent();\n" +
+                    "    String s1 = \"\"\"\n" +
+                    "                int i1 = 1;    \n" +
+                    "                  int i2 = 2;\n" +
+                    "             \"\"\";\n" +
+                    "    String s2 = \"\"\"\n" +
+                    "                int i1 = 1;    \n" +
+                    "                  int i2 = 2;\n" +
+                    "                      \"\"\";\n" +
                     "}\n",
                     "[PUBLIC, CLASS, DECLARATION], 0:13-0:29",
                     "[PUBLIC, CLASS], 1:4-1:10",
-                    "[PACKAGE_PRIVATE, FIELD, DECLARATION], 1:11-1:12",
-                    "[UNINDENTED_RAW_STRING_LITERAL], 2:15-2:26",
-                    "[UNINDENTED_RAW_STRING_LITERAL], 3:15-3:26",
-                    "[PUBLIC, METHOD], 4:17-4:28");
+                    "[PACKAGE_PRIVATE, FIELD, DECLARATION], 1:11-1:13",
+                    "[UNINDENTED_TEXT_BLOCK], 2:13-2:27",
+                    "[UNINDENTED_TEXT_BLOCK], 3:13-3:29",
+                    "[PUBLIC, CLASS], 5:4-5:10",
+                    "[PACKAGE_PRIVATE, FIELD, DECLARATION], 5:11-5:13",
+                    "[UNINDENTED_TEXT_BLOCK], 6:16-6:27",
+                    "[UNINDENTED_TEXT_BLOCK], 7:16-7:29");
     }
 
     private void performTest(String fileName) throws Exception {

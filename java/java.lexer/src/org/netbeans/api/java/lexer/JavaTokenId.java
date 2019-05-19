@@ -128,7 +128,7 @@ public enum JavaTokenId implements TokenId {
     CHAR_LITERAL(null, "character"),
     STRING_LITERAL(null, "string"),
     /**@since 1.41*/
-    RAW_STRING_LITERAL(null, "string"),
+    MULTILINE_STRING_LITERAL(null, "string"),
     
     TRUE("true", "literal"),
     FALSE("false", "literal"),

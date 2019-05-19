@@ -1069,33 +1069,32 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             return null;
         }
 
-        private static final Coloring UNINDENTED_RAW_STRING_LITERAL =
-                ColoringAttributes.add(ColoringAttributes.empty(), ColoringAttributes.UNINDENTED_RAW_STRING_LITERAL);
+        private static final Coloring UNINDENTED_TEXT_BLOCK =
+                ColoringAttributes.add(ColoringAttributes.empty(), ColoringAttributes.UNINDENTED_TEXT_BLOCK);
 
         @Override
-        public Void visitLiteral(LiteralTree node, EnumSet<UseTypes> p) {
+        public Void visitLiteral(LiteralTree node, Void p) {
             int startPos = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), node);
             tl.moveToOffset(startPos);
             Token t = tl.currentToken();
-            if (t != null && t.id() == JavaTokenId.RAW_STRING_LITERAL && t.partType() == PartType.COMPLETE) {
-                //TODO: check parent path to check if stripIndent is called:
+            if (t != null && t.id() == JavaTokenId.MULTILINE_STRING_LITERAL && t.partType() == PartType.COMPLETE) {
                 String tokenText = t.text().toString();
-                int leading = 0;
-                while (tokenText.charAt(leading) == '`')
-                    leading++;
-                String[] lines = tokenText.substring(leading, tokenText.length() - leading).split("\n");
+                String[] lines = tokenText.split("\n");
                 int indent = Arrays.stream(lines, 1, lines.length)
                                    .mapToInt(this::leadingIndent)
                                    .min()
                                    .orElse(0);
-                int pos = startPos + leading;
-                boolean first = true;
-                for (String line : lines) {
-                    int indentedStart = first ? pos : pos + indent;
-                    int indentedEnd = pos + line.length();
-                    if (indentedEnd != indentedStart)
-                        extraColoring.add(Pair.of(new int[] {indentedStart, indentedEnd}, UNINDENTED_RAW_STRING_LITERAL));
-                    first = false;
+                int pos = startPos + lines[0].length() + 1;
+                for (int i = 1; i < lines.length; i++) {
+                    String line = lines[i];
+                    if (i == lines.length - 1) {
+                        line = line.substring(0, line.length() - 3);
+                    }
+                    String strippendLine = line.replaceAll("[\t ]+$", "");
+                    int indentedStart = pos + indent;
+                    int indentedEnd = pos + strippendLine.length();
+                    if (indentedEnd > indentedStart)
+                        extraColoring.add(Pair.of(new int[] {indentedStart, indentedEnd}, UNINDENTED_TEXT_BLOCK));
                     pos += line.length() + 1;
                 }
             }

@@ -170,19 +170,38 @@ public class JavaLexer implements Lexer<JavaTokenId> {
                     return token(JavaTokenId.ERROR);
                 case '"': // string literal
                     if (lookupId == null) lookupId = JavaTokenId.STRING_LITERAL;
-                    while (true)
+                    while (true) {
                         switch (nextChar()) {
                             case '"': // NOI18N
+                                String text = input.readText().toString();
+                                if (text.length() == 2) {
+                                    if (nextChar() != '"') {
+                                        input.backup(1); //TODO: EOF???
+                                        return token(lookupId);
+                                    }
+                                    lookupId = JavaTokenId.MULTILINE_STRING_LITERAL;
+                                }
+                                if (lookupId == JavaTokenId.MULTILINE_STRING_LITERAL) {
+                                    if (text.endsWith("\"\"\"") && !text.endsWith("\\\"\"\"") && text.length() > 6) {
+                                        return token(lookupId);
+                                    } else {
+                                        break;
+                                    }
+                                }
                                 return token(lookupId);
                             case '\\':
                                 nextChar();
                                 break;
                             case '\r': consumeNewline();
                             case '\n':
+                                if (lookupId == JavaTokenId.MULTILINE_STRING_LITERAL) {
+                                    break;
+                                }
                             case EOF:
                                 return tokenFactory.createToken(lookupId, //XXX: \n handling for exotic identifiers?
                                         input.readLength(), PartType.START);
                         }
+                    }
 
                 case '\'': // char literal
                     while (true)
@@ -198,48 +217,6 @@ public class JavaLexer implements Lexer<JavaTokenId> {
                                 return tokenFactory.createToken(JavaTokenId.CHAR_LITERAL,
                                         input.readLength(), PartType.START);
                         }
-
-                case '`': //raw string literal
-                    if (input.readLength() > 1) {
-                        //even the first backtick must be unencoded for a raw string:
-                        return token(JavaTokenId.ERROR);
-                    }
-                    //detect delimiter:
-                    int delimiterCount = 1;
-                    while ((c = input.read()) == '`') {
-                        delimiterCount++;
-                    }
-
-                    if (c == EOF) {
-                        return tokenFactory.createToken(JavaTokenId.RAW_STRING_LITERAL,
-                                input.readLength(), PartType.START);
-                    }
-
-                    while (true) {
-                        while ((c = input.read()) != '`' && c != EOF)
-                            ;
-
-                        if (c == EOF) {
-                            return tokenFactory.createToken(JavaTokenId.RAW_STRING_LITERAL,
-                                    input.readLength(), PartType.START);
-                        }
-
-                        int endDelimiterCount = 1;
-
-                        while ((c = input.read()) == '`') {
-                            endDelimiterCount++;
-                        }
-
-                        if (delimiterCount == endDelimiterCount) {
-                            input.backup(1);
-                            return token(JavaTokenId.RAW_STRING_LITERAL);
-                        }
-
-                        if (c == EOF) {
-                            return tokenFactory.createToken(JavaTokenId.RAW_STRING_LITERAL,
-                                    input.readLength(), PartType.START);
-                        }
-                    }
 
                 case '/':
                     switch (nextChar()) {

@@ -63,6 +63,17 @@ $ ant -Dcluster.config=platform
 
 **Note:** You can also use `php`, `enterprise`, etc. See the [cluster.properties](https://github.com/apache/incubator-netbeans/blob/master/nbbuild/cluster.properties) file.
 
+#### Building Patch from Sources
+
+Patch source releases does not contain all the code sufficient to build a patch release. In oder to build a patch release, it is required to download the source code of a previous full release. The steps would be the following:
+
+1. Create a directory for the sources: ```mkdir netbeans-patch-src```
+2. Download the full release zip required for the patch.
+3. Download the patch sources zip.
+4. Unzip the release sources into ```netbeans-patch-src```
+5. Unzip the patch sources into ```netbeans-patch-src``` overwrite the existing ones.
+6. Go to the ```netbeans-patch-src``` and follow the build instructions above.
+
 #### Building Windows Launchers
 Windows launchers can be build using [MinGW](http://www.mingw.org/) both on Windows and Linux.
 

@@ -19,24 +19,10 @@
     under the License.
 
 -->
+<project basedir="." default="build" name="contrib/j2ee.weblogic9">
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
-<!DOCTYPE web-app PUBLIC '-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN' 'http://java.sun.com/dtd/web-app_2_3.dtd'>
-
-<web-app>
-    <servlet>
-        <servlet-name>JnlpDownloadServlet</servlet-name>
-        <servlet-class>jnlp.sample.servlet.JnlpDownloadServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>IndexServlet</servlet-name>
-        <servlet-class>org.netbeans.jnlp.IndexServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>JnlpDownloadServlet</servlet-name>
-        <url-pattern>*.jnlp</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>IndexServlet</servlet-name>
-        <url-pattern>/config.txt</url-pattern>
-    </servlet-mapping>
-</web-app>
+    <target name="build-init" depends="projectized.build-init">
+	 <unzip src="external/j2ee.weblogic9-generated-schema-classes.zip" dest="./"/>
+    </target>
+</project>

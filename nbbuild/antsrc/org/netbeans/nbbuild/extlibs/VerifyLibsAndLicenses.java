@@ -676,8 +676,8 @@ public class VerifyLibsAndLicenses extends Task {
                     if (line.trim().length() == 0) {
                         continue;
                     }
-                    String[] hashAndFile = line.split(" ", 2);
-                    if (hashAndFile.length < 2) {
+                    String[] hashAndFile = line.split("\\s+");
+                    if (hashAndFile.length < 2 || hashAndFile.length > 3) {
                         throw new BuildException("Bad line '" + line + "' in " + list);
                     }
                     if (MavenCoordinate.isMavenFile(hashAndFile[1])) {

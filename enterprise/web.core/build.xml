@@ -23,5 +23,6 @@
     <import file="../../nbbuild/templates/projectized.xml"/>
     <taskdef name="configureproxy" classname="org.netbeans.nbbuild.extlibs.ConfigureProxy" classpath="${nbantext.jar}"/>
     <configureproxy connectTo="http://netbeans.apache.org" hostProperty="proxyHost" portProperty="proxyPort"/>
+    <property name="proxyPort" value="80"/>
     <setproxy proxyhost="${proxyHost}" proxyPort="${proxyPort}"/>
 </project>

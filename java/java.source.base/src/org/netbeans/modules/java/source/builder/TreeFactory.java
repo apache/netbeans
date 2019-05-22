@@ -507,6 +507,8 @@ public class TreeFactory {
                 return make.at(NOPOS).Literal(TypeTag.INT, ((Byte) value).intValue());
             if (value instanceof Short)
                 return make.at(NOPOS).Literal(TypeTag.INT, ((Short) value).intValue());
+            if (value instanceof String[])
+                return make.at(NOPOS).Literal(TypeTag.CLASS, value);
             // workaround for making NULL_LITERAL kind.
             if (value == null) {
                 return make.at(NOPOS).Literal(TypeTag.BOT, value);

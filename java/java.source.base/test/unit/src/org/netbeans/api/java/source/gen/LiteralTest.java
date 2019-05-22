@@ -168,6 +168,87 @@ public class LiteralTest extends GeneratorTestMDRCompat {
         assertEquals(golden, res);
     }
 
+    public void testTextBlocksNew() throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile,
+            "package hierbas.del.litoral;\n" +
+            "\n" +
+            "public class Test {\n" +
+            "    public static final String C;\n" +
+            "}\n"
+            );
+        String golden =
+            "package hierbas.del.litoral;\n" +
+            "\n" +
+            "public class Test {\n" +
+            "    public static final String C = \"\"\"\n" +
+            "                                   line \"1\n" +
+            "                                   line\\\"\\\"\\\"\"\"2\"\n" +
+            "                                   line\\n3\"\"\";\n" +
+            "}\n";
+        JavaSource testSource = JavaSource.forFileObject(FileUtil.toFileObject(testFile));
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws java.io.IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                TreeMaker make = workingCopy.getTreeMaker();
+
+                ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
+                VariableTree var = (VariableTree) clazz.getMembers().get(1);
+                LiteralTree val = make.Literal(new String[] {"line \"1",
+                                                             "line\"\"\"\"\"2\"",
+                                                             "line\n3"});
+                VariableTree nue = make.setInitialValue(var, val);
+                workingCopy.rewrite(var, nue);
+            }
+
+        };
+        testSource.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testTextBlocksReplace() throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile,
+            "package hierbas.del.litoral;\n" +
+            "\n" +
+            "public class Test {\n" +
+            "    public static final String C = \"\"\"\n" +
+            "                                   old\"\"\";\n" +
+            "}\n"
+            );
+        String golden =
+            "package hierbas.del.litoral;\n" +
+            "\n" +
+            "public class Test {\n" +
+            "    public static final String C = \"\"\"\n" +
+            "                                   new\n" +
+            "                                   \"\"\";\n" +
+            "}\n";
+        JavaSource testSource = JavaSource.forFileObject(FileUtil.toFileObject(testFile));
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws java.io.IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                TreeMaker make = workingCopy.getTreeMaker();
+
+                ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
+                VariableTree var = (VariableTree) clazz.getMembers().get(1);
+                LiteralTree val = make.Literal(new String[] {"new",
+                                                             ""});
+                VariableTree nue = make.setInitialValue(var, val);
+                workingCopy.rewrite(var, nue);
+            }
+
+        };
+        testSource.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        System.err.println(res);
+        assertEquals(golden, res);
+    }
+
     String getGoldenPckg() {
         return "";
     }

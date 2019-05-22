@@ -1,0 +1,364 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.netbeans.modules.java.source.parsing;
+
+import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Scope;
+import com.sun.source.tree.Tree;
+import com.sun.source.util.TreePath;
+import com.sun.tools.javac.api.JavacScope;
+import com.sun.tools.javac.api.JavacTaskImpl;
+import com.sun.tools.javac.api.JavacTrees;
+import com.sun.tools.javac.code.Flags;
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symtab;
+import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.comp.Attr;
+import com.sun.tools.javac.comp.AttrContext;
+import com.sun.tools.javac.comp.Env;
+import com.sun.tools.javac.comp.Flow;
+import com.sun.tools.javac.comp.TypeEnter;
+import com.sun.tools.javac.parser.LazyDocCommentTable;
+import com.sun.tools.javac.parser.Scanner;
+import com.sun.tools.javac.parser.ScannerFactory;
+import com.sun.tools.javac.tree.EndPosTable;
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.TreeInfo;
+import com.sun.tools.javac.tree.TreeMaker;
+import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.CouplingAbort;
+import com.sun.tools.javac.util.JCDiagnostic;
+import com.sun.tools.javac.util.Log;
+import com.sun.tools.javac.util.Names;
+import com.sun.tools.javac.util.Options;
+//import com.sun.tools.javac.util.Position.LineMapImpl;
+import java.io.IOException;
+import java.nio.CharBuffer;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticListener;
+import javax.tools.JavaFileObject;
+import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.api.java.source.JavaSource.Phase;
+import org.netbeans.lib.nbjavac.services.CancelService;
+import org.netbeans.lib.nbjavac.services.NBParserFactory;
+import org.netbeans.modules.*;
+import org.netbeans.modules.java.source.CompilationInfoAccessor;
+import org.netbeans.modules.java.source.JavaSourceAccessor;
+import org.netbeans.modules.java.source.parsing.CompilationInfoImpl;
+import org.netbeans.modules.java.source.parsing.JavacFlowListener;
+import org.netbeans.modules.java.source.parsing.JavacParser;
+import org.netbeans.modules.java.source.parsing.JavacParser.PartialReparser;
+import org.netbeans.modules.parsing.api.Snapshot;
+import org.openide.filesystems.FileObject;
+import org.openide.util.lookup.ServiceProvider;
+
+/**
+ *
+ * @author lahvac
+ */
+@ServiceProvider(service = PartialReparser.class, position = 200)
+public class VanillaPartialReparser implements PartialReparser {
+    private static final Logger LOGGER = Logger.getLogger(VanillaPartialReparser.class.getName());
+
+    @Override
+    public boolean reparseMethod (final CompilationInfoImpl ci,
+            final Snapshot snapshot,
+            final MethodTree orig,
+            final String newBody) throws IOException {
+        assert ci != null;
+        final FileObject fo = ci.getFileObject();
+        if (LOGGER.isLoggable(Level.FINER)) {
+            LOGGER.log(Level.FINER, "Reparse method in: {0}", fo);          //NOI18N
+        }
+        final Phase currentPhase = ci.getPhase();
+        if (Phase.PARSED.compareTo(currentPhase) > 0) {
+            return false;
+        }
+        try {
+            final CompilationUnitTree cu = ci.getCompilationUnit();
+            if (cu == null || newBody == null || orig.getBody() == null) {
+                return false;
+            }
+            final JavacTaskImpl task = ci.getJavacTask();
+            if (Options.instance(task.getContext()).isSet(JavacParser.LOMBOK_DETECTED)) {
+                return false;
+            }
+            CompilationInfo info = JavaSourceAccessor.getINSTANCE().createCompilationInfo(ci);
+            Scope methodScope = info.getTrees().getScope(TreePath.getPath(cu, orig.getBody()));
+//            PartialReparserService pr = PartialReparserService.instance(task.getContext());
+//            if (((JCTree.JCMethodDecl)orig).localEnv == null) {
+//                //We are seeing interface method or abstract or native method with body.
+//                //Don't do any optimalization of this broken code - has no attr env.
+//                return false;
+//            }
+            final JavacTrees jt = JavacTrees.instance(task);
+            final int origStartPos = (int) jt.getSourcePositions().getStartPosition(cu, orig.getBody());
+            final int origEndPos = (int) jt.getSourcePositions().getEndPosition(cu, orig.getBody());
+            if (origStartPos < 0) {
+                LOGGER.log(Level.WARNING, "Javac returned startpos: {0} < 0", new Object[]{origStartPos});  //NOI18N
+                return false;
+            }
+            if (origStartPos > origEndPos) {
+                LOGGER.log(Level.WARNING, "Javac returned startpos: {0} > endpos: {1}", new Object[]{origStartPos, origEndPos});  //NOI18N
+                return false;
+            }
+            final FindAnonymousVisitor fav = new FindAnonymousVisitor();
+            fav.scan(orig.getBody(), null);
+            if (fav.hasLocalClass) {
+                if (LOGGER.isLoggable(Level.FINER)) {
+                    LOGGER.log(Level.FINER, "Skeep reparse method (old local classes): {0}", fo);   //NOI18N
+                }
+                return false;
+            }
+            final int firstInner = fav.firstInner;
+            final int noInner = fav.noInner;
+            final Context ctx = task.getContext();
+//            final TreeLoader treeLoader = TreeLoader.instance(ctx);
+//            if (treeLoader != null) {
+//                treeLoader.startPartialReparse();
+//            }
+            try {
+                final Log l = Log.instance(ctx);
+//                l.startPartialReparse();
+                final JavaFileObject prevLogged = l.useSource(cu.getSourceFile());
+                JCTree.JCBlock block;
+                try {
+                    DiagnosticListener dl = ci.getDiagnosticListener();
+                    assert dl instanceof CompilationInfoImpl.DiagnosticListenerImpl;
+                    ((CompilationInfoImpl.DiagnosticListenerImpl)dl).startPartialReparse(origStartPos, origEndPos);
+                    long start = System.currentTimeMillis();
+//                    Map<JCTree,LazyDocCommentTable.Entry> docComments = new HashMap<>();
+                    block = reparseMethodBody(ctx, cu, orig, newBody + " ", firstInner/*, docComments*/);
+                    final EndPosTable endPos = ((JCTree.JCCompilationUnit)cu).endPositions;
+                    final TranslatePositionsVisitor tpvBody = new TranslatePositionsVisitor(null, endPos, ((JCTree.JCBlock)orig.getBody()).pos);
+                    tpvBody.scan(block, null);
+                    LOGGER.log(Level.FINER, "Reparsed method in: {0}", fo);     //NOI18N
+                    if (block == null) {
+                        LOGGER.log(
+                            Level.FINER,
+                            "Skeep reparse method, invalid position, newBody: ",       //NOI18N
+                            newBody);
+                        return false;
+                    }
+                    final int newEndPos = (int) jt.getSourcePositions().getEndPosition(cu, block);
+                    if (newEndPos != origStartPos + newBody.length()) {
+                        return false;
+                    }
+                    fav.reset();
+                    fav.scan(block, null);
+                    final int newNoInner = fav.noInner;
+                    if (fav.hasLocalClass || noInner != newNoInner) {
+                        if (LOGGER.isLoggable(Level.FINER)) {
+                            LOGGER.log(Level.FINER, "Skeep reparse method (new local classes): {0}", fo);   //NOI18N
+                        }
+                        return false;
+                    }
+//                    ((LazyDocCommentTable) ((JCTree.JCCompilationUnit)cu).docComments).table.keySet().removeAll(fav.docOwners);
+//                    ((LazyDocCommentTable) ((JCTree.JCCompilationUnit)cu).docComments).table.putAll(docComments);
+                    long end = System.currentTimeMillis();
+                    if (fo != null) {
+                        JavacParser.logTime (fo,Phase.PARSED,(end-start));
+                    }
+                    final int delta = newEndPos - origEndPos;
+                    final TranslatePositionsVisitor tpv = new TranslatePositionsVisitor(orig, endPos, delta);
+                    tpv.scan(cu, null);
+                    ((JCTree.JCMethodDecl)orig).body = block;
+                    if (Phase.RESOLVED.compareTo(currentPhase)<=0) {
+                        start = System.currentTimeMillis();
+                        reattrMethodBody(ctx, methodScope, orig, block);
+                        if (LOGGER.isLoggable(Level.FINER)) {
+                            LOGGER.log(Level.FINER, "Resolved method in: {0}", fo);     //NOI18N
+                        }
+                        if (!((CompilationInfoImpl.DiagnosticListenerImpl)dl).hasPartialReparseErrors()) {
+                            final JavacFlowListener fl = JavacFlowListener.instance(ctx);
+                            if (fl != null && fl.hasFlowCompleted(fo)) {
+                                if (LOGGER.isLoggable(Level.FINER)) {
+                                    final List<? extends Diagnostic> diag = ci.getDiagnostics();
+                                    if (!diag.isEmpty()) {
+                                        LOGGER.log(Level.FINER, "Reflow with errors: {0} {1}", new Object[]{fo, diag});     //NOI18N
+                                    }
+                                }
+                                TreePath tp = TreePath.getPath(cu, orig);       //todo: store treepath in changed method => improve speed
+                                Tree t = tp.getParentPath().getLeaf();
+                                reflowMethodBody(ctx, cu, (ClassTree) t, orig);
+                                if (LOGGER.isLoggable(Level.FINER)) {
+                                    LOGGER.log(Level.FINER, "Reflowed method in: {0}", fo); //NOI18N
+                                }
+                            }
+                        }
+                        end = System.currentTimeMillis();
+                        if (fo != null) {
+                            JavacParser.logTime (fo, Phase.ELEMENTS_RESOLVED,0L);
+                            JavacParser.logTime (fo,Phase.RESOLVED,(end-start));
+                        }
+                    }
+
+                    //fix CompilationUnitTree.getLineMap:
+                    long startM = System.currentTimeMillis();
+                    char[] chars = snapshot.getText().toString().toCharArray();
+//                    ((LineMapImpl) cu.getLineMap()).build(chars, chars.length);
+                    LOGGER.log(Level.FINER, "Rebuilding LineMap took: {0}", System.currentTimeMillis() - startM);
+
+                    ((CompilationInfoImpl.DiagnosticListenerImpl)dl).endPartialReparse (delta);
+                } finally {
+//                    l.endPartialReparse();
+                    l.useSource(prevLogged);
+                }
+                ci.update(snapshot);
+            } finally {
+//              if (treeLoader != null) {
+//                  treeLoader.endPartialReparse();
+//              }
+            }
+//        } catch (CouplingAbort ca) {
+//            //Needs full reparse
+//            return false;
+        } catch (Throwable t) {
+            if (t instanceof ThreadDeath) {
+                throw (ThreadDeath) t;
+            }
+            boolean a = false;
+            assert a = true;
+            if (a) {
+                JavacParser.dumpSource(ci, t);
+            }
+            return false;
+        }
+        return true;
+    }
+
+    public JCTree.JCBlock reparseMethodBody(Context ctx, CompilationUnitTree topLevel, MethodTree methodToReparse, String newBodyText, int annonIndex/*,
+            final Map<? super JCTree,? super LazyDocCommentTable.Entry> docComments*/) {
+        CharBuffer buf = CharBuffer.wrap((newBodyText+"\u0000").toCharArray(), 0, newBodyText.length());
+        com.sun.tools.javac.parser.JavacParser parser = newParser(ctx, buf, ((JCTree.JCBlock)methodToReparse.getBody()).pos, ((JCTree.JCCompilationUnit)topLevel).endPositions);
+        final JCTree.JCStatement statement = parser.parseStatement();
+        NBParserFactory.assignAnonymousClassIndices(Names.instance(ctx), statement, Names.instance(ctx).empty, annonIndex);
+        if (statement.getKind() == Tree.Kind.BLOCK) {
+//            if (docComments != null) {
+//                docComments.putAll(((LazyDocCommentTable) parser.getDocComments()).table);
+//            }
+            return (JCTree.JCBlock) statement;
+        }
+        return null;
+    }
+
+    public com.sun.tools.javac.parser.JavacParser newParser(Context context, CharSequence input, int startPos, final EndPosTable endPos) {
+        NBParserFactory parserFactory = (NBParserFactory) NBParserFactory.instance(context); //TODO: eliminate the cast
+        ScannerFactory scannerFactory = ScannerFactory.instance(context);
+        CancelService cancelService = CancelService.instance(context);
+        Scanner lexer = scannerFactory.newScanner(input, true);
+//        lexer.seek(startPos);
+        if (endPos instanceof NBParserFactory.NBJavacParser.EndPosTableImpl) {
+            ((NBParserFactory.NBJavacParser.EndPosTableImpl)endPos).resetErrorEndPos();
+        }
+        return new NBParserFactory.NBJavacParser(parserFactory, lexer, true, false, true, false, cancelService) {
+            @Override protected com.sun.tools.javac.parser.JavacParser.AbstractEndPosTable newEndPosTable(boolean keepEndPositions) {
+                return new com.sun.tools.javac.parser.JavacParser.AbstractEndPosTable(this) {
+
+                    @Override
+                    public void storeEnd(JCTree tree, int endpos) {
+                        ((NBParserFactory.NBJavacParser.EndPosTableImpl)endPos).storeEnd(tree, endpos);
+                    }
+
+                    @Override
+                    protected <T extends JCTree> T to(T t) {
+                        storeEnd(t, token.endPos);
+                        return t;
+                    }
+
+                    @Override
+                    protected <T extends JCTree> T toP(T t) {
+                        storeEnd(t, S.prevToken().endPos);
+                        return t;
+                    }
+
+                    @Override
+                    public int getEndPos(JCTree tree) {
+                        return endPos.getEndPos(tree);
+                    }
+
+                    @Override
+                    public int replaceTree(JCTree oldtree, JCTree newtree) {
+                        return endPos.replaceTree(oldtree, newtree);
+                    }
+
+                    @Override
+                    public void setErrorEndPos(int errPos) {
+                        super.setErrorEndPos(errPos);
+                        ((NBParserFactory.NBJavacParser.EndPosTableImpl)endPos).setErrorEndPos(errPos);
+                    }
+                };
+            }
+        };
+    }
+
+    public BlockTree reattrMethodBody(Context context, Scope scope, MethodTree methodToReparse, BlockTree block) {
+        Attr attr = Attr.instance(context);
+//        assert ((JCTree.JCMethodDecl)methodToReparse).localEnv != null;
+        JCTree.JCMethodDecl tree = (JCTree.JCMethodDecl) methodToReparse;
+        final Names names = Names.instance(context);
+        final Symtab syms = Symtab.instance(context);
+        final TypeEnter typeEnter = TypeEnter.instance(context);
+        final Log log = Log.instance(context);
+        final TreeMaker make = TreeMaker.instance(context);
+        final Env<AttrContext> env = ((JavacScope) scope).getEnv();//this is a copy anyway...
+        final Symbol.ClassSymbol owner = env.enclClass.sym;
+        if (tree.name == names.init && !owner.type.isErroneous() && owner.type != syms.objectType) {
+            //XXX
+            throw new UnsupportedOperationException();
+//            JCTree.JCBlock body = tree.body;
+//            if (body.stats.isEmpty() || !TreeInfo.isSelfCall(body.stats.head)) {
+//                body.stats = body.stats.
+//                prepend(typeEnter.SuperCall(make.at(body.pos),
+//                    com.sun.tools.javac.util.List.<Type>nil(),
+//                    com.sun.tools.javac.util.List.<JCTree.JCVariableDecl>nil(),
+//                    false));
+//            } else if ((env.enclClass.sym.flags() & Flags.ENUM) != 0 &&
+//                (tree.mods.flags & Flags.GENERATEDCONSTR) == 0 &&
+//                TreeInfo.isSuperCall(body.stats.head)) {
+//                // enum constructors are not allowed to call super
+//                // directly, so make sure there aren't any super calls
+//                // in enum constructors, except in the compiler
+//                // generated one.
+//                log.error(tree.body.stats.head.pos(),
+//                          new JCDiagnostic.Error("compiler",
+//                                    "call.to.super.not.allowed.in.enum.ctor",
+//                                    env.enclClass.sym));
+//                    }
+                }
+        attr.attribStat((JCTree.JCBlock)block, env);
+        return block;
+    }
+
+    public BlockTree reflowMethodBody(Context context, CompilationUnitTree topLevel, ClassTree ownerClass, MethodTree methodToReparse) {
+//        Flow flow = Flow.instance(context);
+//        TreeMaker make = TreeMaker.instance(context);
+//        flow.reanalyzeMethod(make.forToplevel((JCTree.JCCompilationUnit)topLevel),
+//                (JCTree.JCClassDecl)ownerClass);
+        return methodToReparse.getBody();
+    }
+}

@@ -22,16 +22,16 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 /**
- * Effectively store {@link CharSequence strings} in memory. This
+ * Efficiently store {@link CharSequence strings} in memory. This
  * class provides useful {@code static} methods to create and
  * work with memory efficient {@link CharSequence}
  * implementations for strings using just a subsets of UTF characters.
  * <p>
  * Often the strings we deal with are based on simple English alphabet. Keeping
- * them in memory as {@code char[]} isn't really effective as they may fit
+ * them in memory as {@code char[]} isn't really efficient as they may fit
  * in simple {@code byte[]}. This utility class does such <em>compression</em>
  * behind the scene. Use the here-in provided methods and your strings will be
- * stored as effectively as possible. As can be seen from the following example,
+ * stored as efficiently as possible. As can be seen from the following example,
  * many languages benefit from the <em>compaction</em>:
  * <p>
  * {@codesnippet CharSequencesTest#createSample}
@@ -43,7 +43,7 @@ import java.util.Comparator;
  * {@codesnippet CharSequencesTest#compareStrings}
  * <p>
  * Use {@link CharSequences#indexOf(java.lang.CharSequence, java.lang.CharSequence)} method
- * to search the compacted strings effectively:
+ * to search the compacted strings efficiently:
  * <p>
  * {@codesnippet CharSequencesTest#indexOfSample}
  * <p>
@@ -60,7 +60,7 @@ public final class CharSequences {
     /**
      * Creates new {@link CharSequence} instance representing the chars
      * in the array. The sequence contains its own copy of the array content
-     * represented in an effective (e.g. {@code byte[]}) way.
+     * represented in an efficient (e.g. {@code byte[]}) way.
      *
      * @param buf buffer to copy the characters from
      * @param start starting offset in the {@code buf} array
@@ -112,12 +112,12 @@ public final class CharSequences {
 
     /**
      * Creates new {@link CharSequence} instance representing the content
-     * of another sequence or {@link String} effectively.
+     * of another sequence or {@link String} efficiently.
      * <p>
      * {@codesnippet CharSequencesTest#createSample}
      * <p>
      * @param s existing string or sequence of chars
-     * @return immutable char sequence effectively representing the data
+     * @return immutable char sequence efficiently representing the data
      */
     public static CharSequence create(CharSequence s) {
         if (s == null) {
@@ -1385,7 +1385,7 @@ public final class CharSequences {
     /**
      * compact char sequence implementation based on char[] array
      * size: 8 + 4 + 4 (= 16 bytes) + sizeof ('value')
-     * it is still more effective than String, because string stores length in field
+     * it is still more efficient than String, because string stores length in field
      * and it costs 20 bytes aligned into 24
      */
     private final static class CharBasedSequence implements CompactCharSequence, Comparable<CharSequence> {

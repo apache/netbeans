@@ -3,7 +3,7 @@ Description: Graal SDK and Truffle API
 License: UPL
 Origin: https://github.com/oracle/graal
 Version: 1.0
-Files: js-1.0.0-rc16.jar regex-1.0.0-rc16.jar
+Files: graal-sdk-19.0.0.jar
 
 Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
 

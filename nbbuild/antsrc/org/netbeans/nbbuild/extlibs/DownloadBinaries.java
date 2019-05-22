@@ -30,7 +30,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -128,9 +127,6 @@ public class DownloadBinaries extends Task {
         this.clean = clean;
     }
 
-
-
-    Writer w;
     @Override
     public void execute() throws BuildException {
         for (FileSet fs : manifests) {
@@ -145,30 +141,21 @@ public class DownloadBinaries extends Task {
 
                     try (InputStream is = new FileInputStream(manifest)) {
                         BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-			w = new FileWriter(new File(basedir, include+"-with512"));
                         String line;
                         while ((line = r.readLine()) != null) {
                             if (line.startsWith("#")) {
-				w.write(line);
-				w.write('\n');
                                 continue;
                             }
                             if (line.trim().length() == 0) {
-				w.write(line);
-				w.write('\n');
                                 continue;
                             }
 
                             String[] hashAndFile = line.split("\\s+");
                             if (hashAndFile.length < 2 || hashAndFile.length > 3) {
-                                w.write(line);
-                                w.write('\n');
                                 throw new BuildException("Bad line '" + line + "' in " + manifest, getLocation());
                             }
 
                             if (hashAndFile[1].equals(artifact)) {
-                                w.write(line);
-                                w.write('\n');
                                 //another hash
                                 if (hashAndFile.length != 3) {
                                     throw new BuildException("Bad line '" + line + "' in " + manifest, getLocation());
@@ -188,9 +175,6 @@ public class DownloadBinaries extends Task {
                             } else {
                                 //process previous artifact
                                 if (artifact != null) {
-                                    if (hashes.size() == 1) {
-                                        w.write("SHA-512 " + artifact + " ");
-                                    }
                                     if (MavenCoordinate.isMavenFile(artifact)) {
                                         MavenCoordinate mc = MavenCoordinate.fromGradleFormat(artifact);
                                         fillInFile(hashes, mc.toArtifactFilename(), manifest, () -> mavenFile(mc));
@@ -199,9 +183,6 @@ public class DownloadBinaries extends Task {
                                         fillInFile(hashes, artifact, manifest, () -> legacyDownload(legacyName));
                                     }
                                 }
-
-                                w.write(line);
-                                w.write('\n');
 
                                 //add new artifact
                                 artifact = hashAndFile[1];
@@ -219,10 +200,6 @@ public class DownloadBinaries extends Task {
 
                         //process last artifact
                         if (artifact != null) {
-                            if (hashes.size() == 1) {
-                                w.write("SHA-512 " + artifact + " ");
-                            }
-
                             if (MavenCoordinate.isMavenFile(artifact)) {
                                 MavenCoordinate mc = MavenCoordinate.fromGradleFormat(artifact);
                                 fillInFile(hashes, mc.toArtifactFilename(), manifest, () -> mavenFile(mc));
@@ -231,9 +208,6 @@ public class DownloadBinaries extends Task {
                                 fillInFile(hashes, artifact, manifest, () -> legacyDownload(legacyName));
                             }
                         }
-
-                        w.close();
-
                     }
                 } catch (IOException x) {
                     throw new BuildException("Could not open " + manifest + ": " + x, x, getLocation());
@@ -281,14 +255,6 @@ public class DownloadBinaries extends Task {
             }
 	    verifyHash(f, expectedHash, manifest);
             log("Have " + f + " with expected hash", Project.MSG_VERBOSE);
-
-            if (expectedHash.size() == 1) {
-                try {
-                    w.write(hash(f, "SHA-512"));
-                    w.write('\n');
-                } catch (IOException ioe) {
-                }
-            }
         } else {
             if (f.exists()) {
 		verifyHash(f, expectedHash, manifest);

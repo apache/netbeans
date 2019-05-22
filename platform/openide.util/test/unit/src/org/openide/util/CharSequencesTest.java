@@ -289,13 +289,13 @@ public class CharSequencesTest  {
         CharSequence englishText = CharSequences.create("English Text");
         assertTrue("English text can be compacted", CharSequences.isCompact(englishText));
 
-        CharSequence russianText = CharSequences.create("Русский Текст");
+        CharSequence russianText = CharSequences.create("\u0420\u0443\u0441\u0441\u043A\u0438\u0439 \u0422\u0435\u043A\u0441\u0442");
         assertTrue("Russian text can be compacted", CharSequences.isCompact(russianText));
 
-        CharSequence germanText = CharSequences.create("Schlüssel");
+        CharSequence germanText = CharSequences.create("Schl\u00FCssel");
         assertTrue("German text can be compacted", CharSequences.isCompact(germanText));
 
-        CharSequence czechText = CharSequences.create("Žluťoučký kůň");
+        CharSequence czechText = CharSequences.create("\u017Dlu\u0165ou\u010Dk\u00FD k\u016F\u0148");
         assertTrue("Czech text can be compacted", CharSequences.isCompact(czechText));
         // END: CharSequencesTest#createSample
     }
@@ -320,7 +320,7 @@ public class CharSequencesTest  {
     @Test
     public void indexOfSample() {
         // BEGIN: CharSequencesTest#indexOfSample
-        CharSequence horseCarriesPepsi = CharSequences.create("Kůň veze Pepsi.");
+        CharSequence horseCarriesPepsi = CharSequences.create("K\u016F\u0148 veze Pepsi.");
         int findPepsi = CharSequences.indexOf(horseCarriesPepsi, "Pepsi");
         assertEquals("Pepsi found in the sentence", 9, findPepsi);
         CharSequence pepsi = horseCarriesPepsi.subSequence(findPepsi, findPepsi + 5);

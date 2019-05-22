@@ -26,10 +26,8 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyEditor;
@@ -121,14 +119,6 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
         cbEffectColor.getAccessibleContext ().setAccessibleName (loc ("AN_Efects_Color"));
         cbEffectColor.getAccessibleContext ().setAccessibleDescription (loc ("AD_Efects_Color"));
         cbLanguage.addActionListener (this);
-        cbLanguage.addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent evt) {
-                if (evt.getKeyCode() == KeyEvent.VK_ENTER || evt.getKeyCode() == KeyEvent.VK_SPACE) {
-                    updateLanguageCombobox();
-                }
-            }
-        });
         lCategories.setSelectionMode (ListSelectionModel.SINGLE_SELECTION);
         lCategories.setVisibleRowCount (3);
         lCategories.setCellRenderer (new CategoryRenderer ());
@@ -369,9 +359,7 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
             updateData ();
 	} else
 	if (evt.getSource () == cbLanguage) {
-            if(evt.getModifiers() == InputEvent.BUTTON1_MASK) { // mouse clicked
-                updateLanguageCombobox();
-            }
+            updateLanguageCombobox();
 	} else
         if (evt.getSource () == bFont) {
             PropertyEditor pe = PropertyEditorManager.findEditor (Font.class);

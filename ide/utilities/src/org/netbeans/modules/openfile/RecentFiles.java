@@ -22,6 +22,7 @@ package org.netbeans.modules.openfile;
 import java.beans.BeanInfo;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -59,6 +60,8 @@ import org.openide.windows.WindowManager;
  */
 public final class RecentFiles {
 
+    static final String PROPERTY_RECENT_FILES = "RecentFiles";
+
     /** List of recently closed files */
     private static List<HistoryItem> history = new ArrayList<HistoryItem>();
     /** Request processor */
@@ -80,8 +83,17 @@ public final class RecentFiles {
             RecentFiles.class.getName());
 
     private static final String RECENT_FILE_KEY = "nb.recent.file.path"; // NOI18N
+    private static final PropertyChangeSupport PCH_SUPPORT = new PropertyChangeSupport(PROPERTY_RECENT_FILES);
 
     private RecentFiles() {
+    }
+
+    static void addPropertyChangeListener(PropertyChangeListener l) {
+        PCH_SUPPORT.addPropertyChangeListener(l);
+    }
+
+    static void removePropertyChangeListener(PropertyChangeListener l) {
+        PCH_SUPPORT.removePropertyChangeListener(l);
     }
 
     /** Starts to listen for recently closed files */
@@ -93,6 +105,7 @@ public final class RecentFiles {
                 List<HistoryItem> loaded = load();
                 synchronized (HISTORY_LOCK) {
                     history.addAll(0, loaded);
+                    PCH_SUPPORT.firePropertyChange(PROPERTY_RECENT_FILES, null, null);
                     if (windowRegistryListener == null) {
                         windowRegistryListener = new WindowRegistryL();
                         TopComponent.getRegistry().addPropertyChangeListener(
@@ -208,6 +221,7 @@ public final class RecentFiles {
         try {
             synchronized (HISTORY_LOCK) {
                 history.clear();
+                PCH_SUPPORT.firePropertyChange(PROPERTY_RECENT_FILES, null, null);
                 getPrefs().clear();
                 getPrefs().flush();
             }
@@ -251,6 +265,7 @@ public final class RecentFiles {
                     history.remove(i);
                 }
                 newItem.setIcon(findIconForPath(newItem.getPath()));
+                PCH_SUPPORT.firePropertyChange(PROPERTY_RECENT_FILES, null, null);
                 store();
             }
         }
@@ -268,6 +283,7 @@ public final class RecentFiles {
                         HistoryItem hItem = findHistoryItem(path);
                         if (hItem != null) {
                             history.remove(hItem);
+                            PCH_SUPPORT.firePropertyChange(PROPERTY_RECENT_FILES, null, null);
                         }
                         store();
                     }

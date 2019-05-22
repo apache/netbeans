@@ -60,7 +60,7 @@ public class DifferentCaseKindsFix implements ErrorRule<Void> {
         TreePath parentPath = treePath.getParentPath();
         List<? extends CaseTree> caseTrees = null;
         boolean flag = false;
-        if(parentPath.getLeaf().getKind().toString().equals("SWITCH_EXPRESSION")){
+        if(parentPath.getLeaf().getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)){
             caseTrees = TreeShims.getCases(parentPath.getLeaf());            
         } else {
             flag = true;
@@ -135,7 +135,7 @@ public class DifferentCaseKindsFix implements ErrorRule<Void> {
         protected void performRewrite(TransformationContext ctx) {
             TreePath tp = ctx.getPath();
             Tree switchBlock = tp.getParentPath().getLeaf();
-            Utilities.performRewriteRuleSwitch(ctx, tp, switchBlock);
+            Utilities.performRewriteRuleSwitch(ctx, tp, switchBlock, false);
         }
 
     } 

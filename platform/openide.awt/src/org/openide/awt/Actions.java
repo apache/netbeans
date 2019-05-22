@@ -274,8 +274,7 @@ public class Actions {
         Bridge b;
         if (action instanceof BooleanStateAction) {
             b = new BooleanButtonBridge(button, (BooleanStateAction)action);
-        }
-        if (action.getValue(Actions.ACTION_VALUE_TOGGLE) != null) {
+        } else if (action.getValue(Actions.ACTION_VALUE_TOGGLE) != null) {
             b = new BooleanButtonBridge(button, action);
         } else {
             b = new ButtonBridge(button, action);

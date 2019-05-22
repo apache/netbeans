@@ -22,7 +22,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
 /** Register multiple grammars.
- * 
+ *
  * @since 1.2
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
@@ -30,7 +30,7 @@ public @interface GrammarRegistrations {
 
     /**The grammar registration to delegate to.
      *
-     * @return grammar resitrations
+     * @return grammar registrations
      */
     public GrammarRegistration[] value();
 

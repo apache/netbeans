@@ -64,6 +64,21 @@
             </p>
         </description>
     </change>
+    <change id="injection_grammars" >
+        <api name="TextmateLexer"/>
+        <summary>Support for injection grammars added.</summary>
+        <version major="1" minor="3"/>
+        <date day="14" month="5" year="2019"/>
+        <author login="dbalek"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Support for injection grammars has been added. See the <a href="overview-summary.html#usecase-injection-grammar">use-cases</a> for more information.
+            </p>
+        </description>
+        <class name="GrammarInjectionRegistration" package="org.netbeans.modules.textmate.lexer.api"/>
+        <class name="GrammarInjectionRegistrations" package="org.netbeans.modules.textmate.lexer.api"/>
+    </change>
 </changes>
 
   <!-- Now the surrounding HTML text and document structure: -->

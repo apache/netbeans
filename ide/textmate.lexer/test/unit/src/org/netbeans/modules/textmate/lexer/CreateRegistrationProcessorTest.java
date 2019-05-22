@@ -25,6 +25,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Writer;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.textmate.lexer.api.GrammarInjectionRegistration;
 import org.netbeans.modules.textmate.lexer.api.GrammarRegistration;
 import org.openide.util.test.AnnotationProcessorTestUtils;
 
@@ -90,5 +91,49 @@ public class CreateRegistrationProcessorTest extends NbTestCase {
                          content.toString());
         }
     }
-    
+
+    public void testInjectionGrammarOK() throws Exception {
+        System.setProperty("executed", "false");
+        AnnotationProcessorTestUtils.makeSource(getWorkDir(),
+                                                "Test",
+                                                "import " + GrammarInjectionRegistration.class.getCanonicalName() + ";\n" +
+                                                "@GrammarInjectionRegistration(grammar=\"injection-grammar.json\", injectTo={\"test\"})\n" +
+                                                "public class Test {}\n");
+        try (Writer w = new FileWriter(new File(getWorkDir(), "injection-grammar.json"))) {
+            w.write("{ \"scopeName\": \"test.injection\", " +
+                    " \"patterns\": [\n" +
+                    "]}\n");
+        }
+
+        File outDir = new File(getWorkDir(), "out");
+
+        outDir.mkdirs();
+
+        assertTrue("Compiles OK",
+            AnnotationProcessorTestUtils.runJavac(getWorkDir(), null, outDir, null, System.err)
+            );
+
+        try (Reader r = new InputStreamReader(new FileInputStream(new File(new File(outDir, "META-INF"), "generated-layer.xml")), "UTF-8")) {
+            StringBuilder content = new StringBuilder();
+            int read;
+
+            while ((read = r.read()) != (-1)) {
+                content.append((char) read);
+            }
+
+            assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                         "<!DOCTYPE filesystem PUBLIC \"-//NetBeans//DTD Filesystem 1.2//EN\"\n" +
+                         "                            \"http://www.netbeans.org/dtds/filesystem-1_2.dtd\">\n" +
+                         "<filesystem>\n" +
+                         "    <folder name=\"Editors\">\n" +
+                         "        <file name=\"injection-grammar.json\" url=\"nbresloc:/injection-grammar.json\">\n" +
+                         "            <!--Test-->\n" +
+                         "            <attr name=\"textmate-grammar\" stringvalue=\"test.injection\"/>\n" +
+                         "            <attr name=\"inject-to\" stringvalue=\"test\"/>\n" +
+                         "        </file>\n" +
+                         "    </folder>\n" +
+                         "</filesystem>\n",
+                         content.toString());
+        }
+    }
 }

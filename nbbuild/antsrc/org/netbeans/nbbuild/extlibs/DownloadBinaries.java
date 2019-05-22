@@ -25,11 +25,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.math.BigInteger;
+import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -40,7 +41,9 @@ import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -125,6 +128,9 @@ public class DownloadBinaries extends Task {
         this.clean = clean;
     }
 
+
+
+    Writer w;
     @Override
     public void execute() throws BuildException {
         for (FileSet fs : manifests) {
@@ -134,28 +140,100 @@ public class DownloadBinaries extends Task {
                 File manifest = new File(basedir, include);
                 log("Scanning: " + manifest, Project.MSG_VERBOSE);
                 try {
+                    Map<String, String> hashes = new HashMap<>();
+                    String artifact = null;
+
                     try (InputStream is = new FileInputStream(manifest)) {
                         BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+			w = new FileWriter(new File(basedir, include+"-with512"));
                         String line;
                         while ((line = r.readLine()) != null) {
                             if (line.startsWith("#")) {
+				w.write(line);
+				w.write('\n');
                                 continue;
                             }
                             if (line.trim().length() == 0) {
+				w.write(line);
+				w.write('\n');
                                 continue;
                             }
-                            String[] hashAndFile = line.split(" ", 2);
-                            if (hashAndFile.length < 2) {
+
+                            String[] hashAndFile = line.split("\\s+");
+                            if (hashAndFile.length < 2 || hashAndFile.length > 3) {
+                                w.write(line);
+                                w.write('\n');
                                 throw new BuildException("Bad line '" + line + "' in " + manifest, getLocation());
                             }
 
-                            if (MavenCoordinate.isMavenFile(hashAndFile[1])) {
-                                MavenCoordinate mc = MavenCoordinate.fromGradleFormat(hashAndFile[1]);
-                                fillInFile(hashAndFile[0], mc.toArtifactFilename(), manifest, () -> mavenFile(mc));
+                            if (hashAndFile[1].equals(artifact)) {
+                                w.write(line);
+                                w.write('\n');
+                                //another hash
+                                if (hashAndFile.length != 3) {
+                                    throw new BuildException("Bad line '" + line + "' in " + manifest, getLocation());
+                                }
+                                // format is
+                                // $HASH_NAME $artifact $HASH_VALUE
+                                switch (hashAndFile[0].toUpperCase()) {
+                                    case "SHA-1":
+                                    case "SHA-512":
+                                    case "SHA-256":
+                                        //ok
+                                        break;
+                                    default:
+                                        throw new BuildException("Bad hash algorithm for '" + line + "' in " + manifest + ". Use SHA-1, SHA-256 or SHA-512", getLocation());
+                                }
+                                hashes.put(hashAndFile[0].toUpperCase(), hashAndFile[2]);
                             } else {
-                                fillInFile(hashAndFile[0], hashAndFile[1], manifest, () -> legacyDownload(hashAndFile[0] + "-" + hashAndFile[1]));
+                                //process previous artifact
+                                if (artifact != null) {
+                                    if (hashes.size() == 1) {
+                                        w.write("SHA-512 " + artifact + " ");
+                                    }
+                                    if (MavenCoordinate.isMavenFile(artifact)) {
+                                        MavenCoordinate mc = MavenCoordinate.fromGradleFormat(artifact);
+                                        fillInFile(hashes, mc.toArtifactFilename(), manifest, () -> mavenFile(mc));
+                                    } else {
+                                        String legacyName = hashes.get("SHA-1") + "-" + artifact;
+                                        fillInFile(hashes, artifact, manifest, () -> legacyDownload(legacyName));
+                                    }
+                                }
+
+                                w.write(line);
+                                w.write('\n');
+
+                                //add new artifact
+                                artifact = hashAndFile[1];
+                                hashes.clear();
+
+                                if (hashAndFile.length == 2) {
+                                    //old format
+                                    hashes.put("SHA-1", hashAndFile[0]);
+                                } else {
+                                    //new format
+                                    hashes.put(hashAndFile[0].toUpperCase(), hashAndFile[2]);
+                                }
                             }
                         }
+
+                        //process last artifact
+                        if (artifact != null) {
+                            if (hashes.size() == 1) {
+                                w.write("SHA-512 " + artifact + " ");
+                            }
+
+                            if (MavenCoordinate.isMavenFile(artifact)) {
+                                MavenCoordinate mc = MavenCoordinate.fromGradleFormat(artifact);
+                                fillInFile(hashes, mc.toArtifactFilename(), manifest, () -> mavenFile(mc));
+                            } else {
+                                String legacyName = hashes.get("SHA-1") + "-" + artifact;
+                                fillInFile(hashes, artifact, manifest, () -> legacyDownload(legacyName));
+                            }
+                        }
+
+                        w.close();
+
                     }
                 } catch (IOException x) {
                     throw new BuildException("Could not open " + manifest + ": " + x, x, getLocation());
@@ -177,12 +255,12 @@ public class DownloadBinaries extends Task {
         return downloadFromServer(u);
     }
 
-    private void fillInFile(String expectedHash, String baseName, File manifest, Downloader download) throws BuildException {
+    private void fillInFile(Map<String, String> expectedHash, String baseName, File manifest, Downloader download) throws BuildException {
         File f = new File(manifest.getParentFile(), baseName);
         if (!clean) {
-            if (!f.exists() || !hash(f).equals(expectedHash)) {
+            if (!f.exists() || !sameHash(f, expectedHash, manifest)) {
                 log("Creating " + f);
-                String cacheName = expectedHash + "-" + baseName;
+                String cacheName = expectedHash.get("SHA-1") + "-" + baseName;
                 if (cache != null) {
                     cache.mkdirs();
                     File cacheFile = new File(cache, cacheName);
@@ -201,35 +279,59 @@ public class DownloadBinaries extends Task {
                     doDownload(cacheName, f, expectedHash, download);
                 }
             }
-            String actualHash = hash(f);
-            if (!actualHash.equals(expectedHash)) {
-                throw new BuildException("File " + f + " requested by " + manifest + " to have hash " +
-                        expectedHash + " actually had hash " + actualHash, getLocation());
-            }
+	    verifyHash(f, expectedHash, manifest);
             log("Have " + f + " with expected hash", Project.MSG_VERBOSE);
+
+            if (expectedHash.size() == 1) {
+                try {
+                    w.write(hash(f, "SHA-512"));
+                    w.write('\n');
+                } catch (IOException ioe) {
+                }
+            }
         } else {
             if (f.exists()) {
-                String actualHash = hash(f);
-                if (!actualHash.equals(expectedHash)) {
-                    throw new BuildException("File " + f + " requested by " + manifest + " to have hash " +
-                            expectedHash + " actually had hash " + actualHash, getLocation());
-                }
+		verifyHash(f, expectedHash, manifest);
                 log("Deleting " + f);
                 f.delete();
             }
         }
     }
 
-    private void doDownload(String cacheName, File destination, String expectedHash, Downloader download) {
+    private void verifyHash(File f, Map<String, String> expectedHashes, File manifest) {
+        for (Map.Entry<String, String> e : expectedHashes.entrySet()) {
+            String actualHash = hash(f, e.getKey());
+            String expectedHash = e.getValue();
+            if (!actualHash.equals(expectedHash)) {
+                throw new BuildException("File " + f + " requested by " + manifest + " to have " + e.getKey() + " hash "
+                        + expectedHash + " actually had hash " + actualHash, getLocation());
+            }
+        }
+    }
+
+    private boolean sameHash(File f, Map<String, String> expectedHash, File manifest) {
+        try {
+            verifyHash(f, expectedHash, manifest);
+            return true;
+        } catch (BuildException be) {
+            //ignore
+            return false;
+        }
+    }
+
+    private void doDownload(String cacheName, File destination, Map<String, String> expectedHashes, Downloader download) {
         Throwable firstProblem = null;
         try {
             byte[] downloaded = download.download();
 
-            if (expectedHash != null) {
-                String actualHash = hash(new ByteArrayInputStream(downloaded));
-                if (!expectedHash.equals(actualHash)) {
-                    throw new BuildException("Download of " + cacheName + " produced content with hash "
-                            + actualHash + " when " + expectedHash + " was expected", getLocation());
+            if (expectedHashes != null) {
+                for (Map.Entry<String, String> e : expectedHashes.entrySet()) {
+                    String expectedHash = e.getValue();
+                    String actualHash = hash(new ByteArrayInputStream(downloaded), e.getKey());
+                    if (!expectedHash.equals(actualHash)) {
+                        throw new BuildException("Download of " + cacheName + " produced content with " + e.getKey() + " hash "
+                                + actualHash + " when " + expectedHash + " was expected", getLocation());
+                    }
                 }
             }
             OutputStream os = new FileOutputStream(destination);
@@ -355,20 +457,20 @@ public class DownloadBinaries extends Task {
         return conn[0];
     }
 
-    private String hash(File f) {
+    private String hash(File f, String alg) {
         try {
             try (FileInputStream is = new FileInputStream(f)) {
-                return hash(is);
+                return hash(is, alg);
             }
         } catch (IOException x) {
             throw new BuildException("Could not get hash for " + f + ": " + x, x, getLocation());
         }
     }
 
-    private String hash(InputStream is) throws IOException {
+    private String hash(InputStream is, String alg) throws IOException {
         MessageDigest digest;
         try {
-            digest = MessageDigest.getInstance("SHA-1");
+            digest = MessageDigest.getInstance(alg);
         } catch (NoSuchAlgorithmException x) {
             throw new BuildException(x, getLocation());
         }
@@ -377,7 +479,20 @@ public class DownloadBinaries extends Task {
         while ((r = is.read(buf)) != -1) {
             digest.update(buf, 0, r);
         }
-        return String.format("%040X", new BigInteger(1, digest.digest()));
+	
+        return toHex(digest.digest());
+    }
+
+    private String toHex(byte[] digest) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < digest.length; i++) {
+            String hex = Integer.toHexString(0xff & digest[i]);
+            if (hex.length() == 1) {
+                sb.append('0');
+            }
+            sb.append(hex);
+        }
+        return sb.toString().toUpperCase();
     }
 
     static class MavenCoordinate {

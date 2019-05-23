@@ -20,9 +20,9 @@
 set -e
 
 if [ -z "$GRAALVM" ]; then
-  VERSION=1.0.0-rc16
+  VERSION=19.0.0
   BASE=graalvm-ce-$VERSION
-  URL=https://github.com/oracle/graal/releases/download/vm-$VERSION/$BASE-linux-amd64.tar.gz
+  URL=https://github.com/oracle/graal/releases/download/vm-$VERSION/graalvm-ce-linux-amd64-$VERSION.tar.gz
   curl -L $URL --output graalvm.tgz
   tar fxz graalvm.tgz
   GRAALVM=`pwd`/$BASE

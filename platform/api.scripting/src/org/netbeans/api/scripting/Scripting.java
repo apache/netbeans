@@ -19,7 +19,12 @@
 package org.netbeans.api.scripting;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
+import javax.script.Bindings;
+import javax.script.ScriptContext;
+import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import org.netbeans.spi.scripting.EngineProvider;
@@ -72,7 +77,8 @@ public final class Scripting {
         EngineManager(List<ScriptEngineFactory> extra, ClassLoader loader) {
             super(loader);
             this.extra = extra;
-
+            final Bindings b = getBindings();
+            b.put("polyglot.js.allowHostAccess", true); // NOI18N
             for (ScriptEngineFactory f : extra) {
                 registerEngineName(f.getEngineName(), f);
                 for (String ext : f.getExtensions()) {
@@ -89,7 +95,107 @@ public final class Scripting {
             List<ScriptEngineFactory> all = new ArrayList<>();
             all.addAll(super.getEngineFactories());
             all.addAll(extra);
+            ListIterator<ScriptEngineFactory> it = all.listIterator();
+            while (it.hasNext()) {
+                ScriptEngineFactory f = it.next();
+                if (f.getNames().contains("Graal.js")) { // NOI18N
+                    it.set(new GraalJSWrapperFactory(f));
+                }
+            }
             return all;
+        }
+
+        @Override
+        public ScriptEngine getEngineByExtension(String extension) {
+            return postConfigure(super.getEngineByExtension(extension));
+        }
+
+        @Override
+        public ScriptEngine getEngineByMimeType(String mimeType) {
+            return postConfigure(super.getEngineByMimeType(mimeType));
+        }
+
+        @Override
+        public ScriptEngine getEngineByName(String shortName) {
+            return postConfigure(super.getEngineByName(shortName));
+        }
+
+        private ScriptEngine postConfigure(ScriptEngine eng) {
+            if (eng == null) {
+                return null;
+            }
+            if (eng.getFactory().getNames().contains("Graal.js")) { // NOI18N
+                eng.setBindings(getBindings(), ScriptContext.ENGINE_SCOPE);
+            }
+            return eng;
+        }
+
+        private final class GraalJSWrapperFactory implements ScriptEngineFactory {
+            private final ScriptEngineFactory original;
+
+            GraalJSWrapperFactory(ScriptEngineFactory original) {
+                this.original = original;
+            }
+
+            @Override
+            public String getEngineName() {
+                return original.getEngineName();
+            }
+
+            @Override
+            public String getEngineVersion() {
+                return original.getEngineVersion();
+            }
+
+            @Override
+            public List<String> getExtensions() {
+                return original.getExtensions();
+            }
+
+            @Override
+            public List<String> getMimeTypes() {
+                return original.getMimeTypes();
+            }
+
+            @Override
+            public List<String> getNames() {
+                return original.getNames();
+            }
+
+            @Override
+            public String getLanguageName() {
+                return original.getLanguageName();
+            }
+
+            @Override
+            public String getLanguageVersion() {
+                return original.getLanguageVersion();
+            }
+
+            @Override
+            public Object getParameter(String key) {
+                return original.getParameter(key);
+            }
+
+            @Override
+            public String getMethodCallSyntax(String obj, String m, String... args) {
+                return original.getMethodCallSyntax(obj, m, args);
+            }
+
+            @Override
+            public String getOutputStatement(String toDisplay) {
+                return original.getOutputStatement(toDisplay);
+            }
+
+            @Override
+            public String getProgram(String... statements) {
+                return original.getProgram(statements);
+            }
+
+            @Override
+            public ScriptEngine getScriptEngine() {
+                return postConfigure(original.getScriptEngine());
+            }
         }
     }
 }

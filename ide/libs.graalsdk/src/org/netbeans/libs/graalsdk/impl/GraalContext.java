@@ -29,6 +29,8 @@ import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.SimpleBindings;
 import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.HostAccess;
+import org.graalvm.polyglot.PolyglotAccess;
 import org.openide.util.io.ReaderInputStream;
 
 final class GraalContext implements ScriptContext {
@@ -38,6 +40,14 @@ final class GraalContext implements ScriptContext {
     private Reader reader;
     private SimpleBindings bindings;
     private boolean allowAllAccess;
+
+    private static final HostAccess NON_OBJECT_PUBLIC = HostAccess.newBuilder().
+            allowPublicAccess(true).
+            allowArrayAccess(true).
+            allowListAccess(true).
+            allowAllImplementations(true).
+            denyAccess(Object.class, false).
+            build();
 
     synchronized final Context ctx() {
         if (ctx == null) {
@@ -51,8 +61,12 @@ final class GraalContext implements ScriptContext {
                     throw raise(RuntimeException.class, ex);
                 }
             }
+            b.allowPolyglotAccess(PolyglotAccess.ALL);
             if (allowAllAccess) {
+                b.allowHostAccess(HostAccess.ALL);
                 b.allowAllAccess(true);
+            } else {
+                b.allowHostAccess(NON_OBJECT_PUBLIC);
             }
             ctx = b.build();
         }

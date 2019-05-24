@@ -23,12 +23,19 @@ import com.sun.jdi.VirtualMachine;
 import com.sun.jdi.connect.IllegalConnectorArgumentsException;
 import com.sun.jdi.event.Event;
 import com.sun.jdi.request.EventRequest;
+import java.io.File;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
-
+import org.netbeans.api.extexecution.ExecutionDescriptor;
 import java.util.logging.Logger;
 import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.spi.debugger.ContextProvider;
@@ -42,10 +49,13 @@ import org.netbeans.modules.debugger.jpda.util.Operator;
 import org.netbeans.modules.debugger.jpda.util.Executor;
 import org.netbeans.spi.debugger.ActionsProvider;
 import org.netbeans.spi.debugger.ActionsProviderListener;
-
+import org.netbeans.api.extexecution.ExecutionService;
+import org.netbeans.modules.java.openjdk.jtreg.SingleJavaSourceDebugActionProvider;
+import org.netbeans.spi.project.ActionProvider;
+import org.openide.filesystems.FileObject;
 import org.openide.util.Cancellable;
 import org.openide.util.Exceptions;
-
+import org.openide.util.Lookup;
 
 /**
 *
@@ -154,12 +164,48 @@ public class StartActionProvider extends ActionsProvider implements Cancellable 
         
     }
     
+    public RunProcess invokeActionHelper (int port) {
+        List<String> commandsList = new ArrayList<>();
+        if (org.openide.util.Utilities.isUnix()) {
+            commandsList.add("bash");
+            commandsList.add("-c");
+        }
+        ActionProvider dap = null;
+        for (ActionProvider ap : Lookup.getDefault().lookupAll(ActionProvider.class)) {
+            if (Arrays.asList(ap.getSupportedActions()).contains("debug.single") && ap.isActionEnabled("debug.single", null)) {
+                dap = ap;
+                break;
+            }
+        }
+        if (dap instanceof SingleJavaSourceDebugActionProvider) {
+            SingleJavaSourceDebugActionProvider debugActionProvider = (SingleJavaSourceDebugActionProvider) dap;
+            FileObject debugFile = debugActionProvider.getFileObject();
+            File javaPathFile = new File(new File(new File(System.getProperty("java.home")), "bin"), "java");
+            String javaPath = "\"" + javaPathFile.getAbsolutePath() + "\"";
+            commandsList.add(javaPath + " -agentlib:jdwp=transport=dt_socket,suspend=y,server=n,address=localhost:" + port + " -classpath \"" + debugFile.getParent().getPath() + "\" " + debugFile.getName());
+            return new RunProcess(commandsList);
+        }
+        return null;
+    }
+    
     private void doStartDebugger(AbstractDICookie cookie) {
         logger.fine("S StartActionProvider." +
                     "doStartDebugger");
         Throwable throwable = null;
         try {
             debuggerImpl.setAttaching(cookie);
+            
+            if (cookie instanceof ListeningDICookie) {
+                ListeningDICookie ldc = (ListeningDICookie) cookie;
+                ExecutionDescriptor descriptor = new ExecutionDescriptor().controllable(true).frontWindow(true).
+                        preExecution(null).postExecution(null);
+                RunProcess process = invokeActionHelper(ldc.getPortNumber());
+                ExecutionService exeService = ExecutionService.newService(
+                        process,
+                        descriptor, "Debugging Java File");
+                Future<Integer> exitCode = exeService.run();
+            }
+            
             VirtualMachine virtualMachine = cookie.getVirtualMachine ();
             debuggerImpl.setAttaching(null);
             VirtualMachineWrapper.setDebugTraceMode (virtualMachine, jdiTrace);
@@ -197,6 +243,7 @@ public class StartActionProvider extends ActionsProvider implements Cancellable 
 
             logger.fine("S StartActionProvider." +
                         "doStartDebugger end: success");
+//         
         } catch (InterruptedException iex) {
             throwable = iex;
         } catch (IOException ioex) {
@@ -303,4 +350,57 @@ public class StartActionProvider extends ActionsProvider implements Cancellable 
             return startingThread == null;
         }
     }
+}
+class RunProcess implements Callable<Process> {
+    
+    private static final Logger LOG = Logger.getLogger(RunProcess.class.getName());
+
+    private final String dirPath;
+    private final List<String> commandsList;
+    private InputStream is;
+    private Process p;
+
+    public RunProcess(String command, String dirPath) {
+        this.dirPath = dirPath;
+        commandsList = new ArrayList<>();
+        commandsList.add(command);
+        setupProcess();
+    }
+
+    public RunProcess(String command) {
+        commandsList = new ArrayList<>();
+        commandsList.add(command);
+        this.dirPath = System.getProperty("user.home");
+        setupProcess();
+    }
+
+    public RunProcess(List<String> commandsList) {
+        this.commandsList = commandsList;
+        this.dirPath = System.getProperty("user.home");
+        setupProcess();
+    }
+
+    public void setupProcess() {
+        try {
+            ProcessBuilder runFileProcessBuilder = new ProcessBuilder(commandsList);
+            runFileProcessBuilder.directory(new File(dirPath));
+            runFileProcessBuilder.redirectErrorStream(true);
+            p = runFileProcessBuilder.start();
+            is = p.getInputStream();
+        } catch (IOException ex) {
+            LOG.log(
+                    Level.WARNING,
+                    "Could not get InputStream of Run Process"); //NOI18N
+        }
+    }
+
+    public InputStream getInputStream() {
+        return is;
+    }
+
+    @Override
+    public Process call() throws Exception {
+        return p;
+    }
+    
 }

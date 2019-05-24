@@ -340,7 +340,9 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <public-packages/>
+            <public-packages>
+                <package>org.netbeans.modules.java.openjdk.jtreg</package>
+            </public-packages>
         </data>
     </configuration>
 </project>

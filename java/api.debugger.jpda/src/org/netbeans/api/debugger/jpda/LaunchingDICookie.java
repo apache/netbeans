@@ -124,11 +124,11 @@ public final class LaunchingDICookie extends AbstractDICookie {
         // TODO: This code is likely wrong, we need to run debuggee on JDK that
         //       is set on the project.
         // XXX: This method is likely not called from anywhere.
-        //      But it's an impl. of API method JPDADebugger.launch().
-        String commandLine = System.getProperty ("java.home") + 
-            "\\bin\\java -agentlib:jdwp=transport=" +
+        //      But it's an impl. of API m  ethod JPDADebugger.launch().
+        String commandLine = "\"" + System.getProperty ("java.home") + 
+            "\\bin\\java\"" + " -agentlib:jdwp=transport=" +
             getTransportName () + 
-            ",address=name,suspend=" + 
+            ",address=name,server=y,suspend=" + 
             (suspend ? "y" : "n") +
             " -classpath \"" + 
             classPath + 

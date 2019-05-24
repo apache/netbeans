@@ -26,12 +26,14 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -59,7 +61,7 @@ public final class ConfigureProxy extends Task {
             URI[] connectedVia = { null };
             URLConnection connect = openConnection(this, connectTo, connectedVia);
             if (connect == null) {
-                throw new BuildException("Cannot connect to " + connectedVia);
+                throw new BuildException("Cannot connect to " + connectTo);
             }
 
             if (connectedVia[0] != null) {
@@ -69,6 +71,10 @@ public final class ConfigureProxy extends Task {
                 final int port = connectedVia[0].getPort();
                 log(String.format("Setting %s to %d", portProperty, port), Project.MSG_INFO);
                 getProject().setUserProperty(portProperty, "" + port);
+            } else {
+                log(String.format("Resetting %s to empty string", hostProperty), Project.MSG_INFO);
+                getProject().setUserProperty(hostProperty, "");
+                getProject().setUserProperty(portProperty, "80");
             }
         } catch (IOException ex) {
             throw new BuildException(ex);
@@ -77,6 +83,7 @@ public final class ConfigureProxy extends Task {
 
     static URLConnection openConnection(Task task, final URL url, URI[] connectedVia) throws IOException {
         final URLConnection[] conn = { null };
+        final List<Exception> errs = new CopyOnWriteArrayList<>();
         final CountDownLatch connected = new CountDownLatch(1);
         ExecutorService connectors = Executors.newFixedThreadPool(3);
         connectors.submit(() -> {
@@ -94,7 +101,7 @@ public final class ConfigureProxy extends Task {
                         connectedVia[0] = uri;
                     }
                 } catch (IOException | URISyntaxException ex) {
-                    task.log(ex, Project.MSG_ERR);
+                    errs.add(ex);
                 }
             }
         });
@@ -113,7 +120,7 @@ public final class ConfigureProxy extends Task {
                         connectedVia[0] = uri;
                     }
                 } catch (IOException | URISyntaxException ex) {
-                    task.log(ex, Project.MSG_ERR);
+                    errs.add(ex);
                 }
             }
         });
@@ -124,7 +131,7 @@ public final class ConfigureProxy extends Task {
                 conn[0] = test;
                 connected.countDown();
             } catch (IOException ex) {
-                task.log(ex, Project.MSG_ERR);
+                errs.add(ex);
             }
         });
         try {
@@ -132,6 +139,9 @@ public final class ConfigureProxy extends Task {
         } catch (InterruptedException ex) {
         }
         if (conn[0] == null) {
+            for (Exception ex : errs) {
+                task.log(ex, Project.MSG_ERR);
+            }
             throw new IOException("Cannot connect to " + url);
         }
         return conn[0];

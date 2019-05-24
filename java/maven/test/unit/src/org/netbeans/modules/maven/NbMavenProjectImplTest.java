@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.maven;
 
+import java.io.IOException;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.Collections;
@@ -146,21 +147,53 @@ public class NbMavenProjectImplTest extends NbTestCase {
     public void testMavenConfig() throws Exception {
         TestFileUtils.writeFile(wd, "pom.xml", "<project><modelVersion>4.0.0</modelVersion>"
                 + "<groupId>test</groupId><artifactId>prj</artifactId><version>1.0</version>"
-                + "<properties><java>1.5</java></properties>"
+                + "<properties><java>1.5</java><testJava>1.5</testJava></properties>"
                 + "<build><plugins><plugin><artifactId>maven-compiler-plugin</artifactId><version>2.1</version>"
-                + "<configuration><source>${java}</source></configuration></plugin></plugins></build>"
-                + "<profiles><profile><id>new</id><properties><java>1.6</java></properties></profile></profiles>"
+                + "<configuration><source>${java}</source><testSource>${testJava}</testSource></configuration></plugin></plugins></build>"
+                + "<profiles>"
+                + "<profile><id>new</id><properties><java>1.6</java></properties></profile>"
+                + "<profile><id>testNew</id><properties><testJava>1.6</testJava></properties></profile>"
+                + "<profile><id>java8</id><activation><property><name>java8</name><value>true</value></property></activation><properties><java>1.8</java></properties></profile>"
+                + "</profiles>"
                 + "</project>");
         FileObject source = TestFileUtils.writeFile(wd, "src/main/java/p/C.java", "package p; class C {}");
+        FileObject test = TestFileUtils.writeFile(wd, "src/test/java/p/CTest.java", "package p; class CTest {}");
         ((NbMavenProjectImpl) ProjectManager.getDefault().findProject(wd)).attachUpdater();
         SourceLevelQuery.Result slqr = SourceLevelQuery.getSourceLevel2(source);
+        SourceLevelQuery.Result testSlqr = SourceLevelQuery.getSourceLevel2(test);
         assertEquals("1.5", slqr.getSourceLevel());
-        TestFileUtils.writeFile(wd, ".mvn/maven.config", "-Pnew");
+        assertEquals("1.5", testSlqr.getSourceLevel());
+        writeMavenConfig("-Pnew");
         assertEquals("1.6", slqr.getSourceLevel());
+        writeMavenConfig("-P new");
+        assertEquals("1.6", slqr.getSourceLevel());
+        writeMavenConfig("--activate-profiles new");
+        assertEquals("1.6", slqr.getSourceLevel());
+        assertEquals("1.5", testSlqr.getSourceLevel());
+        writeMavenConfig("--activate-profiles=testNew");
+        assertEquals("1.5", slqr.getSourceLevel());
+        assertEquals("1.6", testSlqr.getSourceLevel());
+        writeMavenConfig("--activate-profiles new,testNew");
+        assertEquals("1.6", slqr.getSourceLevel());
+        assertEquals("1.6", testSlqr.getSourceLevel());
         wd.getFileObject(".mvn/maven.config").delete();
         assertEquals("1.5", slqr.getSourceLevel());
-        TestFileUtils.writeFile(wd, ".mvn/maven.config", "-Djava=1.7");
+        assertEquals("1.5", testSlqr.getSourceLevel());
+        writeMavenConfig("-Djava=1.7");
         assertEquals("1.7", slqr.getSourceLevel());
+        writeMavenConfig("-D java=1.7");
+        assertEquals("1.7", slqr.getSourceLevel());
+        writeMavenConfig("--define java=1.6");
+        assertEquals("1.6", slqr.getSourceLevel());
+        writeMavenConfig("-Djava8");
+        assertEquals("1.8", slqr.getSourceLevel());
+        writeMavenConfig("-Djava8\n-PtestNew\n");
+        assertEquals("1.8", slqr.getSourceLevel());
+        assertEquals("1.6", testSlqr.getSourceLevel());
+    }
+    private void writeMavenConfig(String text) throws IOException, InterruptedException {
+        // Need the touch call, since NbMavenProjectImpl.Updater checks timestamps.
+        TestFileUtils.touch(TestFileUtils.writeFile(wd, ".mvn/maven.config", text), null);
     }
 
 }

@@ -24,12 +24,15 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.function.BiConsumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
@@ -148,15 +151,24 @@ public final class MavenProjectCache {
         MavenExecutionResult res = null;
         try {
             FileObject mavenConfig = projectDir.getFileObject(".mvn/maven.config");
-            String[] mavenConfigOpts = {};
+            List<String> mavenConfigOpts = Collections.emptyList();
             if (mavenConfig != null && mavenConfig.isData()) {
-                mavenConfigOpts = mavenConfig.asText().split("\\s+");
+                mavenConfigOpts = Arrays.asList(mavenConfig.asText().split("\\s+"));
             }
             final MavenExecutionRequest req = projectEmbedder.createMavenExecutionRequest();
             req.addActiveProfiles(active.getActivatedProfiles());
-            for (String opt : mavenConfigOpts) {
-                if (opt.startsWith("-P")) {
-                    req.addActiveProfile(opt.substring(2));
+            BiConsumer<String, String> addActiveProfiles = (opt, prefix) -> req.addActiveProfiles(Arrays.asList(opt.substring(prefix.length()).split(",")));
+            Iterator<String> optIt = mavenConfigOpts.iterator();
+            while (optIt.hasNext()) {
+                String opt = optIt.next();
+                // Could try to write/integrate a more general option parser here,
+                // but some options like -amd anyway violate GNU style.
+                if (opt.equals("-P") || opt.equals("--activate-profiles")) {
+                    addActiveProfiles.accept(optIt.next(), "");
+                } else if (opt.startsWith("-P")) {
+                    addActiveProfiles.accept(opt, "-P");
+                } else if (opt.startsWith("--activate-profiles=")) {
+                    addActiveProfiles.accept(opt, "--activate-profiles=");
                 }
             }
 
@@ -172,12 +184,24 @@ public final class MavenProjectCache {
             req.setOffline(true);
             //#238800 important to merge, not replace
             Properties uprops = req.getUserProperties();
-            for (String opt : mavenConfigOpts) {
-                if (opt.startsWith("-D")) {
-                    int equals = opt.indexOf('=');
-                    if (equals != -1) {
-                        uprops.setProperty(opt.substring(2, equals), opt.substring(equals + 1));
-                    }
+            BiConsumer<String, String> setProperty = (opt, prefix) -> {
+                String value = opt.substring(prefix.length());
+                int equals = value.indexOf('=');
+                if (equals != -1) {
+                    uprops.setProperty(value.substring(0, equals), value.substring(equals + 1));
+                } else {
+                    uprops.setProperty(value, "true");
+                }
+            };
+            optIt = mavenConfigOpts.iterator();
+            while (optIt.hasNext()) {
+                String opt = optIt.next();
+                if (opt.equals("-D") || opt.equals("--define")) {
+                    setProperty.accept(optIt.next(), "");
+                } else if (opt.startsWith("-D")) {
+                    setProperty.accept(opt, "-D");
+                } else if (opt.startsWith("--define=")) {
+                    setProperty.accept(opt, "--define=");
                 }
             }
             uprops.putAll(createUserPropsForProjectLoading(active.getProperties()));

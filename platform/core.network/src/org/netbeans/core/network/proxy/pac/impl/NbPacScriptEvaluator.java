@@ -400,6 +400,8 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
     }
 
     private boolean isJsFunctionAvailable(ScriptEngine eng, String functionName, boolean doDeepTest) {
+        // We want to test if the function is there, but without actually
+        // invoking it.
         try {
             Object typeofCheck = eng.eval("(function(name) { return typeof this[name]; })");
             Object type = ((Invocable) eng).invokeMethod(typeofCheck, "call", null, functionName);

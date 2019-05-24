@@ -48,15 +48,6 @@ public class OQLEngineTest {
     public OQLEngineTest() {
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        System.setProperty("polyglot.js.nashorn-compat", "true");
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
     @Before
     public void setUp() throws IOException, URISyntaxException {
         URL url = getClass().getResource("small_heap.bin");

@@ -37,10 +37,6 @@ import org.junit.runners.Parameterized;
 
 @RunWith(Parameterized.class)
 public class JavaScriptEnginesTest {
-    static {
-        System.setProperty("polyglot.js.nashorn-compat", "true");
-    }
-
     @Parameterized.Parameters(name = "{0}")
     public static Object[][] engines() {
         List<Object[]> arr = new ArrayList<>();

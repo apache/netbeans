@@ -41,13 +41,15 @@ final class GraalContext implements ScriptContext {
     private SimpleBindings bindings;
     private boolean allowAllAccess;
 
-    private static final HostAccess NON_OBJECT_PUBLIC = HostAccess.newBuilder().
+    // BEGIN: org.netbeans.libs.graalsdk.impl.GraalContext#SANDBOX
+    private static final HostAccess SANDBOX = HostAccess.newBuilder().
             allowPublicAccess(true).
             allowArrayAccess(true).
             allowListAccess(true).
             allowAllImplementations(true).
             denyAccess(Object.class, false).
             build();
+    // END: org.netbeans.libs.graalsdk.impl.GraalContext#SANDBOX
 
     synchronized final Context ctx() {
         if (ctx == null) {
@@ -66,7 +68,7 @@ final class GraalContext implements ScriptContext {
                 b.allowHostAccess(HostAccess.ALL);
                 b.allowAllAccess(true);
             } else {
-                b.allowHostAccess(NON_OBJECT_PUBLIC);
+                b.allowHostAccess(SANDBOX);
             }
             ctx = b.build();
         }

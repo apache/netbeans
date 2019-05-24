@@ -214,9 +214,11 @@ public class ScriptingTutorial extends NbTestCase {
     }
 
     public void callRFunctionFromJava() throws Exception {
+        // BEGIN: org.netbeans.libs.graalsdk.ScriptingTutorial#allowAllAccess
         ScriptEngine rEngine = Scripting.createManager().getEngineByMimeType("application/x-r");
         // FastR currently needs access to native libraries:
         rEngine.getContext().setAttribute("allowAllAccess", true, ScriptContext.GLOBAL_SCOPE);
+        // END: org.netbeans.libs.graalsdk.ScriptingTutorial#allowAllAccess
 
         final Object funcRaw = rEngine.eval("qbinom");
         BinomQuantile func = ((Invocable) rEngine).getInterface(funcRaw, BinomQuantile.class);

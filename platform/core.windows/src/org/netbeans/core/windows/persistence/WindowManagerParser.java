@@ -98,9 +98,9 @@ public class WindowManagerParser {
         }
     }
     
-   /** Extract all ModeConfigs in XML.
+    /** Extract all ModeConfigs in XML.
      *
-     * @param wmc
+     * @param wmc where all knowledge of the ModeConfigs is kept
      * @return All the known modes in the XML configuration that they would
      * be saved to disk as.
      * @throws IOException
@@ -718,8 +718,8 @@ public class WindowManagerParser {
      * Cleans obsolete ModeParsers and creates missing ModeParsers, populating
      * modeParserMap
      *
-     * @param wmc
-     * @return
+     * @param wmc where all knowledge of the ModeConfigs is kept
+     * @return named index of Mode configurations
      */
     private Map<String, ModeConfig> gatherModeConfigs(WindowManagerConfig wmc) {
         //Step 1: Clean obsolete mode parsers
@@ -751,7 +751,7 @@ public class WindowManagerParser {
         }
         return modeConfigMap;
     }
-        
+
     private void writeGroups(WindowManagerConfig wmc) throws IOException {
         if (DEBUG) Debug.log(WindowManagerParser.class, "writeGroups ENTER");
         //Step 1: Clean obsolete group parsers

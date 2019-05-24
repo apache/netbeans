@@ -1595,7 +1595,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
             if (IDESettings.isGui()) {
                 // running in GUI mode, but
                 if (!WindowManagerImpl.getInstance().isVisible()) {
-                        // window manager isn't yet visible => exit for now
+                    // window manager isn't yet visible => exit for now
                     return;
                 }
             }

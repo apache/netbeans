@@ -73,6 +73,10 @@ public class JavaCompletionTask112FeaturesTest extends CompletionTestBase {
         performTest("RuleSwitchWithMultiEnumValues", 1024, null, "ruleSwitchEnumCaseValues.pass");
     }
 
+    public void testRuleSwitchAutoCompleteCaseValue() throws Exception {
+        performTest("RuleSwitchAutoCompleteCaseValue", 1013, "ca", "ruleSwitchAutoCompleteCaseValues.pass");
+    }
+
     public void noop() {
     }
 

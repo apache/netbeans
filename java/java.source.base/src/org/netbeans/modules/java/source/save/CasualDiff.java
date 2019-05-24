@@ -5612,7 +5612,7 @@ public class CasualDiff {
                   }
                   break;
               }
-              if(oldT.getKind().toString().equals("SWITCH_EXPRESSION")){
+              if(oldT.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)){
                   retVal = diffSwitchExpression(oldT, newT, elementBounds);
                   break;
               }

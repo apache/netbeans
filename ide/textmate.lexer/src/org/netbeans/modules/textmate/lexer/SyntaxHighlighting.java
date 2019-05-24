@@ -675,26 +675,30 @@ implements TokenHierarchyListener, ChangeListener {
             List<String> categories = (List<String>) token.getProperty("categories");
             
             for (String category : categories) {
-                attrs.add(scopeName2Coloring.computeIfAbsent(category, c -> {
-                    String cat = category;
+                if (category.startsWith("meta.embedded")) {
+                    attrs.clear();
+                } else {
+                    attrs.add(scopeName2Coloring.computeIfAbsent(category, c -> {
+                        String cat = category;
 
-                    while (true) {
-                        AttributeSet currentAttrs = fcs.getTokenFontColors(cat);
+                        while (true) {
+                            AttributeSet currentAttrs = fcs.getTokenFontColors(cat);
 
-                        if (currentAttrs != null) {
-                            return currentAttrs;
+                            if (currentAttrs != null) {
+                                return currentAttrs;
+                            }
+
+                            int dot = cat.lastIndexOf('.');
+
+                            if (dot == (-1))
+                                break;
+
+                            cat = cat.substring(0, dot);
                         }
 
-                        int dot = cat.lastIndexOf('.');
-
-                        if (dot == (-1))
-                            break;
-
-                        cat = cat.substring(0, dot);
-                    }
-
-                    return SimpleAttributeSet.EMPTY;
-                }));
+                        return SimpleAttributeSet.EMPTY;
+                    }));
+                }
             }
 
             return AttributesUtilities.createComposite(attrs.toArray(new AttributeSet[0]));

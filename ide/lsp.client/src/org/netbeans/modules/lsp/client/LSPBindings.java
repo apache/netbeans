@@ -35,6 +35,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.eclipse.lsp4j.ClientCapabilities;
+import org.eclipse.lsp4j.DocumentSymbolCapabilities;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.TextDocumentClientCapabilities;
@@ -164,7 +165,11 @@ public class LSPBindings {
        initParams.setRootUri(Utils.toURI(root));
        initParams.setRootPath(FileUtil.toFile(root).getAbsolutePath()); //some servers still expect root path
        initParams.setProcessId(0);
-       initParams.setCapabilities(new ClientCapabilities(new WorkspaceClientCapabilities(), new TextDocumentClientCapabilities(), null));
+       TextDocumentClientCapabilities tdcc = new TextDocumentClientCapabilities();
+       DocumentSymbolCapabilities dsc = new DocumentSymbolCapabilities();
+       dsc.setHierarchicalDocumentSymbolSupport(true);
+       tdcc.setDocumentSymbol(dsc);
+       initParams.setCapabilities(new ClientCapabilities(new WorkspaceClientCapabilities(), tdcc, null));
        return server.initialize(initParams).get();
     }
 

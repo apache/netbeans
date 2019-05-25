@@ -53,6 +53,7 @@ import com.sun.tools.javac.util.Options;
 //import com.sun.tools.javac.util.Position.LineMapImpl;
 import java.io.IOException;
 import java.nio.CharBuffer;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +65,7 @@ import javax.tools.JavaFileObject;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.lib.nbjavac.services.CancelService;
+import org.netbeans.lib.nbjavac.services.NBLog;
 import org.netbeans.lib.nbjavac.services.NBParserFactory;
 import org.netbeans.modules.*;
 import org.netbeans.modules.java.source.CompilationInfoAccessor;
@@ -89,6 +91,7 @@ public class VanillaPartialReparser implements PartialReparser {
             final Snapshot snapshot,
             final MethodTree orig,
             final String newBody) throws IOException {
+        System.err.println("reparse");
         assert ci != null;
         final FileObject fo = ci.getFileObject();
         if (LOGGER.isLoggable(Level.FINER)) {
@@ -142,8 +145,8 @@ public class VanillaPartialReparser implements PartialReparser {
 //                treeLoader.startPartialReparse();
 //            }
             try {
-                final Log l = Log.instance(ctx);
-//                l.startPartialReparse();
+                final NBLog l = NBLog.instance(ctx);
+                l.startPartialReparse(cu.getSourceFile());
                 final JavaFileObject prevLogged = l.useSource(cu.getSourceFile());
                 JCTree.JCBlock block;
                 try {
@@ -154,8 +157,6 @@ public class VanillaPartialReparser implements PartialReparser {
 //                    Map<JCTree,LazyDocCommentTable.Entry> docComments = new HashMap<>();
                     block = reparseMethodBody(ctx, cu, orig, newBody + " ", firstInner/*, docComments*/);
                     final EndPosTable endPos = ((JCTree.JCCompilationUnit)cu).endPositions;
-                    final TranslatePositionsVisitor tpvBody = new TranslatePositionsVisitor(null, endPos, ((JCTree.JCBlock)orig.getBody()).pos);
-                    tpvBody.scan(block, null);
                     LOGGER.log(Level.FINER, "Reparsed method in: {0}", fo);     //NOI18N
                     if (block == null) {
                         LOGGER.log(
@@ -225,7 +226,7 @@ public class VanillaPartialReparser implements PartialReparser {
 
                     ((CompilationInfoImpl.DiagnosticListenerImpl)dl).endPartialReparse (delta);
                 } finally {
-//                    l.endPartialReparse();
+                    l.endPartialReparse(cu.getSourceFile());
                     l.useSource(prevLogged);
                 }
                 ci.update(snapshot);
@@ -248,12 +249,20 @@ public class VanillaPartialReparser implements PartialReparser {
             }
             return false;
         }
+        System.err.println("success!");
         return true;
     }
 
     public JCTree.JCBlock reparseMethodBody(Context ctx, CompilationUnitTree topLevel, MethodTree methodToReparse, String newBodyText, int annonIndex/*,
             final Map<? super JCTree,? super LazyDocCommentTable.Entry> docComments*/) {
-        CharBuffer buf = CharBuffer.wrap((newBodyText+"\u0000").toCharArray(), 0, newBodyText.length());
+        int startPos = ((JCTree.JCBlock)methodToReparse.getBody()).pos;
+        char[] body = new char[startPos + newBodyText.length() + 1];
+        Arrays.fill(body, 0, startPos, ' ');
+        for (int i = 0; i < newBodyText.length(); i++) {
+            body[startPos + i] = newBodyText.charAt(i);
+        }
+        body[startPos + newBodyText.length()] = '\u0000';
+        CharBuffer buf = CharBuffer.wrap(body, 0, body.length - 1);
         com.sun.tools.javac.parser.JavacParser parser = newParser(ctx, buf, ((JCTree.JCBlock)methodToReparse.getBody()).pos, ((JCTree.JCCompilationUnit)topLevel).endPositions);
         final JCTree.JCStatement statement = parser.parseStatement();
         NBParserFactory.assignAnonymousClassIndices(Names.instance(ctx), statement, Names.instance(ctx).empty, annonIndex);

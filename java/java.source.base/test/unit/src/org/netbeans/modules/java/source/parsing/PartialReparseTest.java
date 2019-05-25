@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import javax.swing.JEditorPane;
 import javax.swing.text.Document;
@@ -67,7 +68,7 @@ public class PartialReparseTest extends NbTestCase {
         SourceUtilsTestUtil.prepareTest(new String[0], new Object[0]);
         // ensure JavaKit is present, so that NbEditorDocument is eventually created.
         // it handles PositionRefs differently than PlainDocument/PlainEditorKit.
-        MockMimeLookup.setInstances(MimePath.get("text/x-java"), 
+        MockMimeLookup.setInstances(MimePath.get("text/x-java"),
                 new Reindenter.Factory(), new JavaKit());
 //        dataDir = SourceUtilsTestUtil.makeScratchDir(this);
 //        FileObject dataTargetPackage = FileUtil.createFolder(dataDir, getSourcePckg());
@@ -87,15 +88,15 @@ public class PartialReparseTest extends NbTestCase {
 //            }
 //        };
         SharedClassObject loader = JavaDataLoader.findObject(JavaDataLoader.class, true);
-        
+
         SourceUtilsTestUtil.prepareTest(
                 new String[] {
-                    "org/netbeans/modules/java/project/ui/layer.xml", 
+                    "org/netbeans/modules/java/project/ui/layer.xml",
                     "org/netbeans/modules/project/ui/resources/layer.xml"
                 },
                 new Object[] {loader/*, new VanillaPartialReparser()*/ /*, cpp*/}
         );
-        
+
         JEditorPane.registerEditorKitForContentType("text/x-java", "org.netbeans.modules.editor.java.JavaKit");
 //        File cacheFolder = new File(getWorkDir(), "var/cache/index");
 //        cacheFolder.mkdirs();
@@ -103,7 +104,7 @@ public class PartialReparseTest extends NbTestCase {
 //        ensureRootValid(dataDir.getURL());
         TestUtil.setupEditorMockServices();
     }
-    
+
     public void testPartialReparse() throws Exception {
         doRunTest("package test;\n" +
                   "public class Test {\n" +
@@ -113,12 +114,86 @@ public class PartialReparseTest extends NbTestCase {
                   "}",
                   "\n        System.err.println(2);");
     }
-    
+
+    public void testIntroduceParseError1() throws Exception {
+        doRunTest("package test;\n" +
+                  "public class Test {\n" +
+                  "    private void test() {\n" +
+                  "        System.err.println(1);//\n" +
+                  "    }" +
+                  "}",
+                  "\n        if (");
+    }
+
+    public void testIntroduceParseError2() throws Exception {
+        doRunTest("package test;\n" +
+                  "public class Test {\n" +
+                  "    private void test() {\n" +
+                  "        System.err.println(1);//\n" +
+                  "    }" +
+                  "}",
+                  "\n        if (tr");
+    }
+
+    public void testRemoveParseError() throws Exception {
+        doRunTest("package test;\n" +
+                  "public class Test {\n" +
+                  "    private void test() {\n" +
+                  "        System.err.println(1);/\n" +
+                  "        if (/\n" +
+                  "    }" +
+                  "}",
+                  "");
+    }
+
+    public void testResolutionError() throws Exception {
+        doRunTest("package test;\n" +
+                  "public class Test {\n" +
+                  "    private void test() {\n" +
+                  "        System.err.println(1);//\n" +
+                  "    }" +
+                  "}",
+                  "\n        a = 15;");
+    }
+
+    public void testRemoveResolution() throws Exception {
+        doRunTest("package test;\n" +
+                  "public class Test {\n" +
+                  "    private void test() {\n" +
+                  "        System.err.println(1);/\n" +
+                  "        a = 15;/\n" +
+                  "    }" +
+                  "}",
+                  "");
+    }
+
+    public void testIntroduceSomeNewErrors() throws Exception {
+        doRunTest("package test;\n" +
+                  "public class Test {\n" +
+                  "    private void test() {\n" +
+                  "        System.err.println(1);\n" +
+                  "        if (//\n" +
+                  "    }" +
+                  "}",
+                  "a");
+    }
+
+    public void testErrorsRemain() throws Exception {
+        doRunTest("package test;\n" +
+                  "public class Test {\n" +
+                  "    private void test() {\n" +
+                  "        System.err.println(1);\n" +
+                  "        /if (/a\n" +
+                  "    }" +
+                  "}",
+                  "if (");
+    }
+
     private void doRunTest(String code, String inject) throws Exception {
         FileObject srcDir = FileUtil.createMemoryFileSystem().getRoot();
         FileObject src = srcDir.createData("Test.java");
         try (Writer out = new OutputStreamWriter(src.getOutputStream())) {
-            out.write(code.replace("//", ""));
+            out.write(code.replaceFirst("/", "").replaceFirst("/", ""));
         }
         EditorCookie ec = src.getLookup().lookup(EditorCookie.class);
         Document doc = ec.openDocument();
@@ -126,9 +201,12 @@ public class PartialReparseTest extends NbTestCase {
         Object[] topLevel = new Object[1];
         source.runUserActionTask(cc -> {
             cc.toPhase(Phase.RESOLVED);
-            topLevel[0] = cc.getCompilationUnit();
+             topLevel[0] = cc.getCompilationUnit();
         }, true);
-        doc.insertString(code.indexOf("//"), inject, null);
+        int startReplace = code.indexOf('/');
+        int endReplace = code.indexOf('/', startReplace + 1) - 1;
+        doc.remove(startReplace, endReplace - startReplace);
+        doc.insertString(startReplace, inject, null);
         AtomicReference<List<TreeDescription>> actualTree = new AtomicReference<>();
         AtomicReference<List<DiagnosticDescription>> actualDiagnostics = new AtomicReference<>();
         source.runUserActionTask(cc -> {
@@ -137,16 +215,15 @@ public class PartialReparseTest extends NbTestCase {
             actualTree.set(dumpTree(cc));
             actualDiagnostics.set(dumpDiagnostics(cc));
         }, true);
-        FileObject srcDir2 = FileUtil.createMemoryFileSystem().getRoot();
-        FileObject src2 = srcDir2.createData("Test.java");
-        try (Writer out = new OutputStreamWriter(src2.getOutputStream())) {
-            out.write(code.replace("//", inject));
+        ec.saveDocument();
+        try (Writer out = new OutputStreamWriter(src.getOutputStream())) {
+            out.write(code.replaceFirst("/.*/", Matcher.quoteReplacement(inject)));
         }
-        JavaSource source2 = JavaSource.forFileObject(src);
         AtomicReference<List<TreeDescription>> expectedTree = new AtomicReference<>();
         AtomicReference<List<DiagnosticDescription>> expectedDiagnostics = new AtomicReference<>();
-        source2.runUserActionTask(cc -> {
+        source.runUserActionTask(cc -> {
             cc.toPhase(Phase.RESOLVED);
+            assertNotSame(topLevel[0], cc.getCompilationUnit());
             expectedTree.set(dumpTree(cc));
             expectedDiagnostics.set(dumpDiagnostics(cc));
         }, true);
@@ -163,7 +240,7 @@ public class PartialReparseTest extends NbTestCase {
                     result.add(null);
                 } else {
                     result.add(new TreeDescription(tree.getKind(),
-                                                   info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree), 
+                                                   info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree),
                                                    info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree)));
                 }
                 return super.scan(tree, p);
@@ -220,8 +297,14 @@ public class PartialReparseTest extends NbTestCase {
             }
             return true;
         }
+
+        @Override
+        public String toString() {
+            return "TreeDescription{" + "kind=" + kind + ", start=" + start + ", end=" + end + '}';
+        }
+
     }
-    
+
     private static final class DiagnosticDescription {
 
         private final String code;
@@ -302,6 +385,11 @@ public class PartialReparseTest extends NbTestCase {
             }
             return true;
         }
-        
+
+        @Override
+        public String toString() {
+            return "DiagnosticDescription{" + "code=" + code + ", message=" + message + ", column=" + column + ", endPos=" + endPos + ", kind=" + kind + ", line=" + line + ", pos=" + pos + ", source=" + source + ", startPos=" + startPos + '}';
+        }
+
     }
 }

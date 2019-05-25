@@ -27,7 +27,9 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
@@ -41,7 +43,10 @@ public final class NBLog extends Log {
 
     private final Map<URI,Collection<Symbol.ClassSymbol>> notInProfiles =
             new HashMap<>();
-    
+
+    private JavaFileObject partialReparseFile;
+    private Set<Integer> seenPartialReparsePositions = new HashSet<>();
+
     private NBLog(
             final Context context,
             final PrintWriter errWriter,
@@ -94,6 +99,15 @@ public final class NBLog extends Log {
         super.report(diagnostic);
     }
 
+    @Override
+    protected boolean shouldReport(JavaFileObject file, int pos) {
+        if (partialReparseFile != null) {
+            return file == partialReparseFile && seenPartialReparsePositions.add(pos);
+        } else {
+            return super.shouldReport(file, pos);
+        }
+    }
+
     Collection<? extends Symbol.ClassSymbol> removeNotInProfile(final URI uri) {
         return uri == null ? null : notInProfiles.remove(uri);
     }
@@ -108,4 +122,12 @@ public final class NBLog extends Log {
         return Integer.MAX_VALUE;
     }
 
+    public void startPartialReparse(JavaFileObject inFile) {
+        partialReparseFile = inFile;
+    }
+    
+    public void endPartialReparse(JavaFileObject inFile) {
+        partialReparseFile = null;
+        seenPartialReparsePositions.clear(); //TODO: not tested
+    }
 }

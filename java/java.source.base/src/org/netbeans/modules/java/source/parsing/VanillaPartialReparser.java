@@ -34,6 +34,7 @@ import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.comp.Attr;
 import com.sun.tools.javac.comp.AttrContext;
+import com.sun.tools.javac.comp.Enter;
 import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.comp.Flow;
 import com.sun.tools.javac.comp.TypeEnter;
@@ -91,7 +92,6 @@ public class VanillaPartialReparser implements PartialReparser {
             final Snapshot snapshot,
             final MethodTree orig,
             final String newBody) throws IOException {
-        System.err.println("reparse");
         assert ci != null;
         final FileObject fo = ci.getFileObject();
         if (LOGGER.isLoggable(Level.FINER)) {
@@ -249,7 +249,6 @@ public class VanillaPartialReparser implements PartialReparser {
             }
             return false;
         }
-        System.err.println("success!");
         return true;
     }
 
@@ -364,10 +363,10 @@ public class VanillaPartialReparser implements PartialReparser {
     }
 
     public BlockTree reflowMethodBody(Context context, CompilationUnitTree topLevel, ClassTree ownerClass, MethodTree methodToReparse) {
-//        Flow flow = Flow.instance(context);
-//        TreeMaker make = TreeMaker.instance(context);
-//        flow.reanalyzeMethod(make.forToplevel((JCTree.JCCompilationUnit)topLevel),
-//                (JCTree.JCClassDecl)ownerClass);
+        Flow flow = Flow.instance(context);
+        TreeMaker make = TreeMaker.instance(context);
+        Enter enter = Enter.instance(context);
+        flow.analyzeTree(enter.getEnv(((JCTree.JCClassDecl) ownerClass).sym), make);
         return methodToReparse.getBody();
     }
 }

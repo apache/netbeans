@@ -20,18 +20,21 @@ package org.netbeans.modules.java.source.parsing;
 
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.swing.JEditorPane;
 import javax.swing.text.Document;
 import javax.tools.Diagnostic;
@@ -48,11 +51,10 @@ import org.openide.util.SharedClassObject;
 import org.netbeans.api.editor.mimelookup.test.MockMimeLookup;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
-import org.netbeans.api.java.source.TypeMirrorHandle;
+import org.netbeans.api.java.source.SourceUtils;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.cookies.EditorCookie;
-import org.openide.loaders.DataObject;
 
 /**
  *
@@ -70,23 +72,6 @@ public class PartialReparseTest extends NbTestCase {
         // it handles PositionRefs differently than PlainDocument/PlainEditorKit.
         MockMimeLookup.setInstances(MimePath.get("text/x-java"),
                 new Reindenter.Factory(), new JavaKit());
-//        dataDir = SourceUtilsTestUtil.makeScratchDir(this);
-//        FileObject dataTargetPackage = FileUtil.createFolder(dataDir, getSourcePckg());
-//        assertNotNull(dataTargetPackage);
-//        FileObject dataSourceFolder = FileUtil.toFileObject(getDataDir()).getFileObject(getSourcePckg());
-//        assertNotNull(dataSourceFolder);
-//        deepCopy(dataSourceFolder, dataTargetPackage);
-//        ClassPathProvider cpp = new ClassPathProvider() {
-//            public ClassPath findClassPath(FileObject file, String type) {
-//                if (type == ClassPath.SOURCE)
-//                    return ClassPathSupport.createClassPath(new FileObject[] {dataDir});
-//                    if (type == ClassPath.COMPILE)
-//                        return ClassPathSupport.createClassPath(new FileObject[0]);
-//                    if (type == ClassPath.BOOT)
-//                        return BootClassPathUtil.getBootClassPath();
-//                    return null;
-//            }
-//        };
         SharedClassObject loader = JavaDataLoader.findObject(JavaDataLoader.class, true);
 
         SourceUtilsTestUtil.prepareTest(
@@ -98,10 +83,6 @@ public class PartialReparseTest extends NbTestCase {
         );
 
         JEditorPane.registerEditorKitForContentType("text/x-java", "org.netbeans.modules.editor.java.JavaKit");
-//        File cacheFolder = new File(getWorkDir(), "var/cache/index");
-//        cacheFolder.mkdirs();
-//        IndexUtil.setCacheFolder(cacheFolder);
-//        ensureRootValid(dataDir.getURL());
         TestUtil.setupEditorMockServices();
     }
 
@@ -189,6 +170,18 @@ public class PartialReparseTest extends NbTestCase {
                   "if (");
     }
 
+    public void testFlowErrors() throws Exception {
+        doRunTest("package test;\n" +
+                  "public class Test {\n" +
+                  "    private void test() {\n" +
+                  "        final int i = 5;\n" +
+                  "        //\n" +
+                  "        System.err.println(i);\n" +
+                  "    }" +
+                  "}",
+                  "return ;");
+    }
+
     private void doRunTest(String code, String inject) throws Exception {
         FileObject srcDir = FileUtil.createMemoryFileSystem().getRoot();
         FileObject src = srcDir.createData("Test.java");
@@ -239,15 +232,40 @@ public class PartialReparseTest extends NbTestCase {
                 if (tree == null) {
                     result.add(null);
                 } else {
+                    TreePath tp = new TreePath(getCurrentPath(), tree);
+                    Element el = info.getTrees().getElement(tp);
+                    StringBuilder elDesc = new StringBuilder();
+                    if (el != null) {
+                        elDesc.append(el.getKind().name());
+                        while (el != null && !SUPPORTED_ELEMENTS.contains(el.getKind())) {
+                            elDesc.append(":");
+                            elDesc.append(el.getSimpleName());
+                            el = el.getEnclosingElement();
+                        }
+                        if (el != null) {
+                            for (String part : SourceUtils.getJVMSignature(ElementHandle.create(el))) {
+                                elDesc.append(":");
+                                elDesc.append(part);
+                            }
+                        }
+                    }
                     result.add(new TreeDescription(tree.getKind(),
                                                    info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree),
-                                                   info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree)));
+                                                   info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree),
+                                                   elDesc.toString(),
+                                                   String.valueOf(info.getTrees().getTypeMirror(tp))));
                 }
                 return super.scan(tree, p);
             }
         }.scan(info.getCompilationUnit(), null);
         return result;
     }
+
+    private static final Set<ElementKind> SUPPORTED_ELEMENTS = EnumSet.of(
+            ElementKind.PACKAGE, ElementKind.CLASS, ElementKind.INTERFACE,
+            ElementKind.ENUM, ElementKind.ANNOTATION_TYPE, ElementKind.METHOD,
+            ElementKind.CONSTRUCTOR, ElementKind.INSTANCE_INIT,
+            ElementKind.STATIC_INIT, ElementKind.FIELD, ElementKind.ENUM_CONSTANT);
 
     private static List<DiagnosticDescription> dumpDiagnostics(CompilationInfo info) {
         return info.getDiagnostics().stream().map(d -> new DiagnosticDescription(d)).collect(Collectors.toList());
@@ -257,12 +275,15 @@ public class PartialReparseTest extends NbTestCase {
         private final Kind kind;
         private final long start;
         private final long end;
-        //TODO: element, type
+        private final String element;
+        private final String type;
 
-        public TreeDescription(Kind kind, long start, long end) {
+        public TreeDescription(Kind kind, long start, long end, String element, String type) {
             this.kind = kind;
             this.start = start;
             this.end = end;
+            this.element = element;
+            this.type = type;
         }
 
         @Override
@@ -300,7 +321,7 @@ public class PartialReparseTest extends NbTestCase {
 
         @Override
         public String toString() {
-            return "TreeDescription{" + "kind=" + kind + ", start=" + start + ", end=" + end + '}';
+            return "TreeDescription{" + "kind=" + kind + ", start=" + start + ", end=" + end + ", element=" + element + ", type=" + type + '}';
         }
 
     }

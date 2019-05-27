@@ -62,7 +62,7 @@ final class ScaledBitmapIcon implements Icon {
     private Image getScaledImage(GraphicsConfiguration gc, double dpiScaling) {
         Image ret = cache.get(dpiScaling);
         if (ret != null) {
-          return ret;
+            return ret;
         }
         final BufferedImage img = gc.createCompatibleImage(
                 (int) Math.ceil(getIconWidth() * dpiScaling),
@@ -104,9 +104,9 @@ final class ScaledBitmapIcon implements Icon {
         } else {
             dpiScaling = 1.0;
         }
+        // Scale the image down to its logical dimensions, then draw it at the device pixel boundary.
         Image scaledImage = getScaledImage(g.getDeviceConfiguration(), dpiScaling);
         if (dpiScaling != 1.0) {
-            // Scale the image down to its logical dimensions, then draw it at the device pixel boundary.
             AffineTransform tx2 = g.getTransform();
             g.setTransform(new AffineTransform(1, 0, 0, 1,
                 (int) tx2.getTranslateX(),

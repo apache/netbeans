@@ -330,17 +330,17 @@ public final class Splash implements Stamps.Updater {
          */
         public void layout(String text, Graphics graphics) {
             if (fm == null) {
-              // XXX(-ttran) this happened on Japanese Windows NT, don't
-              // fully understand why
-              return;
+                // XXX(-ttran) this happened on Japanese Windows NT, don't
+                // fully understand why
+                return;
             }
             SwingUtilities.layoutCompoundLabel(fm, text, null,
                     BOTTOM, horizontalAlignment, BOTTOM, horizontalAlignment,
                     bounds, new Rectangle(), effectiveBounds, 0);
             if (graphics != null) {
-              graphics.setColor(color);
-              graphics.setFont(font);
-              graphics.drawString(text, effectiveBounds.x, effectiveBounds.y + fm.getAscent());
+                graphics.setColor(color);
+                graphics.setFont(font);
+                graphics.drawString(text, effectiveBounds.x, effectiveBounds.y + fm.getAscent());
             }
         }
 
@@ -348,7 +348,7 @@ public final class Splash implements Stamps.Updater {
             String prefix, boolean optional)
         {
             if (optional && !bundle.containsKey(prefix + "Bounds"))
-              return null;
+                return null;
             StringTokenizer st = new StringTokenizer(
                     bundle.getString(prefix + "Bounds"), " ,"); // NOI18N
             Rectangle bounds = new Rectangle(Integer.parseInt(st.nextToken()),
@@ -376,21 +376,21 @@ public final class Splash implements Stamps.Updater {
             }
             int horizontalAlignment = LEFT;
             try {
-              switch (bundle.getString(prefix + "HorizontalAlignment").toLowerCase(Locale.US)) {
-                case "left":
-                    horizontalAlignment = SwingConstants.LEFT;
-                    break;
-                case "center":
-                    horizontalAlignment = SwingConstants.CENTER;
-                    break;
-                case "right":
-                    horizontalAlignment = SwingConstants.RIGHT;
-                    break;
-                default:
-                    // Ignore; use default
-                    Util.err.warning(
-                        "Invalid horizontal alignment for splash screen text box"); //NOI18N
-              }
+                switch (bundle.getString(prefix + "HorizontalAlignment").toLowerCase(Locale.US)) {
+                  case "left":
+                      horizontalAlignment = SwingConstants.LEFT;
+                      break;
+                  case "center":
+                      horizontalAlignment = SwingConstants.CENTER;
+                      break;
+                  case "right":
+                      horizontalAlignment = SwingConstants.RIGHT;
+                      break;
+                  default:
+                      // Ignore; use default
+                      Util.err.warning(
+                          "Invalid horizontal alignment for splash screen text box"); //NOI18N
+                }
             } catch (MissingResourceException e) {
               // Ignore; use default
             }

@@ -170,7 +170,7 @@ public class PartialReparseTest extends NbTestCase {
                   "if (");
     }
 
-    public void testFlowErrors() throws Exception {
+    public void testFlowErrors1() throws Exception {
         doRunTest("package test;\n" +
                   "public class Test {\n" +
                   "    private void test() {\n" +
@@ -180,6 +180,18 @@ public class PartialReparseTest extends NbTestCase {
                   "    }" +
                   "}",
                   "return ;");
+    }
+
+    public void testFlowErrors2() throws Exception {
+        doRunTest("package test;\n" +
+                  "public class Test {\n" +
+                  "    private void test() {\n" +
+                  "        final int i = 5;\n" +
+                  "        /return ;/\n" +
+                  "        System.err.println(i);\n" +
+                  "    }" +
+                  "}",
+                  "");
     }
 
     private void doRunTest(String code, String inject) throws Exception {

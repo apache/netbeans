@@ -48,6 +48,7 @@ import org.openide.filesystems.FileUtil;
         projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
 public final class ClassPathProviderImpl extends ProjectOpenedHook implements ClassPathProvider {
 
+    public static final String MODULE_INFO_JAVA = "module-info.java"; // NOI18N
     private static final Set<String> SUPPORTED_PATHS = new HashSet<>();
 
 
@@ -57,6 +58,8 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
         SUPPORTED_PATHS.add(ClassPath.COMPILE);
         SUPPORTED_PATHS.add(ClassPath.EXECUTE);
         SUPPORTED_PATHS.add(JavaClassPathConstants.PROCESSOR_PATH);
+
+        SUPPORTED_PATHS.add(JavaClassPathConstants.MODULE_BOOT_PATH);
     }
 
     private final Map<String, SourceSetCP> groups = new HashMap<>();
@@ -138,11 +141,15 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
         final ClassPath compile;
         final ClassPath runtime;
 
+        final ClassPath platformModules;
+
         SourceSetCP(String group) {
             boot = ClassPathFactory.createClassPath(new BootClassPathImpl(project));
             source = ClassPathFactory.createClassPath(new SourceClassPathImpl(project, group));
             compile = ClassPathFactory.createClassPath(new CompileClassPathImpl(project, group));
             runtime = ClassPathFactory.createClassPath(new RuntimeClassPathImpl(project, group));
+
+            platformModules = ClassPathFactory.createClassPath(new BootClassPathImpl(project, true));
         }
 
         public ClassPath getClassPath(String type) {
@@ -151,11 +158,12 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
                 case ClassPath.SOURCE: return source;
                 case ClassPath.COMPILE: return compile;
                 case ClassPath.EXECUTE: return runtime;
+
+                case JavaClassPathConstants.MODULE_BOOT_PATH: return platformModules;
+
                 case JavaClassPathConstants.PROCESSOR_PATH: return compile;
                 default: return null;
             }
         }
-
     }
-
 }

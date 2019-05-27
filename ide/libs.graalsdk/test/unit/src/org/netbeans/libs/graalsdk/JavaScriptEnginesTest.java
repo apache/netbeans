@@ -176,6 +176,22 @@ public class JavaScriptEnginesTest {
     }
 
     @Test
+    public void classOfString() throws Exception {
+        Object clazz = engine.eval("\n"
+            + "var s = '';\n"
+            + "var n;\n"
+            + "try {\n"
+            + "  var c = s.getClass();\n"
+            + "  n = c.getName();\n"
+            + "} catch (e) {\n"
+            + "  n = null;\n"
+            + "}\n"
+            + "n\n"
+        );
+        assertNull("No getClass attribute of string", clazz);
+    }
+
+    @Test
     public void accessJavaObject() throws Exception {
         Object fn = engine.eval("(function(obj) {\n"
                 + "  obj.sum += 5;\n"
@@ -197,6 +213,22 @@ public class JavaScriptEnginesTest {
         assertTrue("Got a number: " + res, res instanceof Number);
         assertEquals(1, ((Number) res).intValue());
         assertNotNull("There was an error calling non-public add method: " + sum.err, sum.err);
+    }
+
+    @Test
+    public void classOfSum() throws Exception {
+        Assume.assumeFalse("GraalJSScriptEngine".equals(engine.getClass().getSimpleName()));
+
+        Object fn = engine.eval("(function(obj) {\n"
+                + "  try {\n"
+                + "     return obj.getClass().getName();\n"
+                + "  } catch (e) {\n"
+                + "     return null;\n"
+                + "  }\n"
+                + "})\n");
+        Sum sum = new Sum();
+        Object clazz = inv().invokeMethod(fn, "call", null, sum);
+        assertNull("No getClass attribute of string", clazz);
     }
 
     @Test

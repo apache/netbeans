@@ -18,8 +18,9 @@
  */
 package org.netbeans.api.scripting;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import javax.script.Bindings;
@@ -77,8 +78,6 @@ public final class Scripting {
         EngineManager(List<ScriptEngineFactory> extra, ClassLoader loader) {
             super(loader);
             this.extra = extra;
-            final Bindings b = getBindings();
-            b.put("polyglot.js.allowHostAccess", true); // NOI18N
             for (ScriptEngineFactory f : extra) {
                 registerEngineName(f.getEngineName(), f);
                 for (String ext : f.getExtensions()) {
@@ -98,7 +97,7 @@ public final class Scripting {
             ListIterator<ScriptEngineFactory> it = all.listIterator();
             while (it.hasNext()) {
                 ScriptEngineFactory f = it.next();
-                if (f.getNames().contains("Graal.js")) { // NOI18N
+                if (f.getNames().contains("Graal.js") || isNashornFactory(f)) { // NOI18N
                     it.set(new GraalJSWrapperFactory(f));
                 }
             }
@@ -125,9 +124,44 @@ public final class Scripting {
                 return null;
             }
             if (eng.getFactory().getNames().contains("Graal.js")) { // NOI18N
-                eng.setBindings(getBindings(), ScriptContext.ENGINE_SCOPE);
+                final Bindings b = eng.getBindings(ScriptContext.ENGINE_SCOPE);
+                b.put("polyglot.js.allowHostAccess", true); // NOI18N
+            }
+            if (isNashornFactory(eng.getFactory())) {
+                return secureEngineEngine(eng);
             }
             return eng;
+        }
+
+
+        private static final Class<?> nashornScriptEngineFactory;
+        static {
+            Class<?> klass;
+            try {
+                klass = Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory");
+            } catch (ClassNotFoundException ex) {
+                klass = String.class;
+            }
+            nashornScriptEngineFactory = klass;
+        }
+        private boolean isNashornFactory(ScriptEngineFactory f) {
+            return nashornScriptEngineFactory.isInstance(f);
+        }
+
+        private ScriptEngine secureEngineEngine(ScriptEngine e) {
+            try {
+                ScriptEngineFactory f = e.getFactory();
+                final Class<? extends ScriptEngineFactory> factoryClass = f.getClass();
+                final ClassLoader factoryClassLoader = factoryClass.getClassLoader();
+                Class<?> filterClass = Class.forName("jdk.nashorn.api.scripting.ClassFilter", true, factoryClassLoader);
+                Method createMethod = factoryClass.getMethod("getScriptEngine", filterClass);
+                Object filter = java.lang.reflect.Proxy.newProxyInstance(factoryClassLoader, new Class[]{filterClass}, (Object proxy, Method method, Object[] args) -> {
+                    return false;
+                });
+                return (ScriptEngine) createMethod.invoke(f, filter);
+            } catch (NoSuchMethodException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                return e;
+            }
         }
 
         private final class GraalJSWrapperFactory implements ScriptEngineFactory {

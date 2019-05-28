@@ -40,39 +40,44 @@ import org.netbeans.api.scripting.Scripting;
 
 @RunWith(Parameterized.class)
 public class JavaScriptEnginesTest {
-    @Parameterized.Parameters(name = "{1}:{0}={2}")
+    @Parameterized.Parameters(name = "{1}:{0}@{4}={2}")
     public static Object[][] engines() {
         List<Object[]> arr = new ArrayList<>();
-        final ScriptEngineManager man = Scripting.createManager();
+        fillArray(Scripting.newBuilder().build(), false, arr);
+        final ScriptEngineManager man = Scripting.newBuilder().allowAllAccess(true).build();
+        fillArray(man, true, arr);
+        return arr.toArray(new Object[0][]);
+    }
+
+    private static void fillArray(final ScriptEngineManager man, boolean allowAllAccess, List<Object[]> arr) {
         for (ScriptEngineFactory f : man.getEngineFactories()) {
             final String name = f.getEngineName();
             if (
-                f.getMimeTypes().contains("text/javascript") ||
-                name.contains("Nashorn")
-            ) {
+                    f.getMimeTypes().contains("text/javascript") ||
+                    name.contains("Nashorn")
+                    ) {
                 final ScriptEngine eng = f.getScriptEngine();
-                arr.add(new Object[] { name, "engineFactories", implName(eng), eng});
+                arr.add(new Object[] { name, "engineFactories", implName(eng), eng, allowAllAccess });
                 for (String n : eng.getFactory().getNames()) {
                     ScriptEngine byName = n == null ? null : man.getEngineByName(n);
                     if (byName != null && eng.getClass() == byName.getClass()) {
-                        arr.add(new Object[] { n, "name", implName(byName), byName });
+                        arr.add(new Object[] { n, "name", implName(byName), byName, allowAllAccess });
                     }
                 }
                 for (String t : eng.getFactory().getMimeTypes()) {
                     ScriptEngine byType = t == null ? null : man.getEngineByMimeType(t);
                     if (byType != null && eng.getClass() == byType.getClass()) {
-                        arr.add(new Object[] { t, "type", implName(byType), byType });
+                        arr.add(new Object[] { t, "type", implName(byType), byType, allowAllAccess });
                     }
                 }
                 for (String e : eng.getFactory().getExtensions()) {
                     ScriptEngine byExt = e == null ? null : man.getEngineByExtension(e);
                     if (byExt != null && eng.getClass() == byExt.getClass()) {
-                        arr.add(new Object[] { e, "ext", implName(byExt), byExt });
+                        arr.add(new Object[] { e, "ext", implName(byExt), byExt, allowAllAccess });
                     }
                 }
             }
         }
-        return arr.toArray(new Object[0][]);
     }
 
     private static String implName(Object obj) {
@@ -81,11 +86,13 @@ public class JavaScriptEnginesTest {
 
     private final String engineName;
     private final ScriptEngine engine;
+    private final boolean allowAllAccess;
 
 
-    public JavaScriptEnginesTest(String engineName, Object info, String implName, ScriptEngine engine) {
+    public JavaScriptEnginesTest(String engineName, Object info, String implName, ScriptEngine engine, boolean allowAllAccess) {
         this.engineName = engineName;
         this.engine = engine;
+        this.allowAllAccess = allowAllAccess;
     }
 
     private Invocable inv() {
@@ -177,6 +184,7 @@ public class JavaScriptEnginesTest {
 
     @Test
     public void classOfString() throws Exception {
+        Assume.assumeFalse(allowAllAccess);
         Object clazz = engine.eval("\n"
             + "var s = '';\n"
             + "var n;\n"
@@ -217,6 +225,7 @@ public class JavaScriptEnginesTest {
 
     @Test
     public void classOfSum() throws Exception {
+        Assume.assumeFalse(allowAllAccess);
         Assume.assumeFalse("GraalJSScriptEngine".equals(engine.getClass().getSimpleName()));
 
         Object fn = engine.eval("(function(obj) {\n"

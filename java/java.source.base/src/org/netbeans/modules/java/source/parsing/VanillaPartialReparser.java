@@ -28,10 +28,8 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.api.JavacScope;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTrees;
-import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symtab;
-import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.comp.Attr;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Enter;
@@ -39,20 +37,22 @@ import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.comp.Flow;
 import com.sun.tools.javac.comp.TypeEnter;
 import com.sun.tools.javac.parser.LazyDocCommentTable;
+import com.sun.tools.javac.parser.ParserFactory;
 import com.sun.tools.javac.parser.Scanner;
 import com.sun.tools.javac.parser.ScannerFactory;
+import com.sun.tools.javac.tree.DocCommentTable;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.TreeInfo;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
-import com.sun.tools.javac.util.CouplingAbort;
-import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Options;
 //import com.sun.tools.javac.util.Position.LineMapImpl;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.nio.CharBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -68,8 +68,6 @@ import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.lib.nbjavac.services.CancelService;
 import org.netbeans.lib.nbjavac.services.NBLog;
 import org.netbeans.lib.nbjavac.services.NBParserFactory;
-import org.netbeans.modules.*;
-import org.netbeans.modules.java.source.CompilationInfoAccessor;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
 import org.netbeans.modules.java.source.parsing.CompilationInfoImpl;
 import org.netbeans.modules.java.source.parsing.JavacFlowListener;
@@ -86,6 +84,35 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = PartialReparser.class, position = 200)
 public class VanillaPartialReparser implements PartialReparser {
     private static final Logger LOGGER = Logger.getLogger(VanillaPartialReparser.class.getName());
+    private final Method unenter;
+    private final Field lazyDocCommentsTable;
+    private final Field parserDocComments;
+
+    public VanillaPartialReparser() {
+        Method unenter;
+        try {
+            unenter = Enter.class.getDeclaredMethod("unenter", JCCompilationUnit.class, JCTree.class);
+        } catch (NoSuchMethodException ex) {
+            unenter = null;
+        }
+        this.unenter = unenter;
+        Field lazyDocCommentsTable;
+        try {
+            lazyDocCommentsTable = LazyDocCommentTable.class.getDeclaredField("table");
+            lazyDocCommentsTable.setAccessible(true);
+        } catch (NoSuchFieldException | SecurityException ex) {
+            lazyDocCommentsTable = null;
+        }
+        this.lazyDocCommentsTable = lazyDocCommentsTable;
+        Field parserDocComments;
+        try {
+            parserDocComments = com.sun.tools.javac.parser.JavacParser.class.getDeclaredField("docComments");
+            parserDocComments.setAccessible(true);
+        } catch (NoSuchFieldException | SecurityException ex) {
+            parserDocComments = null;
+        }
+        this.parserDocComments = parserDocComments;
+    }
 
     @Override
     public boolean reparseMethod (final CompilationInfoImpl ci,
@@ -154,8 +181,8 @@ public class VanillaPartialReparser implements PartialReparser {
                     assert dl instanceof CompilationInfoImpl.DiagnosticListenerImpl;
                     ((CompilationInfoImpl.DiagnosticListenerImpl)dl).startPartialReparse(origStartPos, origEndPos);
                     long start = System.currentTimeMillis();
-//                    Map<JCTree,LazyDocCommentTable.Entry> docComments = new HashMap<>();
-                    block = reparseMethodBody(ctx, cu, orig, newBody + " ", firstInner/*, docComments*/);
+                    Map<JCTree, Object> docComments = new HashMap<>();
+                    block = reparseMethodBody(ctx, cu, orig, newBody + " ", firstInner, docComments);
                     final EndPosTable endPos = ((JCTree.JCCompilationUnit)cu).endPositions;
                     LOGGER.log(Level.FINER, "Reparsed method in: {0}", fo);     //NOI18N
                     if (block == null) {
@@ -178,8 +205,9 @@ public class VanillaPartialReparser implements PartialReparser {
                         }
                         return false;
                     }
-//                    ((LazyDocCommentTable) ((JCTree.JCCompilationUnit)cu).docComments).table.keySet().removeAll(fav.docOwners);
-//                    ((LazyDocCommentTable) ((JCTree.JCCompilationUnit)cu).docComments).table.putAll(docComments);
+                    Map<JCTree, Object> docCommentsTable = (Map<JCTree, Object>) lazyDocCommentsTable.get(((JCTree.JCCompilationUnit)cu).docComments);
+                    docCommentsTable.keySet().removeAll(fav.docOwners);
+                    docCommentsTable.putAll(docComments);
                     long end = System.currentTimeMillis();
                     if (fo != null) {
                         JavacParser.logTime (fo,Phase.PARSED,(end-start));
@@ -187,6 +215,9 @@ public class VanillaPartialReparser implements PartialReparser {
                     final int delta = newEndPos - origEndPos;
                     final TranslatePositionsVisitor tpv = new TranslatePositionsVisitor(orig, endPos, delta);
                     tpv.scan(cu, null);
+                    if (unenter != null) {
+                        unenter.invoke(Enter.instance(ctx), cu, ((JCTree.JCMethodDecl)orig).body);
+                    }
                     ((JCTree.JCMethodDecl)orig).body = block;
                     if (Phase.RESOLVED.compareTo(currentPhase)<=0) {
                         start = System.currentTimeMillis();
@@ -252,8 +283,8 @@ public class VanillaPartialReparser implements PartialReparser {
         return true;
     }
 
-    public JCTree.JCBlock reparseMethodBody(Context ctx, CompilationUnitTree topLevel, MethodTree methodToReparse, String newBodyText, int annonIndex/*,
-            final Map<? super JCTree,? super LazyDocCommentTable.Entry> docComments*/) {
+    public JCTree.JCBlock reparseMethodBody(Context ctx, CompilationUnitTree topLevel, MethodTree methodToReparse, String newBodyText, int annonIndex,
+            final Map<JCTree, Object> docComments) throws IllegalArgumentException, IllegalAccessException {
         int startPos = ((JCTree.JCBlock)methodToReparse.getBody()).pos;
         char[] body = new char[startPos + newBodyText.length() + 1];
         Arrays.fill(body, 0, startPos, ' ');
@@ -266,15 +297,15 @@ public class VanillaPartialReparser implements PartialReparser {
         final JCTree.JCStatement statement = parser.parseStatement();
         NBParserFactory.assignAnonymousClassIndices(Names.instance(ctx), statement, Names.instance(ctx).empty, annonIndex);
         if (statement.getKind() == Tree.Kind.BLOCK) {
-//            if (docComments != null) {
-//                docComments.putAll(((LazyDocCommentTable) parser.getDocComments()).table);
-//            }
+            if (docComments != null) {
+                docComments.putAll((Map<JCTree, Object>) lazyDocCommentsTable.get(parserDocComments.get(parser)));
+            }
             return (JCTree.JCBlock) statement;
         }
         return null;
     }
 
-    public com.sun.tools.javac.parser.JavacParser newParser(Context context, CharSequence input, int startPos, final EndPosTable endPos) {
+    private com.sun.tools.javac.parser.JavacParser newParser(Context context, CharSequence input, int startPos, final EndPosTable endPos) {
         NBParserFactory parserFactory = (NBParserFactory) NBParserFactory.instance(context); //TODO: eliminate the cast
         ScannerFactory scannerFactory = ScannerFactory.instance(context);
         CancelService cancelService = CancelService.instance(context);

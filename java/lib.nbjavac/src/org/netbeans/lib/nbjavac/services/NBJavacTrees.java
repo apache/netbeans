@@ -29,6 +29,8 @@ import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.lang.model.element.Element;
 import org.netbeans.lib.nbjavac.services.NBTreeMaker.IndexedClassDecl;
 
@@ -47,13 +49,25 @@ public class NBJavacTrees extends JavacTrees {
             }
         });
     }
+    private static final boolean hasNbJavac;
+    static {
+        boolean hasNbJavacTemp;
+        try {
+            Class.forName("com.sun.tools.javac.model.LazyTreeLoader");
+            hasNbJavacTemp = true;
+        } catch (ClassNotFoundException ex) {
+            hasNbJavacTemp = false;
+        }
+        hasNbJavac = hasNbJavacTemp;
+    }
+
     protected NBJavacTrees(Context context) {
         super(context);
     }
 
     @Override
     protected Copier createCopier(TreeMaker make) {
-        return new Copier(make) {
+        return hasNbJavac ? new Copier(make) {
             @Override public JCTree visitClass(ClassTree node, JCTree p) {
                 JCTree result = super.visitClass(node, p);
 
@@ -63,7 +77,7 @@ public class NBJavacTrees extends JavacTrees {
 
                 return result;
             }
-        };
+        } : super.createCopier(make);
     }
 
     @Override

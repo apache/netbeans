@@ -90,7 +90,7 @@ public class PartialReparseTest extends NbTestCase {
         doRunTest("package test;\n" +
                   "public class Test {\n" +
                   "    private void test() {\n" +
-                  "        System.err.println(1);//\n" +
+                  "        System.err.println(1);^^\n" +
                   "    }" +
                   "}",
                   "\n        System.err.println(2);");
@@ -100,7 +100,7 @@ public class PartialReparseTest extends NbTestCase {
         doRunTest("package test;\n" +
                   "public class Test {\n" +
                   "    private void test() {\n" +
-                  "        System.err.println(1);//\n" +
+                  "        System.err.println(1);^^\n" +
                   "    }" +
                   "}",
                   "\n        if (");
@@ -110,7 +110,7 @@ public class PartialReparseTest extends NbTestCase {
         doRunTest("package test;\n" +
                   "public class Test {\n" +
                   "    private void test() {\n" +
-                  "        System.err.println(1);//\n" +
+                  "        System.err.println(1);^^\n" +
                   "    }" +
                   "}",
                   "\n        if (tr");
@@ -120,8 +120,8 @@ public class PartialReparseTest extends NbTestCase {
         doRunTest("package test;\n" +
                   "public class Test {\n" +
                   "    private void test() {\n" +
-                  "        System.err.println(1);/\n" +
-                  "        if (/\n" +
+                  "        System.err.println(1);^\n" +
+                  "        if (^\n" +
                   "    }" +
                   "}",
                   "");
@@ -131,7 +131,7 @@ public class PartialReparseTest extends NbTestCase {
         doRunTest("package test;\n" +
                   "public class Test {\n" +
                   "    private void test() {\n" +
-                  "        System.err.println(1);//\n" +
+                  "        System.err.println(1);^^\n" +
                   "    }" +
                   "}",
                   "\n        a = 15;");
@@ -141,8 +141,8 @@ public class PartialReparseTest extends NbTestCase {
         doRunTest("package test;\n" +
                   "public class Test {\n" +
                   "    private void test() {\n" +
-                  "        System.err.println(1);/\n" +
-                  "        a = 15;/\n" +
+                  "        System.err.println(1);^\n" +
+                  "        a = 15;^\n" +
                   "    }" +
                   "}",
                   "");
@@ -153,7 +153,7 @@ public class PartialReparseTest extends NbTestCase {
                   "public class Test {\n" +
                   "    private void test() {\n" +
                   "        System.err.println(1);\n" +
-                  "        if (//\n" +
+                  "        if (^^\n" +
                   "    }" +
                   "}",
                   "a");
@@ -164,7 +164,7 @@ public class PartialReparseTest extends NbTestCase {
                   "public class Test {\n" +
                   "    private void test() {\n" +
                   "        System.err.println(1);\n" +
-                  "        /if (/a\n" +
+                  "        ^if (^a\n" +
                   "    }" +
                   "}",
                   "if (");
@@ -175,7 +175,7 @@ public class PartialReparseTest extends NbTestCase {
                   "public class Test {\n" +
                   "    private void test() {\n" +
                   "        final int i = 5;\n" +
-                  "        //\n" +
+                  "        ^^\n" +
                   "        System.err.println(i);\n" +
                   "    }" +
                   "}",
@@ -187,18 +187,72 @@ public class PartialReparseTest extends NbTestCase {
                   "public class Test {\n" +
                   "    private void test() {\n" +
                   "        final int i = 5;\n" +
-                  "        /return ;/\n" +
+                  "        ^return ;^\n" +
                   "        System.err.println(i);\n" +
                   "    }" +
                   "}",
                   "");
     }
 
+    public void testAnonymous() throws Exception {
+        doRunTest("package test;\n" +
+                  "public class Test {\n" +
+                  "    private void test() {\n" +
+                  "        new Object() {\\n" +
+                  "        };" +
+                  "        final int i = 5;\n" +
+                  "        ^^\n" +
+                  "    }" +
+                  "}",
+                  "final int j = 5;\n");
+    }
+
+    public void testAnonymousFullReparse1() throws Exception {
+        doVerifyFullReparse("package test;\n" +
+                            "public class Test {\n" +
+                            "    private void test() {\n" +
+                            "        ^new Object() {" +
+                            "        };^" +
+                            "        final int i = 5;\n" +
+                            "    }" +
+                            "}",
+                            "");
+    }
+
+    public void testAnonymousFullReparse2() throws Exception {
+        doVerifyFullReparse("package test;\n" +
+                            "public class Test {\n" +
+                            "    private void test() {\n" +
+                            "        new Object() {" +
+                            "        };" +
+                            "        final int i = 5;\n" +
+                            "        ^^\n" +
+                            "    }" +
+                            "}",
+                            "new Object() {}");
+    }
+
+    public void testDocComments() throws Exception {
+        doRunTest("package test;\n" +
+                  "public class Test {\n" +
+                  "        /**javadoc1*/" +
+                  "    private void test() {\n" +
+                  "        new Object() {" +
+                  "            /**javadoc2*/" +
+                  "            final int i = 5;\n" +
+                  "            ^^\n" +
+                  "       };\n" +
+                  "    }" +
+                  "}",
+                  "        /**javadoc3*/\n" +
+                  "        final int j = 5;\n");
+    }
+
     private void doRunTest(String code, String inject) throws Exception {
         FileObject srcDir = FileUtil.createMemoryFileSystem().getRoot();
         FileObject src = srcDir.createData("Test.java");
         try (Writer out = new OutputStreamWriter(src.getOutputStream())) {
-            out.write(code.replaceFirst("/", "").replaceFirst("/", ""));
+            out.write(code.replaceFirst("^", "").replaceFirst("^", ""));
         }
         EditorCookie ec = src.getLookup().lookup(EditorCookie.class);
         Document doc = ec.openDocument();
@@ -208,8 +262,8 @@ public class PartialReparseTest extends NbTestCase {
             cc.toPhase(Phase.RESOLVED);
              topLevel[0] = cc.getCompilationUnit();
         }, true);
-        int startReplace = code.indexOf('/');
-        int endReplace = code.indexOf('/', startReplace + 1) - 1;
+        int startReplace = code.indexOf('^');
+        int endReplace = code.indexOf('^', startReplace + 1) - 1;
         doc.remove(startReplace, endReplace - startReplace);
         doc.insertString(startReplace, inject, null);
         AtomicReference<List<TreeDescription>> actualTree = new AtomicReference<>();
@@ -221,9 +275,7 @@ public class PartialReparseTest extends NbTestCase {
             actualDiagnostics.set(dumpDiagnostics(cc));
         }, true);
         ec.saveDocument();
-        try (Writer out = new OutputStreamWriter(src.getOutputStream())) {
-            out.write(code.replaceFirst("/.*/", Matcher.quoteReplacement(inject)));
-        }
+        ec.close();
         AtomicReference<List<TreeDescription>> expectedTree = new AtomicReference<>();
         AtomicReference<List<DiagnosticDescription>> expectedDiagnostics = new AtomicReference<>();
         source.runUserActionTask(cc -> {
@@ -234,6 +286,32 @@ public class PartialReparseTest extends NbTestCase {
         }, true);
         assertEquals(expectedTree.get(), actualTree.get());
         assertEquals(expectedDiagnostics.get(), actualDiagnostics.get());
+    }
+
+    private void doVerifyFullReparse(String code, String inject) throws Exception {
+        FileObject srcDir = FileUtil.createMemoryFileSystem().getRoot();
+        FileObject src = srcDir.createData("Test.java");
+        try (Writer out = new OutputStreamWriter(src.getOutputStream())) {
+            out.write(code.replaceFirst("^", "").replaceFirst("^", ""));
+        }
+        EditorCookie ec = src.getLookup().lookup(EditorCookie.class);
+        Document doc = ec.openDocument();
+        JavaSource source = JavaSource.forFileObject(src);
+        Object[] topLevel = new Object[1];
+        source.runUserActionTask(cc -> {
+            cc.toPhase(Phase.RESOLVED);
+             topLevel[0] = cc.getCompilationUnit();
+        }, true);
+        int startReplace = code.indexOf('^');
+        int endReplace = code.indexOf('^', startReplace + 1) - 1;
+        doc.remove(startReplace, endReplace - startReplace);
+        doc.insertString(startReplace, inject, null);
+        source.runUserActionTask(cc -> {
+            cc.toPhase(Phase.RESOLVED);
+            assertNotSame(topLevel[0], cc.getCompilationUnit());
+        }, true);
+        ec.saveDocument();
+        ec.close();
     }
 
     private static List<TreeDescription> dumpTree(CompilationInfo info) {
@@ -265,7 +343,8 @@ public class PartialReparseTest extends NbTestCase {
                                                    info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree),
                                                    info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree),
                                                    elDesc.toString(),
-                                                   String.valueOf(info.getTrees().getTypeMirror(tp))));
+                                                   String.valueOf(info.getTrees().getTypeMirror(tp)),
+                                                   info.getTrees().getDocComment(tp)));
                 }
                 return super.scan(tree, p);
             }
@@ -289,21 +368,26 @@ public class PartialReparseTest extends NbTestCase {
         private final long end;
         private final String element;
         private final String type;
+        private final String docComment;
 
-        public TreeDescription(Kind kind, long start, long end, String element, String type) {
+        public TreeDescription(Kind kind, long start, long end, String element, String type, String docComment) {
             this.kind = kind;
             this.start = start;
             this.end = end;
             this.element = element;
             this.type = type;
+            this.docComment = docComment;
         }
 
         @Override
         public int hashCode() {
-            int hash = 7;
-            hash = 29 * hash + Objects.hashCode(this.kind);
-            hash = 29 * hash + (int) (this.start ^ (this.start >>> 32));
-            hash = 29 * hash + (int) (this.end ^ (this.end >>> 32));
+            int hash = 3;
+            hash = 31 * hash + Objects.hashCode(this.kind);
+            hash = 31 * hash + (int) (this.start ^ (this.start >>> 32));
+            hash = 31 * hash + (int) (this.end ^ (this.end >>> 32));
+            hash = 31 * hash + Objects.hashCode(this.element);
+            hash = 31 * hash + Objects.hashCode(this.type);
+            hash = 31 * hash + Objects.hashCode(this.docComment);
             return hash;
         }
 
@@ -325,6 +409,15 @@ public class PartialReparseTest extends NbTestCase {
             if (this.end != other.end) {
                 return false;
             }
+            if (!Objects.equals(this.element, other.element)) {
+                return false;
+            }
+            if (!Objects.equals(this.type, other.type)) {
+                return false;
+            }
+            if (!Objects.equals(this.docComment, other.docComment)) {
+                return false;
+            }
             if (this.kind != other.kind) {
                 return false;
             }
@@ -333,8 +426,9 @@ public class PartialReparseTest extends NbTestCase {
 
         @Override
         public String toString() {
-            return "TreeDescription{" + "kind=" + kind + ", start=" + start + ", end=" + end + ", element=" + element + ", type=" + type + '}';
+            return "TreeDescription{" + "kind=" + kind + ", start=" + start + ", end=" + end + ", element=" + element + ", type=" + type + ", docComment=" + docComment + '}';
         }
+
 
     }
 

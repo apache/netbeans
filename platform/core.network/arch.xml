@@ -107,6 +107,18 @@
       based on available JavaScript engine installed in the JVM.
       Execution of the downloaded JavaScript code is sandboxed.
   </p>
+  <api name="ALLOWED_PAC_ENGINES" type="export" category="stable" group="branding">
+      To further secure execution of downloaded scripts, it is possible
+      to restrict the set of allowed 
+      <a href="@JDK@/javax/script/ScriptEngine.html">ScriptEngine</a>s
+      to evaluate the PAC scripts.
+      Provide a branding of bundle
+      <code>org.netbeans.core.network.proxy.pac.impl.Bundle</code>
+      in your own application
+      and change the value of <code>ALLOWED_PAC_ENGINES</code> key.
+      The default is <code>GraalVM:js,Graal.js,Nashorn</code> - e.g. the engines
+      currently considered secure.
+  </api>
   <p>
       If you don't like the PAC evaluation environment provided
       by this module then you can plug in your own by registering

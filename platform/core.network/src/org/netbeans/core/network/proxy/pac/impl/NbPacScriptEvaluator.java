@@ -45,16 +45,17 @@ import org.openide.util.Exceptions;
 import org.netbeans.core.network.proxy.pac.PacScriptEvaluator;
 import org.netbeans.core.network.proxy.pac.PacUtils;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 
 /**
  * NetBeans implementation of a PAC script evaluator. This implementation
  * is the one returned by {@link NbPacScriptEvaluatorFactory}.
- * 
+ *
  * <h3>Features comparison</h3>
  * There are differences between how browsers have implemented the PAC
  * evaluation functionality. In the following the Apache NetBeans implementation
  * (this class) is pitched against some of the major browsers.<br><br>
- * 
+ *
  * <table summary="" style="table-layout: fixed; width:100%;" border="1" cellpadding="10" cellspacing="0">
  *   <tr><th class="tablersh">Behavior</th>
  *       <th>Apache<br>NetBeans</th>
@@ -147,31 +148,31 @@ import org.openide.util.Lookup;
  *      <td>???</td>
  *   </tr>
  * </table>
- * 1) The following is removed: <i>{@code user-info}</i> and everything after the 
- *    host name, however the value passed to the script always ends with a '/' 
+ * 1) The following is removed: <i>{@code user-info}</i> and everything after the
+ *    host name, however the value passed to the script always ends with a '/'
  *    character.<br>
  * 2) Same as (1), except that <i>{@code user-info}</i> is not removed.<br>
- * 3) However, when converted to Java {@link java.net.Proxy} object, all return 
- *    types must be mapped to Java Proxy types {@code DIRECT}, 
+ * 3) However, when converted to Java {@link java.net.Proxy} object, all return
+ *    types must be mapped to Java Proxy types {@code DIRECT},
  *    {@code HTTP} and {@code SOCKS}, which means some finer grained information
  *    is lost. (but is irrelevant)<br>
- * 4) An implementation not using an explicit timeout will be at the mercy of 
- *    the underlying OS or runtime environment. For example, for 2 name servers, 
+ * 4) An implementation not using an explicit timeout will be at the mercy of
+ *    the underlying OS or runtime environment. For example, for 2 name servers,
  *    the default timeout in JRE is 30 seconds.<br>
- * 5) If date/time functions ({@code weekdayRange()}, {@code dateRange()} and 
- *    {@code timeRange()}) allow values that crosses a value boundary. 
- *    For example {@code timeRange(22,3}) for the range from 10 pm to 3 am, or 
+ * 5) If date/time functions ({@code weekdayRange()}, {@code dateRange()} and
+ *    {@code timeRange()}) allow values that crosses a value boundary.
+ *    For example {@code timeRange(22,3}) for the range from 10 pm to 3 am, or
  *    {@code dateRange("DEC","MAR"}) for the range from Dec 1st to March 31st.<br>
  * 6) How good is the {@code myIpAddress()} (or {@code myIpAddressEx()}) function
  *    at finding the host's correct IP address, in particular on a multi-homed
  *    computer.
  *
  * <h3>Customization</h3>
- * The implementation for 
+ * The implementation for
  * {@link org.netbeans.core.network.proxy.pac.PacHelperMethods PacHelperMethods} is
  * found via the global lookup. If you are unhappy with the implementation
  * of the Helper Functions you can replace with your own.
- * 
+ *
  * @author lbruun
  */
 public class NbPacScriptEvaluator implements PacScriptEvaluator {
@@ -182,7 +183,7 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
     private final boolean canUseURLCaching;
     private final PacScriptEngine scriptEngine;
     private final SimpleObjCache<URI,List<Proxy>> resultCache;
-    
+
     private static final String PAC_PROXY = "PROXY";
     private static final String PAC_DIRECT = "DIRECT";
     private static final String PAC_SOCKS = "SOCKS";
@@ -208,7 +209,7 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
     public List<Proxy> findProxyForURL(URI uri) throws PacValidationException {
 
         List<Proxy> jsResultAnalyzed;
-        
+
         // First try the cache
         if (resultCache != null) {
             jsResultAnalyzed = resultCache.get(uri);
@@ -217,14 +218,14 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
             }
         }
         try {
-            Object jsResult = scriptEngine.findProxyForURL(PacUtils.toStrippedURLStr(uri), uri.getHost()); 
+            Object jsResult = scriptEngine.findProxyForURL(PacUtils.toStrippedURLStr(uri), uri.getHost());
             jsResultAnalyzed = analyzeResult(uri, jsResult);
             if (canUseURLCaching && (resultCache != null)) {
                 resultCache.put(uri, jsResultAnalyzed);   // save the result in the cache
             }
             return jsResultAnalyzed;
         } catch (NoSuchMethodException ex) {
-            // If this exception occur at this time it is really, really unexpected. 
+            // If this exception occur at this time it is really, really unexpected.
             // We already gave the function a test spin in the constructor.
             Exceptions.printStackTrace(ex);
             return Collections.singletonList(Proxy.NO_PROXY);
@@ -265,17 +266,21 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
     public String getPacScriptSource() {
         return this.pacScriptSource;
     }
-    
-    
+
+
 
     private PacScriptEngine getScriptEngine(String pacSource) throws PacParsingException {
 
         try {
-            ScriptEngine engine = getGenericJSScriptEngine();
-            
+            StringBuilder err = new StringBuilder();
+            ScriptEngine engine = newAllowedPacEngine(err);
+            if (engine == null) {
+                throw new  PacParsingException(err.toString());
+            }
+
             LOGGER.log(Level.FINE, "PAC script evaluator using:  {0}", getEngineInfo(engine));
-            
-            
+
+
             PacHelperMethods pacHelpers = Lookup.getDefault().lookup(PacHelperMethods.class);
             if (pacHelpers == null) { // this should be redundant but we take no chances
                 pacHelpers = new NbPacHelperMethods();
@@ -314,7 +319,7 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
                 throw new ScriptException(ex);
             }
 
-            
+
             engine.eval(pacSource);
 
             String helperJSScript = HelperScriptFactory.getPacHelperSource();
@@ -329,33 +334,52 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
             // Do some minimal testing of the validity of the PAC Script.
             final PacJsEntryFunction jsMainFunction;
             jsMainFunction = testScriptEngine(engine, false);
-            
+
             return new PacScriptEngine(engine, jsMainFunction);
         } catch (ScriptException ex) {
             throw new  PacParsingException(ex);
         }
     }
-    
-    private ScriptEngine getGenericJSScriptEngine() {
-        ScriptEngine eng = newGenericJSScriptEngine();
-        return eng;
+
+    @NbBundle.Messages({
+        "ALLOWED_PAC_ENGINES=GraalVM:js,Graal.js,Nashorn"
+    })
+    private static ScriptEngine newAllowedPacEngine(StringBuilder err) {
+        return newAllowedPacEngine(null, err);
     }
 
-    private ScriptEngine newGenericJSScriptEngine() {
-        ScriptEngineManager manager = Scripting.createManager();
-        ScriptEngine mimeBased = manager.getEngineByMimeType("text/javascript");
-        if (mimeBased != null) {
-            return mimeBased;
+    public static ScriptEngine newAllowedPacEngine(String allowedEngines, StringBuilder err) {
+        if (allowedEngines == null) {
+            allowedEngines = Bundle.ALLOWED_PAC_ENGINES();
         }
-        ScriptEngine namedJavaScript = manager.getEngineByName("JavaScript");
-        if (namedJavaScript != null) {
-            return namedJavaScript;
+        ScriptEngineManager manager = Scripting.newBuilder().build();
+        if (allowedEngines != null) {
+            for (String allowedEngine : allowedEngines.split(",")) {
+                ScriptEngine engine = manager.getEngineByName(allowedEngine);
+                if (engine != null) {
+                    return engine;
+                }
+            }
         }
-        return manager.getEngineByExtension("js");
+        if (err != null) {
+            logWarning(err, allowedEngines, manager);
+        }
+        return null;
     }
-    
+
+    private static void logWarning(StringBuilder sb, String allowedEngines, ScriptEngineManager manager) {
+        sb.append("Cannot find secure PAC script engine.\n"); // NOI18N
+        sb.append("Allowed engines: ").append(allowedEngines).append("\n"); // NOI18N
+        sb.append("Found engines:\n"); // NOI18N
+        for (ScriptEngineFactory f : manager.getEngineFactories()) {
+            sb.append("  ").append(f.getEngineName()).append("\n"); // NOI18N
+        }
+        sb.append("Will not resolve proxy configuration.\n"); // NOI18N
+        sb.append("Brand ALLOWED_PAC_ENGINES key in org.netbeans.core.network.proxy.pac.impl.Bundle to configure.\n"); // NOI18N
+    }
+
     /**
-     * Test if the main entry point, function FindProxyForURL()/FindProxyForURLEx(), 
+     * Test if the main entry point, function FindProxyForURL()/FindProxyForURLEx(),
      * is available.
      */
     private PacJsEntryFunction testScriptEngine(ScriptEngine eng, boolean doDeepTest) throws PacParsingException {
@@ -380,7 +404,7 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
             return false;
         }
     }
-    
+
 
     /**
      * Does the script source make reference to any of the date/time functions
@@ -390,7 +414,7 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
      * @return
      */
     private static boolean usesTimeDateFunctions(String pacScriptSource) {
-        // Will be called only once so there's little to be gained by precompiling 
+        // Will be called only once so there's little to be gained by precompiling
         // the regex statement.
 
         Pattern pattern = Pattern.compile(".*(timeRange\\s*\\(|dateRange\\s*\\(|weekdayRange\\s*\\().*", Pattern.DOTALL);
@@ -420,31 +444,31 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
 
     /**
      * Translates result from JavaScript into list of java proxy types.
-     * 
+     *
      * The string returned from the JavaScript function (input to this
-     * method) can contain any number of the following building blocks, 
+     * method) can contain any number of the following building blocks,
      * separated by a semicolon:
-     * 
+     *
      *   DIRECT
      *       Connections should be made directly, without any proxies.
-     * 
+     *
      *   PROXY host:port
      *       The specified proxy should be used.
-     * 
+     *
      *   SOCKS host:port
      *       The specified SOCKS server should be used.
-     * 
-     * 
+     *
+     *
      * @param uri
      * @param proxiesString
-     * @return 
+     * @return
      */
     private List<Proxy> analyzeResult(URI uri, Object proxiesString) throws PacValidationException {
         if (proxiesString == null) {
             LOGGER.log(Level.FINE, "Null result for {0}", uri);
             return null;
         }
-        
+
         StringTokenizer st = new StringTokenizer(proxiesString.toString(), ";"); //NOI18N
         List<Proxy> proxies = new LinkedList<>();
         while (st.hasMoreTokens()) {
@@ -457,8 +481,8 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
     private static Proxy getProxy(String proxySpec) throws PacValidationException {
          if (proxySpec.equals(PAC_DIRECT)) {
              return Proxy.NO_PROXY;
-         }      
-        
+         }
+
         String[] ele = proxySpec.split(" +"); // NOI18N
         if (ele.length != 2) {
             throw new PacValidationException("The value \"" + proxySpec + "\" has incorrect format");
@@ -478,7 +502,7 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
             default:
                 throw new PacValidationException("The value \"" + ele[0] + "\" is an unknown proxy type");
         }
-        
+
         String hostAndPortNo = ele[1];
         int i = hostAndPortNo.lastIndexOf(":"); // NOI18N
         if (i <= 0 || i == (hostAndPortNo.length() - 1)) {
@@ -494,11 +518,11 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
         } catch (NumberFormatException ex) {
             throw new PacValidationException("The portno value \"" + portStr + "\" cannot be converted to an integer");
         }
-        
+
         return new Proxy(proxyType, new InetSocketAddress(host, portNo));
     }
-    
-    
+
+
     private static class PacScriptEngine  {
         private final ScriptEngine scriptEngine;
         private final PacJsEntryFunction jsMainFunction;
@@ -521,10 +545,10 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
         public Invocable getInvocable() {
             return invocable;
         }
-        
+
         public Object findProxyForURL(String url, String host) throws ScriptException, NoSuchMethodException {
             return invocable.invokeFunction(jsMainFunction.getJsFunctionName(), url, host);
         }
     }
-        
+
 }

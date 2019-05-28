@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="main" basedir="../nbbuild" default="build">
+<project name="java" basedir="../nbbuild" default="build">
     <description>NetBeans Java cluster  build script.</description>
     <import file="../nbbuild/build.xml"/>
 

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.script.Invocable;
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptException;
@@ -30,6 +31,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import org.junit.Assume;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -226,6 +228,37 @@ public class JavaScriptEnginesTest {
         assertEquals("a", list.get("2"));
         assertEquals(Math.PI, list.get("3"));
         assertEquals(sum, list.get("4"));
+    }
+
+    @Test
+    public void allowLoadAClassInJS() throws Exception {
+        engine.getBindings(ScriptContext.ENGINE_SCOPE).put("allowAllAccess", true); // NOI18N
+        Object fn = engine.eval("(function(obj) {\n"
+                + "  var Long = Java.type('java.lang.Long');\n"
+                + "  return new Long(33);\n"
+                + "})\n");
+        assertNotNull(fn);
+
+        Object value = ((Invocable) engine).invokeMethod(fn, "call", null, null);
+        assertTrue("Is number: " + value, value instanceof Number);
+        assertEquals(33, ((Number) value).intValue());
+    }
+
+    @Test
+    public void preventLoadAClassInJS() throws Exception {
+        Object fn = engine.eval("(function(obj) {\n"
+                + "  var Long = Java.type('java.lang.Long');\n"
+                + "  return new Long(33);\n"
+                + "})\n");
+        assertNotNull(fn);
+
+        Object value;
+        try {
+            value = ((Invocable) engine).invokeMethod(fn, "call", null, null);
+        } catch (ScriptException | RuntimeException ex) {
+            return;
+        }
+        fail("Access to Java.type classes shall be prevented: " + value);
     }
 
     public static interface ArrayLike {

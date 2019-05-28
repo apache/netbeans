@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.function.Predicate;
 import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
@@ -125,7 +126,10 @@ public final class Scripting {
             }
             if (eng.getFactory().getNames().contains("Graal.js")) { // NOI18N
                 final Bindings b = eng.getBindings(ScriptContext.ENGINE_SCOPE);
-                b.put("polyglot.js.allowHostAccess", true); // NOI18N
+                b.put("polyglot.js.nashorn-compat", true); // NOI18N
+                b.put("polyglot.js.allowHostClassLookup", (Predicate<String>) (s) -> { // NOI18N
+                    return allowHostClassLookup(eng, s);
+                });
             }
             if (isNashornFactory(eng.getFactory())) {
                 return secureEngineEngine(eng);
@@ -138,7 +142,7 @@ public final class Scripting {
         static {
             Class<?> klass;
             try {
-                klass = Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory");
+                klass = Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory"); // NOI18N
             } catch (ClassNotFoundException ex) {
                 klass = String.class;
             }
@@ -148,20 +152,30 @@ public final class Scripting {
             return nashornScriptEngineFactory.isInstance(f);
         }
 
-        private ScriptEngine secureEngineEngine(ScriptEngine e) {
+        private ScriptEngine secureEngineEngine(ScriptEngine prototypeEngine) {
+            final ScriptEngine[] engine = { prototypeEngine };
             try {
-                ScriptEngineFactory f = e.getFactory();
+                ScriptEngineFactory f = engine[0].getFactory();
                 final Class<? extends ScriptEngineFactory> factoryClass = f.getClass();
                 final ClassLoader factoryClassLoader = factoryClass.getClassLoader();
                 Class<?> filterClass = Class.forName("jdk.nashorn.api.scripting.ClassFilter", true, factoryClassLoader);
                 Method createMethod = factoryClass.getMethod("getScriptEngine", filterClass);
                 Object filter = java.lang.reflect.Proxy.newProxyInstance(factoryClassLoader, new Class[]{filterClass}, (Object proxy, Method method, Object[] args) -> {
-                    return false;
+                    return allowHostClassLookup(engine[0], (String) args[0]);
                 });
-                return (ScriptEngine) createMethod.invoke(f, filter);
+                engine[0] = (ScriptEngine) createMethod.invoke(f, filter);
+                return engine[0];
             } catch (NoSuchMethodException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                return e;
+                return engine[0];
             }
+        }
+
+        private boolean allowHostClassLookup(final ScriptEngine engine, String className) {
+            Object engineAllAccess = engine.getBindings(ScriptContext.ENGINE_SCOPE).get("allowAllAccess");
+            Object globalAllAccess = getBindings().get("allowAllAccess");
+
+            boolean allowClassAccess = Boolean.TRUE.equals(engineAllAccess) || Boolean.TRUE.equals(globalAllAccess);
+            return allowClassAccess;
         }
 
         private final class GraalJSWrapperFactory implements ScriptEngineFactory {

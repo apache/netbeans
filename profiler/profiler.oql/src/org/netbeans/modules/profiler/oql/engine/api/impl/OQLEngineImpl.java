@@ -382,7 +382,7 @@ public class OQLEngineImpl {
         try {
             ScriptEngineManager manager = Scripting.createManager();
             engine = manager.getEngineByName("JavaScript"); // NOI18N
-            engine.getBindings(ScriptContext.ENGINE_SCOPE).put("polyglot.js.nashorn-compat", true);
+            engine.getBindings(ScriptContext.ENGINE_SCOPE).put("allowAllAccess", true);
             InputStream strm = getInitStream();
             CompiledScript cs = ((Compilable)engine).compile(new InputStreamReader(strm));
             cs.eval();

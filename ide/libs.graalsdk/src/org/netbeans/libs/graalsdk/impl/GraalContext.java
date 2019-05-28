@@ -34,10 +34,12 @@ import org.graalvm.polyglot.PolyglotAccess;
 import org.openide.util.io.ReaderInputStream;
 
 final class GraalContext implements ScriptContext {
+    private final static String ALLOW_ALL_ACCESS = "allowAllAccess"; // NOI18N
     private Context ctx;
     private final WriterOutputStream writer = new WriterOutputStream(new OutputStreamWriter(System.out));
     private final WriterOutputStream errorWriter = new WriterOutputStream(new OutputStreamWriter(System.err));
     private Reader reader;
+    private final Bindings globals;
     private SimpleBindings bindings;
     private boolean allowAllAccess;
 
@@ -50,6 +52,10 @@ final class GraalContext implements ScriptContext {
             denyAccess(Object.class, false).
             build();
     // END: org.netbeans.libs.graalsdk.impl.GraalContext#SANDBOX
+
+    GraalContext(Bindings globals) {
+        this.globals = globals;
+    }
 
     synchronized final Context ctx() {
         if (ctx == null) {
@@ -64,7 +70,7 @@ final class GraalContext implements ScriptContext {
                 }
             }
             b.allowPolyglotAccess(PolyglotAccess.ALL);
-            if (allowAllAccess) {
+            if (Boolean.TRUE.equals(getAttribute(ALLOW_ALL_ACCESS, ScriptContext.GLOBAL_SCOPE))) {
                 b.allowHostAccess(HostAccess.ALL);
                 b.allowAllAccess(true);
             } else {
@@ -74,7 +80,6 @@ final class GraalContext implements ScriptContext {
         }
         return ctx;
     }
-
 
     @Override
     public void setBindings(Bindings bindings, int scope) {
@@ -101,7 +106,7 @@ final class GraalContext implements ScriptContext {
     @Override
     public void setAttribute(String name, Object value, int scope) {
         assertGlobalScope(scope);
-        if ("allowAllAccess".equals(name)) { // NOI18N
+        if (ALLOW_ALL_ACCESS.equals(name)) {
             if (this.ctx == null) {
                 this.allowAllAccess = Boolean.TRUE.equals(value);
                 return;
@@ -114,10 +119,12 @@ final class GraalContext implements ScriptContext {
     @Override
     public Object getAttribute(String name, int scope) {
         assertGlobalScope(scope);
-        if ("allowAllAccess".equals(name)) { // NOI18N
-            return this.allowAllAccess;
+        if (ALLOW_ALL_ACCESS.equals(name)) {
+            if (this.allowAllAccess) {
+                return true;
+            }
         }
-        return null;
+        return globals == null ? null : globals.get(name);
     }
 
     @Override

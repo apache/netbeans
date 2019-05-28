@@ -380,9 +380,8 @@ public class OQLEngineImpl {
     private void init(Snapshot snapshot) throws RuntimeException {
         this.snapshot = snapshot;
         try {
-            ScriptEngineManager manager = Scripting.createManager();
+            ScriptEngineManager manager = Scripting.newBuilder().allowAllAccess(true).build();
             engine = manager.getEngineByName("JavaScript"); // NOI18N
-            engine.getBindings(ScriptContext.ENGINE_SCOPE).put("allowAllAccess", true);
             InputStream strm = getInitStream();
             CompiledScript cs = ((Compilable)engine).compile(new InputStreamReader(strm));
             cs.eval();

@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.script.Invocable;
-import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptException;
@@ -39,7 +38,7 @@ import org.junit.runners.Parameterized;
 
 @RunWith(Parameterized.class)
 public class JavaScriptEnginesTest {
-    @Parameterized.Parameters(name = "{0}")
+    @Parameterized.Parameters(name = "{0}@{1}")
     public static Object[][] engines() {
         List<Object[]> arr = new ArrayList<>();
         for (ScriptEngineFactory f : Scripting.createManager().getEngineFactories()) {
@@ -48,7 +47,16 @@ public class JavaScriptEnginesTest {
                 f.getMimeTypes().contains("text/javascript") ||
                 name.contains("Nashorn")
             ) {
-                arr.add(new Object[] { name, f.getScriptEngine() });
+                arr.add(new Object[] { name, false, f.getScriptEngine() });
+            }
+        }
+        for (ScriptEngineFactory f : Scripting.newBuilder().allowAllAccess(true).build().getEngineFactories()) {
+            final String name = f.getEngineName();
+            if (
+                f.getMimeTypes().contains("text/javascript") ||
+                name.contains("Nashorn")
+            ) {
+                arr.add(new Object[] { name, true, f.getScriptEngine() });
             }
         }
         return arr.toArray(new Object[0][]);
@@ -56,9 +64,11 @@ public class JavaScriptEnginesTest {
 
     private final String engineName;
     private final ScriptEngine engine;
+    private final boolean allowAllAccess;
 
-    public JavaScriptEnginesTest(String engineName, ScriptEngine engine) {
+    public JavaScriptEnginesTest(String engineName, boolean allowAllAccess, ScriptEngine engine) {
         this.engineName = engineName;
+        this.allowAllAccess = allowAllAccess;
         this.engine = engine;
     }
 
@@ -232,11 +242,13 @@ public class JavaScriptEnginesTest {
 
     @Test
     public void allowLoadAClassInJS() throws Exception {
-        engine.getBindings(ScriptContext.ENGINE_SCOPE).put("allowAllAccess", true); // NOI18N
+        Assume.assumeTrue("All access has to be allowed", allowAllAccess);
+        // BEGIN: org.netbeans.api.scripting.JavaScriptEnginesTest#allowLoadAClassInJS
         Object fn = engine.eval("(function(obj) {\n"
                 + "  var Long = Java.type('java.lang.Long');\n"
                 + "  return new Long(33);\n"
                 + "})\n");
+        // END: org.netbeans.api.scripting.JavaScriptEnginesTest#allowLoadAClassInJS
         assertNotNull(fn);
 
         Object value = ((Invocable) engine).invokeMethod(fn, "call", null, null);
@@ -246,6 +258,7 @@ public class JavaScriptEnginesTest {
 
     @Test
     public void preventLoadAClassInJS() throws Exception {
+        Assume.assumeFalse("All access has to be disabled", allowAllAccess);
         Object fn = engine.eval("(function(obj) {\n"
                 + "  var Long = Java.type('java.lang.Long');\n"
                 + "  return new Long(33);\n"

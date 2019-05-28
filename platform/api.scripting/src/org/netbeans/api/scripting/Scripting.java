@@ -21,6 +21,7 @@ package org.netbeans.api.scripting;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.function.Predicate;
@@ -48,6 +49,8 @@ import org.openide.util.Lookup;
  * @since 1.0
  */
 public final class Scripting {
+    private boolean allowAllAccess;
+
     private Scripting() {
     }
 
@@ -59,10 +62,54 @@ public final class Scripting {
      * @return new instance of the engine manager
      */
     public static ScriptEngineManager createManager() {
-        List<ScriptEngineFactory> extra = new ArrayList<>();
-        for (EngineProvider p : Lookup.getDefault().lookupAll(EngineProvider.class)) {
-            extra.addAll(p.factories());
-        }
+        return newBuilder().build();
+    }
+
+    /**
+     * A builder to configure and create new instance of {@link ScriptEngineManager}.
+     *
+     * @return a builder object with {@link #build()} method
+     * @since 1.2
+     */
+    public static Scripting newBuilder() {
+        return new Scripting();
+    }
+
+    /** Allows the scripts to access JVM classes. By default the scripts
+     * run in as restricted environment as possible. See
+     * <a href="@org-netbeans-libs-graalsdk@/org/netbeans/libs/graalsdk/package-summary.html">scripting tutorial</a>
+     * for details. That is the prefered mode of execution. However,
+     * if your script is known and trusted, you may allow it to access
+     * classes and features in the JVM. For example it is common in Nashorn scripts
+     * to use:
+     * 
+     * {@codesnippet org.netbeans.api.scripting.JavaScriptEnginesTest#allowLoadAClassInJS}
+     * 
+     * Such classloading is prevented by default. To allow it, specify {@code true}
+     * in here.
+     * <p>
+     * {@link ScriptEngineManager} created with all access on, has a boolean property
+     * in its {@link ScriptEngineManager#getBindings()}:
+     * {@codesnippet org.netbeans.api.scripting.ScriptingTest#testBuilderAllowAccess}
+     *
+     * @param allAccess allow access to JVM internals from the script
+     * @return instance of {@code this} builder
+     * @since 1.2
+     */
+    public Scripting allowAllAccess(boolean allAccess) {
+        this.allowAllAccess = allAccess;
+        return this;
+    }
+
+    /** Create new {@link ScriptEngineManager} configured for the NetBeans
+     * environment. The manager serves as an <em>isolated</em> environment -
+     * engines created from the same manager are supposed to share the
+     * same internals and be able to communicate with each other.
+     *
+     * @return new instance of the engine manager
+     * @since 1.2
+     */
+    public ScriptEngineManager build() {
         ClassLoader l = Lookup.getDefault().lookup(ClassLoader.class);
         if (l == null) {
             l = Thread.currentThread().getContextClassLoader();
@@ -70,15 +117,20 @@ public final class Scripting {
         if (l == null) {
             l = Scripting.class.getClassLoader();
         }
-        return new EngineManager(extra, l);
+        return new EngineManager(allowAllAccess, l);
     }
 
     private static final class EngineManager extends ScriptEngineManager {
         private final List<ScriptEngineFactory> extra;
+        private final boolean allowAllAccess;
 
-        EngineManager(List<ScriptEngineFactory> extra, ClassLoader loader) {
+        EngineManager(boolean allowAllAccess, ClassLoader loader) {
             super(loader);
-            this.extra = extra;
+            this.allowAllAccess = allowAllAccess;
+            if (allowAllAccess) {
+                getBindings().put("allowAllAccess", true); // NOI18N
+            }
+            this.extra = populateExtras(this);
             for (ScriptEngineFactory f : extra) {
                 registerEngineName(f.getEngineName(), f);
                 for (String ext : f.getExtensions()) {
@@ -88,6 +140,14 @@ public final class Scripting {
                     registerEngineMimeType(mime, f);
                 }
             }
+        }
+
+        private static List<ScriptEngineFactory> populateExtras(EngineManager m) {
+            List<ScriptEngineFactory> extra = new ArrayList<>();
+            for (EngineProvider p : Lookup.getDefault().lookupAll(EngineProvider.class)) {
+                extra.addAll(p.factories(m));
+            }
+            return Collections.unmodifiableList(extra);
         }
 
         @Override
@@ -171,11 +231,7 @@ public final class Scripting {
         }
 
         private boolean allowHostClassLookup(final ScriptEngine engine, String className) {
-            Object engineAllAccess = engine.getBindings(ScriptContext.ENGINE_SCOPE).get("allowAllAccess");
-            Object globalAllAccess = getBindings().get("allowAllAccess");
-
-            boolean allowClassAccess = Boolean.TRUE.equals(engineAllAccess) || Boolean.TRUE.equals(globalAllAccess);
-            return allowClassAccess;
+            return allowAllAccess;
         }
 
         private final class GraalJSWrapperFactory implements ScriptEngineFactory {

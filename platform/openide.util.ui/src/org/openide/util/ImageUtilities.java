@@ -19,7 +19,6 @@
 
 package org.openide.util;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.HeadlessException;
@@ -31,8 +30,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
-import java.awt.image.IndexColorModel;
 import java.awt.image.RGBImageFilter;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
@@ -138,6 +135,10 @@ public final class ImageUtilities {
      * @return icon's Image or null if the icon cannot be loaded
      */
     public static final Image loadImage(String resource, boolean localized) {
+        // Avoid a NPE that could previously occur in the isDarkLaF case only. See NETBEANS-2401.
+        if (resource == null) {
+            return null;
+        }
         Image image = null;
         if( isDarkLaF() ) {
             image = getIcon(addDarkSuffix(resource), localized);
@@ -149,8 +150,7 @@ public final class ImageUtilities {
             // only non _dark images need filtering
             RGBImageFilter imageFilter = getImageIconFilter();
             if (null != image && null != imageFilter) {
-                image = Toolkit.getDefaultToolkit()
-                        .createImage(new FilteredImageSource(image.getSource(), imageFilter));
+                image = createFilteredImage(imageFilter, image);
             }
         }
         return image;
@@ -342,7 +342,10 @@ public final class ImageUtilities {
      */
     public static Icon createDisabledIcon(Icon icon)  {
         Parameters.notNull("icon", icon);
-        return new LazyDisabledIcon(icon2Image(icon));
+        /* FilteredIcon's Javadoc mentions a caveat about the Component parameter that is passed to
+        Icon.paintIcon. It's not really a problem; previous implementations had the same
+        behavior. */
+        return FilteredIcon.create(DisabledButtonFilter.INSTANCE, icon);
     }
 
     /**
@@ -353,7 +356,14 @@ public final class ImageUtilities {
      */
     public static Image createDisabledImage(Image image)  {
         Parameters.notNull("image", image);
-        return LazyDisabledIcon.createDisabledImage(image);
+        return createFilteredImage(DisabledButtonFilter.INSTANCE, image);
+    }
+
+    private static Image createFilteredImage(RGBImageFilter filter, Image image) {
+        Parameters.notNull("filter", filter);
+        Parameters.notNull("image", image);
+        return Toolkit.getDefaultToolkit().createImage(
+                new FilteredImageSource(image.getSource(), filter));
     }
 
     /**
@@ -880,44 +890,8 @@ public final class ImageUtilities {
         }
     }
 
-    private static class LazyDisabledIcon implements Icon {
-
-        /** Shared instance of filter for disabled icons */
-        private static final RGBImageFilter DISABLED_BUTTON_FILTER = new DisabledButtonFilter();
-        private Image img;
-        private Icon disabledIcon;
-
-        public LazyDisabledIcon(Image img) {
-            assert null != img;
-            this.img = img;
-        }
-
-        public void paintIcon(Component c, Graphics g, int x, int y) {
-            getDisabledIcon().paintIcon(c, g, x, y);
-        }
-
-        public int getIconWidth() {
-            return getDisabledIcon().getIconWidth();
-        }
-
-        public int getIconHeight() {
-            return getDisabledIcon().getIconHeight();
-        }
-
-        private synchronized Icon getDisabledIcon() {
-            if (null == disabledIcon) {
-                disabledIcon = new ImageIcon(createDisabledImage(img));
-            }
-            return disabledIcon;
-        }
-
-        static Image createDisabledImage(Image img) {
-            ImageProducer prod = new FilteredImageSource(img.getSource(), DISABLED_BUTTON_FILTER);
-            return Toolkit.getDefaultToolkit().createImage(prod);
-        }
-    }
-
     private static class DisabledButtonFilter extends RGBImageFilter {
+        public static final RGBImageFilter INSTANCE = new DisabledButtonFilter();
 
         DisabledButtonFilter() {
             canFilterIndexColorModel = true;

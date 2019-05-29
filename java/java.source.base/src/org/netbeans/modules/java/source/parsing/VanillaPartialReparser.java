@@ -37,10 +37,8 @@ import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.comp.Flow;
 import com.sun.tools.javac.comp.TypeEnter;
 import com.sun.tools.javac.parser.LazyDocCommentTable;
-import com.sun.tools.javac.parser.ParserFactory;
 import com.sun.tools.javac.parser.Scanner;
 import com.sun.tools.javac.parser.ScannerFactory;
-import com.sun.tools.javac.tree.DocCommentTable;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
@@ -49,7 +47,6 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Options;
-//import com.sun.tools.javac.util.Position.LineMapImpl;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -69,9 +66,6 @@ import org.netbeans.lib.nbjavac.services.CancelService;
 import org.netbeans.lib.nbjavac.services.NBLog;
 import org.netbeans.lib.nbjavac.services.NBParserFactory;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
-import org.netbeans.modules.java.source.parsing.CompilationInfoImpl;
-import org.netbeans.modules.java.source.parsing.JavacFlowListener;
-import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.java.source.parsing.JavacParser.PartialReparser;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.openide.filesystems.FileObject;
@@ -87,6 +81,7 @@ public class VanillaPartialReparser implements PartialReparser {
     private final Method unenter;
     private final Field lazyDocCommentsTable;
     private final Field parserDocComments;
+    private final Method lineMapBuild;
 
     public VanillaPartialReparser() {
         Method unenter;
@@ -112,6 +107,15 @@ public class VanillaPartialReparser implements PartialReparser {
             parserDocComments = null;
         }
         this.parserDocComments = parserDocComments;
+        Method lineMapBuild;
+        try {
+            Class<?> lineMapImpl = Class.forName("com.sun.tools.javac.util.Position$LineMapImpl");
+            lineMapBuild = lineMapImpl.getDeclaredMethod("build", char[].class, int.class);
+            lineMapBuild.setAccessible(true);
+        } catch (NoSuchMethodException | ClassNotFoundException ex) {
+            lineMapBuild = null;
+        }
+        this.lineMapBuild = lineMapBuild;
     }
 
     @Override
@@ -252,7 +256,9 @@ public class VanillaPartialReparser implements PartialReparser {
                     //fix CompilationUnitTree.getLineMap:
                     long startM = System.currentTimeMillis();
                     char[] chars = snapshot.getText().toString().toCharArray();
-//                    ((LineMapImpl) cu.getLineMap()).build(chars, chars.length);
+                    if (lineMapBuild != null) {
+                        lineMapBuild.invoke(cu.getLineMap(), chars, chars.length);
+                    }
                     LOGGER.log(Level.FINER, "Rebuilding LineMap took: {0}", System.currentTimeMillis() - startM);
 
                     ((CompilationInfoImpl.DiagnosticListenerImpl)dl).endPartialReparse (delta);
@@ -278,6 +284,7 @@ public class VanillaPartialReparser implements PartialReparser {
             if (a) {
                 JavacParser.dumpSource(ci, t);
             }
+            t.printStackTrace();
             return false;
         }
         return true;

@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.source.parsing;
 
+import com.sun.source.tree.LineMap;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
@@ -31,6 +32,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
@@ -268,24 +270,29 @@ public class PartialReparseTest extends NbTestCase {
         doc.insertString(startReplace, inject, null);
         AtomicReference<List<TreeDescription>> actualTree = new AtomicReference<>();
         AtomicReference<List<DiagnosticDescription>> actualDiagnostics = new AtomicReference<>();
+        AtomicReference<List<Long>> actualLineMap = new AtomicReference<>();
         source.runUserActionTask(cc -> {
             cc.toPhase(Phase.RESOLVED);
             assertSame(topLevel[0], cc.getCompilationUnit());
             actualTree.set(dumpTree(cc));
             actualDiagnostics.set(dumpDiagnostics(cc));
+            actualLineMap.set(dumpLineMap(cc));
         }, true);
         ec.saveDocument();
         ec.close();
         AtomicReference<List<TreeDescription>> expectedTree = new AtomicReference<>();
         AtomicReference<List<DiagnosticDescription>> expectedDiagnostics = new AtomicReference<>();
+        AtomicReference<List<Long>> expectedLineMap = new AtomicReference<>();
         source.runUserActionTask(cc -> {
             cc.toPhase(Phase.RESOLVED);
             assertNotSame(topLevel[0], cc.getCompilationUnit());
             expectedTree.set(dumpTree(cc));
             expectedDiagnostics.set(dumpDiagnostics(cc));
+            expectedLineMap.set(dumpLineMap(cc));
         }, true);
         assertEquals(expectedTree.get(), actualTree.get());
         assertEquals(expectedDiagnostics.get(), actualDiagnostics.get());
+        assertEquals(expectedLineMap.get(), actualLineMap.get());
     }
 
     private void doVerifyFullReparse(String code, String inject) throws Exception {
@@ -360,6 +367,19 @@ public class PartialReparseTest extends NbTestCase {
 
     private static List<DiagnosticDescription> dumpDiagnostics(CompilationInfo info) {
         return info.getDiagnostics().stream().map(d -> new DiagnosticDescription(d)).collect(Collectors.toList());
+    }
+
+    private static List<Long> dumpLineMap(CompilationInfo info) {
+        LineMap lm = info.getCompilationUnit().getLineMap();
+        int len = info.getText().length();
+        List<Long> dump = new ArrayList<>();
+        for (int p = 0; p <= len + 1; p++) {
+            dump.add(lm.getLineNumber(p));
+            dump.add(lm.getColumnNumber(p));
+            dump.add(lm.getStartPosition(lm.getLineNumber(p)));
+            dump.add(lm.getPosition(lm.getLineNumber(p), lm.getColumnNumber(p)));
+        }
+        return dump;
     }
 
     private static final class TreeDescription {

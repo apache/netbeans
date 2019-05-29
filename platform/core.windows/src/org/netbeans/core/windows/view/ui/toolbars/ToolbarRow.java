@@ -35,11 +35,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import org.openide.util.ImageUtilities;
 
 /**
  * Panel which holds one row of toolbars. The order of toolbars is defined
@@ -183,7 +183,7 @@ class ToolbarRow extends JPanel {
         if( dropContainter != container ) {
             //create image of dragged toolbar and show it in the area where toolbar will be dropped
             dropContainter = container;
-            dropReplacement.setIcon(new ImageIcon(dragImage));
+            dropReplacement.setIcon(ImageUtilities.image2Icon(dragImage));
         }
         
         if( null != targetComp ) {

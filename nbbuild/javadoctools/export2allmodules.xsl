@@ -20,14 +20,23 @@
 
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <xsl:import href="jsonhelp.xsl" />
     <xsl:output method="html"/>
-
+    <xsl:param name="maturity" />
     <xsl:template match="/" >
         <html>
         <head>
             <!-- projects.netbeans.org -->
            <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-           <title>All Apache NetBeans (incubating) Classes</title>
+           <xsl:element name="title">
+               <xsl:text>All </xsl:text>
+               <xsl:call-template name="apachenetbeanstext" >
+                   <xsl:with-param name="maturity">
+                       <xsl:value-of select="$maturity"/>
+                   </xsl:with-param>
+               </xsl:call-template>
+               <xsl:text>Classes</xsl:text>
+           </xsl:element>
            <link rel="stylesheet" href="org-openide-util/javadoc.css" type="text/css"/>
         </head>
 

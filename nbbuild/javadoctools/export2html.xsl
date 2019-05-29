@@ -20,33 +20,60 @@
 
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <xsl:import href="jsonhelp.xsl" />
     <xsl:output method="html"/>
     <xsl:param name="date" />
     <xsl:param name="download" select="'true'"/>
-
+    <xsl:param name="maturity" />
+    <xsl:param name="version" />
+    <xsl:param name="releaseinfo" />
+    
     <!-- unique key over all groups of apis -->
     <xsl:key match="//api[@type='export']" name="apiGroups" use="@group" />
     <!-- unique key over all names of apis -->
     <xsl:key match="//api" name="apiNames" use="@name" />
-
     <xsl:template match="/apis" >
+        <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;</xsl:text>
         <html>
         <head>
             <!-- projects.netbeans.org -->
            <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-           <title>Apache NetBeans (incubating) API List</title>
-            <link rel="stylesheet" href="netbeans.css" type="text/css"/>
-
-          <link REL="icon" href="http://www.netbeans.org/favicon.ico" type="image/ico" />
-          <link REL="shortcut icon" href="http://www.netbeans.org/favicon.ico" />
+           <xsl:element name="title">
+               <xsl:call-template name="apachenetbeanstext" >
+                   <xsl:with-param name="maturity">
+                       <xsl:value-of select="$maturity"/>
+                   </xsl:with-param>
+               </xsl:call-template>
+               <xsl:text>API List</xsl:text>
+           </xsl:element>
+           <link rel="stylesheet" href="netbeans.css" type="text/css"/>
+           <link rel="icon" type="image/png" sizes="32x32" href="//netbeans.apache.org/favicon-32x32.png" /> 
+           <link rel="icon" type="image/png" sizes="16x16" href="//netbeans.apache.org/favicon-16x16.png" />
+          
 
         </head>
 
         <body>
 
         <center>
-            <h1>Apache NetBeans (incubating) API List</h1>
-            <h3>Current Development Version</h3>
+            <xsl:element name="h1">
+                <xsl:call-template name="apachenetbeanstext" >
+                    <xsl:with-param name="maturity">
+                        <xsl:value-of select="$maturity"/>
+                    </xsl:with-param>
+                </xsl:call-template>
+                <xsl:text>API List</xsl:text>
+            </xsl:element>
+            <xsl:element name="h3">
+                <xsl:call-template name="apachenetbeansversion" >
+                    <xsl:with-param name="maturity">
+                        <xsl:value-of select="$maturity"/>                
+                    </xsl:with-param>
+                    <xsl:with-param name="version">
+                        <xsl:value-of select="$version"/>                
+                    </xsl:with-param>
+                </xsl:call-template>
+            </xsl:element>
             <xsl:if test="$date" >
                 <xsl:value-of select="$date" />
                 <p/>
@@ -61,8 +88,7 @@
         <span style="background:#ddcc80">under development</span>,
         <span style="background:#afafaf;text-decoration:line-through">deprecated</span>,
         <span style="background:#e0c0c0">friend or private</span>;
-        see <a
-        href="http://wiki.netbeans.org/API_Stability">API
+        see <a href="http://wiki.netbeans.org/API_Stability">API
         stability</a> for more info).
         The aim is to provide as detailed a definition of NetBeans module 
         external interfaces as possible and give other developers a chance to decide
@@ -80,13 +106,61 @@
         <em>NetBeans</em> one is free to choose the set of modules and their APIs 
         to satisfy one's needs.
         <p>
-        This is a list of APIs for development version, if you want to see
-        a list of APIs for a particular version, you may want to go to:
+        This is a list of APIs for 
+            <xsl:call-template name="apachenetbeansversion" >
+                <xsl:with-param name="maturity">
+                    <xsl:value-of select="$maturity"/>                
+                </xsl:with-param>
+                <xsl:with-param name="version">
+                    <xsl:value-of select="$version"/>                
+                </xsl:with-param>
+            </xsl:call-template>, if you want to see
+        a list of APIs at for a particular version, you may want to go to:
         </p>
         <ul>
-            <li><a href="http://bits.netbeans.org/11.0/javadoc/" target="_top">11.0</a> - Javadoc as released for NetBeans IDE 11.0</li>
-            <li><a href="http://bits.netbeans.org/10.0/javadoc/" target="_top">10.0</a> - Javadoc as released for NetBeans IDE 10.0</li>
-            <li><a href="http://bits.netbeans.org/9.0/javadoc/" target="_top">9.0</a> - Javadoc as released for NetBeans IDE 9.0</li>
+            <xsl:variable name="currentversion" select="document($releaseinfo)/*/@position"/>
+            <xsl:for-each select="document($releaseinfo)//release">
+                <xsl:sort data-type="number" select="@position" order="descending" />
+                <li>
+                    <xsl:choose>
+                        <xsl:when test="$currentversion = @position">
+                            This is were your are - Javadoc as released for
+                            <xsl:call-template name="apachenetbeansversion" >
+                                <xsl:with-param name="maturity">
+                                    <xsl:value-of select="@tlp"/>
+                                </xsl:with-param>
+                                <xsl:with-param name="version">
+                                    <xsl:value-of select="@version"/>                
+                                </xsl:with-param>
+                            </xsl:call-template>             
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:element name="a">
+                                <xsl:attribute name="href">
+                                    <xsl:value-of select="@apidocurl"/>
+                                </xsl:attribute>
+                                <xsl:attribute name="target">_top</xsl:attribute>
+                                <xsl:value-of select="@version"/>
+                            </xsl:element>                 
+                            - Javadoc as released for 
+                            <xsl:call-template name="apachenetbeansversion" >
+                                <xsl:with-param name="maturity">
+                                    <xsl:value-of select="@tlp"/>
+                                </xsl:with-param>
+                                <xsl:with-param name="version">
+                                    <xsl:value-of select="@version"/>                
+                                </xsl:with-param>
+                            </xsl:call-template>          
+                        </xsl:otherwise>
+                    </xsl:choose>
+                    
+                </li>
+            </xsl:for-each>
+        </ul>
+        <p>
+        This is a list of apidocs of NetBeans of Oracle era.
+        </p>
+        <ul>
             <li><a href="http://bits.netbeans.org/8.2/javadoc/" target="_top">8.2</a> - Javadoc as released for NetBeans IDE 8.2</li>
             <li><a href="http://bits.netbeans.org/8.1/javadoc/" target="_top">8.1</a> - Javadoc as released for NetBeans IDE 8.1</li>
             <li><a href="http://bits.netbeans.org/8.0.1/javadoc/" target="_top">8.0.1</a> - Javadoc as released for NetBeans IDE 8.0.1</li>
@@ -130,7 +204,7 @@
 
         <h4>FAQ and Mailing List</h4>
 
-        <p>Can't find what you're looking for? Try the <a href="https://netbeans.apache.org" target="_top">Apache NetBeans (incubating) website</a>.</p>
+        <p>Can't find what you're looking for? Try the <a href="https://netbeans.apache.org" target="_top">Apache NetBeans website</a>.</p>
 
         <hr/>
         <xsl:call-template name="list-modules" />
@@ -432,5 +506,3 @@
     </xsl:template>
     
 </xsl:stylesheet>
-
-

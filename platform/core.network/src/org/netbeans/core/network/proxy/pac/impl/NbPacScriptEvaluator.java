@@ -353,12 +353,10 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
             allowedEngines = Bundle.ALLOWED_PAC_ENGINES();
         }
         ScriptEngineManager manager = Scripting.newBuilder().build();
-        if (allowedEngines != null) {
-            for (String allowedEngine : allowedEngines.split(",")) {
-                ScriptEngine engine = manager.getEngineByName(allowedEngine);
-                if (engine != null) {
-                    return engine;
-                }
+        for (String allowedEngine : allowedEngines.split(",")) { // NOI18N
+            ScriptEngine engine = manager.getEngineByName(allowedEngine);
+            if (engine != null) {
+                return engine;
             }
         }
         if (err != null) {

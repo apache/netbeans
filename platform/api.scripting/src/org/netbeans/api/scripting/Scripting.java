@@ -222,8 +222,8 @@ public final class Scripting {
                 ScriptEngineFactory f = engine[0].getFactory();
                 final Class<? extends ScriptEngineFactory> factoryClass = f.getClass();
                 final ClassLoader factoryClassLoader = factoryClass.getClassLoader();
-                Class<?> filterClass = Class.forName("jdk.nashorn.api.scripting.ClassFilter", true, factoryClassLoader);
-                Method createMethod = factoryClass.getMethod("getScriptEngine", filterClass);
+                Class<?> filterClass = Class.forName("jdk.nashorn.api.scripting.ClassFilter", true, factoryClassLoader); // NOI18N
+                Method createMethod = factoryClass.getMethod("getScriptEngine", filterClass); // NOI18N
                 Object filter = java.lang.reflect.Proxy.newProxyInstance(factoryClassLoader, new Class[]{filterClass}, (Object proxy, Method method, Object[] args) -> {
                     return allowHostClassLookup(engine[0], (String) args[0]);
                 });

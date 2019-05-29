@@ -39,6 +39,7 @@ ant -f ide/libs.graalsdk/build.xml test
 #
 ant -f webcommon/libs.graaljs/build.xml test
 ant -f profiler/profiler.oql/build.xml test
+ant -f platform/api.htmlui/build.xml test
 
 $GRAALVM/bin/gu install python
 $GRAALVM/bin/gu install R

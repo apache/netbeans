@@ -23,9 +23,9 @@ import org.netbeans.modules.gradle.api.NbGradleProject;
 import java.util.Collection;
 import org.netbeans.modules.gradle.spi.GradleProgressListenerProvider;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.gradle.tooling.Failure;
@@ -57,11 +57,12 @@ import org.openide.util.Lookup;
  * @author Laszlo Kishalmi
  */
 @ProjectServiceProvider(service = GradleProgressListenerProvider.class, projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java")
-public class GradleTestProgressListener implements ProgressListener, GradleProgressListenerProvider {
+public final class GradleTestProgressListener implements ProgressListener, GradleProgressListenerProvider {
 
     final private Project project;
     TestSession session;
-    Map<String, Testcase> runningTests = new HashMap<>();
+
+    Map<String, Testcase> runningTests = new ConcurrentHashMap<>();
 
     public GradleTestProgressListener(Project project) {
         this.project = project;
@@ -125,47 +126,42 @@ public class GradleTestProgressListener implements ProgressListener, GradleProgr
     }
 
     private void sessionFinish(TestFinishEvent evt) {
-        TestOperationResult result = evt.getResult();
-        Report report = session.getReport(result.getEndTime() - result.getStartTime());
+        runningTests.clear();
         CoreManager manager = getManager();
         if (manager != null) {
-            manager.sessionFinished(session);
-            manager.displayReport(session, report, true);
             manager.sessionFinished(session);
         }
     }
 
     private void suiteStart(TestStartEvent evt, JvmTestOperationDescriptor op) {
-        if (op.getClassName() != null) {
-            TestSuite suite = new GradleTestSuite(op);
-            session.addSuite(suite);
-            CoreManager manager = getManager();
-            if (manager != null) {
-                manager.displaySuiteRunning(session, suite);
-            }
-        }
     }
 
     private void suiteFinish(TestFinishEvent evt, JvmTestOperationDescriptor op) {
-
+        TestOperationResult result = evt.getResult();
+        TestSuite currentSuite = session.getCurrentSuite();
+        String suiteName = GradleTestSuite.suiteName(op);
+        if (suiteName.equals(currentSuite.getName())) {
+            Report report = session.getReport(result.getEndTime() - result.getStartTime());
+            CoreManager manager = getManager();
+            if (manager != null) {
+                manager.displayReport(session, report, true);
+            }
+        }
     }
 
     private void caseStart(TestStartEvent evt, JvmTestOperationDescriptor op) {
-        Testcase tc = new GradleTestcase(op, session);
-        if (op.getSuiteName() == null) {
-            // Sometimes it is possible to receive testcase execution events
-            // without suite. It is common with TestNG
-            TestSuite currentSuite = session.getCurrentSuite();
-            if ((currentSuite == null) || !currentSuite.getName().equals(op.getClassName())) {
-                TestSuite suite = new GradleTestSuite(op);
-                session.addSuite(suite);
-                CoreManager manager = getManager();
-                if (manager != null) {
-                    manager.displaySuiteRunning(session, suite);
-                }
+        assert session != null;
+        assert op.getParent() != null;
+        TestSuite currentSuite = session.getCurrentSuite();
+        TestSuite newSuite = new GradleTestSuite((JvmTestOperationDescriptor) op.getParent());
+        if ((currentSuite == null) || !currentSuite.equals(newSuite)) {
+            session.addSuite(newSuite);
+            CoreManager manager = getManager();
+            if (manager != null) {
+                manager.displaySuiteRunning(session, newSuite);
             }
         }
-        tc.setClassName(op.getClassName());
+        Testcase tc = new GradleTestcase(op, session);
         runningTests.put(getTestOpKey(op), tc);
         session.addTestCase(tc);
     }

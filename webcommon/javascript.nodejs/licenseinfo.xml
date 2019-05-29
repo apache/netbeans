@@ -45,6 +45,7 @@
         <file>src/org/netbeans/modules/javascript/nodejs/ui/resources/nodejs-badge.png</file>
         <file>src/org/netbeans/modules/javascript/nodejs/ui/resources/unknown.png</file>
         <file>src/org/netbeans/modules/javascript/nodejs/ui/resources/uptodate.gif</file>
+        <file>src/org/netbeans/modules/javascript/nodejs/ui/resources/npm.png</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>

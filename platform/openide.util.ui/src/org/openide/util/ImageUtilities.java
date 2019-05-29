@@ -224,7 +224,7 @@ public final class ImageUtilities {
         }
         
         CompositeImageKey k = new CompositeImageKey(image1, image2, x, y);
-        Image cached;
+        ToolTipImage cached;
 
         synchronized (compositeCache) {
             ActiveRef<CompositeImageKey> r = compositeCache.get(k);
@@ -282,10 +282,15 @@ public final class ImageUtilities {
      * @return Image with attached tool tip 
      */    
     public static final Image assignToolTipToImage(Image image, String text) {
+        return assignToolTipToImageInternal(image, text);
+    }
+
+    // Private version with more specific return type.
+    private static ToolTipImage assignToolTipToImageInternal(Image image, String text) {
         Parameters.notNull("image", image);
         Parameters.notNull("text", text);
         ToolTipImageKey key = new ToolTipImageKey(image, text);
-        Image cached;
+        ToolTipImage cached;
         synchronized (imageToolTipCache) {
             ActiveRef<ToolTipImageKey> r = imageToolTipCache.get(key);
             if (r != null) {
@@ -411,14 +416,14 @@ public final class ImageUtilities {
         }
     }
 
-    static Image getIcon(String resource, boolean localized) {
+    static ToolTipImage getIcon(String resource, boolean localized) {
         if (localized) {
             if (resource == null) {
                 return null;
             }
             synchronized (localizedCache) {
                 ActiveRef<String> ref = localizedCache.get(resource);
-                Image img = null;
+                ToolTipImage img = null;
 
                 // no icon for this name (already tested)
                 if (ref == NO_ICON) {
@@ -460,7 +465,7 @@ public final class ImageUtilities {
                 
                 while (it.hasNext()) {
                     String suffix = it.next();
-                    Image i;
+                    ToolTipImage i;
 
                     if (suffix.length() == 0) {
                         i = getIcon(resource, loader, false);
@@ -487,12 +492,12 @@ public final class ImageUtilities {
     * @param localizedQuery whether the name contains some localization suffix
     *  and is not optimized/interned
     */
-    private static Image getIcon(String name, ClassLoader loader, boolean localizedQuery) {
+    private static ToolTipImage getIcon(String name, ClassLoader loader, boolean localizedQuery) {
         if (name == null) {
             return null;
         }
         ActiveRef<String> ref = cache.get(name);
-        Image img = null;
+        ToolTipImage img = null;
 
         // no icon for this name (already tested)
         if (ref == NO_ICON) {
@@ -596,9 +601,9 @@ public final class ImageUtilities {
                     ERR.log(Level.FINE, "loading icon {0} = {1}", new Object[] {n, result});
                 }
                 name = new String(name).intern(); // NOPMD
-                result = ToolTipImage.createNew("", result, url);
-                cache.put(name, new ActiveRef<String>(result, cache, name));
-                return result;
+                ToolTipImage toolTipImage = ToolTipImage.createNew("", result, url);
+                cache.put(name, new ActiveRef<String>(toolTipImage, cache, name));
+                return toolTipImage;
             } else { // no icon found
                 if (!localizedQuery) {
                     cache.put(name, NO_ICON);
@@ -651,7 +656,7 @@ public final class ImageUtilities {
         }
     }
     
-    private static final Image doMergeImages(Image image1, Image image2, int x, int y) {
+    private static final ToolTipImage doMergeImages(Image image1, Image image2, int x, int y) {
         ensureLoaded(image1);
         ensureLoaded(image2);
 
@@ -788,11 +793,11 @@ public final class ImageUtilities {
     }
 
     /** Cleaning reference. */
-    private static final class ActiveRef<T> extends SoftReference<Image> implements Runnable {
+    private static final class ActiveRef<T> extends SoftReference<ToolTipImage> implements Runnable {
         private final Map<T,ActiveRef<T>> holder;
         private final T key;
 
-        public ActiveRef(Image o, Map<T,ActiveRef<T>> holder, T key) {
+        public ActiveRef(ToolTipImage o, Map<T,ActiveRef<T>> holder, T key) {
             super(o, Utilities.activeReferenceQueue());
             this.holder = holder;
             this.key = key;

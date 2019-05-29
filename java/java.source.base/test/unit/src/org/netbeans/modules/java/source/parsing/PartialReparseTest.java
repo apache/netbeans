@@ -32,8 +32,6 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Function;
-import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -250,6 +248,54 @@ public class PartialReparseTest extends NbTestCase {
                   "        final int j = 5;\n");
     }
 
+    public void testConstructor1() throws Exception {
+        doRunTest("package test;\n" +
+                  "public class Test {\n" +
+                  "    public Test() {\n" +
+                  "        System.err.println(1);\n" +
+                  "        ^^\n" +
+                  "    }" +
+                  "}",
+                  "System.err.println(2);");
+    }
+
+    public void testConstructor2() throws Exception {
+        doRunTest("package test;\n" +
+                  "public class Test {\n" +
+                  "    public Test() {\n" +
+                  "        super();" +
+                  "        System.err.println(1);\n" +
+                  "        ^^\n" +
+                  "    }" +
+                  "}",
+                  "System.err.println(2);");
+    }
+
+    public void testConstructorEnum1() throws Exception {
+        doRunTest("package test;\n" +
+                  "public enum Test {\n" +
+                  "    A(1);\n" +
+                  "    public Test(int i) {\n" +
+                  "        System.err.println(i);\n" +
+                  "        ^^\n" +
+                  "    }" +
+                  "}",
+                  "System.err.println(2);");
+    }
+
+    public void testConstructorEnum2() throws Exception {
+        doRunTest("package test;\n" +
+                  "public enum Test {\n" +
+                  "    A(1);\n" +
+                  "    public Test(int i) {\n" +
+                  "        super();\n" +
+                  "        System.err.println(i);\n" +
+                  "        ^^\n" +
+                  "    }" +
+                  "}",
+                  "System.err.println(2);");
+    }
+
     private void doRunTest(String code, String inject) throws Exception {
         FileObject srcDir = FileUtil.createMemoryFileSystem().getRoot();
         FileObject src = srcDir.createData("Test.java");
@@ -265,7 +311,7 @@ public class PartialReparseTest extends NbTestCase {
              topLevel[0] = cc.getCompilationUnit();
         }, true);
         int startReplace = code.indexOf('^');
-        int endReplace = code.indexOf('^', startReplace + 1) - 1;
+        int endReplace = code.indexOf('^', startReplace + 1) + 1;
         doc.remove(startReplace, endReplace - startReplace);
         doc.insertString(startReplace, inject, null);
         AtomicReference<List<TreeDescription>> actualTree = new AtomicReference<>();

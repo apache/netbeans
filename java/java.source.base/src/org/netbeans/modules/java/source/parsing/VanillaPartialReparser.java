@@ -28,8 +28,10 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.api.JavacScope;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTrees;
+import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symtab;
+import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.comp.Attr;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Enter;
@@ -42,13 +44,16 @@ import com.sun.tools.javac.parser.ScannerFactory;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Options;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.CharBuffer;
 import java.util.Arrays;
@@ -82,6 +87,7 @@ public class VanillaPartialReparser implements PartialReparser {
     private final Field lazyDocCommentsTable;
     private final Field parserDocComments;
     private final Method lineMapBuild;
+    private final Method typeEnterSuperCall;
 
     public VanillaPartialReparser() {
         Method unenter;
@@ -116,6 +122,14 @@ public class VanillaPartialReparser implements PartialReparser {
             lineMapBuild = null;
         }
         this.lineMapBuild = lineMapBuild;
+        Method typeEnterSuperCall;
+        try {
+            typeEnterSuperCall = TypeEnter.class.getDeclaredMethod("SuperCall", TreeMaker.class, com.sun.tools.javac.util.List.class, com.sun.tools.javac.util.List.class, boolean.class);
+            typeEnterSuperCall.setAccessible(true);
+        } catch (NoSuchMethodException ex) {
+            typeEnterSuperCall = null;
+        }
+        this.typeEnterSuperCall = typeEnterSuperCall;
     }
 
     @Override
@@ -362,7 +376,7 @@ public class VanillaPartialReparser implements PartialReparser {
         };
     }
 
-    public BlockTree reattrMethodBody(Context context, Scope scope, MethodTree methodToReparse, BlockTree block) {
+    public BlockTree reattrMethodBody(Context context, Scope scope, MethodTree methodToReparse, BlockTree block) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Attr attr = Attr.instance(context);
 //        assert ((JCTree.JCMethodDecl)methodToReparse).localEnv != null;
         JCTree.JCMethodDecl tree = (JCTree.JCMethodDecl) methodToReparse;
@@ -374,28 +388,26 @@ public class VanillaPartialReparser implements PartialReparser {
         final Env<AttrContext> env = ((JavacScope) scope).getEnv();//this is a copy anyway...
         final Symbol.ClassSymbol owner = env.enclClass.sym;
         if (tree.name == names.init && !owner.type.isErroneous() && owner.type != syms.objectType) {
-            //XXX
-            throw new UnsupportedOperationException();
-//            JCTree.JCBlock body = tree.body;
-//            if (body.stats.isEmpty() || !TreeInfo.isSelfCall(body.stats.head)) {
-//                body.stats = body.stats.
-//                prepend(typeEnter.SuperCall(make.at(body.pos),
-//                    com.sun.tools.javac.util.List.<Type>nil(),
-//                    com.sun.tools.javac.util.List.<JCTree.JCVariableDecl>nil(),
-//                    false));
-//            } else if ((env.enclClass.sym.flags() & Flags.ENUM) != 0 &&
-//                (tree.mods.flags & Flags.GENERATEDCONSTR) == 0 &&
-//                TreeInfo.isSuperCall(body.stats.head)) {
-//                // enum constructors are not allowed to call super
-//                // directly, so make sure there aren't any super calls
-//                // in enum constructors, except in the compiler
-//                // generated one.
-//                log.error(tree.body.stats.head.pos(),
-//                          new JCDiagnostic.Error("compiler",
-//                                    "call.to.super.not.allowed.in.enum.ctor",
-//                                    env.enclClass.sym));
-//                    }
-                }
+            JCTree.JCBlock body = tree.body;
+            if (body.stats.isEmpty() || !TreeInfo.isSelfCall(body.stats.head)) {
+                body.stats = body.stats.
+                prepend((JCTree.JCStatement) typeEnterSuperCall.invoke(typeEnter, make.at(body.pos),
+                    com.sun.tools.javac.util.List.<Type>nil(),
+                    com.sun.tools.javac.util.List.<JCTree.JCVariableDecl>nil(),
+                    false));
+            } else if ((env.enclClass.sym.flags() & Flags.ENUM) != 0 &&
+                (tree.mods.flags & Flags.GENERATEDCONSTR) == 0 &&
+                TreeInfo.isSuperCall(body.stats.head)) {
+                // enum constructors are not allowed to call super
+                // directly, so make sure there aren't any super calls
+                // in enum constructors, except in the compiler
+                // generated one.
+                log.error(tree.body.stats.head.pos(),
+                          new JCDiagnostic.Error("compiler",
+                                    "call.to.super.not.allowed.in.enum.ctor",
+                                    env.enclClass.sym));
+                    }
+        }
         attr.attribStat((JCTree.JCBlock)block, env);
         return block;
     }

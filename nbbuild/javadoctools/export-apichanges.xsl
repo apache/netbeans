@@ -37,12 +37,12 @@
     <xsl:template match="/" name="api-changes" >
         <!-- amount of changes to print -->
         <xsl:param name="changes-since-amount" select="$changes-since-amount" />
-         <xsl:text>
+        <xsl:text>
 
          
-</xsl:text>
-        <xsl:comment>Search for dates that are later or equal to <xsl:value-of select="$changes-since-year" 
-          />-<xsl:value-of select="$changes-since-month" />-<xsl:value-of select="$changes-since-day" /> in
+        </xsl:text>
+        <xsl:comment>Search for dates that are later or equal to <xsl:value-of select="$changes-since-year"
+        />-<xsl:value-of select="$changes-since-month" />-<xsl:value-of select="$changes-since-day" /> in
           <xsl:value-of select="$changes-since-url" />
         </xsl:comment>
         <xsl:apply-templates select="//change" mode="changes-since" >

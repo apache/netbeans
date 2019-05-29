@@ -20,24 +20,44 @@
 
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <xsl:import href="jsonhelp.xsl" />
     <xsl:output method="html"/>
     <xsl:param name="date" />
-
+    <xsl:param name="maturity" />
     <xsl:template match="/" >
+        <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;</xsl:text>
         <html>
-        <head>
-            <!-- projects.netbeans.org -->
-           <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-           <title>Description Layer Registration in Apache NetBeans (incubating) APIs</title>
-            <link rel="stylesheet" href="netbeans.css" type="text/css"/>
+            <head>
+                <!-- projects.netbeans.org -->
+                <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+                <xsl:element name="title">
+                    <xsl:text>Description Layer Registration in </xsl:text>
+                    <xsl:call-template name="apachenetbeanstext" >
+                        <xsl:with-param name="maturity">
+                            <xsl:value-of select="$maturity"/>
+                        </xsl:with-param>
+                    </xsl:call-template>
+                    <xsl:text>APIs</xsl:text>
+                </xsl:element>
+                <link rel="stylesheet" href="netbeans.css" type="text/css"/>
 
-          <link REL="icon" href="http://www.netbeans.org/favicon.ico" type="image/ico" />
-          <link REL="shortcut icon" href="http://www.netbeans.org/favicon.ico" />
+                <link rel="icon" type="image/png" sizes="32x32" href="//netbeans.apache.org/favicon-32x32.png" />
+                <link rel="icon" type="image/png" sizes="16x16" href="//netbeans.apache.org/favicon-16x16.png" />
 
-        </head>
+            </head>
 
         <body>
-            <center><h1>Description of Layer Registrations in Apache NetBeans (incubating) APIs</h1></center>
+            <center>
+                <xsl:element name="h1">
+                    <xsl:text>Description Layer Registration in </xsl:text>
+                    <xsl:call-template name="apachenetbeanstext" >
+                        <xsl:with-param name="maturity">
+                            <xsl:value-of select="$maturity"/>
+                        </xsl:with-param>
+                    </xsl:call-template>
+                    <xsl:text>APIs</xsl:text>
+                </xsl:element>
+            </center>
 
             <p>
             Registration of various objects, files and hints into layer is 

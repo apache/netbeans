@@ -31,7 +31,7 @@
 
     <xsl:template match="/">
         <xsl:variable name="interfaces" select="//api[@type='export']" />
-
+        <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;</xsl:text>
         <html>
          <head>
           <title>Overview</title><!-- note this is ignored -->

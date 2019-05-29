@@ -21,7 +21,8 @@
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:import href="apichanges.xsl" />
-
+    <xsl:import href="jsonhelp.xsl" />
+    
     <xsl:output method="html"/>
     <xsl:param name="date"  />
     <xsl:param name="changes-since-year"  />
@@ -29,19 +30,30 @@
     <xsl:param name="changes-since-day"  />
     <xsl:param name="include-introduction" select="'true'" />
     <xsl:param name="url-prefix" select="''" />
-
+    <xsl:param name="maturity" />
+    <xsl:param name="version" />
+    <xsl:param name="releaseinfo" />
+     
     <xsl:template match="/" >
       <xsl:choose>
         <xsl:when test="$include-introduction='true'" >
+            <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;</xsl:text>
             <html>
             <head>
                 <!-- projects.netbeans.org -->
                <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-               <title>Apache NetBeans (incubating) API Changes since Last Release</title>
+               <xsl:element name="title">
+                    <xsl:call-template name="apachenetbeanstext" >
+                        <xsl:with-param name="maturity">
+                            <xsl:value-of select="$maturity"/>
+                        </xsl:with-param>
+                    </xsl:call-template>
+                    <xsl:text>API Changes since Last Release</xsl:text>
+                </xsl:element>
                 <link rel="stylesheet" href="netbeans.css" type="text/css"/>
 
-              <link REL="icon" href="http://www.netbeans.org/favicon.ico" type="image/ico" />
-              <link REL="shortcut icon" href="http://www.netbeans.org/favicon.ico" />
+              <link rel="icon" type="image/png" sizes="32x32" href="//netbeans.apache.org/favicon-32x32.png" /> 
+              <link rel="icon" type="image/png" sizes="16x16" href="//netbeans.apache.org/favicon-16x16.png" />
               <link type="application/atom+xml" rel="alternate" href="apichanges.atom"/>
 
             </head>
@@ -50,8 +62,24 @@
 
 
             <center>
-                <h1>Apache NetBeans (incubating) API Changes since Last Release</h1>
-                <h3>Current Development Version</h3>
+                 <xsl:element name="h1">
+                    <xsl:call-template name="apachenetbeanstext" >
+                        <xsl:with-param name="maturity">
+                            <xsl:value-of select="$maturity"/>
+                        </xsl:with-param>
+                    </xsl:call-template>
+                    <xsl:text>API Changes since Last Release</xsl:text>
+                </xsl:element>
+                <xsl:element name="h3">
+                    <xsl:call-template name="apachenetbeansversion" >
+                        <xsl:with-param name="maturity">
+                            <xsl:value-of select="$maturity"/>                
+                        </xsl:with-param>
+                        <xsl:with-param name="version">
+                            <xsl:value-of select="$version"/>                
+                        </xsl:with-param>
+                    </xsl:call-template>
+                </xsl:element>
                 <xsl:if test="$date" >
                     <xsl:value-of select="$date" />
                     <p/>
@@ -79,7 +107,8 @@
                 <xsl:text> </xsl:text>
                 <xsl:value-of select="$changes-since-year" /> 
                 <xsl:text>). There are also other documents that list changes 
-                made for </xsl:text>
+                made for releaso of the Oracle era: </xsl:text>
+                <p>
                 <a href="http://www.netbeans.org/download/5_0/javadoc/apichanges.html">release 5.0</a>, 
                 <a href="http://www.netbeans.org/download/5_5/javadoc/apichanges.html">release 5.5</a>,
                 <a href="http://bits.netbeans.org/6.0/javadoc/apichanges.html">release 6.0</a>,
@@ -102,10 +131,27 @@
                 <a href="http://bits.netbeans.org/8.0/javadoc/apichanges.html">release 8.0</a>,
                 <a href="http://bits.netbeans.org/8.0.1/javadoc/apichanges.html">release 8.0.1</a>,
                 <a href="http://bits.netbeans.org/8.1/javadoc/apichanges.html">release 8.1</a>,
-                <a href="http://bits.netbeans.org/8.2/javadoc/apichanges.html">release 8.2</a>,
-                <a href="http://bits.netbeans.org/9.0/javadoc/apichanges.html">release 9.0</a>,
+                <a href="http://bits.netbeans.org/8.2/javadoc/apichanges.html">release 8.2</a>.
+                </p>
+                <p>Apache era:</p>
+                <xsl:variable name="currentversion" select="document($releaseinfo)/*/@position"/>
+                <xsl:for-each select="document($releaseinfo)//release">
+                    <xsl:sort data-type="number" select="@position" order="ascending" />
+                    <xsl:choose>
+                        <xsl:when test="$currentversion = @position">,current release</xsl:when>
+                        <xsl:otherwise>
+                            <xsl:element name="a">
+                                <xsl:attribute name="href"><xsl:value-of select="@apidocurl"/>/apichanges.html</xsl:attribute>
+                                <xsl:attribute name="target">_top</xsl:attribute>,release <xsl:value-of select="@version"/>      
+                            </xsl:element>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                    
+                </xsl:for-each>
+                .
+               <!-- <a href="http://bits.netbeans.org/9.0/javadoc/apichanges.html">release 9.0</a>,
                 <a href="http://bits.netbeans.org/10.0/javadoc/apichanges.html">release 10.0</a>,
-                <a href="http://bits.netbeans.org/11.0/javadoc/apichanges.html">release 11.0</a>.
+                <a href="http://bits.netbeans.org/11.0/javadoc/apichanges.html">release 11.0</a>.-->
             <xsl:call-template name="do-the-table" />
             </body>
             </html>

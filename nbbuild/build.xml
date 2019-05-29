@@ -77,6 +77,7 @@
             <include name="nbbuild/external/binaries-list"/>
             <include name="platform/libs.junit4/external/binaries-list"/>
             <include name="platform/javahelp/external/binaries-list"/>
+            <include name="ide/libs.json_simple/external/binaries-list"/>
         </manifest>
     </downloadbinaries>
     <!--
@@ -93,7 +94,9 @@
      <fileset dir="..">
         <!-- For JavaHelp indexing and link checking: -->
         <include name="platform/javahelp/external/jhall*.jar"/>
-      </fileset>
+        <!-- For json parsing -->
+        <include name="ide/libs.json_simple/external/json-simple*.jar"/>
+     </fileset>
     </path>
     <javac srcdir="antsrc" destdir="${build.ant.classes.dir}" deprecation="true" debug="${build.compiler.debug}" source="1.8" target="1.8">
       <classpath refid="bootstrap-cp"/>
@@ -110,6 +113,14 @@
       <zipfileset dir="${nb_all}/nbbuild" includes="notice-stub.txt" fullpath="META-INF/NOTICE"/>
     </jar>
     <taskdef name="createlicensesummary" classname="org.netbeans.nbbuild.extlibs.CreateLicenseSummary" classpath="${nbantext.jar}"/>
+    <condition property="build.branch" value="master">
+          <not>
+              <isset property="build.branch"/>
+          </not>
+      </condition>
+      <taskdef name="setjavadoc" classname="org.netbeans.nbbuild.SetApidocClustersConfig" classpath="${nbantext.jar}"/>
+      <setjavadoc branch="${build.branch}"/>
+      <echo message="${config.javadoc.all}" />
   </target>
 
   <target name="download-all-extbins" unless="ext.binaries.downloaded" depends="bootstrap">
@@ -1919,7 +1930,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
       <property name="catalog.content.description"  value=""/>
       <property name="catalog.content.description.url" value=""/>
       <property name="catalog.license.header" value="${nb_all}/nbbuild/catalog-license-header.txt"/>
-
+      
 <!--      <genau config="ausrc/modules.setup" nbmLocation="${nbms.location}" catalog="${catalog.file}" catalogDeploymentLocation="${catalog.base.url}"/>-->
       <makeupdatedesc desc="${catalog.file}" distbase="${catalog.base.url}" automaticgrouping="true" uselicenseurl="${use.license.url.in.catalog}" notificationmessage="${catalog.notification.message}" notificationurl="${catalog.notification.url}" contentdescription="${catalog.content.description}" contentdescriptionurl="${catalog.content.description.url}" desclicense="${catalog.license.header}">
           <fileset dir="${nbms.location}">

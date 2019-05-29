@@ -71,8 +71,79 @@ committed to the repository for legal reasons. You need to download it:
 
     <!-- Main document structure: -->
     <xsl:template match="/">
-        <html>
-            <xsl:apply-templates select="apichanges/htmlcontents/node()"/>
+        <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;</xsl:text>
+        <html lang="en">
+            <head>
+                <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+                <xsl:apply-templates select="apichanges/htmlcontents/head/title"/>
+                <link rel="stylesheet" type="text/css" href="javadoc.css" title="Style"/>
+                <script type="text/javascript" src="script.js"></script>
+            </head>
+            <body>
+                <!-- ========= START OF TOP NAVBAR ======= -->
+                <div class="topNav">
+                    <a name="navbar.top">
+                        <!--   -->
+                    </a>
+                    <div class="skipNav">
+                        <a href="#skip.navbar.top" title="Skip navigation links">Skip navigation links</a>
+                    </div>
+                    <a name="navbar.top.firstrow">
+                        <!--   -->
+                    </a>
+                    <ul class="navList noreplace" title="Navigation">
+                        <li class="navBarCell1Rev">
+                            API Changes
+                        </li>
+                        <li><a href="architecture-summary.html">Architecture Summary</a></li>
+                        <li><a href="overview-summary.html">Overview</a></li>
+                        <li>Package</li>
+                        <li>Class</li>
+                        <li>Use</li>
+                        <li>Tree</li>
+                        <li>
+                            <a href="deprecated-list.html">Deprecated</a>
+                        </li>
+                        <li>Index</li>
+                        <li>
+                            <a href="help-doc.html">Help</a>
+                        </li>
+                    </ul>
+                    <div class="aboutLanguage"> </div>
+                </div>
+                <div class="subNav">
+                    <ul class="navList">
+                        <li>
+                            <a href="index.html?overview-summary.html" target="_top">Frames</a>
+                        </li>
+                        <li>
+                            <a href="overview-summary.html" target="_top">No Frames</a>
+                        </li>
+                    </ul>
+                    <ul class="navList" id="allclasses_navbar_top">
+                        <li>
+                            <a href="allclasses-noframe.html">All Classes</a>
+                        </li>
+                    </ul>
+                    <div>
+                        <script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+                        </script>
+                    </div>
+                    <a name="skip.navbar.top">
+                        <!--   -->
+                    </a>
+                </div>
+                <!-- ========= END OF TOP NAVBAR ========= -->
+                <xsl:apply-templates select="apichanges/htmlcontents/body/node()[not(contains(@class, 'overviewlink'))]"/>
+            </body>
         </html>
     </xsl:template>
 

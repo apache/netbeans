@@ -20,91 +20,88 @@
 
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-    <xsl:import href="jsonhelp.xsl" />
+    <xsl:import href="../jsonhelp.xsl" />
+    <xsl:import href="export2allmodules.xsl" />
     <xsl:output method="html"/>
     <xsl:param name="date" />
     <xsl:param name="maturity" />
+    <xsl:param name="version" />
+    <xsl:param name="releaseinfo" />
     <xsl:template match="/" >
         <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;</xsl:text>
         <html>
-            <head>
-                <!-- projects.netbeans.org -->
-                <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-                <xsl:element name="title">
-                    <xsl:text>Description Layer Registration in </xsl:text>
-                    <xsl:call-template name="apachenetbeanstext" >
-                        <xsl:with-param name="maturity">
-                            <xsl:value-of select="$maturity"/>
-                        </xsl:with-param>
-                    </xsl:call-template>
-                    <xsl:text>API</xsl:text>
-                </xsl:element>
-                <link rel="stylesheet" href="netbeans.css" type="text/css"/>
-
-                <link rel="icon" type="image/png" sizes="32x32" href="//netbeans.apache.org/favicon-32x32.png" /> 
-                <link rel="icon" type="image/png" sizes="16x16" href="//netbeans.apache.org/favicon-16x16.png" />
-
-            </head>
+            <xsl:call-template name="htmlheader" >
+                <xsl:with-param name="title" >APIs Layer list</xsl:with-param>
+                <xsl:with-param name="maturity" select="$maturity" />
+                <xsl:with-param name="version" select="$version"/> 
+            </xsl:call-template>
 
             <body>
-                <center>
-                    <xsl:element name="h1">
-                        <xsl:text>Description of Branding APIs for </xsl:text>
-                        <xsl:call-template name="apachenetbeanstext" >
-                            <xsl:with-param name="maturity">
-                                <xsl:value-of select="$maturity"/>
-                            </xsl:with-param>
-                        </xsl:call-template>
-                        <xsl:text>Platform Applications</xsl:text>
-                    </xsl:element>
-                </center>
+                <xsl:call-template name="htmlmainmenu" >
+                    <xsl:with-param name="title" >APIs Layer list</xsl:with-param>
+                    <xsl:with-param name="maturity" select="$maturity" />
+                    <xsl:with-param name="version" select="$version"/> 
+                    <xsl:with-param name="releaseinfo" select="$releaseinfo"/>
+                    <xsl:with-param name="menukey" >layers</xsl:with-param>
+                </xsl:call-template>
+                <div class="apidocmaincontent">
+                    <xsl:call-template name="build-docmenu" >
+                        <xsl:with-param name="menukey" >layers</xsl:with-param>
+                    </xsl:call-template>
+                
+                    <div class="innercontent">
+                        <p>
+                            Registration of various objects, files and hints into layer is 
+                            pretty central to the way NetBeans based applications handle 
+                            communication between modules. This page summarizes the list of such
+                            extension points defined by 
+                            <a href="index.html">modules with API</a>. 
+                        </p>
 
-                <p>
-                    Applications built on top of NetBeans Platform may change configuration
-                    of various aspects via branding. E.g. by providing different values
-                    for certain keys in various <code>Bundle</code>. 
-                    This page summarizes the list of such
-                    branding APIs defined by <a href="index.html">modules with API</a>. 
-                </p>
-
-                <ul>
-                    <xsl:for-each select="//api[@type='export' and @group='branding']" >
-                        <li>
-                            <b>
-                                <xsl:choose >
-                                    <xsl:when test="@url" >
+                        <ul>
+                            <xsl:for-each select="//api[@type='export' and @group='layer']" >
+                                <li>
+                                    <b>
+                                        <xsl:choose >
+                                            <xsl:when test="@url" >
+                                                <a>
+                                                    <xsl:attribute name="href">
+                                                        <xsl:value-of select="@url"/>
+                                                    </xsl:attribute>
+                                                    <xsl:value-of select="@name"></xsl:value-of>
+                                                </a>
+                                            </xsl:when>
+                                            <xsl:otherwise>
+                                                <xsl:value-of select="@name"></xsl:value-of>
+                                            </xsl:otherwise>
+                                        </xsl:choose>
+                                        <xsl:text> in </xsl:text>
                                         <a>
                                             <xsl:attribute name="href">
-                                                <xsl:value-of select="@url"/>
+                                                <xsl:value-of select="ancestor::module/@target"/>
+                                                <xsl:text>#group-layer</xsl:text>
                                             </xsl:attribute>
-                                            <xsl:value-of select="@name"></xsl:value-of>
+                                            <xsl:value-of select="ancestor::module/@name"/>
                                         </a>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <xsl:value-of select="@name"></xsl:value-of>
-                                    </xsl:otherwise>
-                                </xsl:choose>
-                                <xsl:text> in </xsl:text>
-                                <a>
-                                    <xsl:attribute name="href">
-                                        <xsl:value-of select="ancestor::module/@target"/>
-                                        <xsl:text>#group-branding</xsl:text>
-                                    </xsl:attribute>
-                                    <xsl:value-of select="ancestor::module/@name"/>
-                                </a>
-                            </b>
-                            <p>
-                                <xsl:apply-templates select="." />
-                            </p>
-                        </li>
-                    </xsl:for-each>
-                </ul>
+                                    </b>
+                                    <p>
+                                        <xsl:apply-templates select="." />
+                                    </p>
+                                </li>
+                            </xsl:for-each>
+                        </ul>
             
-                <p>
-                    To get your API listed here, use 
-                    <code>&lt;api type='export' group='branding' ... /&gt;</code> in
-                    your module arch.xml document.
-                </p>
+                        <p>
+                            To get your API listed here, use 
+                            <code>&lt;api type='export' group='layer' ... /&gt;</code> in
+                            your module arch.xml document.
+                        </p>
+                    </div> 
+                </div>
+                <div class="apidocleft">
+                    <xsl:call-template name="listallmodules" />
+                </div>
+        
             </body>
         </html>
     </xsl:template>
@@ -192,7 +189,7 @@
             <xsl:apply-templates select="@*|node()"/>
         </xsl:copy>
     </xsl:template>
-
+        
 </xsl:stylesheet>
 
 

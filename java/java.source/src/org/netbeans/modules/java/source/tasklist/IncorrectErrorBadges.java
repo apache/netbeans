@@ -138,15 +138,15 @@ public class IncorrectErrorBadges implements CancellableTask<CompilationInfo> {
                 return;
             }
 
-            if (!PathRegistry.getDefault().isKnownRoot(root.getURL())) {
+            if (!PathRegistry.getDefault().isKnownRoot(root.toURL())) {
                 LOG.log(Level.WARNING, "Not PathRegistry controlled root: " + root);
                 return;
             }
 
             LOG.log(Level.WARNING, "Going to recompute root={0}, files in error={1}.",
-                    new Object[] {FileUtil.getFileDisplayName(root), ErrorsCache.getAllFilesInError(root.getURL())});
+                    new Object[] {FileUtil.getFileDisplayName(root), ErrorsCache.getAllFilesInError(root.toURL())});
 
-            IndexingManager.getDefault().refreshIndex(root.getURL(), null, true, true);
+            IndexingManager.getDefault().refreshIndex(root.toURL(), null, true, true);
         } catch (IOException ex) {
             LOG.log(Level.FINE, null, ex);
         }

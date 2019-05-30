@@ -305,7 +305,7 @@ public class DataShadow extends MultiDataObject implements DataObject.Container 
                          }
                          fo = trg.createData (n, ext);
                     }
-                    writeShadowFile(fo, obj.getPrimaryFile().getURL());
+                    writeShadowFile(fo, obj.getPrimaryFile().toURL());
                     return fo;
                 }
             });
@@ -468,7 +468,7 @@ public class DataShadow extends MultiDataObject implements DataObject.Container 
             } else {
                 fs = fileObject.getFileSystem();
             }
-            return new URL(fs.getRoot().getURL(), path);
+            return new URL(fs.getRoot().toURL(), path);
         }
     }
     private static String[] readOriginalFileAndFileSystem(final FileObject f) throws IOException {
@@ -645,7 +645,7 @@ public class DataShadow extends MultiDataObject implements DataObject.Container 
     
     private void tryUpdate() throws IOException {
         URL url = readURL(getPrimaryFile ());
-        if (url.equals(original.getPrimaryFile().getURL())) {
+        if (url.equals(original.getPrimaryFile().toURL())) {
             return;
         }
         writeOriginal (null, null, getPrimaryFile (), original);

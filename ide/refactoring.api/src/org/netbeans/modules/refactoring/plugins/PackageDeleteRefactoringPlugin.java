@@ -190,12 +190,7 @@ public class PackageDeleteRefactoringPlugin implements RefactoringPlugin{
 
         @Override
         public FileObject getParentFile() {
-            try {
-                return URLMapper.findFileObject(dirFileObject.getURL());
-            } catch (FileStateInvalidException ex) {
-                ErrorManager.getDefault().notify(ex);
-                throw new IllegalStateException(ex);
-            }
+            return URLMapper.findFileObject(dirFileObject.toURL());
         }
 
         @Override
@@ -216,11 +211,7 @@ public class PackageDeleteRefactoringPlugin implements RefactoringPlugin{
         private PackageDeleteElem(NonRecursiveFolder folder) {
             this.folder = folder;
             dir = FileUtil.toFile(folder.getFolder());
-            try {
-                res = folder.getFolder().getURL();
-            } catch (FileStateInvalidException fileStateInvalidException) {
-                throw new IllegalStateException(fileStateInvalidException);
-            }
+            res = folder.getFolder().toURL();
             srcGroup = getSourceGroup(folder.getFolder(), JAVA_EXTENSION);
             if (srcGroup == null) {
                 srcGroup = getSourceGroup(folder.getFolder(), Sources.TYPE_GENERIC);

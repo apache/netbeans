@@ -353,7 +353,7 @@ public class Utils {
                                 try {
                                     rs.deploy();
                                     if (testFO != null) {
-                                        URL url = testFO[0].getURL();
+                                        URL url = testFO[0].toURL();
                                         if (url != null) {
                                             HtmlBrowser.URLDisplayer
                                                     .getDefault().showURL(url);
@@ -372,7 +372,7 @@ public class Utils {
                                 rs.getLocalTargetTestRest(), rs.getBaseURL());
                         rs.deploy();
                         if (testFO != null) {
-                            URL url = testFO.getURL();
+                            URL url = testFO.toURL();
                             if (url != null) {
                                 HtmlBrowser.URLDisplayer.getDefault().showURL(
                                         url);
@@ -410,7 +410,7 @@ public class Utils {
                 File testdir = rs.getLocalTargetTestRest();
                 FileObject testFO = MiscUtilities.generateTestClient(testdir);
                 p.setProperty(RestSupport.PROP_RESTBEANS_TEST_URL, 
-                        testFO.getURL().toString());
+                        testFO.toURL().toString());
                 p.setProperty(RestSupport.PROP_RESTBEANS_TEST_FILE, 
                         FileUtil.toFile(testFO).getAbsolutePath());
             } catch (IOException ex) {

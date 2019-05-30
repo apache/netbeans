@@ -67,7 +67,7 @@ public class DBschemaDataObject extends MultiDataObject {
                             if (schemaElement != null) {
                                 SchemaElement.removeFromCache(schemaElement.getName().getFullName());
                                 try {
-                                    SchemaElement.removeFromCache(schemaElement.getName().getFullName() + "#" + getPrimaryFile().getURL().toString()); //NOI18N
+                                    SchemaElement.removeFromCache(schemaElement.getName().getFullName() + "#" + getPrimaryFile().toURL().toString()); //NOI18N
                                 } catch (Exception exc) {
                                     if (Boolean.getBoolean("netbeans.debug.exceptions")) //NOI18N
                                         exc.printStackTrace();
@@ -78,7 +78,7 @@ public class DBschemaDataObject extends MultiDataObject {
                         } else {
                             SchemaElement.removeFromCache(schemaElement.getName().getFullName());
                             try {
-                                SchemaElement.removeFromCache(schemaElement.getName().getFullName() + "#" + getPrimaryFile().getURL().toString()); //NOI18N
+                                SchemaElement.removeFromCache(schemaElement.getName().getFullName() + "#" + getPrimaryFile().toURL().toString()); //NOI18N
                             } catch (Exception exc) {
                                 if (Boolean.getBoolean("netbeans.debug.exceptions")) //NOI18N
                                     exc.printStackTrace();
@@ -93,7 +93,7 @@ public class DBschemaDataObject extends MultiDataObject {
                     else {
                         SchemaElement.removeFromCache(schemaElement.getName().getFullName());
                         try {
-                            SchemaElement.removeFromCache(schemaElement.getName().getFullName() + "#" + getPrimaryFile().getURL().toString()); //NOI18N
+                            SchemaElement.removeFromCache(schemaElement.getName().getFullName() + "#" + getPrimaryFile().toURL().toString()); //NOI18N
                         } catch (Exception exc) {
                             if (Boolean.getBoolean("netbeans.debug.exceptions")) //NOI18N
                                 exc.printStackTrace();

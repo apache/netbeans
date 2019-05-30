@@ -118,14 +118,14 @@ public final class DDProvider {
                     // preparsing
                     error = ClientParseUtils.parse(fo);
                     original = DDUtils.createAppClient(fo, version);
-                    baseBeanMap.put(fo.getURL(), new WeakReference<AppClient>(original));
-                    errorMap.put(fo.getURL(), error);
+                    baseBeanMap.put(fo.toURL(), new WeakReference<AppClient>(original));
+                    errorMap.put(fo.toURL(), error);
                 } else {
                     BigDecimal orgVersion = original.getVersion();
                     if (orgVersion != null){
                         version = orgVersion.toPlainString();
                     }
-                    error = errorMap.get(fo.getURL());
+                    error = errorMap.get(fo.toURL());
                 }
             }
             appClient = new AppClientProxy(original, version);
@@ -147,7 +147,7 @@ public final class DDProvider {
             if (cached != null) {
                 return cached;
             }
-            ddMap.put(fo.getURL(), new WeakReference<AppClientProxy>(appClient));
+            ddMap.put(fo.toURL(), new WeakReference<AppClientProxy>(appClient));
         }
         return appClient;
     }
@@ -168,26 +168,26 @@ public final class DDProvider {
         if (fo == null) {
             return null;
         }
-        WeakReference<AppClientProxy> wr = ddMap.get(fo.getURL());
+        WeakReference<AppClientProxy> wr = ddMap.get(fo.toURL());
         if (wr == null) {
             return null;
         }
         AppClientProxy appClient = wr.get();
         if (appClient == null) {
-            ddMap.remove(fo.getURL());
+            ddMap.remove(fo.toURL());
         }
         return appClient;
     }
     
     private AppClient getOriginalFromCache(FileObject fo) throws IOException {
-        WeakReference<AppClient> wr = baseBeanMap.get(fo.getURL());
+        WeakReference<AppClient> wr = baseBeanMap.get(fo.toURL());
         if (wr == null) {
             return null;
         }
         AppClient appClient = wr.get();
         if (appClient == null) {
-            baseBeanMap.remove(fo.getURL());
-            errorMap.remove(fo.getURL());
+            baseBeanMap.remove(fo.toURL());
+            errorMap.remove(fo.toURL());
         }
         return appClient;
     }
@@ -234,8 +234,8 @@ public final class DDProvider {
                                     appClient.setStatus(AppClient.STATE_VALID);
                                 }
                                 AppClient original = DDUtils.createAppClient(fo, version);
-                                baseBeanMap.put(fo.getURL(), new WeakReference<AppClient>(original));
-                                errorMap.put(fo.getURL(), appClient.getError());
+                                baseBeanMap.put(fo.toURL(), new WeakReference<AppClient>(original));
+                                errorMap.put(fo.toURL(), appClient.getError());
                                 appClient.merge(original, AppClient.MERGE_UPDATE);
                             } catch (SAXException ex) {
                                 if (ex instanceof SAXParseException) {
@@ -255,10 +255,10 @@ public final class DDProvider {
                                 if (original.getClass().equals(orig.getClass())) {
                                     orig.merge(original,AppClient.MERGE_UPDATE);
                                 } else {
-                                    baseBeanMap.put(fo.getURL(), new WeakReference<AppClient>(original));
+                                    baseBeanMap.put(fo.toURL(), new WeakReference<AppClient>(original));
                                 }
                             } catch (SAXException ex) {
-                                baseBeanMap.remove(fo.getURL());
+                                baseBeanMap.remove(fo.toURL());
                             }
                         }
                     }

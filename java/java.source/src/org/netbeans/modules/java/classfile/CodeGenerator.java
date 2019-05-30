@@ -196,9 +196,9 @@ public class CodeGenerator {
                         toOpen = te;
                     }
 
-                    classfileRoot[0] = root.getURL();
+                    classfileRoot[0] = root.toURL();
                     binaryName[0] = binName;
-                    final File  sourceRoot = new File (JavaIndex.getIndex(root.getURL()),"gensrc");     //NOI18N
+                    final File  sourceRoot = new File (JavaIndex.getIndex(root.toURL()),"gensrc");     //NOI18N
                     final FileObject sourceRootFO = FileUtil.createFolder(sourceRoot);
                     if (sourceRootFO == null) {
                         LOG.info("Cannot create folder: " + sourceRoot); //NOI18N

@@ -115,7 +115,7 @@ public class LibrariesHelper {
                         if (classPath.contains(destJar)) {
                             continue;
                         }
-                        archiveJars.add(new URL(destJar.getURL().toExternalForm() + "/")); // NOI18N
+                        archiveJars.add(new URL(destJar.toURL().toExternalForm() + "/")); // NOI18N
 
                     } catch (IOException ex) {
                         Exceptions.printStackTrace(ex);

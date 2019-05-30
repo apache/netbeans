@@ -22,9 +22,11 @@ package org.openide.util;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.MediaTracker;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.Transparency;
@@ -721,16 +723,56 @@ public final class ImageUtilities {
         Object firstUrl = image1.getProperty("url", null);
         
         ColorModel model = colorModel(bitmask? Transparency.BITMASK: Transparency.TRANSLUCENT);
-        ToolTipImage buffImage = new ToolTipImage(str.toString(), null,
+        // Provide a delegate Icon for scalable rendering.
+        Icon delegateIcon = new MergedIcon(image2Icon(image1), image2Icon(image2), x, y);
+        ToolTipImage buffImage = new ToolTipImage(str.toString(), delegateIcon,
                 model, model.createCompatibleWritableRaster(w, h), model.isAlphaPremultiplied(), null, firstUrl instanceof URL ? (URL)firstUrl : null
             );
 
+        // Also provide an Image-based rendering for backwards-compatibility.
         java.awt.Graphics g = buffImage.createGraphics();
         g.drawImage(image1, 0, 0, null);
         g.drawImage(image2, x, y, null);
         g.dispose();
 
         return buffImage;
+    }
+
+    /**
+     * Alternative image merging implementation using the {@link Icon} API. This preserves
+     * scalability of the delegate {@code Icon}s on HiDPI displays.
+     */
+    private static final class MergedIcon extends CachedHiDPIIcon {
+        private final Icon icon1;
+        private final Icon icon2;
+        private final int x, y;
+
+        public MergedIcon(Icon icon1, Icon icon2, int x, int y) {
+            super(Math.max(icon1.getIconWidth(), x + icon2.getIconWidth()),
+                  Math.max(icon1.getIconHeight(), y + icon2.getIconHeight()));
+            this.icon1 = icon1;
+            this.icon2 = icon2;
+            this.x = x;
+            this.y = y;
+        }
+
+        @Override
+        protected Image createImage(Component c, GraphicsConfiguration graphicsConfiguration,
+                int deviceWidth, int deviceHeight, double scale)
+        {
+            BufferedImage ret = graphicsConfiguration.createCompatibleImage(
+                    deviceWidth, deviceHeight, Transparency.TRANSLUCENT);
+            Graphics2D g = ret.createGraphics();
+            try {
+                g.clip(new Rectangle(0, 0, deviceWidth, deviceHeight));
+                g.scale(scale, scale);
+                icon1.paintIcon(c, g, 0, 0);
+                icon2.paintIcon(c, g, x, y);
+            } finally {
+                g.dispose();
+            }
+            return ret;
+        }
     }
 
     /** Creates BufferedImage with Transparency.TRANSLUCENT */

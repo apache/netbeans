@@ -21,11 +21,14 @@ package org.openide.util;
 
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.MediaTracker;
+import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.Transparency;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.ImageObserver;
@@ -160,7 +163,8 @@ public final class ImageUtilities {
         return loadImageInternal(resource, localized);
     }
 
-    // Private version with more specific return type.
+    /* Private version of the method showing the more specific return type. We always return a
+    ToolTipImage, to take advantage of its rendering tweaks for HiDPI screens. */
     private static ToolTipImage loadImageInternal(String resource, boolean localized) {
         // Avoid a NPE that could previously occur in the isDarkLaF case only. See NETBEANS-2401.
         if (resource == null) {
@@ -177,9 +181,6 @@ public final class ImageUtilities {
             // only non _dark images need filtering
             RGBImageFilter imageFilter = getImageIconFilter();
             if (null != image && null != imageFilter) {
-                /* Make sure that every Image loaded by this class is a ToolTipImage, whether or not
-                a filter is applied. That way we're less likely to introduce bugs that only occur on
-                certain LAFs. */
                 image = icon2ToolTipImage(FilteredIcon.create(imageFilter, image));
             }
         }
@@ -276,6 +277,8 @@ public final class ImageUtilities {
      * @return icon corresponding icon
      */    
     public static final Icon image2Icon(Image image) {
+        /* Make sure to always return a ToolTipImage, to take advantage of its rendering tweaks for
+        HiDPI screens. */
         return (image instanceof ToolTipImage)
                 ? (ToolTipImage) image : assignToolTipToImageInternal(image, "");
     }
@@ -954,7 +957,44 @@ public final class ImageUtilities {
             if (delegateIcon != null) {
                 delegateIcon.paintIcon(c, g, x, y);
             } else {
-                g.drawImage(this, x, y, null);
+                /* There is no scalable delegate icon available. On HiDPI displays, this means that
+                original low-resolution icons will need to be scaled up to a higher resolution. Do a
+                few tricks here to improve the quality of the scaling. See NETBEANS-2614 and the
+                before/after screenshots that are attached to said JIRA ticket. */
+                Graphics2D g2 = (Graphics2D) g.create();
+                try {
+                    final AffineTransform tx = g2.getTransform();
+                    final int txType = tx.getType();
+                    final double scale;
+                    if (txType == AffineTransform.TYPE_UNIFORM_SCALE ||
+                        txType == (AffineTransform.TYPE_UNIFORM_SCALE | AffineTransform.TYPE_TRANSLATION))
+                    {
+                      scale = tx.getScaleX();
+                    } else {
+                      scale = 1.0;
+                    }
+                    if (scale != 1.0) {
+                        /* The default interpolation mode is nearest neighbor. Use bicubic
+                        interpolation instead, which looks better, especially with non-integral
+                        HiDPI scaling factors (e.g. 150%). Even for an integral 2x scaling factor
+                        (used by all Retina displays on MacOS), the blurred appearance of bicubic
+                        scaling ends up looking better on HiDPI displays than the blocky appearance
+                        of nearest neighbor. */
+                        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+                        g2.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+                        g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+                        /* For non-integral scaling factors, we frequently encounter non-integral
+                        device pixel positions. For instance, with a 150% scaling factor, the
+                        logical pixel position (7,0) would map to device pixel position (10.5,0).
+                        On such scaling factors, icons look a lot better if we round the (x,y)
+                        translation to an integral number of device pixels before painting. */
+                        g2.setTransform(new AffineTransform(scale, 0, 0, scale,
+                                (int) tx.getTranslateX(), (int) tx.getTranslateY()));
+                    }
+                    g2.drawImage(this, x, y, null);
+                } finally {
+                    g2.dispose();
+                }
             }
         }
 

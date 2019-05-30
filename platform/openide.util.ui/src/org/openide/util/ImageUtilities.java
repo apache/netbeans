@@ -28,7 +28,6 @@ import java.awt.Toolkit;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
-import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageObserver;
 import java.awt.image.RGBImageFilter;
 import java.awt.image.WritableRaster;
@@ -54,6 +53,13 @@ import javax.swing.UIManager;
 
 /** 
  * Useful static methods for manipulation with images/icons, results are cached.
+ *
+ * <p>Images can be represented as instances of either {@link Image} or {@link Icon}. For best
+ * results on HiDPI displays, clients should use the {@link #image2Icon(Image)} method provided by
+ * this class when converting an {@code Image} to an {@code Icon}, rather than constructing
+ * {@link ImageIcon} instances themselves. When doing manual painting, clients should use
+ * {@link Icon#paintIcon(Component, Graphics, int, int)} rather than
+ * {@link Graphics#drawImage(Image, int, int, ImageObserver)}.
  * 
  * @author Jaroslav Tulach, Tomas Holy
  * @since 7.15
@@ -93,6 +99,22 @@ public final class ImageUtilities {
     private static final Logger ERR = Logger.getLogger(ImageUtilities.class.getName());
     
     private static final String DARK_LAF_SUFFIX = "_dark"; //NOI18N
+
+    /**
+     * Dummy component to be passed to the first parameter  of
+     * {@link Icon#paintIcon(Component, Graphics, int, int)} when converting an {@code Icon} to an
+     * {@code Image}. See comment in {@link #icon2ToolTipImage(Icon)}.
+     */
+    private static volatile Component dummyIconComponent;
+
+    static {
+        Mutex.EVENT.writeAccess(new Runnable() {
+            @Override
+            public void run() {
+                dummyIconComponent = new JLabel();
+            }
+        });
+    }
     
     private ImageUtilities() {
     }
@@ -135,11 +157,16 @@ public final class ImageUtilities {
      * @return icon's Image or null if the icon cannot be loaded
      */
     public static final Image loadImage(String resource, boolean localized) {
+        return loadImageInternal(resource, localized);
+    }
+
+    // Private version with more specific return type.
+    private static ToolTipImage loadImageInternal(String resource, boolean localized) {
         // Avoid a NPE that could previously occur in the isDarkLaF case only. See NETBEANS-2401.
         if (resource == null) {
             return null;
         }
-        Image image = null;
+        ToolTipImage image = null;
         if( isDarkLaF() ) {
             image = getIcon(addDarkSuffix(resource), localized);
             // found an image with _dark-suffix, so there no need to apply an
@@ -150,7 +177,10 @@ public final class ImageUtilities {
             // only non _dark images need filtering
             RGBImageFilter imageFilter = getImageIconFilter();
             if (null != image && null != imageFilter) {
-                image = createFilteredImage(imageFilter, image);
+                /* Make sure that every Image loaded by this class is a ToolTipImage, whether or not
+                a filter is applied. That way we're less likely to introduce bugs that only occur on
+                certain LAFs. */
+                image = icon2ToolTipImage(FilteredIcon.create(imageFilter, image));
             }
         }
         return image;
@@ -171,11 +201,11 @@ public final class ImageUtilities {
      * @since 7.22
      */
     public static final ImageIcon loadImageIcon( String resource, boolean localized ) {
-        Image image = loadImage(resource, localized);
+        ToolTipImage image = loadImageInternal(resource, localized);
         if( image == null ) {
             return null;
         }
-        return ( ImageIcon ) image2Icon( image );
+        return IconImageIcon.create(image);
     }
     
     private static boolean isDarkLaF() {
@@ -246,15 +276,15 @@ public final class ImageUtilities {
      * @return icon corresponding icon
      */    
     public static final Icon image2Icon(Image image) {
-        if (image instanceof ToolTipImage) {
-            return ((ToolTipImage) image).getIcon();
-        } else {
-            return new ImageIcon(image);
-        }
+        return (image instanceof ToolTipImage)
+                ? (ToolTipImage) image : assignToolTipToImageInternal(image, "");
     }
     
     /**
      * Converts given icon to a {@link java.awt.Image}.
+     *
+     * <p>A scalable {@link Icon} instance can always be recovered by passing the returned
+     * {@code Image} to {@link #image2Icon(Image)} again, i.e. for painting on HiDPI screens.
      *
      * @param icon {@link javax.swing.Icon} to be converted.
      */
@@ -263,15 +293,33 @@ public final class ImageUtilities {
             LOGGER.log(Level.WARNING, null, new NullPointerException());
             return loadImage("org/openide/nodes/defaultNode.png", true);
         }
-        if (icon instanceof ImageIcon) {
+        if (icon instanceof ToolTipImage) {
+            return (ToolTipImage) icon;
+        } else if (icon instanceof IconImageIcon) {
+            return icon2Image(((IconImageIcon) icon).getDelegateIcon());
+        } else if (icon instanceof ImageIcon) {
             return ((ImageIcon) icon).getImage();
         } else {
-            ToolTipImage image = new ToolTipImage("", icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
-            Graphics g = image.getGraphics();
-            icon.paintIcon(new JLabel(), g, 0, 0);
-            g.dispose();
-            return image;
+            return icon2ToolTipImage(icon);
         }
+    }
+
+    private static ToolTipImage icon2ToolTipImage(Icon icon) {
+        Parameters.notNull("icon", icon);
+        if (icon instanceof ToolTipImage) {
+            return (ToolTipImage) icon;
+        }
+        ToolTipImage image = new ToolTipImage(icon, "", BufferedImage.TYPE_INT_ARGB);
+        Graphics g = image.getGraphics();
+        /* Previously, we'd create a new JLabel here every time; this once led to a deadlock on
+        startup when the nb.imageicon.filter setting was enabled. The underlying problem is that
+        methods in this class may be called from any thread, while JLabel's methods and constructors
+        should really only be called on the Event Dispatch Thread. Constructing the component once
+        on the EDT fixed the problem. Read-only operations from non-EDT threads shouldn't really be
+        a problem; most Icon implementations won't ever access the component parameter anyway. */
+        icon.paintIcon(dummyIconComponent, g, 0, 0);
+        g.dispose();
+        return image;
     }
     
     /**
@@ -361,14 +409,8 @@ public final class ImageUtilities {
      */
     public static Image createDisabledImage(Image image)  {
         Parameters.notNull("image", image);
-        return createFilteredImage(DisabledButtonFilter.INSTANCE, image);
-    }
-
-    private static Image createFilteredImage(RGBImageFilter filter, Image image) {
-        Parameters.notNull("filter", filter);
-        Parameters.notNull("image", image);
-        return Toolkit.getDefaultToolkit().createImage(
-                new FilteredImageSource(image.getSource(), filter));
+        // Go through FilteredIcon to preserve scalable icons.
+        return icon2Image(createDisabledIcon(image2Icon(image)));
     }
 
     /**
@@ -676,7 +718,7 @@ public final class ImageUtilities {
         Object firstUrl = image1.getProperty("url", null);
         
         ColorModel model = colorModel(bitmask? Transparency.BITMASK: Transparency.TRANSLUCENT);
-        ToolTipImage buffImage = new ToolTipImage(str.toString(), 
+        ToolTipImage buffImage = new ToolTipImage(str.toString(), null,
                 model, model.createCompatibleWritableRaster(w, h), model.isAlphaPremultiplied(), null, firstUrl instanceof URL ? (URL)firstUrl : null
             );
 
@@ -812,11 +854,40 @@ public final class ImageUtilities {
      // end of ActiveRef
 
     /**
+     * Wraps an arbitrary {@link Icon} inside an {@link ImageIcon}. This allows us to provide
+     * scalable icons from {@link #loadImageIcon(String,boolean)} without changing the API.
+     */
+    private static final class IconImageIcon extends ImageIcon {
+        private final Icon delegate;
+
+        private IconImageIcon(Icon delegate) {
+            super(icon2Image(delegate));
+            Parameters.notNull("delegate", delegate);
+            this.delegate = delegate;
+        }
+
+        private static ImageIcon create(Icon delegate) {
+            return (delegate instanceof ImageIcon)
+                    ? (ImageIcon) delegate : new IconImageIcon(delegate);
+        }
+
+        @Override
+        public synchronized void paintIcon(Component c, Graphics g, int x, int y) {
+            delegate.paintIcon(c, g, x, y);
+        }
+
+        public Icon getDelegateIcon() {
+            return delegate;
+        }
+    }
+
+    /**
      * Image with tool tip text (for icons with badges)
      */
     private static class ToolTipImage extends BufferedImage implements Icon {
         final String toolTipText;
-        ImageIcon imageIcon;
+        // May be null.
+        final Icon delegateIcon;
         final URL url;
 
         public static ToolTipImage createNew(String toolTipText, Image image, URL url) {
@@ -829,8 +900,11 @@ public final class ImageUtilities {
                 Object value = image.getProperty("url", null);
                 url = (value instanceof URL) ? (URL) value : null;
             }            
+            Icon icon = (image instanceof ToolTipImage)
+                    ? ((ToolTipImage) image).getDelegateIcon() : null;
             ToolTipImage newImage = new ToolTipImage(
                 toolTipText,
+                icon,
                 model,
                 model.createCompatibleWritableRaster(w, h),
                 model.isAlphaPremultiplied(), null, url
@@ -841,27 +915,31 @@ public final class ImageUtilities {
             g.dispose();
             return newImage;
         }
-        
+
         public ToolTipImage(
-            String toolTipText, ColorModel cm, WritableRaster raster,
+            String toolTipText, Icon delegateIcon, ColorModel cm, WritableRaster raster,
             boolean isRasterPremultiplied, Hashtable<?, ?> properties, URL url
         ) {
             super(cm, raster, isRasterPremultiplied, properties);
             this.toolTipText = toolTipText;
+            this.delegateIcon = delegateIcon;
             this.url = url;
         }
 
-        public ToolTipImage(String toolTipText, int width, int height, int imageType) {
-            super(width, height, imageType);
+        public ToolTipImage(Icon delegateIcon, String toolTipText, int imageType) {
+            super(delegateIcon.getIconWidth(), delegateIcon.getIconHeight(), imageType);
+            this.delegateIcon = delegateIcon;
             this.toolTipText = toolTipText;
             this.url = null;
         }
-        
-        synchronized ImageIcon getIcon() {
-            if (imageIcon == null) {
-                imageIcon = new ImageIcon(this);
-            }
-            return imageIcon;
+
+        /**
+         * Get an {@link Icon} instance representing a scalable version of this {@code Image}.
+         *
+         * @return may be null
+         */
+        public Icon getDelegateIcon() {
+            return delegateIcon;
         }
 
         public int getIconHeight() {
@@ -873,7 +951,11 @@ public final class ImageUtilities {
         }
 
         public void paintIcon(Component c, Graphics g, int x, int y) {
-            g.drawImage(this, x, y, null);
+            if (delegateIcon != null) {
+                delegateIcon.paintIcon(c, g, x, y);
+            } else {
+                g.drawImage(this, x, y, null);
+            }
         }
 
         @Override
@@ -881,14 +963,14 @@ public final class ImageUtilities {
             if ("url".equals(name)) { // NOI18N
                 if (url != null) {
                     return url;
+                } else if (!(delegateIcon instanceof ImageIcon)) {
+                    return null;
                 } else {
-                    if (imageIcon == null) {
+                    Image image = ((ImageIcon) delegateIcon).getImage();
+                    if (image == this || image == null) {
                         return null;
                     }
-                    if (imageIcon.getImage() == this) {
-                        return null;
-                    }
-                    return imageIcon.getImage().getProperty("url", observer);
+                    return image.getProperty("url", observer);
                 }
             }
             return super.getProperty(name, observer);

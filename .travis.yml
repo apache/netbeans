@@ -51,6 +51,9 @@ matrix:
         - env: OPTS="-quiet" TARGET="build-platform"
           jdk: oraclejdk11
 
+        - env: OPTS="-quiet" TARGET="build-basic"
+          jdk: oraclejdk8
+
         - env: OPTS="-Dcluster.config=standard -quiet -Dpermit.jdk9.builds=true -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false" TARGET="build"
           jdk: oraclejdk11
 

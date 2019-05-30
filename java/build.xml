@@ -20,26 +20,11 @@
 
 -->
 <project name="java" basedir="../nbbuild" default="build">
-    <description>NetBeans Java cluster  build script.</description>
+    <description>NetBeans Basic cluster  build script.</description>
     <import file="../nbbuild/build.xml"/>
 
-  <target name="build" description="Build the NetBeans Java cluster.">
-      <mkdir dir="${netbeans.dest.dir}"/>
-      <ant dir="." target="build" inheritAll="false">
-          <property name="cluster.config" value="standard-java"/>
-          <property name="permit.jdk9.builds" value="true"/>
-      </ant>
-  </target>
+  <target name="build" depends="build-basic" description="Build the NetBeans Basic cluster."/>
 
- <target name="test" description="Test the NetBeans Java modules.">
-      <mkdir dir="${netbeans.dest.dir}"/>
-      <ant dir="." target="test" inheritAll="false">
-          <property name="cluster.config" value="java"/>
-          <property name="test.type" value="test-unit"/>
-          <property name="test-unit-sys-prop.ignore.random.failures" value="true"/>
-          <property name="permit.jdk9.builds" value="true"/>
-          <property name="vanilla.javac.exists" value="true"/>
-      </ant>
-  </target>
+  <target name="test" depends="test-basic" description="Test the NetBeans Basic cluster."/>
 
 </project>

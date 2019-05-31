@@ -34,7 +34,7 @@ import javax.swing.ImageIcon;
 /**
  * Abstract base class for {@link javax.swing.Icon} implementations that need to cache scaled bitmap
  * representations for HiDPI displays. Bitmaps for multiple HiDPI scaling factors can be cached at
- * the same time, e.g. for multi-monitor setups.
+ * the same time, e.g. for multi-monitor setups. Thread-safe.
  */
 abstract class CachedHiDPIIcon extends ImageIcon {
     /**
@@ -143,7 +143,7 @@ abstract class CachedHiDPIIcon extends ImageIcon {
      *        Future implementations might also elect to simply pass a dummy Component instance
      *        here.
      * @param graphicsConfiguration the configuration of the surface on which the image will be
-     * painted
+     *        painted
      * @param deviceWidth the required width of the image, with scaling already applied
      * @param deviceHeight the required height of the image, with scaling already applied
      * @param scale the HiDPI scaling factor detected in {@code graphicsConfiguration}

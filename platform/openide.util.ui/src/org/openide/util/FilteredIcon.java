@@ -38,7 +38,7 @@ import javax.swing.ImageIcon;
  * of {@link VectorIcon}, or {@link ImageIcon} instances delegating to a
  * {@code java.awt.image.MultiResolutionImage} (available since Java 9 and above).
  *
- * <p>Note that state passed through the {code Component} parameter of the
+ * <p>Note that state passed through the {@code Component} parameter of the
  * {@link Icon#paintIcon(Component,Graphics,int,int)} method will only be current as of the time the
  * icon is initially entered into the cache.
  */

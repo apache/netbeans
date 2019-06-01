@@ -21,12 +21,11 @@ package org.openide.util;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.RGBImageFilter;
 import javax.swing.Icon;
@@ -59,12 +58,10 @@ final class FilteredIcon extends CachedHiDPIIcon {
     }
 
     @Override
-    protected Image createImage(
-            Component c, GraphicsConfiguration graphicsConfiguration,
-            int deviceWidth, int deviceHeight, double scale)
+    protected Image createAndPaintImage(
+            Component c, ColorModel colorModel, int deviceWidth, int deviceHeight, double scale)
     {
-        final BufferedImage img = graphicsConfiguration.createCompatibleImage(
-                deviceWidth, deviceHeight, Transparency.TRANSLUCENT);
+        final BufferedImage img = createBufferedImage(colorModel, deviceWidth, deviceHeight);
         final Graphics2D imgG = img.createGraphics();
         try {
             imgG.clip(new Rectangle(0, 0, img.getWidth(), img.getHeight()));

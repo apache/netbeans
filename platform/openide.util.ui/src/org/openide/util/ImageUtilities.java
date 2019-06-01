@@ -23,7 +23,6 @@ import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.MediaTracker;
@@ -45,7 +44,9 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -57,6 +58,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import org.openide.util.spi.SVGLoader;
 
 /** 
  * Useful static methods for manipulation with images/icons, results are cached.
@@ -91,9 +93,10 @@ public final class ImageUtilities {
      * @see "#20072"
      */
     private static final Set<String> extraInitialSlashes = new HashSet<String>();
-    private static volatile Object currentLoader;
-    private static Lookup.Result<ClassLoader> loaderQuery = null;
-    private static boolean noLoaderWarned = false;
+    private static final CachedLookupLoader<ClassLoader> classLoaderLoader =
+            new CachedLookupLoader<ClassLoader>(ClassLoader.class);
+    private static final CachedLookupLoader<SVGLoader> svgLoaderLoader =
+            new CachedLookupLoader<SVGLoader>(SVGLoader.class);
     private static final Component component = new Component() {
     };
 
@@ -101,7 +104,6 @@ public final class ImageUtilities {
     private static int mediaTrackerID;
     
     private static ImageReader PNG_READER;
-//    private static ImageReader GIF_READER;
     
     private static final Logger ERR = Logger.getLogger(ImageUtilities.class.getName());
     
@@ -110,7 +112,7 @@ public final class ImageUtilities {
     /**
      * Dummy component to be passed to the first parameter  of
      * {@link Icon#paintIcon(Component, Graphics, int, int)} when converting an {@code Icon} to an
-     * {@code Image}. See comment in {@link #icon2ToolTipImage(Icon)}.
+     * {@code Image}. See comment in {@link #icon2ToolTipImage(Icon, URL)}.
      */
     private static volatile Component dummyIconComponent;
 
@@ -135,12 +137,25 @@ public final class ImageUtilities {
     static {
         ImageIO.setUseCache(false);
         PNG_READER = ImageIO.getImageReadersByMIMEType("image/png").next();
-//        GIF_READER = ImageIO.getImageReadersByMIMEType("image/gif").next();
     }
 
     /**
      * Loads an image from the specified resource ID. The image is loaded using the "system" classloader registered in
      * Lookup.
+     *
+     * <p>If the default lookup contains a service provider for the {@link SVGLoader} interface, and
+     * there exists an SVG version of the requested image (e.g. "icon.svg" exists when "icon.png"
+     * was requested), the SVG version will be loaded instead of the originally requested bitmap.
+     * SVG images can also be requested directly. The SVG document's root element must contain
+     * explicit width/height attributes. An SVG loader implementation can be installed via the
+     * optional {@code openide.util.ui.svg} module.
+     *
+     * <p>To paint SVG images at arbitrary resolutions, convert the returned {@link Image} to an
+     * {@link Icon} using {@link #image2Icon(Image)}, and set an appropriate transform on the
+     * {@link Graphics2D} instance passed to {@link Icon#paintIcon(Component, Graphics, int, int)}.
+     * When painting on HiDPI-capable {@code Graphics2D} instances provided by Swing, the
+     * appropriate transform will already be in place.
+     *
      * @param resourceID resource path of the icon (no initial slash)
      * @return icon's Image, or null, if the icon cannot be loaded.     
      */
@@ -191,7 +206,7 @@ public final class ImageUtilities {
             // only non _dark images need filtering
             RGBImageFilter imageFilter = getImageIconFilter();
             if (null != image && null != imageFilter) {
-                image = icon2ToolTipImage(FilteredIcon.create(imageFilter, image));
+                image = icon2ToolTipImage(FilteredIcon.create(imageFilter, image), image.url);
             }
         }
         return image;
@@ -315,15 +330,18 @@ public final class ImageUtilities {
             if (ret != null)
                 return ret;
         }
-        return icon2ToolTipImage(icon);
+        return icon2ToolTipImage(icon, null);
     }
 
-    private static ToolTipImage icon2ToolTipImage(Icon icon) {
+    /**
+     * @param url may be null
+     */
+    private static ToolTipImage icon2ToolTipImage(Icon icon, URL url) {
         Parameters.notNull("icon", icon);
         if (icon instanceof ToolTipImage) {
             return (ToolTipImage) icon;
         }
-        ToolTipImage image = new ToolTipImage(icon, "", BufferedImage.TYPE_INT_ARGB);
+        ToolTipImage image = new ToolTipImage(icon, "", url, BufferedImage.TYPE_INT_ARGB);
         Graphics g = image.getGraphics();
         /* Previously, we'd create a new JLabel here every time; this once led to a deadlock on
         startup when the nb.imageicon.filter setting was enabled. The underlying problem is that
@@ -428,47 +446,107 @@ public final class ImageUtilities {
     }
 
     /**
+     * Get an SVG icon loader, if the appropriate service provider module is installed. To ensure
+     * lazy loading of the SVG loader module, this method should only be called when there actually
+     * exists an SVG file to load. The result is cached.
+     *
+     * @return may be null
+     */
+    private static SVGLoader getSVGLoader() {
+        /* "Objects contained in the default lookup are instantiated lazily when first requested."
+        ( http://wiki.netbeans.org/DevFaqLookupDefault ) So the SVGLoader implementation module will
+        only be loaded the first time an SVG file is actually encountered for loading, rather than,
+        for instance, when the startup splash screen initializes ImageUtilities to load its PNG
+        image. This was confirmed by printing a debugging message from a static initializer in
+        SVGLoaderImpl in the implementation module; the message appears well after the splash
+        screen's PNG graphics first becomes visible. */
+        return svgLoaderLoader.getLoader();
+    }
+
+    /**
      * Get the class loader from lookup.
      * Since this is done very frequently, it is wasteful to query lookup each time.
      * Instead, remember the last result and just listen for changes.
      */
-    static ClassLoader getLoader() {
-        Object is = currentLoader;
-        if (is instanceof ClassLoader) {
-            return (ClassLoader)is;
-        }
-            
-        currentLoader = Thread.currentThread();
-            
-        if (loaderQuery == null) {
-            loaderQuery = Lookup.getDefault().lookup(new Lookup.Template<ClassLoader>(ClassLoader.class));
-            loaderQuery.addLookupListener(
-                new LookupListener() {
-                    public void resultChanged(LookupEvent ev) {
-                        ERR.fine("Loader cleared"); // NOI18N
-                        currentLoader = null;
-                    }
-                }
-            );
+    static ClassLoader getClassLoader() {
+        return classLoaderLoader.getLoader();
+    }
+
+    private static final class CachedLookupLoader<T> {
+        private final Class<T> clazz;
+        private final AtomicBoolean noLoaderWarned = new AtomicBoolean(false);
+        /**
+         * Cached result of {@link #getLoader()}. Null means the cache is cleared; absent means the
+         * result is cached but was null (no loader found). This field is marked volatile so that it
+         * can be retrieved without synchronization in the common case, like in prior versions.
+         */
+        private volatile Optional<T> currentLoader;
+        /**
+         * The thread which last started performing an uncached lookup, when said lookup is
+         * currently in progress. The result of an uncached lookup will only be cached if
+         * (1) LookupListener.resultChanged was _not_ called while the lookup was being performed
+         * and (2) no other uncached lookups were started more recently. This is slightly cleaned-up
+         * version of the fix for an old race condition bug (#62194 in BugZilla).
+         */
+        private Thread threadInProgress;
+        private Lookup.Result<T> loaderQuery;
+
+        public CachedLookupLoader(Class<T> clazz) {
+            Parameters.notNull("clazz", clazz);
+            this.clazz = clazz;
         }
 
-        Iterator it = loaderQuery.allInstances().iterator();
-        if (it.hasNext()) {
-            ClassLoader toReturn = (ClassLoader) it.next();
-            if (currentLoader == Thread.currentThread()) {
-                currentLoader = toReturn;
+        public T getLoader() {
+            Optional<T> toReturn = currentLoader;
+            if (toReturn != null) {
+                return toReturn.orElse(null);
             }
-            if (ERR.isLoggable(Level.FINE)) {
-                ERR.fine("Loader computed: " + currentLoader); // NOI18N
+            final Lookup.Result<T> useLoaderQuery;
+            synchronized (this) {
+                // Signal to other threads that their result is outdated.
+                threadInProgress = Thread.currentThread();
+                if (loaderQuery == null) {
+                    loaderQuery = Lookup.getDefault().lookupResult(clazz);
+                    loaderQuery.addLookupListener(
+                        new LookupListener() {
+                            @Override
+                            public void resultChanged(LookupEvent ev) {
+                                ERR.log(Level.FINE, "Loader for {0} cleared", clazz); // NOI18N
+                                /* Clear any existing cached result, and indicate to ongoing lookup
+                                operations in other threads that their results are outdated and
+                                should not be cahced. */
+                                synchronized (CachedLookupLoader.this) {
+                                    currentLoader = null;
+                                    threadInProgress = null;
+                                }
+                            }
+                        }
+                    );
+                }
+                useLoaderQuery = loaderQuery;
             }
-            return toReturn;
-        } else { if (!noLoaderWarned) {
-                noLoaderWarned = true;
-                ERR.warning(
-                    "No ClassLoader instance found in " + Lookup.getDefault() // NOI18N
-                );
+            Iterator it = useLoaderQuery.allInstances().iterator();
+            toReturn = Optional.ofNullable(it.hasNext() ? (T) it.next() : null);
+            if (!toReturn.isPresent()) {
+                if (!noLoaderWarned.getAndSet(true)) {
+                    ERR.log(Level.WARNING, "No {0} instance found in {1}", // NOI18N
+                            new Object[]{ clazz, Lookup.getDefault() });
+                }
+            } else if (ERR.isLoggable(Level.FINE)) {
+                // Log message must start with "Loader computed", per ImageUtilitiesGetLoaderTest.
+                ERR.log(Level.FINE, "Loader computed for {0}: {1}", // NOI18N
+                        new Object[]{ clazz, toReturn.orElse(null) });
             }
-            return null;
+            synchronized (this) {
+                if (threadInProgress == Thread.currentThread()) {
+                    /* We're the last thread to have started performing a lookup, and the result has
+                    not been invalidated since after we started the operation, so we can safely
+                    cache the result. */
+                    threadInProgress = null;
+                    currentLoader = toReturn;
+                }
+            }
+            return toReturn.orElse(null);
         }
     }
 
@@ -497,7 +575,7 @@ public final class ImageUtilities {
                 }
 
                 // find localized or base image
-                ClassLoader loader = getLoader();
+                ClassLoader loader = getClassLoader();
 
                 // we'll keep the String probably for long time, optimize it
                 resource = new String(resource).intern(); // NOPMD
@@ -538,7 +616,7 @@ public final class ImageUtilities {
                 return null;
             }
         } else {
-            return getIcon(resource, getLoader(), false);
+            return getIcon(resource, getClassLoader(), false);
         }
     }
 
@@ -600,15 +678,39 @@ public final class ImageUtilities {
                 n = name;
             }
 
-            // we have to load it
-            java.net.URL url = (loader != null) ? loader.getResource(n)
-                                                : ImageUtilities.class.getClassLoader().getResource(n);
+            // Load the icon.
+            SVGLoader svgLoader = null; // If not null, url should be loaded as an SVG file.
+            ClassLoader useClassLoader =
+                    (loader != null) ? loader : ImageUtilities.class.getClassLoader();
+            java.net.URL url = null;
+            if (n.endsWith(".png") || n.endsWith(".gif") || n.endsWith(".svg")) {
+                /* If an SVG version of the image is available, always load that one. Only attempt
+                to load the SVGLoader implementation module if an actual SVG file exists. */
+                URL svgURL = useClassLoader.getResource(n.substring(0, n.length() - 4) + ".svg");
+                if (svgURL != null) {
+                    svgLoader = getSVGLoader();
+                    if (svgLoader != null) {
+                        url = svgURL;
+                    } else {
+                        ERR.log(Level.INFO, "No SVG loader available for loading {0}", svgURL);
+                    }
+                }
+            }
+            if (url == null && !n.endsWith(".svg")) { // The SVG case was handled before.
+                url = useClassLoader.getResource(n);
+            }
 
 //            img = (url == null) ? null : Toolkit.getDefaultToolkit().createImage(url);
             Image result = null;
             try {
                 if (url != null) {
-                    if (name.endsWith(".png")) {
+                    if (svgLoader != null) {
+                        try {
+                            result = icon2ToolTipImage(svgLoader.loadIcon(url), url);
+                        } catch (IOException e) {
+                            ERR.log(Level.INFO, "Failed to load SVG image " + url, e);
+                        }
+                    } else if (name.endsWith(".png")) {
                         ImageInputStream stream = ImageIO.createImageInputStream(url.openStream());
                         ImageReadParam param = PNG_READER.getDefaultReadParam();
                         try {
@@ -620,20 +722,6 @@ public final class ImageUtilities {
                         }
                         stream.close();
                     } 
-                    /*
-                    else if (name.endsWith(".gif")) {
-                        ImageInputStream stream = ImageIO.createImageInputStream(url.openStream());
-                        ImageReadParam param = GIF_READER.getDefaultReadParam();
-                        try {
-                            GIF_READER.setInput(stream, true, true);
-                            result = GIF_READER.read(0, param);
-                        }
-                        catch (IOException ioe1) {
-                            ERR.log(Level.INFO, "Image "+name+" is not GIF", ioe1);
-                        }
-                        stream.close();
-                    }
-                     */
 
                     if (result == null) {
                         result = ImageIO.read(url);
@@ -657,7 +745,9 @@ public final class ImageUtilities {
                     ERR.log(Level.FINE, "loading icon {0} = {1}", new Object[] {n, result});
                 }
                 name = new String(name).intern(); // NOPMD
-                ToolTipImage toolTipImage = ToolTipImage.createNew("", result, url);
+                ToolTipImage toolTipImage = (result instanceof ToolTipImage)
+                        ? (ToolTipImage) result
+                        : ToolTipImage.createNew("", result, url);
                 cache.put(name, new ActiveRef<String>(toolTipImage, cache, name));
                 return toolTipImage;
             } else { // no icon found
@@ -669,10 +759,11 @@ public final class ImageUtilities {
         }
     }
 
+    // Note: No longer in use.
     /** The method creates a BufferedImage which represents the same Image as the
      * parameter but consumes less memory.
      */
-    static final Image toBufferedImage(Image img) {
+    private static final Image toBufferedImage(Image img) {
         // load the image
         new javax.swing.ImageIcon(img, "");
 
@@ -766,11 +857,10 @@ public final class ImageUtilities {
         }
 
         @Override
-        protected Image createImage(Component c, GraphicsConfiguration graphicsConfiguration,
-                int deviceWidth, int deviceHeight, double scale)
+        protected Image createAndPaintImage(
+                Component c, ColorModel colorModel, int deviceWidth, int deviceHeight, double scale)
         {
-            BufferedImage ret = graphicsConfiguration.createCompatibleImage(
-                    deviceWidth, deviceHeight, Transparency.TRANSLUCENT);
+            BufferedImage ret = createBufferedImage(colorModel, deviceWidth, deviceHeight);
             Graphics2D g = ret.createGraphics();
             try {
                 g.clip(new Rectangle(0, 0, deviceWidth, deviceHeight));
@@ -941,6 +1031,7 @@ public final class ImageUtilities {
         final String toolTipText;
         // May be null.
         final Icon delegateIcon;
+        // May be null.
         final URL url;
         // May be null.
         ImageIcon imageIconVersion;
@@ -987,13 +1078,16 @@ public final class ImageUtilities {
           return imageIconVersion;
         }
 
-        public ToolTipImage(Icon delegateIcon, String toolTipText, int imageType) {
+        /**
+         * @param url may be null
+         */
+        public ToolTipImage(Icon delegateIcon, String toolTipText, URL url, int imageType) {
             // BufferedImage must have width/height > 0.
             super(Math.max(1, delegateIcon.getIconWidth()),
                     Math.max(1, delegateIcon.getIconHeight()), imageType);
             this.delegateIcon = delegateIcon;
             this.toolTipText = toolTipText;
-            this.url = null;
+            this.url = url;
         }
 
         /**

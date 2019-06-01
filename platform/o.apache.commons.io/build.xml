@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="ide/o.apache.commons.io" default="build" basedir=".">
+<project name="platform/o.apache.commons.io" default="build" basedir=".">
     <import file="../../nbbuild/templates/projectized.xml"/>
     <target name="jar"/>
 </project>

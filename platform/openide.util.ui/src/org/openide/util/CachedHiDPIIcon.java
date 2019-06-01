@@ -23,7 +23,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.Image;
+import java.awt.Transparency;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -35,7 +38,7 @@ import javax.swing.Icon;
  * representations for HiDPI displays. Bitmaps for multiple HiDPI scaling factors can be cached at
  * the same time, e.g. for multi-monitor setups. Thread-safe.
  */
-abstract class CachedHiDPIIcon implements Icon {
+public abstract class CachedHiDPIIcon implements Icon {
     /**
      * The maximum size of the cache, as a multiple of the size of the icon at 100% scaling. For
      * example, storing three images at 100%, 150%, and 200% scaling, respectively, yields a total
@@ -56,7 +59,11 @@ abstract class CachedHiDPIIcon implements Icon {
     private double cacheSize = 0.0;
 
     /**
-     * Constructor to be used by subclasses.
+     * Constructor to be used by subclasses. For HiDPI screens, dimensions are specified in logical
+     * pixels rather than device pixels, as in the superclass.
+     *
+     * @param width the width of the icon
+     * @param height the height of the icon
      */
     protected CachedHiDPIIcon(int width, int height) {
         if (width < 0) {
@@ -78,7 +85,7 @@ abstract class CachedHiDPIIcon implements Icon {
         final int deviceWidth = (int) Math.ceil(getIconWidth() * scale);
         final int deviceHeight = (int) Math.ceil(getIconHeight() * scale);
         final Image img =
-                createImage(c, key.getGraphicsConfiguration(), deviceWidth, deviceHeight, scale);
+                createAndPaintImage(c, key.getColorModel(), deviceWidth, deviceHeight, scale);
         final double imgSize = key.getSize();
         if (imgSize <= MAX_CACHE_SIZE) {
             /* Evict least-recently-used images from the cache until we have space for the latest
@@ -133,7 +140,9 @@ abstract class CachedHiDPIIcon implements Icon {
     }
 
     /**
-     * Create a scaled image containing the graphics of this icon. The result may be cached.
+     * Create a scaled image containing the graphics of this icon. The result may be cached. The
+     * dimensions are specfied in device pixels rather than logical pixels, i.e. with HiDPI scaling
+     * applied.
      *
      * @param c the component that was passed to {@link Icon#paintIcon(Component,Graphics,int,int)}.
      *        The cache will <em>not</em> be invalidated if {@code c} or its state changes, so 
@@ -141,25 +150,51 @@ abstract class CachedHiDPIIcon implements Icon {
      *        ensure compatibility with existing Icon implementations that may be used as delegates.
      *        Future implementations might also elect to simply pass a dummy Component instance
      *        here.
-     * @param graphicsConfiguration the configuration of the surface on which the image will be
-     *        painted
-     * @param deviceWidth the required width of the image, with scaling already applied
-     * @param deviceHeight the required height of the image, with scaling already applied
+     * @param colorModel the {@link ColorModel} of the surface on which the image will be painted
+     *        (may be passed to {@link #createBufferedImage(ColorModel, int, int)} in the common
+     *        case)
+     * @param deviceWidth the required width of the image, in device pixels
+     * @param deviceHeight the required height of the image, in device pixels
      * @param scale the HiDPI scaling factor detected in {@code graphicsConfiguration}
      */
-    protected abstract Image createImage(Component c, GraphicsConfiguration graphicsConfiguration,
+    protected abstract Image createAndPaintImage(Component c, ColorModel colorModel,
             int deviceWidth, int deviceHeight, double scale);
 
+    /**
+     * Utility method to create a compatible {@link BufferedImage} from the parameters passed to
+     * {@link #createAndPaintImage(Component, ColorModel, int, int, double)}. May be called by
+     * implementors of the latter to create a surface to draw on and return.
+     *
+     * @param colorModel the required {@link ColorModel}
+     * @param deviceWidth the required width of the image, in device pixels
+     * @param deviceHeight the required height of the image, in device pixels
+     * @return an image compatible with the given parameters
+     */
+    protected static final BufferedImage createBufferedImage(
+            ColorModel colorModel, int deviceWidth, int deviceHeight)
+    {
+      return new BufferedImage(
+          colorModel,
+          colorModel.createCompatibleWritableRaster(deviceWidth, deviceHeight),
+          colorModel.isAlphaPremultiplied(), null);
+    }
+
+    /**
+     * Key for image cache map. Immutable.
+     */
     private static final class CachedImageKey {
-        private final GraphicsConfiguration gconf;
+        /* The ColorModel is the only field in GraphicsConfiguration that is needed to create a
+        compatible BufferedImage. So include only that one, plus the HiDPI scaling factor, in the
+        cache key. */
+        private final ColorModel colorModel;
         private final double scale;
 
-        public CachedImageKey(GraphicsConfiguration gconf, double scale) {
-            Parameters.notNull("gconf", gconf);
+        private CachedImageKey(ColorModel colorModel, double scale) {
+            Parameters.notNull("colorModel", colorModel);
             if (scale <= 0.0) {
                 throw new IllegalArgumentException();
             }
-            this.gconf = gconf;
+            this.colorModel = colorModel;
             this.scale = scale;
         }
 
@@ -174,7 +209,12 @@ abstract class CachedHiDPIIcon implements Icon {
             } else {
                 scale = 1.0;
             }
-            return new CachedImageKey(g.getDeviceConfiguration(), scale);
+            GraphicsConfiguration gconf = g.getDeviceConfiguration();
+            /* Always use the same transparency mode for the cached images, so we don't end up with
+            one set of cached images for each encountered mode. The TRANSLUCENT mode is the most
+            generic one; presumably it should paint OK onto less capable surfaces. */
+            ColorModel colorModel = gconf.getColorModel(Transparency.TRANSLUCENT);
+            return new CachedImageKey(colorModel, scale);
         }
 
         public double getScale() {
@@ -188,13 +228,13 @@ abstract class CachedHiDPIIcon implements Icon {
             return Math.pow(getScale(), 2.0);
         }
 
-        public GraphicsConfiguration getGraphicsConfiguration() {
-            return gconf;
+        public ColorModel getColorModel() {
+            return colorModel;
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(gconf, scale);
+            return Objects.hash(colorModel, scale);
         }
 
         @Override
@@ -203,8 +243,13 @@ abstract class CachedHiDPIIcon implements Icon {
                 return false;
             }
             final CachedImageKey other = (CachedImageKey) obj;
-            return this.gconf.equals(other.gconf) &&
+            return this.colorModel.equals(other.colorModel) &&
                    this.scale == other.scale;
+        }
+
+        @Override
+        public String toString() {
+            return "CachedImageKey(" + colorModel + ", " + scale + ")";
         }
     }
 }

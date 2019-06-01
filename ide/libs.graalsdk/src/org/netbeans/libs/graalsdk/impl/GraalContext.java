@@ -22,6 +22,9 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +52,10 @@ final class GraalContext implements ScriptContext {
             allowArrayAccess(true).
             allowListAccess(true).
             allowAllImplementations(true).
+            denyAccess(Class.class).
+            denyAccess(Method.class).
+            denyAccess(Field.class).
+            denyAccess(Proxy.class).
             denyAccess(Object.class, false).
             build();
     // END: org.netbeans.libs.graalsdk.impl.GraalContext#SANDBOX

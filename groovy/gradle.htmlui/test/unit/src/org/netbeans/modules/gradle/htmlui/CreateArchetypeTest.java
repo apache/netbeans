@@ -78,6 +78,11 @@ public class CreateArchetypeTest extends NbTestCase {
                 assertPackage("my.pkg.x").
                 assertName("BrowserMain").
                 assertNoLicense();
+        assertFile("settings include only desktop and web", dest, "settings.gradle").
+                assertText("//include 'app'").
+                assertText("//include 'ios'").
+                assertText("include 'desktop'").
+                assertText("include 'web'");
     }
 
     private AssertContent assertFile(String msg, FileObject root, String... path) throws IOException {

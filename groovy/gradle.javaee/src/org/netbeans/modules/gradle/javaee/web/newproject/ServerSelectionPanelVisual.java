@@ -19,12 +19,16 @@
 
 package org.netbeans.modules.gradle.javaee.web.newproject;
 
+import java.util.LinkedList;
+import java.util.List;
 import org.netbeans.modules.gradle.javaee.api.ui.support.DisplayNameListCellRenderer;
 import org.netbeans.modules.gradle.javaee.api.ui.support.JavaEEServerComboBoxModel;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eePlatform;
@@ -39,6 +43,7 @@ public class ServerSelectionPanelVisual extends javax.swing.JPanel {
 
     final J2eeModule.Type type;
     final DefaultComboBoxModel<Profile> profiles = new DefaultComboBoxModel<>();
+    final List<ChangeListener> listeners = new LinkedList<>();
 
     /**
      * Creates new form ServerSelectionPanel
@@ -129,6 +134,7 @@ public class ServerSelectionPanelVisual extends javax.swing.JPanel {
             cbServer.setModel(model);
             cbServerActionPerformed(null);
         }
+        fireStateChange();
     }//GEN-LAST:event_btAddServerButtonActionPerformed
 
     private void cbServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbServerActionPerformed
@@ -202,4 +208,20 @@ public class ServerSelectionPanelVisual extends javax.swing.JPanel {
         return (cbVersion.getSelectedItem() != null)
                 && (cbServer.getSelectedItem() != null);
     }
+
+    public void fireStateChange() {
+        ChangeEvent evt = new ChangeEvent(this);
+        for (ChangeListener listener : listeners) {
+            listener.stateChanged(evt);
+        }
+    }
+
+    public void addChangeListener(ChangeListener l) {
+        listeners.add(l);
+    }
+
+    public void removeChangeListener(ChangeListener l) {
+        listeners.remove(l);
+    }
+
 }

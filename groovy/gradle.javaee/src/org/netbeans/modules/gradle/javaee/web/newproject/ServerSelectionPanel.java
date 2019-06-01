@@ -33,9 +33,8 @@ public class ServerSelectionPanel implements WizardDescriptor.Panel<WizardDescri
 
     ServerSelectionPanelVisual component;
     final J2eeModule.Type type;
-
-    public static final String PROP_SERVER = "platformId";
-    public static final String PROP_PROFILE = "profileId";
+    public static final String PROP_SERVER = "platformId"; //NOI18N
+    public static final String PROP_PROFILE = "profileId"; //NOI18N
 
     public ServerSelectionPanel(J2eeModule.Type type) {
         this.type = type;
@@ -69,12 +68,15 @@ public class ServerSelectionPanel implements WizardDescriptor.Panel<WizardDescri
         return component.isValidSelection();
     }
 
+
     @Override
     public void addChangeListener(ChangeListener l) {
+        component.addChangeListener(l);
     }
 
     @Override
     public void removeChangeListener(ChangeListener l) {
+        component.removeChangeListener(l);
     }
 
 }

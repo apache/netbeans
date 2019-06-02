@@ -85,6 +85,7 @@ import org.openide.loaders.DataObject;
 import org.openide.util.BaseUtilities;
 import org.openide.util.ContextAwareAction;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.TaskListener;
 import org.openide.util.actions.Presenter;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
@@ -250,6 +251,9 @@ public class ActionProviderImpl implements ActionProvider {
                     prj.reloadProject(true, maxQualily, reloadArgs);
                 }
                 project.getLookup().lookup(AfterBuildActionHook.class).afterAction(action, outerCtx, task.result(), out1);
+                for (TaskListener l : context.lookupAll(TaskListener.class)) {
+                    l.taskFinished(t);
+                }
             });
         }
     }

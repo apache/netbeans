@@ -22,12 +22,20 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import junit.framework.Test;
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertNotEquals;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectManager;
+import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.LocalFileSystem;
+import org.openide.util.TaskListener;
+import org.openide.util.lookup.Lookups;
 
 public class CreateArchetypeTest extends NbTestCase {
 
@@ -37,6 +45,16 @@ public class CreateArchetypeTest extends NbTestCase {
         super(name);
     }
 
+    public static Test suite() {
+        return NbModuleSuite.createConfiguration(CreateArchetypeTest.class).
+                enableClasspathModules(true).
+                gui(false).
+                clusters(".*").
+                enableModules(".*").
+                honorAutoloadEager(true).
+                suite();
+    }
+
     @Override
     protected void setUp() throws Exception {
         clearWorkDir();
@@ -44,8 +62,6 @@ public class CreateArchetypeTest extends NbTestCase {
         lfs.setRootDirectory(getWorkDir());
         workFo = lfs.getRoot();
     }
-
-
 
     public void testCreateFromArchetype() throws Exception {
         FileObject dir = FileUtil.getConfigFile("Templates/Project/Gradle/org-netbeans-modules-gradle-htmlui-HtmlJavaApplicationProjectWizard");
@@ -83,6 +99,23 @@ public class CreateArchetypeTest extends NbTestCase {
                 assertText("//include 'ios'").
                 assertText("include 'desktop'").
                 assertText("include 'web'");
+
+        Project mainPrj = ProjectManager.getDefault().findProject(dest);
+        assertNotNull("Project found", mainPrj);
+
+
+        ActionProvider actions = mainPrj.getLookup().lookup(ActionProvider.class);
+        assertTrue(Arrays.asList(actions.getSupportedActions()).contains(ActionProvider.COMMAND_BUILD));
+        actions.isActionEnabled(ActionProvider.COMMAND_BUILD, mainPrj.getLookup());
+
+
+        CountDownLatch buildMainLatch = new CountDownLatch(1);
+        TaskListener buildMainFinished = (t) -> {
+            buildMainLatch.countDown();
+        };
+        actions.invokeAction(ActionProvider.COMMAND_BUILD, Lookups.fixed(mainPrj, buildMainFinished));
+        buildMainLatch.await();
+        assertFile("JAR created", dest, "build", "libs", "dest-1.0-SNAPSHOT.jar");
     }
 
     private AssertContent assertFile(String msg, FileObject root, String... path) throws IOException {

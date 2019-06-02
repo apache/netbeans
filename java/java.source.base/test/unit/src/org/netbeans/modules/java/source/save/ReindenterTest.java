@@ -1943,7 +1943,21 @@ public class ReindenterTest extends NbTestCase {
                 "package t;\npublic class T {\n    public void op() {\n        int a = switch(get())\n        {\n        }\n    }\n}\n");
     }
 
-    
+    public void testNewLineIndentationTextBlock1() throws Exception {
+        performNewLineIndentationTest("package t;\npublic class T {\n    private final String s = \"\"\"|\n}\n",
+                "package t;\npublic class T {\n    private final String s = \"\"\"\n                             \n}\n");
+    }
+
+    public void testSpanIndentationTextBlock1() throws Exception {
+        performSpanIndentationTest("package t;\npublic class T {\n|private final String s = \"\"\"\n\"\"\";|\n}\n",
+                "package t;\npublic class T {\n    private final String s = \"\"\"\n                             \"\"\";\n}\n");
+    }
+
+    public void testSpanIndentationTextBlock2() throws Exception {
+        performSpanIndentationTest("package t;\npublic class T {\n|private final String s = \"\"\"\n1\n  2\n 3\n\"\"\";|\n}\n",
+                "package t;\npublic class T {\n    private final String s = \"\"\"\n                             1\n                               2\n                              3\n                             \"\"\";\n}\n");
+    }
+
     private void performNewLineIndentationTest(String code, String golden) throws Exception {
         int pos = code.indexOf('|');
 

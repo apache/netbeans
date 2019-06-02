@@ -303,10 +303,11 @@ public final class ImageUtilities {
         } else if (icon instanceof IconImageIcon) {
             return icon2Image(((IconImageIcon) icon).getDelegateIcon());
         } else if (icon instanceof ImageIcon) {
-            return ((ImageIcon) icon).getImage();
-        } else {
-            return icon2ToolTipImage(icon);
+            Image ret = ((ImageIcon) icon).getImage();
+            if (ret != null)
+                return ret;
         }
+        return icon2ToolTipImage(icon);
     }
 
     private static ToolTipImage icon2ToolTipImage(Icon icon) {

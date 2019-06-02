@@ -29,14 +29,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 
 /**
  * Abstract base class for {@link javax.swing.Icon} implementations that need to cache scaled bitmap
  * representations for HiDPI displays. Bitmaps for multiple HiDPI scaling factors can be cached at
  * the same time, e.g. for multi-monitor setups. Thread-safe.
  */
-abstract class CachedHiDPIIcon extends ImageIcon {
+abstract class CachedHiDPIIcon implements Icon {
     /**
      * The maximum size of the cache, as a multiple of the size of the icon at 100% scaling. For
      * example, storing three images at 100%, 150%, and 200% scaling, respectively, yields a total

@@ -1239,7 +1239,31 @@ public class TypingCompletionUnitTest extends NbTestCase {
         ctx.typeChar(')');
         ctx.assertDocumentTextEquals("//()|)");
     }
-     
+
+    public void testTextBlock1() throws Exception {
+        Context ctx = new Context(new JavaKit(), "\"\"|");
+        ctx.typeChar('\"');
+        ctx.assertDocumentTextEquals("\"\"\"\n|\"\"\"");
+    }
+
+    public void testTextBlock2() throws Exception {
+        Context ctx = new Context(new JavaKit(), "\"\"\"\n|\"\"\"");
+        ctx.typeChar('\"');
+        ctx.assertDocumentTextEquals("\"\"\"\n\"|\"\"");
+    }
+
+    public void testTextBlock3() throws Exception {
+        Context ctx = new Context(new JavaKit(), "\"\"\"\n\"|\"\"");
+        ctx.typeChar('\"');
+        ctx.assertDocumentTextEquals("\"\"\"\n\"\"|\"");
+    }
+
+    public void testTextBlock4() throws Exception {
+        Context ctx = new Context(new JavaKit(), "\"\"\"\n\"\"|\"");
+        ctx.typeChar('\"');
+        ctx.assertDocumentTextEquals("\"\"\"\n\"\"\"|");
+    }
+
     public void testCorrectHandlingOfStringEscapes184059() throws Exception {
         assertTrue(isInsideString("foo\n\"bar|\""));
         assertTrue(isInsideString("foo\n\"bar\\\"|\""));

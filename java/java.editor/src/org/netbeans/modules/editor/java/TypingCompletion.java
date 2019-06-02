@@ -31,6 +31,8 @@ import org.netbeans.api.lexer.PartType;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
+import org.netbeans.modules.editor.NbEditorUtilities;
+import org.netbeans.modules.editor.indent.api.Indent;
 import org.netbeans.spi.editor.typinghooks.DeletedTextInterceptor;
 import org.netbeans.spi.editor.typinghooks.TypedBreakInterceptor;
 import org.netbeans.spi.editor.typinghooks.TypedTextInterceptor;
@@ -138,9 +140,15 @@ class TypingCompletion {
         
         
         char chr = context.getDocument().getText(context.getOffset(), 1).charAt(0);
-        if (chr == ')' || chr == ',' || chr == '\"' || chr == '\'' || chr == ' ' || chr == ']' || chr == '}' || chr == '\n' || chr == '\t' || chr == ';') {
+        if (chr == ')' || chr == ',' || chr == '\'' || chr == ' ' || chr == ']' || chr == '}' || chr == '\n' || chr == '\t' || chr == ';') {
             char insChr = context.getText().charAt(0);
-            context.setText("" + insChr + matching(insChr) , 1);  // NOI18N
+            context.setText("" + insChr + matching(insChr), 1);  // NOI18N
+        } else if (chr == '\"') {
+            if (context.getOffset() > 2 && context.getDocument().getText(context.getOffset() - 2, 3).equals("\"\"\"")) {
+                context.setText("\"\n\"\"\"", 2);  // NOI18N
+            } else {
+                context.setText("\"\"", 1);  // NOI18N
+            }
         }
     }
 
@@ -214,7 +222,8 @@ class TypingCompletion {
         boolean completablePosition = isQuoteCompletablePosition(context);
         boolean insideString = caretInsideToken
                 && (id == JavaTokenId.STRING_LITERAL
-                || id == JavaTokenId.CHAR_LITERAL);
+                || id == JavaTokenId.CHAR_LITERAL
+                || id == JavaTokenId.MULTILINE_STRING_LITERAL);
 
         int lastNonWhite = org.netbeans.editor.Utilities.getRowLastNonWhite((BaseDocument) context.getDocument(), context.getOffset());
         // eol - true if the caret is at the end of line (ignoring whitespaces)
@@ -231,7 +240,7 @@ class TypingCompletion {
                         javaTS.move(context.getOffset() - 1);
                         if (javaTS.moveNext()) {
                             id = javaTS.token().id();
-                            if (id == JavaTokenId.STRING_LITERAL || id == JavaTokenId.CHAR_LITERAL) {
+                            if (id == JavaTokenId.STRING_LITERAL || id == JavaTokenId.CHAR_LITERAL || id == JavaTokenId.MULTILINE_STRING_LITERAL) {
                                 context.setText("", 0); // NOI18N
                                 return context.getOffset() + 1;
                             }
@@ -242,7 +251,12 @@ class TypingCompletion {
         }
 
         if ((completablePosition && !insideString) || eol) {
-            context.setText(context.getText() + context.getText(), 1);
+            if (context.getText().equals("\"") && context.getOffset() >= 2 && context.getDocument().getText(context.getOffset() - 2, 2).equals("\"\"")) {
+                context.setText("\"\n\"\"\"", 2);  // NOI18N
+                Thread.dumpStack();
+            } else {
+                context.setText(context.getText() + context.getText(), 1);
+            }
         }
         return -1;
     }
@@ -813,7 +827,7 @@ class TypingCompletion {
         return null;
     }
     
-    private static Set<JavaTokenId> STRING_AND_COMMENT_TOKENS = EnumSet.of(JavaTokenId.STRING_LITERAL, JavaTokenId.LINE_COMMENT, JavaTokenId.JAVADOC_COMMENT, JavaTokenId.BLOCK_COMMENT, JavaTokenId.CHAR_LITERAL);
+    private static Set<JavaTokenId> STRING_AND_COMMENT_TOKENS = EnumSet.of(JavaTokenId.STRING_LITERAL, JavaTokenId.LINE_COMMENT, JavaTokenId.JAVADOC_COMMENT, JavaTokenId.BLOCK_COMMENT, JavaTokenId.CHAR_LITERAL, JavaTokenId.MULTILINE_STRING_LITERAL);
 
     private static boolean isStringOrComment(JavaTokenId javaTokenId) {
         return STRING_AND_COMMENT_TOKENS.contains(javaTokenId);

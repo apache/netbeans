@@ -61,7 +61,7 @@ public class NbGradleProjectFactoryTest extends NbTestCase {
         assertFalse("Pom wins", NbGradleProjectFactory.isProjectCheck(prj, true));
     }
 
-    public void testPomAndGradleNested() throws Exception {
+    public void testPomNestedAndGradleNot() throws Exception {
         FileObject parentPrj = root;
         FileObject parentPom = FileUtil.createData(parentPrj, "pom.xml");
         FileObject prj = FileUtil.createFolder(parentPrj, "child");
@@ -70,6 +70,21 @@ public class NbGradleProjectFactoryTest extends NbTestCase {
 
         assertFalse("Pom wins on settings", NbGradleProjectFactory.isProjectCheck(prj, true));
         assertFalse("Pom wins on parent pom", NbGradleProjectFactory.isProjectCheck(prj, false));
+    }
+
+    public void testPomAndGradleBothNested() throws Exception {
+        FileObject parentPrj = root;
+        FileObject parentPom = FileUtil.createData(parentPrj, "pom.xml");
+        FileObject parentGradle = FileUtil.createData(parentPrj, "build.gradle");
+        FileObject prj = FileUtil.createFolder(parentPrj, "child");
+        FileObject pom = FileUtil.createData(prj, "pom.xml");
+        FileObject gradle = FileUtil.createData(prj, "build.gradle");
+
+        assertFalse("Parent Pom wins on settings", NbGradleProjectFactory.isProjectCheck(parentPrj, true));
+        assertTrue("Parent Gradle wins", NbGradleProjectFactory.isProjectCheck(parentPrj, false));
+
+        assertFalse("Pom wins on settings", NbGradleProjectFactory.isProjectCheck(prj, true));
+        assertTrue("Gradle wins on parent build.gradle", NbGradleProjectFactory.isProjectCheck(prj, false));
     }
 
 }

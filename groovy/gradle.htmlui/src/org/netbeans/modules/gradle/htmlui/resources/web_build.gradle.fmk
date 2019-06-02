@@ -19,7 +19,7 @@
 
 -->
 buildscript {
-    ext.bck2brwsr_version = '0.30'
+    ext.bck2brwsr_version = '0.31'
 
     repositories {
         mavenCentral()
@@ -49,4 +49,5 @@ configurations.bck2brwsr {
 bck2brwsrPages.from {
     fileTree("${commonProject.projectDir}/src/main/webapp/pages")
 }
+bck2brwsrAot.dependsOn(bck2brwsrPages)
 </#noparse>

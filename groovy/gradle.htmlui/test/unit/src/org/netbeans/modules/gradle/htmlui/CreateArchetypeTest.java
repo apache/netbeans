@@ -33,11 +33,11 @@ import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.gradle.spi.actions.AfterBuildActionHook;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.LocalFileSystem;
-import org.openide.util.TaskListener;
 import org.openide.util.lookup.Lookups;
 
 public class CreateArchetypeTest extends NbTestCase {
@@ -136,7 +136,7 @@ public class CreateArchetypeTest extends NbTestCase {
 
     protected void invokeCommand(ActionProvider actions, String cmd, Project prj) throws IllegalArgumentException, InterruptedException {
         CountDownLatch waiter = new CountDownLatch(1);
-        TaskListener notifier = (t) -> {
+        AfterBuildActionHook notifier = (action, context, res, out) -> {
             waiter.countDown();
         };
         actions.invokeAction(cmd, Lookups.fixed(prj, notifier));

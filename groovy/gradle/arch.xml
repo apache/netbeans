@@ -878,7 +878,7 @@ publishPlugins&lt;/args&gt;
          When calling 
          <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/ActionProvider.html">
          ActionProvider</a><code>.invokeAction(name, lookup)</code>
-         an instance of <a href="@org-openide-util@/org/openide/util/TaskListener.html">TaskListener</a>
+         an instance of <a href="@TOP@/org/netbeans/modules/gradle/spi/actions/AfterBuildActionHook.html">AfterBuildActionHook</a>
          can be placed into <code>lookup</code>. It is then notified when the
          execution of the action is finished. Useful when writing tests.
      </p>

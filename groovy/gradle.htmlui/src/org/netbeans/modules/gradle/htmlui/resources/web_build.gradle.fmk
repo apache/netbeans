@@ -49,4 +49,5 @@ configurations.bck2brwsr {
 bck2brwsrPages.from {
     fileTree("${commonProject.projectDir}/src/main/webapp/pages")
 }
+bck2brwsrAot.dependsOn(bck2brwsrPages)
 </#noparse>

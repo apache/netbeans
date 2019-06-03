@@ -20,8 +20,9 @@
 set -e
 
 if [ -z "$GRAALVM" ]; then
-  BASE=graalvm-ce-1.0.0-rc12
-  URL=https://github.com/oracle/graal/releases/download/vm-1.0.0-rc12/$BASE-linux-amd64.tar.gz
+  VERSION=19.0.0
+  BASE=graalvm-ce-$VERSION
+  URL=https://github.com/oracle/graal/releases/download/vm-$VERSION/graalvm-ce-linux-amd64-$VERSION.tar.gz
   curl -L $URL --output graalvm.tgz
   tar fxz graalvm.tgz
   GRAALVM=`pwd`/$BASE
@@ -31,13 +32,8 @@ fi
 
 ant -f platform/api.scripting/build.xml test
 ant -f ide/libs.graalsdk/build.xml test
-# may also following Graal fixes:
-# commit 6c2ea38719a68fb8bb258a8acf76420d0e99a963
-#    Also query the contextClassLoader for available languages
-# commit e38aa347e1de8f8f0474247eb90d193e5ea373d0
-#    Always try to locate the implementation by service loader
-#
 ant -f webcommon/libs.graaljs/build.xml test
+ant -f platform/core.network/build.xml test
 ant -f profiler/profiler.oql/build.xml test
 ant -f platform/api.htmlui/build.xml test
 
@@ -49,6 +45,7 @@ $GRAALVM/bin/gu install R
 JAVA_HOME=$GRAALVM ant -f platform/api.scripting/build.xml test
 JAVA_HOME=$GRAALVM ant -f ide/libs.graalsdk/build.xml test
 
+JAVA_HOME=$GRAALVM ant -f platform/core.network/build.xml test
 JAVA_HOME=$GRAALVM ant -f webcommon/libs.graaljs/build.xml test
 JAVA_HOME=$GRAALVM ant -f profiler/profiler.oql/build.xml test
 

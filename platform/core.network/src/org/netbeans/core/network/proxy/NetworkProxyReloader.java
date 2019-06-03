@@ -78,8 +78,9 @@ public class NetworkProxyReloader extends ProxySettings.Reloader {
         } else {
             LOGGER.log(Level.INFO, "System network proxy reloading succeeded."); //NOI18N
         }
-                       
-        switch (networkProxySettings.getProxyMode()) {
+
+        NetworkProxySettings.ProxyMode mode = networkProxySettings.getProxyMode();
+        switch (mode) {
             case AUTO:
                 final ProxyAutoConfig pacForTest = ProxyAutoConfig.get(networkProxySettings.getPacFileUrl());
                 List<Proxy> testHttpProxy = null;

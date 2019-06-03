@@ -250,6 +250,9 @@ public class ActionProviderImpl implements ActionProvider {
                     prj.reloadProject(true, maxQualily, reloadArgs);
                 }
                 project.getLookup().lookup(AfterBuildActionHook.class).afterAction(action, outerCtx, task.result(), out1);
+                for (AfterBuildActionHook l : context.lookupAll(AfterBuildActionHook.class)) {
+                    l.afterAction(action, outerCtx, task.result(), out1);
+                }
             });
         }
     }

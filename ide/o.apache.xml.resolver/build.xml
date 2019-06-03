@@ -50,7 +50,7 @@
         <!-- ... 4. Compiles sources to build/external-patch/classes -->
         <mkdir dir="build/external-patch/classes" />
         <javac srcdir="build/external-patch/sources"
-            destdir="build/external-patch/classes" >
+            destdir="build/external-patch/classes" source="${javac.source}" target="${javac.target}">
             <exclude name="org/apache/xml/resolver/tests/**" />
         </javac>
         <!-- ... 5. Creates a jar in 'external/resolver-1.2.jar' -->

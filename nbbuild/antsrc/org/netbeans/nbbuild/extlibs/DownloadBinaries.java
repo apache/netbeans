@@ -266,7 +266,7 @@ public class DownloadBinaries extends Task {
     
     private byte[] downloadFromServer(URL url) throws IOException {
         log("Downloading: " + url);
-        URLConnection conn = openConnection(url);
+        URLConnection conn = ConfigureProxy.openConnection(this, url, null);
         int code = HttpURLConnection.HTTP_OK;
         if (conn instanceof HttpURLConnection) {
             code = ((HttpURLConnection) conn).getResponseCode();
@@ -291,68 +291,6 @@ public class DownloadBinaries extends Task {
 
     interface Downloader {
         public byte[] download() throws IOException;
-    }
-
-    private URLConnection openConnection(final URL url) throws IOException {
-        final URLConnection[] conn = { null };
-        final CountDownLatch connected = new CountDownLatch(1);
-        ExecutorService connectors = Executors.newFixedThreadPool(3);
-        connectors.submit(new Runnable() {
-            public void run() {
-                String httpProxy = System.getenv("http_proxy");
-                if (httpProxy != null) {
-                    try {
-                        URI uri = new URI(httpProxy);
-                        InetSocketAddress address = InetSocketAddress.createUnresolved(uri.getHost(), uri.getPort());
-                        Proxy proxy = new Proxy(Proxy.Type.HTTP, address);
-                        URLConnection test = url.openConnection(proxy);
-                        test.connect();
-                        conn[0] = test;
-                        connected.countDown();
-                    } catch (IOException | URISyntaxException ex) {
-                        log(ex, Project.MSG_ERR);
-                    }
-                }
-            }
-        });
-        connectors.submit(new Runnable() {
-            public void run() {
-                String httpProxy = System.getenv("https_proxy");
-                if (httpProxy != null) {
-                    try {
-                        URI uri = new URI(httpProxy);
-                        InetSocketAddress address = InetSocketAddress.createUnresolved(uri.getHost(), uri.getPort());
-                        Proxy proxy = new Proxy(Proxy.Type.HTTP, address);
-                        URLConnection test = url.openConnection(proxy);
-                        test.connect();
-                        conn[0] = test;
-                        connected.countDown();
-                    } catch (IOException | URISyntaxException ex) {
-                        log(ex, Project.MSG_ERR);
-                    }
-                }
-            }
-        });
-        connectors.submit(new Runnable() {
-            public void run() {
-                try {
-                    URLConnection test = url.openConnection();
-                    test.connect();
-                    conn[0] = test;
-                    connected.countDown();
-                } catch (IOException ex) {
-                    log(ex, Project.MSG_ERR);
-                }
-            }
-        });
-        try {
-            connected.await(5, TimeUnit.SECONDS);
-        } catch (InterruptedException ex) {
-        }
-        if (conn[0] == null) {
-            throw new IOException("Cannot connect to " + url);
-        }
-        return conn[0];
     }
 
     private String hash(File f) {

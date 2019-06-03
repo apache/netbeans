@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.0.11
+#Version 1.1
 
 CLSS public abstract com.oracle.js.parser.AbstractParser
 cons protected init(com.oracle.js.parser.Source,com.oracle.js.parser.ErrorManager,boolean,int)
@@ -106,23 +106,11 @@ meth public static boolean isRepresentableAsInt(double)
 meth public static boolean isRepresentableAsLong(double)
 meth public static boolean isStrictlyRepresentableAsInt(double)
 meth public static boolean isStrictlyRepresentableAsLong(double)
-meth public static boolean toBoolean(java.lang.Object)
-meth public static double toNumber(java.lang.Object)
-meth public static double toNumber(java.lang.String)
-meth public static int digit(char,int)
-meth public static int digit(char,int,boolean)
-meth public static int toInt32(double)
-meth public static int toInt32(java.lang.Object)
-meth public static long toLong(double)
-meth public static long toLong(java.lang.Object)
-meth public static long toUint32(double)
-meth public static long toUint32(java.lang.Object)
 supr java.lang.Object
-hfds INT32_LIMIT,MAX_UINT
 
 CLSS public com.oracle.js.parser.Lexer
-cons public init(com.oracle.js.parser.Source,com.oracle.js.parser.TokenStream,boolean,boolean,boolean)
-cons public init(com.oracle.js.parser.Source,int,int,com.oracle.js.parser.TokenStream,boolean,boolean,boolean,boolean)
+cons public init(com.oracle.js.parser.Source,com.oracle.js.parser.TokenStream,boolean,boolean,boolean,boolean,boolean)
+cons public init(com.oracle.js.parser.Source,int,int,com.oracle.js.parser.TokenStream,boolean,boolean,boolean,boolean,boolean,boolean)
 innr protected abstract interface static LineInfoReceiver
 innr public abstract static LexerToken
 innr public static RegexToken
@@ -133,7 +121,6 @@ meth protected boolean isEscapeCharacter(char)
 meth protected boolean isStringDelimiter(char)
 meth protected boolean isWhitespace(char)
 meth protected boolean scanLiteral(long,com.oracle.js.parser.TokenType,com.oracle.js.parser.Lexer$LineInfoReceiver)
-meth protected boolean skipComments()
 meth protected final void scanTemplateSpan()
 meth protected static int convertDigit(char,int)
 meth protected void add(com.oracle.js.parser.TokenType,int)
@@ -148,10 +135,11 @@ meth public java.lang.String stringIntern(java.lang.String)
 meth public java.lang.String valueOfRawString(long)
 meth public static boolean isJSEOL(char)
 meth public static boolean isJSWhitespace(char)
+meth public static boolean isStringLineTerminator(char)
 meth public static java.lang.String unicodeEscape(char)
 meth public void lexify()
 supr com.oracle.js.parser.Scanner
-hfds JAVASCRIPT_WHITESPACE_HIGH,JAVASCRIPT_WHITESPACE_HIGH_START,XML_LITERALS,es6,internedStrings,last,linePosition,nested,pauseOnFunctionBody,pauseOnNextLeftBrace,pauseOnRightBrace,pendingLine,scripting,shebang,source,stream
+hfds JAVASCRIPT_WHITESPACE_HIGH,JAVASCRIPT_WHITESPACE_HIGH_START,MESSAGE_INVALID_HEX,XML_LITERALS,allowBigInt,es6,internedStrings,isModule,last,linePosition,nested,pauseOnFunctionBody,pauseOnNextLeftBrace,pauseOnRightBrace,pendingLine,scripting,shebang,source,stream
 hcls EditStringLexer,State
 
 CLSS public abstract static com.oracle.js.parser.Lexer$LexerToken
@@ -194,7 +182,6 @@ cons public init(com.oracle.js.parser.ScriptEnvironment,com.oracle.js.parser.Sou
 fld protected final com.oracle.js.parser.Lexer$LineInfoReceiver lineInfoReceiver
 fld public final static boolean PROFILE_PARSING
 fld public final static boolean PROFILE_PARSING_PRINT
-fld public static long totalParsingDuration
 meth public com.oracle.js.parser.ir.Expression parseExpression()
 meth public com.oracle.js.parser.ir.FunctionNode parse()
 meth public com.oracle.js.parser.ir.FunctionNode parse(java.lang.String,int,int,int)
@@ -205,7 +192,7 @@ meth public java.lang.String toString()
 meth public void parseFormalParameterList()
 meth public void setReparsedFunction(com.oracle.js.parser.RecompilableScriptFunctionData)
 supr com.oracle.js.parser.AbstractParser
-hfds ANONYMOUS_FUNCTION_NAME,ARGUMENTS_NAME,ARROW_FUNCTION_NAME,CATCH_PARAMETER_CONTEXT,CONSTRUCTOR_NAME,ERROR_BINDING_NAME,ES2019_OPTIONAL_CATCH_BINDING,ES6_ARROW_FUNCTION,ES6_CLASS,ES6_COMPUTED_PROPERTY_NAME,ES6_DEFAULT_PARAMETER,ES6_DESTRUCTURING,ES6_FOR_OF,ES6_GENERATOR_FUNCTION,ES6_NEW_TARGET,ES6_REST_PARAMETER,ES6_SPREAD_ARGUMENT,ES6_SPREAD_ARRAY,ES8_ASYNC_FUNCTION,ES8_FOR_AWAIT_OF,ES8_REST_SPREAD_PROPERTY,ES8_TRAILING_COMMA,EVAL_NAME,EXEC_NAME,FUNCTION_PARAMETER_CONTEXT,IMPORT_META_NAME,NEW_TARGET_NAME,PROGRAM_NAME,PROTOTYPE_NAME,PROTO_NAME,REPARSE_IS_METHOD,REPARSE_IS_PROPERTY_ACCESSOR,SWITCH_BINDING_NAME,defaultNames,env,functionDeclarations,isModule,lc,namespace,reparsedFunction,scripting,shebang
+hfds ANONYMOUS_FUNCTION_NAME,ARGUMENTS_NAME,ARROW_FUNCTION_NAME,ASSIGNMENT_TARGET_CONTEXT,CATCH_PARAMETER_CONTEXT,CLASS_NAME_CONTEXT,CONSTRUCTOR_NAME,ERROR_BINDING_NAME,ES2019_OPTIONAL_CATCH_BINDING,ES6_ARROW_FUNCTION,ES6_CLASS,ES6_COMPUTED_PROPERTY_NAME,ES6_DEFAULT_PARAMETER,ES6_DESTRUCTURING,ES6_FOR_OF,ES6_GENERATOR_FUNCTION,ES6_NEW_TARGET,ES6_REST_PARAMETER,ES6_SPREAD_ARGUMENT,ES6_SPREAD_ARRAY,ES8_ASYNC_FUNCTION,ES8_FOR_AWAIT_OF,ES8_REST_SPREAD_PROPERTY,ES8_TRAILING_COMMA,EVAL_NAME,EXEC_NAME,FUNCTION_PARAMETER_CONTEXT,IMPORTED_BINDING_CONTEXT,IMPORT_META_NAME,MESSAGE_ESCAPED_KEYWORD,MESSAGE_EXPECTED_OPERAND,MESSAGE_EXPECTED_STMT,MESSAGE_INVALID_ARROW_PARAMETER,MESSAGE_INVALID_LVALUE,MESSAGE_INVALID_PROPERTY_INITIALIZER,MESSAGE_PROPERTY_REDEFINITON,NEW_TARGET_NAME,PROGRAM_NAME,PROTOTYPE_NAME,PROTO_NAME,REPARSE_IS_METHOD,REPARSE_IS_PROPERTY_ACCESSOR,SWITCH_BINDING_NAME,VARIABLE_NAME_CONTEXT,allowBigInt,defaultNames,env,functionDeclarations,isModule,lc,namespace,reparsedFunction,scripting,shebang
 hcls ClassElementKey,ForVariableDeclarationListResult,ParserState,PropertyFunction,VerifyDestructuringPatternNodeVisitor
 
 CLSS public final com.oracle.js.parser.ParserException
@@ -254,11 +241,12 @@ innr public final static Builder
 meth public boolean isStrict()
 meth public static com.oracle.js.parser.ScriptEnvironment$Builder builder()
 supr java.lang.Object
-hfds constAsVar,dumpOnError,earlyLvalueError,ecmaScriptVersion,emptyStatements,err,functionStatement,namespace,scripting,shebang,strict,syntaxExtensions
+hfds allowBigInt,constAsVar,dumpOnError,earlyLvalueError,ecmaScriptVersion,emptyStatements,err,functionStatement,namespace,scripting,shebang,strict,syntaxExtensions
 
 CLSS public final static com.oracle.js.parser.ScriptEnvironment$Builder
  outer com.oracle.js.parser.ScriptEnvironment
 meth public com.oracle.js.parser.ScriptEnvironment build()
+meth public com.oracle.js.parser.ScriptEnvironment$Builder allowBigInt(boolean)
 meth public com.oracle.js.parser.ScriptEnvironment$Builder constAsVar(boolean)
 meth public com.oracle.js.parser.ScriptEnvironment$Builder dumpOnError(java.io.PrintWriter)
 meth public com.oracle.js.parser.ScriptEnvironment$Builder earlyLvalueError(boolean)
@@ -270,7 +258,7 @@ meth public com.oracle.js.parser.ScriptEnvironment$Builder shebang(boolean)
 meth public com.oracle.js.parser.ScriptEnvironment$Builder strict(boolean)
 meth public com.oracle.js.parser.ScriptEnvironment$Builder syntaxExtensions(boolean)
 supr java.lang.Object
-hfds constAsVar,dumpOnError,earlyLvalueError,ecmaScriptVersion,emptyStatements,functionStatementBehavior,scripting,shebang,strict,syntaxExtensions
+hfds allowBigInt,constAsVar,dumpOnError,earlyLvalueError,ecmaScriptVersion,emptyStatements,functionStatementBehavior,scripting,shebang,strict,syntaxExtensions
 
 CLSS public final static !enum com.oracle.js.parser.ScriptEnvironment$FunctionStatementBehavior
  outer com.oracle.js.parser.ScriptEnvironment
@@ -509,7 +497,7 @@ meth public static com.oracle.js.parser.TokenType valueOf(java.lang.String)
 meth public static com.oracle.js.parser.TokenType[] values()
 meth public void setNext(com.oracle.js.parser.TokenType)
 supr java.lang.Enum<com.oracle.js.parser.TokenType>
-hfds isLeftAssociative,kind,name,next,precedence,values
+hfds isLeftAssociative,kind,name,next,precedence,tokenValues
 
 CLSS public final com.oracle.js.parser.ir.AccessNode
 cons public init(long,int,com.oracle.js.parser.ir.Expression,java.lang.String)
@@ -555,8 +543,8 @@ meth public com.oracle.js.parser.ir.BinaryNode setLHS(com.oracle.js.parser.ir.Ex
 meth public com.oracle.js.parser.ir.BinaryNode setRHS(com.oracle.js.parser.ir.Expression)
 meth public com.oracle.js.parser.ir.Expression getAssignmentDest()
 meth public com.oracle.js.parser.ir.Expression getAssignmentSource()
-meth public com.oracle.js.parser.ir.Expression lhs()
-meth public com.oracle.js.parser.ir.Expression rhs()
+meth public com.oracle.js.parser.ir.Expression getLhs()
+meth public com.oracle.js.parser.ir.Expression getRhs()
 meth public com.oracle.js.parser.ir.Node accept(com.oracle.js.parser.ir.visitor.NodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext>)
 meth public static boolean isLogical(com.oracle.js.parser.TokenType)
 meth public void toString(java.lang.StringBuilder,boolean)
@@ -641,7 +629,6 @@ hfds block
 CLSS public final com.oracle.js.parser.ir.BreakNode
 cons public init(int,long,int,java.lang.String)
 meth public <%0 extends java.lang.Object> {%%0} accept(com.oracle.js.parser.ir.visitor.TranslatorNodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext,{%%0}>)
-meth public com.oracle.js.parser.ir.BreakableNode getTarget(com.oracle.js.parser.ir.LexicalContext)
 meth public com.oracle.js.parser.ir.Node accept(com.oracle.js.parser.ir.visitor.NodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext>)
 supr com.oracle.js.parser.ir.JumpStatement
 
@@ -652,9 +639,11 @@ meth public abstract boolean isBreakableWithoutLabel()
 CLSS public final com.oracle.js.parser.ir.CallNode
 cons public init(int,long,int,com.oracle.js.parser.ir.Expression,java.util.List<com.oracle.js.parser.ir.Expression>,boolean)
 cons public init(int,long,int,int,com.oracle.js.parser.ir.Expression,java.util.List<com.oracle.js.parser.ir.Expression>,boolean)
+cons public init(int,long,int,int,com.oracle.js.parser.ir.Expression,java.util.List<com.oracle.js.parser.ir.Expression>,boolean,boolean)
 intf com.oracle.js.parser.ir.LexicalContextNode
 meth public <%0 extends java.lang.Object> {%%0} accept(com.oracle.js.parser.ir.LexicalContext,com.oracle.js.parser.ir.visitor.TranslatorNodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext,{%%0}>)
 meth public boolean isEval()
+meth public boolean isImport()
 meth public boolean isNew()
 meth public com.oracle.js.parser.ir.CallNode setArgs(java.util.List<com.oracle.js.parser.ir.Expression>)
 meth public com.oracle.js.parser.ir.CallNode setFunction(com.oracle.js.parser.ir.Expression)
@@ -664,9 +653,10 @@ meth public final <%0 extends java.lang.Object> {%%0} accept(com.oracle.js.parse
 meth public final com.oracle.js.parser.ir.Node accept(com.oracle.js.parser.ir.visitor.NodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext>)
 meth public int getLineNumber()
 meth public java.util.List<com.oracle.js.parser.ir.Expression> getArgs()
+meth public static com.oracle.js.parser.ir.Expression forImport(int,long,int,int,com.oracle.js.parser.ir.IdentNode,java.util.List<com.oracle.js.parser.ir.Expression>)
 meth public void toString(java.lang.StringBuilder,boolean)
 supr com.oracle.js.parser.ir.Expression
-hfds IS_EVAL,IS_NEW,args,flags,function,lineNumber
+hfds IS_EVAL,IS_IMPORT,IS_NEW,args,flags,function,lineNumber
 
 CLSS public final com.oracle.js.parser.ir.CaseNode
 cons public init(long,int,com.oracle.js.parser.ir.Expression,java.util.List<com.oracle.js.parser.ir.Statement>)
@@ -716,7 +706,6 @@ hfds classElements,classHeritage,constructor,ident
 CLSS public com.oracle.js.parser.ir.ContinueNode
 cons public init(int,long,int,java.lang.String)
 meth public <%0 extends java.lang.Object> {%%0} accept(com.oracle.js.parser.ir.visitor.TranslatorNodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext,{%%0}>)
-meth public com.oracle.js.parser.ir.BreakableNode getTarget(com.oracle.js.parser.ir.LexicalContext)
 meth public com.oracle.js.parser.ir.Node accept(com.oracle.js.parser.ir.visitor.NodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext>)
 supr com.oracle.js.parser.ir.JumpStatement
 
@@ -1082,9 +1071,6 @@ supr com.oracle.js.parser.ir.Expression
 hfds expression
 
 CLSS public abstract com.oracle.js.parser.ir.JumpStatement
-cons protected init(com.oracle.js.parser.ir.JumpStatement)
-cons protected init(int,long,int,java.lang.String)
-meth public abstract com.oracle.js.parser.ir.BreakableNode getTarget(com.oracle.js.parser.ir.LexicalContext)
 meth public boolean hasGoto()
 meth public java.lang.String getLabelName()
 meth public void toString(java.lang.StringBuilder,boolean)
@@ -1113,21 +1099,13 @@ meth public <%0 extends com.oracle.js.parser.ir.LexicalContextNode> {%%0} push({
 meth public boolean contains(com.oracle.js.parser.ir.LexicalContextNode)
 meth public boolean inUnprotectedSwitchContext()
 meth public boolean isEmpty()
-meth public boolean isFunctionBody()
 meth public com.oracle.js.parser.ir.Block getCurrentBlock()
 meth public com.oracle.js.parser.ir.Block getParentBlock()
-meth public com.oracle.js.parser.ir.BreakableNode getBreakable(java.lang.String)
 meth public com.oracle.js.parser.ir.FunctionNode getCurrentFunction()
 meth public com.oracle.js.parser.ir.FunctionNode getCurrentNonArrowFunction()
-meth public com.oracle.js.parser.ir.FunctionNode getOutermostFunction()
-meth public com.oracle.js.parser.ir.LabelNode findLabel(java.lang.String)
-meth public com.oracle.js.parser.ir.LabelNode getCurrentBlockLabelNode()
 meth public com.oracle.js.parser.ir.LexicalContextNode replace(com.oracle.js.parser.ir.LexicalContextNode,com.oracle.js.parser.ir.LexicalContextNode)
-meth public com.oracle.js.parser.ir.LoopNode getContinueTo(java.lang.String)
-meth public com.oracle.js.parser.ir.LoopNode getCurrentLoop()
 meth public java.lang.String toString()
 meth public java.util.Iterator<com.oracle.js.parser.ir.Block> getBlocks()
-meth public java.util.Iterator<com.oracle.js.parser.ir.Block> getBlocksInCurrentFunction()
 meth public java.util.Iterator<com.oracle.js.parser.ir.FunctionNode> getFunctions()
 meth public java.util.Iterator<com.oracle.js.parser.ir.LexicalContextNode> getAllNodes()
 supr java.lang.Object
@@ -1148,21 +1126,13 @@ fld protected final {com.oracle.js.parser.ir.LiteralNode%0} value
 innr public final static ArrayLiteralNode
 innr public static PrimitiveLiteralNode
 meth public <%0 extends java.lang.Object> {%%0} accept(com.oracle.js.parser.ir.visitor.TranslatorNodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext,{%%0}>)
-meth public boolean getBoolean()
 meth public boolean isArray()
-meth public boolean isBoolean()
-meth public boolean isNull()
-meth public boolean isNumeric()
 meth public boolean isString()
 meth public com.oracle.js.parser.ir.Node accept(com.oracle.js.parser.ir.visitor.NodeVisitor<? extends com.oracle.js.parser.ir.LexicalContext>)
-meth public double getNumber()
 meth public final {com.oracle.js.parser.ir.LiteralNode%0} getValue()
-meth public int getInt32()
 meth public java.lang.Object getObject()
 meth public java.lang.String getString()
 meth public java.util.List<com.oracle.js.parser.ir.Expression> getElementExpressions()
-meth public long getLong()
-meth public long getUint32()
 meth public static com.oracle.js.parser.ir.LiteralNode<com.oracle.js.parser.Lexer$LexerToken> newInstance(long,int,com.oracle.js.parser.Lexer$LexerToken)
 meth public static com.oracle.js.parser.ir.LiteralNode<com.oracle.js.parser.ir.Expression[]> newInstance(long,int,com.oracle.js.parser.ir.Expression[])
 meth public static com.oracle.js.parser.ir.LiteralNode<com.oracle.js.parser.ir.Expression[]> newInstance(long,int,java.util.List<com.oracle.js.parser.ir.Expression>)
@@ -1171,7 +1141,7 @@ meth public static com.oracle.js.parser.ir.LiteralNode<java.lang.Boolean> newIns
 meth public static com.oracle.js.parser.ir.LiteralNode<java.lang.Number> newInstance(long,int,java.lang.Number)
 meth public static com.oracle.js.parser.ir.LiteralNode<java.lang.Number> newInstance(long,int,java.lang.Number,java.util.function.Function<java.lang.Number,java.lang.String>)
 meth public static com.oracle.js.parser.ir.LiteralNode<java.lang.Object> newInstance(long,int)
-meth public static com.oracle.js.parser.ir.LiteralNode<java.lang.String> newInstance(long,int,java.lang.String)
+meth public static com.oracle.js.parser.ir.LiteralNode<java.lang.String> newInstance(long,java.lang.String)
 meth public void toString(java.lang.StringBuilder,boolean)
 supr com.oracle.js.parser.ir.Expression
 hcls BooleanLiteralNode,LexerTokenLiteralNode,NullLiteralNode,NumberLiteralNode,StringLiteralNode
@@ -1197,9 +1167,6 @@ hfds hasCoverInitializedName,hasSpread,hasTrailingComma
 CLSS public static com.oracle.js.parser.ir.LiteralNode$PrimitiveLiteralNode<%0 extends java.lang.Object>
  outer com.oracle.js.parser.ir.LiteralNode
 intf com.oracle.js.parser.ir.PropertyKey
-meth public boolean isAlwaysFalse()
-meth public boolean isAlwaysTrue()
-meth public boolean isTrue()
 meth public java.lang.String getPropertyName()
 supr com.oracle.js.parser.ir.LiteralNode<{com.oracle.js.parser.ir.LiteralNode$PrimitiveLiteralNode%0}>
 

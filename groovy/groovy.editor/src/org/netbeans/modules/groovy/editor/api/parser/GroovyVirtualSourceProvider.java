@@ -350,8 +350,7 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
             boolean skipGetter = false;
             List getterCandidates = propNode.getField().getOwner().getMethods(getterName);
             if (getterCandidates != null) {
-                for (Iterator it = getterCandidates.iterator(); it.hasNext();) {
-                    MethodNode method = (MethodNode) it.next();
+                for (MethodNode method : getterCandidates) {
                     if (method.getParameters().length == 0) {
                         skipGetter = true;
                     }

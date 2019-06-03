@@ -87,7 +87,7 @@ is the proper place.
             <summary>Prepended text for highlights</summary>
             <version major="2" minor="24"/>
             <date day="14" month="5" year="2019"/>
-            <author login="markiewb"/>
+            <author login="jlahoda"/>
             <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes" deprecation="no" deletion="no" modification="no" />
             <description>
                 <p>If AttributeSet returned from HighlightsSequence contains key "virtual-text-prepend"

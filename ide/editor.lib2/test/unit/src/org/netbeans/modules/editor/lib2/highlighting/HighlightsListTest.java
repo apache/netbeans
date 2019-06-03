@@ -26,6 +26,7 @@ import javax.swing.text.PlainDocument;
 import javax.swing.text.StyleConstants;
 import org.junit.Test;
 import org.netbeans.api.editor.settings.AttributesUtilities;
+import org.netbeans.modules.editor.lib2.view.ViewUtils;
 import org.netbeans.spi.editor.highlighting.HighlightsContainer;
 import org.netbeans.spi.editor.highlighting.support.OffsetsBag;
 
@@ -162,7 +163,7 @@ public class HighlightsListTest {
         AttributeSet attrs2 = AttributesUtilities.createImmutable(
                 StyleConstants.Foreground, Color.RED,
                 StyleConstants.FontFamily, fontNames[0],
-                "virtual-text-prepend", "test");
+                ViewUtils.KEY_VIRTUAL_TEXT_PREPEND, "test");
         AttributeSet attrs3 = AttributesUtilities.createImmutable(
                 StyleConstants.Foreground, Color.RED,
                 StyleConstants.FontFamily, fontNames[1]);

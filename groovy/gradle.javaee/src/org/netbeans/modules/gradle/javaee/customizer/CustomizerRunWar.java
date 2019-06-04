@@ -25,9 +25,10 @@ import org.netbeans.modules.gradle.javaee.api.ui.support.CheckBoxUpdater;
 import org.netbeans.modules.gradle.javaee.api.ui.support.ComboBoxUpdater;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
 import org.netbeans.modules.gradle.javaee.web.WebModuleProviderImpl;
-import java.io.IOException;
+import java.util.prefs.Preferences;
 import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.Deployment;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.InstanceRemovedException;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eePlatform;
@@ -36,7 +37,6 @@ import org.netbeans.modules.javaee.project.api.JavaEEProjectSettings;
 import org.netbeans.modules.web.browser.api.BrowserUISupport;
 import org.netbeans.modules.web.browser.api.BrowserUISupport.BrowserComboBoxModel;
 import org.netbeans.modules.web.browser.api.WebBrowser;
-import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -86,21 +86,15 @@ public class CustomizerRunWar extends javax.swing.JPanel {
         cbBrowser.setModel(browserModel);
         cbBrowser.setRenderer(BrowserUISupport.createBrowserRenderer());
 
-        FileObject pdir = project.getProjectDirectory();
-        Boolean showInBrowser = (Boolean) pdir.getAttribute(PROP_SHOW_IN_BROWSER);
-        showInBrowser = showInBrowser != null ? showInBrowser : Boolean.FALSE;
+        Preferences prefs = NbGradleProject.getPreferences(project, false);
+        Boolean showInBrowser = prefs.getBoolean(PROP_SHOW_IN_BROWSER, true);
         showInBrowserUpdater = CheckBoxUpdater.create(cbBrowserOnRun, showInBrowser, (boolean value) -> {
-            try {
-                boolean show = cbBrowserOnRun.isSelected();
-                pdir.setAttribute(PROP_SHOW_IN_BROWSER, show);
-                if (show) {
-                    pdir.setAttribute(PROP_SHOW_PAGE, tfRelativeURL.getText().trim());
-                }
-            } catch (IOException ex) {
-            }
+            boolean show = cbBrowserOnRun.isSelected();
+            prefs.putBoolean(PROP_SHOW_IN_BROWSER, show);
+            prefs.put(PROP_SHOW_PAGE, tfRelativeURL.getText().trim());
         });
 
-        String relativeUrl = (String) pdir.getAttribute(PROP_SHOW_PAGE);
+        String relativeUrl = prefs.get(PROP_SHOW_PAGE, "");
         tfRelativeURL.setText(relativeUrl);
     }
 

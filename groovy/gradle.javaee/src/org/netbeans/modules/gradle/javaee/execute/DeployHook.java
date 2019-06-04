@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.gradle.javaee.execute;
 
-import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.javaee.customizer.CustomizerRunWar;
 import org.netbeans.modules.gradle.spi.actions.AfterBuildActionHook;
@@ -52,30 +51,30 @@ public class DeployHook implements AfterBuildActionHook {
     @Override
     public void afterAction(String action, Lookup context, int result, PrintWriter out) {
         if ("run".equals(action) && (result == 0)) {
-            deploy(out);
+            deploy(out, Deployment.Mode.RUN);
         }
     }
 
-    private void deploy(PrintWriter out) {
-        Deployment.Mode mode = Deployment.Mode.RUN;
+    private void deploy(PrintWriter out, Deployment.Mode mode) {
         J2eeModuleProvider jmp = project.getLookup().lookup(J2eeModuleProvider.class);
-        GradleBaseProject gbp = GradleBaseProject.get(project);
         try {
             String showPage = showBrowserOnRun();
             String browserUrl = Deployment.getDefault().deploy(jmp, mode, null, showPage == null ? "" : showPage, true);
-            URL url = new URL(browserUrl);
-            if (showPage != null) {
-                URLDisplayerImplementation urlDisplayer = project.getLookup().lookup(URLDisplayerImplementation.class);
-                if (urlDisplayer != null) {
-                    URL appRoot = url;
-                    if (showPage.length() > 0 && browserUrl.endsWith(showPage)) {
-                        appRoot = new URL(browserUrl.substring(0, browserUrl.length() - showPage.length()));
+            if (browserUrl != null) {
+                URL url = new URL(browserUrl);
+                if (showPage != null) {
+                    URLDisplayerImplementation urlDisplayer = project.getLookup().lookup(URLDisplayerImplementation.class);
+                    if (urlDisplayer != null) {
+                        URL appRoot = url;
+                        if (showPage.length() > 0 && browserUrl.endsWith(showPage)) {
+                            appRoot = new URL(browserUrl.substring(0, browserUrl.length() - showPage.length()));
+                        }
+                        urlDisplayer.showURL(appRoot, url, project.getProjectDirectory());
+                    } else {
+                        HtmlBrowser.URLDisplayer.getDefault().showURL(url);
                     }
-                    urlDisplayer.showURL(appRoot, url, project.getProjectDirectory());
-                } else {
-                    HtmlBrowser.URLDisplayer.getDefault().showURL(url);
-                }
 
+                }
             }
         } catch (Deployment.DeploymentException|IOException ex) {
             Exceptions.printStackTrace(ex);
@@ -84,7 +83,7 @@ public class DeployHook implements AfterBuildActionHook {
 
     private String showBrowserOnRun() {
         Preferences prefs = NbGradleProject.getPreferences(project, false);
-        if (prefs.getBoolean(CustomizerRunWar.PROP_SHOW_IN_BROWSER, false)) {
+        if (prefs.getBoolean(CustomizerRunWar.PROP_SHOW_IN_BROWSER, true)) {
             return prefs.get(CustomizerRunWar.PROP_SHOW_PAGE, "");
         } else {
             return null;

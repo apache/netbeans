@@ -19,8 +19,11 @@
 
 package org.netbeans.modules.java.editor.codegen.ui;
 
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 import java.util.List;
 import javax.lang.model.element.Element;
+import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.modules.java.editor.codegen.ToStringGenerator;
@@ -31,11 +34,12 @@ import org.openide.util.NbBundle;
  * @author  Dusan Balek
  */
 public class ToStringPanel extends JPanel {
-    
-    private ElementSelectorPanel elementSelector;
-    
+
+    private final ElementSelectorPanel elementSelector;
+    private final JCheckBox useStringBuilderCheckBox = new JCheckBox();
+
     /** Creates new form GetterSetterPanel */
-    public ToStringPanel(ElementNode.Description description) {
+    public ToStringPanel(ElementNode.Description description, boolean useStringBuilder, boolean supportsStringBuilder) {
         initComponents();
         elementSelector = new ElementSelectorPanel(description, false);
         java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
@@ -47,11 +51,27 @@ public class ToStringPanel extends JPanel {
         selectorLabel.setText(NbBundle.getMessage(ToStringGenerator.class, "LBL_tostring_select")); //NOI18N
         selectorLabel.setLabelFor(elementSelector);
         elementSelector.doInitialExpansion(1);
+        useStringBuilderCheckBox.setSelected(false);
+        if (supportsStringBuilder) {
+            useStringBuilderCheckBox.setSelected(useStringBuilder);
+            org.openide.awt.Mnemonics.setLocalizedText(useStringBuilderCheckBox, NbBundle.getMessage(ToStringGenerator.class, "LBL_tostring_use_stringbuilder")); // NOI18N
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.fill = GridBagConstraints.BOTH;
+            gbc.gridx = 0;
+            gbc.gridy = 2;
+            gbc.insets = new Insets(0, 12, 0, 12);
+            gbc.anchor = GridBagConstraints.WEST;
+            add(useStringBuilderCheckBox, gbc);
+        }
 	this.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(ToStringGenerator.class, "A11Y_Generate_ToString"));
     }
-    
+
     public List<ElementHandle<? extends Element>> getVariables() {
         return ((ElementSelectorPanel)elementSelector).getSelectedElements();
+    }
+
+    public boolean useStringBuilder() {
+        return useStringBuilderCheckBox.isSelected();
     }
 
     /** This method is called from within the constructor to
@@ -73,8 +93,8 @@ public class ToStringPanel extends JPanel {
         gridBagConstraints.insets = new java.awt.Insets(12, 12, 6, 12);
         add(selectorLabel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel selectorLabel;
     // End of variables declaration//GEN-END:variables

@@ -42,6 +42,7 @@ const DWORD JVM_EXTRACTION_TIMEOUT = 180000;  //180sec
 WCHAR * JAVA_REGISTRY_KEYS [] = {
     L"SOFTWARE\\JavaSoft\\Java Runtime Environment",
     L"SOFTWARE\\JavaSoft\\Java Development Kit",
+    L"SOFTWARE\\JavaSoft\\JDK",
     L"SOFTWARE\\JRockit\\Java Runtime Environment",
     L"SOFTWARE\\JRockit\\Java Development Kit",
     L"SOFTWARE\\IBM\\Java Runtime Environment",
@@ -138,7 +139,7 @@ JavaVersion * getJavaVersionFromString(char * string, DWORD * result) {
             major = (major) * 10 + c - '0';
             if (major > 999) return vers;
             continue;
-        } else if(c=='.'){
+        } else if(c=='.' || c=='+'){
             break;
         } else{
             return vers;

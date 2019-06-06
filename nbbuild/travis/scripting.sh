@@ -20,8 +20,9 @@
 set -e
 
 if [ -z "$GRAALVM" ]; then
-  BASE=graalvm-ce-1.0.0-rc10
-  URL=https://github.com/oracle/graal/releases/download/vm-1.0.0-rc10/$BASE-linux-amd64.tar.gz
+  VERSION=19.0.0
+  BASE=graalvm-ce-$VERSION
+  URL=https://github.com/oracle/graal/releases/download/vm-$VERSION/graalvm-ce-linux-amd64-$VERSION.tar.gz
   curl -L $URL --output graalvm.tgz
   tar fxz graalvm.tgz
   GRAALVM=`pwd`/$BASE
@@ -32,6 +33,9 @@ fi
 ant -f platform/api.scripting/build.xml test
 ant -f ide/libs.graalsdk/build.xml test
 ant -f webcommon/libs.graaljs/build.xml test
+ant -f platform/core.network/build.xml test
+ant -f profiler/profiler.oql/build.xml test
+ant -f platform/api.htmlui/build.xml test
 
 $GRAALVM/bin/gu install python
 $GRAALVM/bin/gu install R
@@ -41,8 +45,7 @@ $GRAALVM/bin/gu install R
 JAVA_HOME=$GRAALVM ant -f platform/api.scripting/build.xml test
 JAVA_HOME=$GRAALVM ant -f ide/libs.graalsdk/build.xml test
 
-# currently broken. fixed by
-# https://github.com/oracle/graal/commit/4c217f2b2fba77c55d05c7aa3654e13c215b5ddb
-# which is likely to appear in GraalVM RC12
-JAVA_HOME=$GRAALVM ant -f webcommon/libs.graaljs/build.xml test || echo "==== Expected failure ===="
+JAVA_HOME=$GRAALVM ant -f platform/core.network/build.xml test
+JAVA_HOME=$GRAALVM ant -f webcommon/libs.graaljs/build.xml test
+JAVA_HOME=$GRAALVM ant -f profiler/profiler.oql/build.xml test
 

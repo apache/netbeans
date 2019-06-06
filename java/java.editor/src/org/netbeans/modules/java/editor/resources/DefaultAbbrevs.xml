@@ -265,6 +265,15 @@ ${selection}${cursor}
         </code>
     </codetemplate>
 
+    <codetemplate abbreviation="main" contexts="CLASS">
+        <code>
+<![CDATA[public static void main(String[] args) {
+   ${cursor}
+}
+]]>
+        </code>
+    </codetemplate>
+
     <codetemplate abbreviation="bcom" descriptionId="CT_bcom">
         <code>
 <![CDATA[${no-format}/*${selection}${cursor}*/]]>

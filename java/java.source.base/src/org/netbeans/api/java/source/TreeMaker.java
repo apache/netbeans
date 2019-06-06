@@ -1042,7 +1042,19 @@ public final class TreeMaker {
     public SwitchTree Switch(ExpressionTree expression, List<? extends CaseTree> cases) {
         return delegate.Switch(expression, cases);
     }
-    
+
+    /**
+     * Creates a new SwitchExpressionTree.
+     *
+     * @param expression the expression which provides the value to be switched.
+     * @param cases the list of cases, or an empty list.
+     * @see com.sun.source.tree.SwitchExpressionTree
+     * @since 2.41
+     */
+    public Tree SwitchExpression(ExpressionTree expression, List<? extends CaseTree> cases) {
+        return delegate.SwitchExpression(expression, cases);
+    }
+
     /**
      * Creates a new SynchronizedTree.
      *

@@ -23,6 +23,7 @@ import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
 import java.io.File;
 import java.io.Serializable;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.netbeans.api.project.Project;
+import org.openide.filesystems.FileUtil;
 
 /**
  * This object holds the basic information of the Gradle project.
@@ -52,6 +54,7 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
     String path;
     String status;
     String parentName;
+    String displayName;
 
     File buildDir;
     File projectDir;
@@ -75,10 +78,10 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
     }
 
     /**
-     * This Gradle project name. 
-     * 
-     * 
-     * 
+     * This Gradle project name.
+     *
+     *
+     *
      * @return the name of the project
      */
     public String getName() {
@@ -105,6 +108,10 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
         return description;
     }
 
+    public String getDisplayName() {
+        return displayName;
+    }
+
     public String getVersion() {
         return version;
     }
@@ -123,8 +130,8 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
 
     /**
      * The set of Gradle plugin ids used applied in this project.
-     * 
-     * @return the set of applied plugins 
+     *
+     * @return the set of applied plugins
      */
     public Set<String> getPlugins() {
         return plugins;
@@ -139,8 +146,8 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
     }
 
     /**
-     * The classpath used to 
-     * @return 
+     * The classpath used to
+     * @return
      */
     public Set<File> getGradleClassPath() {
         return gradleClassPath;
@@ -153,11 +160,11 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
     public Map<String, File> getIncludedBuilds() {
         return includedBuilds;
     }
-    
+
     /**
      * Returns true if the project directory is the same as the root project's
      * project directory, in short if this project is a root project.
-     * 
+     *
      * @return true for root Gradle projects
      */
     public boolean isRoot() {
@@ -166,8 +173,8 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
 
     /**
      * Return the value of the property defined {@code netbeans.<key>} as
-     * in this Gradle project or inherited from the root project. 
-     * 
+     * in this Gradle project or inherited from the root project.
+     *
      * @param key the property name after the {@code netbeans.} prefix.
      * @return the property value or {@code null} if it is not defined.
      */
@@ -187,6 +194,13 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
         return license != null ? license : "default"; //NOI18N
     }
 
+    /**
+     * Returns the sub-project of this project, in a map as Gradle project path
+     * and project directory pairs. In the current Gradle implementation only
+     * root project can have sub-projects.
+     *
+     * @return the map of sub-projects.
+     */
     public Map<String, File> getSubProjects() {
         return subProjects;
     }
@@ -242,7 +256,7 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
 
     @Override
     public Set<GradleDependency.ModuleDependency> findModules(String gav) {
-        String parts[] = gav.split(":");
+        String parts[] = GradleDependency.gavSplit(gav);
         if (parts.length != 3) {
             throw new IllegalArgumentException("Invalid gav filter: "  + gav);
         }
@@ -294,13 +308,13 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
     }
 
     /**
-     * Retrieve the actual GradleBaseProject from the given NetBeans 
-     * {@link Project project} lookup. If the project is not a Gradle project it 
+     * Retrieve the actual GradleBaseProject from the given NetBeans
+     * {@link Project project} lookup. If the project is not a Gradle project it
      * returns {@code null}. It always returns a non-null value for a Gradle
      * project.
-     * 
+     *
      * @see org.netbeans.modules.gradle.api.NbGradleProject.Quality
-     * 
+     *
      * @param project a NetBeans project
      * @return the basic Gradle project info stored for the given project or
      *         {@code null} for non-Gradle projects.
@@ -318,7 +332,19 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
         ret.buildDir = new File(files.getProjectDir(), "build");
         ret.rootDir = files.getRootDir();
         ret.version = "unspecified";
-        ret.path = files.isRootProject() ? ":" : ":" + ret.name;
+        StringBuilder path = new StringBuilder(":");       //NOI18N
+        if (!files.isRootProject()) {
+            Path prjPath = files.getProjectDir().toPath();
+            Path rootPath = files.getRootDir().toPath();
+            String separator = "";
+            Path relPath = rootPath.relativize(prjPath);
+            for(int i = 0; i < relPath.getNameCount() ; i++) {
+                path.append(separator);
+                path.append(relPath.getName(i));
+                separator = ":"; //NOI18N
+            }
+        }
+        ret.path = path.toString();
         ret.status = "release";
         ret.parentName = files.isRootProject() ? null : files.getRootDir().getName();
 

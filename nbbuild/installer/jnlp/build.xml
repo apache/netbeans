@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<project basedir="." default="netbeans" name="jnlpinstaller">
+
+    <property name="nb_all" location="../../.."/>
+    <import file="${nb_all}/nbbuild/default.xml" />
+    
+    <property name="jnlp-api.file.location" value="external/jnlp-definitions-7.0.jar"/>
+    <property name="jnlp-servlet.file.location" value="external/webstart-jnlp-servlet-1.0-beta-7.jar"/>
+
+    <property name="jnlp.signjar.alias" value="jnlp" />
+    <property name="jnlp.signjar.keystore" location="default.keystore" />
+    <property name="jnlp.signjar.password" value="netbeans" />
+    <property name="jnlp.codebase.base" location="release" />
+    <property name="jnlp.codebase" value="file:${jnlp.codebase.base}/" />
+    <property name="jnlp.static" value="true" />
+    <property name="allmodules" value="${nb.cluster.platform}" />
+    
+    
+    <taskdef name="moduleinfo" classpath="${nb_all}/nbbuild/build/nbantext.jar" classname="org.netbeans.nbbuild.ModuleInfo" />
+    
+    <target name="compile">
+        <delete file="src/META-INF/netbeans-location.properties"/>
+        <javac debug="${build.compiler.debug}" deprecation="${build.compiler.deprecation}" destdir="src" srcdir="src">
+            <classpath refid="cp"/>
+        </javac>
+    </target>
+
+    <!-- The main target -->
+    <target depends="jnlp-expand1, create-war" name="netbeans">
+    </target>
+
+    <target depends="create-config-base" name="create-config">
+        <copy file="help.jnlp" tofile="release/help.jnlp" />
+    </target>
+    
+    <!-- default jars that we do not want to sign and pack -->
+    <selector id="extensions" >
+        <filename name="**/*jh*.jar" />
+    </selector>
+    <selector id="no-extensions" >
+        <not>
+            <selector refid="extensions" />
+        </not>
+    </selector>
+
+    
+    <!-- This target fills in the content of file nb-launch.jnlp.
+         Scans all the available jar files and adds entries to the .jnlp file.
+    -->
+    <target depends="copy-to-release, create-jnlp-jars" name="create-config-base">
+        <!-- This target creates the end of nb-launch.jnlp file -->
+        <path id="jarfiles">
+            <fileset dir="release">
+                <include name="*.jar"/>
+                <!-- do not enumerate extensions-->
+                <selector refid="no-extensions" />
+            </fileset>
+        </path>
+        <property location="${nb_all}/installer/jnlp/release/" name="dirname"/>
+        <!-- save directory name for replacing back -->
+        <replace file="release/nb-launch.jnlp" token="${dirname}" value="D#I#R#_#N#A#M#E"/>
+        <pathconvert dirsep="${file.separator}" pathsep="" property="jar-files-list" refid="jarfiles"/>
+        <echo append="true" file="release/nb-launch.jnlp" message="@@@${jar-files-list}%%%"/>
+        <echo message="Replacing ${dirname}"/>
+        <replace file="release/nb-launch.jnlp" token="${dirname}${file.separator}" value="@@@###"/>
+        <replace file="release/nb-launch.jnlp" token="@@@@@@" value=""/>
+        <replace file="release/nb-launch.jnlp" token="@@@">
+            <replacevalue><![CDATA["/>
+]]></replacevalue>
+        </replace>
+        <replace file="release/nb-launch.jnlp" token="%%%">
+            <replacevalue><![CDATA["/>
+]]></replacevalue>
+        </replace>
+        <replace file="release/nb-launch.jnlp" token="###">
+            <replacevalue><![CDATA[        <jar href="]]></replacevalue>
+        </replace>
+        <echo append="true" file="release/nb-launch.jnlp" message="${jnlp.extra.properties}"/>
+        <echo append="true" file="release/nb-launch.jnlp">
+<![CDATA[        
+    </resources>
+    <application-desc main-class="org.netbeans.jnlp.Main"/>
+</jnlp>
+]]></echo>
+        <!-- replace back accidentally replaced name of the directory -->
+        <replace file="release/nb-launch.jnlp" token="D#I#R#_#N#A#M#E" value="${dirname}${file.separator}"/>
+        
+        <echo message="JNLP file release/nb-launch.jnlp has been generated. You can pass it to javaws." />
+    </target>
+    
+    <target depends="jars" name="copy-to-release">
+        <mkdir dir="release"/>
+        <delete file="release/nb-launch.jnlp"/>
+        <copy flatten="true" todir="release">
+            <fileset dir="">
+                <include name="*.jnlp"/>
+            </fileset>
+        </copy>
+    </target>
+    
+    <target name="jnlp-expand1" depends="create-config" if="jnlp.static">
+        <replace dir="release" token="@CODEBASE@" value="${jnlp.codebase}">
+            <filename name="*.jnlp" />
+        </replace>
+        <replace file="release/nb-launch.jnlp" token="@NAME@" value="nb-launch.jnlp"/>
+    </target>
+    
+    <target name="jnlp-expand2" depends="create-config" unless="jnlp.static">
+        <replace dir="release" token="@CODEBASE@" value="$$$$codebase">
+            <filename name="*.jnlp" />
+        </replace>
+        <replace file="release/nb-launch.jnlp" token="@NAME@" value="$$$$name"/>
+    </target>
+
+    <target name="create-war" depends="jnlp-expand2" unless="jnlp.static">
+        <mkdir dir="release/WEB-INF/lib"/>
+        <copy file="${jnlp-servlet.file.location}" todir="release/WEB-INF/lib"/>
+        <mkdir dir="release/WEB-INF/classes"/>
+        <copy todir="release/WEB-INF/classes" flatten="false">
+            <fileset dir="src" excludes="**/*.java">
+                <include name="**/IndexServlet*"/>
+            </fileset>
+        </copy>
+        <war basedir="release" 
+            compress="false"
+            webxml="web.xml"
+            warfile="${netbeans.dest}.war"/>
+    </target>
+        
+    <target depends="jars,generate-keystore" name="create-jnlp-jars">
+        <mkdir dir="release"/>
+        <copy flatten="true" todir="release">
+            <fileset dir="jars">
+                <include name="**/*.jar"/>
+                <!-- we do not support autoupdate in webstart -->
+                <include name="**/org-netbeans-modules-autoupdate.jar" />
+            </fileset>
+        </copy>
+
+        <!-- now they can be signed -->
+        <signjar alias="${jnlp.signjar.alias}" keystore="${jnlp.signjar.keystore}" storepass="${jnlp.signjar.password}">
+            <fileset dir=".">
+                <include name="release/*.jar"/>
+                <selector refid="no-extensions" />
+            </fileset>
+        </signjar>
+    </target>
+    
+    <target name="nbm"/>
+    
+    <target description="Clean build products." name="clean">
+        <delete>
+            <fileset dir="src">
+                <include name="**/*.class"/>
+            </fileset>
+        </delete>
+	<!-- workaround for issue 20745 -->
+        <delete dir="netbeans/lib"/>
+        <delete dir="Info"/>
+        <delete file="manifest-subst.mf"/>
+        <delete dir="javadoc"/>
+        <delete dir="release"/>
+        <delete dir="jars"/>
+        <delete file="${netbeans.dest}.war"/>
+        <delete file="src/META-INF/netbeans-location.properties"/>
+    </target>
+
+    <target depends="clean" name="real-clean">
+        <delete dir="reload"/>
+    </target>
+
+    <path id="cp">
+        <pathelement location="${o.n.core.dir}/core/core.jar"/>
+        <pathelement location="${jnlp-api.file.location}"/>
+    </path>
+    
+    <target name="jars" depends="compile">
+        <taskdef name="repeat" classname="org.netbeans.nbbuild.Repeat" classpath="${nb_all}/nbbuild/build/nbantext.jar"/>
+        
+        <repeat values="${allmodules}" name="maindir" target="buildjar"/>
+        <mkdir dir="jars"/>
+        <jar compress="false"
+             jarfile="jars/nbjnlpinstaller.jar">
+             <fileset dir="src" excludes="**/*.java"/>
+        </jar>
+    </target>
+
+    <!-- copies and conditionally repackages all jars -->
+    <target name="buildjar">
+        <echo message="buildjar running with property maindir == ${maindir}"/>
+
+        <moduleinfo 
+            module="${maindir}" 
+            filesetname="buildjar.files" 
+            clusterdirname="buildjar.cluster" 
+            trackingpath="${netbeans.dest.dir}" 
+            failonerror="false"
+        />
+        
+        <mkdir dir="jars"/>
+        
+        <copy todir="jars" flatten="true" >
+            <fileset refid="buildjar.files" >
+            </fileset>
+        </copy>
+        
+    </target>
+    
+    <available file="${jnlp.signjar.keystore}" property="do.not.generate.keystore" />
+    <target name="generate-keystore" unless="do.not.generate.keystore" >
+        <echo message="Going to create default keystore in ${jnlp.signjar.keystore}" />
+        <exec 
+            executable="keytool" 
+            dir="."  
+            inputstring="
+            noname${line.separator}
+            noorganization${line.separator}
+            nolocation${line.separator}
+            nostate${line.separator}
+            no${line.separator}yes${line.separator}yes${line.separator}"
+        >
+          <arg value="--genkey" />
+          <arg value="--alias" />
+          <arg value="${jnlp.signjar.alias}" />
+          <arg value="--keystore" />
+          <arg file="${jnlp.signjar.keystore}" />
+          <arg value="--storepass" />
+          <arg value="${jnlp.signjar.password}" />
+          <arg value="--keypass" />
+          <arg value="${jnlp.signjar.password}" />
+        </exec>
+    </target>
+</project>
+

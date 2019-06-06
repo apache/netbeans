@@ -39,12 +39,19 @@ import org.openide.util.WeakListeners;
  * @author Laszlo Kishalmi
  */
 public final class BootClassPathImpl extends AbstractGradleClassPathImpl implements PropertyChangeListener {
+    private static final String PROTOCOL_NBJRT = "nbjrt";   //NOI18N
 
     JavaPlatformManager platformManager;
+    final boolean modulesOnly;
+
+    public BootClassPathImpl(Project proj) {
+        this(proj, false);
+    }
 
     @SuppressWarnings("LeakingThisInConstructor")
-    public BootClassPathImpl(Project proj) {
+    public BootClassPathImpl(Project proj, boolean modulesOnly) {
         super(proj);
+        this.modulesOnly = modulesOnly;
         platformManager = JavaPlatformManager.getDefault();
         platformManager.addPropertyChangeListener(WeakListeners.propertyChange(this, platformManager));
         NbGradleProject.getPreferences(project, false).addPreferenceChangeListener(new PreferenceChangeListener() {
@@ -56,7 +63,7 @@ public final class BootClassPathImpl extends AbstractGradleClassPathImpl impleme
             }
         });
     }
-    
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         clearResourceCache();
@@ -68,11 +75,14 @@ public final class BootClassPathImpl extends AbstractGradleClassPathImpl impleme
         List<URL> ret = new LinkedList<>();
         if (platform != null) {
             for (ClassPath.Entry entry : platform.getBootstrapLibraries().entries()) {
-                ret.add(entry.getURL());
+                URL root = entry.getURL();
+                if (!modulesOnly || PROTOCOL_NBJRT.equals(root.getProtocol())) {
+                    ret.add(root);
+                }
             }
         }
         return ret;
     }
 
-    
+
 }

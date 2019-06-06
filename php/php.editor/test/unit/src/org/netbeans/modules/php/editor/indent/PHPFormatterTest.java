@@ -791,4 +791,11 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/flexibleNowdoc_01.php", options);
     }
 
+    // PHP 7.4
+    public void testNullCoalescingAssignment01() throws Exception {
+        // "??="
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/nullCoalescingAssignment01.php", options);
+    }
+
 }

@@ -19,8 +19,6 @@
 
 package org.netbeans.modules.gradle.actions;
 
-import org.netbeans.modules.gradle.actions.ActionMappingScanner;
-import org.netbeans.modules.gradle.actions.ActionMappingScanner;
 import org.netbeans.modules.gradle.api.execute.ActionMapping;
 import java.io.IOException;
 import java.util.Set;
@@ -34,7 +32,7 @@ import org.xml.sax.SAXException;
  * @author Laszlo Kishalmi
  */
 public class ActionMappingScannerTest {
-    
+
     public ActionMappingScannerTest() {
     }
 
@@ -44,5 +42,5 @@ public class ActionMappingScannerTest {
         assertTrue(mappings.size() > 0);
     }
 
-    
+
 }

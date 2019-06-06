@@ -72,7 +72,7 @@ public class GradlePersistenceProvider implements PersistenceLocationProvider,
     final Project project;
 
     /**
-     * Creates a new instance of MavenPersistenceProvider
+     * Creates a new instance of GradlePersistenceProvider
      */
     public GradlePersistenceProvider(Project proj, Lookup lkp) {
         this.project = proj;

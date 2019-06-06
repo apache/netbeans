@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.23.1
+#Version 2.24.1
 
 CLSS public abstract interface java.io.Serializable
 
@@ -49,8 +49,10 @@ supr java.lang.Object
 hfds MAX_TOOLTIP_LINES,name,testcases
 
 CLSS public org.netbeans.modules.gsf.testrunner.api.Testcase
+cons public init(java.lang.String,java.lang.String,java.lang.String,org.netbeans.modules.gsf.testrunner.api.TestSession)
 cons public init(java.lang.String,java.lang.String,org.netbeans.modules.gsf.testrunner.api.TestSession)
 meth public java.lang.String getClassName()
+meth public java.lang.String getDisplayName()
 meth public java.lang.String getLocation()
 meth public java.lang.String getName()
 meth public java.lang.String getType()
@@ -67,7 +69,7 @@ meth public void setStatus(org.netbeans.modules.gsf.testrunner.api.Status)
 meth public void setTimeMillis(long)
 meth public void setTrouble(org.netbeans.modules.gsf.testrunner.api.Trouble)
 supr java.lang.Object
-hfds className,location,name,output,session,status,timeMillis,trouble,type
+hfds className,displayName,location,name,output,session,status,timeMillis,trouble,type
 
 CLSS public final org.netbeans.modules.testng.api.TestNGSupport
 innr public final static !enum Action

@@ -90,7 +90,7 @@ import org.openide.filesystems.FileObject;
  */
 public class CssCompletion implements CodeCompletionHandler {
 
-    private static final Collection<String> AT_RULES = Arrays.asList(new String[]{"@media", "@page", "@import", "@charset", "@font-face"}); //NOI18N
+    private static final Collection<String> AT_RULES = Arrays.asList(new String[]{"@media", "@page", "@import", "@charset", "@font-face", "@supports"}); //NOI18N
     private static char firstPrefixChar; //read getPrefix() comment!
     private static final String EMPTY_STRING = ""; //NOI18N
     private static final String UNIVERSAL_SELECTOR = "*"; //NOI18N

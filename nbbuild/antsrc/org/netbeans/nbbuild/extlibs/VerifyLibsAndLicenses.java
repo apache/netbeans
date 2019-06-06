@@ -183,8 +183,10 @@ public class VerifyLibsAndLicenses extends Task {
         for (String pattern : ignoredPatterns) {
             String[] parts = pattern.split(" ");
             assert parts.length == 2 : pattern;
-            if (SelectorUtils.matchPath(parts[0], path1.replaceFirst("^.+ in ", "")) &&
-                    SelectorUtils.matchPath(parts[1], path2.replaceFirst("^.+ in ", ""))) {
+            if ((SelectorUtils.matchPath(parts[0], path1.replaceFirst("^.+ in ", ""))
+                && SelectorUtils.matchPath(parts[1], path2.replaceFirst("^.+ in ", "")))
+                || (SelectorUtils.matchPath(parts[1], path1.replaceFirst("^.+ in ", ""))
+                && SelectorUtils.matchPath(parts[0], path2.replaceFirst("^.+ in ", "")))) {
                 return;
             }
         }

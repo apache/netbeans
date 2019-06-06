@@ -19,21 +19,22 @@
 
 package org.openide.util;
 
-import org.netbeans.junit.NbTestCase;
 import java.util.Comparator;
 import junit.framework.AssertionFailedError;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import org.junit.Assume;
 import org.junit.Test;
-import org.openide.util.CharSequences;
+import static org.netbeans.junit.NbTestCase.assertSize;
 
 /**
  *
  * @author Vladimir Voskresensky
  */
-public class CharSequencesTest extends NbTestCase {
-
-    public CharSequencesTest(String testName) {
-        super(testName);
-    }
+public class CharSequencesTest  {
 
     @Test
     public void testMaths() {
@@ -130,7 +131,7 @@ public class CharSequencesTest extends NbTestCase {
             assertEquals(cs.toString(), cs.toString());
             assertTrue(str.contentEquals(cs));
         }
-        
+
         for (int i = 0; i< 1024; i++) {
             StringBuilder buf = new StringBuilder();
             for (int j = 0; j< 64; j++) {
@@ -214,6 +215,7 @@ public class CharSequencesTest extends NbTestCase {
 
     @Test
     public void testSizes() {
+        Assume.assumeFalse("Skip the test on JDK11", isJDK11());
         // 32-bit JVM
         //String    String CharSequence
         //Length     Size    Size
@@ -273,11 +275,66 @@ public class CharSequencesTest extends NbTestCase {
             } catch (AssertionFailedError e) {
 //                System.err.println(e.getMessage());
                 stringIsSame = true;
-            }            
+            }
         } catch (AssertionFailedError e) {
 //                    System.err.println(e.getMessage());
             stringIsBigger = true;
         }
         assertTrue("string object \"" + rusText + "\" is smaller than our char sequence with size " + sizeLimit, stringIsBigger || stringIsSame);
+    }
+
+    @Test
+    public void createSample() {
+        // BEGIN: CharSequencesTest#createSample
+        CharSequence englishText = CharSequences.create("English Text");
+        assertTrue("English text can be compacted", CharSequences.isCompact(englishText));
+
+        CharSequence russianText = CharSequences.create("\u0420\u0443\u0441\u0441\u043A\u0438\u0439 \u0422\u0435\u043A\u0441\u0442");
+        assertTrue("Russian text can be compacted", CharSequences.isCompact(russianText));
+
+        CharSequence germanText = CharSequences.create("Schl\u00FCssel");
+        assertTrue("German text can be compacted", CharSequences.isCompact(germanText));
+
+        CharSequence czechText = CharSequences.create("\u017Dlu\u0165ou\u010Dk\u00FD k\u016F\u0148");
+        assertTrue("Czech text can be compacted", CharSequences.isCompact(czechText));
+        // END: CharSequencesTest#createSample
+    }
+
+    @Test
+    public void compareStrings() {
+        // BEGIN: CharSequencesTest#compareStrings
+        String h1 = "Hello World!";
+        CharSequence h2 = CharSequences.create(h1);
+        CharSequence h3 = CharSequences.create(h1.toCharArray(), 0, h1.length());
+
+        assertNotSame("Compacted into a new object #1", h1, h2);
+        assertNotSame("Compacted into a new object #2", h1, h3);
+        assertNotSame("Compacted into a new object #3", h2, h3);
+
+        assertEquals("Content remains the same #1", 0, CharSequences.comparator().compare(h1, h2));
+        assertEquals("Content remains the same #2", 0, CharSequences.comparator().compare(h2, h3));
+        assertEquals("Content remains the same #3", 0, CharSequences.comparator().compare(h3, h1));
+        // END: CharSequencesTest#compareStrings
+    }
+
+    @Test
+    public void indexOfSample() {
+        // BEGIN: CharSequencesTest#indexOfSample
+        CharSequence horseCarriesPepsi = CharSequences.create("K\u016F\u0148 veze Pepsi.");
+        int findPepsi = CharSequences.indexOf(horseCarriesPepsi, "Pepsi");
+        assertEquals("Pepsi found in the sentence", 9, findPepsi);
+        CharSequence pepsi = horseCarriesPepsi.subSequence(findPepsi, findPepsi + 5);
+        assertTrue("It is still compacted", CharSequences.isCompact(pepsi));
+        assertEquals(0, CharSequences.comparator().compare("Pepsi", pepsi));
+        // END: CharSequencesTest#indexOfSample
+    }
+
+    private static boolean isJDK11() {
+        try {
+            Class.forName("java.lang.Module");
+            return true;
+        } catch (ClassNotFoundException ex) {
+            return false;
+        }
     }
 }

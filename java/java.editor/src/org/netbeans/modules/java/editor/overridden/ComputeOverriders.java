@@ -215,16 +215,12 @@ public class ComputeOverriders {
 	FileObject currentFileSourceRoot = findSourceRoot(file);
 
 	if (currentFileSourceRoot != null) {
-	    try {
-		URL rootURL = currentFileSourceRoot.getURL();
-		Map<ElementHandle<TypeElement>, Set<ElementHandle<TypeElement>>> overridingHandles = users.remove(rootURL);
+            URL rootURL = currentFileSourceRoot.toURL();
+            Map<ElementHandle<TypeElement>, Set<ElementHandle<TypeElement>>> overridingHandles = users.remove(rootURL);
 
-		if (overridingHandles != null) {
-		    computeOverridingForRoot(rootURL, overridingHandles, methods, overriding);
-		}
-	    } catch (FileStateInvalidException ex) {
-		LOG.log(Level.INFO, null, ex);
-	    }
+            if (overridingHandles != null) {
+                computeOverridingForRoot(rootURL, overridingHandles, methods, overriding);
+            }
 	}
 
         for (Map.Entry<URL, Map<ElementHandle<TypeElement>, Set<ElementHandle<TypeElement>>>> data : users.entrySet()) {
@@ -347,14 +343,7 @@ public class ComputeOverriders {
             return null;
         }
 
-        URL thisSourceRootURL;
-
-        try {
-            thisSourceRootURL = thisSourceRoot.getURL();
-        } catch (FileStateInvalidException ex) {
-            Exceptions.printStackTrace(ex);
-            return null;
-        }
+        URL thisSourceRootURL = thisSourceRoot.toURL();
 
         Map<URL, List<URL>> rootPeers = getRootPeers();
         List<URL> sourceRoots = reverseSourceRootsInOrder(info, thisSourceRootURL, thisSourceRoot, sourceDeps, binaryDeps, rootPeers, interactive);

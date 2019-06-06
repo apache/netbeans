@@ -28,7 +28,6 @@
             <public-packages>
                 <!-- TODO: need to specify exports here, because fragments cannot add exports - should be fixed? -->
                 <package>org.netbeans.libs.javacapi</package>
-                <package>com.sun.javadoc</package>
                 <package>com.sun.source.doctree</package>
                 <package>com.sun.source.tree</package>
                 <package>com.sun.source.util</package>
@@ -41,7 +40,7 @@
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path />
-                <binary-origin>external/nb-javac-9-api.jar</binary-origin>
+                <binary-origin>external/nb-javac-12-api.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

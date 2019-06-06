@@ -79,6 +79,13 @@
             <include name="platform/javahelp/external/binaries-list"/>
         </manifest>
     </downloadbinaries>
+    <!--
+    nb-extra-files denotes directories/files, that are not packed for
+    distribution. The clusters are only used for local development/testing.
+    The files must not be included in distribution zip and also need to be
+    excluded from license analysis
+    -->
+    <property name="nb-extra-files" value="test/**,extra/**"/>
 
     <echo message="Bootstrapping NetBeans-specific Ant extensions..."/>
     <path id="bootstrap-cp">
@@ -101,7 +108,6 @@
       </fileset>
       <zipfileset dir="${nb_all}" includes="LICENSE" fullpath="META-INF/LICENSE"/>
       <zipfileset dir="${nb_all}/nbbuild" includes="notice-stub.txt" fullpath="META-INF/NOTICE"/>
-      <zipfileset dir="${nb_all}" includes="DISCLAIMER" fullpath="META-INF/DISCLAIMER"/>
     </jar>
     <taskdef name="createlicensesummary" classname="org.netbeans.nbbuild.extlibs.CreateLicenseSummary" classpath="${nbantext.jar}"/>
   </target>
@@ -149,16 +155,15 @@
         <property name="langtools.jdk.home" value="${java.home}" />
     </ant>
     <mkdir dir="${nb_all}/nbbuild/build/langtools/build/nb" />
-    <javac srcdir="${nb_all}/nbbuild/build/langtools/src/java.compiler/share/classes:${nb_all}/nbbuild/build/langtools/src/jdk.compiler/share/classes:${nb_all}/nbbuild/build/langtools/src/jdk.javadoc/share/classes:${nb_all}/nbbuild/build/langtools/src/jdk.jdeps/share/classes:${nb_all}/nbbuild/build/langtools/build/gensrc/jdk.compiler"
+    <javac srcdir="${nb_all}/nbbuild/build/langtools/src/java.compiler/share/classes:${nb_all}/nbbuild/build/langtools/src/jdk.compiler/share/classes:${nb_all}/nbbuild/build/langtools/src/jdk.jdeps/share/classes:${nb_all}/nbbuild/build/langtools/build/gensrc/jdk.compiler"
            destdir="${nb_all}/nbbuild/build/langtools/build/nb"
-           excludes="**/module-info.java,com/sun/tools/javac/main/JavacToolProvider.java,com/sun/tools/jdeps/**,com/sun/tools/jdeprscan/**,com/sun/tools/javap/Main.java,jdk/javadoc/internal/tool/JavadocToolProvider.java,com/sun/tools/doclets/standard/Standard.java" />
+           excludes="**/module-info.java,com/sun/tools/javac/main/JavacToolProvider.java,com/sun/tools/jdeps/**,com/sun/tools/jdeprscan/**,com/sun/tools/javap/Main.java,jdk/javadoc/internal/tool/JavadocToolProvider.java,com/sun/tools/doclets/standard/Standard.java" source="1.8" target="1.8"/>
     <copy todir="${nb_all}/nbbuild/build/langtools/build/nb">
         <fileset dir="${nb_all}/nbbuild/build/langtools/src/java.compiler/share/classes" includes="**/*.properties"/>
         <fileset dir="${nb_all}/nbbuild/build/langtools/src/jdk.compiler/share/classes" includes="**/*.properties"/>
-        <fileset dir="${nb_all}/nbbuild/build/langtools/src/jdk.javadoc/share/classes" includes="**/*.properties"/>
         <fileset dir="${nb_all}/nbbuild/build/langtools/src/jdk.jdeps/share/classes" includes="**/*.properties"/>
     </copy>
-    <jar destfile="${nb_all}/nbbuild/external/vanilla-javac-api.jar" basedir="${nb_all}/nbbuild/build/langtools/build/nb" includes="javax/**,com/sun/source/**,com/sun/javadoc/**" />
+    <jar destfile="${nb_all}/nbbuild/external/vanilla-javac-api.jar" basedir="${nb_all}/nbbuild/build/langtools/build/nb" includes="javax/**,com/sun/source/**" />
     <jar destfile="${nb_all}/nbbuild/external/vanilla-javac-impl.jar" basedir="${nb_all}/nbbuild/build/langtools/build/nb" excludes="javax/**,com/sun/source/**,com/sun/javadoc/**" />
   </target>
 
@@ -443,8 +448,6 @@ Hg ID:    ${hg.id}
     <delete file="NetBeans-${buildnum}-javadoc-web.zip"/> <!-- XXX why? -->
     <delete file="NetBeans-${buildnum}-javadoc.zip"/> <!-- XXX why? -->
 
-    <property name="nb-extra-files" value="test/**,extra/**"/>
-
     <antcall target="zip-cluster-config" inheritall="true"/>
   </target>
 
@@ -467,6 +470,24 @@ Hg ID:    ${hg.id}
     </nbmerge>
   </target>
 
+  <target name="build-basic" description="Build the NetBeans Basic cluster.">
+      <mkdir dir="${netbeans.dest.dir}"/>
+      <ant dir="." target="build" inheritAll="false">
+          <property name="cluster.config" value="basic"/>
+          <property name="permit.jdk9.builds" value="true"/>
+      </ant>
+  </target>
+
+  <target name="test-basic" description="Test the NetBeans Basic cluster.">
+      <mkdir dir="${netbeans.dest.dir}"/>
+      <ant dir="." target="test" inheritAll="false">
+          <property name="cluster.config" value="basic"/>
+          <property name="test.type" value="test-unit"/>
+          <property name="test-unit-sys-prop.ignore.random.failures" value="true"/>
+          <property name="permit.jdk9.builds" value="true"/>
+          <property name="vanilla.javac.exists" value="true"/>
+      </ant>
+  </target>
 
   <target name="-build-platform" depends="init">
       <delete file="${netbeans.dest.dir}/nb.cluster.platform.built"/>
@@ -582,7 +603,6 @@ Hg ID:    ${hg.id}
             <include name="*.css"/>
             <include name="*.html"/>
             <include name="DEPENDENCIES"/>
-            <include name="DISCLAIMER"/>
             <include name="LICENSE"/>
             <include name="NOTICE"/>
             <include name="licenses/**"/>
@@ -1568,7 +1588,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         
         <delete dir="${netbeans.dest.dir}/licenses" />
         <mkdir dir="${netbeans.dest.dir}/licenses" />
-        
+
         <createlicensesummary licenseStub="${nb_all}/LICENSE" 
                               noticeStub="notice-stub.txt" 
                               report="${nb.build.dir}/createlicensesummary.xml" 
@@ -1578,6 +1598,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                               licenseTargetDir="${netbeans.dest.dir}/licenses"
                               notice="${nb.build.dir}/notice-temp"
                               binary="true"
+                              excludes="${nb-extra-files}"
         />
         
         <concat destfile="${netbeans.dest.dir}/NOTICE">
@@ -1598,7 +1619,6 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         />
         <taskdef name="createdependencies" classname="org.netbeans.nbbuild.extlibs.CreateDependencies" classpath="${nbantext.jar}"/>
         <createdependencies refid="source.dirset"  dependencies="${netbeans.dest.dir}/DEPENDENCIES"/>
-        <copy file="${nb_all}/DISCLAIMER" tofile="${netbeans.dest.dir}/DISCLAIMER" />
     </target>
 
     <target name="-copy-platform-readme" depends="-check-nb-cluster" unless="has.nb.cluster">
@@ -1675,7 +1695,6 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
       <zipfileset file="${nb.build.dir}/NOTICE" />
       <zipfileset file="${nb.build.dir}/LICENSE" />
       <zipfileset dir="${nb.build.dir}/licenses" includes="**" prefix="licenses" /> 
-      <zipfileset file="${nb_all}/DISCLAIMER" />
       <zipfileset file="${source.zip.readme}" fullpath="README.md" erroronmissingarchive="false" />
     </zip>
   </target>

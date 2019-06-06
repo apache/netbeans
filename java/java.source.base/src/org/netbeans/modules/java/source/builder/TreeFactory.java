@@ -80,6 +80,7 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.JavaFileObject;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.modules.java.source.TreeShims;
 import static org.netbeans.modules.java.source.save.PositionEstimator.*;
 
 /**
@@ -803,7 +804,11 @@ public class TreeFactory {
             cases.append((JCCase)t);
         return make.at(NOPOS).Switch((JCExpression)expression, cases.toList());
     }
-    
+
+    public Tree SwitchExpression(ExpressionTree expression, List<? extends CaseTree> caseList) {
+        return TreeShims.SwitchExpression(make.at(NOPOS), expression, caseList);
+    }
+
     public SynchronizedTree Synchronized(ExpressionTree expression, BlockTree block) {
         return make.at(NOPOS).Synchronized((JCExpression)expression, (JCBlock)block);
     }
@@ -841,6 +846,11 @@ public class TreeFactory {
                 tp = make.at(NOPOS).Wildcard(make.at(NOPOS).TypeBoundKind(a.kind), (JCExpression) Type(a.type));
                 break;
             }
+            case ERROR:
+                if (t.hasTag(TypeTag.ERROR)) {
+                    tp = make.at(NOPOS).Ident(((ErrorType) type).tsym.name);
+                    break;
+                }
             case DECLARED:
                 JCExpression clazz = (JCExpression) QualIdent(t.tsym);
                 tp = t.getTypeArguments().isEmpty()
@@ -853,9 +863,6 @@ public class TreeFactory {
                 break;
             case NULL:
                 tp = make.at(NOPOS).Literal(TypeTag.BOT, null);
-                break;
-            case ERROR:
-                tp = make.at(NOPOS).Ident(((ErrorType) type).tsym.name);
                 break;
             default:
                 return make.at(NOPOS).Type((Type)type);

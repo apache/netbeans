@@ -20,6 +20,7 @@
 package org.openide.util;
 
 import java.awt.Component;
+import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
@@ -54,6 +55,7 @@ import javax.imageio.stream.ImageInputStream;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 /** 
@@ -113,12 +115,18 @@ public final class ImageUtilities {
     private static volatile Component dummyIconComponent;
 
     static {
-        Mutex.EVENT.writeAccess(new Runnable() {
-            @Override
-            public void run() {
-                dummyIconComponent = new JLabel();
-            }
-        });
+        /* Could have used Mutex.EVENT.writeAccess here, but it doesn't seem to be available during
+        testing. */
+        if (EventQueue.isDispatchThread()) {
+            dummyIconComponent = new JLabel();
+        } else {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    dummyIconComponent = new JLabel();
+                }
+            });
+        }
     }
     
     private ImageUtilities() {
@@ -973,7 +981,9 @@ public final class ImageUtilities {
         }
 
         public ToolTipImage(Icon delegateIcon, String toolTipText, int imageType) {
-            super(delegateIcon.getIconWidth(), delegateIcon.getIconHeight(), imageType);
+            // BufferedImage must have width/height > 0.
+            super(Math.max(1, delegateIcon.getIconWidth()),
+                    Math.max(1, delegateIcon.getIconHeight()), imageType);
             this.delegateIcon = delegateIcon;
             this.toolTipText = toolTipText;
             this.url = null;
@@ -1044,6 +1054,10 @@ public final class ImageUtilities {
         @Override
         public Object getProperty(String name, ImageObserver observer) {
             if ("url".equals(name)) { // NOI18N
+                /* In some cases it might strictly be more appropriate to return
+                Image.UndefinedProperty rather than null (see Javadoc spec for this method), but
+                retain the existing behavior and use null instead here. That way there won't be a
+                ClassCastException if someone tries to cast to URL. */
                 if (url != null) {
                     return url;
                 } else if (!(delegateIcon instanceof ImageIcon)) {

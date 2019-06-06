@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.gradle.java.nodes;
 
+import java.nio.file.Path;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.spi.nodes.AbstractGradleNodeList;
 import java.util.Arrays;
@@ -75,19 +76,6 @@ public final class SourcesNodeFactory implements NodeFactory {
         @NbBundle.Messages({"# {0} - label of source group", "# {1} - project name", "ERR_WrongSG={0} is owned by project {1}, cannot be used here, see issue #138310 for details."})
         @Override
         public Node node(SourceGroup group) {
-            Project owner = FileOwnerQuery.getOwner(group.getRootFolder());
-            if (owner != project) {
-                if (owner == null) {
-                    //#152418 if project for folder is not found, just look the other way..
-                    Logger.getLogger(SourcesNodeFactory.class.getName()).log(Level.INFO, "Cannot find a project owner for folder {0}", group.getRootFolder()); //NOI18N
-                    return null;
-                }
-                AbstractNode erroNode = new AbstractNode(Children.LEAF);
-                String prjText = ProjectUtils.getInformation(owner).getDisplayName();
-                //TODO: Could this happen? Use Bundle.
-                erroNode.setDisplayName("Error Node: " + group.getDisplayName() + " " + prjText);
-                return erroNode;
-            }
             String name = group.getName();
             Node ret;
             switch(name) {
@@ -98,8 +86,9 @@ public final class SourcesNodeFactory implements NodeFactory {
                     break;
                 default:
                     ret = PackageView.createPackageView(group);
-            }          
-            ret.setShortDescription(FileUtil.getRelativePath(project.getProjectDirectory(), group.getRootFolder()));
+            }
+            Path relPath = FileUtil.toFile(project.getProjectDirectory()).toPath().relativize(FileUtil.toFile(group.getRootFolder()).toPath());
+            ret.setShortDescription(relPath.toString());
             return ret;
         }
         

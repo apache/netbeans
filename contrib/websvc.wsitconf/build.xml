@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project basedir="." default="build" name="contrib/websvc.wsitconf">
+    <import file="../../nbbuild/templates/projectized.xml"/>
+    
+ <property name="resources.dir" value="./src/org/netbeans/modules/websvc/wsitconf/resources/"/>
+
+    <target name="build61modules">
+
+        <delete dir="61src" failonerror="false"/>
+        <delete file="nb61src.zip" failonerror="false"/>
+
+        <condition property="61srcdownloaded">
+          <available file="nb61src.zip"/>
+        </condition>
+        <antcall target="download61src"/>
+
+        <condition property="61srcexpanded">
+          <available file="61src"/>
+        </condition>
+        <antcall target="expand61src"/>
+
+        <delete dir="61src/websvc.wsitmodelext"/>
+        <delete dir="61src/websvc.wsitconf"/>
+
+        <mkdir dir="61src/websvc.wsitmodelext"/>   
+        <copy todir="61src/websvc.wsitmodelext">
+            <fileset dir="../websvc.wsitmodelext"/>
+        </copy> 
+        <mkdir dir="61src/websvc.wsitconf"/>
+        <copy todir="61src/websvc.wsitconf">
+            <fileset dir="../websvc.wsitconf">
+                <include name="nbproject**/*"/>
+                <include name="src**/*"/>
+                <include name="test**/*"/>
+                <include name="build.xml"/>
+                <include name="manifest.mf"/>
+            </fileset>
+        </copy>
+
+        <delete dir="61src/websvc.wsitconf/nbproject/project.xml"/>
+
+        <copy file="61src/websvc.wsitconf/nbproject/project61.xml" tofile="61src/websvc.wsitconf/nbproject/project.xml"/>
+        
+    </target>
+
+    <target name="download61src" unless="61srcdownloaded">
+        <get src="http://smetiste.czech.sun.com/builds/netbeans/6.1/fixes/2008-06-09_03-01-28/zip/netbeans-6.1_fixes-200806090101-src.zip" dest="nb61src.zip"/>
+    </target>
+
+    <target name="expand61src" unless="61srcexpanded">
+        <unzip src="nb61src.zip" dest="61src"/>
+    </target>
+</project>

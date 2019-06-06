@@ -487,11 +487,7 @@ public class JaxWsChildren extends Children.Keys<Object>/* implements MDRChangeL
         List<URL> list = new ArrayList<URL>();
         for (int i=0;i<bindingFiles.length;i++) {
             FileObject fo = bindingsFolder.getFileObject(bindingFiles[i]);
-            try {
-                list.add(fo.getURL());
-            } catch (FileStateInvalidException ex) {
-                // if there is problem no bindings will be added
-            }
+            list.add(fo.toURL());
         }
         URL[] bindings = new URL[list.size()];
         list.<URL>toArray(bindings);
@@ -552,7 +548,7 @@ public class JaxWsChildren extends Children.Keys<Object>/* implements MDRChangeL
                 if (localWsdl!=null) {
                     WsdlWrapperHandler handler = null;
                     try {
-                        handler = WsdlWrapperGenerator.parse(localWsdl.getURL().toExternalForm());
+                        handler = WsdlWrapperGenerator.parse(localWsdl.toURL().toExternalForm());
                     } catch (ParserConfigurationException ex) {
                         ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL,ex);
                     } catch (SAXException ex) {
@@ -561,9 +557,9 @@ public class JaxWsChildren extends Children.Keys<Object>/* implements MDRChangeL
                         ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL,ex);
                     }
                     if (handler != null && !handler.isServiceElement()) {
-                        StreamSource source = new StreamSource(localWsdl.getURL().toExternalForm());
+                        StreamSource source = new StreamSource(localWsdl.toURL().toExternalForm());
                         try {
-                            File wrapperWsdlFile = new File(FileUtil.toFile(localWsdl.getParent()), WsdlWrapperGenerator.getWrapperName(localWsdl.getURL())); //NOI18N
+                            File wrapperWsdlFile = new File(FileUtil.toFile(localWsdl.getParent()), WsdlWrapperGenerator.getWrapperName(localWsdl.toURL())); //NOI18N
 
                             if(!wrapperWsdlFile.exists()) {
                                 try {

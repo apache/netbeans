@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
@@ -117,7 +118,7 @@ public final class PhpUnit {
 
     // suite file
     private static final String SUITE_NAME = "NetBeansSuite"; // NOI18N
-    private static final String SUITE_RUN = "--run=%s"; // NOI18N
+    private static final String SUITE_RUN = "NB_PHPUNIT_RUN"; // NOI18N
     private static final String SUITE_PATH_DELIMITER = ";"; // NOI18N
     private static final String SUITE_REL_PATH = "phpunit/" + SUITE_NAME + ".php"; // NOI18N
 
@@ -243,7 +244,9 @@ public final class PhpUnit {
         if (workingDirectory != null) {
             phpUnit.workDir(workingDirectory);
         }
-        phpUnit.additionalParameters(getTestParams(phpModule, runInfo));
+        TestParams testParams = getTestParams(phpModule, runInfo);
+        phpUnit.additionalParameters(testParams.getParams());
+        phpUnit.environmentVariables(testParams.getEnvironmentVariables());
         ExecutionDescriptor descriptor = getTestDescriptor();
         try {
             if (runInfo.getSessionType() == TestRunInfo.SessionType.TEST) {
@@ -332,8 +335,9 @@ public final class PhpUnit {
         return params;
     }
 
-    private List<String> getTestParams(PhpModule phpModule, TestRunInfo runInfo) throws TestRunException {
+    private TestParams getTestParams(PhpModule phpModule, TestRunInfo runInfo) throws TestRunException {
         List<String> params = createParams(true);
+        Map<String, String> envVariables = Collections.emptyMap();
         params.add(JUNIT_LOG_PARAM);
         params.add(XML_LOG.getAbsolutePath());
         addBootstrap(phpModule, params);
@@ -403,11 +407,13 @@ public final class PhpUnit {
                 //params.add(SUITE_NAME)
                 params.add(getNbSuite().getAbsolutePath());
                 // #254276
-                params.add(PARAM_SEPARATOR);
-                params.add(String.format(SUITE_RUN, joinPaths(startFiles, SUITE_PATH_DELIMITER)));
+                //params.add(PARAM_SEPARATOR);
+                //params.add(String.format(SUITE_RUN, joinPaths(startFiles, SUITE_PATH_DELIMITER)));
+                // NETBEANS-2573
+                envVariables = Collections.singletonMap(SUITE_RUN, joinPaths(startFiles, SUITE_PATH_DELIMITER));
             }
         }
-        return params;
+        return new TestParams(params, envVariables);
     }
 
     private void addBootstrap(PhpModule phpModule, List<String> params) {
@@ -775,6 +781,28 @@ public final class PhpUnit {
 
         public boolean hasOutput() {
             return hasOutput;
+        }
+
+    }
+
+    private static final class TestParams {
+
+        private final List<String> params;
+        private final Map<String, String> environmentVariables;
+
+        public TestParams(List<String> params, Map<String, String> environmentVariables) {
+            assert params != null;
+            assert environmentVariables != null;
+            this.params = params;
+            this.environmentVariables = environmentVariables;
+        }
+
+        public List<String> getParams() {
+            return params;
+        }
+
+        public Map<String, String> getEnvironmentVariables() {
+            return environmentVariables;
         }
 
     }

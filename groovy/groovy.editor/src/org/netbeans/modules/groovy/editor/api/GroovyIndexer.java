@@ -238,14 +238,10 @@ public class GroovyIndexer extends EmbeddingIndexer {
         public void analyze() {
             this.doc = LexUtilities.getDocument(result, true);
 
-            try {
-                url = file.getURL().toExternalForm();
+            url = file.toURL().toExternalForm();
 
-                // Make relative URLs for urls in the libraries
-                url = GroovyIndex.getPreindexUrl(url);
-            } catch (IOException ioe) {
-                Exceptions.printStackTrace(ioe);
-            }
+            // Make relative URLs for urls in the libraries
+            url = GroovyIndex.getPreindexUrl(url);
 
             AnalysisResult ar = result.getStructure();
             List<? extends ASTElement> children = ar.getElements();

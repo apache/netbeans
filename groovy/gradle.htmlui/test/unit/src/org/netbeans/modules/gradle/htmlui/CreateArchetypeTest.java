@@ -19,15 +19,26 @@
 package org.netbeans.modules.gradle.htmlui;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import junit.framework.Test;
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertNotEquals;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectManager;
+import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.gradle.spi.actions.AfterBuildActionHook;
+import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.LocalFileSystem;
+import org.openide.util.lookup.Lookups;
 
 public class CreateArchetypeTest extends NbTestCase {
 
@@ -37,6 +48,16 @@ public class CreateArchetypeTest extends NbTestCase {
         super(name);
     }
 
+    public static Test suite() {
+        return NbModuleSuite.createConfiguration(CreateArchetypeTest.class).
+                enableClasspathModules(true).
+                gui(true).
+                clusters(".*").
+                enableModules(".*").
+                honorAutoloadEager(true).
+                suite();
+    }
+
     @Override
     protected void setUp() throws Exception {
         clearWorkDir();
@@ -44,8 +65,6 @@ public class CreateArchetypeTest extends NbTestCase {
         lfs.setRootDirectory(getWorkDir());
         workFo = lfs.getRoot();
     }
-
-
 
     public void testCreateFromArchetype() throws Exception {
         FileObject dir = FileUtil.getConfigFile("Templates/Project/Gradle/org-netbeans-modules-gradle-htmlui-HtmlJavaApplicationProjectWizard");
@@ -61,7 +80,8 @@ public class CreateArchetypeTest extends NbTestCase {
         assertFile("Main class found", dest, "src", "main", "java", "my", "pkg", "x", "Demo.java").
                 assertPackage("my.pkg.x").
                 assertName("Demo").
-                assertNoLicense();
+                assertNoLicense().
+                appendLine("applyBindings(model);", "System.exit(0);");
         assertFile("index.html found", dest, "src", "main", "webapp", "pages", "index.html").
                 assertNoLicense();
         assertFile("DesktopMain class found", dest, "desktop", "src", "main", "java", "my", "pkg", "x", "DesktopMain.java").
@@ -78,11 +98,55 @@ public class CreateArchetypeTest extends NbTestCase {
                 assertPackage("my.pkg.x").
                 assertName("BrowserMain").
                 assertNoLicense();
+        assertFile("settings include only desktop and web", dest, "settings.gradle").
+                assertText("//include 'app'").
+                assertText("//include 'ios'").
+                assertText("include 'desktop'").
+                assertText("include 'web'");
+
+        Project mainPrj = ProjectManager.getDefault().findProject(dest);
+        assertNotNull("Project found", mainPrj);
+        OpenProjects.getDefault().open(new Project[] { mainPrj }, true);
+
+
+        ActionProvider actions = mainPrj.getLookup().lookup(ActionProvider.class);
+        assertTrue(Arrays.asList(actions.getSupportedActions()).contains(ActionProvider.COMMAND_BUILD));
+        actions.isActionEnabled(ActionProvider.COMMAND_BUILD, mainPrj.getLookup());
+
+
+        invokeCommand(actions, ActionProvider.COMMAND_BUILD, mainPrj);
+        assertFile("JAR created", dest, "build", "libs", "dest-1.0-SNAPSHOT.jar");
+
+        FileObject desktopFo = mainPrj.getProjectDirectory().getFileObject("desktop");
+        assertNotNull("desktop dir found", desktopFo);
+        Project desktopPrj = ProjectManager.getDefault().findProject(desktopFo);
+        assertNotNull("desktop project found", desktopPrj);
+
+        invokeCommand(actions, ActionProvider.COMMAND_RUN, desktopPrj);
+        assertFile("JAR created", dest, "desktop", "build", "libs", "desktop.jar");
+
+        FileObject webFo = mainPrj.getProjectDirectory().getFileObject("web");
+        assertNotNull("web dir found", webFo);
+        Project webPrj = ProjectManager.getDefault().findProject(webFo);
+        assertNotNull("web project found", webPrj);
+
+        invokeCommand(actions, ActionProvider.COMMAND_RUN, webPrj);
+        assertFile("Main script created", dest, "web", "build", "web", "bck2brwsr.js");
+    }
+
+    protected void invokeCommand(ActionProvider actions, String cmd, Project prj) throws IllegalArgumentException, InterruptedException {
+        CountDownLatch waiter = new CountDownLatch(1);
+        AfterBuildActionHook notifier = (action, context, res, out) -> {
+            waiter.countDown();
+        };
+        actions.invokeAction(cmd, Lookups.fixed(prj, notifier));
+        waiter.await();
     }
 
     private AssertContent assertFile(String msg, FileObject root, String... path) throws IOException {
         FileObject at = root;
         for (String element : path) {
+            at.refresh();
             FileObject next = at.getFileObject(element);
             if (next == null) {
                 fail(msg +
@@ -142,6 +206,13 @@ public class CreateArchetypeTest extends NbTestCase {
         private AssertContent assertText(String txt) {
             assertNotEquals(txt + " found in\n" + data, -1, data.indexOf(txt));
             return this;
+        }
+
+        private void appendLine(String pivot, String text) throws IOException {
+            String newData = data.replace(pivot, pivot + "\n" + text);
+            try (OutputStream os = fo.getOutputStream()) {
+                os.write(newData.getBytes(StandardCharsets.UTF_8));
+            }
         }
     }
 }

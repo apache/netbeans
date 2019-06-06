@@ -22,13 +22,12 @@
 
 <project basedir="." default="netbeans" name="jnlpinstaller">
 
-    <property name="nb_all" location="../.."/>
+    <property name="nb_all" location="../../.."/>
     <import file="${nb_all}/nbbuild/default.xml" />
     
-    <property name="jnlp-api.file.location" value="../external/jnlp.jar"/>
-    <property name="jnlp-servlet.file.location" value="../external/jnlp-servlet.jar"/>
+    <property name="jnlp-api.file.location" value="external/jnlp-definitions-7.0.jar"/>
+    <property name="jnlp-servlet.file.location" value="external/webstart-jnlp-servlet-1.0-beta-7.jar"/>
 
-    
     <property name="jnlp.signjar.alias" value="jnlp" />
     <property name="jnlp.signjar.keystore" location="default.keystore" />
     <property name="jnlp.signjar.password" value="netbeans" />

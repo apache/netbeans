@@ -29,12 +29,10 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.web.clientproject.api.json.JsonFile;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.MIMEResolver;
 
 /**
  * Class representing project's <tt>package.json</tt> file.
  */
-@MIMEResolver.Registration(displayName = "package.json", resource = "../resources/npm-resolver.xml", position = 127)
 public final class PackageJson {
 
     public static final String FILE_NAME = "package.json"; // NOI18N

@@ -70,7 +70,6 @@ public class TextmateLexer implements Lexer<TextmateTokenId>{
             while ((read = li.read()) != LexerInput.EOF && read != '\n');
             if (!forceReadLine) {
                 if (li.readLength() != 0) {
-                    System.err.println(li.readText().toString());
                     lineLen = li.readText().length();
                     currentOffset = 0;
                     ITokenizeLineResult tokenized = grammar.tokenizeLine(li.readText().toString(), state);

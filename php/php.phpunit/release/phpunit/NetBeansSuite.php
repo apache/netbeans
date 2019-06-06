@@ -43,10 +43,10 @@ if (!class_exists('PHPUnit_Framework_TestSuite')) {
  */
 class NetBeansSuite extends PHPUnit_Framework_TestSuite {
     /**
-     * The name of the parameter followed by equals sign ("=") of the file or directory to be run by PHPUnit.
+     * The name of the environment variable containing the file or directory to be run by PHPUnit.
      * @see toRun()
      */
-    const RUN = "--run=";
+    const ENV_RUN = "NB_PHPUNIT_RUN";
 
     /**
      * Suite factory.
@@ -69,26 +69,19 @@ class NetBeansSuite extends PHPUnit_Framework_TestSuite {
     }
 
     /**
-     * Tries to find {@link #RUN) in CLI parameters and returns array of files to be runj by PHPUnit
-     * or throws Exception if no such parameter found or directory/file does not exist.
+     * Tries to find {@link #ENV_RUN) in environment variables and returns array of files to be run by PHPUnit
+     * or throws Exception if no such variable found or directory/file does not exist.
      *
      * @access private
      * @static
      *
      * @return array an array of files to be run by PHPUnit
-     * @see RUN
+     * @see ENV_RUN
      */
     private static function toRun() {
-        $argv = isset($_SERVER['argv']) ? $_SERVER['argv'] : array();
-        $run = null;
-        foreach ($argv as $arg) {
-            if (preg_match("/^\"?".self::RUN."(.+?)\"?$/", $arg, $sub)) {
-                $run = $sub[1];
-                break;
-            }
-        }
+        $run = getenv(self::ENV_RUN);
         if ($run === null) {
-            throw new Exception(sprintf("No argument to run (%s) found.", self::RUN));
+            throw new Exception(sprintf("No environment variable to run (%s) found.", self::ENV_RUN));
         }
         $result = array();
         foreach (explode(";", $run) as $part) {

@@ -37,11 +37,11 @@ import org.openide.LifecycleManager;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.Repository;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.UserCancelException;
-import org.openide.util.Utilities;
 
 /**
  * Main class for NetBeans when run in GUI mode.
@@ -203,7 +203,7 @@ public final class Main extends Object {
     if (jdkHome == null) {
         jdkHome = System.getProperty("java.home");  // NOI18N
 
-        if (!Utilities.isMac()) {
+        if (!BaseUtilities.isMac()) {
             jdkHome += File.separator + "..";  // NOI18N
         }
 

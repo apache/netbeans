@@ -242,6 +242,18 @@ public class ImageUtilitiesTest extends TestCase {
         assertEquals("Tool tip text should be empty, but it is " + str, expected, str);
     }
 
+    public void testLoadImageCached() {
+        Image image1 = ImageUtilities.loadImage("org/openide/util/testimage.png", false);
+        Image image2 = ImageUtilities.loadImage("org/openide/util/testimage.png", false);
+        assertSame("Expected same instance", image1, image2);
+    }
+
+    public void testLoadImageIconCached() {
+        ImageIcon icon1 = ImageUtilities.loadImageIcon("org/openide/util/testimage.png", false);
+        ImageIcon icon2 = ImageUtilities.loadImageIcon("org/openide/util/testimage.png", false);
+        assertSame("Expected same instance", icon1, icon2);
+    }
+
     public void testConversions() {
         /* Note: these are rather implementation-oriented tests. Implementation changes in
         ImageUtilities (addition or removal of caches etc.) might require this test to be
@@ -275,18 +287,18 @@ public class ImageUtilitiesTest extends TestCase {
 
             /* An Icon/Image loaded via loadImage can be freely passed through icon2Image/image2Icon
             without a new instance being created. */
-            assertEquals("Should be same instance",
+            assertSame("Should be same instance",
                     image,
                     icon2Image(imageIcon));
 
-            assertEquals("Should be same instance",
+            assertSame("Should be same instance",
                     icon2Image(imageIcon),
                     icon2Image(imageIcon));
 
             if (!useExternalImage) {
               /* In the useExternalImage case, the original instance will be converted to a
               ToolTipImage, so we won't have the same instance here. */
-              assertEquals("Should be same instance",
+              assertSame("Should be same instance",
                       image,
                       icon2Image(image2Icon(image)));
             }
@@ -298,12 +310,12 @@ public class ImageUtilitiesTest extends TestCase {
                     image2Icon(icon2Image(imageIcon)));
 
             Icon iconFromImage2Icon = image2Icon(image);
-            assertEquals("Should be same instance",
+            assertSame("Should be same instance",
                     iconFromImage2Icon,
                     image2Icon(icon2Image(iconFromImage2Icon)));
 
             Icon iconFromImageIconRoundabout = image2Icon(icon2Image(imageIcon));
-            assertEquals("Should be same instance",
+            assertSame("Should be same instance",
                     iconFromImageIconRoundabout,
                     image2Icon(icon2Image(iconFromImageIconRoundabout)));
 

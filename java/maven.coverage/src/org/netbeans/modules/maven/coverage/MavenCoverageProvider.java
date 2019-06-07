@@ -125,7 +125,7 @@ public final class MavenCoverageProvider implements CoverageProvider {
         if (hasPlugin(GROUP_JOCOCO, ARTIFACT_JOCOCO)) {
             String outputDirectory = PluginPropertyUtils.getReportPluginProperty(p, GROUP_JOCOCO, ARTIFACT_JOCOCO, "outputDirectory", null);
             if (outputDirectory == null) {
-                outputDirectory = PluginPropertyUtils.getPluginProperty(p, GROUP_JOCOCO, ARTIFACT_JOCOCO, "outputDirectory", null, null);
+                outputDirectory = PluginPropertyUtils.getPluginProperty(p, GROUP_JOCOCO, ARTIFACT_JOCOCO, "outputDirectory", "report", null);
             }
             if (outputDirectory == null) {
                 try {
@@ -136,10 +136,6 @@ public final class MavenCoverageProvider implements CoverageProvider {
                 }
             }
             File outputFile = FileUtil.normalizeFile(new File(outputDirectory));
-            if (!outputFile.exists()) {
-                // NETBEANS-1768 checking the plugin executions if the outputDirectory is customised
-                outputDirectory = PluginPropertyUtils.getPluginProperty(p, GROUP_JOCOCO, ARTIFACT_JOCOCO, "outputDirectory", "report", null);
-            }
             return FileUtil.normalizeFile(new File(outputDirectory, "jacoco.xml"));
         } else {
         String outputDirectory = PluginPropertyUtils.getReportPluginProperty(p, GROUP_COBERTURA, ARTIFACT_COBERTURA, "outputDirectory", null);

@@ -43,18 +43,23 @@
       </subant>
       <exec executable="${java.home}/bin/keytool" failonerror="true">
           <arg value="-exportcert"/>
-          <arg line="-keystore ${netbeans.bundled.ks}"/>
+          <arg value="-keystore" />
+          <arg value="${netbeans.bundled.ks}"/>
           <arg line="-alias netbeans-bundled"/>
-          <arg line="-storepass ${netbeans.bundled.ks}"/>
-          <arg line="-file ${netbeans.bundled.cert}"/>
+          <arg value="-storepass" />
+          <arg value="${netbeans.bundled.ks}"/>
+          <arg value="-file" />
+          <arg value="${netbeans.bundled.cert}"/>
       </exec>
       <copy overwrite="true" file="ide.ks" tofile="${build.dir}/ide.ks"/>
       <exec executable="${java.home}/bin/keytool" failonerror="true">
           <arg value="-importcert"/>
           <arg value="-noprompt"/>
-          <arg line="-keystore ${build.dir}/ide.ks"/>
+          <arg value="-keystore" />
+          <arg value="${build.dir}/ide.ks"/>
           <arg line="-storepass open4all"/>
-          <arg line="-file ${netbeans.bundled.cert}"/>
+          <arg value="-file" />
+          <arg value="${netbeans.bundled.cert}"/>
       </exec>
       <delete file="${netbeans.bundled.ks}"/>
       <delete file="${netbeans.bundled.cert}"/>

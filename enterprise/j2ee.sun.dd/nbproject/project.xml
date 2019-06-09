@@ -131,6 +131,8 @@
                 <friend>org.netbeans.modules.j2ee.sun.ws7</friend>
                 <friend>org.netbeans.modules.glassfish.javaee</friend>
                 <friend>org.netbeans.modules.glassfish.eecommon</friend>
+                <friend>org.netbeans.modules.payara.jakartaee</friend>
+                <friend>org.netbeans.modules.payara.eecommon</friend>
                 <friend>org.netbeans.modules.visualweb.ejb</friend>
                 <package>org.netbeans.modules.j2ee.sun.dd.api</package>
                 <package>org.netbeans.modules.j2ee.sun.dd.api.app</package>

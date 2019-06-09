@@ -308,6 +308,7 @@
             <public-packages>
                 <package>org.netbeans.modules.gradle.java.api</package>
                 <package>org.netbeans.modules.gradle.java.api.output</package>
+                <package>org.netbeans.modules.gradle.java.spi.debug</package>
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>gradle/org.jacoco.core.jar</runtime-relative-path>

@@ -34,21 +34,21 @@ public class PayaraWizardProvider implements ServerWizardProvider {
     public static PayaraWizardProvider createEe6() {
         return new PayaraWizardProvider(
                 NbBundle.getMessage(PayaraWizardProvider.class,
-                        "STR_V3_FAMILY_NAME", new Object[]{}) // NOI18N
+                        "STR_PF_FAMILY_NAME", new Object[]{}) // NOI18N
         );
     }
 
     public static PayaraWizardProvider createEe7() {
         return new PayaraWizardProvider(
                 NbBundle.getMessage(PayaraWizardProvider.class,
-                        "STR_V4_FAMILY_NAME", new Object[]{}) // NOI18N
+                        "STR_PF_FAMILY_NAME", new Object[]{}) // NOI18N
         );
     }
 
     public static PayaraWizardProvider createEe8() {
         return new PayaraWizardProvider(
                 NbBundle.getMessage(PayaraWizardProvider.class,
-                        "STR_V5_FAMILY_NAME", new Object[]{}) // NOI18N
+                        "STR_PF_FAMILY_NAME", new Object[]{}) // NOI18N
         );
     }
     

@@ -30,6 +30,8 @@ import org.netbeans.modules.payara.spi.PayaraModule;
 import org.netbeans.modules.payara.spi.Utils;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionRegistration;
 import org.openide.awt.HtmlBrowser.URLDisplayer;
 import org.openide.nodes.Node;
 import org.openide.util.HelpCtx;
@@ -40,6 +42,8 @@ import org.openide.util.actions.NodeAction;
  *
  * @author Peter Williams
  */
+@ActionID(id = "org.netbeans.modules.payara.common.actions.ViewAdminConsoleAction", category = "Payara")
+@ActionRegistration(displayName = "#CTL_ViewAdminConsoleAction", lazy = false)
 public class ViewAdminConsoleAction extends NodeAction {
 
     @Override

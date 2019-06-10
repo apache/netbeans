@@ -28,6 +28,8 @@ import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 import org.netbeans.modules.payara.spi.PayaraModule;
 import org.netbeans.modules.payara.spi.PayaraModule.ServerState;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionRegistration;
 import org.openide.util.Lookup;
 import org.openide.util.actions.NodeAction;
 
@@ -37,6 +39,8 @@ import org.openide.util.actions.NodeAction;
  * 
  * @author Peter Williams
  */
+@ActionID(id = "org.netbeans.modules.payara.common.actions.ViewServerLogAction", category = "Payara")
+@ActionRegistration(displayName = "#CTL_ViewServerLogAction", lazy = false)
 public class ViewServerLogAction extends NodeAction {
 
     private static final String SHOW_SERVER_LOG_ICONBASE =

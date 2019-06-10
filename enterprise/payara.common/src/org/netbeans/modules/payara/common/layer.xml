@@ -21,12 +21,6 @@
 -->
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
-    <folder name="Actions">
-        <folder name="Payara">
-            <file name="org-netbeans-modules-payara-common-actions-ViewAdminConsoleAction.instance"/>
-            <file name="org-netbeans-modules-payara-common-actions-ViewServerLogAction.instance"/>
-        </folder>
-    </folder>
     <folder name="Servers">
         <file name="PayaraInstanceProvider.instance">
             <attr name="instanceCreate" methodvalue="org.netbeans.modules.payara.common.PayaraInstanceProvider.getProvider"/>
@@ -34,16 +28,10 @@
             <attr name="instanceOf" stringvalue="org.netbeans.spi.server.ServerInstanceProvider"/>
         </file>
         <file name="org-netbeans-modules-payara-common-wizards-PayaraWizardProvider.instance">
-            <attr name="instanceCreate" methodvalue="org.netbeans.modules.payara.common.wizards.PayaraWizardProvider.createEe6"/>
-            <attr name="instanceClass" stringvalue="org.netbeans.modules.payara.common.wizards.PayaraWizardProvider"/>
-            <attr name="instanceOf" stringvalue="org.netbeans.spi.server.ServerWizardProvider"/>
-            <attr name="displayName" bundlevalue="org.netbeans.modules.payara.common.wizards.Bundle#STR_FAMILY_NAME"/>
-        </file>
-        <file name="org-netbeans-modules-payara-common-wizards-PayaraWizardProvider.instance">
             <attr name="instanceCreate" methodvalue="org.netbeans.modules.payara.common.wizards.PayaraWizardProvider.createEe8"/>
             <attr name="instanceClass" stringvalue="org.netbeans.modules.payara.common.wizards.PayaraWizardProvider"/>
             <attr name="instanceOf" stringvalue="org.netbeans.spi.server.ServerWizardProvider"/>
-            <attr name="displayName" bundlevalue="org.netbeans.modules.payara.common.wizards.Bundle#STR_FAMILY_NAME"/>
+            <attr name="displayName" bundlevalue="org.netbeans.modules.payara.common.wizards.Bundle#STR_PF_FAMILY_NAME"/>
         </file>
     </folder>
 </filesystem>

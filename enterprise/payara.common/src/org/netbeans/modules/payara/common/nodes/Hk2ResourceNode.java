@@ -16,15 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.payara.common.nodes;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import javax.swing.Action;
+import org.netbeans.modules.payara.common.ui.ConnectionPoolCustomizer;
+import org.netbeans.modules.payara.common.nodes.actions.ConnectionPoolAdvancedAttributesAction;
 import org.netbeans.modules.payara.spi.PayaraModule;
 import org.netbeans.modules.payara.spi.ResourceDecorator;
 import org.netbeans.modules.payara.spi.ResourceDesc;
 import org.netbeans.modules.payara.spi.ServerUtilities;
 import org.openide.nodes.Children;
 import org.openide.util.Lookup;
+import org.openide.util.actions.SystemAction;
 
 /**
  *
@@ -32,13 +38,16 @@ import org.openide.util.Lookup;
  */
 public class Hk2ResourceNode extends Hk2ItemNode {
 
-    public Hk2ResourceNode(final Lookup lookup, final ResourceDesc resource, 
+    private final Class customizer;
+
+    public Hk2ResourceNode(final Lookup lookup, final ResourceDesc resource,
             final ResourceDecorator decorator, final Class customizer) {
         super(Children.LEAF, lookup, resource.getName(), decorator);
+        this.customizer = customizer;
         setDisplayName(resource.getName());
         setShortDescription("<html>name: " + resource.getName() + "</html>");
 
-        if(decorator.canUnregister()) {
+        if (decorator.canUnregister()) {
             getCookieSet().add(new Hk2Cookie.Unregister(lookup,
                     resource.getName(), resource.getCommandType(),
                     decorator.getCmdPropertyName(),
@@ -61,5 +70,20 @@ public class Hk2ResourceNode extends Hk2ItemNode {
             }
 
         }
+        if (customizer == ConnectionPoolCustomizer.class) {
+            // add the ConnectionPoolAdvancedAttributes cookie
+            getCookieSet().add(new Hk2Cookie.ConnectionPoolAdvancedAttributes(
+                    lookup, getDisplayName(),
+                    resource.getCommandType(), customizer));
+        }
+    }
+
+    @Override
+    public Action[] getActions(boolean context) {
+        List<Action> actions = new ArrayList<>(Arrays.asList(super.getActions(context)));
+        if (customizer == ConnectionPoolCustomizer.class) {
+            actions.add(SystemAction.get(ConnectionPoolAdvancedAttributesAction.class));
+        }
+        return actions.toArray(new Action[actions.size()]);
     }
 }

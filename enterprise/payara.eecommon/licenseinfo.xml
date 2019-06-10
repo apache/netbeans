@@ -17,9 +17,12 @@
     KIND, either express or implied.  See the License for the
     specific language governing permissions and limitations
     under the License.
-    
+
 -->
-<!DOCTYPE payara-web-app PUBLIC "-//Payara.fish//DTD Payara Server 4 Servlet 3.0//EN" "https://docs.payara.fish/schemas/payara-web-app_4.dtd">
-<payara-web-app error-url="">
-  <class-loader delegate="true"/>
-</payara-web-app>
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/payara/eecommon/dd/resources/payara-web-app_4.dtd</file>
+        <license ref="CDDL-1.1" />
+        <comment type="CATEGORY_B" />
+    </fileset>
+</licenseinfo>

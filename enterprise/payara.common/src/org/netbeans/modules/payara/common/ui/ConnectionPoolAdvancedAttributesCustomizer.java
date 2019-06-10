@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.payara.extended.ui;
+package org.netbeans.modules.payara.common.ui;
 
 import java.awt.Component;
 import java.util.Arrays;
@@ -69,9 +69,9 @@ public class ConnectionPoolAdvancedAttributesCustomizer extends BasePanel {
         slowQueryLogThresholdLayeredPane2.add(slowQueryLogThresholdTextField, java.awt.BorderLayout.CENTER);
 
         secondsLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        secondsLabel.setText(org.openide.util.NbBundle.getMessage(ConnectionPoolAdvancedAttributesCustomizer.class, "ConnectionPoolAdvancedAttributesCustomizer.secondsLabel.text")); // NOI18N
+        secondsLabel.setText(org.openide.util.NbBundle.getMessage(ConnectionPoolAdvancedAttributesCustomizer.class, "ConnectionPoolAdvancedAttributesCustomizer.secondUnitLabel.text")); // NOI18N
         secondsLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
-        secondsLabel.setPreferredSize(new java.awt.Dimension(45, 14));
+        secondsLabel.setPreferredSize(new java.awt.Dimension(65, 14));
         slowQueryLogThresholdLayeredPane2.add(secondsLabel, java.awt.BorderLayout.LINE_END);
 
         javax.swing.GroupLayout slowQueryLogThresholdLayeredPaneLayout = new javax.swing.GroupLayout(slowQueryLogThresholdLayeredPane);
@@ -79,16 +79,16 @@ public class ConnectionPoolAdvancedAttributesCustomizer extends BasePanel {
         slowQueryLogThresholdLayeredPaneLayout.setHorizontalGroup(
             slowQueryLogThresholdLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(slowQueryLogThresholdLayeredPaneLayout.createSequentialGroup()
-                .addComponent(slowQueryLogThresholdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(slowQueryLogThresholdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(slowQueryLogThresholdLayeredPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
+                .addComponent(slowQueryLogThresholdLayeredPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)
                 .addContainerGap())
         );
         slowQueryLogThresholdLayeredPaneLayout.setVerticalGroup(
             slowQueryLogThresholdLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(slowQueryLogThresholdLayeredPaneLayout.createSequentialGroup()
                 .addGroup(slowQueryLogThresholdLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(slowQueryLogThresholdLayeredPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                    .addComponent(slowQueryLogThresholdLayeredPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, Short.MAX_VALUE)
                     .addComponent(slowQueryLogThresholdLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -99,7 +99,7 @@ public class ConnectionPoolAdvancedAttributesCustomizer extends BasePanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(logJDBCCallsLabel, org.openide.util.NbBundle.getMessage(ConnectionPoolAdvancedAttributesCustomizer.class, "ConnectionPoolAdvancedAttributesCustomizer.logJDBCCallsLabel.text")); // NOI18N
 
-        logJDBCCallsCheckBox.setText(org.openide.util.NbBundle.getMessage(ConnectionPoolAdvancedAttributesCustomizer.class, "ConnectionPoolAdvancedAttributesCustomizer.log-jdbc-calls.text")); // NOI18N
+        logJDBCCallsCheckBox.setText(org.openide.util.NbBundle.getMessage(ConnectionPoolAdvancedAttributesCustomizer.class, "ConnectionPoolAdvancedAttributesCustomizer.logJDBCCallsCheckbox.text")); // NOI18N
         logJDBCCallsCheckBox.setToolTipText(org.openide.util.NbBundle.getMessage(ConnectionPoolAdvancedAttributesCustomizer.class, "ConnectionPoolAdvancedAttributesCustomizer.logJDBCCallsLayeredPane.toolTipText")); // NOI18N
         logJDBCCallsCheckBox.setName("log-jdbc-calls"); // NOI18N
 
@@ -108,7 +108,7 @@ public class ConnectionPoolAdvancedAttributesCustomizer extends BasePanel {
         logJDBCCallsLayeredPaneLayout.setHorizontalGroup(
             logJDBCCallsLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(logJDBCCallsLayeredPaneLayout.createSequentialGroup()
-                .addComponent(logJDBCCallsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(logJDBCCallsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(logJDBCCallsCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -140,16 +140,16 @@ public class ConnectionPoolAdvancedAttributesCustomizer extends BasePanel {
         sqlTraceListenersLayeredPaneLayout.setHorizontalGroup(
             sqlTraceListenersLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(sqlTraceListenersLayeredPaneLayout.createSequentialGroup()
-                .addComponent(sqlTraceListenersLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(sqlTraceListenersLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sqlTraceListenersLayeredPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
+                .addComponent(sqlTraceListenersLayeredPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)
                 .addContainerGap())
         );
         sqlTraceListenersLayeredPaneLayout.setVerticalGroup(
             sqlTraceListenersLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(sqlTraceListenersLayeredPaneLayout.createSequentialGroup()
                 .addGroup(sqlTraceListenersLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(sqlTraceListenersLayeredPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                    .addComponent(sqlTraceListenersLayeredPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, Short.MAX_VALUE)
                     .addComponent(sqlTraceListenersLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );

@@ -56,6 +56,8 @@ import org.netbeans.modules.payara.common.nodes.actions.UndeployModuleCookie;
 import org.netbeans.modules.payara.common.nodes.actions.UnregisterResourceCookie;
 import org.netbeans.modules.payara.common.utils.Util;
 import org.netbeans.modules.payara.common.ui.BasePanel;
+import org.netbeans.modules.payara.common.nodes.actions.ConnectionPoolAdvancedAttributesCookie;
+import org.netbeans.modules.payara.common.ui.ConnectionPoolAdvancedAttributesCustomizer;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -265,6 +267,120 @@ public class Hk2Cookie {
     }
 
     /**
+     * Connection Pool advanced attributes cookie.
+     */
+    static class ConnectionPoolAdvancedAttributes
+            extends Hk2Cookie.Cookie implements ConnectionPoolAdvancedAttributesCookie {
+
+        /** Resources properties query prefix */
+        private static final String QUERY_PREFIX = "resources.*";
+
+        /** Properties query common item element. */
+        private static final String QUERY_ITEM = ".*";
+
+        /** Properties query common item separator. */
+        private static final String QUERY_SEPARATOR = ".";
+
+        /** Resource properties query. */
+        private final String query;
+
+        /** Properties customizer. */
+        final Class customizer;
+
+        /**
+         * Creates an instance of cookie for editing details of module.
+         * <p/>
+         * @param lookup    Lookup containing {@see CommonServerSupport}.
+         * @param name      Name of resource to undeploy.
+         * @param cmdSuffix Resource related command suffix.
+         */
+        ConnectionPoolAdvancedAttributes(final Lookup lookup, final String name,
+                final String cmdSuffix, final Class customizer) {
+            super(lookup, name);
+            final int nameLen = name != null ? name.length() : 0;
+            StringBuilder sb = new StringBuilder(QUERY_PREFIX.length()
+                    + QUERY_SEPARATOR.length() + nameLen + QUERY_ITEM.length());
+            sb.append(QUERY_PREFIX);
+            if (nameLen > 0
+                    && !PayaraModule.JDBC_RESOURCE.equals(cmdSuffix)) {
+                sb.append(QUERY_SEPARATOR);
+                sb.append(name);
+                sb.append(QUERY_ITEM);
+            }
+            query = sb.toString();
+            this.customizer = customizer;
+        }
+
+        @Override
+        public void openCustomizer() {
+            final BasePanel retVal = new ConnectionPoolAdvancedAttributesCustomizer();
+            retVal.initializeUI();
+            RequestProcessor.getDefault().post(new Runnable() {
+
+                // fetch the data for the BasePanel
+                @Override
+                public void run() {
+                    if (instance != null) {
+                        Future<ResultMap> future = ServerAdmin.<ResultMap>exec(
+                                instance, new CommandGetProperty(query));
+                        Map<String, String> value;
+                        try {
+                            ResultMap result = future.get();
+                            value = result.getValue();
+                        } catch (InterruptedException | ExecutionException ie) {
+                            Logger.getLogger("payara")
+                                    .log(Level.INFO, ie.getMessage(), ie);
+                            value = new HashMap<String, String>();
+                        }
+                        retVal.initializeData(name, value);
+                    }
+                }
+            });
+            DialogDescriptor dd = new DialogDescriptor(retVal,
+                    NbBundle.getMessage(this.getClass(), "TITLE_CONNECTION_POOL_ADVANCED_ATTRIBUTES", name),
+                    false,
+                    new ActionListener() {
+
+                        private void appendErrorReport(StringBuilder sb, final String key, final String value) {
+                            if (sb.length() > 0) {
+                                sb.append(", ");
+                            }
+                            sb.append(key);
+                            sb.append("=");
+                            sb.append(value != null ? value : "<null>");
+                        }
+
+                        @Override
+                        public void actionPerformed(ActionEvent event) {
+                            if (event.getSource().equals(NotifyDescriptor.OK_OPTION)) {
+                                if (instance != null) {
+                                    Map<String, String> properties = retVal.getData();
+                                    Set<String> keys = properties.keySet();
+                                    StringBuilder sb = new StringBuilder();
+                                    for (String key : keys) {
+                                        String value = properties.get(key);
+                                        Future<ResultString> future = ServerAdmin.<ResultString>exec(
+                                                instance, new CommandSetProperty(key, value));
+                                        try {
+                                            ResultString result = future.get();
+                                        } catch (InterruptedException | ExecutionException ie) {
+                                            appendErrorReport(sb, key, value);
+                                        }
+                                    }
+                                    if (sb.length() > 0) {
+                                        Exceptions.printStackTrace(new PartialCompletionException(sb.toString()));
+                                    }
+                                }
+                            }
+                        }
+                    });
+            Dialog d = DialogDisplayer.getDefault().createDialog(dd);
+            d.setVisible(true);
+        }
+
+    }
+
+    /**
      * Undeploy node cookie.
      */
     static class Undeploy
@@ -432,7 +548,7 @@ public class Hk2Cookie {
         public RequestProcessor.Task refresh(String expected, String unexpected) {
             if (children instanceof Refreshable) {
                 ((Refreshable) children).updateKeys();
-                boolean foundExpected = expected == null ? true : false;
+                boolean foundExpected = expected == null;
                 boolean foundUnexpected = false;
                 for (Node node : children.getNodes()) {
                     if (!foundExpected

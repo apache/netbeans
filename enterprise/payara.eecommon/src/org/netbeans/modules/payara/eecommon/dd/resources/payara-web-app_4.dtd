@@ -867,5 +867,3 @@ The version-identifier element contains the version information. The value is
 Payara element to ignore servlet initializers
 -->
 <!ELEMENT container-initializer-enabled (#PCDATA)>
-
-

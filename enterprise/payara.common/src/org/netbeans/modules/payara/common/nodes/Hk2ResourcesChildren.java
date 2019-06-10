@@ -32,7 +32,6 @@ import org.netbeans.modules.payara.common.ui.ConnectorConnectionPoolCustomizer;
 import org.netbeans.modules.payara.common.ui.ConnectorCustomizer;
 import org.netbeans.modules.payara.common.ui.JavaMailCustomizer;
 import org.netbeans.modules.payara.common.ui.JdbcResourceCustomizer;
-import org.netbeans.modules.payara.extended.nodes.Hk2ExtResourceNode;
 import org.netbeans.modules.payara.spi.Decorator;
 import org.netbeans.modules.payara.spi.ResourceDecorator;
 import org.netbeans.modules.payara.spi.ResourceDesc;
@@ -84,7 +83,7 @@ public class Hk2ResourcesChildren extends Children.Keys<Object> implements Refre
                         List<ResourceDesc> reslourcesList
                                 = ResourceDesc.getResources(commonSupport.getInstance(), childtype);
                         for (ResourceDesc resource : reslourcesList) {
-                            keys.add(new Hk2ExtResourceNode(lookup, resource, (ResourceDecorator) decorator, getCustomizer(childtype)));
+                            keys.add(new Hk2ResourceNode(lookup, resource, (ResourceDecorator) decorator, getCustomizer(childtype)));
                         }
                     } catch (Exception ex) {
                         Logger.getLogger("payara").log(Level.INFO, ex.getLocalizedMessage(), ex);
@@ -157,7 +156,7 @@ public class Hk2ResourcesChildren extends Children.Keys<Object> implements Refre
                                 List<ResourceDesc> reslourcesList
                                         = ResourceDesc.getResources(commonSupport.getInstance(), type);
                                 for (ResourceDesc resource : reslourcesList) {
-                                    keys.add(new Hk2ExtResourceNode(lookup, resource, (ResourceDecorator) decorator, customizer));
+                                    keys.add(new Hk2ResourceNode(lookup, resource, (ResourceDecorator) decorator, customizer));
                                 }
                             }
                         } catch (Exception ex) {

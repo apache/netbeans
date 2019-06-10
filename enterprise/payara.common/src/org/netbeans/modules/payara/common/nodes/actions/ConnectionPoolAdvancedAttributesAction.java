@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.payara.extended.nodes.actions;
+package org.netbeans.modules.payara.common.nodes.actions;
 
 import org.openide.nodes.Node;
 import org.openide.util.HelpCtx;

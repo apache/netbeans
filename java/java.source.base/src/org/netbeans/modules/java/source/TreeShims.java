@@ -35,6 +35,7 @@ import java.util.List;
 public class TreeShims {
 
     public static final String SWITCH_EXPRESSION = "SWITCH_EXPRESSION"; //NOI18N
+    public static final String RULE_CASE_KIND = "RULE"; //NOI18N
 
     public static List<? extends ExpressionTree> getExpressions(CaseTree node) {
         try {
@@ -51,6 +52,17 @@ public class TreeShims {
         try {
             Method getBody = CaseTree.class.getDeclaredMethod("getBody");
             return (Tree) getBody.invoke(node);
+        } catch (NoSuchMethodException ex) {
+            return null;
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+
+    public static String getCaseKind(CaseTree node) {
+        try {
+            Method getCaseKind = CaseTree.class.getDeclaredMethod("getCaseKind");
+            return getCaseKind.invoke(node).toString();
         } catch (NoSuchMethodException ex) {
             return null;
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {

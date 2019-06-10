@@ -28,8 +28,12 @@
         <file>src/org/netbeans/modules/payara/jakartaee/resources/jdbc.gif</file>
         <file>src/org/netbeans/modules/payara/jakartaee/resources/jms.gif</file>
         <file>src/org/netbeans/modules/payara/jakartaee/resources/jndi.gif</file>
-        <file>src/org/netbeans/modules/payara/jakartaee/resources/server.png</file>
         <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/payara/jakartaee/resources/server.png</file>
+        <license ref="CDDL-1.1" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>
 </licenseinfo>

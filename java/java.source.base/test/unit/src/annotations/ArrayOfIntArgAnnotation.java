@@ -16,28 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package annotations;
 
-package org.netbeans.modules.projectapi.nb;
+public interface ArrayOfIntArgAnnotation extends java.lang.annotation.Annotation {
 
-import org.netbeans.spi.project.ProjectManagerImplementation;
-import org.openide.util.Lookup;
-
-/**
- *
- * @author Tomas Zezula
- */
-public final class NbProjectManagerAccessor {
-
-    private NbProjectManagerAccessor() {}
-
-    public static void reset() {
-        final ProjectManagerImplementation impl = Lookup.getDefault().lookup(ProjectManagerImplementation.class);
-        if (impl instanceof NbProjectManager) {
-            ((NbProjectManager)impl).reset();
-        } else {
-            throw new IllegalStateException(String.format(
-                "No NbProjectManager instance, found: %s.", //NOI18N
-                impl));
-        }
-    }
+    public abstract int[] value();
 }

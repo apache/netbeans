@@ -16,28 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package usages;
 
-package org.netbeans.modules.projectapi.nb;
+import annotations.TestEnum;
+import java.util.List;
 
-import org.netbeans.spi.project.ProjectManagerImplementation;
-import org.openide.util.Lookup;
-
-/**
- *
- * @author Tomas Zezula
- */
-public final class NbProjectManagerAccessor {
-
-    private NbProjectManagerAccessor() {}
-
-    public static void reset() {
-        final ProjectManagerImplementation impl = Lookup.getDefault().lookup(ProjectManagerImplementation.class);
-        if (impl instanceof NbProjectManager) {
-            ((NbProjectManager)impl).reset();
-        } else {
-            throw new IllegalStateException(String.format(
-                "No NbProjectManager instance, found: %s.", //NOI18N
-                impl));
-        }
+public class MethodArrayAnnotations {
+    @annotations.ArrayOfAnnotationArgAnnotation(
+        @annotations.ArrayOfStringArgAnnotation(value = "")
+    )
+    @annotations.ArrayOfEnumArgAnnotation(TestEnum.X)
+    @annotations.ArrayOfClassArgAnnotation (List.class)
+    public void test() {
     }
 }

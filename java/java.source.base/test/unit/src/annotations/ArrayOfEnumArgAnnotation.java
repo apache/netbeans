@@ -17,27 +17,10 @@
  * under the License.
  */
 
-package org.netbeans.modules.projectapi.nb;
+package annotations;
 
-import org.netbeans.spi.project.ProjectManagerImplementation;
-import org.openide.util.Lookup;
-
-/**
- *
- * @author Tomas Zezula
- */
-public final class NbProjectManagerAccessor {
-
-    private NbProjectManagerAccessor() {}
-
-    public static void reset() {
-        final ProjectManagerImplementation impl = Lookup.getDefault().lookup(ProjectManagerImplementation.class);
-        if (impl instanceof NbProjectManager) {
-            ((NbProjectManager)impl).reset();
-        } else {
-            throw new IllegalStateException(String.format(
-                "No NbProjectManager instance, found: %s.", //NOI18N
-                impl));
-        }
-    }
+public @interface ArrayOfEnumArgAnnotation {
+    
+    TestEnum[] value();
+    
 }

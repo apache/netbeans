@@ -58,6 +58,35 @@ public class ConvertToPatternInstanceOfTest extends NbTestCase {
                               "}\n");
     }
 
+    public void testWithElse() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    private int test(Object o) {\n" +
+                       "        if (o instanceof String) {\n" +
+                       "            String s = (String) o;\n" +
+                       "            return s.length();\n" +
+                       "        } else {\n" +
+                       "            return -1;\n" +
+                       "        }\n" +
+                       "    }\n" +
+                       "}\n")
+                .run(ConvertToPatternInstanceOf.class)
+                .findWarning("3:8-3:10:verifier:" + Bundle.ERR_ConvertToPatternInstanceOf())
+                .applyFix()
+                .assertCompilable()
+                .assertOutput("package test;\n" +
+                              "public class Test {\n" +
+                              "    private int test(Object o) {\n" +
+                              "        if (o instanceof String s) {\n" +
+                              "            return s.length();\n" +
+                              "        } else {\n" +
+                              "            return -1;\n" +
+                              "        }\n" +
+                              "    }\n" +
+                              "}\n");
+    }
+
     public void testNoSoSimple() throws Exception {
         HintTest.create()
                 .input("package test;\n" +
@@ -76,8 +105,34 @@ public class ConvertToPatternInstanceOfTest extends NbTestCase {
                 .assertOutput("package test;\n" +
                               "public class Test {\n" +
                               "    private int test(Object o) {\n" +
-                              "        if (o instanceof String $75) {\n" +
-                              "            return ($75).length();\n" + //XXX: parentheses
+                              "        if (o instanceof String string) {\n" +
+                              "            return string.length();\n" +
+                              "        }\n" +
+                              "        return -1;\n" +
+                              "    }\n" +
+                              "}\n");
+    }
+
+    public void testNoSoSimpleNameClash() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    private int test(Object o, String string) {\n" +
+                       "        if (o instanceof String) {\n" +
+                       "            return ((String) o).length();\n" +
+                       "        }\n" +
+                       "        return -1;\n" +
+                       "    }\n" +
+                       "}\n")
+                .run(ConvertToPatternInstanceOf.class)
+                .findWarning("3:8-3:10:verifier:" + Bundle.ERR_ConvertToPatternInstanceOf())
+                .applyFix()
+                .assertCompilable()
+                .assertOutput("package test;\n" +
+                              "public class Test {\n" +
+                              "    private int test(Object o, String string) {\n" +
+                              "        if (o instanceof String string1) {\n" +
+                              "            return string1.length();\n" +
                               "        }\n" +
                               "        return -1;\n" +
                               "    }\n" +

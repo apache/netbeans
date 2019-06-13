@@ -24,18 +24,25 @@ import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeMirror;
+import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.WorkingCopy;
+import org.netbeans.modules.java.hints.errors.Utilities;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
@@ -61,11 +68,11 @@ import org.openide.util.NbBundle;
 public class ConvertToPatternInstanceOf {
     
     @TriggerPatterns({
-        @TriggerPattern(value="if ($expr instanceof $typeI) { $statements$;}"),
+        @TriggerPattern(value="if ($expr instanceof $typeI) { $statements$;} else $else$;"),
     })
     public static ErrorDescription trivial(HintContext ctx) {
         //XXX: sideeffects in $expr
-        if (!MatcherUtilities.matches(ctx, ctx.getPath(), "if ($expr instanceof $typeI) { $typeV $var = ($typeC) $expr; $other$;}", true)) {
+        if (!MatcherUtilities.matches(ctx, ctx.getPath(), "if ($expr instanceof $typeI) { $typeV $var = ($typeC) $expr; $other$;} else $else$;", true)) {
             Set<TreePath> convertPath = new HashSet<>();
             new TreePathScanner<Void, Void>() {
                 @Override
@@ -77,7 +84,11 @@ public class ConvertToPatternInstanceOf {
                 }
             }.scan(ctx.getPath(), null);
             if (!convertPath.isEmpty()) {
-                Fix fix = new FixImpl(ctx.getInfo(), ctx.getPath(), "$" + ctx.getInfo().getTrees().getSourcePositions().getStartPosition(ctx.getPath().getCompilationUnit(), ctx.getPath().getLeaf()), false, convertPath).toEditorFix();
+                TreePath typeI = ctx.getVariables().get("$typeI");
+                TypeMirror typeITM = ctx.getInfo().getTrees().getTypeMirror(typeI);
+                List<String> varNameCandidates = org.netbeans.modules.editor.java.Utilities.varNamesSuggestions(typeITM, ElementKind.LOCAL_VARIABLE, EnumSet.noneOf(Modifier.class), null, null, ctx.getInfo().getTypes(), ctx.getInfo().getElements(), Collections.emptyList(), CodeStyle.getDefault(ctx.getInfo().getFileObject()));
+                String varName = Utilities.makeNameUnique(ctx.getInfo(), ctx.getInfo().getTrees().getScope(ctx.getPath()), varNameCandidates.get(0));
+                Fix fix = new FixImpl(ctx.getInfo(), ctx.getPath(), varName, false, convertPath).toEditorFix();
 
                 return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_ConvertToPatternInstanceOf(), fix);
             }
@@ -132,6 +143,9 @@ public class ConvertToPatternInstanceOf {
             StatementTree thenBlock = removeFirst ? wc.getTreeMaker().removeBlockStatement((BlockTree) bt, 0) : bt;
             wc.rewrite(it, wc.getTreeMaker().If(wc.getTreeMaker().Parenthesized(cond), thenBlock, it.getElseStatement()));
             replaceOccurrences.stream().map(tph -> tph.resolve(wc)).forEach(tp -> {
+                if (!removeFirst && tp.getParentPath().getLeaf().getKind() == Kind.PARENTHESIZED) {
+                    tp = tp.getParentPath();
+                }
                 wc.rewrite(tp.getLeaf(), wc.getTreeMaker().Identifier(varName));
             });
         }

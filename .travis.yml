@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 language: java
-install: sudo apt-get install -y ant junit4
+install: sudo apt-get install -y ant ant-optional
 before_script:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start || echo No X11

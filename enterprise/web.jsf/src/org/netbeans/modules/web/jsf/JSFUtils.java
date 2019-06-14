@@ -78,6 +78,7 @@ public class JSFUtils {
     public static final String JSF_2_0__API_SPECIFIC_CLASS = "javax.faces.application.ProjectStage"; //NOI18N
     public static final String JSF_2_1__API_SPECIFIC_CLASS = "javax.faces.component.TransientStateHelper"; //NOI18N
     public static final String JSF_2_2__API_SPECIFIC_CLASS = "javax.faces.flow.Flow"; //NOI18N
+    public static final String JSF_2_3__API_SPECIFIC_CLASS = "javax.faces.push.PushContext"; //NOI18N
     public static final String MYFACES_SPECIFIC_CLASS = "org.apache.myfaces.webapp.StartupServletContextListener"; //NOI18N
 
     //constants for web.xml

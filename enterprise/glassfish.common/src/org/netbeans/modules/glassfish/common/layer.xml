@@ -40,5 +40,11 @@
             <attr name="instanceOf" stringvalue="org.netbeans.spi.server.ServerWizardProvider"/>
             <attr name="displayName" bundlevalue="org.netbeans.modules.glassfish.common.wizards.Bundle#STR_V3_FAMILY_NAME"/>
         </file>
+        <file name="org-netbeans-modules-glassfish-common-wizards-GlassfishWizardProvider.instance">
+            <attr name="instanceCreate" methodvalue="org.netbeans.modules.glassfish.common.wizards.GlassfishWizardProvider.createEe8"/>
+            <attr name="instanceClass" stringvalue="org.netbeans.modules.glassfish.common.wizards.GlassfishWizardProvider"/>
+            <attr name="instanceOf" stringvalue="org.netbeans.spi.server.ServerWizardProvider"/>
+            <attr name="displayName" bundlevalue="org.netbeans.modules.glassfish.common.wizards.Bundle#STR_V3_FAMILY_NAME"/>
+        </file>
     </folder>
 </filesystem>

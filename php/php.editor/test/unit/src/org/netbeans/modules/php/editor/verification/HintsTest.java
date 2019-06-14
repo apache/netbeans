@@ -115,6 +115,11 @@ public class HintsTest extends PHPHintsTestBase {
         checkHints(new UnusedUsesHint(), "testUnusedUsesHint.php");
     }
 
+    public void testUnusedUsesHintWithTypedProperties() throws Exception {
+        // PHP 7.4
+        checkHints(new UnusedUsesHint(), "testUnusedUsesHintWithTypedProperties.php");
+    }
+
     public void testAmbiguousComparisonHint() throws Exception {
         checkHints(new AmbiguousComparisonHint(), "testAmbiguousComparisonHint.php");
     }
@@ -716,8 +721,7 @@ public class HintsTest extends PHPHintsTestBase {
     }
 
 
-   //~ Inner classes
-
+    //~ Inner classes
     private static final class ImplementAbstractMethodsHintErrorStub extends ImplementAbstractMethodsHintError {
 
         private final PhpVersion phpVersion;

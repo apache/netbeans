@@ -29,6 +29,7 @@ import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
+import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
@@ -89,8 +90,23 @@ public final class PHP74UnhandledError extends UnhandledErrorRule {
             super.visit(node);
         }
 
+        @Override
+        public void visit(FieldsDeclaration node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            checkTypedProperties(node);
+            super.visit(node);
+        }
+
         private void checkNullCoalescingAssignmet(Assignment node) {
             if (node.getOperator() == Assignment.Type.COALESCE_EQUAL) { // ??=
+                createError(node);
+            }
+        }
+
+        private void checkTypedProperties(FieldsDeclaration node) {
+            if (node.getFieldType() != null) {
                 createError(node);
             }
         }

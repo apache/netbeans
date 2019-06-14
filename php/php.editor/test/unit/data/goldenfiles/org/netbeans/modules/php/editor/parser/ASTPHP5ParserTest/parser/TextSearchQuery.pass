@@ -18249,6 +18249,8 @@
                 </Interfaces>
                 <Block start='20971' end='21542' isCurly='true'>
                     <FieldsDeclaration start='20977' end='20994' modifier='public'>
+                        <FieldType>
+                        </FieldType>
                         <VariableNames>
                             <Variable start='20981' end='20984' isDollared='true'>
                                 <Identifier start='20982' end='20984' name='op'/>
@@ -18345,6 +18347,8 @@
                 </Interfaces>
                 <Block start='21624' end='22179' isCurly='true'>
                     <FieldsDeclaration start='21630' end='21647' modifier='public'>
+                        <FieldType>
+                        </FieldType>
                         <VariableNames>
                             <Variable start='21634' end='21637' isDollared='true'>
                                 <Identifier start='21635' end='21637' name='op'/>
@@ -18621,6 +18625,8 @@
                 </Interfaces>
                 <Block start='22241' end='22346' isCurly='true'>
                     <FieldsDeclaration start='22247' end='22263' modifier='public'>
+                        <FieldType>
+                        </FieldType>
                         <VariableNames>
                             <Variable start='22251' end='22254' isDollared='true'>
                                 <Identifier start='22252' end='22254' name='op'/>
@@ -18669,6 +18675,8 @@
                 </Interfaces>
                 <Block start='22420' end='22602' isCurly='true'>
                     <FieldsDeclaration start='22426' end='22450' modifier='public'>
+                        <FieldType>
+                        </FieldType>
                         <VariableNames>
                             <Variable start='22430' end='22433' isDollared='true'>
                                 <Identifier start='22431' end='22433' name='op'/>
@@ -18770,6 +18778,8 @@
                 </Interfaces>
                 <Block start='22675' end='22855' isCurly='true'>
                     <FieldsDeclaration start='22681' end='22703' modifier='public'>
+                        <FieldType>
+                        </FieldType>
                         <VariableNames>
                             <Variable start='22685' end='22688' isDollared='true'>
                                 <Identifier start='22686' end='22688' name='op'/>
@@ -18871,6 +18881,8 @@
                 </Interfaces>
                 <Block start='22924' end='23097' isCurly='true'>
                     <FieldsDeclaration start='22930' end='22948' modifier='public'>
+                        <FieldType>
+                        </FieldType>
                         <VariableNames>
                             <Variable start='22934' end='22937' isDollared='true'>
                                 <Identifier start='22935' end='22937' name='op'/>
@@ -18969,6 +18981,8 @@
                 </Interfaces>
                 <Block start='23189' end='23377' isCurly='true'>
                     <FieldsDeclaration start='23195' end='23213' modifier='public'>
+                        <FieldType>
+                        </FieldType>
                         <VariableNames>
                             <Variable start='23199' end='23202' isDollared='true'>
                                 <Identifier start='23200' end='23202' name='op'/>
@@ -19057,6 +19071,8 @@
                 </Interfaces>
                 <Block start='23452' end='23563' isCurly='true'>
                     <FieldsDeclaration start='23458' end='23481' modifier='public'>
+                        <FieldType>
+                        </FieldType>
                         <VariableNames>
                             <Variable start='23462' end='23465' isDollared='true'>
                                 <Identifier start='23463' end='23465' name='op'/>
@@ -19117,6 +19133,8 @@
                 </Interfaces>
                 <Block start='23674' end='23751' isCurly='true'>
                     <FieldsDeclaration start='23680' end='23703' modifier='public'>
+                        <FieldType>
+                        </FieldType>
                         <VariableNames>
                             <Variable start='23684' end='23687' isDollared='true'>
                                 <Identifier start='23685' end='23687' name='op'/>
@@ -19162,6 +19180,8 @@
                 </Interfaces>
                 <Block start='23825' end='24011' isCurly='true'>
                     <FieldsDeclaration start='23831' end='23853' modifier='public'>
+                        <FieldType>
+                        </FieldType>
                         <VariableNames>
                             <Variable start='23835' end='23838' isDollared='true'>
                                 <Identifier start='23836' end='23838' name='op'/>
@@ -19269,6 +19289,8 @@
                 </Interfaces>
                 <Block start='24102' end='24676' isCurly='true'>
                     <FieldsDeclaration start='24108' end='24124' modifier='public'>
+                        <FieldType>
+                        </FieldType>
                         <VariableNames>
                             <Variable start='24112' end='24115' isDollared='true'>
                                 <Identifier start='24113' end='24115' name='op'/>
@@ -19983,6 +20005,8 @@
                 </Interfaces>
                 <Block start='25898' end='27238' isCurly='true'>
                     <FieldsDeclaration start='25904' end='25920' modifier='public'>
+                        <FieldType>
+                        </FieldType>
                         <VariableNames>
                             <Variable start='25908' end='25911' isDollared='true'>
                                 <Identifier start='25909' end='25911' name='op'/>
@@ -20392,6 +20416,8 @@
                 </Interfaces>
                 <Block start='27358' end='28188' isCurly='true'>
                     <FieldsDeclaration start='27364' end='27379' modifier='public'>
+                        <FieldType>
+                        </FieldType>
                         <VariableNames>
                             <Variable start='27368' end='27371' isDollared='true'>
                                 <Identifier start='27369' end='27371' name='op'/>

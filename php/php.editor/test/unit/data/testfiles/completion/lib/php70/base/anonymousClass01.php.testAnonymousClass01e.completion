@@ -1,6 +1,9 @@
 Code completion result for source line:
 public f|unction testAnon() {
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    Firm                            [PUBLIC]   My
 ------------------------------------
+CLASS      FloatClass                      [PUBLIC]   scalarTypeHints.php
 KEYWORD    final                                      null
+KEYWORD    float                                      null
 KEYWORD    function                                   null

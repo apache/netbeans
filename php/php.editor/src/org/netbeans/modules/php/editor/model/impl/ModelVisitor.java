@@ -120,6 +120,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ReturnStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.Scalar;
 import org.netbeans.modules.php.editor.parser.astnodes.Scalar.Type;
 import org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.SingleUseStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticConstantAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticFieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticMethodInvocation;
@@ -129,7 +130,6 @@ import org.netbeans.modules.php.editor.parser.astnodes.TraitDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TraitMethodAliasDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TryStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.UseStatement;
-import org.netbeans.modules.php.editor.parser.astnodes.SingleUseStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
 import org.netbeans.modules.php.editor.parser.astnodes.VariableBase;
@@ -416,10 +416,11 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         if (parent instanceof FunctionName) {
             occurencesBuilder.prepare(Kind.FUNCTION, namespaceName, fileScope);
         } else if (parent instanceof Program
-                || parent instanceof Block) {
+                || parent instanceof Block
+                || parent instanceof FieldsDeclaration) {
             // return type
             Kind[] kinds = {Kind.CLASS, Kind.IFACE};
-            occurencesBuilder.prepare(kinds, namespaceName, fileScope);
+            occurencesBuilder.prepare(kinds, namespaceName, modelBuilder.getCurrentScope());
         } else if (parent instanceof ClassInstanceCreation) {
             if (((ClassInstanceCreation) parent).isAnonymous()) {
                 // superclass, ifaces
@@ -1046,16 +1047,7 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
                 }
             }
             if (parameterName instanceof Variable) {
-                if (parameterType instanceof NullableType) {
-                    NullableType nullableType = (NullableType) parameterType;
-                    if (nullableType.getType() instanceof NamespaceName) {
-                        parameterType = (NamespaceName) nullableType.getType();
-                    }
-                }
-                if (parameterType instanceof NamespaceName) {
-                    Kind[] kinds = {Kind.CLASS, Kind.IFACE};
-                    occurencesBuilder.prepare(kinds, (NamespaceName) parameterType, fncScope);
-                }
+                prepareType(parameterType, fncScope);
                 prepareVariable((Variable) parameterName, fncScope);
             }
             super.visit(node);
@@ -1544,6 +1536,20 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
             if (type.equals(Comment.Type.TYPE_VARTYPE)) {
                 checkComments(comment);
             }
+        }
+    }
+
+    private void prepareType(Expression type, Scope scope) {
+        Expression namespaceName = type;
+        if (namespaceName instanceof NullableType) {
+            NullableType nullableType = (NullableType) namespaceName;
+            if (nullableType.getType() instanceof NamespaceName) {
+                namespaceName = (NamespaceName) nullableType.getType();
+            }
+        }
+        if (namespaceName instanceof NamespaceName) {
+            Kind[] kinds = {Kind.CLASS, Kind.IFACE};
+            occurencesBuilder.prepare(kinds, (NamespaceName) namespaceName, scope);
         }
     }
 

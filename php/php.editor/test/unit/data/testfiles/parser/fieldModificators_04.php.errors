@@ -1,10 +1,10 @@
 [[47,56]-Syntax error
  unexpected:	protected
  after:	public
- expected:	variable, function, const, static, abstract, final] 47-56:Syntax error
+ expected:	identifier, variable, function, const, array, callable, namespace, \, define, ?, static, abstract, final] 47-56:Syntax error
  unexpected:	protected
  after:	public
- expected:	variable, function, const, static, abstract, final
+ expected:	identifier, variable, function, const, array, callable, namespace, \, define, ?, static, abstract, final
 [[66,67]-POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	}] 66-67:POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	}

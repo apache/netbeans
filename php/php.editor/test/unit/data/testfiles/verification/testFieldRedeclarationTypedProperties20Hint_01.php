@@ -1,3 +1,4 @@
+<?php
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,18 +17,43 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.editor.model;
 
-import java.util.Collection;
+class A
+{
+    public int $foo;
+    private string $foo = "foo";
+    protected int $foo;
+    var bool $foo;
+    public static ?string $foo;
+    private static ?array $foo;
+    protected static iterable $foo;
+    static MyClass $foo;
+    public int $FOO;
 
-/**
- *
- * @author Radek Matous
- */
-public interface FieldElement extends ClassMemberElement, TypeAssignments {
+}
 
-    Collection<? extends String> getDefaultTypeNames();
+abstract class B
+{
+    private int $bar;
+    protected ?string $bar;
+    var bool $bar;
+    public string $bar = 'bar';
+    public static array $bar;
+    private static ?array $bar;
+    protected static float $bar;
+    static self $bar;
+    public parent $BAR;
+}
 
-    boolean isAnnotation();
-
+trait T
+{
+    protected int $baz;
+    public string $baz;
+    var ?MyClass $baz;
+    private object $baz;
+    public static ?string $baz;
+    protected static \Foo\Bar\MyClass $baz;
+    private static ?\Foo\MyClass $baz;
+    static int $baz;
+    protected bool $BAZ;
 }

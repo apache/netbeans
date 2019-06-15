@@ -50,7 +50,7 @@ public final class Icons {
             return null;
         }
         else {
-            return new ImageIcon (img);
+            return ImageUtilities.image2Icon (img);
         }
     }
             
@@ -101,7 +101,7 @@ public final class Icons {
 	    default:	
 	        img = null;
         }
-	return img == null ? null : new ImageIcon (img);
+	return img == null ? null : ImageUtilities.image2Icon (img);
         
     }
     

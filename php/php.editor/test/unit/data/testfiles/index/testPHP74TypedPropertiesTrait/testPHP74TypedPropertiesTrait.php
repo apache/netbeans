@@ -17,6 +17,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+/**
+ * @param int $a
+ * @property double $b Description
+ * @property-read string $c
+ * @property-write string $d Description
+ */
 trait TypedPropertiesTrait {
 
     public $withoutType;

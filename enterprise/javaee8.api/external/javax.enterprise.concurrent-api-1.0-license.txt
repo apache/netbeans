@@ -1,6 +1,6 @@
 Name: Javax Concurrent API
 Version: 1.0
-License: CDDL-1.1 + GPL2 w/ CPE
+License: CDDL-1.1
 Description: Javax Concurrent API 1.0
 Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.enterprise.concurrent/javax.enterprise.concurrent-api/1.0)
 

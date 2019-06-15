@@ -1,6 +1,6 @@
 Name: JMS API
 Version: 2.0.1
-License: CDDL-1.1 + GPLv2 with classpath exception
+License: CDDL-1.1
 Description: JMS API 2.0.1
 Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.jms/javax.jms-api/2.0.1)
 

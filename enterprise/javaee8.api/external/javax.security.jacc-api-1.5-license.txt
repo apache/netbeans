@@ -1,6 +1,6 @@
 Name: Java Authorization Contract For Containers API
 Version: 1.5
-License: CDDL-1.1 + GPLv2 with classpath exception
+License: CDDL-1.1
 Description: Java Authorization Contract For Containers API 1.5
 Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.security.jacc/javax.security.jacc-api/1.5)
 

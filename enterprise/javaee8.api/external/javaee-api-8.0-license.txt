@@ -1,6 +1,6 @@
 Name: JavaEE API 8.0
 Version: 8.0
-License: CDDL-1.1 + GPLv2 with classpath exception
+License: CDDL-1.1
 Description: JavaEE API 8.0
 Origin: GlassFish Community (https://mvnrepository.com/artifact/javax/javaee-api/8.0)
 

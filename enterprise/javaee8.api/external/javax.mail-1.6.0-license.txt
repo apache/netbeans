@@ -1,6 +1,6 @@
 Name: JavaMail API
 Version: 1.6.0
-License: CDDL-1.1 + GPLv2 with classpath exception
+License: CDDL-1.1
 Description: JavaMail API 1.6.0
 Origin: GlassFish Community (https://mvnrepository.com/artifact/com.sun.mail/javax.mail/1.6.0)
 

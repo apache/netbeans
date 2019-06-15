@@ -1,6 +1,6 @@
 Name: Javax Management J2EE API
 Version: 1.1.1
-License: CDDL-1.1 + GPLv2 with classpath exception
+License: CDDL-1.1
 Description: Javax Management J2EE API 1.1.1
 Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.management.j2ee/javax.management.j2ee-api/1.1.1)
 

@@ -1,10 +1,10 @@
 Name: Java Batch API
 Version: 1.0.1
-License: The Apache Software License, Version 2.0
+License: Apache-2.0
 Description: Java Batch API 1.0.1
 Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.batch/javax.batch-api/1.0.1)
 
-Apache License
+                                 Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
 

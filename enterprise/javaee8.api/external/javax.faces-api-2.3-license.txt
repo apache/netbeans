@@ -1,6 +1,6 @@
 Name: JavaServer Faces API
 Version: 2.3
-License: CDDL-1.1 + GPL
+License: CDDL-1.1
 Description: JavaServer Faces API 2.3
 Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.faces/javax.faces-api/2.3)
 

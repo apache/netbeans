@@ -1,6 +1,6 @@
 Name: Javax Annotation API
 Version: 1.2
-License: CDDL-1.1 + GPLv2 with classpath exception
+License: CDDL-1.1
 Description: Javax Annotation API 1.2
 Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api/1.2)
 

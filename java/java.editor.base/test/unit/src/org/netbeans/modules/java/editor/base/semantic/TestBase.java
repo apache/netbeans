@@ -40,6 +40,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.CountDownLatch;
+import javax.lang.model.SourceVersion;
+import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.Task;
@@ -52,6 +54,7 @@ import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.spi.editor.hints.ErrorDescription;
+import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -159,7 +162,29 @@ public abstract class TestBase extends NbTestCase {
     }
 
     protected void performTest(Input input, final Performer performer, boolean doCompileRecursively, Validator validator) throws Exception {
-        SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/java/editor/resources/layer.xml"}, new Object[] {new MIMEResolverImpl()});
+        SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/java/editor/resources/layer.xml"}, new Object[] {
+            new MIMEResolverImpl(),
+            new CompilerOptionsQueryImplementation() {
+                @Override
+                public CompilerOptionsQueryImplementation.Result getOptions(FileObject file) {
+                    if (testSourceFO == file) {
+                        return new CompilerOptionsQueryImplementation.Result() {
+                            @Override
+                            public List<? extends String> getArguments() {
+                                return extraOptions;
+                            }
+
+                            @Override
+                            public void addChangeListener(ChangeListener listener) {}
+
+                            @Override
+                            public void removeChangeListener(ChangeListener listener) {}
+                        };
+                    }
+                    return null;
+                }
+            }
+        });
         
 	FileObject scratch = SourceUtilsTestUtil.makeScratchDir(this);
 	FileObject cache   = scratch.createFolder("cache");
@@ -270,6 +295,14 @@ public abstract class TestBase extends NbTestCase {
 
     protected final void setSourceLevel(String sourceLevel) {
         this.sourceLevel = sourceLevel;
+    }
+
+    private List<String> extraOptions = new ArrayList<>();
+
+    protected final void enablePreview() {
+        String svName = SourceVersion.latest().name();
+        setSourceLevel(svName.substring(svName.indexOf('_') + 1));
+        extraOptions.add("--enable-preview");
     }
 
     private boolean showPrependedText;

@@ -1085,6 +1085,18 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             return super.visitLiteral(node, p);
         }
 
+        @Override
+        public Void scan(Tree tree, Void p) {
+            if (tree != null && "YIELD".equals(tree.getKind().name())) {
+                tl.moveToOffset(sourcePositions.getStartPosition(info.getCompilationUnit(), tree));
+                Token t = firstIdentifierToken("yield"); //NOI18N
+                if (t != null) {
+                    contextKeywords.add(t);
+                }
+            }
+            return super.scan(tree, p);
+        }
+
     }
 
     public static interface ErrorDescriptionSetter {

@@ -50,6 +50,9 @@ public class ConvertToTextBlock {
             return null;
         }
         String text = getTextOrNull(ctx.getPath());
+        if (text == null) {
+            return null;
+        }
         Fix fix = new FixImpl(ctx.getInfo(), ctx.getPath(), text).toEditorFix();
         return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_ConvertToTextBlock(), fix);
     }
@@ -95,7 +98,7 @@ public class ConvertToTextBlock {
 
         @Override
         protected void performRewrite(TransformationContext ctx) {
-            ctx.getWorkingCopy().rewrite(ctx.getPath().getLeaf(), ctx.getWorkingCopy().getTreeMaker().Literal(text.split("\n")));
+            ctx.getWorkingCopy().rewrite(ctx.getPath().getLeaf(), ctx.getWorkingCopy().getTreeMaker().Literal(text.split("\n", -1)));
             //perform the required transformation
         }
     }

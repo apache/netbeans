@@ -52,4 +52,50 @@ public class ConvertToTextBlockTest {
                         "    }\n" +
                         "}\n");
     }
+
+    @Test
+    public void testNewLineAtEnd() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    public static void main(String[] args) {\n" +
+                       "        assert args[0].equals(\"{\\n\" +\n" +
+                       "                              \"    int i = 0;\\n\" +\n" +
+                       "                              \"}\\n\");\n" +
+                       "    }\n" +
+                       "}\n")
+                .sourceLevel(SourceVersion.latest().name())
+                .options("--enable-preview")
+                .run(ConvertToTextBlock.class)
+                .findWarning("3:30-3:37:verifier:" + Bundle.ERR_ConvertToTextBlock())
+                .applyFix()
+                .assertCompilable()
+                //TODO: change to match expected output
+                .assertOutput("package test;\n" +
+                        "public class Test {\n" +
+                        "    public static void main(String[] args) {\n" +
+                        "        assert args[0].equals(\"\"\"\n" +
+                        "                              {\n" +
+                        "                                  int i = 0;\n" +
+                        "                              }\n" +
+                        "                              \"\"\");\n" +
+                        "    }\n" +
+                        "}\n");
+    }
+
+    @Test
+    public void testOnlyLiterals() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    public int test() {\n" +
+                       "        return c() + c();\n" +
+                       "    }\n" +
+                       "    private int c() { return 0; }\n" +
+                       "}\n")
+                .sourceLevel(SourceVersion.latest().name())
+                .options("--enable-preview")
+                .run(ConvertToTextBlock.class)
+                .assertWarnings();
+    }
 }

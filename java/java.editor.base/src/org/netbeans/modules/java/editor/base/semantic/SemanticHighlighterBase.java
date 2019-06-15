@@ -326,7 +326,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             return true;
         
         if (computeUnusedImports) {
-            setter.setHighlights(doc, extraColoring);
+            setter.setHighlights(doc, extraColoring, v.preText);
         }
 
         setter.setColorings(doc, newColoring);
@@ -414,6 +414,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         private Map<Tree, List<Token>> tree2Tokens;
         private List<Token> contextKeywords;
         private List<Pair<int[], Coloring>> extraColoring;
+        private Map<int[], String> preText;
         private TokenList tl;
         private long memberSelectBypass = -1;        
         private SourcePositions sourcePositions;
@@ -428,6 +429,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             tree2Tokens = new IdentityHashMap<Tree, List<Token>>();
             contextKeywords = new ArrayList<>();
             extraColoring = new ArrayList<>();
+            preText = new HashMap<>();
 
             tl = new TokenList(info, doc, cancel);
             
@@ -1098,6 +1100,24 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                     pos += line.length() + 1;
                 }
             }
+
+            TreePath pp = getCurrentPath().getParentPath();
+            if (pp.getLeaf() != null &&
+                pp.getLeaf().getKind() == Kind.METHOD_INVOCATION) {
+                MethodInvocationTree inv = (MethodInvocationTree) pp.getLeaf();
+                int pos = inv.getArguments().indexOf(node);
+                if (pos != (-1)) {
+                    Element invoked = info.getTrees().getElement(pp);
+                    if (invoked != null && (invoked.getKind() == ElementKind.METHOD || invoked.getKind() == ElementKind.CONSTRUCTOR)) {
+                        long start = sourcePositions.getStartPosition(info.getCompilationUnit(), node);
+                        long end = start + 1;
+                        ExecutableElement invokedMethod = (ExecutableElement) invoked;
+                        pos = Math.min(pos, invokedMethod.getParameters().size() - 1);
+                        preText.put(new int[] {(int) start, (int) end},
+                                    invokedMethod.getParameters().get(pos).getSimpleName() + ":");
+                    }
+                }
+            }
             return super.visitLiteral(node, p);
         }
 
@@ -1118,7 +1138,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
 
     public static interface ErrorDescriptionSetter {
         
-        public void setHighlights(Document doc, Collection<Pair<int[], Coloring>> highlights);
+        public void setHighlights(Document doc, Collection<Pair<int[], Coloring>> highlights, Map<int[], String> preText);
         public void setColorings(Document doc, Map<Token, Coloring> colorings);
     }    
 }

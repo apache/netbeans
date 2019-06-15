@@ -40,6 +40,7 @@ public final class HighlightImpl {
     private int start;
     private int end;
     private Collection<ColoringAttributes> colorings;
+    private String textPrepend;
     
     public HighlightImpl(Document doc, Token token, Collection<ColoringAttributes> colorings) {
         this.doc       = doc;
@@ -55,6 +56,14 @@ public final class HighlightImpl {
         this.colorings = colorings;
     }
     
+    public HighlightImpl(Document doc, int start, int end, String textPrepend) {
+        this.doc = doc;
+        this.start = start;
+        this.end = end;
+        this.colorings = ColoringAttributes.empty();
+        this.textPrepend = textPrepend;
+    }
+
     public int getStart() {
         return start;
     }
@@ -88,7 +97,15 @@ public final class HighlightImpl {
                 result.append(attribute.name());
             }
         }
-        
+
+        if (textPrepend != null) {
+            if (!first) {
+                result.append(", ");
+            }
+
+            result.append(textPrepend);
+        }
+
         result.append("]");
         
         return result.toString();

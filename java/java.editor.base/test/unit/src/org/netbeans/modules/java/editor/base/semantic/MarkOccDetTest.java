@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.editor.base.semantic;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.swing.text.Document;
@@ -362,7 +363,8 @@ public class MarkOccDetTest extends TestBase {
                 if (spans != null) {
                     setter.setHighlights(doc, spans.stream()
                                                    .map(span -> Pair.of(span, MARK_OCCURRENCES))
-                                                   .collect(Collectors.toList()));
+                                                   .collect(Collectors.toList()),
+                                         Collections.<int[], String>emptyMap());
                 }
             }
         }, doCompileRecursively);

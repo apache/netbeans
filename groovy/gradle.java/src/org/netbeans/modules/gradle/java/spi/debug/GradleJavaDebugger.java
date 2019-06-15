@@ -22,6 +22,8 @@ package org.netbeans.modules.gradle.java.spi.debug;
  * Instance would be found in the project's lookup allow to attach debugger
  * to the project. This is essentially the same as MavenDebugger for Maven
  * projects.
+ * 
+ * @since 1.2
  */
 public interface GradleJavaDebugger {
 

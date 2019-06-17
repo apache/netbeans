@@ -28,16 +28,23 @@
     <volume>
         <type>classpath</type>
         <resource>jar:nbinst://org.netbeans.modules.javaee8.api/modules/ext/javaee8-endorsed/javax.annotation-api.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.modules.javaee8.api/modules/ext/javaee8-endorsed/javax.xml.soap-api.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.modules.javaee8.api/modules/ext/javaee8-endorsed/jaxb-api-osgi.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.modules.javaee8.api/modules/ext/javaee8-endorsed/jaxws-api.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.modules.javaee8.api/modules/ext/javaee8-endorsed/jsr181-api.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.javaee8.api/modules/ext/javaee8-endorsed/javax.batch-api.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.javaee8.api/modules/ext/javaee8-endorsed/javax.enterprise.concurrent-api.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.javaee8.api/modules/ext/javaee8-endorsed/javax.enterprise.deploy-api.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.javaee8.api/modules/ext/javaee8-endorsed/javax.faces-api.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.javaee8.api/modules/ext/javaee8-endorsed/javax.jms-api.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.javaee8.api/modules/ext/javaee8-endorsed/javax.mail.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.javaee8.api/modules/ext/javaee8-endorsed/javax.management.j2ee-api.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.javaee8.api/modules/ext/javaee8-endorsed/javax.resource-api.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.javaee8.api/modules/ext/javaee8-endorsed/javax.security.jacc-api.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.javaee8.api/modules/ext/javaee8-endorsed/javax.xml.registry-api.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.javaee8.api/modules/ext/javaee8-endorsed/javax.xml.rpc-api.jar!/</resource>
     </volume>
     <volume>
         <type>javadoc</type>
         <resource>jar:nbinst://org.netbeans.modules.j2ee.platform/docs/javaee-doc-api.jar!/</resource>
     </volume>
-    
+
     <properties>
         <property>
             <name>maven-dependencies</name>

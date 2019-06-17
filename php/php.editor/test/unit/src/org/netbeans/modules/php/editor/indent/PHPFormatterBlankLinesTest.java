@@ -1348,4 +1348,104 @@ public class PHPFormatterBlankLinesTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/blankLines/ClassConstantVisibility10.php", options);
     }
 
+    // PHP 7.4
+    // see testBLFields**()
+    public void testTypedProperties20_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_CLASS_DECL_LEFT_BRACE, true);
+        options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.SAME_LINE);
+        options.put(FmtOptions.METHOD_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.SAME_LINE);
+        options.put(FmtOptions.OTHER_BRACE_PLACEMENT, CodeStyle.BracePlacement.SAME_LINE);
+        options.put(FmtOptions.INITIAL_INDENT, 0);
+        reformatFileContents("testfiles/formatting/blankLines/TypedProperties20_01.php", options);
+    }
+
+    public void testTypedProperties20_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.INITIAL_INDENT, 0);
+        reformatFileContents("testfiles/formatting/blankLines/TypedProperties20_02.php", options);
+    }
+
+    public void testTypedProperties20_03() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.INITIAL_INDENT, 0);
+        reformatFileContents("testfiles/formatting/blankLines/TypedProperties20_03.php", options);
+    }
+
+    public void testTypedProperties20_04() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.INITIAL_INDENT, 0);
+        reformatFileContents("testfiles/formatting/blankLines/TypedProperties20_04.php", options);
+    }
+
+    public void testTypedProperties20_05() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.INITIAL_INDENT, 0);
+        reformatFileContents("testfiles/formatting/blankLines/TypedProperties20_05.php", options);
+    }
+
+    public void testTypedProperties20_05a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.INITIAL_INDENT, 0);
+        reformatFileContents("testfiles/formatting/blankLines/TypedProperties20_05a.php", options);
+    }
+
+    public void testTypedProperties20_05b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.INITIAL_INDENT, 0);
+        reformatFileContents("testfiles/formatting/blankLines/TypedProperties20_05b.php", options);
+    }
+
+    public void testTypedProperties20_06() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.INITIAL_INDENT, 0);
+        reformatFileContents("testfiles/formatting/blankLines/TypedProperties20_06.php", options);
+    }
+
+    public void testTypedProperties20_06a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.INITIAL_INDENT, 0);
+        reformatFileContents("testfiles/formatting/blankLines/TypedProperties20_06a.php", options);
+    }
+
+    public void testTypedProperties20_06b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.INITIAL_INDENT, 0);
+        reformatFileContents("testfiles/formatting/blankLines/TypedProperties20_06b.php", options);
+    }
+
+    public void testTypedProperties20_07() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_AFTER_FIELDS, 3);
+        reformatFileContents("testfiles/formatting/blankLines/TypedProperties20_07.php", options);
+    }
+
+    public void testTypedProperties20_07a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_AFTER_FIELDS, 3);
+        reformatFileContents("testfiles/formatting/blankLines/TypedProperties20_07a.php", options);
+    }
+
+    public void testTypedProperties20_08() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/blankLines/TypedProperties20_08.php", options);
+    }
+
+    public void testTypedProperties20_09() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/blankLines/TypedProperties20_09.php", options);
+    }
+
+    public void testTypedProperties20_10() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/blankLines/TypedProperties20_10.php", options);
+    }
+
+    public void testTypedProperties20_11() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_BETWEEN_FIELDS, 2);
+        options.put(FmtOptions.BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC, false);
+        reformatFileContents("testfiles/formatting/blankLines/TypedProperties20_11.php", options);
+    }
+
 }

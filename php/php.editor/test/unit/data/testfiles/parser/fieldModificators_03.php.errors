@@ -1,10 +1,10 @@
 [[47,54]-Syntax error
  unexpected:	private
  after:	public
- expected:	variable, function, const, static, abstract, final] 47-54:Syntax error
+ expected:	identifier, variable, function, const, array, callable, namespace, \, define, ?, static, abstract, final] 47-54:Syntax error
  unexpected:	private
  after:	public
- expected:	variable, function, const, static, abstract, final
+ expected:	identifier, variable, function, const, array, callable, namespace, \, define, ?, static, abstract, final
 [[64,65]-POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	}] 64-65:POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	}

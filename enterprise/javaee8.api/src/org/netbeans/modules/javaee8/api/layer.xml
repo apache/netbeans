@@ -30,9 +30,6 @@
       <file name="javaee-web-api-8.0.xml" url="javaee-web-api-8.0.xml">
         <attr name="displayName" bundlevalue="org/netbeans/modules/javaee8/api/Bundle#javaee-web-api-8.0"/>
       </file>
-      <file name="javaee-endorsed-api-8.0.xml" url="javaee-endorsed-api-8.0.xml">
-        <attr name="displayName" bundlevalue="org/netbeans/modules/javaee8/api/Bundle#javaee-endorsed-api-8.0"/>
-      </file>
     </folder>
   </folder>
 </filesystem>

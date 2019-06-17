@@ -23,7 +23,7 @@ import java.awt.EventQueue;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 /** Utilities for actions tests.
  * @author Jesse Glick

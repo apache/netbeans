@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 import javax.swing.JEditorPane;
 import javax.swing.text.Document;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.ModuleManager;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.java.classpath.ClassPath;

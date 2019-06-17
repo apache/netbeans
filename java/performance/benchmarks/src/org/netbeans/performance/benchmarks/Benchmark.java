@@ -23,7 +23,7 @@ import java.lang.reflect.Method;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.framework.TestResult;
-import junit.framework.Assert;
+import org.junit.Assert;
 import junit.framework.AssertionFailedError;
 
 /**

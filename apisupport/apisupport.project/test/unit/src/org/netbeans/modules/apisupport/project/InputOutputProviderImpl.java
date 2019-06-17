@@ -24,7 +24,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.logging.Logger;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.junit.NbTestCase;
 import org.openide.ErrorManager;
 import org.openide.windows.IOProvider;

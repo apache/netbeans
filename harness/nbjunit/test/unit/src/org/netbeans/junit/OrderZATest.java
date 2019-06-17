@@ -19,7 +19,7 @@
 package org.netbeans.junit;
 
 import java.lang.reflect.Method;
-import junit.framework.Assert;
+import org.junit.Assert;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
 import org.junit.Test;

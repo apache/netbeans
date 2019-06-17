@@ -21,7 +21,7 @@ package org.netbeans.modules.editor.lib2.view;
 import java.util.List;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.View;
-import junit.framework.Assert;
+import org.junit.Assert;
 import junit.framework.TestCase;
 
 /**

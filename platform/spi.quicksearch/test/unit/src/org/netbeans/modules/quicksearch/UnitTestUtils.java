@@ -23,7 +23,7 @@ import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.net.URL;
 import javax.swing.text.Utilities;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.Repository;
 import org.openide.filesystems.XMLFileSystem;

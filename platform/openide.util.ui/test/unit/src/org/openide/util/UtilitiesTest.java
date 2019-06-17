@@ -101,7 +101,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.junit.NbTestCase;
 import org.openide.util.actions.Presenter;
 import org.openide.util.lookup.AbstractLookup;

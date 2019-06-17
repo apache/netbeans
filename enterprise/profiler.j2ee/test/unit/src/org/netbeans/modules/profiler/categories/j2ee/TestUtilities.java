@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer;

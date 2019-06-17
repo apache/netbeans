@@ -26,7 +26,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.event.ChangeListener;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.api.queries.VisibilityQuery;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.versioning.core.VersioningManager;

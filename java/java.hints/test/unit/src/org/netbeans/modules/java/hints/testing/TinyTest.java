@@ -18,7 +18,7 @@
  */
 package org.netbeans.modules.java.hints.testing;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.hints.test.api.HintTest;
 import org.openide.filesystems.FileUtil;
@@ -36,7 +36,7 @@ public class TinyTest extends NbTestCase {
     public void testAssertEqualsForArrays() throws Exception {
         HintTest.create()
                 .input("package test;\n" +
-                       "import junit.framework.Assert;\n" +
+                       "import org.junit.Assert;\n" +
                        "public class Test {\n" +
                        "    private void test(Object[] g, Object[] a) {\n" +
                        "        Assert.assertEquals(g, a);\n" +
@@ -48,7 +48,7 @@ public class TinyTest extends NbTestCase {
                 .applyFix()
                 .assertCompilable()
                 .assertOutput("package test;\n" +
-                              "import junit.framework.Assert;\n" +
+                              "import org.junit.Assert;\n" +
                               "public class Test {\n" +
                               "    private void test(Object[] g, Object[] a) {\n" +
                               "        org.junit.Assert.assertArrayEquals(g, a);\n" +
@@ -59,7 +59,7 @@ public class TinyTest extends NbTestCase {
     public void testAssertEqualsForArraysWithMessages() throws Exception {
         HintTest.create()
                 .input("package test;\n" +
-                       "import junit.framework.Assert;\n" +
+                       "import org.junit.Assert;\n" +
                        "public class Test {\n" +
                        "    private void test(int[] g, int[] a) {\n" +
                        "        Assert.assertEquals(\"a\", g, a);\n" +
@@ -71,7 +71,7 @@ public class TinyTest extends NbTestCase {
                 .applyFix()
                 .assertCompilable()
                 .assertOutput("package test;\n" +
-                              "import junit.framework.Assert;\n" +
+                              "import org.junit.Assert;\n" +
                               "public class Test {\n" +
                               "    private void test(int[] g, int[] a) {\n" +
                               "        org.junit.Assert.assertArrayEquals(\"a\", g, a);\n" +
@@ -82,7 +82,7 @@ public class TinyTest extends NbTestCase {
     public void testAssertEqualsNoArrays() throws Exception {
         HintTest.create()
                 .input("package test;\n" +
-                       "import junit.framework.Assert;\n" +
+                       "import org.junit.Assert;\n" +
                        "public class Test {\n" +
                        "    private void test(Object g, Object a) {\n" +
                        "        Assert.assertEquals(g, a);\n" +
@@ -134,7 +134,7 @@ public class TinyTest extends NbTestCase {
     public void testAssertEqualsMismatchedConstantVSReal() throws Exception {
         HintTest.create()
                 .input("package test;\n" +
-                       "import junit.framework.Assert;\n" +
+                       "import org.junit.Assert;\n" +
                        "public class Test {\n" +
                        "    private void test(int actual) {\n" +
                        "        Assert.assertEquals(actual, 0);\n" +
@@ -146,7 +146,7 @@ public class TinyTest extends NbTestCase {
                 .applyFix()
                 .assertCompilable()
                 .assertOutput("package test;\n" +
-                              "import junit.framework.Assert;\n" +
+                              "import org.junit.Assert;\n" +
                               "public class Test {\n" +
                               "    private void test(int actual) {\n" +
                               "        Assert.assertEquals(0, actual);\n" +
@@ -157,7 +157,7 @@ public class TinyTest extends NbTestCase {
     public void testAssertEqualsMismatchedConstantVSReal2() throws Exception {
         HintTest.create()
                 .input("package test;\n" +
-                       "import junit.framework.Assert;\n" +
+                       "import org.junit.Assert;\n" +
                        "public class Test {\n" +
                        "    private void test(String actual) {\n" +
                        "        Assert.assertEquals(\"a\", actual, \"golden\");\n" +
@@ -169,7 +169,7 @@ public class TinyTest extends NbTestCase {
                 .applyFix()
                 .assertCompilable()
                 .assertOutput("package test;\n" +
-                              "import junit.framework.Assert;\n" +
+                              "import org.junit.Assert;\n" +
                               "public class Test {\n" +
                               "    private void test(String actual) {\n" +
                               "        Assert.assertEquals(\"a\", \"golden\", actual);\n" +
@@ -180,7 +180,7 @@ public class TinyTest extends NbTestCase {
     public void testAssertEqualsMismatchedConstantVSRealCorrect() throws Exception {
         HintTest.create()
                 .input("package test;\n" +
-                       "import junit.framework.Assert;\n" +
+                       "import org.junit.Assert;\n" +
                        "public class Test {\n" +
                        "    private void test(String actual) {\n" +
                        "        Assert.assertEquals(\"a\", \"golden\", actual);\n" +
@@ -194,7 +194,7 @@ public class TinyTest extends NbTestCase {
     public void testAssertEqualsInconvertiblePos1() throws Exception {
         HintTest.create()
                 .input("package test;\n" +
-                       "import junit.framework.Assert;\n" +
+                       "import org.junit.Assert;\n" +
                        "public class Test {\n" +
                        "    private void test() {\n" +
                        "        Assert.assertEquals(\"a\", \"golden\", 1);\n" +
@@ -208,7 +208,7 @@ public class TinyTest extends NbTestCase {
     public void testAssertEqualsInconvertibleNeg1() throws Exception {
         HintTest.create()
                 .input("package test;\n" +
-                       "import junit.framework.Assert;\n" +
+                       "import org.junit.Assert;\n" +
                        "public class Test {\n" +
                        "    private void test(CharSequence actual) {\n" +
                        "        Assert.assertEquals(\"a\", \"golden\", actual);\n" +

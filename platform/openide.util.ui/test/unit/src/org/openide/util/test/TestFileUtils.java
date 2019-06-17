@@ -37,7 +37,7 @@ import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 /**
  * Common utility methods for massaging and inspecting files from tests.

@@ -21,7 +21,7 @@ package org.openide.filesystems;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.modules.openide.filesystems.declmime.MIMEResolverImpl;
 
 /**

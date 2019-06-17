@@ -20,7 +20,7 @@ package org.netbeans.modules.web.jsf.navigation;
 
 
 import java.io.File;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer;
 import org.netbeans.modules.java.source.parsing.ClassParser;

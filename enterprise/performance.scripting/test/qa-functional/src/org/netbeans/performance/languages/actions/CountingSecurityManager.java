@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicLong;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.openide.util.Exceptions;
 
 /**

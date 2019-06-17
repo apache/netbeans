@@ -33,7 +33,7 @@ import java.util.prefs.Preferences;
 
 import javax.swing.JEditorPane;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.classpath.ClassPath;

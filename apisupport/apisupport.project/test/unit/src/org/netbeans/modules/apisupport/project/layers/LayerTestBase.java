@@ -19,7 +19,7 @@
 
 package org.netbeans.modules.apisupport.project.layers;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.api.xml.services.UserCatalog;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.spi.project.support.ant.AntBasedProjectType;

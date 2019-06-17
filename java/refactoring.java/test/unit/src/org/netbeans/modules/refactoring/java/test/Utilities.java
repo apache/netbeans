@@ -34,7 +34,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.openide.filesystems.*;
 import org.openide.util.*;

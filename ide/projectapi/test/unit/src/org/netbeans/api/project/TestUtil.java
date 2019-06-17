@@ -32,7 +32,7 @@ import java.util.StringTokenizer;
 import java.util.WeakHashMap;
 import java.util.logging.Logger;
 import javax.swing.Icon;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectFactory2;

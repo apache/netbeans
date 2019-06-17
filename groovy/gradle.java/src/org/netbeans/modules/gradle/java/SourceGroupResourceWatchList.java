@@ -28,6 +28,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.gradle.java.classpath.ClassPathProviderImpl;
+import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.project.ProjectServiceProvider;
 
 /**
@@ -51,6 +53,12 @@ public class SourceGroupResourceWatchList implements WatchedResourceProvider {
             ret = new HashSet<>();
             for (GradleJavaSourceSet ss : gjp.getSourceSets().values()) {
                 ret.addAll(ss.getAllDirs());
+                for (File dir : ss.getJavaDirs()) {
+                    ret.add(new File(dir, ClassPathProviderImpl.MODULE_INFO_JAVA));
+                }
+                for (File dir : ss.getGroovyDirs()) {
+                    ret.add(new File(dir, ClassPathProviderImpl.MODULE_INFO_JAVA));
+                }
             }
         }
         return ret;

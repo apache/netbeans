@@ -20,6 +20,7 @@
 package org.netbeans.modules.java.source.indexing;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -81,6 +82,7 @@ import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.classfile.ClassFile;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.JavaSourceTaskFactoryManager;
 import org.netbeans.modules.java.source.ModuleNames;
@@ -174,6 +176,7 @@ public class JavaCustomIndexer extends CustomIndexer {
                     }
                 }
 
+                Set<String> shortNames = new HashSet<>();
                 boolean binariesAreNewer = true;
                 for (Indexable index : files) {
                     FileObject fo = context.getRoot().getFileObject(index.getRelativePath());
@@ -181,6 +184,7 @@ public class JavaCustomIndexer extends CustomIndexer {
                         binariesAreNewer = false;
                         break;
                     }
+                    shortNames.add(fo.getNameExt());
                 }
 
                 if (binariesAreNewer) {
@@ -189,7 +193,17 @@ public class JavaCustomIndexer extends CustomIndexer {
                     at = 0;
                     for (URL singleBinaryRoot : binaryRoots) {
                         FileObject singleBinaryRootFo = binaryRootsFo[at++];
-                        JavaBinaryIndexer.doIndex(context, singleBinaryRoot);
+                       JavaBinaryIndexer.doIndex(context, singleBinaryRoot, (cf) -> {
+                            String src = cf.getSourceFileName();
+                            if (src != null) {
+                                String srcName = src.substring(src.lastIndexOf(File.separatorChar) + 1);
+                                if (!shortNames.contains(srcName)) {
+                                    return false;
+                                }
+                            }
+                            return true;
+                       });
+
                         JavaIndex.LOG.log(Level.FINE, "  copying from {0} to {1}", new Object[] { FileUtil.getFileDisplayName(singleBinaryRootFo), copyTo }); // NOI18N
                         Enumeration<? extends FileObject> en = singleBinaryRootFo.getChildren(true);
                         while (en.hasMoreElements()) {
@@ -1046,7 +1060,7 @@ public class JavaCustomIndexer extends CustomIndexer {
 
                 final Set<URL> urls = new HashSet<URL>();
                 for (FileObject file : files)
-                    urls.add(file.getURL());
+                    urls.add(file.toURL());
 
                 if (includeFilesInError) {
                     final Collection<? extends URL> errUrls = ErrorsCache.getAllFilesInError(depRoot);

@@ -1,0 +1,26 @@
+Code completion result for source line:
+var |string $string;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    Bar                             [PUBLIC]   null
+PACKAGE    Foo                             [PUBLIC]   null
+CLASS      MyClass                         [PUBLIC]   Bar
+CLASS      TypedPropertiesClass            [PUBLIC]   Foo
+------------------------------------
+KEYWORD    abstract                                   null
+KEYWORD    array                                      null
+KEYWORD    bool                                       null
+KEYWORD    const                                      null
+KEYWORD    final                                      null
+KEYWORD    float                                      null
+KEYWORD    function                                   null
+KEYWORD    int                                        null
+KEYWORD    iterable                                   null
+KEYWORD    object                                     null
+KEYWORD    parent                                     null
+KEYWORD    private                                    null
+KEYWORD    protected                                  null
+KEYWORD    public                                     null
+KEYWORD    self                                       null
+KEYWORD    static                                     null
+KEYWORD    string                                     null
+KEYWORD    var                                        null

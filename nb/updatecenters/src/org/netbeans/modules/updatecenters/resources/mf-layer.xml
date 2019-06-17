@@ -25,25 +25,14 @@
   <folder name="Services">
 
     <folder name="AutoupdateType">
-      <!-- this ordering left because backward compatibility with deserialized autoupdate types -->
-      <file name="standard-update-provider.instance">
-        <attr name="displayName" bundlevalue="org.netbeans.modules.updatecenters.resources.Bundle#Services/AutoupdateType/standard-update-provider.instance"/>
-        <attr name="iconBase" stringvalue="org/netbeans/modules/updatecenters/resources/updateAction.gif"/>
-        <attr name="url" bundlevalue="org.netbeans.modules.updatecenters.resources.Bundle#URL_LatestBuild"/>
-        <attr name="category" stringvalue="STANDARD"/>
-        <attr name="enabled" boolvalue="true"/>
-        <attr name="instanceOf" stringvalue="org.netbeans.spi.autoupdate.UpdateProvider" />
-        <attr name="instanceCreate" methodvalue="org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogFactory.createUpdateProvider" />
-      </file>
-
-      <file name="dev-update-provider.instance">
-          <attr name="displayName" bundlevalue="org.netbeans.modules.updatecenters.resources.Bundle#Services/AutoupdateType/dev-update-provider.instance"/>
+      <file name="distribution-update-provider.instance">
+          <attr name="displayName" bundlevalue="org.netbeans.modules.updatecenters.resources.Bundle#Services/AutoupdateType/distribution-update-provider.instance"/>
           <attr name="iconBase" stringvalue="org/netbeans/modules/updatecenters/resources/updateAction.gif"/>
-          <attr name="url" bundlevalue="org.netbeans.modules.updatecenters.resources.Bundle#URL_Default_N"/>
+          <attr name="url" bundlevalue="org.netbeans.modules.updatecenters.resources.Bundle#URL_Distribution"/>
           <attr name="category" stringvalue="STANDARD"/>
           <attr name="enabled" boolvalue="true"/>
           <attr name="instanceOf" stringvalue="org.netbeans.spi.autoupdate.UpdateProvider" />
-          <attr name="instanceCreate" methodvalue="org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogFactory.createUpdateProvider" />
+          <attr name="instanceCreate" methodvalue="org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogFactory.createUpdateProvider"/>
       </file>
 
       <file name="pluginportal-update-provider.instance">
@@ -56,25 +45,6 @@
          <attr name="instanceCreate" methodvalue="org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogFactory.createUpdateProvider"/>
       </file>
       
-      <file name="82pluginportal-update-provider.instance">
-          <attr name="displayName" bundlevalue="org.netbeans.modules.updatecenters.resources.Bundle#Services/AutoupdateType/82pluginportal-update-provider.instance"/>
-          <attr name="iconBase" stringvalue="org/netbeans/modules/updatecenters/resources/updateAction.gif"/>
-          <attr name="url" bundlevalue="org.netbeans.modules.updatecenters.resources.Bundle#URL_82PluginPortal"/>
-          <attr name="category" stringvalue="STANDARD"/>
-          <attr name="enabled" boolvalue="false"/>
-          <attr name="instanceOf" stringvalue="org.netbeans.spi.autoupdate.UpdateProvider"/>
-          <attr name="instanceCreate" methodvalue="org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogFactory.createUpdateProvider"/>
-      </file>
-
-      <file name="3rdparty.instance">
-          <attr name="displayName" bundlevalue="org.netbeans.modules.updatecenters.resources.Bundle#3rdparty"/>
-          <attr name="iconBase" stringvalue="org/netbeans/modules/updatecenters/resources/updateAction.gif"/>
-          <attr name="url" bundlevalue="org.netbeans.modules.updatecenters.resources.Bundle#URL_3rdparty"/>
-          <attr name="category" stringvalue="STANDARD"/>
-          <attr name="enabled" boolvalue="true"/>
-          <attr name="instanceOf" stringvalue="org.netbeans.spi.autoupdate.UpdateProvider"/>
-          <attr name="instanceCreate" methodvalue="org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogFactory.createUpdateProvider"/>
-      </file>
    </folder>
     
   </folder> <!-- Services -->

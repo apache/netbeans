@@ -78,8 +78,8 @@ public class NavigationHistoryManager {
 
     public NavigationHistoryManager(HeapFragmentWalker heapFragmentWalker) {
         this.heapFragmentWalker = heapFragmentWalker;
-        backHistory = new ArrayList();
-        forwardHistory = new ArrayList();
+        backHistory    = new ArrayList<NavigationHistoryItem>();
+        forwardHistory = new ArrayList<NavigationHistoryItem>();
     }
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------

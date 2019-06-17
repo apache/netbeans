@@ -271,6 +271,7 @@
                 <friend>org.netbeans.modules.css.editor</friend>
                 <friend>org.netbeans.modules.css.prep</friend>
                 <friend>org.netbeans.modules.css.visual</friend>
+                <friend>org.netbeans.modules.gradle.javaee</friend>
                 <friend>org.netbeans.modules.html.editor</friend>
                 <friend>org.netbeans.modules.javascript.bower</friend>
                 <friend>org.netbeans.modules.javascript.grunt</friend>

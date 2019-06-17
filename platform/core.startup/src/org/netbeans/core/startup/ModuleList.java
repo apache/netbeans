@@ -68,10 +68,10 @@ import org.openide.filesystems.FileUtil;
 import org.openide.modules.Dependency;
 import org.openide.modules.InstalledFileLocator;
 import org.openide.modules.SpecificationVersion;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Parameters;
 import org.openide.util.RequestProcessor;
 import org.openide.util.RequestProcessor.Task;
-import org.openide.util.Utilities;
 import org.openide.util.WeakSet;
 import org.openide.xml.EntityCatalog;
 import org.openide.xml.XMLUtil;
@@ -1466,7 +1466,7 @@ final class ModuleList implements Stamps.Updater {
                     String prop = toCheck[i];
                     Object onDisk = props.get(prop);
                     Object inMem = diskProps.get(prop);
-                    if (! Utilities.compareObjects(onDisk, inMem)) {
+                    if (! BaseUtilities.compareObjects(onDisk, inMem)) {
                         ev.log(Events.MISC_PROP_MISMATCH, status.module, prop, onDisk, inMem);
                     }
                 }

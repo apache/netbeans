@@ -1017,6 +1017,14 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php74/nullCoalescingAssignmentOperator_01");
     }
 
+    public void testTypedProperties20Class() throws Exception {
+        performTest("parser/php74/typedPropertiesClass");
+    }
+
+    public void testTypedProperties20Trait() throws Exception {
+        performTest("parser/php74/typedPropertiesTrait");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

@@ -1,0 +1,5 @@
+        $this->myClass->|>MARK_OCCURRENCES:publicTestMethod<|();
+        $this->myClass2->|>MARK_OCCURRENCES:pu^blicTestMethod<|();
+        $this->myClass3->|>MARK_OCCURRENCES:publicTestMethod<|();
+        $this->myClass4->|>MARK_OCCURRENCES:publicTestMethod<|();
+    public function |>MARK_OCCURRENCES:publicTestMethod<|(): void {

@@ -986,6 +986,8 @@
                 </Interfaces>
                 <Block start='214' end='407' isCurly='true'>
                     <FieldsDeclaration start='220' end='236' modifier='private'>
+                        <FieldType>
+                        </FieldType>
                         <VariableNames>
                             <Variable start='228' end='235' isDollared='true'>
                                 <Identifier start='229' end='235' name='logger'/>
@@ -1221,6 +1223,8 @@
                             </Interfaces>
                             <Block start='838' end='954' isCurly='true'>
                                 <FieldsDeclaration start='844' end='857' modifier='private'>
+                                    <FieldType>
+                                    </FieldType>
                                     <VariableNames>
                                         <Variable start='852' end='856' isDollared='true'>
                                             <Identifier start='853' end='856' name='num'/>
@@ -1294,6 +1298,8 @@
                 </Interfaces>
                 <Block start='1045' end='1541' isCurly='true'>
                     <FieldsDeclaration start='1051' end='1069' modifier='private'>
+                        <FieldType>
+                        </FieldType>
                         <VariableNames>
                             <Variable start='1059' end='1064' isDollared='true'>
                                 <Identifier start='1060' end='1064' name='prop'/>
@@ -1304,6 +1310,8 @@
                         </InitialValues>
                     </FieldsDeclaration>
                     <FieldsDeclaration start='1074' end='1095' modifier='protected'>
+                        <FieldType>
+                        </FieldType>
                         <VariableNames>
                             <Variable start='1084' end='1090' isDollared='true'>
                                 <Identifier start='1085' end='1090' name='prop2'/>
@@ -1354,6 +1362,8 @@
                                         </Interfaces>
                                         <Block start='1245' end='1532' isCurly='true'>
                                             <FieldsDeclaration start='1259' end='1274' modifier='private'>
+                                                <FieldType>
+                                                </FieldType>
                                                 <VariableNames>
                                                     <Variable start='1267' end='1273' isDollared='true'>
                                                         <Identifier start='1268' end='1273' name='prop3'/>

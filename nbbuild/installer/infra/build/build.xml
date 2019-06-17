@@ -237,10 +237,9 @@
         
 	<set property="nb.build.number"
              value="${build.number}"/>
-        <!--
-	<set property="nb.build.number"
-             value="0"/>
-        -->
+        
+        <set property="nb.version.number"
+             value="${nb.version}"/>
 
 	<set property="nb.full.version"
              value="11.0.0.0.${nb.build.number}"/>

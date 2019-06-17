@@ -343,6 +343,7 @@
                 <friend>org.netbeans.modules.cordova.platforms</friend>
                 <friend>org.netbeans.modules.cordova.platforms.android</friend>
                 <friend>org.netbeans.modules.cordova.platforms.ios</friend>
+                <friend>org.netbeans.modules.gradle.javaee</friend>
                 <friend>org.netbeans.modules.html.ojet</friend>
                 <friend>org.netbeans.modules.javascript.bower</friend>
                 <friend>org.netbeans.modules.javascript.cdnjs</friend>

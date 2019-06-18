@@ -535,7 +535,7 @@ public class TransformPerformer {
             File file = FileUtil.toFile(fileObject);
             
             if ( file != null ) {
-                fileURL = file.toURL();
+                fileURL = file.toURI().toURL();
             } else {
                 fileURL = fileObject.getURL();
             }

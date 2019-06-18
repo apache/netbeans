@@ -613,7 +613,7 @@ public class CatalogModelImpl implements CatalogModel {
         catalogResolver = new NbCatalogResolver(manager);
         apacheCatalogResolverObj = catalogResolver.getCatalog();
         for(File catFile : catalogFileList){
-            apacheCatalogResolverObj.parseCatalog(catFile.toURL());
+            apacheCatalogResolverObj.parseCatalog(catFile.toURI().toURL());
         }
         
         String result = null;

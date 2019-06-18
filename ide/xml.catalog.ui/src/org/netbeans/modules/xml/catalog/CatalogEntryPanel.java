@@ -232,7 +232,7 @@ public class CatalogEntryPanel extends javax.swing.JPanel {
         java.io.File f = org.netbeans.modules.xml.catalog.lib.Util.selectFile("dtd xsd DTD XSD", dialogTitle, maskTitle); // NOI18N
         if (f == null) return;
         try {
-            String location = f.toURL().toExternalForm();
+            String location = f.toURI().toURL().toExternalForm();
             uriTF.setText(location);
         } catch (java.net.MalformedURLException ex) {
             // ignore

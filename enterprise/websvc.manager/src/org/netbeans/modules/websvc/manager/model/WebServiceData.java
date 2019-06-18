@@ -218,16 +218,6 @@ public class WebServiceData implements WsdlData {
 
     /**
      * 
-     * @return the WSDL file (absolute path)
-     * @deprecated use {@link #getWsdlFile()} instead
-     */
-    @Deprecated
-    public String getURL() {
-        return wsdlFile;
-    }
-
-    /**
-     * 
      * @param url the WSDL file
      * @deprecated use {@link #setWsdlFile(String)} instead
      */

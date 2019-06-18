@@ -212,13 +212,14 @@ parser code {:
         }
      }
 
-    /**
+     /**
      * Report a fatal error.  This method takes a message string and an additional object
      * (to be used by specializations implemented in subclasses).
      * The super class reports the error then throws an exception.
      * @param message an error message.
      * @param info    an extra object reserved for use by specialized subclasses.
      */
+
     public void report_fatal_error(String message, Object info) throws Exception {
         if (errorHandler != null) {
             errorHandler.handleError(ParserErrorHandler.Type.FATAL_PARSER_ERROR, null, cur_token, null);
@@ -1779,9 +1780,9 @@ trait_statement_list:list trait_statement:traitStatement
 ;
 
 trait_statement ::=
-variable_modifiers:modifier optional_class_type:fieldType class_variable_declaration:decList T_SEMICOLON:end
+variable_modifiers:modifier class_variable_declaration:decList T_SEMICOLON:end
 {:
-    FieldsDeclaration fieldsDeclaration = new FieldsDeclaration(modifierleft, endright, modifier.intValue(), fieldType, decList);
+    FieldsDeclaration fieldsDeclaration = new FieldsDeclaration(modifierleft, endright, modifier.intValue(), decList);
     RESULT = fieldsDeclaration;
 :}
 
@@ -2416,9 +2417,9 @@ class_statement_list:list class_statement:classStatement
 ;
 
 class_statement ::=
-variable_modifiers:modifier optional_class_type:fieldType class_variable_declaration:decList T_SEMICOLON:end
+variable_modifiers:modifier class_variable_declaration:decList T_SEMICOLON:end
 {:
-    FieldsDeclaration fieldsDeclaration = new FieldsDeclaration(modifierleft, endright, modifier.intValue(), fieldType, decList);
+    FieldsDeclaration fieldsDeclaration = new FieldsDeclaration(modifierleft, endright, modifier.intValue(), decList);
     RESULT = fieldsDeclaration;
 :}
 

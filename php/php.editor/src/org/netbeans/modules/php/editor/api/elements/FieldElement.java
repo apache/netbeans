@@ -27,5 +27,4 @@ import org.netbeans.modules.php.editor.api.PhpElementKind;
 public interface FieldElement extends TypedInstanceElement, TypeMemberElement {
     PhpElementKind KIND = PhpElementKind.FIELD;
     String getName(boolean dollared);
-    boolean isAnnotation();
 }

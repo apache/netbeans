@@ -47,6 +47,7 @@ import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.WindowCacheConfig;
+import org.netbeans.junit.Filter;
 import org.netbeans.libs.git.ApiUtils;
 import org.netbeans.libs.git.GitBranch;
 import org.netbeans.libs.git.GitClient;
@@ -66,9 +67,16 @@ public class CheckoutTest extends AbstractGitTestCase {
     private File workDir;
     private Repository repository;
     private static final String BRANCH = "nova";
-    
+
     public CheckoutTest (String testName) throws IOException {
         super(testName);
+        if (Boolean.getBoolean("skip.git.integration.tests")) {
+            Filter filter = new Filter();
+            filter.setExcludes(new Filter.IncludeExclude[] {
+                new Filter.IncludeExclude("testLargeFile", ""),
+            });
+            setFilter(filter);
+        }
     }
 
     @Override

@@ -78,24 +78,6 @@ public final class ModuleSelector extends BaseExtendSelector {
         }
         
         String module = null;
-        if (file.getName().endsWith(".jar")) {
-            try (JarFile jar = new JarFile(file)) {
-                Manifest m = jar.getManifest();
-                if (m != null) {
-                    module = m.getMainAttributes().getValue("OpenIDE-Module"); // NOI18N
-                    if (module == null && !isExt(file)) {
-                        module = m.getMainAttributes().getValue("Bundle-SymbolicName"); // NOI18N
-                        int semicolon = module == null ? -1 : module.indexOf(';');
-                        if (semicolon >= 0) {
-                            module = module.substring(0, semicolon);
-                        }
-                    }
-                }
-            } catch (IOException ex) {
-                throw new BuildException("Problem with " + file + ": " + ex, ex, getLocation());
-            }
-        }
-
         String name = file.getName();
         File p = file.getParentFile();
         for(;;) {
@@ -123,6 +105,24 @@ public final class ModuleSelector extends BaseExtendSelector {
             }
             name = p.getName() + '/' + name;
             p = p.getParentFile();
+        }
+
+        if (module == null && name.endsWith(".jar")) {
+            try (JarFile jar = new JarFile(file)) {
+                Manifest m = jar.getManifest();
+                if (m != null) {
+                    module = m.getMainAttributes().getValue("OpenIDE-Module"); // NOI18N
+                    if (module == null && !isExt(file)) {
+                        module = m.getMainAttributes().getValue("Bundle-SymbolicName"); // NOI18N
+                        int semicolon = module == null ? -1 : module.indexOf(';');
+                        if (semicolon >= 0) {
+                            module = module.substring(0, semicolon);
+                        }
+                    }
+                }
+            } catch (IOException ex) {
+                throw new BuildException("Problem with " + file + ": " + ex, ex, getLocation());
+            }
         }
         
         if (module == null) {

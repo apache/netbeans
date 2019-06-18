@@ -575,6 +575,15 @@ public class PHPIndexTest extends PHPNavTestBase {
         checkIndexer(getTestPath());
     }
 
+    // PHP 7.4
+    public void testPHP74TypedPropertiesClass() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
+    public void testPHP74TypedPropertiesTrait() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
     // #241740
     public void testMixin() throws Exception {
         checkIndexer(getTestPath());

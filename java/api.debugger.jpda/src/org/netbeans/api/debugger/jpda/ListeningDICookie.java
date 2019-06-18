@@ -56,7 +56,7 @@ public final class ListeningDICookie extends AbstractDICookie {
      */
     public static final String ID = "netbeans-jpda-ListeningDICookie";
 
-    private ListeningConnector listeningConnector;
+    private final ListeningConnector listeningConnector;
     private Map<String, ? extends Argument> args;
     private boolean isListening = false;
 

@@ -20,6 +20,8 @@
 
 package org.netbeans.modules.web.jsf;
 
+import java.util.List;
+import java.util.ArrayList;
 
 import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
 import org.netbeans.modules.xml.catalog.spi.*;
@@ -90,7 +92,7 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
      * @return null if cannot proceed, try later.
      */
     public java.util.Iterator getPublicIDs() {
-        java.util.List list = new java.util.ArrayList();
+        List<String> list = new ArrayList<String>();
         list.add(JSF_ID_1_0);
         list.add(JSF_ID_1_1);
         list.add(JSF_ID_1_2);

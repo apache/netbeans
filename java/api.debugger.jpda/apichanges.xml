@@ -53,6 +53,19 @@
 <changes>
     <change>
         <api name="JPDADebuggerAPI"/>
+        <summary>Randomly select listening port</summary>
+        <version major="3" minor="12"/>
+        <date day="15" month="6" year="2019"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes"/>
+        <description>
+            Enhanced behavior of 
+            <a href="@TOP@/org/netbeans/api/debugger/jpda/ListeningDICookie.html">ListeningDICookie.create(-1)</a>
+            method.
+        </description>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
         <summary>JPDADebugger.getException() method added.</summary>
         <date day="20" month="4" year="2004"/>
         <author login="jjancura"/>

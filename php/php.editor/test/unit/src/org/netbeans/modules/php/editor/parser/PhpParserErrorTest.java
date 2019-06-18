@@ -961,12 +961,4 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php74/nullCoalescingAssignmentOperator_01.php");
     }
 
-    public void testTypedProperties20Class() throws Exception {
-        checkErrors("testfiles/parser/php74/typedPropertiesClass.php");
-    }
-
-    public void testTypedProperties20Trait() throws Exception {
-        checkErrors("testfiles/parser/php74/typedPropertiesTrait.php");
-    }
-
 }

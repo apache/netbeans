@@ -33,9 +33,9 @@ import org.netbeans.api.lexer.TokenId;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.modules.csl.spi.ParserResult;
-import org.netbeans.modules.php.editor.NavUtils;
 import org.netbeans.modules.php.editor.lexer.LexUtilities;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
+import org.netbeans.modules.php.editor.NavUtils;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.api.Utils;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTError;
@@ -153,16 +153,6 @@ final class CompletionContextFinder {
             new Object[]{PHPTokenId.PHP_FUNCTION},
             new Object[]{PHPTokenId.PHP_FUNCTION, PHPTokenId.WHITESPACE},
             new Object[]{PHPTokenId.PHP_FUNCTION, PHPTokenId.WHITESPACE, PHPTokenId.PHP_STRING});
-    private static final List<Object[]> FIELD_TYPE_TOKENCHAINS = Arrays.asList(
-            new Object[]{PHPTokenId.PHP_PRIVATE, PHPTokenId.WHITESPACE, NAMESPACE_FALSE_TOKEN},
-            new Object[]{PHPTokenId.PHP_PROTECTED, PHPTokenId.WHITESPACE, NAMESPACE_FALSE_TOKEN},
-            new Object[]{PHPTokenId.PHP_PUBLIC, PHPTokenId.WHITESPACE, NAMESPACE_FALSE_TOKEN},
-            new Object[]{PHPTokenId.PHP_STATIC, PHPTokenId.WHITESPACE, NAMESPACE_FALSE_TOKEN},
-            new Object[]{PHPTokenId.PHP_VAR, PHPTokenId.WHITESPACE, NAMESPACE_FALSE_TOKEN},
-            new Object[]{PHPTokenId.PHP_TOKEN}, // ? (nullable)
-            new Object[]{PHPTokenId.PHP_TOKEN, PHPTokenId.PHP_STRING},
-            new Object[]{PHPTokenId.PHP_TOKEN, NAMESPACE_FALSE_TOKEN}
-    );
     private static final List<Object[]> CLASS_CONTEXT_KEYWORDS_TOKENCHAINS = Arrays.asList(
             new Object[]{PHPTokenId.PHP_PRIVATE},
             new Object[]{PHPTokenId.PHP_PRIVATE, PHPTokenId.WHITESPACE},
@@ -202,7 +192,7 @@ final class CompletionContextFinder {
 
     public static enum CompletionContext {
 
-        EXPRESSION, HTML, CLASS_NAME, INTERFACE_NAME, TYPE_NAME, RETURN_TYPE_NAME, FIELD_TYPE_NAME, STRING,
+        EXPRESSION, HTML, CLASS_NAME, INTERFACE_NAME, TYPE_NAME, RETURN_TYPE_NAME, STRING,
         CLASS_MEMBER, STATIC_CLASS_MEMBER, PHPDOC, INHERITANCE, EXTENDS, IMPLEMENTS, METHOD_NAME,
         CLASS_CONTEXT_KEYWORDS, SERVER_ENTRY_CONSTANTS, NONE, NEW_CLASS, GLOBAL, NAMESPACE_KEYWORD,
         GROUP_USE_KEYWORD, GROUP_USE_CONST_KEYWORD, GROUP_USE_FUNCTION_KEYWORD,
@@ -311,9 +301,6 @@ final class CompletionContextFinder {
                 CompletionContext paramContext = getParamaterContext(token, caretOffset, tokenSequence);
                 if (paramContext != null) {
                     return paramContext;
-                } else if (acceptTokenChains(tokenSequence, FIELD_TYPE_TOKENCHAINS, moveNextSucces)) {
-                    // \Namespace\ClassName, ?, ?ClassName, ?\Namespace\ClassName etc.
-                    return CompletionContext.FIELD_TYPE_NAME;
                 } else if (acceptTokenChains(tokenSequence, CLASS_CONTEXT_KEYWORDS_TOKENCHAINS, moveNextSucces)) {
                     return CompletionContext.CLASS_CONTEXT_KEYWORDS;
                 }

@@ -798,9 +798,4 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/nullCoalescingAssignment01.php", options);
     }
 
-    public void testTypedProperties20_01() throws Exception {
-        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
-        reformatFileContents("testfiles/formatting/typedProperties20_01.php", options);
-    }
-
 }

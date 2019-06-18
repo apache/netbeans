@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.netbeans.modules.php.editor.model;
 
 import java.util.Collection;
@@ -27,7 +28,5 @@ import java.util.Collection;
 public interface FieldElement extends ClassMemberElement, TypeAssignments {
 
     Collection<? extends String> getDefaultTypeNames();
-
-    boolean isAnnotation();
 
 }

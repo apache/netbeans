@@ -58,9 +58,6 @@ under the License.
                 <include name="webservices-osgi.jar"/>
                 <include name="weld-osgi-bundle.jar"/>
             </fileset>            
-            <fileset dir="modules/endorsed">
-                <include name=".+\.jar"/>
-            </fileset>
             <fileset dir="../mq/lib">
                 <include name="jaxm-api.jar"/>
             </fileset>

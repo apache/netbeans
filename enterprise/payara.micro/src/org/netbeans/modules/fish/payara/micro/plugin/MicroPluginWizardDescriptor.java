@@ -34,6 +34,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.api.templates.TemplateRegistration;
+import static org.netbeans.modules.fish.payara.micro.plugin.Constants.POM_TEMPLATE;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROJECT_ICON;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROJECT_TYPE;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROP_AUTO_BIND_HTTP;
@@ -71,7 +72,7 @@ public final class MicroPluginWizardDescriptor implements WizardDescriptor.Insta
         params.put("autoBindHttp", autoBindHttp);
         params.put("payaraMicroVersion", payaraMicroVersion);
 
-        try (Reader sourceReader = new InputStreamReader(loadResource("org/netbeans/modules/fish/payara/micro/plugin/resources/pom.xml.ftl"))) {
+        try (Reader sourceReader = new InputStreamReader(loadResource(POM_TEMPLATE))) {
             try (Reader targetReader = new StringReader(expandTemplate(sourceReader, params))) {
                 POMManager pomManager = new POMManager(targetReader, project);
                 pomManager.setExtensionOverrideFilter((source, target) -> {

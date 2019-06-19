@@ -99,4 +99,7 @@ public interface Constants {
     @StaticResource
     String PROFILE_ICON = "org/netbeans/modules/fish/payara/micro/project/resources/payara-micro-profile.png";
 
+    @StaticResource
+    String POM_TEMPLATE = "org/netbeans/modules/fish/payara/micro/plugin/resources/pom.xml.ftl";
+
 }

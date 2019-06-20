@@ -1,9 +1,9 @@
-Name: AWS SDK For Java
-Origin: Amazon Web Services
-Version: 1.2.1
+Name: Jackson-dataformat-CBOR
+Origin: FasterXML
+Version: 2.6.7
 License: Apache-2.0
-Description:  Amazon Web Services SDK for Java
-URL: http://aws.amazon.com/sdkforjava/
+Description: Support for reading and writing Concise Binary Object Representation ([CBOR](https://www.rfc-editor.org/info/rfc7049) encoded data using Jackson abstractions (streaming API, data binding, tree model)
+URL: http://wiki.fasterxml.com/JacksonForCbor
 
                                  Apache License
                            Version 2.0, January 2004

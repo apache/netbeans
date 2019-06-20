@@ -39,6 +39,7 @@ public class AmazonInstanceManager {
     private static final String KEY_ID = "access-key-id"; // NOI18N
     private static final String KEY = "secret-access-key"; // NOI18N
     private static final String REGION = "region"; // NOI18N
+    private static final String CODE = "code"; // NOI18N
     
     private static AmazonInstanceManager instance;
     private List<AmazonInstance> instances = new ArrayList<AmazonInstance>();
@@ -91,6 +92,7 @@ public class AmazonInstanceManager {
         
         props.putString("name", ai.getName()); // NOI18N
         props.putString("region", ai.getRegionURL()); // NOI18N
+        props.putString("code", ai.getRegionCode()); // NOI18N
     }
     
     
@@ -100,6 +102,12 @@ public class AmazonInstanceManager {
             String name = props.getString("name", null); // NOI18N
             assert name != null : "Instance without name";
             String region = props.getString(REGION, null); // NOI18N
+            String code = props.getString(CODE, null); // NOI18N
+            
+            if(code == null) {
+                AmazonRegion r = (AmazonRegion) AmazonRegion.findRegion(region);
+                code = r.getCode();
+            }
             
             char ch[] = Keyring.read(PREFIX+KEY_ID+"."+name);
             if (ch == null) {
@@ -113,7 +121,7 @@ public class AmazonInstanceManager {
                 continue;
             }
             String key = new String(ch);
-            result.add(new AmazonInstance(name, keyId, key, region));
+            result.add(new AmazonInstance(name, keyId, key, region, code));
         }
         return result;
     }

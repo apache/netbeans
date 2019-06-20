@@ -1,9 +1,10 @@
-Name: Apache HttpClient
-Origin: Apache Software Foundation
-Version: 4.1.1
+Name: Jackson-core
+Origin: FasterXML
+Version: 2.6.7
 License: Apache-2.0
-Description: Apache HttpComponents Client
-URL: http://hc.apache.org/httpcomponents-client
+Description: Core Jackson abstractions, basic JSON streaming API implementation
+URL: https://github.com/FasterXML/jackson-core
+
 
                                  Apache License
                            Version 2.0, January 2004

@@ -786,6 +786,13 @@ public class PrintASTVisitor implements Visitor {
     }
 
     @Override
+    public void visit(UnpackableArrayElement node) {
+        XMLPrintNode printNode = new XMLPrintNode(node, "UnpackableArrayElement");
+        printNode.addChild("Value", node.getValue());
+        printNode.print(this);
+    }
+
+    @Override
     public void visit(Variable variable) {
         XMLPrintNode printNode = new XMLPrintNode(variable, "Variable",
                 new String[]{"isDollared", (variable.isDollared()?"true":"false")});

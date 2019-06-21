@@ -1,0 +1,2 @@
+$|>MARK_OCCURRENCES:arr^ay2<| = [...$array1];
+$array4 = array(...$array1, ...$|>MARK_OCCURRENCES:array2<|, 111);

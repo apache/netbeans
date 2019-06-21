@@ -3039,7 +3039,8 @@ T_LIST:start T_OPEN_PARENTHESE array_pair_list:varList T_CLOSE_PARENTHESE:close 
 
 | variable:var T_COALESCE_EQUAL expr:expr
 {:
-    // PHP 7.4
+    // PHP 7.4 Null Coalescing Assignment Operator
+    // https://wiki.php.net/rfc/null_coalesce_equal_operator
     RESULT = new Assignment(varleft, exprright, var , Assignment.Type.COALESCE_EQUAL, expr);
 :}
 
@@ -4158,10 +4159,27 @@ non_empty_static_array_pair_list:list T_COMMA static_scalar:key T_DOUBLE_ARROW s
     RESULT = list;
 :}
 
+| non_empty_static_array_pair_list:list T_COMMA T_ELLIPSIS:ell static_scalar:value
+{:
+    // PHP 7.4 Spread Operator In Array Expression
+    UnpackableArrayElement element = new UnpackableArrayElement(ellleft, valueright, value);
+    list.add(element);
+    RESULT = list;
+:}
+
 | static_scalar:key T_DOUBLE_ARROW static_scalar:value
 {:
     List list = new LinkedList();
     ArrayElement element = new ArrayElement(keyleft, valueright, key, value);
+    list.add(element);
+    RESULT = list;
+:}
+
+| T_ELLIPSIS:ell static_scalar:value
+{:
+    // PHP 7.4 Spread Operator In Array Expression
+    List list = new LinkedList();
+    UnpackableArrayElement element = new UnpackableArrayElement(ellleft, valueright, value);
     list.add(element);
     RESULT = list;
 :}
@@ -4732,6 +4750,14 @@ expr:key T_DOUBLE_ARROW expr:value
 {:
     ArrayElement element = new ArrayElement(exprleft, exprright, expr);
     RESULT = element;
+:}
+
+| T_ELLIPSIS:ell expr:expr
+{:
+    // PHP 7.4 Spread Operator In Array Expression
+    // https://wiki.php.net/rfc/spread_operator_for_array
+    UnpackableArrayElement unpack = new UnpackableArrayElement(ellleft, exprright, expr);
+    RESULT = unpack;
 :}
 
 | expr:expr T_DOUBLE_ARROW T_REFERENCE:start w_variable:var

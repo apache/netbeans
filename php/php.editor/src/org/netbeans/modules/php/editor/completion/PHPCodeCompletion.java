@@ -203,6 +203,14 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
     static final String[] PHP_STATIC_CLASS_KEYWORDS = {
         "self::", "parent::", "static::" //NOI18N
     };
+    static final List<String> PHP_GLOBAL_CONST_KEYWORDS = Arrays.asList(
+            "array" // NOI18N
+    );
+    static final List<String> PHP_CLASS_CONST_KEYWORDS = Arrays.asList(
+            "array", // NOI18N
+            "self::", // NOI18N
+            "parent::" // NOI18N
+    );
     private static final Collection<Character> AUTOPOPUP_STOP_CHARS = new TreeSet<>(
             Arrays.asList('=', ';', '+', '-', '*', '/',
             '%', '(', ')', '[', ']', '{', '}', '?'));
@@ -361,6 +369,18 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             case EXPRESSION:
                 autoCompleteNamespaces(completionResult, request);
                 autoCompleteExpression(completionResult, request);
+                break;
+            case GLOBAL_CONST_EXPRESSION:
+                autoCompleteNamespaces(completionResult, request);
+                autoCompleteTypeNames(completionResult, request, null, true);
+                autoCompleteConstants(completionResult, request);
+                autoCompleteKeywords(completionResult, request, PHP_GLOBAL_CONST_KEYWORDS);
+                break;
+            case CLASS_CONST_EXPRESSION:
+                autoCompleteNamespaces(completionResult, request);
+                autoCompleteTypeNames(completionResult, request, null, true);
+                autoCompleteConstants(completionResult, request);
+                autoCompleteKeywords(completionResult, request, PHP_CLASS_CONST_KEYWORDS);
                 break;
             case HTML:
             case OPEN_TAG:
@@ -1485,6 +1505,20 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 }
                 completionResult.add(new PHPCompletionItem.VariableItem(variableElement, request));
             }
+        }
+    }
+
+    private void autoCompleteConstants(final PHPCompletionResult completionResult, PHPCompletionItem.CompletionRequest request) {
+        final boolean isCamelCase = isCamelCaseForTypeNames(request.prefix);
+        final NameKind prefix = NameKind.create(request.prefix,
+                isCamelCase ? Kind.CAMEL_CASE : Kind.CASE_INSENSITIVE_PREFIX);
+        Model model = request.result.getModel();
+        Set<AliasedName> aliasedNames = ModelUtils.getAliasedNames(model, request.anchor);
+        for (final ConstantElement element : request.index.getConstants(prefix, aliasedNames, Trait.ALIAS)) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            completionResult.add(new PHPCompletionItem.ConstantItem((ConstantElement) element, request));
         }
     }
 

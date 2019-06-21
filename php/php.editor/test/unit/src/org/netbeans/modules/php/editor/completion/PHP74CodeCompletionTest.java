@@ -257,4 +257,140 @@ public class PHP74CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion(getTestPath("typedProperties20Trait"), "    public const ^CONSTANT = \"constant\";", false);
     }
 
+    public void testSpreadOperatorInArrayExpression_01() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInArrayExpression"), "$array2 = [...$arra^y1];", false);
+    }
+
+    public void testSpreadOperatorInArrayExpression_02() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInArrayExpression"), "$array3 = [0, ...^$array1];", false);
+    }
+
+    public void testSpreadOperatorInArrayExpression_02a() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInArrayExpression"), "$array3_a = [0, ^$array1];", false);
+    }
+
+    public void testSpreadOperatorInArrayExpression_03() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInArrayExpression"), "$array4 = array(...^$array1, ...$array2, 111);", false);
+    }
+
+    public void testSpreadOperatorInArrayExpression_04() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInArrayExpression"), "$array4 = array(...$array1, ...^$array2, 111);", false);
+    }
+
+    public void testSpreadOperatorInArrayExpression_05() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInArrayExpression"), "$array4 = array(...$array^1, ...$array2, 111);", false);
+    }
+
+    public void testSpreadOperatorInArrayExpression_06() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInArrayExpression"), "$array4 = array(...$array1, ...$array2^, 111);", false);
+    }
+
+    public void testSpreadOperatorInArrayExpression_07() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInArrayExpression"), "$array6 = [...getAr^ray()];", false);
+    }
+
+    public void testSpreadOperatorInArrayExpression_GlobalConst_01() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInArrayExpression"), "const CONSTANT1 = [...^CONSTANT];", false);
+    }
+
+    public void testSpreadOperatorInArrayExpression_GlobalConst_02() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInArrayExpression"), "const CONSTANT2 = [100, ...CONSTANT, ...^CONSTANT1,];", false);
+    }
+
+    public void testSpreadOperatorInArrayExpression_GlobalConst_03() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInArrayExpression"), "const CONSTANT3 = [...CONSTANT2, 100 => 0, ...CONSTANT^];", false);
+    }
+
+    public void testSpreadOperatorInArrayExpression_GlobalConst_04() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInArrayExpression"), "const CONSTANT4 = [...CONSTANT2, 100 => 0, ...\\B^ar\\BAR_CONSTANT];", false);
+    }
+
+    public void testSpreadOperatorInArrayExpression_GlobalConst_05() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInArrayExpression"), "const CONSTANT4 = [...CONSTANT2, 100 => 0, ...\\Bar\\^BAR_CONSTANT];", false);
+    }
+
+    public void testSpreadOperatorInArrayExpression_GlobalConst_06() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInArrayExpression"), "const CONSTANT5 = [...CONSTANT2, 100 => 0, ...\\^Bar\\Qux::QUX_CONSTANT];", false);
+    }
+
+    public void testSpreadOperatorInArrayExpression_GlobalConst_07() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInArrayExpression"), "const CONSTANT5 = [...CONSTANT2, 100 => 0, ...\\Bar\\Q^ux::QUX_CONSTANT];", false);
+    }
+
+    public void testSpreadOperatorInArrayExpression_GlobalConst_08() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInArrayExpression"), "const CONSTANT5 = [...CONSTANT2, 100 => 0, ...\\Bar\\Qux::^QUX_CONSTANT];", false);
+    }
+
+    public void testSpreadOperatorInArrayExpression_GlobalConst_09() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInArrayExpression"), "const BAR_CONSTANT = ^[];", false);
+    }
+
+    public void testSpreadOperatorInClassConst_00() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInClassConst"), "    public const CONSTANT1 = ^self::CONSTANT;", false);
+    }
+
+    public void testSpreadOperatorInClassConst_01() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInClassConst"), "    public const CONSTANT2 = [...^self::CONSTANT];", false);
+    }
+
+    public void testSpreadOperatorInClassConst_02() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInClassConst"), "    public const CONSTANT2 = [...self::^CONSTANT];", false);
+    }
+
+    public void testSpreadOperatorInClassConst_03() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInClassConst"), "    public const CONSTANT3 = [...se^lf::CONSTANT, \"4\"];", false);
+    }
+
+    public void testSpreadOperatorInClassConst_04() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInClassConst"), "    public const CONSTANT4 = [\"0\", ...^self::CONSTANT, \"4\"];", false);
+    }
+
+    public void testSpreadOperatorInClassConst_05() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInClassConst"), "    public const CONSTANT5 = [\"0\", ...self::CONSTANT, \"4\", se^lf::CONSTANT1];", false);
+    }
+
+    public void testSpreadOperatorInClassConst_06() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInClassConst"), "    public const CONSTANT5 = [\"0\", ...self::CONSTANT, \"4\", self::CONSTA^NT1];", false);
+    }
+
+    public void testSpreadOperatorInClassConst_07() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInClassConst"), "    public const CHILD_CONSTANT = [\"0\", ...^parent::CONSTANT, ];", false);
+    }
+
+    public void testSpreadOperatorInClassConst_08() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInClassConst"), "    public const CHILD_CONSTANT = [\"0\", ...parent::C^ONSTANT, ];", false);
+    }
+
+    public void testSpreadOperatorInClassConst_09() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInClassConst"), "    private const CONST1 = [...U^npackClass::CONSTANT];", false);
+    }
+
+    public void testSpreadOperatorInClassConst_10() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInClassConst"), "    private const CONST1 = [...UnpackClass::^CONSTANT];", false);
+    }
+
+    public void testSpreadOperatorInClassConst_11() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInClassConst"), "    private const CONST2 = [1, ...^UnpackClass::CONSTANT];", false);
+    }
+
+    public void testSpreadOperatorInClassConst_12() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInClassConst"), "    private const CONST2 = [1, ...UnpackClass::C^ONSTANT];", false);
+    }
+
+    public void testSpreadOperatorInClassConst_13() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInClassConst"), "    private const CONST3 = [1, ...\\^Foo\\UnpackClass::CONSTANT, 4];", false);
+    }
+
+    public void testSpreadOperatorInClassConst_14() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInClassConst"), "    private const CONST3 = [1, ...\\Foo\\^UnpackClass::CONSTANT, 4];", false);
+    }
+
+    public void testSpreadOperatorInClassConst_15() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInClassConst"), "    private const CONST3 = [1, ...\\Foo\\UnpackClass::^CONSTANT, 4];", false);
+    }
+
+    public void testSpreadOperatorInClassConst_16() throws Exception {
+        checkCompletion(getTestPath("spreadOperatorInClassConst"), "    private const CONST4 = [...F^_CONST];", false);
+    }
+
 }

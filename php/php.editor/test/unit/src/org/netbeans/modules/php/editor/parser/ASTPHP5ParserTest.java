@@ -1025,6 +1025,22 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php74/typedPropertiesTrait");
     }
 
+    public void testSpreadOperatorInArrayExpression_01() throws Exception {
+        performTest("parser/php74/spreadOperatorInArrayExpression_01");
+    }
+
+    public void testSpreadOperatorInArrayExpression_02() throws Exception {
+        performTest("parser/php74/spreadOperatorInArrayExpression_02");
+    }
+
+    public void testSpreadOperatorInArrayExpression_03() throws Exception {
+        performTest("parser/php74/spreadOperatorInArrayExpression_03");
+    }
+
+    public void testSpreadOperatorInArrayExpression_04() throws Exception {
+        performTest("parser/php74/spreadOperatorInArrayExpression_04");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

@@ -969,4 +969,20 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php74/typedPropertiesTrait.php");
     }
 
+    public void testSpreadOperatorInArrayExpression_01() throws Exception {
+        checkErrors("testfiles/parser/php74/spreadOperatorInArrayExpression_01.php");
+    }
+
+    public void testSpreadOperatorInArrayExpression_02() throws Exception {
+        checkErrors("testfiles/parser/php74/spreadOperatorInArrayExpression_02.php");
+    }
+
+    public void testSpreadOperatorInArrayExpression_03() throws Exception {
+        checkErrors("testfiles/parser/php74/spreadOperatorInArrayExpression_03.php");
+    }
+
+    public void testSpreadOperatorInArrayExpression_04() throws Exception {
+        checkErrors("testfiles/parser/php74/spreadOperatorInArrayExpression_04.php");
+    }
+
 }

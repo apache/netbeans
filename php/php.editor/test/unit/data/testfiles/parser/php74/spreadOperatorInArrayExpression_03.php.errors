@@ -1,0 +1,8 @@
+[[870,871]-Syntax error
+ unexpected:	&
+ expected:	exit, integer, double, identifier, STRING_VARNAME, variable, String, String, clone, function, isset, empty, list, array, __CLASS__, __TRAIT__, __METHOD__, __FUNCTION__, __LINE__, __FILE__, <<<"...", namespace, __NAMESPACE__, __DIR__, \, define, include, include_once, eval, require, require_once, print, +, -, !, ~, ++, --, (int), (double), (string), (array), (object), (bool), (unset), @, [, new, static, (, $, '"', '`', <<<'...'] 870-871:Syntax error
+ unexpected:	&
+ expected:	exit, integer, double, identifier, STRING_VARNAME, variable, String, String, clone, function, isset, empty, list, array, __CLASS__, __TRAIT__, __METHOD__, __FUNCTION__, __LINE__, __FILE__, <<<"...", namespace, __NAMESPACE__, __DIR__, \, define, include, include_once, eval, require, require_once, print, +, -, !, ~, ++, --, (int), (double), (string), (array), (object), (bool), (unset), @, [, new, static, (, $, '"', '`', <<<'...'
+[[878,879]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	]] 878-879:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	]

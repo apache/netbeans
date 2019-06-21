@@ -108,6 +108,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.TraitDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TraitMethodAliasDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TryStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.UnaryOperation;
+import org.netbeans.modules.php.editor.parser.astnodes.UnpackableArrayElement;
 import org.netbeans.modules.php.editor.parser.astnodes.UseStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatementPart;
@@ -640,6 +641,11 @@ public class DefaultVisitor implements Visitor {
         scan(traitsInsteadofStatement.getPreferredTraitName());
         scan(traitsInsteadofStatement.getMethodName());
         scan(traitsInsteadofStatement.getSuppressedTraitNames());
+    }
+
+    @Override
+    public void visit(UnpackableArrayElement unpackableArrayElement) {
+        scan(unpackableArrayElement.getValue());
     }
 
     @Override

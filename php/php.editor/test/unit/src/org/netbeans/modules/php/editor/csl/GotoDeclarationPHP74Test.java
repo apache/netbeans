@@ -129,4 +129,117 @@ public class GotoDeclarationPHP74Test extends GotoDeclarationTestBase {
     public void testTypedProperties20Trait_13() throws Exception {
         checkDeclaration(getTestPath(), "        $this->myClass4::^publicStaticTestMethod();", "    public static function ^publicStaticTestMethod(): void {");
     }
+
+    public void testSpreadOperatorInArrayExpression_01() throws Exception {
+        checkDeclaration(getTestPath(), "$array2 = [...$a^rray1];", "$^array1 = [1, 2, 3];");
+    }
+
+    public void testSpreadOperatorInArrayExpression_02() throws Exception {
+        checkDeclaration(getTestPath(), "$array3 = [0, ...$arr^ay1];", "$^array1 = [1, 2, 3];");
+    }
+
+    public void testSpreadOperatorInArrayExpression_03a() throws Exception {
+        checkDeclaration(getTestPath(), "$array4 = array(...$ar^ray1, ...$array2, 111);", "$^array1 = [1, 2, 3];");
+    }
+
+    public void testSpreadOperatorInArrayExpression_03b() throws Exception {
+        checkDeclaration(getTestPath(), "$array4 = array(...$array1, ...$ar^ray2, 111);", "$^array2 = [...$array1];");
+    }
+
+    public void testSpreadOperatorInArrayExpression_04a() throws Exception {
+        checkDeclaration(getTestPath(), "$array5 = [...$^array1, ...$array1];", "$^array1 = [1, 2, 3];");
+    }
+
+    public void testSpreadOperatorInArrayExpression_04b() throws Exception {
+        checkDeclaration(getTestPath(), "$array5 = [...$array1, ...$ar^ray1];", "$^array1 = [1, 2, 3];");
+    }
+
+    public void testSpreadOperatorInArrayExpression_05() throws Exception {
+        checkDeclaration(getTestPath(), "$array6 = [...getArr^ay()];", "function ^getArray() {");
+    }
+
+    public void testSpreadOperatorInArrayExpression_06() throws Exception {
+        checkDeclaration(getTestPath(), "$array8 = [...arrayGenerat^or()];", "function ^arrayGenerator() {");
+    }
+
+    // const
+    public void testSpreadOperatorInArrayExpression_07() throws Exception {
+        checkDeclaration(getTestPath(), "const CONSTANT1 = [...CO^NSTANT];", "const ^CONSTANT = [0, 1, 2, 3];");
+    }
+
+    public void testSpreadOperatorInArrayExpression_08() throws Exception {
+        checkDeclaration(getTestPath(), "const CONSTANT2 = [100, ...CONST^ANT, ...CONSTANT1,];", "const ^CONSTANT = [0, 1, 2, 3];");
+    }
+
+    public void testSpreadOperatorInArrayExpression_09() throws Exception {
+        checkDeclaration(getTestPath(), "const CONSTANT3 = [...CONSTANT2, 100 => 0, ...CONSTA^NT];", "const ^CONSTANT = [0, 1, 2, 3];");
+    }
+
+    public void testSpreadOperatorInArrayExpression_10() throws Exception {
+        checkDeclaration(getTestPath(), "const CONSTANT2 = [100, ...CONSTANT, ...CON^STANT1,];", "const ^CONSTANT1 = [...CONSTANT];");
+    }
+
+    public void testSpreadOperatorInArrayExpression_11() throws Exception {
+        checkDeclaration(getTestPath(), "const CONSTANT3 = [...^CONSTANT2, 100 => 0, ...CONSTANT];", "const ^CONSTANT2 = [100, ...CONSTANT, ...CONSTANT1,];");
+    }
+
+    public void testSpreadOperatorInArrayExpression_12() throws Exception {
+        checkDeclaration(getTestPath(), "const CONSTANT4 = [...CONST^ANT2, 100 => 0, ...\\Bar\\BAR_CONSTANT];", "const ^CONSTANT2 = [100, ...CONSTANT, ...CONSTANT1,];");
+    }
+
+    public void testSpreadOperatorInArrayExpression_13() throws Exception {
+        checkDeclaration(getTestPath(), "const CONSTANT5 = [...CONSTANT2^, 100 => 0, ...\\Bar\\Bar::BAR_CONSTANT];", "const ^CONSTANT2 = [100, ...CONSTANT, ...CONSTANT1,];");
+    }
+
+    public void testSpreadOperatorInArrayExpression_14() throws Exception {
+        checkDeclaration(getTestPath(), "const CONSTANT4 = [...CONSTANT2, 100 => 0, ...\\Bar\\BAR_CONS^TANT];", "const ^BAR_CONSTANT = [];");
+    }
+
+    public void testSpreadOperatorInArrayExpression_15() throws Exception {
+        checkDeclaration(getTestPath(), "const CONSTANT5 = [...CONSTANT2, 100 => 0, ...\\Bar\\Bar::BAR_CON^STANT];", "    public const ^BAR_CONSTANT = \"test\";");
+    }
+
+    public void testSpreadOperatorInClassConst_01() throws Exception {
+        checkDeclaration(getTestPath(), "    public const CONSTANT1 = self::^CONSTANT;", "    public const ^CONSTANT = [\"1\", \"2\", \"3\"];");
+    }
+
+    public void testSpreadOperatorInClassConst_02() throws Exception {
+        checkDeclaration(getTestPath(), "    public const CONSTANT2 = [...self::CONS^TANT];", "    public const ^CONSTANT = [\"1\", \"2\", \"3\"];");
+    }
+
+    public void testSpreadOperatorInClassConst_03() throws Exception {
+        checkDeclaration(getTestPath(), "    public const CONSTANT3 = [...self::CONSTANT^, \"4\"];", "    public const ^CONSTANT = [\"1\", \"2\", \"3\"];");
+    }
+
+    public void testSpreadOperatorInClassConst_04() throws Exception {
+        checkDeclaration(getTestPath(), "    public const CONSTANT4 = [\"0\", ...self::C^ONSTANT, \"4\"];", "    public const ^CONSTANT = [\"1\", \"2\", \"3\"];");
+    }
+
+    public void testSpreadOperatorInClassConst_05() throws Exception {
+        checkDeclaration(getTestPath(), "    public const CONSTANT5 = [\"0\", ...self::CONSTA^NT, \"4\", self::CONSTANT1];", "    public const ^CONSTANT = [\"1\", \"2\", \"3\"];");
+    }
+
+    public void testSpreadOperatorInClassConst_06() throws Exception {
+        checkDeclaration(getTestPath(), "    public const CHILD_CONSTANT = [\"0\", ...parent::CONS^TANT, ];", "    public const ^CONSTANT = [\"1\", \"2\", \"3\"];");
+    }
+
+    public void testSpreadOperatorInClassConst_07() throws Exception {
+        checkDeclaration(getTestPath(), "    private const CONST1 = [...UnpackClass::CO^NSTANT];", "    public const ^CONSTANT = [\"1\", \"2\", \"3\"];");
+    }
+
+    public void testSpreadOperatorInClassConst_08() throws Exception {
+        checkDeclaration(getTestPath(), "    private const CONST2 = [1, ...UnpackClass::CONST^ANT];", "    public const ^CONSTANT = [\"1\", \"2\", \"3\"];");
+    }
+
+    public void testSpreadOperatorInClassConst_09() throws Exception {
+        checkDeclaration(getTestPath(), "    private const CONST3 = [1, ...\\Foo\\UnpackClass::CO^NSTANT, 4];", "    public const ^CONSTANT = [\"1\", \"2\", \"3\"];");
+    }
+
+    public void testSpreadOperatorInClassConst_10() throws Exception {
+        checkDeclaration(getTestPath(), "    public const CONSTANT5 = [\"0\", ...self::CONSTANT, \"4\", self::CONST^ANT1];", "    public const ^CONSTANT1 = self::CONSTANT;");
+    }
+
+    public void testSpreadOperatorInClassConst_11() throws Exception {
+        checkDeclaration(getTestPath(), "    private const CONST4 = [...F_CO^NST];", "const ^F_CONST = \"test\";");
+    }
 }

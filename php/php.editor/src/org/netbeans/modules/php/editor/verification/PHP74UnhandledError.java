@@ -30,6 +30,7 @@ import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.UnpackableArrayElement;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
@@ -86,7 +87,7 @@ public final class PHP74UnhandledError extends UnhandledErrorRule {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
-            checkNullCoalescingAssignmet(node);
+            checkNullCoalescingAssignment(node);
             super.visit(node);
         }
 
@@ -99,7 +100,16 @@ public final class PHP74UnhandledError extends UnhandledErrorRule {
             super.visit(node);
         }
 
-        private void checkNullCoalescingAssignmet(Assignment node) {
+        @Override
+        public void visit(UnpackableArrayElement node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            checkUnpackableArrayElement(node);
+            super.visit(node);
+        }
+
+        private void checkNullCoalescingAssignment(Assignment node) {
             if (node.getOperator() == Assignment.Type.COALESCE_EQUAL) { // ??=
                 createError(node);
             }
@@ -109,6 +119,10 @@ public final class PHP74UnhandledError extends UnhandledErrorRule {
             if (node.getFieldType() != null) {
                 createError(node);
             }
+        }
+
+        private void checkUnpackableArrayElement(UnpackableArrayElement node) {
+            createError(node);
         }
 
         private void createError(ASTNode node) {

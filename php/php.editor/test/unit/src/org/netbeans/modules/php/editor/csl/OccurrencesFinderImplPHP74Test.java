@@ -155,4 +155,159 @@ public class OccurrencesFinderImplPHP74Test extends OccurrencesFinderImplTestBas
         checkOccurrences(getTestPath(), "    public static function publicStaticTestMe^thod(): void {", true);
     }
 
+    public void testSpreadOperatorInArrayExpression_01() throws Exception {
+        checkOccurrences(getTestPath(), "$a^rray1 = [1, 2, 3];", true);
+    }
+
+    public void testSpreadOperatorInArrayExpression_02() throws Exception {
+        checkOccurrences(getTestPath(), "$array2 = [...$array^1];", true);
+    }
+
+    public void testSpreadOperatorInArrayExpression_03() throws Exception {
+        checkOccurrences(getTestPath(), "$array3 = [0, ...$arra^y1];", true);
+    }
+
+    public void testSpreadOperatorInArrayExpression_04() throws Exception {
+        checkOccurrences(getTestPath(), "$array4 = array(...$array^1, ...$array2, 111);", true);
+    }
+
+    public void testSpreadOperatorInArrayExpression_05() throws Exception {
+        checkOccurrences(getTestPath(), "$array5 = [...$^array1, ...$array1];", true);
+    }
+
+    public void testSpreadOperatorInArrayExpression_06() throws Exception {
+        checkOccurrences(getTestPath(), "$array5 = [...$array1, ...$ar^ray1];", true);
+    }
+
+    public void testSpreadOperatorInArrayExpression_07() throws Exception {
+        checkOccurrences(getTestPath(), "$arr^ay2 = [...$array1];", true);
+    }
+
+    public void testSpreadOperatorInArrayExpression_08() throws Exception {
+        checkOccurrences(getTestPath(), "$array4 = array(...$array1, ...$arra^y2, 111);", true);
+    }
+
+    public void testSpreadOperatorInArrayExpression_09() throws Exception {
+        checkOccurrences(getTestPath(), "function getArr^ay() {", true);
+    }
+
+    public void testSpreadOperatorInArrayExpression_10() throws Exception {
+        checkOccurrences(getTestPath(), "$array6 = [...getAr^ray()];", true);
+    }
+
+    public void testSpreadOperatorInArrayExpression_11() throws Exception {
+        checkOccurrences(getTestPath(), "function arrayGenerat^or() {", true);
+    }
+
+    public void testSpreadOperatorInArrayExpression_12() throws Exception {
+        checkOccurrences(getTestPath(), "$array8 = [...arrayGenera^tor()];", true);
+    }
+
+    public void testSpreadOperatorInArrayExpression_GlobalConst_01() throws Exception {
+        checkOccurrences(getTestPath(), "const CONST^ANT = [0, 1, 2, 3];", true);
+    }
+
+    public void testSpreadOperatorInArrayExpression_GlobalConst_02() throws Exception {
+        checkOccurrences(getTestPath(), "const CONSTANT1 = [...^CONSTANT];", true);
+    }
+
+    public void testSpreadOperatorInArrayExpression_GlobalConst_03() throws Exception {
+        checkOccurrences(getTestPath(), "const CONSTANT2 = [100, ...CONSTANT^, ...CONSTANT1,];", true);
+    }
+
+    public void testSpreadOperatorInArrayExpression_GlobalConst_04() throws Exception {
+        checkOccurrences(getTestPath(), "const CONSTANT3 = [...CONSTANT2, 100 => 0, ...CON^STANT];", true);
+    }
+
+    public void testSpreadOperatorInArrayExpression_GlobalConst_05() throws Exception {
+        checkOccurrences(getTestPath(), "const CONST^ANT1 = [...CONSTANT];", true);
+    }
+
+    public void testSpreadOperatorInArrayExpression_GlobalConst_06() throws Exception {
+        checkOccurrences(getTestPath(), "const CONSTANT2 = [100, ...CONSTANT, ...CON^STANT1,];", true);
+    }
+
+    public void testSpreadOperatorInArrayExpression_GlobalConst_07() throws Exception {
+        checkOccurrences(getTestPath(), "const CONST^ANT2 = [100, ...CONSTANT, ...CONSTANT1,];", true);
+    }
+
+    public void testSpreadOperatorInArrayExpression_GlobalConst_08() throws Exception {
+        checkOccurrences(getTestPath(), "const CONSTANT3 = [...CONSTAN^T2, 100 => 0, ...CONSTANT];", true);
+    }
+
+    public void testSpreadOperatorInArrayExpression_GlobalConst_09() throws Exception {
+        checkOccurrences(getTestPath(), "const CONSTANT4 = [...CON^STANT2, 100 => 0, ...\\Bar\\BAR_CONSTANT];", true);
+    }
+
+    public void testSpreadOperatorInArrayExpression_GlobalConst_10() throws Exception {
+        checkOccurrences(getTestPath(), "const CONSTANT5 = [...CONSTANT^2, 100 => 0, ...\\Bar\\Bar::BAR_CONSTANT];", true);
+    }
+
+    public void testSpreadOperatorInArrayExpression_GlobalConst_11() throws Exception {
+        checkOccurrences(getTestPath(), "const BAR_CO^NSTANT = [];", true);
+    }
+
+    public void testSpreadOperatorInArrayExpression_GlobalConst_12() throws Exception {
+        checkOccurrences(getTestPath(), "const CONSTANT4 = [...CONSTANT2, 100 => 0, ...\\Bar\\BAR_CO^NSTANT];", true);
+    }
+
+    public void testSpreadOperatorInArrayExpression_GlobalConst_13() throws Exception {
+        checkOccurrences(getTestPath(), "    public const BAR_C^ONSTANT = \"test\";", true);
+    }
+
+    public void testSpreadOperatorInArrayExpression_GlobalConst_14() throws Exception {
+        checkOccurrences(getTestPath(), "const CONSTANT5 = [...CONSTANT2, 100 => 0, ...\\Bar\\Bar::BAR^_CONSTANT];", true);
+    }
+
+    public void testSpreadOperatorInClassConst_01a() throws Exception {
+        checkOccurrences(getTestPath(), "const F_C^ONST = \"test\";", true);
+    }
+
+    public void testSpreadOperatorInClassConst_01b() throws Exception {
+        checkOccurrences(getTestPath(), "    private const CONST4 = [...F_CON^ST];", true);
+    }
+
+    public void testSpreadOperatorInClassConst_01c() throws Exception {
+        checkOccurrences(getTestPath(), "use const \\Foo\\F_CON^ST;", true);
+    }
+
+    public void testSpreadOperatorInClassConst_02a() throws Exception {
+        checkOccurrences(getTestPath(), "    public const ^CONSTANT = [\"1\", \"2\", \"3\"];", true);
+    }
+
+    public void testSpreadOperatorInClassConst_02b() throws Exception {
+        checkOccurrences(getTestPath(), "    public const CONSTANT1 = self::C^ONSTANT;", true);
+    }
+
+    public void testSpreadOperatorInClassConst_02c() throws Exception {
+        checkOccurrences(getTestPath(), "    public const CONSTANT2 = [...self::CONSTA^NT];", true);
+    }
+
+    public void testSpreadOperatorInClassConst_02d() throws Exception {
+        checkOccurrences(getTestPath(), "    public const CONSTANT3 = [...self::CONST^ANT, \"4\"];", true);
+    }
+
+    public void testSpreadOperatorInClassConst_02e() throws Exception {
+        checkOccurrences(getTestPath(), "    public const CONSTANT4 = [\"0\", ...self::CONST^ANT, \"4\"];", true);
+    }
+
+    public void testSpreadOperatorInClassConst_02f() throws Exception {
+        checkOccurrences(getTestPath(), "    public const CONSTANT5 = [\"0\", ...self::CONSTA^NT, \"4\", self::CONSTANT1];", true);
+    }
+
+    public void testSpreadOperatorInClassConst_02g() throws Exception {
+        checkOccurrences(getTestPath(), "    public const CHILD_CONSTANT = [\"0\", ...parent::CONSTA^NT, ];", true);
+    }
+
+    public void testSpreadOperatorInClassConst_02h() throws Exception {
+        checkOccurrences(getTestPath(), "    private const CONST1 = [...UnpackClass::CONSTA^NT];", true);
+    }
+
+    public void testSpreadOperatorInClassConst_02i() throws Exception {
+        checkOccurrences(getTestPath(), "    private const CONST2 = [1, ...UnpackClass::CONSTA^NT];", true);
+    }
+
+    public void testSpreadOperatorInClassConst_02j() throws Exception {
+        checkOccurrences(getTestPath(), "    private const CONST3 = [1, ...\\Foo\\UnpackClass::C^ONSTANT, 4];", true);
+    }
 }

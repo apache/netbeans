@@ -1,0 +1,9 @@
+Code completion result for source line:
+public const CONSTANT5 = ["0", ...self::CONSTANT, "4", self::CONSTA|NT1];
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   CONSTANT ?                      [PUBLIC]   \Foo\UnpackClass
+CONSTANT   CONSTANT1 ?                     [PUBLIC]   \Foo\UnpackClass
+CONSTANT   CONSTANT2 ?                     [PUBLIC]   \Foo\UnpackClass
+CONSTANT   CONSTANT3 ?                     [PUBLIC]   \Foo\UnpackClass
+CONSTANT   CONSTANT4 ?                     [PUBLIC]   \Foo\UnpackClass
+CONSTANT   CONSTANT5 ?                     [PUBLIC]   \Foo\UnpackClass

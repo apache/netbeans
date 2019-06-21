@@ -47,7 +47,7 @@ parts:
       - unzip
       - openjdk-8-jdk-headless
     plugin: ant
-    source: ../../
+    source: ../../../
     filesets:
         netbeans: [ netbeans/*, -netbeans/*.built ]
     override-build: |

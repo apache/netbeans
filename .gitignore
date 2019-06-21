@@ -77,10 +77,10 @@
 
 # Snapcraft Generated files #
 #######################
-/nbbuild/packaging/snap/.snapcraft/
-/nbbuild/packaging/parts/
-/nbbuild/packaging/prime/
-/nbbuild/packaging/stage/
+/nbbuild/packaging/*/snap/.snapcraft/
+/nbbuild/packaging/*/parts/
+/nbbuild/packaging/*/prime/
+/nbbuild/packaging/*/stage/
 *.snap
 
 # Backup files

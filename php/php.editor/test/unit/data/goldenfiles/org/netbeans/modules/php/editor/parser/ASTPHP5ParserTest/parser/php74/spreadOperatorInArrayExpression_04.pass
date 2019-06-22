@@ -1,0 +1,47 @@
+<testresult testFile='spreadOperatorInArrayExpression_04.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='833' end='839'>
+            <text>$array</text>
+        </token>
+        <token id='T_EQUAL' start='840' end='841'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='842' end='843'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='851' end='857'>
+            <text>"test"</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='858' end='860'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_ELLIPSIS' start='861' end='864'>
+            <text>...</text>
+        </token>
+        <token id='T_VARIABLE' start='864' end='871'>
+            <text>$array1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='872' end='873'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='873' end='874'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='875' end='875'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='875'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='815' end='833' commentType='singleLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='815' end='833' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <ASTError start='833' end='860'/>
+            <ASTError start='864' end='871'/>
+            <EmptyStatement start='873' end='874'/>
+        </Statements>
+    </Program>
+</testresult>

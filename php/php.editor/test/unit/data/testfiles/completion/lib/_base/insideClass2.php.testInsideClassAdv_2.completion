@@ -2,5 +2,7 @@ Code completion result for source line:
 protected f|unction meth_bb() {}
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
+CLASS      ForClsCtxCodeCompletion         [PUBLIC]   insideClass3.php
 KEYWORD    final                                      null
+KEYWORD    float                                      null
 KEYWORD    function                                   null

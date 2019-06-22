@@ -395,6 +395,7 @@ public class PrintASTVisitor implements Visitor {
     public void visit(FieldsDeclaration node) {
         XMLPrintNode printNode = new XMLPrintNode(node, "FieldsDeclaration",
                 new String[]{"modifier", node.getModifierString() });
+        printNode.addChild("FieldType", node.getFieldType());
         printNode.addChildrenGroup("VariableNames", node.getVariableNames());
         printNode.addChildrenGroup("InitialValues", node.getInitialValues());
         printNode.print(this);
@@ -781,6 +782,13 @@ public class PrintASTVisitor implements Visitor {
         XMLPrintNode printNode = new XMLPrintNode(node, "UnaryOperation",
                 new String[]{"operator", node.getOperator().name()});
         printNode.addChild(node.getExpression());
+        printNode.print(this);
+    }
+
+    @Override
+    public void visit(UnpackableArrayElement node) {
+        XMLPrintNode printNode = new XMLPrintNode(node, "UnpackableArrayElement");
+        printNode.addChild("Value", node.getValue());
         printNode.print(this);
     }
 

@@ -1,0 +1,13 @@
+Code completion result for source line:
+public const CHILD_CONSTANT = ["0", ...|parent::CONSTANT, ];
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    Bar                             [PUBLIC]   null
+PACKAGE    Foo                             [PUBLIC]   null
+CLASS      BarUnpackClass                  [PUBLIC]   Bar
+CLASS      UnpackChildClass                [PUBLIC]   Foo
+CLASS      UnpackClass                     [PUBLIC]   Foo
+CONSTANT   F_CONST "test"                  [PUBLIC]   Foo
+KEYWORD    parent::                                   null
+KEYWORD    self::                                     null
+------------------------------------
+KEYWORD    array                                      null

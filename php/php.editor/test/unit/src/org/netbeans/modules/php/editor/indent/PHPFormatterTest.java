@@ -798,4 +798,20 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/nullCoalescingAssignment01.php", options);
     }
 
+    public void testTypedProperties20_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/typedProperties20_01.php", options);
+    }
+
+    public void testSpeadOperatorInArrayExpression_01() throws Exception {
+        // $array = [...$array, 1];
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/spreadOperatorInArrayExpression.php", options);
+    }
+
+    public void testSpeadOperatorInArrayExpression_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/spreadOperatorInClassConst.php", options);
+    }
+
 }

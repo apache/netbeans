@@ -95,6 +95,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ReflectionVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ReturnStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.Scalar;
 import org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.SingleUseStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticConstantAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticFieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticMethodInvocation;
@@ -107,8 +108,8 @@ import org.netbeans.modules.php.editor.parser.astnodes.TraitDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TraitMethodAliasDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TryStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.UnaryOperation;
+import org.netbeans.modules.php.editor.parser.astnodes.UnpackableArrayElement;
 import org.netbeans.modules.php.editor.parser.astnodes.UseStatement;
-import org.netbeans.modules.php.editor.parser.astnodes.SingleUseStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
@@ -287,6 +288,7 @@ public class DefaultVisitor implements Visitor {
 
     @Override
     public void visit(FieldsDeclaration node) {
+        scan(node.getFieldType());
         scan(node.getFields());
     }
 
@@ -639,6 +641,11 @@ public class DefaultVisitor implements Visitor {
         scan(traitsInsteadofStatement.getPreferredTraitName());
         scan(traitsInsteadofStatement.getMethodName());
         scan(traitsInsteadofStatement.getSuppressedTraitNames());
+    }
+
+    @Override
+    public void visit(UnpackableArrayElement unpackableArrayElement) {
+        scan(unpackableArrayElement.getValue());
     }
 
     @Override

@@ -33,6 +33,8 @@
             </Interfaces>
             <Block start='78' end='234' isCurly='true'>
                 <FieldsDeclaration start='84' end='98' modifier='private'>
+                    <FieldType>
+                    </FieldType>
                     <VariableNames>
                         <Variable start='92' end='97' isDollared='true'>
                             <Identifier start='93' end='97' name='name'/>

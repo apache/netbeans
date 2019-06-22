@@ -307,10 +307,13 @@ class ModelBuilder {
         }
 
         static FieldElementImpl create(SingleFieldDeclarationInfo nodeInfo, ModelBuilder context) {
-            String returnType = VariousUtils.getFieldTypeFromPHPDoc(context.getProgram(), nodeInfo.getOriginalNode());
+            String returnType = nodeInfo.getFieldType();
+            if (returnType == null) {
+                returnType = VariousUtils.getFieldTypeFromPHPDoc(context.getProgram(), nodeInfo.getOriginalNode());
+            }
             boolean isDeprecated = VariousUtils.isDeprecatedFromPHPDoc(context.getProgram(), nodeInfo.getOriginalNode());
             String returnFQType = VariousUtils.qualifyTypeNames(returnType, nodeInfo.getRange().getStart(), context.getCurrentScope());
-            FieldElementImpl fei = new FieldElementImpl(context.getCurrentScope(), returnType, returnFQType, nodeInfo, isDeprecated);
+            FieldElementImpl fei = new FieldElementImpl(context.getCurrentScope(), returnType, returnFQType, nodeInfo, isDeprecated, false);
             return fei;
         }
 

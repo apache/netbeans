@@ -1,0 +1,10 @@
+Code completion result for source line:
+const CONSTANT3 = [...CONSTANT2, 100 => 0, ...CONSTANT|];
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   CONSTANT ?                      [PUBLIC]   Foo
+CONSTANT   CONSTANT1 ?                     [PUBLIC]   Foo
+CONSTANT   CONSTANT1a ?                    [PUBLIC]   Foo
+CONSTANT   CONSTANT2 ?                     [PUBLIC]   Foo
+CONSTANT   CONSTANT3 ?                     [PUBLIC]   Foo
+CONSTANT   CONSTANT4 ?                     [PUBLIC]   Foo
+CONSTANT   CONSTANT5 ?                     [PUBLIC]   Foo

@@ -78,6 +78,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ParenthesisExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Program;
 import org.netbeans.modules.php.editor.parser.astnodes.ReturnStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.SingleUseStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.Statement;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticFieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticMethodInvocation;
@@ -89,7 +90,6 @@ import org.netbeans.modules.php.editor.parser.astnodes.TraitDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TraitMethodAliasDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TryStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.UseStatement;
-import org.netbeans.modules.php.editor.parser.astnodes.SingleUseStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
@@ -991,7 +991,7 @@ public class FormatVisitor extends DefaultVisitor {
                 includeWSBeforePHPDoc = true;
             }
         }
-        while (ts.moveNext() && ts.token().id() != PHPTokenId.PHP_VARIABLE) {
+        while (ts.moveNext() && !isFieldTypeOrVariableToken(ts.token())) {
             addFormatToken(formatTokens);
         }
         ts.movePrevious();
@@ -2484,6 +2484,24 @@ public class FormatVisitor extends DefaultVisitor {
                     && statements.get(0).equals(node);
         }
         return true;
+    }
+
+    private boolean isFieldTypeOrVariableToken(Token<PHPTokenId> token) {
+        return PHPTokenId.PHP_VARIABLE == token.id()
+                || PHPTokenId.PHP_ARRAY == token.id()
+                || PHPTokenId.PHP_ITERABLE == token.id()
+                || PHPTokenId.PHP_PARENT == token.id()
+                || PHPTokenId.PHP_SELF == token.id()
+                || PHPTokenId.PHP_TYPE_BOOL == token.id()
+                || PHPTokenId.PHP_TYPE_INT == token.id()
+                || PHPTokenId.PHP_TYPE_FLOAT == token.id()
+                || PHPTokenId.PHP_TYPE_OBJECT == token.id()
+                || PHPTokenId.PHP_TYPE_STRING == token.id()
+                || PHPTokenId.PHP_NS_SEPARATOR == token.id() // \
+                || (PHPTokenId.PHP_TOKEN == token.id() && TokenUtilities.textEquals(token.text(), "?")) // NOI18N
+                || PHPTokenId.PHP_TYPE_VOID == token.id() // not supported type but just check it
+                || PHPTokenId.PHP_CALLABLE == token.id() // not supported type but just check it
+                ;
     }
 
     private interface GroupAlignmentTokenHolder {

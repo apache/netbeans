@@ -1,10 +1,10 @@
 [[51,58]-Syntax error
  unexpected:	private
  after:	protected
- expected:	variable, function, const, static, abstract, final] 51-58:Syntax error
+ expected:	identifier, variable, function, const, array, callable, namespace, \, define, ?, static, abstract, final] 51-58:Syntax error
  unexpected:	private
  after:	protected
- expected:	variable, function, const, static, abstract, final
+ expected:	identifier, variable, function, const, array, callable, namespace, \, define, ?, static, abstract, final
 [[75,78]-POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	identifier 'fnc'] 75-78:POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	identifier 'fnc'

@@ -1,3 +1,4 @@
+<?php
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,22 +17,43 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.editor.lexer;
 
-public class PHP74FeaturesTest extends PHPLexerTestBase {
+$billion1 = 1000000000;
+$billion2 = 1_000_000_000;
 
-    public PHP74FeaturesTest(String testName) {
-        super(testName);
-    }
+const CONSTANT1 = 123456789.88;
+const CONSTANT2 = 123_456_789.88;
+const CONSTANT1 = 1_234_5678_9.88_888_8_88;
 
-    // "??="
-    public void testNullCoalescingAssignmentOperator_01() throws Exception {
-        performTest("lexer/php74/nullCoalescingAssignmentOperator_01");
-    }
+$value1 = 13500;
+$value2 = 135_00;
 
-    // e.g. 100_000_000
-    public void testNumericLiteralSeparator_01() throws Exception {
-        performTest("lexer/php74/numericLiteralSeparator_01");
-    }
+.88;
+.88_00;
+.88_000_0;
+33.;
+33_44.;
+33_44_5_6666.;
 
-}
+1.234567e-11; // float
+1.234_567e-11; // float
+1.2_34_567e-1_1; // float
+1.2_3456_7E1_11; // float
+
+123456789; // decimal
+123_456_789; // decimal
+12_3456_7_89; // decimal
+
+0x1234ABCD; // hexadecimal
+0x1234_ABCD; // hexadecimal
+0x1_23_4ABC_D; // hexadecimal
+
+0b01011111; // binary
+0b0101_1111; // binary
+0b010_11_1_11; // binary
+
+0123456; // octal
+0123_456; // octal
+01_2_345_6; // octal
+
+_100; // constant name

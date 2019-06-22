@@ -1,3 +1,4 @@
+<?php
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,22 +17,5 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.editor.lexer;
 
-public class PHP74FeaturesTest extends PHPLexerTestBase {
-
-    public PHP74FeaturesTest(String testName) {
-        super(testName);
-    }
-
-    // "??="
-    public void testNullCoalescingAssignmentOperator_01() throws Exception {
-        performTest("lexer/php74/nullCoalescingAssignmentOperator_01");
-    }
-
-    // e.g. 100_000_000
-    public void testNumericLiteralSeparator_01() throws Exception {
-        performTest("lexer/php74/numericLiteralSeparator_01");
-    }
-
-}
+0x_123;

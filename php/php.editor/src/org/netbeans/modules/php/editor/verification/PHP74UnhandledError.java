@@ -30,6 +30,7 @@ import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.Scalar;
 import org.netbeans.modules.php.editor.parser.astnodes.UnpackableArrayElement;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
@@ -109,6 +110,17 @@ public final class PHP74UnhandledError extends UnhandledErrorRule {
             super.visit(node);
         }
 
+        @Override
+        public void visit(Scalar scalar) {
+            // Numeric Literal Separator
+            // https://wiki.php.net/rfc/numeric_literal_separator
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            checkNumericLiteralSeparator(scalar);
+            super.visit(scalar);
+        }
+
         private void checkNullCoalescingAssignment(Assignment node) {
             if (node.getOperator() == Assignment.Type.COALESCE_EQUAL) { // ??=
                 createError(node);
@@ -123,6 +135,15 @@ public final class PHP74UnhandledError extends UnhandledErrorRule {
 
         private void checkUnpackableArrayElement(UnpackableArrayElement node) {
             createError(node);
+        }
+
+        private void checkNumericLiteralSeparator(Scalar node) {
+            if (node.getScalarType() == Scalar.Type.INT
+                    || node.getScalarType() == Scalar.Type.REAL) {
+                if (node.getStringValue().contains("_")) { // NOI18N
+                    createError(node);
+                }
+            }
         }
 
         private void createError(ASTNode node) {

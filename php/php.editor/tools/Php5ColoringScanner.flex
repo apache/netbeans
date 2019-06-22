@@ -257,11 +257,11 @@ import org.netbeans.modules.web.common.api.ByteStack;
 
 %}
 
-LNUM=[0-9]+
-DNUM=([0-9]*[\.][0-9]+)|([0-9]+[\.][0-9]*)
+LNUM=[0-9]+(_[0-9]+)*
+DNUM=({LNUM}?[\.]{LNUM})|({LNUM}[\.]{LNUM}?)
 EXPONENT_DNUM=(({LNUM}|{DNUM})[eE][+-]?{LNUM})
-HNUM="0x"[0-9a-fA-F]+
-BNUM="0b"[01]+
+HNUM="0x"[0-9a-fA-F]+(_[0-9a-fA-F]+)*
+BNUM="0b"[01]+(_[01]+)*
 //LABEL=[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
 LABEL=([[:letter:]_]|[\u007f-\u00ff])([[:letter:][:digit:]_]|[\u007f-\u00ff])*
 WHITESPACE=[ \n\r\t]+

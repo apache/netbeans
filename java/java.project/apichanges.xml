@@ -85,6 +85,18 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="ProjectPlatformNoPE">
+            <api name="java_project"/>
+            <summary>Added support for per-project platform for projects which don't use PropertyEvaluator.</summary>
+            <version major="1" minor="77"/>
+            <date day="19" month="6" year="2019"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                Added support for per-project platform for projects which don't use <code>PropertyEvaluator</code>.
+            </description>
+            <class package="org.netbeans.spi.java.project.support" name="ProjectPlatform"/>
+        </change>
         <change id="ProjectModulesModifier">
             <api name="java_project"/>
             <summary>Added a SPI to manipulate with project's <code>module-info.java</code> declarations</summary>

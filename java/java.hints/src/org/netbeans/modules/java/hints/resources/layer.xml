@@ -359,23 +359,6 @@
         <folder name="org"><folder name="netbeans"><folder name="modules"><folder name="java"><folder name="hints">
             <folder name="rule_config_default">
             </folder>
-            <folder name="rule_config_jdk5">
-                <file name="org.netbeans.modules.java.hints.jdk.IteratorToFor.properties" url="enabled.properties"/>
-                <file name="org.netbeans.modules.java.hints.jdk.UnnecessaryUnboxing.properties" url="enabled.properties"/>
-                <file name="org.netbeans.modules.java.hints.jdk.UnnecessaryBoxing.run.properties" url="enabled.properties"/>
-                <file name="org.netbeans.modules.java.hints.StaticImport.properties" url="enabled.properties"/>
-                <file name="org.netbeans.modules.java.hints.jdk.ConvertToStringSwitch.properties" url="enabled.properties"/>
-            </folder>
-            <folder name="rule_config_jdk7">
-                <file name="Javac_canUseDiamond.properties" url="enabled.properties"/>
-                <file name="org.netbeans.modules.java.hints.jdk.IteratorToFor.properties" url="enabled.properties"/>
-                <file name="org.netbeans.modules.java.hints.jdk.Tiny.containsForIndexOf.properties" url="enabled.properties"/>
-                <file name="org.netbeans.modules.java.hints.jdk.UnnecessaryUnboxing.properties" url="enabled.properties"/>
-                <file name="org.netbeans.modules.java.hints.jdk.ConvertToARM.properties" url="enabled.properties"/>
-                <file name="org.netbeans.modules.java.hints.jdk.JoinCatches.properties" url="enabled.properties"/>
-                <file name="org.netbeans.modules.java.hints.StaticImport.properties" url="enabled.properties"/>
-                <file name="org.netbeans.modules.java.hints.jdk.UnnecessaryBoxing.run.properties" url="enabled.properties"/>
-            </folder>
             <folder name="rule_config_jdk8">
                 <file name="Javac_canUseDiamond.properties" url="enabled.properties"/>
                 <file name="Javac_canUseLambda.properties" url="enabled.properties"/>
@@ -388,7 +371,7 @@
                 <file name="org.netbeans.modules.java.hints.jdk.ConvertToStringSwitch.properties" url="enabled.properties"/>
                 <file name="org.netbeans.modules.java.hints.jdk.UnnecessaryBoxing.run.properties" url="enabled.properties"/>
             </folder>
-            <folder name="rule_config_jdk10">
+            <folder name="rule_config_jdk11">
                 <file name="Javac_canUseDiamond.properties" url="enabled.properties"/>
                 <file name="Javac_canUseLambda.properties" url="enabled.properties"/>
                 <file name="org.netbeans.modules.java.hints.jdk.IteratorToFor.properties" url="enabled.properties"/>
@@ -417,10 +400,8 @@
             </folder>
             <folder name="ui">
                 <file name="rule_config_default.properties" url="nbresloc:/org/netbeans/modules/java/hints/resources/default.properties"/>
-                <file name="rule_config_jdk5.properties" url="nbresloc:/org/netbeans/modules/java/hints/resources/jdk5.properties"/>
-                <file name="rule_config_jdk7.properties" url="nbresloc:/org/netbeans/modules/java/hints/resources/jdk7.properties"/>
                 <file name="rule_config_jdk8.properties" url="nbresloc:/org/netbeans/modules/java/hints/resources/jdk8.properties"/>
-                <file name="rule_config_jdk10.properties" url="nbresloc:/org/netbeans/modules/java/hints/resources/jdk10.properties"/>
+                <file name="rule_config_jdk11.properties" url="nbresloc:/org/netbeans/modules/java/hints/resources/jdk11.properties"/>
                 <file name="rule_config_jdk12.properties" url="nbresloc:/org/netbeans/modules/java/hints/resources/jdk12.properties"/>
             </folder>
         </folder></folder></folder></folder></folder>

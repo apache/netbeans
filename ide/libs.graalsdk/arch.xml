@@ -148,7 +148,10 @@
       <usecase id="org.graalvm.polyglot" name="Use Graal SDK directly">
           <api category="third" group="java" name="org.graalvm.polyglot" type="export">
               This module re-exports <code>org.graalvm.polyglot</code> APIs.
-              Use them to obtain directly, if you trust the provider of those APIs.
+              Use them to obtain access to the GraalVM directly, if you only
+              want to work with them and generic
+              <a href="@org-netbeans-api-scripting@/org/netbeans/api/scripting/Scripting.html">Scripting</a>
+              wrapper isn't enough.
           </api>
       </usecase>
   </p>
@@ -551,7 +554,9 @@
       <api name="allowAllAccess" type="export" group="property" category="stable">
         By default all the <a href="http://graalvm.org">GraalVM</a> engines
         (named <code>GraalVM:something</code>)
-        run in a very restricted, secure sandbox. That means they cannot
+        run in a very restricted, secure sandbox. See
+        <a href="@TOP@/org/netbeans/libs/graalsdk/GraalSDK.html">GraalSDK</a>
+        for details. That means the languages cannot
         access local files, ports, etc. Some languages (like
         <a href="https://gihub.com/graalvm/fastr">>FastR</a>
         implementation of the <b>R</b> language) need such access. In such

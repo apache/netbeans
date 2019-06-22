@@ -23,6 +23,8 @@
     <description>Builds, tests, and runs the project org.netbeans.modules.gradle</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 
+    <taskdef name="configureproxy" classname="org.netbeans.nbbuild.extlibs.ConfigureProxy" classpath="${nbantext.jar}"/>
+
     <property name="test-unit-sys-prop.test.data.dir" location="test/data"/>
     <property name="tooling" value="netbeans-gradle-tooling"/>
     <available property="have.gradle.wrapper" file="${tooling}/gradle/wrapper/gradle-wrapper.jar"/>
@@ -36,9 +38,18 @@
         <copy file="external/gradle-wrapper-4.10.2.jar" tofile="${tooling}/gradle/wrapper/gradle-wrapper.jar"/>
     </target>
 
-    <target name="build-tooling-lib" depends="-copy-gradle-wrapper,-uptodate-tooling" unless="tooling.uptodate">
+    <target name="build-tooling-lib" depends="-download.release.files,-copy-gradle-wrapper,-uptodate-tooling" unless="tooling.uptodate">
+        <configureproxy connectTo="http://netbeans.apache.org" hostProperty="proxyHost" portProperty="proxyPort"/>
+        <condition property="gradle.proxy.args" value="-Dhttp.proxyHost=${proxyHost} -Dhttp.proxyPort=${proxyPort} -Dhttps.proxyHost=${proxyHost} -Dhttps.proxyPort=${proxyPort}">
+            <not>
+                <equals arg1="${proxyHost}" arg2="" />
+            </not>
+        </condition>
+        <property name="gradle.proxy.args" value=""/>
+
         <java fork="true" dir="${tooling}" classpath="${tooling}/gradle/wrapper/gradle-wrapper.jar" classname="org.gradle.wrapper.GradleWrapperMain" failonerror="true">
             <sysproperty key="org.gradle.appname" value="Gradle"/>
+            <arg line="${gradle.proxy.args}"/>
             <arg line="clean build -x check"/>
         </java>
         <copy file="${tooling}/build/libs/${tooling}.jar" todir="build/tooling" overwrite="true"/>

@@ -57,13 +57,12 @@ import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Enumerations;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.SharedClassObject;
-import org.openide.util.Utilities;
-import org.openide.util.actions.SystemAction;
 import org.openide.util.io.NbObjectInputStream;
 
 /**
@@ -84,9 +83,6 @@ final class BinaryFS extends FileSystem implements DataInput {
      */
 
     static final byte[] MAGIC = "org.netbeans.core.projects.cache.BinaryV6".getBytes(); // NOI18N
-
-    /** An empty array of SystemActions. */
-    static final SystemAction[] NO_ACTIONS = new SystemAction[0];
 
     /** An empty array of FileObjects. */
     static final FileObject[] NO_CHILDREN = new FileObject[0];
@@ -178,20 +174,6 @@ final class BinaryFS extends FileSystem implements DataInput {
         return fo;
     }
 
-    /** Returns an array of actions that can be invoked on any file in
-     * this filesystem.
-     * These actions should preferably
-     * support the {@link org.openide.util.actions.Presenter.Menu Menu},
-     * {@link org.openide.util.actions.Presenter.Popup Popup},
-     * and {@link org.openide.util.actions.Presenter.Toolbar Toolbar} presenters.
-     *
-     * @return array of available actions
-     *
-     */
-    public SystemAction[] getActions() {
-        return NO_ACTIONS;
-    }
-
     /** Provides a name for the system that can be presented to the user.
      * <P>
      * This call should <STRONG>never</STRONG> be used to attempt to identify the file root
@@ -278,7 +260,7 @@ final class BinaryFS extends FileSystem implements DataInput {
                 return this;
             }
         }
-        String ret = "jar:" + Utilities.toURI(new DirFile(path)).toString(); // NOI18N
+        String ret = "jar:" + BaseUtilities.toURI(new DirFile(path)).toString(); // NOI18N
         assert !ret.contains("//") : ret;
         return ret;
     }
@@ -815,7 +797,7 @@ final class BinaryFS extends FileSystem implements DataInput {
          */
         private Class findClass (String name) throws ClassNotFoundException {
             ClassLoader c = Lookup.getDefault().lookup(ClassLoader.class);
-            String tname = org.openide.util.Utilities.translate (name);
+            String tname = BaseUtilities.translate (name);
             try {
                 if (c == null) {
                     return Class.forName (tname);

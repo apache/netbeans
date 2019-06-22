@@ -31,20 +31,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -266,7 +258,7 @@ public class DownloadBinaries extends Task {
     
     private byte[] downloadFromServer(URL url) throws IOException {
         log("Downloading: " + url);
-        URLConnection conn = openConnection(url);
+        URLConnection conn = ConfigureProxy.openConnection(this, url, null);
         int code = HttpURLConnection.HTTP_OK;
         if (conn instanceof HttpURLConnection) {
             code = ((HttpURLConnection) conn).getResponseCode();
@@ -291,68 +283,6 @@ public class DownloadBinaries extends Task {
 
     interface Downloader {
         public byte[] download() throws IOException;
-    }
-
-    private URLConnection openConnection(final URL url) throws IOException {
-        final URLConnection[] conn = { null };
-        final CountDownLatch connected = new CountDownLatch(1);
-        ExecutorService connectors = Executors.newFixedThreadPool(3);
-        connectors.submit(new Runnable() {
-            public void run() {
-                String httpProxy = System.getenv("http_proxy");
-                if (httpProxy != null) {
-                    try {
-                        URI uri = new URI(httpProxy);
-                        InetSocketAddress address = InetSocketAddress.createUnresolved(uri.getHost(), uri.getPort());
-                        Proxy proxy = new Proxy(Proxy.Type.HTTP, address);
-                        URLConnection test = url.openConnection(proxy);
-                        test.connect();
-                        conn[0] = test;
-                        connected.countDown();
-                    } catch (IOException | URISyntaxException ex) {
-                        log(ex, Project.MSG_ERR);
-                    }
-                }
-            }
-        });
-        connectors.submit(new Runnable() {
-            public void run() {
-                String httpProxy = System.getenv("https_proxy");
-                if (httpProxy != null) {
-                    try {
-                        URI uri = new URI(httpProxy);
-                        InetSocketAddress address = InetSocketAddress.createUnresolved(uri.getHost(), uri.getPort());
-                        Proxy proxy = new Proxy(Proxy.Type.HTTP, address);
-                        URLConnection test = url.openConnection(proxy);
-                        test.connect();
-                        conn[0] = test;
-                        connected.countDown();
-                    } catch (IOException | URISyntaxException ex) {
-                        log(ex, Project.MSG_ERR);
-                    }
-                }
-            }
-        });
-        connectors.submit(new Runnable() {
-            public void run() {
-                try {
-                    URLConnection test = url.openConnection();
-                    test.connect();
-                    conn[0] = test;
-                    connected.countDown();
-                } catch (IOException ex) {
-                    log(ex, Project.MSG_ERR);
-                }
-            }
-        });
-        try {
-            connected.await(5, TimeUnit.SECONDS);
-        } catch (InterruptedException ex) {
-        }
-        if (conn[0] == null) {
-            throw new IOException("Cannot connect to " + url);
-        }
-        return conn[0];
     }
 
     private String hash(File f) {

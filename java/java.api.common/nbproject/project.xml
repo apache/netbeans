@@ -449,6 +449,7 @@
                 <friend>org.netbeans.modules.apisupport.ant</friend>
                 <friend>org.netbeans.modules.avatar_js.project</friend>
                 <friend>org.netbeans.modules.cnd.mixeddev</friend>
+                <friend>org.netbeans.modules.gradle.java</friend>
                 <friend>org.netbeans.modules.groovy.grailsproject</friend>
                 <friend>org.netbeans.modules.hudson.ant</friend>
                 <friend>org.netbeans.modules.j2ee.archive</friend>

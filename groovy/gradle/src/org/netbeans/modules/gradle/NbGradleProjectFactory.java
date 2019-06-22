@@ -47,24 +47,31 @@ public final class NbGradleProjectFactory implements ProjectFactory2 {
 
     @Override
     public boolean isProject(FileObject dir) {
-        boolean ret = FileUtil.toFile(dir) != null;
-        if (ret) {
-            FileObject pom = dir.getFileObject("pom.xml"); //NOI18N
-            if ((pom != null) && pom.isData() && GradleSettings.getDefault().isPreferMaven()) {
-                ret = false;
-            } else {
-                File suspect = FileUtil.toFile(dir);
-                GradleFiles files = new GradleFiles(suspect);
-                if (!files.isRootProject()) {
-                    Boolean inSubDirCache = GradleProjectCache.isKnownSubProject(files.getRootDir(), suspect);
-                    ret = inSubDirCache != null ? inSubDirCache : files.isProject();
-                } else {
-                    ret = true;
-                }
+        return isProjectCheck(dir, GradleSettings.getDefault().isPreferMaven());
+    }
+
+    static boolean isProjectCheck(FileObject dir, final boolean preferMaven) {
+        if (dir == null || FileUtil.toFile(dir) == null) {
+            return false;
+        }
+        FileObject pom = dir.getFileObject("pom.xml"); //NOI18N
+        if (pom != null && pom.isData()) {
+            if (preferMaven) {
+                return false;
+            }
+            final FileObject parent = dir.getParent();
+            if (parent != null && parent.getFileObject("pom.xml") != null) { // NOI18N
+                return isProjectCheck(parent, preferMaven);
             }
         }
-
-        return ret;
+        File suspect = FileUtil.toFile(dir);
+        GradleFiles files = new GradleFiles(suspect);
+        if (!files.isRootProject()) {
+            Boolean inSubDirCache = GradleProjectCache.isKnownSubProject(files.getRootDir(), suspect);
+            return inSubDirCache != null ? inSubDirCache : files.isProject();
+        } else {
+            return true;
+        }
     }
 
     @Override

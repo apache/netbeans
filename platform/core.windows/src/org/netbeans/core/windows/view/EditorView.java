@@ -202,7 +202,7 @@ public class EditorView extends ViewElement {
             if(imageSource != null) {
                 Image image = ImageUtilities.loadImage(imageSource);
                 if(image != null) {
-                    JLabel label = new JLabel(new ImageIcon(image));
+                    JLabel label = new JLabel(ImageUtilities.image2Icon(image));
                     label.setMinimumSize(new Dimension(0, 0)); // XXX To be able shrink the area.
                     add(label, BorderLayout.CENTER);
                 } else {

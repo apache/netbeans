@@ -147,7 +147,7 @@ public class TypeUtilitiesTest extends NbTestCase {
                 ExpressionStatementTree var = (ExpressionStatementTree) init.getStatements().get(0);
                 ExpressionTree getInvocation = ((MemberSelectTree) ((MethodInvocationTree) var.getExpression()).getMethodSelect()).getExpression();
                 TypeMirror intersectionType = info.getTrees().getTypeMirror(info.getTrees().getPath(info.getCompilationUnit(), getInvocation));
-                assertEquals("Exception&Runnable", info.getTypeUtilities().getTypeName(intersectionType));
+                assertEquals("Exception & Runnable", info.getTypeUtilities().getTypeName(intersectionType));
             }
         }, true);
         

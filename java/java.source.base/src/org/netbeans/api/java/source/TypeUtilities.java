@@ -466,7 +466,7 @@ public final class TypeUtilities {
             while (it.hasNext()) {
                 visit(it.next(), p);
                 if (it.hasNext()) {
-                    DEFAULT_VALUE.append("&");
+                    DEFAULT_VALUE.append(" & ");
                 }
             }
             return DEFAULT_VALUE;

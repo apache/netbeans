@@ -24,6 +24,7 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Scope;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.api.JavacScope;
 import com.sun.tools.javac.api.JavacTaskImpl;
@@ -156,7 +157,11 @@ public class VanillaPartialReparser implements PartialReparser {
                 return false;
             }
             CompilationInfo info = JavaSourceAccessor.getINSTANCE().createCompilationInfo(ci);
-            Scope methodScope = info.getTrees().getScope(TreePath.getPath(cu, orig.getBody()));
+            TreePath methodPath = info.getTreeUtilities().pathFor(((JCTree.JCMethodDecl) orig).pos);
+            if (methodPath.getLeaf().getKind() != Kind.METHOD) {
+                return false;
+            }
+            Scope methodScope = info.getTrees().getScope(new TreePath(methodPath, ((MethodTree) methodPath.getLeaf()).getBody()));
 //            PartialReparserService pr = PartialReparserService.instance(task.getContext());
 //            if (((JCTree.JCMethodDecl)orig).localEnv == null) {
 //                //We are seeing interface method or abstract or native method with body.

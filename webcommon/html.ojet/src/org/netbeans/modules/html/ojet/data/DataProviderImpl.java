@@ -81,7 +81,7 @@ public class DataProviderImpl extends DataProvider {
 
     @Override
     public Collection<DataItem> getBindingOptions() {
-        List<DataItem> result = new ArrayList(1);
+        List<DataItem> result = new ArrayList<DataItem>(1);
         result.add((new DataItemImpl(OJETUtils.OJ_COMPONENT, null, OJETUtils.OJ_COMPONENT + ": {component: }"))); // NOI18N
         result.add(new DataItemImpl(OJETUtils.OJ_MODULE, null, OJETUtils.OJ_MODULE + ": "));
         return result;
@@ -126,7 +126,7 @@ public class DataProviderImpl extends DataProvider {
     @Override
     public Collection<String> getAvailableVersions() {
         File folder = InstalledFileLocator.getDefault().locate(zipFolder, "org.netbeans.modules.html.ojet", false); //NOI18N
-        List<String> versions = new ArrayList();
+        List<String> versions = new ArrayList<String>();
         if (folder.exists()) {
             File[] files = folder.listFiles();
             for (File file : files) {

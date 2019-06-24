@@ -25,6 +25,9 @@
         <action name="run">
             <args>war</args>
         </action>
+        <action name="debug">
+            <args>war</args>
+        </action>
     </apply-for>
 </actions>
 

@@ -28,6 +28,8 @@ public class AntProjectConstants {
     public static final String ENDORSED_LIBRARY_CLASSPATH_6 = "${libs." + ENDORSED_LIBRARY_NAME_6 + ".classpath}"; // NOI18N
     public static final String ENDORSED_LIBRARY_NAME_7 = "javaee-endorsed-api-7.0"; // NOI18N
     public static final String ENDORSED_LIBRARY_CLASSPATH_7 = "${libs." + ENDORSED_LIBRARY_NAME_7 + ".classpath}"; // NOI18N
+    public static final String ENDORSED_LIBRARY_NAME_8 = "javaee-endorsed-api-8.0"; // NOI18N
+    public static final String ENDORSED_LIBRARY_CLASSPATH_8 = "${libs." + ENDORSED_LIBRARY_NAME_8 + ".classpath}"; // NOI18N
     public static final String DESTINATION_DIRECTORY_ROOT = "100";
     public static final String DESTINATION_DIRECTORY_DO_NOT_COPY = "300";
     public static final String DESTINATION_DIRECTORY = "destinationDirectory";

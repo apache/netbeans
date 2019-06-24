@@ -33,9 +33,9 @@ import org.netbeans.Module;
 import org.netbeans.core.startup.layers.ModuleLayeredFileSystem;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.XMLFileSystem;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
-import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
 
 /**
@@ -93,7 +93,7 @@ public class CLICoreBridge extends CLIHandler {
         for (Module m : moduleSystem.getManager().getModules()) {
             for (File f : m.getAllJars()) {
                 try {
-                    urls.add(Utilities.toURI(f).toURL());
+                    urls.add(BaseUtilities.toURI(f).toURL());
                 }
                 catch (MalformedURLException ex) {
                     Exceptions.printStackTrace(ex);

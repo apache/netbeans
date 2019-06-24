@@ -24,32 +24,13 @@ import org.netbeans.modules.gradle.api.execute.RunConfig;
 import org.netbeans.modules.gradle.api.output.OutputDisplayer;
 import org.netbeans.modules.gradle.api.output.OutputProcessor;
 import org.netbeans.modules.gradle.api.output.OutputProcessorFactory;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.netbeans.api.debugger.jpda.DebuggerStartException;
-import org.netbeans.api.debugger.jpda.JPDADebugger;
-import org.netbeans.api.java.classpath.ClassPath;
-import org.netbeans.api.java.platform.JavaPlatform;
-import org.netbeans.api.java.platform.JavaPlatformManager;
-import org.netbeans.spi.java.classpath.support.ClassPathSupport;
-import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation2;
 import org.netbeans.spi.project.ProjectServiceProvider;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
-import org.openide.util.Exceptions;
-import org.openide.util.Lookup;
-import org.openide.util.RequestProcessor;
 import org.openide.windows.IOColors;
-import org.netbeans.modules.gradle.java.api.ProjectSourcesClassPathProvider;
+import org.netbeans.modules.gradle.java.spi.debug.GradleJavaDebugger;
 
 /**
  *
@@ -57,8 +38,6 @@ import org.netbeans.modules.gradle.java.api.ProjectSourcesClassPathProvider;
  */
 @ProjectServiceProvider(service = OutputProcessorFactory.class, projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
 public class JDPAProcessorFactory implements OutputProcessorFactory {
-
-    private static final RequestProcessor RP = new RequestProcessor("GradleDebug", 1);
 
     @Override
     public Set<? extends OutputProcessor> createOutputProcessors(RunConfig cfg) {
@@ -80,75 +59,18 @@ public class JDPAProcessorFactory implements OutputProcessorFactory {
             Matcher m = JDPA_LISTEN.matcher(line);
             if (m.matches()) {
                 String portStr = m.group(1);
-                int port = 5005;
-                try {
-                    port = Integer.parseInt(portStr);
-                } catch (NumberFormatException ex) {
-                }
-                final int finalPort = port;
-
-                if (!activated) {
-                    activated = true;
-                    RP.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            Map<String, Object> services = new HashMap<>();
-                            services.put("name", cfg.getTaskDisplayName());
-                            services.put("baseDir", FileUtil.toFile(cfg.getProject().getProjectDirectory()));
-                            services.put("jdksources", getJdkSources());
-                            services.put("sourcepath", getSources());
-                            try {
-                                JPDADebugger.attach("localhost", finalPort, new Object[]{services});
-                            } catch (DebuggerStartException ex) {
-                                Exceptions.printStackTrace(ex);
-                            }
-                        }
-                    });
+                GradleJavaDebugger dbg = cfg.getProject().getLookup().lookup(GradleJavaDebugger.class);
+                if (dbg != null) {
+                    try {
+                        dbg.attachDebugger(cfg.getTaskDisplayName() , "dt_socket", "localhost", portStr);
+                    } catch (Exception ex) {
+                        out.print(ex.getCause().getMessage(), null, IOColors.OutputType.ERROR);
+                    } 
                 }
                 out.print(line, null, IOColors.OutputType.LOG_DEBUG);
                 return true;
             }
             return false;
-        }
-
-        private ClassPath getJdkSources() {
-            JavaPlatform jdk = JavaPlatformManager.getDefault().getDefaultPlatform();
-            if (jdk != null) {
-                return jdk.getSourceFolders();
-            }
-            return null;
-        }
-
-        private ClassPath getSources() {
-            ProjectSourcesClassPathProvider pgcpp = cfg.getProject().getLookup().lookup(ProjectSourcesClassPathProvider.class);
-            List<SourceForBinaryQueryImplementation2> sourceQueryImpls = new ArrayList<>(2);
-            sourceQueryImpls.addAll(cfg.getProject().getLookup().lookupAll(SourceForBinaryQueryImplementation2.class));
-            sourceQueryImpls.addAll(Lookup.getDefault().lookupAll(SourceForBinaryQueryImplementation2.class));
-
-            Set<FileObject> srcs = new LinkedHashSet<>();
-            for (ClassPath projectSourcePath : pgcpp.getProjectClassPath(ClassPath.SOURCE)) {
-                srcs.addAll(Arrays.asList(projectSourcePath.getRoots()));
-            }
-
-            for (ClassPath cp : pgcpp.getProjectClassPath(ClassPath.EXECUTE)) {
-                for (ClassPath.Entry entry : cp.entries()) {
-                    URL url = entry.getURL();
-                    SourceForBinaryQueryImplementation2.Result ret;
-                    for (SourceForBinaryQueryImplementation2 sourceQuery : sourceQueryImpls) {
-                        ret = sourceQuery.findSourceRoots2(url);
-                        if (ret != null) {
-                            List<FileObject> roots = Arrays.asList(ret.getRoots());
-                            if (!roots.isEmpty()) {
-                                srcs.addAll(roots);
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            FileObject[] roots = srcs.toArray(new FileObject[srcs.size()]);
-            return ClassPathSupport.createClassPath(roots);
         }
 
     }

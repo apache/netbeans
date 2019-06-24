@@ -54,6 +54,10 @@ abstract class BaseJ2eeArchetypeProvider {
         map.put(j2eeProfile, createMojoArchetype(version, artifactId));
     }
 
+    protected void addJavaEE8Archetype(Profile j2eeProfile, String groupId, String version, String artifactId) {
+        map.put(j2eeProfile, createArchetype(groupId, version, artifactId));
+    }
+
     protected void addSameMojoArchetypeForAllProfiles(String version, String artifactId) {
         Archetype archetype = createMojoArchetype(version, artifactId);
         map.put(Profile.J2EE_14, archetype);
@@ -62,11 +66,24 @@ abstract class BaseJ2eeArchetypeProvider {
         map.put(Profile.JAVA_EE_6_WEB, archetype);
         map.put(Profile.JAVA_EE_7_FULL, archetype);
         map.put(Profile.JAVA_EE_7_WEB, archetype);
+        Archetype javaEE8Archetype = createArchetype("io.github.juneau001","1.0.0", "webapp-javaee8");
+        
+        map.put(Profile.JAVA_EE_8_FULL, javaEE8Archetype);
+        map.put(Profile.JAVA_EE_8_WEB, javaEE8Archetype);
     }
 
     private Archetype createMojoArchetype(String version, String artifactId) {
         Archetype archetype = new Archetype();
         archetype.setGroupId("org.codehaus.mojo.archetypes"); //NOI18N
+        archetype.setVersion(version);
+        archetype.setArtifactId(artifactId);
+
+        return archetype;
+    }
+
+    private Archetype createArchetype(String groupId, String version, String artifactId) {
+        Archetype archetype = new Archetype();
+        archetype.setGroupId(groupId); //NOI18N
         archetype.setVersion(version);
         archetype.setArtifactId(artifactId);
 

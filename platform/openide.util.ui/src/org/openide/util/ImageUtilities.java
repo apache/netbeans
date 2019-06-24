@@ -216,7 +216,7 @@ public final class ImageUtilities {
         if( image == null ) {
             return null;
         }
-        return IconImageIcon.create(image);
+        return image.asImageIcon();
     }
     
     private static boolean isDarkLaF() {
@@ -844,7 +844,7 @@ public final class ImageUtilities {
         @Override
         public int hashCode() {
             int hash = ((x << 3) ^ y) << 4;
-            hash = hash ^ baseImage.hashCode() ^ overlayImage.hashCode();
+            hash = hash ^ System.identityHashCode(baseImage) ^ System.identityHashCode(overlayImage);
 
             return hash;
         }
@@ -878,8 +878,7 @@ public final class ImageUtilities {
 
         @Override
         public int hashCode() {
-            int hash = image.hashCode() ^ str.hashCode();
-            return hash;
+            return System.identityHashCode(image) ^ str.hashCode();
         }
 
         @Override
@@ -943,6 +942,8 @@ public final class ImageUtilities {
         // May be null.
         final Icon delegateIcon;
         final URL url;
+        // May be null.
+        ImageIcon imageIconVersion;
 
         public static ToolTipImage createNew(String toolTipText, Image image, URL url) {
             ImageUtilities.ensureLoaded(image);
@@ -978,6 +979,12 @@ public final class ImageUtilities {
             this.toolTipText = toolTipText;
             this.delegateIcon = delegateIcon;
             this.url = url;
+        }
+
+        public synchronized ImageIcon asImageIcon() {
+          if (imageIconVersion == null)
+            imageIconVersion = IconImageIcon.create(this);
+          return imageIconVersion;
         }
 
         public ToolTipImage(Icon delegateIcon, String toolTipText, int imageType) {

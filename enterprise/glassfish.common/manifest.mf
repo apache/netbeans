@@ -4,6 +4,6 @@ OpenIDE-Module: org.netbeans.modules.glassfish.common/0
 OpenIDE-Module-Install: org/netbeans/modules/glassfish/common/Installer.class
 OpenIDE-Module-Layer: org/netbeans/modules/glassfish/common/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/glassfish/common/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.78
+OpenIDE-Module-Specification-Version: 1.79
 OpenIDE-Module-Provides: org.netbeans.modules.glassfish.common
 

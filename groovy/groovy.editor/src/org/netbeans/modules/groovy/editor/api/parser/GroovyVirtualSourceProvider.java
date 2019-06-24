@@ -161,7 +161,7 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
 
         private boolean java5 = false;
         private boolean requireSuperResolved = false;
-        private List toCompile = new ArrayList();
+        private List<String> toCompile = new ArrayList<String>();
 
         private JavaStubGenerator(final boolean requireSuperResolved, final boolean java5) {
             this.requireSuperResolved = requireSuperResolved;
@@ -313,8 +313,8 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
             if (fields == null) {
                 return;
             }
-            ArrayList enumFields = new ArrayList(fields.size());
-            ArrayList normalFields = new ArrayList(fields.size());
+            ArrayList<FieldNode> enumFields   = new ArrayList<FieldNode>(fields.size());
+            ArrayList<FieldNode> normalFields = new ArrayList<FieldNode>(fields.size());
             for (Iterator it = fields.iterator(); it.hasNext();) {
                 FieldNode fieldNode = (FieldNode) it.next();
                 boolean isEnumField = (fieldNode.getModifiers() & Opcodes.ACC_ENUM) != 0;

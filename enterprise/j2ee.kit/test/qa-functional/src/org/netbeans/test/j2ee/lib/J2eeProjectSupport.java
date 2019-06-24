@@ -58,7 +58,7 @@ public class J2eeProjectSupport {
     public static final int WEB_PROJECT = 1;
     public static final int EJB_PROJECT = 2;
     public static final int J2EE_PROJECT = 3;
-    public static final String DEFAULT_J2EE_LEVEL = Profile.JAVA_EE_7_FULL.toPropertiesString();
+    public static final String DEFAULT_J2EE_LEVEL = Profile.JAVA_EE_8_FULL.toPropertiesString();
     public static final String DEFAULT_SRC_STRUCTURE = WebProjectUtilities.SRC_STRUCT_BLUEPRINTS;
     public static final int WAIT_APPSRV_INSTALL = 30000;
 

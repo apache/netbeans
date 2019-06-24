@@ -575,7 +575,9 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                 if (ddRoot != null) {
                     Profile profile = webModule.getJ2eeProfile();
                     if (profile != null && profile.isAtLeast(Profile.JAVA_EE_5) && jsfVersion != null) {
-                        if (jsfVersion.isAtLeast(JSFVersion.JSF_2_2)) {
+                        if (jsfVersion.isAtLeast(JSFVersion.JSF_2_3)) {
+                          facesConfigTemplate = JSFCatalog.RES_FACES_CONFIG_2_3;
+                        } else if (jsfVersion.isAtLeast(JSFVersion.JSF_2_2)) {
                             facesConfigTemplate = JSFCatalog.RES_FACES_CONFIG_2_2;
                         } else if (jsfVersion.isAtLeast(JSFVersion.JSF_2_1)) {
                             facesConfigTemplate = JSFCatalog.RES_FACES_CONFIG_2_1;
@@ -739,7 +741,7 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
             String shortName;
             try {
                 shortName = Deployment.getDefault().getServerInstance(serverInstanceID).getServerID();
-                if ("gfv3ee6".equals(shortName) || "gfv3".equals(shortName)) {
+                if ("gfv5ee8".equals(shortName) || "gfv5".equals(shortName) || "gfv3ee6".equals(shortName) || "gfv3".equals(shortName)) {
                     return true;
                 }
             } catch (InstanceRemovedException ex) {

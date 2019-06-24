@@ -16,19 +16,23 @@
 
 name: netbeans-dev
 
-summary: Apache NetBeans IDE
+summary: Apache NetBeans IDE (Development Build)
 description: |
   Disclaimer:
-  This is an in Development Version of Apache NetBeans IDE , this is for sole
-  testing purposes and shall be not considered as an official release.
-
-  Apache NetBeans IDE (incubating) lets you quickly and easily develop Java
+  This is an in Development Build of Apache NetBeans IDE , this is for sole
+  testing purposes and shall be not considered as a release.
+  
+  This package is refreshed weekly automatically from the NetBeans master
+  repository. Take it as it is, there are no additional testing is being
+  made on these builds.
+  
+  Apache NetBeans IDE lets you quickly and easily develop Java
   desktop, enterprise, and  web applications, as well as HTML5 applications
   with HTML, JavaScript, and CSS. The IDE also provides a great set of tools for
   PHP and C/C++ developers.
   It is free and open source and has a large community of users and developers
   around the world.
-
+  
   It requires Java 8 or later Java Development Kit installed.
 
 icon: ../../platform/core.startup/src/org/netbeans/core/startup/frame512.png

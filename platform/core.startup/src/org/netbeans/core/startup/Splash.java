@@ -27,6 +27,7 @@ import java.awt.image.BufferedImage;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
@@ -91,11 +92,30 @@ public final class Splash implements Stamps.Updater {
     private SplashPainter painter;
     private SplashComponent comp;
     private SplashScreen splashScreen;
+    /**
+     * Indicate if we should try to take advantage of java's "-splash" parameter, which allows
+     * the splash screen to be displayed at an earlier stage in the app startup sequence. See the
+     * original Buzilla RFE at https://netbeans.org/bugzilla/show_bug.cgi?id=60142 . This requires
+     * splash screen image(s) to be written to the cache directory the first time NetBeans starts,
+     * to be available during subsequent NetBeans startups. Despite
+     * https://bugs.openjdk.java.net/browse/JDK-8145173 and
+     * https://bugs.openjdk.java.net/browse/JDK-8151787 , as of OpenJDK 10.0.2 and OpenJDK 12.0.1
+     * I have found no way to make this work properly with HiDPI screens on Windows. HiDPI filenames
+     * attempted include "splash@2x.png", "splash@200pct.png", "splash.scale-200.png", and
+     * "splash.java-scale200.png". In all of these cases, the regular "splash.png" file is used
+     * instead of one of the 2x-scaled ones (for a system DPI scaling of 200%), and the splash
+     * screen becomes half the expected size. Thus, to we disable this feature for now, in favor of
+     * a slightly delayed splash screen that appears with the correct size and resolution on HiDPI
+     * screens.
+     *
+     * <p>See also https://issues.apache.org/jira/browse/NETBEANS-67 .
+     */
+    private static final boolean USE_LAUNCHER_SPLASH = false;
     
     private Splash() {
         Stamps s = Stamps.getModulesJARs();
         if (!CLIOptions.isNoSplash() && !GraphicsEnvironment.isHeadless()) {
-            if (!s.exists("splash.png")) {
+            if (USE_LAUNCHER_SPLASH && !s.exists("splash.png")) {
                 s.scheduleSave(this, "splash.png", false);
             }
             try {
@@ -208,17 +228,29 @@ public final class Splash implements Stamps.Updater {
         c.setBounds(Utilities.findCenterBounds(c.getSize()));
     }
 
-    /** Loads a splash image from its source 
+    /**
+     * Loads a splash image from its source. For high-resolution rendering on HiDPI displays, the
+     * returned image should be converted to a HiDPI-aware Icon instance via
+     * {@link ImageUtilities#image2Icon} prior to painting.
+     *
      *  @param about if true then about image is loaded, if false splash image is loaded
      */
     public static Image loadContent(boolean about) {
+        return ImageUtilities.icon2Image(loadContentIcon(about));
+    }
+
+    private static Icon loadContentIcon(boolean about) {
+        Image ret = null;
         if (about) {
-            Image img = ImageUtilities.loadImage("org/netbeans/core/startup/about.png", true);
-            if (img != null) {
-                return img;
-            }
+            ret = ImageUtilities.loadImage("org/netbeans/core/startup/about.png", true);
         }
-        return ImageUtilities.loadImage("org/netbeans/core/startup/splash.gif", true);
+        if (ret == null)
+            ret = ImageUtilities.loadImage("org/netbeans/core/startup/splash.gif", true);
+        if (ret == null)
+            return null;
+        return new ScaledBitmapIcon(ret,
+                Integer.parseInt(NbBundle.getMessage(Splash.class, "SPLASH_WIDTH")),
+                Integer.parseInt(NbBundle.getMessage(Splash.class, "SPLASH_HEIGHT")));
     }
 
     @Override
@@ -255,7 +287,7 @@ public final class Splash implements Stamps.Updater {
          */
         @Override
         public void paint(Graphics graphics) {
-            painter.graphics = graphics;
+            painter.graphics = (Graphics2D) graphics;
             painter.paint();
         }
         @Override
@@ -271,27 +303,125 @@ public final class Splash implements Stamps.Updater {
         }
     }
 
+    private static final class TextBox {
+        final Rectangle bounds;
+        final Color color;
+        final int textSize;
+        final Font font;
+        final FontMetrics fm;
+        final int horizontalAlignment;
+        // Will be set by SwingUtilities.layoutCompoundLabel.
+        final Rectangle effectiveBounds = new Rectangle();
+
+        private TextBox(
+                Rectangle bounds, Color color, int textSize, Font font, FontMetrics fontMetrics,
+                int horizontalAlignment)
+        {
+            this.bounds = bounds;
+            this.color = color;
+            this.textSize = textSize;
+            this.font = font;
+            this.fm = fontMetrics;
+            this.horizontalAlignment = horizontalAlignment;
+        }
+
+        /**
+         * Compute the text layout and, if graphics is not null, paint the text string.
+         */
+        public void layout(String text, Graphics graphics) {
+            if (fm == null) {
+                // XXX(-ttran) this happened on Japanese Windows NT, don't
+                // fully understand why
+                return;
+            }
+            SwingUtilities.layoutCompoundLabel(fm, text, null,
+                    BOTTOM, horizontalAlignment, BOTTOM, horizontalAlignment,
+                    bounds, new Rectangle(), effectiveBounds, 0);
+            if (graphics != null) {
+                graphics.setColor(color);
+                graphics.setFont(font);
+                graphics.drawString(text, effectiveBounds.x, effectiveBounds.y + fm.getAscent());
+            }
+        }
+
+        public static TextBox parse(Graphics graphics, JComponent comp, ResourceBundle bundle,
+            String prefix, boolean optional)
+        {
+            if (optional && !bundle.containsKey(prefix + "Bounds"))
+                return null;
+            StringTokenizer st = new StringTokenizer(
+                    bundle.getString(prefix + "Bounds"), " ,"); // NOI18N
+            Rectangle bounds = new Rectangle(Integer.parseInt(st.nextToken()),
+                    Integer.parseInt(st.nextToken()),
+                    Integer.parseInt(st.nextToken()),
+                    Integer.parseInt(st.nextToken()));
+            Color color = Color.BLACK;
+            try {
+                Integer rgb = Integer.decode(bundle.getString(prefix + "Color")); // NOI18N
+                color = new Color(rgb.intValue());
+            } catch (NumberFormatException nfe) {
+                //IZ 37515 - NbBundle.DEBUG causes startup to fail; use default value
+                Util.err.warning("Number format exception " + //NOI18N
+                        "loading splash screen parameters."); //NOI18N
+                Logger.getLogger("global").log(Level.WARNING, null, nfe);
+            }
+            int size = 12;
+            try {
+                String sizeStr = bundle.getString(prefix + "FontSize");
+                size = Integer.parseInt(sizeStr);
+            } catch (MissingResourceException e) {
+                //ignore - use default size
+            } catch (NumberFormatException nfe) {
+                //ignore - use default size
+            }
+            int horizontalAlignment = LEFT;
+            try {
+                switch (bundle.getString(prefix + "HorizontalAlignment").toLowerCase(Locale.US)) {
+                  case "left":
+                      horizontalAlignment = SwingConstants.LEFT;
+                      break;
+                  case "center":
+                      horizontalAlignment = SwingConstants.CENTER;
+                      break;
+                  case "right":
+                      horizontalAlignment = SwingConstants.RIGHT;
+                      break;
+                  default:
+                      // Ignore; use default
+                      Util.err.warning(
+                          "Invalid horizontal alignment for splash screen text box"); //NOI18N
+                }
+            } catch (MissingResourceException e) {
+              // Ignore; use default
+            }
+            Font font = new Font(bundle.getString(prefix + "FontType"), Font.PLAIN, size); // NOI18N
+            FontMetrics fontMetrics;
+            if (comp != null) {
+                fontMetrics = comp.getFontMetrics(font);
+            } else {
+                fontMetrics = graphics.getFontMetrics(font);
+            }
+            return new TextBox(bounds, color, size, font, fontMetrics, horizontalAlignment);
+        }
+    }
+
     private static class SplashPainter {
-        Rectangle view;
-        Color color_text;
+        TextBox statusBox;
+        // May be null.
+        TextBox versionBox;
         Color color_bar;
         Color color_edge;
         Color color_corner;
-	
-        /** font size for splash texts */
-        private int size = 12;
         private Rectangle dirty = new Rectangle();
-        private Rectangle rect = new Rectangle();
         private Rectangle bar = new Rectangle();
         private Rectangle bar_inc = new Rectangle();
         private int progress = 0;
         private int maxSteps = 0;
         private int barStart = 0;
         private int barLength = 0;
-        private Image image;
+        private Icon image;
         private String text;
-        private FontMetrics fm;
-        private Graphics graphics;
+        private Graphics2D graphics;
         private final JComponent comp;
         private final boolean about;
 
@@ -300,7 +430,7 @@ public final class Splash implements Stamps.Updater {
          * param about true is this component will be used in about dialog
          */
         public SplashPainter(Graphics graphics, JComponent comp, boolean about) {
-            this.graphics = graphics;
+            this.graphics = (Graphics2D) graphics;
             this.comp = comp;
             this.about = about;
         }
@@ -315,22 +445,16 @@ public final class Splash implements Stamps.Updater {
             maxSteps = 140;
 
             ResourceBundle bundle = NbBundle.getBundle(Splash.class);
+            statusBox = TextBox.parse(graphics, comp, bundle, "SplashRunningText", false);
+            versionBox = TextBox.parse(graphics, comp, bundle, "SplashVersionText", true);
             StringTokenizer st = new StringTokenizer(
-                    bundle.getString("SplashRunningTextBounds"), " ,"); // NOI18N
-            view = new Rectangle(Integer.parseInt(st.nextToken()),
-                    Integer.parseInt(st.nextToken()),
-                    Integer.parseInt(st.nextToken()),
-                    Integer.parseInt(st.nextToken()));
-            st = new StringTokenizer(
                     bundle.getString("SplashProgressBarBounds"), " ,"); // NOI18N
             try {
                 bar = new Rectangle(Integer.parseInt(st.nextToken()),
                         Integer.parseInt(st.nextToken()),
                         Integer.parseInt(st.nextToken()),
                         Integer.parseInt(st.nextToken()));
-                Integer rgb = Integer.decode(bundle.getString("SplashRunningTextColor")); // NOI18N
-                color_text = new Color(rgb.intValue());
-                rgb = Integer.decode(bundle.getString("SplashProgressBarColor")); // NOI18N
+                Integer rgb = Integer.decode(bundle.getString("SplashProgressBarColor")); // NOI18N
                 color_bar = new Color(rgb.intValue());
                 rgb = Integer.decode(bundle.getString("SplashProgressBarEdgeColor")); // NOI18N
                 color_edge = new Color(rgb.intValue());
@@ -341,31 +465,16 @@ public final class Splash implements Stamps.Updater {
                 Util.err.warning("Number format exception " + //NOI18N
                         "loading splash screen parameters."); //NOI18N
                 Logger.getLogger("global").log(Level.WARNING, null, nfe);
-                color_text = Color.BLACK;
                 color_bar = Color.ORANGE;
                 color_edge = Color.BLUE;
                 color_corner = Color.GREEN;
                 bar = new Rectangle(0, 0, 80, 10);
             }
-            try {
-                String sizeStr = bundle.getString("SplashRunningTextFontSize");
-                size = Integer.parseInt(sizeStr);
-            } catch (MissingResourceException e) {
-                //ignore - use default size
-            } catch (NumberFormatException nfe) {
-                //ignore - use default size
-            }
 
-            image = loadContent(about);
+            image = loadContentIcon(about);
 
-            Font font = new Font(bundle.getString("SplashRunningTextFontType"), Font.PLAIN, size); // NOI18N
-            if (comp != null) {
-                comp.setFont(font); 
-                fm = comp.getFontMetrics(font);
-            } else {
-                graphics.setFont(font);
-                fm = graphics.getFontMetrics(font);
-            }
+            if (comp != null)
+              comp.setFont(statusBox.font);
         }
 
         long next;
@@ -409,19 +518,17 @@ public final class Splash implements Stamps.Updater {
                         return;
                     }
 
-                    if (fm == null) {
+                    if (statusBox.fm == null) {
                         return;
                     }
 
                     adjustText(text);
 
-                    SwingUtilities.layoutCompoundLabel(fm, text, null,
-                            BOTTOM, LEFT, BOTTOM, LEFT,
-                            view, new Rectangle(), rect, 0);
-                    dirty = dirty.union(rect);
+                    statusBox.layout(text, null);
+                    dirty = dirty.union(statusBox.effectiveBounds);
                     // update screen (assume repaint manager optimizes unions;)
                     repaint(dirty);
-                    dirty = new Rectangle(rect);
+                    dirty = new Rectangle(statusBox.effectiveBounds);
                 }
             });
         }
@@ -437,12 +544,12 @@ public final class Splash implements Stamps.Updater {
             if (text == null)
                 return ;
 
-            if (fm == null)
+            if (statusBox.fm == null)
                 return;
             
-            int width = fm.stringWidth(text);            
+            int width = statusBox.fm.stringWidth(text);
             
-            if (width > view.width) {                
+            if (width > statusBox.bounds.width) {
                 StringTokenizer st = new StringTokenizer(text);
                 while (st.hasMoreTokens()) {
                     String element = st.nextToken();                                    
@@ -450,7 +557,7 @@ public final class Splash implements Stamps.Updater {
                         newString = element;
                     else
                         newString = newText + " " + element; // NOI18N
-                    if (fm.stringWidth(newString + "...") > view.width) { // NOI18N
+                    if (statusBox.fm.stringWidth(newString + "...") > statusBox.bounds.width) { // NOI18N
                         this.text = newText + "..."; // NOI18N
                         break;
                     } else                        
@@ -466,7 +573,7 @@ public final class Splash implements Stamps.Updater {
                     newText = "";
                     for (int i = 0; i < text.length(); i++) {
                         newString += text.charAt(i);
-                        if (fm.stringWidth(newString + "...") > view.width) { // NOI18N
+                        if (statusBox.fm.stringWidth(newString + "...") > statusBox.bounds.width) { // NOI18N
                             this.text = newText + "..."; // NOI18N
                             break;
                         } else {
@@ -489,12 +596,14 @@ public final class Splash implements Stamps.Updater {
                 int bl = bar.width * progress / maxSteps - barStart;
                 if (bl > 1 || barStart % 2 == 0) {
                     barLength = bl;
-                    bar_inc = new Rectangle(bar.x + barStart, bar.y, barLength + 1, bar.height);
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
                             init();
-                            repaint(bar_inc);
+                            /* Don't try to be smart about which section of the bar to repaint.
+                            There can be tricky rounding issues on HiDPI screens with non-integral
+                            scaling factors (e.g. 150%). */
+                            repaint(bar);
                         }
                     });
                 }
@@ -524,36 +633,35 @@ public final class Splash implements Stamps.Updater {
         }
 	
         void paint() {
-            graphics.setColor(color_text);
-            graphics.drawImage(image, 0, 0, null);
+            image.paintIcon(comp, graphics, 0, 0);
+            // turn anti-aliasing on for the splash text
+            graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+                    RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
+            if (versionBox != null) {
+                String buildNumber = System.getProperty("netbeans.buildnumber");
+                versionBox.layout(NbBundle.getMessage(TopLogging.class, "currentVersion", buildNumber), graphics);
+            }
             if (text != null) {
-                if (fm == null) {
-                    // XXX(-ttran) this happened on Japanese Windows NT, don't
-                    // fully understand why
-                    return;
-                }
-
-                SwingUtilities.layoutCompoundLabel(fm, text, null,
-                        BOTTOM, LEFT, BOTTOM, LEFT,
-                        view, new Rectangle(), rect, 0);
-                // turn anti-aliasing on for the splash text
-                Graphics2D g2d = (Graphics2D) graphics;
-                g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                        RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-                graphics.drawString(text, rect.x, rect.y + fm.getAscent());
+                statusBox.layout(text, graphics);
             }
 
             // Draw progress bar if applicable
             if (!noBar && maxSteps > 0/* && barLength > 0*/) {
                 graphics.setColor(color_bar);
                 graphics.fillRect(bar.x, bar.y, barStart + barLength, bar.height);
-                graphics.setColor(color_corner);
-                graphics.drawLine(bar.x, bar.y, bar.x, bar.y + bar.height);
-                graphics.drawLine(bar.x + barStart + barLength, bar.y, bar.x + barStart + barLength, bar.y + bar.height);
-                graphics.setColor(color_edge);
-                graphics.drawLine(bar.x, bar.y + bar.height / 2, bar.x, bar.y + bar.height / 2);
-                graphics.drawLine(bar.x + barStart + barLength, bar.y + bar.height / 2, bar.x + barStart + barLength, bar.y + bar.height / 2);
+                /* To discourage visual artifacts on HiDPI displays, only paint the distinct
+                corner/edge colors if the branding actually calls for them. */
+                if (!color_bar.equals(color_corner)) {
+                  graphics.setColor(color_corner);
+                  graphics.drawLine(bar.x, bar.y, bar.x, bar.y + bar.height);
+                  graphics.drawLine(bar.x + barStart + barLength, bar.y, bar.x + barStart + barLength, bar.y + bar.height);
+                }
+                if (!color_bar.equals(color_edge)) {
+                  graphics.setColor(color_edge);
+                  graphics.drawLine(bar.x, bar.y + bar.height / 2, bar.x, bar.y + bar.height / 2);
+                  graphics.drawLine(bar.x + barStart + barLength, bar.y + bar.height / 2, bar.x + barStart + barLength, bar.y + bar.height / 2);
+                }
                 barStart += barLength;
                 barLength = 0;
             }

@@ -70,7 +70,7 @@ public class MavenWebProjectValidation extends WebProjectValidation {
 
     @Override
     protected String getEEVersion() {
-        return JAVA_EE_7;
+        return JAVA_EE_8;
     }
 
     public void testNewMavenWebProject() throws IOException {
@@ -96,6 +96,8 @@ public class MavenWebProjectValidation extends WebProjectValidation {
             serverStep.cboJavaEEVersion().selectItem("1.6-web");
         } else if (JAVA_EE_7.equals(getEEVersion())) {
             serverStep.cboJavaEEVersion().selectItem("1.7-web");
+        } else if (JAVA_EE_8.equals(getEEVersion())) {
+            serverStep.cboJavaEEVersion().selectItem("1.8-web");
         }
         serverStep.finish();
         // need to increase time to wait for project node

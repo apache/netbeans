@@ -77,6 +77,18 @@ public final class ServerUtilities {
                 GlassfishWizardProvider.createEe6());
     }
 
+    public static ServerUtilities getEe7Utilities() {
+        GlassfishInstanceProvider gip = GlassfishInstanceProvider.getProvider();
+        return null == gip ? null : new ServerUtilities(gip,
+                GlassfishWizardProvider.createEe7());
+    }
+    
+    public static ServerUtilities getEe8Utilities() {
+        GlassfishInstanceProvider gip = GlassfishInstanceProvider.getProvider();
+        return null == gip ? null : new ServerUtilities(gip,
+                GlassfishWizardProvider.createEe8());
+    }
+
 //    public static ServerUtilities getEe6WCUtilities() {
 //        GlassfishInstanceProvider gip = GlassfishInstanceProvider.getProvider();
 //        return null == gip ? null : new ServerUtilities(gip,

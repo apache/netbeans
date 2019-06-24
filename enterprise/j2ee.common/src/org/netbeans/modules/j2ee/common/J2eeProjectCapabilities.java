@@ -96,7 +96,7 @@ public final class J2eeProjectCapabilities {
     public boolean isEjb30Supported() {
         J2eeModule.Type moduleType = provider.getJ2eeModule().getType();
         boolean eeOk = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAVA_EE_5) ||
-                ejbJarProfile.equals(Profile.JAVA_EE_6_FULL) || ejbJarProfile.equals(Profile.JAVA_EE_7_FULL));
+                ejbJarProfile.equals(Profile.JAVA_EE_6_FULL) || ejbJarProfile.equals(Profile.JAVA_EE_7_FULL) || ejbJarProfile.equals(Profile.JAVA_EE_8_FULL));
         return J2eeModule.Type.EJB.equals(moduleType) && eeOk;
     }
 
@@ -106,7 +106,7 @@ public final class J2eeProjectCapabilities {
      */
     public boolean isEjb31Supported() {
         J2eeModule.Type moduleType = provider.getJ2eeModule().getType();
-        boolean ee6or7 = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAVA_EE_6_FULL) || ejbJarProfile.equals(Profile.JAVA_EE_7_FULL));
+        boolean ee6or7 = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAVA_EE_6_FULL) || ejbJarProfile.equals(Profile.JAVA_EE_7_FULL) || ejbJarProfile.equals(Profile.JAVA_EE_8_FULL));
         return ee6or7 && (J2eeModule.Type.EJB.equals(moduleType) ||
                 J2eeModule.Type.WAR.equals(moduleType));
     }
@@ -117,7 +117,7 @@ public final class J2eeProjectCapabilities {
      */
     public boolean isEjb31LiteSupported() {
         J2eeModule.Type moduleType = provider.getJ2eeModule().getType();
-        boolean ee6or7Web = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAVA_EE_6_WEB) || ejbJarProfile.equals(Profile.JAVA_EE_7_WEB));
+        boolean ee6or7Web = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAVA_EE_6_WEB) || ejbJarProfile.equals(Profile.JAVA_EE_7_WEB) || ejbJarProfile.equals(Profile.JAVA_EE_8_WEB));
         return isEjb31Supported() || (J2eeModule.Type.WAR.equals(moduleType) && ee6or7Web);
     }
 
@@ -130,7 +130,7 @@ public final class J2eeProjectCapabilities {
      */
     public boolean isEjb32Supported() {
         J2eeModule.Type moduleType = provider.getJ2eeModule().getType();
-        boolean ee7 = ejbJarProfile != null && ejbJarProfile.equals(Profile.JAVA_EE_7_FULL);
+        boolean ee7 = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAVA_EE_7_FULL) || ejbJarProfile.equals(Profile.JAVA_EE_8_FULL));
         return ee7 && (J2eeModule.Type.EJB.equals(moduleType) || J2eeModule.Type.WAR.equals(moduleType));
     }
 
@@ -143,7 +143,7 @@ public final class J2eeProjectCapabilities {
      */
     public boolean isEjb32LiteSupported() {
         J2eeModule.Type moduleType = provider.getJ2eeModule().getType();
-        boolean ee7Web = ejbJarProfile != null && ejbJarProfile.equals(Profile.JAVA_EE_7_WEB);
+        boolean ee7Web = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAVA_EE_7_WEB) || ejbJarProfile.equals(Profile.JAVA_EE_8_WEB));
         return isEjb32Supported() || (J2eeModule.Type.WAR.equals(moduleType) && ee7Web);
     }
 
@@ -153,9 +153,11 @@ public final class J2eeProjectCapabilities {
      * @since 1.86
      */
     public boolean isCdi11Supported() {
-        return Profile.JAVA_EE_7_FULL.equals(ejbJarProfile) ||
+        return Profile.JAVA_EE_8_FULL.equals(ejbJarProfile) ||
+            Profile.JAVA_EE_8_WEB.equals(webProfile) ||
+            Profile.JAVA_EE_7_FULL.equals(ejbJarProfile) ||
             Profile.JAVA_EE_7_WEB.equals(webProfile) ||
-            Profile.JAVA_EE_7_FULL.equals(carProfile);
+            Profile.JAVA_EE_8_FULL.equals(carProfile);
     }
 
     /**

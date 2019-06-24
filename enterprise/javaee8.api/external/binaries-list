@@ -1,0 +1,30 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+5595992A15BF40CEDA8A831C77ECFE4043F8F161 javax:javaee-api:8.0
+DD21587DD7515F8DDAD285CF019A6ACB18D6E3BA javax:javaee-web-api:8.0
+479C1E06DB31C432330183F5CAE684163F186146 javax.annotation:javax.annotation-api:1.2
+2A642453AB5CE7A506B46164DE8258EE463A9197 javax.faces:javax.faces-api:2.3
+5FAAA3864FF6025CE69809B60D65BDA3E358610C javax.jms:javax.jms-api:2.0.1
+A055C648842C4954C1F7DB7254F45D9AD565E278 com.sun.mail:javax.mail:1.6.0
+AE40E0864EB1E92C48BF82A2A3399CBBF523FB79 javax.resource:javax.resource-api:1.7
+DFA282CEA1495277168697CB5C349EC29F82947C javax.management.j2ee:javax.management.j2ee-api:1.1.1
+5CFDC878B7A5A533F373493BE9F7B24E34C01800 javax.security.jacc:javax.security.jacc-api:1.5
+C392610C40AA3E0E7B57C47A1B561D4B3F974FAC javax.enterprise.concurrent:javax.enterprise.concurrent-api:1.0
+2562072EF44E364529EBF7C48CF44E4568CBD8F5 javax.batch:javax.batch-api:1.0.1
+020FD338DD025EAFC226CA90BD7CDCC60015D75D javax.enterprise.deploy:javax.enterprise.deploy-api:1.6
+C1E6D1DE3BA048B9D36FAA122D7BCA20ABCF12B0 javax.xml.registry:javax.xml.registry-api:1.0.7
+E21E7F033112BC4BCF54234EDB5AA5D782D4B568 javax.xml.rpc:javax.xml.rpc-api:1.1.1

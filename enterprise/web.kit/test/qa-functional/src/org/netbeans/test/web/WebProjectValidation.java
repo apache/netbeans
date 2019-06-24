@@ -89,6 +89,7 @@ public class WebProjectValidation extends J2eeTestCase {
     public static final String JAVA_EE_5 = "Java EE 5";
     public static final String JAVA_EE_6 = "Java EE 6";
     public static final String JAVA_EE_7 = "Java EE 7";
+    public static final String JAVA_EE_8 = "Java EE 8";
     // location of sample project
     protected static String PROJECT_LOCATION;
     // name of sample project

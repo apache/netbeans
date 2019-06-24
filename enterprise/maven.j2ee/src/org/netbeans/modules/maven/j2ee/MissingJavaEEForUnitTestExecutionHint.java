@@ -119,7 +119,9 @@ public class MissingJavaEEForUnitTestExecutionHint extends AbstractHint {
                 continue;
             }
             if (fo.getNameExt().toLowerCase().contains("javaee-web-api-7.0") || // NOI18N
-                    fo.getNameExt().toLowerCase().contains("javaee-api-7.0")) { // NOI18N
+                    fo.getNameExt().toLowerCase().contains("javaee-api-7.0") ||
+                    fo.getNameExt().toLowerCase().contains("javaee-web-api-8.0") ||
+                    fo.getNameExt().toLowerCase().contains("javaee-api-8.0")) { // NOI18N
                 javaeeJar = true;
             }
             

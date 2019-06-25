@@ -92,6 +92,10 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
         retval.add(createMagicMethod(type, "__sleep",  Modifier.PUBLIC)); //NOI18N
         retval.add(createMagicMethod(type, "__wakeup",  Modifier.PUBLIC)); //NOI18N
         retval.add(createMagicMethod(type, "__toString",  Modifier.PUBLIC)); //NOI18N
+        // PHP 7.4 New custom object serialization mechanism
+        // https://wiki.php.net/rfc/custom_object_serialization
+        retval.add(createMagicMethod(type, "__serialize", Modifier.PUBLIC)); //NOI18N
+        retval.add(createMagicMethod(type, "__unserialize", Modifier.PUBLIC, "array $data")); //NOI18N
         return retval;
     }
 

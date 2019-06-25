@@ -393,4 +393,8 @@ public class PHP74CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion(getTestPath("spreadOperatorInClassConst"), "    private const CONST4 = [...F^_CONST];", false);
     }
 
+    public void testSerializeUnserialize_01() throws Exception {
+        checkCompletion(getTestPath("serializeUnserialize"), "    __^", false);
+    }
+
 }

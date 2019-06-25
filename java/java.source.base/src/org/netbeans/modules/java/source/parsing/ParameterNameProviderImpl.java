@@ -41,6 +41,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -76,6 +77,8 @@ import org.openide.util.Exceptions;
  * @author lahvac
  */
 public class ParameterNameProviderImpl {
+    public static boolean DISABLE_ARTIFICAL_PARAMETER_NAMES;
+
     public static void register(JavacTask task, ClasspathInfo cpInfo) {
         try {
             Class<?> c = Class.forName("com.sun.source.util.ParameterNameProvider");
@@ -165,10 +168,14 @@ public class ParameterNameProviderImpl {
         }
 
         if (names == null) {
-            names = artificial_method2Parameters.computeIfAbsent(methodKey, mk -> {
-                Set<String> usedNames = new HashSet<>();
-                return ((ExecutableElement) method).getParameters().stream().map(p -> generateReadableParameterName(p.asType().toString(), usedNames)).collect(Collectors.toList());
-            });
+            if (!DISABLE_ARTIFICAL_PARAMETER_NAMES) {
+                names = artificial_method2Parameters.computeIfAbsent(methodKey, mk -> {
+                    Set<String> usedNames = new HashSet<>();
+                    return ((ExecutableElement) method).getParameters().stream().map(p -> generateReadableParameterName(p.asType().toString(), usedNames)).collect(Collectors.toList());
+                });
+            } else {
+                names = Collections.emptyList();
+            }
         }
 
         capCache(source_toplevelClass2method2Parameters);

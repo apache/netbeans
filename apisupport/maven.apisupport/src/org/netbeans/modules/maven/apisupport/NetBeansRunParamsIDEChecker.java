@@ -24,7 +24,6 @@ import java.util.Arrays;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.apache.maven.project.MavenProject;
 import org.netbeans.modules.maven.api.NbMavenProject;
-import org.netbeans.modules.maven.api.PluginPropertyUtils;
 import org.netbeans.modules.maven.api.execute.PrerequisitesChecker;
 import org.netbeans.modules.maven.api.execute.RunConfig;
 import org.netbeans.modules.maven.model.ModelOperation;
@@ -116,10 +115,10 @@ public class NetBeansRunParamsIDEChecker implements PrerequisitesChecker {
                     bld = factory.createBuild();
                     project.setBuild(bld);
                 }
-                Plugin plg = bld.findPluginById(MavenNbModuleImpl.GROUPID_MOJO, MavenNbModuleImpl.NBM_PLUGIN);
+                Plugin plg = PluginBackwardPropertyUtils.findPluginFromBuild(bld);
                 if (plg == null) {
                     plg = factory.createPlugin();
-                    plg.setGroupId(MavenNbModuleImpl.GROUPID_MOJO);
+                    plg.setGroupId(MavenNbModuleImpl.GROUPID_APACHE);
                     plg.setArtifactId(MavenNbModuleImpl.NBM_PLUGIN);
                     plg.setExtensions(Boolean.TRUE);
                     bld.addPlugin(plg);
@@ -156,7 +155,7 @@ public class NetBeansRunParamsIDEChecker implements PrerequisitesChecker {
 
     
     static boolean usingNbmPlugin311(MavenProject prj) {
-        String v = PluginPropertyUtils.getPluginVersion(prj, MavenNbModuleImpl.GROUPID_MOJO, MavenNbModuleImpl.NBM_PLUGIN);
+        String v = PluginBackwardPropertyUtils.getPluginVersion(prj);
         return v != null && new ComparableVersion(v).compareTo(new ComparableVersion("3.11.1")) >= 0;
     } 
     

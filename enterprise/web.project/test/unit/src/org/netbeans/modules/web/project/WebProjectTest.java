@@ -104,6 +104,9 @@ public class WebProjectTest extends NbTestCase {
         JavaEEProjectSettings.setProfile(webProject, Profile.JAVA_EE_7_WEB);
         obtainedProfile = JavaEEProjectSettings.getProfile(webProject);
         assertEquals(Profile.JAVA_EE_7_WEB, obtainedProfile);
+        JavaEEProjectSettings.setProfile(webProject, Profile.JAVA_EE_8_WEB);
+        Profile obtainedProfileEE8 = JavaEEProjectSettings.getProfile(webProject);
+        assertEquals(Profile.JAVA_EE_8_WEB, obtainedProfileEE8);
     }
 
     /**

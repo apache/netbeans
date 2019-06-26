@@ -125,7 +125,9 @@ public class WebSocketMethodsTask implements CancellableTask<CompilationInfo> {
         }
         Profile profile = webModule.getJ2eeProfile();
         if (!Profile.JAVA_EE_7_WEB.equals(profile)
-                && !Profile.JAVA_EE_7_FULL.equals(profile)) {
+                && !Profile.JAVA_EE_7_FULL.equals(profile)
+                && !Profile.JAVA_EE_8_WEB.equals(profile)
+                && !Profile.JAVA_EE_8_FULL.equals(profile)) {
             return false;
         }
         return true;

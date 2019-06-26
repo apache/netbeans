@@ -67,7 +67,7 @@ public class Hk2DatasourceManagerTest extends NbTestCase {
         rootFolder.mkdirs();
         FileObject rootFolderFO = FileUtil.toFileObject(rootFolder);
         j2eeModuleImpl = new HK2TestEEModuleImpl(
-                rootFolderFO, J2eeModule.Type.WAR, Profile.JAVA_EE_7_FULL.toPropertiesString());
+                rootFolderFO, J2eeModule.Type.WAR, Profile.JAVA_EE_8_FULL.toPropertiesString());
         j2eeModule = J2eeModuleFactory.createJ2eeModule(j2eeModuleImpl);
     }
 

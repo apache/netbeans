@@ -507,6 +507,7 @@
             </test-dependencies>
             <friend-packages>
                 <friend>org.netbeans.modules.glassfish.eecommon</friend>
+                <friend>org.netbeans.modules.payara.eecommon</friend>
                 <friend>org.netbeans.modules.gradle.javaee</friend>
                 <friend>org.netbeans.modules.j2ee.archive</friend>
                 <friend>org.netbeans.modules.j2ee.clientproject</friend>

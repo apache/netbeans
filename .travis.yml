@@ -83,7 +83,8 @@ matrix:
             RUN_TESTS_JDK9PLUS=false 
             RUN_TESTS_JDK8=true 
             OPTS="-Dcluster.config=minimal -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
-            TEST_MODULES="ide/api.xml.ui
+            TEST_MODULES="ide/api.xml
+             ide/api.xml.ui
              ide/bugtracking
              ide/bugtracking.bridge
              ide/bugtracking.commons

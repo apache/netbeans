@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.payara.eecommon/0
+OpenIDE-Module-Implementation-Version: 1
+OpenIDE-Module-Layer: org/netbeans/modules/payara/eecommon/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/payara/eecommon/Bundle.properties
+
+

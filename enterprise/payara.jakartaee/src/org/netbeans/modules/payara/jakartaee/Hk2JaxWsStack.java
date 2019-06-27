@@ -72,7 +72,9 @@ public class Hk2JaxWsStack implements WSStackImplementation<JaxWs> {
     @Override
     public WSStackVersion getVersion() {
         Set<Profile> supportedProfiles = platform.getSupportedProfiles();
-        if (supportedProfiles.contains(Profile.JAVA_EE_7_FULL)
+        if (supportedProfiles.contains(Profile.JAVA_EE_8_FULL)
+                || supportedProfiles.contains(Profile.JAVA_EE_8_WEB)
+                || supportedProfiles.contains(Profile.JAVA_EE_7_FULL)
                 || supportedProfiles.contains(Profile.JAVA_EE_7_WEB)
                 || supportedProfiles.contains(Profile.JAVA_EE_6_FULL)
                 || supportedProfiles.contains(Profile.JAVA_EE_6_WEB)) {

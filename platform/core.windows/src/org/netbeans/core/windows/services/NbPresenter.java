@@ -15,6 +15,9 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
+ *
+ * Contains a bug fix contributed by Experian. © Experian, 2019. Licensed under Apache 2.0.
+ *
  */
 
 package org.netbeans.core.windows.services;
@@ -79,6 +82,7 @@ import javax.swing.MenuSelectionManager;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
+import javax.swing.border.Border;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicLookAndFeel;
 import javax.swing.plaf.metal.MetalLookAndFeel;
@@ -551,6 +555,19 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
 
             } );
         }
+        
+        // Netbeans-2667 : bug fix contributed by Experian.
+        // The goal of this change is to retrieve the border which is supposed to be applied at the OptionPane.border
+        // which is displayed around the message area and the button area.
+        // As the JOptionPane is now wrapped on a JPanel and the buttons moved on another panel, we need to
+        // retrieve the border which is applied on the JOptionPane and apply it at the content pane level.
+        // Doing that we reduce inconsistencies between dialogs opened through the Java APIs or through the Netbeans APIs.
+        Border optionPaneBorder = optionPane.getBorder();
+        if (optionPaneBorder != null && getContentPane() instanceof JComponent) {
+            ((JComponent) getContentPane()).setBorder(optionPaneBorder);
+            optionPane.setBorder(null);
+        }
+        
         return optionPane;
     }
 

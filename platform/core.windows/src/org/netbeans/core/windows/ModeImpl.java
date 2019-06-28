@@ -32,7 +32,11 @@ import java.util.Set;
 import javax.swing.SwingUtilities;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.io.IOException;
 import java.util.Collection;
+import org.netbeans.core.windows.persistence.ModeConfig;
+import org.netbeans.core.windows.persistence.PersistenceManager;
+import org.openide.util.Exceptions;
 
 
 /** This class is an implementation of Mode interface.
@@ -40,7 +44,7 @@ import java.util.Collection;
  *
  * @author Peter Zavadsky
  */
-public final class ModeImpl implements Mode {
+public final class ModeImpl implements Mode.Xml {
 
     /** Name constant as a base for nonamed modes. */
     private static final String MODE_ANONYMOUS_NAME = "anonymousMode"; // NOI18N
@@ -544,6 +548,16 @@ public final class ModeImpl implements Mode {
         getCentral().setModeName(this, text);
     }
 
-    
+    @Override
+    public String toXml() {
+        ModeConfig config = PersistenceHandler.getDefault().getConfigFromMode(this);
+        try {
+            return PersistenceManager.getDefault().createXmlFromMode(config);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+            return "";
+        }
+    }
+
 }
 

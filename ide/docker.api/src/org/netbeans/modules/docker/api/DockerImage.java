@@ -18,9 +18,6 @@
  */
 package org.netbeans.modules.docker.api;
 
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

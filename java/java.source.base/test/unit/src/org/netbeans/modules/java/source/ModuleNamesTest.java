@@ -128,6 +128,7 @@ public class ModuleNamesTest extends NbTestCase {
         try {
             FileObject mod1 = FileUtil.getArchiveRoot(jar(wd, "app-core-1.0.jar", null).get());    //NOI18N
             final FileObject mod2 = FileUtil.getArchiveRoot(jar(wd,"app-main-1.0.jar", null).get());     //NOI18N
+            final FileObject mod3 = FileUtil.getArchiveRoot(jar(wd,"app-util2-1.0.jar", null).get());     //NOI18N
             String moduleName = names.getModuleName(mod1.toURL(), false);
             assertEquals("app.core", moduleName);   //NOI18N
             assertTrue(th.isCalculated());
@@ -166,6 +167,10 @@ public class ModuleNamesTest extends NbTestCase {
             moduleName = names.getModuleName(mod1.toURL(), false);
             assertTrue(th.isCalculated());
             assertEquals("org.me.app.core", moduleName);    //NOI18N
+            th.reset();
+            moduleName = names.getModuleName(mod3.toURL(), false);
+            assertEquals("app.util2", moduleName);   //NOI18N
+            assertTrue(th.isCalculated());
             th.reset();
         } finally {
             th.unregister();

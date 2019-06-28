@@ -38,6 +38,7 @@ import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ErrorType;
 import javax.lang.model.type.ExecutableType;
+import javax.lang.model.type.IntersectionType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
@@ -455,6 +456,18 @@ public final class TypeUtilities {
             } else {
                 DEFAULT_VALUE.append(" super "); //NOI18N
                 visit(bound, p);
+            }
+            return DEFAULT_VALUE;
+        }
+
+        @Override
+        public StringBuilder visitIntersection(IntersectionType t, Boolean p) {
+            Iterator<? extends TypeMirror> it = t.getBounds().iterator();
+            while (it.hasNext()) {
+                visit(it.next(), p);
+                if (it.hasNext()) {
+                    DEFAULT_VALUE.append(" & ");
+                }
             }
             return DEFAULT_VALUE;
         }

@@ -622,6 +622,7 @@
                 <friend>org.netbeans.modules.scala.maven</friend>
                 <!-- danis@netbeans.org -->
                 <friend>org.vaadin.netbeans.maven</friend>
+                <friend>org.netbeans.modules.payara.micro</friend>
                 <!-- NetBeans support for Google App Engine -->
                 <friend>org.netbeans.modules.j2ee.appengine</friend>
                 <friend>org.netbeans.modules.maven.util</friend>
@@ -635,6 +636,7 @@
                 <package>org.netbeans.modules.maven.api.execute</package>
                 <package>org.netbeans.modules.maven.api.output</package>
                 <package>org.netbeans.modules.maven.api.problem</package>
+                <package>org.netbeans.modules.maven.execute</package>
                 <package>org.netbeans.modules.maven.execute.model</package>
                 <package>org.netbeans.modules.maven.execute.model.io.jdom</package>
                 <package>org.netbeans.modules.maven.execute.model.io.xpp3</package>

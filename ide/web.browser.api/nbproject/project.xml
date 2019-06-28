@@ -194,6 +194,7 @@
                 <friend>org.netbeans.modules.cordova.platforms.ios</friend>
                 <friend>org.netbeans.modules.css.visual</friend>
                 <friend>org.netbeans.modules.extbrowser.chrome</friend>
+                <friend>org.netbeans.modules.gradle.javaee</friend>
                 <friend>org.netbeans.modules.html</friend>
                 <friend>org.netbeans.modules.j2ee.common</friend>
                 <friend>org.netbeans.modules.j2ee.earproject</friend>

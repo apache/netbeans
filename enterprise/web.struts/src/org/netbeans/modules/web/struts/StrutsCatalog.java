@@ -25,10 +25,13 @@
 
 package org.netbeans.modules.web.struts;
 
+import java.util.List;
+import java.util.ArrayList;
 import org.netbeans.modules.xml.catalog.spi.*;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
+
 /**
  *
  * @author  Petr Pisl
@@ -66,7 +69,7 @@ public class StrutsCatalog implements CatalogReader, CatalogDescriptor2, org.xml
      * @return null if cannot proceed, try later.
      */
     public java.util.Iterator getPublicIDs() {
-        java.util.List list = new java.util.ArrayList();
+        List<String> list = new ArrayList<String>();
         list.add(STRUTS_ID_1_0);
         list.add(STRUTS_ID_1_1);
         list.add(STRUTS_ID_1_2);

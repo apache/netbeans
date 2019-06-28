@@ -25,6 +25,20 @@
     <apidef name="htmlui">HTML UI API</apidef>
 </apidefs>
 <changes>
+    <change id="NoFreeGeoIp">
+        <api name="htmlui"/>
+        <summary>FreeGeoIp service no longer works</summary>
+        <version major="1" minor="12"/>
+        <date year="2019" month="5" day="9"/>
+        <author login="jtulach"/>
+        <compatibility deletion="yes" semantic="incompatible" binary="compatible" source="compatible"/>
+        <description>
+            <p>
+                FreeGeoIp service no longer works. Removing the default GeoIp
+                location provider.
+            </p>
+        </description>
+    </change>
     <change id="defaultcss">
         <api name="htmlui"/>
         <summary>CSS for Look and Feel</summary>

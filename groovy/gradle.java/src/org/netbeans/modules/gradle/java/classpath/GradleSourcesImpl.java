@@ -206,6 +206,9 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
         }
         String llang = lang.name().toLowerCase();
         String ggroup = Utils.camelCaseToTitle(group);
+        if (!unique && llang.equals(dir.getName())) {
+            dir = dir.getParentFile() != null ? dir.getParentFile() : dir;
+        }
 
         return NbBundle.getMessage(GradleSourcesImpl.class, key.toString(),
                 ggroup, llang, dir.getName());

@@ -85,17 +85,23 @@ public abstract class BaseWizardIterator implements WizardDescriptor.BackgroundI
         JavaEEProjectSettings.setServerInstanceID(project, instanceID);
         MavenProjectSupport.createWebXMLIfRequired(project, serverID);
 
-        if (j2eeVersion != null && j2eeVersion.contains("1.7")) { //NOI18N
+        if (j2eeVersion != null && j2eeVersion.contains("1.8")) { //NOI18N
+            JavaPlatform platform = findJDK8Platform();
+            loadAuxillaryProps(platform,project);
+        } else if (j2eeVersion != null && j2eeVersion.contains("1.7")) { //NOI18N
             JavaPlatform platform = findJDK7Platform();
-
-            AuxiliaryProperties properties = project.getLookup().lookup(AuxiliaryProperties.class);
+            loadAuxillaryProps(platform,project);
+        }
+    }
+    
+    private void loadAuxillaryProps(JavaPlatform platform, Project project){
+        AuxiliaryProperties properties = project.getLookup().lookup(AuxiliaryProperties.class);
 
             if (platform == null || platform.equals(JavaPlatformManager.getDefault().getDefaultPlatform())) {
                 properties.put(Constants.HINT_JDK_PLATFORM, null, true);
             } else {
                 properties.put(Constants.HINT_JDK_PLATFORM, platform.getDisplayName(), true);
             }
-        }
     }
 
     private JavaPlatform findJDK7Platform() {
@@ -114,6 +120,22 @@ public abstract class BaseWizardIterator implements WizardDescriptor.BackgroundI
         return null;
     }
 
+    private JavaPlatform findJDK8Platform() {
+        JavaPlatform defaultPlatform = JavaPlatformManager.getDefault().getDefaultPlatform();
+        List<JavaPlatform> jdk8Platforms = getJdk8Platforms();
+
+        // If the default platform support JDK 7 then choose it
+        if (jdk8Platforms.contains(defaultPlatform)) {
+            return defaultPlatform;
+        }
+
+        // Otherwise take one of the JDK 8 complient platforms
+        for (JavaPlatform platform : jdk8Platforms) {
+            return platform;
+        }
+        return null;
+    }
+
     private List<JavaPlatform> getJdk7Platforms() {
         List<JavaPlatform> jdk7platforms = new ArrayList<JavaPlatform>();
 
@@ -124,6 +146,18 @@ public abstract class BaseWizardIterator implements WizardDescriptor.BackgroundI
             }
         }
         return jdk7platforms;
+    }
+
+    private List<JavaPlatform> getJdk8Platforms() {
+        List<JavaPlatform> jdk8platforms = new ArrayList<JavaPlatform>();
+
+        for (JavaPlatform platform : JavaPlatformManager.getDefault().getInstalledPlatforms()) {
+            SpecificationVersion version = platform.getSpecification().getVersion();
+            if ("1.8".equals(version.toString())) { //NOI18N
+                jdk8platforms.add(platform);
+            }
+        }
+        return jdk8platforms;
     }
 
     @Override

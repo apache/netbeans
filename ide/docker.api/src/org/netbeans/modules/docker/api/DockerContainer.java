@@ -19,8 +19,6 @@
 package org.netbeans.modules.docker.api;
 
 import java.util.Objects;
-import javax.swing.event.ChangeListener;
-import org.openide.util.ChangeSupport;
 
 /**
  *

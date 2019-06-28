@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.j2ee.common/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/j2ee/common/Bundle.properties
 OpenIDE-Module-Needs: javax.script.ScriptEngine.freemarker
-OpenIDE-Module-Specification-Version: 1.107
+OpenIDE-Module-Specification-Version: 1.108
 AutoUpdate-Show-In-Client: false

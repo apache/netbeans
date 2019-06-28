@@ -65,7 +65,7 @@ public class RequireJSCodeCompletion implements CompletionProvider {
         EditorUtils.CodeCompletionContext context = EditorUtils.findContext(snapshot, offset);
 
         if (context == EditorUtils.CodeCompletionContext.CONFIG_PROPERTY_NAME) {
-            List<CompletionProposal> result = new ArrayList();
+            List<CompletionProposal> result = new ArrayList<CompletionProposal>();
             Collection<String> names = RequireJsDataProvider.getDefault().getConfigurationOptions();
             for (String name : names) {
                 if (name.startsWith(prefix)) {
@@ -174,7 +174,7 @@ public class RequireJSCodeCompletion implements CompletionProvider {
                 }
 
                 if (relativeTo.isEmpty()) {
-                    Collection<String> basePaths = new ArrayList();
+                    Collection<String> basePaths = new ArrayList<String>();
                     if (rIndex != null) {
                         basePaths = rIndex.getBasePaths();
                         relativeTo.add(fo.getParent());
@@ -216,7 +216,7 @@ public class RequireJSCodeCompletion implements CompletionProvider {
                     }
                 }
 
-                List<CompletionProposal> result = new ArrayList();
+                List<CompletionProposal> result = new ArrayList<CompletionProposal>();
                 Map<String, FSCompletionItem> ccItems  = new HashMap<>();
                 try {
                     boolean addPrefix = !isClientCode(project, fo);
@@ -251,7 +251,7 @@ public class RequireJSCodeCompletion implements CompletionProvider {
                         topFolder = project.getProjectDirectory();
                     }
                     try {
-                        List<CompletionProposal> tmpResult = new ArrayList();
+                        List<CompletionProposal> tmpResult = new ArrayList<CompletionProposal>();
                         while (FileUtil.isParentOf(topFolder, parentFolder)) {
                             tmpResult.add(new FSCompletionItem(parentFolder, writtenPath, addExtensionInCC, offset));
                             parentFolder = parentFolder.getParent();

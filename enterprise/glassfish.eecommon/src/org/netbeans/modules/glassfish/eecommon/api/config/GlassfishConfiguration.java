@@ -497,7 +497,8 @@ public abstract class GlassfishConfiguration implements
         "JavaEEPlusSIP",
         "gfv3",
         "gfv3ee6",
-        "gfv3ee6wc"
+        "gfv3ee6wc",
+        "gfv5ee8"
     };
 
     protected ASDDVersion getTargetAppServerVersion() {

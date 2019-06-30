@@ -206,12 +206,12 @@ public final class SourceJavadocAttacherUtil {
                 final List<URI> result = new ArrayList<URI>();
                 if (forSources) {
                     for (FileObject root : JavadocAndSourceRootDetection.findSourceRoots(fo,null)) {
-                        result.add(root.getURL().toURI());
+                        result.add(root.toURL().toURI());
                     }
                 } else {
                     FileObject root = JavadocAndSourceRootDetection.findJavadocRoot(fo);
                     if (root != null) {
-                        result.add(root.getURL().toURI());
+                        result.add(root.toURL().toURI());
                     }
                 }
                 return result;

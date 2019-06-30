@@ -190,10 +190,15 @@ public final class PhpUnitLogParser extends DefaultHandler {
 
     private void fillStacktrace() {
         String[] lines = buffer.toString().trim().split("\n"); // NOI18N
-        assert lines.length >= 2 : "At least 2 lines must be found (message + stacktrace)";
+        // stacktrace may be empty, so check whether the new line is contained instead of lines.length >= 2
+        assert buffer.toString().contains("\n") : "At least 2 lines must be found (message + stacktrace)"; // NOI18N
 
         buffer = new StringBuilder(200);
         boolean stacktraceStarted = false;
+        // NETBEANS-1851 stacktrace is empty
+        if (lines.length == 1) {
+            buffer.append(lines[0]);
+        }
         // 1st line is skipped
         for (int i = 1; i < lines.length; ++i) {
             String line = lines[i];

@@ -18,17 +18,48 @@
  */
 package org.netbeans.libs.graalsdk;
 
+import java.util.List;
 import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.Context.Builder;
 import org.graalvm.polyglot.Engine;
+import org.graalvm.polyglot.HostAccess;
 
 /**
  * Integration of <a href="@org-netbeans-api-scripting@/overview-summary.html">NetBeans Scripting</a>
  * API and GraalVM; see the {@link org.netbeans.libs.graalsdk tutorial} for more details.
+ * <h2>Security</h2>
  * <p>
- * As a secondary usecase, it is possible to request this module and gain access to
- * {@code org.graalvm.polyglot} package directly. Consult {@link Context} and {@link Engine}
+ * By default all the <a href="http://graalvm.org">GraalVM</a> engines
+ * (named <code>GraalVM:something</code>)
+ * run in a very restricted, secure sandbox:
+ * </p>
+ * {@codesnippet org.netbeans.libs.graalsdk.impl.GraalContext#SANDBOX}
+ * <p>
+ * The languages cannot access local files, ports, etc. They can access <b>public</b>
+ * fields and <b>public</b> methods of objects passed into their scripts (but not
+ * those methods exposed by base {@link Object} class). The scripts can access
+ * elements of Java arrays and {@link List} elements. Methods of a 
+ * {@linkplain FunctionalInterface functional interfaces} are callable by the 
+ * scripts.
+ * </p>
+ * <p>
+ * For some languages such restrictions are too tight. They
+ * need to gain wider access. This can be done by setting <code>allowAllAccess</code>
+ * attribute to {@code true}:
+ * </p>
+ * {@codesnippet org.netbeans.libs.graalsdk.ScriptingTutorial#allowAllAccess}
+ * <p>
+ * Once enabled, the {@link HostAccess#ALL} and {@link Builder#allowAllAccess(boolean) allowAllAccess(true)}
+ * is then used to construct the engine's environment.
+ * </p>
+ * <h2>Polyglot API Access</h2>
+ * <p>
+ * As a consequence of packaging the GraalVM APIs, it is possible to request this module and gain access to
+ * {@link org.graalvm.polyglot} package directly. Consult {@link Context} and {@link Engine}
  * classes as a starting points when
- * accessing the Graal SDK polyglot API directly.
+ * accessing the Graal SDK directly. Preferably use only if the 
+ * <a href="@org-netbeans-api-scripting@/overview-summary.html">NetBeans Scripting</a>
+ * API wrapper isn't good enough.
  */
 public final class GraalSDK {
     private GraalSDK() {

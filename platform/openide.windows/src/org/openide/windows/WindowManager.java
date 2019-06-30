@@ -741,6 +741,44 @@ public abstract class WindowManager extends Object implements Serializable {
         return null;
     }
     
+    /**
+     * Given some XML, attempts to create a Mode that can
+     * subsequently be used to dock a TopComponent into.
+     * Usually this will be an anonymous Mode.
+     * 
+     * @param xml ModeConfig XML that was originally produced by {@link ModeUtilities#toXml}
+     * @return an instance of Mode or null if the attempt to create the Mode failed
+     * @see ModeUtilities
+     */
+    public Mode createModeFromXml(String xml) {
+        return null;
+    }
+
+    /**
+     * Before restoring a whole bunch of Modes (for example with XML that has been
+     * previously saved somewhere and now loaded), it is useful to remove the
+     * anonymous modes from the system.
+     * 
+     * @param mode the {@link Mode} to be removed
+     * @return success or failure of the attempt to remove the {@link Mode}
+     */
+    public boolean removeMode(Mode mode) {
+        return false;
+    }
+
+    /**
+     * Before restoring anonymous Modes, it is useful to update whatever defined Modes
+     * may exist like editor, explorer etc., so that all the Modes will eventually
+     * re-appear in the desired locations.
+     * 
+     * @param xml ModeConfig XML that was originally produced by {@link ModeUtilities#toXml}
+     * @return success or failure of the attempt to find the Mode and update it
+     * @see ModeUtilities
+     */
+    public boolean updateModeConstraintsFromXml(String xml) {
+        return false;
+    }
+            
     /** A manager that handles operations on top components.
      * It is always attached to a {@link TopComponent}.
      * @deprecated Do not use anymore. This interface is replaced by bunch of protected methods

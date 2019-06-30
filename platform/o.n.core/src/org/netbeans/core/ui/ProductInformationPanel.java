@@ -21,7 +21,6 @@ package org.netbeans.core.ui;
 
 import java.awt.Cursor;
 import java.awt.EventQueue;
-import java.awt.Font;
 import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -36,7 +35,6 @@ import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Locale;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -51,6 +49,7 @@ import org.openide.awt.HtmlBrowser.URLDisplayer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.Places;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
@@ -121,7 +120,8 @@ public class ProductInformationPanel extends JPanel implements HyperlinkListener
         copyright.setBackground(getBackground());
         copyright.putClientProperty( JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
 
-        about = new ImageIcon(org.netbeans.core.startup.Splash.loadContent(true));
+        // Use image2Icon to preserve the underlying HiDPI-aware Icon instance.
+        about = ImageUtilities.image2Icon(org.netbeans.core.startup.Splash.loadContent(true));
         imageLabel.setIcon(about);
 
         imageLabel.addMouseListener(new MouseAdapter() {

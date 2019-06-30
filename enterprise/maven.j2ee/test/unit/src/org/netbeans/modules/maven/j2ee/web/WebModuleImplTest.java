@@ -113,6 +113,14 @@ public class WebModuleImplTest extends JavaEEMavenTestBase {
         checkJ2eeProfile(Profile.JAVA_EE_7_WEB, "javax", "javaee-web-api", "7.0"); //NOI18N
     }
 
+    public void testGetJ2eeProfile_warProject_javaEE8FullSpecification() throws IOException {
+        checkJ2eeProfile(Profile.JAVA_EE_8_WEB, "javax", "javaee-api", "8.0"); //NOI18N
+    }
+
+    public void testGetJ2eeProfile_javaEE8WebSpecification() throws IOException {
+        checkJ2eeProfile(Profile.JAVA_EE_8_WEB, "javax", "javaee-web-api", "8.0"); //NOI18N
+    }
+
     public void testGetJ2eeProfile_javaEE5Full_glassfish() throws IOException {
         checkJ2eeProfile(Profile.JAVA_EE_5, "org.glassfish.main.extras", "glassfish-embedded-all", "2"); //NOI18N
     }
@@ -135,6 +143,14 @@ public class WebModuleImplTest extends JavaEEMavenTestBase {
 
     public void testGetJ2eeProfile_javaEE7Web_glassfish() throws IOException {
         checkJ2eeProfile(Profile.JAVA_EE_7_WEB, "org.glassfish.main.extras", "glassfish-embedded-web", "4.0.1"); //NOI18N
+    }
+
+    public void testGetJ2eeProfile_warProject_javaEE8Full_glassfish() throws IOException {
+        checkJ2eeProfile(Profile.JAVA_EE_8_WEB, "org.glassfish.main.extras", "glassfish-embedded-all", "5.0"); //NOI18N
+    }
+
+    public void testGetJ2eeProfile_javaEE8Web_glassfish() throws IOException {
+        checkJ2eeProfile(Profile.JAVA_EE_8_WEB, "org.glassfish.main.extras", "glassfish-embedded-web", "5.0"); //NOI18N
     }
 
     public void testGetJ2eeProfile_javaEE5_weblogic() throws IOException {

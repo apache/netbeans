@@ -98,6 +98,37 @@ public class WindowManagerParser {
         }
     }
     
+    /** Extract all ModeConfigs in XML.
+     *
+     * @param wmc where all knowledge of the ModeConfigs is kept
+     * @return All the known modes in the XML configuration that they would
+     * be saved to disk as.
+     * @throws IOException
+     */
+    List<String> modeConfigXmls(WindowManagerConfig wmc) throws IOException {
+        synchronized (SAVING_LOCK) {
+            Map<String, ModeConfig> modeConfigMap = gatherModeConfigs(wmc);
+            return xmlModeConfigs(modeConfigMap);
+        }
+    }
+    
+    /** Get a ModeConfig as XML.
+     * 
+     * @param modeName the name of the Mode for which we want the XML
+     * @param wmc where all knowledge of the ModeConfigs is kept
+     * @return XML String of the Mode with modeName
+     * @throws IOException 
+     */
+    public String modeConfigXml(String modeName, WindowManagerConfig wmc) throws IOException {
+        synchronized (SAVING_LOCK) {
+            Map<String, ModeConfig> modeConfigMap = gatherModeConfigs(wmc);
+            ModeConfig modeConfig = modeConfigMap.get(modeName);
+            ModeParser modeParser = modeParserMap.get(modeName);
+            String xml = modeParser.modeConfigXml(modeConfig);
+            return xml;
+        }
+    }
+
     /** Called from ModuleChangeHandler when wsmode file is deleted from module folder.
      * Do not remove ModeParser. Only set that it is not present in module folder.
      * @param modeName unique name of mode
@@ -123,7 +154,7 @@ public class WindowManagerParser {
             ModeParser modeParser = (ModeParser) modeParserMap.get(modeName);
             if (modeParser == null) {
                 //Create new ModeParser if it does not exist.
-                modeParser = new ModeParser(modeName,tcRefNameLocalSet);
+                modeParser = ModeParser.parseFromFileObject(modeName,tcRefNameLocalSet);
                 modeParserMap.put(modeName, modeParser);
             }
             FileObject modesModuleFolder = null;
@@ -360,7 +391,7 @@ public class WindowManagerParser {
                     //wsmode file
                     ModeParser modeParser = (ModeParser) modeParserMap.get(files[i].getName());
                     if (modeParser == null) {
-                        modeParser = new ModeParser(files[i].getName(),tcRefNameLocalSet);
+                        modeParser = ModeParser.parseFromFileObject(files[i].getName(),tcRefNameLocalSet);
                         modeParserMap.put(files[i].getName(), modeParser);
                     }
                     modeParser.setInModuleFolder(true);
@@ -382,7 +413,7 @@ public class WindowManagerParser {
                     if (modeParserMap.containsKey(files[i].getName())) {
                         modeParser = (ModeParser) modeParserMap.get(files[i].getName());
                     } else {
-                        modeParser = new ModeParser(files[i].getName(),tcRefNameLocalSet);
+                        modeParser = ModeParser.parseFromFileObject(files[i].getName(),tcRefNameLocalSet);
                         modeParserMap.put(files[i].getName(), modeParser);
                     }
                     modeParser.setInLocalFolder(true);
@@ -644,8 +675,53 @@ public class WindowManagerParser {
         if (DEBUG) Debug.log(WindowManagerParser.class, "writeProperties LEAVE");
     }
     
-    private void writeModes (WindowManagerConfig wmc) throws IOException {
-        if (DEBUG) Debug.log(WindowManagerParser.class, "writeModes ENTER");
+    private void writeModes(WindowManagerConfig wmc) throws IOException {
+        if (DEBUG) {
+            Debug.log(WindowManagerParser.class, "writeModes ENTER");
+        }
+
+        Map<String, ModeConfig> modeConfigMap = gatherModeConfigs(wmc);
+
+        saveModeConfigs(modeConfigMap);
+
+        if (DEBUG) {
+            Debug.log(WindowManagerParser.class, "writeModes LEAVE");
+        }
+    }
+
+    private void saveModeConfigs(Map<String, ModeConfig> modeConfigMap) throws IOException {
+        FileObject modesLocalFolder = pm.getRootLocalFolder().getFileObject(PersistenceManager.MODES_FOLDER);
+        if ((modesLocalFolder == null) && (modeParserMap.size() > 0)) {
+            modesLocalFolder = pm.getModesLocalFolder();
+        }
+        //Step 3: Save all modes
+        for (Iterator it = modeParserMap.keySet().iterator(); it.hasNext();) {
+            ModeParser modeParser = (ModeParser) modeParserMap.get(it.next());
+            modeParser.setLocalParentFolder(modesLocalFolder);
+            modeParser.setInLocalFolder(true);
+            modeParser.save((ModeConfig) modeConfigMap.get(modeParser.getName()));
+        }
+    }
+
+    private List<String> xmlModeConfigs(Map<String, ModeConfig> modeConfigMap) throws IOException {
+        // Convert ModeConfigs into xml.
+        List<String> modeConfigXmls = new ArrayList<>();
+        for (Iterator it = modeParserMap.keySet().iterator(); it.hasNext();) {
+            ModeParser modeParser = (ModeParser) modeParserMap.get(it.next());
+            String xml = modeParser.modeConfigXml((ModeConfig) modeConfigMap.get(modeParser.getName()));
+            modeConfigXmls.add(xml);
+        }
+        return modeConfigXmls;
+    }
+
+    /**
+     * Cleans obsolete ModeParsers and creates missing ModeParsers, populating
+     * modeParserMap
+     *
+     * @param wmc where all knowledge of the ModeConfigs is kept
+     * @return named index of Mode configurations
+     */
+    private Map<String, ModeConfig> gatherModeConfigs(WindowManagerConfig wmc) {
         //Step 1: Clean obsolete mode parsers
         Map<String, ModeConfig> modeConfigMap = new HashMap<String, ModeConfig>();
         for (int i = 0; i < wmc.modes.length; i++) {
@@ -668,28 +744,15 @@ public class WindowManagerParser {
         //Step 2: Create missing mode parsers
         for (int i = 0; i < wmc.modes.length; i++) {
             if (!modeParserMap.containsKey(wmc.modes[i].name)) {
-                ModeParser modeParser = new ModeParser(wmc.modes[i].name,tcRefNameLocalSet);
+                ModeParser modeParser = ModeParser.parseFromFileObject(wmc.modes[i].name,tcRefNameLocalSet);
                 modeParserMap.put(wmc.modes[i].name, modeParser);
                 //if (DEBUG) Debug.log(WindowManagerParser.class, "-- WMParser.writeModes ** CREATE modeParser:" + modeParser.getName());
             }
         }
-        
-        FileObject modesLocalFolder = pm.getRootLocalFolder().getFileObject(PersistenceManager.MODES_FOLDER);
-        if ((modesLocalFolder == null) && (modeParserMap.size() > 0)) {
-            modesLocalFolder = pm.getModesLocalFolder();
-        }
-        //Step 3: Save all modes
-        for (Iterator it = modeParserMap.keySet().iterator(); it.hasNext(); ) {
-            ModeParser modeParser = (ModeParser) modeParserMap.get(it.next());
-            modeParser.setLocalParentFolder(modesLocalFolder);
-            modeParser.setInLocalFolder(true);
-            modeParser.save((ModeConfig) modeConfigMap.get(modeParser.getName()));
-        }
-        
-        if (DEBUG) Debug.log(WindowManagerParser.class, "writeModes LEAVE");
+        return modeConfigMap;
     }
-    
-    private void writeGroups (WindowManagerConfig wmc) throws IOException {
+
+    private void writeGroups(WindowManagerConfig wmc) throws IOException {
         if (DEBUG) Debug.log(WindowManagerParser.class, "writeGroups ENTER");
         //Step 1: Clean obsolete group parsers
         Map<String, GroupConfig> groupConfigMap = new HashMap<String, GroupConfig>();
@@ -1948,7 +2011,7 @@ public class WindowManagerParser {
      */
     public static ModeConfig loadModeConfigFrom( FileObject fo ) throws IOException {
         String modeName = fo.getName();
-        ModeParser parser = new ModeParser(modeName, new HashSet(1));
+        ModeParser parser = ModeParser.parseFromFileObject(modeName, new HashSet(1));
         parser.setInLocalFolder(true);
         parser.setLocalParentFolder(fo.getParent());
         return parser.load();

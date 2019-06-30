@@ -25,6 +25,7 @@
     <fileset>
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/beans-1.0.xml</file>
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/beans-1.1.xml</file>
+        <file>src/org/netbeans/modules/j2ee/common/dd/resources/beans-2.0.xml</file>
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/constraint.xml</file>
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/ear-1.3.xml</file>
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/ear-1.4.xml</file>
@@ -37,8 +38,10 @@
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/web-2.5.xml</file>
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/web-3.0.xml</file>
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/web-3.1.xml</file>
+        <file>src/org/netbeans/modules/j2ee/common/dd/resources/web-4.0.xml</file>
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/web-fragment-3.0.xml</file>
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/web-fragment-3.1.xml</file>
+        <file>src/org/netbeans/modules/j2ee/common/dd/resources/web-fragment-4.0.xml</file>
         <file>test/unit/src/templates/Class.template</file>
         <file>test/unit/src/templates/Interface.template</file>
         <license ref="Apache-2.0-ASF" />

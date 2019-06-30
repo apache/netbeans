@@ -68,6 +68,12 @@ public class Hk2OptionalFactory extends OptionalDeploymentManagerFactory {
                 t, true);
     }
     
+    public static Hk2OptionalFactory createEe8() {
+        ServerUtilities t = ServerUtilities.getEe8Utilities();
+        return null == t ? null : new Hk2OptionalFactory(Hk2DeploymentFactory.createEe8(),
+                t, true);
+    }
+    
     @Override
     public StartServer getStartServer(DeploymentManager dm) {
         return new Hk2StartServer(dm);

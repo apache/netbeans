@@ -38,7 +38,7 @@ public final class DebuggerInfo implements ContextProvider {
 
 
     /**
-     * Creates a new instance of DebuggerInfo.
+     * Creates a new instance of DebuggerInfo. Takes varargs since version 1.60.
      *
      * @param typeID identification of DebuggerInfo type. Is used for 
      *      registration of external services.
@@ -48,7 +48,7 @@ public final class DebuggerInfo implements ContextProvider {
      */
     public static DebuggerInfo create (
         String typeID,
-        Object[] services
+        Object... services
     ) {
         return new DebuggerInfo (
             typeID, 

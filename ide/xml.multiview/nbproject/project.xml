@@ -197,6 +197,7 @@
                 <friend>de.genomatix.jasperreporteditor</friend>
                 <friend>org.netbeans.modules.hibernate</friend>
                 <friend>org.netbeans.modules.hibernateweb</friend>
+                <friend>org.netbeans.modules.payara.eecommon</friend>
                 <friend>org.netbeans.modules.identity.profile.ui</friend>
                 <friend>org.netbeans.modules.j2ee.ddloaders</friend>
                 <friend>org.netbeans.modules.j2ee.persistence</friend>

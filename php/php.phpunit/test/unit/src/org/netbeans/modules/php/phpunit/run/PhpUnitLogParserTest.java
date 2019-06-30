@@ -280,6 +280,21 @@ public class PhpUnitLogParserTest extends NbTestCase {
         assertEquals(1465, tests);
     }
 
+    public void testParseLogNETBEANS1851() throws Exception {
+        Reader reader = createReader("phpunit-log-netbeans1851.xml");
+        TestSessionVo testSession = new TestSessionVo(null);
+
+        PhpUnitLogParser.parse(reader, testSession);
+
+        assertSame(1, testSession.getTestSuites().size());
+        TestSuiteVo testSuite = testSession.getTestSuites().get(0);
+        assertEquals("CalculatorTest", testSuite.getName());
+        assertEquals("/tmp/Calculator-PHPUnit/test/src/CalculatorTest.php", testSuite.getFile());
+        TestCaseVo testCase = testSuite.getTestCases().get(16);
+        assertTrue(testCase.isError());
+        assertEquals("Risky Test", testCase.getStackTrace()[0]);
+    }
+
     private Reader createReader(String filename) throws FileNotFoundException {
         return new BufferedReader(new FileReader(new File(getDataDir(), filename)));
     }

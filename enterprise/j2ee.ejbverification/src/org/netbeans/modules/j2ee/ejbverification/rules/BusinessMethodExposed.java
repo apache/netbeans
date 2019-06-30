@@ -82,8 +82,8 @@ public class BusinessMethodExposed {
             Profile profile = ejbModule.getJ2eeProfile();
             if (profile != null && profile.isAtLeast(Profile.JAVA_EE_6_WEB)) {
                 int intfCount = ctx.getEjbData().getBusinessLocal().length + ctx.getEjbData().getBusinessRemote().length;
-                localInterfaces = new ArrayList(resolveClasses(hintContext.getInfo(), ctx.getEjbData().getBusinessLocal()));
-                remoteInterfaces = new ArrayList(resolveClasses(hintContext.getInfo(), ctx.getEjbData().getBusinessRemote()));
+                localInterfaces  = new ArrayList<TypeElement>(resolveClasses(hintContext.getInfo(), ctx.getEjbData().getBusinessLocal()));
+                remoteInterfaces = new ArrayList<TypeElement>(resolveClasses(hintContext.getInfo(), ctx.getEjbData().getBusinessRemote()));
                 if (intfCount == 0 || JavaUtils.hasAnnotation(ctx.getClazz(), EJBAPIAnnotations.LOCAL_BEAN)) {
                     return null;
                 }
@@ -95,10 +95,10 @@ public class BusinessMethodExposed {
             }
 
             if (localInterfaces == null) {
-                localInterfaces = new ArrayList(resolveClasses(hintContext.getInfo(), ctx.getEjbData().getBusinessLocal()));
+                localInterfaces = new ArrayList<TypeElement>(resolveClasses(hintContext.getInfo(), ctx.getEjbData().getBusinessLocal()));
             }
             if (remoteInterfaces == null) {
-                remoteInterfaces = new ArrayList(resolveClasses(hintContext.getInfo(), ctx.getEjbData().getBusinessRemote()));
+                remoteInterfaces = new ArrayList<TypeElement>(resolveClasses(hintContext.getInfo(), ctx.getEjbData().getBusinessRemote()));
             }
 
             Collection<ExecutableElement> definedMethods = new ArrayList<>();

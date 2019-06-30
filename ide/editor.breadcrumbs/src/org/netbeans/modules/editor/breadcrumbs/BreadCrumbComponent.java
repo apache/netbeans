@@ -64,7 +64,8 @@ import org.openide.util.WeakListeners;
  */
 public class BreadCrumbComponent<T extends JLabel&Renderer> extends JComponent implements PropertyChangeListener {
 
-    private final Image SEPARATOR = ImageUtilities.loadImage("org/netbeans/modules/editor/breadcrumbs/resources/separator.png");
+    private final Icon SEPARATOR =
+        ImageUtilities.image2Icon(ImageUtilities.loadImage("org/netbeans/modules/editor/breadcrumbs/resources/separator.png"));
     
     public BreadCrumbComponent() {
         setPreferredSize(new Dimension(0, COMPONENT_HEIGHT));
@@ -119,7 +120,7 @@ public class BreadCrumbComponent<T extends JLabel&Renderer> extends JComponent i
         int height = getHeight();
         
         if (nodes.length == 0) {
-            g.drawImage(SEPARATOR, START_INSET, (height - SEPARATOR.getHeight(null)) / 2, null);
+            SEPARATOR.paintIcon(this, g, START_INSET, (height - SEPARATOR.getIconHeight()) / 2);
             return ;
         }
         
@@ -135,10 +136,10 @@ public class BreadCrumbComponent<T extends JLabel&Renderer> extends JComponent i
             g.translate(-x, -labelY);
 
             x += sizes[i];
-            
-            g.drawImage(SEPARATOR, x + LEFT_SEPARATOR_INSET, (height - SEPARATOR.getHeight(null)) / 2, null);
 
-            x += LEFT_SEPARATOR_INSET + SEPARATOR.getWidth(null) + RIGHT_SEPARATOR_INSET;
+            SEPARATOR.paintIcon(this, g, x + LEFT_SEPARATOR_INSET, (height - SEPARATOR.getIconHeight()) / 2);
+
+            x += LEFT_SEPARATOR_INSET + SEPARATOR.getIconWidth() + RIGHT_SEPARATOR_INSET;
         }
     }
 
@@ -169,7 +170,7 @@ public class BreadCrumbComponent<T extends JLabel&Renderer> extends JComponent i
             i++;
         }
 
-        setPreferredSize(new Dimension((int) (xTotal + (nodes.length - 1) * (LEFT_SEPARATOR_INSET + SEPARATOR.getWidth(null) + RIGHT_SEPARATOR_INSET) + START_INSET), USABLE_HEIGHT/*(int) (height + 2 * INSET_HEIGHT)*/));
+        setPreferredSize(new Dimension((int) (xTotal + (nodes.length - 1) * (LEFT_SEPARATOR_INSET + SEPARATOR.getIconWidth() + RIGHT_SEPARATOR_INSET) + START_INSET), USABLE_HEIGHT/*(int) (height + 2 * INSET_HEIGHT)*/));
     }
     
     @Override
@@ -206,7 +207,7 @@ public class BreadCrumbComponent<T extends JLabel&Renderer> extends JComponent i
             }
             
             startX = elemX;
-            elemX += SEPARATOR.getWidth(null);
+            elemX += SEPARATOR.getIconWidth();
             
             if (clickX <= elemX) {
                 //found:

@@ -201,14 +201,11 @@ implements FileChangeListener, LexicalHandler, LookupListener {
             }
             return previousID;
         }
+
         URL url = null;
         InputStream in = null;
-        try {
-            url = myFileObject.getURL();
-        } catch (IOException ex) {
-            warning(ex, "I/O exception while retrieving xml FileObject URL.");
-            return NULL;
-        }
+        url = myFileObject.toURL();
+
         synchronized (this) {
             try {
                 if (!myFileObject.isValid()) {

@@ -51,7 +51,7 @@ public abstract class JavaEEMavenTestBase extends NbTestCase {
     public  final String WEB_XML = "web.xml"; //NOI18N
     
     public  final String WEBLOGIC = "WebLogic"; //NOI18N
-    public  final String GLASSFISH = "gfv3ee6"; //NOI18N
+    public  final String GLASSFISH = "gfv5ee8"; //NOI18N
     public  final String TOMCAT = "Tomcat"; //NOI18N
     public  final String JBOSS = "JBoss"; //NOI18N
     

@@ -140,12 +140,8 @@ public class JavadocForBinaryQueryImpl implements JavadocForBinaryQueryImplement
         if (normalizedURL == null) {
             FileObject fo = URLMapper.findFileObject(url);
             if (fo != null) {
-                try {
-                    normalizedURL = fo.getURL();
-                    this.normalizedURLCache.put (url, normalizedURL);
-                } catch (FileStateInvalidException e) {
-                    ErrorManager.getDefault().notify(e);
-                }
+                normalizedURL = fo.toURL();
+                this.normalizedURLCache.put (url, normalizedURL);
             }
         }
         return normalizedURL;
@@ -197,12 +193,7 @@ public class JavadocForBinaryQueryImpl implements JavadocForBinaryQueryImplement
             return rootURL;
         }
         FileObject result = findIndexFolder (root,1);
-        try {
-            return result == null ? rootURL : result.getURL();
-        } catch (FileStateInvalidException e) {
-            ErrorManager.getDefault().notify(e);
-            return rootURL;
-        }
+        return ((result == null) ? rootURL : result.toURL());
     }
 
     private static FileObject findIndexFolder (FileObject fo, int depth) {

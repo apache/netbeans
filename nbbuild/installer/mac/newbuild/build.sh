@@ -43,12 +43,9 @@ build_jdk8=$5
 build_jdk11=$6
 binaryname=$7
 mac_sign_idname=$8
-#mac_sign_client=$7
-#mac_sign_user=$8
-#mac_sign_guid=$9
-#codesignbureau_credfile=${10}
-if [ -n "${9}" ] ; then
-  nb_locales=",${9}"
+version_number=$9
+if [ -n "${10}" ] ; then
+  nb_locales=",${10}"
 fi
 
 basename=`dirname "$0"`
@@ -85,5 +82,5 @@ fi
 
 rm -rf "$basename"/dist_en
 
-ant -f $basename/build.xml $target -Dlocales=$nb_locales -Dcommon.name=$commonname -Dnb.binary.name=$binaryname -Dmac.sign.idname="$mac_sign_idname" -Dprefix=$prefix -Dbuildnumber=$buildnumber -Dmac.sign.client=$mac_sign_client -Dmac.sign.user=$mac_sign_user -Dmac.sign.guid=$mac_sign_guid -Dbuild.jdk7=$build_jdk7 -Dbuild.jdk8=$build_jdk8 -Dbuild.jdk11=$build_jdk11 -Dgf_builds_host=$GLASSFISH_BUILDS_HOST -Djre_builds_host=$JRE_BUILDS_HOST -Djdk_builds_host=$JDK_BUILDS_HOST -Djre_builds_path=$JRE_BUILDS_PATH -Djdk7_builds_path=$JDK7_BUILDS_PATH -Djdk8_builds_path=$JDK8_BUILDS_PATH -Djdk11_builds_path=$JDK11_BUILDS_PATH -Dbinary_cache_host=$BINARY_CACHE_HOST
+ant -f $basename/build.xml $target -Dlocales=$nb_locales -Dcommon.name=$commonname -Dnb.binary.name=$binaryname -Dmac.sign.idname="$mac_sign_idname" -Dprefix=$prefix -Dbuildnumber=$buildnumber -Dversionnumber=$version_number -Dmac.sign.client=$mac_sign_client -Dmac.sign.user=$mac_sign_user -Dmac.sign.guid=$mac_sign_guid -Dbuild.jdk7=$build_jdk7 -Dbuild.jdk8=$build_jdk8 -Dbuild.jdk11=$build_jdk11 -Dgf_builds_host=$GLASSFISH_BUILDS_HOST -Djre_builds_host=$JRE_BUILDS_HOST -Djdk_builds_host=$JDK_BUILDS_HOST -Djre_builds_path=$JRE_BUILDS_PATH -Djdk7_builds_path=$JDK7_BUILDS_PATH -Djdk8_builds_path=$JDK8_BUILDS_PATH -Djdk11_builds_path=$JDK11_BUILDS_PATH -Dbinary_cache_host=$BINARY_CACHE_HOST
 mv -f "$basename"/dist "$basename"/dist_en

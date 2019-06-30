@@ -75,4 +75,17 @@ public class ProfileTest extends NbTestCase {
         assertTrue(Profile.JAVA_EE_7_FULL.isAtLeast(Profile.JAVA_EE_7_WEB));
     }
 
+    public void testIsHigherJavaEEVersionJavaEE8full() {
+        assertFalse(Profile.J2EE_13.isAtLeast(Profile.JAVA_EE_8_WEB));
+        assertFalse(Profile.J2EE_14.isAtLeast(Profile.JAVA_EE_8_WEB));
+        assertFalse(Profile.JAVA_EE_5.isAtLeast(Profile.JAVA_EE_8_WEB));
+
+        assertFalse(Profile.JAVA_EE_6_WEB.isAtLeast(Profile.JAVA_EE_8_WEB));
+        assertFalse(Profile.JAVA_EE_6_FULL.isAtLeast(Profile.JAVA_EE_8_WEB));
+        assertFalse(Profile.JAVA_EE_7_WEB.isAtLeast(Profile.JAVA_EE_8_WEB));
+        assertFalse(Profile.JAVA_EE_7_FULL.isAtLeast(Profile.JAVA_EE_8_WEB));
+        assertTrue(Profile.JAVA_EE_8_WEB.isAtLeast(Profile.JAVA_EE_8_WEB));
+        assertTrue(Profile.JAVA_EE_8_FULL.isAtLeast(Profile.JAVA_EE_8_WEB));
+}
+
 }

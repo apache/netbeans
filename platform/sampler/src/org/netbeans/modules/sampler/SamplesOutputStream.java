@@ -70,13 +70,13 @@ class SamplesOutputStream {
 //        out = new ObjectOutputStream(os);
         lastThreadInfos = new HashMap();
         steCache = new WeakHashMap(8*1024);
-        samples = new ArrayList(1024);
+        samples = new ArrayList<Sample>(1024);
     }
 
     void writeSample(ThreadInfo[] infos, long time, long selfThreadId) throws IOException {
-        List<Long> sameT = new ArrayList();
-        List<ThreadInfo> newT = new ArrayList();
-        List<Long> tids = new ArrayList();
+        List<Long> sameT = new ArrayList<Long>();
+        List<ThreadInfo> newT = new ArrayList<ThreadInfo>();
+        List<Long> tids = new ArrayList<Long>();
 
         for (ThreadInfo tinfo : infos) {
             long id;

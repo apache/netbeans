@@ -34,6 +34,7 @@ import org.netbeans.swing.tabcontrol.TabDataModel;
 import org.netbeans.swing.tabcontrol.customtabs.Tabbed;
 import org.netbeans.swing.tabcontrol.plaf.EqualPolygon;
 import org.openide.util.ChangeSupport;
+import org.openide.util.ImageUtilities;
 import org.openide.util.WeakListeners;
 import org.openide.windows.TopComponent;
 
@@ -184,7 +185,7 @@ public abstract class AbstractTabbedImpl extends Tabbed {
             String displayName = WindowManagerImpl.getInstance().getTopComponentDisplayName( tc );
             data[i] = new TabData(
                     tc,
-                    icon == null ? null : new ImageIcon( icon ),
+                    icon == null ? null : ImageUtilities.image2Icon( icon ),
                     displayName == null ? "" : displayName, // NOI18N
                     tc.getToolTipText() );
             if( selected == tcs[i] ) {

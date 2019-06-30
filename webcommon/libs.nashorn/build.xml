@@ -25,11 +25,11 @@
     <import file="../../nbbuild/templates/common.xml"/>
 
     <!-- Relative path to the jsparser module build -->
-    <property name="jsparser.module.dir" location="../libs.oracle.jsparser/build/webcommon/modules"/>
+    <property name="jsparser.module.dir" location="../../contrib/libs.oracle.jsparser/build/webcommon/modules"/>
 
     <!-- For testing purposes, build distribution of JS parser in a separate directory -->
     <target name="expand-test-jsparser-module">
-        <ant dir="../libs.oracle.jsparser" inheritall="false" inheritrefs="false"/>
+        <ant dir="../../contrib/libs.oracle.jsparser" inheritall="false" inheritrefs="false"/>
         <mkdir dir="${build.test.unit.classes.dir}"/>
         <mkdir dir="build/test/unit/classes"/>
         <!-- Test infrastructure will zip the files again, into ${test.unit.out.folder} -->

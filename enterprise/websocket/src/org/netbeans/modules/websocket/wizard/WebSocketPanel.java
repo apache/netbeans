@@ -79,7 +79,9 @@ class WebSocketPanel implements Panel<WizardDescriptor> {
         if (webModule != null) {
             Profile profile = webModule.getJ2eeProfile();
             if ( !Profile.JAVA_EE_7_FULL.equals(profile) && 
-                    !Profile.JAVA_EE_7_WEB.equals(profile))
+                    !Profile.JAVA_EE_7_WEB.equals(profile) &&
+                    !Profile.JAVA_EE_8_FULL.equals(profile) &&
+                            !Profile.JAVA_EE_8_WEB.equals(profile))
             {
                 setErrorMessage(NbBundle.getMessage(WebSocketPanel.class, 
                         "MSG_NoJEE7Profile"));          // NOI18N

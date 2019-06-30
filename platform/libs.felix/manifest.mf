@@ -9,7 +9,7 @@ Covered-Packages: META-INF,/MANIFEST.MF,org.netbeans.libs.felix,
  default/default.properties,org.apache.felix.framework,
  org.apache.felix.framework.cache,org.apache.felix.framework.capabilityset,
  org.apache.felix.framework.ext,org.apache.felix.framework.resolver,
- org.apache.felix.resolver,org.apache.felix.resolver.util,
+ org.apache.felix.resolver,org.apache.felix.resolver.reason,org.apache.felix.resolver.util,
  org.apache.felix.framework.util,org.apache.felix.framework.util.manifestparser,
  org.apache.felix.main,org.apache.felix.framework.wiring
  

@@ -23,13 +23,13 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.tree.AbstractLayoutCache;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import org.netbeans.swing.outline.CheckRenderDataProvider;
 import org.netbeans.swing.outline.Outline;
 import org.openide.nodes.Node;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -103,7 +103,7 @@ class NodeRenderDataProvider implements CheckRenderDataProvider {
         } else {
             image = n.getIcon(java.beans.BeanInfo.ICON_COLOR_16x16);
         }
-        return new ImageIcon(image);
+        return ImageUtilities.image2Icon(image);
     }
 
     public String getTooltipText(Object o) {

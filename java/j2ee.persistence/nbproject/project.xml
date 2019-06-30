@@ -619,6 +619,7 @@
             </test-dependencies>
             <friend-packages>
                 <friend>org.netbeans.modules.form.j2ee</friend>
+                <friend>org.netbeans.modules.gradle.javaee</friend>
                 <friend>org.netbeans.modules.hibernate</friend>
                 <friend>org.netbeans.modules.j2ee.common</friend>
                 <friend>org.netbeans.modules.j2ee.ejbcore</friend>

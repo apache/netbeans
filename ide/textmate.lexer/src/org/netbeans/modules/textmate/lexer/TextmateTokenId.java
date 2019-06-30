@@ -20,6 +20,7 @@ package org.netbeans.modules.textmate.lexer;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -55,11 +56,14 @@ public enum TextmateTokenId implements TokenId {
     public static class LanguageHierarchyImpl extends LanguageHierarchy<TextmateTokenId> {
 
         public static final String GRAMMAR_MARK = "textmate-grammar";
+        public static final String INJECTION_MARK = "inject-to";
         private static final Map<String, FileObject> scope2File;
+        private static final Map<String, Collection<String>> scope2Injections;
         private static final Map<String, String> mimeType2Scope;
-        
+
         static {
             scope2File = new HashMap<>();
+            scope2Injections = new HashMap<>();
             mimeType2Scope = new HashMap<>();
             FileObject editors = FileUtil.getSystemConfigRoot().getFileObject("Editors");
             if (editors != null) {
@@ -70,7 +74,14 @@ public enum TextmateTokenId implements TokenId {
                     if (attr != null && attr instanceof String) {
                         String scope = (String) attr;
                         scope2File.put(scope, candidate);
-                        mimeType2Scope.put(FileUtil.getRelativePath(editors, candidate.getParent()), scope);
+                        attr = candidate.getAttribute(INJECTION_MARK);
+                        if (attr != null && attr instanceof String) {
+                            for (String s : ((String)attr).split(",")) {
+                                scope2Injections.computeIfAbsent(s, str -> new ArrayList<>()).add(scope);
+                            }
+                        } else {
+                            mimeType2Scope.put(FileUtil.getRelativePath(editors, candidate.getParent()), scope);
+                        }
                     }
                 }
             }
@@ -94,7 +105,7 @@ public enum TextmateTokenId implements TokenId {
                 }
                 @Override
                 public Collection<String> getInjections(String scopeName) {
-                    return null;
+                    return scope2Injections.get(scopeName);
                 }
             };
             this.grammar = new Registry(opts).loadGrammar(scope);

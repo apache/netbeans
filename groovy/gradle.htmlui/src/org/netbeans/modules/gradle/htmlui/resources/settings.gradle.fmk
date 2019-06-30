@@ -19,7 +19,7 @@
 
 -->
 include 'desktop'
-include 'app'
+//include 'app'
 include 'web'
-include 'ios'
+//include 'ios'
 

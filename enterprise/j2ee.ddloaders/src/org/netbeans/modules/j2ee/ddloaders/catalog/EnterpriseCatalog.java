@@ -93,6 +93,7 @@ public final class EnterpriseCatalog implements CatalogReader, CatalogDescriptor
         schemas.add(new SchemaInfo("web-app_2_5.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("web-app_3_0.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("web-app_3_1.xsd", NEW_JAVAEE_NS));
+        schemas.add(new SchemaInfo("web-app_4_0.xsd", NEW_JAVAEE_NS));
 
         schemas.add(new SchemaInfo("web-common_3_0.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("web-common_3_1.xsd", NEW_JAVAEE_NS));
@@ -109,6 +110,7 @@ public final class EnterpriseCatalog implements CatalogReader, CatalogDescriptor
         schemas.add(new SchemaInfo("javaee_5.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("javaee_6.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("javaee_7.xsd", NEW_JAVAEE_NS));
+        schemas.add(new SchemaInfo("javaee_8.xsd", NEW_JAVAEE_NS));
         // web 2.2 and 2.3 dtds
         schemas.add(new SchemaInfo("web-app_2_2.dtd", "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN", true)); //NO18N
         schemas.add(new SchemaInfo("web-app_2_3.dtd", "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN", true)); //NO18N

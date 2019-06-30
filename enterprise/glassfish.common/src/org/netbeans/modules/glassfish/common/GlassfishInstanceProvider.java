@@ -63,9 +63,11 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
     private volatile static GlassfishInstanceProvider glassFishProvider;
 
     public static final String EE6_DEPLOYER_FRAGMENT = "deployer:gfv3ee6"; // NOI18N
+    public static final String EE8_DEPLOYER_FRAGMENT = "deployer:gfv5ee8"; // NOI18N
     public static final String EE6WC_DEPLOYER_FRAGMENT = "deployer:gfv3ee6wc"; // NOI18N
     public static final String PRELUDE_DEPLOYER_FRAGMENT = "deployer:gfv3"; // NOI18N
     static private String EE6_INSTANCES_PATH = "/GlassFishEE6/Instances"; // NOI18N
+    static private String EE8_INSTANCES_PATH = "/GlassFishEE8/Instances"; // NOI18N
     static private String EE6WC_INSTANCES_PATH = "/GlassFishEE6WC/Instances"; // NOI18N
 
     static public String PRELUDE_DEFAULT_NAME = "GlassFish_v3_Prelude"; //NOI18N
@@ -87,8 +89,8 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
                 if (glassFishProvider == null) {
                     runInit = true;
                     glassFishProvider = new GlassfishInstanceProvider(
-                            new String[]{EE6_DEPLOYER_FRAGMENT, EE6WC_DEPLOYER_FRAGMENT},
-                            new String[]{EE6_INSTANCES_PATH, EE6WC_INSTANCES_PATH},
+                            new String[]{EE6_DEPLOYER_FRAGMENT, EE6WC_DEPLOYER_FRAGMENT, EE8_DEPLOYER_FRAGMENT},
+                            new String[]{EE6_INSTANCES_PATH, EE6WC_INSTANCES_PATH, EE8_INSTANCES_PATH},
                             null,
                             true, 
                             new String[]{"--nopassword"}, // NOI18N

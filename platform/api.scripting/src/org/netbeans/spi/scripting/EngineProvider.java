@@ -21,6 +21,7 @@ package org.netbeans.spi.scripting;
 import java.util.List;
 import java.util.ServiceLoader;
 import javax.script.ScriptEngineFactory;
+import javax.script.ScriptEngineManager;
 
 /** Provider of additional {@link ScriptEngineFactory} implementations.
  * Register into {@link ServiceLoader} pool of services.
@@ -36,4 +37,17 @@ public interface EngineProvider {
      * @return list of additional factories
      */
     public List<ScriptEngineFactory> factories();
+
+    /** Provide additional factories. Searches the system in a custom way
+     * to find and instantiate additional (to those registered via
+     * {@code META-INF/services/javax.script.ScriptEngineFactory} way)
+     * factories.
+     *
+     * @param m the manager to associate the factories with
+     * @return list of additional factories
+     * @since 1.2
+     */
+    public default List<? extends ScriptEngineFactory> factories(ScriptEngineManager m) {
+        return factories();
+    }
 }

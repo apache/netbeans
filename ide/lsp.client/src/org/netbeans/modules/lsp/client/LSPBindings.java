@@ -38,6 +38,7 @@ import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.DocumentSymbolCapabilities;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
+import org.eclipse.lsp4j.ResourceOperationKind;
 import org.eclipse.lsp4j.TextDocumentClientCapabilities;
 import org.eclipse.lsp4j.WorkspaceClientCapabilities;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
@@ -169,7 +170,10 @@ public class LSPBindings {
        DocumentSymbolCapabilities dsc = new DocumentSymbolCapabilities();
        dsc.setHierarchicalDocumentSymbolSupport(true);
        tdcc.setDocumentSymbol(dsc);
-       initParams.setCapabilities(new ClientCapabilities(new WorkspaceClientCapabilities(), tdcc, null));
+       WorkspaceClientCapabilities wcc = new WorkspaceClientCapabilities();
+       wcc.getWorkspaceEdit().setDocumentChanges(true);
+       wcc.getWorkspaceEdit().setResourceOperations(Arrays.asList(ResourceOperationKind.Create, ResourceOperationKind.Delete, ResourceOperationKind.Rename));
+       initParams.setCapabilities(new ClientCapabilities(wcc, tdcc, null));
        return server.initialize(initParams).get();
     }
 

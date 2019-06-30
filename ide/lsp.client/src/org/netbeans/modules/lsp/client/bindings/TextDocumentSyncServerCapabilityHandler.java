@@ -68,9 +68,9 @@ public class TextDocumentSyncServerCapabilityHandler {
         newOpened.removeAll(lastOpened);
         Set<JTextComponent> newClosed = Collections.newSetFromMap(new IdentityHashMap<>());
         newClosed.addAll(lastOpened);
-        newClosed.removeAll(newOpened);
-        lastOpened.removeAll(newClosed);
-        lastOpened.addAll(newOpened);
+        newClosed.removeAll(currentOpened);
+        lastOpened.clear();
+        lastOpened.addAll(currentOpened);
 
         for (JTextComponent opened : newOpened) {
             FileObject file = NbEditorUtilities.getFileObject(opened.getDocument());

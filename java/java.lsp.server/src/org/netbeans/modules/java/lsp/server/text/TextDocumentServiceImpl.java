@@ -756,6 +756,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                                          err.getDescription());
                         switch (err.getSeverity()) {
                             case ERROR: diag.setSeverity(DiagnosticSeverity.Error); break;
+                            case VERIFIER:
                             case WARNING: diag.setSeverity(DiagnosticSeverity.Warning); break;
                             case HINT: diag.setSeverity(DiagnosticSeverity.Hint); break;
                             default: diag.setSeverity(DiagnosticSeverity.Information); break;

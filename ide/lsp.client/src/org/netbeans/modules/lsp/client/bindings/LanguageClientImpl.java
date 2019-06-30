@@ -124,12 +124,12 @@ public class LanguageClientImpl implements LanguageClient {
         severityMap.put(DiagnosticSeverity.Error, Severity.ERROR);
         severityMap.put(DiagnosticSeverity.Hint, Severity.HINT);
         severityMap.put(DiagnosticSeverity.Information, Severity.HINT);
-        severityMap.put(DiagnosticSeverity.Warning, Severity.HINT);
+        severityMap.put(DiagnosticSeverity.Warning, Severity.WARNING);
     }
 
     @Override
     public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
-        Utils.applyWorkspaceEditor(params.getEdit());
+        Utils.applyWorkspaceEdit(params.getEdit());
         return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(true));
     }
 

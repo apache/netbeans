@@ -96,4 +96,12 @@ public final class JsLibsCompositeCategoryProvider implements ProjectCustomizer.
         return new JsLibsCompositeCategoryProvider(true);
     }
 
+    @ProjectCustomizer.CompositeCategoryProvider.Registration(
+            projectType = "org-netbeans-modules-gradle", // NOI18N
+            category = CATEGORY_IDENT,
+            categoryLabel = "#JsLibs.name", // NOI18N
+            position = 258)
+    public static ProjectCustomizer.CompositeCategoryProvider forGradleProject() {
+        return new JsLibsCompositeCategoryProvider(true);
+    }
 }

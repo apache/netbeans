@@ -37,7 +37,7 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Egor Ushakov <gorrus@netbeans.org>
  */
-@ServiceProvider(service=Notifier.class, position=1010)
+@ServiceProvider(service=Notifier.class, position=200)
 public class NioNotifier extends Notifier<WatchKey> {
     private final WatchService watcher;
 

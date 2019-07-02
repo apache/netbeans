@@ -41,7 +41,7 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Tomas Zezula
  */
-@ServiceProvider(service=Notifier.class, position=300)
+@ServiceProvider(service=Notifier.class, position=100)
 public final class OSXNotifier extends Notifier<Void> {
     private static final Level DEBUG_LOG_LEVEL = Level.FINE;
     private static final Level PERF_LOG_LEVEL = Level.FINE;

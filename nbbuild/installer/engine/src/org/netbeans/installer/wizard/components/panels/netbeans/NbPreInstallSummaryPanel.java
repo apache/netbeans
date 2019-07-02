@@ -318,7 +318,7 @@ public class NbPreInstallSummaryPanel extends ErrorMessagePanel {
                 try {
                     if (product.getLogic().registerInSystem() || product.getUid().equals("jdk")
 			    || product.getUid().equals("mysql") || product.getUid().equals("javafxsdk")) {
-                        nbBasePresent = product.getUid().equals(NB_BASE_UID) ? true : nbBasePresent;
+                        nbBasePresent = product.getUid().equals(NB_ALL_UID) ? true : nbBasePresent;
                     } else {
                         if (product.getUid().startsWith("nb-")) {
                             dependentOnNb.add(product);

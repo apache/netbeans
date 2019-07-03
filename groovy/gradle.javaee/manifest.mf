@@ -1,6 +1,5 @@
 Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.modules.gradle.javaee
-OpenIDE-Module-Layer: org/netbeans/modules/gradle/javaee/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/gradle/javaee/Bundle.properties
 OpenIDE-Module-Specification-Version: 1.0

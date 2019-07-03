@@ -40,7 +40,7 @@
                 <attr name="instanceCreate" methodvalue="org.netbeans.modules.j2ee.deployment.impl.bridge.ServerInstanceProviderLookup.getInstance"/>
                 <attr name="instanceClass" stringvalue="org.netbeans.modules.j2ee.deployment.impl.bridge.ServerInstanceProviderLookup"/>
                 <attr name="instanceOf" stringvalue="org.openide.util.Lookup"/>
-            </file>   
+            </file>
             <file name="ServerWizardProviderLookup.instance">
                 <attr name="instanceCreate" methodvalue="org.netbeans.modules.j2ee.deployment.impl.bridge.ServerWizardProviderLookup.getInstance"/>
                 <attr name="instanceClass" stringvalue="org.netbeans.modules.j2ee.deployment.impl.bridge.ServerWizardProviderLookup"/>
@@ -55,12 +55,13 @@
                 <attr name="config-J2EE/InstalledServers/" boolvalue="true"/>
                 <!-- More appropriate place would be GF module, but that would need another action-->
                 <attr name="config-GlassFishEE6/Instances/" boolvalue="true"/>
+                <attr name="config-GlassFishEE8/Instances/" boolvalue="true"/>
                 <attr name="config-GlassFishEE6WC/Instances/" boolvalue="true"/>
             </file>
         </folder>
     </folder>
-    
-    
+
+
   <folder name="J2EE">
     <folder name="ApplicationProviders">
     </folder>
@@ -69,7 +70,7 @@
     <folder name="InstalledServers">
     </folder>
   </folder>
-  
+
   <folder name="Services">
     <folder name="J2EEServers">
         <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.j2ee.deployment.impl.Bundle"/>
@@ -130,7 +131,7 @@
     <folder name="OptionsExport">
         <folder name="Advanced">
             <file name="J2EE">
-                <attr name="include" stringvalue="config/(J2EE|GlassFish|GlassFishEE6|GlassFishEE6WC)/.*"/>
+                <attr name="include" stringvalue="config/(J2EE|GlassFish|GlassFishEE6|GlassFishEE6WC|GlassFishEE8)/.*"/>
                 <attr name="displayName" bundlevalue="org.netbeans.modules.j2ee.deployment.impl.Bundle#J2EE.Options.Export.displayName"/>
             </file>
         </folder>

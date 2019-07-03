@@ -45,6 +45,7 @@ import org.netbeans.modules.php.editor.api.elements.PhpElement;
 import org.netbeans.modules.php.editor.api.elements.TypeResolver;
 import org.netbeans.modules.php.editor.elements.TypeResolverImpl;
 import org.netbeans.modules.php.editor.elements.VariableElementImpl;
+import org.netbeans.modules.php.editor.model.ArrowFunctionScope;
 import org.netbeans.modules.php.editor.model.ClassScope;
 import org.netbeans.modules.php.editor.model.CodeMarker;
 import org.netbeans.modules.php.editor.model.FileScope;
@@ -73,6 +74,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayElement;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.CatchClause;
@@ -165,8 +167,10 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
     private final Cache<Scope, Map<String, AssignmentImpl>> assignmentMapCache = new Cache<>();
 
     private boolean lazyScan = true;
-    private volatile ScopeImpl previousScope;
+    private volatile Scope previousScope;
     private volatile List<String> currentLexicalVariables = new LinkedList<>();
+    private volatile boolean isReturnType = false;
+    private volatile boolean isLexialVariable = false;
 
     public ModelVisitor(final PHPParseResult info) {
         this.fileScope = new FileScopeImpl(info);
@@ -417,7 +421,8 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
             occurencesBuilder.prepare(Kind.FUNCTION, namespaceName, fileScope);
         } else if (parent instanceof Program
                 || parent instanceof Block
-                || parent instanceof FieldsDeclaration) {
+                || parent instanceof FieldsDeclaration
+                || isReturnType) {
             // return type
             Kind[] kinds = {Kind.CLASS, Kind.IFACE};
             occurencesBuilder.prepare(kinds, namespaceName, modelBuilder.getCurrentScope());
@@ -771,8 +776,25 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
     }
 
     private void prepareVariable(Variable node, Scope scope) {
-        if (previousScope != null && isLexicalVariable(node)) {
-            occurencesBuilder.prepare(node, previousScope);
+        if (isLexicalVariable(scope, node)) {
+            Scope inScope = previousScope;
+            while (inScope instanceof ArrowFunctionScope) {
+                ArrowFunctionScope arrowFunctionScope = (ArrowFunctionScope) inScope;
+                boolean isArrowFunctionVariable = false;
+                for (String parameterName : arrowFunctionScope.getParameterNames()) {
+                    if (parameterName.equals(CodeUtils.extractVariableName(node))) {
+                        isArrowFunctionVariable = true;
+                        break;
+                    }
+                }
+                if (isArrowFunctionVariable) {
+                    break;
+                }
+                inScope = inScope.getInScope();
+            }
+            occurencesBuilder.prepare(node, inScope);
+        } else if (scope instanceof ArrowFunctionScope) {
+            prepareArrowFunctionVariable(scope, node);
         } else {
             occurencesBuilder.prepare(node, scope);
         }
@@ -780,6 +802,33 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
 
     private boolean isLexicalVariable(final Variable variable) {
         return currentLexicalVariables.contains(CodeUtils.extractVariableName(variable));
+    }
+
+    private boolean isLexicalVariable(Scope scope, Variable variable) {
+        return previousScope != null
+                && !(scope instanceof ArrowFunctionScope)
+                && isLexicalVariable(variable);
+    }
+
+    private void prepareArrowFunctionVariable(Scope scope, Variable node) {
+        Scope inScope = scope;
+        while (inScope instanceof FunctionScope
+                && ((FunctionScope)inScope).isAnonymous()) {
+            FunctionScope functionScope = (FunctionScope) inScope;
+            Collection<? extends VariableName> declaredVariables = functionScope.getDeclaredVariables();
+            for (VariableName declaredVariable : declaredVariables) {
+                if (declaredVariable.getName().equals(CodeUtils.extractVariableName(node))) {
+                    if (isLexicalVariable(node)) {
+                        occurencesBuilder.prepare(node, inScope.getInScope());
+                    } else {
+                        occurencesBuilder.prepare(node, inScope);
+                    }
+                    return;
+                }
+            }
+            inScope = inScope.getInScope();
+        }
+        occurencesBuilder.prepare(node, inScope);
     }
 
     @Override
@@ -1014,18 +1063,15 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         Scope scp = modelBuilder.getCurrentScope();
         if (scp instanceof FunctionScopeImpl) {
             FunctionScopeImpl fncScope = (FunctionScopeImpl) scp;
-            while (parameterName instanceof Reference) {
-                Reference ref = (Reference) parameterName;
-                Expression expression = ref.getExpression();
-                if (expression instanceof Variadic) {
-                    expression = ((Variadic) expression).getExpression();
-                }
-                if (expression instanceof Variable || expression instanceof Reference) {
-                    parameterName = expression;
-                }
+            // func(&...$variable), func(...$variable): Reference -> Variadic -> Variable
+            if (parameterName instanceof Reference) {
+                parameterName = ((Reference) parameterName).getExpression();
             }
-            List<? extends ParameterElement> parameters = fncScope.getParameters();
+            if (parameterName instanceof Variadic) {
+                parameterName = ((Variadic) parameterName).getExpression();
+            }
             if (parameterName instanceof Variable) {
+                List<? extends ParameterElement> parameters = fncScope.getParameters();
                 for (ParameterElement parameter : parameters) {
                     Set<TypeResolver> types = parameter.getTypes();
                     String typeName = null;
@@ -1045,8 +1091,6 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
                         var.addElement(varAssignment);
                     }
                 }
-            }
-            if (parameterName instanceof Variable) {
                 prepareType(parameterType, fncScope);
                 prepareVariable((Variable) parameterName, fncScope);
             }
@@ -1088,10 +1132,26 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
     }
 
     @Override
+    public void visit(ArrowFunctionDeclaration node) {
+        ScopeImpl scope = modelBuilder.getCurrentScope();
+        FunctionScopeImpl fncScope = FunctionScopeImpl.createElement(scope, node);
+        modelBuilder.setCurrentScope(fncScope);
+        scan(node.getFormalParameters());
+        isReturnType = true;
+        scan(node.getReturnType());
+        isReturnType = false;
+        scan(node.getExpression());
+        modelBuilder.reset();
+    }
+
+    @Override
     public void visit(LambdaFunctionDeclaration node) {
         ScopeImpl scope = modelBuilder.getCurrentScope();
         FunctionScopeImpl fncScope = FunctionScopeImpl.createElement(scope, node);
         List<Expression> lexicalVariables = node.getLexicalVariables();
+        isLexialVariable = true;
+        scan(lexicalVariables);
+        isLexialVariable = false;
         for (Expression expression : lexicalVariables) {
             Expression expr = expression;
             // #269672 also check the reference: &$variable
@@ -1105,10 +1165,11 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
                 varNameImpl.setGloballyVisible(true);
             }
         }
-        scan(lexicalVariables);
         modelBuilder.setCurrentScope(fncScope);
         scan(node.getFormalParameters());
+        isReturnType = true;
         scan(node.getReturnType());
+        isReturnType = false;
         previousScope = scope;
         scan(node.getBody());
         previousScope = null;
@@ -1138,9 +1199,12 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
     public void visit(FunctionInvocation node) {
         Scope scope = modelBuilder.getCurrentScope();
         Expression functionName = node.getFunctionName().getName();
+        // avoid scanning FunctionName node twice
+        boolean isFunctionNameScaned = false;
         if (functionName instanceof Variable) {
             Variable variable = (Variable) functionName;
             scan(variable);
+            isFunctionNameScaned = true;
         } else {
             occurencesBuilder.prepare(node, scope);
             if (functionName instanceof NamespaceName) {
@@ -1175,8 +1239,11 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
             }
 
         }
-
-        super.visit(node);
+        if (isFunctionNameScaned) {
+            scan(node.getParameters());
+        } else {
+            super.visit(node);
+        }
     }
 
     @Override
@@ -1371,6 +1438,9 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         if (retval == null) {
             if (ModelUtils.filter(varContainer.getDeclaredVariables(), name).isEmpty()) {
                 retval = varContainer.createElement(node);
+                if (isLexialVariable) {
+                    retval.setGloballyVisible(true);
+                }
                 map.put(name, retval);
             }
         }

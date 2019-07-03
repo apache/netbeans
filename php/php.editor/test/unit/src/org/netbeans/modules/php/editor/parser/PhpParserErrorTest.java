@@ -1021,4 +1021,24 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php74/numericLiteralSeparatorParseError_08.php");
     }
 
+    public void testArrowFunctions_01() throws Exception {
+        checkErrors("testfiles/parser/php74/arrowFunctions_01.php");
+    }
+
+    public void testArrowFunctionsParseError_01() throws Exception {
+        checkErrors("testfiles/parser/php74/arrowFunctionsParseError_01.php");
+    }
+
+    public void testArrowFunctionsParseError_02() throws Exception {
+        checkErrors("testfiles/parser/php74/arrowFunctionsParseError_02.php");
+    }
+
+    public void testArrowFunctionsParseError_03() throws Exception {
+        checkErrors("testfiles/parser/php74/arrowFunctionsParseError_03.php");
+    }
+
+    public void testArrowFunctionsParseError_04() throws Exception {
+        checkErrors("testfiles/parser/php74/arrowFunctionsParseError_04.php");
+    }
+
 }

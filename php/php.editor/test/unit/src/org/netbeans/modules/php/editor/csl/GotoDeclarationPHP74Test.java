@@ -242,4 +242,173 @@ public class GotoDeclarationPHP74Test extends GotoDeclarationTestBase {
     public void testSpreadOperatorInClassConst_11() throws Exception {
         checkDeclaration(getTestPath(), "    private const CONST4 = [...F_CO^NST];", "const ^F_CONST = \"test\";");
     }
+
+    public void testArrowFunctions_01a() throws Exception {
+        checkDeclaration(getTestPath(), "$fn1a = fn(int $x) => $x + $^y;", "$^y = 5;");
+    }
+
+    public void testArrowFunctions_01b() throws Exception {
+        checkDeclaration(getTestPath(), "$fn1b = function ($x) use ($^y) {", "$^y = 5;");
+    }
+
+    public void testArrowFunctions_01c() throws Exception {
+        checkDeclaration(getTestPath(), "    return $x + $^y;", "$^y = 5;");
+    }
+
+    public void testArrowFunctions_01d() throws Exception {
+        checkDeclaration(getTestPath(), "$fn2 = fn(int $a, ArrowFunctions $b) => $a + $b->getNumber() * $^y;", "$^y = 5;");
+    }
+
+    public void testArrowFunctions_01e() throws Exception {
+        checkDeclaration(getTestPath(), "$af = fn() => fn() => $^y;", "$^y = 5;");
+    }
+
+    public void testArrowFunctions_01f() throws Exception {
+        checkDeclaration(getTestPath(), "(fn() => fn() => $y^)()();", "$^y = 5;");
+    }
+
+    public void testArrowFunctions_01g() throws Exception {
+        checkDeclaration(getTestPath(), "(fn() => function() use ($^y) {return $y;})()();", "$^y = 5;");
+    }
+
+    public void testArrowFunctions_01i() throws Exception {
+        checkDeclaration(getTestPath(), "$af = fn(int $x): callable => fn(int $z): int => $x + $^y * $z;", "$^y = 5;");
+    }
+
+    public void testArrowFunctions_01j() throws Exception {
+        checkDeclaration(getTestPath(), "    return fn() => $x + $^y;", "$^y = 5;");
+    }
+
+    public void testArrowFunctions_01k() throws Exception {
+        checkDeclaration(getTestPath(), "    return fn($x) => $x + $^y;", "$^y = 5;");
+    }
+
+    public void testArrowFunctions_02() throws Exception {
+        checkDeclaration(getTestPath(), "$fn1a = fn(int $x) => $^x + $y;", "$fn1a = fn(int $^x) => $x + $y;");
+    }
+
+    public void testArrowFunctions_03a() throws Exception {
+        checkDeclaration(getTestPath(), "$fn2 = fn(int $a, ArrowFunctions $b) => $^a + $b->getNumber() * $y;", "$fn2 = fn(int $^a, ArrowFunctions $b) => $a + $b->getNumber() * $y;");
+    }
+
+    public void testArrowFunctions_03b() throws Exception {
+        checkDeclaration(getTestPath(), "$fn2 = fn(int $a, ArrowFunctions $b) => $a + $^b->getNumber() * $y;", "$fn2 = fn(int $a, ArrowFunctions $^b) => $a + $b->getNumber() * $y;");
+    }
+
+    public void testArrowFunctions_04() throws Exception {
+        checkDeclaration(getTestPath(), "fn (array $x) => $^x; // parameter type", "fn (array $^x) => $x; // parameter type");
+    }
+
+    public void testArrowFunctions_05() throws Exception {
+        checkDeclaration(getTestPath(), "fn(int $x): int => $^x; // return type", "fn(int $^x): int => $x; // return type");
+    }
+
+    public void testArrowFunctions_06a() throws Exception {
+        checkDeclaration(getTestPath(), "fn(?array $z, int $x): ?int => $^x + count($z);", "fn(?array $z, int $^x): ?int => $x + count($z);");
+    }
+
+    public void testArrowFunctions_06b() throws Exception {
+        checkDeclaration(getTestPath(), "fn(?array $z, int $x): ?int => $x + count($^z);", "fn(?array $^z, int $x): ?int => $x + count($z);");
+    }
+
+    public void testArrowFunctions_07() throws Exception {
+        checkDeclaration(getTestPath(), "fn($x = 100) => $^x; // default value", "fn($^x = 100) => $x; // default value");
+    }
+
+    public void testArrowFunctions_08() throws Exception {
+        checkDeclaration(getTestPath(), "fn(&$x) => $^x; // reference", "fn(&$^x) => $x; // reference");
+    }
+
+    public void testArrowFunctions_09() throws Exception {
+        checkDeclaration(getTestPath(), "fn&($x) => $^x; // reference", "fn&($^x) => $x; // reference");
+    }
+
+    public void testArrowFunctions_10() throws Exception {
+        checkDeclaration(getTestPath(), "fn&(&$x) => $^x; // reference", "fn&(&$^x) => $x; // reference");
+    }
+
+    public void testArrowFunctions_11a() throws Exception {
+        checkDeclaration(getTestPath(), "fn($x, ...$reset) => $re^set; // variadics", "fn($x, ...$^reset) => $reset; // variadics");
+    }
+
+    public void testArrowFunctions_11b() throws Exception {
+        checkDeclaration(getTestPath(), "fn($x, &...$reset) => $^reset; // reference variadics", "fn($x, &...$^reset) => $reset; // reference variadics");
+    }
+
+    public void testArrowFunctions_12() throws Exception {
+        checkDeclaration(getTestPath(), "fn(): int => CONST^ANT_INT;", "const ^CONSTANT_INT = 1000;");
+    }
+
+    public void testArrowFunctions_13a() throws Exception {
+        checkDeclaration(getTestPath(), "fn(): ArrowFun^ctions => ArrowFunctions::new();", "class ^ArrowFunctions");
+    }
+
+    public void testArrowFunctions_13b() throws Exception {
+        checkDeclaration(getTestPath(), "fn(): ArrowFunctions => Arrow^Functions::new();", "class ^ArrowFunctions");
+    }
+
+    public void testArrowFunctions_13c() throws Exception {
+        checkDeclaration(getTestPath(), "function (): Arro^wFunctions {", "class ^ArrowFunctions");
+    }
+
+    public void testArrowFunctions_13d() throws Exception {
+        checkDeclaration(getTestPath(), "    return ArrowFu^nctions::new();", "class ^ArrowFunctions");
+    }
+
+    public void testArrowFunctions_13e() throws Exception {
+        checkDeclaration(getTestPath(), "$af = fn(ArrowFun^ctions $x): callable => fn(?ArrowFunctions $z): ?ArrowFunctions => new ArrowFunctions();", "class ^ArrowFunctions");
+    }
+
+    public void testArrowFunctions_13f() throws Exception {
+        checkDeclaration(getTestPath(), "$af = fn(ArrowFunctions $x): callable => fn(?^ArrowFunctions $z): ?ArrowFunctions => new ArrowFunctions();", "class ^ArrowFunctions");
+    }
+
+    public void testArrowFunctions_13g() throws Exception {
+        checkDeclaration(getTestPath(), "$af = fn(ArrowFunctions $x): callable => fn(?ArrowFunctions $z): ?ArrowFu^nctions => new ArrowFunctions();", "class ^ArrowFunctions");
+    }
+
+    public void testArrowFunctions_13h() throws Exception {
+        checkDeclaration(getTestPath(), "$af = fn(ArrowFunctions $x): callable => fn(?ArrowFunctions $z): ?ArrowFunctions => new ArrowFu^nctions();", "class ^ArrowFunctions");
+    }
+
+    public void testArrowFunctions_13i() throws Exception {
+        checkDeclaration(getTestPath(), "        $af = fn(): ?ArrowFunc^tions => $this;", "class ^ArrowFunctions");
+    }
+
+    public void testArrowFunctions_13j() throws Exception {
+        checkDeclaration(getTestPath(), "$fn2 = fn(int $a, ArrowF^unctions $b) => $a + $b->getNumber() * $y;", "class ^ArrowFunctions");
+    }
+
+    public void testArrowFunctions_14() throws Exception {
+        checkDeclaration(getTestPath(), "$fn2 = fn(int $a, ArrowFunctions $b) => $a + $b->getNu^mber() * $y;", "    public function ^getNumber(): int {");
+    }
+
+    public void testArrowFunctions_15() throws Exception {
+        checkDeclaration(getTestPath(), "fn(): ArrowFunctions => ArrowFunctions::ne^w();", "    public static function ^new() {");
+    }
+
+    public void testArrowFunctions_16() throws Exception {
+        checkDeclaration(getTestPath(), "        $af = fn($x): ?int => $^x + $y;", "        $af = fn($^x): ?int => $x + $y;");
+    }
+
+    public void testArrowFunctions_17() throws Exception {
+        checkDeclaration(getTestPath(), "        $af = fn($x): ?int => $x + $^y;", "        $^y = 100;");
+    }
+
+    public void testArrowFunctions_18() throws Exception {
+        checkDeclaration(getTestPath(), "    return fn() => $^x + $y;", "$fn3 = function ($^x) use ($y) {");
+    }
+
+    public void testArrowFunctions_19() throws Exception {
+        checkDeclaration(getTestPath(), "    return fn($x) => $^x + $y;", "    return fn($^x) => $x + $y;");
+    }
+
+    public void testArrowFunctions_20() throws Exception {
+        checkDeclaration(getTestPath(), "    return fn(...$args) => !$^f(...$args);", "function test(callable $^f) {");
+    }
+
+    public void testArrowFunctions_21() throws Exception {
+        checkDeclaration(getTestPath(), "    return fn(...$args) => !$f(...$ar^gs);", "    return fn(...$^args) => !$f(...$args);");
+    }
+
 }

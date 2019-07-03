@@ -51,10 +51,14 @@ import org.netbeans.modules.php.editor.model.Scope;
 import org.netbeans.modules.php.editor.model.TraitScope;
 import org.netbeans.modules.php.editor.model.TypeScope;
 import org.netbeans.modules.php.editor.model.VariableName;
+import org.netbeans.modules.php.editor.model.nodes.ArrowFunctionDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.FunctionDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.LambdaFunctionDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.MagicMethodDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.MethodDeclarationInfo;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.Block;
+import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
 
@@ -80,6 +84,16 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
 
     FunctionScopeImpl(Scope inScope, LambdaFunctionDeclarationInfo info) {
         super(inScope, info, PhpModifiers.fromBitMask(PhpModifiers.PUBLIC), info.getOriginalNode().getBody(), inScope.isDeprecated());
+        this.paremeters = info.getParameters();
+        QualifiedName retType = info.getReturnType();
+        if (retType != null) {
+            this.returnType = retType.getName();
+        }
+        declaredReturnType = retType != null;
+    }
+
+    FunctionScopeImpl(Scope inScope, ArrowFunctionDeclarationInfo info, Block block) {
+        super(inScope, info, PhpModifiers.fromBitMask(PhpModifiers.PUBLIC), block, inScope.isDeprecated());
         this.paremeters = info.getParameters();
         QualifiedName retType = info.getReturnType();
         if (retType != null) {
@@ -121,6 +135,12 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
                 return true;
             }
         };
+    }
+
+    public static FunctionScopeImpl createElement(Scope scope, ArrowFunctionDeclaration node) {
+        Expression expression = node.getExpression();
+        Block block = new Block(expression.getStartOffset(), expression.getEndOffset(), Collections.emptyList(), false);
+        return new ArrowFunctionScopeImpl(scope, ArrowFunctionDeclarationInfo.create(node), block);
     }
 
     //old contructors

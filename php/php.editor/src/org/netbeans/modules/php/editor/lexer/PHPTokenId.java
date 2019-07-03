@@ -101,6 +101,7 @@ public enum PHPTokenId implements TokenId {
     PHP_ENDFOR(null, "keyword"), //NOI18N
     PHP_REQUIRE_ONCE(null, "keyword"), //NOI18N
     PHP_NAMESPACE(null, "keyword"), //NOI18N
+    PHP_FN(null, "keyword"), //NOI18N PHP 7.4
     PHP_FUNCTION(null, "keyword"), //NOI18N
     PHP_PROTECTED(null, "keyword"), //NOI18N
     PHP_PRIVATE(null, "keyword"), //NOI18N

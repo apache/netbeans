@@ -173,6 +173,30 @@ ${cursor}]]>
         </code>
     </codetemplate>
 
+    <codetemplate uuid="org.netbeans.modules.php.editor.codetemplate.fn" abbreviation="fn" contexts="php-code">
+        <code>
+<![CDATA[fn() => ${selection}${cursor}]]>
+        </code>
+    </codetemplate>
+
+    <codetemplate uuid="org.netbeans.modules.php.editor.codetemplate.fnp" abbreviation="fnp" contexts="php-code">
+        <code>
+<![CDATA[fn($$${param}) => ${selection}${cursor}]]>
+        </code>
+    </codetemplate>
+
+    <codetemplate uuid="org.netbeans.modules.php.editor.codetemplate.fnr" abbreviation="fnr" contexts="php-code">
+        <code>
+<![CDATA[fn(): ${type} => ${selection}${cursor}]]>
+        </code>
+    </codetemplate>
+
+    <codetemplate uuid="org.netbeans.modules.php.editor.codetemplate.fnpr" abbreviation="fnpr" contexts="php-code">
+        <code>
+<![CDATA[fn($$${param}): ${type} => ${selection}${cursor}]]>
+        </code>
+    </codetemplate>
+
     <codetemplate uuid="org.netbeans.modules.php.editor.codetemplate.foreach" abbreviation="fore" contexts="php-code">
         <code>
 <![CDATA[foreach (${ARRAY variableFromPreviousAssignment instanceof="array" default="$array"} as $$${value}) {

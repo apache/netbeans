@@ -21,11 +21,13 @@ package org.netbeans.modules.php.editor.parser.astnodes.visitors;
 import java.util.LinkedList;
 import java.util.List;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTError;
+import org.netbeans.modules.php.editor.parser.astnodes.ASTErrorExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.AnonymousObjectVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayElement;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
 import org.netbeans.modules.php.editor.parser.astnodes.BackTickExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
@@ -176,6 +178,13 @@ public class DefaultTreePathVisitor extends DefaultVisitor {
     }
 
     @Override
+    public void visit(ArrowFunctionDeclaration node) {
+        addToPath(node);
+        super.visit(node);
+        removeFromPath();
+    }
+
+    @Override
     public void visit(Assignment node) {
         addToPath(node);
         super.visit(node);
@@ -185,6 +194,11 @@ public class DefaultTreePathVisitor extends DefaultVisitor {
     @Override
     public void visit(ASTError astError) {
         super.visit(astError);
+    }
+
+    @Override
+    public void visit(ASTErrorExpression astErrorExpression) {
+        super.visit(astErrorExpression);
     }
 
     @Override

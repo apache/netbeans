@@ -26,6 +26,7 @@ import org.netbeans.modules.csl.spi.support.CancelSupport;
 import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
@@ -101,6 +102,22 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
             super.visit(node);
         }
 
+        @Override
+        public void visit(ArrowFunctionDeclaration node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            // PHP 7.4
+            // fn(): void => $y;
+            // arrow function returns something, so we would get the following
+            // "Fatal error: A void function must not return a value"
+            Expression returnType = node.getReturnType();
+            if (returnType != null) {
+                checkArrowFunctionReturnType(returnType);
+            }
+            super.visit(node);
+        }
+
         private void checkFieldType(Expression fieldType) {
             // unusable types: void and callable PHP 7.4
             Expression type = fieldType;
@@ -122,10 +139,19 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
         }
 
         private void checkParameterType(Expression parameterType) {
-            // unusable types: void
+            // unusable type: void
             if (parameterType instanceof NamespaceName) {
                 if (isVoidType((NamespaceName) parameterType)) {
                     createError(parameterType, "void", "parameter"); // NOI18N
+                }
+            }
+        }
+
+        private void checkArrowFunctionReturnType(Expression returnType) {
+            // unusable type: void
+            if (returnType instanceof NamespaceName) {
+                if (isVoidType((NamespaceName) returnType)) {
+                    createError(returnType, "void", "return"); // NOI18N
                 }
             }
         }

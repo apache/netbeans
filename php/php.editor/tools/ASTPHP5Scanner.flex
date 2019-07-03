@@ -368,6 +368,12 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
     return createFullSymbol(ASTPHP5Symbols.T_EXIT);
 }
 
+<ST_IN_SCRIPTING>"fn" {
+    // PHP 7.4 Arrow Functions 2.0
+    // https://wiki.php.net/rfc/arrow_functions_v2
+    return createFullSymbol(ASTPHP5Symbols.T_FN);
+}
+
 <ST_IN_SCRIPTING>"function" {
     return createFullSymbol(ASTPHP5Symbols.T_FUNCTION);
 }

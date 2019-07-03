@@ -19,8 +19,6 @@
 package org.netbeans.modules.cloud.amazon;
 
 import javax.swing.JComponent;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import org.netbeans.modules.cloud.amazon.ui.AmazonInstanceNode;
 import org.netbeans.modules.cloud.amazon.ui.AmazonWizardComponent;
 import org.netbeans.spi.server.ServerInstanceImplementation;
@@ -72,5 +70,10 @@ public class AmazonServerInstanceImplementation implements ServerInstanceImpleme
     public boolean isRemovable() {
         return true;
     }
-    
+
+    @Override
+    public String getProperty(String key) {
+        return ai.getServerInstance().getProperty(key);
+    }
+
 }

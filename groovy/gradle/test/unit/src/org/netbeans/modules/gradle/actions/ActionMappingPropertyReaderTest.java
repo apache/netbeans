@@ -49,10 +49,10 @@ public class ActionMappingPropertyReaderTest {
         Set<ActionMapping> result = ActionMappingPropertyReader.loadMappings(props);
         assertEquals(result.size(), 1);
         ActionMapping mapping = result.iterator().next();
-        assertEquals(mapping.getName(), "run");
-        assertEquals(mapping.getArgs(), "runArgs");
+        assertEquals("run", mapping.getName());
+        assertEquals("runArgs", mapping.getArgs());
         assertTrue(mapping.isRepeatable());
-        assertEquals(mapping.getReloadRule(), ActionMapping.ReloadRule.DEFAULT);
+        assertEquals(ActionMapping.ReloadRule.DEFAULT, mapping.getReloadRule());
         assertTrue(mapping.getReloadArgs().isEmpty());
     }
 
@@ -67,12 +67,12 @@ public class ActionMappingPropertyReaderTest {
         Set<ActionMapping> result = ActionMappingPropertyReader.loadMappings(props);
         assertEquals(result.size(), 1);
         ActionMapping mapping = result.iterator().next();
-        assertEquals(mapping.getDisplayName(), "Build with Arguments");
-        assertEquals(mapping.getName(), "custom-1");
-        assertEquals(mapping.getArgs(), "runArgs ${test}");
+        assertEquals("Build with Arguments", mapping.getDisplayName());
+        assertEquals("custom-1", mapping.getName());
+        assertEquals("runArgs ${test}", mapping.getArgs());
         assertFalse(mapping.isRepeatable());
-        assertEquals(mapping.getReloadRule(), ActionMapping.ReloadRule.NEVER);
-        assertEquals(mapping.getReloadArgs(), "runArgs");
+        assertEquals(ActionMapping.ReloadRule.NEVER, mapping.getReloadRule());
+        assertEquals("runArgs", mapping.getReloadArgs());
     }
 
     @Test
@@ -84,10 +84,37 @@ public class ActionMappingPropertyReaderTest {
         Set<ActionMapping> result = ActionMappingPropertyReader.loadMappings(props);
         assertEquals(result.size(), 1);
         DefaultActionMapping mapping = (DefaultActionMapping) result.iterator().next();
-        assertEquals(mapping.getName(), "build");
-        assertEquals(mapping.priority, 100);
+        assertEquals("build", mapping.getName());
+        assertEquals(100, mapping.priority);
         assertTrue(mapping.isApplicable(new HashSet<String>(Arrays.asList("groovy", "root", "war"))));
         assertFalse(mapping.isApplicable(new HashSet<String>(Arrays.asList("groovy"))));
     }
 
+    @Test
+    public void testLoadMappings5() {
+        Properties props = new Properties();
+        props.put("action.test.single.args", "cleanTest test --tests ${selectedClass}");
+        Set<ActionMapping> result = ActionMappingPropertyReader.loadMappings(props);
+        assertEquals(result.size(), 1);
+        DefaultActionMapping mapping = (DefaultActionMapping) result.iterator().next();
+        assertEquals("test.single", mapping.getName());
+    }
+
+    @Test
+    public void testLoadMappings6() {
+        Properties props = new Properties();
+        props.put("action.download.javadoc.reload.args", "-PdownloadJavadoc={0}");
+        Set<ActionMapping> result = ActionMappingPropertyReader.loadMappings(props);
+        assertEquals(result.size(), 1);
+        DefaultActionMapping mapping = (DefaultActionMapping) result.iterator().next();
+        assertEquals("download.javadoc", mapping.getName());
+    }
+
+    @Test
+    public void testLoadMappings7() {
+        Properties props = new Properties();
+        props.put("action.download.javadoc_args", "-PdownloadJavadoc={0}");
+        Set<ActionMapping> result = ActionMappingPropertyReader.loadMappings(props);
+        assertEquals(result.size(), 0);
+    }
 }

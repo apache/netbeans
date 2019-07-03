@@ -201,7 +201,7 @@ public class MavenWhiteListQueryImpl implements WhiteListQueryImplementation {
     }
     
     public static boolean isUseOSGiDependencies(Project project) {
-        String useOsgiString = PluginPropertyUtils.getPluginProperty(project, MavenNbModuleImpl.GROUPID_MOJO, MavenNbModuleImpl.NBM_PLUGIN, "useOSGiDependencies", null, null);
+        String useOsgiString = PluginBackwardPropertyUtils.getPluginProperty(project, "useOSGiDependencies", null, null);
         return  useOsgiString != null ? Boolean.parseBoolean(useOsgiString) : false;
     }
     
@@ -253,7 +253,7 @@ public class MavenWhiteListQueryImpl implements WhiteListQueryImplementation {
             }
         }
         
-        List<ExplicitDependency> explicits = PluginPropertyUtils.getPluginPropertyBuildable(project, MavenNbModuleImpl.GROUPID_MOJO, MavenNbModuleImpl.NBM_PLUGIN, null, new ExplicitBuilder());
+        List<ExplicitDependency> explicits = PluginBackwardPropertyUtils.getPluginPropertyBuildable(project, null, new ExplicitBuilder());
 //        String codenamebase = PluginPropertyUtils.getPluginProperty(project, MavenNbModuleImpl.GROUPID_MOJO, MavenNbModuleImpl.NBM_PLUGIN, "codeNameBase", null, null);
 //        if (codenamebase == null) {
 //            codenamebase = mp.getGroupId() + "." + mp.getArtifactId();

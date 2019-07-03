@@ -183,12 +183,12 @@ public enum GlassFishVersion {
     /**  A <code>String</code> representation of GF_5_0_1 value. */
     static final String GF_5_0_1_STR = "5.0.1";
     /** Additional <code>String</code> representations of GF_5_0_1 value. */
-    static final String GF_5_0_1_STR_NEXT[] = {"5.0.1", "5.0.1"};
+    static final String GF_5_0_1_STR_NEXT[] = {"5.0.1", "5.0.1.0"};
     
     /**  A <code>String</code> representation of GF_5_1_0 value. */
     static final String GF_5_1_0_STR = "5.1.0";
     /** Additional <code>String</code> representations of GF_5_1_0 value. */
-    static final String GF_5_1_0_STR_NEXT[] = {"5.1.0", "5.1.0"};
+    static final String GF_5_1_0_STR_NEXT[] = {"5.1.0", "5.1.0.0"};
 
     /** 
      * Stored <code>String</code> values for backward <code>String</code>

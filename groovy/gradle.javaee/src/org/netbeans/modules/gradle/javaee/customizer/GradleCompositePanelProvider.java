@@ -19,12 +19,11 @@
 
 package org.netbeans.modules.gradle.javaee.customizer;
 
-import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.JComponent;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.gradle.spi.customizer.support.FilterPanelProvider;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer;
 import org.netbeans.modules.web.common.ui.api.CssPreprocessorsUI;
 import org.openide.util.Lookup;
@@ -37,12 +36,12 @@ public class GradleCompositePanelProvider implements ProjectCustomizer.Composite
     
     @ProjectCustomizer.CompositeCategoryProvider.Registration(projectType = NbGradleProject.GRADLE_PROJECT_TYPE, position = 259)
     public static ProjectCustomizer.CompositeCategoryProvider createCssPreprocessors() {
-        return new FilterProvider(CssPreprocessorsUI.getDefault().createCustomizer(), "war");
+        return new FilterPanelProvider(CssPreprocessorsUI.getDefault().createCustomizer(), "war");
     }
 
     @ProjectCustomizer.CompositeCategoryProvider.Registration(projectType = NbGradleProject.GRADLE_PROJECT_TYPE, position = 301)
     public static ProjectCustomizer.CompositeCategoryProvider createRunPanel() {
-        return new FilterProvider(new GradleCompositePanelProvider(), "war");
+        return new FilterPanelProvider(new GradleCompositePanelProvider(), "war");
     }
     
     @Override
@@ -57,34 +56,5 @@ public class GradleCompositePanelProvider implements ProjectCustomizer.Composite
             cust.save();
         });
         return cust;
-    }
-    
-    private static class FilterProvider implements ProjectCustomizer.CompositeCategoryProvider {
-
-        final ProjectCustomizer.CompositeCategoryProvider original;
-        final String plugin;
-        
-
-        public FilterProvider(ProjectCustomizer.CompositeCategoryProvider original, String plugin) {
-            this.original = original;
-            this.plugin = plugin;
-        }
-
-        @Override
-        public ProjectCustomizer.Category createCategory(Lookup context) {
-            Project project = context.lookup(Project.class);
-            assert project != null;
-            GradleBaseProject gbp = GradleBaseProject.get(project);
-            if (!gbp.getPlugins().contains(plugin)) {
-                return null;
-            }
-            return original.createCategory(context);
-        }
-
-        @Override
-        public JComponent createComponent(ProjectCustomizer.Category category, Lookup context) {
-            return original.createComponent(category, context);
-        }
-
     }
 }

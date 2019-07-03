@@ -40,13 +40,13 @@ class BottomBar extends JPanel {
         setBackground( Utils.getBottomBarColor() );
         
         add( Logo.createApacheLogo(), new GridBagConstraints(0,0,1,1,0.0,0.0,
-                GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(0,12,0,5),0,0 ) );
+                GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(5,12,5,5),0,0 ) );
         
         add( new JLabel(), new GridBagConstraints(1,0,1,1,1.0,0.0,
                 GridBagConstraints.CENTER,GridBagConstraints.NONE,new Insets(0,0,0,0),0,0 ) );
         
-        add( Logo.createIncubatorLogo(), new GridBagConstraints(4,0,1,1,0.0,0.0,
-                GridBagConstraints.EAST,GridBagConstraints.NONE,new Insets(5,5,5,12),0,0 ) );
+        //add( Logo.createIncubatorLogo(), new GridBagConstraints(4,0,1,1,0.0,0.0,
+        //        GridBagConstraints.EAST,GridBagConstraints.NONE,new Insets(5,5,5,12),0,0 ) );
     }
 
 }

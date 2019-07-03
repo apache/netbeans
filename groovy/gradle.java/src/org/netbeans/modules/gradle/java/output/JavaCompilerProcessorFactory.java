@@ -48,19 +48,25 @@ import org.netbeans.modules.gradle.java.api.ProjectSourcesClassPathProvider;
  * @author Laszlo Kishalmi
  */
 @ProjectServiceProvider(service = OutputProcessorFactory.class, projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
-public class JavaCompilerProcessorFactory implements OutputProcessorFactory {
+public final class JavaCompilerProcessorFactory implements OutputProcessorFactory {
 
     @Override
     public Set<? extends OutputProcessor> createOutputProcessors(RunConfig cfg) {
         return new HashSet<>(Arrays.asList(new StackTraceProcessor(cfg)));
     }
 
-    private static class StackTraceProcessor implements OutputProcessor {
+    static class StackTraceProcessor implements OutputProcessor {
 
         private static final Pattern STACKTRACE_PATTERN = Pattern.compile("(.*)at ((\\w[\\w\\.]*)/)?(\\w[\\w\\.\\$<>]*)\\((\\w+)\\.java\\:([0-9]+)\\)(.*)");
         private static final IOColors.OutputType OUT_TYPE = IOColors.OutputType.ERROR;
         private final Project project;
         private final ClassPath classPath;
+
+        // Used in unittest only
+        StackTraceProcessor() {
+            project = null;
+            classPath = null;
+        }
 
         private StackTraceProcessor(RunConfig cfg) {
             project = cfg.getProject();
@@ -78,7 +84,7 @@ public class JavaCompilerProcessorFactory implements OutputProcessorFactory {
             Matcher m = STACKTRACE_PATTERN.matcher(line);
             if (m.matches()) {
                 String prefix = m.group(1);
-                String modulePrefix = m.group(2);
+                String modulePrefix = m.group(2) != null ? m.group(2) : ""; //NOI18N
                 //String module = m.group(3);
                 String method = m.group(4);
                 String fileName = m.group(5);
@@ -86,7 +92,7 @@ public class JavaCompilerProcessorFactory implements OutputProcessorFactory {
                 String postfix = m.group(7);
 
                 int ppos = method.indexOf(fileName);
-                if ((ppos >= 0) && (project != null)) {
+                if (ppos >= 0) {
                     String pack = method.substring(0, ppos).replace('.', '/');
                     String javaName = pack + fileName + ".java"; //NOI18N
 

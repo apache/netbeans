@@ -3114,7 +3114,11 @@ public class Utilities {
     public static boolean isCompatibleWithSwitchExpression(SwitchTree st) {
         boolean firstCase = true;
         Name leftTreeName = null;
-        for (CaseTree ct : st.getCases()) {
+        int caseCount = 0;
+        List<? extends CaseTree> cases = st.getCases();
+
+        for (CaseTree ct : cases) {
+            caseCount++;
             List<StatementTree> statements = new ArrayList<>(ct.getStatements());
             switch (statements.size()) {
                 case 0:
@@ -3122,22 +3126,33 @@ public class Utilities {
                 case 1:
                     if (firstCase && leftTreeName == null && statements.get(0).getKind() == Tree.Kind.RETURN) {
                         break;
+                    } else if (caseCount == cases.size() && statements.get(0).getKind() == Tree.Kind.EXPRESSION_STATEMENT) {
+                        if (firstCase) {
+                            leftTreeName = getLeftTreeName(statements.get(0));
+                            if (leftTreeName == null) {
+                                return false;
+                            }
+                            break;
+                        } else {
+                            if (leftTreeName != null && leftTreeName.contentEquals(getLeftTreeName(statements.get(0)))) {
+                                break;
+                            } else {
+                                return false;
+                            }
+                        }
                     } else {
                         return false;
                     }
                 case 2:
                     if (statements.get(0).getKind() == Tree.Kind.EXPRESSION_STATEMENT && statements.get(1).getKind() == Tree.Kind.BREAK) {
-                        StatementTree statementTree = statements.get(0);
-                        JCTree.JCExpressionStatement jceTree = (JCTree.JCExpressionStatement) statementTree;
-                        if (!(jceTree.expr instanceof JCTree.JCAssign)) {
-                            return false;
-                        }
-                        JCTree.JCAssign assignTree = (JCTree.JCAssign) jceTree.expr;
                         if (firstCase) {
-                            leftTreeName = ((JCTree.JCIdent) assignTree.lhs).name;
+                            leftTreeName = getLeftTreeName(statements.get(0));
+                            if (leftTreeName == null) {
+                                return false;
+                            }
                             firstCase = false;
-                            break;
-                        } else if (leftTreeName != null && leftTreeName.contentEquals(((JCTree.JCIdent) assignTree.lhs).name)) {
+                        }
+                        if (leftTreeName != null && leftTreeName.contentEquals(getLeftTreeName(statements.get(0)))) {
                             break;
                         } else {
                             return false;
@@ -3287,5 +3302,16 @@ public class Utilities {
             return null;
         }
    }
-
+    
+    private static Name getLeftTreeName(StatementTree statement) {
+        if (statement.getKind() != Kind.EXPRESSION_STATEMENT) {
+            return null;
+        }
+        JCTree.JCExpressionStatement jceTree = (JCTree.JCExpressionStatement) statement;
+        if (jceTree.expr.getKind() != Kind.ASSIGNMENT) {
+            return null;
+        }
+        JCTree.JCAssign assignTree = (JCTree.JCAssign) jceTree.expr;
+        return ((JCTree.JCIdent) assignTree.lhs).name;
+    }
 }

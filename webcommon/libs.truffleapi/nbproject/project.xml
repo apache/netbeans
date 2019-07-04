@@ -41,6 +41,7 @@
                 <package>com.oracle.truffle.api.frame</package>
                 <package>com.oracle.truffle.api.instrumentation</package>
                 <package>com.oracle.truffle.api.interop</package>
+                <package>com.oracle.truffle.api.library</package>
                 <package>com.oracle.truffle.api.nodes</package>
                 <package>com.oracle.truffle.api.object</package>
                 <package>com.oracle.truffle.api.object.dsl</package>

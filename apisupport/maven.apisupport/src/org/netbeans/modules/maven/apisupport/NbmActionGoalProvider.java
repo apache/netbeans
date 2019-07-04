@@ -32,7 +32,6 @@ import org.netbeans.api.project.Project;
 import org.netbeans.modules.apisupport.project.spi.NbModuleProvider;
 import org.netbeans.modules.maven.api.FileUtilities;
 import org.netbeans.modules.maven.api.NbMavenProject;
-import org.netbeans.modules.maven.api.PluginPropertyUtils;
 import org.netbeans.modules.maven.api.execute.RunConfig;
 import org.netbeans.modules.maven.api.execute.RunUtils;
 import static org.netbeans.modules.maven.apisupport.Bundle.*;
@@ -138,13 +137,13 @@ public class NbmActionGoalProvider implements MavenActionsProvider {
                 assert rc != null;
                 rc.setPreExecution(RunUtils.createRunConfig(FileUtil.toFile(project.getProjectDirectory()), project, rc.getTaskDisplayName(), Collections.singletonList("package")));
                 MavenProject prj = project.getLookup().lookup(NbMavenProject.class).getMavenProject();
-                String nbmBuildDir = PluginPropertyUtils.getPluginProperty(project, MavenNbModuleImpl.GROUPID_MOJO, MavenNbModuleImpl.NBM_PLUGIN, "nbmBuildDir", "nbm", null);
+                String nbmBuildDir = PluginBackwardPropertyUtils.getPluginProperty(project, "nbmBuildDir", "nbm", null);
                 if (nbmBuildDir == null) {
                     Build build = prj.getBuild();
                     String directory = build != null ? build.getDirectory() : null;
                     nbmBuildDir = (directory != null ? directory : "target") + "/nbm";
                 }
-                String cluster = PluginPropertyUtils.getPluginProperty(project, MavenNbModuleImpl.GROUPID_MOJO, MavenNbModuleImpl.NBM_PLUGIN, "cluster", "nbm", null);
+                String cluster = PluginBackwardPropertyUtils.getPluginProperty(project, "cluster", "nbm", null);
                 if (cluster == null) {
                     cluster = "extra";
                 }

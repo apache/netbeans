@@ -98,7 +98,7 @@ public class ParameterNameProviderImpl {
         }
     }
 
-    private static final int MAX_CACHE_SIZE = 100;
+            static final int MAX_CACHE_SIZE = 100;
     private static final LinkedHashMap<String, Map<String, List<String>>> source_toplevelClass2method2Parameters = new LinkedHashMap<>();
     private static final LinkedHashMap<String, Map<String, List<String>>> javadoc_class2method2Parameters = new LinkedHashMap<>();
     private static final LinkedHashMap<String, List<String>> artificial_method2Parameters = new LinkedHashMap<>();
@@ -183,9 +183,10 @@ public class ParameterNameProviderImpl {
         return Arrays.stream(SourceUtils.getJVMSignature(ElementHandle.create(el))).collect(Collectors.joining(":"));
     }
 
-    private void capCache(LinkedHashMap<String, ?> map) {
+    static void capCache(LinkedHashMap<String, ?> map) {
         Iterator<String> it = map.keySet().iterator();
         while (map.size() > MAX_CACHE_SIZE) {
+            it.next();
             it.remove();
         }
     }

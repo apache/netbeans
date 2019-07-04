@@ -157,6 +157,7 @@ public final class J2eeProjectCapabilities {
             Profile.JAVA_EE_8_WEB.equals(webProfile) ||
             Profile.JAVA_EE_7_FULL.equals(ejbJarProfile) ||
             Profile.JAVA_EE_7_WEB.equals(webProfile) ||
+            Profile.JAVA_EE_7_FULL.equals(carProfile) ||
             Profile.JAVA_EE_8_FULL.equals(carProfile);
     }
 

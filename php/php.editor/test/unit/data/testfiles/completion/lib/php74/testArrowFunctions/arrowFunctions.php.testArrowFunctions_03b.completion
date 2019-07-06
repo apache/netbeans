@@ -1,0 +1,6 @@
+Code completion result for source line:
+$fn1a = fn(i|nt $x) => $x + $y;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    int                                        null
+KEYWORD    iterable                                   null

@@ -1,0 +1,4 @@
+Code completion result for source line:
+$af = fn($x): ?int => $x + $tes|t;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   int $test                       [PUBLIC]   arrowFunctions.php

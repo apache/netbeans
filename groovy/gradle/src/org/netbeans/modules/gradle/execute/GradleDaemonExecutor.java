@@ -179,8 +179,6 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             }
         } finally {
             BuildExecutionSupport.registerFinishedItem(item);
-            ioput.getOut().close();
-            ioput.getErr().close();
             if (pconn != null) {
                 pconn.close();
             }

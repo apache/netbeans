@@ -94,11 +94,14 @@ import org.netbeans.modules.php.editor.elements.VariableElementImpl;
 import org.netbeans.modules.php.editor.indent.CodeStyle;
 import org.netbeans.modules.php.editor.lexer.LexUtilities;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
+import org.netbeans.modules.php.editor.model.ArrowFunctionScope;
+import org.netbeans.modules.php.editor.model.FunctionScope;
 import org.netbeans.modules.php.editor.model.Model;
 import org.netbeans.modules.php.editor.model.ModelElement;
 import org.netbeans.modules.php.editor.model.ModelUtils;
 import org.netbeans.modules.php.editor.model.NamespaceScope;
 import org.netbeans.modules.php.editor.model.ParameterInfoSupport;
+import org.netbeans.modules.php.editor.model.Scope;
 import org.netbeans.modules.php.editor.model.TypeScope;
 import org.netbeans.modules.php.editor.model.VariableName;
 import org.netbeans.modules.php.editor.model.VariableScope;
@@ -142,6 +145,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         PHP_KEYWORDS.put("const", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
         PHP_KEYWORDS.put("continue", KeywordCompletionType.ENDS_WITH_SEMICOLON); //NOI18N
         PHP_KEYWORDS.put("function", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
+        PHP_KEYWORDS.put("fn", KeywordCompletionType.SIMPLE); // NOI18N PHP 7.4
         PHP_KEYWORDS.put("new", KeywordCompletionType.SIMPLE); //NOI18N
         PHP_KEYWORDS.put("static", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
         PHP_KEYWORDS.put("var", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
@@ -1534,7 +1538,8 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         Model model = request.result.getModel();
         VariableScope variableScope = model.getVariableScope(request.anchor);
         if (variableScope != null) {
-            if (variableScope instanceof NamespaceScope) {
+            if (variableScope instanceof NamespaceScope
+                    || variableScope instanceof ArrowFunctionScope) {
                 if (globalVariables == null) {
                     FileObject fileObject = request.result.getSnapshot().getSource().getFileObject();
                     final ElementFilter forCurrentFile = ElementFilter.forFiles(fileObject);
@@ -1548,8 +1553,23 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                     proposals.put(globalVariable.getName(), new PHPCompletionItem.VariableItem(globalVariable, request));
                 }
             }
-            Collection<? extends VariableName> declaredVariables = ModelUtils.filter(variableScope.getDeclaredVariables(),
-                    nameKind, request.prefix);
+
+            List<VariableName> allDeclaredVariables = new ArrayList<>(variableScope.getDeclaredVariables());
+            // for nested arrow functions
+            if (variableScope instanceof ArrowFunctionScope) {
+                Scope inScope = variableScope.getInScope();
+                while (inScope != null
+                        && (inScope instanceof FunctionScope || inScope instanceof NamespaceScope)) {
+                    allDeclaredVariables.addAll(((VariableScope) inScope).getDeclaredVariables());
+                    if (inScope instanceof FunctionScope
+                            && !(inScope instanceof ArrowFunctionScope)) {
+                        break;
+                    }
+                    inScope = inScope.getInScope();
+                }
+            }
+
+            Collection<? extends VariableName> declaredVariables = ModelUtils.filter(allDeclaredVariables, nameKind, request.prefix);
             final int caretOffset = request.anchor + request.prefix.length();
             for (VariableName varName : declaredVariables) {
                 if (CancelSupport.getDefault().isCancelled()) {

@@ -27,7 +27,12 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.text.BadLocationException;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.editor.BaseDocument;
+import org.netbeans.modules.csl.spi.GsfUtilities;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexDocument;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.editor.CodeUtils;
@@ -51,18 +56,26 @@ import org.netbeans.modules.php.editor.model.Scope;
 import org.netbeans.modules.php.editor.model.TraitScope;
 import org.netbeans.modules.php.editor.model.TypeScope;
 import org.netbeans.modules.php.editor.model.VariableName;
+import org.netbeans.modules.php.editor.model.nodes.ArrowFunctionDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.FunctionDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.LambdaFunctionDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.MagicMethodDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.MethodDeclarationInfo;
+import org.netbeans.modules.php.editor.parser.astnodes.ASTErrorExpression;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.Block;
+import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
+import org.openide.filesystems.FileObject;
 
 /**
  *
  * @author Radek Matous
  */
 class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableNameFactory {
+
+    private static final Logger LOGGER = Logger.getLogger(FunctionScopeImpl.class.getName());
     private static final String TYPE_SEPARATOR = "|"; //NOI18N
     private static final String TYPE_SEPARATOR_REGEXP = "\\|"; //NOI18N
     private List<? extends ParameterElement> paremeters;
@@ -80,6 +93,16 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
 
     FunctionScopeImpl(Scope inScope, LambdaFunctionDeclarationInfo info) {
         super(inScope, info, PhpModifiers.fromBitMask(PhpModifiers.PUBLIC), info.getOriginalNode().getBody(), inScope.isDeprecated());
+        this.paremeters = info.getParameters();
+        QualifiedName retType = info.getReturnType();
+        if (retType != null) {
+            this.returnType = retType.getName();
+        }
+        declaredReturnType = retType != null;
+    }
+
+    FunctionScopeImpl(Scope inScope, ArrowFunctionDeclarationInfo info, Block block) {
+        super(inScope, info, PhpModifiers.fromBitMask(PhpModifiers.PUBLIC), block, inScope.isDeprecated());
         this.paremeters = info.getParameters();
         QualifiedName retType = info.getReturnType();
         if (retType != null) {
@@ -121,6 +144,46 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
                 return true;
             }
         };
+    }
+
+    public static FunctionScopeImpl createElement(Scope scope, ArrowFunctionDeclaration node) {
+        Expression expression = node.getExpression();
+        int startOffset = expression.getStartOffset();
+        int endOffset = expression.getEndOffset();
+        if (expression instanceof ASTErrorExpression) {
+            // increase the end offset if there are white spaces behind it
+            // e.g. fn($x) => ;
+            endOffset += getWhitespacesBehindASTErrorExpression(scope, endOffset);
+        }
+        Block block = new Block(startOffset, endOffset, Collections.emptyList(), false);
+        return new ArrowFunctionScopeImpl(scope, ArrowFunctionDeclarationInfo.create(node), block);
+    }
+
+    private static int getWhitespacesBehindASTErrorExpression(Scope scope, int endOffset) {
+        FileObject fileObject = scope.getFileObject();
+        int wsCount = 0;
+        if (fileObject != null) {
+            BaseDocument document = GsfUtilities.getDocument(fileObject, true);
+            Scope inScope = scope.getInScope();
+            if (document != null && inScope != null) {
+                int length = inScope.getBlockRange().getEnd() - endOffset;
+                if (length > 0) {
+                    try {
+                        char[] chars = document.getChars(endOffset, length);
+                        for (char c : chars) {
+                            if (c == ' ' || c == '\t') {
+                                wsCount++;
+                            } else {
+                                break;
+                            }
+                        }
+                    } catch (BadLocationException ex) {
+                        LOGGER.log(Level.WARNING, "Invalid offset: " + ex.offsetRequested(), ex); // NOI18N
+                    }
+                }
+            }
+        }
+        return wsCount;
     }
 
     //old contructors

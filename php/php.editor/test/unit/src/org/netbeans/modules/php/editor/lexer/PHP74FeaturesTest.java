@@ -34,4 +34,9 @@ public class PHP74FeaturesTest extends PHPLexerTestBase {
         performTest("lexer/php74/numericLiteralSeparator_01");
     }
 
+    // e.g. fn($x) => $x + $y;
+    public void testArrowFunctions_01() throws Exception {
+        performTest("lexer/php74/arrowFunctions_01");
+    }
+
 }

@@ -122,6 +122,7 @@ KEYWORD    exit()                                     Language Construct
 KEYWORD    extends                                    null
 KEYWORD    final                                      null
 KEYWORD    finally                                    null
+KEYWORD    fn                                         null
 KEYWORD    for                                        null
 KEYWORD    foreach                                    null
 KEYWORD    function                                   null

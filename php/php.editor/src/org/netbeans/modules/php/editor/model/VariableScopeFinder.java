@@ -121,7 +121,8 @@ public final class VariableScopeFinder {
                     boolean possibleScope = true;
                     VariableScope variableScope = variableScopeWrapper.getVariableScope();
                     if (variableScope instanceof FunctionScope || variableScope instanceof ClassScope) {
-                        if (blockRange.getEnd() == offset) {
+                        if (blockRange.getEnd() == offset
+                                && !(variableScope instanceof ArrowFunctionScope)) {
                             possibleScope = false;
                         }
                     }

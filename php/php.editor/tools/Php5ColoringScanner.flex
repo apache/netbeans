@@ -369,6 +369,12 @@ PHP_TYPE_OBJECT=[o][b][j][e][c][t]
     return PHPTokenId.PHP_DIE;
 }
 
+<ST_PHP_IN_SCRIPTING>"fn" {
+    // PHP 7.4 Arrow Functions 2.0
+    // https://wiki.php.net/rfc/arrow_functions_v2
+    return PHPTokenId.PHP_FN;
+}
+
 <ST_PHP_IN_SCRIPTING>"function" {
     pushState(ST_PHP_LOOKING_FOR_FUNCTION_NAME);
     return PHPTokenId.PHP_FUNCTION;

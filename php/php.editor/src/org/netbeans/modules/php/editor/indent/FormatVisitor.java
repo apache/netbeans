@@ -42,6 +42,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ASTError;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayElement;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.CastExpression;
@@ -373,6 +374,13 @@ public class FormatVisitor extends DefaultVisitor {
 
     private static boolean isKeyValueOperator(Token<PHPTokenId> token) {
         return token.id() == PHPTokenId.PHP_OPERATOR && TokenUtilities.textEquals("=>", token.text()); // NOI18N
+    }
+
+    @Override
+    public void visit(ArrowFunctionDeclaration node) {
+        scan(node.getFormalParameters());
+        addReturnType(node.getReturnType());
+        scan(node.getExpression());
     }
 
     @Override
@@ -1156,8 +1164,9 @@ public class FormatVisitor extends DefaultVisitor {
         scan(node.getLexicalVariables());
         Block body = node.getBody();
         if (body != null) {
-            // in case of (function(){echo "foo";})(), missing an indent
-            boolean addIndent = path.size() > 1 && (path.get(1) instanceof ParenthesisExpression);
+            // in case of (function(){echo "foo";})() and fn() => function() use ($y) {return $y;}, missing an indent
+            boolean addIndent = path.size() > 1
+                    && ((path.get(1) instanceof ParenthesisExpression) || (path.get(1) instanceof ArrowFunctionDeclaration));
             if (addIndent) {
                 formatTokens.add(new FormatToken.IndentToken(ts.offset() + ts.token().length(), options.continualIndentSize));
             }
@@ -1920,7 +1929,7 @@ public class FormatVisitor extends DefaultVisitor {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_ANONYMOUS_CLASS_PAREN, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_ANONYMOUS_CLASS_PARENS, ts.offset() + ts.token().length()));
-                    } else if (parent instanceof FunctionDeclaration || parent instanceof MethodDeclaration) {
+                    } else if (parent instanceof FunctionDeclaration || parent instanceof MethodDeclaration || parent instanceof ArrowFunctionDeclaration) {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_METHOD_DEC_PAREN, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_METHOD_DECL_PARENS, ts.offset() + ts.token().length()));
@@ -1959,7 +1968,7 @@ public class FormatVisitor extends DefaultVisitor {
                     if (isAnonymousClass(parent)) {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_ANONYMOUS_CLASS_PARENS, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
-                    } else if (parent instanceof FunctionDeclaration || parent instanceof MethodDeclaration) {
+                    } else if (parent instanceof FunctionDeclaration || parent instanceof MethodDeclaration || parent instanceof ArrowFunctionDeclaration) {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_METHOD_DECL_PARENS, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                     } else if (parent instanceof FunctionInvocation || parent instanceof MethodInvocation || parent instanceof ClassInstanceCreation) {
@@ -2011,7 +2020,8 @@ public class FormatVisitor extends DefaultVisitor {
                 } else if (TokenUtilities.textEquals(":", txt)) { // NOI18N
                     if (parent instanceof FunctionDeclaration
                             || parent instanceof MethodDeclaration
-                            || parent instanceof LambdaFunctionDeclaration) {
+                            || parent instanceof LambdaFunctionDeclaration
+                            || parent instanceof ArrowFunctionDeclaration) {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_RETURN_TYPE_SEPARATOR, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AFTER_RETURN_TYPE_SEPARATOR, ts.offset() + ts.token().length()));

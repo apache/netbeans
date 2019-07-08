@@ -1077,6 +1077,26 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php74/numericLiteralSeparatorParseError_08");
     }
 
+    public void testArrowFunctions_01() throws Exception {
+        performTest("parser/php74/arrowFunctions_01");
+    }
+
+    public void testArrowFunctionsParseError_01() throws Exception {
+        performTest("parser/php74/arrowFunctionsParseError_01");
+    }
+
+    public void testArrowFunctionsParseError_02() throws Exception {
+        performTest("parser/php74/arrowFunctionsParseError_02");
+    }
+
+    public void testArrowFunctionsParseError_03() throws Exception {
+        performTest("parser/php74/arrowFunctionsParseError_03");
+    }
+
+    public void testArrowFunctionsParseError_04() throws Exception {
+        performTest("parser/php74/arrowFunctionsParseError_04");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

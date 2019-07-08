@@ -19,12 +19,14 @@
 package org.netbeans.modules.php.editor.parser.astnodes.visitors;
 
 import org.netbeans.modules.php.editor.parser.astnodes.ASTError;
+import org.netbeans.modules.php.editor.parser.astnodes.ASTErrorExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.AnonymousObjectVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayDimension;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayElement;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
 import org.netbeans.modules.php.editor.parser.astnodes.BackTickExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
@@ -157,6 +159,13 @@ public class DefaultVisitor implements Visitor {
     }
 
     @Override
+    public void visit(ArrowFunctionDeclaration node) {
+        scan(node.getFormalParameters());
+        scan(node.getReturnType());
+        scan(node.getExpression());
+    }
+
+    @Override
     public void visit(Assignment node) {
         scan(node.getLeftHandSide());
         scan(node.getRightHandSide());
@@ -164,6 +173,10 @@ public class DefaultVisitor implements Visitor {
 
     @Override
     public void visit(ASTError astError) {
+    }
+
+    @Override
+    public void visit(ASTErrorExpression astErrorExpression) {
     }
 
     @Override

@@ -1,0 +1,6 @@
+Code completion result for source line:
+$fn2 = fn(int $a, ArrowFunctions $b) => $a + $b->|getNumber() * $y;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     getNumber()                     [PUBLIC]   ArrowFunctions
+METHOD     new()                           [STATIC]   ArrowFunctions
+METHOD     test()                          [PUBLIC]   ArrowFunctions

@@ -397,4 +397,348 @@ public class PHP74CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion(getTestPath("serializeUnserialize"), "    __^", false);
     }
 
+    public void testArrowFunctions_01() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "$fn0 = f^n() => 100;", false);
+    }
+
+    public void testArrowFunctions_02() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "$fn0 = fn() => ^100;", false);
+    }
+
+    public void testArrowFunctions_03a() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "$fn1a = fn(^int $x) => $x + $y;", false);
+    }
+
+    public void testArrowFunctions_03b() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "$fn1a = fn(i^nt $x) => $x + $y;", false);
+    }
+
+    public void testArrowFunctions_03c() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "$fn1a = fn(int $x) => $^x + $y;", false);
+    }
+
+    public void testArrowFunctions_03d() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "$fn1a = fn(int $x) => $x + $^y;", false);
+    }
+
+    public void testArrowFunctions_04a() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "$fn2 = fn(int $a, ^ArrowFunctions $b) => $a + $b->getNumber() * $y;", false);
+    }
+
+    public void testArrowFunctions_04b() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "$fn2 = fn(int $a, ArrowFunctions $b) => $a + $b->^getNumber() * $y;", false);
+    }
+
+    public void testArrowFunctions_05a() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "fn(int $x): ^int => $x; // return type", false);
+    }
+
+    public void testArrowFunctions_05b() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "fn(int $x): int => ^$x; // return type", false);
+    }
+
+    public void testArrowFunctions_06a() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "fn(?^array $z, int $x): ?int => $x + count($z); // parameter and return type", false);
+    }
+
+    public void testArrowFunctions_06b() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "fn(?array $z, int $x): ?i^nt => $x + count($z); // parameter and return type", false);
+    }
+
+    public void testArrowFunctions_06c() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "fn(?array $z, int $x): ?int => $x + count($^z); // parameter and return type", false);
+    }
+
+    public void testArrowFunctions_06d() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "fn(?array $z, int $x): ?int => $x + count($z^); // parameter and return type", false);
+    }
+
+    public void testArrowFunctions_07() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "fn($x = 100) => $^x; // default value", false);
+    }
+
+    public void testArrowFunctions_08() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "fn(&$x) => ^$x; // reference", false);
+    }
+
+    public void testArrowFunctions_09() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "fn&($x) => $^x; // reference", false);
+    }
+
+    public void testArrowFunctions_10() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "fn&(&$x) => $^x; // reference", false);
+    }
+
+    public void testArrowFunctions_11a() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "fn($x, ...$reset) => $^reset; // variadics", false);
+    }
+
+    public void testArrowFunctions_11b() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "fn($x, ...$reset) => $res^et; // variadics", false);
+    }
+
+    public void testArrowFunctions_12() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "fn($x, &...$reset) => $r^eset; // reference variadics", false);
+    }
+
+    public void testArrowFunctions_13() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "fn(): int => CONSTAN^T_INT;", false);
+    }
+
+    public void testArrowFunctions_14() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "fn(): ArrowFunctions => ArrowFunctions::^new();", false);
+    }
+
+    public void testArrowFunctions_15a() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "$af = fn() => fn() => ^$y;", false);
+    }
+
+    public void testArrowFunctions_15b() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "$af = fn() => fn() => $^y;", false);
+    }
+
+    public void testArrowFunctions_16a() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "(fn() => function() use ($y) {return $^y;})()();", false);
+    }
+
+    public void testArrowFunctions_16b() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "(fn() => function() use ($y) {return $y^;})()();", false);
+    }
+
+    public void testArrowFunctions_17a() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "$af = fn(int $x): call^able => fn(int $z): int => $x + $y * $z;", false);
+    }
+
+    public void testArrowFunctions_17b() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "$af = fn(int $x): callable => fn(^int $z): int => $x + $y * $z;", false);
+    }
+
+    public void testArrowFunctions_17c() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "$af = fn(int $x): callable => fn(int $z): i^nt => $x + $y * $z;", false);
+    }
+
+    public void testArrowFunctions_17d() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "$af = fn(int $x): callable => fn(int $z): int => $x + $y * ^$z;", false);
+    }
+
+    public void testArrowFunctions_17e() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "$af = fn(int $x): callable => fn(int $z): int => $x + $y * $^z;", false);
+    }
+
+    public void testArrowFunctions_17f() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "$af = fn(int $x): callable => fn(int $z): int => $x + $y * $z^;", false);
+    }
+
+    public void testArrowFunctions_18a() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "$af = fn(ArrowFunctions $x): callable => fn(?ArrowFunct^ions $z): ?ArrowFunctions => new ArrowFunctions();", false);
+    }
+
+    public void testArrowFunctions_18b() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "$af = fn(ArrowFunctions $x): callable => fn(?ArrowFunctions $z): ?Arr^owFunctions => new ArrowFunctions();", false);
+    }
+
+    public void testArrowFunctions_18c() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "$af = fn(ArrowFunctions $x): callable => fn(?ArrowFunctions $z): ?ArrowFunctions => ^new ArrowFunctions();", false);
+    }
+
+    public void testArrowFunctions_18d() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "$af = fn(ArrowFunctions $x): callable => fn(?ArrowFunctions $z): ?ArrowFunctions => new Arro^wFunctions();", false);
+    }
+
+    public void testArrowFunctions_19a() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "    return fn() => $^x + $y;", false);
+    }
+
+    public void testArrowFunctions_19b() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "    return fn() => $x + $y^;", false);
+    }
+
+    public void testArrowFunctions_20a() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "    return fn($x) => $x^ + $y;", false);
+    }
+
+    public void testArrowFunctions_20b() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "    return fn($x) => $x + $^y;", false);
+    }
+
+    public void testArrowFunctions_21a() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "        $af = fn(): ?ArrowFuncti^ons => $this;", false);
+    }
+
+    public void testArrowFunctions_21b() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "        $af = fn(): ?ArrowFunctions => ^$this;", false);
+    }
+
+    public void testArrowFunctions_21c() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "        $af = fn(): ?ArrowFunctions => $this^;", false);
+    }
+
+    public void testArrowFunctions_22a() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "        $af = fn() => self::^class;", false);
+    }
+
+    public void testArrowFunctions_22b() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "        $af = fn() => self::clas^s;", false);
+    }
+
+    public void testArrowFunctions_23a() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "        $af = fn(^$x): ?int => $x + $test;", false);
+    }
+
+    public void testArrowFunctions_23b() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "        $af = fn($x): ?^int => $x + $test;", false);
+    }
+
+    public void testArrowFunctions_23c() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "        $af = fn($x): ?int => $^x + $test;", false);
+    }
+
+    public void testArrowFunctions_23d() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "        $af = fn($x): ?int => $x + $tes^t;", false);
+    }
+
+    public void testArrowFunctions_24a() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "        $af = sta^tic fn() => isset($this); // static", false);
+    }
+
+    public void testArrowFunctions_24b() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "        $af = static fn() => ^isset($this); // static", false);
+    }
+
+    public void testArrowFunctions_24c() throws Exception {
+        checkCompletion(getTestPath("arrowFunctions"), "        $af = static fn() => isset($^this); // static", false);
+    }
+
+    public void testArrowFunctionsNested_01() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsNested"), "$af = fn(ArrowFunctions $x): callable => fn(?ArrowFunctions $z): ?ArrowFunctions => ^$x->test();", false);
+    }
+
+    public void testArrowFunctionsNested_02() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsNested"), "$af = fn(ArrowFunctions $x): callable => fn(ArrowFunctions $z): ?ArrowFunctions => $^y->test();", false);
+    }
+
+    public void testArrowFunctionsNested_03() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsNested"), "$af = fn(ArrowFunctions $x): callable => fn(?ArrowFunctions $z): ?ArrowFunctions => $x->^test();", false);
+    }
+
+    public void testArrowFunctionsNested_04() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsNested"), "$af = fn(ArrowFunctions $x): callable => fn(ArrowFunctions $z): ?ArrowFunctions => $y->^test();", false);
+    }
+
+    public void testArrowFunctionsNested_05() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsNested"), "$af = fn(ArrowFunctions $x): callable => fn(?ArrowFunctions $z): ?ArrowFunctions => $z->^test();", false);
+    }
+
+    public void testArrowFunctionsNested_06() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsNested"), "echo (function($z) use ($object) {return $z + $object->^getNumber();})(2);", false);
+    }
+
+    public void testArrowFunctionsInFunction_01a() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsInFunction"), "    $fn = fn() => ^$af->getNumber() + $number;", false);
+    }
+
+    public void testArrowFunctionsInFunction_01b() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsInFunction"), "    $fn = fn() => $af->^getNumber() + $number;", false);
+    }
+
+    public void testArrowFunctionsInFunction_01c() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsInFunction"), "    $fn = fn() => $af->getNumber() + $^number;", false);
+    }
+
+    public void testArrowFunctionsInFunction_02a() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsInFunction"), "    $fn = fn() => $^af->getNumber() + $number + $globalVariable;", false);
+    }
+
+    public void testArrowFunctionsInFunction_02b() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsInFunction"), "    $fn = fn() => $af->^getNumber() + $number + $globalVariable;", false);
+    }
+
+    public void testArrowFunctionsInFunction_02c() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsInFunction"), "    $fn = fn() => $af->getNumber() + $number + $gl^obalVariable;", false);
+    }
+
+    public void testArrowFunctionsInMethod_01a() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsInMethod"), "        $fn = fn() => ^$af->getNumber() + $number + $this->getNumber();", false);
+    }
+
+    public void testArrowFunctionsInMethod_01b() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsInMethod"), "        $fn = fn() => $af->^getNumber() + $number + $this->getNumber();", false);
+    }
+
+    public void testArrowFunctionsInMethod_01c() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsInMethod"), "        $fn = fn() => $af->getNumber() + $nu^mber + $this->getNumber();", false);
+    }
+
+    public void testArrowFunctionsInMethod_01d() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsInMethod"), "        $fn = fn() => $af->getNumber() + $number + $this->^getNumber();", false);
+    }
+
+    public void testArrowFunctionsWithError01_01a() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsWithError01"), "    return array_map(fn($test) =>^ , $keys);", false);
+    }
+
+    public void testArrowFunctionsWithError01_01b() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsWithError01"), "    return array_map(fn($test) => ^, $keys);", false);
+    }
+
+    public void testArrowFunctionsWithError01_02() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsWithError01"), "    return array_map(fn($test) => $^, $keys);", false);
+    }
+
+    public void testArrowFunctionsWithError02_01a() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsWithError02"), "$af = fn(ArrowFunction $object) =>^ ;", false);
+    }
+
+    public void testArrowFunctionsWithError02_01b() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsWithError02"), "$af = fn(ArrowFunction $object) => ^;", false);
+    }
+
+    public void testArrowFunctionsWithError02_02() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsWithError02"), "$af = fn(ArrowFunction $object) => $^;", false);
+    }
+
+    public void testArrowFunctionsWithError02_03() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsWithError02"), "$af = fn(ArrowFunction $object) =>	^;", false);
+    }
+
+    public void testArrowFunctionsInMethodWithError_01a() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsInMethodWithError"), "        $fn = fn(int $test) => $af->getNumber() + ^ + $this->getNumber();", false);
+    }
+
+    public void testArrowFunctionsInMethodWithError_01b() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsInMethodWithError"), "        $fn = fn(int $test) => $af->getNumber() + $^ + $this->getNumber();", false);
+    }
+
+    public void testArrowFunctionsInMethodWithError_02a() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsInMethodWithError"), "        $fn = fn(ArrowFunctions $object) => $af->getNumber() + ^;", false);
+    }
+
+    public void testArrowFunctionsInMethodWithError_02b() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsInMethodWithError"), "        $fn = fn(ArrowFunctions $object) => $af->getNumber() + $^;", false);
+    }
+
+    public void testArrowFunctionsInFunctionWithError_01a() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsInFunctionWithError"), "    $fn = fn(int $test) => ^;", false);
+    }
+
+    public void testArrowFunctionsInFunctionWithError_01b() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsInFunctionWithError"), "    $fn = fn(int $test) => $^;", false);
+    }
+
+    public void testArrowFunctionsInFunctionWithError_02a() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsInFunctionWithError"), "    $fn = fn(array $array, int $test) => $af->getNumber() + ^;", false);
+    }
+
+    public void testArrowFunctionsInFunctionWithError_02b() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsInFunctionWithError"), "    $fn = fn(array $array, int $test) => $af->getNumber() + $^;", false);
+    }
+
+    public void testArrowFunctionsInFunctionWithError_03a() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsInFunctionWithError"), "    $fn = fn() => $af->getNumber() + $number + ^;", false);
+    }
+
+    public void testArrowFunctionsInFunctionWithError_03b() throws Exception {
+        checkCompletion(getTestPath("arrowFunctionsInFunctionWithError"), "    $fn = fn() => $af->getNumber() + $number + $^;", false);
+    }
+
 }

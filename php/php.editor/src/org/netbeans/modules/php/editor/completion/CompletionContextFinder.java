@@ -939,7 +939,8 @@ final class CompletionContextFinder {
     }
 
     private static boolean isFunctionDeclaration(Token<PHPTokenId> token) {
-        return token.id().equals(PHPTokenId.PHP_FUNCTION); //NOI18N
+        return token.id().equals(PHPTokenId.PHP_FUNCTION)
+                || token.id().equals(PHPTokenId.PHP_FN);
     }
 
     private static boolean isVariable(Token<PHPTokenId> token) {

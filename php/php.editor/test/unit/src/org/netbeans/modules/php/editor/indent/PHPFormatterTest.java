@@ -814,4 +814,14 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/spreadOperatorInClassConst.php", options);
     }
 
+    public void testArrowFunctions_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/arrowFunctions01.php", options);
+    }
+
+    public void testArrowFunctions_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/arrowFunctions02.php", options);
+    }
+
 }

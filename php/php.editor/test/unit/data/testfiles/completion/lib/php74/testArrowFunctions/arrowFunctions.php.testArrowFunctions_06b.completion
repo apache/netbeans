@@ -1,0 +1,6 @@
+Code completion result for source line:
+fn(?array $z, int $x): ?i|nt => $x + count($z); // parameter and return type
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    int                                        null
+KEYWORD    iterable                                   null

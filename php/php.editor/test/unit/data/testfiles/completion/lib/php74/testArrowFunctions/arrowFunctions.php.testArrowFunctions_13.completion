@@ -1,0 +1,4 @@
+Code completion result for source line:
+fn(): int => CONSTAN|T_INT;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   CONSTANT_INT 1000               [PUBLIC]   arrowFunctions.php

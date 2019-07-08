@@ -264,6 +264,7 @@ terminal String T_DEFAULT;
 terminal String T_BREAK;
 terminal String T_CONTINUE;
 terminal String T_GOTO;
+terminal String T_FN;
 terminal String T_FUNCTION;
 terminal String T_CONST;
 terminal String T_RETURN;
@@ -421,6 +422,7 @@ non terminal possible_comma;
 non terminal List non_empty_static_array_pair_list;
 non terminal Expression expr;
 non terminal Expression expr_with_yields;
+non terminal Expression expr_with_yields_and_error;
 non terminal Expression expr_without_class_instance;
 non terminal Expression yield_expr;
 non terminal Expression yield_from_expr;
@@ -821,6 +823,12 @@ T_INCLUDE:reserved
 
 | T_GOTO:reserved
 {:
+    RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_FN:reserved
+{:
+    // PHP 7.4
     RESULT = new Identifier(reservedleft, reservedright, reserved, true);
 :}
 
@@ -3345,6 +3353,18 @@ T_CURLY_OPEN:blockStart inner_statement_list:list T_CURLY_CLOSE:blockEnd
         new Block(blockStartleft, blockEndright, list), isReference.booleanValue(), true);
 :}
 
+| T_FN:s is_reference:isReference T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE optional_return_type:returnType T_DOUBLE_ARROW expr_with_yields_and_error:expr
+{:
+    // PHP 7.4
+    RESULT = new ArrowFunctionDeclaration(sleft, exprright, paramList, returnType, expr, isReference.booleanValue(), false);
+:}
+
+| T_STATIC:st T_FN:s is_reference:isReference T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE optional_return_type:returnType T_DOUBLE_ARROW expr_with_yields_and_error:expr
+{:
+    // PHP 7.4
+    RESULT = new ArrowFunctionDeclaration(stleft, exprright, paramList, returnType, expr, isReference.booleanValue(), true);
+:}
+
 | expression_array_access:eaa
 {:
     RESULT = eaa;
@@ -4277,6 +4297,18 @@ expr:expr
 | yield_from_expr:expr
 {:
     RESULT = expr;
+:}
+;
+
+expr_with_yields_and_error ::=
+expr_with_yields:expr
+{:
+    RESULT = expr;
+:}
+
+| error:expr
+{:
+    RESULT = new ASTErrorExpression(exprleft, exprright);
 :}
 ;
 

@@ -205,6 +205,20 @@ public class PrintASTVisitor implements Visitor {
     }
 
     @Override
+    public void visit(ArrowFunctionDeclaration node) {
+        XMLPrintNode printNode = new XMLPrintNode(node, "ArrowFunctionDeclaration",
+                new String[] {
+                    "isReference", (node.isReference() ? "true" : "false"),
+                    "isStatic", (node.isStatic()? "true" : "false")
+                }
+        );
+        printNode.addChildren(node.getFormalParameters());
+        printNode.addChild(node.getReturnType());
+        printNode.addChild(node.getExpression());
+        printNode.print(this);
+    }
+
+    @Override
     public void visit(Assignment assignment) {
         XMLPrintNode printNode = new XMLPrintNode(assignment, "Assignment",
                 new String[]{"operator", assignment.getOperator().name()});
@@ -216,6 +230,11 @@ public class PrintASTVisitor implements Visitor {
     @Override
     public void visit(ASTError astError) {
         (new XMLPrintNode(astError, "ASTError")).print(this);
+    }
+
+    @Override
+    public void visit(ASTErrorExpression astErrorExpression) {
+        (new XMLPrintNode(astErrorExpression, "ASTErrorExpression")).print(this);
     }
 
     @Override

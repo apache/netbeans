@@ -1,0 +1,4 @@
+Code completion result for source line:
+$af = fn(ArrowFunctions $x): callable => fn(?ArrowFunctions $z): ?ArrowFunctions => new Arro|wFunctions();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTRUCTO ArrowFunctions()                [PUBLIC]   ArrowFunctions

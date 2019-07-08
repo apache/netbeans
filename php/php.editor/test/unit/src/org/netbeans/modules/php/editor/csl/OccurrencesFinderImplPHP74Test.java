@@ -310,4 +310,290 @@ public class OccurrencesFinderImplPHP74Test extends OccurrencesFinderImplTestBas
     public void testSpreadOperatorInClassConst_02j() throws Exception {
         checkOccurrences(getTestPath(), "    private const CONST3 = [1, ...\\Foo\\UnpackClass::C^ONSTANT, 4];", true);
     }
+
+    public void testArrowFunctions_01a() throws Exception {
+        checkOccurrences(getTestPath(), "const CONST^ANT_INT = 1000;", true);
+    }
+
+    public void testArrowFunctions_01b() throws Exception {
+        checkOccurrences(getTestPath(), "fn(): int => CONST^ANT_INT;", true);
+    }
+
+    public void testArrowFunctions_02a() throws Exception {
+        checkOccurrences(getTestPath(), "$^y = 5;", true);
+    }
+
+    public void testArrowFunctions_02b() throws Exception {
+        checkOccurrences(getTestPath(), "$fn1a = fn(int $x) => $x + $^y;", true);
+    }
+
+    public void testArrowFunctions_02c() throws Exception {
+        checkOccurrences(getTestPath(), "$fn1b = function ($x) use ($^y) {", true);
+    }
+
+    public void testArrowFunctions_02d() throws Exception {
+        checkOccurrences(getTestPath(), "    return $x + $^y;", true);
+    }
+
+    public void testArrowFunctions_02e() throws Exception {
+        checkOccurrences(getTestPath(), "$fn2 = fn(int $a, ArrowFunctions $b) => $a + $b->getNumber() * $^y;", true);
+    }
+
+    public void testArrowFunctions_02f() throws Exception {
+        checkOccurrences(getTestPath(), "$af = fn() => fn() => $^y;", true);
+    }
+
+    public void testArrowFunctions_02g() throws Exception {
+        checkOccurrences(getTestPath(), "(fn() => fn() => $^y)()();", true);
+    }
+
+    public void testArrowFunctions_02h() throws Exception {
+        checkOccurrences(getTestPath(), "(fn() => function() use ($^y) {return $y;})()();", true);
+    }
+
+    public void testArrowFunctions_02i() throws Exception {
+        checkOccurrences(getTestPath(), "(fn() => function() use ($y) {return $^y;})()();", true);
+    }
+
+    public void testArrowFunctions_02j() throws Exception {
+        checkOccurrences(getTestPath(), "$af = fn(int $x): callable => fn(int $z): int => $x + $^y * $z;", true);
+    }
+
+    public void testArrowFunctions_02k() throws Exception {
+        checkOccurrences(getTestPath(), "$fn3 = function ($x) use ($^y) {", true);
+    }
+
+    public void testArrowFunctions_02l() throws Exception {
+        checkOccurrences(getTestPath(), "    return fn() => $x + $^y;", true);
+    }
+
+    public void testArrowFunctions_02m() throws Exception {
+        checkOccurrences(getTestPath(), "$fn4 = function ($x) use ($^y) {", true);
+    }
+
+    public void testArrowFunctions_02n() throws Exception {
+        checkOccurrences(getTestPath(), "    return fn($x) => $x + $^y;", true);
+    }
+
+    public void testArrowFunctions_03a() throws Exception {
+        checkOccurrences(getTestPath(), "$fn1a = fn(int $^x) => $x + $y;", true);
+    }
+
+    public void testArrowFunctions_03b() throws Exception {
+        checkOccurrences(getTestPath(), "$fn1a = fn(int $x) => $^x + $y;", true);
+    }
+
+    public void testArrowFunctions_04a() throws Exception {
+        checkOccurrences(getTestPath(), "$fn1b = function ($^x) use ($y) {", true);
+    }
+
+    public void testArrowFunctions_04b() throws Exception {
+        checkOccurrences(getTestPath(), "    return $^x + $y;", true);
+    }
+
+    public void testArrowFunctions_05a() throws Exception {
+        checkOccurrences(getTestPath(), "$fn2 = fn(int $a, ArrowFunc^tions $b) => $a + $b->getNumber() * $y;", true);
+    }
+
+    public void testArrowFunctions_05b() throws Exception {
+        checkOccurrences(getTestPath(), "fn(): ArrowFunction^s => ArrowFunctions::new();", true);
+    }
+
+    public void testArrowFunctions_05c() throws Exception {
+        checkOccurrences(getTestPath(), "fn(): ArrowFunctions => Arr^owFunctions::new();", true);
+    }
+
+    public void testArrowFunctions_05d() throws Exception {
+        checkOccurrences(getTestPath(), "function (): ArrowFunc^tions {", true);
+    }
+
+    public void testArrowFunctions_05e() throws Exception {
+        checkOccurrences(getTestPath(), "    return ArrowFunctio^ns::new();", true);
+    }
+
+    public void testArrowFunctions_05f() throws Exception {
+        checkOccurrences(getTestPath(), "$af = fn(ArrowFunc^tions $x): callable => fn(?ArrowFunctions $z): ?ArrowFunctions => new ArrowFunctions();", true);
+    }
+
+    public void testArrowFunctions_05g() throws Exception {
+        checkOccurrences(getTestPath(), "$af = fn(ArrowFunctions $x): callable => fn(?Arro^wFunctions $z): ?ArrowFunctions => new ArrowFunctions();", true);
+    }
+
+    public void testArrowFunctions_05h() throws Exception {
+        checkOccurrences(getTestPath(), "$af = fn(ArrowFunctions $x): callable => fn(?ArrowFunctions $z): ?ArrowFunctio^ns => new ArrowFunctions();", true);
+    }
+
+    public void testArrowFunctions_05i() throws Exception {
+        checkOccurrences(getTestPath(), "$af = fn(ArrowFunctions $x): callable => fn(?ArrowFunctions $z): ?ArrowFunctions => new ArrowF^unctions();", true);
+    }
+
+    public void testArrowFunctions_05j() throws Exception {
+        checkOccurrences(getTestPath(), "class ArrowFunct^ions", true);
+    }
+
+    public void testArrowFunctions_05k() throws Exception {
+        checkOccurrences(getTestPath(), "        $af = fn(): ?ArrowFunctio^ns => $this;", true);
+    }
+
+    public void testArrowFunctions_05l() throws Exception {
+        checkOccurrences(getTestPath(), "        return new ArrowFunctio^ns();", true);
+    }
+
+    public void testArrowFunctions_06a() throws Exception {
+        checkOccurrences(getTestPath(), "$fn2 = fn(int $^a, ArrowFunctions $b) => $a + $b->getNumber() * $y;", true);
+    }
+
+    public void testArrowFunctions_06b() throws Exception {
+        checkOccurrences(getTestPath(), "$fn2 = fn(int $a, ArrowFunctions $b) => $^a + $b->getNumber() * $y;", true);
+    }
+
+    public void testArrowFunctions_07a() throws Exception {
+        checkOccurrences(getTestPath(), "fn (array $^x) => $x; // parameter type", true);
+    }
+
+    public void testArrowFunctions_07b() throws Exception {
+        checkOccurrences(getTestPath(), "fn (array $x) => $^x; // parameter type", true);
+    }
+
+    public void testArrowFunctions_08a() throws Exception {
+        checkOccurrences(getTestPath(), "fn(int $^x): int => $x; // return type", true);
+    }
+
+    public void testArrowFunctions_08b() throws Exception {
+        checkOccurrences(getTestPath(), "fn(int $x): int => $^x; // return type", true);
+    }
+
+    public void testArrowFunctions_09a() throws Exception {
+        checkOccurrences(getTestPath(), "fn(?array $^z, int $x): ?int => $x + count($z); // parameter and return type", true);
+    }
+
+    public void testArrowFunctions_09b() throws Exception {
+        checkOccurrences(getTestPath(), "fn(?array $z, int $x): ?int => $x + count($^z); // parameter and return type", true);
+    }
+
+    public void testArrowFunctions_10a() throws Exception {
+        checkOccurrences(getTestPath(), "fn(?array $z, int $^x): ?int => $x + count($z); // parameter and return type", true);
+    }
+
+    public void testArrowFunctions_10b() throws Exception {
+        checkOccurrences(getTestPath(), "fn(?array $z, int $x): ?int => $^x + count($z); // parameter and return type", true);
+    }
+
+    public void testArrowFunctions_11a() throws Exception {
+        checkOccurrences(getTestPath(), "fn($^x = 100) => $x; // default value", true);
+    }
+
+    public void testArrowFunctions_11b() throws Exception {
+        checkOccurrences(getTestPath(), "fn($x = 100) => $^x; // default value", true);
+    }
+
+    public void testArrowFunctions_12a() throws Exception {
+        checkOccurrences(getTestPath(), "fn(&$^x) => $x; // reference", true);
+    }
+
+    public void testArrowFunctions_12b() throws Exception {
+        checkOccurrences(getTestPath(), "fn(&$x) => $^x; // reference", true);
+    }
+
+    public void testArrowFunctions_13a() throws Exception {
+        checkOccurrences(getTestPath(), "fn&($^x) => $x; // reference", true);
+    }
+
+    public void testArrowFunctions_13b() throws Exception {
+        checkOccurrences(getTestPath(), "fn&($x) => $^x; // reference", true);
+    }
+
+    public void testArrowFunctions_14a() throws Exception {
+        checkOccurrences(getTestPath(), "fn&(&$^x) => $x; // reference", true);
+    }
+
+    public void testArrowFunctions_14b() throws Exception {
+        checkOccurrences(getTestPath(), "fn&(&$x) => $^x; // reference", true);
+    }
+
+    public void testArrowFunctions_15a() throws Exception {
+        checkOccurrences(getTestPath(), "fn($x, ...$re^set) => $reset; // variadics", true);
+    }
+
+    public void testArrowFunctions_15b() throws Exception {
+        checkOccurrences(getTestPath(), "fn($x, ...$reset) => $r^eset; // variadics", true);
+    }
+
+    public void testArrowFunctions_16a() throws Exception {
+        checkOccurrences(getTestPath(), "fn($x, &...$re^set) => $reset; // reference variadics", true);
+    }
+
+    public void testArrowFunctions_16b() throws Exception {
+        checkOccurrences(getTestPath(), "fn($x, &...$reset) => $res^et; // reference variadics", true);
+    }
+
+    public void testArrowFunctions_17a() throws Exception {
+        checkOccurrences(getTestPath(), "$af = fn(int $^x): callable => fn(int $z): int => $x + $y * $z;", true);
+    }
+
+    public void testArrowFunctions_17b() throws Exception {
+        checkOccurrences(getTestPath(), "$af = fn(int $x): callable => fn(int $z): int => $^x + $y * $z;", true);
+    }
+
+    public void testArrowFunctions_18a() throws Exception {
+        checkOccurrences(getTestPath(), "$af = fn(int $x): callable => fn(int $^z): int => $x + $y * $z;", true);
+    }
+
+    public void testArrowFunctions_18b() throws Exception {
+        checkOccurrences(getTestPath(), "$af = fn(int $x): callable => fn(int $z): int => $x + $y * $^z;", true);
+    }
+
+    public void testArrowFunctions_19a() throws Exception {
+        checkOccurrences(getTestPath(), "$fn3 = function ($^x) use ($y) {", true);
+    }
+
+    public void testArrowFunctions_19b() throws Exception {
+        checkOccurrences(getTestPath(), "    return fn() => $^x + $y;", true);
+    }
+
+    public void testArrowFunctions_20a() throws Exception {
+        checkOccurrences(getTestPath(), "$fn4 = function ($^x) use ($y) {", true);
+    }
+
+    public void testArrowFunctions_21a() throws Exception {
+        checkOccurrences(getTestPath(), "    return fn($^x) => $x + $y;", true);
+    }
+
+    public void testArrowFunctions_21b() throws Exception {
+        checkOccurrences(getTestPath(), "    return fn($x) => $^x + $y;", true);
+    }
+
+    // in class
+    public void testArrowFunctions_22a() throws Exception {
+        checkOccurrences(getTestPath(), "        $^y = 100;", true);
+    }
+
+    public void testArrowFunctions_22b() throws Exception {
+        checkOccurrences(getTestPath(), "        $af = fn($x): ?int => $x + $^y;", true);
+    }
+
+    public void testArrowFunctions_23a() throws Exception {
+        checkOccurrences(getTestPath(), "        $af = fn($^x): ?int => $x + $y;", true);
+    }
+
+    public void testArrowFunctions_23b() throws Exception {
+        checkOccurrences(getTestPath(), "        $af = fn($x): ?int => $^x + $y;", true);
+    }
+
+    public void testArrowFunctions_24a() throws Exception {
+        checkOccurrences(getTestPath(), "function test(callable $^f) {", true);
+    }
+
+    public void testArrowFunctions_24b() throws Exception {
+        checkOccurrences(getTestPath(), "    return fn(...$args) => !$^f(...$args);", true);
+    }
+
+    public void testArrowFunctions_25a() throws Exception {
+        checkOccurrences(getTestPath(), "    return fn(...$a^rgs) => !$f(...$args);", true);
+    }
+
+    public void testArrowFunctions_25b() throws Exception {
+        checkOccurrences(getTestPath(), "    return fn(...$args) => !$f(...$ar^gs);", true);
+    }
+
 }

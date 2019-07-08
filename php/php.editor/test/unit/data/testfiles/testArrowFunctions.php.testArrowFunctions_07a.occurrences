@@ -1,0 +1,1 @@
+fn (array $^|>MARK_OCCURRENCES:x<|) => $|>MARK_OCCURRENCES:x<|; // parameter type

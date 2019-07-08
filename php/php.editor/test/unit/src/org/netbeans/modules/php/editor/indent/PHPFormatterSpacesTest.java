@@ -1394,4 +1394,10 @@ public class PHPFormatterSpacesTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/spaces/issue268541_05.php", options);
     }
 
+    // PHP 7.4
+    public void testSpacesBeforeArrowFunctionDeclLeftBrace01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_METHOD_DECL_PAREN, true);
+        reformatFileContents("testfiles/formatting/spaces/spaceBeforeArrowFunctionParen01.php", options);
+    }
 }

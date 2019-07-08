@@ -1,0 +1,23 @@
+Code completion result for source line:
+$fn = fn(int $test) => $af->getNumber() + $| + $this->getNumber();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   ? $fn                           [PUBLIC]   arrowFunctionsInMethodWithError.php
+VARIABLE   ArrowFunctions $af              [PUBLIC]   arrowFunctionsInMethodWithError.php
+VARIABLE   int $number                     [PUBLIC]   arrowFunctionsInMethodWithError.php
+VARIABLE   int $test                       [PUBLIC]   arrowFunctionsInMethodWithError.php
+KEYWORD    ArrowFunctions $this->                     null
+------------------------------------
+VARIABLE   $GLOBALS                                   PHP Platform
+VARIABLE   $HTTP_RAW_POST_DATA                        PHP Platform
+VARIABLE   $_COOKIE                                   PHP Platform
+VARIABLE   $_ENV                                      PHP Platform
+VARIABLE   $_FILES                                    PHP Platform
+VARIABLE   $_GET                                      PHP Platform
+VARIABLE   $_POST                                     PHP Platform
+VARIABLE   $_REQUEST                                  PHP Platform
+VARIABLE   $_SERVER                                   PHP Platform
+VARIABLE   $_SESSION                                  PHP Platform
+VARIABLE   $argc                                      PHP Platform
+VARIABLE   $argv                                      PHP Platform
+VARIABLE   $http_response_header                      PHP Platform
+VARIABLE   $php_errormsg                              PHP Platform

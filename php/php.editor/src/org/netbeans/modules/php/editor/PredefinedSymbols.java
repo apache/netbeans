@@ -52,55 +52,57 @@ public final class PredefinedSymbols {
 
     public static final List<String> SERVER_ENTRY_CONSTANTS =
             Collections.unmodifiableList(Arrays.asList(new String[]{
-                "PHP_SELF",
-                "GATEWAY_INTERFACE",
-                "SERVER_ADDR",
-                "SERVER_NAME",
-                "SERVER_SOFTWARE",
-                "SERVER_PROTOCOL",
-                "REQUEST_METHOD",
-                "QUERY_STRING",
-                "DOCUMENT_ROOT",
-                "HTTP_ACCEPT",
-                "HTTP_ACCEPT_CHARSET",
-                "HTTP_ACCEPT_ENCODING",
-                "HTTP_ACCEPT_LANGUAGE",
-                "HTTP_CONNECTION",
-                "HTTP_HOST",
-                "HTTP_REFERER",
-                "HTTP_USER_AGENT",
-                "HTTPS",
-                "REMOTE_ADDR",
-                "REMOTE_HOST",
-                "REMOTE_PORT",
-                "SCRIPT_FILENAME",
-                "SERVER_ADMIN",
-                "SERVER_PORT",
-                "SERVER_SIGNATURE",
-                "PATH_TRANSLATED",
-                "SCRIPT_NAME",
-                "REQUEST_URI",
-                "PHP_AUTH_DIGEST",
-                "PHP_AUTH_USER",
-                "PHP_AUTH_PW",
-                "AUTH_TYPE"
+                "PHP_SELF", // NOI18N
+                "GATEWAY_INTERFACE", // NOI18N
+                "SERVER_ADDR", // NOI18N
+                "SERVER_NAME", // NOI18N
+                "SERVER_SOFTWARE", // NOI18N
+                "SERVER_PROTOCOL", // NOI18N
+                "REQUEST_METHOD", // NOI18N
+                "QUERY_STRING", // NOI18N
+                "DOCUMENT_ROOT", // NOI18N
+                "HTTP_ACCEPT", // NOI18N
+                "HTTP_ACCEPT_CHARSET", // NOI18N
+                "HTTP_ACCEPT_ENCODING", // NOI18N
+                "HTTP_ACCEPT_LANGUAGE", // NOI18N
+                "HTTP_CONNECTION", // NOI18N
+                "HTTP_HOST", // NOI18N
+                "HTTP_REFERER", // NOI18N
+                "HTTP_USER_AGENT", // NOI18N
+                "HTTPS", // NOI18N
+                "REMOTE_ADDR", // NOI18N
+                "REMOTE_HOST", // NOI18N
+                "REMOTE_PORT", // NOI18N
+                "SCRIPT_FILENAME", // NOI18N
+                "SERVER_ADMIN", // NOI18N
+                "SERVER_PORT", // NOI18N
+                "SERVER_SIGNATURE", // NOI18N
+                "PATH_TRANSLATED", // NOI18N
+                "SCRIPT_NAME", // NOI18N
+                "REQUEST_URI", // NOI18N
+                "PHP_AUTH_DIGEST", // NOI18N
+                "PHP_AUTH_USER", // NOI18N
+                "PHP_AUTH_PW", // NOI18N
+                "AUTH_TYPE" // NOI18N
             }));
 
 
     public static final Set<String> MAGIC_METHODS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(new String[]{
-                "__callStatic",
-                "__set_state",
-                "__call",
-                "__clone",
-                "__construct",
-                "__destruct",
-                "__get",
-                "__set",
-                "__isset",
-                "__unset",
-                "__sleep",
-                "__wakeup",
-                "__toString"
+                "__callStatic", // NOI18N
+                "__set_state", // NOI18N
+                "__call", // NOI18N
+                "__clone", // NOI18N
+                "__construct", // NOI18N
+                "__destruct", // NOI18N
+                "__get", // NOI18N
+                "__set", // NOI18N
+                "__isset", // NOI18N
+                "__unset", // NOI18N
+                "__sleep", // NOI18N
+                "__wakeup", // NOI18N
+                "__toString", // NOI18N
+                "__serialize", // NOI18N PHP 7.4
+                "__unserialize", // NOI18N PHP 7.4
             })));
 
     public static enum VariableKind {

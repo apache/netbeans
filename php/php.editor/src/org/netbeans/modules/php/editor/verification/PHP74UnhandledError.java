@@ -28,6 +28,7 @@ import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Scalar;
@@ -81,6 +82,15 @@ public final class PHP74UnhandledError extends UnhandledErrorRule {
 
         public Collection<VerificationError> getErrors() {
             return Collections.unmodifiableCollection(errors);
+        }
+
+        @Override
+        public void visit(ArrowFunctionDeclaration node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            checkArrowFunction(node);
+            super.visit(node);
         }
 
         @Override
@@ -144,6 +154,10 @@ public final class PHP74UnhandledError extends UnhandledErrorRule {
                     createError(node);
                 }
             }
+        }
+
+        private void checkArrowFunction(ArrowFunctionDeclaration node) {
+            createError(node);
         }
 
         private void createError(ASTNode node) {

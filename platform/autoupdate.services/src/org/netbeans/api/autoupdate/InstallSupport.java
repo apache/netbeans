@@ -69,6 +69,7 @@ public final class InstallSupport {
      * @throws org.netbeans.api.autoupdate.OperationException
      * @deprecated Use {@link #doDownload(ProgressHandle, Boolean, boolean)} instead.
      */
+    @Deprecated
     public Validator doDownload(ProgressHandle progress/*or null*/, boolean isGlobal) throws OperationException {
         if (impl.doDownload (progress, isGlobal ? Boolean.TRUE : null, false)) {
             return new Validator ();

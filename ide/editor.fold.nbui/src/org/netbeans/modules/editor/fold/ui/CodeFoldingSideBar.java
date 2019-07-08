@@ -107,14 +107,17 @@ public final class CodeFoldingSideBar extends JComponent implements Accessible {
     /** This field should be treated as final. Subclasses are forbidden to change it. 
      * @deprecated Without any replacement.
      */
+    @Deprecated
     protected Color backColor;
     /** This field should be treated as final. Subclasses are forbidden to change it. 
      * @deprecated Without any replacement.
      */
+    @Deprecated
     protected Color foreColor;
     /** This field should be treated as final. Subclasses are forbidden to change it. 
      * @deprecated Without any replacement.
      */
+    @Deprecated
     protected Font font;
     
     /** This field should be treated as final. Subclasses are forbidden to change it. */
@@ -372,6 +375,7 @@ public final class CodeFoldingSideBar extends JComponent implements Accessible {
      * @return The background color used for painting this component.
      * @deprecated Without any replacement.
      */
+    @Deprecated
     protected Color getBackColor() {
         if (backColor == null) {
             updateColors();
@@ -388,6 +392,7 @@ public final class CodeFoldingSideBar extends JComponent implements Accessible {
      * @return The foreground color used for painting this component.
      * @deprecated Without any replacement.
      */
+    @Deprecated
     protected Color getForeColor() {
         if (foreColor == null) {
             updateColors();
@@ -400,6 +405,7 @@ public final class CodeFoldingSideBar extends JComponent implements Accessible {
      * @return The font used for painting this component.
      * @deprecated Without any replacement.
      */
+    @Deprecated
     protected Font getColoringFont() {
         if (font == null) {
             updateColors();

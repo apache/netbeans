@@ -40,6 +40,7 @@ public final class WebModuleFactory {
      * @return an instance of a API web module.
      * @deprecated use {@link #createWebModule(org.netbeans.modules.web.spi.webmodule.WebModuleImplementation2)}
      */
+    @Deprecated
     public static WebModule createWebModule(WebModuleImplementation spiWebmodule) {
         return WebModuleAccessor.getDefault().createWebModule (spiWebmodule);
     }

@@ -41,6 +41,7 @@ import javax.swing.event.*;
  * @deprecated Use {@link org.openide.util.WeakListeners} class.
  * @author Jaroslav Tulach
  */
+@Deprecated
 public abstract class WeakListener implements java.util.EventListener {
     /** weak reference to listener */
     private Reference ref;
@@ -204,6 +205,7 @@ public abstract class WeakListener implements java.util.EventListener {
      * @return a NodeListener delegating to <CODE>l</CODE>.
      * @deprecated Use {@link org.openide.nodes.NodeOp#weakNodeListener} or {@link org.openide.util.WeakListeners#create}
      */
+    @Deprecated
     public static NodeListener node(NodeListener l, Object source) {
         WeakListener.Node wl = new WeakListener.Node(l);
         wl.setSource(source);
@@ -219,6 +221,7 @@ public abstract class WeakListener implements java.util.EventListener {
      * @return a PropertyChangeListener delegating to <CODE>l</CODE>.
      * @deprecated Use {@link org.openide.util.WeakListeners#propertyChange}
      */
+    @Deprecated
     public static PropertyChangeListener propertyChange(PropertyChangeListener l, Object source) {
         WeakListener.PropertyChange wl = new WeakListener.PropertyChange(l);
         wl.setSource(source);
@@ -234,6 +237,7 @@ public abstract class WeakListener implements java.util.EventListener {
      * @return a VetoableChangeListener delegating to <CODE>l</CODE>.
      * @deprecated Use {@link org.openide.util.WeakListeners#vetoableChange}
      */
+    @Deprecated
     public static VetoableChangeListener vetoableChange(VetoableChangeListener l, Object source) {
         WeakListener.VetoableChange wl = new WeakListener.VetoableChange(l);
         wl.setSource(source);
@@ -249,6 +253,7 @@ public abstract class WeakListener implements java.util.EventListener {
      * @return a FileChangeListener delegating to <CODE>l</CODE>.
      * @deprecated Use {@link FileUtil#weakFileChangeListener} or {@link org.openide.util.WeakListeners#create}
      */
+    @Deprecated
     public static FileChangeListener fileChange(FileChangeListener l, Object source) {
         WeakListener.FileChange wl = new WeakListener.FileChange(l);
         wl.setSource(source);
@@ -264,6 +269,7 @@ public abstract class WeakListener implements java.util.EventListener {
      * @return a FileStatusListener delegating to <CODE>l</CODE>.
      * @deprecated Use {@link FileUtil#weakFileStatusListener} or {@link org.openide.util.WeakListeners#create}
      */
+    @Deprecated
     public static FileStatusListener fileStatus(FileStatusListener l, Object source) {
         WeakListener.FileStatus wl = new WeakListener.FileStatus(l);
         wl.setSource(source);
@@ -293,6 +299,7 @@ public abstract class WeakListener implements java.util.EventListener {
      * @return a DocumentListener delegating to <CODE>l</CODE>.
      * @deprecated Use {@link org.openide.util.WeakListeners#document}
      */
+    @Deprecated
     public static DocumentListener document(DocumentListener l, Object source) {
         WeakListener.Document wl = new WeakListener.Document(l);
         wl.setSource(source);
@@ -308,6 +315,7 @@ public abstract class WeakListener implements java.util.EventListener {
      * @return a ChangeListener delegating to <CODE>l</CODE>.
      * @deprecated Use {@link org.openide.util.WeakListeners#change}
      */
+    @Deprecated
     public static ChangeListener change(ChangeListener l, Object source) {
         WeakListener.Change wl = new WeakListener.Change(l);
         wl.setSource(source);
@@ -323,6 +331,7 @@ public abstract class WeakListener implements java.util.EventListener {
      * @return a FocusListener delegating to <CODE>l</CODE>.
      * @deprecated Use {@link org.openide.util.WeakListeners#create}
      */
+    @Deprecated
     public static FocusListener focus(FocusListener l, Object source) {
         WeakListener.Focus wl = new WeakListener.Focus(l);
         wl.setSource(source);
@@ -343,6 +352,7 @@ public abstract class WeakListener implements java.util.EventListener {
      * calls to <CODE>l</CODE>.
      * @deprecated Use {@link org.openide.util.WeakListeners#create}
      */
+    @Deprecated
     public static EventListener create(Class lType, EventListener l, Object source) {
         ProxyListener pl = new ProxyListener(lType, l);
         pl.setSource(source);
@@ -353,6 +363,7 @@ public abstract class WeakListener implements java.util.EventListener {
     /** Weak property change listener
     * @deprecated use appropriate method instead
     */
+    @Deprecated
     public static class PropertyChange extends WeakListener implements PropertyChangeListener {
         /** Constructor.
         * @param l listener to delegate to
@@ -393,6 +404,7 @@ public abstract class WeakListener implements java.util.EventListener {
     /** Weak vetoable change listener
     * @deprecated use appropriate method instead
     */
+    @Deprecated
     public static class VetoableChange extends WeakListener implements VetoableChangeListener {
         /** Constructor.
         * @param l listener to delegate to
@@ -426,6 +438,7 @@ public abstract class WeakListener implements java.util.EventListener {
     /** Weak file change listener.
     * @deprecated use appropriate method instead
     */
+    @Deprecated
     public static class FileChange extends WeakListener implements FileChangeListener {
         /** Constructor.
         * @param l listener to delegate to
@@ -520,6 +533,7 @@ public abstract class WeakListener implements java.util.EventListener {
     /** Weak file status listener.
     * @deprecated use appropriate method instead
     */
+    @Deprecated
     public static class FileStatus extends WeakListener implements FileStatusListener {
         /** Constructor.
         */
@@ -550,6 +564,7 @@ public abstract class WeakListener implements java.util.EventListener {
     /** Weak file system pool listener.
     * @deprecated use appropriate method instead
     */
+    @Deprecated
     public static class Repository extends WeakListener implements RepositoryListener {
         /** Constructor.
         * @param l listener to delegate to
@@ -603,6 +618,7 @@ public abstract class WeakListener implements java.util.EventListener {
     * can be happily unfinaled if desired.
     * @deprecated use appropriate method instead
     */
+    @Deprecated
     public static final class Document extends WeakListener implements DocumentListener {
         /** Constructor.
         * @param l listener to delegate to
@@ -673,6 +689,7 @@ public abstract class WeakListener implements java.util.EventListener {
     * can be happily unfinaled if desired.
     * @deprecated use appropriate method instead
     */
+    @Deprecated
     public static final class Change extends WeakListener implements ChangeListener {
         /** Constructor.
         * @param l listener to delegate to
@@ -706,6 +723,7 @@ public abstract class WeakListener implements java.util.EventListener {
     * can be happily unfinaled if desired.
     * @deprecated use appropriate method instead
     */
+    @Deprecated
     public static final class Node extends WeakListener.PropertyChange implements NodeListener {
         /** Constructor.
         * @param l listener to delegate to
@@ -768,6 +786,7 @@ public abstract class WeakListener implements java.util.EventListener {
     * can be happily unfinaled if desired.
     * @deprecated use appropriate method instead
     */
+    @Deprecated
     public static final class Focus extends WeakListener implements FocusListener {
         /** Constructor.
         * @param l listener to delegate to

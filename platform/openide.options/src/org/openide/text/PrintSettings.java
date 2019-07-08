@@ -94,6 +94,7 @@ public final class PrintSettings extends ContextSystemOption {
     }
 
     /** @deprecated Use {@link #getPageFormat(PrinterJob)} instead. */
+    @Deprecated
     public PageFormat getPageFormat() {
         return getPageFormat(PrinterJob.getPrinterJob());
     }

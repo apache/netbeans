@@ -53,6 +53,7 @@ import javax.swing.Timer;
 *   for details
 * @author Jaroslav Tulach
 */
+@Deprecated
 public class ExplorerPanel extends TopComponent implements ExplorerManager.Provider {
     /** serial version UID */
     static final long serialVersionUID = 5522528786650751459L;

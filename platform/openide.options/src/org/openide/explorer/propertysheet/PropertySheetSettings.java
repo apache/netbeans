@@ -37,6 +37,7 @@ import javax.swing.UIManager;
 * @author Jan Jancura, Ian Formanek
 * @version 0.11, May 16, 1998
 */
+@Deprecated
 public class PropertySheetSettings extends SystemOption {
     /** generated Serialized Version UID */
     static final long serialVersionUID = -3820718202747868830L;
@@ -69,17 +70,20 @@ public class PropertySheetSettings extends SystemOption {
     * @deprecated Relic of the original property sheet implementation.  Display of properties
     * is handled by the look and feel.
     */
+    @Deprecated
     public void setPropertyPaintingStyle(int style) {
     }
 
     /*
     * Returns mode of showing properties.
-    * @deprecated Relic of the original property sheet implementation.  Display of properties
-    * is handled by the look and feel.
     *
     * @return <CODE>int</CODE> mode of showing properties.
     * @see #setExpert
+    *
+    * @deprecated Relic of the original property sheet implementation.  Display of properties
+    * is handled by the look and feel.
     */
+    @Deprecated
     public int getPropertyPaintingStyle() {
         return -1;
     }
@@ -106,6 +110,7 @@ public class PropertySheetSettings extends SystemOption {
     * @deprecated Relic of the original property sheet implementation.  Display of properties
     * is handled by the look and feel.
     */
+    @Deprecated
     public void setPlastic(boolean plastic) {
     }
 
@@ -114,6 +119,7 @@ public class PropertySheetSettings extends SystemOption {
     * @deprecated Relic of the original property sheet implementation.  Display of properties
     * is handled by the look and feel.
     */
+    @Deprecated
     public boolean getPlastic() {
         return false;
     }
@@ -123,6 +129,7 @@ public class PropertySheetSettings extends SystemOption {
     * @deprecated Relic of the original property sheet implementation.  Display of properties
     * is handled by the look and feel.
     */
+    @Deprecated
     public void setValueColor(Color color) {
     }
 
@@ -138,6 +145,7 @@ public class PropertySheetSettings extends SystemOption {
     * @deprecated Relic of the original property sheet implementation.  Display of properties
     * is handled by the look and feel.
     */
+    @Deprecated
     public void setDisabledPropertyColor(Color color) {
     }
 
@@ -146,6 +154,7 @@ public class PropertySheetSettings extends SystemOption {
     * @deprecated Relic of the original property sheet implementation.  Display of properties
     * is handled by the look and feel.
     */
+    @Deprecated
     public Color getDisabledPropertyColor() {
         return null;
     }
@@ -161,7 +170,9 @@ public class PropertySheetSettings extends SystemOption {
     * Getter method for visibleWritableOnly property. If is true only writable
     * properties are showen in propertysheet.
     * @deprecated Relic of the original property sheet implementation.  The new propertysheet
-     * implementation does not support this kind of filtering of properties.    */
+    * implementation does not support this kind of filtering of properties.
+    */
+    @Deprecated
     public boolean getDisplayWritableOnly() {
         return false;
     }

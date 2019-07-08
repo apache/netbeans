@@ -50,6 +50,7 @@ public abstract class ContextSystemOption extends SystemOption implements BeanCo
     /** Reference to the bean context describing the structure of this option tree.
      * @deprecated To obtain bean context use {@link #getBeanContextProxy}.
      */
+    @Deprecated
     protected BeanContext beanContext;
 
     /** Default constructor. */

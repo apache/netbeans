@@ -162,6 +162,7 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
      * @return the image data
      * @deprecated use getImage() instead
      */
+    @Deprecated
     private byte[] getImageData() {
         try {
             FileObject fo = getPrimaryFile();

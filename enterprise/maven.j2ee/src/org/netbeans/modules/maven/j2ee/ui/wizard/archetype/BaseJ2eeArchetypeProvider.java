@@ -66,8 +66,8 @@ abstract class BaseJ2eeArchetypeProvider {
         map.put(Profile.JAVA_EE_6_WEB, archetype);
         map.put(Profile.JAVA_EE_7_FULL, archetype);
         map.put(Profile.JAVA_EE_7_WEB, archetype);
-        Archetype javaEE8Archetype = createArchetype("io.github.juneau001","1.2", "webapp-javaee8");
-        
+        Archetype javaEE8Archetype = createArchetype("io.github.juneau001","1.3", "webapp-javaee8");
+
         map.put(Profile.JAVA_EE_8_FULL, javaEE8Archetype);
         map.put(Profile.JAVA_EE_8_WEB, javaEE8Archetype);
     }

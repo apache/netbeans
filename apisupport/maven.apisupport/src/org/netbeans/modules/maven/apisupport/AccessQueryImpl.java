@@ -32,7 +32,6 @@ import org.netbeans.api.annotations.common.SuppressWarnings;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.codehaus.plexus.util.IOUtil;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.maven.api.PluginPropertyUtils;
 import org.netbeans.spi.java.queries.AccessibilityQueryImplementation;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.filesystems.FileObject;
@@ -160,8 +159,7 @@ public class AccessQueryImpl implements AccessibilityQueryImplementation {
 
     private static List<Pattern> loadPublicPackagesPatterns(Project project) {
         List<Pattern> toRet = new ArrayList<Pattern>();
-        String[] params = PluginPropertyUtils.getPluginPropertyList(project, 
-                MavenNbModuleImpl.GROUPID_MOJO, MavenNbModuleImpl.NBM_PLUGIN, //NOI18N
+        String[] params = PluginBackwardPropertyUtils.getPluginPropertyList(project,
                 "publicPackages", "publicPackage", "manifest"); //NOI18N
         if (params != null) {
             toRet = prepareMavenPublicPackagesPatterns(params);

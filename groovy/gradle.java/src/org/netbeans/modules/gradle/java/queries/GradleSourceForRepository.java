@@ -20,21 +20,15 @@
 package org.netbeans.modules.gradle.java.queries;
 
 import org.netbeans.modules.gradle.api.GradleProjects;
-import org.netbeans.modules.gradle.api.NbGradleProject;
-import org.netbeans.modules.gradle.java.api.GradleJavaProject;
-import org.netbeans.modules.gradle.java.api.GradleJavaSourceSet;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Set;
 import java.util.WeakHashMap;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.queries.JavadocForBinaryQuery;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
-import org.netbeans.api.project.FileOwnerQuery;
-import org.netbeans.api.project.Project;
 import org.netbeans.spi.java.queries.JavadocForBinaryQueryImplementation;
 import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation;
 import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation2;
@@ -49,28 +43,22 @@ import org.openide.util.lookup.ServiceProviders;
  * @author Laszlo Kishalmi
  */
 @ServiceProviders({
-    @ServiceProvider(service = SourceForBinaryQueryImplementation.class, position = 67),
-    @ServiceProvider(service = SourceForBinaryQueryImplementation2.class, position = 67),
-    @ServiceProvider(service = JavadocForBinaryQueryImplementation.class, position = 67)
+    @ServiceProvider(service = SourceForBinaryQueryImplementation.class, position = 110),
+    @ServiceProvider(service = SourceForBinaryQueryImplementation2.class, position = 110),
+    @ServiceProvider(service = JavadocForBinaryQueryImplementation.class, position = 110)
 })
 public class GradleSourceForRepository implements SourceForBinaryQueryImplementation2, JavadocForBinaryQueryImplementation {
 
-    private final Map<URL, SrcRes> srcCache = Collections.synchronizedMap(new WeakHashMap<URL, SrcRes>());
-    private final Map<URL, DocRes> docCache = Collections.synchronizedMap(new WeakHashMap<URL, DocRes>());
+    private final Map<URL, SrcRes> srcCache = Collections.synchronizedMap(new WeakHashMap<>());
+    private final Map<URL, DocRes> docCache = Collections.synchronizedMap(new WeakHashMap<>());
 
     @Override
     public Result findSourceRoots2(URL binaryRoot) {
         SrcRes ret = srcCache.get(binaryRoot);
         if ((ret == null) && "jar".equals(binaryRoot.getProtocol())) {
             try {
-                File sources = null;
-
                 File jar = FileUtil.normalizeFile(Utilities.toFile(FileUtil.getArchiveFile(binaryRoot).toURI()));
-                Project owner = FileOwnerQuery.getOwner(Utilities.toURI(jar));
-                NbGradleProject project = owner != null ? owner.getLookup().lookup(NbGradleProject.class) : null;
-                if (project == null) {
-                    sources = GradleProjects.getSources(jar);
-                }
+                File sources = GradleProjects.getSources(jar);
                 if (sources != null) {
                     ret = new SrcRes(sources);
                     srcCache.put(binaryRoot, ret);

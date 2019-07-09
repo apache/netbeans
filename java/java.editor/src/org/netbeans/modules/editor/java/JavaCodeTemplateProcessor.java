@@ -94,6 +94,7 @@ public class JavaCodeTemplateProcessor implements CodeTemplateProcessor {
     
     private JavaCodeTemplateProcessor(CodeTemplateInsertRequest request) {
         this.request = request;
+        boolean needsParsing = false;
         for (CodeTemplateParameter param : request.getMasterParameters()) {
             for (String hint : param.getHints().keySet()) {
                 if (INSTANCE_OF.equals(hint)
@@ -106,8 +107,7 @@ public class JavaCodeTemplateProcessor implements CodeTemplateProcessor {
                 }
             }
             if (CodeTemplateParameter.SELECTION_PARAMETER_NAME.equals(param.getName())) {
-                initParsing(false);
-                return;
+                needsParsing = true;
             }
             for (String hint : param.getHints().keySet()) {
                 if (UNCAUGHT_EXCEPTION_CATCH_STATEMENTS.equals(hint)
@@ -123,10 +123,12 @@ public class JavaCodeTemplateProcessor implements CodeTemplateProcessor {
                         || CURRENT_METHOD_NAME.equals(hint)
                         || ITERABLE_ELEMENT_TYPE.equals(hint)
                         || UNCAUGHT_EXCEPTION_TYPE.equals(hint)) {
-                    initParsing(false);
-                    return;
+                    needsParsing = true;
                 }
             }
+        }
+        if (needsParsing) {
+            initParsing(false);
         }
     }
     

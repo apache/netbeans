@@ -32,6 +32,9 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'bck2brwsr'
 
+targetCompatibility = '1.8'
+sourceCompatibility = '1.8'
+
 mainClassName = '${packageBase}.BrowserMain'
 
 <#noparse>

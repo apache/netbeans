@@ -86,6 +86,8 @@ public class TextDocumentSyncServerCapabilityHandler {
                 if (server == null)
                     return ; //ignore
 
+                doc.putProperty(HyperlinkProviderImpl.class, Boolean.TRUE);
+
                 String uri = Utils.toURI(file);
                 String[] text = new String[1];
 

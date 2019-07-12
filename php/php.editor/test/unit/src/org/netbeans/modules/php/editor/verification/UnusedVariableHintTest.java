@@ -30,6 +30,11 @@ public class UnusedVariableHintTest extends PHPHintsTestBase {
         super(testName);
     }
 
+    @Override
+    protected String getTestDirectory() {
+        return TEST_DIRECTORY + "UnusedVariableHint/";
+    }
+
     public void testWithParams() throws Exception {
         checkHints(new UnusedVariableHintStub(true), "testUnusedVariableHint.php");
     }

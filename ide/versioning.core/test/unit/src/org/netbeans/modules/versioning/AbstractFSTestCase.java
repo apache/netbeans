@@ -96,7 +96,7 @@ public class AbstractFSTestCase extends NbTestCase {
         return VCSFileProxy.createFileProxy(fo);
     }
 
-    protected Class getVCS() {
+    protected Class<?> getVCS() {
         return TestVCS.class;
     }    
 }

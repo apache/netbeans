@@ -41,7 +41,7 @@ public class SelectorI extends PlainElementI implements Selector {
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return Selector.class;
     }
 }

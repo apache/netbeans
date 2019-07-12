@@ -54,7 +54,7 @@ public class AllImpl extends SchemaComponentImpl implements All {
 	visitor.visit(this);
     }
     
-    protected Class getAttributeType(SchemaAttributes attr) {
+    protected Class<?> getAttributeType(SchemaAttributes attr) {
 	switch(attr) {
 	    case MIN_OCCURS:
 		return Occur.ZeroOne.class;

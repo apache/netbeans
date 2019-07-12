@@ -114,7 +114,7 @@ public class GlobalElementImpl extends ElementImpl implements GlobalElement {
         visitor.visit(this);
     }
  
-    protected Class getAttributeMemberType(SchemaAttributes attr) {
+    protected Class<?> getAttributeMemberType(SchemaAttributes attr) {
         switch(attr) {
             case FINAL:
                 return Final.class;

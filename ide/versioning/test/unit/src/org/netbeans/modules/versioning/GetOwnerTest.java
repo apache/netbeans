@@ -96,7 +96,7 @@ public class GetOwnerTest extends NbTestCase {
         testGetOwnerKnowFileType(f, false);                         
     }
 
-    protected Class getVCS() {
+    protected Class<?> getVCS() {
         return TestVCS.class;
     }
     

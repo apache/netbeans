@@ -65,7 +65,7 @@ public class NamespacesI extends ModelElement implements Namespaces {
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return Namespaces.class;
     }
 }

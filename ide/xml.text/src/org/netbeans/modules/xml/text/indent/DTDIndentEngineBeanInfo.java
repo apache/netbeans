@@ -61,7 +61,7 @@ public class DTDIndentEngineBeanInfo extends FormatterIndentEngineBeanInfo {
 
     /**
      */
-    protected Class getBeanClass () {
+    protected Class<?> getBeanClass () {
         return DTDIndentEngine.class;
     }
 

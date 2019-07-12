@@ -85,7 +85,7 @@ public class MediaBodyItemI extends ModelElement implements MediaBodyItem {
     }
     
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return MediaBodyItem.class;
     }
     

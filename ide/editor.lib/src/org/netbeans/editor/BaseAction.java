@@ -222,7 +222,7 @@ public abstract class BaseAction extends TextAction {
      * <br/>
      * By default this method returns null.
      */
-    protected Class getShortDescriptionBundleClass() {
+    protected Class<?> getShortDescriptionBundleClass() {
         return null;
     }
     

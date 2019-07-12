@@ -41,7 +41,7 @@ public class NamespacePrefixNameI extends PlainElementI implements NamespacePref
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return NamespacePrefixName.class;
     }
 }

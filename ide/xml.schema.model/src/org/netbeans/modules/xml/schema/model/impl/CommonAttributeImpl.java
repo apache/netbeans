@@ -42,7 +42,7 @@ public abstract class CommonAttributeImpl extends NamedImpl
 	super(model, el);
     }
  
-    protected Class getAttributeType(SchemaAttributes attr) {
+    protected Class<?> getAttributeType(SchemaAttributes attr) {
         switch(attr) {
             case FIXED:
                 return String.class;

@@ -36,7 +36,7 @@ public class CollectXMLAction extends CollectSystemAction {
      * Getter for class
      */
     @Override
-    protected Class getActionLookClass () {
+    protected Class<?> getActionLookClass () {
         return XMLAction.class;
     }
 

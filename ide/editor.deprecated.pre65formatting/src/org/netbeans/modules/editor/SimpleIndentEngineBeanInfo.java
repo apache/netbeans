@@ -45,7 +45,7 @@ public class SimpleIndentEngineBeanInfo extends FormatterIndentEngineBeanInfo {
         return beanDescriptor;
     }
 
-    protected Class getBeanClass() {
+    protected Class<?> getBeanClass() {
         return SimpleIndentEngine.class;
     }
 

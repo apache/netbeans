@@ -80,7 +80,7 @@ public class ImportItemI extends ModelElement implements ImportItem {
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return ImportItem.class;
     }
 }

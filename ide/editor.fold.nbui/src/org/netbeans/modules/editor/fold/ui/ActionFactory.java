@@ -307,7 +307,7 @@ final class ActionFactory {
         }
 
         @Override
-        protected Class getShortDescriptionBundleClass() {
+        protected Class<?> getShortDescriptionBundleClass() {
             return ActionFactory.class;
         }
 

@@ -45,7 +45,7 @@ public abstract class ElementImpl extends NamedImpl implements Element {
         super(model, el);
     }
     
-    protected Class getAttributeMemberType(SchemaAttributes attr) {
+    protected Class<?> getAttributeMemberType(SchemaAttributes attr) {
         switch(attr) {
             case BLOCK:
                 return Block.class;

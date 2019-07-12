@@ -55,7 +55,7 @@ public class MediaFeatureValueI extends ModelElement implements MediaFeatureValu
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return MediaFeatureValue.class;
     }
     

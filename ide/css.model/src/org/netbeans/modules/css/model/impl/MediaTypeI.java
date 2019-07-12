@@ -41,7 +41,7 @@ class MediaTypeI extends PlainElementI implements MediaType {
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return MediaType.class;
     }
 }

@@ -66,7 +66,7 @@ public abstract class CommonLength extends SchemaComponentImpl implements Length
         setAttribute(FIXED_PROPERTY, SchemaAttributes.FIXED, isFixed);
     }
     
-    protected Class getAttributeType(SchemaAttributes attr) {
+    protected Class<?> getAttributeType(SchemaAttributes attr) {
         switch(attr) {
             case FIXED:
                 return String.class;

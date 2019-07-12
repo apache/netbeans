@@ -81,7 +81,7 @@ public class WhitespaceImpl extends SchemaComponentImpl implements Whitespace{
         visitor.visit(this);
     }
 
-    protected Class getAttributeType(SchemaAttributes attr) {
+    protected Class<?> getAttributeType(SchemaAttributes attr) {
         switch(attr) {
             case VALUE:
                 return Treatment.class;

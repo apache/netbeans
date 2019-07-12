@@ -151,7 +151,7 @@ public class DeclarationsI extends ModelElement implements Declarations {
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return Declarations.class;
     }
 }

@@ -44,7 +44,7 @@ public abstract class XMLGenerateAction extends CookieAction {
         return new Class[] { getOwnCookieClass() };
     }
 
-    protected Class getOwnCookieClass () {
+    protected Class<?> getOwnCookieClass () {
         return XMLGenerateCookie.class;
     }
     
@@ -93,7 +93,7 @@ public abstract class XMLGenerateAction extends CookieAction {
             return new HelpCtx (GenerateDTDAction.class);
         }
 
-        protected Class getOwnCookieClass () {
+        protected Class<?> getOwnCookieClass () {
             return GenerateDTDSupport.class;
         }
     } // end of inner class GenerateDTDAction
@@ -119,7 +119,7 @@ public abstract class XMLGenerateAction extends CookieAction {
    //         return new HelpCtx (GenerateDocumentHandlerAction.class);
    //     }
 
-   //     protected Class getOwnCookieClass () {
+   //     protected Class<?> getOwnCookieClass () {
    //         return SAXGeneratorSupport.class;
    //     }
   //  } // end of inner class GenerateDocumentHandlerAction
@@ -145,7 +145,7 @@ public abstract class XMLGenerateAction extends CookieAction {
    //         return new HelpCtx (GenerateDOMScannerAction.class);
   //      }
 
-  //      protected Class getOwnCookieClass () {
+  //      protected Class<?> getOwnCookieClass () {
   //          return GenerateDOMScannerSupport.class;
   //      }
   //  } // end of inner class GenerateDOMScannerAction

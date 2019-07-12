@@ -71,7 +71,7 @@ public class MozDocumentI extends ModelElement implements MozDocument {
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return MozDocument.class;
     }
 

@@ -72,7 +72,7 @@ public class MediaQueryI extends ModelElement implements MediaQuery {
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return MediaQuery.class;
     }
 

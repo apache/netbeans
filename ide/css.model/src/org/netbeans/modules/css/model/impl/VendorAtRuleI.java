@@ -78,7 +78,7 @@ public class VendorAtRuleI extends ModelElement implements VendorAtRule {
     }
     
       @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return VendorAtRule.class;
     }
     

@@ -42,7 +42,7 @@ public class CharSetValueI extends PlainElementI implements CharSetValue {
 
     
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return CharSetValue.class;
     }
     

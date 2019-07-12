@@ -69,7 +69,7 @@ public class SelectorsGroupI extends ModelElement implements SelectorsGroup {
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return SelectorsGroup.class;
     }
 }

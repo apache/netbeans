@@ -41,7 +41,7 @@ class MediaFeatureI extends PlainElementI implements MediaFeature {
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return MediaFeature.class;
     }
 }

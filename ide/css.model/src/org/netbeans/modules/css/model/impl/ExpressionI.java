@@ -41,7 +41,7 @@ public class ExpressionI extends PlainElementI implements Expression {
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return Expression.class;
     }
 }

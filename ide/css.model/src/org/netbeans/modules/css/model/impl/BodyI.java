@@ -202,7 +202,7 @@ public class BodyI extends ModelElement implements Body {
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return Body.class;
     }
 

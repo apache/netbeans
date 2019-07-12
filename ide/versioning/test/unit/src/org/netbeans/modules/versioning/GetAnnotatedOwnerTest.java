@@ -53,7 +53,7 @@ public class GetAnnotatedOwnerTest extends GetOwnerTest {
     }
     
     @Override
-    protected Class getVCS() {
+    protected Class<?> getVCS() {
         return TestAnnotatedVCS.class;
     }
     

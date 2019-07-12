@@ -112,7 +112,7 @@ public class PropertyDeclarationI extends ModelElement implements PropertyDeclar
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return PropertyDeclaration.class;
     }
 

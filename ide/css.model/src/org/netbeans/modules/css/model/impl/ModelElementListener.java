@@ -245,9 +245,9 @@ public interface ModelElementListener {
     public static class Support {
 
         private static void fireElementEvent(Element element, ModelElementListener listener, boolean add) {
-            Class clazz = element.getClass();
-            Class[] interfaces = clazz.getInterfaces();
-            for (Class in : interfaces) {
+            Class<?> clazz = element.getClass();
+            Class<?>[] interfaces = clazz.getInterfaces();
+            for (Class<?> in : interfaces) {
                 if (Element.class.isAssignableFrom(in)) {
                     try {
                         //the interface extends Element - so this is the one we are interested in

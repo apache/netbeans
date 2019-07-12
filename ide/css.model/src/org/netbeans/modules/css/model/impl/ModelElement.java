@@ -218,7 +218,7 @@ public abstract class ModelElement implements Element {
         fireElementChanged();
     }
 
-    protected abstract Class getModelClass();
+    protected abstract Class<?> getModelClass();
 
     protected final void initChildrenElements() {
         for (Node child : node.children()) {
@@ -226,7 +226,7 @@ public abstract class ModelElement implements Element {
         }
     }
 
-    protected void addEmptyElement(Class clazz) {
+    protected void addEmptyElement(Class<?> clazz) {
         CLASSELEMENTS.add(new ClassElement(clazz, null));
     }
 
@@ -234,10 +234,10 @@ public abstract class ModelElement implements Element {
         addElement(model.getElementFactory().createPlainElement(text));
     }
 
-    private Class getModelClass(Element element) {
+    private Class<?> getModelClass(Element element) {
         if (element instanceof ModelElement) {
             ModelElement melement = (ModelElement) element;
-            Class clazz = melement.getModelClass();
+            Class<?> clazz = melement.getModelClass();
             if (!clazz.isAssignableFrom(element.getClass())) {
                 throw new IllegalArgumentException(String.format("Element %s declares %s as its superinterface but it is not true!", element.getClass().getSimpleName(), clazz.getSimpleName()));
             }
@@ -249,7 +249,7 @@ public abstract class ModelElement implements Element {
 
     @Override
     public int addElement(Element e) {
-        Class clazz = getModelClass(e);
+        Class<?> clazz = getModelClass(e);
         CLASSELEMENTS.add(new ClassElement(clazz, e));
         fireElementAdded(e);
         return getElementsCount() - 1; //last element index
@@ -268,7 +268,7 @@ public abstract class ModelElement implements Element {
 
     @Override
     public Element setElementAt(int index, Element e) {
-        Class clazz = getModelClass(e);
+        Class<?> clazz = getModelClass(e);
         ClassElement ce = new ClassElement(clazz, e);
         ClassElement old = CLASSELEMENTS.set(index, ce);
         if (old != null && old.getElement() != null) {
@@ -311,7 +311,7 @@ public abstract class ModelElement implements Element {
 
     @Override
     public void insertElement(int index, Element element) {
-        Class clazz = getModelClass(element);
+        Class<?> clazz = getModelClass(element);
         CLASSELEMENTS.add(index, new ClassElement(clazz, element));
         fireElementAdded(element);
     }
@@ -328,7 +328,7 @@ public abstract class ModelElement implements Element {
         return -1;
     }
 
-    public int getElementIndex(Class elementClass) {
+    public int getElementIndex(Class<?> elementClass) {
         //XXX: fix the linear search :-(
         for (int i = 0; i < CLASSELEMENTS.size(); i++) {
             ClassElement ce = CLASSELEMENTS.get(i);
@@ -527,15 +527,15 @@ public abstract class ModelElement implements Element {
 
     private static class ClassElement {
 
-        private Class clazz;
+        private Class<?> clazz;
         private Element element;
 
-        public ClassElement(Class clazz, Element element) {
+        public ClassElement(Class<?> clazz, Element element) {
             this.clazz = clazz;
             this.element = element;
         }
 
-        public Class getClazz() {
+        public Class<?> getClazz() {
             return clazz;
         }
 

@@ -37,7 +37,7 @@ public class PrioI extends PlainElementI implements Prio {
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return Prio.class;
     }
 }

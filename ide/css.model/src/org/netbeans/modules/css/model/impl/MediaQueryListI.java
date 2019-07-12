@@ -65,7 +65,7 @@ public class MediaQueryListI extends ModelElement implements MediaQueryList {
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return MediaQueryList.class;
     }
 }

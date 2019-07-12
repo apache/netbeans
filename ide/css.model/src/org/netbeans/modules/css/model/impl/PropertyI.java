@@ -41,7 +41,7 @@ public class PropertyI extends PlainElementI implements Property {
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return Property.class;
     }
 }

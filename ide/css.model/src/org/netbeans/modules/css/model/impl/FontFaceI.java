@@ -72,7 +72,7 @@ public class FontFaceI extends ModelElement implements FontFace {
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return FontFace.class;
     }
 }

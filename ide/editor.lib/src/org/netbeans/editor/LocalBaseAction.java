@@ -45,7 +45,7 @@ abstract class LocalBaseAction extends BaseAction {
         super(name, updateMask);
     }
 
-    protected Class getShortDescriptionBundleClass() {
+    protected Class<?> getShortDescriptionBundleClass() {
         return BaseKit.class;
     }
 

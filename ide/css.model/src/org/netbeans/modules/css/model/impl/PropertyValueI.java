@@ -67,7 +67,7 @@ public class PropertyValueI extends ModelElement implements PropertyValue {
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return PropertyValue.class;
     }
 

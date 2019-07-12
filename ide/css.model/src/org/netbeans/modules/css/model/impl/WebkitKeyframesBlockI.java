@@ -63,7 +63,7 @@ public class WebkitKeyframesBlockI extends ModelElement implements WebkitKeyfram
 
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return WebkitKeyframesBlock.class;
     }
 

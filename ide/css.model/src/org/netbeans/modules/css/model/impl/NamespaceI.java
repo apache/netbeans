@@ -80,7 +80,7 @@ public class NamespaceI extends ModelElement implements Namespace {
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return Namespace.class;
     }
 }

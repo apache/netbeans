@@ -273,7 +273,7 @@ public abstract class LAState {
             System.arraycopy(laBytes, srcRawIndex, laBytes, dstRawIndex, len);
         }
 
-        protected Class addToGapStart(int lookahead, Object state) {
+        protected Class<?> addToGapStart(int lookahead, Object state) {
             if (lookahead <= Byte.MAX_VALUE) {
                 if (state == null) {
                     laBytes[gapStart] = (byte)lookahead;
@@ -344,7 +344,7 @@ public abstract class LAState {
             System.arraycopy(laStateShorts, srcRawIndex, laStateShorts, dstRawIndex, len);
         }
 
-        protected Class addToGapStart(int lookahead, Object state) {
+        protected Class<?> addToGapStart(int lookahead, Object state) {
             if (lookahead <= Byte.MAX_VALUE) {
                 int intState;
                 if (state == null) {
@@ -404,7 +404,7 @@ public abstract class LAState {
             System.arraycopy(states, srcRawIndex, states, dstRawIndex, len);
         }
 
-        protected Class addToGapStart(int lookahead, Object state) {
+        protected Class<?> addToGapStart(int lookahead, Object state) {
             lookaheads[gapStart] = lookahead;
             states[gapStart] = state;
             return null;

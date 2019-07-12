@@ -49,7 +49,7 @@ public class GlobalSimpleTypeImpl extends CommonSimpleTypeImpl implements Global
 		return GlobalSimpleType.class;
 	}
     
-    protected Class getAttributeMemberType(SchemaAttributes attribute) {
+    protected Class<?> getAttributeMemberType(SchemaAttributes attribute) {
         switch(attribute) {
             case FINAL:
                 return Final.class;

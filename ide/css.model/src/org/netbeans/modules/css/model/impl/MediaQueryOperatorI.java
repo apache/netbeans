@@ -41,7 +41,7 @@ class MediaQueryOperatorI extends PlainElementI implements MediaQueryOperator {
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return MediaQueryOperator.class;
     }
 }

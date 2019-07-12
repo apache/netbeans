@@ -151,7 +151,7 @@ public class RuleI extends ModelElement implements Rule {
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return Rule.class;
     }
 }

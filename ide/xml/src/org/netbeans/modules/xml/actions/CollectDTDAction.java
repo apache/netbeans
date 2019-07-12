@@ -37,7 +37,7 @@ public class CollectDTDAction extends CollectSystemAction {
      * Getter for action class
      */
     @Override
-    protected Class getActionLookClass () {
+    protected Class<?> getActionLookClass () {
         return DTDAction.class;
     }
 

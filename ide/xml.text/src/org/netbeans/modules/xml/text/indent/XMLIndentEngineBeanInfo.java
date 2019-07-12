@@ -61,7 +61,7 @@ public class XMLIndentEngineBeanInfo extends FormatterIndentEngineBeanInfo {
 
     /**
      */
-    protected Class getBeanClass () {
+    protected Class<?> getBeanClass () {
         return XMLIndentEngine.class;
     }
 

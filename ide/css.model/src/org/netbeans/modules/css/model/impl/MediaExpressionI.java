@@ -65,7 +65,7 @@ public class MediaExpressionI extends ModelElement implements MediaExpression {
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return MediaExpression.class;
     }
     

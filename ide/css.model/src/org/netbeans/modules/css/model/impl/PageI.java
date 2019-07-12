@@ -40,7 +40,7 @@ public class PageI extends PlainElementI implements Page {
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return Page.class;
     }
 }

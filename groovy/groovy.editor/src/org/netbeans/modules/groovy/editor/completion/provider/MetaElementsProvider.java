@@ -93,7 +93,7 @@ public final class MetaElementsProvider implements CompletionProvider {
     @Override
     public Map<FieldSignature, CompletionItem> getFields(CompletionContext context) {
         final Map<FieldSignature, CompletionItem> result = new HashMap<FieldSignature, CompletionItem>();
-        final Class clazz = loadClass(context);
+        final Class<?> clazz = loadClass(context);
         
         if (clazz != null) {
             final MetaClass metaClass = GroovySystem.getMetaClassRegistry().getMetaClass(clazz);

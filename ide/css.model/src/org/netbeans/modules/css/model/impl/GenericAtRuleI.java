@@ -41,7 +41,7 @@ public class GenericAtRuleI extends PlainElementI implements GenericAtRule {
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return GenericAtRule.class;
     }
     

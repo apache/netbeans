@@ -41,7 +41,7 @@ public class WebkitKeyframeSelectorsI extends PlainElementI implements WebkitKey
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return WebkitKeyframeSelectors.class;
     }
     

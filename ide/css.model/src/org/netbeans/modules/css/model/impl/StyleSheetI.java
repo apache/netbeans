@@ -115,7 +115,7 @@ public class StyleSheetI extends ModelElement implements StyleSheet {
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return StyleSheet.class;
     }
     

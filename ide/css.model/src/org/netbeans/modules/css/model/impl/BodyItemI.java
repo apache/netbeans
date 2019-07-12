@@ -73,8 +73,8 @@ public class BodyItemI extends ModelElement implements BodyItem {
         return elementListener;
     }
     
-      @Override
-    protected Class getModelClass() {
+    @Override
+    protected Class<?> getModelClass() {
         return BodyItem.class;
     }
     

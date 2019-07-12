@@ -35,7 +35,7 @@ public abstract class CommandsAccessor {
     static {
         // invokes static initializer of CommandFactory.class
         // that will assign value to the DEFAULT field above
-        Class c = CommandFactory.class;
+        Class<?> c = CommandFactory.class;
         try {
             Class.forName(c.getName(), true, c.getClassLoader());
         } catch (ClassNotFoundException e) {

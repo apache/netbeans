@@ -337,7 +337,7 @@ final class PropUtils {
         }
 
         String name = c.getName();
-        Class clazz = c.getClass();
+       Class<?> clazz = c.getClass();
         String classname = clazz.getName();
         int i = classname.lastIndexOf('.');
 

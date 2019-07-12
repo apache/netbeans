@@ -69,7 +69,7 @@ public class DeclarationI extends ModelElement implements Declaration {
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return Declaration.class;
     }
 }

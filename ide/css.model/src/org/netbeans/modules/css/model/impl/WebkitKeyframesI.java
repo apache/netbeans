@@ -65,7 +65,7 @@ public class WebkitKeyframesI extends ModelElement implements WebkitKeyframes {
 
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return WebkitKeyframes.class;
     }
 

@@ -230,7 +230,7 @@ public class InstantRenameAction extends BaseAction {
     }
 
     @Override
-    protected Class getShortDescriptionBundleClass() {
+    protected Class<?> getShortDescriptionBundleClass() {
         return InstantRenameAction.class;
     }
 

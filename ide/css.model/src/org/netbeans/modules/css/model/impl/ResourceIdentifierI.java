@@ -41,7 +41,7 @@ public class ResourceIdentifierI extends PlainElementI implements ResourceIdenti
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return ResourceIdentifier.class;
     }
 }

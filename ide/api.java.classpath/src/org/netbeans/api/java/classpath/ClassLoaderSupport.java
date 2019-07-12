@@ -90,7 +90,7 @@ final class ClassLoaderSupport extends URLClassLoader implements FileChangeListe
      * @throws ClassNotFoundException
      */
     @Override
-    protected Class findClass (String name) throws ClassNotFoundException {
+    protected Class<?> findClass (String name) throws ClassNotFoundException {
         Class c = super.findClass (name);
         if (c != null) {
             org.openide.filesystems.FileObject fo;

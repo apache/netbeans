@@ -41,7 +41,7 @@ public class AtRuleIdI extends PlainElementI implements AtRuleId {
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return AtRuleId.class;
     }
     

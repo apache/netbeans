@@ -67,7 +67,7 @@ public class PlainElementI extends ModelElement implements PlainElement {
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return PlainElement.class;
     }
 }

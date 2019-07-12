@@ -92,7 +92,7 @@ public class AtRuleI extends ModelElement implements AtRule {
     }
     
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return AtRule.class;
     }
     

@@ -41,7 +41,7 @@ public class MozDocumentFunctionI extends PlainElementI implements MozDocumentFu
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return MozDocumentFunction.class;
     }
     

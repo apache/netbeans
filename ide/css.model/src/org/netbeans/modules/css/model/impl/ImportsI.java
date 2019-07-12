@@ -65,7 +65,7 @@ public class ImportsI extends ModelElement implements Imports {
     }
 
     @Override
-    protected Class getModelClass() {
+    protected Class<?> getModelClass() {
         return Imports.class;
     }
 }

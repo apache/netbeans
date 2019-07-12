@@ -65,8 +65,8 @@ public class CharSetI extends ModelElement implements CharSet {
         return elementListener;
     }
     
-      @Override
-    protected Class getModelClass() {
+    @Override
+    protected Class<?> getModelClass() {
         return CharSet.class;
     }
     

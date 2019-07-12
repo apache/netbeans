@@ -52,11 +52,11 @@ public class DDUtils {
             inputStream.close();
         }
     }
-    
+
     public static EjbJarProxy createEjbJarProxy(Reader reader) throws IOException {
         return createEjbJarProxy(new InputSource(reader));
     }
-    
+
     public static EjbJarProxy createEjbJarProxy(InputSource inputSource) throws IOException {
         try {
             return (EjbJarProxy) DDProvider.getDefault().getDDRoot(inputSource);
@@ -73,8 +73,8 @@ public class DDUtils {
             return ejbJarProxy;
         }
     }
-    
-    
+
+
     public static void merge(EjbJarProxy ejbJarProxy, Reader reader) {
         try {
             EjbJarProxy newEjbJarProxy = createEjbJarProxy(reader);
@@ -95,10 +95,10 @@ public class DDUtils {
             // so lets not set the original to null here but wait
             // until the file becomes parsable again to do a merge
             //ejbJarProxy.setOriginal(null);
-        } catch (Schema2BeansRuntimeException s2bre){ // see #70286    
+        } catch (Schema2BeansRuntimeException s2bre){ // see #70286
             ejbJarProxy.setStatus(EjbJar.STATE_INVALID_UNPARSABLE);
             ejbJarProxy.setError(new SAXParseException(null, null, s2bre));
-        } catch (RuntimeException re){ // see #99047    
+        } catch (RuntimeException re){ // see #99047
             if (re.getCause() instanceof Schema2BeansException){
                 ejbJarProxy.setStatus(EjbJar.STATE_INVALID_UNPARSABLE);
                 ejbJarProxy.setError(new SAXParseException(null, null, (Schema2BeansException) re.getCause()));
@@ -121,6 +121,8 @@ public class DDUtils {
                 return org.netbeans.modules.j2ee.dd.impl.web.model_3_0.WebApp.createGraph(is);
             } else if (WebApp.VERSION_3_1.equals(version)) {
                 return org.netbeans.modules.j2ee.dd.impl.web.model_3_1.WebApp.createGraph(is);
+            } else if (WebApp.VERSION_4_0.equals(version)) {
+                return org.netbeans.modules.j2ee.dd.impl.web.model_4_0.WebApp.createGraph(is);
             } else {
                 return null;
             }
@@ -137,7 +139,7 @@ public class DDUtils {
             inputStream.close();
         }
     }
-    
+
     public static AppClient createAppClient(InputStream is, String version) throws IOException, SAXException {
         try {
             if (AppClient.VERSION_1_4.equals(version)) {

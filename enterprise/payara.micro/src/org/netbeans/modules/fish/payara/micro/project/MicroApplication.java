@@ -145,8 +145,10 @@ public class MicroApplication {
     public static MicroApplication getInstance(Project project) {
         MicroApplication microApplication = null;
         if (project != null) {
-           MicroApplicationContent content = project.getLookup().lookup(MicroApplicationContent.class);
-           microApplication = content.getMicroApplication();
+            MicroApplicationContent content = project.getLookup().lookup(MicroApplicationContent.class);
+            if (content != null) {
+                microApplication = content.getMicroApplication();
+            }
         }
         return microApplication;
     }

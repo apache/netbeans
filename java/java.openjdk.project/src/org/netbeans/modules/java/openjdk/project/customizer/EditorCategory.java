@@ -119,7 +119,7 @@ public class EditorCategory extends javax.swing.JPanel {
 
     private static final Map<UseRemotePlatform, String> useRemotePlatformDisplayName = new EnumMap<UseRemotePlatform, String>(UseRemotePlatform.class) {{
         put(UseRemotePlatform.ALWAYS, "Always");
-        put(UseRemotePlatform.TEST, "For tests only");
+        put(UseRemotePlatform.JAVA_COMPILER, "For java.compiler module only");
         put(UseRemotePlatform.NEVER, "Never");
     }};
 

@@ -61,6 +61,9 @@ public class LanguageServerProviderImpl implements LanguageServerProvider {
                 
                 Map<String, String> fileNameToPath = new HashMap<>();
                 for (String nbDir : (System.getProperty("netbeans.dirs") + ":" + System.getProperty("netbeans.home")).split(":")) {
+                    if (nbDir.isEmpty()) {
+                        continue;
+                    }
                     Path nbDirPath = Paths.get(nbDir);
                     if (Files.isDirectory(nbDirPath)) {
                         Files.find(nbDirPath, Integer.MAX_VALUE, (p, attr) -> true).forEach(p -> {

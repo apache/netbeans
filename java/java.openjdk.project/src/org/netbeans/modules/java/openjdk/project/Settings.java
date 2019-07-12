@@ -59,9 +59,9 @@ public class Settings {
 
     public UseRemotePlatform getUseRemotePlatform() {
         try {
-            return UseRemotePlatform.valueOf(getPrivatePreferences().get(KEY_USE_REMOTE_PLATFORM, UseRemotePlatform.TEST.name()));
+            return UseRemotePlatform.valueOf(getPrivatePreferences().get(KEY_USE_REMOTE_PLATFORM, UseRemotePlatform.JAVA_COMPILER.name()));
         } catch (IllegalArgumentException ex) {
-            return UseRemotePlatform.TEST;
+            return UseRemotePlatform.JAVA_COMPILER;
         }
     }
 
@@ -93,7 +93,7 @@ public class Settings {
 
     public enum UseRemotePlatform {
         NEVER,
-        TEST,
+        JAVA_COMPILER,
         ALWAYS;
     }
 }

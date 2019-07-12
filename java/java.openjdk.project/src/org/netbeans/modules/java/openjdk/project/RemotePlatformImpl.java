@@ -112,16 +112,9 @@ public class RemotePlatformImpl implements RemotePlatform {
             @Override
             public RemotePlatform findPlatform(FileObject file) {
                 switch (project.getLookup().lookup(Settings.class).getUseRemotePlatform()) {
-                    case TEST:
-                        String fileURL = file.toURL().toString();
-                        //TODO: more reliable tests detection?
-                        boolean tests = false;
-                        for (Root root : project.getRoots()) {
-                            if (root.kind != RootKind.TEST_SOURCES)
-                                continue;
-                            tests |= fileURL.startsWith(root.getLocation().toString());
-                        }
-                        if (!tests) {
+                    case JAVA_COMPILER:
+                        if (!"java.compiler".equals(project.getProjectDirectory().getNameExt())) {
+                            System.err.println("not java.compiler: " + project.getProjectDirectory().getNameExt());
                             return null;
                         }
                     case ALWAYS:

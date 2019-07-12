@@ -1,0 +1,4 @@
+    return fn($param2) => $param1 + $param2 + ^$variable1;
+---------------------------------------------------------
+HINT:You can use arrow function
+FIX:Use Arrow Function

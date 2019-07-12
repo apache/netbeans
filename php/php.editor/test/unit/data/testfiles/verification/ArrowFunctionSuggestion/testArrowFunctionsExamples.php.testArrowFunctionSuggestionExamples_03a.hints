@@ -1,0 +1,4 @@
+    return in_array($ne^edle, $array);
+-------------------------------------
+HINT:You can use arrow function
+FIX:Use Arrow Function

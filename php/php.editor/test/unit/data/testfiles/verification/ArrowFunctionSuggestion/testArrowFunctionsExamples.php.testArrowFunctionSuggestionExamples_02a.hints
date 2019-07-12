@@ -1,0 +1,4 @@
+$test = function ($param) use (^$callable1, $callable2) {
+--------------------------------------------------------
+HINT:You can use arrow function
+FIX:Use Arrow Function

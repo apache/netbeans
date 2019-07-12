@@ -66,6 +66,9 @@ function (): ArrowFunctions {
 
                $af = fn(   int $x):     callable => fn (    int     $z): int     =>  $x +  $y  *  $z;
    $af = fn(    ArrowFunctions    $x): callable => fn(     ?ArrowFunctions     $z    ):    ?ArrowFunctions =>    new ArrowFunctions();
+fn() => function($x) use ($y) {
+    return $x + $y;
+            };
 
 $fn3 = function ($x) use ($y) {
                     return      fn()    =>     $x + $y;

@@ -146,15 +146,12 @@ public class Utils {
         try {
             Command command;
 
-            System.err.println("cmd=" + cmd);
             if (cmd.isLeft()) {
                 command = cmd.getLeft();
             } else {
                 Utils.applyWorkspaceEdit(cmd.getRight().getEdit());
-                System.err.println("edit=" + cmd.getRight().getEdit());
                 command = cmd.getRight().getCommand();
             }
-            System.err.println("command=" + command);
             if (command != null) {
                 server.getWorkspaceService().executeCommand(new ExecuteCommandParams(command.getCommand(), command.getArguments())).get();
             }

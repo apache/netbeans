@@ -76,6 +76,23 @@ public class UnusedVariableHintTest extends PHPHintsTestBase {
         checkHints(new UnusedVariableHintStub(false, false), "testUnusedVariableInInheritedMethodParameters.php");
     }
 
+    // PHP 7.4
+    public void testUnusedVariableArrowFunctionsWithParams_01() throws Exception {
+        checkHints(new UnusedVariableHintStub(true), "testUnusedVariableHintArrowFunctions.php");
+    }
+
+    public void testUnusedVariableArrowFunctionsWithoutParams_01() throws Exception {
+        checkHints(new UnusedVariableHintStub(false), "testUnusedVariableHintArrowFunctions.php");
+    }
+
+    public void testUnusedVariableArrowFunctionsNestedWithParams_01() throws Exception {
+        checkHints(new UnusedVariableHintStub(true), "testUnusedVariableHintArrowFunctionsNested.php");
+    }
+
+    public void testUnusedVariableArrowFunctionsNestedWithoutParams_01() throws Exception {
+        checkHints(new UnusedVariableHintStub(false), "testUnusedVariableHintArrowFunctionsNested.php");
+    }
+
     private class UnusedVariableHintStub extends UnusedVariableHint {
         private final boolean unusedFormalParameters;
         private final boolean inheritedMethodParameters;

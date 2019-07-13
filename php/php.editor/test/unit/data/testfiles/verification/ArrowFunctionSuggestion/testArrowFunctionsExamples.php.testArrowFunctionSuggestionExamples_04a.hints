@@ -1,0 +1,4 @@
+        return !$callable(...$ar^gs);
+------------------------------------
+HINT:You can use arrow function
+FIX:Use Arrow Function

@@ -1,0 +1,4 @@
+    return array_map(function ($x) use ($array^) { return $array[$x]; }, $keys);
+-------------------------------------------------------------------------------
+HINT:You can use arrow function
+FIX:Use Arrow Function

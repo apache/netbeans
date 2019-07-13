@@ -1558,8 +1558,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             // for nested arrow functions
             if (variableScope instanceof ArrowFunctionScope) {
                 Scope inScope = variableScope.getInScope();
-                while (inScope != null
-                        && (inScope instanceof FunctionScope || inScope instanceof NamespaceScope)) {
+                while (inScope instanceof FunctionScope || inScope instanceof NamespaceScope) {
                     allDeclaredVariables.addAll(((VariableScope) inScope).getDeclaredVariables());
                     if (inScope instanceof FunctionScope
                             && !(inScope instanceof ArrowFunctionScope)) {

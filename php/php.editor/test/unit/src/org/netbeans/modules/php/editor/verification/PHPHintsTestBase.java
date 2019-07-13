@@ -52,7 +52,7 @@ public class PHPHintsTestBase extends PHPTestBase {
     }
 
     protected void checkHints(Rule onLineHint, String fileName, String caretLine) throws Exception {
-        checkHints(this, onLineHint, TEST_DIRECTORY + fileName, caretLine);
+        checkHints(this, onLineHint, getTestDirectory() + fileName, caretLine);
     }
 
     /**
@@ -72,7 +72,7 @@ public class PHPHintsTestBase extends PHPTestBase {
      * @throws Exception
      */
     protected void applyHint(Rule hint, String fileName, String caretLine, String fixDesc) throws Exception {
-        applyHint(this, hint, TEST_DIRECTORY + fileName, caretLine, fixDesc);
+        applyHint(this, hint, getTestDirectory() + fileName, caretLine, fixDesc);
     }
 
     @Override
@@ -80,9 +80,13 @@ public class PHPHintsTestBase extends PHPTestBase {
         return Collections.singletonMap(
             PhpSourcePath.SOURCE_CP,
             ClassPathSupport.createClassPath(new FileObject[] {
-                FileUtil.toFileObject(new File(getDataDir(), "/" + TEST_DIRECTORY))
+                FileUtil.toFileObject(new File(getDataDir(), "/" + getTestDirectory()))
             })
         );
+    }
+
+    protected String getTestDirectory() {
+        return TEST_DIRECTORY;
     }
 
 }

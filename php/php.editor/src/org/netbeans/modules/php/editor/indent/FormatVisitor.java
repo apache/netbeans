@@ -1165,8 +1165,7 @@ public class FormatVisitor extends DefaultVisitor {
         Block body = node.getBody();
         if (body != null) {
             // in case of (function(){echo "foo";})() and fn() => function() use ($y) {return $y;}, missing an indent
-            boolean addIndent = path.size() > 1
-                    && ((path.get(1) instanceof ParenthesisExpression) || (path.get(1) instanceof ArrowFunctionDeclaration));
+            boolean addIndent = isParentParenthesisExpr() || isParentArrowFunctionParenthesisExpr();
             if (addIndent) {
                 formatTokens.add(new FormatToken.IndentToken(ts.offset() + ts.token().length(), options.continualIndentSize));
             }
@@ -1184,6 +1183,17 @@ public class FormatVisitor extends DefaultVisitor {
                 formatTokens.add(new FormatToken.IndentToken(node.getEndOffset(), -1 * options.continualIndentSize));
             }
         }
+    }
+
+    private boolean isParentParenthesisExpr() {
+        return path.size() > 1
+                && (path.get(1) instanceof ParenthesisExpression);
+    }
+
+    private boolean isParentArrowFunctionParenthesisExpr() {
+        return path.size() > 2
+                && (path.get(1) instanceof ArrowFunctionDeclaration)
+                && (path.get(2) instanceof ParenthesisExpression);
     }
 
     private void addReturnType(@NullAllowed Expression returnType) {

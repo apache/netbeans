@@ -38,14 +38,12 @@ class FindAnonymousVisitor extends ErrorAwareTreeScanner<Void,Void> {
 
     private static enum Mode {COLLECT, CHECK};
 
-    int firstInner = -1;
     int noInner;
     boolean hasLocalClass;
     final Set<Tree> docOwners = new HashSet<Tree>();
     private Mode mode = Mode.COLLECT;            
     
     public final void reset () {
-        this.firstInner = -1;
         this.noInner = 0;
         this.hasLocalClass = false;
         this.mode = Mode.CHECK;
@@ -53,9 +51,6 @@ class FindAnonymousVisitor extends ErrorAwareTreeScanner<Void,Void> {
 
     @Override
     public Void visitClass(ClassTree node, Void p) {
-        if (firstInner == -1) {
-            firstInner = ((IndexedClassDecl)node).index;
-        }
         if (node.getSimpleName().length() != 0) {
             hasLocalClass = true;
         }

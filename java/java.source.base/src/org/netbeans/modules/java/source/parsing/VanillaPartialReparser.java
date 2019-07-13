@@ -187,7 +187,6 @@ public class VanillaPartialReparser implements PartialReparser {
                 }
                 return false;
             }
-            final int firstInner = fav.firstInner;
             final int noInner = fav.noInner;
             final Context ctx = task.getContext();
 //            final TreeLoader treeLoader = TreeLoader.instance(ctx);
@@ -205,7 +204,7 @@ public class VanillaPartialReparser implements PartialReparser {
                     ((CompilationInfoImpl.DiagnosticListenerImpl)dl).startPartialReparse(origStartPos, origEndPos);
                     long start = System.currentTimeMillis();
                     Map<JCTree, Object> docComments = new HashMap<>();
-                    block = reparseMethodBody(ctx, cu, orig, newBody + " ", firstInner, docComments);
+                    block = reparseMethodBody(ctx, cu, orig, newBody + " ", docComments);
                     final EndPosTable endPos = ((JCTree.JCCompilationUnit)cu).endPositions;
                     LOGGER.log(Level.FINER, "Reparsed method in: {0}", fo);     //NOI18N
                     if (block == null) {
@@ -309,7 +308,7 @@ public class VanillaPartialReparser implements PartialReparser {
         return true;
     }
 
-    public JCTree.JCBlock reparseMethodBody(Context ctx, CompilationUnitTree topLevel, MethodTree methodToReparse, String newBodyText, int annonIndex,
+    public JCTree.JCBlock reparseMethodBody(Context ctx, CompilationUnitTree topLevel, MethodTree methodToReparse, String newBodyText,
             final Map<JCTree, Object> docComments) throws IllegalArgumentException, IllegalAccessException {
         int startPos = ((JCTree.JCBlock)methodToReparse.getBody()).pos;
         char[] body = new char[startPos + newBodyText.length() + 1];
@@ -321,7 +320,6 @@ public class VanillaPartialReparser implements PartialReparser {
         CharBuffer buf = CharBuffer.wrap(body, 0, body.length - 1);
         com.sun.tools.javac.parser.JavacParser parser = newParser(ctx, buf, ((JCTree.JCBlock)methodToReparse.getBody()).pos, ((JCTree.JCCompilationUnit)topLevel).endPositions);
         final JCTree.JCStatement statement = parser.parseStatement();
-        NBParserFactory.assignAnonymousClassIndices(Names.instance(ctx), statement, Names.instance(ctx).empty, annonIndex);
         if (statement.getKind() == Tree.Kind.BLOCK) {
             if (docComments != null) {
                 docComments.putAll((Map<JCTree, Object>) lazyDocCommentsTable.get(parserDocComments.get(parser)));

@@ -36,6 +36,7 @@
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/application_6.xsd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/application_7.mdd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/application_7.xsd</file>
+        <file>src/org/netbeans/modules/j2ee/dd/impl/resources/application_8.mdd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/application_8.xsd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/application-client_1_4.mdd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/application-client_1_4.xsd</file>
@@ -87,6 +88,7 @@
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-app_3_0.xsd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-app_3_1.mdd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-app_3_1.xsd</file>
+        <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-app_4_0.mdd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-app_4_0.xsd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-common_3_0.xsd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-common_3_1.xsd</file>
@@ -95,6 +97,7 @@
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-fragment_3_0.xsd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-fragment_3_1.mdd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-fragment_3_1.xsd</file>
+        <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-fragment_4_0.mdd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-fragment_4_0.xsd</file>
         <license ref="CDDL-1.1" />
         <comment type="CATEGORY_B" />

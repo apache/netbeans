@@ -18,10 +18,14 @@
     under the License.
 
 -->
-apply plugin: 'java'
-apply plugin: 'application'
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.7' apply false
+}
 
 def commonProject = project.parent
+def jdk8 = System.getProperty("java.version").startsWith("1.8")
 
 mainClassName = '${packageBase}.DesktopMain'
 
@@ -36,6 +40,13 @@ distributions {
 }
 tasks.run {
     jvmArgs "-Dbrowser.rootdir=${commonProject.projectDir}/src/main/webapp/"
+}
+if (!jdk8) {
+    apply plugin: 'org.openjfx.javafxplugin'
+    javafx {
+        version = "11"
+        modules = ["javafx.web"]
+    }
 }
 </#noparse>
 dependencies {

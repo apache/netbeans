@@ -20,7 +20,7 @@
 -->
 <#noparse>
 plugins {
-    id "me.tatarka.retrolambda" version "3.7.0"
+    id "me.tatarka.retrolambda" version "3.7.1"
 }
 
 apply plugin: 'java'

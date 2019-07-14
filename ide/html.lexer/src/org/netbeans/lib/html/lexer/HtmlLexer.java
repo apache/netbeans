@@ -285,7 +285,6 @@ public final class HtmlLexer implements Lexer<HTMLTokenId> {
 
     private static final int ISI_VAL_QUOT_ESC = 42;
 
-    private static final int ISA_ARG_UNDERSCORE = 44; //after _ in attribute name
     private static final int ISP_TAG_X_ERROR = 45; //error in tag content
 
     private static final int ISI_XML_PI = 47; //inside <? ... ?>
@@ -379,6 +378,11 @@ public final class HtmlLexer implements Lexer<HTMLTokenId> {
     private boolean isName( int character ) {
         return Character.isLetterOrDigit(character) ||
                 character == '-' || character == '_' || character == '.' || character == ':';
+    }
+
+    private boolean isAttributeName( int character ) {
+        return (! Character.isWhitespace(character)) && character != '/'
+            && character != '>' && character != '=' && character != 0;
     }
 
     /**
@@ -744,7 +748,7 @@ public final class HtmlLexer implements Lexer<HTMLTokenId> {
                         lexerState = ISP_TAG_WS;
                         break;
                     }
-                    if( isAZ( actChar ) ) {
+                    if( isAttributeName(actChar) ) {
                         lexerState = ISI_ARG;
                         break;
                     }
@@ -778,10 +782,6 @@ public final class HtmlLexer implements Lexer<HTMLTokenId> {
                             tag = null;
                             lexerState = INIT;
                             input.backup(1);
-                            break;
-                        //issue 192803 - the attribute may start with underscore
-                        case '_':
-                            lexerState = ISA_ARG_UNDERSCORE;
                             break;
                         default:
                             lexerState = ISP_TAG_X_ERROR;
@@ -821,11 +821,10 @@ public final class HtmlLexer implements Lexer<HTMLTokenId> {
                             lexerState = INIT;
                             return token(HTMLTokenId.TAG_CLOSE_SYMBOL);
                         default:
-                            lexerState = ISI_ERROR;
+                            lexerState = ISP_TAG_X;
                             input.backup(1);
-                            break;
+                            return token(HTMLTokenId.ERROR);
                     }
-                    break;
 
                 case ISI_SCRIPT_CONTENT:
                     switch( actChar ) {
@@ -887,18 +886,8 @@ public final class HtmlLexer implements Lexer<HTMLTokenId> {
                     lexerState = ISI_STYLE_CONTENT;
                     break;
 
-                case ISA_ARG_UNDERSCORE:
-                    if( isName(actChar)) {
-                        lexerState = ISI_ARG;
-                        //fallthrough to ISI_ARG
-                    } else {
-                        lexerState = ISI_ERROR;
-                        input.backup(1); //the char will be read again and put to the error token
-                        break;
-                    }
-
                 case ISI_ARG:           // DONE
-                    if( isName( actChar ) ) break; // eat next char
+                    if( isAttributeName(actChar) ) break; // eat next char
                     lexerState = ISP_ARG_X;
                     if(input.readLength() > 1) { //lexer restart check, token already returned before last EOF
                         input.backup(1);
@@ -912,7 +901,7 @@ public final class HtmlLexer implements Lexer<HTMLTokenId> {
                         lexerState = ISP_ARG_WS;
                         break;
                     }
-                    if( isAZ( actChar ) ) {
+                    if( isAttributeName(actChar) ) {
                         lexerState = ISI_ARG;
                         break;
                     }
@@ -1378,7 +1367,6 @@ public final class HtmlLexer implements Lexer<HTMLTokenId> {
             case ISI_ENDTAG:
                 return token(HTMLTokenId.TAG_CLOSE);
 
-            case ISA_ARG_UNDERSCORE:
             case ISI_ARG:
                 return token(HTMLTokenId.ARGUMENT);
 

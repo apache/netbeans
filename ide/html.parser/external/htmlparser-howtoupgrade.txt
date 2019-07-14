@@ -1,0 +1,25 @@
+Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+license agreements; and to You under the Apache License, Version 2.0.
+
+How to upgrade the htmlparser library:
+
+1) clone the sources of the parser from http://hg.mozilla.org/projects/htmlparser
+   these instructions were done with changeset 885:1370ab8cc556
+   hg clone http://hg.mozilla.org/projects/htmlparser
+2) go to the repository root
+3) apply the patches htmlparser-*.patch from this directory
+   (for production build against JDK8 and skip the JDK11 patch)
+   patch -p1 < ~/src/netbeans/ide/html.parser/external/htmlparser-01-fix-maven-build.patch
+   patch -p1 < ~/src/netbeans/ide/html.parser/external/htmlparser-02-ignore-file.patch
+   patch -p1 < ~/src/netbeans/ide/html.parser/external/htmlparser-03-minimum-changes-nb.patch
+4) Update the version with the day of the build
+5) Run maven build:
+   mvn clean package
+6) upload the generated htmlparser-1.4.<date>.jar file as a binary library at https://hg.netbeans.org/binaries/upload
+
+For local testing without uploading the new file:
+
+1) Get the SHA1 sum for the file: sha1sum target/htmlparser-1.4.<date>.jar | awk '{print toupper($1)}'
+2) Copy the file to ~/.hgexternalcache/<SHA1SUM>-htmlparser-1.4.<date>.jar
+   DATE=20190624; cp target/htmlparser-1.4.$DATE.jar ~/.hgexternalcache/`sha1sum target/htmlparser-1.4.$DATE.jar | awk '{print toupper($1)}'`-htmlparser-1.4.$DATE.jar
+3) Update the binaries list

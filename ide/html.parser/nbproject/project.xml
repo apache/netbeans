@@ -132,7 +132,7 @@
             </friend-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/html5-parser.jar</runtime-relative-path>
-                <binary-origin>external/htmlparser-1.2.1.jar</binary-origin>
+                <binary-origin>external/htmlparser-1.4.20190624.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/icu4j-4_4_2.jar</runtime-relative-path>

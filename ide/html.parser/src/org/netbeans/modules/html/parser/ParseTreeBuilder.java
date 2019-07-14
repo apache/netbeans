@@ -29,6 +29,8 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import nu.validator.htmlparser.annotation.Local;
+import nu.validator.htmlparser.annotation.NsUri;
 import nu.validator.htmlparser.common.TransitionHandler;
 import nu.validator.htmlparser.impl.CoalescingTreeBuilder;
 import nu.validator.htmlparser.impl.ElementName;
@@ -418,7 +420,7 @@ public class ParseTreeBuilder extends CoalescingTreeBuilder<Named> implements Tr
     @Override
     public void startTag(ElementName en, HtmlAttributes ha, boolean bln) throws SAXException {
         if (LOG) {
-            LOGGER.fine(String.format("open tag %s at %s", en.name, tag_lt_offset));//NOI18N
+            LOGGER.fine(String.format("open tag %s at %s", en.getName(), tag_lt_offset));//NOI18N
         }
         
         startTag = en;
@@ -429,10 +431,10 @@ public class ParseTreeBuilder extends CoalescingTreeBuilder<Named> implements Tr
     @Override
     public void endTag(ElementName en) throws SAXException {
         if (LOG) {
-            LOGGER.fine(String.format("close tag %s at %s", en.name, tag_lt_offset));//NOI18N
+            LOGGER.fine(String.format("close tag %s at %s", en.getName(), tag_lt_offset));//NOI18N
         }
 
-        ModifiableCloseTag closeTag = factory.createCloseTag(tag_lt_offset, -1, (byte)en.name.length());
+        ModifiableCloseTag closeTag = factory.createCloseTag(tag_lt_offset, -1, (byte)en.getName().length());
         currentCloseTag = closeTag;
         physicalEndTagsQueue.add(closeTag);
 
@@ -472,15 +474,44 @@ public class ParseTreeBuilder extends CoalescingTreeBuilder<Named> implements Tr
         //???????
     }
 
+    @Override
+    protected Named createAndInsertFosterParentedElement(String ns, String name,
+            HtmlAttributes attributes, Named table, Named stackParent) throws SAXException {
+        if (LOG) {
+            LOGGER.fine(String.format("createElement(%s)", name));//NOI18N
+        }
+
+        ModifiableOpenTag node;
+        if (startTag != null && startTag.getName().equals(name)) {
+
+            if (self_closing_starttag) {
+                currentOpenTag = node = factory.createEmptyOpenTag(tag_lt_offset, -1, (byte) name.length());
+            } else {
+                currentOpenTag = node = factory.createOpenTag(tag_lt_offset, -1, (byte) name.length());
+            }
+            addAttributesToElement(node, attributes);
+            resetInternalPositions();
+
+        } else {
+            //virtual element
+            node = factory.createVirtualOpenTag(name);
+            addAttributesToElement(node, attributes);
+        }
+
+        ((ModifiableOpenTag) stackParent).addChild(node);
+
+        return node;
+    }
+
     //create open tag element
     @Override
-    protected Named createElement(String namespace, String name, HtmlAttributes attributes) throws SAXException {
+    protected Named createElement(String namespace, String name, HtmlAttributes attributes, Named t) throws SAXException {
         if(LOG) {
             LOGGER.fine(String.format("createElement(%s)", name));//NOI18N
         }
 
         ModifiableOpenTag node;
-        if (startTag != null && startTag.name.equals(name)) {
+        if (startTag != null && startTag.getName().equals(name)) {
             
             if(self_closing_starttag) {
                 currentOpenTag = node = factory.createEmptyOpenTag(tag_lt_offset, -1, (byte)name.length());
@@ -505,7 +536,7 @@ public class ParseTreeBuilder extends CoalescingTreeBuilder<Named> implements Tr
             LOGGER.fine("createHtmlElementSetAsRoot()");//NOI18N
         }
 
-        Named rootTag = createElement("http://www.w3.org/1999/xhtml", "html", attributes);//NOI18N
+        Named rootTag = createElement("http://www.w3.org/1999/xhtml", "html", attributes, null);//NOI18N
         stack.push(root);
 
         root.addChild(rootTag);

@@ -1,0 +1,36 @@
+fn(int $x) => $x = ($y + 2);
+               -
+HINT:You should use only:
+1 assignment(s) (2 used)
+to a variable:
+$x
+to avoid accidentally overwriting it and make your code easier to read.
+HINT:You should use only:
+1 assignment(s) (2 used)
+to a variable:
+$x
+to avoid accidentally overwriting it and make your code easier to read.
+fn(int $x) => fn($z) => $z = ($y + 2);
+                         -
+HINT:You should use only:
+1 assignment(s) (2 used)
+to a variable:
+$z
+to avoid accidentally overwriting it and make your code easier to read.
+HINT:You should use only:
+1 assignment(s) (2 used)
+to a variable:
+$z
+to avoid accidentally overwriting it and make your code easier to read.
+fn(int $x) => fn($z) => $x = ($y + 2);
+                         -
+HINT:You should use only:
+1 assignment(s) (2 used)
+to a variable:
+$x
+to avoid accidentally overwriting it and make your code easier to read.
+HINT:You should use only:
+1 assignment(s) (2 used)
+to a variable:
+$x
+to avoid accidentally overwriting it and make your code easier to read.

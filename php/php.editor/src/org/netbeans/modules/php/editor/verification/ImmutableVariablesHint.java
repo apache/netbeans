@@ -19,8 +19,9 @@
 package org.netbeans.modules.php.editor.verification;
 
 import java.util.ArrayDeque;
-import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -36,6 +37,7 @@ import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment.Type;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
@@ -127,7 +129,7 @@ public class ImmutableVariablesHint extends HintRule implements CustomisableRule
             for (Map<String, List<Variable>> names : assignments.values()) {
                 checkNamesInScope(names);
             }
-            return hints;
+            return Collections.unmodifiableList(hints);
         }
 
         private void checkNamesInScope(Map<String, List<Variable>> names) {
@@ -200,6 +202,21 @@ public class ImmutableVariablesHint extends HintRule implements CustomisableRule
             parentNodes.push(node);
             super.visit(node);
             parentNodes.pop();
+        }
+
+        @Override
+        public void visit(ArrowFunctionDeclaration node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            if (parentNodes.peek() instanceof ArrowFunctionDeclaration) {
+                // nested arrow function
+                super.visit(node);
+            } else {
+                parentNodes.push(node);
+                super.visit(node);
+                parentNodes.pop();
+            }
         }
 
         @Override

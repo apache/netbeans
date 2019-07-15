@@ -40,7 +40,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Sarvesh Kesharwani
  */
 @ServiceProvider(service = ActionProvider.class)
-public class SingleJavaSourceRunActionProvider implements ActionProvider {
+public final class SingleJavaSourceRunActionProvider implements ActionProvider {
     
     private static final String FILE_ARGUMENTS = "single_file_run_arguments"; //NOI18N
     private static final String FILE_VM_OPTIONS = "single_file_vm_options"; //NOI18N
@@ -76,7 +76,7 @@ public class SingleJavaSourceRunActionProvider implements ActionProvider {
         return version >= 11 && fileObject != null;
     }
     
-    public RunProcess invokeActionHelper (String command, FileObject fileObject) {
+    final RunProcess invokeActionHelper (String command, FileObject fileObject) {
         String filePath = fileObject.getPath();
         Object argumentsObject = fileObject.getAttribute(FILE_ARGUMENTS);
         String arguments = argumentsObject != null ? (String) argumentsObject : "";

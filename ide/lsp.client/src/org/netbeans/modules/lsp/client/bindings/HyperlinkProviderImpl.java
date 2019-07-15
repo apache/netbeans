@@ -69,6 +69,11 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
 
     @Override
     public int[] getHyperlinkSpan(Document doc, int offset, HyperlinkType type) {
+        if (doc.getProperty(HyperlinkProviderImpl.class) != Boolean.TRUE) {
+            //not handled by a LSP handler
+            return null;
+        }
+
         try {
             //XXX: not really using the server, are we?
             return Utilities.getIdentifierBlock((BaseDocument) doc, offset);

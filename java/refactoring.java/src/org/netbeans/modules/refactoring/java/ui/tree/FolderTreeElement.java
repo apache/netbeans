@@ -19,6 +19,9 @@
 
 package org.netbeans.modules.refactoring.java.ui.tree;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 import javax.lang.model.element.ElementKind;
 import javax.swing.Icon;
@@ -36,9 +39,9 @@ import org.openide.util.NbBundle;
  *
  * @author Jan Becicka
  */
-public class FolderTreeElement implements TreeElement {
+public final class FolderTreeElement implements TreeElement {
     
-    private FileObject fo;
+    private final FileObject fo;
     FolderTreeElement(FileObject fo) {
         this.fo = fo;
     }
@@ -104,22 +107,23 @@ public class FolderTreeElement implements TreeElement {
             return null;
         }
         Sources src = ProjectUtils.getSources(prj);
+        List<SourceGroup> allgroups = new ArrayList<>();
         //TODO: needs to be generified
-        SourceGroup[] javagroups = src.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
-        SourceGroup[] xmlgroups = src.getSourceGroups("xml");//NOI18N
-        
-        SourceGroup[] allgroups =  new SourceGroup[javagroups.length + xmlgroups.length];
-
-        if (allgroups.length < 1) {
+        String[] sourceTypes = new String[] {
+            JavaProjectConstants.SOURCES_TYPE_JAVA,
+            "xml", //NOI18N
+        };
+        for (String sourceType : sourceTypes) {
+            allgroups.addAll(Arrays.asList(src.getSourceGroups(sourceType)));
+        }
+        if (allgroups.isEmpty()) {
             // Unknown project group
             Logger.getLogger(FolderTreeElement.class.getName()).severe("Cannot find SourceGroup for " + file.getPath()); // NOI18N
             return null;
-       }
-        System.arraycopy(javagroups,0,allgroups,0,javagroups.length);
-        System.arraycopy(xmlgroups,0,allgroups,allgroups.length-1,xmlgroups.length);
-        for(int i=0; i<allgroups.length; i++) {
-            if (allgroups[i].getRootFolder().equals(file) || FileUtil.isParentOf(allgroups[i].getRootFolder(), file)) {
-                return allgroups[i];
+        }
+        for (SourceGroup group : allgroups) {
+            if (group.getRootFolder().equals(file) || FileUtil.isParentOf(group.getRootFolder(), file)) {
+                return group;
             }
         }
         return null;
@@ -132,10 +136,10 @@ public class FolderTreeElement implements TreeElement {
         }
         Sources src = ProjectUtils.getSources(prj);
         SourceGroup[] javagroups = src.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
-        
-        for(int i=0; i<javagroups.length; i++) {
-            if (javagroups[i].getRootFolder().equals(file) || FileUtil.isParentOf(javagroups[i].getRootFolder(), file)) {
-                return javagroups[i];
+
+        for (SourceGroup group : javagroups) {
+            if (group.getRootFolder().equals(file) || FileUtil.isParentOf(group.getRootFolder(), file)) {
+                return group;
             }
         }
         return null;

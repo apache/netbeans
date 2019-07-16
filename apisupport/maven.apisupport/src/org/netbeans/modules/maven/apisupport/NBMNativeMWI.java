@@ -162,23 +162,20 @@ final class NBMNativeMWI {
                 //add repository
                 boolean addRepository = true;
                 boolean isSnapshot = NbmWizardIterator.SNAPSHOT_VERSION.equals(netbeansDependencyVersion);
-                String repoUrl = isSnapshot ? "https://repository.apache.org/content/repositories/snapshots/" : "http://bits.netbeans.org/nexus/content/groups/netbeans";
-                String oldRepoUrl = isSnapshot ? "https://repository.apache.org/content/repositories/snapshots/" : "http://bits.netbeans.org/maven2";
+                String snapshotRepoUrl = "https://repository.apache.org/content/repositories/snapshots/";
                 if (parent != null) {
                     List<ArtifactRepository> repos = parent.getRemoteArtifactRepositories();
                     if (repos != null) {
                         OUTER : 
                         for (ArtifactRepository repo : repos) {
-                            if (repoUrl.equals(repo.getUrl()) || (repoUrl + "/").equals(repo.getUrl()) || 
-                                oldRepoUrl.equals(repo.getUrl()) || (oldRepoUrl + "/").equals(repo.getUrl()))
+                            if (snapshotRepoUrl.equals(repo.getUrl()) || (snapshotRepoUrl + "/").equals(repo.getUrl()))
                             {
                                 addRepository = false;
                                 break;
                             }
                             if (repo.getMirroredRepositories() != null) {
                                 for (ArtifactRepository mirr : repo.getMirroredRepositories()) {
-                                    if (repoUrl.equals(mirr.getUrl()) || (repoUrl + "/").equals(mirr.getUrl()) || 
-                                        oldRepoUrl.equals(mirr.getUrl()) || (oldRepoUrl + "/").equals(mirr.getUrl()))
+                                    if (snapshotRepoUrl.equals(mirr.getUrl()) || (snapshotRepoUrl + "/").equals(mirr.getUrl()))
                                     {
                                         addRepository = false;
                                         break OUTER;
@@ -188,20 +185,14 @@ final class NBMNativeMWI {
                         }
                     }
                 }
-                if (addRepository) {
+                if (addRepository && isSnapshot ) {
                     Repository repo = model.getFactory().createRepository();
-                    repo.setId(isSnapshot ? MavenNbModuleImpl.APACHE_SNAPSHOT_REPO_ID : MavenNbModuleImpl.NETBEANS_REPO_ID);
+                    repo.setId(MavenNbModuleImpl.APACHE_SNAPSHOT_REPO_ID);
                     repo.setName("Repository hosting NetBeans modules");
-                    repo.setUrl(repoUrl);
-                    if (isSnapshot) {
-                        RepositoryPolicy policy = model.getFactory().createReleaseRepositoryPolicy();
-                        policy.setEnabled(false);
-                        repo.setReleases(policy);
-                    } else {
-                        RepositoryPolicy policy = model.getFactory().createSnapshotRepositoryPolicy();
-                        policy.setEnabled(false);
-                        repo.setSnapshots(policy);
-                    }
+                    repo.setUrl(snapshotRepoUrl);
+                    RepositoryPolicy policy = model.getFactory().createReleaseRepositoryPolicy();
+                    policy.setEnabled(false);
+                    repo.setReleases(policy);
                     root.addRepository(repo);
                 }
                 
@@ -379,6 +370,7 @@ final class NBMNativeMWI {
                     p.setArtifactId(Constants.PLUGIN_JAR);
                     if (managedPVersion == null) {
                         p.setVersion(pVersion);
+                        managedPVersion = pVersion;
                     }
                     Configuration c = model.getFactory().createConfiguration();
                     if (new ComparableVersion(managedPVersion).compareTo(new ComparableVersion(JAR_PLUGIN_VERSION_MANIFEST_CONFIG_CHANGE)) >= 0) {
@@ -390,7 +382,7 @@ final class NBMNativeMWI {
                         manifestelement.setElementText("${project.build.outputDirectory}/META-INF/MANIFEST.MF");
                         archiveelement.addAnyElement(manifestelement, 0);
                         
-                        c.getConfigurationElements().add(archiveelement);
+                        c.addExtensibilityElement(archiveelement);
                     } else {
                         c.setSimpleParameter("useDefaultManifestFile", "true");
                     }

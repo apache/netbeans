@@ -94,7 +94,6 @@ public class MavenNbModuleImpl implements NbModuleProvider {
     
     private final RequestProcessor.Task tsk = RP.create(dependencyAdder);
     
-    public static final String NETBEANS_REPO_ID = "netbeans";
     public static final String MAVEN_CENTRAL = "central";
     public static final String APACHE_SNAPSHOT_REPO_ID = "apache.snapshots";
     // this repository is not good anymore, dev-SNAPSHOT version are buil on apache snapshot
@@ -122,8 +121,7 @@ public class MavenNbModuleImpl implements NbModuleProvider {
 
     static List<RepositoryInfo> netbeansRepo() {
         return Arrays.asList(
-                RepositoryPreferences.getInstance().getRepositoryInfoById(MAVEN_CENTRAL),
-                RepositoryPreferences.getInstance().getRepositoryInfoById(NETBEANS_REPO_ID));
+                RepositoryPreferences.getInstance().getRepositoryInfoById(MAVEN_CENTRAL));
     }
     
     private File getModuleXmlLocation() {

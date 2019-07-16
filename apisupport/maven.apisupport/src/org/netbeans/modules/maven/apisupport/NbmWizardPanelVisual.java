@@ -105,7 +105,6 @@ public class NbmWizardPanelVisual extends javax.swing.JPanel {
                 final Object key = this;               
                 if (info == null || info.contains(null)) {
                     try {
-                        RepositoryPreferences.getInstance().addTransientRepository(key, MavenNbModuleImpl.NETBEANS_REPO_ID, MavenNbModuleImpl.NETBEANS_REPO_ID, "http://bits.netbeans.org/maven2/", RepositoryInfo.MirrorStrategy.NON_WILDCARD);
                         //transient remove central, make central transient too
                         RepositoryPreferences.getInstance().addTransientRepository(key, "central", "central", "https://repo1.maven.org/maven2", RepositoryInfo.MirrorStrategy.NON_WILDCARD);
                         info = MavenNbModuleImpl.netbeansRepo();

@@ -54,7 +54,7 @@ public class OJETPanel extends javax.swing.JPanel implements CustomizerPanelImpl
     }
 
     private void initData() {
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
         for (String version: DataProviderImpl.getInstance().getAvailableVersions()) {
             model.addElement(version);
         }
@@ -79,7 +79,7 @@ public class OJETPanel extends javax.swing.JPanel implements CustomizerPanelImpl
         cbVersion = new javax.swing.JComboBox();
         lVersion = new javax.swing.JLabel();
 
-        cbVersion.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbVersion.setModel(new DefaultComboBoxModel<String>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cbVersion.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbVersionItemStateChanged(evt);

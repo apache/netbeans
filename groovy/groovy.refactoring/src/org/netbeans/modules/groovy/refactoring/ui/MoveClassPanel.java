@@ -101,7 +101,7 @@ public final class MoveClassPanel extends JPanel implements ActionListener, Docu
         Project openProjects[] = OpenProjects.getDefault().getOpenProjects();
         Arrays.sort( openProjects, new ProjectByDisplayNameComparator());
 
-        projectsComboBox.setModel(new DefaultComboBoxModel(openProjects));
+        projectsComboBox.setModel(new DefaultComboBoxModel<Project>(openProjects));
         projectsComboBox.setSelectedItem(project);
         
         updateSourceRoots();
@@ -150,7 +150,7 @@ public final class MoveClassPanel extends JPanel implements ActionListener, Docu
         if (groups.isEmpty()) {
             groups.addAll(Arrays.asList(sources.getSourceGroups(Sources.TYPE_GENERIC)));
         }
-        rootComboBox.setModel(new DefaultComboBoxModel(groups.toArray(new SourceGroup[0])));
+        rootComboBox.setModel(new DefaultComboBoxModel<SourceGroup>(groups.toArray(new SourceGroup[0])));
 
         // Select correct source root
         for (SourceGroup group : groups) {

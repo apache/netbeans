@@ -174,11 +174,11 @@ public class ControlPanel extends javax.swing.JPanel {
 
         forwardLookahead.setText(org.openide.util.NbBundle.getMessage(ControlPanel.class, "forwardLookahead.text")); // NOI18N
 
-        searchDirection.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "Backward Preferred", "Forward Preferred" }));
+        searchDirection.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "", "Backward Preferred", "Forward Preferred" }));
 
         jLabel4.setText(org.openide.util.NbBundle.getMessage(ControlPanel.class, "jLabel4.text")); // NOI18N
 
-        caretBias.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "Backward (before caret)", "Forward (after caret)" }));
+        caretBias.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "", "Backward (before caret)", "Forward (after caret)" }));
 
         showParameters.setText(org.openide.util.NbBundle.getMessage(ControlPanel.class, "jCheckBox1.text_1")); // NOI18N
         showParameters.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));

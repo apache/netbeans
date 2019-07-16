@@ -206,7 +206,7 @@ public final class RunAnalysisPanel extends javax.swing.JPanel implements Lookup
 
         scopes.add(0, new AllProjectsScopeDescription(currentProjectIcon));
 
-        scopeCombo.setModel(new DefaultComboBoxModel(scopes.toArray(new ScopeDescription[0])));
+        scopeCombo.setModel(new DefaultComboBoxModel<ScopeDescription>(scopes.toArray(new ScopeDescription[0])));
         scopeCombo.setRenderer(new ScopeRenderer());
         scopeCombo.setSelectedIndex(scopes.size() - 1);
 
@@ -365,7 +365,7 @@ public final class RunAnalysisPanel extends javax.swing.JPanel implements Lookup
         configurationRadio.setSelected(state.configurationsSelected);
         configurationCombo.setRenderer(new ConfigurationRenderer(true));
 
-        DefaultComboBoxModel inspectionModel = new DefaultComboBoxModel();
+        DefaultComboBoxModel<String> inspectionModel = new DefaultComboBoxModel<>();
         
         inspectionModel.addElement(Bundle.LBL_PleaseWait());
         

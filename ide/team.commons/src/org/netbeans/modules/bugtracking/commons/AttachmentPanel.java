@@ -51,7 +51,7 @@ public class AttachmentPanel extends javax.swing.JPanel implements DocumentListe
     }
 
     private void initFileTypeCombo() {
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        DefaultComboBoxModel<FileType> model = new DefaultComboBoxModel<>();
         ResourceBundle bundle = NbBundle .getBundle(AttachmentPanel.class);
         model.addElement(new FileType(null, bundle.getString("AttachmentPanel.fileType.automatic"))); // NOI18N
         model.addElement(new FileType("text/plain", bundle.getString("AttachmentPanel.fileType.textPlain"))); // NOI18N

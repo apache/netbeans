@@ -105,10 +105,10 @@ public class QueryPanel extends javax.swing.JPanel {
         ccCheckBox.setOpaque(false);
         commenterCheckBox.setOpaque(false);
 
-        summaryComboBox.setModel(new DefaultComboBoxModel());
-        commentComboBox.setModel(new DefaultComboBoxModel());
-        keywordsComboBox.setModel(new DefaultComboBoxModel());
-        peopleComboBox.setModel(new DefaultComboBoxModel());
+        summaryComboBox.setModel(new DefaultComboBoxModel<String>());
+        commentComboBox.setModel(new DefaultComboBoxModel<String>());
+        keywordsComboBox.setModel(new DefaultComboBoxModel<String>());
+        peopleComboBox.setModel(new DefaultComboBoxModel<String>());
         
         summaryComboBox.setRenderer(new ParameterValueCellRenderer());
         commentComboBox.setRenderer(new ParameterValueCellRenderer());
@@ -294,7 +294,7 @@ public class QueryPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(commenterCheckBox, org.openide.util.NbBundle.getMessage(QueryPanel.class, "QueryPanel.commenterCheckBox.text")); // NOI18N
 
-        peopleComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        peopleComboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         peopleTextField.setColumns(17);
 
@@ -570,11 +570,11 @@ public class QueryPanel extends javax.swing.JPanel {
         keywordsLabel.setLabelFor(keywordsComboBox);
         org.openide.awt.Mnemonics.setLocalizedText(keywordsLabel, org.openide.util.NbBundle.getMessage(QueryPanel.class, "QueryPanel.keywordsLabel.text")); // NOI18N
 
-        summaryComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        summaryComboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        commentComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        commentComboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        keywordsComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        keywordsComboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         summaryTextField.setColumns(30);
 
@@ -592,7 +592,7 @@ public class QueryPanel extends javax.swing.JPanel {
         whiteboardLabel.setLabelFor(commentComboBox);
         org.openide.awt.Mnemonics.setLocalizedText(whiteboardLabel, org.openide.util.NbBundle.getMessage(QueryPanel.class, "QueryPanel.whiteboardLabel.text")); // NOI18N
 
-        whiteboardComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        whiteboardComboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         whiteboardTextField.setColumns(30);
 
@@ -676,7 +676,7 @@ public class QueryPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(tableSummaryLabel, org.openide.util.NbBundle.getMessage(QueryPanel.class, "QueryPanel.tableSummaryLabel.text_1")); // NOI18N
 
-        filterComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        filterComboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         filterLabel.setLabelFor(filterComboBox);
         org.openide.awt.Mnemonics.setLocalizedText(filterLabel, org.openide.util.NbBundle.getMessage(QueryPanel.class, "QueryPanel.filterLabel.text_1")); // NOI18N

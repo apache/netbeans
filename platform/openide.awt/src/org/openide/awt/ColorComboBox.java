@@ -174,7 +174,7 @@ public final class ColorComboBox extends JComboBox {
     }
 
     private static DefaultComboBoxModel createModel( Color[] colors, String[] names, boolean allowCustomColors ) {
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        DefaultComboBoxModel<ColorValue> model = new DefaultComboBoxModel<>();
 
         for( int i=0; i<colors.length; i++ ) {
             Color c = colors[i];

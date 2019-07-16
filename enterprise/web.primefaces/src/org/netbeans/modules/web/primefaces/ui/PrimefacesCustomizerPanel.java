@@ -181,7 +181,7 @@ public class PrimefacesCustomizerPanel extends javax.swing.JPanel implements Hel
         primefacesLibraryLabel.setText(org.openide.util.NbBundle.getMessage(PrimefacesCustomizerPanel.class, "PrimefacesCustomizerPanel.primefacesLibraryLabel.text")); // NOI18N
 
         primefacesLibrariesComboBox.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        primefacesLibrariesComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Searching Primefaces Libraries..." }));
+        primefacesLibrariesComboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "Searching Primefaces Libraries..." }));
 
         createLibraryButton.setMnemonic(java.util.ResourceBundle.getBundle("org/netbeans/modules/web/primefaces/ui/Bundle").getString("PrimefacesCustomizerPanel.createLibraryButton.mnemonic").charAt(0));
         createLibraryButton.setText(org.openide.util.NbBundle.getMessage(PrimefacesCustomizerPanel.class, "PrimefacesCustomizerPanel.createLibraryButton.text")); // NOI18N

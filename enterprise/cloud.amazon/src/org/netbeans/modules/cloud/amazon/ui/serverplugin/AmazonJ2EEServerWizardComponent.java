@@ -270,7 +270,7 @@ public class AmazonJ2EEServerWizardComponent extends javax.swing.JPanel implemen
 
     private void initAccounts() {
         List<AmazonInstance> l = AmazonInstanceManager.getDefault().getInstances();
-        DefaultComboBoxModel model = new DefaultComboBoxModel(l.toArray(new AmazonInstance[l.size()]));
+        DefaultComboBoxModel<AmazonInstance> model = new DefaultComboBoxModel<>(l.toArray(new AmazonInstance[l.size()]));
         accountComboBox.setModel(model);
         accountComboBox.setRenderer(new ListCellRenderer() {
             @Override
@@ -305,7 +305,7 @@ public class AmazonJ2EEServerWizardComponent extends javax.swing.JPanel implemen
     private void initApplications() {
         JTextField tf = (JTextField)(appNameComboBox.getEditor().getEditorComponent());
         tf.getDocument().addDocumentListener(this);
-        DefaultComboBoxModel model = new DefaultComboBoxModel(new String[]{suggestedName == null ? "" : suggestedName});
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(new String[]{suggestedName == null ? "" : suggestedName});
         appNameComboBox.setModel(model);
         appNameComboBox.setRenderer(new ListCellRenderer() {
             @Override
@@ -345,7 +345,7 @@ public class AmazonJ2EEServerWizardComponent extends javax.swing.JPanel implemen
             if (templateNames != null && templateNames.size() > 0) {
                 templateNames = new ArrayList<String>(templateNames);
                 templateNames.add(0, "");
-                templateComboBox.setModel(new DefaultComboBoxModel(templateNames.toArray(new String[templateNames.size()])));
+                templateComboBox.setModel(new DefaultComboBoxModel<String>(templateNames.toArray(new String[templateNames.size()])));
                 templateComboBox.setSelectedIndex(0);
                 templateComboBox.setEnabled(true);
                 templateLabel.setEnabled(true);
@@ -358,7 +358,7 @@ public class AmazonJ2EEServerWizardComponent extends javax.swing.JPanel implemen
     }
     
     private void reloadApplications() {
-        DefaultComboBoxModel model = new DefaultComboBoxModel(new String[]{suggestedName == null ? "" : suggestedName, NbBundle.getMessage(AmazonJ2EEServerWizardComponent.class, "AmazonJ2EEServerWizardComponent.loadingApplications")});
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(new String[]{suggestedName == null ? "" : suggestedName, NbBundle.getMessage(AmazonJ2EEServerWizardComponent.class, "AmazonJ2EEServerWizardComponent.loadingApplications")});
         appNameComboBox.setModel(model);
         final AmazonInstance ai = (AmazonInstance)accountComboBox.getSelectedItem();
         
@@ -371,7 +371,7 @@ public class AmazonJ2EEServerWizardComponent extends javax.swing.JPanel implemen
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        appNameComboBox.setModel(new DefaultComboBoxModel(apps.toArray(new String[apps.size()])));
+                        appNameComboBox.setModel(new DefaultComboBoxModel<String>(apps.toArray(new String[apps.size()])));
                         appNameComboBox.setSelectedIndex(0);
                     }
                 });
@@ -433,7 +433,7 @@ public class AmazonJ2EEServerWizardComponent extends javax.swing.JPanel implemen
     }
 
     private void initContainersModel() {
-        DefaultComboBoxModel model = new DefaultComboBoxModel(new String[]{NbBundle.getMessage(AmazonJ2EEServerWizardComponent.class, "AmazonJ2EEServerWizardComponent.loadingApplications")});
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(new String[]{NbBundle.getMessage(AmazonJ2EEServerWizardComponent.class, "AmazonJ2EEServerWizardComponent.loadingApplications")});
         final AmazonInstance ai = (AmazonInstance)accountComboBox.getSelectedItem();
         containerComboBox.setModel(model);
         AmazonInstance.runAsynchronously(new Callable<Void>() {
@@ -443,7 +443,7 @@ public class AmazonJ2EEServerWizardComponent extends javax.swing.JPanel implemen
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        containerComboBox.setModel(new DefaultComboBoxModel(containers.toArray(new String[containers.size()])));
+                        containerComboBox.setModel(new DefaultComboBoxModel<String>(containers.toArray(new String[containers.size()])));
                     }
                 });
                 return null;

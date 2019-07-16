@@ -49,7 +49,7 @@ public class EditPanel extends javax.swing.JPanel {
         } else {
             versions = library.getVersions();
         }
-        versionComboBox.setModel(new DefaultComboBoxModel(versions));
+        versionComboBox.setModel(new DefaultComboBoxModel<Library.Version>(versions));
         versionComboBox.setRenderer(new LibraryVersionRenderer());
         
         // Pre-select the installed version

@@ -90,7 +90,10 @@ public class EditRulesPanel extends javax.swing.JPanel {
     /**
      * Models for stylesheets and at rules comboboxes.
      */
-    private DefaultComboBoxModel STYLESHEETS_MODEL, AT_RULES_MODEL, SELECTORS_MODEL;
+    private DefaultComboBoxModel<FileObject> STYLESHEETS_MODEL;
+    private DefaultComboBoxModel<MediaItem>  AT_RULES_MODEL;
+    private DefaultComboBoxModel SELECTORS_MODEL;
+
     /**
      * Context of the create rule panel.
      */
@@ -105,8 +108,8 @@ public class EditRulesPanel extends javax.swing.JPanel {
 
     public EditRulesPanel() {
         SELECTORS_MODEL = new DefaultComboBoxModel();
-        STYLESHEETS_MODEL = new DefaultComboBoxModel();
-        AT_RULES_MODEL = new DefaultComboBoxModel();
+        STYLESHEETS_MODEL = new DefaultComboBoxModel<>();
+        AT_RULES_MODEL = new DefaultComboBoxModel<>();
 
         initComponents();
         //install autocomplete

@@ -389,7 +389,7 @@ public class OutputTabOperator extends JComponentOperator {
                 Document document = documentForTab(getSource());
                 try {
                     if (getOutputDocumentClass().isInstance(document)) {
-                        Class clazz = getOutputDocumentClass();
+                        Class<?> clazz = getOutputDocumentClass();
                         Method getLineStartMethod = clazz.getDeclaredMethod("getLineStart", new Class[]{int.class});
                         getLineStartMethod.setAccessible(true);
                         Integer lineStart = (Integer) getLineStartMethod.invoke(document, new Object[]{Integer.valueOf(line)});

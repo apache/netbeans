@@ -44,7 +44,7 @@ public abstract class HighlightingSpiPackageAccessor {
     public static synchronized HighlightingSpiPackageAccessor get() {
         // Trying to wake up HighlightsLayer ...
         try {
-            Class clazz = Class.forName(HighlightsLayer.class.getName());
+            Class<?> clazz = Class.forName(HighlightsLayer.class.getName());
         } catch (ClassNotFoundException e) {
             // ignore
         }

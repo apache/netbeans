@@ -241,7 +241,7 @@ public abstract class DOMConvertor extends Convertor {
         }
         
         ConvertorResolver res = ConvertorResolver.getDefault();
-        Class clazz = obj.getClass();
+        Class<?> clazz = obj.getClass();
         Convertor c = res.getConvertor(clazz);
         if (c == null) {
             throw new IOException("Convertor not found for object: " + obj); // NOI18N

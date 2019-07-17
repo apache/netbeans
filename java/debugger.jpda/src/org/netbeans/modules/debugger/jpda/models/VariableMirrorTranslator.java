@@ -107,7 +107,7 @@ public class VariableMirrorTranslator {
             }
             if (value instanceof ObjectReference && type instanceof ReferenceType) {
                 try {
-                    Class clazz = Class.forName(typeStr);
+                    Class<?> clazz = Class.forName(typeStr);
                     if (String.class.equals(clazz)) {
                         return ShortenedStrings.getStringWithLengthControl((StringReference) value);
                     }
@@ -349,7 +349,7 @@ public class VariableMirrorTranslator {
         if (vm == null) {
             throw new VMDisconnectedExceptionWrapper(new VMDisconnectedException());
         }
-        Class clazz = mirror.getClass();
+        Class<?> clazz = mirror.getClass();
         JPDAThreadImpl currentThread;
         Lock lock;
         if (willInvokeMethods(isObject, clazz)) {

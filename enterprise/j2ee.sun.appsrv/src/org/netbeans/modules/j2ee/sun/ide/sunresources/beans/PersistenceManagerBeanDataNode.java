@@ -50,7 +50,7 @@ public class PersistenceManagerBeanDataNode extends BaseResourceNode implements 
         resource = key;
         
         key.addPropertyChangeListener(this);
-        Class clazz = key.getClass ();
+        Class<?> clazz = key.getClass ();
         try{
             createProperties(key, Utilities.getBeanInfo(clazz));
         } catch (Exception e){

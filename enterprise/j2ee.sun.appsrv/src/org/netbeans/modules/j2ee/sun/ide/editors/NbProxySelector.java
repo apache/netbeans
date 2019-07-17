@@ -304,7 +304,7 @@ public final class NbProxySelector extends ProxySelector {
     static boolean useSystemProxies () {
         if (useSystemProxies == null) {
             try {
-                Class clazz = Class.forName ("sun.net.NetProperties");
+                Class<?> clazz = Class.forName ("sun.net.NetProperties");
                 Method getBoolean = clazz.getMethod ("getBoolean", String.class);
                 useSystemProxies = getBoolean.invoke (null, "java.net.useSystemProxies");
             } catch (Exception x) {

@@ -50,7 +50,7 @@ class SubtaskTableModel extends DefaultTableModel {
 
     @Override
     public Class<?> getColumnClass (int columnIndex) {
-        Class clazz = String.class;
+        Class<?> clazz = String.class;
         return clazz;
     }
 

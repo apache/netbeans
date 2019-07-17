@@ -1422,7 +1422,7 @@ public class MetaComponentCreator {
                     new Mutex.ExceptionAction() {
                         @Override
                         public Object run() throws Exception {
-                            Class clazz = ClassPathUtils.loadClass(className, formFile);
+                            Class<?> clazz = ClassPathUtils.loadClass(className, formFile);
                             if (clazz != null) {
                                 // Force creation of the default instance in the correct L&F context
                                 BeanSupport.getDefaultInstance(clazz);

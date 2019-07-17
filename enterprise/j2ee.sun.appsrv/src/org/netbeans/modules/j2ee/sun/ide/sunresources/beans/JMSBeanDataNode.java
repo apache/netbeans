@@ -58,7 +58,7 @@ public class JMSBeanDataNode extends BaseResourceNode implements java.beans.Prop
         setShortDescription (NbBundle.getMessage (JMSBeanDataNode.class, "DSC_JmsNode"));//NOI18N
         
         key.addPropertyChangeListener(this);
-        Class clazz = key.getClass ();
+        Class<?> clazz = key.getClass ();
         try{
             createProperties(key, Utilities.getBeanInfo(clazz));
         } catch (Exception e){

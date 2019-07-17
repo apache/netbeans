@@ -1650,7 +1650,7 @@ public class InstanceDataObject extends MultiDataObject implements InstanceCooki
             throw new FileNotFoundException("SFS:xml/memory while converting a " + obj.getClass().getName()); //NOI18N
         }
         
-        Class clazz = obj.getClass();
+        Class<?> clazz = obj.getClass();
         Class c = clazz;
         while (c != null) {
             String className = c.getName();

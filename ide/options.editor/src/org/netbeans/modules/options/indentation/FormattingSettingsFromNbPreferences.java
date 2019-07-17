@@ -123,7 +123,7 @@ public final class FormattingSettingsFromNbPreferences extends StorageFilter<Str
             ClassLoader loader = Lookup.getDefault().lookup(ClassLoader.class);
             if (loader != null) {
                 try {
-                    Class clazz = loader.loadClass(className);
+                    Class<?> clazz = loader.loadClass(className);
                     prefs = NbPreferences.forModule(clazz);
                 } catch (ClassNotFoundException ex) {
                     // ignore

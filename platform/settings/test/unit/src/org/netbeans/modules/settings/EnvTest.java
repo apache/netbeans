@@ -52,19 +52,19 @@ public class EnvTest extends NbTestCase {
     }
     
     public void testFindProvider() throws Exception {
-        Class clazz = org.netbeans.modules.settings.convertors.FooSetting.class;
+        Class<?> clazz = org.netbeans.modules.settings.convertors.FooSetting.class;
         FileObject fo = Env.findProvider(clazz);
         assertNotNull("xml/memory registration not found: " + clazz.getName(), fo);
     }
     
     public void testFindProviderFromSuperClass() throws Exception {
-        Class clazz = org.netbeans.modules.settings.convertors.Bar3Setting.class;
+        Class<?> clazz = org.netbeans.modules.settings.convertors.Bar3Setting.class;
         FileObject fo = Env.findProvider(clazz);
         assertNotNull("xml/memory registration not found: " + clazz.getName(), fo);
     }
     
     public void testFindProviderFromSuperClass2() throws Exception {
-        Class clazz = org.netbeans.modules.settings.convertors.Bar4Setting.class;
+        Class<?> clazz = org.netbeans.modules.settings.convertors.Bar4Setting.class;
         FileObject fo = Env.findProvider(clazz);
         assertNull("xml/memory registration found: " + clazz.getName(), fo);
     }

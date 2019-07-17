@@ -38,7 +38,7 @@ public abstract class CodeTemplateApiPackageAccessor {
     public static CodeTemplateApiPackageAccessor get() {
         if (INSTANCE == null) {
             try {
-                Class clazz = Class.forName(CodeTemplateManager.class.getName());
+                Class<?> clazz = Class.forName(CodeTemplateManager.class.getName());
             } catch (ClassNotFoundException e) {
                 // ignore
             }

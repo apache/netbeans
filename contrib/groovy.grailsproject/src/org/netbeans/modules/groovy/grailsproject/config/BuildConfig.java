@@ -458,7 +458,7 @@ public final class BuildConfig {
         }
 
         try {
-            Class clazz = urlLoader.loadClass("grails.util.BuildSettings"); // NOI18N
+            Class<?> clazz = urlLoader.loadClass("grails.util.BuildSettings"); // NOI18N
             Constructor contructor = clazz.getConstructor(File.class, File.class);
             Object instance = contructor.newInstance(platform.getGrailsHome(), projectRoot);
 

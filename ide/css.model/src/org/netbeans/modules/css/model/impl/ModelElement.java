@@ -237,7 +237,7 @@ public abstract class ModelElement implements Element {
     private Class getModelClass(Element element) {
         if (element instanceof ModelElement) {
             ModelElement melement = (ModelElement) element;
-            Class clazz = melement.getModelClass();
+            Class<?> clazz = melement.getModelClass();
             if (!clazz.isAssignableFrom(element.getClass())) {
                 throw new IllegalArgumentException(String.format("Element %s declares %s as its superinterface but it is not true!", element.getClass().getSimpleName(), clazz.getSimpleName()));
             }
@@ -249,7 +249,7 @@ public abstract class ModelElement implements Element {
 
     @Override
     public int addElement(Element e) {
-        Class clazz = getModelClass(e);
+        Class<?> clazz = getModelClass(e);
         CLASSELEMENTS.add(new ClassElement(clazz, e));
         fireElementAdded(e);
         return getElementsCount() - 1; //last element index
@@ -268,7 +268,7 @@ public abstract class ModelElement implements Element {
 
     @Override
     public Element setElementAt(int index, Element e) {
-        Class clazz = getModelClass(e);
+        Class<?> clazz = getModelClass(e);
         ClassElement ce = new ClassElement(clazz, e);
         ClassElement old = CLASSELEMENTS.set(index, ce);
         if (old != null && old.getElement() != null) {
@@ -311,7 +311,7 @@ public abstract class ModelElement implements Element {
 
     @Override
     public void insertElement(int index, Element element) {
-        Class clazz = getModelClass(element);
+        Class<?> clazz = getModelClass(element);
         CLASSELEMENTS.add(index, new ClassElement(clazz, element));
         fireElementAdded(element);
     }

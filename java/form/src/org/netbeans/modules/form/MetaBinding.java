@@ -68,7 +68,7 @@ public class MetaBinding {
     void setTarget(RADComponent target) {
         this.target = target;
         // backward compatibility hack
-        Class clazz = target.getBeanClass();
+        Class<?> clazz = target.getBeanClass();
         if (hasSubBindings() && 
                 (javax.swing.JComboBox.class.isAssignableFrom(clazz)
                 || javax.swing.JList.class.isAssignableFrom(clazz))) {

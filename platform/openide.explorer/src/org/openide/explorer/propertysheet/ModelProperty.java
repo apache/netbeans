@@ -135,7 +135,7 @@ class ModelProperty extends Property {
 
     /** Creates a ProxyProperty for a set of nodes given a property name */
     static Property toProperty(Node[] n, String name) throws ClassCastException, NullPointerException {
-        Class clazz = null; //the class to look for
+        Class<?> clazz = null; //the class to look for
 
         if (n.length == 0) {
             //Give enough info for someone to figure out what's wrong

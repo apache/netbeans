@@ -532,7 +532,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
             Item rootItem = new Item();
             Object[] array = publicNodeTypeNamesMap.keySet().toArray();
             for (int i = 0; i < array.length; i++) {
-                Class clazz = (Class)array[i];
+                Class<?> clazz = (Class)array[i];
                 Item.insertItemIntoLayer (rootItem.layer, Item.getItem (clazz));
                 
                 if ( clazz.isInterface() ) {

@@ -454,7 +454,7 @@ public class FontEditor extends ResourceWrapperEditor implements XMLPropertyEdit
                 java.lang.reflect.Method readMethod = propDesc.getReadMethod();
                 if (readMethod != null) {
                     try {
-                        Class clazz = radProp.getRADComponent().getBeanClass();
+                        Class<?> clazz = radProp.getRADComponent().getBeanClass();
                         Object beanInstance = BeanSupport.createBeanInstance(clazz);
                         return (Font)readMethod.invoke(beanInstance, new Object [0]);
                     } catch (Exception e) {

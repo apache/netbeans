@@ -130,7 +130,7 @@ public class EditorOperatorTest extends JellyTestCase {
         // set text to status bar
         try {
             String className = "org.netbeans.editor.Utilities";
-            Class clazz = Class.forName(className);
+            Class<?> clazz = Class.forName(className);
             Method setStatusTextMethod = clazz.getDeclaredMethod("setStatusText", new Class[]{
                         JTextComponent.class,
                         String.class

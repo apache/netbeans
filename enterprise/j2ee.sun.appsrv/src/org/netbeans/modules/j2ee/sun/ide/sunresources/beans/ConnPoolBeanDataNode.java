@@ -51,7 +51,7 @@ public class ConnPoolBeanDataNode extends BaseResourceNode implements java.beans
         resource = key;
         key.addPropertyChangeListener(this);
         
-        Class clazz = key.getClass();
+        Class<?> clazz = key.getClass();
         try{
             createProperties(key, Utilities.getBeanInfo(clazz));
         } catch (Exception e){

@@ -80,7 +80,7 @@ public class LanguagesDataNode extends DataNode {
                     int i, k = dob.length;
                     for (i = 0; i < k; i++) {
                         InstanceCookie ic = dob [i].getCookie(InstanceCookie.class);
-                        Class clazz = ic.instanceClass ();
+                        Class<?> clazz = ic.instanceClass ();
                         if (JSeparator.class.isAssignableFrom (clazz))
                             actions.add (null);
                         else

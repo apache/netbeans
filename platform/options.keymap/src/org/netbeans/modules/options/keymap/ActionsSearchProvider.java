@@ -221,7 +221,7 @@ public class ActionsSearchProvider implements SearchProvider {
 
                 @Override
                 public void run() {
-                    Class clazz = sa.getClass();
+                    Class<?> clazz = sa.getClass();
                     Field f = null;
                     try {
                         f = clazz.getDeclaredField("action");

@@ -369,7 +369,7 @@ public class LogViewMgr {
     private Method initSetClosedMethod(InputOutput io) {
         Method method = null;
         try {
-            Class clazz = io.getClass();
+            Class<?> clazz = io.getClass();
             method = clazz.getDeclaredMethod("setClosed", boolean.class); // NOI18N
             method.setAccessible(true);
         } catch(Exception ex) {

@@ -42,7 +42,7 @@ public abstract class TypingHooksSpiAccessor {
     public static synchronized TypingHooksSpiAccessor get() {
         // Trying to wake up HighlightsLayer ...
         try {
-            Class clazz = Class.forName(TypedTextInterceptor.MutableContext.class.getName());
+            Class<?> clazz = Class.forName(TypedTextInterceptor.MutableContext.class.getName());
         } catch (ClassNotFoundException e) {
             // ignore
         }

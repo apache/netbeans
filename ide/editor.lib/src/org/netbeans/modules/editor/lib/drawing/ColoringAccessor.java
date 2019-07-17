@@ -38,7 +38,7 @@ public abstract class ColoringAccessor {
         if (ACCESSOR == null) {
             // Trying to wake up EditorUI ...
             try {
-                Class clazz = Class.forName(Coloring.class.getName());
+                Class<?> clazz = Class.forName(Coloring.class.getName());
             } catch (ClassNotFoundException e) {
                 // ignore
             }

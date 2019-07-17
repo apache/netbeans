@@ -263,7 +263,7 @@ abstract class DataTransferSupport {
         */
         public final Transferable paste () throws IOException {
             try {
-                Class clazz = cookie.instanceClass ();
+                Class<?> clazz = cookie.instanceClass ();
                 
                 // create the instance
                 InstanceDataObject.create(getTargetFolder(), null, clazz);

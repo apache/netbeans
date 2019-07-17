@@ -585,7 +585,7 @@ public class ReflectionHelper {
             String inClassName, LinkedList inParamList, JavaMethod inMethod,
             URLClassLoader urlClassLoader, WsdlData wsData, WSPort port) throws WebServiceReflectionException {
 
-        Class clazz = null;
+        Class<?> clazz = null;
         Class serviceClass = null;
         if (null == urlClassLoader) {
             return null;

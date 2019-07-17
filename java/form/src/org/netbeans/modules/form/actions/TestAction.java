@@ -328,7 +328,7 @@ public class TestAction extends CallableSystemAction implements Runnable {
                             PaletteItem pitem = items[j].getLookup().lookup(PaletteItem.class);
                             boolean supported = false;
                             try {
-                                Class clazz = pitem.getComponentClass();
+                                Class<?> clazz = pitem.getComponentClass();
                                 if ((clazz != null) && (LookAndFeel.class.isAssignableFrom(clazz))) {
                                     LookAndFeel laf = (LookAndFeel)clazz.newInstance();
                                     supported = laf.isSupportedLookAndFeel();

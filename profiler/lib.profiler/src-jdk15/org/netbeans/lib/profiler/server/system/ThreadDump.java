@@ -49,7 +49,7 @@ public class ThreadDump {
             String className = method[0];
             String methodName = method[1];
             try {
-                Class clazz = Class.forName(className);
+                Class<?> clazz = Class.forName(className);
                 toCompositeDataMethod = clazz.getMethod(methodName, ThreadInfo.class);
                 if (toCompositeDataMethod != null) {
                     break;

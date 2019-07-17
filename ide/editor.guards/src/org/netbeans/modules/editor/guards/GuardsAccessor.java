@@ -33,7 +33,7 @@ public abstract class GuardsAccessor {
     public static GuardsAccessor DEFAULT;
     
     static {
-        Class clazz = GuardedSectionManager.class;
+        Class<?> clazz = GuardedSectionManager.class;
         try {
             Class.forName(clazz.getName(), true, clazz.getClassLoader());
         } catch (ClassNotFoundException cnfe) {

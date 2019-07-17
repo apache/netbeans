@@ -1422,7 +1422,7 @@ public class TableCustomizer extends JPanel implements Customizer, FormAwareEdit
      */
     private void checkBindingType() {
         FormUtils.TypeHelper type = modelBoundCustomizer.getSelectedType();
-        Class clazz = (type == null) ? null : FormUtils.typeToClass(type);
+        Class<?> clazz = (type == null) ? null : FormUtils.typeToClass(type);
         boolean collection = (clazz != null) && (Collection.class.isAssignableFrom(clazz) || Object.class.equals(clazz));
         tabbedPane.setEnabledAt(1, collection);
         expressionCombo.setEnabled(false);

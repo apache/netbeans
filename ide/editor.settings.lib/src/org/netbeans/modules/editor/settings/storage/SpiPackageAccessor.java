@@ -39,7 +39,7 @@ public abstract class SpiPackageAccessor {
     public static synchronized SpiPackageAccessor get() {
         // Trying to wake up HighlightsLayer ...
         try {
-            Class clazz = Class.forName(StorageReader.class.getName());
+            Class<?> clazz = Class.forName(StorageReader.class.getName());
         } catch (ClassNotFoundException e) {
             // ignore
         }

@@ -124,7 +124,7 @@ public class NbObjectInputStream extends ObjectInputStream {
 
         // otherwise reload the ObjectStreamClass to contain the local copy
         ClassLoader cl = getNBClassLoader();
-        Class clazz = Class.forName(newN, false, cl);
+        Class<?> clazz = Class.forName(newN, false, cl);
 
         ObjectStreamClass newOse = ObjectStreamClass.lookup(clazz);
 

@@ -633,7 +633,7 @@ abstract class SheetCell extends AbstractCellEditor implements TableModelListene
                 FeatureDescriptor fd = ((ExPropertyModel)getModel()).getFeatureDescriptor();
                 @SuppressWarnings("deprecation")
                 Node node = (Node)((ExPropertyModel)getModel()).getBeans()[0];
-                Class clazz = getModel().getPropertyType();
+                Class<?> clazz = getModel().getPropertyType();
                 return MessageFormat.format(
                     getString("ACSD_PropertyPanelRenderer"),
                     new Object[] {

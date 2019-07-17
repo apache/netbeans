@@ -57,7 +57,7 @@ public class JavaMailSessionBeanDataNode extends BaseResourceNode implements jav
         setShortDescription (NbBundle.getMessage (JavaMailSessionBeanDataNode.class, "DSC_MailNode"));//NOI18N
         key.addPropertyChangeListener(this);
         
-        Class clazz = key.getClass ();
+        Class<?> clazz = key.getClass ();
         try{
             createProperties(key, Utilities.getBeanInfo(clazz));
         } catch (Exception e){

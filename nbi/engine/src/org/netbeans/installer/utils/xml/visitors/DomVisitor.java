@@ -31,7 +31,7 @@ import org.w3c.dom.Text;
 public class DomVisitor {
    
    public void visit(Node node) {
-      final Class clazz = node.getClass();
+      final Class<?> clazz = node.getClass();
       if (Element.class.isAssignableFrom(clazz)) {
          visit((Element) node);
       } else if (Document.class.isAssignableFrom(clazz)) {

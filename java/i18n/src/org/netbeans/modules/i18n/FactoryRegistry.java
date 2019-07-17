@@ -76,7 +76,7 @@ public final class FactoryRegistry extends Object {
 
             // XXX it has to be checked for null, for cases Jsp support and java support
             // don't have their modules available, see JspI18nSupportFactory.getDataObjectClass.
-            Class clazz = factory.getDataObjectClass();
+            Class<?> clazz = factory.getDataObjectClass();
             
             if ((clazz != null) && clazz.isAssignableFrom(dataObjectClass)) {
                 candidates.add(factory);
@@ -121,7 +121,7 @@ public final class FactoryRegistry extends Object {
 
             // XXX it has to be checked for null, for cases Jsp support and java support
             // don't have their modules available, see JspI18nSupportFactory.getDataObjectClass.
-            Class clazz = factory.getDataObjectClass();
+            Class<?> clazz = factory.getDataObjectClass();
             
             if ((clazz != null) && clazz.isAssignableFrom(dataObjectClass)) {
                 cache.add(dataObjectClass);

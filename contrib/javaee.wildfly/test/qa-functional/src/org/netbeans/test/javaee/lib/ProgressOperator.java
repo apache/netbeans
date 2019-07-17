@@ -80,7 +80,7 @@ public class ProgressOperator {
     
     private static boolean processInProgress(String name) {
         try {
-            Class clazz = Class.forName("org.netbeans.progress.module.Controller");
+            Class<?> clazz = Class.forName("org.netbeans.progress.module.Controller");
             Method getDefaultMethod = clazz.getDeclaredMethod("getDefault", (Class[])null);
             getDefaultMethod.setAccessible(true);
             Object controllerInstance = getDefaultMethod.invoke(null, (Object[])null);

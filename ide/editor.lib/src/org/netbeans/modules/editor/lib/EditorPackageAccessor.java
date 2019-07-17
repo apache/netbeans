@@ -51,7 +51,7 @@ public abstract class EditorPackageAccessor {
     public static synchronized EditorPackageAccessor get() {
         // Trying to wake up BaseDocument ...
         try {
-            Class clazz = Class.forName(BaseDocument.class.getName());
+            Class<?> clazz = Class.forName(BaseDocument.class.getName());
         } catch (ClassNotFoundException e) {
             // ignore
         }

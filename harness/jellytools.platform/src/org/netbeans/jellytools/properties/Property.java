@@ -360,7 +360,7 @@ public class Property {
         // in ButtonPanel (supplies custom editor button "...")
         // or IconPanel(supplies property marking).
         try {
-            Class clazz = Class.forName("org.openide.explorer.propertysheet.RendererPropertyDisplayer");
+            Class<?> clazz = Class.forName("org.openide.explorer.propertysheet.RendererPropertyDisplayer");
             Method findInnermostRendererMethod = clazz.getDeclaredMethod("findInnermostRenderer", new Class[] {JComponent.class});
             findInnermostRendererMethod.setAccessible(true);
             comp = (Component)findInnermostRendererMethod.invoke(null, new Object[] {comp});
@@ -406,7 +406,7 @@ public class Property {
             @Override
             public void run() {
                 try {
-                    Class clazz = Class.forName("org.openide.explorer.propertysheet.PropUtils");
+                    Class<?> clazz = Class.forName("org.openide.explorer.propertysheet.PropUtils");
                     Method getPropertyEditorMethod = clazz.getDeclaredMethod("getPropertyEditor", new Class[]{Node.Property.class});
                     getPropertyEditorMethod.setAccessible(true);
                     atomicReference.set((PropertyEditor) getPropertyEditorMethod.invoke(null, new Object[]{property}));

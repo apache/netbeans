@@ -216,7 +216,7 @@ public final class AntBridge {
             Map<String,Class> m2 = new HashMap<String,Class>();
             for (Map.Entry<String,Class> entry2 : defs.entrySet()) {
                 String fqn = entry2.getKey();
-                Class clazz = entry2.getValue();
+                Class<?> clazz = entry2.getValue();
                 String name;
                 int idx = fqn.lastIndexOf(':');
                 if (idx != -1) {
@@ -558,7 +558,7 @@ public final class AntBridge {
             String name = entry.getKey();
             String clazzname = entry.getValue();
             try {
-                Class clazz = l.loadClass(clazzname);
+                Class<?> clazz = l.loadClass(clazzname);
                 defs.put(name, clazz);
             } catch (ClassNotFoundException cnfe) {
                 // This is not normal. If the class is mentioned, it should be there.

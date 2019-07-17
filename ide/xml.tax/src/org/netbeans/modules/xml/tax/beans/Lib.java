@@ -132,7 +132,7 @@ public class Lib {
 	}
         if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("Lib::getCustomizer: propertyDescriptor: " + propertyDescriptor); // NOI18N
 
-        Class clazz = propertyDescriptor.getPropertyEditorClass();
+        Class<?> clazz = propertyDescriptor.getPropertyEditorClass();
 
         if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("Lib::getCustomizer: propertyEditorClass: " + clazz); // NOI18N
 

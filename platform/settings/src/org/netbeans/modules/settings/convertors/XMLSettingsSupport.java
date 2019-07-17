@@ -234,7 +234,7 @@ final class XMLSettingsSupport {
                 // ok look up new descriptor
             }
             
-            Class clazz = Class.forName(newN, false, cl);
+            Class<?> clazz = Class.forName(newN, false, cl);
             ObjectStreamClass newOse = ObjectStreamClass.lookup(clazz);
 
             // #28021 - it is possible that lookup return null. In that case the conversion

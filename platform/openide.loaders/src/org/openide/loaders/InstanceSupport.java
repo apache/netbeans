@@ -275,7 +275,7 @@ public class InstanceSupport extends Object implements InstanceCookie.Of {
         
         // try to find out...
         try {
-            Class clazz = instanceClass();
+            Class<?> clazz = instanceClass();
             int modif = clazz.getModifiers ();
             if (!Modifier.isPublic (modif) || Modifier.isAbstract (modif)) {
                 bean = Boolean.FALSE;
@@ -367,7 +367,7 @@ public class InstanceSupport extends Object implements InstanceCookie.Of {
     @Deprecated
     public static HelpCtx findHelp (InstanceCookie instance) {
         try {
-            Class clazz = instance.instanceClass();
+            Class<?> clazz = instance.instanceClass();
             // [a.n] I have moved the code here as those components's BeanInfo do not contain helpID
             // - it is faster
             // Help on some standard components. Note that borders/layout managers do not really work here.

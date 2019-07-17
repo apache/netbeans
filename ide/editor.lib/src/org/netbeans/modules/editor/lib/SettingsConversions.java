@@ -212,7 +212,7 @@ public final class SettingsConversions {
             return;
         }
 
-        Class clazz = instance.getClass();
+        Class<?> clazz = instance.getClass();
         Boolean hasMethod = settingsChangeAvailable.get(clazz);
         if (hasMethod == null || hasMethod.booleanValue()) {
             Method method = null;

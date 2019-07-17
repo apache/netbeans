@@ -71,7 +71,7 @@ public class GsfDataNode extends DataNode {
                 LOG.log(Level.WARNING, "Not an action instance, or broken action: {0}", dob[i].getPrimaryFile());
                 continue;
             }
-            Class clazz = ic.instanceClass();
+            Class<?> clazz = ic.instanceClass();
 
             if (JSeparator.class.isAssignableFrom(clazz)) {
                 actions.add(null);

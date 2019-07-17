@@ -26,6 +26,11 @@ import java.util.prefs.Preferences;
  */
 public class UninitializedVariableHintTest extends PHPHintsTestBase {
 
+    @Override
+    protected String getTestDirectory() {
+        return TEST_DIRECTORY + "UninitializedVariableHint/";
+    }
+
     public UninitializedVariableHintTest(String testName) {
         super(testName);
     }
@@ -64,6 +69,11 @@ public class UninitializedVariableHintTest extends PHPHintsTestBase {
 
     public void testIssue249508() throws Exception {
         checkHints(new UninitializedVariableHintStub(false), "testIssue249508.php");
+    }
+
+    // PHP 7.4
+    public void testArrowFunctions() throws Exception {
+        checkHints(new UninitializedVariableHintStub(false), "testArrowFunctions.php");
     }
 
     private class UninitializedVariableHintStub extends UninitializedVariableHint {

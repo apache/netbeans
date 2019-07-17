@@ -21,6 +21,7 @@ package org.netbeans.modules.php.editor.verification;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -49,6 +50,7 @@ import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayElement;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
 import org.netbeans.modules.php.editor.parser.astnodes.CatchClause;
 import org.netbeans.modules.php.editor.parser.astnodes.DoStatement;
@@ -138,6 +140,9 @@ public class UninitializedVariableHint extends HintRule implements CustomisableR
         private final Model model;
         private final Map<String, Set<BaseFunctionElement>> invocationCache = new HashMap<>();
         private final BaseDocument baseDocument;
+        private final Map<ArrowFunctionDeclaration, Set<String>> arrowFunctionParameters = new HashMap<>();
+        private ArrowFunctionDeclaration firstArrowFunction = null;
+        private ArrowFunctionDeclaration currentArrowFunction = null;
 
         private CheckVisitor(FileObject fileObject, Model model, BaseDocument baseDocument) {
             this.fileObject = fileObject;
@@ -149,7 +154,7 @@ public class UninitializedVariableHint extends HintRule implements CustomisableR
             for (ASTNode scopeNode : uninitializedVariablesAll.keySet()) {
                 createHints(getUninitializedVariables(scopeNode));
             }
-            return hints;
+            return Collections.unmodifiableCollection(hints);
         }
 
         private void createHints(List<Variable> uninitializedVariables) {
@@ -212,6 +217,30 @@ public class UninitializedVariableHint extends HintRule implements CustomisableR
             scan(node.getFormalParameters());
             scan(node.getBody());
             parentNodes.pop();
+        }
+
+        @Override
+        public void visit(ArrowFunctionDeclaration node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            if (firstArrowFunction == null) {
+                firstArrowFunction = node;
+            }
+            if (currentArrowFunction == null || parentNodes.peek() instanceof LambdaFunctionDeclaration) {
+                currentArrowFunction = node;
+            }
+            Set<String> arrowFunctionParams = getArrowFunctionParams(currentArrowFunction);
+            for (FormalParameter parameter : node.getFormalParameters()) {
+                arrowFunctionParams.add(CodeUtils.extractFormalParameterName(parameter));
+            }
+            scan(node.getExpression());
+            // clear
+            if (firstArrowFunction == node) {
+                firstArrowFunction = null;
+                currentArrowFunction = null;
+                arrowFunctionParameters.clear();
+            }
         }
 
         @Override
@@ -296,7 +325,7 @@ public class UninitializedVariableHint extends HintRule implements CustomisableR
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
-            if (isProcessableVariable(node)) {
+            if (isProcessableVariable(node) && !isArrowFunctionParameter(node)) {
                 addUninitializedVariable(node);
             }
         }
@@ -312,7 +341,7 @@ public class UninitializedVariableHint extends HintRule implements CustomisableR
                 if (functionName != null) {
                     Set<BaseFunctionElement> allFunctions = invocationCache.get(functionName);
                     if (allFunctions == null) {
-                        allFunctions = new HashSet<BaseFunctionElement>(model.getIndexScope().getIndex().getFunctions(NameKind.create(functionName, QuerySupport.Kind.EXACT)));
+                        allFunctions = new HashSet<>(model.getIndexScope().getIndex().getFunctions(NameKind.create(functionName, QuerySupport.Kind.EXACT)));
                         invocationCache.put(functionName, allFunctions);
                     }
                     processAllFunctions(allFunctions, invocationParametersExp);
@@ -339,7 +368,7 @@ public class UninitializedVariableHint extends HintRule implements CustomisableR
                             if (resolvedTypes.size() > 0) {
                                 TypeScope resolvedType = ModelUtils.getFirst(resolvedTypes);
                                 Index index = model.getIndexScope().getIndex();
-                                allFunctions = new HashSet<BaseFunctionElement>(ElementFilter.forName(NameKind.exact(functionName)).filter(index.getAllMethods(resolvedType)));
+                                allFunctions = new HashSet<>(ElementFilter.forName(NameKind.exact(functionName)).filter(index.getAllMethods(resolvedType)));
                                 invocationCache.put(functionName, allFunctions);
                             }
                         }
@@ -532,6 +561,22 @@ public class UninitializedVariableHint extends HintRule implements CustomisableR
                 }
             }
             return retval;
+        }
+
+        private boolean isArrowFunctionParameter(Variable node) {
+            if (currentArrowFunction == null) {
+                return false;
+            }
+            return getArrowFunctionParams(currentArrowFunction).contains(CodeUtils.extractVariableName(node));
+        }
+
+        private Set<String> getArrowFunctionParams(ArrowFunctionDeclaration arrowFunctionDeclaration) {
+            Set<String> arrowFunctionParams = arrowFunctionParameters.get(arrowFunctionDeclaration);
+            if (arrowFunctionParams == null) {
+                arrowFunctionParams = new HashSet<>();
+                arrowFunctionParameters.put(arrowFunctionDeclaration, arrowFunctionParams);
+            }
+            return arrowFunctionParams;
         }
 
     }

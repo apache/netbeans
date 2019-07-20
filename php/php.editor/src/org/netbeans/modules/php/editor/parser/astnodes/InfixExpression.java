@@ -19,11 +19,14 @@
 package org.netbeans.modules.php.editor.parser.astnodes;
 
 /**
- * Represents an infix expression
- * <pre>e.g.<pre> $a + 1,
+ * Represents an infix expression.
+ * e.g.
+ * <pre>
+ * $a + 1,
  * 3 - 2,
  * foo() * $a->bar(),
  * 'string'.$c
+ * </pre>
  */
 public class InfixExpression extends Expression {
 
@@ -123,4 +126,3 @@ public class InfixExpression extends Expression {
     }
 
 }
-

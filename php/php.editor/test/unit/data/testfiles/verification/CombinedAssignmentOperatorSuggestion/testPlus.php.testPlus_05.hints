@@ -1,0 +1,4 @@
+$x^ = $x + $object->request['messages']['id'];
+---------------------------------------------
+HINT:You can use combined assignment operator
+FIX:Use Combined Assignment Operator"+="

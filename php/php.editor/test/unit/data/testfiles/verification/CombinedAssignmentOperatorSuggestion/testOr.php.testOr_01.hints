@@ -1,0 +1,4 @@
+$x = ^$x | 10;
+-------------
+HINT:You can use combined assignment operator
+FIX:Use Combined Assignment Operator"|="

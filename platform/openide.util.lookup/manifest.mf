@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.openide.util.lookup
 OpenIDE-Module-Localizing-Bundle: org/openide/util/lookup/Bundle.properties
-OpenIDE-Module-Specification-Version: 8.38
+OpenIDE-Module-Specification-Version: 8.39
 

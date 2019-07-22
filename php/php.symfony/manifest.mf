@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.php.symfony
 OpenIDE-Module-Layer: org/netbeans/modules/php/symfony/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/php/symfony/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.49
+OpenIDE-Module-Specification-Version: 1.50
 

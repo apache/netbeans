@@ -4,5 +4,5 @@ OpenIDE-Module: org.netbeans.modules.findbugs.installer
 xOpenIDE-Module-Layer: org/netbeans/modules/findbugs/installer/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/findbugs/installer/Bundle.properties
 OpenIDE-Module-Provides: org.netbeans.modules.findbugs.installer
-OpenIDE-Module-Specification-Version: 1.21
+OpenIDE-Module-Specification-Version: 1.22
 

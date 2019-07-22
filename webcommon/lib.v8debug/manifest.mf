@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.lib.v8debug/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/lib/v8debug/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.21
+OpenIDE-Module-Specification-Version: 1.22
 Main-Class: org.netbeans.lib.v8debug.client.cmdline.V8Debug

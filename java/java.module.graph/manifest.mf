@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.java.module.graph
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/java/module/graph/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.5
+OpenIDE-Module-Specification-Version: 1.6
 

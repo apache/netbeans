@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.libs.javafx.macosx
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/javafx/macosx/Bundle.properties
 OpenIDE-Module-Fragment-Host: org.netbeans.libs.javafx
-OpenIDE-Module-Specification-Version: 11.1
+OpenIDE-Module-Specification-Version: 11.2
 OpenIDE-Module-Java-Dependencies: Java > 11
 OpenIDE-Module-Needs: org.openide.modules.os.MacOSX
 OpenIDE-Module-Provides: org.openide.modules.jre.JavaFX

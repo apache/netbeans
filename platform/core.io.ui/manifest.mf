@@ -3,5 +3,5 @@ OpenIDE-Module: org.netbeans.core.io.ui/1
 OpenIDE-Module-Provides: org.openide.windows.IOContainer$Provider
 OpenIDE-Module-Layer: org/netbeans/core/io/ui/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/core/io/ui/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.35
+OpenIDE-Module-Specification-Version: 1.36
 

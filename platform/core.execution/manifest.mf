@@ -3,4 +3,4 @@ OpenIDE-Module: org.netbeans.core.execution/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/core/execution/resources/Bundle.properties
 OpenIDE-Module-Provides: org.openide.execution.ExecutionEngine
 AutoUpdate-Essential-Module: true
-OpenIDE-Module-Specification-Version: 1.46
+OpenIDE-Module-Specification-Version: 1.47

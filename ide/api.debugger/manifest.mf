@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.api.debugger/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/api/debugger/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.60
+OpenIDE-Module-Specification-Version: 1.61
 OpenIDE-Module-Layer: org/netbeans/api/debugger/layer.xml

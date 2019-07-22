@@ -1,5 +1,5 @@
 OpenIDE-Module: org.netbeans.modules.el.lexer/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/el/lexer/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.32
+OpenIDE-Module-Specification-Version: 1.33
 OpenIDE-Module-Layer: org/netbeans/modules/el/lexer/resources/layer.xml
 

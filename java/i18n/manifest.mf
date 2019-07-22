@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.i18n/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/i18n/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.58
+OpenIDE-Module-Specification-Version: 1.59
 OpenIDE-Module-Layer: org/netbeans/modules/i18n/Layer.xml
 AutoUpdate-Show-In-Client: false
 

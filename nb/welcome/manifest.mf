@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module-Install: org/netbeans/modules/welcome/Installer.class
-OpenIDE-Module-Specification-Version: 1.47
+OpenIDE-Module-Specification-Version: 1.48
 OpenIDE-Module: org.netbeans.modules.welcome/1
 OpenIDE-Module-Layer: org/netbeans/modules/welcome/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/welcome/Bundle.properties

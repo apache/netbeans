@@ -3,4 +3,4 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.gradle.java
 OpenIDE-Module-Layer: org/netbeans/modules/gradle/java/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/gradle/java/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.2
+OpenIDE-Module-Specification-Version: 1.3

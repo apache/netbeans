@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.languages.yaml
 OpenIDE-Module-Layer: org/netbeans/modules/languages/yaml/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/languages/yaml/Bundle.properties
-OpenIDE-Module-Specification-Version: 2.37
+OpenIDE-Module-Specification-Version: 2.38
 AutoUpdate-Show-In-Client: false

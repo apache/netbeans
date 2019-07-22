@@ -3,4 +3,4 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.modules.php.twig/1
 OpenIDE-Module-Layer: org/netbeans/modules/php/twig/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/php/twig/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.30
+OpenIDE-Module-Specification-Version: 1.31

@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.j2ee.genericserver
-OpenIDE-Module-Specification-Version: 1.36
+OpenIDE-Module-Specification-Version: 1.37
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/j2ee/genericserver/resources/Bundle.properties
 OpenIDE-Module-Layer: org/netbeans/modules/j2ee/genericserver/resources/layer.xml
 AutoUpdate-Show-In-Client: false

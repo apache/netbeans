@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.web.clientproject
 OpenIDE-Module-Layer: org/netbeans/modules/web/clientproject/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/web/clientproject/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.91
+OpenIDE-Module-Specification-Version: 1.92
 OpenIDE-Module-Provides: org.netbeans.modules.web.clientproject

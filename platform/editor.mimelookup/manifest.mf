@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.editor.mimelookup/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/editor/mimelookup/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.45
+OpenIDE-Module-Specification-Version: 1.46
 OpenIDE-Module-Recommends: org.netbeans.spi.editor.mimelookup.MimeDataProvider
 AutoUpdate-Essential-Module: true
 

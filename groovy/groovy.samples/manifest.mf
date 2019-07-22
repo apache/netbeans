@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.groovy.samples
 OpenIDE-Module-Layer: org/netbeans/modules/groovy/samples/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/groovy/samples/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.29
+OpenIDE-Module-Specification-Version: 1.30
 

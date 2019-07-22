@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 AutoUpdate-Essential-Module: true
 OpenIDE-Module: org.netbeans.api.io
 OpenIDE-Module-Localizing-Bundle: org/netbeans/api/io/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.8
+OpenIDE-Module-Specification-Version: 1.9
 OpenIDE-Module-Recommends: org.netbeans.spi.io.InputOutputProvider

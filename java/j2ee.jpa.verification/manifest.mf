@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.j2ee.jpa.verification
 OpenIDE-Module-Layer: org/netbeans/modules/j2ee/jpa/verification/resources/layer.xml
-OpenIDE-Module-Specification-Version: 1.40
+OpenIDE-Module-Specification-Version: 1.41
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/j2ee/jpa/verification/Bundle.properties
 AutoUpdate-Show-In-Client: false
 

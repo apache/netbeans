@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.libs.testng/1
-OpenIDE-Module-Specification-Version: 1.19
+OpenIDE-Module-Specification-Version: 1.20
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/testng/Bundle.properties

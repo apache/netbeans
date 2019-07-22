@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.javascript.cdnjs/0
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/javascript/cdnjs/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 0.12
+OpenIDE-Module-Specification-Version: 0.13
 AutoUpdate-Show-In-Client: false

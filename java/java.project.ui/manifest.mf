@@ -3,7 +3,7 @@ OpenIDE-Module: org.netbeans.modules.java.project.ui/1
 OpenIDE-Module-Layer: org/netbeans/modules/java/project/ui/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/java/project/ui/Bundle.properties
 OpenIDE-Module-Needs: javax.script.ScriptEngine.freemarker
-OpenIDE-Module-Specification-Version: 1.80
+OpenIDE-Module-Specification-Version: 1.81
 OpenIDE-Module-Recommends: org.netbeans.spi.java.project.runner.JavaRunnerImplementation
 AutoUpdate-Show-In-Client: false
 

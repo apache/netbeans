@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.javascript.bower
 OpenIDE-Module-Layer: org/netbeans/modules/javascript/bower/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/javascript/bower/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 0.10
+OpenIDE-Module-Specification-Version: 0.11
 AutoUpdate-Show-In-Client: false

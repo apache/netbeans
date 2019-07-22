@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.docker.api/0
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/docker/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.25
+OpenIDE-Module-Specification-Version: 1.26
 AutoUpdate-Show-In-Client: false
 

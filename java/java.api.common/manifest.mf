@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.java.api.common/0
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/java/api/common/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.128
+OpenIDE-Module-Specification-Version: 1.129

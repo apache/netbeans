@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.libs.asm
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/asm/Bundle.properties
-OpenIDE-Module-Specification-Version: 5.8
+OpenIDE-Module-Specification-Version: 5.9

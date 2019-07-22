@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.core.netigso
 OpenIDE-Module-Localizing-Bundle: org/netbeans/core/netigso/Bundle.properties
 OpenIDE-Module-Provides: org.netbeans.NetigsoFramework
-OpenIDE-Module-Specification-Version: 1.36
+OpenIDE-Module-Specification-Version: 1.37
 OpenIDE-Module-Needs: org.osgi.framework.launch.FrameworkFactory
 AutoUpdate-Essential-Module: true
 

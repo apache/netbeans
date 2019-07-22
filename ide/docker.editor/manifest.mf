@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.modules.docker.editor/0
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/docker/editor/Bundle.properties
 OpenIDE-Module-Layer: org/netbeans/modules/docker/editor/layer.xml
-OpenIDE-Module-Specification-Version: 1.5
+OpenIDE-Module-Specification-Version: 1.6
 

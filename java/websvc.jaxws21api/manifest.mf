@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.websvc.jaxws21api/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/websvc/jaxws21api/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.37
+OpenIDE-Module-Specification-Version: 1.38
 OpenIDE-Module-Requires: org.openide.modules.ModuleFormat2
 OpenIDE-Module-Needs: com.sun.xml.ws.spi.ProviderImpl, com.sun.xml.bind
 OpenIDE-Module-Hide-Classpath-Packages: javax.jws.**, javax.xml.ws.**, javax.xml.soap.**, javax.annotation.**

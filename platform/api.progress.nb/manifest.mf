@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.api.progress.nb
 OpenIDE-Module-Localizing-Bundle: org/netbeans/api/progress/nb/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.52
+OpenIDE-Module-Specification-Version: 1.53
 

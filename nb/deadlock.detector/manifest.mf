@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.deadlock.detector
 OpenIDE-Module-Install: org/netbeans/modules/deadlock/detector/Installer.class
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/deadlock/detector/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.11
+OpenIDE-Module-Specification-Version: 1.12
 Main-Class: org.netbeans.modules.deadlock.detector.DeadlockReporter

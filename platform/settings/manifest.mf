@@ -3,5 +3,5 @@ OpenIDE-Module: org.netbeans.modules.settings/1
 OpenIDE-Module-Layer: org/netbeans/modules/settings/resources/mf-layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/settings/resources/Bundle.properties
 AutoUpdate-Essential-Module: true
-OpenIDE-Module-Specification-Version: 1.54
+OpenIDE-Module-Specification-Version: 1.55
 

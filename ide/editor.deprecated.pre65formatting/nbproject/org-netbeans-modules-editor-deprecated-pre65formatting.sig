@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.35.1
+#Version 1.36.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -5875,7 +5875,7 @@ meth public final void begin(org.openide.filesystems.FileObject,java.awt.Font,ja
 meth public final void eol()
 meth public void addLines(java.util.List<java.text.AttributedCharacterIterator>)
 supr java.lang.Object
-hfds DOCTYPE,DOT,EOL,ESC_AMP,ESC_APOS,ESC_GT,ESC_LT,ESC_QUOT,STYLE_PREFIX,ST_BEGIN,ST_BGCOLOR,ST_BODY,ST_BOLD,ST_COLOR,ST_END,ST_FONT_FAMILY,ST_ITALIC,ST_PRE,ST_SEPARATOR,ST_SIZE,ST_TABLE,T_BLOCK_E,T_BLOCK_S,T_BODY_E,T_BODY_S,T_CHARSET,T_COMMENT_E,T_COMMENT_S,T_HEAD_E,T_HEAD_S,T_HTML_E,T_HTML_S,T_NAME_TABLE,T_PRE_E,T_PRE_S,T_STYLE_E,T_STYLE_S,T_TITLE,WS,ZERO,boolHolder,buffer,charset,defaultBackgroundColor,defaultFont,defaultForegroundColor,fileName,headerBackgroundColor,headerForegroundColor,shortFileName,styles,syntaxColoring
+hfds DOCTYPE,DOT,EOL,ESC_AMP,ESC_APOS,ESC_GT,ESC_LT,ESC_QUOT,FF_MONOSPACE,FF_SANSSERIF,FF_SERIF,STYLE_PREFIX,ST_BEGIN,ST_BGCOLOR,ST_BODY,ST_BOLD,ST_COLOR,ST_END,ST_FONT_FAMILY,ST_ITALIC,ST_PRE,ST_SEPARATOR,ST_SIZE,ST_TABLE,T_BLOCK_E,T_BLOCK_S,T_BODY_E,T_BODY_S,T_CHARSET,T_COMMENT_E,T_COMMENT_S,T_HEAD_E,T_HEAD_S,T_HTML_E,T_HTML_S,T_NAME_TABLE,T_PRE_E,T_PRE_S,T_STYLE_E,T_STYLE_S,T_TITLE,WS,ZERO,boolHolder,buffer,charset,defaultBackgroundColor,defaultFont,defaultForegroundColor,fileName,headerBackgroundColor,headerForegroundColor,shortFileName,styles,syntaxColoring
 hcls Styles
 
 CLSS public org.netbeans.modules.editor.IndentEngineFormatter

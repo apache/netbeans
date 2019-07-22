@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.22.1
+#Version 1.24
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -240,8 +240,10 @@ fld public final static java.lang.String DESTINATION_DIRECTORY_LIB = "200"
 fld public final static java.lang.String DESTINATION_DIRECTORY_ROOT = "100"
 fld public final static java.lang.String ENDORSED_LIBRARY_CLASSPATH_6 = "${libs.javaee-endorsed-api-6.0.classpath}"
 fld public final static java.lang.String ENDORSED_LIBRARY_CLASSPATH_7 = "${libs.javaee-endorsed-api-7.0.classpath}"
+fld public final static java.lang.String ENDORSED_LIBRARY_CLASSPATH_8 = "${libs.javaee-endorsed-api-8.0.classpath}"
 fld public final static java.lang.String ENDORSED_LIBRARY_NAME_6 = "javaee-endorsed-api-6.0"
 fld public final static java.lang.String ENDORSED_LIBRARY_NAME_7 = "javaee-endorsed-api-7.0"
+fld public final static java.lang.String ENDORSED_LIBRARY_NAME_8 = "javaee-endorsed-api-8.0"
 supr java.lang.Object
 
 CLSS public org.netbeans.modules.javaee.project.api.ant.AntProjectUtil

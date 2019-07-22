@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.13.1
+#Version 0.14
 
 CLSS public abstract interface org.netbeans.modules.php.spi.templates.completion.CompletionProvider
 meth public abstract java.util.Set<java.lang.String> getItems(org.openide.filesystems.FileObject,java.lang.String)

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.16.1
+#Version 0.17
 
 CLSS public abstract interface org.netbeans.modules.javascript2.nodejs.spi.NodeJsSupport
 meth public abstract boolean isSupportEnabled()

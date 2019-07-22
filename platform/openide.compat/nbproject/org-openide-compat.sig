@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 6.44.1
+#Version 6.45
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1185,8 +1185,8 @@ meth public final static javax.swing.ImageIcon loadImageIcon(java.lang.String,bo
 meth public static java.awt.Image createDisabledImage(java.awt.Image)
 meth public static javax.swing.Icon createDisabledIcon(javax.swing.Icon)
 supr java.lang.Object
-hfds DARK_LAF_SUFFIX,ERR,LOGGER,NO_ICON,PNG_READER,TOOLTIP_SEPAR,cache,component,compositeCache,currentLoader,extraInitialSlashes,imageIconFilter,imageToolTipCache,loaderQuery,localizedCache,mediaTrackerID,noLoaderWarned,tracker
-hcls ActiveRef,CompositeImageKey,DisabledButtonFilter,LazyDisabledIcon,ToolTipImage,ToolTipImageKey
+hfds DARK_LAF_SUFFIX,ERR,LOGGER,NO_ICON,PNG_READER,TOOLTIP_SEPAR,cache,component,compositeCache,currentLoader,dummyIconComponent,extraInitialSlashes,imageIconFilter,imageToolTipCache,loaderQuery,localizedCache,mediaTrackerID,noLoaderWarned,tracker
+hcls ActiveRef,CompositeImageKey,DisabledButtonFilter,IconImageIcon,MergedIcon,ToolTipImage,ToolTipImageKey
 
 CLSS public abstract org.openide.util.Lookup
 cons public init()

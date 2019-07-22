@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.28.1
+#Version 1.30
 
 CLSS public java.lang.Object
 cons public init()
@@ -24,6 +24,8 @@ fld public final static org.netbeans.api.j2ee.core.Profile JAVA_EE_6_FULL
 fld public final static org.netbeans.api.j2ee.core.Profile JAVA_EE_6_WEB
 fld public final static org.netbeans.api.j2ee.core.Profile JAVA_EE_7_FULL
 fld public final static org.netbeans.api.j2ee.core.Profile JAVA_EE_7_WEB
+fld public final static org.netbeans.api.j2ee.core.Profile JAVA_EE_8_FULL
+fld public final static org.netbeans.api.j2ee.core.Profile JAVA_EE_8_WEB
 meth public boolean isAtLeast(org.netbeans.api.j2ee.core.Profile)
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public java.lang.String getDisplayName()

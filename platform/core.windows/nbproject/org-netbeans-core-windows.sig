@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.87.1
+#Version 2.88
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -733,7 +733,7 @@ fld protected final org.netbeans.core.windows.options.LafOptionsPanelController 
 meth protected boolean store()
 meth protected void load()
 supr javax.swing.JPanel
-hfds COLOR_MODEL_CLASS_NAME,DARK_COLOR_THEME_NAME,buttonGroup1,checkMaximizeNativeLaF,comboLaf,defaultLookAndFeelIndex,isAquaLaF,lafs,lblLaf,lblRestart,panelLaF,panelLaFCombo,prefs,restartNotification
+hfds COLOR_MODEL_CLASS_NAME,DARK_COLOR_THEME_NAME,NO_RESTART_ON_LAF_CHANGE,buttonGroup1,checkMaximizeNativeLaF,comboLaf,defaultLookAndFeelIndex,isAquaLaF,lafs,lblLaf,lblRestart,panelLaF,panelLaFCombo,prefs,restartNotification
 
 CLSS public org.netbeans.core.windows.options.TabsOptionsPanelController
 cons public init()

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.66.1
+#Version 1.67.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -340,8 +340,8 @@ meth public void increment(int)
 meth public void print(java.lang.String)
 meth public void setRunning(boolean)
 supr java.lang.Object
-hfds ICON_1024,ICON_16,ICON_256,ICON_32,ICON_48,ICON_512,comp,frame,noBar,painter,splash,splashScreen
-hcls SplashComponent,SplashDialog,SplashPainter,SplashRunner
+hfds ICON_1024,ICON_16,ICON_256,ICON_32,ICON_48,ICON_512,USE_LAUNCHER_SPLASH,comp,frame,noBar,painter,splash,splashScreen
+hcls SplashComponent,SplashDialog,SplashPainter,SplashRunner,TextBox
 
 CLSS public org.netbeans.core.startup.StartLog
 cons public init()

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.79.1
+#Version 1.80
 
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
@@ -191,6 +191,12 @@ meth public static org.netbeans.api.java.platform.JavaPlatform forProject(org.ne
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()
  anno 3 org.netbeans.api.annotations.common.NonNull()
+meth public static org.netbeans.api.java.platform.JavaPlatform forProject(org.netbeans.api.project.Project,org.openide.filesystems.FileObject,java.lang.String,java.lang.String)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+ anno 3 org.netbeans.api.annotations.common.NonNull()
+ anno 4 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
 hfds PLATFORM_ACTIVE,homesByProject,platformsByHome,platformsByProject
 

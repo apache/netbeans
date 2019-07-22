@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.41.1
+#Version 1.42.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1196,6 +1196,8 @@ fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEV
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion J2EE_1_4
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAVAEE_5_0
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAVAEE_6_0
+fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAVAEE_7_0
+fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAVAEE_8_0
 meth public int compareTo(java.lang.Object)
 meth public static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion getJ2EEVersion(java.lang.String)
 supr org.netbeans.modules.glassfish.eecommon.api.config.J2EEBaseVersion

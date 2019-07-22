@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.41.1
+#Version 2.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -697,6 +697,33 @@ supr java.awt.Container
 hfds ACTIONMAP_CREATED,ANCESTOR_INPUTMAP_CREATED,ANCESTOR_USING_BUFFER,AUTOSCROLLS_SET,COMPLETELY_OBSCURED,CREATED_DOUBLE_BUFFER,DEBUG_GRAPHICS_LOADED,FOCUS_INPUTMAP_CREATED,FOCUS_TRAVERSAL_KEYS_BACKWARD_SET,FOCUS_TRAVERSAL_KEYS_FORWARD_SET,INHERITS_POPUP_MENU,INPUT_VERIFIER_SOURCE_KEY,IS_DOUBLE_BUFFERED,IS_OPAQUE,IS_PAINTING_TILE,IS_PRINTING,IS_PRINTING_ALL,IS_REPAINTING,KEYBOARD_BINDINGS_KEY,KEY_EVENTS_ENABLED,NEXT_FOCUS,NOT_OBSCURED,OPAQUE_SET,PARTIALLY_OBSCURED,REQUEST_FOCUS_DISABLED,RESERVED_1,RESERVED_2,RESERVED_3,RESERVED_4,RESERVED_5,RESERVED_6,WHEN_IN_FOCUSED_WINDOW_BINDINGS,WIF_INPUTMAP_CREATED,WRITE_OBJ_COUNTER_FIRST,WRITE_OBJ_COUNTER_LAST,aaTextInfo,actionMap,alignmentX,alignmentY,ancestorInputMap,autoscrolls,border,clientProperties,componentObtainingGraphicsFrom,componentObtainingGraphicsFromLock,defaultLocale,flags,focusController,focusInputMap,inputVerifier,isAlignmentXSet,isAlignmentYSet,managingFocusBackwardTraversalKeys,managingFocusForwardTraversalKeys,paintingChild,popupMenu,readObjectCallbacks,revalidateRunnableScheduled,tempRectangles,uiClassID,verifyInputWhenFocusTarget,vetoableChangeSupport,windowInputMap
 hcls ActionStandin,IntVector,KeyboardState,ReadObjectCallback
 
+CLSS public abstract interface org.netbeans.modules.j2ee.deployment.plugins.spi.config.ContextRootConfiguration
+meth public abstract java.lang.String getContextRoot() throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public abstract void setContextRoot(java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+
+CLSS public abstract interface org.netbeans.modules.j2ee.deployment.plugins.spi.config.DatasourceConfiguration
+meth public abstract boolean supportsCreateDatasource()
+meth public abstract java.lang.String findDatasourceJndiName(java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public abstract java.lang.String findDatasourceJndiNameForEjb(java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public abstract java.util.Set<org.netbeans.modules.j2ee.deployment.common.api.Datasource> getDatasources() throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public abstract org.netbeans.modules.j2ee.deployment.common.api.Datasource createDatasource(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException,org.netbeans.modules.j2ee.deployment.common.api.DatasourceAlreadyExistsException
+meth public abstract void bindDatasourceReference(java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public abstract void bindDatasourceReferenceForEjb(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+
+CLSS public abstract interface org.netbeans.modules.j2ee.deployment.plugins.spi.config.EjbResourceConfiguration
+meth public abstract java.lang.String findJndiNameForEjb(java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public abstract void bindEjbReference(java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public abstract void bindEjbReferenceForEjb(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+
+CLSS public abstract interface org.netbeans.modules.j2ee.deployment.plugins.spi.config.MessageDestinationConfiguration
+meth public abstract boolean supportsCreateMessageDestination()
+meth public abstract java.lang.String findMessageDestinationName(java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public abstract java.util.Set<org.netbeans.modules.j2ee.deployment.common.api.MessageDestination> getMessageDestinations() throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public abstract org.netbeans.modules.j2ee.deployment.common.api.MessageDestination createMessageDestination(java.lang.String,org.netbeans.modules.j2ee.deployment.common.api.MessageDestination$Type) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public abstract void bindMdbToMessageDestination(java.lang.String,java.lang.String,org.netbeans.modules.j2ee.deployment.common.api.MessageDestination$Type) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public abstract void bindMessageDestinationReference(java.lang.String,java.lang.String,java.lang.String,org.netbeans.modules.j2ee.deployment.common.api.MessageDestination$Type) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public abstract void bindMessageDestinationReferenceForEjb(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,org.netbeans.modules.j2ee.deployment.common.api.MessageDestination$Type) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+
 CLSS public org.netbeans.modules.payara.eecommon.api.ConfigureProfilerHelper
 cons public init()
 meth public static boolean modifyAsEnvScriptFile(java.io.File,java.lang.String)
@@ -717,7 +744,7 @@ meth public org.w3c.dom.Document getDomainDocument()
 meth public org.w3c.dom.Document getDomainDocument(java.lang.String)
 meth public void createSampleDatasource()
 supr java.lang.Object
-hfds CONST_AO,CONST_CP,CONST_DATABASE_NAME,CONST_DERBY_CONN_ATTRS,CONST_DRIVER_CLASS,CONST_DS_CLASS,CONST_ENABLED,CONST_JDBC,CONST_JNDINAME,CONST_JVM_OPTIONS,CONST_LOWER_DATABASE_NAME,CONST_LOWER_PORT_NUMBER,CONST_NAME,CONST_OBJTYPE,CONST_PASSWORD,CONST_POOLNAME,CONST_PORT_NUMBER,CONST_PROP,CONST_RES_TYPE,CONST_SERVER_NAME,CONST_SID,CONST_URL,CONST_USER,CONST_VALUE,HTTPS_PROXY_HOST,HTTPS_PROXY_PORT,HTTP_PROXY_HOST,HTTP_PROXY_NO_HOST,HTTP_PROXY_PORT,LOGGER,NBPROFILERNAME,SAMPLE_CONNPOOL,SAMPLE_DATASOURCE,XML_ENTITY,dmLoc,dmName,isPayaraV1OrV2,sysDatasources
+hfds CONST_AO,CONST_CP,CONST_DATABASE_NAME,CONST_DERBY_CONN_ATTRS,CONST_DRIVER_CLASS,CONST_DS_CLASS,CONST_ENABLED,CONST_JDBC,CONST_JNDINAME,CONST_JVM_OPTIONS,CONST_LOWER_DATABASE_NAME,CONST_LOWER_PORT_NUMBER,CONST_NAME,CONST_OBJTYPE,CONST_PASSWORD,CONST_POOLNAME,CONST_PORT_NUMBER,CONST_PROP,CONST_RES_TYPE,CONST_SERVER_NAME,CONST_SID,CONST_URL,CONST_USER,CONST_VALUE,HTTPS_PROXY_HOST,HTTPS_PROXY_PORT,HTTP_PROXY_HOST,HTTP_PROXY_NO_HOST,HTTP_PROXY_PORT,LOGGER,NBPROFILERNAME,SAMPLE_CONNPOOL,SAMPLE_DATASOURCE,XML_ENTITY,dmLoc,dmName,sysDatasources
 hcls InnerResolver
 
 CLSS public org.netbeans.modules.payara.eecommon.api.ExecSupport
@@ -1106,79 +1133,6 @@ meth public void fileRenamed(org.openide.filesystems.FileRenameEvent)
 supr java.lang.Object
 hfds configKey,targets
 
-CLSS public abstract org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration
-cons protected init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.eecommon.api.config.J2eeModuleHelper,org.netbeans.modules.payara.tooling.data.PayaraVersion) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-cons protected init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraVersion) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-cons public init()
- anno 0 java.lang.Deprecated()
-fld protected final java.io.File primaryDD
-fld protected final java.io.File secondaryDD
-fld protected final org.netbeans.modules.payara.eecommon.api.config.J2eeModuleHelper moduleHelper
-fld protected final org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule module
-fld protected org.netbeans.modules.payara.eecommon.api.config.DescriptorListener descriptorListener
-fld protected org.netbeans.modules.payara.tooling.data.PayaraVersion version
-innr public final static !enum ChangeOperation
-intf org.netbeans.modules.j2ee.deployment.plugins.spi.config.ContextRootConfiguration
-intf org.netbeans.modules.j2ee.deployment.plugins.spi.config.DatasourceConfiguration
-intf org.netbeans.modules.j2ee.deployment.plugins.spi.config.EjbResourceConfiguration
-intf org.netbeans.modules.j2ee.deployment.plugins.spi.config.MessageDestinationConfiguration
-meth protected <%0 extends org.netbeans.modules.j2ee.sun.dd.api.CommonDDBean> {%%0} findNamedBean(org.netbeans.modules.j2ee.sun.dd.api.CommonDDBean,java.lang.String,java.lang.String,java.lang.String)
-meth protected org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider getProvider(java.io.File)
-meth protected org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion getInstalledAppServerVersion(java.io.File)
-meth protected org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion getTargetAppServerVersion()
-meth protected org.netbeans.modules.j2ee.sun.dd.api.RootInterface getPayaraDDRoot(boolean) throws java.io.IOException
-meth protected org.openide.filesystems.FileObject getPayaraDD(java.io.File,boolean) throws java.io.IOException
-meth protected void createDefaultSunDD(java.io.File) throws java.io.IOException
-meth protected void displayError(java.lang.Exception,java.lang.String)
-meth protected void handleEventRelatedException(java.lang.Exception)
-meth protected void handleEventRelatedIOException(java.io.IOException)
-meth public <%0 extends java.lang.Object> org.netbeans.modules.j2ee.metadata.model.api.MetadataModel<{%%0}> getMetadataModel(java.lang.Class<{%%0}>)
-meth public abstract boolean supportsCreateDatasource()
-meth public abstract boolean supportsCreateMessageDestination()
-meth public abstract java.util.Set<org.netbeans.modules.j2ee.deployment.common.api.Datasource> getDatasources() throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public abstract java.util.Set<org.netbeans.modules.j2ee.deployment.common.api.MessageDestination> getMessageDestinations() throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public abstract org.netbeans.modules.j2ee.deployment.common.api.Datasource createDatasource(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException,org.netbeans.modules.j2ee.deployment.common.api.DatasourceAlreadyExistsException
-meth public abstract org.netbeans.modules.j2ee.deployment.common.api.MessageDestination createMessageDestination(java.lang.String,org.netbeans.modules.j2ee.deployment.common.api.MessageDestination$Type) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public final org.netbeans.modules.j2ee.dd.api.common.RootInterface getStandardRootDD()
-meth public final org.netbeans.modules.j2ee.dd.api.webservices.Webservices getWebServicesRootDD()
-meth public final static org.openide.util.Pair<java.io.File,java.lang.Boolean> getExistingResourceFile(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraVersion)
-meth public final static org.openide.util.Pair<java.io.File,java.lang.Boolean> getNewResourceFile(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraVersion)
-meth public java.lang.String findDatasourceJndiName(java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public java.lang.String findDatasourceJndiNameForEjb(java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public java.lang.String findJndiNameForEjb(java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public java.lang.String findMessageDestinationName(java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public java.lang.String getContextRoot() throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public org.netbeans.modules.payara.eecommon.api.config.J2EEBaseVersion getJ2eeVersion()
-meth public org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule getJ2eeModule()
-meth public org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion getAppServerVersion()
-meth public org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion getMaxASVersion()
-meth public org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion getMinASVersion()
-meth public org.netbeans.modules.j2ee.sun.dd.api.RootInterface getPayaraDDRoot(java.io.File,boolean) throws java.io.IOException
-meth public static org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration getConfiguration(java.io.File)
-meth public static void addConfiguration(java.io.File,org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration)
-meth public static void removeConfiguration(java.io.File)
-meth public void bindDatasourceReference(java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public void bindDatasourceReferenceForEjb(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public void bindEjbReference(java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public void bindEjbReferenceForEjb(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public void bindMdbToMessageDestination(java.lang.String,java.lang.String,org.netbeans.modules.j2ee.deployment.common.api.MessageDestination$Type) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public void bindMessageDestinationReference(java.lang.String,java.lang.String,java.lang.String,org.netbeans.modules.j2ee.deployment.common.api.MessageDestination$Type) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public void bindMessageDestinationReferenceForEjb(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,org.netbeans.modules.j2ee.deployment.common.api.MessageDestination$Type) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public void dispose()
-meth public void saveConfiguration(java.io.OutputStream) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public void setAppServerVersion(org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion)
-meth public void setContextRoot(java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-supr java.lang.Object
-hfds LOGGER,RESOURCE_FILES,RESOURCE_FILES_SUFFIX,RP,appServerVersion,configurationMap,configurationMonitor,defaultcr,deferredAppServerChange,maxASVersion,minASVersion,sunServerIds
-
-CLSS public final static !enum org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration$ChangeOperation
- outer org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration
-fld public final static org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration$ChangeOperation CREATE
-fld public final static org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration$ChangeOperation DELETE
-meth public static org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration$ChangeOperation valueOf(java.lang.String)
-meth public static org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration$ChangeOperation[] values()
-supr java.lang.Enum<org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration$ChangeOperation>
-
 CLSS public abstract org.netbeans.modules.payara.eecommon.api.config.J2EEBaseVersion
 cons protected init(java.lang.String,int,java.lang.String,int)
 intf java.lang.Comparable
@@ -1196,6 +1150,8 @@ fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVers
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion J2EE_1_4
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAVAEE_5_0
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAVAEE_6_0
+fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAVAEE_7_0
+fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAVAEE_8_0
 meth public int compareTo(java.lang.Object)
 meth public static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion getJ2EEVersion(java.lang.String)
 supr org.netbeans.modules.payara.eecommon.api.config.J2EEBaseVersion
@@ -1225,8 +1181,9 @@ meth public java.lang.String getWebserviceDDName()
 meth public org.netbeans.modules.j2ee.dd.api.common.RootInterface getStandardRootDD(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule)
 meth public org.netbeans.modules.j2ee.dd.api.webservices.Webservices getWebServicesRootDD(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule)
 meth public static boolean isGlassFishWeb(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule)
+meth public static boolean isPayaraWeb(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule)
 supr java.lang.Object
-hfds gfhelperMap,helperMap,moduleType,primarySunDDName,secondarySunDDName,standardDDName,webserviceDDName
+hfds gfhelperMap,helperMap,moduleType,primaryDDName,secondaryDDName,standardDDName,webserviceDDName
 
 CLSS public static org.netbeans.modules.payara.eecommon.api.config.J2eeModuleHelper$ClientDDHelper
  outer org.netbeans.modules.payara.eecommon.api.config.J2eeModuleHelper
@@ -1275,6 +1232,79 @@ meth public static org.netbeans.modules.payara.eecommon.api.config.JavaEEModule[
 supr java.lang.Enum<org.netbeans.modules.payara.eecommon.api.config.JavaEEModule>
 hfds LOGGER,j2eeModuleTypeToValue,moduleType
 
+CLSS public abstract org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration
+cons protected init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.eecommon.api.config.J2eeModuleHelper,org.netbeans.modules.payara.tooling.data.PayaraVersion) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+cons protected init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraVersion) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+cons public init()
+ anno 0 java.lang.Deprecated()
+fld protected final java.io.File primaryDD
+fld protected final java.io.File secondaryDD
+fld protected final org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule module
+fld protected final org.netbeans.modules.payara.eecommon.api.config.J2eeModuleHelper moduleHelper
+fld protected org.netbeans.modules.payara.eecommon.api.config.DescriptorListener descriptorListener
+fld protected org.netbeans.modules.payara.tooling.data.PayaraVersion version
+innr public final static !enum ChangeOperation
+intf org.netbeans.modules.j2ee.deployment.plugins.spi.config.ContextRootConfiguration
+intf org.netbeans.modules.j2ee.deployment.plugins.spi.config.DatasourceConfiguration
+intf org.netbeans.modules.j2ee.deployment.plugins.spi.config.EjbResourceConfiguration
+intf org.netbeans.modules.j2ee.deployment.plugins.spi.config.MessageDestinationConfiguration
+meth protected <%0 extends org.netbeans.modules.j2ee.sun.dd.api.CommonDDBean> {%%0} findNamedBean(org.netbeans.modules.j2ee.sun.dd.api.CommonDDBean,java.lang.String,java.lang.String,java.lang.String)
+meth protected org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider getProvider(java.io.File)
+meth protected org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion getInstalledAppServerVersion(java.io.File)
+meth protected org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion getTargetAppServerVersion()
+meth protected org.netbeans.modules.j2ee.sun.dd.api.RootInterface getPayaraDDRoot(boolean) throws java.io.IOException
+meth protected org.openide.filesystems.FileObject getPayaraDD(java.io.File,boolean) throws java.io.IOException
+meth protected void createDefaultSunDD(java.io.File) throws java.io.IOException
+meth protected void displayError(java.lang.Exception,java.lang.String)
+meth protected void handleEventRelatedException(java.lang.Exception)
+meth protected void handleEventRelatedIOException(java.io.IOException)
+meth public <%0 extends java.lang.Object> org.netbeans.modules.j2ee.metadata.model.api.MetadataModel<{%%0}> getMetadataModel(java.lang.Class<{%%0}>)
+meth public abstract boolean supportsCreateDatasource()
+meth public abstract boolean supportsCreateMessageDestination()
+meth public abstract java.util.Set<org.netbeans.modules.j2ee.deployment.common.api.Datasource> getDatasources() throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public abstract java.util.Set<org.netbeans.modules.j2ee.deployment.common.api.MessageDestination> getMessageDestinations() throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public abstract org.netbeans.modules.j2ee.deployment.common.api.Datasource createDatasource(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException,org.netbeans.modules.j2ee.deployment.common.api.DatasourceAlreadyExistsException
+meth public abstract org.netbeans.modules.j2ee.deployment.common.api.MessageDestination createMessageDestination(java.lang.String,org.netbeans.modules.j2ee.deployment.common.api.MessageDestination$Type) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public final org.netbeans.modules.j2ee.dd.api.common.RootInterface getStandardRootDD()
+meth public final org.netbeans.modules.j2ee.dd.api.webservices.Webservices getWebServicesRootDD()
+meth public final static org.openide.util.Pair<java.io.File,java.lang.Boolean> getExistingResourceFile(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraVersion)
+meth public final static org.openide.util.Pair<java.io.File,java.lang.Boolean> getNewResourceFile(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraVersion)
+meth public java.lang.String findDatasourceJndiName(java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public java.lang.String findDatasourceJndiNameForEjb(java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public java.lang.String findJndiNameForEjb(java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public java.lang.String findMessageDestinationName(java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public java.lang.String getContextRoot() throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule getJ2eeModule()
+meth public org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion getAppServerVersion()
+meth public org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion getMaxASVersion()
+meth public org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion getMinASVersion()
+meth public org.netbeans.modules.j2ee.sun.dd.api.RootInterface getPayaraDDRoot(java.io.File,boolean) throws java.io.IOException
+meth public org.netbeans.modules.payara.eecommon.api.config.J2EEBaseVersion getJ2eeVersion()
+meth public static org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration getConfiguration(java.io.File)
+meth public static void addConfiguration(java.io.File,org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration)
+meth public static void removeConfiguration(java.io.File)
+meth public void bindDatasourceReference(java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public void bindDatasourceReferenceForEjb(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public void bindEjbReference(java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public void bindEjbReferenceForEjb(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public void bindMdbToMessageDestination(java.lang.String,java.lang.String,org.netbeans.modules.j2ee.deployment.common.api.MessageDestination$Type) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public void bindMessageDestinationReference(java.lang.String,java.lang.String,java.lang.String,org.netbeans.modules.j2ee.deployment.common.api.MessageDestination$Type) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public void bindMessageDestinationReferenceForEjb(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,org.netbeans.modules.j2ee.deployment.common.api.MessageDestination$Type) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public void dispose()
+meth public void saveConfiguration(java.io.OutputStream) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+meth public void setAppServerVersion(org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion)
+meth public void setContextRoot(java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+supr java.lang.Object
+hfds LOGGER,RESOURCE_FILES,RESOURCE_FILES_SUFFIX,RP,appServerVersion,configurationMap,configurationMonitor,defaultcr,deferredAppServerChange,maxASVersion,minASVersion,serverIds
+
+CLSS public final static !enum org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration$ChangeOperation
+ outer org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration
+fld public final static org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration$ChangeOperation CREATE
+fld public final static org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration$ChangeOperation DELETE
+meth public static org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration$ChangeOperation valueOf(java.lang.String)
+meth public static org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration$ChangeOperation[] values()
+supr java.lang.Enum<org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration$ChangeOperation>
+
 CLSS public final org.netbeans.modules.payara.eecommon.api.config.ServletVersion
 fld public final static org.netbeans.modules.payara.eecommon.api.config.ServletVersion SERVLET_2_3
 fld public final static org.netbeans.modules.payara.eecommon.api.config.ServletVersion SERVLET_2_4
@@ -1283,33 +1313,6 @@ fld public final static org.netbeans.modules.payara.eecommon.api.config.ServletV
 meth public int compareTo(java.lang.Object)
 meth public static org.netbeans.modules.payara.eecommon.api.config.ServletVersion getServletVersion(java.lang.String)
 supr org.netbeans.modules.payara.eecommon.api.config.J2EEBaseVersion
-
-CLSS public abstract interface org.netbeans.modules.j2ee.deployment.plugins.spi.config.ContextRootConfiguration
-meth public abstract java.lang.String getContextRoot() throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public abstract void setContextRoot(java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-
-CLSS public abstract interface org.netbeans.modules.j2ee.deployment.plugins.spi.config.DatasourceConfiguration
-meth public abstract boolean supportsCreateDatasource()
-meth public abstract java.lang.String findDatasourceJndiName(java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public abstract java.lang.String findDatasourceJndiNameForEjb(java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public abstract java.util.Set<org.netbeans.modules.j2ee.deployment.common.api.Datasource> getDatasources() throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public abstract org.netbeans.modules.j2ee.deployment.common.api.Datasource createDatasource(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException,org.netbeans.modules.j2ee.deployment.common.api.DatasourceAlreadyExistsException
-meth public abstract void bindDatasourceReference(java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public abstract void bindDatasourceReferenceForEjb(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-
-CLSS public abstract interface org.netbeans.modules.j2ee.deployment.plugins.spi.config.EjbResourceConfiguration
-meth public abstract java.lang.String findJndiNameForEjb(java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public abstract void bindEjbReference(java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public abstract void bindEjbReferenceForEjb(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-
-CLSS public abstract interface org.netbeans.modules.j2ee.deployment.plugins.spi.config.MessageDestinationConfiguration
-meth public abstract boolean supportsCreateMessageDestination()
-meth public abstract java.lang.String findMessageDestinationName(java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public abstract java.util.Set<org.netbeans.modules.j2ee.deployment.common.api.MessageDestination> getMessageDestinations() throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public abstract org.netbeans.modules.j2ee.deployment.common.api.MessageDestination createMessageDestination(java.lang.String,org.netbeans.modules.j2ee.deployment.common.api.MessageDestination$Type) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public abstract void bindMdbToMessageDestination(java.lang.String,java.lang.String,org.netbeans.modules.j2ee.deployment.common.api.MessageDestination$Type) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public abstract void bindMessageDestinationReference(java.lang.String,java.lang.String,java.lang.String,org.netbeans.modules.j2ee.deployment.common.api.MessageDestination$Type) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-meth public abstract void bindMessageDestinationReferenceForEjb(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,org.netbeans.modules.j2ee.deployment.common.api.MessageDestination$Type) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 
 CLSS public abstract interface org.openide.filesystems.FileChangeListener
 intf java.util.EventListener

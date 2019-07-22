@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.0.1
+#Version 1.2
 
 CLSS public abstract interface java.io.Serializable
 
@@ -151,4 +151,7 @@ meth public static void openAtLine(org.openide.filesystems.FileObject,int)
 meth public static void openAtLine(org.openide.filesystems.FileObject,int,boolean)
 supr java.lang.Object
 hfds finder,location
+
+CLSS public abstract interface org.netbeans.modules.gradle.java.spi.debug.GradleJavaDebugger
+meth public abstract void attachDebugger(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws java.lang.Exception
 

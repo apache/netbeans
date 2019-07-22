@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.14.1
+#Version 1.15
 
 CLSS public com.amazonaws.AmazonClientException
 cons public init(java.lang.String)

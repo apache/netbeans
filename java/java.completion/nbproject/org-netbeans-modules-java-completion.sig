@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.12.1
+#Version 1.13.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -140,6 +140,7 @@ hfds INIT,SUPER_KEYWORD,THIS_KEYWORD,anchorOffset,toolTipData,toolTipIndex,toolT
 
 CLSS public org.netbeans.modules.java.completion.TreeShims
 cons public init()
+fld public final static java.lang.String SWITCH_EXPRESSION = "SWITCH_EXPRESSION"
 meth public static com.sun.source.tree.ExpressionTree getValue(com.sun.source.tree.BreakTree)
 meth public static com.sun.source.tree.Tree SwitchExpression(com.sun.tools.javac.tree.TreeMaker,com.sun.source.tree.ExpressionTree,java.util.List<? extends com.sun.source.tree.CaseTree>)
 meth public static com.sun.source.tree.Tree getBody(com.sun.source.tree.CaseTree)

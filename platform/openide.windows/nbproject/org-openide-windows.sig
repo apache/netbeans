@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 6.80.1
+#Version 6.82
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -769,6 +769,7 @@ fld public final static java.lang.String PROP_BOUNDS = "bounds"
 fld public final static java.lang.String PROP_DISPLAY_NAME = "displayName"
 fld public final static java.lang.String PROP_NAME = "name"
 fld public final static long serialVersionUID = -2650968323666215654
+innr public abstract interface static Xml
 intf java.io.Serializable
 meth public abstract boolean canDock(org.openide.windows.TopComponent)
 meth public abstract boolean dockInto(org.openide.windows.TopComponent)
@@ -783,8 +784,17 @@ meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeLis
 meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public abstract void setBounds(java.awt.Rectangle)
 
+CLSS public abstract interface static org.openide.windows.Mode$Xml
+ outer org.openide.windows.Mode
+intf org.openide.windows.Mode
+meth public abstract java.lang.String toXml()
+
 CLSS public abstract interface org.openide.windows.ModeSelector
 meth public abstract org.openide.windows.Mode selectModeForOpen(org.openide.windows.TopComponent,org.openide.windows.Mode)
+
+CLSS public final org.openide.windows.ModeUtilities
+meth public final static java.lang.String toXml(org.openide.windows.Mode)
+supr java.lang.Object
 
 CLSS public abstract interface !annotation org.openide.windows.OnShowing
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=SOURCE)
@@ -1033,11 +1043,14 @@ meth public boolean isEditorTopComponent(org.openide.windows.TopComponent)
 meth public boolean isOpenedEditorTopComponent(org.openide.windows.TopComponent)
 meth public boolean isTopComponentFloating(org.openide.windows.TopComponent)
 meth public boolean isTopComponentMinimized(org.openide.windows.TopComponent)
+meth public boolean removeMode(org.openide.windows.Mode)
+meth public boolean updateModeConstraintsFromXml(java.lang.String)
 meth public final org.openide.windows.Workspace createWorkspace(java.lang.String)
  anno 0 java.lang.Deprecated()
 meth public final static org.openide.windows.WindowManager getDefault()
 meth public java.lang.String findTopComponentID(org.openide.windows.TopComponent)
 meth public java.lang.String getRole()
+meth public org.openide.windows.Mode createModeFromXml(java.lang.String)
 meth public org.openide.windows.TopComponent$Registry getRegistry()
 meth public org.openide.windows.TopComponent[] getOpenedTopComponents(org.openide.windows.Mode)
 meth public void addWindowSystemListener(org.openide.windows.WindowSystemListener)

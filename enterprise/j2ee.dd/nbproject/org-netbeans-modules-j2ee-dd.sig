@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.44.1
+#Version 1.45.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -1943,6 +1943,7 @@ fld public final static java.lang.String VERSION_2_4 = "2.4"
 fld public final static java.lang.String VERSION_2_5 = "2.5"
 fld public final static java.lang.String VERSION_3_0 = "3.0"
 fld public final static java.lang.String VERSION_3_1 = "3.1"
+fld public final static java.lang.String VERSION_4_0 = "4.0"
 intf org.netbeans.modules.j2ee.dd.api.common.RootInterface
 meth public abstract boolean isDistributable()
 meth public abstract boolean isMetadataComplete() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException

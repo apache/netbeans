@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.112.1
+#Version 1.113
 
 CLSS public abstract interface java.io.Serializable
 
@@ -1126,7 +1126,7 @@ meth public boolean beginTrans(boolean,boolean)
 meth public void beginTrans(boolean)
 meth public void endTrans()
 supr java.lang.Object
-hfds DEBUG,class$org$netbeans$lib$profiler$global$TransactionalSupport,interruptedFlag,lockRead,lockWrite,lockedExclusively,lockedShared,sharedLockCount,transactionLock
+hfds DEBUG,interruptedFlag,lockRead,lockWrite,lockedExclusively,lockedShared,sharedLockCount,transactionLock
 
 CLSS public abstract interface org.netbeans.lib.profiler.heap.ArrayItemValue
 intf org.netbeans.lib.profiler.heap.Value
@@ -4051,7 +4051,7 @@ meth public int getBufSize()
 meth public java.lang.String getEventBufferFileName()
 meth public java.lang.String toString()
 supr org.netbeans.lib.profiler.wireprotocol.Command
-hfds $assertionsDisabled,bufSize,buffer,class$org$netbeans$lib$profiler$wireprotocol$EventBufferDumpedCommand,eventBufferFileName,startPos
+hfds bufSize,buffer,eventBufferFileName,startPos
 
 CLSS public org.netbeans.lib.profiler.wireprotocol.GetClassFileBytesCommand
 cons public init(java.lang.String[],int[])
@@ -4257,7 +4257,7 @@ meth public void setDataOnThreads(int,int,int[],long[],byte[])
 meth public void setExplicitDataOnThreads(int[],byte[],long[])
 meth public void setGCstartFinishData(long[],long[])
 supr org.netbeans.lib.profiler.wireprotocol.Response
-hfds $assertionsDisabled,class$org$netbeans$lib$profiler$wireprotocol$MonitoredNumbersResponse,exactThreadIds,exactThreadStates,exactTimeStamps,gcFinishs,gcStarts,generalNumbers,mode,nNewThreads,nThreadStates,nThreads,newThreadClassNames,newThreadIds,newThreadNames,serverProgress,serverState,stateTimestamps,threadIds,threadStates
+hfds exactThreadIds,exactThreadStates,exactTimeStamps,gcFinishs,gcStarts,generalNumbers,mode,nNewThreads,nThreadStates,nThreads,newThreadClassNames,newThreadIds,newThreadNames,serverProgress,serverState,stateTimestamps,threadIds,threadStates
 
 CLSS public org.netbeans.lib.profiler.wireprotocol.ObjectAllocationResultsResponse
 cons public init(int[],int)

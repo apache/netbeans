@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.168.1
+#Version 0.169.0
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
@@ -965,8 +965,6 @@ meth public boolean isMemberOf(javax.lang.model.element.Element,javax.lang.model
 meth public boolean isOpen(javax.lang.model.element.ModuleElement)
 meth public boolean isSynthetic(javax.lang.model.element.Element)
 meth public boolean overridesMethod(javax.lang.model.element.ExecutableElement)
-meth public com.sun.javadoc.Doc javaDocFor(javax.lang.model.element.Element)
- anno 0 java.lang.Deprecated()
 meth public java.lang.CharSequence getElementName(javax.lang.model.element.Element,boolean)
 meth public java.lang.Iterable<? extends javax.lang.model.element.Element> getLocalMembersAndVars(com.sun.source.tree.Scope,org.netbeans.api.java.source.ElementUtilities$ElementAcceptor)
 meth public java.lang.Iterable<? extends javax.lang.model.element.Element> getLocalVars(com.sun.source.tree.Scope,org.netbeans.api.java.source.ElementUtilities$ElementAcceptor)
@@ -978,8 +976,6 @@ meth public java.util.List<? extends javax.lang.model.element.ExecutableElement>
 meth public java.util.Map<? extends javax.lang.model.element.Element,com.sun.source.tree.Scope> findElementsAndOrigins(com.sun.source.tree.Scope,org.netbeans.api.java.source.ElementUtilities$ElementAcceptor)
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public javax.lang.model.element.Element elementFor(com.sun.javadoc.Doc)
- anno 0 java.lang.Deprecated()
 meth public javax.lang.model.element.Element findElement(java.lang.String)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
@@ -1267,7 +1263,7 @@ meth public static org.openide.filesystems.FileObject getFile(javax.lang.model.e
 meth public static org.openide.filesystems.FileObject getFile(org.netbeans.api.java.source.ElementHandle<? extends javax.lang.model.element.Element>,org.netbeans.api.java.source.ClasspathInfo)
 meth public static void waitScanFinished() throws java.lang.InterruptedException
 supr java.lang.Object
-hfds LOG,MAX_LEN,VOWELS
+hfds LOG
 hcls CaseInsensitiveMatch,CaseSensitiveMatch,Match
 
 CLSS public abstract interface org.netbeans.api.java.source.Task<%0 extends java.lang.Object>

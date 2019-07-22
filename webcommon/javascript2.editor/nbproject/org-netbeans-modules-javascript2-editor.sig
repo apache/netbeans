@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.77.1
+#Version 0.78
 
 CLSS public abstract interface java.io.Serializable
 
@@ -83,6 +83,7 @@ meth public abstract org.netbeans.modules.csl.api.OffsetRange getReferenceSpan(j
 CLSS public org.netbeans.modules.javascript2.editor.api.FrameworksUtils
 cons public init()
 fld public final static java.lang.String CATEGORY = "jsframeworks"
+fld public final static java.lang.String GRADLE_PROJECT = "org-netbeans-modules-gradle"
 fld public final static java.lang.String HTML5_CLIENT_PROJECT = "org.netbeans.modules.web.clientproject"
 fld public final static java.lang.String MAVEN_PROJECT = "org-netbeans-modules-maven"
 fld public final static java.lang.String PHP_PROJECT = "org-netbeans-modules-php-project"

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.63.1
+#Version 2.65
 
 CLSS public abstract interface java.io.Serializable
 
@@ -116,6 +116,7 @@ fld public final static org.netbeans.modules.php.api.PhpVersion PHP_70
 fld public final static org.netbeans.modules.php.api.PhpVersion PHP_71
 fld public final static org.netbeans.modules.php.api.PhpVersion PHP_72
 fld public final static org.netbeans.modules.php.api.PhpVersion PHP_73
+fld public final static org.netbeans.modules.php.api.PhpVersion PHP_74
 meth public boolean hasNamespaces()
 meth public java.lang.String getDisplayName()
 meth public java.lang.String toString()

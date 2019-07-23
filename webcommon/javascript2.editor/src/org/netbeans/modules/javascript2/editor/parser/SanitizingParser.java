@@ -176,6 +176,10 @@ public abstract class SanitizingParser<R extends BaseParserResult> extends Parse
                 }
             } else if (snapshot.getMimeType().equals(JsTokenId.JSON_MIME_TYPE)) {
                 int index = text.length() - 1;
+                if (index < 0) {
+                    // NETBEANS-2881
+                    return false;
+                }
                 char ch = text.charAt(index);
                 while (index > 0 && ch != '}') {
                     index--;

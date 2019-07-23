@@ -29,6 +29,7 @@ import org.netbeans.jellytools.actions.Action;
  * @author Jiri Skrivanek
  * @deprecated Navigator is used instead of Inspector. Use NavigatorOperator.
  */
+@Deprecated
 public class InspectorAction extends Action {
 
     // Window|Navigator

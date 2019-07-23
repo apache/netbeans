@@ -148,6 +148,7 @@ public class Html5Parser implements HtmlParser {
      * @deprecated 
      */
     @Override
+    @Deprecated
     public HtmlModel getModel(HtmlVersion version) {
         return null;
     }
@@ -156,6 +157,7 @@ public class Html5Parser implements HtmlParser {
      * @deprecated 
      */
     @Override
+    @Deprecated
     public String getName() {
         return null;
     }

@@ -75,7 +75,7 @@ import org.openide.util.WeakListeners;
  * @deprecated Please use Editor Indentation API instead, for details see
  *   <a href="@org-netbeans-modules-editor-indent@/overview-summary.html">Editor Indentation</a>.
  */
-
+@Deprecated
 public class ExtFormatter extends Formatter implements FormatLayer {
 
     /** List holding the format layers */

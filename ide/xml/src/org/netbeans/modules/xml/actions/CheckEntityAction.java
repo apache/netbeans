@@ -34,6 +34,7 @@ import org.netbeans.modules.xml.util.Util;
  * @version 1.0
  * @deprecated To be eliminated once a API CheckXMLAction will be introduced
  */
+@Deprecated
 public class CheckEntityAction extends CookieAction implements CollectXMLAction.XMLAction {
 
     /** Serial Version UID */

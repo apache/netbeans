@@ -45,6 +45,7 @@ public final class ProgressHandleFactory {
      * @return an instance of {@link org.netbeans.api.progress.ProgressHandle}, initialized but not started.
      * @deprecated Use {@link ProgressHandle#createHandle(java.lang.String)}
      */
+    @Deprecated
     public static ProgressHandle createHandle(String displayName) {
         return createHandle(displayName, (Action)null);
     }
@@ -58,6 +59,7 @@ public final class ProgressHandleFactory {
      * @return an instance of {@link org.netbeans.api.progress.ProgressHandle}, initialized but not started.
      * @deprecated Use {@link ProgressHandle#createHandle(java.lang.String, org.openide.util.Cancellable)}.
      */
+    @Deprecated
     public static ProgressHandle createHandle(String displayName, Cancellable allowToCancel) {
         return createHandle(displayName, allowToCancel, null);
     }

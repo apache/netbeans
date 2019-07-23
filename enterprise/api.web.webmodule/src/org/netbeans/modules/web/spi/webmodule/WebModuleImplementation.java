@@ -28,6 +28,7 @@ import org.openide.filesystems.FileObject;
  * @see WebModuleFactory
  * @deprecated implement {@link WebModuleImplementation2}
  */
+@Deprecated
 public interface WebModuleImplementation {
 
     /**

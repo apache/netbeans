@@ -669,6 +669,7 @@ public abstract class SectionInnerPanel extends javax.swing.JPanel implements Li
     /** This will be called after model is changed from this panel
      * @deprecated use {@link SectionInnerPanel#endUIChange} instead
      */
+    @Deprecated
     protected void signalUIChange() {
     }
     

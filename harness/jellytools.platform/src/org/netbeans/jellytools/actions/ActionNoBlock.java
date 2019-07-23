@@ -81,6 +81,7 @@ public class ActionNoBlock extends Action {
      * {@link ActionNoBlock#ActionNoBlock(String menuPath, String popupPath, KeyStroke[] keystrokes)}
      * instead.
      */
+    @Deprecated
     public ActionNoBlock(String menuPath, String popupPath, Shortcut[] shortcuts) {
         super(menuPath, popupPath, shortcuts);
     }
